@@ -138,184 +138,188 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                       role="row"
                     >
                       <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 18%;"
-                      >
-                        <p
-                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                          style="--text-line-clamp: 1;"
-                        >
-                          artifact-1
-                        </p>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 17%;"
+                        class="TableV2--cells"
                       >
                         <div
-                          class="StyledProps--font StyledProps--main paddedContainer"
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 18%;"
+                        >
+                          <p
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                            style="--text-line-clamp: 1;"
+                          >
+                            artifact-1
+                          </p>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 17%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main paddedContainer"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main StyledProps--flex"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main envContainer"
+                              >
+                                <p
+                                  class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+                                  style="--text-line-clamp: 1;"
+                                >
+                                  env-1
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 14%;"
                         >
                           <div
                             class="StyledProps--font StyledProps--main StyledProps--flex"
                           >
                             <div
-                              class="StyledProps--font StyledProps--main envContainer"
+                              class="Layout--horizontal StyledProps--main"
                             >
                               <p
-                                class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+                                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
                                 style="--text-line-clamp: 1;"
                               >
-                                env-1
+                                infra-1
                               </p>
                             </div>
                           </div>
                         </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 14%;"
-                      >
                         <div
-                          class="StyledProps--font StyledProps--main StyledProps--flex"
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 5%;"
                         >
                           <div
-                            class="Layout--horizontal StyledProps--main"
+                            class="StyledProps--font StyledProps--main paddedContainer"
                           >
                             <p
-                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                              style="--text-line-clamp: 1;"
+                              class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
                             >
-                              infra-1
+                              12
                             </p>
                           </div>
                         </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 5%;"
-                      >
                         <div
-                          class="StyledProps--font StyledProps--main paddedContainer"
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 28%;"
                         >
-                          <p
-                            class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
+                          <div
+                            class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
                           >
-                            12
-                          </p>
+                            <span
+                              class="bp3-popover-wrapper"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                  style="width: 18px; height: 18px;"
+                                />
+                              </span>
+                            </span>
+                            <span
+                              class="bp3-popover-wrapper"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                  style="width: 18px; height: 18px;"
+                                />
+                              </span>
+                            </span>
+                            <span
+                              class="bp3-popover-wrapper"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                  style="width: 18px; height: 18px;"
+                                />
+                              </span>
+                            </span>
+                            <span
+                              class="bp3-popover-wrapper"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                  style="width: 18px; height: 18px;"
+                                />
+                              </span>
+                            </span>
+                            <span
+                              class="bp3-popover-wrapper"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                  style="width: 18px; height: 18px;"
+                                />
+                              </span>
+                            </span>
+                            <span
+                              class="bp3-popover-wrapper"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                  style="width: 18px; height: 18px;"
+                                />
+                              </span>
+                            </span>
+                            <span
+                              class="bp3-popover-wrapper"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                  style="width: 18px; height: 18px;"
+                                />
+                              </span>
+                            </span>
+                            <p
+                              class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-left-xsmall"
+                            >
+                              +5
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 28%;"
-                      >
                         <div
-                          class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 23%;"
                         >
-                          <span
-                            class="bp3-popover-wrapper"
+                          <div
+                            class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
                           >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                              />
-                            </span>
-                          </span>
-                          <span
-                            class="bp3-popover-wrapper"
-                          >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                              />
-                            </span>
-                          </span>
-                          <span
-                            class="bp3-popover-wrapper"
-                          >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                              />
-                            </span>
-                          </span>
-                          <span
-                            class="bp3-popover-wrapper"
-                          >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                              />
-                            </span>
-                          </span>
-                          <span
-                            class="bp3-popover-wrapper"
-                          >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                              />
-                            </span>
-                          </span>
-                          <span
-                            class="bp3-popover-wrapper"
-                          >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                              />
-                            </span>
-                          </span>
-                          <span
-                            class="bp3-popover-wrapper"
-                          >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                              />
-                            </span>
-                          </span>
-                          <p
-                            class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-left-xsmall"
-                          >
-                            +5
-                          </p>
-                        </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 23%;"
-                      >
-                        <div
-                          class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
-                        >
-                          dummy date
+                            dummy date
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -324,195 +328,97 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                       role="row"
                     >
                       <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 18%;"
-                      />
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 17%;"
-                      />
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 14%;"
+                        class="TableV2--cells"
                       >
                         <div
-                          class="StyledProps--font StyledProps--main StyledProps--flex"
-                        >
-                          <div
-                            class="Layout--horizontal StyledProps--main"
-                          >
-                            <p
-                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                              style="--text-line-clamp: 1;"
-                            >
-                              infra-2
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 5%;"
-                      >
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 18%;"
+                        />
                         <div
-                          class="StyledProps--font StyledProps--main paddedContainer"
-                        >
-                          <p
-                            class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
-                          >
-                            2
-                          </p>
-                        </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 28%;"
-                      >
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 17%;"
+                        />
                         <div
-                          class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
-                        >
-                          <span
-                            class="bp3-popover-wrapper"
-                          >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                              />
-                            </span>
-                          </span>
-                          <span
-                            class="bp3-popover-wrapper"
-                          >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                              />
-                            </span>
-                          </span>
-                        </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 23%;"
-                      >
-                        <div
-                          class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
-                        >
-                          dummy date
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      class="TableV2--row TableV2--card"
-                      role="row"
-                    >
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 18%;"
-                      />
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 17%;"
-                      >
-                        <div
-                          class="StyledProps--font StyledProps--main paddedContainer"
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 14%;"
                         >
                           <div
                             class="StyledProps--font StyledProps--main StyledProps--flex"
                           >
                             <div
-                              class="StyledProps--font StyledProps--main envContainer"
+                              class="Layout--horizontal StyledProps--main"
                             >
                               <p
-                                class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+                                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
                                 style="--text-line-clamp: 1;"
                               >
-                                env-2
+                                infra-2
                               </p>
                             </div>
                           </div>
                         </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 14%;"
-                      >
                         <div
-                          class="StyledProps--font StyledProps--main StyledProps--flex"
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 5%;"
                         >
                           <div
-                            class="Layout--horizontal StyledProps--main"
+                            class="StyledProps--font StyledProps--main paddedContainer"
                           >
                             <p
-                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                              style="--text-line-clamp: 1;"
+                              class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
                             >
-                              infra-3
+                              2
                             </p>
                           </div>
                         </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 5%;"
-                      >
                         <div
-                          class="StyledProps--font StyledProps--main paddedContainer"
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 28%;"
                         >
-                          <p
-                            class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
-                          >
-                            1
-                          </p>
-                        </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 28%;"
-                      >
-                        <div
-                          class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
-                        >
-                          <span
-                            class="bp3-popover-wrapper"
+                          <div
+                            class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
                           >
                             <span
-                              class="bp3-popover-target"
+                              class="bp3-popover-wrapper"
                             >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                              />
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                  style="width: 18px; height: 18px;"
+                                />
+                              </span>
                             </span>
-                          </span>
+                            <span
+                              class="bp3-popover-wrapper"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                  style="width: 18px; height: 18px;"
+                                />
+                              </span>
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 23%;"
-                      >
                         <div
-                          class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 23%;"
                         >
-                          dummy date
+                          <div
+                            class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
+                          >
+                            dummy date
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -521,93 +427,203 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                       role="row"
                     >
                       <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 18%;"
-                      />
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 17%;"
-                      />
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 14%;"
+                        class="TableV2--cells"
                       >
                         <div
-                          class="StyledProps--font StyledProps--main StyledProps--flex"
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 18%;"
+                        />
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 17%;"
                         >
                           <div
-                            class="Layout--horizontal StyledProps--main"
+                            class="StyledProps--font StyledProps--main paddedContainer"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main StyledProps--flex"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main envContainer"
+                              >
+                                <p
+                                  class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+                                  style="--text-line-clamp: 1;"
+                                >
+                                  env-2
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 14%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main StyledProps--flex"
+                          >
+                            <div
+                              class="Layout--horizontal StyledProps--main"
+                            >
+                              <p
+                                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                                style="--text-line-clamp: 1;"
+                              >
+                                infra-3
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 5%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main paddedContainer"
                           >
                             <p
-                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                              style="--text-line-clamp: 1;"
+                              class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
                             >
-                              infra-4
+                              1
                             </p>
                           </div>
                         </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 5%;"
-                      >
                         <div
-                          class="StyledProps--font StyledProps--main paddedContainer"
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 28%;"
                         >
-                          <p
-                            class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
-                          >
-                            2
-                          </p>
-                        </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 28%;"
-                      >
-                        <div
-                          class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
-                        >
-                          <span
-                            class="bp3-popover-wrapper"
+                          <div
+                            class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
                           >
                             <span
-                              class="bp3-popover-target"
+                              class="bp3-popover-wrapper"
                             >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                              />
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                  style="width: 18px; height: 18px;"
+                                />
+                              </span>
                             </span>
-                          </span>
-                          <span
-                            class="bp3-popover-wrapper"
+                          </div>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 23%;"
+                        >
+                          <div
+                            class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
                           >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                              />
-                            </span>
-                          </span>
+                            dummy date
+                          </div>
                         </div>
                       </div>
+                    </div>
+                    <div
+                      class="TableV2--row TableV2--card"
+                      role="row"
+                    >
                       <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 23%;"
+                        class="TableV2--cells"
                       >
                         <div
-                          class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 18%;"
+                        />
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 17%;"
+                        />
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 14%;"
                         >
-                          dummy date
+                          <div
+                            class="StyledProps--font StyledProps--main StyledProps--flex"
+                          >
+                            <div
+                              class="Layout--horizontal StyledProps--main"
+                            >
+                              <p
+                                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                                style="--text-line-clamp: 1;"
+                              >
+                                infra-4
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 5%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main paddedContainer"
+                          >
+                            <p
+                              class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
+                            >
+                              2
+                            </p>
+                          </div>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 28%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                          >
+                            <span
+                              class="bp3-popover-wrapper"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                  style="width: 18px; height: 18px;"
+                                />
+                              </span>
+                            </span>
+                            <span
+                              class="bp3-popover-wrapper"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                  style="width: 18px; height: 18px;"
+                                />
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 23%;"
+                        >
+                          <div
+                            class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
+                          >
+                            dummy date
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -674,107 +690,111 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                       role="row"
                     >
                       <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 18%;"
-                      >
-                        <p
-                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                          style="--text-line-clamp: 1;"
-                        >
-                          artifact-2
-                        </p>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 17%;"
+                        class="TableV2--cells"
                       >
                         <div
-                          class="StyledProps--font StyledProps--main paddedContainer"
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 18%;"
+                        >
+                          <p
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                            style="--text-line-clamp: 1;"
+                          >
+                            artifact-2
+                          </p>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 17%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main paddedContainer"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main StyledProps--flex"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main envContainer"
+                              >
+                                <p
+                                  class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+                                  style="--text-line-clamp: 1;"
+                                >
+                                  env-3
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 14%;"
                         >
                           <div
                             class="StyledProps--font StyledProps--main StyledProps--flex"
                           >
                             <div
-                              class="StyledProps--font StyledProps--main envContainer"
+                              class="Layout--horizontal StyledProps--main"
                             >
                               <p
-                                class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+                                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
                                 style="--text-line-clamp: 1;"
                               >
-                                env-3
+                                infra-5
                               </p>
                             </div>
                           </div>
                         </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 14%;"
-                      >
                         <div
-                          class="StyledProps--font StyledProps--main StyledProps--flex"
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 5%;"
                         >
                           <div
-                            class="Layout--horizontal StyledProps--main"
+                            class="StyledProps--font StyledProps--main paddedContainer"
                           >
                             <p
-                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                              style="--text-line-clamp: 1;"
+                              class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
                             >
-                              infra-5
+                              1
                             </p>
                           </div>
                         </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 5%;"
-                      >
                         <div
-                          class="StyledProps--font StyledProps--main paddedContainer"
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 28%;"
                         >
-                          <p
-                            class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
-                          >
-                            1
-                          </p>
-                        </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 28%;"
-                      >
-                        <div
-                          class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
-                        >
-                          <span
-                            class="bp3-popover-wrapper"
+                          <div
+                            class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
                           >
                             <span
-                              class="bp3-popover-target"
+                              class="bp3-popover-wrapper"
                             >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                              />
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                  style="width: 18px; height: 18px;"
+                                />
+                              </span>
                             </span>
-                          </span>
+                          </div>
                         </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 23%;"
-                      >
                         <div
-                          class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 23%;"
                         >
-                          dummy date
+                          <div
+                            class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
+                          >
+                            dummy date
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -783,195 +803,97 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                       role="row"
                     >
                       <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 18%;"
-                      />
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 17%;"
-                      />
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 14%;"
+                        class="TableV2--cells"
                       >
                         <div
-                          class="StyledProps--font StyledProps--main StyledProps--flex"
-                        >
-                          <div
-                            class="Layout--horizontal StyledProps--main"
-                          >
-                            <p
-                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                              style="--text-line-clamp: 1;"
-                            >
-                              infra-6
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 5%;"
-                      >
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 18%;"
+                        />
                         <div
-                          class="StyledProps--font StyledProps--main paddedContainer"
-                        >
-                          <p
-                            class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
-                          >
-                            2
-                          </p>
-                        </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 28%;"
-                      >
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 17%;"
+                        />
                         <div
-                          class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
-                        >
-                          <span
-                            class="bp3-popover-wrapper"
-                          >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                              />
-                            </span>
-                          </span>
-                          <span
-                            class="bp3-popover-wrapper"
-                          >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                              />
-                            </span>
-                          </span>
-                        </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 23%;"
-                      >
-                        <div
-                          class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
-                        >
-                          dummy date
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      class="TableV2--row TableV2--card"
-                      role="row"
-                    >
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 18%;"
-                      />
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 17%;"
-                      >
-                        <div
-                          class="StyledProps--font StyledProps--main paddedContainer"
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 14%;"
                         >
                           <div
                             class="StyledProps--font StyledProps--main StyledProps--flex"
                           >
                             <div
-                              class="StyledProps--font StyledProps--main envContainer"
+                              class="Layout--horizontal StyledProps--main"
                             >
                               <p
-                                class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+                                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
                                 style="--text-line-clamp: 1;"
                               >
-                                env-4
+                                infra-6
                               </p>
                             </div>
                           </div>
                         </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 14%;"
-                      >
                         <div
-                          class="StyledProps--font StyledProps--main StyledProps--flex"
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 5%;"
                         >
                           <div
-                            class="Layout--horizontal StyledProps--main"
+                            class="StyledProps--font StyledProps--main paddedContainer"
                           >
                             <p
-                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                              style="--text-line-clamp: 1;"
+                              class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
                             >
-                              infra-7
+                              2
                             </p>
                           </div>
                         </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 5%;"
-                      >
                         <div
-                          class="StyledProps--font StyledProps--main paddedContainer"
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 28%;"
                         >
-                          <p
-                            class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
-                          >
-                            1
-                          </p>
-                        </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 28%;"
-                      >
-                        <div
-                          class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
-                        >
-                          <span
-                            class="bp3-popover-wrapper"
+                          <div
+                            class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
                           >
                             <span
-                              class="bp3-popover-target"
+                              class="bp3-popover-wrapper"
                             >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                              />
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                  style="width: 18px; height: 18px;"
+                                />
+                              </span>
                             </span>
-                          </span>
+                            <span
+                              class="bp3-popover-wrapper"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                  style="width: 18px; height: 18px;"
+                                />
+                              </span>
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 23%;"
-                      >
                         <div
-                          class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 23%;"
                         >
-                          dummy date
+                          <div
+                            class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
+                          >
+                            dummy date
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -980,93 +902,203 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                       role="row"
                     >
                       <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 18%;"
-                      />
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 17%;"
-                      />
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 14%;"
+                        class="TableV2--cells"
                       >
                         <div
-                          class="StyledProps--font StyledProps--main StyledProps--flex"
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 18%;"
+                        />
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 17%;"
                         >
                           <div
-                            class="Layout--horizontal StyledProps--main"
+                            class="StyledProps--font StyledProps--main paddedContainer"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main StyledProps--flex"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main envContainer"
+                              >
+                                <p
+                                  class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+                                  style="--text-line-clamp: 1;"
+                                >
+                                  env-4
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 14%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main StyledProps--flex"
+                          >
+                            <div
+                              class="Layout--horizontal StyledProps--main"
+                            >
+                              <p
+                                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                                style="--text-line-clamp: 1;"
+                              >
+                                infra-7
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 5%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main paddedContainer"
                           >
                             <p
-                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                              style="--text-line-clamp: 1;"
+                              class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
                             >
-                              infra-8
+                              1
                             </p>
                           </div>
                         </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 5%;"
-                      >
                         <div
-                          class="StyledProps--font StyledProps--main paddedContainer"
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 28%;"
                         >
-                          <p
-                            class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
-                          >
-                            2
-                          </p>
-                        </div>
-                      </div>
-                      <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 28%;"
-                      >
-                        <div
-                          class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
-                        >
-                          <span
-                            class="bp3-popover-wrapper"
+                          <div
+                            class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
                           >
                             <span
-                              class="bp3-popover-target"
+                              class="bp3-popover-wrapper"
                             >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                              />
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                  style="width: 18px; height: 18px;"
+                                />
+                              </span>
                             </span>
-                          </span>
-                          <span
-                            class="bp3-popover-wrapper"
+                          </div>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 23%;"
+                        >
+                          <div
+                            class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
                           >
-                            <span
-                              class="bp3-popover-target"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                                style="width: 18px; height: 18px;"
-                              />
-                            </span>
-                          </span>
+                            dummy date
+                          </div>
                         </div>
                       </div>
+                    </div>
+                    <div
+                      class="TableV2--row TableV2--card"
+                      role="row"
+                    >
                       <div
-                        class="TableV2--cell"
-                        role="cell"
-                        style="width: 23%;"
+                        class="TableV2--cells"
                       >
                         <div
-                          class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 18%;"
+                        />
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 17%;"
+                        />
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 14%;"
                         >
-                          dummy date
+                          <div
+                            class="StyledProps--font StyledProps--main StyledProps--flex"
+                          >
+                            <div
+                              class="Layout--horizontal StyledProps--main"
+                            >
+                              <p
+                                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                                style="--text-line-clamp: 1;"
+                              >
+                                infra-8
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 5%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main paddedContainer"
+                          >
+                            <p
+                              class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
+                            >
+                              2
+                            </p>
+                          </div>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 28%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                          >
+                            <span
+                              class="bp3-popover-wrapper"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                  style="width: 18px; height: 18px;"
+                                />
+                              </span>
+                            </span>
+                            <span
+                              class="bp3-popover-wrapper"
+                            >
+                              <span
+                                class="bp3-popover-target"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                  style="width: 18px; height: 18px;"
+                                />
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 23%;"
+                        >
+                          <div
+                            class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
+                          >
+                            dummy date
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1204,198 +1236,202 @@ exports[`ActiveInstance Details Dialog Open details dialog 1`] = `
                     role="row"
                   >
                     <div
-                      class="TableV2--cell"
-                      role="cell"
-                      style="width: 18%;"
-                    >
-                      <p
-                        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                        style="--text-line-clamp: 1;"
-                      >
-                        artifact-1
-                      </p>
-                    </div>
-                    <div
-                      class="TableV2--cell"
-                      role="cell"
-                      style="width: 17%;"
+                      class="TableV2--cells"
                     >
                       <div
-                        class="StyledProps--font StyledProps--main paddedContainer"
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 18%;"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                          style="--text-line-clamp: 1;"
+                        >
+                          artifact-1
+                        </p>
+                      </div>
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 17%;"
+                      >
+                        <div
+                          class="StyledProps--font StyledProps--main paddedContainer"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main StyledProps--flex"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main envContainer"
+                            >
+                              <p
+                                class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+                                style="--text-line-clamp: 1;"
+                              >
+                                env-1
+                              </p>
+                            </div>
+                            <p
+                              class="StyledProps--font StyledProps--main plusMore StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey500"
+                              style="line-height: small;"
+                            >
+                              + 
+                              1
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 14%;"
                       >
                         <div
                           class="StyledProps--font StyledProps--main StyledProps--flex"
                         >
                           <div
-                            class="StyledProps--font StyledProps--main envContainer"
+                            class="Layout--horizontal StyledProps--main"
                           >
                             <p
-                              class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
                               style="--text-line-clamp: 1;"
                             >
-                              env-1
+                              infra-1
+                            </p>
+                            <p
+                              class="StyledProps--font StyledProps--main plusMore StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey500"
+                              style="line-height: small;"
+                            >
+                              + 
+                              3
                             </p>
                           </div>
-                          <p
-                            class="StyledProps--font StyledProps--main plusMore StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey500"
-                            style="line-height: small;"
-                          >
-                            + 
-                            1
-                          </p>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      class="TableV2--cell"
-                      role="cell"
-                      style="width: 14%;"
-                    >
                       <div
-                        class="StyledProps--font StyledProps--main StyledProps--flex"
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 5%;"
                       >
                         <div
-                          class="Layout--horizontal StyledProps--main"
+                          class="StyledProps--font StyledProps--main paddedContainer"
                         >
                           <p
-                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                            style="--text-line-clamp: 1;"
+                            class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
                           >
-                            infra-1
-                          </p>
-                          <p
-                            class="StyledProps--font StyledProps--main plusMore StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey500"
-                            style="line-height: small;"
-                          >
-                            + 
-                            3
+                            17
                           </p>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      class="TableV2--cell"
-                      role="cell"
-                      style="width: 5%;"
-                    >
                       <div
-                        class="StyledProps--font StyledProps--main paddedContainer"
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 28%;"
                       >
-                        <p
-                          class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
+                        <div
+                          class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
                         >
-                          17
-                        </p>
+                          <span
+                            class="bp3-popover-wrapper"
+                          >
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                style="width: 18px; height: 18px;"
+                              />
+                            </span>
+                          </span>
+                          <span
+                            class="bp3-popover-wrapper"
+                          >
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                style="width: 18px; height: 18px;"
+                              />
+                            </span>
+                          </span>
+                          <span
+                            class="bp3-popover-wrapper"
+                          >
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                style="width: 18px; height: 18px;"
+                              />
+                            </span>
+                          </span>
+                          <span
+                            class="bp3-popover-wrapper"
+                          >
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                style="width: 18px; height: 18px;"
+                              />
+                            </span>
+                          </span>
+                          <span
+                            class="bp3-popover-wrapper"
+                          >
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                style="width: 18px; height: 18px;"
+                              />
+                            </span>
+                          </span>
+                          <span
+                            class="bp3-popover-wrapper"
+                          >
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                style="width: 18px; height: 18px;"
+                              />
+                            </span>
+                          </span>
+                          <span
+                            class="bp3-popover-wrapper"
+                          >
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                style="width: 18px; height: 18px;"
+                              />
+                            </span>
+                          </span>
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-left-xsmall"
+                          >
+                            +10
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    <div
-                      class="TableV2--cell"
-                      role="cell"
-                      style="width: 28%;"
-                    >
                       <div
-                        class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 23%;"
                       >
-                        <span
-                          class="bp3-popover-wrapper"
+                        <div
+                          class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
                         >
-                          <span
-                            class="bp3-popover-target"
-                          >
-                            <div
-                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                              style="width: 18px; height: 18px;"
-                            />
-                          </span>
-                        </span>
-                        <span
-                          class="bp3-popover-wrapper"
-                        >
-                          <span
-                            class="bp3-popover-target"
-                          >
-                            <div
-                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                              style="width: 18px; height: 18px;"
-                            />
-                          </span>
-                        </span>
-                        <span
-                          class="bp3-popover-wrapper"
-                        >
-                          <span
-                            class="bp3-popover-target"
-                          >
-                            <div
-                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                              style="width: 18px; height: 18px;"
-                            />
-                          </span>
-                        </span>
-                        <span
-                          class="bp3-popover-wrapper"
-                        >
-                          <span
-                            class="bp3-popover-target"
-                          >
-                            <div
-                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                              style="width: 18px; height: 18px;"
-                            />
-                          </span>
-                        </span>
-                        <span
-                          class="bp3-popover-wrapper"
-                        >
-                          <span
-                            class="bp3-popover-target"
-                          >
-                            <div
-                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                              style="width: 18px; height: 18px;"
-                            />
-                          </span>
-                        </span>
-                        <span
-                          class="bp3-popover-wrapper"
-                        >
-                          <span
-                            class="bp3-popover-target"
-                          >
-                            <div
-                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                              style="width: 18px; height: 18px;"
-                            />
-                          </span>
-                        </span>
-                        <span
-                          class="bp3-popover-wrapper"
-                        >
-                          <span
-                            class="bp3-popover-target"
-                          >
-                            <div
-                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                              style="width: 18px; height: 18px;"
-                            />
-                          </span>
-                        </span>
-                        <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-left-xsmall"
-                        >
-                          +10
-                        </p>
-                      </div>
-                    </div>
-                    <div
-                      class="TableV2--cell"
-                      role="cell"
-                      style="width: 23%;"
-                    >
-                      <div
-                        class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
-                      >
-                        dummy date
+                          dummy date
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1460,181 +1496,185 @@ exports[`ActiveInstance Details Dialog Open details dialog 1`] = `
                     role="row"
                   >
                     <div
-                      class="TableV2--cell"
-                      role="cell"
-                      style="width: 18%;"
-                    >
-                      <p
-                        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                        style="--text-line-clamp: 1;"
-                      >
-                        artifact-2
-                      </p>
-                    </div>
-                    <div
-                      class="TableV2--cell"
-                      role="cell"
-                      style="width: 17%;"
+                      class="TableV2--cells"
                     >
                       <div
-                        class="StyledProps--font StyledProps--main paddedContainer"
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 18%;"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                          style="--text-line-clamp: 1;"
+                        >
+                          artifact-2
+                        </p>
+                      </div>
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 17%;"
+                      >
+                        <div
+                          class="StyledProps--font StyledProps--main paddedContainer"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main StyledProps--flex"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main envContainer"
+                            >
+                              <p
+                                class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+                                style="--text-line-clamp: 1;"
+                              >
+                                env-3
+                              </p>
+                            </div>
+                            <p
+                              class="StyledProps--font StyledProps--main plusMore StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey500"
+                              style="line-height: small;"
+                            >
+                              + 
+                              1
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 14%;"
                       >
                         <div
                           class="StyledProps--font StyledProps--main StyledProps--flex"
                         >
                           <div
-                            class="StyledProps--font StyledProps--main envContainer"
+                            class="Layout--horizontal StyledProps--main"
                           >
                             <p
-                              class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
                               style="--text-line-clamp: 1;"
                             >
-                              env-3
+                              infra-5
+                            </p>
+                            <p
+                              class="StyledProps--font StyledProps--main plusMore StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey500"
+                              style="line-height: small;"
+                            >
+                              + 
+                              3
                             </p>
                           </div>
-                          <p
-                            class="StyledProps--font StyledProps--main plusMore StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey500"
-                            style="line-height: small;"
-                          >
-                            + 
-                            1
-                          </p>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      class="TableV2--cell"
-                      role="cell"
-                      style="width: 14%;"
-                    >
                       <div
-                        class="StyledProps--font StyledProps--main StyledProps--flex"
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 5%;"
                       >
                         <div
-                          class="Layout--horizontal StyledProps--main"
+                          class="StyledProps--font StyledProps--main paddedContainer"
                         >
                           <p
-                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                            style="--text-line-clamp: 1;"
+                            class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
                           >
-                            infra-5
-                          </p>
-                          <p
-                            class="StyledProps--font StyledProps--main plusMore StyledProps--font-size-xsmall StyledProps--color StyledProps--color-grey500"
-                            style="line-height: small;"
-                          >
-                            + 
-                            3
+                            6
                           </p>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      class="TableV2--cell"
-                      role="cell"
-                      style="width: 5%;"
-                    >
                       <div
-                        class="StyledProps--font StyledProps--main paddedContainer"
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 28%;"
                       >
-                        <p
-                          class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
+                        <div
+                          class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
                         >
-                          6
-                        </p>
+                          <span
+                            class="bp3-popover-wrapper"
+                          >
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                style="width: 18px; height: 18px;"
+                              />
+                            </span>
+                          </span>
+                          <span
+                            class="bp3-popover-wrapper"
+                          >
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                style="width: 18px; height: 18px;"
+                              />
+                            </span>
+                          </span>
+                          <span
+                            class="bp3-popover-wrapper"
+                          >
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                style="width: 18px; height: 18px;"
+                              />
+                            </span>
+                          </span>
+                          <span
+                            class="bp3-popover-wrapper"
+                          >
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                style="width: 18px; height: 18px;"
+                              />
+                            </span>
+                          </span>
+                          <span
+                            class="bp3-popover-wrapper"
+                          >
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                style="width: 18px; height: 18px;"
+                              />
+                            </span>
+                          </span>
+                          <span
+                            class="bp3-popover-wrapper"
+                          >
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                                style="width: 18px; height: 18px;"
+                              />
+                            </span>
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                    <div
-                      class="TableV2--cell"
-                      role="cell"
-                      style="width: 28%;"
-                    >
                       <div
-                        class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                        class="TableV2--cell"
+                        role="cell"
+                        style="width: 23%;"
                       >
-                        <span
-                          class="bp3-popover-wrapper"
+                        <div
+                          class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
                         >
-                          <span
-                            class="bp3-popover-target"
-                          >
-                            <div
-                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                              style="width: 18px; height: 18px;"
-                            />
-                          </span>
-                        </span>
-                        <span
-                          class="bp3-popover-wrapper"
-                        >
-                          <span
-                            class="bp3-popover-target"
-                          >
-                            <div
-                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                              style="width: 18px; height: 18px;"
-                            />
-                          </span>
-                        </span>
-                        <span
-                          class="bp3-popover-wrapper"
-                        >
-                          <span
-                            class="bp3-popover-target"
-                          >
-                            <div
-                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                              style="width: 18px; height: 18px;"
-                            />
-                          </span>
-                        </span>
-                        <span
-                          class="bp3-popover-wrapper"
-                        >
-                          <span
-                            class="bp3-popover-target"
-                          >
-                            <div
-                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                              style="width: 18px; height: 18px;"
-                            />
-                          </span>
-                        </span>
-                        <span
-                          class="bp3-popover-wrapper"
-                        >
-                          <span
-                            class="bp3-popover-target"
-                          >
-                            <div
-                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                              style="width: 18px; height: 18px;"
-                            />
-                          </span>
-                        </span>
-                        <span
-                          class="bp3-popover-wrapper"
-                        >
-                          <span
-                            class="bp3-popover-target"
-                          >
-                            <div
-                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                              style="width: 18px; height: 18px;"
-                            />
-                          </span>
-                        </span>
-                      </div>
-                    </div>
-                    <div
-                      class="TableV2--cell"
-                      role="cell"
-                      style="width: 23%;"
-                    >
-                      <div
-                        class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
-                      >
-                        dummy date
+                          dummy date
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1874,168 +1914,172 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                   role="row"
                 >
                   <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 26%;"
-                  >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                      style="--text-line-clamp: 1;"
-                    >
-                      artifact-1
-                    </p>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 22%;"
+                    class="TableV2--cells"
                   >
                     <div
-                      class="StyledProps--font StyledProps--main paddedContainer"
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 26%;"
+                    >
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                        style="--text-line-clamp: 1;"
+                      >
+                        artifact-1
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 22%;"
                     >
                       <div
-                        class="StyledProps--font StyledProps--main StyledProps--flex"
+                        class="StyledProps--font StyledProps--main paddedContainer"
                       >
                         <div
-                          class="StyledProps--font StyledProps--main envContainer"
+                          class="StyledProps--font StyledProps--main StyledProps--flex"
                         >
-                          <p
-                            class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
-                            style="--text-line-clamp: 1;"
+                          <div
+                            class="StyledProps--font StyledProps--main envContainer"
                           >
-                            env-1
-                          </p>
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+                              style="--text-line-clamp: 1;"
+                            >
+                              env-1
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 15%;"
-                  >
                     <div
-                      class="StyledProps--font StyledProps--main paddedContainer"
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 15%;"
                     >
-                      <p
-                        class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-grey100"
+                      <div
+                        class="StyledProps--font StyledProps--main paddedContainer"
                       >
-                        2
-                      </p>
+                        <p
+                          class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-grey100"
+                        >
+                          2
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 10%;"
-                  >
                     <div
-                      class="StyledProps--font StyledProps--main paddedContainer"
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 10%;"
                     >
-                      <p
-                        class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
+                      <div
+                        class="StyledProps--font StyledProps--main paddedContainer"
                       >
-                        14
-                      </p>
+                        <p
+                          class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
+                        >
+                          14
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 27%;"
-                  >
                     <div
-                      class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 27%;"
                     >
-                      <span
-                        class="bp3-popover-wrapper"
+                      <div
+                        class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
                       >
                         <span
-                          class="bp3-popover-target"
+                          class="bp3-popover-wrapper"
                         >
-                          <div
-                            class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                            style="width: 18px; height: 18px;"
-                          />
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                              style="width: 18px; height: 18px;"
+                            />
+                          </span>
                         </span>
-                      </span>
-                      <span
-                        class="bp3-popover-wrapper"
-                      >
                         <span
-                          class="bp3-popover-target"
+                          class="bp3-popover-wrapper"
                         >
-                          <div
-                            class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                            style="width: 18px; height: 18px;"
-                          />
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                              style="width: 18px; height: 18px;"
+                            />
+                          </span>
                         </span>
-                      </span>
-                      <span
-                        class="bp3-popover-wrapper"
-                      >
                         <span
-                          class="bp3-popover-target"
+                          class="bp3-popover-wrapper"
                         >
-                          <div
-                            class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                            style="width: 18px; height: 18px;"
-                          />
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                              style="width: 18px; height: 18px;"
+                            />
+                          </span>
                         </span>
-                      </span>
-                      <span
-                        class="bp3-popover-wrapper"
-                      >
                         <span
-                          class="bp3-popover-target"
+                          class="bp3-popover-wrapper"
                         >
-                          <div
-                            class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                            style="width: 18px; height: 18px;"
-                          />
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                              style="width: 18px; height: 18px;"
+                            />
+                          </span>
                         </span>
-                      </span>
-                      <span
-                        class="bp3-popover-wrapper"
-                      >
                         <span
-                          class="bp3-popover-target"
+                          class="bp3-popover-wrapper"
                         >
-                          <div
-                            class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                            style="width: 18px; height: 18px;"
-                          />
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                              style="width: 18px; height: 18px;"
+                            />
+                          </span>
                         </span>
-                      </span>
-                      <span
-                        class="bp3-popover-wrapper"
-                      >
                         <span
-                          class="bp3-popover-target"
+                          class="bp3-popover-wrapper"
                         >
-                          <div
-                            class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                            style="width: 18px; height: 18px;"
-                          />
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                              style="width: 18px; height: 18px;"
+                            />
+                          </span>
                         </span>
-                      </span>
-                      <span
-                        class="bp3-popover-wrapper"
-                      >
                         <span
-                          class="bp3-popover-target"
+                          class="bp3-popover-wrapper"
                         >
-                          <div
-                            class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                            style="width: 18px; height: 18px;"
-                          />
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                              style="width: 18px; height: 18px;"
+                            />
+                          </span>
                         </span>
-                      </span>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-left-xsmall"
-                      >
-                        +7
-                      </p>
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-left-xsmall"
+                        >
+                          +7
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -2044,108 +2088,112 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                   role="row"
                 >
                   <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 26%;"
-                  />
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 22%;"
+                    class="TableV2--cells"
                   >
                     <div
-                      class="StyledProps--font StyledProps--main paddedContainer"
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 26%;"
+                    />
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 22%;"
                     >
                       <div
-                        class="StyledProps--font StyledProps--main StyledProps--flex"
+                        class="StyledProps--font StyledProps--main paddedContainer"
                       >
                         <div
-                          class="StyledProps--font StyledProps--main envContainer"
+                          class="StyledProps--font StyledProps--main StyledProps--flex"
                         >
-                          <p
-                            class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
-                            style="--text-line-clamp: 1;"
+                          <div
+                            class="StyledProps--font StyledProps--main envContainer"
                           >
-                            env-2
-                          </p>
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+                              style="--text-line-clamp: 1;"
+                            >
+                              env-2
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 15%;"
-                  >
                     <div
-                      class="StyledProps--font StyledProps--main paddedContainer"
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 15%;"
                     >
-                      <p
-                        class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-grey100"
+                      <div
+                        class="StyledProps--font StyledProps--main paddedContainer"
                       >
-                        2
-                      </p>
+                        <p
+                          class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-grey100"
+                        >
+                          2
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 10%;"
-                  >
                     <div
-                      class="StyledProps--font StyledProps--main paddedContainer"
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 10%;"
                     >
-                      <p
-                        class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
+                      <div
+                        class="StyledProps--font StyledProps--main paddedContainer"
                       >
-                        3
-                      </p>
+                        <p
+                          class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
+                        >
+                          3
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 27%;"
-                  >
                     <div
-                      class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 27%;"
                     >
-                      <span
-                        class="bp3-popover-wrapper"
+                      <div
+                        class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
                       >
                         <span
-                          class="bp3-popover-target"
+                          class="bp3-popover-wrapper"
                         >
-                          <div
-                            class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                            style="width: 18px; height: 18px;"
-                          />
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                              style="width: 18px; height: 18px;"
+                            />
+                          </span>
                         </span>
-                      </span>
-                      <span
-                        class="bp3-popover-wrapper"
-                      >
                         <span
-                          class="bp3-popover-target"
+                          class="bp3-popover-wrapper"
                         >
-                          <div
-                            class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                            style="width: 18px; height: 18px;"
-                          />
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                              style="width: 18px; height: 18px;"
+                            />
+                          </span>
                         </span>
-                      </span>
-                      <span
-                        class="bp3-popover-wrapper"
-                      >
                         <span
-                          class="bp3-popover-target"
+                          class="bp3-popover-wrapper"
                         >
-                          <div
-                            class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                            style="width: 18px; height: 18px;"
-                          />
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                              style="width: 18px; height: 18px;"
+                            />
+                          </span>
                         </span>
-                      </span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -2154,115 +2202,119 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                   role="row"
                 >
                   <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 26%;"
-                  >
-                    <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                      style="--text-line-clamp: 1;"
-                    >
-                      artifact-2
-                    </p>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 22%;"
+                    class="TableV2--cells"
                   >
                     <div
-                      class="StyledProps--font StyledProps--main paddedContainer"
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 26%;"
+                    >
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                        style="--text-line-clamp: 1;"
+                      >
+                        artifact-2
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 22%;"
                     >
                       <div
-                        class="StyledProps--font StyledProps--main StyledProps--flex"
+                        class="StyledProps--font StyledProps--main paddedContainer"
                       >
                         <div
-                          class="StyledProps--font StyledProps--main envContainer"
+                          class="StyledProps--font StyledProps--main StyledProps--flex"
                         >
-                          <p
-                            class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
-                            style="--text-line-clamp: 1;"
+                          <div
+                            class="StyledProps--font StyledProps--main envContainer"
                           >
-                            env-3
-                          </p>
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+                              style="--text-line-clamp: 1;"
+                            >
+                              env-3
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 15%;"
-                  >
                     <div
-                      class="StyledProps--font StyledProps--main paddedContainer"
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 15%;"
                     >
-                      <p
-                        class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-grey100"
+                      <div
+                        class="StyledProps--font StyledProps--main paddedContainer"
                       >
-                        2
-                      </p>
+                        <p
+                          class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-grey100"
+                        >
+                          2
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 10%;"
-                  >
                     <div
-                      class="StyledProps--font StyledProps--main paddedContainer"
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 10%;"
                     >
-                      <p
-                        class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
+                      <div
+                        class="StyledProps--font StyledProps--main paddedContainer"
                       >
-                        3
-                      </p>
+                        <p
+                          class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
+                        >
+                          3
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 27%;"
-                  >
                     <div
-                      class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 27%;"
                     >
-                      <span
-                        class="bp3-popover-wrapper"
+                      <div
+                        class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
                       >
                         <span
-                          class="bp3-popover-target"
+                          class="bp3-popover-wrapper"
                         >
-                          <div
-                            class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                            style="width: 18px; height: 18px;"
-                          />
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                              style="width: 18px; height: 18px;"
+                            />
+                          </span>
                         </span>
-                      </span>
-                      <span
-                        class="bp3-popover-wrapper"
-                      >
                         <span
-                          class="bp3-popover-target"
+                          class="bp3-popover-wrapper"
                         >
-                          <div
-                            class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                            style="width: 18px; height: 18px;"
-                          />
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                              style="width: 18px; height: 18px;"
+                            />
+                          </span>
                         </span>
-                      </span>
-                      <span
-                        class="bp3-popover-wrapper"
-                      >
                         <span
-                          class="bp3-popover-target"
+                          class="bp3-popover-wrapper"
                         >
-                          <div
-                            class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                            style="width: 18px; height: 18px;"
-                          />
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                              style="width: 18px; height: 18px;"
+                            />
+                          </span>
                         </span>
-                      </span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -2271,108 +2323,112 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                   role="row"
                 >
                   <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 26%;"
-                  />
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 22%;"
+                    class="TableV2--cells"
                   >
                     <div
-                      class="StyledProps--font StyledProps--main paddedContainer"
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 26%;"
+                    />
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 22%;"
                     >
                       <div
-                        class="StyledProps--font StyledProps--main StyledProps--flex"
+                        class="StyledProps--font StyledProps--main paddedContainer"
                       >
                         <div
-                          class="StyledProps--font StyledProps--main envContainer"
+                          class="StyledProps--font StyledProps--main StyledProps--flex"
                         >
-                          <p
-                            class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
-                            style="--text-line-clamp: 1;"
+                          <div
+                            class="StyledProps--font StyledProps--main envContainer"
                           >
-                            env-4
-                          </p>
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main environmentRow StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+                              style="--text-line-clamp: 1;"
+                            >
+                              env-4
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 15%;"
-                  >
                     <div
-                      class="StyledProps--font StyledProps--main paddedContainer"
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 15%;"
                     >
-                      <p
-                        class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-grey100"
+                      <div
+                        class="StyledProps--font StyledProps--main paddedContainer"
                       >
-                        2
-                      </p>
+                        <p
+                          class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-grey100"
+                        >
+                          2
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 10%;"
-                  >
                     <div
-                      class="StyledProps--font StyledProps--main paddedContainer"
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 10%;"
                     >
-                      <p
-                        class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
+                      <div
+                        class="StyledProps--font StyledProps--main paddedContainer"
                       >
-                        3
-                      </p>
+                        <p
+                          class="StyledProps--font StyledProps--main countBadge overflow StyledProps--font-size-xsmall StyledProps--font-weight-bold StyledProps--background-primary1"
+                        >
+                          3
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <div
-                    class="TableV2--cell"
-                    role="cell"
-                    style="width: 27%;"
-                  >
                     <div
-                      class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 27%;"
                     >
-                      <span
-                        class="bp3-popover-wrapper"
+                      <div
+                        class="StyledProps--font StyledProps--main paddedContainer hexContainer StyledProps--flex StyledProps--flex-justifyContent-flex-start"
                       >
                         <span
-                          class="bp3-popover-target"
+                          class="bp3-popover-wrapper"
                         >
-                          <div
-                            class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                            style="width: 18px; height: 18px;"
-                          />
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                              style="width: 18px; height: 18px;"
+                            />
+                          </span>
                         </span>
-                      </span>
-                      <span
-                        class="bp3-popover-wrapper"
-                      >
                         <span
-                          class="bp3-popover-target"
+                          class="bp3-popover-wrapper"
                         >
-                          <div
-                            class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                            style="width: 18px; height: 18px;"
-                          />
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                              style="width: 18px; height: 18px;"
+                            />
+                          </span>
                         </span>
-                      </span>
-                      <span
-                        class="bp3-popover-wrapper"
-                      >
                         <span
-                          class="bp3-popover-target"
+                          class="bp3-popover-wrapper"
                         >
-                          <div
-                            class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                            style="width: 18px; height: 18px;"
-                          />
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+                              style="width: 18px; height: 18px;"
+                            />
+                          </span>
                         </span>
-                      </span>
+                      </div>
                     </div>
                   </div>
                 </div>
