@@ -1706,6 +1706,291 @@ exports[`ActiveInstance Details Dialog Open details dialog 1`] = `
 </div>
 `;
 
+exports[`ActiveInstance Tab states change tab to deployments 1`] = `
+<div>
+  <div
+    class="bp3-card bp3-elevation-0 Card--card activeServiceInstances"
+  >
+    <div
+      class="Layout--vertical StyledProps--main tabsStyle"
+    >
+      <div
+        class="bp3-tabs Tabs--main Tabs--horizontal"
+      >
+        <div
+          class="bp3-tab-list"
+          role="tablist"
+        >
+          <div
+            class="bp3-tab-indicator-wrapper"
+            style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
+          >
+            <div
+              class="bp3-tab-indicator"
+            />
+          </div>
+          <div
+            aria-controls="bp3-tab-panel_ServiceDetailTabs_Active Service Instances"
+            aria-disabled="false"
+            aria-expanded="false"
+            aria-selected="false"
+            class="bp3-tab"
+            data-tab-id="Active Service Instances"
+            id="bp3-tab-title_ServiceDetailTabs_Active Service Instances"
+            role="tab"
+            tabindex="0"
+          >
+            cd.serviceDashboard.activeServiceInstancesLabel
+          </div>
+          <div
+            aria-controls="bp3-tab-panel_ServiceDetailTabs_Deployments"
+            aria-disabled="false"
+            aria-expanded="true"
+            aria-selected="true"
+            class="bp3-tab"
+            data-tab-id="Deployments"
+            id="bp3-tab-title_ServiceDetailTabs_Deployments"
+            role="tab"
+            tabindex="0"
+          >
+            deploymentsText
+          </div>
+        </div>
+        <div
+          aria-hidden="false"
+          aria-labelledby="bp3-tab-title_ServiceDetailTabs_Deployments"
+          class="bp3-tab-panel"
+          id="bp3-tab-panel_ServiceDetailTabs_Deployments"
+          role="tabpanel"
+        >
+          <div
+            class="StyledProps--font StyledProps--main"
+          >
+            <div
+              class="TableV2--table deploymentTab"
+            >
+              <div
+                class="TableV2--header"
+                role="row"
+              >
+                <div
+                  class="TableV2--cell"
+                  colspan="1"
+                  role="columnheader"
+                  style="width: 35%;"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                  >
+                    environment
+                  </p>
+                </div>
+                <div
+                  class="TableV2--cell"
+                  colspan="1"
+                  role="columnheader"
+                  style="width: 65%;"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                  >
+                    cd.artifactVersion
+                  </p>
+                </div>
+              </div>
+              <div
+                class="TableV2--body"
+              >
+                <div
+                  class="TableV2--row TableV2--card"
+                  role="row"
+                >
+                  <div
+                    class="TableV2--cells"
+                  >
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 35%;"
+                    >
+                      <div
+                        class="StyledProps--font StyledProps--main envName"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main envNameText StyledProps--color StyledProps--color-white"
+                          style="--text-line-clamp: 1;"
+                        >
+                          NewEnv
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 65%;"
+                    >
+                      <div
+                        class="StyledProps--font StyledProps--main paddedContainer"
+                      >
+                        <div
+                          class="StyledProps--font StyledProps--main StyledProps--padding-right-xsmall"
+                        >
+                          <p
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800"
+                            style="--text-line-clamp: 1;"
+                          >
+                            perl
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="TableV2--row TableV2--card"
+                  role="row"
+                >
+                  <div
+                    class="TableV2--cells"
+                  >
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 35%;"
+                    >
+                      <div
+                        class="StyledProps--font StyledProps--main envName"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main envNameText StyledProps--color StyledProps--color-white"
+                          style="--text-line-clamp: 1;"
+                        >
+                          PreProDEnv
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 65%;"
+                    >
+                      <div
+                        class="StyledProps--font StyledProps--main paddedContainer"
+                      >
+                        <div
+                          class="StyledProps--font StyledProps--main StyledProps--padding-right-xsmall"
+                        >
+                          <p
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800"
+                            style="--text-line-clamp: 1;"
+                          >
+                            stable
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="TableV2--row TableV2--card"
+                  role="row"
+                >
+                  <div
+                    class="TableV2--cells"
+                  >
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 35%;"
+                    >
+                      <div
+                        class="StyledProps--font StyledProps--main envName"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main envNameText StyledProps--color StyledProps--color-white"
+                          style="--text-line-clamp: 1;"
+                        >
+                          PreQa
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 65%;"
+                    >
+                      <div
+                        class="StyledProps--font StyledProps--main paddedContainer"
+                      >
+                        <div
+                          class="StyledProps--font StyledProps--main StyledProps--padding-right-xsmall"
+                        >
+                          <p
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800"
+                            style="--text-line-clamp: 1;"
+                          >
+                            stable
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="TableV2--row TableV2--card"
+                  role="row"
+                >
+                  <div
+                    class="TableV2--cells"
+                  >
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 35%;"
+                    >
+                      <div
+                        class="StyledProps--font StyledProps--main envName"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main envNameText StyledProps--color StyledProps--color-white"
+                          style="--text-line-clamp: 1;"
+                        >
+                          env
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 65%;"
+                    >
+                      <div
+                        class="StyledProps--font StyledProps--main paddedContainer"
+                      >
+                        <div
+                          class="StyledProps--font StyledProps--main StyledProps--padding-right-xsmall"
+                        >
+                          <p
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800"
+                            style="--text-line-clamp: 1;"
+                          >
+                            stable
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesContent 1`] = `
 <div>
   <div

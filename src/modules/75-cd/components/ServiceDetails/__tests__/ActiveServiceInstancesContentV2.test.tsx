@@ -274,6 +274,29 @@ describe('ActiveInstance Tab states', () => {
     expect(getByText('common.instanceLabel')).toBeTruthy()
   })
 
+  test('change tab to deployments', () => {
+    jest.spyOn(cdngServices, 'useGetEnvArtifactDetailsByServiceId').mockImplementation(() => {
+      return {
+        data: dataMock
+      } as any
+    })
+    jest.spyOn(cdngServices, 'useGetActiveServiceInstances').mockImplementation(() => {
+      return { loading: false, error: false, data: mockData, refetch: jest.fn() } as any
+    })
+    const { container } = render(
+      <TestWrapper>
+        <ActiveServiceInstancesV2 />
+      </TestWrapper>
+    )
+
+    const deploymentsTab = container.querySelectorAll('div[role="tab"]')[1]
+    expect(deploymentsTab).toBeDefined()
+    act(() => {
+      fireEvent.click(deploymentsTab)
+    })
+    expect(container).toMatchSnapshot()
+  })
+
   //tab should be defaulted to deployments
   test('when activeInstance is empty and deployments is not', () => {
     jest.spyOn(cdngServices, 'useGetEnvArtifactDetailsByServiceId').mockImplementation(() => {
