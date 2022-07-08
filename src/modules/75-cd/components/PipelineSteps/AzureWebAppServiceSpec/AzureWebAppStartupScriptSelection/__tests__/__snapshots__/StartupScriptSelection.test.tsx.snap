@@ -172,7 +172,7 @@ exports[`StartupScriptSelection readonly mode 1`] = `
                     <span
                       class="noWrap"
                     >
-                      filePath
+                      [filePath]
                     </span>
                   </p>
                 </div>
