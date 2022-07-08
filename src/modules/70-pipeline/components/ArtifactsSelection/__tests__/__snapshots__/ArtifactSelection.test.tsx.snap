@@ -470,19 +470,7 @@ exports[`ArtifactsSelection tests artifact list renders with proper payload 1`] 
     </div>
     <div
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
-    >
-      <button
-        class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
-        id="add-artifact"
-        type="button"
-      >
-        <span
-          class="bp3-button-text"
-        >
-          pipelineSteps.serviceTab.artifactList.addSidecar
-        </span>
-      </button>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -753,19 +741,7 @@ exports[`ArtifactsSelection tests delete artifact list works correctly 1`] = `
     </div>
     <div
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
-    >
-      <button
-        class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
-        id="add-artifact"
-        type="button"
-      >
-        <span
-          class="bp3-button-text"
-        >
-          pipelineSteps.serviceTab.artifactList.addSidecar
-        </span>
-      </button>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -1036,19 +1012,7 @@ exports[`ArtifactsSelection tests edit artifact list works correctly 1`] = `
     </div>
     <div
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
-    >
-      <button
-        class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
-        id="add-artifact"
-        type="button"
-      >
-        <span
-          class="bp3-button-text"
-        >
-          pipelineSteps.serviceTab.artifactList.addSidecar
-        </span>
-      </button>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -1291,19 +1255,7 @@ exports[`ArtifactsSelection tests renders Artifact Listview with connectors Data
     </div>
     <div
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
-    >
-      <button
-        class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
-        id="add-artifact"
-        type="button"
-      >
-        <span
-          class="bp3-button-text"
-        >
-          pipelineSteps.serviceTab.artifactList.addSidecar
-        </span>
-      </button>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -1493,19 +1445,7 @@ exports[`ArtifactsSelection tests renders Artifact Listview without crashing 1`]
     </div>
     <div
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
-    >
-      <button
-        class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
-        id="add-artifact"
-        type="button"
-      >
-        <span
-          class="bp3-button-text"
-        >
-          pipelineSteps.serviceTab.artifactList.addSidecar
-        </span>
-      </button>
-    </div>
+    />
   </div>
 </div>
 `;
