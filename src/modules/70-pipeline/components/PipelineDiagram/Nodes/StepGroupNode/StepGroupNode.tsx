@@ -13,22 +13,21 @@ import { defaultTo, get } from 'lodash-es'
 import { Event, DiagramDrag, DiagramType } from '@pipeline/components/Diagram'
 import { STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'
+import type { ExecutionWrapperConfig } from 'services/pipeline-ng'
+import type { EventStepDataType } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import StepGroupGraph from '../StepGroupGraph/StepGroupGraph'
-import { NodeProps, NodeType } from '../../types'
+import { NodeProps, NodeType, PipelineStageNodeMetaDataType } from '../../types'
 import SVGMarker from '../SVGMarker'
 import { getPositionOfAddIcon } from '../utils'
 import { useNodeDimensionContext } from '../NodeDimensionStore'
 import MatrixNodeLabelWrapper from '../MatrixNodeLabelWrapper'
 import css from './StepGroupNode.module.scss'
 import defaultCss from '../DefaultNode/DefaultNode.module.scss'
-interface T {
-  name: string
-}
-interface U {
-  name: string
-}
-export function StepGroupNode(props: NodeProps<T, U, V>): JSX.Element {
-  const allowAdd = defaultTo(props.allowAdd, false)
+
+export function StepGroupNode(
+  props: NodeProps<ExecutionWrapperConfig, PipelineStageNodeMetaDataType, EventStepDataType>
+): JSX.Element {
+  const allowAdd = defaultTo(props.permissions?.allowAdd, false)
   const { getString } = useStrings()
   const [showAdd, setVisibilityOfAdd] = React.useState(false)
   const [showAddLink, setShowAddLink] = React.useState(false)
@@ -115,20 +114,8 @@ export function StepGroupNode(props: NodeProps<T, U, V>): JSX.Element {
             >
               <SVGMarker />
             </div>
-            <div id={props?.id} className={css.horizontalBar}></div>
-            {props.data?.skipCondition && (
-              <div className={css.conditional}>
-                <Text
-                  tooltip={`Skip condition:\n${props.data?.skipCondition}`}
-                  tooltipProps={{
-                    isDark: true
-                  }}
-                >
-                  <Icon size={26} name={'conditional-skip-new'} color="white" />
-                </Text>
-              </div>
-            )}
-            {props.data?.conditionalExecutionEnabled && (
+            <div id={props?.data?.id} className={css.horizontalBar}></div>
+            {props.data?.metaData?.conditionalExecutionEnabled && (
               <div className={css.conditional}>
                 <Text
                   tooltip={getString('pipeline.conditionalExecution.title')}
@@ -159,7 +146,7 @@ export function StepGroupNode(props: NodeProps<T, U, V>): JSX.Element {
                   }}
                 />
                 <Text
-                  data-nodeid={props.id}
+                  data-nodeid={props.data?.id}
                   className={css.cursor}
                   onMouseEnter={event => {
                     event.stopPropagation()
@@ -189,7 +176,7 @@ export function StepGroupNode(props: NodeProps<T, U, V>): JSX.Element {
                     })
                   }}
                 >
-                  {props.name}
+                  {props.data?.name}
                 </Text>
               </Layout.Horizontal>
             </div>
@@ -198,11 +185,11 @@ export function StepGroupNode(props: NodeProps<T, U, V>): JSX.Element {
                 {...props}
                 data={stepsData}
                 isNodeCollapsed={isNodeCollapsed}
-                parentIdentifier={props?.identifier}
-                hideLinks={props?.identifier === STATIC_SERVICE_GROUP_NAME}
+                parentIdentifier={props?.data?.identifier}
+                hideLinks={props?.data?.identifier === STATIC_SERVICE_GROUP_NAME}
               />
             </div>
-            {!props.readonly && props?.identifier !== STATIC_SERVICE_GROUP_NAME && (
+            {!props.readonly && props?.data?.identifier !== STATIC_SERVICE_GROUP_NAME && (
               <Button
                 className={cx(css.closeNode, { [css.readonly]: props.readonly })}
                 minimal
@@ -214,7 +201,7 @@ export function StepGroupNode(props: NodeProps<T, U, V>): JSX.Element {
                   props?.fireEvent?.({
                     type: Event.RemoveNode,
                     data: {
-                      identifier: props?.identifier,
+                      identifier: props?.data?.identifier,
                       node: props
                     }
                   })
@@ -226,7 +213,7 @@ export function StepGroupNode(props: NodeProps<T, U, V>): JSX.Element {
           {!props.isParallelNode && !props.readonly && (
             <div
               style={{ left: getPositionOfAddIcon(props) }}
-              data-linkid={props?.identifier}
+              data-linkid={props?.data?.identifier}
               onMouseOver={event => event.stopPropagation()}
               onClick={event => {
                 event.stopPropagation()
@@ -237,7 +224,7 @@ export function StepGroupNode(props: NodeProps<T, U, V>): JSX.Element {
                     entityType: DiagramType.Link,
                     node: props,
                     parentIdentifier: props?.parentIdentifier,
-                    identifier: props?.identifier
+                    identifier: props?.data?.identifier
                   }
                 })
               }}
@@ -285,7 +272,7 @@ export function StepGroupNode(props: NodeProps<T, U, V>): JSX.Element {
                 props?.fireEvent?.({
                   type: Event.DropNodeEvent,
                   data: {
-                    entityType: DiagramType.Default,
+                    nodeType: DiagramType.Default,
                     node: JSON.parse(event.dataTransfer.getData(DiagramDrag.NodeDrag)),
                     destination: props
                   }
@@ -297,7 +284,7 @@ export function StepGroupNode(props: NodeProps<T, U, V>): JSX.Element {
                   type: Event.AddParallelNode,
                   target: event.target,
                   data: {
-                    identifier: props?.identifier,
+                    identifier: props?.data?.identifier,
                     parentIdentifier: props?.parentIdentifier,
                     entityType: DiagramType.StepGroupNode,
                     node: props

@@ -102,6 +102,7 @@ export interface NodeGraphMetaType {
     showMarkers?: boolean
   }
 }
+// rename as it is generic to stage and step
 export interface PipelineStageNodeMetaDataType extends NodeGraphMetaType {
   //metaData
   conditionalExecutionEnabled: boolean

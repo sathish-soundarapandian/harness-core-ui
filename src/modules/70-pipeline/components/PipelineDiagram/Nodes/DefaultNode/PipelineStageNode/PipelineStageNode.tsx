@@ -20,8 +20,8 @@ import type { EventStageDataType } from '@pipeline/components/PipelineStudio/Sta
 import SVGMarker from '../../SVGMarker'
 import AddLinkNode from '../AddLinkNode/AddLinkNode'
 import { NodeProps, NodeType, PipelineStageNodeMetaDataType } from '../../../types'
-import defaultCss from '../DefaultNode.module.scss'
 import { getPositionOfAddIcon } from '../../utils'
+import defaultCss from '../DefaultNode.module.scss'
 
 const CODE_ICON: IconName = 'command-echo'
 const TEMPLATE_ICON: IconName = 'template-library'
@@ -44,7 +44,6 @@ function PipelineStageNode(
     stageStatus as ExecutionStatus,
     ExecutionPipelineNodeType.NORMAL
   )
-  const stageData = props?.data?.data?.stage
   const setAddVisibility = (visibility: boolean): void => {
     if (!allowAdd) {
       return
@@ -374,7 +373,6 @@ function PipelineStageNode(
 
       {!isParallelNode(props) && !props?.permissions?.readonly && (
         <AddLinkNode<StageElementConfig, PipelineStageNodeMetaDataType, EventStageDataType>
-          {...props}
           data={props?.data?.data?.stage as StageElementConfig}
           id={props?.data?.id}
           parentIdentifier={props?.metaData?.parentIdentifier}

@@ -451,7 +451,7 @@ export interface EventProps<T, U> {
   }
 }
 
-interface EventMetaDataProps {
+export interface EventMetaDataProps {
   hasChildren?: boolean
   isParallelNode?: boolean
   isRightAddIcon?: boolean

@@ -378,19 +378,15 @@ function PipelineStepNode(
         />
       )}
       {!isParallelNode(props) && !isServiceStep && !props?.permissions?.readonly && (
-        <AddLinkNode
-          {...props}
-          // nextNode={props?.metaData?.nextNode}
+        <AddLinkNode<StepElementConfig, PipelineStageNodeMetaDataType, EventStepDataType>
+          data={props?.data?.data?.step as StepElementConfig}
+          id={props?.data?.id}
           parentIdentifier={props?.metaData?.parentIdentifier}
           isParallelNode={isParallelNode(props)}
           readonly={props?.permissions?.readonly}
+          fireEvent={props.fireEvent}
           style={{ left: getPositionOfAddIcon(props) }}
-          className={cx(
-            defaultCss.addNodeIcon,
-            // { [defaultCss.left]: !isPrevNodeParallel, [defaultCss.stepGroupLeft]: isPrevNodeParallel },
-            defaultCss.stepAddIcon
-            // { [defaultCss.stepGroupLeftAddLink]: !!props.parentIdentifier }
-          )}
+          className={cx(defaultCss.addNodeIcon, defaultCss.stepAddIcon)}
         />
       )}
       {!props?.metaData?.nextNode &&
@@ -398,15 +394,15 @@ function PipelineStepNode(
         props?.metaData?.parentIdentifier &&
         !props?.permissions?.readonly &&
         !isParallelNode(props) && (
-          <AddLinkNode<ExecutionWrapperConfig, PipelineStageNodeMetaDataType, EventStepDataType>
-            {...props}
+          <AddLinkNode<StepElementConfig, PipelineStageNodeMetaDataType, EventStepDataType>
             data={props?.data?.data?.step as StepElementConfig}
-            // nextNode={props?.metaData?.nextNode }
-            style={{ right: getPositionOfAddIcon(props, true) }}
+            id={props?.data?.id}
             parentIdentifier={props?.metaData?.parentIdentifier}
             isParallelNode={isParallelNode(props)}
             readonly={props?.permissions?.readonly}
+            fireEvent={props.fireEvent}
             isRightAddIcon={true}
+            style={{ right: getPositionOfAddIcon(props, true) }}
             className={cx(defaultCss.addNodeIcon, defaultCss.stepAddIcon)}
           />
         )}

@@ -9,20 +9,12 @@ import React, { CSSProperties } from 'react'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { Icon } from '@harness/uicore'
-import { get } from 'lodash-es'
 import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
-import type { NodeProps, PipelineStageNodeMetaDataType } from '@pipeline/components/PipelineDiagram/types'
-import type {
-  ExecutionWrapperConfig,
-  StageElementConfig,
-  StageElementWrapperConfig,
-  StepElementConfig
-} from 'services/pipeline-ng'
-import type {
-  EventStageDataType,
-  EventStepDataType
-} from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
-interface AddLinkNodeProps<T, U, V> extends NodeProps<T, U, V> {
+import type { FireEventMethod, NodeProps } from '@pipeline/components/PipelineDiagram/types'
+import type { EventMetaDataProps, EventProps } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
+
+interface AddLinkNodeProps<T, U, V>
+  extends Omit<NodeProps<T, U, V>, 'data' | 'fireEvent' | 'getNode' | 'getDefaultNode' | 'updateGraphLinks'> {
   parentIdentifier?: string
   isParallelNode?: boolean
   readonly?: boolean
@@ -31,17 +23,14 @@ interface AddLinkNodeProps<T, U, V> extends NodeProps<T, U, V> {
   id?: string
   isRightAddIcon?: boolean
   style?: CSSProperties
+  data: T
   setShowAddLink?: (data: boolean) => void
+  fireEvent?: FireEventMethod<EventProps<T, EventMetaDataProps>>
 }
 
 type AddLinkNodeStageProps<T, U, V> = AddLinkNodeProps<T, U, V>
 
-type AddLinkNodeStepProps = AddLinkNodeProps<ExecutionWrapperConfig, PipelineStageNodeMetaDataType, EventStepDataType>
-
 export default function AddLinkNode<T, U, V>(props: AddLinkNodeStageProps<T, U, V>): React.ReactElement | null {
-  const data = get(props, 'data.data.stage')
-    ? (get(props, 'data.data.stage') as StageElementConfig)
-    : (get(props, 'data.data.step') as StepElementConfig)
   return (
     <div
       style={props?.style}
@@ -55,7 +44,7 @@ export default function AddLinkNode<T, U, V>(props: AddLinkNodeStageProps<T, U, 
             parentIdentifier: props?.parentIdentifier,
             nodeType: DiagramType.Link,
             nodeData: {
-              id: props?.data.id,
+              id: props?.id as string,
               data: props?.data,
               metaData: {
                 isRightAddIcon: props?.isRightAddIcon
@@ -86,8 +75,8 @@ export default function AddLinkNode<T, U, V>(props: AddLinkNodeStageProps<T, U, 
               }
             },
             destinationNode: {
-              id: props?.data.id,
-              data: data!,
+              id: props?.id as string,
+              data: props?.data,
               metaData: {
                 isRightAddIcon: props?.isRightAddIcon
               }
@@ -100,57 +89,5 @@ export default function AddLinkNode<T, U, V>(props: AddLinkNodeStageProps<T, U, 
     >
       <Icon name="plus" color={Color.WHITE} />
     </div>
-  )
-}
-
-export function AddStageLinkNode(props: AddLinkNodeStageProps): React.ReactElement | null {
-  return (
-    <AddLinkNode
-      {...props}
-      onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        event.stopPropagation()
-        props?.fireEvent?.({
-          type: Event.AddLinkClicked,
-          target: event.target,
-          data: {
-            parentIdentifier: props?.parentIdentifier,
-            nodeType: DiagramType.Link,
-            nodeData: {
-              id: props?.data.id,
-              data: props.data?.data?.stage,
-              metaData: {
-                isRightAddIcon: props?.isRightAddIcon
-              }
-            }
-          }
-        })
-      }}
-    />
-  )
-}
-
-export function AddStepLinkNode(props: AddLinkNodeStepProps): React.ReactElement | null {
-  return (
-    <AddLinkNode
-      {...props}
-      onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        event.stopPropagation()
-        props?.fireEvent?.({
-          type: Event.AddLinkClicked,
-          target: event.target,
-          data: {
-            parentIdentifier: props?.parentIdentifier,
-            nodeType: DiagramType.Link,
-            nodeData: {
-              id: props?.data.id,
-              data: props.data?.data?.step,
-              metaData: {
-                isRightAddIcon: props?.isRightAddIcon
-              }
-            }
-          }
-        })
-      }}
-    />
   )
 }

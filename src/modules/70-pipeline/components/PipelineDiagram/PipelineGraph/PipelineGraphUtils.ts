@@ -490,8 +490,8 @@ const transformStepsData = (
   errorMap?: Map<string, string[]>,
   parentPath?: string,
   offsetIndex = 0
-): PipelineGraphState[] => {
-  const finalData: PipelineGraphState[] = []
+): PipelineGraphState<ExecutionWrapperConfig, PipelineStageNodeMetaDataType, EventWithBaseType>[] => {
+  const finalData: PipelineGraphState<ExecutionWrapperConfig, PipelineStageNodeMetaDataType, EventWithBaseType>[] = []
 
   steps.forEach((step: ExecutionWrapperConfig, index: number) => {
     if (step?.step) {
@@ -508,25 +508,28 @@ const transformStepsData = (
       finalData.push({
         id: getuniqueIdForStep(step),
         identifier: step.step.identifier as string,
-        name: step.step.name as string,
         type,
-        nodeType: nodeType as string,
+        name: step.step.name as string,
         icon: stepIcon ? stepIcon : iconName,
-        data: {
-          graphType,
-          ...step,
-          isInComplete: isCustomGeneratedString(step.step.identifier) || hasErrors,
-          loopingStrategyEnabled: !!step.step?.strategy,
+        // nodeType: nodeType as string,
+        data: step,
+        metaData: {
           conditionalExecutionEnabled: isExecutionView
             ? getConditionalExecutionFlag(step.step?.when)
             : step.step?.when
             ? step.step?.when?.stageStatus !== 'Success' || !!step.step?.when?.condition?.trim()
             : false,
-          isTemplateNode: Boolean(templateRef)
-        },
-        children: (step?.step as any)?.children
-          ? transformStepsData((step?.step as any)?.children, graphType, templateTypes, errorMap, updatedStagetPath, 1)
-          : []
+          isInComplete: isCustomGeneratedString(step.step.identifier) || Boolean(hasErrors),
+          isTemplateNode: Boolean(templateRef),
+          loopingStrategyEnabled: !isExecutionView && Boolean(step.step?.strategy), // show on setup side only
+          nodeMeta: {
+            graphType,
+            nodeType
+          }
+        }
+        // children: (step.step as any)?.children
+        //   ? transformStepsData((step?.step as any)?.children, graphType, templateTypes, errorMap, updatedStagetPath, 1)
+        //   : []
       })
     } else if (step?.parallel?.length) {
       const updatedStagetPath = `${parentPath}.${index}.parallel`
@@ -534,116 +537,121 @@ const transformStepsData = (
 
       const hasErrors =
         errorMap && [...errorMap.keys()].some(key => currentStagetPath && key.startsWith(currentStagetPath))
-
       const [first, ...rest] = step.parallel
+      const isExecutionView = get(first, 'step.status', false)
       if (first.stepGroup) {
         const { iconName } = getNodeInfo('', graphType)
         finalData.push({
           id: getuniqueIdForStep(first),
           identifier: first.stepGroup?.identifier as string,
+          type: NodeType.StepGroupNode,
           name: first.stepGroup?.name as string,
-          type: 'StepGroup',
-          nodeType: 'StepGroup',
           icon: iconName,
-          data: {
-            ...first,
-            isInComplete: isCustomGeneratedString(first.stepGroup?.identifier) || hasErrors,
-            graphType
-          },
-          children: transformStepsData(
-            rest as ExecutionWrapperConfig[],
-            graphType,
-            templateTypes,
-            errorMap,
-            updatedStagetPath,
-            1
-          )
-        })
-      } else {
-        const templateRef = (first?.step as unknown as TemplateStepNode)?.template?.templateRef
-        const type = (templateRef ? get(templateTypes, templateRef) : first?.step?.type) as string
-        const { nodeType, iconName } = getNodeInfo(defaultTo(type, ''), graphType)
-        const isExecutionView = get(first, 'step.status', false)
-        finalData.push({
-          id: getuniqueIdForStep(first),
-          identifier: first?.step?.identifier as string,
-          name: first?.step?.name as string,
-          type,
-          nodeType: nodeType as string,
-          icon: iconName,
-          data: {
-            ...first,
-            isInComplete: isCustomGeneratedString(first?.step?.identifier as string) || hasErrors,
-            loopingStrategyEnabled: !!first.step?.strategy,
+          data: first,
+          metaData: {
             conditionalExecutionEnabled: isExecutionView
               ? getConditionalExecutionFlag(first.step?.when)
               : first.step?.when
               ? first.step?.when?.stageStatus !== 'Success' || !!first.step?.when?.condition?.trim()
               : false,
-            isTemplateNode: Boolean(templateRef),
-            graphType
+            isInComplete: isCustomGeneratedString(first.stepGroup?.identifier) || Boolean(hasErrors),
+            isTemplateNode: false, // stepGroup does not have template
+            loopingStrategyEnabled: !isExecutionView && Boolean((step.stepGroup as any)?.strategy),
+            nodeMeta: {
+              graphType,
+              nodeType: NodeType.StepGroupNode
+            }
           },
+          children: transformStepsData(rest, graphType, templateTypes, errorMap, updatedStagetPath, 1)
+        })
+      } else {
+        const templateRef = (first?.step as unknown as TemplateStepNode)?.template?.templateRef
+        const type = (templateRef ? get(templateTypes, templateRef) : first?.step?.type) as string
+        const { nodeType, iconName } = getNodeInfo(defaultTo(type, ''), graphType)
+        finalData.push({
+          id: getuniqueIdForStep(first),
+          identifier: first?.step?.identifier as string,
+          type,
+          name: first?.step?.name as string,
+          icon: iconName,
+          data: first,
+          metaData: {
+            conditionalExecutionEnabled: isExecutionView
+              ? getConditionalExecutionFlag(first.step?.when)
+              : first.step?.when
+              ? first.step?.when?.stageStatus !== 'Success' || !!first.step?.when?.condition?.trim()
+              : false,
+            isInComplete: isCustomGeneratedString(first?.step?.identifier as string) || Boolean(hasErrors),
+            isTemplateNode: Boolean(templateRef),
+            loopingStrategyEnabled: !isExecutionView && Boolean(first.step?.strategy),
+            nodeMeta: {
+              graphType,
+              nodeType
+            }
+          },
+
           children: transformStepsData(rest, graphType, templateTypes, errorMap, updatedStagetPath, 1)
         })
       }
     } else {
-      const type = (step as any)?.type as string
+      const type = NodeType.StepGroupNode // step.stepGroup case
       const { iconName } = getNodeInfo(defaultTo(type, ''), graphType)
       const updatedStagetPath = `${parentPath}.${index}.stepGroup.steps`
       const hasErrors =
         errorMap && [...errorMap.keys()].some(key => updatedStagetPath && key.startsWith(updatedStagetPath))
       const isExecutionView = get(step, 'stepGroup.status', false)
-      if (step?.stepGroup) {
-        finalData.push({
-          id: getuniqueIdForStep(step),
-          identifier: step.stepGroup?.identifier as string,
-          name: step.stepGroup?.name as string,
-          type: 'StepGroup',
-          nodeType: 'StepGroup',
-          icon: iconName,
-          data: {
-            ...step,
-            type: 'StepGroup',
-            nodeType: 'StepGroup',
-            icon: iconName,
-            loopingStrategyEnabled: !!(step.stepGroup as any)?.strategy,
-            conditionalExecutionEnabled: isExecutionView
-              ? getConditionalExecutionFlag(step.stepGroup?.when)
-              : step.stepGroup?.when
-              ? step.stepGroup?.when?.stageStatus !== 'Success' || !!step.stepGroup?.when?.condition?.trim()
-              : false,
+      // if (step?.stepGroup) {
+      finalData.push({
+        id: getuniqueIdForStep(step),
+        identifier: step.stepGroup?.identifier as string,
+        type: NodeType.StepGroupNode,
+        name: step.stepGroup?.name as string,
+        icon: iconName,
+        nodeType: NodeType.StepGroupNode,
+        data: step,
+        metaData: {
+          conditionalExecutionEnabled: isExecutionView
+            ? getConditionalExecutionFlag(step.stepGroup?.when)
+            : step.stepGroup?.when
+            ? step.stepGroup?.when?.stageStatus !== 'Success' || !!step.stepGroup?.when?.condition?.trim()
+            : false,
+          isInComplete: isCustomGeneratedString(step.stepGroup?.identifier as string) || Boolean(hasErrors),
+          loopingStrategyEnabled: !isExecutionView && Boolean((step.stepGroup as any)?.strategy),
+          isTemplateNode: false,
+          nodeMeta: {
             graphType,
-            isInComplete: isCustomGeneratedString(step.stepGroup?.identifier as string) || hasErrors
+            nodeType: NodeType.StepGroupNode
           }
-        })
-      } else {
-        const stepData = step as StepElementConfig
-        finalData.push({
-          id: getuniqueIdForStep({ step } as any),
-          identifier: stepData?.identifier as string,
-          name: stepData?.name as string,
-          type: stepData?.type as string,
-          nodeType: stepData?.type as string,
-          icon: iconName,
-          status: get(stepData, 'status', ''),
-          data: {
-            step: {
-              ...get(stepData, 'data.step', {})
-            },
-            type: stepData?.name as string,
-            nodeType: stepData?.name as string,
-            icon: iconName,
-            loopingStrategyEnabled: !!stepData?.strategy,
-            conditionalExecutionEnabled: isExecutionView
-              ? getConditionalExecutionFlag(stepData?.when)
-              : stepData?.when
-              ? stepData?.when?.stageStatus !== 'Success' || !!stepData?.when?.condition?.trim()
-              : false,
-            graphType,
-            isInComplete: isCustomGeneratedString(stepData?.identifier as string) || hasErrors
-          }
-        })
-      }
+        }
+      })
+      // }
+      //  else {
+      //   const stepData = step as StepElementConfig
+      //   finalData.push({
+      //     id: getuniqueIdForStep({ step } as any),
+      //     identifier: stepData?.identifier as string,
+      //     name: stepData?.name as string,
+      //     type: stepData?.type as string,
+      //     nodeType: stepData?.type as string,
+      //     icon: iconName,
+      //     status: get(stepData, 'status', ''),
+      //     data: {
+      //       step: {
+      //         ...get(stepData, 'data.step', {})
+      //       },
+      //       type: stepData?.name as string,
+      //       nodeType: stepData?.name as string,
+      //       icon: iconName,
+      //       conditionalExecutionEnabled: isExecutionView
+      //         ? getConditionalExecutionFlag(stepData?.when)
+      //         : stepData?.when
+      //         ? stepData?.when?.stageStatus !== 'Success' || !!stepData?.when?.condition?.trim()
+      //         : false,
+      //       graphType,
+      //       isInComplete: isCustomGeneratedString(stepData?.identifier as string) || hasErrors
+      //     }
+      //   })
+      // }
     }
   })
   return finalData
