@@ -59,7 +59,7 @@
     .connectorName {
       display: inline-flex;
       color: var(--grey-500);
-      max-width: 236px;
+      margin-right: var(--spacing-small);
       text-overflow: ellipsis;
     }
   }

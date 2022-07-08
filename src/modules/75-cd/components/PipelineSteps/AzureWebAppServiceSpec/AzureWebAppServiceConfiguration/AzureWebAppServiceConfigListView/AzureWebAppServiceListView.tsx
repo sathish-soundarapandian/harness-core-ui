@@ -40,6 +40,7 @@ import { getConnectorNameFromValue, getStatus } from '@pipeline/components/Pipel
 import { AzureWebAppServiceConfigWizard } from '@cd/components/PipelineSteps/AzureWebAppServiceSpec/AzureWebAppServiceConfiguration/AzureWebAppServiceConfigListView/AzureWebAppServiceWizard/AzureWebAppServiceConfigWizard'
 import { ServiceConfigActions } from '@common/constants/TrackingConstants'
 import AzureWebAppServiceStepTwo from './AzureWebAppServiceWizard/AzureWebAppServiceStepTwo'
+import ConnectorField from './AzureWebAppServiceConnectorField'
 import {
   AllowedTypes,
   AzureWebAppWizardInitData,
@@ -51,7 +52,6 @@ import {
   ModalViewOption,
   WizardStepNames
 } from '../AzureWebAppServiceConfig.types'
-import ConnectorField from './AzureWebAppServiceConnectorField'
 import css from '../AzureWebAppServiceConfig.module.scss'
 
 export const DIALOG_PROPS: IDialogProps = {

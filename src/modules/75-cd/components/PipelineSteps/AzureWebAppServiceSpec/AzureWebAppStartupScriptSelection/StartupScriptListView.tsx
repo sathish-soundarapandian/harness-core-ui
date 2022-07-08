@@ -61,7 +61,6 @@ function StartupScriptListView({
   stage,
   isPropagating,
   connectors,
-  refetchConnectors,
   startupScript,
   isReadonly,
   allowableTypes
@@ -124,7 +123,7 @@ function StartupScriptListView({
   }
 
   /* istanbul ignore next */
-  const updateStageData = (): void => {
+  const updateStageData = (script: StoreConfigWrapper): void => {
     const path = isPropagating
       ? 'stage.spec.serviceConfig.stageOverrides.startupScript'
       : 'stage.spec.serviceConfig.serviceDefinition.spec.startupScript'
@@ -132,7 +131,7 @@ function StartupScriptListView({
     if (stage) {
       updateStage(
         produce(stage, draft => {
-          set(draft, path, startupScript)
+          set(draft, path, script)
         }).stage as StageElementConfig
       )
     }
@@ -140,15 +139,13 @@ function StartupScriptListView({
 
   /* istanbul ignore next */
   const handleSubmit = (script: StoreConfigWrapper): void => {
-    startupScript = script
-    updateStageData()
+    updateStageData(script)
 
     trackEvent(StartupScriptActions.SaveStartupScriptOnPipelinePage, { startupScript: startupScript?.type })
 
     hideConnectorModal()
     setConnectorView(false)
     setConnectorType('')
-    refetchConnectors()
   }
 
   /* istanbul ignore next */
