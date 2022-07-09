@@ -87,29 +87,43 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
   const resetForm = (parent: string): void => {
     switch (parent) {
       case 'connectorRef':
-        set(initialValues, 'subscriptionId', '')
-        set(initialValues, 'resourceGroup', '')
-        set(initialValues, 'webApp', '')
-        set(initialValues, 'deploymentSlot', '')
-        set(initialValues, 'targetSlot', '')
+        getMultiTypeFromValue(initialValues.connectorRef) !== MultiTypeInputType.RUNTIME &&
+          set(initialValues, 'subscriptionId', '')
+        getMultiTypeFromValue(initialValues.subscriptionId) !== MultiTypeInputType.RUNTIME &&
+          set(initialValues, 'resourceGroup', '')
+        getMultiTypeFromValue(initialValues.resourceGroup) !== MultiTypeInputType.RUNTIME &&
+          set(initialValues, 'webApp', '')
+        getMultiTypeFromValue(initialValues.deploymentSlot) !== MultiTypeInputType.RUNTIME &&
+          set(initialValues, 'deploymentSlot', '')
+        getMultiTypeFromValue(initialValues.targetSlot) !== MultiTypeInputType.RUNTIME &&
+          set(initialValues, 'targetSlot', '')
         onUpdate?.(initialValues)
         break
       case 'subscriptionId':
-        set(initialValues, 'resourceGroup', '')
-        set(initialValues, 'webApp', '')
-        set(initialValues, 'deploymentSlot', '')
-        set(initialValues, 'targetSlot', '')
+        getMultiTypeFromValue(initialValues.subscriptionId) !== MultiTypeInputType.RUNTIME &&
+          set(initialValues, 'resourceGroup', '')
+        getMultiTypeFromValue(initialValues.resourceGroup) !== MultiTypeInputType.RUNTIME &&
+          set(initialValues, 'webApp', '')
+        getMultiTypeFromValue(initialValues.deploymentSlot) !== MultiTypeInputType.RUNTIME &&
+          set(initialValues, 'deploymentSlot', '')
+        getMultiTypeFromValue(initialValues.targetSlot) !== MultiTypeInputType.RUNTIME &&
+          set(initialValues, 'targetSlot', '')
         onUpdate?.(initialValues)
         break
       case 'resourceGroup':
-        set(initialValues, 'webApp', '')
-        set(initialValues, 'deploymentSlot', '')
-        set(initialValues, 'targetSlot', '')
+        getMultiTypeFromValue(initialValues.resourceGroup) !== MultiTypeInputType.RUNTIME &&
+          set(initialValues, 'webApp', '')
+        getMultiTypeFromValue(initialValues.deploymentSlot) !== MultiTypeInputType.RUNTIME &&
+          set(initialValues, 'deploymentSlot', '')
+        getMultiTypeFromValue(initialValues.targetSlot) !== MultiTypeInputType.RUNTIME &&
+          set(initialValues, 'targetSlot', '')
         onUpdate?.(initialValues)
         break
       case 'webApp':
-        set(initialValues, 'deploymentSlot', '')
-        set(initialValues, 'targetSlot', '')
+        getMultiTypeFromValue(initialValues.deploymentSlot) !== MultiTypeInputType.RUNTIME &&
+          set(initialValues, 'deploymentSlot', '')
+        getMultiTypeFromValue(initialValues.targetSlot) !== MultiTypeInputType.RUNTIME &&
+          set(initialValues, 'targetSlot', '')
         onUpdate?.(initialValues)
         break
     }
