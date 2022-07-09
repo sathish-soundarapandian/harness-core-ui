@@ -381,11 +381,16 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                   gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                   onChange={type => {
                     if (type !== MultiTypeInputType.FIXED) {
-                      formik.setFieldValue('subscriptionId', '')
-                      formik.setFieldValue('resourceGroup', '')
-                      formik.setFieldValue('webApp', '')
-                      formik.setFieldValue('deploymentSlot', '')
-                      formik.setFieldValue('targetSlot', '')
+                      getMultiTypeFromValue(formik.values?.subscriptionId) !== MultiTypeInputType.RUNTIME &&
+                        formik.setFieldValue('subscriptionId', '')
+                      getMultiTypeFromValue(formik.values?.resourceGroup) !== MultiTypeInputType.RUNTIME &&
+                        formik.setFieldValue('resourceGroup', '')
+                      getMultiTypeFromValue(formik.values?.webApp) !== MultiTypeInputType.RUNTIME &&
+                        formik.setFieldValue('webApp', '')
+                      getMultiTypeFromValue(formik.values?.deploymentSlot) !== MultiTypeInputType.RUNTIME &&
+                        formik.setFieldValue('deploymentSlot', '')
+                      getMultiTypeFromValue(formik.values?.targetSlot) !== MultiTypeInputType.RUNTIME &&
+                        formik.setFieldValue('targetSlot', '')
                     }
                   }}
                 />
@@ -425,10 +430,14 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                   }
                   multiTypeInputProps={{
                     onChange: /* istanbul ignore next */ () => {
-                      formik.setFieldValue('resourceGroup', '')
-                      formik.setFieldValue('webApp', '')
-                      formik.setFieldValue('deploymentSlot', '')
-                      formik.setFieldValue('targetSlot', '')
+                      getMultiTypeFromValue(formik.values?.resourceGroup) !== MultiTypeInputType.RUNTIME &&
+                        formik.setFieldValue('resourceGroup', '')
+                      getMultiTypeFromValue(formik.values?.webApp) !== MultiTypeInputType.RUNTIME &&
+                        formik.setFieldValue('webApp', '')
+                      getMultiTypeFromValue(formik.values?.deploymentSlot) !== MultiTypeInputType.RUNTIME &&
+                        formik.setFieldValue('deploymentSlot', '')
+                      getMultiTypeFromValue(formik.values?.targetSlot) !== MultiTypeInputType.RUNTIME &&
+                        formik.setFieldValue('targetSlot', '')
 
                       setResourceGroups([])
                       setWebApps([])
@@ -500,9 +509,12 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                   }
                   multiTypeInputProps={{
                     onChange: /* istanbul ignore next */ () => {
-                      formik.setFieldValue('webApp', '')
-                      formik.setFieldValue('deploymentSlot', '')
-                      formik.setFieldValue('targetSlot', '')
+                      getMultiTypeFromValue(formik.values?.webApp) !== MultiTypeInputType.RUNTIME &&
+                        formik.setFieldValue('webApp', '')
+                      getMultiTypeFromValue(formik.values?.deploymentSlot) !== MultiTypeInputType.RUNTIME &&
+                        formik.setFieldValue('deploymentSlot', '')
+                      getMultiTypeFromValue(formik.values?.targetSlot) !== MultiTypeInputType.RUNTIME &&
+                        formik.setFieldValue('targetSlot', '')
 
                       setWebApps([])
                       setDeploymentSlots([])
@@ -579,8 +591,10 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                   }
                   multiTypeInputProps={{
                     onChange: /* istanbul ignore next */ () => {
-                      formik.setFieldValue('deploymentSlot', '')
-                      formik.setFieldValue('targetSlot', '')
+                      getMultiTypeFromValue(formik.values?.deploymentSlot) !== MultiTypeInputType.RUNTIME &&
+                        formik.setFieldValue('deploymentSlot', '')
+                      getMultiTypeFromValue(formik.values?.targetSlot) !== MultiTypeInputType.RUNTIME &&
+                        formik.setFieldValue('targetSlot', '')
                       setDeploymentSlots([])
                     },
                     expressions,
@@ -657,7 +671,7 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                   multiTypeInputProps={{
                     onChange: /* istanbul ignore next */ type => {
                       if (type !== MultiTypeInputType.FIXED) {
-                        getMultiTypeFromValue(getValue(formik?.values?.targetSlot)) === MultiTypeInputType.FIXED &&
+                        getMultiTypeFromValue(getValue(formik?.values?.targetSlot)) !== MultiTypeInputType.RUNTIME &&
                           formik.setFieldValue('targetSlot', '')
                       }
                     },
