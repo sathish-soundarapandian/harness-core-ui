@@ -11,7 +11,11 @@ import { InfraDeploymentType } from '@cd/components/PipelineSteps/PipelineStepsU
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { Infrastructure, ServiceDefinition } from 'services/cd-ng'
 import type { StringsMap } from 'stringTypes'
-import { isServerlessDeploymentType, isSSHWinRMDeploymentType } from '@pipeline/utils/stageHelpers'
+import {
+  isAzureWebAppDeploymentType,
+  isServerlessDeploymentType,
+  isSSHWinRMDeploymentType
+} from '@pipeline/utils/stageHelpers'
 
 const DEFAULT_RELEASE_NAME = 'release-<+INFRA_KEY>'
 
@@ -213,6 +217,21 @@ export const getInfraGroups = (
           ]
         }
       ]
+    : isAzureWebAppDeploymentType(deploymentType)
+    ? [
+        {
+          groupLabel: '',
+          items: NG_AZURE
+            ? [
+                {
+                  label: 'Azure Web App',
+                  icon: 'azurewebapp',
+                  value: InfraDeploymentType.AzureWebApp
+                }
+              ]
+            : []
+        }
+      ]
     : isSSHWinRMDeploymentType(deploymentType)
     ? [
         {
@@ -255,11 +274,6 @@ export const getInfraGroups = (
                   label: getString('cd.steps.azureInfraStep.azure'),
                   icon: 'microsoft-azure',
                   value: InfraDeploymentType.KubernetesAzure
-                },
-                {
-                  label: 'Azure Web App',
-                  icon: 'azurewebapp',
-                  value: InfraDeploymentType.AzureWebApp
                 }
               ]
             : [
