@@ -16,6 +16,7 @@ import type { LogFiltersProps } from './LogFilters.types'
 import type { EventTypeFullName } from '../../../ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.constants'
 import { getClusterTypes } from '../../../ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.utils'
 import css from '../../../ExecutionVerification/components/LogAnalysisContainer/components/ClusterTypeFiltersForLogs.module.scss'
+import { VerificationType } from '@cv/components/HealthSourceDropDown/HealthSourceDropDown.constants'
 
 const LogFilters: React.FC<LogFiltersProps> = ({
   clusterTypeFilters,
@@ -41,6 +42,7 @@ const LogFilters: React.FC<LogFiltersProps> = ({
         <HealthSourceMultiSelectDropDown
           data={data}
           error={error}
+          verificationType={VerificationType.LOG}
           loading={loading}
           onChange={onHealthSouceChange}
           selectedValues={selectedHealthSources}

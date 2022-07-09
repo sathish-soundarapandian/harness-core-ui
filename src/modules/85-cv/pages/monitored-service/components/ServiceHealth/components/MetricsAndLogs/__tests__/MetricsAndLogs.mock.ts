@@ -24,7 +24,7 @@ export const mockedHealthSourcesData = {
         identifier: 'service_prod/custommetric',
         name: 'custommetric',
         type: 'CUSTOM_HEALTH_METRIC',
-        verificationType: 'TIME_SERIES'
+        verificationType: 'LOG'
       }
     ]
   }
@@ -47,7 +47,7 @@ export const healthSourceMock = {
       identifier: 'service_prod/custommetric',
       name: 'custommetric',
       type: 'CUSTOM_HEALTH_METRIC',
-      verificationType: 'TIME_SERIES'
+      verificationType: 'LOG'
     }
   ],
   responseMessages: []
