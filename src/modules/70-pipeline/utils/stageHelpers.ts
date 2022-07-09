@@ -229,6 +229,10 @@ export const isSSHWinRMDeploymentType = (deploymentType: string): boolean => {
   return deploymentType === ServiceDeploymentType.winrm || deploymentType === ServiceDeploymentType.ssh
 }
 
+export const isAzureWebAppDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.AzureWebApp
+}
+
 export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessAwsLambda]: 'Amazon Web Services Details',
   [ServiceDeploymentType.ServerlessAzureFunctions]: 'Azure Details',
