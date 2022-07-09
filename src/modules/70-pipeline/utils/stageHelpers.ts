@@ -60,7 +60,7 @@ export enum ServiceDeploymentType {
   ServerlessGoogleFunctions = 'ServerlessGoogleFunctions',
   AmazonSAM = 'AwsSAM',
   AzureFunctions = 'AzureFunctions',
-  AzureWebApps = 'AzureWebApps'
+  AzureWebApp = 'AzureWebApp'
 }
 
 export type ServerlessGCPInfrastructure = Infrastructure & {
@@ -232,7 +232,7 @@ export const isSSHWinRMDeploymentType = (deploymentType: string): boolean => {
 export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessAwsLambda]: 'Amazon Web Services Details',
   [ServiceDeploymentType.ServerlessAzureFunctions]: 'Azure Details',
-  [ServiceDeploymentType.AzureWebApps]: 'Web App Details',
+  [ServiceDeploymentType.AzureWebApp]: 'Web App Details',
   [ServiceDeploymentType.ServerlessGoogleFunctions]: 'GCP Details',
   [ServiceDeploymentType.Pdc]: 'Infrastructure definition',
   [ServiceDeploymentType.winrm]: 'WinRM'
@@ -427,7 +427,7 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
   if (isServerlessDeploymentType(deploymentType)) {
     return StepType.ServerlessAwsLambda
   }
-  if (deploymentType === ServiceDeploymentType.AzureWebApps) {
+  if (deploymentType === ServiceDeploymentType.AzureWebApp) {
     return StepType.AzureWebAppServiceSpec
   }
   return StepType.K8sServiceSpec
