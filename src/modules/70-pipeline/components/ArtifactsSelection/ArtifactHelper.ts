@@ -26,7 +26,7 @@ export const isAllowedACRArtifactDeploymentTypes = (deploymentType: ServiceDefin
   return (
     deploymentType === ServiceDeploymentType.Kubernetes ||
     deploymentType === ServiceDeploymentType.NativeHelm ||
-    deploymentType === ServiceDeploymentType.AzureWebApps
+    deploymentType === ServiceDeploymentType.AzureWebApp
   )
 }
 
@@ -49,7 +49,7 @@ export const isAdditionAllowed = (deploymentType: ServiceDefinition['type'], isR
     (deploymentType === ServiceDeploymentType.Kubernetes ||
       deploymentType === ServiceDeploymentType.NativeHelm ||
       deploymentType === ServiceDeploymentType.ServerlessAwsLambda ||
-      deploymentType === ServiceDeploymentType.AzureWebApps)
+      deploymentType === ServiceDeploymentType.AzureWebApp)
   )
 }
 
@@ -133,7 +133,7 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
   ],
   Ssh: [],
   WinRm: [],
-  AzureWebApps: [
+  AzureWebApp: [
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
     ENABLED_ARTIFACT_TYPES.Gcr,
     ENABLED_ARTIFACT_TYPES.Ecr,

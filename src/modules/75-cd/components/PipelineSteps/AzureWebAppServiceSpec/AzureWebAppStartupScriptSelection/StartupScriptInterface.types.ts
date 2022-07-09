@@ -105,7 +105,7 @@ export const gitFetchTypeList = [
 
 export interface AzureWebAppsServiceDefinition {
   spec: AzureWebAppServiceSpec
-  type: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
+  type: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApp'
 }
 
 export interface StartupScriptListViewProps {
