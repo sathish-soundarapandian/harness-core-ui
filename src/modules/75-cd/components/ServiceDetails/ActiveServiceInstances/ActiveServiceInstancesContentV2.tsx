@@ -8,16 +8,19 @@
 import React, { useMemo } from 'react'
 import type { CellProps, Renderer } from 'react-table'
 import cx from 'classnames'
-import { Color } from '@harness/design-system'
-import { Container, Layout, Popover, Text, PageError } from '@wings-software/uicore'
+import { Color, FontVariation } from '@harness/design-system'
+import { Container, Layout, Popover, Text, PageError, useToaster } from '@wings-software/uicore'
 import { PopoverInteractionKind } from '@blueprintjs/core'
 import type { GetDataError } from 'restful-react'
 import ReactTimeago from 'react-timeago'
+import { useParams } from 'react-router-dom'
 import { PageSpinner, Table } from '@common/components'
 import type { InstanceGroupedByArtifact } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import MostActiveServicesEmptyState from '@cd/icons/MostActiveServicesEmptyState.svg'
 import { numberFormatter } from '@cd/components/Services/common'
+import routes from '@common/RouteDefinitions'
+import type { PipelineType, PipelinePathProps, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 import { ActiveServiceInstancePopover } from './ActiveServiceInstancePopover'
 import css from './ActiveServiceInstancesV2.module.scss'
 
@@ -279,18 +282,53 @@ const RenderInstances: Renderer<CellProps<TableRowData>> = ({
   )
 }
 
-/*
- * TODO-DASHBOARD-V2 [Guy Castel, July 07 2022]: Temporary
- * Inspired by 'ServicesList > RenderLastDeployment'.
- * Currently generated without link because missing 'pipelineIdentifier'.
- */
+// Inspired by 'ServicesList > RenderLastDeployment', consider reusing
 const RenderPipelineExecution: Renderer<CellProps<TableRowData>> = ({
   row: {
-    original: { /* lastPipelineExecutionId, lastPipelineExecutionName, */ lastDeployedAt }
+    original: { lastPipelineExecutionId, lastPipelineExecutionName, lastDeployedAt }
   }
 }) => {
+  const { getString } = useStrings()
+  const { showError } = useToaster()
+
+  const { orgIdentifier, projectIdentifier, accountId, module, pipelineIdentifier } =
+    useParams<PipelineType<PipelinePathProps>>()
+  const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
+
+  function handleClick(): void {
+    if (lastPipelineExecutionName && lastPipelineExecutionId) {
+      const route = routes.toExecutionPipelineView({
+        orgIdentifier,
+        pipelineIdentifier: lastPipelineExecutionName,
+        executionIdentifier: lastPipelineExecutionId,
+        projectIdentifier,
+        accountId,
+        module,
+        source
+      })
+
+      const baseUrl = window.location.href.split('#')[0]
+      window.open(`${baseUrl}#${route}`)
+    } else {
+      showError(getString('cd.serviceDashboard.noLastDeployment'))
+    }
+  }
+
   return (
     <Layout.Vertical margin={{ right: 'large' }} flex={{ alignItems: 'flex-start' }}>
+      <Text
+        font={{ variation: FontVariation.BODY2 }}
+        color={Color.PRIMARY_7}
+        margin={{ right: 'xsmall' }}
+        className={css.lastDeploymentText}
+        lineClamp={1}
+        onClick={e => {
+          e.stopPropagation()
+          handleClick()
+        }}
+      >
+        {lastPipelineExecutionName}
+      </Text>
       {lastDeployedAt && (
         <ReactTimeago
           date={new Date(parseInt(lastDeployedAt))}

@@ -318,6 +318,12 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                           <div
                             class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
                           >
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
+                              style="--text-line-clamp: 1;"
+                            >
+                              Pipeline-1
+                            </p>
                             dummy date
                           </div>
                         </div>
@@ -417,6 +423,12 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                           <div
                             class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
                           >
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
+                              style="--text-line-clamp: 1;"
+                            >
+                              Pipeline-2
+                            </p>
                             dummy date
                           </div>
                         </div>
@@ -523,6 +535,12 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                           <div
                             class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
                           >
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
+                              style="--text-line-clamp: 1;"
+                            >
+                              Pipeline-3
+                            </p>
                             dummy date
                           </div>
                         </div>
@@ -622,6 +640,12 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                           <div
                             class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
                           >
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
+                              style="--text-line-clamp: 1;"
+                            >
+                              Pipeline-4
+                            </p>
                             dummy date
                           </div>
                         </div>
@@ -793,6 +817,12 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                           <div
                             class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
                           >
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
+                              style="--text-line-clamp: 1;"
+                            >
+                              Pipeline-5
+                            </p>
                             dummy date
                           </div>
                         </div>
@@ -892,6 +922,12 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                           <div
                             class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
                           >
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
+                              style="--text-line-clamp: 1;"
+                            >
+                              Pipeline-6
+                            </p>
                             dummy date
                           </div>
                         </div>
@@ -998,6 +1034,12 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                           <div
                             class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
                           >
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
+                              style="--text-line-clamp: 1;"
+                            >
+                              Pipeline-7
+                            </p>
                             dummy date
                           </div>
                         </div>
@@ -1097,6 +1139,12 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                           <div
                             class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
                           >
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
+                              style="--text-line-clamp: 1;"
+                            >
+                              Pipeline-8
+                            </p>
                             dummy date
                           </div>
                         </div>
@@ -1430,6 +1478,10 @@ exports[`ActiveInstance Details Dialog Open details dialog 1`] = `
                         <div
                           class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
                         >
+                          <p
+                            class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
+                            style="--text-line-clamp: 1;"
+                          />
                           dummy date
                         </div>
                       </div>
@@ -1673,6 +1725,10 @@ exports[`ActiveInstance Details Dialog Open details dialog 1`] = `
                         <div
                           class="Layout--vertical StyledProps--main StyledProps--margin-right-large StyledProps--flex StyledProps--flex-alignItems-flex-start"
                         >
+                          <p
+                            class="StyledProps--font Text--lineclamp StyledProps--main lastDeploymentText StyledProps--font-variation-body2 StyledProps--color StyledProps--color-primary7 StyledProps--margin-right-xsmall"
+                            style="--text-line-clamp: 1;"
+                          />
                           dummy date
                         </div>
                       </div>
