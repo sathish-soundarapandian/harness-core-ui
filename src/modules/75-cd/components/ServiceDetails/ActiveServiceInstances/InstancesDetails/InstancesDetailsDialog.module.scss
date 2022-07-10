@@ -52,3 +52,9 @@
     }
   }
 }
+
+.searchIconStyle {
+  & > input:focus {
+    width: 200px !important;
+  }
+}

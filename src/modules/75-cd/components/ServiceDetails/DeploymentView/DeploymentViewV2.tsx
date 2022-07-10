@@ -9,8 +9,7 @@ import React, { useMemo } from 'react'
 import type { CellProps, Renderer } from 'react-table'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
-import { Container, Layout, Popover, Text, PageError } from '@wings-software/uicore'
-import { PopoverInteractionKind } from '@blueprintjs/core'
+import { Container, Layout, Text, PageError } from '@wings-software/uicore'
 import type { GetDataError } from 'restful-react'
 import ReactTimeago from 'react-timeago'
 import { PageSpinner, Table } from '@common/components'
@@ -18,114 +17,13 @@ import type { InstanceGroupedByArtifact } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import MostActiveServicesEmptyState from '@cd/icons/MostActiveServicesEmptyState.svg'
 import { numberFormatter } from '@cd/components/Services/common'
-import { ActiveServiceInstancePopover } from './ActiveServiceInstancePopover'
-import css from './ActiveServiceInstancesV2.module.scss'
-
-const TOTAL_VISIBLE_INSTANCES = 7
-
-export interface TableRowData {
-  artifactVersion?: string
-  envId?: string
-  envName?: string
-  infraIdentifier?: string
-  infraName?: string
-  instanceCount?: number
-  lastPipelineExecutionId?: string
-  lastPipelineExecutionName?: string
-  lastDeployedAt?: string
-  showArtifact?: boolean
-  showEnv?: boolean
-  totalEnvs?: number
-  totalInfras?: number
-}
-
-export const getFullTableData = (instanceGroupedByArtifact?: InstanceGroupedByArtifact[]): TableRowData[] => {
-  const tableData: TableRowData[] = []
-  instanceGroupedByArtifact?.forEach(artifact => {
-    if (artifact.artifactVersion && artifact.instanceGroupedByEnvironmentList) {
-      const artifactVersion = artifact.artifactVersion
-      artifact.instanceGroupedByEnvironmentList.forEach((env, envIndex) => {
-        env.instanceGroupedByInfraList?.forEach((infra, infraIndex) => {
-          tableData.push({
-            artifactVersion: artifactVersion,
-            showArtifact: !envIndex && !infraIndex,
-            envId: env.envId,
-            envName: env.envName,
-            showEnv: !infraIndex,
-            infraIdentifier: infra.infraIdentifier,
-            infraName: infra.infraName,
-            instanceCount: infra.count,
-            lastPipelineExecutionId: infra.lastPipelineExecutionId,
-            lastPipelineExecutionName: infra.lastPipelineExecutionName,
-            lastDeployedAt: infra.lastDeployedAt
-          })
-        })
-      })
-    }
-  })
-  return tableData
-}
-
-export const getPreviewTableData = (instanceGroupedByArtifact?: InstanceGroupedByArtifact[]): TableRowData[] => {
-  const tableData: TableRowData[] = []
-  instanceGroupedByArtifact?.forEach(artifact => {
-    artifact.instanceGroupedByEnvironmentList?.forEach((env, envIndex) => {
-      let totalInstancesPerEnv = 0
-      env.instanceGroupedByInfraList?.forEach(infra => {
-        totalInstancesPerEnv += infra.count || 0
-      })
-      tableData.push({
-        artifactVersion: artifact.artifactVersion,
-        showArtifact: !envIndex,
-        envId: env.envId,
-        envName: env.envName,
-        showEnv: true,
-        totalInfras: env.instanceGroupedByInfraList?.length,
-        instanceCount: totalInstancesPerEnv
-      })
-    })
-  })
-  return tableData
-}
-
-export const getSummaryTableData = (instanceGroupedByArtifact?: InstanceGroupedByArtifact[]): TableRowData[] => {
-  const tableData: TableRowData[] = []
-  let artifactVersion: string | undefined
-  let envName: string | undefined
-  let infraName: string | undefined
-  let totalEnvs = 0
-  let totalInfras = 0
-  let totalInstances = 0
-  let lastDeployedAt = '0'
-  instanceGroupedByArtifact?.forEach(artifact => {
-    artifactVersion ??= artifact.artifactVersion
-    artifact.instanceGroupedByEnvironmentList?.forEach(env => {
-      totalEnvs++
-      envName ??= env.envName
-      env.instanceGroupedByInfraList?.forEach(infra => {
-        infraName ??= infra.infraName
-        totalInfras++
-        totalInstances += infra.count || 0
-        if (infra.lastDeployedAt) {
-          lastDeployedAt =
-            parseInt(lastDeployedAt) >= parseInt(infra.lastDeployedAt) ? lastDeployedAt : infra.lastDeployedAt
-        }
-      })
-    })
-  })
-  tableData.push({
-    artifactVersion: artifactVersion,
-    showArtifact: true,
-    envName: envName,
-    showEnv: true,
-    totalEnvs: totalEnvs,
-    infraName: infraName,
-    totalInfras: totalInfras,
-    instanceCount: totalInstances,
-    lastDeployedAt: lastDeployedAt
-  })
-  return tableData
-}
+import {
+  getFullTableData,
+  getPreviewTableData,
+  getSummaryTableData,
+  TableRowData
+} from '../ActiveServiceInstances/ActiveServiceInstancesContentV2'
+import css from '../ActiveServiceInstances/ActiveServiceInstancesV2.module.scss'
 
 const RenderArtifactVersion: Renderer<CellProps<TableRowData>> = ({
   row: {
@@ -133,7 +31,12 @@ const RenderArtifactVersion: Renderer<CellProps<TableRowData>> = ({
   }
 }) => {
   return showArtifact ? (
-    <Text font={{ size: 'small', weight: 'semi-bold' }} lineClamp={1} color={Color.GREY_800}>
+    <Text
+      style={{ maxWidth: '200px' }}
+      font={{ size: 'small', weight: 'semi-bold' }}
+      lineClamp={1}
+      color={Color.GREY_800}
+    >
       {artifactVersion}
     </Text>
   ) : (
@@ -179,7 +82,12 @@ const RenderInfra: Renderer<CellProps<TableRowData>> = ({
   return infraName ? (
     <Container flex>
       <Layout.Horizontal>
-        <Text font={{ size: 'small', weight: 'semi-bold' }} lineClamp={1} color={Color.GREY_800}>
+        <Text
+          style={{ maxWidth: '120px' }}
+          font={{ size: 'small', weight: 'semi-bold' }}
+          lineClamp={1}
+          color={Color.GREY_800}
+        >
           {infraName}
         </Text>
         {totalInfras && totalInfras > 1 && (
@@ -213,66 +121,6 @@ const RenderInfraCount: Renderer<CellProps<TableRowData>> = ({
       >
         {numberFormatter(totalInfras)}
       </Text>
-    </Container>
-  ) : (
-    <></>
-  )
-}
-
-const RenderInstanceCount: Renderer<CellProps<TableRowData>> = ({
-  row: {
-    original: { instanceCount }
-  }
-}) => {
-  return instanceCount ? (
-    <Container className={css.paddedContainer}>
-      <Text
-        font={{ size: 'xsmall', weight: 'bold' }}
-        background={Color.PRIMARY_1}
-        className={cx(css.countBadge, css.overflow)}
-      >
-        {numberFormatter(instanceCount)}
-      </Text>
-    </Container>
-  ) : (
-    <></>
-  )
-}
-
-const RenderInstances: Renderer<CellProps<TableRowData>> = ({
-  row: {
-    original: { envId, artifactVersion: buildId, instanceCount }
-  }
-}) => {
-  return instanceCount ? (
-    <Container className={cx(css.paddedContainer, css.hexContainer)} flex={{ justifyContent: 'flex-start' }}>
-      {Array(Math.min(instanceCount, TOTAL_VISIBLE_INSTANCES))
-        .fill(null)
-        .map((_, index) => (
-          <Popover
-            interactionKind={PopoverInteractionKind.CLICK}
-            key={index}
-            modifiers={{ preventOverflow: { escapeWithReference: true } }}
-          >
-            <Container
-              className={css.hex}
-              width={18}
-              height={18}
-              background={Color.PRIMARY_3}
-              margin={{ left: 'xsmall', right: 'xsmall', top: 'xsmall', bottom: 'xsmall' }}
-            />
-            <ActiveServiceInstancePopover buildId={buildId} envId={envId} instanceNum={index} />
-          </Popover>
-        ))}
-      {instanceCount > TOTAL_VISIBLE_INSTANCES ? (
-        <Text
-          font={{ size: 'small', weight: 'semi-bold' }}
-          color={Color.GREY_600}
-          margin={{ left: 'xsmall' }}
-        >{`+${numberFormatter(instanceCount - TOTAL_VISIBLE_INSTANCES)}`}</Text>
-      ) : (
-        <></>
-      )}
     </Container>
   ) : (
     <></>
@@ -315,49 +163,35 @@ export enum TableType {
 const columnsProperties = {
   artifacts: {
     width: {
-      preview: '26%',
-      summary: '18%',
-      full: '18%'
+      preview: '35%',
+      summary: '26%',
+      full: '26%'
     }
   },
   envs: {
     width: {
-      preview: '22%',
-      summary: '17%',
-      full: '17%'
+      preview: '30%',
+      summary: '22%',
+      full: '22%'
     }
   },
   infras: {
     width: {
-      preview: '15%',
-      summary: '14%',
-      full: '14%'
-    }
-  },
-  instancesCount: {
-    width: {
-      preview: '10%',
-      summary: '5%',
-      full: '5%'
-    }
-  },
-  instances: {
-    width: {
-      preview: '27%',
-      summary: '28%',
-      full: '28%'
+      preview: '20%',
+      summary: '20%',
+      full: '20%'
     }
   },
   pipelines: {
     width: {
       preview: '0%',
-      summary: '23%',
-      full: '23%'
+      summary: '31%',
+      full: '31%'
     }
   }
 }
 
-export const ActiveServiceInstancesContentV2 = (
+export const DeploymentsV2 = (
   props: React.PropsWithChildren<{
     tableType: TableType
     loading?: boolean
@@ -399,18 +233,6 @@ export const ActiveServiceInstancesContentV2 = (
         id: 'infra',
         width: columnsProperties.infras.width[tableType],
         Cell: tableType == TableType.PREVIEW ? RenderInfraCount : RenderInfra
-      },
-      {
-        Header: getString('common.instanceLabel'),
-        id: 'instances',
-        width: columnsProperties.instancesCount.width[tableType],
-        Cell: RenderInstanceCount
-      },
-      {
-        Header: '',
-        id: 'deployments',
-        width: columnsProperties.instances.width[tableType],
-        Cell: RenderInstances
       }
     ]
 
