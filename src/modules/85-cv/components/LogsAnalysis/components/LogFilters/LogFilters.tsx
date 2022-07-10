@@ -12,11 +12,11 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { HealthSourceMultiSelectDropDown } from '@cv/components/ExecutionVerification/components/HealthSourcesMultiSelectDropdown/HealthSourceMultiSelectDropDown'
 import { useStrings } from 'framework/strings'
 import { useGetAllHealthSourcesForMonitoredServiceIdentifier } from 'services/cv'
+import { VerificationType } from '@cv/components/HealthSourceDropDown/HealthSourceDropDown.constants'
 import type { LogFiltersProps } from './LogFilters.types'
 import type { EventTypeFullName } from '../../../ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.constants'
 import { getClusterTypes } from '../../../ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.utils'
 import css from '../../../ExecutionVerification/components/LogAnalysisContainer/components/ClusterTypeFiltersForLogs.module.scss'
-import { VerificationType } from '@cv/components/HealthSourceDropDown/HealthSourceDropDown.constants'
 
 const LogFilters: React.FC<LogFiltersProps> = ({
   clusterTypeFilters,
