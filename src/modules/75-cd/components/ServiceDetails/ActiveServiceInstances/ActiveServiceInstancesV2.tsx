@@ -69,6 +69,7 @@ export const ActiveServiceInstancesV2: React.FC = () => {
     queryParams: queryParamsDeployments
   })
 
+  /* istanbul ignore next */
   const isDeploymentTab = (): boolean => {
     return Boolean(
       activeInstanceData &&

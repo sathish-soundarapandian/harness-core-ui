@@ -250,6 +250,30 @@ describe('ActiveInstance Details Dialog', () => {
 
     expect(popup).toMatchSnapshot()
   })
+
+  test('Click pipeline execution link in dialog', async () => {
+    jest.spyOn(cdngServices, 'useGetActiveServiceInstances').mockImplementation(() => {
+      return { loading: false, error: false, data: mockData, refetch: jest.fn() } as any
+    })
+    const { getByText } = render(
+      <TestWrapper>
+        <ActiveServiceInstancesV2 />
+      </TestWrapper>
+    )
+
+    const moreDetailsButton = getByText('cd.serviceDashboard.moreDetails')
+    await act(async () => {
+      fireEvent.click(moreDetailsButton!)
+    })
+
+    const popup = findDialogContainer()
+    expect(popup).toBeTruthy()
+
+    const pipelineLinks = document.querySelectorAll('.lastDeploymentText')
+    await act(async () => {
+      fireEvent.click(pipelineLinks[0])
+    })
+  })
 })
 
 //tests differents default states of tab according to the returned api response
