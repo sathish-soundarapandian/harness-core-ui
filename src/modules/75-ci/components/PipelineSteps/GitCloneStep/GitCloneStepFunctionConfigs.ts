@@ -30,31 +30,26 @@ export const transformValuesFieldsConfig = [
     type: TransformValuesTypes.Text
   },
   {
-    name: 'spec.build.type',
+    name: 'spec.cloneDirectory',
     type: TransformValuesTypes.Text
   },
   {
-    name: 'spec.build.spec.branch',
-    // type: TransformValuesTypes.Branch
-    type: TransformValuesTypes.Text
+    label: 'pipeline.depth',
+    name: 'spec.depth',
+    type: TransformValuesTypes.Numeric
   },
   {
-    name: 'spec.build.spec.tag',
-    // type: TransformValuesTypes.Tag
-    type: TransformValuesTypes.Text
+    label: 'pipeline.sslVerify',
+    name: 'spec.sslVerify',
+    type: TransformValuesTypes.Boolean
   },
   {
-    name: 'spec.build.spec.number',
-    // type: TransformValuesTypes.PRNumber
+    name: 'spec.runAsUser',
     type: TransformValuesTypes.Text
   },
   {
     name: 'spec.limitMemory',
     type: TransformValuesTypes.LimitMemory
-  },
-  {
-    name: 'spec.cloneDirectory',
-    type: TransformValuesTypes.Text
   },
   {
     name: 'spec.limitCPU',
@@ -70,7 +65,7 @@ export const transformValuesFieldsConfig = [
   }
 ]
 
-export const getEditViewValidateFieldsConfig = (isConnectorRuntimeInput?: boolean) => [
+export const getEditViewValidateFieldsConfig = (isBuildTypeRequired?: boolean) => [
   {
     name: 'identifier',
     type: ValidationFieldTypes.Identifier,
@@ -89,23 +84,32 @@ export const getEditViewValidateFieldsConfig = (isConnectorRuntimeInput?: boolea
     label: 'pipelineSteps.connectorLabel',
     isRequired: true
   },
-  // {
-  //   name: 'spec.build',
-  //   type: ValidationFieldTypes.Text,
-  //   label: 'pipeline.gitCloneStep.validation.associatedBuildInput',
-  //   isRequired: true
-  // },
   {
     name: 'spec.build.type',
     type: ValidationFieldTypes.Text,
     label: 'filters.executions.buildType',
-    isRequired: isConnectorRuntimeInput ? false : true
+    isRequired: isBuildTypeRequired ? true : false
   },
   {
     name: 'spec.cloneDirectory',
     type: ValidationFieldTypes.Text,
     label: 'pipeline.gitCloneStep.cloneDirectory',
     isRequired: true
+  },
+  {
+    label: 'pipeline.depth',
+    name: 'spec.depth',
+    type: ValidationFieldTypes.Numeric
+  },
+  {
+    label: 'pipeline.sslVerify',
+    name: 'spec.sslVerify',
+    type: ValidationFieldTypes.Boolean
+  },
+  {
+    label: 'pipeline.stepCommonFields.runAsUser',
+    name: 'spec.runAsUser',
+    type: ValidationFieldTypes.Numeric
   },
   {
     name: 'spec.limitMemory',
@@ -130,6 +134,10 @@ export function getInputSetViewValidateFieldsConfig(
       type: ValidationFieldTypes.Text,
       label: 'pipelineSteps.connectorLabel',
       isRequired
+    },
+    {
+      name: 'spec.runAsUser',
+      type: ValidationFieldTypes.Numeric
     },
     {
       name: 'spec.resources.limits.memory',
