@@ -26,7 +26,7 @@ export interface MultiTypeRadioGroupProps
   extends Omit<ExpressionAndRuntimeTypeProps, 'fixedTypeComponent' | 'fixedTypeComponentProps'> {
   radioGroupProps?: Omit<IRadioGroupProps, 'name' | 'selectedValue' | 'onChange' | 'options'>
   name: string
-  options: IOptionProps[]
+  options?: IOptionProps[]
 }
 
 export const MultiTypeRadioGroup: React.FC<MultiTypeRadioGroupProps> = ({

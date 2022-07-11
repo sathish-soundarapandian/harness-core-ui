@@ -107,7 +107,6 @@ export class GitCloneStep extends PipelineStep<GitCloneStepData> {
   protected type = StepType.GitClone
   protected stepName = 'Configure Git Clone Step'
   protected stepIcon: IconName = 'git-clone-step'
-  protected stepIconColor = '#4F5162'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.GitClone'
 
   protected stepPaletteVisible = false
