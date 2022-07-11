@@ -141,7 +141,7 @@ describe('Test Azure WebApp Infrastructure Spec snapshot', () => {
     )
     expect(container).toMatchSnapshot()
   })
-  test('Should render edit view for inputset view', async () => {
+  test('Should render edit view for inputset view and fetch dropdowns on focus', async () => {
     const { container } = render(
       <TestStepWidget
         initialValues={getInitialValues()}
@@ -157,11 +157,30 @@ describe('Test Azure WebApp Infrastructure Spec snapshot', () => {
       await act(async () => {
         const subscriptionInput = container.querySelector(
           '[placeholder="cd.steps.azureInfraStep.subscriptionPlaceholder"]'
-        )
-        fireEvent.focus(subscriptionInput!)
+        ) as HTMLElement
+        subscriptionInput.focus()
+        await waitFor(() => expect(subscriptionsResponse.refetch).toHaveBeenCalled())
+        const resourceGroupInput = container.querySelector(
+          '[placeholder="cd.steps.azureInfraStep.resourceGroupPlaceholder"]'
+        ) as HTMLElement
+        resourceGroupInput.focus()
+        await waitFor(() => expect(resourceGroupsResponse.refetch).toHaveBeenCalled())
+        const webAppInput = container.querySelector(
+          '[placeholder="cd.steps.azureWebAppInfra.webAppPlaceholder"]'
+        ) as HTMLElement
+        webAppInput.focus()
+        await waitFor(() => expect(webAppNamesResponse.refetch).toHaveBeenCalled())
+        const deploymentSlotInput = container.querySelector(
+          '[placeholder="cd.steps.azureWebAppInfra.deploymentSlotPlaceHolder"]'
+        ) as HTMLElement
+        deploymentSlotInput.focus()
+        await waitFor(() => expect(deploymentSlotsResponse.refetch).toHaveBeenCalled())
+        const targetSlotInput = container.querySelector(
+          '[placeholder="cd.steps.azureWebAppInfra.targetSlotPlaceHolder"]'
+        ) as HTMLElement
+        targetSlotInput.focus()
+        await waitFor(() => expect(deploymentSlotsResponse.refetch).toHaveBeenCalled())
       })
-
-      await waitFor(() => expect(subscriptionsResponse.refetch).toHaveBeenCalled())
     })
   })
 
@@ -229,6 +248,22 @@ describe('Test Azure Infrastructure Spec behavior', () => {
           '[placeholder="cd.steps.azureInfraStep.subscriptionPlaceholder"]'
         )
         fireEvent.change(subscriptionInput!, { target: { value: 'subscription1' } })
+        const resourceGroupInput = container.querySelector(
+          '[placeholder="cd.steps.azureInfraStep.resourceGroupPlaceholder"]'
+        ) as HTMLElement
+        fireEvent.change(resourceGroupInput!, { target: { value: 'subscription1' } })
+        const webAppInput = container.querySelector(
+          '[placeholder="cd.steps.azureWebAppInfra.webAppPlaceholder"]'
+        ) as HTMLElement
+        fireEvent.change(webAppInput!, { target: { value: 'subscription1' } })
+        const deploymentSlotInput = container.querySelector(
+          '[placeholder="cd.steps.azureWebAppInfra.deploymentSlotPlaceHolder"]'
+        ) as HTMLElement
+        fireEvent.change(deploymentSlotInput!, { target: { value: 'subscription1' } })
+        const targetSlotInput = container.querySelector(
+          '[placeholder="cd.steps.azureWebAppInfra.targetSlotPlaceHolder"]'
+        ) as HTMLElement
+        fireEvent.change(targetSlotInput!, { target: { value: 'subscription1' } })
 
         await ref.current?.submitForm()
       })

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test Azure WebApp Infrastructure Spec snapshot Should render edit view for inputset view 1`] = `
+exports[`Test Azure WebApp Infrastructure Spec snapshot Should render edit view for inputset view and fetch dropdowns on focus 1`] = `
 <div>
   <div
     class="OverlaySpinner--overlaySpinner"
