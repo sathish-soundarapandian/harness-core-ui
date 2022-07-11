@@ -404,9 +404,7 @@ export function PipelineInputSetForm(props: Omit<PipelineInputSetFormProps, 'all
         accountPathProps,
         template: props.template
       }).then(data => {
-        if (data.length > 0) {
-          setTemplate(Object.assign(props.template, ...data))
-        }
+        setTemplate(Object.assign(props.template, ...data))
       })
     }
   }, [props?.template])
