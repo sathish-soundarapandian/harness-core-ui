@@ -258,20 +258,20 @@ export const ActiveServiceInstancesContent = (
   const columns = useMemo(() => {
     const columnsArray = [
       {
-        Header: getString('environment'),
+        Header: getString('cd.serviceDashboard.headers.environment'),
         id: 'service',
         width: columnsWidth[0] || '20%',
         Cell: RenderEnvironment
       },
       {
-        Header: getString('cd.artifactVersion'),
+        Header: getString('cd.serviceDashboard.headers.artifactVersion'),
         id: 'type',
         width: columnsWidth[1] || '25%',
         Cell: RenderBuildName,
         expandBuilds
       },
       {
-        Header: getString('common.instanceLabel'),
+        Header: getString('cd.serviceDashboard.headers.instances'),
         id: 'serviceInstances',
         width: columnsWidth[2] || '10%',
         Cell: RenderInstanceCount

@@ -61,24 +61,24 @@ export default function InstancesDetailsDialog(props: InstancesDetailsDialogProp
         flexGrow: 4
       },
       {
-        label: getString('cd.artifactVersion'),
+        label: getString('cd.serviceDashboard.headers.artifactVersion'),
         flexGrow: 18
       },
       {
-        label: getString('environment'),
+        label: getString('cd.serviceDashboard.headers.environment'),
         flexGrow: 16
       },
       {
-        label: getString('common.clusters'),
-        flexGrow: 14
+        label: getString('cd.serviceDashboard.headers.infrastructures'),
+        flexGrow: 16
       },
       {
-        label: getString('common.instanceLabel'),
+        label: getString('cd.serviceDashboard.headers.instances'),
         flexGrow: 32
       },
       {
-        label: getString('cd.pipelineExecution'),
-        flexGrow: 25
+        label: getString('cd.serviceDashboard.headers.pipelineExecution'),
+        flexGrow: 24
       }
     ]
 

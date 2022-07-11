@@ -143,7 +143,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                   >
-                    environment
+                    cd.serviceDashboard.headers.environment
                   </p>
                 </div>
                 <div
@@ -155,7 +155,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                   >
-                    cd.artifactVersion
+                    cd.serviceDashboard.headers.artifactVersion
                   </p>
                 </div>
                 <div
@@ -167,7 +167,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                   >
-                    common.instanceLabel
+                    cd.serviceDashboard.headers.instances
                   </p>
                 </div>
                 <div

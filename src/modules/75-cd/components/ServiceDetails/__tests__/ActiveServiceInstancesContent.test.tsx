@@ -129,7 +129,7 @@ describe('ActiveInstance Tab states', () => {
     )
 
     // activeInstance Tab should be visible
-    expect(getByText('common.instanceLabel')).toBeTruthy()
+    expect(getByText('cd.serviceDashboard.headers.instances')).toBeTruthy()
   })
 
   //tab should be defaulted to deployments
@@ -153,8 +153,8 @@ describe('ActiveInstance Tab states', () => {
       </TestWrapper>
     )
     //check if table header are visible
-    expect(getByText('environment')).toBeTruthy()
-    expect(getByText('cd.artifactVersion')).toBeTruthy()
+    expect(getByText('cd.serviceDashboard.headers.environment')).toBeTruthy()
+    expect(getByText('cd.serviceDashboard.headers.artifactVersion')).toBeTruthy()
 
     //check if table rows of deployments are visible
 
