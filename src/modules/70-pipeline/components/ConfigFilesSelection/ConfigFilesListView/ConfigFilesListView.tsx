@@ -404,7 +404,6 @@ function ConfigFilesListView({
                 const filesType = configFile?.spec?.store?.spec?.files?.length
                   ? getString('pipeline.configFiles.plainText')
                   : getString('encrypted')
-                console.log('configFIle', configFile)
                 const filesLocation = configFile?.spec?.store?.spec?.files?.length
                   ? configFile?.spec?.store?.spec?.files
                   : configFile?.spec?.store?.spec?.secretFiles

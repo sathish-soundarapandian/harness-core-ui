@@ -96,36 +96,24 @@ export const prepareConfigFilesValue = (formData: ConfigFileHarnessDataType & { 
     true
   )
   const isRunTime = typeValue === MultiTypeInputType.RUNTIME
-  const isFixed = typeValue === MultiTypeInputType.FIXED
-  const isExpression = typeValue === MultiTypeInputType.EXPRESSION
-  console.log('isRuntime', isRunTime)
   const filesData: any = {
     files: [],
     secretFiles: []
   }
-  console.log('FORMDATA', formData)
   if (fileType === FILE_TYPE_VALUES.FILE_STORE && !isRunTime) {
-    console.log('fileType === FILE_TYPE_VALUES.FILE_STORE && !isRunTime', files)
     filesData.files = formData?.files
   }
   if (fileType === FILE_TYPE_VALUES.FILE_STORE && isRunTime) {
-    console.log('fileType === FILE_TYPE_VALUES.FILE_STORE && isRunTime', files)
-
     filesData.files = formData?.files
   }
 
   if (fileType === FILE_TYPE_VALUES.ENCRYPTED && !isRunTime) {
-    console.log('fileType === FILE_TYPE_VALUES.ENCRYPTED && !isRunTime', files)
-
     filesData.secretFiles = formData?.files
   }
   if (fileType === FILE_TYPE_VALUES.ENCRYPTED && isRunTime) {
-    console.log('fileType === FILE_TYPE_VALUES.ENCRYPTED && isRunTime', files)
-
     filesData.secretFiles = formData?.files
   }
 
-  console.log('filesData', filesData)
   return filesData
 }
 
