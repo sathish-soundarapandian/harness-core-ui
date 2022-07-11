@@ -26,6 +26,7 @@ allowpaths:
   - '/setup/delegates/delegate-selectors-up-the-hierarchy'
   - '/setup/delegates/v2/up-the-hierarchy'
   - '/users/user.get'
+  - '/users/accounts/{userId}.get'
   - '/users/set-default-account/{accountId}'
   - '/users/new-trial'
   - '/ng/signup'
@@ -81,6 +82,7 @@ operationIdOverrides:
   /setup/delegates/delegate-selectors-up-the-hierarchy.get: getDelegateSelectorsUpTheHierarchy
   /setup/delegates/v2/up-the-hierarchy.get: getDelegatesUpTheHierarchy
   /users/user.get: getUser
+  /users/accounts/{userId}.get: getAccounts
   /users/{userId}/logout: logout
   /setup/delegates/delegate-tags.get: getDelegateTags
   /apps.get: getListApplications

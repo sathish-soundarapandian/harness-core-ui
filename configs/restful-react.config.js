@@ -14,7 +14,7 @@ const customGenerator = require('../scripts/swagger-custom-generator.js')
 module.exports = {
   portal: {
     output: 'src/services/portal/index.tsx',
-    // url: 'https://localhost:9090/api/swagger.json',
+    // url: 'https://qa.harness.io/api/swagger.json',
     file: 'src/services/portal/swagger.json',
     validation: false,
     transformer: 'scripts/swagger-transform.js',

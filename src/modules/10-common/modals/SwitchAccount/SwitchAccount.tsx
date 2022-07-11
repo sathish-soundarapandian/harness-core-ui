@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState, useEffect } from 'react'
+import React, { useMemo, useState } from 'react'
 import {
   Container,
   Text,
@@ -19,13 +19,13 @@ import {
 } from '@wings-software/uicore'
 import type { Column, Renderer, CellProps } from 'react-table'
 import { useParams, useHistory } from 'react-router-dom'
-import { get, defaultTo } from 'lodash-es'
+import { get } from 'lodash-es'
 import { Intent } from '@blueprintjs/core'
 import {
-  useGetUser,
   useSetDefaultAccountForCurrentUser,
   RestResponseUser,
-  useRestrictedSwitchAccount
+  useRestrictedSwitchAccount,
+  useGetAccounts
 } from 'services/portal'
 import type { User, Account } from 'services/portal'
 import { PageSpinner } from '@common/components'
@@ -69,12 +69,12 @@ const ReAuthenticationNote: React.FC<ReAuthenticationNoteProps> = ({ accounts, a
 
 const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '', mock }) => {
   const { accountId } = useParams<AccountPathProps>()
-  const [user, setUser] = useState<User>()
   const { showError } = useToaster()
   const history = useHistory()
   const { getString } = useStrings()
-  const { data, loading, error, refetch } = useGetUser({
-    mock
+  const { data, loading, error, refetch } = useGetAccounts({
+    userId: 'lv0euRhKRCyiXWzS7pOg6g',
+    queryParams: { searchTerm: searchString }
   })
   const { mutate: setDefaultAccount, loading: settingDefault } = useSetDefaultAccountForCurrentUser({ accountId })
   const { mutate: switchAccount, loading: switchAccountLoading } = useRestrictedSwitchAccount({
@@ -145,10 +145,7 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '', mock }
       }
     })
 
-    // default account should not be actionable
-    return account.uuid === user?.defaultAccountId ? (
-      <Text flex={{ align: 'center-center' }}>Default</Text>
-    ) : (
+    return (
       <Button
         small
         variation={ButtonVariation.TERTIARY}
@@ -157,23 +154,22 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '', mock }
         data-testid={`set-default-account-${account.accountName}`}
       />
     )
+
+    // // default account should not be actionable
+    // return account.uuid === user?.defaultAccountId ? (
+    //   <Text flex={{ align: 'center-center' }}>Default</Text>
+    // ) : (
+    //   <Button
+    //     small
+    //     variation={ButtonVariation.TERTIARY}
+    //     text={getString('common.setAsDefault')}
+    //     onClick={openDialog}
+    //     data-testid={`set-default-account-${account.accountName}`}
+    //   />
+    // )
   }
 
-  useEffect(() => {
-    setUser(data?.resource)
-  }, [data])
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const accounts = useMemo(
-    () =>
-      defaultTo(
-        user?.accounts
-          ?.concat(defaultTo(user.supportAccounts, []))
-          ?.filter(account => account.accountName.toLowerCase().includes(searchString.toLowerCase())),
-        []
-      ),
-    [user, searchString]
-  )
+  const accounts = data?.resource?.content || []
 
   const columns: Column<Account>[] = useMemo(
     () => [
@@ -218,7 +214,17 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '', mock }
         ) : null}
         {!loading && !settingDefault && !error && accounts ? (
           accounts.length ? (
-            <TableV2 columns={columns} data={accounts} sortable={false} />
+            <TableV2
+              columns={columns}
+              data={accounts}
+              sortable={false}
+              pagination={{
+                itemCount: data?.resource?.totalItems || 0,
+                pageSize: data?.resource?.pageSize || 10,
+                pageCount: data?.resource?.totalPages || 0,
+                pageIndex: data?.resource?.pageIndex || 0
+              }}
+            />
           ) : (
             <NoDataCard
               message={getString('noData')}
