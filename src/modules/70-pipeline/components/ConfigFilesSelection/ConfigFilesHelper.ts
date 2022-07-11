@@ -8,7 +8,6 @@
 import { IconName, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { Connectors } from '@connectors/constants'
-import get from 'lodash/get'
 
 import type { StringKeys } from 'framework/strings'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'

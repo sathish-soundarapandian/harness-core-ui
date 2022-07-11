@@ -1154,13 +1154,14 @@ ACR:
   repositoryError: 'No repository found with given Registry'
   tagError: 'No tags found with given Connector, Subscription Id, Registry and Repository'
 configFiles:
-  title: 'Config File Detailss'
+  title: 'Config File {{type}}'
   source: 'Config File Source'
   selectFileType: 'Select file type'
   plainText: 'Plain text'
   identifierLabel: 'Config File Identifier'
   encryptedFiles: 'Encrypted file(s)'
   fileType: 'File Type'
+  encryptedLocation: 'Secrets Manager Name'
   error:
     fileType: 'File type is required'
     identifier: 'Config file identifier is required'

@@ -194,7 +194,7 @@ export const getInfrastructureDefinitionValidationSchema = (
         credentialsRef: getSshKeyRefSchema(getString)
       })
     }
-    if (deploymentType === ServiceDeploymentType.winrm) {
+    if (deploymentType === ServiceDeploymentType.WinRm) {
       return Yup.object().shape({})
     }
     return getValidationSchema(getString)

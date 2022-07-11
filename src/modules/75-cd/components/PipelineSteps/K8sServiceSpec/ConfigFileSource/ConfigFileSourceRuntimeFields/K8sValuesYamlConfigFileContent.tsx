@@ -13,7 +13,6 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
 import type { ConfigFileSourceRenderProps } from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBase'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
-// import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
 interface K8sValuesYamlConfigFileRenderProps extends ConfigFileSourceRenderProps {
@@ -24,7 +23,7 @@ const K8sValuesYamlConfigFileContent = (props: K8sValuesYamlConfigFileRenderProp
     template,
     path,
     configFilePath,
-    configFiles,
+    // configFiles,
     configFile
     // fromTrigger,
     // allowableTypes,
@@ -65,7 +64,7 @@ const K8sValuesYamlConfigFileContent = (props: K8sValuesYamlConfigFileRenderProp
   return (
     <Layout.Vertical
       data-name="config-files"
-      key={configFiles?.identifier}
+      key={configFile?.identifier}
       className={cx(css.inputWidth, css.layoutVerticalSpacing)}
     >
       {(isFieldRuntime(`${configFilePath}.spec.store.spec.files`, template) ||
@@ -73,9 +72,9 @@ const K8sValuesYamlConfigFileContent = (props: K8sValuesYamlConfigFileRenderProp
         <div className={css.verticalSpacingInput}>
           <FileStoreList
             labelClassName={css.listLabel}
-            label={getString('pipeline.manifestType.valuesYamlPath')}
+            label={getString('pipeline.configFiles.title')}
             name={`${path}.${configFilePath}.spec.store.spec.${filesType}`}
-            placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+            // placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
             // disabled={isFieldDisabled(`${manifestPath}.spec.valuesPaths`)}
             style={{ marginBottom: 'var(--spacing-small)' }}
             expressions={expressions}

@@ -13,6 +13,7 @@ declare const styles: {
   readonly artifactIcon: string
   readonly blackText: string
   readonly bp3Button: string
+  readonly configContainer: string
   readonly configFileSelect: string
   readonly configFilesForm: string
   readonly configureOptions: string

@@ -1,16 +1,7 @@
-/*
- * Copyright 2021 Harness Inc. All rights reserved.
- * Use of this source code is governed by the PolyForm Shield 1.0.0 license
- * that can be found in the licenses directory at the root of this repository, also available at
- * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
- */
-
 import React from 'react'
-import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import cx from 'classnames'
 import {
   Text,
-  FormInput,
   Button,
   getMultiTypeFromValue,
   MultiTypeInputType,
@@ -20,26 +11,19 @@ import {
   Layout,
   Icon
 } from '@harness/uicore'
-import { FormGroup, Intent } from '@blueprintjs/core'
+import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
+
 import { FieldArray, connect, FormikContextType } from 'formik'
-import { get, isPlainObject } from 'lodash-es'
+import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { ExpressionsListInput } from '@common/components/ExpressionsListInput/ExpressionsListInput'
 
 import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
-import MultiTypeFieldSelector, {
-  MultiTypeFieldSelectorProps
-} from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import SecretInput from '@secrets/components/SecretInput/SecretInput'
+import type { MultiTypeFieldSelectorProps } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
-import FileStoreSelectField from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/MultiConfigSelectField/FileStoreSelect/FileStoreSelectField'
-import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
-import FileSelectField from './EncryptedSelect/FileSelectField'
-import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
+import FileStoreSelectField from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
+import FileSelectField from '@filestore/components/MultiTypeFileSelect/EncryptedSelect/EncryptedFileSelectField'
 import MultiTypeConfigFileSelect from './MultiTypeConfigFileSelect'
-import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
 
 import css from './MultiConfigSelectField.module.scss'
 
@@ -74,7 +58,6 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
   const {
     name,
     multiTypeFieldSelectorProps,
-    // valueMultiTextInputProps = {},
     enableConfigureOptions = true,
     configureOptionsProps,
     cardStyle,
@@ -104,23 +87,6 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
 
   const { getString } = useStrings()
 
-  const errorCheck = (index: number): boolean =>
-    (formik?.submitCount &&
-      formik?.submitCount > 0 &&
-      get(formik?.errors, `${name}[${index}]`) &&
-      isPlainObject(get(formik?.errors, `${name}[${index}]`))) as boolean
-
-  React.useEffect(() => {
-    console.log('err', get(formik?.errors, `${name}[0]`))
-  }, [formik?.errors])
-
-  React.useEffect(() => {
-    console.log('xxxx', {
-      values: formik?.values.files,
-      isArray: Array.isArray(formik?.values.files)
-    })
-  }, [formik?.values.files])
-
   return (
     <DragDropContext
       onDragEnd={(result: DropResult) => {
@@ -130,7 +96,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
         const res = Array.from(value)
         const [removed] = res.splice(result.source.index, 1)
         res.splice(result.destination.index, 0, removed)
-        formik.setFieldValue(name, [...res])
+        formik?.setFieldValue(name, [...res])
         setChanged(!changed)
       }}
     >
@@ -139,12 +105,12 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
           <div
             {...provided.droppableProps}
             ref={provided.innerRef}
-            className={cx(css.group, css.withoutSpacing, appearance === 'minimal' ? css.minimalCard : '')}
+            className={cx(css.group, appearance === 'minimal' ? css.minimalCard : '')}
             {...restProps}
           >
-            <MultiTypeFieldSelector
+            <MultiTypeConfigFileSelect
+              isFieldInput={true}
               name={name}
-              isInputField={false}
               defaultValueToReset={getDefaultResetValue()}
               style={{ flexGrow: 1, marginBottom: 0 }}
               allowedTypes={[MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED]}
@@ -177,25 +143,57 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                 >
                                   <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
                                     <>
-                                      <Icon name="drag-handle-vertical" className={css.drag} />
+                                      <Icon name="drag-handle-vertical" />
                                       <Text className={css.text}>{`${index + 1}.`}</Text>
                                     </>
 
                                     <div className={css.multiSelectField}>
-                                      <div className={cx(css.group, css.withoutAligning, css.withoutSpacing)}>
+                                      <div className={cx(css.group, css.withoutAligning)}>
                                         {fileType === FILE_TYPE_VALUES.ENCRYPTED ? (
-                                          <FileSelectField
-                                            index={index}
+                                          <MultiTypeConfigFileSelect
                                             name={`${name}[${index}]`}
-                                            formik={formik}
-                                            onChange={(newValue, i) => {
-                                              replace(i, {
-                                                ...restValue,
-                                                value: newValue
-                                              })
+                                            label={''}
+                                            defaultValueToReset={''}
+                                            style={{ flexGrow: 1, marginBottom: 0, marginTop: 0 }}
+                                            disableTypeSelection={false}
+                                            changed={changed}
+                                            supportListOfExpressions={true}
+                                            defaultType={getMultiTypeFromValue(
+                                              get(formik?.values, `${name}[${index}]`),
+                                              [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                                              true
+                                            )}
+                                            allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
+                                            expressionRender={() => {
+                                              return (
+                                                <ExpressionInput
+                                                  name={`${name}[${index}]`}
+                                                  value={get(formik?.values, `${name}[${index}]`)}
+                                                  disabled={false}
+                                                  inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
+                                                  items={expressions}
+                                                  onChange={val =>
+                                                    /* istanbul ignore next */
+                                                    formik?.setFieldValue(`${name}[${index}]`, val)
+                                                  }
+                                                />
+                                              )
                                             }}
-                                            field={field}
-                                          />
+                                          >
+                                            <div className={css.fieldWrapper}>
+                                              <FileSelectField
+                                                value={get(formik?.values, `${name}[${index}]`)}
+                                                name={`${name}[${index}]`}
+                                                onChange={(newValue, i) => {
+                                                  replace(i, {
+                                                    ...restValue,
+                                                    value: newValue
+                                                  })
+                                                  formik?.setFieldValue(`${name}[${index}]`, newValue)
+                                                }}
+                                              />
+                                            </div>
+                                          </MultiTypeConfigFileSelect>
                                         ) : (
                                           <MultiTypeConfigFileSelect
                                             name={`${name}[${index}]`}
@@ -226,12 +224,18 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                                 />
                                               )
                                             }}
-                                            onTypeChange={e => {
-                                              console.log('e', e)
-                                            }}
                                           >
                                             <div className={css.fieldWrapper}>
-                                              <FileStoreSelectField name={`${name}[${index}]`} />
+                                              <FileStoreSelectField
+                                                name={`${name}[${index}]`}
+                                                onChange={(newValue, i) => {
+                                                  replace(i, {
+                                                    ...restValue,
+                                                    value: newValue
+                                                  })
+                                                  formik?.setFieldValue(`${name}[${index}]`, newValue)
+                                                }}
+                                              />
                                             </div>
                                           </MultiTypeConfigFileSelect>
                                         )}
@@ -269,7 +273,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                   )
                 }}
               />
-            </MultiTypeFieldSelector>
+            </MultiTypeConfigFileSelect>
             {provided.placeholder}
             {enableConfigureOptions &&
               typeof value === 'string' &&

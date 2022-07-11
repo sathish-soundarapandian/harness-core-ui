@@ -6,19 +6,8 @@
  */
 
 import React, { useState } from 'react'
-import {
-  Button,
-  ButtonVariation,
-  Text,
-  Container,
-  Formik,
-  Layout,
-  StepProps,
-  FormInput,
-  getMultiTypeFromValue,
-  MultiTypeInputType
-} from '@harness/uicore'
-import { Form, yupToFormErrors } from 'formik'
+import { Button, ButtonVariation, Text, Container, Formik, Layout, StepProps, FormInput } from '@harness/uicore'
+import { Form } from 'formik'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 // import { defaultTo, merge } from 'lodash-es'
@@ -44,6 +33,7 @@ interface ConfigFilesPropType {
   handleSubmit: any
   expressions: string[]
   isEditMode: boolean
+  listOfConfigFiles: any[]
 }
 
 // interface ConfigFileData {
@@ -64,7 +54,8 @@ export function HarnessConfigStep({
   //   nextStep,
   handleSubmit,
   expressions,
-  isEditMode
+  isEditMode,
+  listOfConfigFiles
 }: StepProps<any> & ConfigFilesPropType): React.ReactElement {
   //   const gotoNextStep = (): void => {
   //     nextStep?.()
@@ -94,7 +85,6 @@ export function HarnessConfigStep({
       ...prevStepData,
       files: prevStepData?.files?.length > 0 ? prevStepData.files : prevStepData.secretFiles,
       secretFiles: undefined
-      //   fileType: prevStepData?.fileType ? prevStepData.fileType : FILE_TYPE_VALUES.FILE_STORE
     })
   }, [prevStepData])
 
@@ -129,7 +119,13 @@ export function HarnessConfigStep({
           initialValues={initialValues}
           formName="configFileDetails"
           validationSchema={Yup.object().shape({
-            identifier: Yup.string().required(getString('pipeline.configFiles.error.identifier')),
+            identifier: Yup.mixed()
+              .notOneOf(
+                [...listOfConfigFiles.map(({ configFile }) => configFile.identifier)],
+                getString('validation.duplicateIdError')
+              )
+              .required(getString('validation.identifierRequired')),
+
             files: Yup.lazy(value =>
               Array.isArray(value) ? Yup.array().of(Yup.string().required()) : Yup.string().required()
             )
@@ -145,7 +141,7 @@ export function HarnessConfigStep({
           {formikProps => {
             console.log('formikProps', formikProps)
             return (
-              <Form>
+              <Form className={css.configContainer}>
                 <div className={css.headerContainer}>
                   <FormInput.Text
                     name="identifier"
@@ -169,7 +165,6 @@ export function HarnessConfigStep({
                         {
                           label: getString('resourcePage.fileStore'),
                           value: FILE_TYPE_VALUES.FILE_STORE
-                          //   disabled: false
                         },
                         { label: getString('encrypted'), value: FILE_TYPE_VALUES.ENCRYPTED }
                       ]}
@@ -200,6 +195,7 @@ export function HarnessConfigStep({
                     icon="chevron-left"
                     variation={ButtonVariation.SECONDARY}
                     onClick={() => previousStep?.({ ...prevStepData })}
+                    margin={{ right: 'medium' }}
                   />
                   <Button
                     variation={ButtonVariation.PRIMARY}
@@ -207,6 +203,7 @@ export function HarnessConfigStep({
                     disabled={formikProps.values.store === null}
                     text={getString('continue')}
                     rightIcon="chevron-right"
+                    margin={{ left: 'medium' }}
                   />
                 </Layout.Horizontal>
               </Form>

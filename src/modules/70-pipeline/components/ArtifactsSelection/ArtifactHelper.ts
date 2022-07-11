@@ -23,7 +23,12 @@ export enum ModalViewFor {
 }
 
 export const isAllowedArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
-  return deploymentType === ServiceDeploymentType.Kubernetes || deploymentType === ServiceDeploymentType.NativeHelm
+  return (
+    deploymentType === ServiceDeploymentType.Kubernetes ||
+    deploymentType === ServiceDeploymentType.NativeHelm ||
+    deploymentType === ServiceDeploymentType.Ssh ||
+    deploymentType === ServiceDeploymentType.WinRm
+  )
 }
 
 export const isAdditionAllowed = (deploymentType: ServiceDefinition['type'], isReadOnly: boolean): boolean => {
@@ -31,7 +36,9 @@ export const isAdditionAllowed = (deploymentType: ServiceDefinition['type'], isR
     !isReadOnly &&
     (deploymentType === ServiceDeploymentType.Kubernetes ||
       deploymentType === ServiceDeploymentType.NativeHelm ||
-      deploymentType === ServiceDeploymentType.ServerlessAwsLambda)
+      deploymentType === ServiceDeploymentType.ServerlessAwsLambda ||
+      deploymentType === ServiceDeploymentType.Ssh ||
+      deploymentType === ServiceDeploymentType.WinRm)
   )
 }
 
@@ -110,8 +117,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry
   ],
   ServerlessAwsLambda: [ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry, ENABLED_ARTIFACT_TYPES.Ecr],
-  Ssh: [ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry],
-  WinRm: [ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry],
+  Ssh: [ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry, ENABLED_ARTIFACT_TYPES.Jenkins],
+  WinRm: [ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry, ENABLED_ARTIFACT_TYPES.Jenkins],
   AzureWebApps: []
 }
 

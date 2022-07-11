@@ -91,7 +91,7 @@ export interface KubernetesManifestsProps {
   manifestPath?: string
 }
 
-export interface KubernetesConfigFileProps {
+export interface KubernetesConfigFilesProps {
   template: ServiceSpec
   path?: string
   stepViewType?: StepViewType

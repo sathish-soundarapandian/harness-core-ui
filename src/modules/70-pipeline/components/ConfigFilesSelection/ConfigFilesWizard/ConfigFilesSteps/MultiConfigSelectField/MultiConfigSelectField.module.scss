@@ -5,6 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+.formGroup {
+  :global {
+    .bp3-label {
+      margin-bottom: 0 !important;
+    }
+  }
+}
+
 .group {
   display: flex;
   &.minimalCard {
@@ -57,6 +65,8 @@
 
   :global {
     .bp3-input {
+      width: 340px;
+
       background-color: var(--grey-50);
       border: 1px solid var(--grey-200);
 

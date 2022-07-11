@@ -28,9 +28,9 @@ export function ConfigFilesWizard({
   allowableTypes,
   //   manifestStoreTypes,
   //   labels,
-  selectedConfigFile,
-  newConnectorView,
-  newConnectorSteps,
+  // selectedConfigFile,
+  // newConnectorView,
+  // newConnectorSteps,
   lastSteps,
   //   changeConfigFileType,
   //   iconsProps,
@@ -53,7 +53,8 @@ export function ConfigFilesWizard({
       className={css.configFileWizard}
       onStepChange={onStepChange}
       icon={ConfigWizard.icon}
-      title={`${ConfigWizard.label} ${getString('pipeline.configFiles.title')}`}
+      iconProps={{ size: 50 }}
+      title={`${ConfigWizard.label} ${getString('pipeline.configFiles.title', { type: 'Source' })}`}
       initialStep={1}
     >
       <ConfigFilesStore

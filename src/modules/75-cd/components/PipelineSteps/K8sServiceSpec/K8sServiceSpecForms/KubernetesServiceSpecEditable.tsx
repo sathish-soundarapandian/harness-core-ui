@@ -12,7 +12,11 @@ import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/W
 import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ArtifactsSelection'
 import ConfigFilesSelection from '@pipeline/components/ConfigFilesSelection/ConfigFilesSelection'
 import ManifestSelection from '@pipeline/components/ManifestSelection/ManifestSelection'
-import { getSelectedDeploymentType, isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
+import {
+  getSelectedDeploymentType,
+  isServerlessDeploymentType,
+  isSshOrWinrmDeploymentType
+} from '@pipeline/utils/stageHelpers'
 import { useStrings } from 'framework/strings'
 import type { ServiceDefinition } from 'services/cd-ng'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
@@ -59,7 +63,7 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
     <div className={css.serviceDefinition}>
       {!!selectedDeploymentType && (
         <>
-          {selectedDeploymentType !== 'Ssh' && (
+          {!isSshOrWinrmDeploymentType(selectedDeploymentType) && (
             <Card
               className={css.sectionCard}
               id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
@@ -101,7 +105,7 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
               readonly={!!readonly}
             />
           </Card>
-          {selectedDeploymentType === 'Ssh' && (
+          {isSshOrWinrmDeploymentType(selectedDeploymentType) && (
             <Card className={css.sectionCard} id={getString('pipelineSteps.configFiles')}>
               <div
                 className={cx(css.tabSubHeading, 'ng-tooltip-native')}

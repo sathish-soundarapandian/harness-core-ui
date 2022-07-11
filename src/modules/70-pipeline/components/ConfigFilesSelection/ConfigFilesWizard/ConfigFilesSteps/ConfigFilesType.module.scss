@@ -130,6 +130,12 @@
 
 .optionsViewContainer {
   margin: var(--spacing-small) 0 0 var(--spacing-small) !important;
+  .configContainer {
+    display: flex;
+    flex-direction: column;
+    min-height: 470px;
+    justify-content: space-between;
+  }
   .configFilesForm {
     min-height: 470px;
 

@@ -9,8 +9,7 @@ import {
   HarnessDocTooltip,
   FormInput,
   EXECUTION_TIME_INPUT_VALUE,
-  Container,
-  Text
+  Container
 } from '@harness/uicore'
 import { IFormGroupProps, Intent, FormGroup } from '@blueprintjs/core'
 import { FormikContextType, connect } from 'formik'
@@ -44,7 +43,7 @@ export interface MultiTypeFieldSelectorProps extends Omit<IFormGroupProps, 'labe
   localId?: string
   changed?: boolean
   values?: string | string[]
-  isInputField?: boolean
+  isFieldInput?: boolean
 }
 
 export interface ConnectedMultiTypeFieldSelectorProps extends MultiTypeFieldSelectorProps {
@@ -72,8 +71,8 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
     defaultType,
     changed,
     localId,
-    isInputField = true,
     values,
+    isFieldInput = false,
     ...restProps
   } = props
   const error = get(formik?.errors, name)
@@ -118,10 +117,39 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
     setType(getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions))
   }
 
-  return (
+  return isFieldInput ? (
     <FormGroup
       {...rest}
-      //   className={type === MultiTypeInputType.RUNTIME ? css.formGroup : ''}
+      labelFor={name}
+      helperText={helperText}
+      intent={intent}
+      disabled={disabled}
+      label={
+        <div className={css.formLabel}>
+          <HarnessDocTooltip tooltipId={dataTooltipId} labelText={labelText} />
+          {disableTypeSelection ? null : (
+            <MultiTypeSelectorButton
+              allowedTypes={allowedTypes}
+              type={type}
+              onChange={handleChange}
+              disabled={disableMultiSelectBtn}
+            />
+          )}
+        </div>
+      }
+    >
+      {disableTypeSelection || type === MultiTypeInputType.FIXED ? (
+        children
+      ) : type === MultiTypeInputType.EXPRESSION && typeof expressionRender === 'function' ? (
+        expressionRender()
+      ) : type === MultiTypeInputType.RUNTIME && typeof value === 'string' ? (
+        <FormInput.Text className={css.runtimeDisabled} name={name} disabled label="" />
+      ) : null}
+    </FormGroup>
+  ) : (
+    <FormGroup
+      {...rest}
+      className={type === MultiTypeInputType.RUNTIME ? css.formGroup : ''}
       labelFor={name}
       helperText={helperText}
       intent={intent}

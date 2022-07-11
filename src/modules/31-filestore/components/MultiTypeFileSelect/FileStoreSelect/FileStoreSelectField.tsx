@@ -34,7 +34,7 @@ export interface FileStoreSelectProps {
   placeholder?: string
   readonly?: boolean
   formik: FormikContextType<any>
-  onChange: (value: string) => void
+  onChange: (value: string, id?: any) => void
 }
 
 interface FormikFileStoreInput extends FileStoreSelectProps {

@@ -44,10 +44,8 @@ import StepGitAuthentication from '@connectors/components/CreateConnector/GitCon
 import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
 import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
 import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
-// import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
-// import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 
 import {
   buildBitbucketPayload,
@@ -72,16 +70,13 @@ function ConfigFilesListView({
   updateStage,
   stage,
   isPropagating,
-  //   connectors,
-  //   refetchConnectors,
   listOfConfigFiles,
   deploymentType,
   isReadonly,
   allowableTypes,
   selectedConfig,
   setSelectedConfig
-}: //   allowOnlyOne = false
-ConfigFilesListViewProps): JSX.Element {
+}: ConfigFilesListViewProps): JSX.Element {
   const DIALOG_PROPS: IDialogProps = {
     isOpen: true,
     usePortal: true,
@@ -91,18 +86,6 @@ ConfigFilesListViewProps): JSX.Element {
     enforceFocus: false,
     style: { width: 1175, minHeight: 640, borderLeft: 0, paddingBottom: 0, position: 'relative', overflow: 'hidden' }
   }
-
-  //   const context = usePipelineContext()
-  //   const {
-  //     state: {
-  //       pipeline,
-  //       selectionState: { selectedStageId }
-  //     },
-  //     getStageFromPipeline,
-  //     updateStage,
-  //     isReadonly,
-  //     allowableTypes
-  //   } = context
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -132,11 +115,11 @@ ConfigFilesListViewProps): JSX.Element {
     const initValues = get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec', null)
     let files
     let fileType
-    if (get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.secretFiles', []).length > 0) {
-      files = get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.secretFiles', [])
+    if (get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.secretFiles', ['']).length > 0) {
+      files = get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.secretFiles', [''])
       fileType = FILE_TYPE_VALUES.ENCRYPTED
     } else {
-      files = get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.files', [])
+      files = get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.files', [''])
       fileType = FILE_TYPE_VALUES.FILE_STORE
     }
 
@@ -145,15 +128,15 @@ ConfigFilesListViewProps): JSX.Element {
         ...initValues,
         store: listOfConfigFiles[configFileIndex]?.configFile.spec?.store?.type,
         identifier: get(listOfConfigFiles[configFileIndex], 'configFile.identifier', ''),
-        files: files || [],
-        secretFiles: get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.secretFiles', []),
+        files: files || [''],
+        secretFiles: get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.secretFiles', ['']),
         fileType
       }
       return values
     }
     return {
       store: configStore,
-      files: [],
+      files: [''],
       identifier: '',
       fileType: FILE_TYPE_VALUES.FILE_STORE
     }
@@ -208,8 +191,9 @@ ConfigFilesListViewProps): JSX.Element {
         configDetailStep = (
           <HarnessConfigStep
             {...commonProps}
-            stepName={getString('pipeline.configFiles.title')}
-            name={getString('pipeline.configFiles.title')}
+            stepName={getString('pipeline.configFiles.title', { type: 'Details' })}
+            name={getString('pipeline.configFiles.title', { type: 'Details' })}
+            listOfConfigFiles={listOfConfigFiles}
             {...commonLastStepProps}
           />
         )
@@ -218,8 +202,9 @@ ConfigFilesListViewProps): JSX.Element {
         configDetailStep = (
           <HarnessConfigStep
             {...commonProps}
-            stepName={getString('pipeline.configFiles.title')}
-            name={getString('pipeline.configFiles.title')}
+            stepName={getString('pipeline.configFiles.title', { type: 'Details' })}
+            name={getString('pipeline.configFiles.title', { type: 'Details' })}
+            listOfConfigFiles={listOfConfigFiles}
             {...commonLastStepProps}
           />
         )
@@ -314,15 +299,6 @@ ConfigFilesListViewProps): JSX.Element {
     setConfigStore(store || '')
   }
 
-  const getLabels = (): any => {
-    return {
-      firstStepName: getString('pipeline.manifestType.specifyManifestRepoType'),
-      secondStepName: `${getString('common.specify')} ${
-        selectedConfig && getString(ConfigFileTypeTitle[selectedConfig])
-      } ${getString('store')}`
-    }
-  }
-
   const getIconProps = (): IconProps => {
     const iconProps: IconProps = {
       name: ConfigFileIconByType[selectedConfig as ConfigFileType]
@@ -408,7 +384,7 @@ ConfigFilesListViewProps): JSX.Element {
 
   return (
     <Layout.Vertical style={{ width: '100%' }}>
-      <Layout.Vertical spacing={'medium'} flex={{ alignItems: 'flex-start' }}>
+      <Layout.Vertical spacing={'medium'} flex={{ alignItems: 'flex-start' }} width="100%">
         {!!listOfConfigFiles?.length && (
           <div className={cx(css.configFilesList, css.listHeader)}>
             <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('common.ID')}</Text>
@@ -420,12 +396,18 @@ ConfigFilesListViewProps): JSX.Element {
             <span></span>
           </div>
         )}
-        <Layout.Vertical style={{ flexShrink: 'initial' }}>
+        <Layout.Vertical style={{ flexShrink: 'initial' }} width="100%">
           <section>
             {listOfConfigFiles &&
               listOfConfigFiles.map((data: ConfigFileWrapper, index: number) => {
                 const configFile = data['configFile']
-                const filesType = configFile?.spec?.store?.spec?.files?.length ? 'Plain text' : 'Encrypted'
+                const filesType = configFile?.spec?.store?.spec?.files?.length
+                  ? getString('pipeline.configFiles.plainText')
+                  : getString('encrypted')
+                console.log('configFIle', configFile)
+                const filesLocation = configFile?.spec?.store?.spec?.files?.length
+                  ? configFile?.spec?.store?.spec?.files
+                  : configFile?.spec?.store?.spec?.secretFiles
 
                 return (
                   <div className={css.rowItem} key={`${configFile?.identifier}-${index}`}>
@@ -453,14 +435,14 @@ ConfigFilesListViewProps): JSX.Element {
                           {getString(ConfigFileTypeTitle[configFile?.spec?.store?.type as ConfigFileType])}
                         </Text>
                       </div>
-                      <div>{filesType}</div>
+                      <div className={css.columnLocation}>{filesLocation}</div>
                       {!isReadonly && (
                         <span>
                           <Layout.Horizontal>
                             <Button
                               icon="Edit"
                               iconProps={{ size: 18 }}
-                              onClick={() => editConfigFile(configFile?.type as ConfigFileType, index)}
+                              onClick={() => editConfigFile(configFile?.spec?.store?.type as ConfigFileType, index)}
                               minimal
                             />
 
@@ -486,7 +468,7 @@ ConfigFilesListViewProps): JSX.Element {
           variation={ButtonVariation.LINK}
           data-test-id="addConfigFile"
           onClick={addNewConfigFile}
-          //   text={getString('pipelineSteps.serviceTab.configFileList.addConfigFile')}
+          // text={getString('pipelineSteps.serviceTab.configFileList.addConfigFile')}
           text={'+ Add config files'}
         />
       </Layout.Vertical>

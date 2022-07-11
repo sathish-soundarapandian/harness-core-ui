@@ -16,7 +16,7 @@ import css from './EncryptedFileSelectField.module.scss'
 interface SelectEncryptedProps {
   name: string
   formik: FormikContextType<any>
-  onChange: (newValue: any) => void
+  onChange: (newValue: any, id?: any) => void
   readonly?: boolean
   placeholder?: string
   allowSelection?: boolean

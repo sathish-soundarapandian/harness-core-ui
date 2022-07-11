@@ -24,8 +24,6 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 
 import { useStrings } from 'framework/strings'
 import useFileStoreModal from '@filestore/components/FileStoreComponent/FileStoreComponent'
-import { FileStoreNodeTypes } from '@filestore/interfaces/FileStore'
-import folderImage from '@filestore/images/closed-folder.svg'
 
 import css from './FileStoreSelectField.module.scss'
 

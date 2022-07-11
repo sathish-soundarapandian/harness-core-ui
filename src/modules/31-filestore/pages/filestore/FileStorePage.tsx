@@ -509,7 +509,6 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
                 links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
               />
             )}
-            {currentNode.path}
           </>
         }
         title={!isModalView && getString('resourcePage.fileStore')}

@@ -2815,6 +2815,7 @@ export interface StringsMap {
   'pipeline.conditionalExecution.toolTip.stageTitle': string
   'pipeline.conditionalExecution.toolTip.stepTitle': string
   'pipeline.configFiles.encryptedFiles': string
+  'pipeline.configFiles.encryptedLocation': string
   'pipeline.configFiles.error.file': string
   'pipeline.configFiles.error.fileType': string
   'pipeline.configFiles.error.files': string

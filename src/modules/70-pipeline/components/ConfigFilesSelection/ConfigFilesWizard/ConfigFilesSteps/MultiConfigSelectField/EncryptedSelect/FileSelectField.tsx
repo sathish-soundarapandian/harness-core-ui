@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 import { Layout, Icon, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { get, isPlainObject, defaultTo } from 'lodash-es'
+import { get, isPlainObject } from 'lodash-es'
 import { FormGroup, Intent } from '@blueprintjs/core'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import useCreateOrSelectSecretModal from '@secrets/modals/CreateOrSelectSecretModal/useCreateOrSelectSecretModal'
@@ -36,7 +36,7 @@ interface EncryptedData {
 
 function FileSelectField(props: SelectEncryptedProps) {
   const { getString } = useStrings()
-  const { formik, name, placeholder, readonly = false, allowSelection = true } = props
+  const { formik, name, placeholder, allowSelection = true } = props
   const secretValue = get(formik.values, name) || ''
 
   const { openCreateOrSelectSecretModal } = useCreateOrSelectSecretModal(
@@ -56,8 +56,6 @@ function FileSelectField(props: SelectEncryptedProps) {
     },
     []
   )
-
-  const placeholder_ = defaultTo(placeholder, getString('select'))
 
   const data = React.useMemo(() => {
     const getData = (encryptedValue: string): EncryptedData => {

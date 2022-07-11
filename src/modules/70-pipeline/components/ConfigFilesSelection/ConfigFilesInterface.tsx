@@ -8,7 +8,8 @@
 import type { MultiTypeInputType, IconName } from '@harness/uicore'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 
-import type { ServiceDefinition, PipelineInfoConfig, StageElementConfig } from 'services/cd-ng'
+import type { ServiceDefinition, StageElementConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 
 export interface ConfigFilesSelectionProps {
   isPropagating?: boolean

@@ -63,13 +63,13 @@ function ConfigFileStore({
   isReadonly,
   configFilesStoreTypes,
   initialValues,
-  previousStep,
+  // previousStep,
   expressions,
   allowableTypes,
   prevStepData,
-  nextStep,
-  isNewFile
-}: StepProps<ConnectorConfigDTO> & ConfigFileStorePropType): React.ReactElement {
+  nextStep
+}: // isNewFile
+StepProps<ConnectorConfigDTO> & ConfigFileStorePropType): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
