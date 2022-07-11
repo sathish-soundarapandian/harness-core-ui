@@ -6,12 +6,22 @@ import type { SettingCategory, SettingType } from '../interfaces/SettingType'
 import css from './SettingsCategorySection.module.scss'
 import SettingCategorySectionContents from './SettingCategorySectionContents'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { getSettingsListPromise, SettingDTO, SettingResponseDTO, useGetSettingsList } from 'services/cd-ng'
+import {
+  getSettingsListPromise,
+  SettingDTO,
+  SettingRequestDTO,
+  SettingResponseDTO,
+  useGetSettingsList
+} from 'services/cd-ng'
 import { useParams } from 'react-router-dom'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 interface SettingsCategorySectionProps {
   settingCategory: SettingCategory
-  onSettingChange: (settingDTO: SettingDTO) => void
+  onSettingChange: (
+    settingType: SettingType,
+    settingDTO: SettingDTO,
+    updateType: SettingRequestDTO['updateType']
+  ) => void
 }
 
 const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({ settingCategory, onSettingChange }) => {
@@ -28,10 +38,11 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({ setti
   if (!enableFeatureFlag) {
     return null
   }
-  const refiedSettingTypesWithDTO: { [Key in SettingType]?: SettingResponseDTO } = {}
+
   const [settingTypes, updateSettingTypes] = useState<Set<SettingType>>(new Set())
   const [settingResponseDTO, updateSettingResponseDTO] = useState<SettingResponseDTO[]>()
-
+  const [refiedSettingTypesWithDTO, updateRefiedSettingTypesWithDTO] =
+    useState<{ [Key in SettingType]?: SettingResponseDTO }>()
   const [loadingSettingTypes, updateLoadingSettingTypes] = useState(false)
   const categorySectionOpen = async () => {
     console.log('calling api')
@@ -39,16 +50,17 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({ setti
       updateLoadingSettingTypes(true)
       try {
         const data = await getSettingsListPromise({
-          category: settingCategory,
-          queryParams: { accountIdentifier: accountId }
+          queryParams: { accountIdentifier: accountId, category: settingCategory, orgIdentifier, projectIdentifier }
         })
         const settingTypesTemp: Set<SettingType> = new Set()
+        const refiedSettingTypesWithDTOLocal: { [Key in SettingType]?: SettingResponseDTO } = {}
         data?.data?.forEach(val => {
           if (registeredSettingTypes?.has(val.setting.identifier as SettingType)) {
-            refiedSettingTypesWithDTO[val.setting.identifier as SettingType] = val
+            refiedSettingTypesWithDTOLocal[val.setting.identifier as SettingType] = val
             settingTypesTemp.add(val.setting.identifier as SettingType)
           }
         })
+        updateRefiedSettingTypesWithDTO(refiedSettingTypesWithDTOLocal)
         updateSettingResponseDTO(data.data)
         updateSettingTypes(settingTypesTemp)
       } catch (error) {
@@ -57,18 +69,74 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({ setti
       }
     }
   }
-  const onSettingChangeLocal = () => {
-    // onSettingChange({ identifier: settingType, category: settingCategory })
-  }
+
   const onSelectionChange = (settingType: SettingType, val: string) => {
-    console.log({ settingType, val })
+    const prevSettings = refiedSettingTypesWithDTO
+
+    if (prevSettings && prevSettings[settingType]) {
+      let selectedSettingTypeDTO = prevSettings[settingType]
+      if (selectedSettingTypeDTO) {
+        selectedSettingTypeDTO = {
+          ...selectedSettingTypeDTO,
+          setting: { ...selectedSettingTypeDTO.setting, value: val }
+        }
+
+        const updatesSettingDTO = {
+          ...prevSettings,
+          [settingType]: selectedSettingTypeDTO
+        }
+        console.log(updatesSettingDTO)
+        updateRefiedSettingTypesWithDTO(updatesSettingDTO)
+        onSettingChange(settingType, selectedSettingTypeDTO.setting, 'UPDATE')
+      }
+    }
   }
-  const onRestore = (settingType: SettingType, val: string) => {
-    console.log({ settingType, val })
+  const onAllowOverride = (checked: boolean, settingType: SettingType) => {
+    const prevSettings = refiedSettingTypesWithDTO
+
+    if (prevSettings && prevSettings[settingType]) {
+      let selectedSettingTypeDTO = prevSettings[settingType]
+      if (selectedSettingTypeDTO) {
+        selectedSettingTypeDTO = {
+          ...selectedSettingTypeDTO,
+          setting: { ...selectedSettingTypeDTO.setting, allowOverrides: checked }
+        }
+
+        const updatesSettingDTO = {
+          ...prevSettings,
+          [settingType]: selectedSettingTypeDTO
+        }
+        console.log(updatesSettingDTO)
+        updateRefiedSettingTypesWithDTO(updatesSettingDTO)
+        onSettingChange(settingType, selectedSettingTypeDTO.setting, 'UPDATE')
+      }
+    }
+  }
+  const onRestore = (settingType: SettingType) => {
+    const prevSettings = refiedSettingTypesWithDTO
+
+    if (prevSettings && prevSettings[settingType]) {
+      let selectedSettingTypeDTO = prevSettings[settingType]
+      if (selectedSettingTypeDTO) {
+        const defaultValue = selectedSettingTypeDTO?.setting.defaultValue
+        selectedSettingTypeDTO = {
+          ...selectedSettingTypeDTO,
+          setting: { ...selectedSettingTypeDTO.setting, value: 'modified' + defaultValue }
+        }
+
+        const updatesSettingDTO = {
+          ...prevSettings,
+          [settingType]: selectedSettingTypeDTO
+        }
+        console.log(updatesSettingDTO)
+        updateRefiedSettingTypesWithDTO(updatesSettingDTO)
+        onSettingChange(settingType, selectedSettingTypeDTO.setting, 'RESTORE')
+      }
+    }
   }
 
   return (
-    <Card>
+    <Card className={css.summaryCard}>
       <Accordion
         summaryClassName={css.summarySetting}
         onChange={openTabId => {
@@ -87,7 +155,9 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({ setti
               <SettingCategorySectionContents
                 onSelectionChange={onSelectionChange}
                 onRestore={onRestore}
+                onAllowOverride={onAllowOverride}
                 settingsTypesSet={settingTypes}
+                settingTypesResponseDTO={refiedSettingTypesWithDTO}
               />
             )
           }

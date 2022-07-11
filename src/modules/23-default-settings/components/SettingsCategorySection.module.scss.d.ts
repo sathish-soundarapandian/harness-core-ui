@@ -10,6 +10,7 @@ declare const styles: {
   readonly settingOverrideRestore: string
   readonly settingRestore: string
   readonly settingTable: string
+  readonly summaryCard: string
   readonly summarySetting: string
 }
 export default styles

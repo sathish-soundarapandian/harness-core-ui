@@ -80,6 +80,10 @@ export const useGovernanceMetaDataModal = ({
     onModalCloseWhenNoErrorInGovernanceData: () => void
   ) => {
     if (governanceMetadataLocal) {
+      governanceMetadataLocal.details.forEach((ele: any) => {
+        ele['policyMetadata'] = ele['policymetadata']
+      })
+      console.log({ governanceMetadataLocal })
       setGovernanceMetadata(governanceMetadataLocal)
       if (governanceMetadataLocal?.status === 'error' || governanceMetadataLocal?.status === 'warning') {
         setonModalCloseWhenNoErrorInGovernanceDataCall(() => onModalCloseWhenNoErrorInGovernanceData)

@@ -9,9 +9,12 @@
 }
 .settingOverrideRestore {
   display: grid;
-  grid-template-columns: 1fr 4fr;
+  grid-template-columns: 1fr 3fr;
   align-items: center;
 }
 .settingRestore {
   justify-self: flex-start;
+}
+.summaryCard {
+  width: 80%;
 }

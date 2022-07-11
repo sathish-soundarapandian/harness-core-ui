@@ -6,15 +6,20 @@ import SettingTypeRow from './SettingTypeRow'
 import { Layout } from '@harness/uicore'
 
 import css from './SettingsCategorySection.module.scss'
+import type { SettingResponseDTO } from 'services/cd-ng'
 interface SettingTypeRowProps {
   settingsTypesSet: Set<SettingType> | undefined
   onSelectionChange: (settingType: SettingType, val: string) => void
-  onRestore: (settingType: SettingType, val: string) => void
+  onRestore: (settingType: SettingType) => void
+  settingTypesResponseDTO: { [Key in SettingType]?: SettingResponseDTO } | undefined
+  onAllowOverride: (val: boolean, settingType: SettingType) => void
 }
 const SettingCategorySectionContents: React.FC<SettingTypeRowProps> = ({
   settingsTypesSet,
   onRestore,
-  onSelectionChange
+  onSelectionChange,
+  settingTypesResponseDTO,
+  onAllowOverride
 }) => {
   if (!settingsTypesSet) {
     return null
@@ -25,9 +30,8 @@ const SettingCategorySectionContents: React.FC<SettingTypeRowProps> = ({
     }
   }
   const onRestoreLocal = (settingType: SettingType) => {
-    console.log('restored Clicked')
     if (onRestore) {
-      onRestore(settingType, 'restoredValue')
+      onRestore(settingType)
     }
   }
   return (
@@ -42,8 +46,18 @@ const SettingCategorySectionContents: React.FC<SettingTypeRowProps> = ({
             settingType={settingTypeKey}
             onRestore={() => onRestoreLocal(settingTypeKey)}
             settingTypeHandler={settingTypeHandler}
-            settingValue={'somerandomValue'}
+            settingValue={settingTypesResponseDTO ? settingTypesResponseDTO[settingTypeKey]?.setting.value : ''}
             onSelectionChange={(val: string) => onSelectionChangeLocal(settingTypeKey, val)}
+            onAllowOverride={(checked: boolean) => {
+              onAllowOverride(checked, settingTypeKey)
+            }}
+            allowOverride={
+              !!(
+                settingTypesResponseDTO &&
+                settingTypesResponseDTO[settingTypeKey] &&
+                settingTypesResponseDTO[settingTypeKey]?.setting.allowOverrides
+              )
+            }
           />
         )
       })}

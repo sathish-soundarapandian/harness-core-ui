@@ -12,13 +12,17 @@ interface SettingTypeRowProps {
   settingValue?: any
   onRestore: () => void
   settingType: SettingType
+  onAllowOverride: (checked: boolean) => void
+  allowOverride: boolean
 }
 const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
   settingTypeHandler,
   onSelectionChange,
   settingValue,
   settingType,
-  onRestore
+  onRestore,
+  onAllowOverride,
+  allowOverride
 }) => {
   const { label, settingRenderer, featureFlag } = settingTypeHandler
   const { getString } = useStrings()
@@ -45,7 +49,11 @@ const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
       <span className={css.settingOverrideRestore}>
         <Checkbox
           label={getString('defaultSettings.allowOverrides')}
-          onChange={() => onSelectionChange('changed to new value')}
+          checked={allowOverride}
+          onChange={(event: React.FormEvent<HTMLInputElement>) => {
+            console.log({ event })
+            onAllowOverride(event.currentTarget.checked)
+          }}
         />
         <Button
           className={css.settingRestore}

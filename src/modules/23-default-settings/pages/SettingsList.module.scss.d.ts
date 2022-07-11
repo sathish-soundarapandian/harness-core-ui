@@ -7,8 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly accordionPanel: string
-  readonly accordionSummary: string
-  readonly summary: string
+  readonly settingList: string
 }
 export default styles
