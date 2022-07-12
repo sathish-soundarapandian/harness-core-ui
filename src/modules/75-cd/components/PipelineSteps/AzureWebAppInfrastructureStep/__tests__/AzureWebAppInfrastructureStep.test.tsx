@@ -142,7 +142,7 @@ describe('Test Azure WebApp Infrastructure Spec snapshot', () => {
     expect(container).toMatchSnapshot()
   })
   test('Should render edit view for inputset view and fetch dropdowns on focus', async () => {
-    const { container } = render(
+    const { container, getByPlaceholderText } = render(
       <TestStepWidget
         initialValues={getInitialValues()}
         template={getRuntimeInputsValues()}
@@ -155,29 +155,27 @@ describe('Test Azure WebApp Infrastructure Spec snapshot', () => {
 
     await act(async () => {
       await act(async () => {
-        const subscriptionInput = container.querySelector(
-          '[placeholder="cd.steps.azureInfraStep.subscriptionPlaceholder"]'
-        ) as HTMLElement
+        const subscriptionInput = getByPlaceholderText('cd.steps.azureInfraStep.subscriptionPlaceholder') as HTMLElement
         subscriptionInput.focus()
         await waitFor(() => expect(subscriptionsResponse.refetch).toHaveBeenCalled())
-        const resourceGroupInput = container.querySelector(
-          '[placeholder="cd.steps.azureInfraStep.resourceGroupPlaceholder"]'
+
+        const resourceGroupInput = getByPlaceholderText(
+          'cd.steps.azureInfraStep.resourceGroupPlaceholder'
         ) as HTMLElement
         resourceGroupInput.focus()
         await waitFor(() => expect(resourceGroupsResponse.refetch).toHaveBeenCalled())
-        const webAppInput = container.querySelector(
-          '[placeholder="cd.steps.azureWebAppInfra.webAppPlaceholder"]'
-        ) as HTMLElement
+
+        const webAppInput = getByPlaceholderText('cd.steps.azureWebAppInfra.webAppPlaceholder') as HTMLElement
         webAppInput.focus()
         await waitFor(() => expect(webAppNamesResponse.refetch).toHaveBeenCalled())
-        const deploymentSlotInput = container.querySelector(
-          '[placeholder="cd.steps.azureWebAppInfra.deploymentSlotPlaceHolder"]'
+
+        const deploymentSlotInput = getByPlaceholderText(
+          'cd.steps.azureWebAppInfra.deploymentSlotPlaceHolder'
         ) as HTMLElement
         deploymentSlotInput.focus()
         await waitFor(() => expect(deploymentSlotsResponse.refetch).toHaveBeenCalled())
-        const targetSlotInput = container.querySelector(
-          '[placeholder="cd.steps.azureWebAppInfra.targetSlotPlaceHolder"]'
-        ) as HTMLElement
+
+        const targetSlotInput = getByPlaceholderText('cd.steps.azureWebAppInfra.targetSlotPlaceHolder') as HTMLElement
         targetSlotInput.focus()
         await waitFor(() => expect(deploymentSlotsResponse.refetch).toHaveBeenCalled())
       })
@@ -230,7 +228,7 @@ describe('Test Azure Infrastructure Spec behavior', () => {
   test('Should call onUpdate if valid values entered - edit view', async () => {
     const onUpdateHandler = jest.fn()
     const ref = React.createRef<StepFormikRef<unknown>>()
-    const { container } = render(
+    const { getByPlaceholderText } = render(
       <TestStepWidget
         initialValues={getInitialValues()}
         template={getInitialValues()}
@@ -244,28 +242,21 @@ describe('Test Azure Infrastructure Spec behavior', () => {
 
     await act(async () => {
       await act(async () => {
-        const subscriptionInput = container.querySelector(
-          '[placeholder="cd.steps.azureInfraStep.subscriptionPlaceholder"]'
-        )
-        fireEvent.change(subscriptionInput!, { target: { value: 'subscription1' } })
-        const resourceGroupInput = container.querySelector(
-          '[placeholder="cd.steps.azureInfraStep.resourceGroupPlaceholder"]'
+        const subscriptionInput = getByPlaceholderText('cd.steps.azureInfraStep.subscriptionPlaceholder') as HTMLElement
+        expect(subscriptionInput).not.toBeDisabled()
+        fireEvent.change(subscriptionInput!, { target: { label: 's1', value: 'subscription1' } })
+        const resourceGroupInput = getByPlaceholderText(
+          'cd.steps.azureInfraStep.resourceGroupPlaceholder'
         ) as HTMLElement
-        fireEvent.change(resourceGroupInput!, { target: { value: 'subscription1' } })
-        const webAppInput = container.querySelector(
-          '[placeholder="cd.steps.azureWebAppInfra.webAppPlaceholder"]'
+        fireEvent.change(resourceGroupInput!, { target: { value: 'rg1' } })
+        const webAppInput = getByPlaceholderText('cd.steps.azureWebAppInfra.webAppPlaceholder') as HTMLElement
+        fireEvent.change(webAppInput!, { target: { value: 'web1' } })
+        const deploymentSlotInput = getByPlaceholderText(
+          'cd.steps.azureWebAppInfra.deploymentSlotPlaceHolder'
         ) as HTMLElement
-        fireEvent.change(webAppInput!, { target: { value: 'subscription1' } })
-        const deploymentSlotInput = container.querySelector(
-          '[placeholder="cd.steps.azureWebAppInfra.deploymentSlotPlaceHolder"]'
-        ) as HTMLElement
-        fireEvent.change(deploymentSlotInput!, { target: { value: 'subscription1' } })
-        const targetSlotInput = container.querySelector(
-          '[placeholder="cd.steps.azureWebAppInfra.targetSlotPlaceHolder"]'
-        ) as HTMLElement
-        fireEvent.change(targetSlotInput!, { target: { value: 'subscription1' } })
-
-        await ref.current?.submitForm()
+        fireEvent.change(deploymentSlotInput!, { target: { value: 'ds1' } })
+        const targetSlotInput = getByPlaceholderText('cd.steps.azureWebAppInfra.targetSlotPlaceHolder') as HTMLElement
+        fireEvent.change(targetSlotInput!, { target: { value: 'ts1' } })
       })
 
       await waitFor(() => expect(onUpdateHandler).toHaveBeenCalled())
