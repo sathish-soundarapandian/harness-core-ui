@@ -27,6 +27,7 @@ import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/Tem
 import { getStepDataFromValues } from '@pipeline/utils/stepUtils'
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { StepCommandsProps, StepCommandsViews, TabTypes, Values } from './StepCommandTypes'
+
 import css from './StepCommands.module.scss'
 
 export type StepFormikRef<T = unknown> = {

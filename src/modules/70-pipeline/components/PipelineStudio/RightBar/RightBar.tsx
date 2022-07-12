@@ -39,6 +39,7 @@ import {
   getTestGitRepoConnectionResultPromise,
   useGetConnector
 } from 'services/cd-ng'
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
