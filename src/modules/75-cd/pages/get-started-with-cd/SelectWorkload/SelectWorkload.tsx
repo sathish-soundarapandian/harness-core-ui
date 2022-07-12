@@ -17,7 +17,6 @@ import {
   Container,
   Formik,
   FormikForm as Form,
-  FormError,
   FormInput,
   PageSpinner,
   useToaster
@@ -26,8 +25,8 @@ import type { FormikContextType, FormikProps } from 'formik'
 import { get, isEmpty, set } from 'lodash-es'
 import produce from 'immer'
 import { useParams } from 'react-router-dom'
+import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
-
 import { NGServiceConfig, ServiceRequestDTO, useCreateServiceV2 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -43,11 +42,8 @@ import { cleanServiceDataUtil, getUniqueEntityIdentifier, newServiceState } from
 import css from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
 export interface SelectWorkloadRef {
-  values: SelectWorkloadInterface
-  setFieldTouched(field: keyof SelectWorkloadInterface & string, isTouched?: boolean, shouldValidate?: boolean): void
-  validate?: () => boolean
-  showValidationErrors?: () => void
   submitForm?: FormikProps<SelectWorkloadInterface>['submitForm']
+  getErrors?: () => FormikProps<SelectWorkloadInterface>['errors']
 }
 export interface SelectWorkloadInterface {
   workloadType?: WorkloadType
@@ -68,6 +64,7 @@ export type SelectWorkloadForwardRef =
 const SelectWorkloadRef = (props: SelectWorkloadProps, forwardRef: SelectWorkloadForwardRef): React.ReactElement => {
   const { getString } = useStrings()
   const { disableNextBtn, enableNextBtn, onSuccess } = props
+
   const {
     state: { service: serviceData },
     saveServiceData
@@ -91,36 +88,6 @@ const SelectWorkloadRef = (props: SelectWorkloadProps, forwardRef: SelectWorkloa
   const { showSuccess, showError, clear } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
 
-  const validateWorkloadSetup = React.useCallback((): boolean => {
-    const { serviceRef } = formikRef.current?.values || {}
-
-    if (serviceRef) {
-      return !!serviceRef
-    } else if (workloadType) {
-      return !!workloadType
-    } else if (serviceDeploymentType) {
-      return !!serviceDeploymentType
-    }
-    return false
-  }, [formikRef.current])
-
-  const setForwardRef = ({ values, setFieldTouched }: Omit<SelectWorkloadRef, 'validate'>): void => {
-    if (!forwardRef) {
-      return
-    }
-    if (typeof forwardRef === 'function') {
-      return
-    }
-
-    if (values) {
-      forwardRef.current = {
-        values,
-        setFieldTouched: setFieldTouched,
-        validate: validateWorkloadSetup,
-        submitForm: formikRef?.current?.submitForm
-      }
-    }
-  }
   useEffect(() => {
     if (formikRef.current?.values?.workloadType && formikRef?.current?.values?.serviceDeploymentType) {
       enableNextBtn()
@@ -130,13 +97,20 @@ const SelectWorkloadRef = (props: SelectWorkloadProps, forwardRef: SelectWorkloa
   }, [formikRef.current?.values])
 
   useEffect(() => {
-    if (formikRef.current?.values && formikRef.current?.setFieldTouched) {
-      setForwardRef({
-        values: formikRef.current.values,
-        setFieldTouched: formikRef.current.setFieldTouched
-      })
+    if (formikRef.current?.values) {
+      if (!forwardRef) {
+        return
+      }
+      if (typeof forwardRef === 'function') {
+        return
+      }
+      if (formikRef.current.values) {
+        forwardRef.current = {
+          submitForm: formikRef?.current?.submitForm
+        }
+      }
     }
-  }, [formikRef?.current?.values, formikRef?.current?.setFieldTouched])
+  }, [formikRef?.current?.values])
 
   if (createLoading) {
     return <PageSpinner />
@@ -175,10 +149,27 @@ const SelectWorkloadRef = (props: SelectWorkloadProps, forwardRef: SelectWorkloa
         showError(getRBACErrorMessage(error))
         return Promise.resolve(error)
       }
+    } else {
+      // if service not updated
+      onSuccess()
     }
-    onSuccess()
+
     return Promise.resolve({} as SelectWorkloadInterface)
   }
+
+  const validationSchema = Yup.object().shape({
+    workloadType: Yup.string().required(getString('cd.workloadRequired')),
+    serviceDeploymentType: Yup.string().required(
+      getString('fieldRequired', {
+        field: getString('deploymentTypeText')
+      })
+    ),
+    serviceRef: Yup.string().required(
+      getString('fieldRequired', {
+        field: getString('cd.serviceName')
+      })
+    )
+  })
 
   return (
     <Layout.Vertical width="70%">
@@ -191,6 +182,7 @@ const SelectWorkloadRef = (props: SelectWorkloadProps, forwardRef: SelectWorkloa
         }}
         formName="cdWorkload-provider"
         onSubmit={handleSubmit}
+        validationSchema={validationSchema}
       >
         {formikProps => {
           formikRef.current = formikProps
@@ -218,13 +210,6 @@ const SelectWorkloadRef = (props: SelectWorkloadProps, forwardRef: SelectWorkloa
                     setWorkloadType(item)
                   }}
                 />
-                {formikProps.touched.workloadType && !formikProps.values.workloadType ? (
-                  <FormError
-                    name={'workloadType'}
-                    errorMessage={getString('cd.workloadRequired')}
-                    className={css.marginTop}
-                  />
-                ) : null}
 
                 <Container className={cx({ [css.borderBottom]: workloadType })} />
               </Container>
@@ -257,17 +242,6 @@ const SelectWorkloadRef = (props: SelectWorkloadProps, forwardRef: SelectWorkloa
                       }}
                     />
 
-                    {formikProps.touched.serviceDeploymentType &&
-                    formikProps.values.serviceDeploymentType === undefined ? (
-                      <FormError
-                        name={'serviceDeploymentType'}
-                        className={css.marginTop}
-                        errorMessage={getString('fieldRequired', {
-                          field: getString('deploymentTypeText')
-                        })}
-                      />
-                    ) : null}
-
                     {serviceDeploymentType ? (
                       <>
                         <Container className={css.borderBottom} />
@@ -278,18 +252,10 @@ const SelectWorkloadRef = (props: SelectWorkloadProps, forwardRef: SelectWorkloa
 
                           <FormInput.Text
                             tooltipProps={{ dataTooltipId: 'specifyYourService' }}
-                            label={getString('common.serviceName')}
+                            label={getString('cd.serviceName')}
                             name="serviceRef"
                             className={css.formInput}
                           />
-                          {formikProps.values.serviceRef === '' ? (
-                            <FormError
-                              name={'serviceRef'}
-                              errorMessage={getString('fieldRequired', {
-                                field: getString('common.serviceName')
-                              })}
-                            />
-                          ) : null}
                         </Container>
                       </>
                     ) : null}

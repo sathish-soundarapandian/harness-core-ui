@@ -58,7 +58,6 @@ export interface StringsMap {
   'common.artifactTag': string
   'common.at': string
   'common.auditTrail': string
-  'common.authMethod': string
   'common.aws': string
   'common.azure': string
   'common.azureConnector': string
@@ -288,15 +287,13 @@ export interface StringsMap {
   'common.getStarted.accessTokenLabel': string
   'common.getStarted.apiUrlLabel': string
   'common.getStarted.appPassword': string
+  'common.getStarted.authMethod': string
   'common.getStarted.buildPipeline': string
   'common.getStarted.codeRepoLabel': string
   'common.getStarted.codebaseHelptext': string
   'common.getStarted.fetchingRepos': string
   'common.getStarted.fieldIsMissing': string
   'common.getStarted.firstPipeline': string
-  'common.getStarted.gitProviderURLs.bitbucket': string
-  'common.getStarted.gitProviderURLs.github': string
-  'common.getStarted.gitProviderURLs.gitlab': string
   'common.getStarted.learnMoreAboutPermissions': string
   'common.getStarted.plsChoose': string
   'common.getStarted.quicklyCreate': string
@@ -678,7 +675,6 @@ export interface StringsMap {
   'common.selected': string
   'common.serviceCreated': string
   'common.serviceOverrides': string
-  'common.serviceName': string
   'common.serviceReliabilityManagement': string
   'common.serviceType': string
   'common.serviceUpdated': string
@@ -4200,6 +4196,7 @@ export interface StringsMap {
   'cd.serviceDashboard.totalServices': string
   'cd.serviceDashboard.unitDay': string
   'cd.serviceList.noIdentifier': string
+  'cd.serviceName': string
   'cd.serviceOverrides.deleted': string
   'cd.serviceOverrides.deletedOneVariable': string
   'cd.serviceOverrides.helperText': string
@@ -5869,6 +5866,7 @@ export interface StringsMap {
   'ci.getStartedWithCI.dockerRunner': string
   'ci.getStartedWithCI.dockerRunnerBuildLocation': string
   'ci.getStartedWithCI.duration': string
+  'ci.getStartedWithCI.fieldIsMissing': string
   'ci.getStartedWithCI.flexibleInfra': string
   'ci.getStartedWithCI.flexibleInfraHelpText': string
   'ci.getStartedWithCI.genericGit': string
@@ -5888,6 +5886,7 @@ export interface StringsMap {
   'ci.getStartedWithCI.parallelizationHelpText': string
   'ci.getStartedWithCI.parameterization': string
   'ci.getStartedWithCI.parameterizationHelpText': string
+  'ci.getStartedWithCI.plsChoose': string
   'ci.getStartedWithCI.provisionSecureEnv': string
   'ci.getStartedWithCI.provisioningFailed': string
   'ci.getStartedWithCI.provisioningHelpText': string

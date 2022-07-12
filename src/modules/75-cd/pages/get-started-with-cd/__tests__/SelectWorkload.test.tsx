@@ -15,7 +15,7 @@ const pathParams = { accountId: 'accountId', orgIdentifier: 'orgId', projectIden
 const renderComponent = () => {
   return (
     <TestWrapper
-      path={routes.toGetStartedWithCI({
+      path={routes.toGetStartedWithCD({
         ...pathParams,
         module: 'cd'
       })}
@@ -24,7 +24,7 @@ const renderComponent = () => {
         module: 'cd'
       }}
     >
-      <SelectWorkload enableNextBtn={jest.fn()} disableNextBtn={jest.fn()} />
+      <SelectWorkload enableNextBtn={jest.fn()} disableNextBtn={jest.fn()} onSuccess={jest.fn()} />
     </TestWrapper>
   )
 }

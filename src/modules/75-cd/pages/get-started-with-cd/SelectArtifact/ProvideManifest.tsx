@@ -5,16 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { FormError, FormInput, Layout, MultiTypeInputType, Formik } from '@harness/uicore'
+import { FormInput, Layout, MultiTypeInputType } from '@harness/uicore'
 import { Form, FormikContextType, FormikProps } from 'formik'
 import React, { useEffect, useRef } from 'react'
-import { defaultTo, get, set } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { useStrings } from 'framework/strings'
 import DragnDropPaths from '@pipeline/components/ManifestSelection/DragnDropPaths'
-import type { K8sValuesManifestDataType, ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import type { ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
-import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { gitFetchTypeList, GitFetchTypes } from '../DeployProvisioningWizard/Constants'
 // import css from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 export interface ProvideManifestRef {
@@ -48,8 +45,6 @@ const ProvideManifestRef = (props: ProvideManifestProps, forwardRef: ProvideMani
   const { getString } = useStrings()
   const {
     // disableNextBtn, enableNextBtn,
-    initialValues,
-    onSuccess,
     formikProps
   } = props
   const formikRef = useRef<FormikContextType<ProvideManifestInterface>>()
@@ -78,87 +73,13 @@ const ProvideManifestRef = (props: ProvideManifestProps, forwardRef: ProvideMani
   }
 
   useEffect(() => {
-    if (formikRef.current?.values && formikRef.current?.setFieldTouched) {
+    if (formikRef.current?.values) {
       setForwardRef({
         values: formikRef.current.values
       })
     }
   }, [formikRef.current?.values])
 
-  const getInitialValues = React.useCallback((): K8sValuesManifestDataType => {
-    const specValues = get(initialValues, 'spec.store.spec', null)
-
-    if (specValues) {
-      return {
-        ...specValues,
-        identifier: initialValues.identifier,
-        skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
-        paths:
-          typeof specValues.paths === 'string'
-            ? specValues.paths
-            : specValues.paths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) })),
-        valuesPaths:
-          typeof initialValues?.spec?.valuesPaths === 'string'
-            ? initialValues?.spec?.valuesPaths
-            : initialValues?.spec?.valuesPaths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) }))
-      }
-    }
-    return {
-      identifier: '',
-      gitFetchType: 'Commit',
-      branch: undefined,
-      commitId: undefined,
-      paths: [],
-      valuesPaths: []
-      // skipResourceVersioning: false,
-    }
-  }, [])
-
-  const handleSubmit = (values: ProvideManifestInterface): Promise<ProvideManifestInterface> => {
-    const { branch, commitId, gitFetchType, identifier, paths, valuesPaths } = values
-
-    const selectedManifest = ManifestDataType.K8sManifest as ManifestTypes
-
-    const manifestObj: ManifestConfigWrapper = {
-      manifest: {
-        identifier: defaultTo(identifier, ''),
-        type: selectedManifest, // fixed for initial designs
-        spec: {
-          store: {
-            spec: {
-              gitFetchType: gitFetchType,
-              paths: typeof paths === 'string' ? paths : paths?.map((path: { path: string }) => path.path)
-            }
-          },
-          valuesPaths:
-            typeof valuesPaths === 'string' ? valuesPaths : valuesPaths?.map((path: { path: string }) => path.path)
-        }
-      }
-    }
-    if (manifestObj?.manifest?.spec?.store) {
-      if (gitFetchType === 'Branch') {
-        set(manifestObj, 'manifest.spec.store.spec.branch', branch)
-      } else if (gitFetchType === 'Commit') {
-        set(manifestObj, 'manifest.spec.store.spec.commitId', commitId)
-      }
-    }
-
-    if (selectedManifest === ManifestDataType.K8sManifest) {
-      set(manifestObj, 'manifest.spec.skipResourceVersioning', false)
-    }
-    const data = onSuccess?.(manifestObj) || {}
-    return Promise.resolve(data as any)
-  }
-
-  // return (
-  //   <Layout.Vertical width="70%">
-  //     <Formik<ProvideManifestInterface>
-  //       initialValues={getInitialValues()}
-  //       formName="onboardingManifestForm"
-  //       onSubmit={handleSubmit}
-  //     >
-  //       {formikProps => {
-  //         formikRef.current = formikProps
   return (
     <Form>
       <Layout.Vertical width={320}>
@@ -168,13 +89,6 @@ const ProvideManifestRef = (props: ProvideManifestProps, forwardRef: ProvideMani
             label={getString('pipeline.manifestType.manifestIdentifier')}
             placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
           />
-          {formikProps.touched.identifier && !formikProps.values.identifier ? (
-            <FormError
-              name={'identifier'}
-              errorMessage={getString('validation.nameRequired')}
-              // className={css.formError}
-            />
-          ) : null}
         </div>
 
         <div>
@@ -197,15 +111,6 @@ const ProvideManifestRef = (props: ProvideManifestProps, forwardRef: ProvideMani
             name="commitId"
           />
         )}
-        {formikProps.values?.gitFetchType === GitFetchTypes.Branch &&
-        !formikProps.values.branch &&
-        formikProps.touched.branch ? (
-          <FormError name={'branch'} errorMessage={getString('validation.branchName')} />
-        ) : formikProps.values?.gitFetchType === GitFetchTypes.Commit &&
-          !formikProps.values.commitId &&
-          formikProps.touched.commitId ? (
-          <FormError name={'commitId'} errorMessage={getString('validation.commitId')} />
-        ) : null}
         <div>
           <DragnDropPaths
             formik={formikProps}
@@ -214,6 +119,7 @@ const ProvideManifestRef = (props: ProvideManifestProps, forwardRef: ProvideMani
             fieldPath="paths"
             pathLabel={getString('fileFolderPathText')}
             placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+            defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
           />
         </div>
         <div>
@@ -224,14 +130,11 @@ const ProvideManifestRef = (props: ProvideManifestProps, forwardRef: ProvideMani
             placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
             expressions={[]}
             allowableTypes={[MultiTypeInputType.FIXED]}
+            defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
           />
         </div>
       </Layout.Vertical>
     </Form>
-    //         )
-    //       }}
-    //     </Formik>
-    //   </Layout.Vertical>
   )
 }
 

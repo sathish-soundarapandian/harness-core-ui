@@ -17,48 +17,36 @@ import {
   FormikForm as Form,
   Accordion,
   FormError,
-  useToaster
+  useToaster,
+  PageSpinner
 } from '@harness/uicore'
 import type { FormikContextType, FormikProps } from 'formik'
 // import cx from 'classnames'
-import { cloneDeep, defaultTo, get, omit, set } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isEmpty, isEqual, omit, set } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import produce from 'immer'
 import { useParams } from 'react-router-dom'
+import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
-import {
-  ManifestConfigWrapper,
-  NGServiceConfig,
-  ResponseScmConnectorResponse,
-  UserRepoResponse,
-  useUpdateServiceV2
-} from 'services/cd-ng'
+import { ManifestConfigWrapper, NGServiceConfig, useUpdateServiceV2 } from 'services/cd-ng'
 import { GitRepoName, ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import type { SelectGitProviderInterface, SelectGitProviderRef } from './SelectGitProvider'
-import type { ProvideManifestInterface } from './ProvideManifest'
-import { ArtifactProviders, ArtifactType, Hosting } from '../DeployProvisioningWizard/Constants'
+import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
+import { TestStatus } from '@common/components/TestConnectionWidget/TestConnectionWidget'
+import type { SelectGitProviderRef } from './SelectGitProvider'
+import { ACCOUNT_SCOPE_PREFIX, ArtifactProviders, ArtifactType, Hosting } from '../DeployProvisioningWizard/Constants'
 
 import { SelectGitProvider } from './SelectGitProvider'
 import { SelectRepository, SelectRepositoryRef } from './SelectRepository'
 import { ProvideManifest, ProvideManifestRef } from './ProvideManifest'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import css from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
-import type { K8sValuesManifestDataType, ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
-import { TestStatus } from '@common/components/TestConnectionWidget/TestConnectionWidget'
 
 export interface SelectArtifactRef {
-  values: SelectArtifactInterface
-  gitValues?: SelectGitProviderInterface
-  repoValues?: UserRepoResponse
-  manifestValues?: ProvideManifestInterface
-
-  connectorResponse?: ResponseScmConnectorResponse
-  setFieldTouched(field: keyof SelectArtifactInterface & string, isTouched?: boolean, shouldValidate?: boolean): void
-  validate?: () => boolean
-  showValidationErrors?: () => void
   submitForm?: FormikProps<SelectArtifactInterface>['submitForm']
+  getErrors?: () => FormikProps<SelectArtifactInterface>['errors']
+  resetForm?: FormikProps<SelectArtifactInterface>['resetForm']
 }
 export interface SelectArtifactInterface {
   artifactType?: ArtifactType
@@ -66,8 +54,8 @@ export interface SelectArtifactInterface {
   branch?: string | undefined
   commitId?: string | undefined
   gitFetchType?: 'Branch' | 'Commit'
-  paths?: any
-  valuesPaths?: any
+  paths?: string[] | any
+  valuesPaths?: string[] | any
 }
 
 interface SelectArtifactProps {
@@ -100,7 +88,7 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
-  const { mutate: updateService } = useUpdateServiceV2({
+  const { mutate: updateService, loading } = useUpdateServiceV2({
     queryParams: {
       accountIdentifier: accountId
     },
@@ -111,80 +99,81 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
     }
   })
 
-  const setForwardRef = ({
-    values,
-    setFieldTouched
-  }: Omit<SelectArtifactRef, 'validate' | 'showValidationErrors'>): void => {
-    if (!forwardRef) {
-      return
-    }
-    if (typeof forwardRef === 'function') {
-      return
-    }
-
-    if (values) {
-      forwardRef.current = {
-        values,
-        connectorResponse: selectGitProviderRef?.current?.connectorResponse,
-        gitValues: selectGitProviderRef?.current?.values,
-        repoValues: selectRepositoryRef?.current?.repository,
-        manifestValues: provideManifestRef?.current?.values,
-        setFieldTouched: setFieldTouched,
-        submitForm: formikRef?.current?.submitForm
-      }
-    }
-  }
-
   useEffect(() => {
-    if (formikRef.current?.values && formikRef.current?.setFieldTouched) {
-      setForwardRef({
-        values: formikRef.current.values,
-        setFieldTouched: formikRef.current.setFieldTouched
-      })
+    const gitValues = selectGitProviderRef?.current?.values
+    const repoValues = selectRepositoryRef?.current?.repository
+    const manifestValues = formikRef?.current?.values
+    const gitTestConnectionStatus = isEqual(get(serviceData, 'data.gitValues'), gitValues)
+      ? get(serviceData, 'data.gitConnectionStatus')
+      : selectGitProviderRef.current?.testConnectionStatus
+    const updatedContextService = produce(serviceData as NGServiceConfig, draft => {
+      set(draft, 'data.gitValues', gitValues)
+      set(draft, 'data.manifestValues', manifestValues)
+      set(draft, 'data.repoValues', repoValues)
+      set(draft, 'data.gitConnectionStatus', gitTestConnectionStatus)
+    })
+    saveServiceData({ service: updatedContextService })
+    if (formikRef.current?.values) {
+      if (!forwardRef) {
+        return
+      }
+      if (typeof forwardRef === 'function') {
+        return
+      }
+
+      if (formikRef.current.values) {
+        forwardRef.current = {
+          submitForm: formikRef?.current?.submitForm
+        }
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     formikRef?.current?.values,
     formikRef?.current?.setFieldTouched,
     selectGitProviderRef?.current?.values,
-    selectRepositoryRef?.current?.repository,
-    provideManifestRef?.current?.values
+    selectRepositoryRef?.current?.repository
   ])
 
   const openSelectRepoAccordion = (): boolean | undefined => {
     const { validate } = selectGitProviderRef.current || {}
-    return validate?.() && selectGitProviderRef.current?.testConnectionStatus === TestStatus.SUCCESS
+    // const condition = selectGitProviderRef.current?.testConnectionStatus === TestStatus.SUCCESS
+    if (
+      validate?.()
+      // && condition
+    ) {
+      return true
+    } else {
+      disableNextBtn()
+      return false
+    }
   }
 
   const openProvideManifestAccordion = React.useCallback((): boolean | undefined => {
-    if (selectRepositoryRef.current?.repository) {
+    if (selectRepositoryRef.current?.repository?.name) {
       return true
     } else {
+      // disableNextBtn()
       return false
     }
-  }, [selectRepositoryRef.current])
+  }, [selectRepositoryRef?.current?.repository])
 
-  const validateProvideManifestDetails = React.useCallback((): any => {
-    const { identifier } = formikRef?.current?.values || {}
-    if (!identifier) return false
-    return true
+  const validateProvideManifestDetails = React.useCallback((): boolean => {
+    if (isEmpty(formikRef?.current?.errors)) {
+      openSelectRepoAccordion() && openProvideManifestAccordion() && enableNextBtn()
+      return true
+    } else {
+      disableNextBtn()
+      return false
+    }
   }, [])
-
-  // useEffect(() => {
-  //   if (openProvideManifestAccordion() && openProvideManifestAccordion() && validateProvide()) {
-  //     enableNextBtn()
-  //   } else {
-  //     disableNextBtn()
-  //   }
-  // }, [selectGitProviderRef?.current?.values, selectRepositoryRef?.current?.repository, validateProvide()])
 
   const { showError, showSuccess } = useToaster()
   const handleSubmit = async (values: SelectArtifactInterface): Promise<SelectArtifactInterface> => {
     const gitValues = selectGitProviderRef?.current?.values
     const repoValues = selectRepositoryRef?.current?.repository
-    const manifestValues = provideManifestRef?.current?.values
+    const manifestValues = formikRef?.current?.values
     try {
-      // provideManifestRef?.current?.submitForm?.().then(async (manifestObj: any) => {
       const getManifestDetails = (): ManifestConfigWrapper => {
         const { branch, commitId, gitFetchType, identifier, paths, valuesPaths } = formikRef?.current?.values || {}
 
@@ -222,7 +211,11 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
         }
 
         set(manifestObj, 'manifest.spec.store.type', gitValues?.gitProvider?.type)
-        set(manifestObj, 'manifest.spec.store.spec.connectorRef', gitValues?.gitProvider?.type)
+        set(
+          manifestObj,
+          'manifest.spec.store.spec.connectorRef',
+          `${ACCOUNT_SCOPE_PREFIX}${gitValues?.gitProvider?.type}`
+        )
         return manifestObj
       }
 
@@ -239,6 +232,10 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
       saveServiceData({ service: updatedContextService })
 
       const serviceBody = { service: { ...omit(cloneDeep(updatedContextService), 'data') } }
+      if (isEqual(serviceBody, { service: { ...omit(serviceData, 'data') } })) {
+        props?.onSuccess?.()
+        return Promise.resolve(values)
+      }
       const body = {
         ...omit(cloneDeep(serviceBody.service), 'serviceDefinition', 'gitOpsEnabled'),
         projectIdentifier,
@@ -260,7 +257,6 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
       showError(e?.data?.message || e?.message || getString('commonError'))
       return Promise.resolve({} as SelectArtifactInterface)
     }
-    return Promise.resolve({} as SelectArtifactInterface)
   }
 
   const isActiveAccordion: boolean = artifactType ? true : false
@@ -287,19 +283,57 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
     }
     return {
       identifier: '',
-      gitFetchType: 'Commit',
+      gitFetchType: 'Branch',
       branch: undefined,
       commitId: undefined,
-      paths: [],
+      paths: [{ path: '', uuid: uuid('', nameSpace()) }],
       valuesPaths: [],
       artifactType: get(serviceData, 'data.artifactType') || undefined
-      // skipResourceVersioning: false,
     }
   }, [])
+
+  const validationSchema = Yup.object().shape({
+    artifactType: Yup.string().required(getString('validation.nameRequired')),
+    identifier: Yup.string().required(getString('validation.nameRequired')),
+
+    branch: Yup.string().when('gitFetchType', {
+      is: 'Branch',
+      then: Yup.string().trim().required(getString('validation.branchName'))
+    }),
+    commitId: Yup.string().when('gitFetchType', {
+      is: 'Commit',
+      then: Yup.string().trim().required(getString('validation.commitId'))
+    }),
+    paths: Yup.lazy((_value): Yup.Schema<unknown> => {
+      // return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
+      return Yup.array().of(
+        Yup.object().shape({
+          path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))
+        })
+      )
+    }),
+    valuesPaths: Yup.lazy((_value): Yup.Schema<unknown> => {
+      // return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
+      return Yup.array().of(
+        Yup.object().shape({
+          path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))
+        })
+      )
+    })
+  })
+  if (loading) {
+    return <PageSpinner />
+  }
+
   return (
     <Layout.Vertical width="80%">
       <Text font={{ variation: FontVariation.H4 }}>{getString('cd.getStartedWithCD.artifactLocation')}</Text>
-      <Formik<SelectArtifactInterface> formName="cdRepo" initialValues={getInitialValues()} onSubmit={handleSubmit}>
+      <Formik<SelectArtifactInterface>
+        formName="cdRepo"
+        initialValues={getInitialValues()}
+        onSubmit={handleSubmit}
+        validationSchema={validationSchema}
+      >
         {formikProps => {
           formikRef.current = formikProps
           return (
@@ -357,12 +391,12 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
                   <Accordion.Panel
                     id="codeRepo"
                     summary={
-                      <Layout.Horizontal width={300}>
+                      <Layout.Horizontal flex={{ justifyContent: 'space-around' }}>
                         <Text font={{ variation: FontVariation.H5 }}>{getString('cd.getStartedWithCD.codeRepos')}</Text>
                         {openSelectRepoAccordion() ? (
                           <Icon name="success-tick" size={20} className={css.accordionStatus} />
                         ) : selectGitProviderRef?.current?.showValidationErrors ? (
-                          <Icon name="danger-icon" size={20} className={css.accordionStatus} {...disableNextBtn()} />
+                          <Icon name="danger-icon" size={20} className={css.accordionStatus} />
                         ) : null}
                       </Layout.Horizontal>
                     }
@@ -370,6 +404,7 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
                       <SelectGitProvider
                         ref={selectGitProviderRef}
                         gitValues={get(serviceData, 'data.gitValues', {})}
+                        connectionStatus={get(serviceData, 'data.gitConnectionStatus', TestStatus.NOT_INITIATED)}
                         disableNextBtn={() => setDisableBtn(true)}
                         enableNextBtn={() => setDisableBtn(false)}
                         selectedHosting={Hosting.SaaS}
@@ -379,12 +414,12 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
                   <Accordion.Panel
                     id="selectYourRepo"
                     summary={
-                      <Layout.Horizontal width={300}>
+                      <Layout.Horizontal flex={{ justifyContent: 'space-around' }}>
                         <Text font={{ variation: FontVariation.H5 }}>{getString('common.selectYourRepo')}</Text>
                         {openProvideManifestAccordion() ? (
                           <Icon name="success-tick" size={20} className={css.accordionStatus} />
                         ) : !selectRepositoryRef?.current?.repository?.name ? (
-                          <Icon name="danger-icon" size={20} className={css.accordionStatus} {...disableNextBtn()} />
+                          <Icon name="danger-icon" size={20} className={css.accordionStatus} />
                         ) : null}
                       </Layout.Horizontal>
                     }
@@ -404,14 +439,14 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
                   <Accordion.Panel
                     id="provideManifest"
                     summary={
-                      <Layout.Horizontal width={300}>
+                      <Layout.Horizontal flex={{ justifyContent: 'space-around' }}>
                         <Text font={{ variation: FontVariation.H5 }}>
                           {getString('cd.getStartedWithCD.provideManifest')}
                         </Text>
                         {validateProvideManifestDetails() ? (
-                          <Icon name="success-tick" size={20} className={css.accordionStatus} {...enableNextBtn()} />
+                          <Icon name="success-tick" size={20} className={css.accordionStatus} />
                         ) : (
-                          <Icon name="danger-icon" size={20} className={css.accordionStatus} {...disableNextBtn()} />
+                          <Icon name="danger-icon" size={20} className={css.accordionStatus} />
                         )}
                       </Layout.Horizontal>
                     }

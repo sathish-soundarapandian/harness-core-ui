@@ -268,7 +268,7 @@ export default (
       licenseRedirectData={licenseRedirectData}
       sidebarProps={CDSideNavProps}
       pageName={PAGE_NAME.GetStartedWithCI}
-      path={routes.toGetStartedWithCI({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
+      path={routes.toGetStartedWithCD({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
     >
       <GetStartedWithCD />
     </RouteWithLayout>
@@ -281,15 +281,7 @@ export default (
     >
       <CDHomePage />
     </RouteWithLayout>
-    <RouteWithLayout
-      exact
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CDSideNavProps}
-      pageName={PAGE_NAME.GetStartedWithCI}
-      path={routes.toGetStartedWithCI({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
-    >
-      <GetStartedWithCD />
-    </RouteWithLayout>
+
     <RouteWithLayout
       layout={MinimalLayout}
       path={routes.toModuleTrialHome({ ...accountPathProps, module: 'cd' })}

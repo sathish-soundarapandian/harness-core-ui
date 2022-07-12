@@ -80,6 +80,7 @@ export type SelectGitProviderForwardRef =
 interface SelectGitProviderProps {
   className?: string
   gitValues?: SelectGitProviderInterface
+  connectionStatus?: TestStatus
   selectedHosting?: Hosting
   disableNextBtn: () => void
   enableNextBtn: () => void
@@ -99,11 +100,13 @@ const SelectGitProviderRef = (
   props: SelectGitProviderProps,
   forwardRef: SelectGitProviderForwardRef
 ): React.ReactElement => {
-  const { selectedHosting, disableNextBtn, enableNextBtn, gitValues } = props
+  const { selectedHosting, disableNextBtn, enableNextBtn, gitValues, connectionStatus } = props
   const { getString } = useStrings()
   const [gitProvider, setGitProvider] = useState<GitProvider | undefined>(gitValues?.gitProvider)
   const [authMethod, setAuthMethod] = useState<GitAuthenticationMethod | undefined>(gitValues?.gitAuthenticationMethod)
-  const [testConnectionStatus, setTestConnectionStatus] = useState<TestStatus>(TestStatus.NOT_INITIATED)
+  const [testConnectionStatus, setTestConnectionStatus] = useState<TestStatus>(
+    connectionStatus || TestStatus.NOT_INITIATED
+  )
   const formikRef = useRef<FormikContextType<SelectGitProviderInterface>>()
   const { accountId } = useParams<ProjectPathProps>()
   const [testConnectionErrors, setTestConnectionErrors] = useState<ResponseMessage[]>()
@@ -215,13 +218,13 @@ const SelectGitProviderRef = (
     let url = ''
     switch (gitProvider?.type) {
       case Connectors.GITHUB:
-        url = getString('common.getStarted.gitProviderURLs.github')
+        url = getString('common.git.gitHubUrlPlaceholder')
         break
       case Connectors.BITBUCKET:
-        url = getString('common.getStarted.gitProviderURLs.bitbucket')
+        url = getString('common.git.bitbucketUrlPlaceholder')
         break
       case Connectors.GITLAB:
-        url = getString('common.getStarted.gitProviderURLs.gitlab')
+        url = getString('common.git.gitLabUrlPlaceholder')
         break
     }
     return url ? url.replace('/account/', '') : ''
@@ -736,7 +739,9 @@ const SelectGitProviderRef = (
                     <Container padding={{ bottom: 'medium' }}>
                       <Text font={{ variation: FontVariation.H5 }} padding={{ top: 'xlarge', bottom: 'small' }}>
                         {getString(
-                          selectedHosting === Hosting.SaaS ? 'common.authMethod' : 'ci.getStartedWithCI.setUpAuth'
+                          selectedHosting === Hosting.SaaS
+                            ? 'common.getStarted.authMethod'
+                            : 'ci.getStartedWithCI.setUpAuth'
                         )}
                       </Text>
                       {selectedHosting === Hosting.SaaS ? (

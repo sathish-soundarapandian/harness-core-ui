@@ -17,15 +17,15 @@ import {
   FormikForm as Form,
   Accordion,
   FormInput,
-  FormError,
   useToaster,
   PageSpinner,
   getErrorInfoFromErrorObject
 } from '@harness/uicore'
 import type { FormikContextType, FormikProps } from 'formik'
-import { get, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, set } from 'lodash-es'
 import produce from 'immer'
 import { useParams } from 'react-router-dom'
+import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
 
 import {
@@ -47,8 +47,8 @@ import {
 } from './SelectAuthenticationMethod'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import { cleanEnvironmentDataUtil, getUniqueEntityIdentifier, newEnvironmentState } from '../cdOnboardingUtils'
-import css from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
-
+import defaultCss from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
+import css from './SelectInfrastructure.module.scss'
 export interface SelectInfrastructureRef {
   values: SelectInfrastructureInterface
   setFieldTouched(
@@ -83,28 +83,6 @@ const SelectInfrastructureRef = (
   props: SelectInfrastructureProps,
   forwardRef: SelectInfrastructureForwardRef
 ): React.ReactElement => {
-  const defaultInitialFormData: SelectAuthenticationMethodInterface = {
-    authType: AuthTypes.USER_PASSWORD,
-    delegateType: '',
-    masterUrl: '',
-    username: undefined,
-    password: undefined,
-    serviceAccountToken: undefined,
-    oidcIssuerUrl: '',
-    oidcUsername: undefined,
-    oidcPassword: undefined,
-    oidcCleintId: undefined,
-    oidcCleintSecret: undefined,
-    oidcScopes: '',
-    clientKey: undefined,
-    clientKeyCertificate: undefined,
-    clientKeyPassphrase: undefined,
-    clientKeyAlgo: '',
-    clientKeyCACertificate: undefined,
-    connectorName: '',
-    connectorIdentifier: ''
-  }
-
   const { getString } = useStrings()
   const {
     saveEnvironmentData,
@@ -124,6 +102,29 @@ const SelectInfrastructureRef = (
   //   else disableNextBtn()
   // })
 
+  const defaultInitialFormData: SelectAuthenticationMethodInterface = {
+    authType: AuthTypes.USER_PASSWORD,
+    delegateType: defaultTo(get(infrastructureData, 'data.delegateType'), ''),
+    masterUrl: defaultTo(get(infrastructureData, 'data.masterUrl'), ''),
+    username: get(infrastructureData, 'data.username') || '',
+    password: get(infrastructureData, 'data.password') || undefined,
+    serviceAccountToken: get(infrastructureData, 'data.serviceAccountToken') || undefined,
+    oidcIssuerUrl: get(infrastructureData, 'data.oidcIssueUrl') || '',
+    oidcUsername: get(infrastructureData, 'data.oidcIssueUsername') || undefined,
+    oidcPassword: get(infrastructureData, 'data.oidcPassword') || undefined,
+    oidcCleintId: get(infrastructureData, 'data.oidcCleintId') || undefined,
+    oidcCleintSecret: get(infrastructureData, 'data.oidcCleintSecret') || undefined,
+    oidcScopes: get(infrastructureData, 'data.oidcScopes') || '',
+    clientKey: get(infrastructureData, 'data.clientKey') || undefined,
+    clientKeyCertificate: get(infrastructureData, 'data.clientKeyCertificate') || undefined,
+    clientKeyPassphrase: undefined,
+    clientKeyAlgo: get(infrastructureData, 'data.clientKeyAlgo') || '',
+    clientKeyCACertificate: undefined,
+    connectorName: get(infrastructureData, 'infrastructure.infrastructureDefinition.spec.connectorRef') || '',
+    connectorIdentifier:
+      get(infrastructureData, 'infrastructure.infrastructureDefinition.spec.connectorIdentifier') || '',
+    delegateSelectors: []
+  }
   const { loading: createEnvLoading, mutate: createEnvironment } = useCreateEnvironmentV2({
     queryParams: {
       accountIdentifier: accountId
@@ -131,7 +132,14 @@ const SelectInfrastructureRef = (
   })
 
   const openSetUpDelegateAccordion = (): boolean | undefined => {
-    return selectAuthenticationMethodRef?.current?.validate()
+    const validate = selectAuthenticationMethodRef?.current?.validate()
+    if (validate && isEmpty(formikRef?.current?.errors)) {
+      props.enableNextBtn()
+      return true
+    } else {
+      props.disableNextBtn()
+      return false
+    }
   }
 
   const setForwardRef = ({ values, setFieldTouched }: Omit<SelectInfrastructureRef, 'validate'>): void => {
@@ -170,7 +178,28 @@ const SelectInfrastructureRef = (
 
   const { showSuccess, showError, clear } = useToaster()
   const handleSubmit = async (values: SelectInfrastructureInterface): Promise<SelectInfrastructureInterface> => {
-    const { envId, infraId, infraType, namespace, connectorIdentifier } = values || {}
+    const {
+      envId,
+      infraId,
+      infraType,
+      namespace,
+      masterUrl,
+      connectorName,
+      delegateType,
+      username,
+      password,
+      serviceAccountToken,
+      oidcCleintId,
+      oidcIssuerUrl,
+      oidcPassword,
+      oidcUsername,
+      oidcCleintSecret,
+      clientKey,
+      clientKeyCertificate,
+      clientKeyAlgo,
+      connectorIdentifier,
+      authType
+    } = values || {}
     if (!infraType) {
       showError(getString('common.validation.fieldIsRequired', { name: 'Infrastructure Type' }))
     } else if (!envId) {
@@ -192,7 +221,6 @@ const SelectInfrastructureRef = (
       )
     })
     try {
-      // selectAuthenticationMethodRef?.current?.submitForm?.()?.then(async (authValues: any) => {
       const cleanEnvironmentData = cleanEnvironmentDataUtil(updatedContextEnvironment as ServiceRequestDTO)
 
       const response = await createEnvironment({ ...cleanEnvironmentData, orgIdentifier, projectIdentifier })
@@ -212,7 +240,24 @@ const SelectInfrastructureRef = (
           set(draft, 'environmentRef', envId)
           set(draft, 'infrastructureDefinition.spec.namespace', namespace)
           set(draft, 'infrastructureDefinition.spec.connectorRef', connectorIdentifier)
+          set(draft, 'data.connectorName', connectorName)
+          set(draft, 'data.connectorIdentifier', connectorIdentifier)
+          set(draft, 'data.authType', authType)
+          set(draft, 'data.delegateType', delegateType)
+          set(draft, 'data.masterUrl', masterUrl)
+          set(draft, 'data.username', username)
+          set(draft, 'data.password', password)
+          set(draft, 'data.serviceAccountToken', serviceAccountToken)
+          set(draft, 'data.oidcCleintId', oidcCleintId)
+          set(draft, 'data.oidcIssueUrl', oidcIssuerUrl)
+          set(draft, 'data.oidcPassword', oidcPassword)
+          set(draft, 'data.oidcUsername', oidcUsername)
+          set(draft, 'data.oidcCleintSecret', oidcCleintSecret)
+          set(draft, 'data.clientKey', clientKey)
+          set(draft, 'data.clientKeyAlgo', clientKeyAlgo)
+          set(draft, 'data.clientKeyCertificate', clientKeyCertificate)
         })
+
         saveInfrastructureData({
           infrastructure: { ...updatedContextInfra }
         })
@@ -250,10 +295,10 @@ const SelectInfrastructureRef = (
                   identifier: infraResponse.data?.infrastructure?.identifier
                 })
               )
+              return Promise.resolve(values)
             } else {
               throw infraResponse
             }
-            props?.onSuccess?.(refsData)
           })
           .catch(e => {
             showError(getErrorInfoFromErrorObject(e))
@@ -263,19 +308,40 @@ const SelectInfrastructureRef = (
       } else {
         throw response
       }
-      // })
     } catch (error: any) {
       showError(getRBACErrorMessage(error))
       return Promise.resolve({} as SelectInfrastructureInterface)
     }
-    return Promise.resolve({} as SelectInfrastructureInterface)
   }
 
-  const borderBottom = <div className={css.repoborderBottom} />
+  const borderBottom = <div className={defaultCss.repoborderBottom} />
 
   if (createEnvLoading) {
     return <PageSpinner />
   }
+
+  const validationSchema = Yup.object().shape({
+    infraType: Yup.string().required(
+      getString('common.getStarted.plsChoose', {
+        field: `${getString('infrastructureText')}`
+      })
+    ),
+    envId: Yup.string().required(
+      getString('common.validation.fieldIsRequired', { name: getString('cd.getStartedWithCD.envName') })
+    ),
+    infraId: Yup.string().required(
+      getString('common.validation.fieldIsRequired', { name: getString('infrastructureText') })
+    ),
+    namespace: Yup.string().required(
+      getString('common.validation.fieldIsRequired', { name: getString('common.namespace') })
+    ),
+    connectorName: Yup.string().required(getString('validation.nameRequired')),
+    delegateType: Yup.string().required(
+      getString('connectors.chooseMethodForConnection', {
+        name: getString('connectors.k8sConnection')
+      })
+    )
+  })
 
   return (
     <Layout.Vertical width="80%">
@@ -290,21 +356,23 @@ const SelectInfrastructureRef = (
         }}
         formName="cdInfrastructure"
         onSubmit={handleSubmit}
+        validationSchema={validationSchema}
       >
         {formikProps => {
           formikRef.current = formikProps
           return (
             <Form>
-              <Container padding={{ top: 'xxlarge', bottom: 'xxxlarge' }}>
+              <Container className={css.workloadType}>
+                {props.disableNextBtn()}
                 <CardSelect
                   data={InfrastructureTypes}
                   cornerSelected={true}
-                  className={css.icons}
-                  cardClassName={css.serviceDeploymentTypeCard}
+                  className={defaultCss.icons}
+                  cardClassName={defaultCss.serviceDeploymentTypeCard}
                   renderItem={(item: InfrastructureType) => (
                     <>
                       <Layout.Vertical flex>
-                        <Icon name={item.icon} size={30} flex className={css.serviceDeploymentTypeIcon} />
+                        <Icon name={item.icon} size={30} flex className={defaultCss.serviceDeploymentTypeIcon} />
 
                         <Text font={{ variation: FontVariation.SMALL_SEMI }} padding={{ top: 'xxlarge' }} width={78}>
                           {getString(item.label)}
@@ -318,52 +386,46 @@ const SelectInfrastructureRef = (
                     setInfrastructureType(item)
                   }}
                 />
-                {formikProps.touched.infraType && !formikProps.values.infraType ? (
-                  <FormError
-                    className={css.marginTop}
-                    name={'infraType'}
-                    errorMessage={getString('common.getStarted.plsChoose', {
-                      field: `${getString('infrastructureText')}`
-                    })}
-                  />
-                ) : null}
               </Container>
-              <Layout.Vertical padding={{ top: 'xxlarge', bottom: 'xxlarge' }}>
+              <Layout.Horizontal className={css.infraInputs}>
                 <FormInput.Text
                   tooltipProps={{ dataTooltipId: 'specifyYourEnvironment' }}
                   label={getString('cd.getStartedWithCD.envName')}
                   name="envId"
-                  className={css.formInput}
+                  className={defaultCss.formInput}
                 />
                 <FormInput.Text
                   // tooltipProps={{ dataTooltipId: 'specifyYourEnvironment' }}
                   label={getString('infrastructureText')}
                   name="infraId"
-                  className={css.formInput}
+                  className={defaultCss.formInput}
                 />
                 <FormInput.Text
                   tooltipProps={{ dataTooltipId: 'gcpInfraNamespace' }}
                   label={getString('common.namespace')}
                   placeholder={getString('pipeline.infraSpecifications.namespacePlaceholder')}
                   name="namespace"
-                  className={css.formInput}
+                  className={defaultCss.formInput}
                 />
-              </Layout.Vertical>
+              </Layout.Horizontal>
               {borderBottom}
               {infrastructureType &&
               formikRef?.current?.values?.envId &&
               formikRef?.current?.values?.infraId &&
               formikRef?.current?.values?.namespace ? (
-                <Accordion className={css.accordion} activeId={infrastructureType ? 'authMethod' : 'setUpDelegate'}>
+                <Accordion
+                  className={defaultCss.accordion}
+                  activeId={infrastructureType ? 'authMethod' : 'setUpDelegate'}
+                >
                   <Accordion.Panel
                     id="authMethod"
                     summary={
-                      <Layout.Horizontal width={500}>
+                      <Layout.Horizontal flex={{ alignItems: 'center' }}>
                         <Text font={{ variation: FontVariation.H5 }}>{'Connect to your Kubernetes cluster'}</Text>
                         {openSetUpDelegateAccordion() ? (
-                          <Icon name="success-tick" size={20} className={css.accordionStatus} />
+                          <Icon name="success-tick" size={20} className={defaultCss.accordionStatus} />
                         ) : (
-                          <Icon name="danger-icon" size={20} className={css.accordionStatus} />
+                          <Icon name="danger-icon" size={20} className={defaultCss.accordionStatus} />
                         )}
                       </Layout.Horizontal>
                     }
