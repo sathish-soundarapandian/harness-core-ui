@@ -7,7 +7,7 @@
 
 import React, { SyntheticEvent, useState } from 'react'
 import { Drawer, Intent, Position } from '@blueprintjs/core'
-import { Button, useConfirmationDialog } from '@wings-software/uicore'
+import { Button, useConfirmationDialog, ButtonVariation, ButtonSize } from '@wings-software/uicore'
 import { cloneDeep, defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import cx from 'classnames'
 import produce from 'immer'
@@ -737,6 +737,10 @@ export function RightDrawer(): React.ReactElement {
       notificationsRef
     })
   }
+
+  const handleCloseHelpPanel = () => {
+    setHelpPanel(false)
+  }
   const showHelpPanel = () => {
     console.log('hello')
     setHelpPanel(!helpPanelVisible)
@@ -965,9 +969,13 @@ export function RightDrawer(): React.ReactElement {
             onRemoveTemplate={() => removeTemplate(type)}
           />
         )}
-        <Button minimal onClick={showHelpPanel} intent="primary">
-          Help Panel
-        </Button>
+        <Button
+          variation={ButtonVariation.SECONDARY}
+          size={ButtonSize.SMALL}
+          className={css.helpPanel}
+          text={'Help Panel'}
+          onClick={showHelpPanel}
+        />
       </Drawer>
       {helpPanelVisible ? (
         <Drawer
@@ -988,7 +996,7 @@ export function RightDrawer(): React.ReactElement {
             className={css.almostFullScreenCloseBtn}
             icon="cross"
             withoutBoxShadow
-            onClick={handleClose}
+            onClick={handleCloseHelpPanel}
           />
           <HelpPanel referenceId="connectors" type={HelpPanelType.CONTENT_ONLY}></HelpPanel>
         </Drawer>
