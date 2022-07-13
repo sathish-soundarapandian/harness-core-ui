@@ -15,7 +15,7 @@ import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/compo
 import { useStrings } from 'framework/strings'
 
 import { ShellScriptFormData, variableSchema } from '@cd/components/PipelineSteps/ShellScriptStep/shellScriptTypes'
-import BaseShellScript from '@cd/components/PipelineSteps/ShellScriptStep/BaseShellScript'
+import BaseScript from '@cd/components/BaseScript/BaseScript'
 
 /**
  * Spec
@@ -32,7 +32,7 @@ interface ShellScriptWidgetProps {
   isNewStep?: boolean
 }
 
-export function BaseScript(
+export function BaseScriptForm(
   { initialValues, updateTemplate, onChange }: ShellScriptWidgetProps,
   formikRef: StepFormikFowardRef
 ): JSX.Element {
@@ -85,18 +85,10 @@ export function BaseScript(
           updateTemplate?.(formik.values)
         }
 
-        return (
-          <BaseShellScript
-            isNewStep={true}
-            formik={formik}
-            readonly={false}
-            allowableTypes={[]}
-            stepViewType={StepViewType.NoStep}
-          />
-        )
+        return <BaseScript formik={formik} readonly={false} allowableTypes={[]} />
       }}
     </Formik>
   )
 }
 
-export const BaseScriptWithRef = React.forwardRef(BaseScript)
+export const BaseScriptWithRef = React.forwardRef(BaseScriptForm)

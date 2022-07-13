@@ -17,7 +17,7 @@ import { useStrings } from 'framework/strings'
 
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
-import { BaseScriptWithRef } from './BaseScript'
+import { BaseScriptWithRef } from './BaseScriptForm'
 import { OptionalConfigurationWithRef } from './OptionalConfigurations'
 import css from './ScriptTemplateForm.module.scss'
 
