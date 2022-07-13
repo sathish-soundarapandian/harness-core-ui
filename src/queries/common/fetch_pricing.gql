@@ -96,7 +96,7 @@ query fetchPlans {
     ffPlans {
       ...Plans
     }
-    chIntelPlans {
+    srmPlans {
       ...Plans
     }
 
@@ -131,10 +131,10 @@ query fetchPlans {
     ciSaasFeatureGroup {
       ...FeatureGroup
     }
-    chIntelFeatureCaption {
+    srmFeatureCaption {
       ...FeatureCaption
     }
-    chIntelFeatureGroup {
+    srmFeatureGroup {
       ...FeatureGroup
     }
     cdFaq {
