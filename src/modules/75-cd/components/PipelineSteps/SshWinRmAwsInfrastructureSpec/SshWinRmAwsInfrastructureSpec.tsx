@@ -6,7 +6,17 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { IconName, Layout, Formik, FormikForm, FormInput, MultiTypeInputType, SelectOption } from '@harness/uicore'
+import {
+  IconName,
+  Layout,
+  Formik,
+  FormikForm,
+  FormInput,
+  MultiTypeInputType,
+  SelectOption,
+  getMultiTypeFromValue,
+  RUNTIME_INPUT_VALUE
+} from '@harness/uicore'
 import { Radio, RadioGroup } from '@blueprintjs/core'
 import { parse } from 'yaml'
 import * as Yup from 'yup'
@@ -37,10 +47,15 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
-import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
+import {
+  ConnectorReferenceDTO,
+  FormMultiTypeConnectorField
+} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import SSHSecretInput from '@secrets/components/SSHSecretInput/SSHSecretInput'
 import { InfraDeploymentType } from '../PipelineStepsUtil'
 import css from './SshWinRmAwsInfrastructureSpec.module.scss'
@@ -78,7 +93,8 @@ const AutoScalingGroup = {
 const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureSpecEditableProps> = ({
   initialValues,
   onUpdate,
-  readonly
+  readonly,
+  allowableTypes
 }): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -87,6 +103,9 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
   }>()
   /* istanbul ignore next */
   const delayedOnUpdate = React.useRef(debounce(onUpdate || noop, 300)).current
+  const formikRef = React.useRef<FormikProps<SshWinRmAwsInfrastructureUI> | null>(null)
+
+  const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
   const { showError } = useToaster()
 
@@ -95,6 +114,9 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
 
   const [loadBalancers, setLoadBalancers] = useState<SelectOption[]>([])
   const [isLoadBalancersLoading, setIsLoadBalancersLoading] = useState(false)
+  const [loadbalancerRefType, setLoadbalancerRefType] = useState<MultiTypeInputType>(
+    getMultiTypeFromValue(formikRef.current?.values?.loadBalancer)
+  )
 
   const [autoScalingGroups, setAutoScalingGroups] = useState<SelectOption[]>([])
   const [isAutoScalingGroupLoading, setIsAutoScalingGroupLoading] = useState(false)
@@ -105,9 +127,9 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
   const [tags, setTags] = useState<SelectOption[]>([])
   const [isTagsLoading, setIsTagsLoading] = useState(false)
 
-  const [isAutoScalingGroupSelected, setIsAutoScalingGroupSelected] = useState(!!initialValues.useAutoScalingGroup)
-
-  const formikRef = React.useRef<FormikProps<SshWinRmAwsInfrastructureUI> | null>(null)
+  const [isAutoScalingGroupSelected, setIsAutoScalingGroupSelected] = useState(
+    get(initialValues, 'useAutoScalingGroup', true)
+  )
 
   useEffect(() => {
     const { connectorRef, region, loadBalancer, autoScalingGroupName, awsInstanceFilter, useAutoScalingGroup } =
@@ -334,83 +356,102 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                     <SSHSecretInput name={'sshKey'} label={getString('cd.steps.common.specifyCredentials')} />
                   </div>
                   <Layout.Vertical>
-                    <ConnectorReferenceField
+                    <FormMultiTypeConnectorField
                       error={get(formik, 'errors.connectorRef', undefined)}
                       name="connectorRef"
                       type={['Aws']}
-                      selected={formik.values.connectorRef}
                       label={getString('connector')}
                       width={490}
                       placeholder={getString('connectors.selectConnector')}
                       accountIdentifier={accountId}
                       projectIdentifier={projectIdentifier}
                       orgIdentifier={orgIdentifier}
+                      multiTypeProps={{ allowableTypes, expressions }}
                       onChange={
-                        /* istanbul ignore next */ (value, scope) => {
-                          /* istanbul ignore next */
-                          const connectorValue = `${scope !== Scope.PROJECT ? `${scope}.` : ''}${value.identifier}`
-                          formik.setFieldValue('connectorRef', {
-                            label: value.name || '',
-                            value: connectorValue,
-                            scope: scope,
-                            live: get(value, 'status.status', '') === 'SUCCESS',
-                            connector: value
-                          })
-                          /* istanbul ignore next */
-                          formikRef.current?.setFieldValue('region', undefined)
-                          fetchRegions()
+                        /* istanbul ignore next */ (selected, _typeValue, type) => {
+                          const item = selected as unknown as { record?: ConnectorReferenceDTO; scope: Scope }
+                          if (type === MultiTypeInputType.FIXED) {
+                            const connectorRef =
+                              item.scope === Scope.ORG || item.scope === Scope.ACCOUNT
+                                ? `${item.scope}.${item?.record?.identifier}`
+                                : item.record?.identifier
+                            /* istanbul ignore next */
+                            const connectorValue = `${
+                              item.scope !== Scope.PROJECT ? `${item.scope}.` : ''
+                            }${connectorRef}`
+                            formik.setFieldValue('connectorRef', {
+                              label: item?.record?.name || '',
+                              value: connectorValue,
+                              scope: item.scope,
+                              live: get(item.record, 'status.status', '') === 'SUCCESS',
+                              connector: item.record
+                            })
+                            /* istanbul ignore next */
+                            formikRef.current?.setFieldValue('region', undefined)
+                            fetchRegions()
+                          }
                         }
                       }
                     />
                   </Layout.Vertical>
                 </Layout.Vertical>
-                <FormInput.Select
+                <FormInput.MultiTypeInput
                   name="region"
                   className={`regionId-select ${css.inputWidth}`}
-                  items={regions}
-                  disabled={isRegionsLoading || !formik.values.connectorRef || readonly}
+                  selectItems={regions}
                   placeholder={isRegionsLoading ? getString('loading') : getString('pipeline.regionPlaceholder')}
                   label={getString('regionLabel')}
-                  onChange={
-                    /* istanbul ignore next */ optionItem => {
-                      if (optionItem) {
-                        formik.setFieldValue('region', optionItem.value)
+                  multiTypeInputProps={{
+                    onTypeChange: setLoadbalancerRefType,
+                    allowableTypes,
+                    expressions,
+                    onChange: /* istanbul ignore next */ option => {
+                      const { value } = option as SelectOption
+                      if (value) {
+                        formik.setFieldValue('region', value)
                         formik.setFieldValue('loadBalancer', '')
                         formik.setFieldValue('autoScalingGroupName', '')
                         formik.setFieldValue('vpcs', [])
                         formik.setFieldValue('tags', {})
-                        fetchLoadBalancers(optionItem.value as string)
-                        fetchVpcs(optionItem.value as string)
-                        fetchAutoScalingGroups(optionItem.value as string)
-                        fetchTags(optionItem.value as string)
+                        fetchLoadBalancers(value as string)
+                        fetchVpcs(value as string)
+                        fetchAutoScalingGroups(value as string)
+                        fetchTags(value as string)
                       }
                     }
-                  }
+                  }}
                 />
-                <FormInput.Select
+                <FormInput.MultiTypeInput
                   name="loadBalancer"
                   className={`loadBalancer-select ${css.inputWidth}`}
-                  items={loadBalancers}
-                  disabled={isLoadBalancersLoading || !formik.values.region || readonly}
+                  selectItems={loadBalancers}
                   placeholder={
                     isLoadBalancersLoading
                       ? getString('loading')
                       : getString('cd.steps.awsInfraStep.placeholders.loadBalancer')
                   }
                   label={getString('cd.steps.awsInfraStep.labels.loadBalancer')}
-                  onChange={
-                    /* istanbul ignore next */ option => {
-                      if (option) {
-                        formik.setFieldValue('loadBalancer', option.value)
+                  multiTypeInputProps={{
+                    onTypeChange: setLoadbalancerRefType,
+                    allowableTypes,
+                    expressions,
+                    onChange: option => {
+                      const { value } = option as SelectOption
+                      if (value) {
+                        formik.setFieldValue('loadBalancer', value?.value || value)
                       }
                     }
-                  }
+                  }}
                 />
-                <FormInput.Text
+                <FormInput.MultiTextInput
                   name="hostNameConvention"
                   className={`hostNameConvention-text ${css.inputWidth}`}
                   placeholder={getString('cd.steps.awsInfraStep.placeholders.hostName')}
                   label={getString('cd.steps.awsInfraStep.labels.hostName')}
+                  multiTextInputProps={{
+                    allowableTypes,
+                    expressions
+                  }}
                   onChange={
                     /* istanbul ignore next */ e => {
                       if (get(e, 'target.value', false)) {
@@ -441,54 +482,70 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                 </Layout.Horizontal>
                 {isAutoScalingGroupSelected ? (
                   <Layout.Horizontal>
-                    <FormInput.Select
+                    <FormInput.MultiTypeInput
                       name="autoScalingGroupName"
                       className={`autoscalinggroup-select ${css.inputWidth}`}
-                      items={autoScalingGroups}
-                      disabled={isAutoScalingGroupLoading || !formik.values.region || readonly}
+                      selectItems={autoScalingGroups}
                       placeholder={
                         isAutoScalingGroupLoading
                           ? getString('loading')
                           : getString('cd.steps.awsInfraStep.placeholders.autoScallingGroup')
                       }
                       label={getString('cd.steps.awsInfraStep.labels.autoScallingGroup')}
-                      onChange={
-                        /* istanbul ignore next */ option => {
-                          if (option) {
-                            formik.setFieldValue('autoScalingGroupName', option.value)
+                      multiTypeInputProps={{
+                        onTypeChange: setLoadbalancerRefType,
+                        allowableTypes,
+                        expressions,
+                        onChange: /* istanbul ignore next */ option => {
+                          const { value } = option as SelectOption
+                          if (value) {
+                            formik.setFieldValue('autoScalingGroupName', value)
                           }
                         }
-                      }
+                      }}
                     />
                   </Layout.Horizontal>
                 ) : (
                   <>
                     <Layout.Horizontal>
-                      <FormInput.Select
+                      <FormInput.MultiTypeInput
                         name="vpcs"
                         className={`vpcs-select ${css.inputWidth}`}
-                        items={vpcs}
-                        disabled={isVpcsLoading || !formik.values.region || readonly}
+                        selectItems={vpcs}
                         placeholder={
                           isVpcsLoading ? getString('loading') : getString('cd.steps.awsInfraStep.placeholders.vpcs')
                         }
                         label={getString('cd.steps.awsInfraStep.labels.vpcs')}
-                        onChange={
-                          /* istanbul ignore next */ option => {
-                            if (option) {
-                              formik.setFieldValue('vpcs', option.value)
+                        multiTypeInputProps={{
+                          onTypeChange: setLoadbalancerRefType,
+                          allowableTypes,
+                          expressions,
+                          onChange: /* istanbul ignore next */ option => {
+                            const { value } = option as SelectOption
+                            if (value) {
+                              formik.setFieldValue('vpcs', value)
                             }
                           }
-                        }
+                        }}
                       />
                     </Layout.Horizontal>
                     <Layout.Horizontal>
-                      <FormInput.MultiSelect
+                      <FormInput.MultiTypeInput
                         name="tags"
                         label={getString('tagLabel')}
-                        items={tags}
-                        disabled={isTagsLoading || !formik.values.region || readonly}
+                        selectItems={tags}
                         className={css.inputWidth}
+                        multiTypeInputProps={{
+                          onTypeChange: setLoadbalancerRefType,
+                          allowableTypes,
+                          expressions,
+                          onChange: /* istanbul ignore next */ option => {
+                            const { value } = option as SelectOption
+                            if (value) {
+                              formik.setFieldValue('tags', value)
+                            }
+                          }
+                        }}
                       />
                     </Layout.Horizontal>
                   </>
@@ -500,6 +557,21 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
       </>
     </Layout.Vertical>
   )
+}
+
+const SshWinRmAwsInfraSpecVariablesForm: React.FC<SshWinRmAwsInfrastructure> = ({
+  metadataMap,
+  variablesData,
+  initialValues
+}) => {
+  const infraVariables = variablesData?.infrastructureDefinition?.spec
+  return infraVariables ? (
+    <VariablesListTable
+      data={infraVariables}
+      originalData={initialValues?.infrastructureDefinition?.spec || initialValues}
+      metadataMap={metadataMap}
+    />
+  ) : null
 }
 
 interface SshWinRmAwsInfrastructureStep extends SshWinRmAwsInfrastructure {
@@ -522,7 +594,7 @@ export class SshWinRmAwsInfrastructureSpec extends PipelineStep<SshWinRmAwsInfra
     hostNameConvention: '',
     loadBalancer: '',
     region: '',
-    useAutoScalingGroup: false
+    useAutoScalingGroup: true
   }
 
   /* istanbul ignore next */
@@ -645,12 +717,24 @@ export class SshWinRmAwsInfrastructureSpec extends PipelineStep<SshWinRmAwsInfra
   }
 
   renderStep(props: StepProps<SshWinRmAwsInfrastructure>): JSX.Element {
-    const { initialValues, onUpdate, stepViewType, customStepProps, readonly, allowableTypes } = props
+    const { initialValues, onUpdate, stepViewType, customStepProps, readonly, allowableTypes, inputSetData } = props
+    if (stepViewType === StepViewType.InputVariable) {
+      return (
+        <SshWinRmAwsInfraSpecVariablesForm
+          onUpdate={onUpdate}
+          stepViewType={stepViewType}
+          template={inputSetData?.template}
+          {...(customStepProps as SshWinRmAwsInfrastructure)}
+          initialValues={initialValues}
+        />
+      )
+    }
     return (
       <SshWinRmAwsInfrastructureSpecEditable
         onUpdate={onUpdate}
         readonly={readonly}
         stepViewType={stepViewType}
+        path={inputSetData?.path || ''}
         {...(customStepProps as SshWinRmAwsInfrastructureSpecEditableProps)}
         initialValues={initialValues}
         allowableTypes={allowableTypes}

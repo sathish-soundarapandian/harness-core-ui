@@ -183,11 +183,6 @@ export default function SelectDeploymentType({
         icon: 'secret-ssh',
         value: ServiceDeploymentType.ssh
       })
-      baseTypes.push({
-        label: getString('pipeline.serviceDeploymentTypes.winrm'),
-        icon: 'command-winrm',
-        value: ServiceDeploymentType.winrm
-      })
     }
     if (AZURE_WEBAPP_NG) {
       baseTypes.push({
@@ -216,6 +211,11 @@ export default function SelectDeploymentType({
         label: getString('pipeline.serviceDeploymentTypes.awsCodeDeploy'),
         icon: 'app-aws-code-deploy',
         value: ServiceDeploymentType.awsCodeDeploy
+      },
+      {
+        label: getString('pipeline.serviceDeploymentTypes.winrm'),
+        icon: 'command-winrm',
+        value: ServiceDeploymentType.winrm
       },
       {
         label: getString('pipeline.serviceDeploymentTypes.awsLambda'),
