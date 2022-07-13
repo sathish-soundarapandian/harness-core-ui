@@ -10,6 +10,7 @@ import { defaultTo, isEqual } from 'lodash-es'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { ScriptTemplateFormWithRef } from './ScriptTemplateForm/ScriptTemplateForm'
+import type { ShellScriptFormData } from '../PipelineSteps/ShellScriptStep/shellScriptTypes'
 
 const ScriptTemplateCanvas = (_props: unknown, formikRef: TemplateFormRef) => {
   const { state, updateTemplate } = React.useContext(TemplateContext)
@@ -26,7 +27,7 @@ const ScriptTemplateCanvas = (_props: unknown, formikRef: TemplateFormRef) => {
       return defaultTo(scriptRef?.current?.getErrors?.(), {})
     }
   }))
-  const onUpdate = (formikValue: any) => {
+  const onUpdate = (formikValue: ShellScriptFormData) => {
     if (!isEqual(state.template.spec, formikValue.spec)) {
       updateTemplate({
         ...state.template,
