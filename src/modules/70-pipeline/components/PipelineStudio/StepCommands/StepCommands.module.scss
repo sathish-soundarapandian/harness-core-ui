@@ -10,6 +10,19 @@
   flex-direction: column;
 }
 
+.helpPanelGrid {
+  display: flex;
+  direction: row;
+}
+.helpPanelStyle {
+  width: 0;
+  :global {
+    .HelpPanelContent--centerContainer {
+      width: 450px;
+    }
+  }
+}
+
 .step-command {
   flex: 1 1 auto;
   overflow: auto;
@@ -22,7 +35,7 @@
 
   .step-tabs {
     height: 100%;
-
+    width: 600px;
     :global(.bp3-tab-list) {
       border-bottom: 1px solid var(--grey-300);
       background-color: var(--white);

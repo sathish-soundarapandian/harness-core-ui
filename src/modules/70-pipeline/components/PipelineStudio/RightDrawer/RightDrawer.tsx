@@ -746,238 +746,261 @@ export function RightDrawer(): React.ReactElement {
     setHelpPanel(!helpPanelVisible)
   }
   return (
-    <>
-      <Drawer
-        onClose={handleClose}
-        usePortal={true}
-        autoFocus={true}
-        canEscapeKeyClose={type !== DrawerTypes.ExecutionStrategy}
-        canOutsideClickClose={type !== DrawerTypes.ExecutionStrategy}
-        enforceFocus={false}
-        hasBackdrop={true}
-        size={DrawerSizes[type]}
-        isOpen={isDrawerOpened}
-        position={Position.RIGHT}
-        title={title}
-        data-type={type}
-        className={cx(css.main, css.almostFullScreen, css.fullScreen, { [css.showRighDrawer]: isFullScreenDrawer })}
-        {...restDrawerProps}
-        // {...(type === DrawerTypes.FlowControl ? { style: { right: 60, top: 64 }, hasBackdrop: false } : {})}
-        isCloseButtonShown={false}
-        // BUG: https://github.com/palantir/blueprint/issues/4519
-        // you must pass only a single classname, not even an empty string, hence passing a dummy class
-        // "classnames" package cannot be used here because it returns an empty string when no classes are applied
-        portalClassName={isFullScreenDrawer ? css.almostFullScreenPortal : 'pipeline-studio-right-drawer'}
-        style={helpPanelVisible ? { right: '450px' } : {}}
-      >
-        <Button minimal className={css.almostFullScreenCloseBtn} icon="cross" withoutBoxShadow onClick={handleClose} />
+    <Drawer
+      onClose={handleClose}
+      usePortal={true}
+      autoFocus={true}
+      canEscapeKeyClose={type !== DrawerTypes.ExecutionStrategy}
+      canOutsideClickClose={type !== DrawerTypes.ExecutionStrategy}
+      enforceFocus={false}
+      hasBackdrop={true}
+      size={helpPanelVisible ? 1050 : DrawerSizes[type]}
+      isOpen={isDrawerOpened}
+      position={Position.RIGHT}
+      title={title}
+      data-type={type}
+      className={cx(css.main, css.almostFullScreen, css.fullScreen, { [css.showRighDrawer]: isFullScreenDrawer })}
+      {...restDrawerProps}
+      // {...(type === DrawerTypes.FlowControl ? { style: { right: 60, top: 64 }, hasBackdrop: false } : {})}
+      isCloseButtonShown={false}
+      // BUG: https://github.com/palantir/blueprint/issues/4519
+      // you must pass only a single classname, not even an empty string, hence passing a dummy class
+      // "classnames" package cannot be used here because it returns an empty string when no classes are applied
+      portalClassName={isFullScreenDrawer ? css.almostFullScreenPortal : 'pipeline-studio-right-drawer'}
+      // style={helpPanelVisible ? { right: '450px' } : {}}
+    >
+      <Button minimal className={css.almostFullScreenCloseBtn} icon="cross" withoutBoxShadow onClick={handleClose} />
 
-        {type === DrawerTypes.StepConfig && data?.stepConfig?.node && (
-          <StepCommands
-            helpPanelVisible={helpPanelVisible}
-            step={data.stepConfig.node as StepElementConfig | StepGroupElementConfig}
-            isReadonly={isReadonly}
-            ref={formikRef}
-            checkDuplicateStep={checkDuplicateStep.bind(null, formikRef, data, getString)}
-            isNewStep={!data.stepConfig.stepsMap.get(data.stepConfig.node.identifier)?.isSaved}
-            stepsFactory={stepsFactory}
-            hasStepGroupAncestor={!!data?.stepConfig?.isUnderStepGroup}
-            onUpdate={value =>
-              onSubmitStep(
-                value,
-                DrawerTypes.StepConfig,
-                data,
-                trackEvent,
-                selectedStage,
-                updatePipelineView,
-                updateStage,
-                pipelineView
+      {type === DrawerTypes.StepConfig && data?.stepConfig?.node && (
+        <StepCommands
+          helpPanelVisible={helpPanelVisible}
+          step={data.stepConfig.node as StepElementConfig | StepGroupElementConfig}
+          isReadonly={isReadonly}
+          ref={formikRef}
+          checkDuplicateStep={checkDuplicateStep.bind(null, formikRef, data, getString)}
+          isNewStep={!data.stepConfig.stepsMap.get(data.stepConfig.node.identifier)?.isSaved}
+          stepsFactory={stepsFactory}
+          hasStepGroupAncestor={!!data?.stepConfig?.isUnderStepGroup}
+          onUpdate={value =>
+            onSubmitStep(
+              value,
+              DrawerTypes.StepConfig,
+              data,
+              trackEvent,
+              selectedStage,
+              updatePipelineView,
+              updateStage,
+              pipelineView
+            )
+          }
+          viewType={StepCommandsViews.Pipeline}
+          allowableTypes={allowableTypes}
+          onUseTemplate={(selectedTemplate: TemplateSummaryResponse) => addOrUpdateTemplate(selectedTemplate, type)}
+          onRemoveTemplate={() => removeTemplate(type)}
+          isStepGroup={data.stepConfig.isStepGroup}
+          hiddenPanels={data.stepConfig.hiddenAdvancedPanels}
+          stageType={stageType as StageType}
+        />
+      )}
+      {type === DrawerTypes.AddStep && selectedStageId && data?.paletteData && (
+        <StepPalette
+          stepsFactory={stepsFactory}
+          stepPaletteModuleInfos={getStepPaletteModuleInfosFromStage(
+            stageType,
+            selectedStage?.stage,
+            undefined,
+            getFlattenedStages(pipeline).stages
+          )}
+          stageType={stageType as StageType}
+          onSelect={onStepSelection}
+        />
+      )}
+      {/* TODO */}
+      {type === DrawerTypes.PipelineVariables && <PipelineVariables ref={variablesRef} pipeline={pipeline} />}
+      {type === DrawerTypes.Templates && <PipelineTemplates />}
+      {type === DrawerTypes.ExecutionStrategy && (
+        <ExecutionStrategy selectedStage={defaultTo(selectedStage, {})} ref={executionStrategyRef} />
+      )}
+      {type === DrawerTypes.FlowControl && <FlowControl ref={flowControlRef} onDiscard={onDiscard} />}
+      {type === DrawerTypes.PipelineNotifications && <PipelineNotifications ref={notificationsRef} />}
+      {type === DrawerTypes.AdvancedOptions && (
+        <AdvancedOptions
+          pipeline={cloneDeep(pipeline)}
+          onApplyChanges={async updatedPipeline => {
+            await updatePipeline(updatedPipeline)
+            updatePipelineView({
+              ...pipelineView,
+              isDrawerOpened: false,
+              drawerData: {
+                type: DrawerTypes.AddStep
+              }
+            })
+          }}
+          onDiscard={onDiscard}
+        />
+      )}
+      {type === DrawerTypes.PolicySets && <PipelineGovernanceView pipelineName={pipeline.name} />}
+      {type === DrawerTypes.ConfigureService && selectedStageId && data?.stepConfig && data?.stepConfig.node && (
+        <StepCommands
+          helpPanelVisible
+          key={`step-form-${data.stepConfig.node.identifier}`}
+          step={data.stepConfig.node as StepElementConfig}
+          isReadonly={isReadonly}
+          ref={formikRef}
+          isNewStep={!data.stepConfig.stepsMap.get(data.stepConfig.node.identifier)?.isSaved}
+          stepsFactory={stepsFactory}
+          onUpdate={onServiceDependencySubmit}
+          isStepGroup={false}
+          allowableTypes={allowableTypes}
+          withoutTabs
+          stageType={stageType as StageType}
+        />
+      )}
+
+      {type === DrawerTypes.AddProvisionerStep && selectedStageId && data?.paletteData && (
+        <StepPalette
+          stepsFactory={stepsFactory}
+          stepPaletteModuleInfos={getStepPaletteModuleInfosFromStage(
+            stageType,
+            undefined,
+            'Provisioner',
+            getFlattenedStages(pipeline).stages
+          )}
+          stageType={stageType as StageType}
+          isProvisioner={true}
+          onSelect={async (item: StepData) => {
+            const paletteData = data.paletteData
+            if (paletteData?.entity) {
+              const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId))
+              const newStepData = {
+                step: {
+                  type: item.type,
+                  name: item.name,
+                  identifier: generateRandomString(item.name),
+                  spec: {}
+                }
+              }
+
+              data?.paletteData?.onUpdate?.(newStepData.step)
+
+              if (
+                pipelineStage &&
+                !get(pipelineStage?.stage, 'spec.infrastructure.infrastructureDefinition.provisioner')
+              ) {
+                set(pipelineStage, 'stage.spec.infrastructure.infrastructureDefinition.provisioner', {
+                  steps: [],
+                  rollbackSteps: []
+                })
+              }
+
+              const provisioner = get(pipelineStage?.stage, 'spec.infrastructure.infrastructureDefinition.provisioner')
+              // set empty arrays
+              if (!paletteData.isRollback && !provisioner.steps) provisioner.steps = []
+              if (paletteData.isRollback && !provisioner.rollbackSteps) provisioner.rollbackSteps = []
+
+              addStepOrGroup(
+                paletteData.entity,
+                provisioner,
+                newStepData,
+                paletteData.isParallelNodeClicked,
+                paletteData.isRollback,
+                newPipelineStudioEnabled
               )
-            }
-            viewType={StepCommandsViews.Pipeline}
-            allowableTypes={allowableTypes}
-            onUseTemplate={(selectedTemplate: TemplateSummaryResponse) => addOrUpdateTemplate(selectedTemplate, type)}
-            onRemoveTemplate={() => removeTemplate(type)}
-            isStepGroup={data.stepConfig.isStepGroup}
-            hiddenPanels={data.stepConfig.hiddenAdvancedPanels}
-            stageType={stageType as StageType}
-          />
-        )}
-        {type === DrawerTypes.AddStep && selectedStageId && data?.paletteData && (
-          <StepPalette
-            stepsFactory={stepsFactory}
-            stepPaletteModuleInfos={getStepPaletteModuleInfosFromStage(
-              stageType,
-              selectedStage?.stage,
-              undefined,
-              getFlattenedStages(pipeline).stages
-            )}
-            stageType={stageType as StageType}
-            onSelect={onStepSelection}
-          />
-        )}
-        {/* TODO */}
-        {type === DrawerTypes.PipelineVariables && <PipelineVariables ref={variablesRef} pipeline={pipeline} />}
-        {type === DrawerTypes.Templates && <PipelineTemplates />}
-        {type === DrawerTypes.ExecutionStrategy && (
-          <ExecutionStrategy selectedStage={defaultTo(selectedStage, {})} ref={executionStrategyRef} />
-        )}
-        {type === DrawerTypes.FlowControl && <FlowControl ref={flowControlRef} onDiscard={onDiscard} />}
-        {type === DrawerTypes.PipelineNotifications && <PipelineNotifications ref={notificationsRef} />}
-        {type === DrawerTypes.AdvancedOptions && (
-          <AdvancedOptions
-            pipeline={cloneDeep(pipeline)}
-            onApplyChanges={async updatedPipeline => {
-              await updatePipeline(updatedPipeline)
+
+              if (pipelineStage?.stage) {
+                await updateStage(pipelineStage?.stage)
+              }
+
               updatePipelineView({
                 ...pipelineView,
-                isDrawerOpened: false,
+                isDrawerOpened: true,
                 drawerData: {
-                  type: DrawerTypes.AddStep
-                }
-              })
-            }}
-            onDiscard={onDiscard}
-          />
-        )}
-        {type === DrawerTypes.PolicySets && <PipelineGovernanceView pipelineName={pipeline.name} />}
-        {type === DrawerTypes.ConfigureService && selectedStageId && data?.stepConfig && data?.stepConfig.node && (
-          <StepCommands
-            helpPanelVisible
-            key={`step-form-${data.stepConfig.node.identifier}`}
-            step={data.stepConfig.node as StepElementConfig}
-            isReadonly={isReadonly}
-            ref={formikRef}
-            isNewStep={!data.stepConfig.stepsMap.get(data.stepConfig.node.identifier)?.isSaved}
-            stepsFactory={stepsFactory}
-            onUpdate={onServiceDependencySubmit}
-            isStepGroup={false}
-            allowableTypes={allowableTypes}
-            withoutTabs
-            stageType={stageType as StageType}
-          />
-        )}
-
-        {type === DrawerTypes.AddProvisionerStep && selectedStageId && data?.paletteData && (
-          <StepPalette
-            stepsFactory={stepsFactory}
-            stepPaletteModuleInfos={getStepPaletteModuleInfosFromStage(
-              stageType,
-              undefined,
-              'Provisioner',
-              getFlattenedStages(pipeline).stages
-            )}
-            stageType={stageType as StageType}
-            isProvisioner={true}
-            onSelect={async (item: StepData) => {
-              const paletteData = data.paletteData
-              if (paletteData?.entity) {
-                const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId))
-                const newStepData = {
-                  step: {
-                    type: item.type,
-                    name: item.name,
-                    identifier: generateRandomString(item.name),
-                    spec: {}
-                  }
-                }
-
-                data?.paletteData?.onUpdate?.(newStepData.step)
-
-                if (
-                  pipelineStage &&
-                  !get(pipelineStage?.stage, 'spec.infrastructure.infrastructureDefinition.provisioner')
-                ) {
-                  set(pipelineStage, 'stage.spec.infrastructure.infrastructureDefinition.provisioner', {
-                    steps: [],
-                    rollbackSteps: []
-                  })
-                }
-
-                const provisioner = get(
-                  pipelineStage?.stage,
-                  'spec.infrastructure.infrastructureDefinition.provisioner'
-                )
-                // set empty arrays
-                if (!paletteData.isRollback && !provisioner.steps) provisioner.steps = []
-                if (paletteData.isRollback && !provisioner.rollbackSteps) provisioner.rollbackSteps = []
-
-                addStepOrGroup(
-                  paletteData.entity,
-                  provisioner,
-                  newStepData,
-                  paletteData.isParallelNodeClicked,
-                  paletteData.isRollback,
-                  newPipelineStudioEnabled
-                )
-
-                if (pipelineStage?.stage) {
-                  await updateStage(pipelineStage?.stage)
-                }
-
-                updatePipelineView({
-                  ...pipelineView,
-                  isDrawerOpened: true,
-                  drawerData: {
-                    type: DrawerTypes.ProvisionerStepConfig,
-                    data: {
-                      stepConfig: {
-                        node: newStepData.step,
-                        stepsMap: paletteData.stepsMap,
-                        onUpdate: data?.paletteData?.onUpdate,
-                        isStepGroup: false,
-                        addOrEdit: 'edit',
-                        hiddenAdvancedPanels: data.paletteData?.hiddenAdvancedPanels
-                      }
+                  type: DrawerTypes.ProvisionerStepConfig,
+                  data: {
+                    stepConfig: {
+                      node: newStepData.step,
+                      stepsMap: paletteData.stepsMap,
+                      onUpdate: data?.paletteData?.onUpdate,
+                      isStepGroup: false,
+                      addOrEdit: 'edit',
+                      hiddenAdvancedPanels: data.paletteData?.hiddenAdvancedPanels
                     }
                   }
-                })
+                }
+              })
 
-                return
-              }
-              updatePipelineView({ ...pipelineView, isDrawerOpened: false, drawerData: { type: DrawerTypes.AddStep } })
-            }}
-          />
-        )}
-        {type === DrawerTypes.ProvisionerStepConfig && data?.stepConfig?.node && (
-          <StepCommands
-            helpPanelVisible
-            step={data.stepConfig.node as StepElementConfig}
-            ref={formikRef}
-            isReadonly={isReadonly}
-            allowableTypes={allowableTypes}
-            checkDuplicateStep={checkDuplicateStep.bind(null, formikRef, data, getString)}
-            isNewStep={!data.stepConfig.stepsMap.get(data.stepConfig.node.identifier)?.isSaved}
-            stepsFactory={stepsFactory}
-            hasStepGroupAncestor={!!data?.stepConfig?.isUnderStepGroup}
-            onUpdate={value =>
-              onSubmitStep(
-                value,
-                DrawerTypes.ProvisionerStepConfig,
-                data,
-                trackEvent,
-                selectedStage,
-                updatePipelineView,
-                updateStage,
-                pipelineView
-              )
+              return
             }
-            isStepGroup={data.stepConfig.isStepGroup}
-            hiddenPanels={data.stepConfig.hiddenAdvancedPanels}
-            stageType={stageType as StageType}
-            onUseTemplate={(selectedTemplate: TemplateSummaryResponse) => addOrUpdateTemplate(selectedTemplate, type)}
-            onRemoveTemplate={() => removeTemplate(type)}
-          />
-        )}
+            updatePipelineView({ ...pipelineView, isDrawerOpened: false, drawerData: { type: DrawerTypes.AddStep } })
+          }}
+        />
+      )}
+      {type === DrawerTypes.ProvisionerStepConfig && data?.stepConfig?.node && (
+        <StepCommands
+          helpPanelVisible
+          step={data.stepConfig.node as StepElementConfig}
+          ref={formikRef}
+          isReadonly={isReadonly}
+          allowableTypes={allowableTypes}
+          checkDuplicateStep={checkDuplicateStep.bind(null, formikRef, data, getString)}
+          isNewStep={!data.stepConfig.stepsMap.get(data.stepConfig.node.identifier)?.isSaved}
+          stepsFactory={stepsFactory}
+          hasStepGroupAncestor={!!data?.stepConfig?.isUnderStepGroup}
+          onUpdate={value =>
+            onSubmitStep(
+              value,
+              DrawerTypes.ProvisionerStepConfig,
+              data,
+              trackEvent,
+              selectedStage,
+              updatePipelineView,
+              updateStage,
+              pipelineView
+            )
+          }
+          isStepGroup={data.stepConfig.isStepGroup}
+          hiddenPanels={data.stepConfig.hiddenAdvancedPanels}
+          stageType={stageType as StageType}
+          onUseTemplate={(selectedTemplate: TemplateSummaryResponse) => addOrUpdateTemplate(selectedTemplate, type)}
+          onRemoveTemplate={() => removeTemplate(type)}
+        />
+      )}
+      {type === DrawerTypes.StepConfig && !isEmpty(stepData?.referenceId) ? (
         <Button
           variation={ButtonVariation.SECONDARY}
           size={ButtonSize.SMALL}
           className={css.helpPanel}
+          style={helpPanelVisible ? { marginLeft: '920px' } : {}}
           text={'Help Panel'}
           onClick={showHelpPanel}
         />
-      </Drawer>
-      {helpPanelVisible ? (
+      ) : null}
+      {/* {helpPanelVisible ? (
+          <Drawer
+            onClose={handleClose}
+            canEscapeKeyClose={type !== DrawerTypes.ExecutionStrategy}
+            canOutsideClickClose={type !== DrawerTypes.ExecutionStrategy}
+            enforceFocus={false}
+            hasBackdrop={true}
+            size={450}
+            isOpen={isDrawerOpened}
+            position={Position.RIGHT}
+            style={{ width: '450px' }}
+            isCloseButtonShown={false}
+          >
+            {' '}
+            <Button
+              minimal
+              className={css.almostFullScreenCloseBtn}
+              icon="cross"
+              withoutBoxShadow
+              onClick={handleCloseHelpPanel}
+            />
+            <HelpPanel referenceId={stepData?.referenceId || ''} type={HelpPanelType.CONTENT_ONLY}></HelpPanel>
+          </Drawer>
+        ) : null}
+      </Drawer> */}
+      {/* {helpPanelVisible ? (
         <Drawer
           onClose={handleClose}
           canEscapeKeyClose={type !== DrawerTypes.ExecutionStrategy}
@@ -998,9 +1021,9 @@ export function RightDrawer(): React.ReactElement {
             withoutBoxShadow
             onClick={handleCloseHelpPanel}
           />
-          <HelpPanel referenceId="connectors" type={HelpPanelType.CONTENT_ONLY}></HelpPanel>
+          <HelpPanel referenceId={stepData?.referenceId || ''} type={HelpPanelType.CONTENT_ONLY}></HelpPanel>
         </Drawer>
-      ) : null}
-    </>
+      ) : null} */}
+    </Drawer>
   )
 }
