@@ -612,9 +612,15 @@ export interface StringsMap {
   'common.resourceCenter.communityLevelUp': string
   'common.resourceCenter.communitySlack': string
   'common.resourceCenter.feedback.submit': string
+  'common.resourceCenter.productUpdates.earlyAcess': string
+  'common.resourceCenter.productUpdates.title': string
+  'common.resourceCenter.productUpdates.whatsnew': string
   'common.resourceCenter.ticketmenu.submitDesc': string
+  'common.resourceCenter.ticketmenu.submitTicket': string
   'common.resourceCenter.ticketmenu.tickets': string
   'common.resourceCenter.ticketmenu.ticketsDesc': string
+  'common.resourceCenter.ticketmenu.title': string
+  'common.resourceCenter.ticketmenu.viewTicket': string
   'common.resourceCenter.title': string
   'common.resourceGroupLabel': string
   'common.resourceLabel': string
