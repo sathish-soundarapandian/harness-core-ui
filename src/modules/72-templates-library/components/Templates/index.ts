@@ -8,20 +8,26 @@
 import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
 import { StageTemplate } from '@templates-library/components/Templates/StageTemplate/StageTemplate'
 import { PipelineTemplate } from '@templates-library/components/Templates/PipelineTemplate/PipelineTemplate'
+<<<<<<< HEAD
 import { ExecutionTemplate } from '@templates-library/components/Templates/ExecutionTemplate/ExecutionTemplate'
 import { InfrastructureTemplate } from '@templates-library/components/Templates/InfrastructureTemplate/InfrastructureTemplate'
 import { ServiceTemplate } from '@templates-library/components/Templates/ServiceTemplate/ServiceTemplate'
 import { StepGroupTemplate } from '@templates-library/components/Templates/StepGroupTemplate/StepGroupTemplate'
 import { ScriptTemplate } from '@templates-library/components/Templates/ScriptTemplate/ScriptTemplate'
 import { ScriptTemplate } from '@cd/components/ScriptTemplate/ScriptTemplate'
+=======
+>>>>>>> 2c14d4f998de (feat: [PL-25522]: Moved initializing template in template factory)
 import templateFactory from './TemplatesFactory'
 
 // common
 templateFactory.registerTemplate(new StepTemplate())
 templateFactory.registerTemplate(new StageTemplate())
 templateFactory.registerTemplate(new PipelineTemplate())
+<<<<<<< HEAD
 templateFactory.registerTemplate(new ExecutionTemplate())
 templateFactory.registerTemplate(new InfrastructureTemplate())
 templateFactory.registerTemplate(new ServiceTemplate())
 templateFactory.registerTemplate(new StepGroupTemplate())
 templateFactory.registerTemplate(new ScriptTemplate())
+=======
+>>>>>>> 2c14d4f998de (feat: [PL-25522]: Moved initializing template in template factory)

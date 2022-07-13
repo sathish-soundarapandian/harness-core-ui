@@ -89,7 +89,7 @@ export default function BaseShellScript(props: {
       </div>
 
       <div className={stepCss.divider} />
-      <BaseScript formik={formik} readonly={readonly} allowableTypes={[]} />
+      <BaseScript formik={formik} readonly={readonly} allowableTypes={allowableTypes} />
     </>
   )
 }

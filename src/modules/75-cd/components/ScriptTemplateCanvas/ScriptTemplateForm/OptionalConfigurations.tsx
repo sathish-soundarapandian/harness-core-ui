@@ -15,11 +15,6 @@ import { useStrings } from 'framework/strings'
 import { ShellScriptFormData, variableSchema } from '@cd/components/PipelineSteps/ShellScriptStep/shellScriptTypes'
 import OptionalConfiguration from '@cd/components/PipelineSteps/ShellScriptStep/OptionalConfiguration'
 
-/**
- * Spec
- * https://harness.atlassian.net/wiki/spaces/CDNG/pages/1203634286/Shell+Script
- */
-
 interface ShellScriptWidgetProps {
   initialValues: ShellScriptFormData
   updateTemplate?: (data: ShellScriptFormData) => void

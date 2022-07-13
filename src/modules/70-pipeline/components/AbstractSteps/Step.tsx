@@ -20,8 +20,7 @@ export enum StepViewType {
   TriggerForm = 'TriggerForm',
   StageVariable = 'StageVariable',
   Edit = 'Edit',
-  Template = 'Template',
-  NoStep = 'NoStep'
+  Template = 'Template'
 }
 
 export interface InputSetData<T> {
