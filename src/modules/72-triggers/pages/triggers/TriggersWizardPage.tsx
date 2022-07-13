@@ -107,8 +107,6 @@ import {
   getErrorMessage,
   TriggerGitEvent,
   ciCodebaseBuild,
-  ciCodebaseBuildIssueComment,
-  ciCodebaseBuildPullRequest,
   isHarnessExpression
 } from './utils/TriggersWizardPageUtils'
 import {
@@ -2239,9 +2237,7 @@ function getDefaultPipelineReferenceBranch(triggerType = '', event = ''): string
   if (triggerType === TriggerTypes.WEBHOOK) {
     switch (event) {
       case TriggerGitEvent.ISSUE_COMMENT:
-        return ciCodebaseBuildIssueComment.spec.tag
       case TriggerGitEvent.PULL_REQUEST:
-        return ciCodebaseBuildPullRequest.spec.number
       default:
         return ciCodebaseBuild.spec.branch
     }
