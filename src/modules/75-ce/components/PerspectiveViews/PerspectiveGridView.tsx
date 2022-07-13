@@ -59,6 +59,7 @@ const PerpsectiveGridCard: (props: PerspectiveGridCardProps) => JSX.Element | nu
   const { getString } = useStrings()
   const { openMoveFoldersModal } = useMoveFolderModal({
     perspectiveId: data.id || '',
+    folderName: data.folderName || '',
     setRefetchFolders,
     setSelectedFolder,
     setRefetchPerspectives

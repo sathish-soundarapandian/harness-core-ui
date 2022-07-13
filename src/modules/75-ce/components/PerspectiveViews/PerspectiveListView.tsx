@@ -167,6 +167,7 @@ const PerspectiveListView: React.FC<PerspectiveListViewProps> = ({
 
     const { openMoveFoldersModal } = useMoveFolderModal({
       perspectiveId: row.original.id || '',
+      folderName: row.original.folderName || '',
       setRefetchFolders,
       setSelectedFolder,
       setRefetchPerspectives
