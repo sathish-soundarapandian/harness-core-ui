@@ -26,7 +26,7 @@ import type { K8sDelegateWizardData } from '../DelegateSetupStep/DelegateSetupSt
 import { DelegateType } from '../DelegateSetupStep/DelegateSetupStep.types'
 import css from '../CreateK8sDelegate.module.scss'
 
-const k8sFileName = 'harness-delegate.yml'
+const k8sFileName = 'harness-delegate-values.yaml'
 
 const Stepk8ReviewScript: React.FC<StepProps<K8sDelegateWizardData>> = props => {
   const { prevStepData } = props

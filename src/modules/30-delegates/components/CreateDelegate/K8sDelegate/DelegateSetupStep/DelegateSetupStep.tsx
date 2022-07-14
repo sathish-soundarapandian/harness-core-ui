@@ -183,8 +183,29 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
   )
   const { trackEvent } = useTelemetry()
 
+  const validationSchema = Yup.object().shape({
+    name: Yup.string()
+      .trim()
+      .required(getString('delegate.delegateNameRequired'))
+      .max(63)
+      .matches(delegateNameRegex, getString('delegates.delegateNameRegexIssue')),
+    size: Yup.string().trim().required(getString('delegate.delegateSizeRequired')),
+    description: Yup.string().trim(),
+    k8sConfigDetails: Yup.object().shape({
+      k8sPermissionType: Yup.string().trim().required(getString('delegates.permissionRequired')),
+      namespace:
+        selectedPermission === k8sPermissionType.NAMESPACE_ADMIN
+          ? Yup.string().trim().required(getString('delegates.delegateNamespaceRequired'))
+          : Yup.string().trim()
+    }),
+    tokenName: Yup.string().trim().required(),
+    delegateType: IS_HELM_DELEGATE_ENABLED
+      ? Yup.string().required(getString('delegates.delegateCreation.installerSelectionRequired'))
+      : Yup.string().trim()
+  })
+
   const onSubmit = async (values: DelegateSetupDetails, formikActions: FormikHelpers<DelegateSetupDetails>) => {
-    const createParams = { ...values }
+    const createParams = validationSchema.cast(values) as DelegateSetupDetails
     if (createParams.tags) {
       const tagsArray = Object.keys(values.tags || {})
       set(createParams, 'tags', tagsArray)
@@ -251,25 +272,7 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
             onSubmit(values, formikActions)
           }}
           formName="delegateSetupStepForm"
-          validationSchema={Yup.object().shape({
-            name: Yup.string()
-              .trim()
-              .required(getString('delegate.delegateNameRequired'))
-              .max(63)
-              .matches(delegateNameRegex, getString('delegates.delegateNameRegexIssue')),
-            size: Yup.string().trim().required(getString('delegate.delegateSizeRequired')),
-            k8sConfigDetails: Yup.object().shape({
-              k8sPermissionType: Yup.string().trim().required(getString('delegates.permissionRequired')),
-              namespace:
-                selectedPermission === k8sPermissionType.NAMESPACE_ADMIN
-                  ? Yup.string().trim().required(getString('delegates.delegateNamespaceRequired'))
-                  : Yup.string().trim()
-            }),
-            tokenName: Yup.string().trim().required(),
-            delegateType: IS_HELM_DELEGATE_ENABLED
-              ? Yup.string().required(getString('delegates.delegateCreation.installerSelectionRequired'))
-              : Yup.string().trim()
-          })}
+          validationSchema={validationSchema}
         >
           {(formikProps: FormikProps<DelegateSetupDetails>) => {
             const selectors: any = getProfile(data, formikProps.values.delegateConfigurationId)
