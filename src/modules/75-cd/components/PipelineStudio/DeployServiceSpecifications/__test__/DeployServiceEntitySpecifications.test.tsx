@@ -34,7 +34,12 @@ const getOverrideContextValue = (): PipelineContextInterface => {
           identifier: 's3',
           type: StageType.DEPLOY,
           description: '',
-          spec: {}
+          spec: {
+            deploymentType: 'Kubernetes',
+            service: {
+              serviceRef: 'servicebhavya'
+            }
+          }
         }
       }
     }),
@@ -79,7 +84,7 @@ describe('DeployServiceEntitySpecifications', () => {
     factory.registerStep(new KubernetesServiceSpec())
     factory.registerStep(new ServerlessAwsLambdaServiceSpec())
   })
-  test('deployServiceEntitySpecifications renders correctly', () => {
+  test('deployServiceEntitySpecifications renders correctly, when pipeline is already created', () => {
     const { container } = render(
       <TestWrapper>
         <Formik initialValues={{}} onSubmit={noop} formName="deployServiceSpecificationsTest">
