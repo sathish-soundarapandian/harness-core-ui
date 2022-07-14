@@ -55,6 +55,7 @@ export const getLanguageType = (lang: string | undefined): string => {
     case ExtensionType.POWER_SHELL:
       return LanguageType.POWER_SHELL
     case ExtensionType.TEXT:
+    case ExtensionType.TPL:
       return LanguageType.TEXT
     default:
       return LanguageType.TEXT
