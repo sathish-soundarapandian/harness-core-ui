@@ -13,18 +13,16 @@ import {
   MultiTypeInputType,
   Accordion,
   Container,
-  SelectOption,
   Text,
-  Layout,
   RUNTIME_INPUT_VALUE
 } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
-import { FontVariation, Color } from '@harness/design-system'
+import { FontVariation } from '@harness/design-system'
 import { get } from 'lodash-es'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import cx from 'classnames'
 import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
-import type { ConnectorInfoDTO } from 'services/cd-ng'
+import { ConnectorInfoDTO, useGetConnector } from 'services/cd-ng'
 import { useParams } from 'react-router-dom'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
@@ -33,8 +31,7 @@ import { useStrings, UseStringsReturn } from 'framework/strings'
 import StepCommonFields, {
   GetImagePullPolicyOptions
 } from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
-import { getConnectorRefWidth, isRuntimeInput, CodebaseTypes } from '@pipeline/utils/CIUtils'
-import { sslVerifyOptions } from '@pipeline/utils/constants'
+import { getConnectorRefWidth, isRuntimeInput, CodebaseTypes, useGitScope } from '@pipeline/utils/CIUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import {
   getInitialValuesInCorrectFormat,
@@ -48,30 +45,34 @@ import {
 } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
 
 import {
-  renderConnectorAndRepoName,
   runtimeInputGearWidth,
   CodebaseRuntimeInputsInterface
 } from '@pipeline/components/PipelineStudio/RightBar/RightBarUtils'
-import { getOptionalSubLabel } from '@pipeline/components/Volumes/Volumes'
-
+import { CIStepOptionalConfig } from '../CIStep/CIStepOptionalConfig'
 import { FormMultiTypeRadioGroupField } from '@common/components/MultiTypeRadioGroup/MultiTypeRadioGroup'
 import { transformValuesFieldsConfig, getEditViewValidateFieldsConfig } from './GitCloneStepFunctionConfigs'
 import type { GitCloneStepProps, GitCloneStepData, GitCloneStepDataUI } from './GitCloneStep'
 import { CIStep } from '../CIStep/CIStep'
-import { AllMultiTypeInputTypesForStep, useGetPropagatedStageById } from '../CIStep/StepUtils'
+import { useGetPropagatedStageById } from '../CIStep/StepUtils'
 import type { CIBuildInfrastructureType } from '../../../constants/Constants'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
-import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
+import {
+  getIdentifierFromValue,
+  getScopeFromDTO,
+  getScopeFromValue
+} from '@common/components/EntityReference/EntityReference'
+import { Scope } from '@common/interfaces/SecretsInterface'
 
 const renderCodeBaseTypeInput = ({
   type,
   inputLabels,
   readonly,
-  expressions
+  expressions,
+  allowableTypes
 }: {
   type: CodeBaseType
   inputLabels: Record<string, string>
+  allowableTypes: MultiTypeInputType[]
   readonly?: boolean
   expressions?: string[]
 }): JSX.Element => {
@@ -83,7 +84,7 @@ const renderCodeBaseTypeInput = ({
         name={`spec.build.spec.${newType}`}
         multiTextInputProps={{
           expressions,
-          allowableTypes: AllMultiTypeInputTypesForStep
+          allowableTypes
         }}
         disabled={readonly}
         className={css.bottomMargin1}
@@ -92,13 +93,14 @@ const renderCodeBaseTypeInput = ({
   )
 }
 
-const renderBuildType = ({
+export const renderBuild = ({
   expressions,
   readonly,
   getString,
   codeBaseType,
   setCodeBaseType,
-  formik
+  formik,
+  allowableTypes
 }: {
   expressions: string[]
   setCodeBaseType: Dispatch<SetStateAction<CodeBaseType | string | undefined>>
@@ -107,6 +109,7 @@ const renderBuildType = ({
   formik: any
   connectorType?: ConnectorInfoDTO['type']
   readonly?: boolean
+  allowableTypes: MultiTypeInputType[]
 }) => {
   const radioLabels = getBuildTypeLabels(getString)
   const inputLabels = getBuildTypeInputLabels(getString)
@@ -189,7 +192,7 @@ const renderBuildType = ({
             name: 'spec.build.type',
             expressions,
             disabled: readonly,
-            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+            allowableTypes: allowableTypes.filter(type => type !== MultiTypeInputType.EXPRESSION)
           }}
         />
       </Container>
@@ -199,10 +202,10 @@ const renderBuildType = ({
       ) : null} */}
       {/* <Container> */}
       {codeBaseType === CodebaseTypes.branch
-        ? renderCodeBaseTypeInput({ inputLabels, type: codeBaseType, readonly })
+        ? renderCodeBaseTypeInput({ inputLabels, type: codeBaseType, readonly, allowableTypes })
         : null}
       {codeBaseType === CodebaseTypes.tag
-        ? renderCodeBaseTypeInput({ inputLabels, type: codeBaseType, readonly })
+        ? renderCodeBaseTypeInput({ inputLabels, type: codeBaseType, readonly, allowableTypes })
         : null}
       {/* </Container> */}
     </Container>
@@ -235,8 +238,8 @@ export const GitCloneStepBase = (
   const [connectionType, setConnectionType] = React.useState('')
   const [connectorUrl, setConnectorUrl] = React.useState('')
   const codebaseConnector = initialValues?.spec?.connectorRef
-  // const connectorId = getIdentifierFromValue(codebaseConnector || '')
-  // const initialScope = getScopeFromValue(codebaseConnector || '')
+  const connectorId = getIdentifierFromValue(codebaseConnector || '')
+  const initialScope = getScopeFromValue(codebaseConnector || '')
   const [codebaseRuntimeInputs, setCodebaseRuntimeInputs] = React.useState<CodebaseRuntimeInputsInterface>({
     ...(isRuntimeInput(codebaseConnector) && { connectorRef: true, repoName: true })
   })
@@ -262,7 +265,7 @@ export const GitCloneStepBase = (
 
   // if (connector?.data?.connector && initialValues?.spec) {
   //   const scope = getScopeFromDTO<ConnectorInfoDTO>(connector?.data?.connector)
-  //   initialValues.connectorRef = {
+  //   initialValues.spec.connectorRef = {
   //     label: connector?.data?.connector.name || '',
   //     value: `${scope !== Scope.PROJECT ? `${scope}.` : ''}${connector?.data?.connector.identifier}`,
   //     scope: scope,
@@ -349,10 +352,12 @@ export const GitCloneStepBase = (
         )
       }}
       onSubmit={(_values: GitCloneStepDataUI) => {
+        console.log(_values)
         const schemaValues = getFormValuesInCorrectFormat<GitCloneStepDataUI, GitCloneStepData>(
           _values,
           transformValuesFieldsConfig
         )
+        console.log(schemaValues)
         onUpdate?.(schemaValues)
       }}
     >
@@ -388,11 +393,26 @@ export const GitCloneStepBase = (
               stepViewType={stepViewType}
               enableFields={{
                 name: {},
-                description: {}
+                description: {},
+                ['spec.connectorAndRepo']: {
+                  connectorUrl,
+                  connectionType,
+                  connectorWidth: isConnectorRuntimeInput ? connectorWidth - runtimeInputGearWidth : connectorWidth,
+                  setConnectionType,
+                  setConnectorUrl,
+                  repoIdentifier,
+                  branch,
+                  isReadonly,
+                  setCodebaseRuntimeInputs,
+                  codebaseRuntimeInputs
+                },
+                ['spec.build']: { setCodeBaseType, codeBaseType },
+                ['spec.cloneDirectory']: { tooltipId: 'cloneDirectory' }
               }}
               formik={formik}
+              // path="spec"
             />
-            {renderConnectorAndRepoName({
+            {/* {renderConnectorAndRepoName({
               values: formik.values,
               setFieldValue: formik.setFieldValue,
               connectorUrl,
@@ -414,17 +434,17 @@ export const GitCloneStepBase = (
               codebaseRuntimeInputs,
               connectorAndRepoNamePath: 'spec',
               classnames: cx(css.formGroup, css.lg, css.bottomMargin5)
-            })}
+            })} */}
 
-            {renderBuildType({
+            {/* {renderBuild({
               expressions,
               readonly,
               getString,
               formik,
               setCodeBaseType,
               codeBaseType
-            })}
-            <Container className={cx(css.lg, css.formGroup)}>
+            })} */}
+            {/* <Container className={cx(css.lg, css.formGroup)}>
               <FormInput.MultiTextInput
                 name="spec.cloneDirectory"
                 label={getString('pipeline.gitCloneStep.cloneDirectory')}
@@ -434,68 +454,21 @@ export const GitCloneStepBase = (
                 }}
                 style={{ marginBottom: 0, flexGrow: 1 }}
               />
-            </Container>
+            </Container> */}
             <Accordion className={css.accordion}>
               <Accordion.Panel
                 id="optional-config"
                 summary={getString('common.optionalConfig')}
                 details={
                   <Container margin={{ top: 'medium' }}>
-                    <Container className={cx(css.lg, css.formGroup, css.bottomMargin5)}>
-                      <MultiTypeTextField
-                        label={
-                          <Layout.Horizontal style={{ display: 'flex', alignItems: 'baseline' }}>
-                            <Text font={{ variation: FontVariation.FORM_LABEL }} margin={{ bottom: 'xsmall' }}>
-                              {getString('pipeline.depth')}
-                            </Text>
-                            &nbsp;
-                            {getOptionalSubLabel(getString, 'depth')}
-                          </Layout.Horizontal>
-                        }
-                        name="spec.depth"
-                        multiTextInputProps={{
-                          multiTextInputProps: {
-                            expressions,
-                            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
-                          },
-                          disabled: isReadonly
-                        }}
-                      />
-                    </Container>
-                    <Container className={cx(css.lg, css.formGroup, css.bottomMargin5)}>
-                      <MultiTypeSelectField
-                        name="spec.sslVerify"
-                        label={
-                          <Layout.Horizontal style={{ display: 'flex', alignItems: 'baseline' }}>
-                            <Text
-                              className={css.inpLabel}
-                              color={Color.GREY_600}
-                              font={{ size: 'small', weight: 'semi-bold' }}
-                            >
-                              {getString('pipeline.sslVerify')}
-                            </Text>
-                            &nbsp;
-                            {getOptionalSubLabel(getString, 'sslVerify')}
-                          </Layout.Horizontal>
-                        }
-                        multiTypeInputProps={{
-                          selectItems: sslVerifyOptions as unknown as SelectOption[],
-                          placeholder: getString('select'),
-                          multiTypeInputProps: {
-                            expressions,
-                            selectProps: {
-                              addClearBtn: true,
-                              items: sslVerifyOptions as unknown as SelectOption[]
-                            },
-                            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
-                          },
-                          disabled: isReadonly
-                        }}
-                        useValue
-                        disabled={isReadonly}
-                      />
-                    </Container>
-
+                    <CIStepOptionalConfig
+                      stepViewType={stepViewType}
+                      readonly={readonly}
+                      enableFields={{
+                        'spec.depth': {},
+                        'spec.sslVerify': {}
+                      }}
+                    />
                     <StepCommonFields disabled={readonly} buildInfrastructureType={buildInfrastructureType} />
                   </Container>
                 }

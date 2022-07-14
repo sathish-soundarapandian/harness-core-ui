@@ -186,36 +186,6 @@ export const getCodebaseInputFieldName = (formattedPath: string) => ({
   cpuLimit: `${formattedPath}properties.ci.codebase.resources.limits.cpu`
 })
 
-const renderCodeBaseTypeInput = ({
-  type,
-  inputLabels,
-  triggerIdentifier,
-  isNotScheduledTrigger,
-  placeholderValues
-}: {
-  type: CodeBaseType
-  inputLabels: Record<string, string>
-  triggerIdentifier?: string
-  isNotScheduledTrigger?: boolean
-  placeholderValues: Record<string, string>
-}): JSX.Element => {
-  return (
-    <Container>
-      <FormInput.MultiTextInput
-        label={<Text font={{ variation: FontVariation.FORM_LABEL }}>{inputLabels[type]}</Text>}
-        name={codeBaseInputFieldFormName[type]}
-        multiTextInputProps={{
-          expressions,
-          allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED]
-        }}
-        placeholder={triggerIdentifier && isNotScheduledTrigger ? placeholderValues[type] : ''}
-        disabled={readonly}
-        onChange={() => setIsInputTouched(true)}
-      />
-    </Container>
-  )
-}
-
 const getViewType = ({
   viewType,
   viewTypeMetadata

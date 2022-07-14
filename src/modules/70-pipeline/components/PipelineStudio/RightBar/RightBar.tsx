@@ -581,7 +581,12 @@ export function RightBar(): JSX.Element {
                       expressions,
                       isReadonly,
                       setCodebaseRuntimeInputs,
-                      codebaseRuntimeInputs
+                      codebaseRuntimeInputs,
+                      allowableTypes: [
+                        MultiTypeInputType.FIXED,
+                        MultiTypeInputType.EXPRESSION,
+                        MultiTypeInputType.RUNTIME
+                      ]
                     })}
                     <Accordion>
                       <Accordion.Panel
