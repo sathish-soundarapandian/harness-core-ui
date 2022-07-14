@@ -1,0 +1,93 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DeployServiceEntitySpecifications deployServiceEntitySpecifications renders correctly 1`] = `
+<div>
+  <div
+    class="OverlaySpinner--overlaySpinner"
+  >
+    <div
+      class="deployStage"
+    >
+      <div
+        class="contentSection paddedSection"
+      >
+        <div
+          class="tabHeading"
+        >
+          cd.pipelineSteps.serviceTab.aboutYourService
+        </div>
+        <div
+          class="bp3-card bp3-elevation-0 Card--card sectionCard"
+          id="aboutService"
+        >
+          <div
+            class="OverlaySpinner--overlaySpinner"
+          >
+            <form
+              action="#"
+              class="FormikForm--main"
+            >
+              <div>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-flex-start"
+                >
+                  <div
+                    class="bp3-form-group"
+                    data-id="serviceRef-0"
+                  >
+                    <label
+                      class="bp3-label"
+                      for="serviceRef"
+                    >
+                      <span
+                        class="Tooltip--acenter"
+                        data-tooltip-id="specifyYourService"
+                      >
+                        cd.pipelineSteps.serviceTab.specifyYourService
+                      </span>
+                       
+                      <span
+                        class="bp3-text-muted"
+                      />
+                    </label>
+                    <div
+                      class="bp3-form-content"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
+                        style="width: 300px;"
+                      >
+                        <div
+                          class="TextInput--main MultiTypeInput--input"
+                        >
+                          <div
+                            class="bp3-input-group bp3-disabled"
+                          >
+                            <input
+                              class="bp3-input"
+                              disabled=""
+                              name="serviceRef"
+                              placeholder="<+input>"
+                              type="text"
+                              value="<+input>"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--margin-top-xxlarge"
+        >
+          <div />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
