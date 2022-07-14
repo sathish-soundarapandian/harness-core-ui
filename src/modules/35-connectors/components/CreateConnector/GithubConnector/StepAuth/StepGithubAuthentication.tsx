@@ -256,11 +256,9 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
       (event: MessageEvent): void => {
         if (oAuthStatus === Status.IN_PROGRESS) {
           if (event.origin !== getBackendServerUrl() && !isEnvironmentAllowedForOAuth()) {
-            markOAuthAsFailed()
             return
           }
           if (!event || !event.data) {
-            markOAuthAsFailed()
             return
           }
           const { accessTokenRef, refreshTokenRef, status, errorMessage } = event.data
