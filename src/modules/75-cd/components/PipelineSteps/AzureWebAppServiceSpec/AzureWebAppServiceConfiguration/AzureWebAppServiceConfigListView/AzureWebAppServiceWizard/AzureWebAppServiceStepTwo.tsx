@@ -91,31 +91,37 @@ function AzureWebAppServiceStepTwo({
 
     if (specValues) {
       if (specValues?.files?.length) {
-        if (specValues.files === '<+input>') {
+        if (
+          getMultiTypeFromValue(specValues.files, [MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED], true) ===
+          MultiTypeInputType.RUNTIME
+        ) {
           return {
-            fileType: 'fileStore',
+            fileType: FILE_TYPE_VALUES.FILE_STORE,
             file: specValues?.files
           }
         }
         return {
-          fileType: 'fileStore',
+          fileType: FILE_TYPE_VALUES.FILE_STORE,
           file: specValues?.files[0]
         }
       } else {
-        if (specValues.secretFiles === '<+input>') {
+        if (
+          getMultiTypeFromValue(specValues.files, [MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED], true) ===
+          MultiTypeInputType.RUNTIME
+        ) {
           return {
-            fileType: 'fileStore',
+            fileType: FILE_TYPE_VALUES.ENCRYPTED,
             file: specValues?.secretFiles
           }
         }
         return {
-          fileType: 'encrypted',
+          fileType: FILE_TYPE_VALUES.ENCRYPTED,
           file: specValues.secretFiles[0]
         }
       }
     }
     return {
-      fileType: 'fileStore',
+      fileType: FILE_TYPE_VALUES.FILE_STORE,
       file: ''
     }
   }
