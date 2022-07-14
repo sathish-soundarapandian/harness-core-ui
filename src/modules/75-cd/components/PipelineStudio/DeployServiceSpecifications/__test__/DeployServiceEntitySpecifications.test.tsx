@@ -24,7 +24,7 @@ import { servicesV2Mock } from './servicesMock'
 import newServiceEntityPipeline from './overrideSetPipeline.json'
 
 const mockchildren = <div />
-const getOverrideContextValue = (): PipelineContextInterface => {
+const getPipelineContextValue = (): PipelineContextInterface => {
   return {
     ...newServiceEntityPipeline,
     getStageFromPipeline: jest.fn().mockReturnValue({
@@ -48,11 +48,6 @@ const getOverrideContextValue = (): PipelineContextInterface => {
   } as any
 }
 
-jest.mock('@common/components/YAMLBuilder/YamlBuilder')
-jest.mock('@wings-software/monaco-yaml/lib/esm/languageservice/yamlLanguageService', () => ({
-  getLanguageService: jest.fn()
-}))
-
 jest.mock('services/cd-ng', () => ({
   useGetServiceList: jest.fn().mockImplementation(() => ({ loading: false, data: servicesV2Mock, refetch: jest.fn() })),
   useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() })),
@@ -60,15 +55,6 @@ jest.mock('services/cd-ng', () => ({
     .fn()
     .mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() }))
 }))
-
-// jest.mock('lodash-es', () => ({
-//   ...(jest.requireActual('lodash-es') as Record<string, any>),
-//   debounce: jest.fn(fn => {
-//     fn.cancel = jest.fn()
-//     return fn
-//   }),
-//   noop: jest.fn()
-// }))
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const intersectionObserverMock = () => ({
@@ -88,7 +74,7 @@ describe('DeployServiceEntitySpecifications', () => {
     const { container } = render(
       <TestWrapper>
         <Formik initialValues={{}} onSubmit={noop} formName="deployServiceSpecificationsTest">
-          <PipelineContext.Provider value={getOverrideContextValue()}>
+          <PipelineContext.Provider value={getPipelineContextValue()}>
             <DeployServiceEntitySpecifications>{mockchildren}</DeployServiceEntitySpecifications>
           </PipelineContext.Provider>
         </Formik>
