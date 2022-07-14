@@ -597,10 +597,9 @@ onboarding:
   setupLabel: Set up your application and code to communicate with our platform.
   selectLanguage: Select your language
   selectEnvironment: Select your environment
-  createEnv: + Create an environment
+  createEnv: Create an environment
   envCreated: Environment Created
   sdkKeyLabel: Please create an SDK key for your environment
-  sdkButtonLabel: + Create SDK Key
   keyDescriptionServer: We generated a secret as the server-side SDK key of your new environment for you to use in your code below. This secret will be redacted once you leave the page, so make sure to copy and store your secret somewhere safe.
   keyDescriptionClient: We generated a client-side SDK key of your new environment for you to use in your code below.
   secret: SDK Secret
