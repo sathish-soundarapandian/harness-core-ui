@@ -1029,7 +1029,7 @@ export const plansData = {
           __typename: 'ComponentPricingPagePlansZone'
         }
       ],
-      chIntelPlans: [
+      srmPlans: [
         {
           title: 'Ch Community',
           desc: 'Cloud-native for easy, repeatable CI/CD',
@@ -5625,8 +5625,8 @@ export const plansData = {
           __typename: 'ComponentPricingPageFeatureGroup'
         }
       ],
-      chIntelFeatureCaption: [],
-      chIntelFeatureGroup: [],
+      srmFeatureCaption: [],
+      srmFeatureGroup: [],
       caseStudies: [
         {
           id: '36',
