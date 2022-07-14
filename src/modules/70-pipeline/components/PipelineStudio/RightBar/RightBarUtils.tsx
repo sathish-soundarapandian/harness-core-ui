@@ -70,7 +70,8 @@ export const renderConnectorAndRepoName = ({
   codebaseRuntimeInputs,
   connectorWidth,
   classnames,
-  connectorAndRepoNamePath
+  connectorAndRepoNamePath,
+  allowableTypes
 }: {
   values: { [key: string]: any }
   setFieldValue: (field: string, value: any) => void
@@ -93,11 +94,13 @@ export const renderConnectorAndRepoName = ({
   connectorWidth?: number
   classnames?: string
   connectorAndRepoNamePath?: string
+  allowableTypes: MultiTypeInputType[]
 }): JSX.Element => {
   const connectorFieldName = connectorAndRepoNamePath ? `${connectorAndRepoNamePath}.connectorRef` : 'connectorRef'
   const connectorValue = get(values, connectorFieldName)
   const repoNameFieldName = connectorAndRepoNamePath ? `${connectorAndRepoNamePath}.repoName` : 'repoName'
   const repoNameValue = get(values, repoNameFieldName)
+  const connectorAllowableTypes = allowableTypes.filter(type => type !== MultiTypeInputType.EXPRESSION)
   return (
     <>
       <Container className={cx(css.bottomMargin3, classnames)}>
@@ -115,7 +118,7 @@ export const renderConnectorAndRepoName = ({
           multiTypeProps={{
             expressions,
             disabled: isReadonly,
-            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME] // BE does not support expressions
+            allowableTypes: connectorAllowableTypes // BE does not support expressions
           }}
           onChange={(value, _valueType, connectorRefType) => {
             // add coverage once connector select available in jest tests
@@ -162,7 +165,7 @@ export const renderConnectorAndRepoName = ({
               multiTextInputProps={{
                 multiTextInputProps: {
                   expressions,
-                  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+                  allowableTypes
                 },
                 disabled: isReadonly || (isRuntimeInput(connectorValue) && isRuntimeInput(repoNameValue)) // connector is a runtime input
               }}
