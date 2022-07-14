@@ -62,6 +62,11 @@
     align-items: start;
     margin-top: 2px;
     padding-left: var(--spacing-xsmall);
+    overflow: scroll;
+    & :global(.bp3-popover-target) {
+      width: 180px;
+      margin: 0;
+    }
   }
   .columnStore {
     display: flex;
@@ -85,5 +90,5 @@
 }
 
 .columnLocation {
-  overflow: hidden;
+  overflow: scroll;
 }

@@ -44,6 +44,7 @@ export interface MultiTypeFieldSelectorProps extends Omit<IFormGroupProps, 'labe
   changed?: boolean
   values?: string | string[]
   isFieldInput?: boolean
+  hasParentValidation?: boolean
 }
 
 export interface ConnectedMultiTypeFieldSelectorProps extends MultiTypeFieldSelectorProps {
@@ -68,6 +69,7 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
     onTypeChange,
     supportListOfExpressions,
     useExecutionTimeInput,
+    hasParentValidation = false,
     defaultType,
     changed,
     localId,
@@ -80,8 +82,10 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
   const showError = hasError && !hideError
   const labelText = !isOptional ? label : `${label} ${optionalLabel}`
   const {
-    intent = showError ? Intent.DANGER : Intent.NONE,
-    helperText = showError ? <FormError name={name} errorMessage={get(formik?.errors, name)} /> : null,
+    intent = showError && !hasParentValidation ? Intent.DANGER : Intent.NONE,
+    helperText = showError && !hasParentValidation ? (
+      <FormError name={name} errorMessage={get(formik?.errors, name)} />
+    ) : null,
     disabled,
     ...rest
   } = restProps
@@ -121,8 +125,8 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
     <FormGroup
       {...rest}
       labelFor={name}
-      helperText={helperText}
-      intent={intent}
+      // intent={intent}
+      // helperText={!hasParentValidation && helperText}
       disabled={disabled}
       label={
         <div className={css.formLabel}>
@@ -150,10 +154,9 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
     <FormGroup
       {...rest}
       className={type === MultiTypeInputType.RUNTIME ? css.formGroup : ''}
-      labelFor={name}
-      helperText={helperText}
       intent={intent}
-      disabled={disabled}
+      // helperText={!hasParentValidation && helperText}
+      // disabled={disabled}
       label={
         <Container flex>
           <HarnessDocTooltip tooltipId={dataTooltipId} labelText={labelText} />

@@ -36,7 +36,8 @@ export function ConfigFilesWizard({
   //   iconsProps,
   //   isReadonly,
   deploymentType,
-  isNewFile
+  isNewFile,
+  configFileIndex
 }: any): React.ReactElement {
   const { getString } = useStrings()
   const onStepChange = (arg: StepChangeData<any>): void => {
@@ -71,6 +72,7 @@ export function ConfigFilesWizard({
         handleConnectorViewChange={handleConnectorViewChange}
         isReadonly={false}
         isNewFile={isNewFile}
+        configFileIndex={configFileIndex}
       />
 
       {/* {newConnectorView ? newConnectorSteps : null} */}

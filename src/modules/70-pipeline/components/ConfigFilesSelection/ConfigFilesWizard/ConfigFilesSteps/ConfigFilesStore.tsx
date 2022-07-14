@@ -54,6 +54,7 @@ interface ConfigFileStorePropType {
   handleConnectorViewChange: () => void
   handleStoreChange: (store: ConfigFileType) => void
   isNewFile: boolean
+  configFileIndex?: number
 }
 
 function ConfigFileStore({

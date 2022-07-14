@@ -115,7 +115,7 @@ function FileStoreInput(props: FormikFileStoreInput): React.ReactElement {
           }}
         >
           {fileStoreValue && path ? (
-            <Container flex>
+            <Container flex className={css.pathWrapper}>
               <Text lineClamp={1} color={Color.GREY_900} padding={{ left: 'xsmall' }}>
                 {path}
               </Text>

@@ -25,42 +25,23 @@ import type { ConfigFileHarnessDataType } from '../../ConfigFilesInterface'
 import css from './ConfigFilesType.module.scss'
 
 interface ConfigFilesPropType {
-  //   changeConfigFileType: (selected: ConfigFileType) => void
-  //   configFilesTypes: Array<ConfigFileType>
-  //   selectedConfigFile: ConfigFileType | null
-  //   configFileInitialValue?: any
   stepName: string
   handleSubmit: any
   expressions: string[]
   isEditMode: boolean
   listOfConfigFiles: any[]
+  configFileIndex?: number
 }
-
-// interface ConfigFileData {
-//   name: string
-//   identifier: string
-//   fileType: string
-//   files: any[]
-// }
-
 export function HarnessConfigStep({
-  //   selectedConfigFile,
-  //   configFilesTypes,
-  //   changeConfigFileType,
   stepName = 'step name',
-  // configFileInitialValue,
   prevStepData,
   previousStep,
-  //   nextStep,
   handleSubmit,
   expressions,
   isEditMode,
-  listOfConfigFiles
+  listOfConfigFiles,
+  configFileIndex
 }: StepProps<any> & ConfigFilesPropType): React.ReactElement {
-  //   const gotoNextStep = (): void => {
-  //     nextStep?.()
-  //   }
-
   const { getString } = useStrings()
 
   const [initialValues, setInitialValues] = useState({
@@ -108,6 +89,24 @@ export function HarnessConfigStep({
     handleSubmit(configFileObj)
   }
 
+  const identifierValidation = Yup.lazy(value => {
+    return !isEditMode
+      ? Yup.mixed()
+          .notOneOf(
+            [...listOfConfigFiles.map(({ configFile }) => configFile.identifier)],
+            getString('validation.duplicateIdError')
+          )
+          .required(getString('validation.identifierRequired'))
+      : listOfConfigFiles.map(({ configFile }) => configFile.identifier).indexOf(value) === configFileIndex
+      ? Yup.mixed().required(getString('validation.identifierRequired'))
+      : Yup.mixed()
+          .notOneOf(
+            [...listOfConfigFiles.map(({ configFile }) => configFile.identifier)],
+            getString('validation.duplicateIdError')
+          )
+          .required(getString('validation.identifierRequired'))
+  })
+
   return (
     <Container className={css.optionsViewContainer}>
       <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
@@ -118,13 +117,7 @@ export function HarnessConfigStep({
           initialValues={initialValues}
           formName="configFileDetails"
           validationSchema={Yup.object().shape({
-            identifier: Yup.mixed()
-              .notOneOf(
-                [...listOfConfigFiles.map(({ configFile }) => configFile.identifier)],
-                getString('validation.duplicateIdError')
-              )
-              .required(getString('validation.identifierRequired')),
-
+            identifier: identifierValidation,
             files: Yup.lazy(value =>
               Array.isArray(value) ? Yup.array().of(Yup.string().required()) : Yup.string().required()
             )
@@ -174,7 +167,7 @@ export function HarnessConfigStep({
                     formik={formikProps}
                     expressions={expressions}
                     values={formikProps.values.files}
-                    //   disabled={getMultiTypeFromValue(formikProps.values.files) === MultiTypeInputType.RUNTIME}
+                    // disabled={getMultiTypeFromValue(formikProps.values.files) === MultiTypeInputType.RUNTIME}
                     multiTypeFieldSelectorProps={{
                       disableTypeSelection: false,
                       label: (

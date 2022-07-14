@@ -13,9 +13,11 @@ declare const styles: {
   readonly group: string
   readonly minimalCard: string
   readonly multiSelectField: string
+  readonly multiSelectWrapper: string
   readonly runtimeDisabled: string
   readonly selectFieldContainer: string
   readonly text: string
+  readonly withErrorWrapper: string
   readonly withoutAligning: string
 }
 export default styles

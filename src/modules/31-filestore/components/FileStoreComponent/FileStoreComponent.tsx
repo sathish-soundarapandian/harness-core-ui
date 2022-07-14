@@ -65,8 +65,6 @@ const useFileStoreModal = ({ applySelected }: UseFileStoreModalProps): UseFileSt
   }
 
   const handleCancelSelectedFile = (): void => {
-    applySelected({})
-    setSelectedFile({} as FileStoreNodeDTOWithScope)
     hideModal()
   }
 

@@ -19,12 +19,12 @@ import { useStrings } from 'framework/strings'
 
 import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { MultiTypeFieldSelectorProps } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { errorCheck } from '@common/utils/formikHelpers'
 
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import FileStoreSelectField from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
 import FileSelectField from '@filestore/components/MultiTypeFileSelect/EncryptedSelect/EncryptedFileSelectField'
 import MultiTypeConfigFileSelect from './MultiTypeConfigFileSelect'
-
 import css from './MultiConfigSelectField.module.scss'
 
 export type MapValue = { id: string; key: string; value: string }[]
@@ -116,6 +116,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
               allowedTypes={[MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED]}
               {...multiTypeFieldSelectorProps}
               disableTypeSelection={multiTypeFieldSelectorProps.disableTypeSelection || disabled}
+              hasParentValidation={true}
               onTypeChange={e => {
                 if (e !== MultiTypeInputType.RUNTIME) {
                   formik?.setFieldValue(name, [''])
@@ -130,12 +131,14 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                       {Array.isArray(values) &&
                         values.map((field: any, index: number) => {
                           const { ...restValue } = field
+                          const error = get(formik?.errors, `${name}[${index}]`)
+                          const hasError = errorCheck(`${name}[${index}]`, formik) && typeof error === 'string'
                           return (
                             <Draggable key={index} draggableId={`${index}`} index={index}>
                               {providedDrag => (
                                 <Layout.Horizontal
                                   flex={{ distribution: 'space-between', alignItems: 'center' }}
-                                  margin={{ top: 'small' }}
+                                  margin={{ top: 'small', bottom: hasError && 'medium' }}
                                   key={index}
                                   ref={providedDrag.innerRef}
                                   {...providedDrag.draggableProps}
@@ -148,9 +151,10 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                     </>
 
                                     <div className={css.multiSelectField}>
-                                      <div className={cx(css.group, css.withoutAligning)}>
+                                      <div className={cx(css.group)}>
                                         {fileType === FILE_TYPE_VALUES.ENCRYPTED ? (
                                           <MultiTypeConfigFileSelect
+                                            hasParentValidation={true}
                                             name={`${name}[${index}]`}
                                             label={''}
                                             defaultValueToReset={''}

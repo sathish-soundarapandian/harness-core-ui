@@ -108,7 +108,8 @@ function ConfigFilesListView({
     accountId,
     orgIdentifier,
     projectIdentifier,
-    connectorInfo: undefined
+    connectorInfo: undefined,
+    configFileIndex
   }
 
   const getInitialValues = (): ConfigInitStepData => {
@@ -173,10 +174,9 @@ function ConfigFilesListView({
     updateStageData()
 
     hideConnectorModal()
-    // setConnectorView(false)
-    // setSelectedManifest(null)
+    setIsEditMode(false)
+    setEditIndex(0)
     setConfigStore('' as ConfigFileType)
-    // refetchConnectors()
   }
   const commonLastStepProps = {
     handleSubmit,
@@ -237,6 +237,7 @@ function ConfigFilesListView({
       case ConfigFilesToConnectorMap.Harness:
         return (
           <HarnessConfigStep
+            {...commonProps}
             stepName={getString('pipeline.configFiles.title')}
             name={getString('pipeline.configFiles.title')}
             handleSubmit={handleSubmit}
@@ -338,6 +339,7 @@ function ConfigFilesListView({
       setConfigStore('' as ConfigFileType)
       setIsEditMode(false)
       setSelectedConfig('' as ConfigFileType)
+      setEditIndex(0)
     }
 
     return (
@@ -360,6 +362,7 @@ function ConfigFilesListView({
             changeConfigFileType={setSelectedConfig}
             isReadonly={isReadonly}
             isNewFile={isNewFile}
+            configFileIndex={configFileIndex}
           />
         </div>
         <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />
@@ -411,11 +414,7 @@ function ConfigFilesListView({
                 return (
                   <div className={css.rowItem} key={`${configFile?.identifier}-${index}`}>
                     <section className={css.configFilesList}>
-                      <div className={css.columnId}>
-                        <Text inline width={150} className={css.type} color={Color.BLACK} lineClamp={1}>
-                          {configFile?.identifier}
-                        </Text>
-                      </div>
+                      <div className={css.columnId}>{configFile?.identifier}</div>
                       <div>{filesType}</div>
                       <div className={css.columnStore}>
                         <Icon
