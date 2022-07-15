@@ -12,9 +12,10 @@ import {
   ExpressionAndRuntimeType,
   ExpressionAndRuntimeTypeProps,
   FormikTooltipContext,
-  HarnessDocTooltip,
-  MultiTypeInputValue
+  MultiTypeInputValue,
+  Text
 } from '@wings-software/uicore'
+import { FontVariation } from '@harness/design-system'
 import { connect } from 'formik'
 import cx from 'classnames'
 import { get } from 'lodash-es'
@@ -91,7 +92,14 @@ export const FormMultiTypeRadioGroup: React.FC<FormMultiTypeRadioGroupProps> = p
       helperText={helperText}
       intent={intent}
       disabled={disabled}
-      label={label ? <HarnessDocTooltip tooltipId={dataTooltipId} labelText={label} /> : label}
+      label={
+        <Text
+          font={{ variation: FontVariation.FORM_LABEL }}
+          tooltipProps={dataTooltipId ? { dataTooltipId: dataTooltipId } : {}}
+        >
+          {label}
+        </Text>
+      }
     >
       <MultiTypeRadioGroup
         radioGroupProps={radioGroupProps}

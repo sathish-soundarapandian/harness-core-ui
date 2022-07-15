@@ -18,19 +18,15 @@ import { FormMultiTypeTextAreaField } from '@common/components'
 import {
   useGitScope,
   shouldRenderRunTimeInputViewWithAllowedValues,
-  getConnectorRefWidth
+  getConnectorRefWidth,
+  isRuntimeInput
 } from '@pipeline/utils/CIUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
-
-import {
-  renderConnectorAndRepoName,
-  runtimeInputGearWidth,
-  CodebaseRuntimeInputsInterface
-} from '@pipeline/components/PipelineStudio/RightBar/RightBarUtils'
+import { renderConnectorAndRepoName } from '@pipeline/components/PipelineStudio/RightBar/RightBarUtils'
 import { renderBuild } from '../GitCloneStep/GitCloneStepBase'
 import {
   AllMultiTypeInputTypesForInputSet,
@@ -250,34 +246,36 @@ export const CIStep: React.FC<CIStepProps> = props => {
           </Container>
         )
       ) : null}
-      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.connectorAndRepo') &&
-        formik &&
-        renderConnectorAndRepoName({
-          values: formik.values,
-          setFieldValue: formik.setFieldValue,
-          connectorUrl: enableFields['spec.connectorAndRepo'].connectorUrl,
-          connectionType: enableFields['spec.connectorAndRepo'].connectionType,
-          connectorWidth: enableFields['spec.connectorAndRepo'].connectorWidth,
-          setConnectionType: enableFields['spec.connectorAndRepo'].setConnectionType,
-          setConnectorUrl: enableFields['spec.connectorAndRepo'].setConnectorUrl,
-          getString,
-          errors: formik.errors,
-          loading: false,
-          accountId,
-          projectIdentifier,
-          orgIdentifier,
-          repoIdentifier: enableFields['spec.connectorAndRepo'].repoIdentifier,
-          branch: enableFields['spec.connectorAndRepo'].branch,
-          expressions,
-          isReadonly: enableFields['spec.connectorAndRepo'].isReadonly,
-          setCodebaseRuntimeInputs: enableFields['spec.connectorAndRepo'].setCodebaseRuntimeInputs,
-          codebaseRuntimeInputs: enableFields['spec.connectorAndRepo'].codebaseRuntimeInputs,
-          connectorAndRepoNamePath: 'spec',
-          classnames: cx(css.formGroup, css.lg, css.bottomMargin5),
-          allowableTypes: isInputSetView
-            ? [MultiTypeInputType.FIXED]
-            : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
-        })}
+      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.connectorAndRepo') && formik && (
+        <Container className={(css.formGroup, stepCss, css.bottomMargin5)}>
+          {renderConnectorAndRepoName({
+            values: formik.values,
+            setFieldValue: formik.setFieldValue,
+            connectorUrl: enableFields['spec.connectorAndRepo'].connectorUrl,
+            connectionType: enableFields['spec.connectorAndRepo'].connectionType,
+            connectorWidth: enableFields['spec.connectorAndRepo'].connectorWidth,
+            setConnectionType: enableFields['spec.connectorAndRepo'].setConnectionType,
+            setConnectorUrl: enableFields['spec.connectorAndRepo'].setConnectorUrl,
+            getString,
+            errors: formik.errors,
+            loading: false,
+            accountId,
+            projectIdentifier,
+            orgIdentifier,
+            repoIdentifier: enableFields['spec.connectorAndRepo'].repoIdentifier,
+            branch: enableFields['spec.connectorAndRepo'].branch,
+            expressions,
+            isReadonly: enableFields['spec.connectorAndRepo'].isReadonly,
+            setCodebaseRuntimeInputs: enableFields['spec.connectorAndRepo'].setCodebaseRuntimeInputs,
+            codebaseRuntimeInputs: enableFields['spec.connectorAndRepo'].codebaseRuntimeInputs,
+            connectorAndRepoNamePath: `${prefix}spec`,
+            // classnames: cx(css.formGroup, css.lg, css.bottomMargin5),
+            allowableTypes: isInputSetView
+              ? [MultiTypeInputType.FIXED]
+              : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+          })}
+        </Container>
+      )}
 
       {!enableFields['spec.connectorRef']?.shouldHide &&
       Object.prototype.hasOwnProperty.call(enableFields, 'spec.image') ? (
@@ -292,17 +290,26 @@ export const CIStep: React.FC<CIStepProps> = props => {
         </Container>
       ) : null}
 
-      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.build') &&
-        formik &&
-        renderBuild({
-          expressions,
-          readonly,
-          getString,
-          formik,
-          setCodeBaseType: enableFields['spec.build'].setCodeBaseType,
-          codeBaseType: enableFields['spec.build'].codeBaseType,
-          allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
-        })}
+      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.build') && formik && (
+        <Container
+          className={cx(
+            css.formGroup,
+            stepCss,
+            !isRuntimeInput(formik?.values?.spec?.build) && !isRuntimeInput(formik?.values?.spec?.build?.type)
+              ? css.bottomMargin5
+              : css.bottomMargin2
+          )}
+        >
+          {renderBuild({
+            expressions,
+            readonly,
+            getString,
+            formik,
+            path,
+            allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
+          })}
+        </Container>
+      )}
 
       {Object.prototype.hasOwnProperty.call(enableFields, 'spec.cloneDirectory') ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>

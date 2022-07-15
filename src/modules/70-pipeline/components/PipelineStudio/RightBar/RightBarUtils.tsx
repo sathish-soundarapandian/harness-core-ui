@@ -69,7 +69,6 @@ export const renderConnectorAndRepoName = ({
   setCodebaseRuntimeInputs,
   codebaseRuntimeInputs,
   connectorWidth,
-  classnames,
   connectorAndRepoNamePath,
   allowableTypes
 }: {
@@ -92,8 +91,7 @@ export const renderConnectorAndRepoName = ({
   setCodebaseRuntimeInputs: Dispatch<SetStateAction<CodebaseRuntimeInputsInterface>>
   codebaseRuntimeInputs: CodebaseRuntimeInputsInterface
   connectorWidth?: number
-  classnames?: string
-  connectorAndRepoNamePath?: string
+  connectorAndRepoNamePath?: string // coming from step / input set
   allowableTypes: MultiTypeInputType[]
 }): JSX.Element => {
   const connectorFieldName = connectorAndRepoNamePath ? `${connectorAndRepoNamePath}.connectorRef` : 'connectorRef'
@@ -103,7 +101,7 @@ export const renderConnectorAndRepoName = ({
   const connectorAllowableTypes = allowableTypes.filter(type => type !== MultiTypeInputType.EXPRESSION)
   return (
     <>
-      <Container className={cx(css.bottomMargin3, classnames)}>
+      <Container className={cx(css.bottomMargin3)}>
         <FormMultiTypeConnectorField
           name={connectorFieldName}
           type={[Connectors.GIT, Connectors.GITHUB, Connectors.GITLAB, Connectors.BITBUCKET, Connectors.AWS_CODECOMMIT]}
@@ -120,6 +118,7 @@ export const renderConnectorAndRepoName = ({
             disabled: isReadonly,
             allowableTypes: connectorAllowableTypes // BE does not support expressions
           }}
+          setRefValue
           onChange={(value, _valueType, connectorRefType) => {
             // add coverage once connector select available in jest tests
             /* istanbul ignore next */
@@ -149,7 +148,7 @@ export const renderConnectorAndRepoName = ({
         </>
       ) : (
         <>
-          <Container className={cx(css.bottomMargin3, classnames)}>
+          <Container width={connectorWidth} className={cx(css.bottomMargin3)}>
             <MultiTypeTextField
               key={`connector-runtimeinput-${codebaseRuntimeInputs.connectorRef}`} // handle reload RepoName from ConnectorRef as Runtime to Fixed
               label={

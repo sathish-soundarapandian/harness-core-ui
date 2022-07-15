@@ -866,7 +866,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
       ) : null}
 
       {Object.prototype.hasOwnProperty.call(enableFields, 'spec.depth') ? (
-        <div className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {renderMultiTypeTextField({
             name: `${prefix}spec.depth`,
             labelKey: 'pipeline.depth',
@@ -879,10 +879,8 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
               disabled: readonly
             },
             fieldPath: 'spec.depth'
-
-            // allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
           })}
-        </div>
+        </Container>
       ) : null}
 
       {Object.prototype.hasOwnProperty.call(enableFields, 'spec.sslVerify') ? (
