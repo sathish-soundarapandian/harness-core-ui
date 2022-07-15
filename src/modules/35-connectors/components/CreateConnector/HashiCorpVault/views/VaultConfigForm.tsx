@@ -48,6 +48,7 @@ const VaultConfigForm: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsPr
     authToken: undefined,
     sinkPath: undefined,
     renewalIntervalMinutes: 10,
+    k8sAuthEndpoint: '',
     vaultK8sAuthRole: '',
     serviceAccountTokenPath: ''
   }
