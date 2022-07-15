@@ -14,17 +14,8 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
-import type {
-  MultiTypeSelectOption,
-  MultiTypeMapType,
-  MultiTypeMapUIType,
-  MultiTypeConnectorRef,
-  Resources,
-  MultiTypeListUIType,
-  MultiTypeListType
-} from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
+import type { MultiTypeConnectorRef, Resources } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import type { StringsMap } from 'stringTypes'
-import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { GitCloneStepBaseWithRef } from './GitCloneStepBase'
 import { GitCloneStepInputSet } from './GitCloneStepInputSet'
 import { GitCloneStepVariables, GitCloneStepVariablesProps } from './GitCloneStepVariables'
@@ -66,8 +57,6 @@ export interface GitCloneStepData {
   type: string
   timeout?: string
   spec: GitCloneStepSpec
-  // UNSURE FOR NOW
-  // connectorRef?: ConnectorReferenceFieldProps['selected']
 }
 
 export interface GitCloneStepSpecUI

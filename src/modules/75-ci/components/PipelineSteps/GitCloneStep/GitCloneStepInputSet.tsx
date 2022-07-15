@@ -7,22 +7,19 @@
 
 import React from 'react'
 import { connect } from 'formik'
-import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@wings-software/uicore'
 import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
 import { getConnectorRefWidth, isRuntimeInput, shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
-import { Connectors } from '@connectors/constants'
-import type { GitCloneStepProps } from './GitCloneStep'
-import { CIStep } from '../CIStep/CIStep'
-import { CIStepOptionalConfig } from '../CIStep/CIStepOptionalConfig'
-import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-import type { CodeBaseType } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
-import { get } from 'lodash-es'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import {
   CodebaseRuntimeInputsInterface,
   runtimeInputGearWidth
 } from '@pipeline/components/PipelineStudio/RightBar/RightBarUtils'
+import { CIStepOptionalConfig } from '../CIStep/CIStepOptionalConfig'
+import { CIStep } from '../CIStep/CIStep'
+import type { GitCloneStepProps } from './GitCloneStep'
+import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const GitCloneStepInputSetBasic: React.FC<GitCloneStepProps> = ({
   template,
@@ -34,34 +31,14 @@ export const GitCloneStepInputSetBasic: React.FC<GitCloneStepProps> = ({
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [connectionType, setConnectionType] = React.useState('')
   const [connectorUrl, setConnectorUrl] = React.useState('')
-
-  // setFormikRef?.(formikRef, formik)
   const connectorWidth = getConnectorRefWidth('DefaultView')
   const connectorRefValue = formik.values.spec?.connectorRef
   const isConnectorRuntimeInput = isRuntimeInput(connectorRefValue)
-  const codeBaseTypePath = `spec.build.type`
-  const [codeBaseType, setCodeBaseType] = React.useState<CodeBaseType | string | undefined>(
-    get(formik?.values, codeBaseTypePath)
-  )
   const codebaseConnector = formik.values?.spec?.connectorRef
 
   const [codebaseRuntimeInputs, setCodebaseRuntimeInputs] = React.useState<CodebaseRuntimeInputsInterface>({
     ...(isRuntimeInput(codebaseConnector) && { connectorRef: true, repoName: true })
   })
-  React.useEffect(() => {
-    if (formik?.values?.spec?.connectorRef === RUNTIME_INPUT_VALUE) {
-      const newValuesSpec = { ...formik?.values?.spec }
-      newValuesSpec.repoName = RUNTIME_INPUT_VALUE
-      // newValuesSpec.build
-      // const newBuildValue = { ...formik?.values?.spec?.build }
-      // newBuildValue.spec = RUNTIME_INPUT_VALUE
-      // spec.build and reponame
-      // formik?.setFieldValue(buildPath, RUNTIME_INPUT_VALUE)
-      formik?.setValues({ ...formik?.values, spec: newValuesSpec })
-      // set build as <+input>
-      setCodeBaseType(undefined)
-    }
-  }, [formik?.values?.spec?.connectorRef])
   return (
     <FormikForm className={css.removeBpPopoverWrapperTopMargin}>
       <CIStep
@@ -85,17 +62,16 @@ export const GitCloneStepInputSetBasic: React.FC<GitCloneStepProps> = ({
                 isReadonly: readonly,
                 setCodebaseRuntimeInputs,
                 codebaseRuntimeInputs
-                // connectorAndRepoNamePath: 'spec'
               }
             }),
           ...(getMultiTypeFromValue(template?.spec?.connectorRef) !== MultiTypeInputType.RUNTIME &&
             getMultiTypeFromValue(template?.spec?.repoName) === MultiTypeInputType.RUNTIME && {
-              'spec.repoName': { tooltipId: 'cloneDirectory' }
+              'spec.repoName': { tooltipId: 'repoName' }
             }),
-          ...(getMultiTypeFromValue(template?.spec?.connectorRef) === MultiTypeInputType.RUNTIME && {
-            'spec.build': { setCodeBaseType, codeBaseType }
+          ...(getMultiTypeFromValue(template?.spec?.build as string) === MultiTypeInputType.RUNTIME && {
+            'spec.build': {}
           }),
-          ...(getMultiTypeFromValue(template?.spec?.connectorRef) === MultiTypeInputType.RUNTIME && {
+          ...(getMultiTypeFromValue(template?.spec?.cloneDirectory) === MultiTypeInputType.RUNTIME && {
             'spec.cloneDirectory': { tooltipId: 'cloneDirectory' }
           })
         }}
