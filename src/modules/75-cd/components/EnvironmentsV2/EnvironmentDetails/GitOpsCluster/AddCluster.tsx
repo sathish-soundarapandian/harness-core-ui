@@ -27,7 +27,7 @@ import { useStrings } from 'framework/strings'
 import { useInfiniteScroll } from '@common/hooks/useInfiniteScroll'
 
 import {
-  Cluster,
+  ClusterFromGitops,
   ClusterResponse,
   getClusterListFromSourcePromise,
   ResponsePageClusterResponse,
@@ -43,13 +43,25 @@ interface AddClusterProps {
   envRef: string
 }
 
-const getUnlinkedClusters = (clusters: Cluster[] | any, linkedClusters: ClusterResponse[] | any): Cluster[] => {
+const getUnlinkedClusters = (
+  clusters: ClusterFromGitops[] | any,
+  linkedClusters: ClusterResponse[] | any
+): ClusterFromGitops[] => {
   if (!linkedClusters || !clusters) {
     return []
   }
+
   const unlinkedClusters = []
   for (const clstr of clusters) {
-    const clstrObj = linkedClusters.find((obj: ClusterResponse) => obj.clusterRef === clstr.identifier)
+    const clstrObj = linkedClusters.find((obj: ClusterResponse) => {
+      let scopedClusterRef = obj.clusterRef
+
+      if (obj.scope === 'ACCOUNT') {
+        scopedClusterRef = scopedClusterRef?.split('.')[1]
+      }
+
+      return scopedClusterRef === clstr.identifier
+    })
     // istanbul ignore else
     if (!clstrObj) {
       unlinkedClusters.push(clstr)
@@ -65,15 +77,15 @@ const UnLinkedClstrsList = ({
   selectedClusters,
   setSelectedClusters
 }: {
-  unlinkedClusters: Cluster[]
+  unlinkedClusters: ClusterFromGitops[]
   attachRefToLastElement: any
   loadMoreRef: any
-  selectedClusters: Cluster[]
+  selectedClusters: ClusterFromGitops[]
   setSelectedClusters: any
 }): React.ReactElement => {
   return (
     <div className={css.listContainer}>
-      {defaultTo(unlinkedClusters, []).map((cluster: Cluster, index: number) => {
+      {defaultTo(unlinkedClusters, []).map((cluster: ClusterFromGitops, index: number) => {
         return (
           <Layout.Vertical ref={attachRefToLastElement(index) ? loadMoreRef : undefined} key={cluster.identifier}>
             <ClusterCard
@@ -95,9 +107,9 @@ const SelectAllCheckBox = ({
   setSelectedClusters,
   setLinkAll
 }: {
-  selectedClusters: Cluster[]
-  unlinkedClusters: Cluster[]
-  setSelectedClusters: (arr: Cluster[]) => void
+  selectedClusters: ClusterFromGitops[]
+  unlinkedClusters: ClusterFromGitops[]
+  setSelectedClusters: (arr: ClusterFromGitops[]) => void
   setLinkAll: (linkAll: boolean) => void
 }): React.ReactElement => {
   return (
@@ -130,7 +142,7 @@ const SelectedClustersList = ({
   selectedClusters,
   selectedLabel
 }: {
-  selectedClusters: Cluster[]
+  selectedClusters: ClusterFromGitops[]
   selectedLabel: string
 }): React.ReactElement => {
   return (
@@ -140,7 +152,7 @@ const SelectedClustersList = ({
           <Text className={css.selectedHeader} color={Color.GREY_800}>
             {selectedLabel}
           </Text>
-          {selectedClusters.map((clstr: Cluster, index: number) => {
+          {selectedClusters.map((clstr: ClusterFromGitops, index: number) => {
             // istanbul ignore else
             if (index < 10) {
               return (
@@ -175,7 +187,7 @@ const returnTitle = (title: string): React.ReactElement => {
 }
 
 const AddCluster = (props: AddClusterProps): React.ReactElement => {
-  const [selectedClusters, setSelectedClusters] = React.useState<Cluster | any>([])
+  const [selectedClusters, setSelectedClusters] = React.useState<ClusterFromGitops | any>([])
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const [searching, setSearching] = useState(false)
@@ -244,9 +256,9 @@ const AddCluster = (props: AddClusterProps): React.ReactElement => {
       setSubmitting(true)
       const payload = {
         envRef: props.envRef,
-        clusters: selectedClusters.map((clstr: Cluster) => ({
+        clusters: selectedClusters.map((clstr: ClusterFromGitops) => ({
           identifier: defaultTo(clstr.identifier, ''),
-          name: defaultTo(clstr.identifier, '')
+          scope: defaultTo(clstr.scopeLevel, '')
         })),
         orgIdentifier,
         projectIdentifier,

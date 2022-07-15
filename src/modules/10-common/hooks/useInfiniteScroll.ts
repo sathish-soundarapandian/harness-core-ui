@@ -74,7 +74,6 @@ export const useInfiniteScroll = (props: InfiniteScrollProps): InfiniteScrollRet
       .then(response => {
         if (response.data) {
           setFetching(false)
-
           // If the cuurent fetch count exceeds totalItems, set hasMore as false
           const canFetchMore =
             response.data.totalItems > response.data.pageIndex * response.data.pageSize + response.data.pageItemCount

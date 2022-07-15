@@ -152,6 +152,7 @@
     border-radius: 3px;
     border-bottom: solid 1px var(--grey-100);
     display: flex;
+    justify-content: space-between;
     gap: 16px;
     align-items: center;
     cursor: pointer;
@@ -159,6 +160,11 @@
     background: var(--grey-0);
     box-shadow: 0px 0px 1px rgb(40 41 61 / 8%), 0px 0.5px 2px rgb(96 97 112 / 16%);
     padding: 6px 8px;
+
+    .clusterCardRightSide {
+      display: flex;
+      align-items: center;
+    }
 
     .clusterDetails {
       display: flex;
@@ -169,6 +175,12 @@
       display: flex;
       gap: 16px;
       align-items: center;
+    }
+
+    .tag {
+      text-transform: uppercase;
+      background-color: var(--grey-50) !important;
+      color: var(--primary-9) !important;
     }
   }
 
@@ -253,12 +265,6 @@
   display: flex;
   right: 35px;
   position: absolute;
-
-  #tag {
-    text-transform: uppercase;
-    background-color: var(--grey-50) !important;
-    color: var(--primary-9) !important;
-  }
 }
 
 .status {
