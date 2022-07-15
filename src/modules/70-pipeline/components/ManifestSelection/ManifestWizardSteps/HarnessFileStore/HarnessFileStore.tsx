@@ -22,11 +22,16 @@ import * as Yup from 'yup'
 import { defaultTo, get } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { useStrings } from 'framework/strings'
-import type { ConnectorConfigDTO, HarnessStoreFile, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
+import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import FileStoreSelectField from '@filestore/components/FileStoreSelectField/FileStoreSelectField'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ManifestDataType, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
-import type { HarnessFileStoreDataType, HarnessFileStoreFormData, ManifestTypes } from '../../ManifestInterface'
+import type {
+  HarnessFileStoreDataType,
+  HarnessFileStoreFormData,
+  HarnessStoreFile,
+  ManifestTypes
+} from '../../ManifestInterface'
 import css from '../K8sValuesManifest/ManifestDetails.module.scss'
 
 interface HarnessFileStorePropType {
