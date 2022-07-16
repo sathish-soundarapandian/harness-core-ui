@@ -1555,14 +1555,10 @@ export interface CloudformationTemplateFileSpec {
   type?: string
 }
 
-export interface Cluster {
-  cluster?: ClusterInternal
-  identifier?: string
-}
-
 export interface ClusterBasicDTO {
   identifier?: string
   name?: string
+  scope?: 'ACCOUNT' | 'ORGANIZATION' | 'PROJECT'
 }
 
 export interface ClusterBatchRequest {
@@ -1578,8 +1574,10 @@ export interface ClusterBatchResponse {
   linked?: number
 }
 
-export interface ClusterInternal {
+export interface ClusterFromGitops {
+  identifier?: string
   name?: string
+  scopeLevel?: 'ACCOUNT' | 'ORGANIZATION' | 'PROJECT'
 }
 
 export interface ClusterRequest {
@@ -1587,6 +1585,7 @@ export interface ClusterRequest {
   identifier?: string
   orgIdentifier?: string
   projectIdentifier?: string
+  scope?: 'ACCOUNT' | 'ORGANIZATION' | 'PROJECT'
 }
 
 export interface ClusterResponse {
@@ -1595,6 +1594,7 @@ export interface ClusterResponse {
   linkedAt?: number
   orgIdentifier?: string
   projectIdentifier?: string
+  scope?: 'ACCOUNT' | 'ORGANIZATION' | 'PROJECT'
 }
 
 export interface ClusterYaml {
@@ -6775,8 +6775,8 @@ export interface PageApiKeyAggregateDTO {
   totalPages?: number
 }
 
-export interface PageCluster {
-  content?: Cluster[]
+export interface PageClusterFromGitops {
+  content?: ClusterFromGitops[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -9098,9 +9098,9 @@ export interface ResponsePageApiKeyAggregateDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponsePageCluster {
+export interface ResponsePageClusterFromGitops {
   correlationId?: string
-  data?: PageCluster
+  data?: PageClusterFromGitops
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -28113,7 +28113,7 @@ export interface GetClusterListFromSourceQueryParams {
 }
 
 export type GetClusterListFromSourceProps = Omit<
-  GetProps<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>,
+  GetProps<ResponsePageClusterFromGitops, Failure | Error, GetClusterListFromSourceQueryParams, void>,
   'path'
 >
 
@@ -28121,7 +28121,7 @@ export type GetClusterListFromSourceProps = Omit<
  * Gets cluster list from Gitops Service
  */
 export const GetClusterListFromSource = (props: GetClusterListFromSourceProps) => (
-  <Get<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>
+  <Get<ResponsePageClusterFromGitops, Failure | Error, GetClusterListFromSourceQueryParams, void>
     path={`/gitops/clusters/listFromGitops`}
     base={getConfig('ng/api')}
     {...props}
@@ -28129,7 +28129,7 @@ export const GetClusterListFromSource = (props: GetClusterListFromSourceProps) =
 )
 
 export type UseGetClusterListFromSourceProps = Omit<
-  UseGetProps<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>,
+  UseGetProps<ResponsePageClusterFromGitops, Failure | Error, GetClusterListFromSourceQueryParams, void>,
   'path'
 >
 
@@ -28137,7 +28137,7 @@ export type UseGetClusterListFromSourceProps = Omit<
  * Gets cluster list from Gitops Service
  */
 export const useGetClusterListFromSource = (props: UseGetClusterListFromSourceProps) =>
-  useGet<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>(
+  useGet<ResponsePageClusterFromGitops, Failure | Error, GetClusterListFromSourceQueryParams, void>(
     `/gitops/clusters/listFromGitops`,
     { base: getConfig('ng/api'), ...props }
   )
@@ -28146,10 +28146,10 @@ export const useGetClusterListFromSource = (props: UseGetClusterListFromSourcePr
  * Gets cluster list from Gitops Service
  */
 export const getClusterListFromSourcePromise = (
-  props: GetUsingFetchProps<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>,
+  props: GetUsingFetchProps<ResponsePageClusterFromGitops, Failure | Error, GetClusterListFromSourceQueryParams, void>,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>(
+  getUsingFetch<ResponsePageClusterFromGitops, Failure | Error, GetClusterListFromSourceQueryParams, void>(
     getConfig('ng/api'),
     `/gitops/clusters/listFromGitops`,
     props,
@@ -28161,6 +28161,7 @@ export interface DeleteClusterQueryParams {
   orgIdentifier?: string
   projectIdentifier?: string
   environmentIdentifier?: string
+  scope?: 'ACCOUNT' | 'ORGANIZATION' | 'PROJECT'
 }
 
 export type DeleteClusterProps = Omit<

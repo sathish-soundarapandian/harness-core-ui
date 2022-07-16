@@ -15,6 +15,7 @@ declare const styles: {
   readonly agentReferenceField: string
   readonly cancelBtn: string
   readonly checkBox: string
+  readonly clusterCardRightSide: string
   readonly clusterDetails: string
   readonly clusterId: string
   readonly clusterList: string
