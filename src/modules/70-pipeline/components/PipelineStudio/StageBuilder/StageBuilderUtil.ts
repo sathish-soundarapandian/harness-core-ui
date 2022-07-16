@@ -609,7 +609,7 @@ export const getNodeEventListerner = (
   stageMap: Map<string, StageState>,
   newPipelineStudioEnabled?: boolean,
   sectionId?: string | null
-): NodeModelListener => {
+): ListenerReturnType => {
   const {
     state: {
       pipeline,

@@ -59,6 +59,7 @@ function PipelineStepNode(
     setVisibilityOfAdd(visibility)
   }
 
+  const isTemplateNode = props?.data?.metaData?.isTemplateNode
   const stepIcon = defaultTo(stepData?.icon, props?.data?.icon)
   const hasChildren = (nodeData: typeof props): boolean => Boolean(defaultTo(nodeData?.data?.children?.length, 0))
   const isParallelNode = (nodeData: typeof props): boolean => Boolean(nodeData?.metaData?.isParallelNode)
@@ -91,7 +92,7 @@ function PipelineStepNode(
       }
     })
   }
-  const isTemplateNode = props?.data?.metaData?.isTemplateNode
+
   return (
     <div
       className={cx(defaultCss.defaultNode, 'default-node', {

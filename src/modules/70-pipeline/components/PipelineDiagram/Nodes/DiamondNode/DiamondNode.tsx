@@ -15,33 +15,38 @@ import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
-import { PipelineGraphType, NodeType, NodeProps } from '../../types'
+import type { ExecutionWrapperConfig, StepElementConfig } from 'services/pipeline-ng'
+import type { EventStepDataType } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
+import { PipelineGraphType, NodeType, NodeProps, PipelineStageNodeMetaDataType } from '../../types'
 import SVGMarker from '../SVGMarker'
-import { getPositionOfAddIcon } from '../utils'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
+import { getPositionOfAddIcon } from '../utils'
 import cssDefault from '../DefaultNode/DefaultNode.module.scss'
 import css from './DiamondNode.module.scss'
-interface T {
-  name: string
-}
-interface U {
-  name: string
-}
-interface PipelineStepNodeProps extends NodeProps<T, U, V> {
-  status: string
-}
 
-export function DiamondNodeWidget(props: any): JSX.Element {
+export function DiamondNodeWidget(
+  props: NodeProps<ExecutionWrapperConfig, PipelineStageNodeMetaDataType, EventStepDataType>
+): JSX.Element {
   const { getString } = useStrings()
-  const isSelected = props?.isSelected || props?.selectedNodeId === props?.id
+
+  // alloAdd missing
+  const isSelectedNode = (): boolean =>
+    [props?.data?.id, props?.data?.identifier].includes(props.selectedNodeId as string)
+
   const [showAddLink, setShowAddLink] = React.useState(false)
-  const stepStatus = defaultTo(props?.status, props?.data?.step?.status as ExecutionStatus)
+
+  const stepStatus = defaultTo(props?.data?.status, props?.data?.metaData?.status as ExecutionStatus)
   const { secondaryIconProps, secondaryIcon, secondaryIconStyle } = getStatusProps(
     stepStatus as ExecutionStatus,
     ExecutionPipelineNodeType.DIAMOND
   )
-  const isTemplateNode = props?.data?.isTemplateNode
-  const showMarkers = defaultTo(props?.showMarkers, true)
+
+  const showMarkers = defaultTo(props?.data?.metaData?.nodeMeta?.showMarkers, true)
+  const isTemplateNode = props?.data?.metaData?.isTemplateNode
+
+  // const hasChildren = (nodeData: typeof props): boolean => Boolean(defaultTo(nodeData?.data?.children?.length, 0))
+  const isParallelNode = (nodeData: typeof props): boolean => Boolean(nodeData?.metaData?.isParallelNode)
+
   return (
     <div
       className={cx(cssDefault.defaultNode, 'diamond-node')}
@@ -55,10 +60,15 @@ export function DiamondNodeWidget(props: any): JSX.Element {
           type: Event.ClickNode,
           target: event.target,
           data: {
-            ...props,
-            entityType: DiagramType.DiamondNode,
-            identifier: props?.identifier,
-            id: props.id
+            nodeType: DiagramType.DiamondNode,
+            nodeData: {
+              id: props?.data?.id,
+              data: props?.data?.data?.step,
+              metaData: {
+                // hasChildren: hasChildren(props),
+                // isParallelNode: isParallelNode(props)
+              }
+            }
           }
         })
       }}
@@ -70,7 +80,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
           css.diamond,
 
           {
-            [cssDefault.selected]: isSelected,
+            [cssDefault.selected]: isSelectedNode(),
             [cssDefault.failed]: stepStatus === ExecutionStatusEnum.Failed,
             [cssDefault.runningNode]: stepStatus === ExecutionStatusEnum.Running,
             [cssDefault.skipped]: stepStatus === ExecutionStatusEnum.Skipped,
@@ -94,17 +104,26 @@ export function DiamondNodeWidget(props: any): JSX.Element {
         }}
       >
         <div
-          id={props.id}
-          data-nodeid={props.id}
+          id={props?.data?.id}
+          data-nodeid={props?.data?.id}
           className={css.horizontalBar}
           style={{ height: props.data?.graphType === PipelineGraphType.STAGE_GRAPH ? 40 : 64 }}
           onMouseEnter={event => {
             event.stopPropagation()
-
             props?.fireEvent?.({
               type: Event.MouseEnterNode,
               target: event.target,
-              data: { ...props }
+              data: {
+                nodeType: DiagramType.Default,
+                nodeData: {
+                  id: props?.data?.id,
+                  data: props?.data?.data?.step,
+                  metaData: {
+                    // hasChildren: hasChildren(props),
+                    // isParallelNode: isParallelNode(props)
+                  }
+                }
+              }
             })
           }}
           onMouseLeave={event => {
@@ -112,7 +131,17 @@ export function DiamondNodeWidget(props: any): JSX.Element {
             props?.fireEvent?.({
               type: Event.MouseLeaveNode,
               target: event.target,
-              data: { ...props }
+              data: {
+                nodeType: DiagramType.Default,
+                nodeData: {
+                  id: props?.data?.id,
+                  data: props?.data?.data?.step,
+                  metaData: {
+                    // hasChildren: hasChildren(props),
+                    // isParallelNode: isParallelNode(props)
+                  }
+                }
+              }
             })
           }}
         >
@@ -136,25 +165,24 @@ export function DiamondNodeWidget(props: any): JSX.Element {
           )}
         </div>
         <div className="execution-running-animation" />
-        {props?.data?.isInComplete && (
+        {props?.data?.metaData?.isInComplete && (
           <Icon className={css.inComplete} size={12} name={'warning-sign'} color="orange500" />
         )}
-        {props.icon && (
+        {props?.data?.icon && (
           <Icon
             size={28}
             className={css.primaryIcon}
-            inverse={isSelected}
-            name={props.icon}
-            color={isSelected ? Color.WHITE : Color.PRIMARY_7}
+            name={props?.data?.icon}
+            {...(isSelectedNode() ? { color: Color.WHITE, inverse: true } : { color: Color.PRIMARY_7 })}
           />
         )}
-        {props?.tertiaryIcon && (
+        {props?.data?.metaData?.tertiaryIcon && (
           <Icon
             className={css.tertiaryIcon}
             size={15}
-            name={props?.tertiaryIcon}
-            style={props?.tertiaryIconStyle}
-            {...props.tertiaryIconProps}
+            name={props?.data?.metaData?.tertiaryIcon}
+            // style={props?.tertiaryIconStyle}
+            // {...props.tertiaryIconProps}
           />
         )}
         {secondaryIcon && (
@@ -166,19 +194,8 @@ export function DiamondNodeWidget(props: any): JSX.Element {
             {...secondaryIconProps}
           />
         )}
-        {props.skipCondition && (
-          <div className={css.conditional}>
-            <Text
-              tooltip={`Skip condition:\n${props.skipCondition}`}
-              tooltipProps={{
-                isDark: true
-              }}
-            >
-              <Icon size={26} name={'conditional-skip-new'} color="white" />
-            </Text>
-          </div>
-        )}
-        {props.data?.conditionalExecutionEnabled && (
+
+        {props.data?.metaData?.conditionalExecutionEnabled && (
           <div className={css.conditional}>
             <Text
               tooltip={getString('pipeline.conditionalExecution.title')}
@@ -190,7 +207,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
             </Text>
           </div>
         )}
-        {props.data?.loopingStrategyEnabled && (
+        {props.data?.metaData?.loopingStrategyEnabled && (
           <div className={css.loopingStrategy}>
             <Text
               tooltip={getString('pipeline.loopingStrategy.title')}
@@ -201,8 +218,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
               <Icon
                 size={16}
                 name={'looping'}
-                inverse={isSelected}
-                color={isSelected ? Color.WHITE : Color.PRIMARY_7}
+                {...(isSelectedNode() ? { color: Color.WHITE, inverse: true } : { color: Color.PRIMARY_7 })}
               />
             </Text>
           </div>
@@ -212,10 +228,10 @@ export function DiamondNodeWidget(props: any): JSX.Element {
             size={8}
             className={css.template}
             name={'template-library'}
-            color={isSelected ? Color.WHITE : Color.PRIMARY_7}
+            color={isSelectedNode() ? Color.WHITE : Color.PRIMARY_7}
           />
         )}
-        {!props.readonly && (
+        {!props?.permissions?.readonly && (
           <Button
             className={cx(cssDefault.closeNode, css.diamondClose)}
             minimal
@@ -226,15 +242,25 @@ export function DiamondNodeWidget(props: any): JSX.Element {
               e.stopPropagation()
               props?.fireEvent?.({
                 type: Event.RemoveNode,
-                identifier: props?.identifier,
-                node: props
+                target: e.target,
+                data: {
+                  nodeType: DiagramType.Default,
+                  nodeData: {
+                    id: props?.data?.id,
+                    data: props?.data?.data?.step,
+                    metaData: {
+                      // hasChildren: hasChildren(props),
+                      // isParallelNode: isParallelNode(props)
+                    }
+                  }
+                }
               })
             }}
             withoutCurrentColor={true}
           />
         )}
       </div>
-      {props.name && (
+      {props?.data?.name && (
         <div className={cssDefault.nodeNameText}>
           <Text
             width={125}
@@ -243,20 +269,19 @@ export function DiamondNodeWidget(props: any): JSX.Element {
             padding={'small'}
             lineClamp={2}
           >
-            {props.name}
+            {props?.data?.name}
           </Text>
         </div>
       )}
-      {!props.isParallelNode && !props.readonly && (
-        <AddLinkNode<PipelineStepNodeProps>
-          nextNode={props?.nextNode}
-          parentIdentifier={props?.parentIdentifier}
-          isParallelNode={props.isParallelNode}
-          readonly={props.readonly}
-          data={props}
-          fireEvent={props?.fireEvent}
-          identifier={props?.identifier}
+      {!isParallelNode(props) && !props?.permissions?.readonly && (
+        <AddLinkNode<StepElementConfig, PipelineStageNodeMetaDataType, EventStepDataType>
+          isParallelNode={isParallelNode(props)}
+          readonly={props?.permissions?.readonly}
+          fireEvent={props.fireEvent}
           style={{ left: getPositionOfAddIcon(props) }}
+          data={props?.data?.data?.step as StepElementConfig}
+          id={props?.data?.id}
+          parentIdentifier={props?.metaData?.parentIdentifier}
           className={cx(
             cssDefault.addNodeIcon,
             {
@@ -272,17 +297,16 @@ export function DiamondNodeWidget(props: any): JSX.Element {
           setShowAddLink={setShowAddLink}
         />
       )}
-      {(props?.nextNode?.nodeType === NodeType.StepGroupNode || (!props?.nextNode && props?.parentIdentifier)) &&
-        !props.isParallelNode &&
-        !props.readonly && (
-          <AddLinkNode<PipelineStepNodeProps>
-            nextNode={props?.nextNode}
-            parentIdentifier={props?.parentIdentifier}
-            isParallelNode={props.isParallelNode}
-            readonly={props.readonly}
-            data={props}
-            fireEvent={props?.fireEvent}
-            identifier={props?.identifier}
+      {(props?.metaData?.nextNode?.type === NodeType.StepGroupNode ||
+        (!props?.metaData?.nextNode && props?.metaData?.parentIdentifier)) &&
+        !isParallelNode(props) &&
+        !props?.permissions?.readonly && (
+          <AddLinkNode<StepElementConfig, PipelineStageNodeMetaDataType, EventStepDataType>
+            parentIdentifier={props?.metaData?.parentIdentifier}
+            isParallelNode={isParallelNode(props)}
+            readonly={props?.permissions?.readonly}
+            fireEvent={props.fireEvent}
+            data={props?.data?.data?.step as StepElementConfig}
             style={{ right: getPositionOfAddIcon(props, true) }}
             isRightAddIcon={true}
             className={cx(
