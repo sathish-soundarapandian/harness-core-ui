@@ -13,6 +13,7 @@ import { Intent, Color } from '@harness/design-system'
 import { GraphLayoutNode, NodeRunInfo, useGetBarriersExecutionInfo } from 'services/pipeline-ng'
 import {
   getIconFromStageModule,
+  isNodeTypeMatrixOrFor,
   processExecutionDataForGraph,
   processLayoutNodeMap,
   ProcessLayoutNodeMapResponse,
@@ -54,7 +55,7 @@ import StartNodeStage from '@pipeline/components/PipelineDiagram/Nodes/StartNode
 import { getExecutionStageDiagramListeners } from '@pipeline/utils/execUtils'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { MatrixNode } from '@pipeline/components/PipelineDiagram/Nodes/MatrixNode/MatrixNode'
 import CDInfo from './components/CD/CDInfo/CDInfo'
 import css from './ExecutionGraph.module.scss'
@@ -134,8 +135,6 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
   const [stageSetupId, setStageSetupIdId] = React.useState('')
   const { pipelineExecutionDetail, selectedStageId } = useExecutionContext()
   const { primaryPaneSize } = useExecutionLayoutContext()
-
-  const { PIPELINE_MATRIX } = useFeatureFlags()
 
   const newPipelineStudioEnabled: boolean = useFeatureFlag(FeatureFlag.NEW_PIPELINE_STUDIO)
   const nodeData = useMemo(
@@ -246,6 +245,23 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
     )
   }
 
+  const isMatrixNode = React.useCallback((): boolean => {
+    let isMatrixNodePresent = false
+    data?.items?.forEach((obj: PipelineGraphState) => {
+      if (isNodeTypeMatrixOrFor(get(obj, 'type'))) {
+        isMatrixNodePresent = true
+        return
+      }
+      obj?.children?.forEach((parallelNode: PipelineGraphState) => {
+        if (isNodeTypeMatrixOrFor(get(parallelNode, 'type'))) {
+          isMatrixNodePresent = true
+          return
+        }
+      })
+    })
+    return isMatrixNodePresent
+  }, [data?.items])
+
   return (
     <div className={css.main}>
       {isExecutionIgnoreFailed(pipelineExecutionDetail?.pipelineExecutionSummary?.status) ? (
@@ -272,7 +288,7 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
               selectedNodeId={selectedStageId}
               panZoom={false}
               parentSelector=".Pane1"
-              {...(!PIPELINE_MATRIX && { collapsibleProps: { percentageNodeVisible: 0.8, bottomMarginInPixels: 120 } })}
+              {...(!isMatrixNode() && { collapsibleProps: { percentageNodeVisible: 0.8, bottomMarginInPixels: 120 } })}
               graphLinkClassname={css.graphLink}
               key={executionIdentifier}
             />
