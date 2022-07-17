@@ -232,6 +232,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                             <div className={css.fieldWrapper}>
                                               <FileStoreSelectField
                                                 name={`${name}[${index}]`}
+                                                fileUsage="MANIFEST"
                                                 onChange={(newValue, i) => {
                                                   replace(i, {
                                                     ...restValue,
@@ -249,7 +250,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                           minimal
                                           data-testid={`remove-${name}-[${index}]`}
                                           onClick={() => remove(index)}
-                                          disabled={disabled}
+                                          disabled={disabled || values.length <= 1}
                                         />
                                       </div>
                                     </div>

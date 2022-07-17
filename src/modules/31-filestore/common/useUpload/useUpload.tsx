@@ -38,7 +38,8 @@ const useUploadFile = (config: UploadFile): FileStorePopoverItem => {
     updateCurrentNode,
     tempNodes,
     setTempNodes,
-    updateTempNodes
+    updateTempNodes,
+    fileUsage
   } = useContext(FileStoreContext)
 
   const handleChange = (event: Event): void => {
@@ -78,7 +79,8 @@ const useUploadFile = (config: UploadFile): FileStorePopoverItem => {
               mimeType,
               content: reader.result,
               parentIdentifier: currentNode.identifier,
-              parentName: currentNode.name
+              parentName: currentNode.name,
+              fileUsage: fileUsage || null
             }
             if (eventMethod === UPLOAD_EVENTS.REPLACE) {
               updateCurrentNode({

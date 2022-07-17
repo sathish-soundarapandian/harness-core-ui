@@ -24,11 +24,11 @@ const K8sValuesYamlConfigFileContent = (props: K8sValuesYamlConfigFileRenderProp
     path,
     configFilePath,
     // configFiles,
-    configFile
+    configFile,
     // fromTrigger,
     // allowableTypes,
-    // readonly,
-    // formik,
+    readonly,
+    formik
     // stageIdentifier,
     // pathFieldlabel
   } = props
@@ -71,11 +71,12 @@ const K8sValuesYamlConfigFileContent = (props: K8sValuesYamlConfigFileRenderProp
         isFieldRuntime(`${configFilePath}.spec.store.spec.secretFiles`, template)) && (
         <div className={css.verticalSpacingInput}>
           <FileStoreList
+            formik={formik}
             labelClassName={css.listLabel}
             label={getString('pipeline.configFiles.title')}
             name={`${path}.${configFilePath}.spec.store.spec.${filesType}`}
             // placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
-            // disabled={isFieldDisabled(`${manifestPath}.spec.valuesPaths`)}
+            disabled={readonly}
             style={{ marginBottom: 'var(--spacing-small)' }}
             expressions={expressions}
             type={fieldType}

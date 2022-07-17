@@ -16,7 +16,7 @@ import CurrentPathComponent from '@filestore/components/CurrentPathComponent/Cur
 
 export default function StoreView(): React.ReactElement {
   const { getString } = useStrings()
-  const { currentNode, loading } = useContext(FileStoreContext)
+  const { currentNode, loading, isModalView } = useContext(FileStoreContext)
 
   if (loading) {
     return <PageSpinner />
@@ -31,7 +31,14 @@ export default function StoreView(): React.ReactElement {
   }
 
   return (
-    <Container style={{ width: '100%', height: 'calc(100vh - 75px)', overflow: 'hidden', overflowY: 'scroll' }}>
+    <Container
+      style={{
+        width: '100%',
+        height: !isModalView ? 'calc(100vh - 75px)' : 'auto',
+        overflow: 'hidden',
+        overflowY: 'scroll'
+      }}
+    >
       <CurrentPathComponent />
       {currentNode?.type === FileStoreNodeTypes.FOLDER ? <NodesList /> : <FileView />}
     </Container>

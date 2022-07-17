@@ -131,6 +131,7 @@ export function HarnessConfigStep({
           enableReinitialize={true}
         >
           {formikProps => {
+            console.log('formikprops', formikProps)
             return (
               <Form className={css.configContainer}>
                 <div className={css.headerContainer}>
