@@ -24,7 +24,7 @@ import { useValidationErrors } from '@pipeline/components/PipelineStudio/Pipline
 import HoverCard from '@pipeline/components/HoverCard/HoverCard'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 import ConditionalExecutionTooltip from '@pipeline/components/ConditionalExecutionToolTip/ConditionalExecutionTooltip'
-import { useGlobalEventListener, useQueryParams } from '@common/hooks'
+import { useGlobalEventListener } from '@common/hooks'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { getPipelineGraphData } from '@pipeline/components/PipelineDiagram/PipelineGraph/PipelineGraphUtils'
@@ -38,6 +38,7 @@ import StartNodeStage from '@pipeline/components/PipelineDiagram/Nodes/StartNode
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import type { DeploymentStageConfig } from 'services/cd-ng'
 import {
   CanvasWidget,
   createEngine,
@@ -62,14 +63,14 @@ import {
   getNodeEventListerner,
   MoveDirection,
   MoveStageDetailsType,
-  moveStage
+  moveStage,
+  getFlattenedStages
 } from './StageBuilderUtil'
 import { useStageBuilderCanvasState } from './useStageBuilderCanvasState'
 import { StageList } from './views/StageList'
 import { SplitViewTypes } from '../PipelineContext/PipelineActions'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { getNodeListenersOld, getLinkListernersOld } from './StageBuildOldUtils'
-import type { PipelineSelectionState } from '../PipelineQueryParamState/usePipelineQueryParam'
 import css from './StageBuilder.module.scss'
 
 const diagram = new DiagramFactory('graph')
@@ -227,7 +228,6 @@ function StageBuilder(): JSX.Element {
     getStageFromPipeline,
     setSelection
   } = usePipelineContext()
-  const { sectionId } = useQueryParams<PipelineSelectionState>()
 
   // NOTE: we are using ref as setSelection is getting cached somewhere
   const setSelectionRef = React.useRef(setSelection)
@@ -247,11 +247,30 @@ function StageBuilder(): JSX.Element {
 
   const [deleteId, setDeleteId] = React.useState<string | undefined>(undefined)
   const { showSuccess, showError } = useToaster()
+
+  let deletionContentText = `${getString('stageConfirmationText', {
+    name: getStageFromPipeline(deleteId || '').stage?.stage?.name || deleteId,
+    id: deleteId
+  })} `
+
+  if (deleteId) {
+    const propagatingStages = getFlattenedStages(pipeline)
+      .stages?.filter(
+        currentStage =>
+          (currentStage.stage?.spec as DeploymentStageConfig)?.serviceConfig?.useFromStage?.stage === deleteId
+      )
+      ?.reduce((prev, next) => {
+        return prev ? `${prev}, ${next.stage?.name}` : next.stage?.name || ''
+      }, '')
+
+    if (propagatingStages)
+      deletionContentText = getString('pipeline.parentStageDeleteWarning', {
+        propagatingStages
+      })
+  }
+
   const { openDialog: confirmDeleteStage } = useConfirmationDialog({
-    contentText: `${getString('stageConfirmationText', {
-      name: getStageFromPipeline(deleteId || '').stage?.stage?.name || deleteId,
-      id: deleteId
-    })} `,
+    contentText: deletionContentText,
     titleText: getString('deletePipelineStage'),
     confirmButtonText: getString('delete'),
     cancelButtonText: getString('cancel'),
@@ -628,8 +647,7 @@ function StageBuilder(): JSX.Element {
     updateMoveStageDetails,
     confirmMoveStage,
     stageMap,
-    newPipelineStudioEnabled,
-    sectionId
+    newPipelineStudioEnabled
   )
 
   const resetPipelineStages = (stages: StageElementWrapperConfig[]): void => {

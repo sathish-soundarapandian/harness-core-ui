@@ -39,6 +39,7 @@ describe('Configure Datadog health source', () => {
       { allServicesCount: 1, servicesAtRiskCount: 0 }
     )
     cy.visitChangeIntelligence()
+    cy.visitSRMMonitoredServicePage()
   })
 
   it('Add new Datadog metric health source for a monitored service ', () => {

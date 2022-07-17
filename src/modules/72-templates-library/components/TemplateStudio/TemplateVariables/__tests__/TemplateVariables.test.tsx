@@ -31,7 +31,7 @@ import * as PipelineVariables from '@pipeline/components/PipelineStudio/Pipeline
 import * as StepCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/StepCard'
 import * as StageCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/StageCard'
 import * as MonitoredServiceCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/MonitoredServiceCard'
-import type { PipelineCardPanelProps } from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables'
+import type { PipelineCardProps } from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/PipelineCard'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { DrawerTypes } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateActions'
 
@@ -161,7 +161,7 @@ describe('<TemplateVariables /> tests', () => {
   })
 
   test('should call apply and discard correctly', async () => {
-    jest.spyOn(PipelineVariables, 'PipelineCardPanel').mockImplementation((props: PipelineCardPanelProps) => {
+    jest.spyOn(PipelineVariables, 'PipelineCardPanel').mockImplementation((props: PipelineCardProps) => {
       return (
         <div className={'pipeline-card-panel-mock'}>
           <button
@@ -199,7 +199,7 @@ describe('<TemplateVariables /> tests', () => {
       fireEvent.click(getByRole('button', { name: 'pipeline.discard' }))
     })
     expect(templateContext.updateTemplateView).toBeCalledWith({
-      drawerData: { type: DrawerTypes.AddStep },
+      drawerData: { data: { paletteData: { onSelection: expect.anything() } }, type: DrawerTypes.TemplateVariables },
       isDrawerOpened: false,
       isYamlEditable: false
     })
@@ -215,7 +215,7 @@ describe('<TemplateVariables /> tests', () => {
     })
     expect(templateContext.updateTemplate).toBeCalledWith(updatedTemplate)
     expect(templateContext.updateTemplateView).toBeCalledWith({
-      drawerData: { type: DrawerTypes.AddStep },
+      drawerData: { data: { paletteData: { onSelection: expect.anything() } }, type: DrawerTypes.TemplateVariables },
       isDrawerOpened: false,
       isYamlEditable: false
     })

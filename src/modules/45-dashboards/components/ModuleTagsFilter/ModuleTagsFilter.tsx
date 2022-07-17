@@ -19,7 +19,7 @@ export interface ModuleTagsFilterProps {
 
 const ModuleTagsFilter: React.FC<ModuleTagsFilterProps> = ({ selectedFilter, setPredefinedFilter }) => {
   const { getString } = useStrings()
-  const { CENG_ENABLED, CING_ENABLED, CDNG_ENABLED, CFNG_ENABLED, CUSTOM_DASHBOARD_V2 } = useFeatureFlags()
+  const { CENG_ENABLED, CING_ENABLED, CDNG_ENABLED, CFNG_ENABLED, CUSTOM_DASHBOARD_V2, SECURITY } = useFeatureFlags()
 
   const renderTagsFilter = (moduleName: DashboardTags, cssClass: string, text: StringKeys, isEnabled = false) => {
     return (
@@ -42,14 +42,9 @@ const ModuleTagsFilter: React.FC<ModuleTagsFilterProps> = ({ selectedFilter, set
       {renderTagsFilter(DashboardTags.HARNESS, moduleTagCss.harnessTag, 'dashboards.modules.harness', true)}
       {renderTagsFilter(DashboardTags.CE, moduleTagCss.ceTag, 'common.purpose.ce.cloudCost', CENG_ENABLED)}
       {renderTagsFilter(DashboardTags.CI, moduleTagCss.ciTag, 'buildsText', CING_ENABLED)}
-      {renderTagsFilter(DashboardTags.CD, moduleTagCss.cdTag, 'deploymentsText', CDNG_ENABLED)}
+      {renderTagsFilter(DashboardTags.CD, moduleTagCss.cdTag, 'deploymentsText', CDNG_ENABLED || CUSTOM_DASHBOARD_V2)}
       {renderTagsFilter(DashboardTags.CF, moduleTagCss.cfTag, 'common.purpose.cf.continuous', CFNG_ENABLED)}
-      {renderTagsFilter(
-        DashboardTags.CG_CD,
-        moduleTagCss.cgCdTag,
-        'dashboards.modules.cgDeployments',
-        CUSTOM_DASHBOARD_V2
-      )}
+      {renderTagsFilter(DashboardTags.STO, moduleTagCss.stoTag, 'common.purpose.sto.continuous', SECURITY)}
     </>
   )
 }

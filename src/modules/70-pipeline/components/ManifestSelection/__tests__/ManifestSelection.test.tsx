@@ -8,7 +8,7 @@
 import React from 'react'
 import { render, findByText, fireEvent, findAllByText, waitFor } from '@testing-library/react'
 import { MultiTypeInputType } from '@wings-software/uicore'
-import type { ServiceDefinition } from 'services/cd-ng'
+import type { ManifestConfigWrapper, ServiceDefinition } from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   PipelineContext,
@@ -45,6 +45,15 @@ const getGitOpsContextValue = (): PipelineContextInterface => {
       return { stage: gitOpsEnabledPipeline.state.pipeline.stages[0], parent: undefined }
     })
   } as any
+}
+const manifestListCommonProps = {
+  updateStage: jest.fn(),
+  refetchConnectors: jest.fn(),
+  updateManifestList: jest.fn(),
+  removeManifestConfig: jest.fn(),
+  attachPathYaml: jest.fn(),
+  removeValuesYaml: jest.fn(),
+  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
 }
 
 describe('ManifestSelection tests', () => {
@@ -182,20 +191,17 @@ describe('ManifestSelection tests', () => {
     const props = {
       isPropagating: false,
       pipeline: pipelineContextMock.state.pipeline,
-      updateStage: jest.fn(),
       stage: pipelineContextMock.state.pipeline.stages[0],
       isForOverrideSets: false,
       identifierName: '',
       connectors: undefined,
-      refetchConnectors: jest.fn(),
       isReadonly: false,
       listOfManifests: [],
-      deploymentType: 'Kubernetes' as ServiceDefinition['type'],
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+      deploymentType: 'Kubernetes' as ServiceDefinition['type']
     }
     const { container } = render(
       <TestWrapper>
-        <ManifestListView {...props} />
+        <ManifestListView {...props} {...manifestListCommonProps} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -205,21 +211,18 @@ describe('ManifestSelection tests', () => {
     const props = {
       isPropagating: false,
       pipeline: pipelineContextMock.state.pipeline,
-      updateStage: jest.fn(),
       stage: pipelineContextMock.state.pipeline.stages[0],
       isForOverrideSets: false,
       identifierName: '',
       isForPredefinedSets: false,
       connectors: connectorsData.data as any,
-      refetchConnectors: jest.fn(),
       isReadonly: false,
       listOfManifests: [],
-      deploymentType: 'Kubernetes' as ServiceDefinition['type'],
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+      deploymentType: 'Kubernetes' as ServiceDefinition['type']
     }
     const { container } = render(
       <TestWrapper>
-        <ManifestListView {...props} />
+        <ManifestListView {...props} {...manifestListCommonProps} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -229,21 +232,18 @@ describe('ManifestSelection tests', () => {
     const props = {
       isPropagating: true,
       pipeline: pipelineContextMock.state.pipeline,
-      updateStage: jest.fn(),
       stage: pipelineContextMock.state.pipeline.stages[0],
       isForOverrideSets: true,
       identifierName: '',
       isForPredefinedSets: false,
       connectors: connectorsData.data as any,
-      refetchConnectors: jest.fn(),
       isReadonly: false,
       listOfManifests: [],
-      deploymentType: 'Kubernetes' as ServiceDefinition['type'],
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+      deploymentType: 'Kubernetes' as ServiceDefinition['type']
     }
     const { container } = render(
       <TestWrapper>
-        <ManifestListView {...props} />
+        <ManifestListView {...props} {...manifestListCommonProps} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -253,16 +253,13 @@ describe('ManifestSelection tests', () => {
     const props = {
       isPropagating: false,
       pipeline: pipelineContextMock.state.pipeline,
-      updateStage: jest.fn(),
       stage: pipelineContextMock.state.pipeline.stages[0],
       isForOverrideSets: false,
       identifierName: '',
       isForPredefinedSets: false,
       connectors: connectorsData.data as any,
-      refetchConnectors: jest.fn(),
       isReadonly: false,
       deploymentType: 'Kubernetes' as ServiceDefinition['type'],
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
       listOfManifests: [
         {
           manifest: {
@@ -281,12 +278,12 @@ describe('ManifestSelection tests', () => {
               skipResourceVersioning: false
             }
           }
-        }
+        } as ManifestConfigWrapper
       ]
     }
     const { container } = render(
       <TestWrapper>
-        <ManifestListView {...props} />
+        <ManifestListView {...props} {...manifestListCommonProps} />
       </TestWrapper>
     )
 
@@ -301,14 +298,11 @@ describe('ManifestSelection tests', () => {
     const props = {
       isPropagating: false,
       pipeline: pipelineContextMock.state.pipeline,
-      updateStage: jest.fn(),
       stage: pipelineContextMock.state.pipeline.stages[0],
       identifierName: '',
       connectors: connectorsData.data as any,
-      refetchConnectors: jest.fn(),
       isReadonly: false,
       deploymentType: 'Kubernetes' as ServiceDefinition['type'],
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
       listOfManifests: [
         {
           manifest: {
@@ -328,12 +322,12 @@ describe('ManifestSelection tests', () => {
               skipResourceVersioning: false
             }
           }
-        }
+        } as ManifestConfigWrapper
       ]
     }
     const { container } = render(
       <TestWrapper>
-        <ManifestListView {...props} />
+        <ManifestListView {...props} {...manifestListCommonProps} />
       </TestWrapper>
     )
 
@@ -354,22 +348,20 @@ describe('ManifestSelection tests', () => {
     const props = {
       isPropagating: false,
       pipeline: pipelineContextMock.state.pipeline,
-      updateStage: jest.fn(),
       stage: pipelineContextMock.state.pipeline.stages[0],
       isForOverrideSets: true,
       identifierName: '',
       connectors: connectorsData.data as any,
-      refetchConnectors: jest.fn(),
       isReadonly: false,
       listOfManifests: [],
-      deploymentType: 'Kubernetes' as ServiceDefinition['type'],
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+      deploymentType: 'Kubernetes' as ServiceDefinition['type']
     }
 
-    const listOfManifests = props.stage.stage.spec.serviceConfig.serviceDefinition.spec.manifestOverrideSets
+    const listOfManifests = props.stage.stage.spec.serviceConfig.serviceDefinition.spec
+      .manifestOverrideSets as ManifestConfigWrapper[]
     const { container } = render(
       <TestWrapper>
-        <ManifestListView {...props} listOfManifests={listOfManifests} />
+        <ManifestListView {...props} {...manifestListCommonProps} listOfManifests={listOfManifests} />
       </TestWrapper>
     )
 

@@ -36,6 +36,7 @@ export interface ArtifactListViewProps {
   isReadonly: boolean
   isAdditionAllowed: boolean
   withSideCar?: boolean
+  isSidecarAllowed?: boolean
 }
 export interface ArtifactsSelectionProps {
   isPropagating?: boolean
@@ -135,6 +136,29 @@ export interface ACRArtifactProps {
   isReadonly?: boolean
   selectedArtifact: ArtifactType | null
   allowableTypes: MultiTypeInputType[]
+}
+
+export interface JenkinsArtifactProps {
+  key: string
+  name: string
+  expressions: string[]
+  context: number
+  initialValues: JenkinsArtifactType
+  handleSubmit: (data: ArtifactConfig) => void
+  artifactIdentifiers: string[]
+  isReadonly?: boolean
+  selectedArtifact: ArtifactType | null
+  allowableTypes: MultiTypeInputType[]
+}
+
+export interface JenkinsArtifactType {
+  identifier: string
+  spec: {
+    connectorRef?: string
+    artifactPath?: SelectOption | string
+    build?: SelectOption | string
+    jobName?: SelectOption | string
+  }
 }
 
 export interface ConnectorRefLabelType {

@@ -54,7 +54,8 @@ import css from '../../AppDHealthSource.module.scss'
 import basePathStyle from '../BasePath/BasePath.module.scss'
 
 export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterface) {
-  const { formikValues, formikSetField, mappedMetrics, selectedMetric, connectorIdentifier, isTemplate } = props
+  const { formikValues, formikSetField, mappedMetrics, selectedMetric, connectorIdentifier, isTemplate, expressions } =
+    props
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -202,9 +203,13 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
                   />
                 ) : (
                   <FormInput.MultiTextInput
+                    key={formikValues.metricIdentifier}
                     className={css.fullPath}
                     name={PATHTYPE.CompleteMetricPath}
                     label={''}
+                    multiTextInputProps={{
+                      expressions
+                    }}
                     onChange={(_v, _type, multiType) => {
                       if (completeMetricPathType !== multiType) {
                         setCompleteMetricPathType(multiType)
@@ -296,6 +301,7 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
             details={
               <>
                 <SelectHealthSourceServices
+                  key={formikValues.metricIdentifier}
                   values={{
                     sli: !!formikValues?.sli,
                     healthScore: !!formikValues?.healthScore,
@@ -303,6 +309,7 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
                     riskCategory: formikValues?.riskCategory
                   }}
                   isTemplate={isTemplate}
+                  expressions={expressions}
                   metricPackResponse={metricPackResponse}
                   hideServiceIdentifier
                 />

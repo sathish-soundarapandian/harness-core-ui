@@ -9,6 +9,7 @@ import React from 'react'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
+import * as constants from '@delegates/constants'
 import CreateK8sDelegate from '../CreateK8sDelegate'
 import DelegateSizesmock from './DelegateSizesmock.json'
 
@@ -63,6 +64,7 @@ const onBack = jest.fn()
 
 describe('Create K8s Delegate', () => {
   test('test component flow', async () => {
+    jest.spyOn(constants, 'isHelmDelegateEnabled').mockImplementation(() => false)
     const { container, getByRole } = render(
       <TestWrapper>
         <CreateK8sDelegate onBack={onBack} />

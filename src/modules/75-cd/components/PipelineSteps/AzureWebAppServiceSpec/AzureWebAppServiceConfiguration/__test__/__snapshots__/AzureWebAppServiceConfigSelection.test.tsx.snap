@@ -1,0 +1,692 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AzureWebAppConfigSelection empty state - no context values 1`] = `
+<div>
+  <div
+    class="Layout--vertical StyledProps--main"
+  >
+    <div
+      class="Layout--vertical StyledProps--main"
+      style="width: 100%;"
+    >
+      <div
+        class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+      >
+        <div
+          class="Layout--vertical StyledProps--main"
+        >
+          <section />
+          <section />
+        </div>
+      </div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`AzureWebAppConfigSelection initial render 1`] = `
+<div
+  class="bp3-dialog modal bp3-dialog"
+  style="width: 1175px; min-height: 640px; border-left: 0; padding-bottom: 0px; position: relative; overflow: hidden;"
+>
+  <div
+    class="createConnectorWizard"
+  >
+    <div
+      class="StepWizard--main serviceConfigWizard StepWizard--navBar"
+    >
+      <div
+        class="StepWizard--navBarList"
+      >
+        <span
+          class="StepWizard--header"
+        >
+          <span
+            class="bp3-icon StyledProps--main"
+            data-icon="docs"
+          >
+            <svg
+              fill="currentColor"
+              height="37"
+              viewBox="0 0 24 24"
+              width="37"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M5 3h11l3 4v14H5V3z"
+                stroke="#fff"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <g
+                opacity="0.5"
+              >
+                <mask
+                  fill="#fff"
+                  id="docs_svg__a"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M9 9a.5.5 0 000 1h6a.5.5 0 000-1H9zm-.5 3.5A.5.5 0 019 12h6a.5.5 0 010 1H9a.5.5 0 01-.5-.5zm0 3A.5.5 0 019 15h6a.5.5 0 010 1H9a.5.5 0 01-.5-.5z"
+                    fill-rule="evenodd"
+                  />
+                </mask>
+                <path
+                  d="M9.5 9.5a.5.5 0 01-.5.5V8a1.5 1.5 0 00-1.5 1.5h2zM9 9a.5.5 0 01.5.5h-2A1.5 1.5 0 009 11V9zm6 0H9v2h6V9zm-.5.5A.5.5 0 0115 9v2a1.5 1.5 0 001.5-1.5h-2zm.5.5a.5.5 0 01-.5-.5h2A1.5 1.5 0 0015 8v2zm-6 0h6V8H9v2zm0 1a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5v-2zm6 0H9v2h6v-2zm1.5 1.5A1.5 1.5 0 0015 11v2a.5.5 0 01-.5-.5h2zM15 14a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5v2zm-6 0h6v-2H9v2zm-1.5-1.5A1.5 1.5 0 009 14v-2a.5.5 0 01.5.5h-2zM9 14a1.5 1.5 0 00-1.5 1.5h2a.5.5 0 01-.5.5v-2zm6 0H9v2h6v-2zm1.5 1.5A1.5 1.5 0 0015 14v2a.5.5 0 01-.5-.5h2zM15 17a1.5 1.5 0 001.5-1.5h-2a.5.5 0 01.5-.5v2zm-6 0h6v-2H9v2zm-1.5-1.5A1.5 1.5 0 009 17v-2a.5.5 0 01.5.5h-2z"
+                  fill="#F3F3FA"
+                  mask="url(#docs_svg__a)"
+                />
+              </g>
+            </svg>
+          </span>
+        </span>
+        <span
+          class="StepWizard--title StepWizard--header"
+        >
+          pipeline.appServiceConfig.applicationSettings.scriptFile
+        </span>
+        <div
+          class="StepWizard--navStep StepWizard--activeStep"
+        >
+          <span
+            class="StepWizard--number"
+          >
+            1
+          </span>
+          <p
+            class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+            style="--text-line-clamp: 2; width: 200px;"
+          >
+            pipeline.appServiceConfig.applicationSettings.scriptFileSource
+          </p>
+          <p
+            class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+            style="--text-line-clamp: 2; width: 200px;"
+          >
+            
+          </p>
+        </div>
+        <div
+          class="StepWizard--navStep"
+        >
+          <span
+            class="StepWizard--number"
+          >
+            2
+          </span>
+          <p
+            class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+            style="--text-line-clamp: 2; width: 200px;"
+          >
+            pipeline.appServiceConfig.applicationSettings.scriptFileDetails
+          </p>
+        </div>
+      </div>
+      <div
+        class="StepWizard--stepDetails"
+      >
+         
+        <div
+          class="Layout--vertical Layout--layout-spacing-medium StyledProps--main optionsViewContainer"
+          style="height: inherit;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-xxxlarge"
+          >
+            pipeline.appServiceConfig.applicationSettings.fileSource
+          </p>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--margin-bottom-medium"
+          >
+            pipeline.appServiceConfig.applicationSettings.subtitle
+          </p>
+          <div
+            class="OverlaySpinner--overlaySpinner"
+          >
+            <form
+              action="#"
+              class="FormikForm--main"
+            >
+              <div>
+                <div
+                  class="Layout--vertical StyledProps--main serviceConfigForm StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
+                >
+                  <div
+                    class="Layout--vertical StyledProps--main"
+                  >
+                    <div
+                      class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
+                    >
+                      <div
+                        class="bp3-form-group ThumbnailSelect--mainContainer thumbnailSelect"
+                        data-id="store-0"
+                      >
+                        <div
+                          class="bp3-form-content"
+                        >
+                          <div
+                            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+                          >
+                            <label
+                              class="Thumbnail--squareCardContainer"
+                            >
+                              <div
+                                class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
+                                tabindex="0"
+                              >
+                                <span
+                                  class="bp3-icon StyledProps--main"
+                                  data-icon="service-github"
+                                >
+                                  <svg
+                                    height="26"
+                                    viewBox="0 0 14 14"
+                                    width="26"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M13.6 6.4l-6-6C7.3.1 6.7.1 6.4.4L5.1 1.6l1.6 1.6c.4-.1.8 0 1.1.3s.4.7.2 1.1l1.5 1.5c.4-.1.8 0 1.1.2.4.4.4 1.1 0 1.5s-1.1.4-1.5 0c-.3-.3-.3-.7-.2-1.1L7.5 5.3V9c.1 0 .2.1.3.2.4.4.4 1.1 0 1.5s-1.1.4-1.5 0-.4-1.1 0-1.5c.1-.1.2-.2.3-.2V5.2c-.1-.1-.2-.1-.3-.2-.3-.4-.4-.8-.2-1.2L4.5 2.3.4 6.4c-.3.3-.3.9 0 1.2l6 6c.3.3.9.3 1.2 0l6-6c.3-.3.3-.9 0-1.2z"
+                                      fill="#f42534"
+                                    />
+                                  </svg>
+                                </span>
+                              </div>
+                              <p
+                                class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
+                              >
+                                Git
+                              </p>
+                              <input
+                                name="store"
+                                type="checkbox"
+                                value="Git"
+                              />
+                            </label>
+                            <label
+                              class="Thumbnail--squareCardContainer"
+                            >
+                              <div
+                                class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
+                                tabindex="0"
+                              >
+                                <span
+                                  class="bp3-icon StyledProps--main"
+                                  data-icon="github"
+                                >
+                                  <svg
+                                    height="26"
+                                    viewBox="0 0 24 24"
+                                    width="26"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+                                    />
+                                  </svg>
+                                </span>
+                              </div>
+                              <p
+                                class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
+                              >
+                                Github
+                              </p>
+                              <input
+                                name="store"
+                                type="checkbox"
+                                value="Github"
+                              />
+                            </label>
+                            <label
+                              class="Thumbnail--squareCardContainer"
+                            >
+                              <div
+                                class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
+                                tabindex="0"
+                              >
+                                <span
+                                  class="bp3-icon StyledProps--main"
+                                  data-icon="service-gotlab"
+                                >
+                                  <svg
+                                    height="26"
+                                    viewBox="0 0 14 13"
+                                    width="26"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M7 12.9L9.6 5H4.4z"
+                                      fill="#e24329"
+                                    />
+                                    <path
+                                      d="M7 12.9L4.4 5H.8z"
+                                      fill="#fc6d26"
+                                    />
+                                    <path
+                                      d="M.8 5L0 7.4c0 .2 0 .5.2.6L7 12.9z"
+                                      fill="#fca326"
+                                    />
+                                    <path
+                                      d="M.8 5h3.6L2.9.2c-.1-.2-.5-.2-.5 0z"
+                                      fill="#e24329"
+                                    />
+                                    <path
+                                      d="M7 12.9L9.6 5h3.6z"
+                                      fill="#fc6d26"
+                                    />
+                                    <path
+                                      d="M13.2 5l.8 2.4c0 .2 0 .5-.2.6L7 12.9z"
+                                      fill="#fca326"
+                                    />
+                                    <path
+                                      d="M13.2 5H9.6L11.2.2c.1-.2.4-.2.5 0z"
+                                      fill="#e24329"
+                                    />
+                                  </svg>
+                                </span>
+                              </div>
+                              <p
+                                class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
+                              >
+                                GitLab
+                              </p>
+                              <input
+                                name="store"
+                                type="checkbox"
+                                value="GitLab"
+                              />
+                            </label>
+                            <label
+                              class="Thumbnail--squareCardContainer"
+                            >
+                              <div
+                                class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
+                                tabindex="0"
+                              >
+                                <span
+                                  class="bp3-icon StyledProps--main"
+                                  data-icon="bitbucket"
+                                >
+                                  <svg
+                                    height="26"
+                                    width="26"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <defs>
+                                      <lineargradient
+                                        id="bitbucket_svg__b"
+                                        x1="108.633%"
+                                        x2="46.927%"
+                                        y1="13.408%"
+                                        y2="79.102%"
+                                      >
+                                        <stop
+                                          offset="18%"
+                                          stop-color="#0052CC"
+                                        />
+                                        <stop
+                                          offset="100%"
+                                          stop-color="#2684FF"
+                                        />
+                                      </lineargradient>
+                                      <filter
+                                        id="bitbucket_svg__a"
+                                      >
+                                        <fecolormatrix
+                                          in="SourceGraphic"
+                                          values="0 0 0 0 0.157377 0 0 0 0 0.161311 0 0 0 0 0.240000 0 0 0 1.000000 0"
+                                        />
+                                      </filter>
+                                    </defs>
+                                    <g
+                                      fill="none"
+                                      fill-rule="evenodd"
+                                      filter="url(#bitbucket_svg__a)"
+                                      transform="translate(2 3)"
+                                    >
+                                      <path
+                                        d="M8.305 12.59h4.383l1.058-6.211H7.14z"
+                                      />
+                                      <path
+                                        d="M.681.008a.671.671 0 00-.518.235.68.68 0 00-.154.55l2.855 17.432c.074.44.45.764.895.768h13.698a.674.674 0 00.673-.568L20.985.797a.68.68 0 00-.154-.55.671.671 0 00-.519-.235L.682.008zm12.024 12.6H8.333l-1.184-6.22h6.615l-1.06 6.22z"
+                                        fill="#2684FF"
+                                        fill-rule="nonzero"
+                                      />
+                                      <path
+                                        d="M20.06 6.379h-6.308l-1.059 6.215H8.325L3.166 18.75a.908.908 0 00.588.223h13.691a.673.673 0 00.672-.568L20.06 6.38z"
+                                        fill="url(#bitbucket_svg__b)"
+                                        fill-rule="nonzero"
+                                      />
+                                    </g>
+                                  </svg>
+                                </span>
+                              </div>
+                              <p
+                                class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
+                              >
+                                Bitbucket
+                              </p>
+                              <input
+                                name="store"
+                                type="checkbox"
+                                value="Bitbucket"
+                              />
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
+                  >
+                    <button
+                      class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
+                      disabled=""
+                      tabindex="-1"
+                      type="submit"
+                    >
+                      <span
+                        class="bp3-button-text"
+                      >
+                        continue
+                      </span>
+                      <span
+                        class="bp3-icon bp3-icon-chevron-right StyledProps--main"
+                        icon="chevron-right"
+                      >
+                        <svg
+                          data-icon="chevron-right"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          width="16"
+                        >
+                          <desc>
+                            chevron-right
+                          </desc>
+                          <path
+                            d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <span
+        class="bp3-icon StyledProps--main StepWizard--harnessWatermark StyledProps--color StyledProps--color-grey50"
+        data-icon="harness-with-color"
+      >
+        <svg
+          height="346"
+          viewBox="0 0 25 25"
+          width="346"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M22.974 8.186L16.708 1.88a7.023 7.023 0 00-2.59-1.572C11.98-.409 9.858.154 8.135 1.88L1.868 8.186a7.081 7.081 0 00-1.562 2.606c-.713 2.153-.153 4.289 1.562 6.023l6.266 6.306a7.113 7.113 0 002.589 1.58 5.663 5.663 0 001.808.308c1.503 0 2.946-.64 4.177-1.88l6.266-6.305a7.08 7.08 0 001.562-2.606c.713-2.162.153-4.298-1.562-6.032zm-10.07-4.477c.706.213 1.232.7 1.274.735l1.851 1.862-3.608 3.631-3.608-3.63 1.859-1.872c.5-.496 1.197-1.034 2.233-.726zm-9.219 8.305c.212-.71.696-1.24.73-1.282l1.85-1.863 3.609 3.632-3.608 3.63-1.86-1.87c-.492-.504-1.027-1.214-.721-2.247zm8.252 9.279c-.705-.214-1.231-.701-1.273-.735l-1.851-1.863 3.608-3.631 3.608 3.631-1.86 1.871c-.5.496-1.205 1.034-2.232.726zm9.22-8.305c-.212.709-.696 1.239-.73 1.281l-1.851 1.863-3.608-3.631 3.608-3.632 1.86 1.872c.492.504 1.027 1.204.72 2.247z"
+            fill="currentColor"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </span>
+    </div>
+  </div>
+  <button
+    class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main crossIcon Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+    type="button"
+  >
+    <span
+      class="bp3-icon bp3-icon-cross StyledProps--main"
+      icon="cross"
+    >
+      <svg
+        data-icon="cross"
+        height="16"
+        viewBox="0 0 16 16"
+        width="16"
+      >
+        <desc>
+          cross
+        </desc>
+        <path
+          d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
+          fill-rule="evenodd"
+        />
+      </svg>
+    </span>
+  </button>
+</div>
+`;
+
+exports[`AzureWebAppConfigSelection readonly mode 1`] = `
+<div>
+  <div
+    class="Layout--vertical StyledProps--main"
+  >
+    <div
+      class="Layout--vertical StyledProps--main"
+      style="width: 100%;"
+    >
+      <div
+        class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+      >
+        <div
+          class="serviceConfigList"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            TYPELABEL
+          </p>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            STORE
+          </p>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            LOCATION
+          </p>
+          <span />
+        </div>
+        <div
+          class="Layout--vertical StyledProps--main"
+        >
+          <section>
+            <div
+              class="rowItem"
+            >
+              <section
+                class="serviceConfigList"
+              >
+                <div
+                  class="columnId"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main"
+                    style="width: 200px;"
+                  >
+                    pipeline.appServiceConfig.applicationSettings.name
+                  </p>
+                </div>
+                <div
+                  class="columnId"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main StyledProps--inline"
+                    data-icon="service-github"
+                  >
+                    <svg
+                      height="20"
+                      viewBox="0 0 14 14"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M13.6 6.4l-6-6C7.3.1 6.7.1 6.4.4L5.1 1.6l1.6 1.6c.4-.1.8 0 1.1.3s.4.7.2 1.1l1.5 1.5c.4-.1.8 0 1.1.2.4.4.4 1.1 0 1.5s-1.1.4-1.5 0c-.3-.3-.3-.7-.2-1.1L7.5 5.3V9c.1 0 .2.1.3.2.4.4.4 1.1 0 1.5s-1.1.4-1.5 0-.4-1.1 0-1.5c.1-.1.2-.2.3-.2V5.2c-.1-.1-.2-.1-.3-.2-.3-.4-.4-.8-.2-1.2L4.5 2.3.4 6.4c-.3.3-.3.9 0 1.2l6 6c.3.3.9.3 1.2 0l6-6c.3-.3.3-.9 0-1.2z"
+                        fill="#f42534"
+                      />
+                    </svg>
+                  </span>
+                  <div
+                    class="connectorNameField"
+                  >
+                    <span
+                      class="bp3-popover-wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target Text--targetClass"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main connectorName"
+                          style="--text-line-clamp: 1;"
+                          tabindex="0"
+                        >
+                          GIT2
+                        </p>
+                      </span>
+                    </span>
+                    <span
+                      class="bp3-icon bp3-icon-full-circle StyledProps--main StyledProps--color"
+                      icon="full-circle"
+                    >
+                      <svg
+                        data-icon="full-circle"
+                        height="8"
+                        viewBox="0 0 16 16"
+                        width="8"
+                      >
+                        <desc>
+                          full-circle
+                        </desc>
+                        <path
+                          d="M8 0a8 8 0 100 16A8 8 0 108 0z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main"
+                    style="--text-line-clamp: 1; width: 200px;"
+                  >
+                    <span
+                      class="noWrap"
+                    >
+                      [filePath]
+                    </span>
+                  </p>
+                </div>
+              </section>
+            </div>
+          </section>
+          <section>
+            <div
+              class="rowItem"
+            >
+              <section
+                class="serviceConfigList"
+              >
+                <div
+                  class="columnId"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main"
+                    style="width: 200px;"
+                  >
+                    pipeline.appServiceConfig.connectionStrings.name
+                  </p>
+                </div>
+                <div
+                  class="columnId"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main StyledProps--inline"
+                    data-icon="service-github"
+                  >
+                    <svg
+                      height="20"
+                      viewBox="0 0 14 14"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M13.6 6.4l-6-6C7.3.1 6.7.1 6.4.4L5.1 1.6l1.6 1.6c.4-.1.8 0 1.1.3s.4.7.2 1.1l1.5 1.5c.4-.1.8 0 1.1.2.4.4.4 1.1 0 1.5s-1.1.4-1.5 0c-.3-.3-.3-.7-.2-1.1L7.5 5.3V9c.1 0 .2.1.3.2.4.4.4 1.1 0 1.5s-1.1.4-1.5 0-.4-1.1 0-1.5c.1-.1.2-.2.3-.2V5.2c-.1-.1-.2-.1-.3-.2-.3-.4-.4-.8-.2-1.2L4.5 2.3.4 6.4c-.3.3-.3.9 0 1.2l6 6c.3.3.9.3 1.2 0l6-6c.3-.3.3-.9 0-1.2z"
+                        fill="#f42534"
+                      />
+                    </svg>
+                  </span>
+                  <div
+                    class="connectorNameField"
+                  >
+                    <span
+                      class="bp3-popover-wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target Text--targetClass"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main connectorName"
+                          style="--text-line-clamp: 1;"
+                          tabindex="0"
+                        >
+                          GIT2
+                        </p>
+                      </span>
+                    </span>
+                    <span
+                      class="bp3-icon bp3-icon-full-circle StyledProps--main StyledProps--color"
+                      icon="full-circle"
+                    >
+                      <svg
+                        data-icon="full-circle"
+                        height="8"
+                        viewBox="0 0 16 16"
+                        width="8"
+                      >
+                        <desc>
+                          full-circle
+                        </desc>
+                        <path
+                          d="M8 0a8 8 0 100 16A8 8 0 108 0z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main"
+                    style="--text-line-clamp: 1; width: 200px;"
+                  >
+                    <span
+                      class="noWrap"
+                    >
+                      [filePath]
+                    </span>
+                  </p>
+                </div>
+              </section>
+            </div>
+          </section>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
+      />
+    </div>
+  </div>
+</div>
+`;

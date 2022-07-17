@@ -106,14 +106,14 @@ describe('DashboardTags', () => {
     expect(screen.getByText(expectedText)).toBeInTheDocument()
   })
 
-  test('it should display a Current Gen tag when Dashboard Tag is CG', async () => {
+  test('it should display a Security Test tag when Dashboard Tag is STO', async () => {
     const mockDashboard: DashboardModel = {
       ...defaultTestDashboard,
-      data_source: ['CG_CD']
+      data_source: ['STO']
     }
     renderComponent({ dashboard: mockDashboard })
 
-    const expectedText: StringKeys = 'dashboards.modules.cgDeployments'
+    const expectedText: StringKeys = 'common.purpose.sto.continuous'
     expect(screen.getByText(expectedText)).toBeInTheDocument()
   })
 })

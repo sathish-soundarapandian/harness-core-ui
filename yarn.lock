@@ -1756,10 +1756,10 @@
     "@contentful/rich-text-react-renderer" "^15.12.0"
     contentful "^9.1.20"
 
-"@harness/icons@^1.35.0":
-  version "1.35.0"
-  resolved "https://npm.pkg.github.com/download/@harness/icons/1.35.0/14e14f11f5f65a4e9b2821928d7d2e10171378520e9d8dc7e5b594f61ff0720e#c54ba581c90d0e0635dc0c0fabf7bfa74e29e225"
-  integrity sha512-94v7DjpWejBvQadWrzs4hInxA9aAGC555YJBFZo91oaxikN9gzXG2LfFCRJE6iOxfiMCOiiprNZKD4O3KXKIHg==
+"@harness/icons@^1.41.0":
+  version "1.41.0"
+  resolved "https://npm.pkg.github.com/download/@harness/icons/1.41.0/641cec84d5da62afac50c1505f241e15545f2e42ab1ad691d22ca78441937347#a202d12b734a47a651fe109d5959dab38ccaaa01"
+  integrity sha512-gXEwqAlVA3viT6iM747xgB37Tfpai7+SmPW9LZ5KaqSl6GtwKpVfyb5m+lqOJc9cyS6umCsnyFfXvNWV3HxtFg==
 
 "@harness/jarvis@0.16.0":
   version "0.16.0"
@@ -1801,10 +1801,10 @@
   resolved "https://npm.pkg.github.com/download/@harness/telemetry/1.0.42/60bc34c133bb40f0e0aa08f80620a1b23f3f089070e8550767e9d3fce8ca6e25#4d3f71026a03c898992d902f13a6c6d9cb0edac6"
   integrity sha512-pwjPYnQ8du1UswlX7A/apewGVDmbmaKKWTQSXtSHhKf9ekZ8WCwVvFcrM8ZIq/QbTn7Z8BXFYtMJdSG25oNtOg==
 
-"@harness/uicore@3.51.0":
-  version "3.51.0"
-  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.51.0/78b8d0e485ead9b81e36eda3cb034b2fcf555ffa24ad242cc8a5b32e1e7ed888#da7b33d7b9c109d23b8906b1fdc897e3dca64261"
-  integrity sha512-OWqwW1EOjI/oowLA9bqzmtFRcbNAvU5tDjiV89QBMi5rm9oqu1n1mwAHzuQ6yyL7i0YE4jj0wGFDY0E2ZZPVmQ==
+"@harness/uicore@^3.70.0":
+  version "3.70.0"
+  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.70.0/7d384890dfffc7852b3ffee2b9c10cadd6e7d944c16c496d33b94c84975e14eb#bd24d14c8fac3291e85f2495b68323a625257e71"
+  integrity sha512-NTz4sy6Dvd4ghcmLblbtIcc82cXE2lIZQQ4fshPKGhoK+FyDMQFEqWEZLT0ouTum7Y3RBuJXH5tfCLPo4+HNIA==
 
 "@harness/use-modal@1.1.0":
   version "1.1.0"
@@ -3157,17 +3157,17 @@
     resolve-from "^5.0.0"
     store2 "^2.12.0"
 
-"@stripe/react-stripe-js@^1.7.2":
-  version "1.8.1"
-  resolved "https://registry.yarnpkg.com/@stripe/react-stripe-js/-/react-stripe-js-1.8.1.tgz#b646e3a8775dbb0432e234c6e1d67b19c4c0462d"
-  integrity sha512-8TpHu87zWSX/PhMMIC2C0jYXKl53kdiHz7bDSfLDs2oIynbV5L9cyoCZ1NuTllrNvFtd28fOqPc4IikZYRRDew==
+"@stripe/react-stripe-js@^1.9.0":
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/@stripe/react-stripe-js/-/react-stripe-js-1.9.0.tgz#74809a274d7db110c3daf6f68ca4d62c6e6559c7"
+  integrity sha512-Fn49X+Gu5fOTxhPOita1cPMi0jw+0v4xfJ3FCXbbvmfuuDl3M7ZvpRkoijBjql11NXsaXO3TMm3rkN3mEolJzw==
   dependencies:
     prop-types "^15.7.2"
 
-"@stripe/stripe-js@^1.29.0":
-  version "1.31.0"
-  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-1.31.0.tgz#2920bdddc3eabb5734f9ca794824e25b378533ac"
-  integrity sha512-drlXsNvd/s9S1+Ghja0aDB81N3Wr/6iRAZ7MOzKv7AtKxVdvGpOwESw3z1lHl/Wx/rvPpA7whKdB3W2CnVSArw==
+"@stripe/stripe-js@^1.32.0":
+  version "1.32.0"
+  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-1.32.0.tgz#4ecdd298db61ad9b240622eafed58da974bd210e"
+  integrity sha512-7EvBnbBfS1aynfLRmBFcuumHNGjKxnNkO47rorFBktqDYHwo7Yw6pfDW2iqq0R8r7i7XiJEdWPvvEgQAiDrx3A==
 
 "@swc/core-android-arm-eabi@1.2.139":
   version "1.2.139"
@@ -13979,7 +13979,7 @@ react-inspector@^5.1.0:
 react-is@17.0.2, "react-is@^16.12.0 || ^17.0.0", react-is@^17.0.2:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
-  integrity "sha1-5pHUqOnHiTZWVVOas3J2Kw77VPA= sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w=="
+  integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
 react-is@^16.12.0, react-is@^16.13.1, react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1:
   version "16.13.1"

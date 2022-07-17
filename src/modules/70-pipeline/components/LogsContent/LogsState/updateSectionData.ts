@@ -6,7 +6,7 @@
  */
 
 import produce from 'immer'
-import { set } from 'lodash-es'
+import { set, get } from 'lodash-es'
 import { formatDatetoLocale } from '@common/utils/dateUtils'
 import { sanitizeHTML } from '@common/utils/StringUtils'
 import type { Action, ActionType, State, LogSectionData, LogLineData } from './types'
@@ -15,6 +15,7 @@ export function processLogsData(data: string): LogLineData[] {
   return String(data)
     .split('\n')
     .reduce<LogSectionData['data']>((accumulator, line) => {
+      /* istanbul ignore else */
       if (line.length > 0) {
         try {
           const { level, time, out } = JSON.parse(line) as Record<string, string>
@@ -42,12 +43,24 @@ export function updateSectionData(state: State, action: Action<ActionType.Update
     const unit = state.dataMap[payload.id]
     const data = processLogsData(payload.data)
 
+    if (!unit) {
+      return state
+    }
+
     // update status only for blob data
-    if (unit?.dataSource === 'blob') {
+    /* istanbul ignore else */
+    if (unit.dataSource === 'blob') {
       set(draft.dataMap[payload.id], 'status', unit.unitStatus)
     }
 
     set(draft.dataMap[payload.id], 'isOpen', true)
-    set(draft.dataMap[payload.id], 'data', data)
+
+    if (payload.append) {
+      const dataToupdate = get(draft.dataMap[payload.id], 'data', []) as LogLineData[]
+      dataToupdate.push(...data)
+      set(draft.dataMap[payload.id], 'data', dataToupdate)
+    } else {
+      set(draft.dataMap[payload.id], 'data', data)
+    }
   })
 }

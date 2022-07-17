@@ -30,6 +30,26 @@ export const isAllowedArtifactDeploymentTypes = (deploymentType: ServiceDefiniti
     deploymentType === ServiceDeploymentType.WinRm
   )
 }
+export const isAllowedACRArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
+  return (
+    deploymentType === ServiceDeploymentType.Kubernetes ||
+    deploymentType === ServiceDeploymentType.NativeHelm ||
+    deploymentType === ServiceDeploymentType.AzureWebApp
+  )
+}
+
+export const isAllowedCustomArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
+  return deploymentType === ServiceDeploymentType.Kubernetes || deploymentType === ServiceDeploymentType.NativeHelm
+}
+
+export const isSidecarAllowed = (deploymentType: ServiceDefinition['type'], isReadOnly: boolean): boolean => {
+  return (
+    !isReadOnly &&
+    (deploymentType === ServiceDeploymentType.Kubernetes ||
+      deploymentType === ServiceDeploymentType.NativeHelm ||
+      deploymentType === ServiceDeploymentType.ServerlessAwsLambda)
+  )
+}
 
 export const isAdditionAllowed = (deploymentType: ServiceDefinition['type'], isReadOnly: boolean): boolean => {
   return (
@@ -38,7 +58,8 @@ export const isAdditionAllowed = (deploymentType: ServiceDefinition['type'], isR
       deploymentType === ServiceDeploymentType.NativeHelm ||
       deploymentType === ServiceDeploymentType.ServerlessAwsLambda ||
       deploymentType === ServiceDeploymentType.Ssh ||
-      deploymentType === ServiceDeploymentType.WinRm)
+      deploymentType === ServiceDeploymentType.WinRm ||
+      deploymentType === ServiceDeploymentType.AzureWebApp)
   )
 }
 
@@ -107,7 +128,6 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Ecr,
     ENABLED_ARTIFACT_TYPES.Nexus3Registry,
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry
-    // ENABLED_ARTIFACT_TYPES.Jenkins
   ],
   NativeHelm: [
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
@@ -119,7 +139,13 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
   ServerlessAwsLambda: [ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry, ENABLED_ARTIFACT_TYPES.Ecr],
   Ssh: [ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry, ENABLED_ARTIFACT_TYPES.Jenkins],
   WinRm: [ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry, ENABLED_ARTIFACT_TYPES.Jenkins],
-  AzureWebApps: []
+  AzureWebApp: [
+    ENABLED_ARTIFACT_TYPES.DockerRegistry,
+    ENABLED_ARTIFACT_TYPES.Gcr,
+    ENABLED_ARTIFACT_TYPES.Ecr,
+    ENABLED_ARTIFACT_TYPES.Nexus3Registry,
+    ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry
+  ]
 }
 
 export const tagOptions: IOptionProps[] = [

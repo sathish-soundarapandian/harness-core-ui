@@ -50,6 +50,7 @@ const setSelectedFolder = jest.fn()
 const TestComponent = (): React.ReactElement => {
   const { openMoveFoldersModal } = useMoveFolderModal({
     perspectiveId: '',
+    folderName: '',
     setRefetchFolders: setRefetchFolders,
     setSelectedFolder: setSelectedFolder,
     setRefetchPerspectives: setRefetchPerspectives
@@ -67,6 +68,7 @@ const TestComponent = (): React.ReactElement => {
         setRefetchFolders={setRefetchFolders}
         setSelectedFolder={setSelectedFolder}
         setRefetchPerspectives={setRefetchPerspectives}
+        folderName={''}
       />
     </>
   )

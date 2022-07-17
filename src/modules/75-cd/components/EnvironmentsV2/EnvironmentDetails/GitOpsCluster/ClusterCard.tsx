@@ -5,22 +5,24 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Color, FontVariation, Icon, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation, Icon, Layout, Tag, Text } from '@harness/uicore'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
 import React from 'react'
-import type { Cluster } from 'services/cd-ng'
+import type { ClusterFromGitops } from 'services/cd-ng'
 import css from './AddCluster.module.scss'
 
 interface ClusterCardProps {
-  cluster: Cluster
-  setSelectedClusters: (arr: Cluster[]) => void
-  selectedClusters: Cluster[]
+  cluster: ClusterFromGitops
+  setSelectedClusters: (arr: ClusterFromGitops[]) => void
+  selectedClusters: ClusterFromGitops[]
 }
 
 const ClusterCard = (props: ClusterCardProps): React.ReactElement => {
   const { cluster, selectedClusters } = props
-  const isClusterAlreadySelected = selectedClusters.find((clstr: Cluster) => clstr.identifier === cluster.identifier)
+  const isClusterAlreadySelected = selectedClusters.find(
+    (clstr: ClusterFromGitops) => clstr.identifier === cluster.identifier
+  )
   return (
     <div
       onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
@@ -42,22 +44,27 @@ const ClusterCard = (props: ClusterCardProps): React.ReactElement => {
       })}
       data-cy="cluster-card"
     >
-      <Icon name="gitops-clusters" />
-      <Layout.Vertical flex={{ justifyContent: 'flex-start' }} spacing="small" margin={{ bottom: 'small' }}>
-        <Text data-id="cluster-id-label" lineClamp={1} color={Color.BLACK} className={css.clusterName}>
-          {defaultTo(cluster.identifier, '')}
-        </Text>
-        <Text
-          data-id="cluster-id-text"
-          lineClamp={1}
-          font={{ variation: FontVariation.FORM_LABEL }}
-          color={Color.GREY_400}
-          className={css.clusterId}
-          margin={{ left: 'medium' }}
-        >
-          ID: {cluster.identifier}
-        </Text>
-      </Layout.Vertical>
+      <div className={css.clusterCardRightSide}>
+        <Icon name="gitops-clusters" />
+        <Layout.Vertical flex={{ justifyContent: 'flex-start' }} spacing="small" margin={{ bottom: 'small' }}>
+          <Text data-id="cluster-id-label" lineClamp={1} color={Color.BLACK} className={css.clusterName}>
+            {defaultTo(cluster.name, '')}
+          </Text>
+          <Text
+            data-id="cluster-id-text"
+            lineClamp={1}
+            font={{ variation: FontVariation.FORM_LABEL }}
+            color={Color.GREY_400}
+            className={css.clusterId}
+            margin={{ left: 'medium' }}
+          >
+            ID: {cluster.identifier}
+          </Text>
+        </Layout.Vertical>
+      </div>
+      <Tag minimal className={css.tag}>
+        {cluster.scopeLevel}
+      </Tag>
     </div>
   )
 }

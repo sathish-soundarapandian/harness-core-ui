@@ -259,6 +259,7 @@ function FormContent({
           orgIdentifier={orgIdentifier}
           multiTypeProps={{ expressions, allowableTypes }}
           type="Jira"
+          setRefValue
           enableConfigureOptions={false}
           selected={formik?.values?.spec.connectorRef as string}
           disabled={isApprovalStepFieldDisabled(readonly)}

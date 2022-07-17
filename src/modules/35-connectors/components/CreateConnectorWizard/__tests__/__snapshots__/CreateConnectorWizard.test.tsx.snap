@@ -385,7 +385,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Artifacto
   >
     <div
       class="contentContainer"
-      style="width: 100%;"
+      style="width: 900px;"
     >
       <div
         class="StepWizard--main StepWizard--navBar"
@@ -753,6 +753,15 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Artifacto
             />
           </svg>
         </span>
+      </div>
+    </div>
+    <div
+      class="helpPanelContainer"
+    >
+      <div
+        style="min-width: 275px; height: 560px;"
+      >
+        Help Panel
       </div>
     </div>
   </div>
@@ -1160,7 +1169,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for DOCKER 1`
   >
     <div
       class="contentContainer"
-      style="width: 100%;"
+      style="width: 900px;"
     >
       <div
         class="StepWizard--main StepWizard--navBar"
@@ -1532,6 +1541,15 @@ exports[`Create connector Wizard should open CreateConnectorWizard for DOCKER 1`
         </span>
       </div>
     </div>
+    <div
+      class="helpPanelContainer"
+    >
+      <div
+        style="min-width: 275px; height: 560px;"
+      >
+        Help Panel
+      </div>
+    </div>
   </div>
 </div>
 `;
@@ -1543,7 +1561,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for GCP 1`] =
   >
     <div
       class="contentContainer"
-      style="width: 100%;"
+      style="width: 900px;"
     >
       <div
         class="StepWizard--main StepWizard--navBar"
@@ -1968,6 +1986,15 @@ exports[`Create connector Wizard should open CreateConnectorWizard for GCP 1`] =
         </span>
       </div>
     </div>
+    <div
+      class="helpPanelContainer"
+    >
+      <div
+        style="min-width: 275px; height: 560px;"
+      >
+        Help Panel
+      </div>
+    </div>
   </div>
 </div>
 `;
@@ -1979,7 +2006,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for GCP KMS 1
   >
     <div
       class="contentContainer"
-      style="width: 100%;"
+      style="width: 900px;"
     >
       <div
         class="StepWizard--main StepWizard--navBar"
@@ -2364,6 +2391,15 @@ exports[`Create connector Wizard should open CreateConnectorWizard for GCP KMS 1
             />
           </svg>
         </span>
+      </div>
+    </div>
+    <div
+      class="helpPanelContainer"
+    >
+      <div
+        style="min-width: 275px; height: 560px;"
+      >
+        Help Panel
       </div>
     </div>
   </div>
@@ -3579,7 +3615,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Jira 1`] 
   >
     <div
       class="contentContainer"
-      style="width: 100%;"
+      style="width: 900px;"
     >
       <div
         class="StepWizard--main StepWizard--navBar"
@@ -3987,6 +4023,15 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Jira 1`] 
         </span>
       </div>
     </div>
+    <div
+      class="helpPanelContainer"
+    >
+      <div
+        style="min-width: 275px; height: 560px;"
+      >
+        Help Panel
+      </div>
+    </div>
   </div>
 </div>
 `;
@@ -3998,7 +4043,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Nexus 1`]
   >
     <div
       class="contentContainer"
-      style="width: 100%;"
+      style="width: 900px;"
     >
       <div
         class="StepWizard--main StepWizard--navBar"
@@ -4379,6 +4424,15 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Nexus 1`]
             />
           </svg>
         </span>
+      </div>
+    </div>
+    <div
+      class="helpPanelContainer"
+    >
+      <div
+        style="min-width: 275px; height: 560px;"
+      >
+        Help Panel
       </div>
     </div>
   </div>
@@ -5157,7 +5211,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for VAULT 1`]
   >
     <div
       class="contentContainer"
-      style="width: 100%;"
+      style="width: 900px;"
     >
       <div
         class="StepWizard--main StepWizard--navBar"
@@ -5538,6 +5592,15 @@ exports[`Create connector Wizard should open CreateConnectorWizard for VAULT 1`]
             />
           </svg>
         </span>
+      </div>
+    </div>
+    <div
+      class="helpPanelContainer"
+    >
+      <div
+        style="min-width: 275px; height: 560px;"
+      >
+        Help Panel
       </div>
     </div>
   </div>
@@ -5972,7 +6035,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for k8 1`] = 
   >
     <div
       class="contentContainer"
-      style="width: 100%;"
+      style="width: 900px;"
     >
       <div
         class="StepWizard--main StepWizard--navBar"
@@ -6347,6 +6410,15 @@ exports[`Create connector Wizard should open CreateConnectorWizard for k8 1`] = 
             />
           </svg>
         </span>
+      </div>
+    </div>
+    <div
+      class="helpPanelContainer"
+    >
+      <div
+        style="min-width: 275px; height: 560px;"
+      >
+        Help Panel
       </div>
     </div>
   </div>

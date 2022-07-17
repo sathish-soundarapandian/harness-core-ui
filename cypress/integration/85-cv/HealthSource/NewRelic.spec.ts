@@ -38,6 +38,7 @@ describe.skip('Create empty monitored service', () => {
       { allServicesCount: 1, servicesAtRiskCount: 0 }
     )
     cy.visitChangeIntelligence()
+    cy.visitSRMMonitoredServicePage()
   })
 
   it('Add new NewRelic monitored service ', () => {

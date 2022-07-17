@@ -8,6 +8,7 @@
 import React, { Reducer } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
+import { EventSourcePolyfill } from 'event-source-polyfill'
 
 import type { ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 import { PQueue } from '@common/utils/PQueue'
@@ -16,7 +17,6 @@ import SessionToken from 'framework/utils/SessionToken'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { useDeepCompareEffect } from '@common/hooks'
 
-import { useLogsStream } from './useLogsStream'
 import type { ActionType, State, Action } from './LogsState/types'
 import { reducer } from './LogsState'
 import { useActionCreator, UseActionCreatorReturn } from './LogsState/actions'
@@ -29,6 +29,18 @@ export interface UseLogsContentReturn {
   actions: UseActionCreatorReturn
 }
 
+export interface StartStreamProps {
+  queryParams: {
+    key: string
+    accountId: string
+  }
+  headers: Record<string, string>
+  key: string
+  throttleTime?: number
+}
+
+const STREAM_ENDPOINT = `${window.apiUrl || ''}/log-service/stream`
+
 export function useLogsContent(): UseLogsContentReturn {
   const requestQueue = React.useRef(new PQueue())
   const { accountId } = useParams<ExecutionPathProps>()
@@ -36,7 +48,45 @@ export function useLogsContent(): UseLogsContentReturn {
   const actions = useActionCreator(dispatch)
   const { logsToken, setLogsToken } = useExecutionContext()
   const { data: tokenData } = useGetToken({ queryParams: { accountID: accountId }, lazy: !!logsToken })
-  const { log: streamData, startStream, closeStream, key: streamKey } = useLogsStream()
+  const eventSource = React.useRef<null | EventSource>(null)
+
+  const closeStream = React.useCallback(() => {
+    eventSource.current?.close()
+    eventSource.current = null
+  }, [])
+
+  const startStream = React.useCallback(
+    (props: StartStreamProps): void => {
+      closeStream()
+      actions.updateSectionData({ data: '', id: props.key })
+
+      const currentEventSource: EventSource = new EventSourcePolyfill(
+        `${STREAM_ENDPOINT}?accountID=${props.queryParams.accountId}&key=${props.queryParams.key}`,
+        { headers: props.headers }
+      )
+
+      eventSource.current = currentEventSource
+
+      currentEventSource.onmessage = (e: MessageEvent) => {
+        if (e.type === 'error') {
+          currentEventSource.close()
+        }
+
+        /* istanbul ignore else */
+        if (e.data) {
+          actions.updateSectionData({ data: e.data, id: props.key, append: true })
+        }
+      }
+
+      currentEventSource.onerror = (e: Event) => {
+        /* istanbul ignore else */
+        if (e.type === 'error') {
+          closeStream()
+        }
+      }
+    },
+    [closeStream, actions]
+  )
 
   // need to save token in a ref due to scoping issues
   const logsTokenRef = React.useRef('')
@@ -138,14 +188,6 @@ export function useLogsContent(): UseLogsContentReturn {
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.selectedStep, state.dataMap])
-
-  // fetch data for stream
-  React.useEffect(() => {
-    if (streamData) {
-      actions.updateSectionData({ data: streamData, id: streamKey })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [streamData, streamKey, state.selectedStep])
 
   // on unmount
   React.useEffect(() => {

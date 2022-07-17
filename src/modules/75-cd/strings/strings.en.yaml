@@ -15,6 +15,23 @@ steps:
     releaseNamePlaceholder: Enter Release Name
     specifyCredentials: Specify Credentials
     undefinedType: Undefined deployment type
+  commands:
+    runTheCommands: Run the following commands
+    addCommand: Add Command
+    editCommand: Edit Command
+    sourceTypeLabel: Select file type to copy
+    destinationPath: Destination Path
+    destinationPathPlaceholder: Enter Destination Path
+    scriptTypePlaceholder: Enter Script Type
+    filesAndPatterns: Files and Patterns
+    fileToTail: FILE TO TAIL
+    patternToSearch: PATTERN TO SEARCH
+    fileToTailPlaceholder: Enter File to Tail
+    patternToSearchPlaceholder: Enter Pattern to Search
+    runOnDelegate: Run on Delegate
+    validation:
+      sourceTypeRequired: Source Type is required
+      destinationPathRequired: Destination Path is required
   kubernetesGcpStep:
     stepName: Specify your GCP Connector
   pdcStep:
@@ -38,6 +55,17 @@ steps:
     resourceGroupPlaceholder: 'Select or add Resource Group'
     resourceGroupError: 'No resource groups found with given Subscription'
     clusterError: 'No cluster found with given Resource Group'
+  azureWebAppInfra:
+    azureWebApp: 'Azure Web App'
+    subscription: '{{ $.common.subscriptionId }}'
+    subscriptionPlaceholder: '{{ $.common.subscriptionPlaceholder }}'
+    webAppPlaceholder: 'Select or add Web App Name'
+    deploymentSlotPlaceHolder: 'Select or add Deployment Slot'
+    targetSlotPlaceHolder: 'Select or add Target Slot'
+    targetSlotInfoText: 'Target Slot is required for Swap Slot Step'
+    webAppNameError: 'No web app names groups found with given Resource Group'
+    deploymentSlotError: 'No deployment slots groups found with given Web App Name'
+    targetSlotError: 'No target slots found with given Web App Name'
   serverless:
     regionPlaceholder: Specify a region
     stagePlaceholder: Specify a stage
@@ -155,7 +183,16 @@ serviceDashboard:
   instanceCountHistory: Instance Count History
   instanceDetails: Instance Details
   instancesDetails: Instances Details
+  deploymentDetails: Deployment Details
   moreDetails: More Details >
+  headers:
+    artifactVersion: Artifact Version
+    environment: '{{$.environment}}'
+    infrastructures: Infrastructures
+    infras: Infras
+    clusters: '{{$.common.clusters}}'
+    instances: '{{$.instanceFieldOptions.instances}}'
+    pipelineExecution: Pipeline Execution
   pod: pod
   function: function
   deployedAt: Deployed At
@@ -254,7 +291,6 @@ serviceList:
   noIdentifier: Selected service does not have any identifier associated with it.
 artifactRepoTooltip: Enter the name of the repository where the artifact source is located.
 serverlessDeployCommandOptions: Serverless Deploy Command Options
-artifactVersion: ARTIFACT VERSION
 useConnectorCredentials: 'Use Connector Credentials'
 configurationVariable: Configuration Variable
 overrideValue: Override Value

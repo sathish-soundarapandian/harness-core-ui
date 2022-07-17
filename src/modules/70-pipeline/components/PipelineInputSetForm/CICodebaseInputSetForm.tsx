@@ -26,6 +26,7 @@ import { StringKeys, useStrings, UseStringsReturn } from 'framework/strings'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { Connectors } from '@connectors/constants'
+import { getCompleteConnectorUrl, GitAuthenticationProtocol } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ConnectorInfoDTO, useGetConnector } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
@@ -57,7 +58,8 @@ const TriggerTypes = {
 export enum ConnectionType {
   Repo = 'Repo',
   Account = 'Account',
-  Region = 'Region' // awscodecommit
+  Region = 'Region', // awscodecommit
+  Project = 'Project' // Azure Repos
 }
 
 const inputNames = {
@@ -110,6 +112,7 @@ export const handleCIConnectorRefOnChange = ({
   setConnectorUrl,
   setFieldValue,
   setIsConnectorExpression,
+  setGitAuthProtocol,
   codeBaseInputFieldFormName
 }: {
   value: ConnectorRefInterface | undefined
@@ -117,17 +120,22 @@ export const handleCIConnectorRefOnChange = ({
   setConnectionType: Dispatch<SetStateAction<string>>
   setConnectorUrl: Dispatch<SetStateAction<string>>
   setFieldValue: (field: string, value: unknown) => void
+  setGitAuthProtocol?: React.Dispatch<React.SetStateAction<GitAuthenticationProtocol>>
   setIsConnectorExpression?: Dispatch<SetStateAction<boolean>> // used in inputset form
   codeBaseInputFieldFormName?: { [key: string]: string } // only used when setting nested values in input set
 }): void => {
   const newConnectorRef = value as ConnectorRefInterface
+  setGitAuthProtocol?.(get(value, 'record.spec.authentication.type'))
   if (connectorRefType === MultiTypeInputType.FIXED) {
     const connectionType = newConnectorRef?.record?.spec?.type
     if (connectionType === ConnectionType.Account) {
       setConnectionType(ConnectionType.Account)
       setConnectorUrl(newConnectorRef.record?.spec?.url || '')
       setFieldValue(codeBaseInputFieldFormName?.repoName || 'repoName', '')
-    } else if (connectionType === ConnectionType.Repo || connectionType === ConnectionType.Region) {
+    } else if (
+      connectionType &&
+      [ConnectionType.Repo, ConnectionType.Region, ConnectionType.Project].includes(connectionType as ConnectionType)
+    ) {
       setConnectionType(connectionType)
       setConnectorUrl(newConnectorRef.record?.spec?.url || '')
       //  clear repoName from yaml so it is not required
@@ -219,6 +227,7 @@ function CICodebaseInputSetFormInternal({
   const codeBaseTypePath = `${formattedPath}properties.ci.codebase.build.type`
   const prCloneStrategyOptions = getPrCloneStrategyOptions(getString)
   const [codeBaseType, setCodeBaseType] = useState<CodeBaseType | undefined>(get(formik?.values, codeBaseTypePath))
+  const [gitAuthProtocol, setGitAuthProtocol] = useState<GitAuthenticationProtocol>(GitAuthenticationProtocol.HTTPS)
 
   const radioLabels = {
     branch: getString('gitBranch'),
@@ -441,7 +450,8 @@ function CICodebaseInputSetFormInternal({
                   Connectors.GITHUB,
                   Connectors.GITLAB,
                   Connectors.BITBUCKET,
-                  Connectors.AWS_CODECOMMIT
+                  Connectors.AWS_CODECOMMIT,
+                  Connectors.AZURE_REPO
                 ]}
                 label={<Text font={{ variation: FontVariation.FORM_LABEL }}>{getString('connector')}</Text>}
                 placeholder={loadingConnectorDetails ? getString('loading') : getString('connectors.selectConnector')}
@@ -463,6 +473,7 @@ function CICodebaseInputSetFormInternal({
                     setConnectorUrl,
                     setFieldValue: formik?.setFieldValue as (field: string, value: any) => void,
                     codeBaseInputFieldFormName,
+                    setGitAuthProtocol,
                     setIsConnectorExpression
                   })
                 }
@@ -513,9 +524,13 @@ function CICodebaseInputSetFormInternal({
                 !isRuntimeInput(formik?.values.repoName) &&
                 connectorUrl?.length > 0 ? (
                   <div className={css.predefinedValue}>
-                    <Text lineClamp={1} width={connectorWidth ? connectorWidth : '460px'}>
-                      {(connectorUrl[connectorUrl.length - 1] === '/' ? connectorUrl : connectorUrl + '/') +
-                        get(formik?.values, codeBaseInputFieldFormName.repoName, '')}
+                    <Text lineClamp={1}>
+                      {getCompleteConnectorUrl({
+                        partialUrl: connectorUrl,
+                        repoName: get(formik?.values, codeBaseInputFieldFormName.repoName, ''),
+                        connectorType,
+                        gitAuthProtocol
+                      })}
                     </Text>
                   </div>
                 ) : null}

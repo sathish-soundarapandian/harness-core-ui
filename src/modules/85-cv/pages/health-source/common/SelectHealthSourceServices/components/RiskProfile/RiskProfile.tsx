@@ -25,6 +25,7 @@ interface RiskProfileProps {
   riskCategory?: string
   isTemplate?: boolean
   expressions?: string[]
+  isConnectorRuntimeOrExpression?: boolean
 }
 
 export function RiskProfile(props: RiskProfileProps): JSX.Element {
@@ -35,7 +36,8 @@ export function RiskProfile(props: RiskProfileProps): JSX.Element {
     serviceInstance,
     riskCategory,
     isTemplate,
-    expressions
+    expressions,
+    isConnectorRuntimeOrExpression
   } = props
   const { error, loading, data } = metricPackResponse
   const { getString } = useStrings()
@@ -80,16 +82,6 @@ export function RiskProfile(props: RiskProfileProps): JSX.Element {
         key={riskCategory}
       />
     )
-  } else if (isTemplate && !metricPackOptions?.length) {
-    metricPackContent = (
-      <FormInput.MultiTextInput
-        label={getString('cv.monitoringSources.riskCategoryLabel')}
-        name={FieldNames.RISK_CATEGORY}
-        key={riskCategory}
-        multiTextInputProps={{ allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME] }}
-        placeholder={getString('cv.monitoringSources.riskCategoryTemplateNote')}
-      />
-    )
   }
 
   return (
@@ -118,6 +110,9 @@ export function RiskProfile(props: RiskProfileProps): JSX.Element {
               selectItems={transformedLabelNames}
               multiTypeInputProps={{
                 expressions,
+                allowableTypes: isConnectorRuntimeOrExpression
+                  ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+                  : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
                 value: serviceInstance ? { label: serviceInstance, value: serviceInstance } : undefined
               }}
             />

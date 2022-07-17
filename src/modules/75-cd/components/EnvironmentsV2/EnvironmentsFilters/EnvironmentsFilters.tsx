@@ -230,7 +230,7 @@ export default function EnvironmentsFilters(): React.ReactElement {
               (obj: Record<string, any>, item: NGTag) => Object.assign(obj, { [item.key]: item.value }),
               {}
             ),
-            environmentTypes,
+            environmentTypes: getMultiSelectFromOptions(environmentTypes),
             environments: getMultiSelectFromOptions(environmentIdentifiers)
           },
           metadata: { name, filterVisibility, identifier, filterProperties: {} }

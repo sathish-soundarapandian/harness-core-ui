@@ -110,5 +110,6 @@ export enum PAGE_NAME {
   CENodeDetailsPage = 'CENodeDetailsPage',
   CEAnomaliesOverviewPage = 'CEAnomaliesOverviewPage',
   CEBusinessMapping = 'CEBusinessMapping',
-  ErrorTrackingListPage = 'ErrorTrackingListPage'
+  ErrorTrackingListPage = 'ErrorTrackingListPage',
+  OPAPolicyDashboard = 'OPAPolicyDashboard'
 }

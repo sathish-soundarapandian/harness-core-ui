@@ -82,7 +82,8 @@ function ArtifactListView({
   removeSidecar,
   addNewArtifact,
   isAdditionAllowed,
-  withSideCar = true
+  withSideCar = true,
+  isSidecarAllowed
 }: ArtifactListViewProps): React.ReactElement {
   const { getString } = useStrings()
   const { color: primaryConnectorColor } = getStatus(
@@ -151,8 +152,8 @@ function ArtifactListView({
                   )}
                 </div>
                 <div>
-                  <Text lineClamp={1} color={Color.GREY_500}>
-                    {getArtifactLocation(primaryArtifact)}
+                  <Text width={200} lineClamp={1} color={Color.GREY_500}>
+                    <span className={css.noWrap}>{getArtifactLocation(primaryArtifact)}</span>
                   </Text>
                 </div>
                 {!isReadonly && (
@@ -270,7 +271,7 @@ function ArtifactListView({
             text={getString('pipelineSteps.serviceTab.artifactList.addPrimary')}
           />
         )}
-        {isAdditionAllowed && withSideCar && (
+        {isAdditionAllowed && isSidecarAllowed && withSideCar && (
           <Button
             className={css.addArtifact}
             id="add-artifact"

@@ -5,7 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { SelectOption, MultiSelectOption, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import {
+  SelectOption,
+  MultiSelectOption,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  RUNTIME_INPUT_VALUE
+} from '@wings-software/uicore'
 import { clone, isNumber } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import type { PrometheusFilter, PrometheusHealthSourceSpec, TimeSeriesMetricDefinition } from 'services/cv'
@@ -278,7 +284,7 @@ export function transformPrometheusHealthSourceToSetupSource(
   const healthSource: UpdatedHealthSource = sourceData?.healthSourceList?.find(
     (source: UpdatedHealthSource) => source.name === sourceData.healthSourceName
   )
-
+  const isConnectorRuntimeOrExpression = getMultiTypeFromValue(sourceData.connectorRef) !== MultiTypeInputType.FIXED
   if (!healthSource) {
     return {
       isEdit: false,
@@ -289,7 +295,7 @@ export function transformPrometheusHealthSourceToSetupSource(
           {
             metricName: getString('cv.monitoringSources.prometheus.prometheusMetric'),
             isManualQuery: false,
-            query: '',
+            query: isConnectorRuntimeOrExpression ? RUNTIME_INPUT_VALUE : '',
             identifier: 'prometheus_metric'
           }
         ]
@@ -311,19 +317,6 @@ export function transformPrometheusHealthSourceToSetupSource(
 
   for (const metricDefinition of (healthSource?.spec as PrometheusHealthSourceSpec)?.metricDefinitions || []) {
     if (metricDefinition?.metricName) {
-      let riskCategoryValue = ''
-      if (
-        getMultiTypeFromValue(metricDefinition?.analysis?.riskProfile?.category) === MultiTypeInputType.RUNTIME &&
-        getMultiTypeFromValue(metricDefinition?.analysis?.riskProfile?.metricType) === MultiTypeInputType.RUNTIME
-      ) {
-        riskCategoryValue = '<+input>'
-      } else if (
-        metricDefinition?.analysis?.riskProfile?.category &&
-        metricDefinition?.analysis?.riskProfile?.metricType
-      ) {
-        riskCategoryValue = `${metricDefinition?.analysis?.riskProfile?.category}/${metricDefinition?.analysis?.riskProfile?.metricType}`
-      }
-
       setupSource.mappedServicesAndEnvs.set(metricDefinition.metricName, {
         identifier: metricDefinition.identifier,
         metricName: metricDefinition.metricName,
@@ -334,7 +327,10 @@ export function transformPrometheusHealthSourceToSetupSource(
         envFilter: generateMultiSelectOptionListFromPrometheusFilter(metricDefinition.envFilter),
         additionalFilter: generateMultiSelectOptionListFromPrometheusFilter(metricDefinition.additionalFilters),
         aggregator: metricDefinition.aggregation,
-        riskCategory: riskCategoryValue,
+        riskCategory:
+          metricDefinition?.analysis?.riskProfile?.category && metricDefinition?.analysis?.riskProfile?.metricType
+            ? `${metricDefinition?.analysis?.riskProfile?.category}/${metricDefinition?.analysis?.riskProfile?.metricType}`
+            : '',
         serviceInstance: metricDefinition?.analysis?.deploymentVerification?.serviceInstanceFieldName,
         lowerBaselineDeviation:
           metricDefinition?.analysis?.riskProfile?.thresholdTypes?.includes('ACT_WHEN_LOWER') || false,
@@ -395,8 +391,7 @@ export function transformPrometheusSetupSourceToHealthSource(setupSource: Promet
       continue
     }
 
-    const [category, metricType] =
-      riskCategory === '<+input>' ? ['<+input>', '<+input>'] : riskCategory?.split('/') || []
+    const [category, metricType] = riskCategory?.split('/') || []
     const thresholdTypes: TimeSeriesMetricDefinition['thresholdType'][] = []
     if (lowerBaselineDeviation) {
       thresholdTypes.push('ACT_WHEN_LOWER')

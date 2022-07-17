@@ -34,7 +34,7 @@ export interface FileStoreSelectProps {
   placeholder?: string
   readonly?: boolean
   formik: FormikContextType<any>
-  onChange: (value: string, id?: any) => void
+  onChange?: (value: string, id?: any) => void
   fileUsage?: string
 }
 
@@ -50,7 +50,7 @@ export interface FileStoreFieldData {
 function FileStoreInput(props: FormikFileStoreInput): React.ReactElement {
   const { getString } = useStrings()
   const { formik, label, name, tooltipProps, placeholder, readonly = false, onChange, fileUsage = '' } = props
-  const fileStoreValue = get(formik.values, name)
+  const fileStoreValue = get(formik?.values, name)
   const prepareFileStoreValue = (scopeType: string, path: string): string => {
     switch (scopeType) {
       case Scope.ACCOUNT:
@@ -63,7 +63,8 @@ function FileStoreInput(props: FormikFileStoreInput): React.ReactElement {
   const modalFileStore = useFileStoreModal({
     applySelected: value => {
       const { scope, path } = value
-      onChange(prepareFileStoreValue(scope, path))
+      onChange?.(prepareFileStoreValue(scope, path))
+      formik.setFieldValue(name, prepareFileStoreValue(scope, path))
     },
     fileUsage
   })

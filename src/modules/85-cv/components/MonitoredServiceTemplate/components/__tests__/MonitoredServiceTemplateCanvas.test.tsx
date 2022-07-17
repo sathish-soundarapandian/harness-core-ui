@@ -14,8 +14,9 @@ import { TemplateContext } from '@templates-library/components/TemplateStudio/Te
 import { getTemplateContextMock } from '@templates-library/components/TemplateStudio/__tests__/stateMock'
 import { MonitoredTemplateCanvasWithRef } from '../MonitoredServiceTemplateCanvas'
 import { MonitoredServiceTemplate } from '../MonitoredServiceTemplate'
+import { monitoredServiceDefaultTemplateMock } from './MonitoredServiceTemplateCanvas.mock'
 
-const stepTemplateContextMock = getTemplateContextMock(TemplateType.MonitoredService)
+const monitoredServiceTemplateContextMock = getTemplateContextMock(TemplateType.MonitoredService)
 
 jest.mock('@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironment', () => ({
   useGetHarnessServices: () => ({
@@ -87,10 +88,23 @@ jest.mock('services/cv', () => ({
 }))
 
 describe('Test MonitoredTemplateCanvasWithRef', () => {
-  test('should match snapshot for MonitoredTemplateCanvasWithRef', async () => {
+  test('should match snapshot for MonitoredTemplateCanvasWithRef with data', async () => {
     const { container } = render(
       <TestWrapper>
-        <TemplateContext.Provider value={stepTemplateContextMock}>
+        <TemplateContext.Provider value={monitoredServiceTemplateContextMock}>
+          <MonitoredTemplateCanvasWithRef />
+        </TemplateContext.Provider>
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should match snapshot for default MonitoredTemplateCanvasWithRef', async () => {
+    monitoredServiceTemplateContextMock.state.template = monitoredServiceDefaultTemplateMock
+    monitoredServiceTemplateContextMock.state.originalTemplate = monitoredServiceDefaultTemplateMock
+    const { container } = render(
+      <TestWrapper>
+        <TemplateContext.Provider value={monitoredServiceTemplateContextMock}>
           <MonitoredTemplateCanvasWithRef />
         </TemplateContext.Provider>
       </TestWrapper>

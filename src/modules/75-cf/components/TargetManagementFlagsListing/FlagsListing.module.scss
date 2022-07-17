@@ -9,8 +9,9 @@
   text-align: right;
 }
 
-.alignBaseline {
+.alignBaseline :global(.TableV2--cells) {
   align-items: baseline !important;
+  width: 100%;
 }
 
 .autoHeight {

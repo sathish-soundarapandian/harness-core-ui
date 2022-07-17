@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import ServiceCardWithChart, { ServiceCardWithChartProps } from '../DeploymentCards/CardWithChart'
 import type { WorkloadCardProps } from '../DeploymentCards/WorkloadCard'
@@ -71,7 +71,8 @@ jest.mock('highcharts-react-official', () => () => <div />)
 
 describe('WorkloadCard', () => {
   test('initial render', async () => {
-    const { getByText, getByTestId, container } = render(
+    window.open = jest.fn()
+    const { getByText, container } = render(
       <TestWrapper
         path="/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier/services"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy', module: 'cd' }}
@@ -81,9 +82,11 @@ describe('WorkloadCard', () => {
     )
     expect(container).toMatchSnapshot()
     fireEvent.click(getByText('pipeline.dashboards.successRate'))
-    await waitFor(() => getByTestId('location'))
 
-    expect(getByTestId('location')).toHaveTextContent('/account/dummy/cd/orgs/dummy/projects/dummy/services/serviceID')
+    expect(window.open).toHaveBeenCalledTimes(1)
+    expect(window.open).toBeCalledWith(
+      expect.stringContaining(`/account/dummy/cd/orgs/dummy/projects/dummy/services/serviceID`)
+    )
   })
 })
 

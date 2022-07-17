@@ -28,10 +28,12 @@ export const getHasFilters = ({
 }): boolean => {
   return [queryParams.filters, filterIdentifier].some(filter => filter !== undefined)
 }
-export interface EnvironmentsFilterFormType extends Omit<EnvironmentFilterProperties, 'environmentNames'> {
+export interface EnvironmentsFilterFormType
+  extends Omit<EnvironmentFilterProperties, 'environmentTypes' | 'environmentNames'> {
   environmentName?: string
   environments?: MultiSelectOption[]
   environmentTags?: Record<string, any>
+  environmentTypes?: MultiSelectOption[]
 }
 
 export const createRequestBodyPayload = ({

@@ -18,8 +18,7 @@ export const getCIPipelineStages: (
   isCDEnabled?: boolean,
   isCFEnabled?: boolean,
   isSTOEnabled?: boolean,
-  isApprovalStageEnabled?: boolean,
-  isCustomStageEnabled?: boolean
+  isApprovalStageEnabled?: boolean
 ) => React.ReactElement<PipelineStagesProps> = (
   args,
   getString,
@@ -27,8 +26,7 @@ export const getCIPipelineStages: (
   isCDEnabled = false,
   isCFEnabled = false,
   isSTOEnabled = false,
-  isApprovalStageEnabled = false,
-  isCustomStageEnabled = false
+  isApprovalStageEnabled = false
 ) => {
   return (
     <PipelineStages {...args}>
@@ -38,7 +36,7 @@ export const getCIPipelineStages: (
       {stagesCollection.getStage(StageType.FEATURE, isCFEnabled, getString)}
       {stagesCollection.getStage(StageType.SECURITY, isSTOEnabled, getString)}
       {stagesCollection.getStage(StageType.PIPELINE, false, getString)}
-      {stagesCollection.getStage(StageType.CUSTOM, isCustomStageEnabled, getString)}
+      {stagesCollection.getStage(StageType.CUSTOM, true, getString)}
       {stagesCollection.getStage(StageType.Template, false, getString)}
     </PipelineStages>
   )

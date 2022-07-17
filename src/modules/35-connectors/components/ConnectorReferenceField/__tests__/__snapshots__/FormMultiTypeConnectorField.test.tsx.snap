@@ -106,7 +106,7 @@ exports[`FormMultiTypeConnectorField tests renders without crashing 2`] = `
   >
     <div
       class="contentContainer"
-      style="width: 100%;"
+      style="width: 900px;"
     >
       <div
         class="StepWizard--main StepWizard--navBar"
@@ -481,6 +481,15 @@ exports[`FormMultiTypeConnectorField tests renders without crashing 2`] = `
             />
           </svg>
         </span>
+      </div>
+    </div>
+    <div
+      class="helpPanelContainer"
+    >
+      <div
+        style="min-width: 275px; height: 560px;"
+      >
+        Help Panel
       </div>
     </div>
   </div>

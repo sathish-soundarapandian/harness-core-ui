@@ -52,10 +52,10 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
   const [searchParam, setSearchParam] = useState('')
   const { getString } = useStrings()
 
-  const { NG_AZURE } = useFeatureFlags()
+  const { NG_AZURE, AZURE_REPO_CONNECTOR } = useFeatureFlags()
 
   const getCategories = (): AddDrawerMapInterface => {
-    const categories = getCategoryItems(getString)
+    const categories = getCategoryItems(getString, AZURE_REPO_CONNECTOR)
 
     return {
       ...categories,

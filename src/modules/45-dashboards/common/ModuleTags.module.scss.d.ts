@@ -11,12 +11,12 @@ declare const styles: {
   readonly cdTag: string
   readonly ceTag: string
   readonly cfTag: string
-  readonly cgCdTag: string
   readonly ciTag: string
   readonly customTag: string
   readonly customTagButton: string
   readonly harnessTag: string
   readonly moduleTag: string
   readonly predefinedTags: string
+  readonly stoTag: string
 }
 export default styles

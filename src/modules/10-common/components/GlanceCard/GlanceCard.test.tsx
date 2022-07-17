@@ -7,8 +7,30 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
+import { FontVariation, Icon, Layout, Text } from '@harness/uicore'
 import routes from '@common/RouteDefinitions'
 import GlanceCard from './GlanceCard'
+
+const deltaElement = (
+  <Layout.Horizontal>
+    <Icon
+      size={14}
+      name={'caret-up'}
+      style={{
+        color: 'var(--green-800)'
+      }}
+    />
+    <Text font={{ variation: FontVariation.TINY_SEMI }} style={{ color: 'var(--green-800)' }}>
+      {new Intl.NumberFormat('default', {
+        notation: 'compact',
+        compactDisplay: 'short',
+        unitDisplay: 'long',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      }).format(200)}
+    </Text>
+  </Layout.Horizontal>
+)
 
 describe('GlanceCard', () => {
   test('Projects', () => {
@@ -24,9 +46,15 @@ describe('GlanceCard', () => {
       />
     )
     expect(container).toMatchSnapshot()
-  }),
-    test('Services', () => {
-      const { container } = render(<GlanceCard title="Services" iconName="services" number={48} delta="+6" />)
-      expect(container).toMatchSnapshot()
-    })
+  })
+  test('Services', () => {
+    const { container } = render(<GlanceCard title="Services" iconName="services" number={48} delta="+6" />)
+    expect(container).toMatchSnapshot()
+  })
+  test('trend icon tests', () => {
+    const { container } = render(<GlanceCard title="Services" iconName="services" number={48} delta={deltaElement} />)
+
+    expect(container.querySelector('[data-icon="caret-up"]')).toBeTruthy()
+    expect(container).toMatchSnapshot()
+  })
 })

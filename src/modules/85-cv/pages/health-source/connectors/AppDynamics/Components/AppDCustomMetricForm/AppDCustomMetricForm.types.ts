@@ -16,6 +16,7 @@ export interface AppDCustomMetricFormInterface {
   formikSetField: (key: string, value: any) => void
   connectorIdentifier: string
   isTemplate?: boolean
+  expressions?: string[]
 }
 
 export interface SetServiceInstanceInterface {

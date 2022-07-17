@@ -29,6 +29,7 @@ import css from '../PipelineVariables.module.scss'
 
 export interface PipelineCardProps {
   variablePipeline: PipelineInfoConfig
+  originalPipeline: PipelineInfoConfig
   pipeline: PipelineInfoConfig
   stepsFactory: AbstractStepFactory
   metadataMap: PipelineVariablesData['metadataMap']
@@ -38,7 +39,16 @@ export interface PipelineCardProps {
 }
 
 export default function PipelineCard(props: PipelineCardProps): React.ReactElement {
-  const { variablePipeline, pipeline, metadataMap, stepsFactory, updatePipeline, readonly, allowableTypes } = props
+  const {
+    variablePipeline,
+    originalPipeline,
+    pipeline,
+    metadataMap,
+    stepsFactory,
+    updatePipeline,
+    readonly,
+    allowableTypes
+  } = props
   const { getString } = useStrings()
 
   return (
@@ -74,11 +84,10 @@ export default function PipelineCard(props: PipelineCardProps): React.ReactEleme
             </Text>
           </VariableAccordionSummary>
         }
-        summaryClassName={css.variableBorderBottom}
         details={
           <StepWidget<CustomVariablesData, CustomVariableEditableExtraProps>
             factory={stepsFactory}
-            initialValues={{ variables: (pipeline.variables || []) as AllNGVariables[], canAddVariable: true }}
+            initialValues={{ variables: (originalPipeline.variables || []) as AllNGVariables[], canAddVariable: true }}
             type={StepType.CustomVariable}
             stepViewType={StepViewType.InputVariable}
             readonly={readonly}

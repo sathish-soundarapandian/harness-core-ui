@@ -237,3 +237,14 @@ $actions-translate: 10px;
   margin-right: var(--spacing-2);
   padding: var(--spacing-2);
 }
+
+.popoverClass {
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid var(--grey-200);
+}
+.dateTimeStyle {
+  margin-top: var('--spacing-small');
+  display: flex !important;
+  align-items: center !important;
+}

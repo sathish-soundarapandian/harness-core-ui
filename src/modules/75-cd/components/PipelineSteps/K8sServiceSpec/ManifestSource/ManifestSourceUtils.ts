@@ -52,6 +52,7 @@ export const shouldDisplayRepositoryName = (item: any): boolean => {
   return (
     item?.record?.spec?.connectionType === GitRepoName.Repo ||
     item?.record?.spec?.type === GitRepoName.Repo ||
+    item?.connector?.spec?.connectionType === GitRepoName.Repo ||
     item?.connector?.spec?.type === GitRepoName.Repo
   )
 }

@@ -11,6 +11,7 @@ import type { PipelineInfrastructure } from 'services/cd-ng'
 export enum StepType {
   HTTP = 'Http',
   SHELLSCRIPT = 'ShellScript',
+  Command = 'Command',
   CustomApproval = 'CustomApproval',
   Barrier = 'Barrier',
   Queue = 'Queue',
@@ -71,6 +72,8 @@ export enum StepType {
   ZeroNorth = 'Security',
   KubernetesAzure = 'KubernetesAzure',
   SshWinRmAzure = 'SshWinRmAzure',
+  AzureWebApp = 'AzureWebApp',
+  AzureWebAppServiceSpec = 'AzureWebAppServiceSpec',
   ServerlessAwsLambdaDeploy = 'ServerlessAwsLambdaDeploy',
   ServerlessAwsLambdaRollback = 'ServerlessAwsLambdaRollback',
   ServerlessAwsInfra = 'ServerlessAwsInfra',

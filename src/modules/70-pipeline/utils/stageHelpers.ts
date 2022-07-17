@@ -62,7 +62,7 @@ export enum ServiceDeploymentType {
   ServerlessGoogleFunctions = 'ServerlessGoogleFunctions',
   AmazonSAM = 'AwsSAM',
   AzureFunctions = 'AzureFunctions',
-  AzureWebApps = 'AzureWebApps'
+  AzureWebApp = 'AzureWebApp'
 }
 
 export type ServerlessGCPInfrastructure = Infrastructure & {
@@ -104,6 +104,14 @@ export function isCIStage(node?: GraphLayoutNode): boolean {
 
 export function hasCDStage(pipelineExecution?: PipelineExecutionSummary): boolean {
   return pipelineExecution?.modules?.includes('cd') || !isEmpty(pipelineExecution?.moduleInfo?.cd)
+}
+
+export function hasServiceDetail(pipelineExecution?: PipelineExecutionSummary): boolean {
+  return pipelineExecution?.modules?.includes('serviceDetail') || false
+}
+
+export function hasOverviewDetail(pipelineExecution?: PipelineExecutionSummary): boolean {
+  return pipelineExecution?.modules?.includes('overviewPage') || false
 }
 
 export function hasCIStage(pipelineExecution?: PipelineExecutionSummary): boolean {
@@ -232,9 +240,14 @@ export const isSSHWinRMDeploymentType = (deploymentType: string): boolean => {
   return deploymentType === ServiceDeploymentType.winrm || deploymentType === ServiceDeploymentType.ssh
 }
 
+export const isAzureWebAppDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.AzureWebApp
+}
+
 export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessAwsLambda]: 'Amazon Web Services Details',
   [ServiceDeploymentType.ServerlessAzureFunctions]: 'Azure Details',
+  [ServiceDeploymentType.AzureWebApp]: 'Web App Details',
   [ServiceDeploymentType.ServerlessGoogleFunctions]: 'GCP Details',
   [ServiceDeploymentType.Pdc]: 'Infrastructure definition',
   [ServiceDeploymentType.winrm]: 'WinRM'
@@ -440,12 +453,16 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
   if (isServerlessDeploymentType(deploymentType)) {
     return StepType.ServerlessAwsLambda
   }
-  switch (deploymentType) {
-    case 'Ssh':
-      return StepType.SshServiceSpec
-    default:
-      return StepType.K8sServiceSpec
+  if (deploymentType === ServiceDeploymentType.Ssh) {
+    return StepType.SshServiceSpec
   }
+  if (deploymentType === ServiceDeploymentType.WinRm) {
+    return StepType.WinRmServiceSpec
+  }
+  if (deploymentType === ServiceDeploymentType.AzureWebApp) {
+    return StepType.AzureWebAppServiceSpec
+  }
+  return StepType.K8sServiceSpec
 }
 export const STATIC_SERVICE_GROUP_NAME = 'static_service_group'
 export const getDefaultBuildDependencies = (serviceDependencies: DependencyElement[]): PipelineGraphState => ({

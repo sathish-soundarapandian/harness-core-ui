@@ -74,7 +74,8 @@ import type {
   ArtifactType,
   ImagePathProps,
   ImagePathTypes,
-  AmazonS3InitialValuesType
+  AmazonS3InitialValuesType,
+  JenkinsArtifactType
 } from './ArtifactInterface'
 import {
   ArtifactToConnectorMap,
@@ -83,8 +84,10 @@ import {
   ArtifactTitleIdByType,
   allowedArtifactTypes,
   ModalViewFor,
-  isAllowedArtifactDeploymentTypes,
-  isAdditionAllowed
+  isAdditionAllowed,
+  isAllowedCustomArtifactDeploymentTypes,
+  isAllowedACRArtifactDeploymentTypes,
+  isSidecarAllowed
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import NexusArtifact from './ArtifactRepository/ArtifactLastSteps/NexusArtifact/NexusArtifact'
@@ -93,6 +96,7 @@ import { CustomArtifact } from './ArtifactRepository/ArtifactLastSteps/CustomArt
 import { showConnectorStep } from './ArtifactUtils'
 import { ACRArtifact } from './ArtifactRepository/ArtifactLastSteps/ACRArtifact/ACRArtifact'
 import { AmazonS3 } from './ArtifactRepository/ArtifactLastSteps/AmazonS3Artifact/AmazonS3'
+import { JenkinsArtifact } from './ArtifactRepository/ArtifactLastSteps/JenkinsArtifact/JenkinsArtifact'
 import css from './ArtifactsSelection.module.scss'
 
 export default function ArtifactsSelection({
@@ -134,7 +138,7 @@ export default function ArtifactsSelection({
     if (
       CUSTOM_ARTIFACT_NG &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.CustomArtifact) &&
-      isAllowedArtifactDeploymentTypes(deploymentType)
+      isAllowedCustomArtifactDeploymentTypes(deploymentType)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.CustomArtifact)
     }
@@ -142,7 +146,7 @@ export default function ArtifactsSelection({
     if (
       NG_AZURE &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.Acr) &&
-      isAllowedArtifactDeploymentTypes(deploymentType)
+      isAllowedACRArtifactDeploymentTypes(deploymentType)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.Acr)
     }
@@ -464,7 +468,9 @@ export default function ArtifactsSelection({
     }
   }, [selectedArtifact])
 
-  const artifactLastStepProps = useCallback((): ImagePathProps<ImagePathTypes & AmazonS3InitialValuesType> => {
+  const artifactLastStepProps = useCallback((): ImagePathProps<
+    ImagePathTypes & AmazonS3InitialValuesType & JenkinsArtifactType
+  > => {
     return {
       key: getString('connectors.stepFourName'),
       name: getString('connectors.stepFourName'),
@@ -620,6 +626,8 @@ export default function ArtifactsSelection({
         return <CustomArtifact {...artifactLastStepProps()} />
       case ENABLED_ARTIFACT_TYPES.Acr:
         return <ACRArtifact {...artifactLastStepProps()} />
+      case ENABLED_ARTIFACT_TYPES.Jenkins:
+        return <JenkinsArtifact {...artifactLastStepProps()} />
       case ENABLED_ARTIFACT_TYPES.DockerRegistry:
       default:
         return <DockerRegistryArtifact {...artifactLastStepProps()} />
@@ -673,6 +681,7 @@ export default function ArtifactsSelection({
       isReadonly={readonly}
       isAdditionAllowed={isAdditionAllowed(deploymentType, readonly)}
       withSideCar={!withoutSideCar(deploymentType)}
+      isSidecarAllowed={isSidecarAllowed(deploymentType, readonly)}
     />
   )
 }

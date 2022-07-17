@@ -73,7 +73,7 @@ function InheritFromManifest({
     }
   }
 
-  const submitFormData = (formData: InheritFromManifestDataType & { store?: string; connectorRef?: string }): void => {
+  const submitFormData = (formData: InheritFromManifestDataType & { store?: string }): void => {
     const manifestObj: ManifestConfigWrapper = {
       manifest: {
         identifier: formData.identifier,

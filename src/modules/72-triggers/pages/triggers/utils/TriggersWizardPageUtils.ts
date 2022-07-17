@@ -36,6 +36,7 @@ export const CUSTOM = 'Custom'
 export const AWS_CODECOMMIT = 'AWS_CODECOMMIT'
 export const AwsCodeCommit = 'AwsCodeCommit'
 export const PRIMARY_ARTIFACT = 'primary'
+export const AZURE_REPO = 'AZURE_REPO'
 
 export const eventTypes = {
   PUSH: 'Push',
@@ -211,7 +212,10 @@ const checkValidTriggerConfiguration = ({
     if (!formikValues['connectorRef'] || !formikValues['event'] || !formikValues['actions']) return false
     // onEdit case, waiting for api response
     else if (formikValues['connectorRef']?.value && !formikValues['connectorRef'].connector) return true
-    else if (!connectorURLType || !!(connectorURLType === connectorUrlType.ACCOUNT && !formikValues.repoName))
+    else if (
+      !connectorURLType ||
+      !!([connectorURLType.ACCOUNT, connectorURLType.PROJECT].includes(connectorURLType) && !formikValues.repoName)
+    )
       return false
   }
   return true
@@ -403,6 +407,7 @@ export const getValidationSchema = (
               !connectorURLType ||
               (connectorURLType === connectorUrlType.ACCOUNT && repoName?.trim()) ||
               (connectorURLType === connectorUrlType.REGION && repoName?.trim()) ||
+              (connectorURLType === connectorUrlType.PROJECT && repoName?.trim()) ||
               connectorURLType === connectorUrlType.REPO
             )
           }

@@ -35,7 +35,7 @@ exports[`Custom remote tests expand advanced section - when type is HelmChart 1`
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="manifestDetails_identifier"
+                    data-tooltip-id="customRemoteManifest_identifier"
                   >
                     pipeline.manifestType.manifestIdentifier
                   </span>
@@ -78,7 +78,7 @@ exports[`Custom remote tests expand advanced section - when type is HelmChart 1`
                   >
                     <span
                       class="Tooltip--acenter"
-                      data-tooltip-id="manifestDetails_extractionScript"
+                      data-tooltip-id="customRemoteManifest_extractionScript"
                     >
                       pipeline.manifestType.customRemoteExtractionScript
                     </span>
@@ -170,7 +170,7 @@ exports[`Custom remote tests expand advanced section - when type is HelmChart 1`
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="manifestDetails_filePath"
+                    data-tooltip-id="customRemoteManifest_filePath"
                   >
                     pipeline.manifestType.customRemoteExtractedFileLocation
                   </span>
@@ -254,7 +254,7 @@ exports[`Custom remote tests expand advanced section - when type is HelmChart 1`
                         >
                           <span
                             class="Tooltip--acenter"
-                            data-tooltip-id="manifestDetails_delegateSelectors"
+                            data-tooltip-id="customRemoteManifest_delegateSelectors"
                           >
                             common.defineDelegateSelector
                           </span>
@@ -355,7 +355,7 @@ exports[`Custom remote tests expand advanced section - when type is HelmChart 1`
                     >
                       <span
                         class="Tooltip--acenter"
-                        data-tooltip-id="manifestDetails_valuesPaths"
+                        data-tooltip-id="customRemoteManifest_valuesPaths"
                       >
                         <p
                           class="StyledProps--font StyledProps--main"
@@ -630,7 +630,7 @@ exports[`Custom remote tests expand advanced section - when type is HelmChart 1`
                             </div>
                             <span
                               class="Tooltip--acenter tooltip"
-                              data-tooltip-id="manifestDetails_skipResourceVersioning"
+                              data-tooltip-id="customRemoteManifest_skipResourceVersioning"
                             />
                           </div>
                         </div>
@@ -745,7 +745,7 @@ exports[`Custom remote tests initial rendering 1`] = `
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="manifestDetails_identifier"
+                    data-tooltip-id="customRemoteManifest_identifier"
                   >
                     pipeline.manifestType.manifestIdentifier
                   </span>
@@ -788,7 +788,7 @@ exports[`Custom remote tests initial rendering 1`] = `
                   >
                     <span
                       class="Tooltip--acenter"
-                      data-tooltip-id="manifestDetails_extractionScript"
+                      data-tooltip-id="customRemoteManifest_extractionScript"
                     >
                       pipeline.manifestType.customRemoteExtractionScript
                     </span>
@@ -880,7 +880,7 @@ exports[`Custom remote tests initial rendering 1`] = `
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="manifestDetails_filePath"
+                    data-tooltip-id="customRemoteManifest_filePath"
                   >
                     pipeline.manifestType.customRemoteExtractedFileLocation
                   </span>
@@ -964,7 +964,7 @@ exports[`Custom remote tests initial rendering 1`] = `
                         >
                           <span
                             class="Tooltip--acenter"
-                            data-tooltip-id="manifestDetails_delegateSelectors"
+                            data-tooltip-id="customRemoteManifest_delegateSelectors"
                           >
                             common.defineDelegateSelector
                           </span>
@@ -1065,7 +1065,7 @@ exports[`Custom remote tests initial rendering 1`] = `
                     >
                       <span
                         class="Tooltip--acenter"
-                        data-tooltip-id="manifestDetails_valuesPaths"
+                        data-tooltip-id="customRemoteManifest_valuesPaths"
                       >
                         <p
                           class="StyledProps--font StyledProps--main"
@@ -1387,7 +1387,7 @@ exports[`Custom remote tests when fields are runtime input 1`] = `
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="manifestDetails_identifier"
+                    data-tooltip-id="customRemoteManifest_identifier"
                   >
                     pipeline.manifestType.manifestIdentifier
                   </span>
@@ -1430,7 +1430,7 @@ exports[`Custom remote tests when fields are runtime input 1`] = `
                   >
                     <span
                       class="Tooltip--acenter"
-                      data-tooltip-id="manifestDetails_extractionScript"
+                      data-tooltip-id="customRemoteManifest_extractionScript"
                     >
                       pipeline.manifestType.customRemoteExtractionScript
                     </span>
@@ -1522,7 +1522,7 @@ exports[`Custom remote tests when fields are runtime input 1`] = `
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="manifestDetails_filePath"
+                    data-tooltip-id="customRemoteManifest_filePath"
                   >
                     pipeline.manifestType.customRemoteExtractedFileLocation
                   </span>
@@ -1606,7 +1606,7 @@ exports[`Custom remote tests when fields are runtime input 1`] = `
                         >
                           <span
                             class="Tooltip--acenter"
-                            data-tooltip-id="manifestDetails_delegateSelectors"
+                            data-tooltip-id="customRemoteManifest_delegateSelectors"
                           >
                             common.defineDelegateSelector
                           </span>
@@ -1707,7 +1707,7 @@ exports[`Custom remote tests when fields are runtime input 1`] = `
                     >
                       <span
                         class="Tooltip--acenter"
-                        data-tooltip-id="manifestDetails_valuesPaths"
+                        data-tooltip-id="customRemoteManifest_valuesPaths"
                       >
                         <p
                           class="StyledProps--font StyledProps--main"

@@ -13,6 +13,12 @@ import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { StringKeys } from 'framework/strings'
 import { NameSchema } from '@common/utils/Validation'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import {
+  buildBitbucketPayload,
+  buildGithubPayload,
+  buildGitlabPayload,
+  buildGitPayload
+} from '@connectors/pages/connectors/utils/ConnectorUtils'
 import type {
   HelmVersionOptions,
   ManifestStores,
@@ -110,31 +116,31 @@ export const allowedManifestTypes: Record<string, Array<ManifestTypes>> = {
   ServerlessAwsLambda: [ManifestDataType.ServerlessAwsLambda],
   Ssh: [],
   WinRm: [],
-  AzureWebApps: []
+  AzureWebApp: []
 }
 
-export const manifestStoreTypes: Array<ManifestStores> = [
+export const gitStoreTypes: Array<ManifestStores> = [
   ManifestStoreMap.Git,
   ManifestStoreMap.Github,
   ManifestStoreMap.GitLab,
   ManifestStoreMap.Bitbucket
-  // ManifestStoreMap.Harness
 ]
 export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
-  K8sManifest: [...manifestStoreTypes],
-  Values: [...manifestStoreTypes, ManifestStoreMap.InheritFromManifest],
+  K8sManifest: [...gitStoreTypes, ManifestStoreMap.Harness],
+  Values: [...gitStoreTypes, ManifestStoreMap.InheritFromManifest, ManifestStoreMap.Harness],
   HelmChart: [
-    ...manifestStoreTypes,
+    ...gitStoreTypes,
     ManifestStoreMap.Http,
     ManifestStoreMap.OciHelmChart,
     ManifestStoreMap.S3,
-    ManifestStoreMap.Gcs
+    ManifestStoreMap.Gcs,
+    ManifestStoreMap.Harness
   ],
-  Kustomize: manifestStoreTypes,
-  OpenshiftTemplate: [...manifestStoreTypes],
-  OpenshiftParam: [...manifestStoreTypes, ManifestStoreMap.InheritFromManifest],
-  KustomizePatches: [...manifestStoreTypes, ManifestStoreMap.InheritFromManifest],
-  ServerlessAwsLambda: manifestStoreTypes
+  Kustomize: [...gitStoreTypes, ManifestStoreMap.Harness],
+  OpenshiftTemplate: [...gitStoreTypes, ManifestStoreMap.Harness],
+  OpenshiftParam: [...gitStoreTypes, ManifestStoreMap.InheritFromManifest, ManifestStoreMap.Harness],
+  KustomizePatches: [...gitStoreTypes, ManifestStoreMap.InheritFromManifest, ManifestStoreMap.Harness],
+  ServerlessAwsLambda: gitStoreTypes
 }
 
 export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
@@ -262,6 +268,10 @@ export function isConnectorStoreType(): boolean {
   return !(ManifestStoreMap.InheritFromManifest || ManifestStoreMap.Harness || ManifestStoreMap.Inline,
   ManifestStoreMap.CustomRemote)
 }
+export const isGitTypeManifestStore = (manifestStore: ManifestStores): boolean =>
+  [ManifestStoreMap.Git, ManifestStoreMap.Github, ManifestStoreMap.GitLab, ManifestStoreMap.Bitbucket].includes(
+    manifestStore
+  )
 export function getManifestLocation(manifestType: ManifestTypes, manifestStore: ManifestStores): string {
   switch (true) {
     case manifestStore === ManifestStoreMap.Harness:
@@ -279,11 +289,25 @@ export function getManifestLocation(manifestType: ManifestTypes, manifestStore: 
       return 'store.spec.paths'
     case manifestType === ManifestDataType.Kustomize:
     case manifestType === ManifestDataType.HelmChart &&
-      [ManifestStoreMap.S3, ManifestStoreMap.Gcs].includes(manifestStore):
+      ([ManifestStoreMap.S3, ManifestStoreMap.Gcs].includes(manifestStore) || isGitTypeManifestStore(manifestStore)):
       return 'store.spec.folderPath'
     case manifestType === ManifestDataType.HelmChart && manifestStore === ManifestStoreMap.Http:
       return 'chartName'
     default:
       return 'paths'
+  }
+}
+export const getBuildPayload = (type: ConnectorInfoDTO['type']) => {
+  switch (type) {
+    case Connectors.GIT:
+      return buildGitPayload
+    case Connectors.GITHUB:
+      return buildGithubPayload
+    case Connectors.BITBUCKET:
+      return buildBitbucketPayload
+    case Connectors.GITLAB:
+      return buildGitlabPayload
+    default:
+      return () => ({})
   }
 }
