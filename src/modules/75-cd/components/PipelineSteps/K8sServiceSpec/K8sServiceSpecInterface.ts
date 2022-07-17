@@ -15,13 +15,10 @@ import type {
   PrimaryArtifact,
   ServiceDefinition,
   ServiceSpec,
-  SidecarArtifact,
-  ConfigFileWrapper,
-  ConfigFile
+  SidecarArtifact
 } from 'services/cd-ng'
 import type { ArtifactSourceBaseFactory } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import type { ManifestSourceBaseFactory } from '@cd/factory/ManifestSourceFactory/ManifestSourceBaseFactory'
-import type { ConfigFileSourceBaseFactory } from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBaseFactory'
 
 export interface K8SDirectServiceStep extends ServiceSpec {
   stageIndex?: number

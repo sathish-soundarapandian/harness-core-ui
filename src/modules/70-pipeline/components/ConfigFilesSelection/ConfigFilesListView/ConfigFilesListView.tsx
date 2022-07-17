@@ -238,9 +238,11 @@ function ConfigFilesListView({
         return (
           <HarnessConfigStep
             {...commonProps}
+            expressions={expressions}
             stepName={getString('pipeline.configFiles.title')}
             name={getString('pipeline.configFiles.title')}
             handleSubmit={handleSubmit}
+            listOfConfigFiles={listOfConfigFiles}
           />
         )
       case ConfigFilesToConnectorMap.Git:

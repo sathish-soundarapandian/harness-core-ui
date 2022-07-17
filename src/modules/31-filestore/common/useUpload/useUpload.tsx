@@ -12,7 +12,7 @@ import { useStrings } from 'framework/strings'
 
 import type { FileStorePopoverItem } from '@filestore/common/FileStorePopover/FileStorePopover'
 import { FileStoreContext } from '@filestore/components/FileStoreContext/FileStoreContext'
-import { FileStoreNodeTypes } from '@filestore/interfaces/FileStore'
+import { FileStoreNodeTypes, FileUsage } from '@filestore/interfaces/FileStore'
 import { FileStoreActionTypes, FILE_STORE_ROOT, ExtensionType } from '@filestore/utils/constants'
 import type { FileStoreNodeDTO } from '@filestore/components/FileStoreContext/FileStoreContext'
 import { checkSupportedMime } from '@filestore/utils/FileStoreUtils'
@@ -39,7 +39,7 @@ const useUploadFile = (config: UploadFile): FileStorePopoverItem => {
     tempNodes,
     setTempNodes,
     updateTempNodes,
-    fileUsage
+    fileUsage = ''
   } = useContext(FileStoreContext)
 
   const handleChange = (event: Event): void => {
@@ -80,7 +80,7 @@ const useUploadFile = (config: UploadFile): FileStorePopoverItem => {
               content: reader.result,
               parentIdentifier: currentNode.identifier,
               parentName: currentNode.name,
-              fileUsage: fileUsage || null
+              fileUsage: fileUsage as FileUsage
             }
             if (eventMethod === UPLOAD_EVENTS.REPLACE) {
               updateCurrentNode({

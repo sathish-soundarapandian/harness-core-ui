@@ -25,7 +25,6 @@ export class ConfigFileSourceBaseFactory {
 }
 
 const configFileSourceBaseFactory = new ConfigFileSourceBaseFactory()
-// configFileSourceBaseFactory.registerConfigFileSource(new K8sManifestSource())
 configFileSourceBaseFactory.registerConfigFileSource(new SshConfigFileSource())
 
 export default configFileSourceBaseFactory

@@ -135,7 +135,10 @@ export function HarnessConfigStep({
                     label={getString('pipeline.configFiles.identifierLabel')}
                     className={css.identifierField}
                     onChange={e => {
-                      formikProps.setFieldValue('identifier', StringUtils.getIdentifierFromName(e.target.value))
+                      const { value } = e.target as HTMLInputElement
+                      if (value) {
+                        formikProps.setFieldValue('identifier', StringUtils.getIdentifierFromName(value))
+                      }
                     }}
                   />
                   {!isEditMode && (

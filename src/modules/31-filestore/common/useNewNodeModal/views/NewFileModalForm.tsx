@@ -13,8 +13,7 @@ import {
   ModalErrorHandler,
   ModalErrorHandlerBinding,
   Layout,
-  FormInput,
-  SelectOption
+  FormInput
 } from '@harness/uicore'
 import * as Yup from 'yup'
 

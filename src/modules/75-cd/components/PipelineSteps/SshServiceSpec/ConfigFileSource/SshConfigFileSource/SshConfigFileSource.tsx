@@ -1,7 +1,8 @@
 import React from 'react'
-import { ConfigFileSourceBase } from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBase'
-
-import type { ConfigFileSourceRenderProps } from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBase'
+import {
+  ConfigFileSourceBase,
+  ConfigFileSourceRenderProps
+} from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBase'
 
 import { ENABLE_CONFIG_FILES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import K8sValuesYamlConfigFileContent from '../ConfigFileSourceRuntimeFields/SshValuesYamlConfigFileContent'

@@ -93,7 +93,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
         if (!result.destination) {
           return
         }
-        const res = Array.from(value)
+        const res = Array.from(value as [])
         const [removed] = res.splice(result.source.index, 1)
         res.splice(result.destination.index, 0, removed)
         formik?.setFieldValue(name, [...res])
