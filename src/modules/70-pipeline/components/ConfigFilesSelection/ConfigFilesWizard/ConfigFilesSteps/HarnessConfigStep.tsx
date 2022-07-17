@@ -10,9 +10,6 @@ import { Button, ButtonVariation, Text, Container, Formik, Layout, StepProps, Fo
 import { Form } from 'formik'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-// import { defaultTo, merge } from 'lodash-es'
-// import set from 'lodash-es/set'
-// import produce from 'immer'
 import type { ConfigFileWrapper, StoreConfigWrapper } from 'services/cd-ng'
 import { StringUtils } from '@common/exports'
 
@@ -20,7 +17,6 @@ import { useStrings } from 'framework/strings'
 import { FILE_TYPE_VALUES, prepareConfigFilesValue } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { MultiConfigSelectField } from './MultiConfigSelectField/MultiConfigSelectField'
 
-// import { ConfigFileIconByType, ConfigFileTypeTitle } from '../../ConfigFilesHelper'
 import type { ConfigFileHarnessDataType } from '../../ConfigFilesInterface'
 import css from './ConfigFilesType.module.scss'
 
@@ -131,7 +127,6 @@ export function HarnessConfigStep({
           enableReinitialize={true}
         >
           {formikProps => {
-            console.log('formikprops', formikProps)
             return (
               <Form className={css.configContainer}>
                 <div className={css.headerContainer}>
@@ -168,7 +163,6 @@ export function HarnessConfigStep({
                     formik={formikProps}
                     expressions={expressions}
                     values={formikProps.values.files}
-                    // disabled={getMultiTypeFromValue(formikProps.values.files) === MultiTypeInputType.RUNTIME}
                     multiTypeFieldSelectorProps={{
                       disableTypeSelection: false,
                       label: (

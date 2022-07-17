@@ -1,10 +1,3 @@
-/*
- * Copyright 2021 Harness Inc. All rights reserved.
- * Use of this source code is governed by the PolyForm Shield 1.0.0 license
- * that can be found in the licenses directory at the root of this repository, also available at
- * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
- */
-
 import React, { useEffect } from 'react'
 import { get, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -16,12 +9,15 @@ import configFileSourceBaseFactory from '@cd/factory/ConfigFileSourceFactory/Con
 import type { GitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { ConfigFile } from 'services/cd-ng'
-import type { KubernetesConfigFilesProps } from '../K8sServiceSpecInterface'
-import { isRuntimeMode } from '../K8sServiceSpecHelper'
-import { fromPipelineInputTriggerTab, getManifestTriggerSetValues } from '../ManifestSource/ManifestSourceUtils'
-import css from '../KubernetesManifests/KubernetesManifests.module.scss'
+import type { SshWinRmConfigFilesProps } from '@cd/components/PipelineSteps/SshServiceSpec/SshServiceSpecInterface'
+import { isRuntimeMode } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sServiceSpecHelper'
+import {
+  fromPipelineInputTriggerTab,
+  getManifestTriggerSetValues
+} from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/ManifestSourceUtils'
+import css from '@cd/components/PipelineSteps/SshServiceSpec/SshServiceSpec.module.scss'
 
-interface ConfigFileInputFieldProps extends KubernetesConfigFilesProps {
+interface ConfigFileInputFieldProps extends SshWinRmConfigFilesProps {
   configFile: ConfigFile
 }
 const ConfigFileInputField = (props: ConfigFileInputFieldProps): React.ReactElement | null => {
@@ -76,7 +72,7 @@ const ConfigFileInputField = (props: ConfigFileInputFieldProps): React.ReactElem
     </div>
   )
 }
-export function KubernetesConfigFiles(props: KubernetesConfigFilesProps): React.ReactElement {
+export function ConfigFiles(props: SshWinRmConfigFilesProps): React.ReactElement {
   const { getString } = useStrings()
 
   return (

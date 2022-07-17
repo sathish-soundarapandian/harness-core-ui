@@ -12,54 +12,29 @@ import { StringKeys, useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
 import type { ConfigFileSourceRenderProps } from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBase'
-import { isFieldRuntime } from '../../K8sServiceSpecHelper'
-import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
+import { isFieldRuntime } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sServiceSpecHelper'
+import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
+import css from '@cd/components/PipelineSteps/SshServiceSpec/SshServiceSpec.module.scss'
 
 interface K8sValuesYamlConfigFileRenderProps extends ConfigFileSourceRenderProps {
   pathFieldlabel: StringKeys
 }
 const K8sValuesYamlConfigFileContent = (props: K8sValuesYamlConfigFileRenderProps): React.ReactElement => {
-  const {
-    template,
-    path,
-    configFilePath,
-    // configFiles,
-    configFile,
-    // fromTrigger,
-    // allowableTypes,
-    readonly,
-    formik
-    // stageIdentifier,
-    // pathFieldlabel
-  } = props
+  const { template, path, configFilePath, configFile, readonly, formik } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const [filesType, setFilesType] = React.useState('files')
-  const [fieldType, setFieldType] = React.useState('fileStore')
+  const [fieldType, setFieldType] = React.useState(FILE_TYPE_VALUES.FILE_STORE)
 
   React.useEffect(() => {
     if (!Array.isArray(configFile?.spec.store.spec.files)) {
       setFilesType('files')
-      setFieldType('fileStore')
+      setFieldType(FILE_TYPE_VALUES.FILE_STORE)
     } else {
       setFilesType('secretFiles')
-      setFieldType('encrypted')
+      setFieldType(FILE_TYPE_VALUES.ENCRYPTED)
     }
   }, [configFile])
-
-  //   const isFieldDisabled = (fieldName: string): boolean => {
-  //     // /* instanbul ignore else */
-  //     if (readonly) {
-  //       return true
-  //     }
-  //     return isFieldfromTriggerTabDisabled(
-  //       fieldName,
-  //       formik,
-  //       stageIdentifier,
-  //       manifest?.identifier as string,
-  //       fromTrigger
-  //     )
-  //   }
 
   return (
     <Layout.Vertical
@@ -73,9 +48,12 @@ const K8sValuesYamlConfigFileContent = (props: K8sValuesYamlConfigFileRenderProp
           <FileStoreList
             formik={formik}
             labelClassName={css.listLabel}
-            label={getString('pipeline.configFiles.title')}
+            label={
+              fieldType === FILE_TYPE_VALUES.ENCRYPTED
+                ? getString('pipeline.configFiles.encryptedFiles')
+                : getString('pipeline.configFiles.plainText')
+            }
             name={`${path}.${configFilePath}.spec.store.spec.${filesType}`}
-            // placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
             disabled={readonly}
             style={{ marginBottom: 'var(--spacing-small)' }}
             expressions={expressions}

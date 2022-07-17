@@ -1,6 +1,4 @@
-// import { K8sManifestSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/K8sManifestSource/K8sManifestSource'
-// import { ValuesYamlManifestSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/ValuesYamlManifestSource/ValuesYamlManifestSource'
-import { K8sConfigFileSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ConfigFileSource/K8sConfigFileSource/K8ConfigFileSource'
+import { SshConfigFileSource } from '@cd/components/PipelineSteps/SshServiceSpec/ConfigFileSource/SshConfigFileSource/SshConfigFileSource'
 
 import type { ConfigFileSourceBase } from './ConfigFileSourceBase'
 
@@ -28,6 +26,6 @@ export class ConfigFileSourceBaseFactory {
 
 const configFileSourceBaseFactory = new ConfigFileSourceBaseFactory()
 // configFileSourceBaseFactory.registerConfigFileSource(new K8sManifestSource())
-configFileSourceBaseFactory.registerConfigFileSource(new K8sConfigFileSource())
+configFileSourceBaseFactory.registerConfigFileSource(new SshConfigFileSource())
 
 export default configFileSourceBaseFactory

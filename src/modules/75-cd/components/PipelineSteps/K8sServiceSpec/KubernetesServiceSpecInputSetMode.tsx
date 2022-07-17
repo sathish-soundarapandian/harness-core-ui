@@ -18,6 +18,7 @@ import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import type { CustomVariablesData } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableEditable'
 import type { CustomVariableInputSetExtraProps } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
 import type { AllNGVariables } from '@pipeline/utils/types'
+import { ConfigFiles } from '@cd/components/PipelineSteps/SshServiceSpec/SshConfigFiles/ConfigFiles'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import manifestSourceBaseFactory from '@cd/factory/ManifestSourceFactory/ManifestSourceBaseFactory'
@@ -25,7 +26,6 @@ import configFileSourceBaseFactory from '@cd/factory/ConfigFileSourceFactory/Con
 import type { K8SDirectServiceStep } from './K8sServiceSpecInterface'
 import { KubernetesArtifacts } from './KubernetesArtifacts/KubernetesArtifacts'
 import { KubernetesManifests } from './KubernetesManifests/KubernetesManifests'
-import { KubernetesConfigFiles } from './KubernetesConfigFiles/KubernetesConfigFiles'
 import css from './K8sServiceSpec.module.scss'
 
 export interface KubernetesInputSetProps {
@@ -95,7 +95,7 @@ const KubernetesServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetPr
 
       {!!template?.configFiles?.length && (
         <>
-          <KubernetesConfigFiles
+          <ConfigFiles
             template={template}
             configFiles={allValues?.configFiles}
             configFileSourceBaseFactory={configFileSourceBaseFactory}

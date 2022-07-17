@@ -78,6 +78,7 @@ export enum StepType {
   CloudFormationDeleteStack = 'DeleteStack',
   CloudFormationCreateStack = 'CreateStack',
   SshServiceSpec = 'SshServiceSpec',
+  WinRmServiceSpec = 'WinRmServiceSpec',
   CreatePR = 'CreatePR',
   MergePR = 'MergePR',
   AzureWebAppsRollback = 'AzureWebAppRollback',

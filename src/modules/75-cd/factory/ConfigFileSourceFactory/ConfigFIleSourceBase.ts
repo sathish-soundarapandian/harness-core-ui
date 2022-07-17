@@ -1,5 +1,5 @@
-import type { KubernetesConfigFilesProps } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sServiceSpecInterface'
-export interface ConfigFileSourceRenderProps extends KubernetesConfigFilesProps {
+import type { SshWinRmConfigFilesProps } from '@cd/components/PipelineSteps/SshServiceSpec/SshServiceSpecInterface'
+export interface ConfigFileSourceRenderProps extends SshWinRmConfigFilesProps {
   isConfigFileRuntime: boolean
   projectIdentifier: string
   orgIdentifier: string

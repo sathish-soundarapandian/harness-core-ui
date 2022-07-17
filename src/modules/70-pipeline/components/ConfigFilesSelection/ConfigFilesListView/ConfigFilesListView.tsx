@@ -460,13 +460,11 @@ function ConfigFilesListView({
           </section>
         </Layout.Vertical>
         <Button
-          //   className={css.addManifest}
           id="add-config-file"
           size={ButtonSize.SMALL}
           variation={ButtonVariation.LINK}
           data-test-id="addConfigFile"
           onClick={addNewConfigFile}
-          // text={getString('pipelineSteps.serviceTab.configFileList.addConfigFile')}
           text={'+ Add config files'}
         />
       </Layout.Vertical>

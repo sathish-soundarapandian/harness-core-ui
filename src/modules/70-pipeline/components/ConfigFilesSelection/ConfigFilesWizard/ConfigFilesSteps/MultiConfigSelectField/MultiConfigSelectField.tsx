@@ -128,139 +128,140 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                 render={({ push, remove, replace }) => {
                   return (
                     <>
-                      {Array.isArray(values) &&
-                        values.map((field: any, index: number) => {
-                          const { ...restValue } = field
-                          const error = get(formik?.errors, `${name}[${index}]`)
-                          const hasError = errorCheck(`${name}[${index}]`, formik) && typeof error === 'string'
-                          return (
-                            <Draggable key={index} draggableId={`${index}`} index={index}>
-                              {providedDrag => (
-                                <Layout.Horizontal
-                                  flex={{ distribution: 'space-between', alignItems: 'center' }}
-                                  margin={{ top: 'small', bottom: hasError && 'medium' }}
-                                  key={index}
-                                  ref={providedDrag.innerRef}
-                                  {...providedDrag.draggableProps}
-                                  {...providedDrag.dragHandleProps}
-                                >
-                                  <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
-                                    <>
-                                      <Icon name="drag-handle-vertical" />
-                                      <Text className={css.text}>{`${index + 1}.`}</Text>
-                                    </>
+                      <div className={css.listFieldsWrapper}>
+                        {Array.isArray(values) &&
+                          values.map((field: any, index: number) => {
+                            const { ...restValue } = field
+                            const error = get(formik?.errors, `${name}[${index}]`)
+                            const hasError = errorCheck(`${name}[${index}]`, formik) && typeof error === 'string'
+                            return (
+                              <Draggable key={index} draggableId={`${index}`} index={index}>
+                                {providedDrag => (
+                                  <Layout.Horizontal
+                                    flex={{ distribution: 'space-between', alignItems: 'center' }}
+                                    margin={{ top: 'small', bottom: hasError && 'medium' }}
+                                    key={index}
+                                    ref={providedDrag.innerRef}
+                                    {...providedDrag.draggableProps}
+                                    {...providedDrag.dragHandleProps}
+                                  >
+                                    <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
+                                      <>
+                                        <Icon name="drag-handle-vertical" />
+                                        <Text className={css.text}>{`${index + 1}.`}</Text>
+                                      </>
 
-                                    <div className={css.multiSelectField}>
-                                      <div className={cx(css.group)}>
-                                        {fileType === FILE_TYPE_VALUES.ENCRYPTED ? (
-                                          <MultiTypeConfigFileSelect
-                                            hasParentValidation={true}
-                                            name={`${name}[${index}]`}
-                                            label={''}
-                                            defaultValueToReset={''}
-                                            style={{ flexGrow: 1, marginBottom: 0, marginTop: 0 }}
-                                            disableTypeSelection={false}
-                                            changed={changed}
-                                            supportListOfExpressions={true}
-                                            defaultType={getMultiTypeFromValue(
-                                              get(formik?.values, `${name}[${index}]`),
-                                              [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
-                                              true
-                                            )}
-                                            allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
-                                            expressionRender={() => {
-                                              return (
-                                                <ExpressionInput
-                                                  name={`${name}[${index}]`}
+                                      <div className={css.multiSelectField}>
+                                        <div className={cx(css.group)}>
+                                          {fileType === FILE_TYPE_VALUES.ENCRYPTED ? (
+                                            <MultiTypeConfigFileSelect
+                                              hasParentValidation={true}
+                                              name={`${name}[${index}]`}
+                                              label={''}
+                                              defaultValueToReset={''}
+                                              style={{ flexGrow: 1, marginBottom: 0, marginTop: 0 }}
+                                              disableTypeSelection={false}
+                                              changed={changed}
+                                              supportListOfExpressions={true}
+                                              defaultType={getMultiTypeFromValue(
+                                                get(formik?.values, `${name}[${index}]`),
+                                                [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                                                true
+                                              )}
+                                              allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
+                                              expressionRender={() => {
+                                                return (
+                                                  <ExpressionInput
+                                                    name={`${name}[${index}]`}
+                                                    value={get(formik?.values, `${name}[${index}]`)}
+                                                    disabled={false}
+                                                    inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
+                                                    items={expressions}
+                                                    onChange={val =>
+                                                      /* istanbul ignore next */
+                                                      formik?.setFieldValue(`${name}[${index}]`, val)
+                                                    }
+                                                  />
+                                                )
+                                              }}
+                                            >
+                                              <div className={css.fieldWrapper}>
+                                                <FileSelectField
                                                   value={get(formik?.values, `${name}[${index}]`)}
-                                                  disabled={false}
-                                                  inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
-                                                  items={expressions}
-                                                  onChange={val =>
-                                                    /* istanbul ignore next */
-                                                    formik?.setFieldValue(`${name}[${index}]`, val)
-                                                  }
-                                                />
-                                              )
-                                            }}
-                                          >
-                                            <div className={css.fieldWrapper}>
-                                              <FileSelectField
-                                                value={get(formik?.values, `${name}[${index}]`)}
-                                                name={`${name}[${index}]`}
-                                                onChange={(newValue, i) => {
-                                                  replace(i, {
-                                                    ...restValue,
-                                                    value: newValue
-                                                  })
-                                                  formik?.setFieldValue(`${name}[${index}]`, newValue)
-                                                }}
-                                              />
-                                            </div>
-                                          </MultiTypeConfigFileSelect>
-                                        ) : (
-                                          <MultiTypeConfigFileSelect
-                                            name={`${name}[${index}]`}
-                                            label={''}
-                                            defaultValueToReset={''}
-                                            style={{ flexGrow: 1, marginBottom: 0, marginTop: 0 }}
-                                            disableTypeSelection={false}
-                                            changed={changed}
-                                            supportListOfExpressions={true}
-                                            defaultType={getMultiTypeFromValue(
-                                              get(formik?.values, `${name}[${index}]`),
-                                              [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
-                                              true
-                                            )}
-                                            allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
-                                            expressionRender={() => {
-                                              return (
-                                                <ExpressionInput
                                                   name={`${name}[${index}]`}
-                                                  value={get(formik?.values, `${name}[${index}]`)}
-                                                  disabled={false}
-                                                  inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
-                                                  items={expressions}
-                                                  onChange={val =>
-                                                    /* istanbul ignore next */
-                                                    formik?.setFieldValue(`${name}[${index}]`, val)
-                                                  }
+                                                  onChange={(newValue, i) => {
+                                                    replace(i, {
+                                                      ...restValue,
+                                                      value: newValue
+                                                    })
+                                                    formik?.setFieldValue(`${name}[${index}]`, newValue)
+                                                  }}
                                                 />
-                                              )
-                                            }}
-                                          >
-                                            <div className={css.fieldWrapper}>
-                                              <FileStoreSelectField
-                                                name={`${name}[${index}]`}
-                                                fileUsage="MANIFEST"
-                                                onChange={(newValue, i) => {
-                                                  replace(i, {
-                                                    ...restValue,
-                                                    value: newValue
-                                                  })
-                                                  formik?.setFieldValue(`${name}[${index}]`, newValue)
-                                                }}
-                                              />
-                                            </div>
-                                          </MultiTypeConfigFileSelect>
-                                        )}
-                                        <Button
-                                          icon="main-trash"
-                                          iconProps={{ size: 20 }}
-                                          minimal
-                                          data-testid={`remove-${name}-[${index}]`}
-                                          onClick={() => remove(index)}
-                                          disabled={disabled || values.length <= 1}
-                                        />
+                                              </div>
+                                            </MultiTypeConfigFileSelect>
+                                          ) : (
+                                            <MultiTypeConfigFileSelect
+                                              name={`${name}[${index}]`}
+                                              label={''}
+                                              defaultValueToReset={''}
+                                              style={{ flexGrow: 1, marginBottom: 0, marginTop: 0 }}
+                                              disableTypeSelection={false}
+                                              changed={changed}
+                                              supportListOfExpressions={true}
+                                              defaultType={getMultiTypeFromValue(
+                                                get(formik?.values, `${name}[${index}]`),
+                                                [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                                                true
+                                              )}
+                                              allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
+                                              expressionRender={() => {
+                                                return (
+                                                  <ExpressionInput
+                                                    name={`${name}[${index}]`}
+                                                    value={get(formik?.values, `${name}[${index}]`)}
+                                                    disabled={false}
+                                                    inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
+                                                    items={expressions}
+                                                    onChange={val =>
+                                                      /* istanbul ignore next */
+                                                      formik?.setFieldValue(`${name}[${index}]`, val)
+                                                    }
+                                                  />
+                                                )
+                                              }}
+                                            >
+                                              <div className={css.fieldWrapper}>
+                                                <FileStoreSelectField
+                                                  name={`${name}[${index}]`}
+                                                  fileUsage="MANIFEST"
+                                                  onChange={(newValue, i) => {
+                                                    replace(i, {
+                                                      ...restValue,
+                                                      value: newValue
+                                                    })
+                                                    formik?.setFieldValue(`${name}[${index}]`, newValue)
+                                                  }}
+                                                />
+                                              </div>
+                                            </MultiTypeConfigFileSelect>
+                                          )}
+                                          <Button
+                                            icon="main-trash"
+                                            iconProps={{ size: 20 }}
+                                            minimal
+                                            data-testid={`remove-${name}-[${index}]`}
+                                            onClick={() => remove(index)}
+                                            disabled={disabled || values.length <= 1}
+                                          />
+                                        </div>
                                       </div>
-                                    </div>
+                                    </Layout.Horizontal>
                                   </Layout.Horizontal>
-                                </Layout.Horizontal>
-                              )}
-                            </Draggable>
-                          )
-                        })}
-
+                                )}
+                              </Draggable>
+                            )
+                          })}
+                      </div>
                       {restrictToSingleEntry && Array.isArray(value) && value?.length === 1 ? null : (
                         <Button
                           intent="primary"

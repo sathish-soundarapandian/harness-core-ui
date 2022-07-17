@@ -141,7 +141,7 @@ export const FileSelectList = (props: ListProps): React.ReactElement => {
 
   return (
     <div style={style}>
-      <div className={cx(css.label, labelClassName)}>{label}</div>
+      <div className={cx(css.label, labelClassName, css.fileStoreList)}>{label}</div>
       <Card style={{ width: '100%' }}>
         <FieldArray
           name={name}

@@ -90,19 +90,3 @@ export interface KubernetesManifestsProps {
   manifest?: ManifestConfig
   manifestPath?: string
 }
-
-export interface KubernetesConfigFilesProps {
-  template: ServiceSpec
-  path?: string
-  stepViewType?: StepViewType
-  configFileSourceBaseFactory: ConfigFileSourceBaseFactory
-  configFiles?: ConfigFileWrapper[]
-  initialValues: K8SDirectServiceStep
-  readonly: boolean
-  stageIdentifier: string
-  formik?: any
-  fromTrigger?: boolean
-  allowableTypes: MultiTypeInputType[]
-  configFile?: ConfigFile
-  configFilePath?: string
-}

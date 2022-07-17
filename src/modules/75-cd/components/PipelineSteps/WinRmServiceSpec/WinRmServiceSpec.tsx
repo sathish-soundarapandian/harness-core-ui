@@ -11,7 +11,7 @@ import { parse } from 'yaml'
 import type { FormikErrors } from 'formik'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
 
 import { StepViewType, ValidateInputSetProps, Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
 import {
@@ -47,13 +47,13 @@ const ManifestConnectorRefType = 'Git'
 const ArtifactsPrimaryRegex = /^.+artifacts\.primary\.spec\.connectorRef$/
 const ArtifactsPrimaryTagRegex = /^.+artifacts\.primary\.spec\.artifactPath$/
 
-const sshAllowedArtifactTypes: Array<ArtifactType> = allowedArtifactTypes.Ssh
+const winRmAllowedArtifactTypes: Array<ArtifactType> = allowedArtifactTypes.WinRm
 
-export class SshServiceSpec extends Step<ServiceSpec> {
-  protected type = StepType.SshServiceSpec
+export class WinRmServiceSpec extends Step<ServiceSpec> {
+  protected type = StepType.WinRmServiceSpec
   protected defaultValues: ServiceSpec = {}
 
-  protected stepIcon: IconName = 'secret-ssh'
+  protected stepIcon: IconName = 'command-winrm'
   protected stepName = 'Deplyment Service'
   protected stepPaletteVisible = false
   protected _hasStepVariables = true
@@ -132,7 +132,7 @@ export class SshServiceSpec extends Step<ServiceSpec> {
     }
     if (pipelineObj) {
       const obj = get(pipelineObj, path.replace('.spec.connectorRef', ''))
-      if (sshAllowedArtifactTypes.includes(obj?.type)) {
+      if (winRmAllowedArtifactTypes.includes(obj?.type)) {
         return getConnectorListV2Promise({
           queryParams: {
             accountIdentifier: accountId,
@@ -171,7 +171,7 @@ export class SshServiceSpec extends Step<ServiceSpec> {
 
     if (pipelineObj) {
       const obj = get(pipelineObj, path.replace('.spec.artifactPath', ''))
-      if (sshAllowedArtifactTypes.includes(obj?.type)) {
+      if (winRmAllowedArtifactTypes.includes(obj?.type)) {
         return getBuildDetailsForArtifactoryArtifactWithYamlPromise({
           queryParams: {
             artifactPath: obj.spec?.artifactDirectory,

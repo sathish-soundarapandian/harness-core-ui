@@ -11,6 +11,7 @@ declare const styles: {
   readonly formGroup: string
   readonly formLabel: string
   readonly group: string
+  readonly listFieldsWrapper: string
   readonly minimalCard: string
   readonly multiSelectField: string
   readonly multiSelectWrapper: string
