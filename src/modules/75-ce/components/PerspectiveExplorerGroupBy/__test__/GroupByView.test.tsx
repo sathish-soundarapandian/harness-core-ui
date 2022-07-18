@@ -61,6 +61,7 @@ describe('test cases for groupby views', () => {
         openBusinessMappingDrawer={jest.fn()}
         setGroupBy={jest.fn()}
         data={ClusterData as QlceViewFieldIdentifierData}
+        canAddCostCategory={false}
       />
     )
 
