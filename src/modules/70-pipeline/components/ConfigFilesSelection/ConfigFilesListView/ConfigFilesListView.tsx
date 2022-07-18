@@ -349,7 +349,6 @@ function ConfigFilesListView({
         <div className={css.createConnectorWizard}>
           <ConfigFilesWizard
             types={allowedConfigFilesTypes[deploymentType]}
-            // labels={getLabels()}
             newConnectorView={newConnectorView}
             expressions={expressions}
             allowableTypes={allowableTypes}

@@ -60,15 +60,6 @@ export default function ConfigFilesSelection({
   }
 
   const listOfConfigFiles = useMemo(() => {
-    // if (!isReadonly) {
-    //   const serviceData = selectedServiceResponse?.data?.service as ServiceResponseDTO
-    //   if (!isEmpty(serviceData?.yaml)) {
-    //     const parsedYaml = yamlParse<NGServiceConfig>(defaultTo(serviceData.yaml, ''))
-    //     const serviceInfo = parsedYaml.service?.serviceDefinition
-    //     return serviceInfo?.spec.configFiles
-    //   }
-    //   return []
-    // }
     if (isPropagating) {
       return get(stage, 'stage.spec.serviceConfig.stageOverrides.configFiles', [])
     }

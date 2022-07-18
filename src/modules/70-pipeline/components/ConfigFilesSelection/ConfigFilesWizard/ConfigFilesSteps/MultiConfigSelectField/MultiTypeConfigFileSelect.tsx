@@ -1,9 +1,15 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { CSSProperties, ReactChild } from 'react'
 import {
   MultiTypeInputType,
   getMultiTypeFromValue,
   RUNTIME_INPUT_VALUE,
-  FormError,
   FormikTooltipContext,
   DataTooltipInterface,
   HarnessDocTooltip,
@@ -81,14 +87,7 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
   const hasError = errorCheck(name, formik) && typeof error === 'string'
   const showError = hasError && !hideError
   const labelText = !isOptional ? label : `${label} ${optionalLabel}`
-  const {
-    intent = showError && !hasParentValidation ? Intent.DANGER : Intent.NONE,
-    helperText = showError && !hasParentValidation ? (
-      <FormError name={name} errorMessage={get(formik?.errors, name)} />
-    ) : null,
-    disabled,
-    ...rest
-  } = restProps
+  const { intent = showError && !hasParentValidation ? Intent.DANGER : Intent.NONE, disabled, ...rest } = restProps
 
   const tooltipContext = React.useContext(FormikTooltipContext)
   const dataTooltipId =
@@ -125,8 +124,7 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
     <FormGroup
       {...rest}
       labelFor={name}
-      // intent={intent}
-      // helperText={!hasParentValidation && helperText}
+      intent={intent}
       disabled={disabled}
       label={
         <div className={css.formLabel}>
@@ -155,8 +153,7 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
       {...rest}
       className={type === MultiTypeInputType.RUNTIME ? css.formGroup : ''}
       intent={intent}
-      // helperText={!hasParentValidation && helperText}
-      // disabled={disabled}
+      disabled={disabled}
       label={
         <Container flex>
           <HarnessDocTooltip tooltipId={dataTooltipId} labelText={labelText} />
