@@ -27,13 +27,13 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import { renderConnectorAndRepoName } from '@pipeline/components/PipelineStudio/RightBar/RightBarUtils'
-import { renderBuild } from '../GitCloneStep/GitCLoneStepUtils'
 import {
   AllMultiTypeInputTypesForInputSet,
   AllMultiTypeInputTypesForStep,
   SupportedInputTypesForListItems,
   SupportedInputTypesForListTypeField,
-  SupportedInputTypesForListTypeFieldInInputSetView
+  SupportedInputTypesForListTypeFieldInInputSetView,
+  renderBuild
 } from './StepUtils'
 import { renderMultiTypeInputWithAllowedValues, renderMultiTypeListInputSet } from './CIStepOptionalConfig'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
