@@ -56,7 +56,7 @@ export default function AddLinkNode<T, U, V>(props: AddLinkNodeStageProps<T, U, 
       onDragOver={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         event.stopPropagation()
         event.preventDefault()
-        props?.setShowAddLink && props?.setShowAddLink(true)
+        props?.setShowAddLink?.(true)
       }}
       onDrop={event => {
         const nodeData = JSON.parse(event.dataTransfer.getData(DiagramDrag.NodeDrag))
@@ -83,7 +83,8 @@ export default function AddLinkNode<T, U, V>(props: AddLinkNodeStageProps<T, U, 
             }
           }
         })
-        props?.setShowAddLink && props?.setShowAddLink(false)
+        // check where is it coming from
+        props?.setShowAddLink?.(false)
       }}
       className={cx(props.className, 'Plus-class')}
     >

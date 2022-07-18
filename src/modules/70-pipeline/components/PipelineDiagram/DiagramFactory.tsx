@@ -19,10 +19,11 @@ import type {
   PipelineStageNodeMetaDataType,
   TerminalNodeProps,
   CombinedNodeProps,
-  BaseEvent
+  BaseEvent,
+  PipelineGraphDataType
 } from './types'
 import { NodeType } from './types'
-import { StepGroupNode } from './Nodes/StepGroupNode/StepGroupNode'
+import StepGroupNode from './Nodes/StepGroupNode/StepGroupNode'
 import { CANVAS_CLICK_EVENT } from './PipelineGraph/PipelineGraphUtils'
 import DefaultNode from './Nodes/DefaultNode/DefaultNode'
 import { DiagramTypes } from '../PipelineStudio/StageBuilder/StageBuilderUtil'
@@ -195,5 +196,6 @@ export {
   CombinedNodeProps,
   CANVAS_CLICK_EVENT,
   BaseEvent,
-  PipelineStageNodeMetaDataType
+  PipelineStageNodeMetaDataType,
+  PipelineGraphDataType
 }

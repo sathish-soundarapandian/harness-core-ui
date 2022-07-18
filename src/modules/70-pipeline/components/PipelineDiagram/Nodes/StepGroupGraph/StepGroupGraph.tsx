@@ -7,12 +7,14 @@
 
 import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import cx from 'classnames'
-import { defaultTo, get } from 'lodash-es'
+import { defaultTo } from 'lodash-es'
 import { DiagramType, Event } from '@pipeline/components/Diagram'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { isNodeTypeMatrixOrFor } from '@pipeline/utils/executionUtils'
 import { useDeepCompareEffect } from '@common/hooks'
+import type { EventStepGroupDataType } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
+import type { ExecutionWrapperConfig } from 'services/pipeline-ng'
 import { SVGComponent } from '../../PipelineGraph/PipelineGraph'
 import { PipelineGraphRecursive } from '../../PipelineGraph/PipelineGraphNode'
 import {
@@ -20,37 +22,29 @@ import {
   getPipelineGraphData,
   getSVGLinksFromPipeline
 } from '../../PipelineGraph/PipelineGraphUtils'
-import type { GetNodeMethod, NodeDetails, NodeIds, PipelineGraphState, SVGPathRecord } from '../../types'
+import type { NodeProps, PipelineGraphState, PipelineStageNodeMetaDataType, SVGPathRecord } from '../../types'
 import { NodeType } from '../../types'
 import GraphConfigStore from '../../PipelineGraph/GraphConfigStore'
 import { getCalculatedStepNodeStyles } from '../MatrixStepNode/MatrixStepNode'
 import { Dimension, Dimensions, useNodeDimensionContext } from '../NodeDimensionStore'
 import css from './StepGroupGraph.module.scss'
 
-interface StepGroupGraphProps {
-  id?: string
-  data?: any[]
-  getNode: GetNodeMethod
-  getDefaultNode(): NodeDetails | null
-  selectedNodeId?: string
-  uniqueNodeIds?: NodeIds
-  fireEvent: (event: any) => void
-  startEndNodeNeeded?: boolean
-  updateSVGLinks?: (svgPath: string[]) => void
-  identifier?: string
-  isNodeCollapsed: boolean
-  updateGraphLinks: () => void
+interface StepGroupGraphProps
+  extends NodeProps<ExecutionWrapperConfig, PipelineStageNodeMetaDataType, EventStepGroupDataType> {
+  id: string
   parentIdentifier?: string
-  readonly?: boolean
+  stepsData?: ExecutionWrapperConfig[]
+  isNodeCollapsed?: boolean
   hideLinks?: boolean
-  hideAdd?: boolean
+  hideAdd?: boolean // for dependency node
+  updateSVGLinks?: (svgPath: string[]) => void
 }
 
 interface LayoutStyles extends Dimension {
   marginLeft?: string
 }
 
-const getNestedStepGroupHeight = (steps?: any[]): number => {
+const getNestedStepGroupHeight = (steps?: ExecutionWrapperConfig[]): number => {
   let maxParalellNodesCount = 0
   steps?.forEach(step => {
     if (step?.parallel) {
@@ -60,14 +54,17 @@ const getNestedStepGroupHeight = (steps?: any[]): number => {
   return maxParalellNodesCount
 }
 
-const getCalculatedStyles = (data: PipelineGraphState[], childrenDimensions: Dimensions): LayoutStyles => {
+const getCalculatedStyles = (
+  data: PipelineGraphState<ExecutionWrapperConfig, PipelineStageNodeMetaDataType, EventStepGroupDataType>[],
+  childrenDimensions: Dimensions
+): LayoutStyles => {
   let width = 0
   let height = 0
   let maxChildLength = 0
   let hasStepGroupNode = false
   let finalHeight = 0
   data.forEach(node => {
-    const childSteps = get(node, 'data.step.data.stepGroup.steps') || get(node, 'data.stepGroup.steps')
+    const childSteps = node.data.stepGroup?.steps
     const childrenNodesId = defaultTo(node?.children, []).map(o => o.id)
     const childNodesId = [node.id, ...childrenNodesId]
 
@@ -87,10 +84,10 @@ const getCalculatedStyles = (data: PipelineGraphState[], childrenDimensions: Dim
       if (node.type === 'STEP_GROUP') {
         hasStepGroupNode = true
       }
-      const maxParallelism = defaultTo(node?.data?.maxParallelism, node?.data?.step?.data?.maxParallelism) || 1
+      const maxParallelism = defaultTo(node?.metaData?.maxParallelism, 1)
 
       if (isNodeTypeMatrixOrFor(node.type)) {
-        const dimensions = getCalculatedStepNodeStyles(childSteps, maxParallelism, false)
+        const dimensions = getCalculatedStepNodeStyles(childSteps as any, maxParallelism, false)
         width += dimensions.width
         height += dimensions.height
         // height += 50 // 30 for matrixWrapper type + padding
@@ -115,7 +112,9 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
   const [svgPath, setSvgPath] = useState<SVGPathRecord[]>([])
   const [treeRectangle, setTreeRectangle] = useState<DOMRect | void>()
   const [layoutStyles, setLayoutStyles] = useState<LayoutStyles>({ height: 100, width: 70 })
-  const [state, setState] = useState<PipelineGraphState[]>([])
+  const [state, setState] = useState<
+    PipelineGraphState<ExecutionWrapperConfig, PipelineStageNodeMetaDataType, EventStepGroupDataType>[]
+  >([])
   const graphRef = useRef<HTMLDivElement>(null)
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
   const { graphScale } = useContext(GraphConfigStore)
@@ -132,12 +131,19 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
     getStagePathFromPipeline
   } = usePipelineContext()
 
-  const stagePath = getStagePathFromPipeline(props?.identifier || '', 'pipeline.stages')
+  const stagePath = getStagePathFromPipeline(props?.data?.identifier || '', 'pipeline.stages')
+
+  const stepsData = props?.stepsData
+
+  // move to utilsw
+  const hasChildren = (nodeData: typeof props): boolean => Boolean(defaultTo(nodeData?.data?.children?.length, 0))
+  const isParallelNode = (nodeData: typeof props): boolean => Boolean(nodeData?.metaData?.isParallelNode)
+
   useLayoutEffect(() => {
-    if (props?.data?.length) {
+    if (stepsData?.length) {
       setState(
         getPipelineGraphData({
-          data: props.data,
+          data: stepsData,
           templateTypes: templateTypes,
           serviceDependencies: undefined,
           errorMap: errorMap,
@@ -200,28 +206,29 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
   useEffect(() => {
     updateTreeRect()
   }, [])
+  // export from diagram PipelineGraphRecursive
   return (
     <div className={css.main} style={layoutStyles} ref={graphRef}>
       <SVGComponent svgPath={svgPath} className={cx(css.stepGroupSvg)} />
-      {props?.data?.length ? (
+      {stepsData?.length ? (
         <>
-          <PipelineGraphRecursive
-            getDefaultNode={props?.getDefaultNode}
-            parentIdentifier={props?.identifier}
+          <PipelineGraphRecursive<ExecutionWrapperConfig, PipelineStageNodeMetaDataType, EventStepGroupDataType>
+            nodes={state}
+            parentIdentifier={props?.parentIdentifier}
+            startEndNodeNeeded={false}
+            readonly={props?.permissions?.readonly}
+            optimizeRender={false}
             fireEvent={props.fireEvent}
             getNode={props.getNode}
-            nodes={state}
-            selectedNode={defaultTo(props?.selectedNodeId, '')}
-            startEndNodeNeeded={false}
-            readonly={props.readonly}
-            optimizeRender={false}
+            selectedNodeId={defaultTo(props?.selectedNodeId, '')}
             updateGraphLinks={updateGraphLinks}
+            getDefaultNode={props?.getDefaultNode}
           />
         </>
       ) : (
         !props.hideAdd &&
         CreateNode &&
-        !props.readonly && (
+        !props?.permissions?.readonly && (
           <CreateNode
             {...props}
             isInsideStepGroup={true}
@@ -230,10 +237,16 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
                 type: Event.ClickNode,
                 target: event.target,
                 data: {
-                  identifier: props?.identifier,
-                  parentIdentifier: props?.identifier,
-                  entityType: DiagramType.CreateNew,
-                  node: props
+                  nodeType: DiagramType.Default,
+                  parentIdentifier: props?.parentIdentifier,
+                  nodeData: {
+                    id: props?.data?.id,
+                    data: props?.data?.data?.stepGroup,
+                    metaData: {
+                      hasChildren: hasChildren(props),
+                      isParallelNode: isParallelNode(props)
+                    }
+                  }
                 }
               })
             }}

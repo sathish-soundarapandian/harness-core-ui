@@ -7,6 +7,8 @@
 
 import type { IconName } from '@harness/uicore'
 import type { CSSProperties } from 'react'
+import type { ExecutionWrapperConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
+import type { EventWithBaseType } from '../PipelineStudio/StageBuilder/StageBuilderUtil'
 
 export interface ListenerHandle {
   deregister: () => any
@@ -83,6 +85,9 @@ export interface NodeProps<T, U, V> {
   onClick?: any // remove later
 }
 
+export type PipelineGraphDataType =
+  | PipelineGraphState<StageElementWrapperConfig, PipelineStageNodeMetaDataType, EventWithBaseType>[]
+  | PipelineGraphState<ExecutionWrapperConfig, PipelineStageNodeMetaDataType, EventWithBaseType>[]
 export interface TerminalNodeProps<V> {
   id: string
   name?: string
@@ -112,6 +117,8 @@ export interface PipelineStageNodeMetaDataType extends NodeGraphMetaType {
   tertiaryIcon?: IconName
   iconStyle?: CSSProperties
   status?: string //data
+  isNestedGroup?: boolean
+  maxParallelism?: number
 }
 
 export interface NodeIds {

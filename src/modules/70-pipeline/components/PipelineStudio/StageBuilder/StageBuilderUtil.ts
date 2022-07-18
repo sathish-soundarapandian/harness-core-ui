@@ -17,7 +17,8 @@ import type {
   StageElementWrapperConfig,
   PipelineInfoConfig,
   StageElementConfig,
-  StepElementConfig
+  StepElementConfig,
+  StepGroupElementConfig
 } from 'services/pipeline-ng'
 import type * as Diagram from '@pipeline/components/Diagram'
 import {
@@ -459,8 +460,9 @@ export interface EventMetaDataProps {
 
 export type EventStageDataType = EventProps<StageElementConfig, EventMetaDataProps>
 export type EventStepDataType = EventProps<StepElementConfig, EventMetaDataProps>
+export type EventStepGroupDataType = EventProps<StepGroupElementConfig, EventMetaDataProps>
 
-export type EventDataType = EventStageDataType | EventStepDataType
+export type EventDataType = EventStageDataType | EventStepDataType | EventStepGroupDataType
 export type EventWithBaseType = BaseEvent<EventDataType>
 export interface ListenerReturnType {
   [key: string]: (E: EventWithBaseType) => void

@@ -48,7 +48,7 @@ const getHeight = (nodeHeight: number, maxChildLength: number, parallelism: numb
   }
 }
 export const getCalculatedStepNodeStyles = (
-  data: PipelineGraphState[],
+  data: PipelineGraphState<any, any, any>[],
   parallelism: number,
   showAllNodes?: boolean,
   childrenDimensions?: Dimensions

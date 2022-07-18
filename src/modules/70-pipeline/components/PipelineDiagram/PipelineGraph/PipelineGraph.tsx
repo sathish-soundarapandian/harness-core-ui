@@ -43,9 +43,6 @@ interface ControlPosition {
 const DEFAULT_POSITION: ControlPosition = { x: 30, y: 80 }
 export interface PipelineGraphProps<T, U, V> {
   data: PipelineGraphState<T, U, V>[]
-  fireEvent: FireEventMethod<V>
-  getNode: GetNodeMethod<T, U, V>
-  getDefaultNode: GetNodeMethod<T, U, V>
   selectedNodeId?: string
   collapsibleProps?: NodeCollapsibleProps
   readonly?: boolean
@@ -57,6 +54,9 @@ export interface PipelineGraphProps<T, U, V> {
   showEndNode?: boolean
   graphActionsLayout?: 'horizontal' | 'vertical'
   graphLinkClassname?: string
+  fireEvent: FireEventMethod<V>
+  getNode: GetNodeMethod<T, U, V>
+  getDefaultNode: GetNodeMethod<T, U, V>
 }
 
 function PipelineGraph<T, U, V>({

@@ -335,6 +335,7 @@ function PipelineStepNode(
         </div>
       )}
       {props?.data?.name && (
+        // Extract to common component as reused in all
         <div className={defaultCss.nodeNameText}>
           <Text
             width={125}

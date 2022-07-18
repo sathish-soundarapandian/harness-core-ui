@@ -5,6 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { ExecutionWrapperConfig } from 'services/pipeline-ng'
+
 export const getPositionOfAddIcon = (props: any, isRightNode?: boolean): string => {
   if (isRightNode) {
     return '-40px'
@@ -23,3 +25,6 @@ export const getPositionOfAddIcon = (props: any, isRightNode?: boolean): string 
   }
   return '-50px'
 }
+
+export const hasStepGroupChild = (stepsData: ExecutionWrapperConfig[]): boolean =>
+  stepsData?.some((step: ExecutionWrapperConfig): boolean => step?.step?.type === 'STEP_GROUP')

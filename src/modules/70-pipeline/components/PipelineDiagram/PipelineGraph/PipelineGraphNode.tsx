@@ -62,7 +62,8 @@ export function PipelineGraphRecursive<T, U, V>({
   optimizeRender = true,
   parentSelector,
   createNodeTitle,
-  showEndNode
+  showEndNode,
+  parentIdentifier
 }: PipelineGraphRecursiveProps<T, U, V>): React.ReactElement {
   const StartNode: React.FC<CombinedNodeProps<T, U, V>> | undefined = getNode(NodeType.StartNode)?.component
   const CreateNode: React.FC<CombinedNodeProps<T, U, V>> | React.FC<TerminalNodeProps<V>> | undefined = getNode(
@@ -89,6 +90,7 @@ export function PipelineGraphRecursive<T, U, V>({
         return (
           <PipelineNodeComponent
             {...commonProps}
+            parentIdentifier={parentIdentifier}
             selectedNodeId={selectedNodeId}
             data={node}
             index={index}
@@ -336,6 +338,7 @@ function PipelineGraphNodeWithCollapse<T, U, V>(
       ref={ref}
       intersectingIndex={intersectingIndex}
       collapseOnIntersect={true}
+      parentIdentifier={props?.parentIdentifier}
     />
   )
 }
@@ -353,9 +356,11 @@ function PipelineGraphNodeBasic<T, U, V>(props: PipelineGraphNodeBasicProps<T, U
     <PipelineGraphNodeWithCollapse {...props} />
   ) : (
     <PipelineGraphNodeWithoutCollapse
+      {...props}
       data={props?.data}
       selectedNodeId={props?.selectedNodeId}
       collapseOnIntersect={true}
+      parentIdentifier={props?.parentIdentifier}
       {...commonProps}
     />
   )

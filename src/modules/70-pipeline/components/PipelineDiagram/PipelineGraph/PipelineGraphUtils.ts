@@ -354,7 +354,11 @@ const getPipelineGraphData = ({
   PipelineStageNodeMetaDataType,
   EventWithBaseType
 >[] => {
-  let graphState: PipelineGraphState<StageElementWrapperConfig, PipelineStageNodeMetaDataType, EventWithBaseType>[] = []
+  let graphState: PipelineGraphState<
+    StageElementWrapperConfig | ExecutionWrapperConfig,
+    PipelineStageNodeMetaDataType,
+    EventWithBaseType
+  >[] = []
   const pipGraphDataType = graphDataType ? graphDataType : getPipelineGraphDataType(data)
 
   if (pipGraphDataType === PipelineGraphType.STAGE_GRAPH) {
