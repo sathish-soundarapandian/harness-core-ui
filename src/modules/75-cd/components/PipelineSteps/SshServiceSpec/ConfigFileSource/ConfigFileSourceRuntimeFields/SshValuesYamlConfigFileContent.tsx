@@ -18,6 +18,8 @@ import css from '@cd/components/PipelineSteps/SshServiceSpec/SshServiceSpec.modu
 
 interface K8sValuesYamlConfigFileRenderProps extends ConfigFileSourceRenderProps {
   pathFieldlabel: StringKeys
+  formik?: any
+  readnonly?: boolean
 }
 const K8sValuesYamlConfigFileContent = (props: K8sValuesYamlConfigFileRenderProps): React.ReactElement => {
   const { template, path, configFilePath, configFile, readonly, formik } = props
