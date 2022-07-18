@@ -196,7 +196,8 @@ describe('ArtifactsSelection tests', () => {
       accountId: 'test',
       refetchConnectors: jest.fn(),
       isReadonly: false,
-      isAdditionAllowed: true
+      isAdditionAllowed: true,
+      withSideCar: true
     }
 
     const { container } = render(
@@ -223,7 +224,8 @@ describe('ArtifactsSelection tests', () => {
       accountId: 'test',
       refetchConnectors: jest.fn(),
       isReadonly: false,
-      isAdditionAllowed: true
+      isAdditionAllowed: true,
+      withSideCar: true
     }
     const { container } = render(
       <TestWrapper>
@@ -266,7 +268,8 @@ describe('ArtifactsSelection tests', () => {
       accountId: 'test',
       refetchConnectors: jest.fn(),
       isReadonly: false,
-      isAdditionAllowed: true
+      isAdditionAllowed: true,
+      withSideCar: true
     }
     const { container } = render(
       <TestWrapper>
@@ -299,7 +302,8 @@ describe('ArtifactsSelection tests', () => {
       accountId: 'test',
       refetchConnectors: jest.fn(),
       isReadonly: false,
-      isAdditionAllowed: true
+      isAdditionAllowed: true,
+      withSideCar: true
     }
     const { container } = render(
       <TestWrapper>
@@ -332,7 +336,8 @@ describe('ArtifactsSelection tests', () => {
       accountId: 'test',
       refetchConnectors: jest.fn(),
       isReadonly: false,
-      isAdditionAllowed: true
+      isAdditionAllowed: true,
+      withSideCar: true
     }
     const { container } = render(
       <TestWrapper>

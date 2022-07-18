@@ -9269,10 +9269,6 @@ export interface StringsMap {
   /**
    * @deprecated migrate this string to module level file
    */
-  'pipelineSteps.serviceTab.configFileList.addConfigFile': string
-  /**
-   * @deprecated migrate this string to module level file
-   */
   'pipelineSteps.serviceTab.manifestList.addManifest': string
   /**
    * @deprecated migrate this string to module level file

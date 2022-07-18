@@ -261,7 +261,7 @@ function ArtifactListView({
       </Layout.Vertical>
 
       <Layout.Vertical spacing={'medium'} flex={{ alignItems: 'flex-start' }}>
-        {isAdditionAllowed && (
+        {!primaryArtifact && isAdditionAllowed && (
           <Button
             className={css.addArtifact}
             id="add-artifact"
