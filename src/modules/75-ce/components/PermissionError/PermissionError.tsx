@@ -10,6 +10,21 @@ interface ErrorProps {
   wrapperClassname?: string
 }
 
+const getErrorNode = (message: React.ReactNode): React.ReactNode => {
+  if (typeof message === 'string') {
+    return (
+      <Text
+        font={{ variation: FontVariation.BODY2_SEMI }}
+        color={Color.GREY_1000}
+        style={{ marginTop: 'var(--spacing-xlarge)' }}
+      >
+        {message}
+      </Text>
+    )
+  }
+  return message
+}
+
 const HandleError: React.FC<ErrorProps> = ({
   imgSrc,
   errorMsg,
@@ -20,13 +35,7 @@ const HandleError: React.FC<ErrorProps> = ({
   return (
     <Container className={wrapperClassname}>
       <img src={imgSrc} />
-      <Text
-        font={{ variation: FontVariation.BODY2_SEMI }}
-        color={Color.GREY_1000}
-        style={{ marginTop: 'var(--spacing-xlarge)' }}
-      >
-        {errorMsg}
-      </Text>
+      {getErrorNode(errorMsg)}
       <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_500}>
         {errorDesc || getString('ce.permissionError')}
       </Text>
