@@ -174,6 +174,7 @@ export function PipelineCanvas({
     isBEPipelineUpdated,
     gitDetails,
     entityValidityDetails,
+    storeMetadata,
     templateError,
     templateInputsErrorNodeSummary,
     yamlSchemaErrorWrapper
@@ -948,7 +949,8 @@ export function PipelineCanvas({
               onRefreshEntity={() => {
                 fetchPipeline({ forceFetch: true, forceUpdate: true })
               }}
-              originalEntityYaml={yamlStringify(originalPipeline)}
+              originalEntityYaml={yamlStringify(pipeline)}
+              storeMetadata={storeMetadata}
             />
           )}
           <Container className={css.builderContainer}>
