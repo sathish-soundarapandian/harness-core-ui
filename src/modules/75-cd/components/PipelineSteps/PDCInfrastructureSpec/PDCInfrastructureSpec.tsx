@@ -28,7 +28,7 @@ import { Radio, RadioGroup } from '@blueprintjs/core'
 import { parse } from 'yaml'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
-import { debounce, noop, isEmpty, set, get } from 'lodash-es'
+import { debounce, noop, set, get } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { loggerFor } from 'framework/logging/logging'
@@ -71,7 +71,7 @@ const PdcType = 'Pdc'
 
 function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({
-    sshKey: Yup.object().required(getString('validation.password'))
+    credentialsRef: Yup.object().required(getString('validation.password'))
   })
 }
 interface GcpInfrastructureSpecEditableProps {
@@ -184,7 +184,6 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
     const setInitial = async () => {
       const values = {
         ...initialValues,
-        connectorRef: initialValues.connectorRef,
         hosts: initialValues.hosts ? initialValues.hosts.join('\n') : '',
         hostFilters: initialValues.hostFilters ? initialValues.hostFilters.join('\n') : '',
         attributeFilters: initialValues.attributeFilters
@@ -192,6 +191,47 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
               .map(group => `${group[0]}:${group[1]}`)
               .join('\n')
           : ''
+      }
+      if (initialValues.connectorRef) {
+        try {
+          const splitedRef = initialValues.connectorRef.split('.')
+          let scope = ''
+          let identifier = ''
+          if (splitedRef.length > 1) {
+            scope = splitedRef[0]
+            identifier = splitedRef[1]
+          } else {
+            identifier = splitedRef[0]
+          }
+          const queryParams = {
+            accountIdentifier: accountId,
+            includeAllConnectorsAvailableAtScope: true
+          }
+          if (!scope) {
+            set(queryParams, 'orgIdentifier', orgIdentifier)
+            set(queryParams, 'projectIdentifier', projectIdentifier)
+          } else if (scope === 'org') {
+            set(queryParams, 'orgIdentifier', orgIdentifier)
+          }
+          const response = await getConnectorListV2Promise({
+            queryParams,
+            body: { types: ['Pdc'], filterType: 'Connector' }
+          })
+          const connResponse = get(response, 'data.content', []).find(
+            (conn: any) => conn.connector.identifier === identifier
+          )
+          const connectorData = {
+            label: initialValues.connectorRef,
+            value: `${scope ? `${scope}.` : ''}${identifier}`,
+            scope: scope,
+            live: connResponse?.status?.status === 'SUCCESS',
+            connector: connResponse.connector
+          }
+          set(values, 'connectorRef', connectorData)
+        } catch (e) {
+          /* istanbul ignore next */
+          showError(e.data?.message || e.message)
+        }
       }
       try {
         const secretData = await setSecretField(initialValues.credentialsRef, {
@@ -280,10 +320,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
       width: '12%',
       Cell: ({ row }) => (
         <ConnectivityStatus
-          identifier={
-            get(formikRef.current, 'values.credentialsRef', '') ||
-            get(formikRef.current, 'values.sshKey.identifier', '')
-          }
+          identifier={get(formikRef.current, 'values.sshKey.referenceString', '')}
           tags={get(formikRef.current, 'values.delegateSelectors', [])}
           host={get(row.original, 'host', '')}
           status={row.original.status}
@@ -325,10 +362,20 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
     setErrors([])
     try {
       const validationHosts = testHost ? [testHost] : detailHosts.map(host => get(host, 'host', ''))
-      const hostResults = await validateHosts({
-        hosts: validationHosts,
-        tags: get(formikRef, 'current.values.delegateSelectors', [])
-      })
+      const hostResults = await validateHosts(
+        {
+          hosts: validationHosts,
+          tags: get(formikRef, 'current.values.delegateSelectors', [])
+        },
+        {
+          queryParams: {
+            accountIdentifier: accountId,
+            projectIdentifier,
+            orgIdentifier,
+            identifier: get(formikRef.current, 'values.sshKey.referenceString', '')
+          }
+        }
+      )
       if (hostResults.status === 'SUCCESS') {
         const tempMap: any = {}
         detailHosts.forEach(hostItem => {
@@ -375,7 +422,8 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
               const data: Partial<PdcInfrastructure> = {
                 allowSimultaneousDeployments: value.allowSimultaneousDeployments,
                 delegateSelectors: value.delegateSelectors,
-                sshKey: value.sshKey
+                sshKey: value.sshKey,
+                credentialsRef: get(formikRef.current, 'values.sshKey.referenceString', '')
               }
               if (isPreconfiguredHosts === PreconfiguredHosts.FALSE) {
                 data.hosts = parseHosts(value.hosts)
@@ -519,6 +567,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                       <Button
                         onClick={() => {
                           setShowPreviewHostBtn(false)
+                          getHosts()
                         }}
                         size={ButtonSize.SMALL}
                         variation={ButtonVariation.SECONDARY}
@@ -548,11 +597,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                               size={ButtonSize.SMALL}
                               variation={ButtonVariation.SECONDARY}
                               disabled={
-                                detailHosts.length === 0 ||
-                                !(
-                                  get(formikRef.current, 'values.credentialsRef', '') ||
-                                  get(formikRef.current, 'values.sshKey.identifier', '')
-                                )
+                                detailHosts.length === 0 || !get(formikRef.current, 'values.sshKey.referenceString', '')
                               }
                             >
                               {getString('common.smtp.testConnection')}
@@ -609,7 +654,6 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
   protected type = StepType.PDC
   /* istanbul ignore next */
   protected defaultValues: PdcInfrastructure = {
-    connectorRef: '',
     credentialsRef: ''
   }
 
@@ -725,7 +769,7 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
     /* istanbul ignore else */
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (
-      isEmpty(data.credentialsRef) &&
+      !data.credentialsRef &&
       isRequired &&
       getMultiTypeFromValue(get(template, 'credentialsRef', undefined)) === MultiTypeInputType.RUNTIME
     ) {
