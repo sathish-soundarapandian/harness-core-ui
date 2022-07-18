@@ -39,6 +39,7 @@ export enum StepType {
   Run = 'Run',
   GCR = 'BuildAndPushGCR',
   PDC = 'Pdc',
+  SshWinRmAws = 'SshWinRmAws',
   ECR = 'BuildAndPushECR',
   SaveCacheGCS = 'SaveCacheGCS',
   RestoreCacheGCS = 'RestoreCacheGCS',

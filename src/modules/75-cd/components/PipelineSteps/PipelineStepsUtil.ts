@@ -32,6 +32,7 @@ export enum InfraDeploymentType {
   ServerlessAzureFunctions = 'ServerlessAzureFunctions',
   AmazonSAM = 'AwsSAM',
   AzureFunctions = 'AzureFunctions',
+  SshWinRmAws = 'SshWinRmAws',
   SshWinRmAzure = 'SshWinRmAzure',
   AzureWebApp = 'AzureWebApp'
 }
