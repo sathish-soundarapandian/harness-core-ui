@@ -70,6 +70,8 @@ export const getTriggerIcon = ({
         return ArtifactIconByType.DockerRegistry
       case ENABLED_ARTIFACT_TYPES.Acr:
         return ArtifactIconByType.Acr
+      case ENABLED_ARTIFACT_TYPES.Jenkins:
+        return ArtifactIconByType.Jenkins
     }
   }
   return 'yaml-builder-trigger'
@@ -150,6 +152,11 @@ const triggerDrawerMap = (
           itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Acr]),
           value: ENABLED_ARTIFACT_TYPES.Acr,
           iconName: ArtifactIconByType.Acr
+        },
+        {
+          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Jenkins]),
+          value: ENABLED_ARTIFACT_TYPES.Jenkins,
+          iconName: ArtifactIconByType.Jenkins
         }
       ]
     },

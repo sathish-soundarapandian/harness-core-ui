@@ -147,6 +147,10 @@ const onSubmit = ({
     finalArtifact.spec.tag = replaceTriggerDefaultBuild({
       build: finalArtifact?.spec?.tag
     })
+  } else if (!isManifest && finalArtifact?.spec?.build) {
+    finalArtifact.spec.build = replaceTriggerDefaultBuild({
+      build: finalArtifact?.spec?.build
+    })
   } else if (!isManifest && finalArtifact?.spec?.artifactPath) {
     finalArtifact.spec.artifactPath = replaceTriggerDefaultBuild({
       artifactPath: finalArtifact?.spec?.artifactPath

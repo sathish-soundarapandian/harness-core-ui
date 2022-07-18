@@ -1299,6 +1299,12 @@ const getManifestTableItem = ({
           getString?.('pipeline.artifactTriggerConfigPanel.runtimeInput')
       )
     } else {
+      if (manifest.type === 'Jenkins') {
+        return (
+          getRuntimeInputLabel({ str: manifest?.spec?.build, getString }) !==
+          getString?.('pipeline.artifactTriggerConfigPanel.runtimeInput')
+        )
+      }
       if (isServerlessDeploymentTypeSelected) {
         return (
           !manifest?.spec?.artifactPath ||
