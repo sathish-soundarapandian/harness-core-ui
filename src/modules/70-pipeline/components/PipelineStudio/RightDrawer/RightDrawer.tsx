@@ -461,6 +461,7 @@ export function RightDrawer(): React.ReactElement {
     const toolTipType = type ? `_${type}` : ''
     title = (
       <RightDrawerTitle
+        helpPanelVisible ={helpPanelVisible}
         stepType={stepType}
         toolTipType={toolTipType}
         stepData={stepData}

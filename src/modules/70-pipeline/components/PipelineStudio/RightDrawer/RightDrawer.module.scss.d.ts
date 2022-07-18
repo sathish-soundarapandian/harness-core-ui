@@ -16,6 +16,7 @@ declare const styles: {
   readonly helpPanel: string
   readonly helpPanelContainer: string
   readonly main: string
+  readonly showHelpPanel: string
   readonly showRighDrawer: string
   readonly stepConfig: string
   readonly title: string
