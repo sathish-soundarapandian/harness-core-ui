@@ -25,8 +25,8 @@ export const HARNESS_SUPPORT_LINK =
   '/sso.html?action=login&brand_id=114095000394&locale_id=1&return_to=https%3A%2F%2Fsupport.harness.io%2Fhc%2Fen-us%2Frequests&src=zendesk&timestamp=' +
   timestamp
 
-export const WHATS_NEW_LINK = `https://changelog.harness.io/?categories=ng-fix,ng-improvement,ng-new`
-export const EARLY_ACCESS_LINK = `https://changelog.harness.io/?categories=ng-early-access`
+export const WHATS_NEW_LINK = `https://docs.harness.io/article/ueeiji09do-what-s-new`
+export const EARLY_ACCESS_LINK = `https://docs.harness.io/article/w4krvu96i3-early-access`
 
 export const openZendeskSupport = (e: React.MouseEvent<Element, MouseEvent>): void => {
   e.stopPropagation()
