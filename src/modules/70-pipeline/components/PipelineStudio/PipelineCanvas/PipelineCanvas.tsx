@@ -948,7 +948,7 @@ export function PipelineCanvas({
               onRefreshEntity={() => {
                 fetchPipeline({ forceFetch: true, forceUpdate: true })
               }}
-              originalEntityYaml={yamlStringify(pipeline)}
+              originalEntityYaml={yamlStringify(originalPipeline)}
             />
           )}
           <Container className={css.builderContainer}>
