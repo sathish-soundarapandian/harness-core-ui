@@ -748,14 +748,13 @@ export function StageInputSetFormInternal({
       }
     }
   }, [])
-
   return (
     <>
       {deploymentStageTemplate.serviceConfig && (
         <div id={`Stage.${stageIdentifier}.Service`} className={cx(css.accordionSummary)}>
           <div className={css.inputheader}>{getString('service')}</div>
           <div className={css.nestedAccordions}>
-            {!isSvcEnvEntityEnabled && deploymentStageTemplate?.serviceConfig?.serviceRef && (
+            {deploymentStageTemplate?.serviceConfig?.serviceRef && (
               /* istanbul ignore next */ <StepWidget<ServiceConfig>
                 factory={factory}
                 initialValues={deploymentStageInputSet?.serviceConfig || {}}
