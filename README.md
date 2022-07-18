@@ -142,16 +142,16 @@ $ yarn test
 
 ### Hotfix Process
 
-1. Find out which release branch you need to hotfix. You can do that checking the currently deployed version in the environment you want to hotfix. For eg. For UAT environment, you can hit https://uat.harness.io/ng/static/version.json to get the currently deployed version. (eg. `0.53.4`)
-2. Create a branch from the corresponding release branch (eg. `release/0.53.x`) which you want to hotfix
+1. Find out which release branch you need to hotfix. You can do that checking the currently deployed version in the environment you want to hotfix. For eg. For UAT environment, you can hit https://uat.harness.io/ng/static/version.json to get the currently deployed version. (ex. `0.53.4`)
+2. Create a branch from the corresponding release branch (ex. `release/0.53.x`) which you want to hotfix
 3. Commit your changes on your branch
-4. Bump up the patch version in `package.json` (eg. 0.53.0 -> 0.53.1)
+4. Bump up the patch version in `package.json` (ex. 0.53.4 -> 0.53.5)
 5. Raise PR with these changes
 6. When this PR gets merged, this [Workflow](https://uat.harness.io/ng/#/account/sjmVqavzTuS1segZNyZqbA/ci/orgs/default/projects/uiprchecks/pipelines/build_release_branch/executions) will create a new build for you automatically
-7. Please inform Ops/QE team to deploy your new build, especially in QA, UAT or prod environment.
-8. Make sure to raise a PR with the same changes (minus the version bump) for `develop` branch too. Otherwise your changes will get overriden with next deployment.
+7. On UAT or Prod, inform Ops team to deploy your new build. On QA, you can build and deploy, yourself, using Slack slash commands. See https://harness.atlassian.net/wiki/spaces/PD/pages/21077197030/Build+and+Deployment+of+QA+Using+Slack
+8. Make sure to raise a second PR with the same changes (minus the version bump) for `develop` branch (QA hotfix) or `master` branch (Prod hotfix). Otherwise your changes will get overriden with next deployment.
 
-## For wndows environment setup only
+## For windows environment setup only
 
 #### Download Git bash for windows
 
