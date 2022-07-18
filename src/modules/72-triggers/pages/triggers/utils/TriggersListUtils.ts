@@ -154,6 +154,11 @@ const triggerDrawerMap = (
           itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Acr]),
           value: ENABLED_ARTIFACT_TYPES.Acr,
           iconName: ArtifactIconByType.Acr
+        },
+        {
+          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Jenkins]),
+          value: ENABLED_ARTIFACT_TYPES.Jenkins,
+          iconName: ArtifactIconByType.Jenkins
         }
       ]
     },
