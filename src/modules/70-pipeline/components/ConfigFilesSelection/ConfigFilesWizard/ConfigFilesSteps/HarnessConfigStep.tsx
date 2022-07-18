@@ -12,7 +12,6 @@ import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import type { ConfigFileWrapper, StoreConfigWrapper } from 'services/cd-ng'
 import { StringUtils } from '@common/exports'
-
 import { useStrings } from 'framework/strings'
 import { FILE_TYPE_VALUES, prepareConfigFilesValue } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { MultiConfigSelectField } from './MultiConfigSelectField/MultiConfigSelectField'
