@@ -160,9 +160,9 @@ export enum PermissionIdentifier {
   VIEW_CCM_COST_CATEGORY = 'ccm_costCategory_view',
   EDIT_CCM_COST_CATEGORY = 'ccm_costCategory_edit',
   DELETE_CCM_COST_CATEGORY = 'ccm_costCategory_delete',
-  VIEW_CCM_AUTOSTOPPING_RULE = 'ccm_autostoppingrule_view',
-  EDIT_CCM_AUTOSTOPPING_RULE = 'ccm_autostoppingrule_edit',
-  DELETE_CCM_AUTOSTOPPING_RULE = 'ccm_autostoppingrule_delete',
+  VIEW_CCM_AUTOSTOPPING_RULE = 'ccm_autoStoppingRule_view',
+  EDIT_CCM_AUTOSTOPPING_RULE = 'ccm_autoStoppingRule_edit',
+  DELETE_CCM_AUTOSTOPPING_RULE = 'ccm_autoStoppingRule_delete',
   VIEW_CCM_LOADBALANCER = 'ccm_loadBalancer_view',
   EDIT_CCM_LOADBALANCER = 'ccm_loadBalancer_edit',
   DELETE_CCM_LOADBALANCER = 'ccm_loadBalancer_delete'
