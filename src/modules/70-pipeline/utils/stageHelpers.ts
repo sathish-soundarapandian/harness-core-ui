@@ -231,8 +231,7 @@ export const isServerlessDeploymentType = (deploymentType: string): boolean => {
     deploymentType === ServiceDeploymentType.ServerlessAzureFunctions ||
     deploymentType === ServiceDeploymentType.ServerlessGoogleFunctions ||
     deploymentType === ServiceDeploymentType.AmazonSAM ||
-    deploymentType === ServiceDeploymentType.AzureFunctions ||
-    deploymentType === ServiceDeploymentType.Ssh
+    deploymentType === ServiceDeploymentType.AzureFunctions
   )
 }
 
@@ -249,7 +248,7 @@ export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessAzureFunctions]: 'Azure Details',
   [ServiceDeploymentType.AzureWebApp]: 'Web App Details',
   [ServiceDeploymentType.ServerlessGoogleFunctions]: 'GCP Details',
-  [ServiceDeploymentType.Pdc]: 'Infrastructure definition',
+  [ServiceDeploymentType.Ssh]: 'Infrastructure definition',
   [ServiceDeploymentType.winrm]: 'WinRM'
 }
 
