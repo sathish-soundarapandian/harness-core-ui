@@ -27,7 +27,7 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import { renderConnectorAndRepoName } from '@pipeline/components/PipelineStudio/RightBar/RightBarUtils'
-import { renderBuild } from '../GitCloneStep/GitCloneStepBase'
+import { renderBuild } from '../GitCloneStep/GitCLoneStepUtils'
 import {
   AllMultiTypeInputTypesForInputSet,
   AllMultiTypeInputTypesForStep,
