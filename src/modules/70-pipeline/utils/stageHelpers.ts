@@ -51,11 +51,12 @@ export enum ServiceDeploymentType {
   amazonEcs = 'amazonEcs',
   amazonAmi = 'amazonAmi',
   awsCodeDeploy = 'awsCodeDeploy',
-  winrm = 'WinRm',
+  WinRm = 'WinRm',
+  winrm = 'winrm',
   awsLambda = 'awsLambda',
   pcf = 'pcf',
-  ssh = 'Ssh',
   Pdc = 'Pdc',
+  Ssh = 'Ssh',
   ServerlessAwsLambda = 'ServerlessAwsLambda',
   ServerlessAzureFunctions = 'ServerlessAzureFunctions',
   ServerlessGoogleFunctions = 'ServerlessGoogleFunctions',
@@ -230,12 +231,13 @@ export const isServerlessDeploymentType = (deploymentType: string): boolean => {
     deploymentType === ServiceDeploymentType.ServerlessAzureFunctions ||
     deploymentType === ServiceDeploymentType.ServerlessGoogleFunctions ||
     deploymentType === ServiceDeploymentType.AmazonSAM ||
-    deploymentType === ServiceDeploymentType.AzureFunctions
+    deploymentType === ServiceDeploymentType.AzureFunctions ||
+    deploymentType === ServiceDeploymentType.Ssh
   )
 }
 
 export const isSSHWinRMDeploymentType = (deploymentType: string): boolean => {
-  return deploymentType === ServiceDeploymentType.winrm || deploymentType === ServiceDeploymentType.ssh
+  return deploymentType === ServiceDeploymentType.winrm || deploymentType === ServiceDeploymentType.Ssh
 }
 
 export const isAzureWebAppDeploymentType = (deploymentType: string): boolean => {
@@ -374,6 +376,10 @@ export const isInfraDefinitionPresent = (stage: DeploymentStageElementConfig): b
   return !!stage.spec?.infrastructure?.infrastructureDefinition
 }
 
+export const isConfigFilesPresent = (stage: DeploymentStageElementConfig): boolean => {
+  return !!stage.spec?.serviceConfig && !!stage.spec?.serviceConfig.serviceDefinition?.spec.configFiles
+}
+
 export const isServiceEntityPresent = (stage: any): boolean => {
   return !!stage.spec?.service?.serviceRef
 }
@@ -393,7 +399,12 @@ export const doesStageContainOtherData = (stage?: DeploymentStageElementConfig):
   if (!stage) {
     return false
   }
-  return isArtifactManifestPresent(stage) || isInfraDefinitionPresent(stage) || isExecutionFieldPresent(stage)
+  return (
+    isArtifactManifestPresent(stage) ||
+    isInfraDefinitionPresent(stage) ||
+    isExecutionFieldPresent(stage) ||
+    isConfigFilesPresent(stage)
+  )
 }
 
 export const hasStageData = (stage?: any): boolean => {
@@ -412,6 +423,7 @@ export const deleteStageData = (stage?: DeploymentStageElementConfig): void => {
   if (stage) {
     delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.artifacts
     delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.manifests
+    delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.configFiles
     delete stage?.spec?.infrastructure?.allowSimultaneousDeployments
     delete stage?.spec?.infrastructure?.infrastructureDefinition
     if (stage?.spec?.execution?.steps) {
@@ -424,6 +436,7 @@ export const deleteServiceData = (stage?: DeploymentStageElementConfig): void =>
   if (stage) {
     delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.artifacts
     delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.manifests
+    delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.configFiles
   }
 }
 //This is to delete stage data in case of new service/ env entity
@@ -447,6 +460,12 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
   if (isServerlessDeploymentType(deploymentType)) {
     return StepType.ServerlessAwsLambda
   }
+  if (deploymentType === ServiceDeploymentType.Ssh) {
+    return StepType.SshServiceSpec
+  }
+  if (deploymentType === ServiceDeploymentType.WinRm) {
+    return StepType.WinRmServiceSpec
+  }
   if (deploymentType === ServiceDeploymentType.AzureWebApp) {
     return StepType.AzureWebAppServiceSpec
   }
@@ -468,3 +487,11 @@ export const getDefaultBuildDependencies = (serviceDependencies: DependencyEleme
     steps: serviceDependencies.length ? [{ parallel: serviceDependencies.map(d => ({ step: d })) }] : []
   }
 })
+
+export const isSshOrWinrmDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.Ssh || deploymentType === ServiceDeploymentType.WinRm
+}
+
+export const withoutSideCar = (deploymentType: string): boolean => {
+  return isSshOrWinrmDeploymentType(deploymentType)
+}

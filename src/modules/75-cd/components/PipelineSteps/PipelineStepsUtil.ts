@@ -41,7 +41,7 @@ export const deploymentTypeToInfraTypeMap = {
   [ServiceDeploymentType.ServerlessAwsLambda]: InfraDeploymentType.ServerlessAwsLambda,
   [ServiceDeploymentType.ServerlessAzureFunctions]: InfraDeploymentType.ServerlessAzureFunctions,
   [ServiceDeploymentType.ServerlessGoogleFunctions]: InfraDeploymentType.ServerlessGoogleFunctions,
-  [ServiceDeploymentType.ssh]: InfraDeploymentType.PDC
+  [ServiceDeploymentType.Ssh]: InfraDeploymentType.PDC
 }
 
 export function getNameSpaceSchema(
@@ -194,12 +194,12 @@ export const getInfrastructureDefinitionValidationSchema = (
     }
     return getValidationSchema(getString)
   } else {
-    if (deploymentType === ServiceDeploymentType.ssh) {
+    if (deploymentType === ServiceDeploymentType.Ssh) {
       return Yup.object().shape({
         credentialsRef: getCredentialsRefSchema(getString)
       })
     }
-    if (deploymentType === ServiceDeploymentType.winrm) {
+    if (deploymentType === ServiceDeploymentType.WinRm) {
       return Yup.object().shape({})
     }
     return Yup.object().shape({

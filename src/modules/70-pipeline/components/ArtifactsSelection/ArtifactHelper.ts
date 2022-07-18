@@ -22,6 +22,14 @@ export enum ModalViewFor {
   SIDECAR = 2
 }
 
+export const isAllowedArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
+  return (
+    deploymentType === ServiceDeploymentType.Kubernetes ||
+    deploymentType === ServiceDeploymentType.NativeHelm ||
+    deploymentType === ServiceDeploymentType.Ssh ||
+    deploymentType === ServiceDeploymentType.WinRm
+  )
+}
 export const isAllowedACRArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
   return (
     deploymentType === ServiceDeploymentType.Kubernetes ||
@@ -49,6 +57,8 @@ export const isAdditionAllowed = (deploymentType: ServiceDefinition['type'], isR
     (deploymentType === ServiceDeploymentType.Kubernetes ||
       deploymentType === ServiceDeploymentType.NativeHelm ||
       deploymentType === ServiceDeploymentType.ServerlessAwsLambda ||
+      deploymentType === ServiceDeploymentType.Ssh ||
+      deploymentType === ServiceDeploymentType.WinRm ||
       deploymentType === ServiceDeploymentType.AzureWebApp)
   )
 }
@@ -119,11 +129,6 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Nexus3Registry,
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry
   ],
-  ServerlessAwsLambda: [
-    ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
-    ENABLED_ARTIFACT_TYPES.Ecr
-    // ENABLED_ARTIFACT_TYPES.Jenkins
-  ],
   NativeHelm: [
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
     ENABLED_ARTIFACT_TYPES.Gcr,
@@ -131,8 +136,9 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Nexus3Registry,
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry
   ],
-  Ssh: [],
-  WinRm: [],
+  ServerlessAwsLambda: [ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry, ENABLED_ARTIFACT_TYPES.Ecr],
+  Ssh: [ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry, ENABLED_ARTIFACT_TYPES.Jenkins],
+  WinRm: [ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry, ENABLED_ARTIFACT_TYPES.Jenkins],
   AzureWebApp: [
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
     ENABLED_ARTIFACT_TYPES.Gcr,

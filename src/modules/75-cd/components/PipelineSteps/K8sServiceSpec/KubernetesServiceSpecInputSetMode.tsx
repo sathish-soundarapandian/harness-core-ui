@@ -18,9 +18,11 @@ import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import type { CustomVariablesData } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableEditable'
 import type { CustomVariableInputSetExtraProps } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
 import type { AllNGVariables } from '@pipeline/utils/types'
+import { ConfigFiles } from '@cd/components/PipelineSteps/SshServiceSpec/SshConfigFiles/ConfigFiles'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import manifestSourceBaseFactory from '@cd/factory/ManifestSourceFactory/ManifestSourceBaseFactory'
+import configFileSourceBaseFactory from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBaseFactory'
 import type { K8SDirectServiceStep } from './K8sServiceSpecInterface'
 import { KubernetesArtifacts } from './KubernetesArtifacts/KubernetesArtifacts'
 import { KubernetesManifests } from './KubernetesManifests/KubernetesManifests'
@@ -89,6 +91,23 @@ const KubernetesServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetPr
           readonly={readonly}
           allowableTypes={allowableTypes}
         />
+      )}
+
+      {!!template?.configFiles?.length && (
+        <>
+          <ConfigFiles
+            template={template}
+            configFiles={allValues?.configFiles}
+            configFileSourceBaseFactory={configFileSourceBaseFactory}
+            stepViewType={stepViewType}
+            stageIdentifier={stageIdentifier}
+            formik={formik}
+            path={path}
+            initialValues={initialValues}
+            readonly={readonly}
+            allowableTypes={allowableTypes}
+          />
+        </>
       )}
 
       {!!template?.variables?.length && (

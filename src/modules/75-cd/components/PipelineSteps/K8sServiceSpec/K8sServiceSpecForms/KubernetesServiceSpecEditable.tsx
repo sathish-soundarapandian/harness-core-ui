@@ -10,8 +10,13 @@ import { Card, HarnessDocTooltip } from '@wings-software/uicore'
 import cx from 'classnames'
 import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/WorkflowVariables'
 import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ArtifactsSelection'
+import ConfigFilesSelection from '@pipeline/components/ConfigFilesSelection/ConfigFilesSelection'
 import ManifestSelection from '@pipeline/components/ManifestSelection/ManifestSelection'
-import { getSelectedDeploymentType, isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
+import {
+  getSelectedDeploymentType,
+  isServerlessDeploymentType,
+  isSshOrWinrmDeploymentType
+} from '@pipeline/utils/stageHelpers'
 import { useStrings } from 'framework/strings'
 import type { ServiceDefinition } from 'services/cd-ng'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
@@ -60,26 +65,30 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
     <div className={css.serviceDefinition}>
       {!!selectedDeploymentType && (
         <>
-          <Card
-            className={css.sectionCard}
-            id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
-          >
-            <div
-              className={cx(css.tabSubHeading, 'ng-tooltip-native')}
-              data-tooltip-id={getManifestsHeaderTooltipId(selectedDeploymentType)}
+          {!isSshOrWinrmDeploymentType(selectedDeploymentType) && (
+            <Card
+              className={css.sectionCard}
+              id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
             >
-              {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
-              <HarnessDocTooltip tooltipId={getManifestsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
-            </div>
+              <div
+                className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+                data-tooltip-id={getManifestsHeaderTooltipId(selectedDeploymentType)}
+              >
+                {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
+                <HarnessDocTooltip
+                  tooltipId={getManifestsHeaderTooltipId(selectedDeploymentType)}
+                  useStandAlone={true}
+                />
+              </div>
 
-            <ManifestSelection
-              isPropagating={isPropagating}
-              deploymentType={selectedDeploymentType}
-              isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-              readonly={!!readonly}
-            />
-          </Card>
-
+              <ManifestSelection
+                isPropagating={isPropagating}
+                deploymentType={selectedDeploymentType}
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                readonly={!!readonly}
+              />
+            </Card>
+          )}
           <Card
             className={css.sectionCard}
             id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
@@ -98,6 +107,21 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
               readonly={!!readonly}
             />
           </Card>
+          {isSshOrWinrmDeploymentType(selectedDeploymentType) && (
+            <Card className={css.sectionCard} id={getString('pipelineSteps.configFiles')}>
+              <div
+                className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+                data-tooltip-id={getArtifactsHeaderTooltipId(selectedDeploymentType)}
+              >
+                {getString('pipelineSteps.configFiles')}
+                <HarnessDocTooltip
+                  tooltipId={getArtifactsHeaderTooltipId(selectedDeploymentType)}
+                  useStandAlone={true}
+                />
+              </div>
+              <ConfigFilesSelection isPropagating={isPropagating} deploymentType={selectedDeploymentType} />
+            </Card>
+          )}
         </>
       )}
 

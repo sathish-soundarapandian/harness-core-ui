@@ -2849,6 +2849,18 @@ export interface StringsMap {
   'pipeline.conditionalExecution.toolTip.resolvedVariables': string
   'pipeline.conditionalExecution.toolTip.stageTitle': string
   'pipeline.conditionalExecution.toolTip.stepTitle': string
+  'pipeline.configFiles.encryptedFiles': string
+  'pipeline.configFiles.encryptedLocation': string
+  'pipeline.configFiles.error.file': string
+  'pipeline.configFiles.error.fileType': string
+  'pipeline.configFiles.error.files': string
+  'pipeline.configFiles.error.identifier': string
+  'pipeline.configFiles.fileType': string
+  'pipeline.configFiles.identifierLabel': string
+  'pipeline.configFiles.plainText': string
+  'pipeline.configFiles.selectFileType': string
+  'pipeline.configFiles.source': string
+  'pipeline.configFiles.title': string
   'pipeline.createANewPipeline': string
   'pipeline.createPipeline.choosePipelineSetupHeader': string
   'pipeline.createPipeline.learnMore': string

@@ -58,12 +58,12 @@ export const getTags = (tags?: NGTag[]) => {
 
 const NewFileForm: React.FC<NewFileModalData> = props => {
   const { close, editMode = false, tempNode, fileStoreContext, currentNode, notCurrentNode } = props
-  const { updateCurrentNode, removeFromTempNodes, getNode, queryParams, setUnsavedNodes } = fileStoreContext
+  const { updateCurrentNode, removeFromTempNodes, getNode, queryParams, setUnsavedNodes, fileUsage } = fileStoreContext
   const [initialValues, setInitialValues] = useState<Omit<NewFileDTO, 'type'>>({
     name: '',
     description: '',
     identifier: '',
-    fileUsage: null,
+    fileUsage: fileUsage || null,
     content: '',
     tags: []
   })
@@ -220,8 +220,8 @@ const NewFileForm: React.FC<NewFileModalData> = props => {
       initialValues={initialValues}
       formName="newFile"
       validationSchema={Yup.object().shape({
-        identifier: IdentifierSchema(),
-        fileUsage: Yup.string().nullable(true).trim().required(getString('filestore.errors.fileUsage'))
+        identifier: IdentifierSchema()
+        // fileUsage: Yup.string().nullable(true).trim().required(getString('filestore.errors.fileUsage'))
       })}
       onSubmit={values => {
         modalErrorHandler?.hide()
@@ -242,6 +242,14 @@ const NewFileForm: React.FC<NewFileModalData> = props => {
                 />
                 <FormInput.Select
                   style={{ width: 180 }}
+                  value={
+                    formikProps?.values?.fileUsage
+                      ? {
+                          label: getFileUsageNameByType(formikProps?.values?.fileUsage as FileUsage),
+                          value: formikProps?.values?.fileUsage
+                        }
+                      : null
+                  }
                   items={fileUsageItems}
                   name="fileUsage"
                   label={getString('filestore.view.fileUsage')}

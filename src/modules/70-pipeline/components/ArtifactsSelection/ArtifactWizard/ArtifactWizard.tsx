@@ -76,6 +76,7 @@ function ArtifactWizard({
     }
     return undefined
   }
+
   return (
     <StepWizard className={css.existingDocker} subtitle={renderSubtitle()} onStepChange={onStepChange}>
       <ArtifactoryRepoType
