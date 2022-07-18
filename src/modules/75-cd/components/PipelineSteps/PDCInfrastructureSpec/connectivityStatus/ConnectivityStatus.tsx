@@ -6,6 +6,7 @@
  */
 
 import React, { MouseEvent, useState } from 'react'
+import { get } from 'lodash-es'
 import {
   Text,
   Layout,
@@ -102,7 +103,8 @@ const ConnectivityStatus: React.FC<ConnectivityStatusProps> = data => {
   const executeStepVerify = async (): Promise<void> => {
     try {
       const result = await validateHosts({ hosts: [host], tags })
-      if (result.status === 'SUCCESS') {
+      const hostResponse = get(result, 'data[0]', {})
+      if (hostResponse.status === 'SUCCESS') {
         setStatus('SUCCESS')
         setStepDetails({
           step: 2,
@@ -111,7 +113,10 @@ const ConnectivityStatus: React.FC<ConnectivityStatusProps> = data => {
         })
       } else {
         setStatus('FAILURE')
-        setErrorMessage({ ...result.data, useErrorHandler: false })
+        setErrorMessage({
+          errorSummary: get(result, 'data[0].error.message', ''),
+          useErrorHandler: true
+        })
         setStepDetails({
           step: 1,
           intent: Intent.DANGER,
@@ -203,7 +208,7 @@ const ConnectivityStatus: React.FC<ConnectivityStatusProps> = data => {
           <Button intent="primary" minimal loading />
           <div className={css.testConnectionPop}>
             <StepsProgress
-              steps={['step 1 name']}
+              steps={[getString('connectors.testInProgress')]}
               intent={stepDetails.intent}
               current={stepDetails.step}
               currentStatus={stepDetails.status}

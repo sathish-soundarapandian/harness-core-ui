@@ -488,7 +488,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
               onUpdateInfrastructureDefinition(
                 {
                   connectorRef: value.connectorRef?.connector?.identifier,
-                  credentialsRef: value.sshKey?.identifier,
+                  credentialsRef: value.sshKey.referenceString,
                   attributeFilters: value.attributeFilters,
                   hostFilters: value.hostFilters,
                   hosts: value.hosts,
