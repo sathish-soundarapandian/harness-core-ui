@@ -1,3 +1,6 @@
+import React, { useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { Button, ButtonVariation, getErrorInfoFromErrorObject, Layout, useToaster } from '@harness/uicore'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 
 import ScopedTitle from '@common/components/Title/ScopedTitle'
@@ -5,17 +8,12 @@ import { Page } from '@common/exports'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
 import { useStrings } from 'framework/strings'
-import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { Button, ButtonVariation, getErrorInfoFromErrorObject, Layout, useToaster } from '@harness/uicore'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import DefaultSettingsFactory from '@default-settings/factories/DefaultSettingsFactory'
-import { SettingDTO, SettingRequestDTO, updateSettingValuePromise, useUpdateSettingValue } from 'services/cd-ng'
-import css from './SettingsList.module.scss'
+import { SettingDTO, SettingRequestDTO, useUpdateSettingValue } from 'services/cd-ng'
 import type { SettingCategory, SettingType } from '../interfaces/SettingType'
-import type { SettingCategoryHandler } from '../factories/DefaultSettingsFactory'
 import SettingsCategorySection from '../components/SettingsCategorySection'
-import { getError } from '@pipeline/pages/execution/ExecutionTestView/TestsUtils'
+import css from './SettingsList.module.scss'
 const SettingsList = () => {
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()

@@ -1,12 +1,11 @@
-import type { SettingType } from '@default-settings/interfaces/SettingType'
 import React from 'react'
+import type { SettingType } from '@default-settings/interfaces/SettingType'
 
 import DefaultSettingsFactory from '@default-settings/factories/DefaultSettingsFactory'
+import type { SettingRequestDTO, SettingResponseDTO } from 'services/cd-ng'
 import SettingTypeRow from './SettingTypeRow'
-import { Layout } from '@harness/uicore'
 
 import css from './SettingsCategorySection.module.scss'
-import type { SettingRequestDTO, SettingResponseDTO } from 'services/cd-ng'
 interface SettingTypeRowProps {
   settingsTypesSet: Set<SettingType> | undefined
   onSelectionChange: (settingType: SettingType, val: string) => void

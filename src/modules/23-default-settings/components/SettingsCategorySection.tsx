@@ -2,28 +2,21 @@ import {
   Accordion,
   Card,
   getErrorInfoFromErrorObject,
-  OverlaySpinner,
   PageSpinner,
   useToaster,
   Text,
   FontVariation
 } from '@harness/uicore'
-import { useStrings } from 'framework/strings'
 import React, { useState } from 'react'
-import DefaultSettingsFactory from '@default-settings/factories/DefaultSettingsFactory'
-import type { SettingCategory, SettingType } from '../interfaces/SettingType'
-import css from './SettingsCategorySection.module.scss'
-import SettingCategorySectionContents from './SettingCategorySectionContents'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import {
-  getSettingsListPromise,
-  SettingDTO,
-  SettingRequestDTO,
-  SettingResponseDTO,
-  useGetSettingsList
-} from 'services/cd-ng'
 import { useParams } from 'react-router-dom'
+import { useStrings } from 'framework/strings'
+import DefaultSettingsFactory from '@default-settings/factories/DefaultSettingsFactory'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { getSettingsListPromise, SettingDTO, SettingRequestDTO, SettingResponseDTO } from 'services/cd-ng'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { SettingCategory, SettingType } from '../interfaces/SettingType'
+import SettingCategorySectionContents from './SettingCategorySectionContents'
+import css from './SettingsCategorySection.module.scss'
 interface SettingsCategorySectionProps {
   settingCategory: SettingCategory
   onSettingChange: (
@@ -42,7 +35,7 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
   settingErrorMessages
 }) => {
   const settingCategoryHandler = DefaultSettingsFactory.getSettingCategoryHandler(settingCategory)
-  const { projectIdentifier, orgIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
+  const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps & ModulePathParams>()
 
   const { getString } = useStrings()
   if (!settingCategoryHandler) return null
@@ -56,7 +49,6 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
   }
 
   const [settingTypes, updateSettingTypes] = useState<Set<SettingType>>(new Set())
-  const [settingResponseDTO, updateSettingResponseDTO] = useState<SettingResponseDTO[]>()
 
   const { showError } = useToaster()
   const [refiedSettingTypesWithDTO, updateRefiedSettingTypesWithDTO] =
@@ -78,7 +70,6 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
           }
         })
         updateRefiedSettingTypesWithDTO(refiedSettingTypesWithDTOLocal)
-        updateSettingResponseDTO(data.data)
         updateSettingTypes(settingTypesTemp)
       } catch (error) {
         showError(getErrorInfoFromErrorObject(error))

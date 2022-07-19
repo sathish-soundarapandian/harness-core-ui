@@ -1,12 +1,11 @@
-import React, { FormEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { FormEvent } from 'react'
+import { Checkbox, DropDown, TextInput } from '@harness/uicore'
+import { Radio, RadioGroup } from '@blueprintjs/core'
 import type { SettingDTO } from 'services/cd-ng'
 import type { SettingRendererProps } from '@default-settings/factories/DefaultSettingsFactory'
-import { Checkbox, DropDown, RadioButtonGroup, TextInput } from '@harness/uicore'
-import css from './SettingsCategorySection.module.scss'
-import { SettingType } from '@default-settings/interfaces/SettingType'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import { useStrings } from 'framework/strings'
-import { Radio, RadioGroup } from '@blueprintjs/core'
+import css from './SettingsCategorySection.module.scss'
 
 interface SettingsDefaultHandlerProps {
   valueType: SettingDTO['valueType']

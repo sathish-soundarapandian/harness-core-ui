@@ -1,9 +1,9 @@
+import { Button, ButtonSize, ButtonVariation, Checkbox, Color, Layout, Text } from '@harness/uicore'
+import React from 'react'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import type { SettingHandler, SettingRendererProps } from '@default-settings/factories/DefaultSettingsFactory'
 import type { SettingType } from '@default-settings/interfaces/SettingType'
-import { Button, ButtonSize, ButtonVariation, Checkbox, Color, Layout, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import React from 'react'
 import type { SettingRequestDTO } from 'services/cd-ng'
 
 import css from './SettingsCategorySection.module.scss'

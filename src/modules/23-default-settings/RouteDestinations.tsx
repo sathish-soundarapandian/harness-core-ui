@@ -1,15 +1,13 @@
-import { RouteWithLayout } from '@common/router'
 import React, { useEffect, useState } from 'react'
+import { isUndefined } from 'lodash'
+import { RouteWithLayout } from '@common/router'
 import SettingsList from '@default-settings/pages/SettingsList'
 import routes from '@common/RouteDefinitions'
 
-import { accountPathProps, projectPathProps, orgPathProps } from '@common/utils/routeUtils'
+import { projectPathProps } from '@common/utils/routeUtils'
 import { AccountSideNavProps } from '@common/RouteDestinations'
 import DefaultSettingsFactory, { SettingRendererProps } from '@default-settings/factories/DefaultSettingsFactory'
-import type { SettingCategory } from '@default-settings/interfaces/SettingType'
 import { SettingType } from './interfaces/SettingType'
-import { FeatureFlag } from '@common/featureFlags'
-import SettingTypeRow from './components/SettingTypeRow'
 import {
   DefaultSettingStringDropDown,
   DefaultSettingNumberTextbox,
@@ -17,7 +15,6 @@ import {
   DefaultSettingRadioBtnWithTrueAndFalse,
   DefaultSettingCheckBoxWithTrueAndFalse
 } from './components/ReusableHandlers'
-import { isUndefined } from 'lodash'
 DefaultSettingsFactory.registerSettingCategory('CD', {
   icon: 'cd-main',
   label: 'common.purpose.cd.continuous',
