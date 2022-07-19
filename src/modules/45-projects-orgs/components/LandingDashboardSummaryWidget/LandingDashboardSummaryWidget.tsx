@@ -93,7 +93,6 @@ const formatSummaryData = (
       labelTooltip: renderTooltipForProjectLabel(projectData),
       labelLink,
       barSectionsData: [
-        { count: successCount, color: Color.GREEN_500 },
         { count: failureCount, color: Color.RED_500 }
       ],
       trend: `${Math.round(countChangeAndCountChangeRateInfo?.countChangeRate ?? 0)}%`
