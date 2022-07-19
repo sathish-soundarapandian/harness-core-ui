@@ -54,16 +54,14 @@ export default function STOExecutionCardSummary(
       } else {
         // Determine if an informational message should be shown, instead of Security Issue counts
         let message: JSX.Element | undefined = undefined
-        if (!issueCounts || error) {
-          if (error?.status === 404) {
-            message = <Text font={{ size: 'small' }}>{getString('stoSteps.noSecurityTests')}</Text>
-          } else {
-            message = (
-              <Text icon="error" intent="danger" font={{ size: 'small' }}>
-                {getString('stoSteps.failedToGetIssueCounts')}
-              </Text>
-            )
-          }
+        if (error?.status === 404 || (issueCounts && Object.keys(issueCounts).length === 0)) {
+          message = <Text font={{ size: 'small' }}>{getString('stoSteps.noSecurityTests')}</Text>
+        } else if (!issueCounts || error) {
+          message = (
+            <Text icon="error" intent="danger" font={{ size: 'small' }}>
+              {getString('stoSteps.failedToGetIssueCounts')}
+            </Text>
+          )
         } else if (!(issueCounts?.critical || issueCounts?.high || issueCounts?.medium || issueCounts?.low)) {
           message = (
             <Text icon={'tick-circle'} iconProps={{ intent: 'success' }} font={{ size: 'small' }}>
