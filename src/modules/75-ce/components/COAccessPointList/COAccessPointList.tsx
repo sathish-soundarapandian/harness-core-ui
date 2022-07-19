@@ -22,7 +22,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import copy from 'copy-to-clipboard'
 import { useParams } from 'react-router-dom'
 import type { IconName } from '@blueprintjs/icons'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 import { Classes, Menu, Popover, Position } from '@blueprintjs/core'
 // import { Dialog, IconName, IDialogProps } from '@blueprintjs/core'
 import { AccessPoint, useAccessPointActivity, useAccessPointRules, useAllAccessPoints } from 'services/lw'
@@ -35,12 +35,15 @@ import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import PermissionError from '@ce/images/permission-error.svg'
+import EmptyPage from '@ce/common/EmptyPage/EmptyPage'
 import DeleteAccessPoint from '../COAccessPointDelete/DeleteAccessPoint'
 import { getRelativeTime } from '../COGatewayList/Utils'
 // import LoadBalancerDnsConfig from '../COGatewayAccess/LoadBalancerDnsConfig'
 import useCreateAccessPointDialog from './COCreateAccessPointDialog'
 import TextWithToolTip, { textWithToolTipStatus } from '../TextWithTooltip/TextWithToolTip'
 import useEditAccessPoint from './EditAccessPoint'
+import HandleError from '../PermissionError/PermissionError'
 import css from './COAcessPointList.module.scss'
 
 function NameCell(tableProps: CellProps<AccessPoint>): JSX.Element {
@@ -254,9 +257,6 @@ const COLoadBalancerList: React.FC = () => {
     [allAccessPoints]
   )
 
-  if (error) {
-    showError(error.data || error.message, undefined, 'ce.all.ap.rules.error')
-  }
   useEffect(() => {
     if (loading) {
       return
@@ -268,6 +268,23 @@ const COLoadBalancerList: React.FC = () => {
     refetch()
     setSelectedAccessPoints([])
   }
+
+  if (loading) {
+    return (
+      <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
+        <PageSpinner />
+      </div>
+    )
+  }
+
+  if (error) {
+    if (error.status === 403) {
+      return <HandleError imgSrc={PermissionError} errorMsg={get(error, 'data.message', '')} />
+    } else {
+      showError((error.data as any)?.message || error.message)
+    }
+  }
+
   return (
     <Container background={Color.WHITE} height="100vh">
       <Page.Header
@@ -294,18 +311,14 @@ const COLoadBalancerList: React.FC = () => {
         </Layout.Horizontal>
       </Layout.Horizontal>
       <Page.Body className={css.pageContainer}>
-        {!loading ? (
-          allAccessPoints?.length > 0 && (
-            <AccessPointTable
-              allAccessPoints={allAccessPoints}
-              selectedAccessPoints={selectedAccessPoints}
-              setSelectedAccessPoints={setSelectedAccessPoints}
-            />
-          )
+        {allAccessPoints?.length > 0 ? (
+          <AccessPointTable
+            allAccessPoints={allAccessPoints}
+            selectedAccessPoints={selectedAccessPoints}
+            setSelectedAccessPoints={setSelectedAccessPoints}
+          />
         ) : (
-          <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
-            <PageSpinner />
-          </div>
+          <EmptyPage />
         )}
       </Page.Body>
     </Container>
