@@ -14,7 +14,7 @@ import { parse } from 'yaml'
 import { useStageBuilderCanvasState } from '@pipeline/components/PipelineStudio/StageBuilder/useStageBuilderCanvasState'
 import { CanvasWidget, createEngine } from '@pipeline/components/Diagram'
 import { StageBuilderModel } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderModel'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { findAllByKey, usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { getTemplateTypesByRef } from '@pipeline/utils/templateUtils'
 import { useStrings } from 'framework/strings'
@@ -31,9 +31,10 @@ import css from './TemplatePipelineCanvas.module.scss'
 
 export function TemplatePipelineCanvas(): React.ReactElement {
   const {
-    state: { pipeline, templateTypes, gitDetails },
+    state: { pipeline, templateTypes, templateServiceData, gitDetails },
     stagesMap,
-    setTemplateTypes
+    setTemplateTypes,
+    setTemplateServiceData
   } = usePipelineContext()
   const canvasRef = React.useRef<HTMLDivElement | null>(null)
   const { getString } = useStrings()
@@ -98,7 +99,8 @@ export function TemplatePipelineCanvas(): React.ReactElement {
       },
       templateRefs
     ).then(resp => {
-      setTemplateTypes(merge(templateTypes, resp))
+      setTemplateTypes(merge(templateTypes, resp.templateTypes))
+      setTemplateServiceData(merge(templateServiceData, resp.templateServiceData))
     })
   }, [JSON.stringify(resolvedPipeline)])
 

@@ -61,12 +61,12 @@ const mockEmptyGetFolderResponse: customDashboardServices.GetFolderResponse = {
 }
 
 describe('Dashboards', () => {
-  const useGetFolderMock = jest.spyOn(customDashboardServices, 'useGetFolder')
+  const useGetFoldersMock = jest.spyOn(customDashboardServices, 'useGetFolders')
 
   beforeEach(() => {
     jest.clearAllMocks()
 
-    useGetFolderMock.mockReturnValue({ data: mockEmptyGetFolderResponse, error: null, loading: false } as any)
+    useGetFoldersMock.mockReturnValue({ data: mockEmptyGetFolderResponse, error: null, loading: false } as any)
   })
 
   test('it should show an empty message when there are no dashboards', () => {
@@ -98,11 +98,9 @@ describe('Dashboards', () => {
 
     const noDashboardsText: StringKeys = 'dashboards.homePage.noDashboardsAvailable'
 
-    const headerFavoriteCount: StringKeys = 'dashboards.dashboardList.headerFavoriteCount'
     const headerViewCount: StringKeys = 'dashboards.dashboardList.headerViewCount'
 
     expect(screen.queryByText(noDashboardsText)).toBeNull()
-    expect(screen.getByText(headerFavoriteCount)).toBeInTheDocument()
     expect(screen.getByText(headerViewCount)).toBeInTheDocument()
   })
 

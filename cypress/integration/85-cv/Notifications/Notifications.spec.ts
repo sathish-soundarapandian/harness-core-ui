@@ -36,7 +36,7 @@ describe('Create SLO with Notifications', () => {
     cy.visitChangeIntelligence()
   })
 
-  it('should be able to create Notifications with SLO', () => {
+  it.skip('should be able to create Notifications with SLO', () => {
     cy.intercept('GET', listSLOsCall, listSLOsCallResponse)
     cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
     cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)

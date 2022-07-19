@@ -24,7 +24,8 @@ import {
   MultiTypeInputType,
   MultiTypeInput,
   MultiSelectOption,
-  getMultiTypeFromValue
+  getMultiTypeFromValue,
+  AllowedTypes as MultiTypeAllowedTypes
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
@@ -47,7 +48,7 @@ import css from './AWSConnector.module.scss'
 const S3 = 'S3'
 interface StepOneProps {
   isReadonly: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: MultiTypeAllowedTypes
   setShowNewConnector: (bool: boolean) => void
   selectedConnector: string
   setSelectedConnector: (type: string) => void

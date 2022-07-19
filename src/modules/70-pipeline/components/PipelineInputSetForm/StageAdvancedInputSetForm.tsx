@@ -12,17 +12,22 @@ import {
   Layout,
   Container,
   MultiTypeInputType,
-  getMultiTypeFromValue
+  getMultiTypeFromValue,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import { isEmpty, get } from 'lodash-es'
+import { isEmpty, get, set } from 'lodash-es'
+import produce from 'immer'
 import { connect, FormikContextType } from 'formik'
 import cx from 'classnames'
-import type { StageElementConfig } from 'services/cd-ng'
+import type { StageElementConfig } from 'services/pipeline-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { MultiTypeExecutionCondition } from '@common/components/MultiTypeExecutionCondition/MultiTypeExecutionCondition'
 import DelegateSelectorPanel from '@pipeline/components/PipelineSteps/AdvancedSteps/DelegateSelectorPanel/DelegateSelectorPanel'
 import { useStrings } from 'framework/strings'
+import { getDefaultMonacoConfig } from '@common/components/MonacoTextField/MonacoTextField'
+import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
+import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import css from './PipelineInputSetForm.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -31,14 +36,14 @@ interface StageAdvancedInputSetFormProps {
   path: string
   readonly?: boolean
   stageIdentifier?: string
-  allowableTypes?: MultiTypeInputType[]
+  allowableTypes?: AllowedTypes
   delegateSelectors?: string[] | string
 }
 
 interface ConditionalExecutionFormProps {
   readonly?: boolean
   path: string
-  allowableTypes?: MultiTypeInputType[]
+  allowableTypes?: AllowedTypes
   formik?: FormikContextType<any>
 }
 
@@ -81,6 +86,63 @@ function ConditionalExecutionFormInternal(props: ConditionalExecutionFormProps):
 
 export const ConditionalExecutionForm = connect(ConditionalExecutionFormInternal)
 
+export interface StrategyFormInternalProps {
+  readonly?: boolean
+  path: string
+}
+
+export function StrategyFormInternal(
+  props: StrategyFormInternalProps & { formik: FormikContextType<any> }
+): React.ReactElement {
+  const { readonly, path, formik } = props
+  const { getString } = useStrings()
+
+  const value = yamlStringify(get(formik.values, path, '')).replace(': null\n', ': \n')
+
+  function handleChange(newValue: string): void {
+    try {
+      const parsed = yamlParse(newValue)
+      formik.setValues(
+        produce(formik.values, (draft: any) => {
+          set(draft, path, parsed)
+        })
+      )
+    } catch (e) {
+      // empty block
+    }
+  }
+
+  function preventSubmit(e: React.KeyboardEvent): void {
+    if (e.key === 'Enter') {
+      e.stopPropagation()
+    }
+  }
+
+  return (
+    <div className={css.strategyContainer} onKeyDown={preventSubmit}>
+      <Text
+        color={Color.GREY_600}
+        margin={{ bottom: 'small' }}
+        className={css.conditionalExecutionTitle}
+        font={{ weight: 'semi-bold' }}
+      >
+        {getString('pipeline.loopingStrategy.title')}
+      </Text>
+      <div className={css.editor}>
+        <MonacoEditor
+          height={300}
+          options={getDefaultMonacoConfig(!!readonly)}
+          language="yaml"
+          value={value}
+          onChange={handleChange}
+        />
+      </div>
+    </div>
+  )
+}
+
+export const StrategyForm = connect<StrategyFormInternalProps>(StrategyFormInternal)
+
 export function StageAdvancedInputSetForm({
   deploymentStageTemplate,
   path,
@@ -111,6 +173,11 @@ export function StageAdvancedInputSetForm({
               path={`${path}.when.condition`}
               allowableTypes={allowableTypes}
             />
+          </div>
+        )}
+        {!isEmpty(deploymentStageTemplate?.strategy) && (
+          <div className={cx(css.nestedAccordions, stepCss.formGroup, stepCss.md)}>
+            <StrategyForm readonly={readonly} path={`${path}.strategy`} />
           </div>
         )}
       </div>

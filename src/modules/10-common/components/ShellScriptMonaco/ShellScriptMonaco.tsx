@@ -8,10 +8,11 @@
 import React from 'react'
 import type { MonacoEditorProps } from 'react-monaco-editor'
 import { Dialog, Classes } from '@blueprintjs/core'
+import cx from 'classnames'
 import { FormikProps, connect } from 'formik'
 import { get } from 'lodash-es'
 import { Button } from '@wings-software/uicore'
-import type { languages, IDisposable } from 'monaco-editor/esm/vs/editor/editor.api'
+import type { languages, IDisposable, editor } from 'monaco-editor/esm/vs/editor/editor.api'
 import { useStrings } from 'framework/strings'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import { useDeepCompareEffect } from '@common/hooks'
@@ -31,6 +32,8 @@ export interface ShellScriptMonacoProps {
   name: string
   disabled?: boolean
   expressions?: string[]
+  className?: string
+  editorOptions?: editor.IEditorConstructionOptions
 }
 
 export interface ConnectedShellScriptMonacoProps extends ShellScriptMonacoProps {
@@ -40,7 +43,7 @@ export interface ConnectedShellScriptMonacoProps extends ShellScriptMonacoProps 
 const VAR_REGEX = /.*<\+.*?/
 
 export function ShellScriptMonaco(props: ConnectedShellScriptMonacoProps): React.ReactElement {
-  const { scriptType, formik, name, disabled, expressions, title } = props
+  const { scriptType, formik, name, disabled, expressions, title, className, editorOptions } = props
   const [isFullScreen, setFullScreen] = React.useState(false)
   const { getString } = useStrings()
   const value = get(formik.values, name) || ''
@@ -54,6 +57,7 @@ export function ShellScriptMonaco(props: ConnectedShellScriptMonacoProps): React
         .map(label => ({
           label,
           insertText: label + '>',
+          documentation: `<+${label}}>`,
           kind: 13
         }))
 
@@ -88,7 +92,7 @@ export function ShellScriptMonaco(props: ConnectedShellScriptMonacoProps): React
 
   const editor = (
     <div
-      className={css.monacoWrapper}
+      className={cx(css.monacoWrapper, !isFullScreen && className)}
       onKeyDown={event => {
         if (event.key === 'Enter') {
           event.stopPropagation()
@@ -108,7 +112,8 @@ export function ShellScriptMonaco(props: ConnectedShellScriptMonacoProps): React
               enabled: false
             },
             readOnly: disabled,
-            scrollBeyondLastLine: false
+            scrollBeyondLastLine: false,
+            ...editorOptions
           } as MonacoEditorProps['options']
         }
         onChange={txt => formik.setFieldValue(name, txt)}

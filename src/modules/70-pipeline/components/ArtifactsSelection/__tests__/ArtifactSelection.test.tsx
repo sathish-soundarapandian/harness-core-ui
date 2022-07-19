@@ -195,7 +195,8 @@ describe('ArtifactsSelection tests', () => {
       fetchedConnectorResponse: undefined,
       accountId: 'test',
       refetchConnectors: jest.fn(),
-      isReadonly: false
+      isReadonly: false,
+      isAdditionAllowed: true
     }
 
     const { container } = render(
@@ -221,7 +222,8 @@ describe('ArtifactsSelection tests', () => {
       fetchedConnectorResponse: connectorsData.data as any,
       accountId: 'test',
       refetchConnectors: jest.fn(),
-      isReadonly: false
+      isReadonly: false,
+      isAdditionAllowed: true
     }
     const { container } = render(
       <TestWrapper>
@@ -263,7 +265,8 @@ describe('ArtifactsSelection tests', () => {
       fetchedConnectorResponse: connectorsData.data as any,
       accountId: 'test',
       refetchConnectors: jest.fn(),
-      isReadonly: false
+      isReadonly: false,
+      isAdditionAllowed: true
     }
     const { container } = render(
       <TestWrapper>
@@ -295,7 +298,8 @@ describe('ArtifactsSelection tests', () => {
       fetchedConnectorResponse: connectorsData.data as any,
       accountId: 'test',
       refetchConnectors: jest.fn(),
-      isReadonly: false
+      isReadonly: false,
+      isAdditionAllowed: true
     }
     const { container } = render(
       <TestWrapper>
@@ -327,7 +331,8 @@ describe('ArtifactsSelection tests', () => {
       fetchedConnectorResponse: connectorsData.data as any,
       accountId: 'test',
       refetchConnectors: jest.fn(),
-      isReadonly: false
+      isReadonly: false,
+      isAdditionAllowed: true
     }
     const { container } = render(
       <TestWrapper>
@@ -358,11 +363,11 @@ describe('ArtifactsSelection tests', () => {
     expect(remove).toBeDefined()
   })
 
-  test('is artifacts type list containing all types for Kubernetes for activated NG_AZURE, NG_NEXUS_ARTIFACTORY and CUSTOM_ARTIFACT_NG', async () => {
+  test('is artifacts type list containing all types for Kubernetes for activated NG_AZURE and CUSTOM_ARTIFACT_NG', async () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+          featureFlags: { NG_AZURE: true, CUSTOM_ARTIFACT_NG: true }
         }}
       >
         <PipelineContext.Provider value={getContextValue()}>
@@ -386,11 +391,11 @@ describe('ArtifactsSelection tests', () => {
     expect(custom).toBeDefined()
   })
 
-  test('is artifacts type list containing all types for NativeHelm for activated NG_AZURE, NG_NEXUS_ARTIFACTORY and CUSTOM_ARTIFACT_NG', async () => {
+  test('is artifacts type list containing all types for NativeHelm for activated NG_AZURE and CUSTOM_ARTIFACT_NG', async () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+          featureFlags: { NG_AZURE: true, CUSTOM_ARTIFACT_NG: true }
         }}
       >
         <PipelineContext.Provider value={getContextValue()}>
@@ -414,11 +419,11 @@ describe('ArtifactsSelection tests', () => {
     expect(custom).toBeDefined()
   })
 
-  test('is artifacts type list containing all types for NativeHelm for activated NG_AZURE, NG_NEXUS_ARTIFACTORY and CUSTOM_ARTIFACT_NG', async () => {
+  test('is artifacts type list containing all types for NativeHelm for activated NG_AZURE and CUSTOM_ARTIFACT_NG', async () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+          featureFlags: { NG_AZURE: true, CUSTOM_ARTIFACT_NG: true }
         }}
       >
         <PipelineContext.Provider value={getContextValue()}>
@@ -440,7 +445,7 @@ describe('ArtifactsSelection tests', () => {
     expect(acr).toBeDefined()
   })
 
-  test('is artifacts type list containing all types for ServerlessAwsLambda for activated NG_AZURE, NG_NEXUS_ARTIFACTORY and CUSTOM_ARTIFACT_NG', async () => {
+  test('is artifacts type list containing all types for ServerlessAwsLambda for activated NG_AZURE and CUSTOM_ARTIFACT_NG', async () => {
     const context = {
       ...pipelineContextWithoutArtifactsMock,
       getStageFromPipeline: jest.fn(() => {
@@ -451,7 +456,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+          featureFlags: { NG_AZURE: true, CUSTOM_ARTIFACT_NG: true }
         }}
       >
         <PipelineContext.Provider value={context}>
@@ -466,17 +471,23 @@ describe('ArtifactsSelection tests', () => {
     const portal = document.getElementsByClassName('bp3-dialog')[0]
     const artifactLabel = await waitFor(() => findByText(portal as HTMLElement, 'connectors.specifyArtifactRepoType'))
     expect(artifactLabel).toBeDefined()
-    const artifactory = await container.querySelector('input[value="ArtifactoryRegistry"]')
-    expect(artifactory).toBeDefined()
-    const nexus = await container.querySelector('input[value="Nexus3Registry"]')
+    // Artifactory, ECR should be rendered
+    const artifactory = await portal.querySelector('input[value="ArtifactoryRegistry"]')
+    expect(artifactory).not.toBeNull()
+    const ecr = await portal.querySelector('input[value="Ecr"]')
+    expect(ecr).not.toBeNull()
+    // Nexus, ACR, AmazonS3, Custom should NOT be rendered
+    const amazonS3 = await portal.querySelector('input[value="AmazonS3"]')
+    expect(amazonS3).toBeNull()
+    const nexus = await portal.querySelector('input[value="Nexus3Registry"]')
     expect(nexus).toBeNull()
-    const acr = await container.querySelector('input[value="Acr"]')
+    const acr = await portal.querySelector('input[value="Acr"]')
     expect(acr).toBeNull()
-    const custom = await container.querySelector('input[value="CustomArtifact"]')
+    const custom = await portal.querySelector('input[value="CustomArtifact"]')
     expect(custom).toBeNull()
   })
 
-  test('clicking on Create Artifactory Connector should open create dialog properly', async () => {
+  test('clicking on Add Sidecar should show all types for ServerlessAwsLambda when NG_AZURE and CUSTOM_ARTIFACT_NG are ON', async () => {
     const context = {
       ...pipelineContextWithoutArtifactsMock,
       getStageFromPipeline: jest.fn(() => {
@@ -487,7 +498,49 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+          featureFlags: { NG_AZURE: true, CUSTOM_ARTIFACT_NG: true }
+        }}
+      >
+        <PipelineContext.Provider value={context}>
+          <ArtifactsSelection isReadonlyServiceMode={false} readonly={false} deploymentType="ServerlessAwsLambda" />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const addSidecarButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    expect(addSidecarButton).toBeDefined()
+    fireEvent.click(addSidecarButton)
+    const portal = document.getElementsByClassName('bp3-dialog')[0]
+    const artifactLabel = await waitFor(() => findByText(portal as HTMLElement, 'connectors.specifyArtifactRepoType'))
+    expect(artifactLabel).toBeDefined()
+    // Artifactory, ECR should be rendered
+    const artifactory = await portal.querySelector('input[value="ArtifactoryRegistry"]')
+    expect(artifactory).not.toBeNull()
+    const ecr = await portal.querySelector('input[value="Ecr"]')
+    expect(ecr).not.toBeNull()
+    // Nexus, ACR, AmazonS3, Custom should NOT be rendered
+    const amazonS3 = await portal.querySelector('input[value="AmazonS3"]')
+    expect(amazonS3).toBeNull()
+    const nexus = await portal.querySelector('input[value="Nexus3Registry"]')
+    expect(nexus).toBeNull()
+    const acr = await portal.querySelector('input[value="Acr"]')
+    expect(acr).toBeNull()
+    const custom = await portal.querySelector('input[value="CustomArtifact"]')
+    expect(custom).toBeNull()
+  })
+
+  test('clicking on Create Artifactory Connector should show create view when deployment type is ServerlessAwsLambda', async () => {
+    const context = {
+      ...pipelineContextWithoutArtifactsMock,
+      getStageFromPipeline: jest.fn(() => {
+        return { stage: pipelineContextWithoutArtifactsMock.state.pipeline.stages[0], parent: undefined }
+      })
+    } as any
+
+    const { container } = render(
+      <TestWrapper
+        defaultAppStoreValues={{
+          featureFlags: { NG_AZURE: true, CUSTOM_ARTIFACT_NG: true }
         }}
       >
         <PipelineContext.Provider value={context}>

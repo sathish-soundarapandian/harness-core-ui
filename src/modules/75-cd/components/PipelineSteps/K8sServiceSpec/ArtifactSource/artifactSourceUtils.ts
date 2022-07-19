@@ -7,9 +7,8 @@
 
 import { getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import type { FormikValues } from 'formik'
-import { cloneDeep, defaultTo, get, isEmpty, unset } from 'lodash-es'
+import { get, isEmpty, unset } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
-import { parse } from 'yaml'
 import {
   PRIMARY_ARTIFACT,
   TriggerDefaultFieldList,
@@ -22,12 +21,12 @@ import type {
   DockerBuildDetailsDTO,
   EcrBuildDetailsDTO,
   GcrBuildDetailsDTO,
-  NexusBuildDetailsDTO,
-  PipelineInfoConfig
+  NexusBuildDetailsDTO
 } from 'services/cd-ng'
 import { checkIfQueryParamsisNotEmpty, RegistryHostNames } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
-import { clearRuntimeInputValue } from '../K8sServiceSpecHelper'
+
+export const DefaultParam = 'defaultParam'
 
 export type BuildDetailsDTO =
   | DockerBuildDetailsDTO[]
@@ -35,6 +34,10 @@ export type BuildDetailsDTO =
   | EcrBuildDetailsDTO[]
   | NexusBuildDetailsDTO[]
   | ArtifactoryBuildDetailsDTO[]
+
+export function isNewServiceEnvEntity(path: string): boolean {
+  return path?.includes('service.serviceInputs.serviceDefinition')
+}
 
 export const resetTags = (formik: FormikValues, tagPath: string): void => {
   const tagValue = get(formik.values, tagPath, '')
@@ -85,20 +88,6 @@ export const isFieldfromTriggerTabDisabled = (
 
 export const getTagError = (fetchTagsError: GetDataError<any> | null): string =>
   get(fetchTagsError, 'data.message', null)
-
-export const getYamlData = (formikValues: Record<string, any>): PipelineInfoConfig =>
-  clearRuntimeInputValue(
-    cloneDeep(
-      parse(
-        defaultTo(
-          JSON.stringify({
-            pipeline: formikValues
-          }),
-          ''
-        )
-      )
-    )
-  )
 
 export const getPrimaryInitialValues = (
   initialValues: K8SDirectServiceStep,
@@ -163,8 +152,43 @@ export const isArtifactSourceRuntime = (
   isSidecarRuntime: boolean,
   isSidecar: boolean
 ): boolean => (!isSidecar && isPrimaryArtifactsRuntime) || (isSidecar && isSidecarRuntime)
+
 export const getImagePath = (initialImagePath: string, formikImagePathValue: string): string => {
+  //initialImagePath is empty in case of new service entity, so we return defaultParam string to make tag as enabled
+  if (isEmpty(initialImagePath)) {
+    return DefaultParam
+  }
   return getMultiTypeFromValue(initialImagePath) !== MultiTypeInputType.RUNTIME
     ? initialImagePath
     : formikImagePathValue
+}
+
+export const getDefaultQueryParam = (initialImagePath: string, formikImagePathValue: string): string => {
+  //initialImagePath is empty in case of new service entity, so we return defaultParam string to make tag as enabled
+  if (isEmpty(initialImagePath)) {
+    return DefaultParam
+  }
+  return getMultiTypeFromValue(initialImagePath) !== MultiTypeInputType.RUNTIME
+    ? initialImagePath
+    : formikImagePathValue
+}
+
+export function getFinalQueryParamValue(initialParam: string): string | undefined {
+  return initialParam !== DefaultParam ? initialParam : undefined
+}
+
+export function getFqnPath(
+  path: string,
+  isPropagatedStage: boolean,
+  stageIdentifier: string,
+  artifactPath: string
+): string {
+  if (isNewServiceEnvEntity(path)) {
+    return `pipeline.stages.${stageIdentifier}.spec.service.serviceInputs.serviceDefinition.spec.artifacts.${artifactPath}.spec.tag`
+  } else {
+    if (isPropagatedStage) {
+      return `pipeline.stages.${stageIdentifier}.spec.serviceConfig.stageOverrides.artifacts.${artifactPath}.spec.tag`
+    }
+    return `pipeline.stages.${stageIdentifier}.spec.serviceConfig.serviceDefinition.spec.artifacts.${artifactPath}.spec.tag`
+  }
 }

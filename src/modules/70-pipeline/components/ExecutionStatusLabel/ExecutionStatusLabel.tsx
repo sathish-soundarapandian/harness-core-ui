@@ -38,7 +38,6 @@ export const stringsMap: Record<ExecutionStatus, StringKeys> = {
   ApprovalRejected: 'pipeline.executionStatus.ApprovalRejected',
   InterventionWaiting: 'pipeline.executionStatus.Waiting',
   ApprovalWaiting: 'pipeline.executionStatus.Waiting',
-  Waiting: 'pipeline.executionStatus.Waiting',
   InputWaiting: 'pipeline.executionStatus.Waiting'
 }
 
@@ -64,7 +63,6 @@ export const iconMap: Record<ExecutionStatus, IconProps> = {
   Queued: { name: 'queued', size: 10 },
   NotStarted: { name: 'play-outline', size: 8 },
   Skipped: { name: 'skipped', size: 8 },
-  Waiting: { name: 'loading', size: 10 },
   InputWaiting: { name: 'loading', size: 10 }
 }
 

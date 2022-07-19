@@ -12,6 +12,7 @@ import { useStrings } from 'framework/strings'
 import type { Segment, Target } from 'services/cf'
 import type { FormVariationMap, VariationColorMap, VariationTarget, VariationTargetGroup } from '../../types'
 import DisabledFeatureTooltip from '../disabled-feature-tooltip/DisabledFeatureTooltip'
+
 export interface SpecificTargetingItemProps {
   index: number
   disabled: boolean
@@ -80,6 +81,7 @@ const SpecificTargetingItem = (props: SpecificTargetingItemProps): ReactElement 
                 placeholder: getString('cf.featureFlags.rules.searchTargets'),
                 onQueryChange: query => refetchTargets(query)
               }}
+              disabled={disabled}
             />
           </DisabledFeatureTooltip>
         </div>
@@ -99,6 +101,7 @@ const SpecificTargetingItem = (props: SpecificTargetingItemProps): ReactElement 
                 placeholder: getString('cf.featureFlags.rules.searchTargetGroups'),
                 onQueryChange: query => refetchSegments(query)
               }}
+              disabled={disabled}
             />
           </DisabledFeatureTooltip>
         </div>

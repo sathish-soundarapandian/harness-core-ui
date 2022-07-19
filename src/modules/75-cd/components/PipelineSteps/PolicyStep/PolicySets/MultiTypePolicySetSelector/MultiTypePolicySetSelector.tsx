@@ -9,7 +9,7 @@ import React from 'react'
 import { connect, FormikContextType } from 'formik'
 import { get } from 'lodash-es'
 
-import { Button, MultiTypeInputType } from '@harness/uicore'
+import { AllowedTypes, Button, MultiTypeInputType } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import type { IFormGroupProps } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
@@ -28,7 +28,7 @@ export interface MultiTypePolicySetSelectorInternalProps extends Omit<IFormGroup
   name: string
   label: string
   expressions?: string[]
-  allowableTypes?: MultiTypeInputType[]
+  allowableTypes?: AllowedTypes
 }
 
 export function MultiTypePolicySetSelectorInternal(props: MultiTypePolicySetSelectorInternalProps): React.ReactElement {

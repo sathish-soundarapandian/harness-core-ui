@@ -6,8 +6,16 @@
  */
 
 import type { StoreType } from '@common/constants/GitSyncTypes'
-import type { StringNGVariable, NumberNGVariable, SecretNGVariable, PipelineInfoConfig } from 'services/cd-ng'
-import type { NodeRunInfo, EntityGitDetails, EntityValidityDetails, InputSetResponse } from 'services/pipeline-ng'
+import type {
+  NodeRunInfo,
+  EntityGitDetails,
+  EntityValidityDetails,
+  InputSetResponse,
+  PipelineInfoConfig,
+  StringNGVariable,
+  NumberNGVariable,
+  SecretNGVariable
+} from 'services/pipeline-ng'
 
 export type AllNGVariables = StringNGVariable | NumberNGVariable | SecretNGVariable
 
@@ -16,6 +24,7 @@ export interface ExecutionPageQueryParams {
   stage?: string
   step?: string
   retryStep?: string
+  stageExecId?: string // strategy nodes require stageExecId + stageID
 }
 
 export interface ExpressionBlock {

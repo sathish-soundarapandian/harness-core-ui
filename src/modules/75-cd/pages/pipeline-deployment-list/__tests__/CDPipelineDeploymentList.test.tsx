@@ -35,6 +35,7 @@ jest.mock('@pipeline/components/Dashboards/PipelineSummaryCards/PipelineSummaryC
 jest.mock('@pipeline/components/Dashboards/BuildExecutionsChart/PipelineBuildExecutionsChart', () => () => <div />)
 
 jest.mock('services/pipeline-ng', () => ({
+  useGetExecutionData: jest.fn().mockReturnValue({}),
   useGetListOfExecutions: jest.fn(() => ({
     mutate: jest.fn(() => Promise.resolve(data)),
     loading: false,

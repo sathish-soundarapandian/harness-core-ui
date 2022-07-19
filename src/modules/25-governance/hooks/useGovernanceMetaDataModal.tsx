@@ -92,6 +92,8 @@ export const useGovernanceMetaDataModal = ({
       else {
         onModalCloseWhenNoErrorInGovernanceData()
       }
+    } else {
+      onModalCloseWhenNoErrorInGovernanceData()
     }
   }
   return {

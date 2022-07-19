@@ -12,7 +12,7 @@ import {
   FormikForm,
   FormInput,
   Layout,
-  MultiTypeInputType,
+  AllowedTypes,
   Heading,
   PageError,
   Text
@@ -57,7 +57,7 @@ export interface TemplateStepWidgetProps {
   stepViewType?: StepViewType
   readonly?: boolean
   factory: AbstractStepFactory
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export interface TemplateStepValues extends TemplateStepNode {

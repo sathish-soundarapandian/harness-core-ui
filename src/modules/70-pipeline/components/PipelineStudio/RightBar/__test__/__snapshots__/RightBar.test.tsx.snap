@@ -1312,7 +1312,7 @@ exports[`RightBar Renders all ci codebase on edit values 1`] = `
           >
             <p
               class="StyledProps--font Text--lineclamp StyledProps--main"
-              style="--text-line-clamp: 1; width: 460px;"
+              style="--text-line-clamp: 1;"
             >
               https://github.com/reponame
             </p>
@@ -2212,7 +2212,7 @@ exports[`RightBar Renders all ci codebase on edit values 2`] = `
           >
             <p
               class="StyledProps--font Text--lineclamp StyledProps--main"
-              style="--text-line-clamp: 1; width: 460px;"
+              style="--text-line-clamp: 1;"
             >
               https://github.com/reponame
             </p>
@@ -3140,7 +3140,7 @@ exports[`RightBar Renders validation errors 1`] = `
           >
             <p
               class="StyledProps--font Text--lineclamp StyledProps--main"
-              style="--text-line-clamp: 1; width: 460px;"
+              style="--text-line-clamp: 1;"
             >
               https://github.com/reponame
             </p>

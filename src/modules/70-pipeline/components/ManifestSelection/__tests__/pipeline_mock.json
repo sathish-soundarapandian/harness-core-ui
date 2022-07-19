@@ -23,6 +23,33 @@
                   "type": "Kubernetes",
                   "spec": {
                     "artifacts": { "sidecars": [], "primary": null },
+                    "startupScript": {
+                      "type": "Git",
+                      "spec": {
+                        "connectorRef": "GIT2",
+                        "gitFetchType": "Branch",
+                        "paths": "[filePath]",
+                        "branch": "branch"
+                      }
+                    },
+                    "applicationSettings": {
+                      "type": "Git",
+                      "spec": {
+                        "connectorRef": "GIT2",
+                        "gitFetchType": "Branch",
+                        "paths": "[filePath]",
+                        "branch": "branch"
+                      }
+                    },
+                    "connectionStrings": {
+                      "type": "Git",
+                      "spec": {
+                        "connectorRef": "GIT2",
+                        "gitFetchType": "Branch",
+                        "paths": "[filePath]",
+                        "branch": "branch"
+                      }
+                    },
                     "manifests": [
                       {
                         "manifest": {

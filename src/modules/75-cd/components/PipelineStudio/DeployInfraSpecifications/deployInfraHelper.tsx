@@ -11,7 +11,11 @@ import { InfraDeploymentType } from '@cd/components/PipelineSteps/PipelineStepsU
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { Infrastructure, ServiceDefinition } from 'services/cd-ng'
 import type { StringsMap } from 'stringTypes'
-import { isServerlessDeploymentType, isSSHWinRMDeploymentType } from '@pipeline/utils/stageHelpers'
+import {
+  isAzureWebAppDeploymentType,
+  isServerlessDeploymentType,
+  isSSHWinRMDeploymentType
+} from '@pipeline/utils/stageHelpers'
 
 const DEFAULT_RELEASE_NAME = 'release-<+INFRA_KEY>'
 
@@ -118,6 +122,26 @@ export const getInfrastructureDefaultValue = (
         allowSimultaneousDeployments
       }
     }
+    case InfraDeploymentType.AzureWebApp: {
+      const connectorRef = infrastructure?.spec?.connectorRef
+      const subscriptionId = infrastructure?.spec?.subscriptionId
+      const resourceGroup = infrastructure?.spec?.resourceGroup
+      const webApp = infrastructure?.spec?.webApp
+      const deploymentSlot = infrastructure?.spec?.deploymentSlot
+      const targetSlot = infrastructure?.spec?.targetSlot
+      const releaseName = infrastructure?.spec?.releaseName ?? DEFAULT_RELEASE_NAME
+
+      return {
+        connectorRef,
+        subscriptionId,
+        resourceGroup,
+        webApp,
+        deploymentSlot,
+        targetSlot,
+        releaseName,
+        allowSimultaneousDeployments
+      }
+    }
     case InfraDeploymentType.PDC: {
       const { connectorRef, credentialsRef, delegateSelectors, hostFilters, hosts, attributeFilters } =
         infrastructure?.spec || {}
@@ -130,6 +154,19 @@ export const getInfrastructureDefaultValue = (
         delegateSelectors,
         hostFilters,
         attributeFilters
+      }
+    }
+    case InfraDeploymentType.SshWinRmAzure: {
+      const { credentialsRef, connectorRef, subscriptionId, resourceGroup, cluster, tags, usePublicDns } =
+        infrastructure?.spec || {}
+      return {
+        credentialsRef,
+        connectorRef,
+        subscriptionId,
+        resourceGroup,
+        cluster,
+        tags,
+        usePublicDns
       }
     }
     default: {
@@ -180,6 +217,21 @@ export const getInfraGroups = (
           ]
         }
       ]
+    : isAzureWebAppDeploymentType(deploymentType)
+    ? [
+        {
+          groupLabel: '',
+          items: NG_AZURE
+            ? [
+                {
+                  label: 'Azure Web App',
+                  icon: 'azurewebapp',
+                  value: InfraDeploymentType.AzureWebApp
+                }
+              ]
+            : []
+        }
+      ]
     : isSSHWinRMDeploymentType(deploymentType)
     ? [
         {
@@ -189,6 +241,11 @@ export const getInfraGroups = (
               label: getString('connectors.title.pdcConnector'),
               icon: 'pdc',
               value: InfraDeploymentType.PDC
+            },
+            {
+              label: getString('common.azure'),
+              icon: 'service-azure',
+              value: InfraDeploymentType.SshWinRmAzure
             }
           ]
         }

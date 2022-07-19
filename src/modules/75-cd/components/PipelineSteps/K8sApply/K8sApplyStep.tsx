@@ -7,6 +7,7 @@
 
 import React from 'react'
 import {
+  AllowedTypes,
   Button,
   ButtonVariation,
   Formik,
@@ -88,13 +89,14 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
   const defaultValueToReset = [{ value: '', id: uuid() }]
   const {
     state: {
-      selectionState: { selectedStageId }
+      selectionState: { selectedStageId },
+      templateServiceData
     },
     getStageFromPipeline
   } = usePipelineContext()
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
-  const selectedDeploymentType = getSelectedDeploymentType(stage, getStageFromPipeline)
+  const selectedDeploymentType = getSelectedDeploymentType(stage, getStageFromPipeline, false, templateServiceData)
 
   const { expressions } = useVariablesExpression()
 
@@ -206,7 +208,9 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
                               placeholder={getString('cd.filePathPlaceholder')}
                               name={`spec.filePaths[${index}].value`}
                               multiTextInputProps={{
-                                allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME),
+                                allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                  item => item !== MultiTypeInputType.RUNTIME
+                                ) as AllowedTypes,
                                 expressions,
                                 textProps: { disabled: isDisabled }
                               }}

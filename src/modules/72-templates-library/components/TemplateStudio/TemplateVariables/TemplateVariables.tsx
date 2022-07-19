@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback } from 'react'
-import { MultiTypeInputType, NestedAccordionProvider, PageError } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, NestedAccordionProvider, PageError } from '@wings-software/uicore'
 import { isEmpty, omit, set } from 'lodash-es'
 import { produce } from 'immer'
 import {
@@ -17,7 +17,7 @@ import { PageSpinner } from '@common/components'
 import type { NGTemplateInfoConfig } from 'services/template-ng'
 import StageCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/StageCard'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
-import type { PipelineInfoConfig, StageElementConfig, StepElementConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig, StageElementConfig, StepElementConfig } from 'services/pipeline-ng'
 import { StepCardPanel } from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/StepCard'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { DefaultNewStageId } from '@templates-library/components/TemplateStudio/StageTemplateCanvas/StageTemplateForm/StageTemplateForm'
@@ -27,7 +27,6 @@ import { VariablesHeader } from '@pipeline/components/PipelineStudio/PipelineVar
 import MonitoredServiceCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/MonitoredServiceCard'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import { PipelineCardPanel } from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables'
-import { DrawerTypes } from '../TemplateContext/TemplateActions'
 import css from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 const TemplateVariables: React.FC = (): JSX.Element => {
@@ -37,7 +36,11 @@ const TemplateVariables: React.FC = (): JSX.Element => {
     updateTemplateView
   } = React.useContext(TemplateContext)
   const { originalTemplate, variablesTemplate, metadataMap, error, initLoading } = useTemplateVariables()
-  const allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+  const allowableTypes: AllowedTypesWithRunTime[] = [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ]
   const [templateAtState, setTemplateAtState] = React.useState<NGTemplateInfoConfig>(originalTemplate)
 
   const onUpdate = useCallback(
@@ -54,11 +57,11 @@ const TemplateVariables: React.FC = (): JSX.Element => {
 
   async function applyChanges(): Promise<void> {
     await updateTemplate(templateAtState)
-    updateTemplateView({ ...templateView, isDrawerOpened: false, drawerData: { type: DrawerTypes.AddStep } })
+    updateTemplateView({ ...templateView, isDrawerOpened: false })
   }
 
   async function discardChanges(): Promise<void> {
-    updateTemplateView({ ...templateView, isDrawerOpened: false, drawerData: { type: DrawerTypes.AddStep } })
+    updateTemplateView({ ...templateView, isDrawerOpened: false })
   }
 
   if (initLoading) {

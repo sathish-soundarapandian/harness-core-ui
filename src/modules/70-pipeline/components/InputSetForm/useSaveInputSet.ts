@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { MutateMethod } from 'restful-react'
-import { defaultTo, isEmpty, omit } from 'lodash-es'
+import { defaultTo, isEmpty, noop, omit } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
 
 import { useToaster } from '@harness/uicore'
@@ -77,10 +77,18 @@ interface InputSetInfo {
   inputSetResponse: ResponseInputSetResponse | null
   isEdit: boolean
   setFormErrors: React.Dispatch<React.SetStateAction<Record<string, unknown>>>
+  onCreateSuccess?: (response: ResponseInputSetResponse) => void
 }
 
 export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetReturnType {
-  const { createInputSet, updateInputSet, inputSetResponse, isEdit, setFormErrors } = inputSetInfo
+  const {
+    createInputSet,
+    updateInputSet,
+    inputSetResponse,
+    isEdit,
+    setFormErrors,
+    onCreateSuccess = noop
+  } = inputSetInfo
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
@@ -106,7 +114,8 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
     async (
       inputSetObj: InputSetDTO,
       gitDetails?: SaveToGitFormInterface,
-      objectId = ''
+      objectId = '',
+      onCreateInputSetSuccess: (response: ResponseInputSetResponse) => void = noop
     ): CreateUpdateInputSetsReturnType => {
       let response: ResponseInputSetResponse | null = null
       try {
@@ -122,8 +131,12 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
                 orgIdentifier,
                 pipelineIdentifier,
                 projectIdentifier,
-                pipelineRepoID: repoIdentifier,
-                pipelineBranch: branch,
+                ...(isGitSyncEnabled
+                  ? {
+                      pipelineRepoID: repoIdentifier,
+                      pipelineBranch: branch
+                    }
+                  : {}),
                 ...(initialStoreMetadata.storeType === StoreType.REMOTE ? initialStoreMetadata : {}),
                 ...updatedGitDetails
               }
@@ -138,12 +151,17 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
               orgIdentifier,
               pipelineIdentifier,
               projectIdentifier,
-              pipelineRepoID: repoIdentifier,
-              pipelineBranch: branch,
+              ...(isGitSyncEnabled
+                ? {
+                    pipelineRepoID: repoIdentifier,
+                    pipelineBranch: branch
+                  }
+                : {}),
               ...(initialStoreMetadata.storeType === StoreType.REMOTE ? initialStoreMetadata : {}),
               ...updatedGitDetails
             }
           })
+          onCreateInputSetSuccess(response)
         }
         if (!isGitSyncEnabled && initialStoreMetadata.storeType !== StoreType.REMOTE) {
           showSuccess(getString('inputSets.inputSetSaved'))
@@ -162,7 +180,7 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
         }
       }
       return {
-        status: response?.status, // nextCallback can be added if required
+        status: response?.status, // nextCallback can be added if required,        response,
         nextCallback: () => history.goBack()
       }
     },
@@ -191,7 +209,8 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
       gitData: SaveToGitFormInterface & SaveToGitFormV2Interface,
       payload?: SaveInputSetDTO,
       objectId?: string
-    ): Promise<UseSaveSuccessResponse> => createUpdateInputSet(payload?.inputSet || savedInputSetObj, gitData, objectId)
+    ): Promise<UseSaveSuccessResponse> =>
+      createUpdateInputSet(payload?.inputSet || savedInputSetObj, gitData, objectId, onCreateSuccess)
   })
 
   const handleSubmit = React.useCallback(
@@ -203,8 +222,7 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
         'connectorRef',
         'repoName',
         'filePath',
-        'storeType',
-        'remoteType'
+        'storeType'
       )
       setSavedInputSetObj(inputSetObj)
       setInitialGitDetails(defaultTo(isEdit ? inputSetResponse?.data?.gitDetails : gitDetails, {}))

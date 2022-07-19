@@ -6,7 +6,18 @@
  */
 
 import React, { useState, useContext, useMemo } from 'react'
-import { Container, Formik, FormikForm, Text, Layout, SelectOption, Utils, Accordion } from '@wings-software/uicore'
+import {
+  Container,
+  Formik,
+  FormikForm,
+  Text,
+  Layout,
+  SelectOption,
+  Utils,
+  Accordion,
+  getMultiTypeFromValue,
+  MultiTypeInputType
+} from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { noop } from 'lodash-es'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
@@ -40,10 +51,12 @@ import css from './PrometheusHealthSource.module.scss'
 export interface PrometheusHealthSourceProps {
   data: any
   onSubmit: (formdata: PrometheusSetupSource, UpdatedHealthSource: UpdatedHealthSource) => Promise<void>
+  isTemplate?: boolean
+  expressions?: string[]
 }
 
 export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.Element {
-  const { data: sourceData, onSubmit } = props
+  const { data: sourceData, onSubmit, isTemplate, expressions } = props
 
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps & { identifier: string }>()
 
@@ -55,12 +68,15 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
   const metricDefinitions = existingMetricDetails?.spec?.metricDefinitions
 
   const { getString } = useStrings()
-  const connectorIdentifier = sourceData?.connectorRef || ''
+  const connectorIdentifier = (sourceData?.connectorRef?.value || sourceData?.connectorRef) as string
+  const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED
+
   const [labelNameTracingId, metricNameTracingId] = useMemo(() => [Utils.randomId(), Utils.randomId()], [])
   const metricPackResponse = useGetMetricPacks({
     queryParams: { projectIdentifier, orgIdentifier, accountId, dataSourceType: 'PROMETHEUS' }
   })
   const labelNamesResponse = useGetLabelNames({
+    lazy: isConnectorRuntimeOrExpression,
     queryParams: { projectIdentifier, orgIdentifier, accountId, connectorIdentifier, tracingId: labelNameTracingId }
   })
   const metricNamesResponse = useGetMetricNames({
@@ -169,7 +185,7 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
                   mainHeading={getString('cv.monitoringSources.prometheus.querySpecificationsAndMappings')}
                   subHeading={getString('cv.monitoringSources.prometheus.customizeQuery')}
                 />
-                {formikProps.values?.isManualQuery && (
+                {formikProps.values?.isManualQuery && !isTemplate && (
                   <Container className={css.manualQueryWarning}>
                     <Text icon="warning-sign" iconProps={{ size: 14 }}>
                       {getString('cv.monitoringSources.prometheus.isManualQuery')}
@@ -240,19 +256,25 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
                       summary={getString('cv.monitoringSources.assign')}
                       details={
                         <SelectHealthSourceServices
+                          key={formikProps?.values?.identifier}
                           values={{
                             sli: !!formikProps?.values?.sli,
                             riskCategory: formikProps?.values?.riskCategory,
                             healthScore: !!formikProps?.values?.healthScore,
                             continuousVerification: !!formikProps?.values?.continuousVerification
                           }}
+                          isTemplate={isTemplate}
+                          expressions={expressions}
                           metricPackResponse={metricPackResponse}
                           labelNamesResponse={labelNamesResponse}
+                          isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
                         />
                       }
                     />
                   </Accordion>
                   <PrometheusQueryViewer
+                    isTemplate={isTemplate}
+                    expressions={expressions}
                     onChange={(fieldName, value) => {
                       if (
                         fieldName === PrometheusMonitoringSourceFieldNames.IS_MANUAL_QUERY &&
@@ -283,6 +305,7 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
               onNext={async () => {
                 formikProps.setTouched({
                   ...formikProps.touched,
+                  [PrometheusMonitoringSourceFieldNames.QUERY]: true,
                   [PrometheusMonitoringSourceFieldNames.PROMETHEUS_METRIC]: true,
                   [PrometheusMonitoringSourceFieldNames.GROUP_NAME]: true,
                   [PrometheusMonitoringSourceFieldNames.SERVICE_FILTER]: true,

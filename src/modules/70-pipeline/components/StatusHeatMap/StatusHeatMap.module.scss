@@ -1,0 +1,64 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.statusHeatMap {
+  display: flex;
+  align-items: end;
+  column-gap: var(--spacing-2);
+  line-height: 0;
+  &Cell {
+    width: 18px;
+    height: 18px;
+    border-radius: 2px;
+    flex: 0 0 auto;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &[data-primary-state='default'] {
+      height: 12px;
+      background-color: var(--grey-200);
+      &:hover,
+      &:focus {
+        box-shadow: var(--white) 0px 0px 0px 2px, var(--grey-200) 0px 0px 0px 4px;
+      }
+    }
+
+    &[data-primary-state='success'] {
+      background-color: var(--green-500);
+      &:hover,
+      &:focus {
+        box-shadow: var(--white) 0px 0px 0px 2px, var(--green-500) 0px 0px 0px 4px;
+      }
+    }
+
+    &[data-primary-state='failed'] {
+      background-color: var(--red-200);
+      &:hover,
+      &:focus {
+        box-shadow: var(--white) 0px 0px 0px 2px, var(--red-200) 0px 0px 0px 4px;
+      }
+    }
+
+    &[data-primary-state='paused'] {
+      background-color: var(--orange-200);
+      &:hover,
+      &:focus {
+        box-shadow: var(--white) 0px 0px 0px 2px, var(--orange-200) 0px 0px 0px 4px;
+      }
+    }
+
+    &[data-primary-state='running'] {
+      background-color: var(--primary-3);
+      &:hover,
+      &:focus {
+        box-shadow: var(--white) 0px 0px 0px 2px, var(--primary-3) 0px 0px 0px 4px;
+      }
+    }
+  }
+}

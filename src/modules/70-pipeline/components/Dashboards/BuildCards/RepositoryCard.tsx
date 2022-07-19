@@ -178,7 +178,7 @@ function mapStatusToColor(status?: string) {
   }
 }
 
-const defaultChartOptions: Highcharts.Options = {
+export const defaultChartOptions: Highcharts.Options = {
   chart: {
     animation: false,
     backgroundColor: 'transparent',

@@ -78,13 +78,11 @@ describe('DashboardCard', () => {
   })
 
   test('it should show editable dashboard card for an account dashboard', async () => {
-    const favouriteCount = 1234
     const viewCount = 5678
 
     const testDashboard: DashboardModel = {
       ...defaultTestDashboard,
       type: DashboardType.ACCOUNT,
-      favorite_count: favouriteCount,
       view_count: viewCount
     }
 
@@ -97,7 +95,6 @@ describe('DashboardCard', () => {
     expect(screen.getAllByText(editText).length).toBe(2)
     expect(screen.getByText(deleteText)).toBeInTheDocument()
 
-    expect(screen.getByText(favouriteCount.toString())).toBeInTheDocument()
     expect(screen.getByText(viewCount.toString())).toBeInTheDocument()
   })
 

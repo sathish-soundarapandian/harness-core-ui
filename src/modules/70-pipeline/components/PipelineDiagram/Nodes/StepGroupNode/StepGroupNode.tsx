@@ -17,6 +17,7 @@ import StepGroupGraph from '../StepGroupGraph/StepGroupGraph'
 import { NodeType } from '../../types'
 import SVGMarker from '../SVGMarker'
 import { getPositionOfAddIcon } from '../utils'
+import { useNodeDimensionContext } from '../NodeDimensionStore'
 import css from './StepGroupNode.module.scss'
 import defaultCss from '../DefaultNode/DefaultNode.module.scss'
 
@@ -34,11 +35,23 @@ export function StepGroupNode(props: any): JSX.Element {
     const stepType = get(step, 'step.type')
     return stepType === 'STEP_GROUP'
   })
+
+  const isExecutionView = Boolean(props?.data?.status)
+
+  const { updateDimensions } = useNodeDimensionContext()
   const isNestedStepGroup = Boolean(get(props, 'data.step.data.isNestedGroup'))
 
   React.useEffect(() => {
     props?.updateGraphLinks?.()
+    updateDimensions?.({ [(props?.data?.id || props?.id) as string]: { height: 100, width: 115 } })
   }, [isNodeCollapsed])
+
+  React.useEffect(() => {
+    // collapse stepGroup in execution view till data loads
+    if (stepsData?.length === 0 && isExecutionView) {
+      setNodeCollapsed(true)
+    }
+  }, [stepsData])
 
   return (
     <>

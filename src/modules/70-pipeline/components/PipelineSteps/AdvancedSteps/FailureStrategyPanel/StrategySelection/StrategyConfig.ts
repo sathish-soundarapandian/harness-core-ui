@@ -127,5 +127,8 @@ export const errorTypesForStages: Record<StageType, FailureErrorType[]> = {
     ErrorType.AllErrors,
     ErrorType.PolicyEvaluationFailure
   ],
-  [StageType.Template]: []
+  [StageType.Template]: [],
+  [StageType.MATRIX]: [],
+  [StageType.FOR]: [],
+  [StageType.PARALLELISM]: []
 }

@@ -36,7 +36,7 @@ import {
   responseSLODashboardDetail
 } from '../../../support/85-cv/slos/constants'
 
-describe('Create SLO', () => {
+describe.skip('Create SLO', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -48,7 +48,7 @@ describe('Create SLO', () => {
     cy.visitChangeIntelligence()
   })
 
-  it('should be able to create SLO by filling all the details.', () => {
+  it.skip('should be able to create SLO by filling all the details.', () => {
     cy.intercept('GET', listSLOsCall, listSLOsCallResponse)
     cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
     cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)
@@ -373,7 +373,7 @@ describe('Create SLO', () => {
     cy.contains('span', 'SLO created successfully').should('be.visible')
   })
 
-  it('should throw duplication error for the same SLO identifier', () => {
+  it.skip('should throw duplication error for the same SLO identifier', () => {
     cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse)
     cy.intercept('GET', getSLORiskCount, getSLORiskCountResponse)
     cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
@@ -427,7 +427,7 @@ describe('Create SLO', () => {
     cy.contains('span', 'SLO with identifier SLO1 is already exist.').should('be.visible')
   })
 
-  it('should be able to edit the SLO in monitored service details page', () => {
+  it.skip('should be able to edit the SLO in monitored service details page', () => {
     cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse)
     cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
     cy.intercept('GET', getSLORiskCount, getSLORiskCountResponse)
@@ -471,7 +471,7 @@ describe('Create SLO', () => {
     cy.contains('p', 'SLO recalculation in progress').should('be.visible')
   })
 
-  it('should be able to create new SLO in monitored service details page', () => {
+  it.skip('should be able to create new SLO in monitored service details page', () => {
     cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse)
     cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
     cy.intercept('GET', getSLORiskCount, getSLORiskCountResponse)

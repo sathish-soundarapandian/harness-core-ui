@@ -7,7 +7,15 @@
 
 import React, { useEffect, useState } from 'react'
 import YAML from 'yaml'
-import { Accordion, Card, Container, RUNTIME_INPUT_VALUE, Text } from '@wings-software/uicore'
+import {
+  Accordion,
+  AllowedTypes,
+  Card,
+  Container,
+  MultiTypeInputType,
+  RUNTIME_INPUT_VALUE,
+  Text
+} from '@wings-software/uicore'
 import { debounce, defaultTo, get, isEmpty, isNil, omit, set } from 'lodash-es'
 import produce from 'immer'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -15,20 +23,23 @@ import {
   getProvisionerExecutionStrategyYamlPromise,
   Infrastructure,
   K8sAzureInfrastructure,
+  AzureWebAppInfrastructure,
   K8SDirectInfrastructure,
   K8sGcpInfrastructure,
   PdcInfrastructure,
+  PipelineInfrastructure,
   StageElementConfig
 } from 'services/cd-ng'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
-import { PipelineInfrastructureV2, StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type {
   InfraProvisioningData,
   ProvisionersOptions
 } from '@cd/components/PipelineSteps/InfraProvisioning/InfraProvisioning'
 import type { GcpInfrastructureSpec } from '@cd/components/PipelineSteps/GcpInfrastructureSpec/GcpInfrastructureSpec'
 import type { PDCInfrastructureSpec } from '@cd/components/PipelineSteps/PDCInfrastructureSpec/PDCInfrastructureSpec'
+import type { SshWinRmAzureInfrastructureSpec } from '@cd/components/PipelineSteps/SshWinRmAzureInfrastructureSpec/SshWinRmAzureInfrastructureSpec'
 import { useStrings } from 'framework/strings'
 import {
   PipelineContextType,
@@ -40,6 +51,7 @@ import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipelin
 import SelectInfrastructureType from '@cd/components/PipelineStudio/DeployInfraSpecifications/SelectInfrastructureType/SelectInfrastructureType'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { AzureInfrastructureSpec } from '@cd/components/PipelineSteps/AzureInfrastructureStep/AzureInfrastructureStep'
+import type { AzureWebAppInfrastructureSpec } from '@cd/components/PipelineSteps/AzureWebAppInfrastructureStep/AzureWebAppInfrastructureStep'
 import {
   detailsHeaderName,
   getCustomStepProps,
@@ -69,7 +81,8 @@ export const deploymentTypeInfraTypeMap = {
   ServerlessAzureFunctions: InfraDeploymentType.ServerlessAzureFunctions,
   ServerlessGoogleFunctions: InfraDeploymentType.ServerlessGoogleFunctions,
   AmazonSAM: InfraDeploymentType.AmazonSAM,
-  AzureFunctions: InfraDeploymentType.AzureFunctions
+  AzureFunctions: InfraDeploymentType.AzureFunctions,
+  AzureWebApp: InfraDeploymentType.AzureWebApp
 }
 
 type InfraTypes =
@@ -78,6 +91,7 @@ type InfraTypes =
   | ServerlessInfraTypes
   | K8sAzureInfrastructure
   | PdcInfrastructure
+  | AzureWebAppInfrastructure
 
 export default function DeployInfraDefinition(props: React.PropsWithChildren<unknown>): JSX.Element {
   const [initialInfrastructureDefinitionValues, setInitialInfrastructureDefinitionValues] =
@@ -89,7 +103,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
   const {
     state: {
       originalPipeline,
-      selectionState: { selectedStageId }
+      selectionState: { selectedStageId },
+      templateServiceData
     },
     allowableTypes,
     isReadonly,
@@ -119,7 +134,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
           set(draft, 'stage.spec', {
             ...stage.stage?.spec,
             infrastructure: {
-              environmentRef: getScopeBasedDefaultEnvironmentRef(),
+              environmentRef: scope === Scope.PROJECT ? '' : RUNTIME_INPUT_VALUE,
               infrastructureDefinition: {},
               allowSimultaneousDeployments: false
             }
@@ -130,7 +145,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
     } else if (
       scope !== Scope.PROJECT &&
       stage?.stage?.spec?.infrastructure &&
-      stage?.stage?.spec?.infrastructure?.environmentRef !== RUNTIME_INPUT_VALUE
+      isEmpty(stage?.stage?.spec?.infrastructure?.environmentRef)
     ) {
       const stageData = produce(stage, draft => {
         if (draft) {
@@ -166,15 +181,12 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
     setProvisionerEnabled(false)
   }
 
-  const getScopeBasedDefaultEnvironmentRef = React.useCallback(() => {
-    return scope === Scope.PROJECT ? '' : RUNTIME_INPUT_VALUE
-  }, [scope])
-
   const selectedDeploymentType = React.useMemo(() => {
     return getSelectedDeploymentType(
       stage,
       getStageFromPipeline,
-      !!stage?.stage?.spec?.serviceConfig?.useFromStage?.stage
+      !!stage?.stage?.spec?.serviceConfig?.useFromStage?.stage,
+      templateServiceData
     )
   }, [stage, getStageFromPipeline])
 
@@ -369,6 +381,34 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
           />
         )
       }
+      case InfraDeploymentType.AzureWebApp: {
+        return (
+          <StepWidget<AzureWebAppInfrastructureSpec>
+            factory={factory}
+            key={stage?.stage?.identifier}
+            readonly={isReadonly}
+            initialValues={initialInfrastructureDefinitionValues as AzureWebAppInfrastructureSpec}
+            type={StepType.AzureWebApp}
+            stepViewType={StepViewType.Edit}
+            allowableTypes={allowableTypes}
+            onUpdate={value =>
+              onUpdateInfrastructureDefinition(
+                {
+                  connectorRef: value.connectorRef,
+                  subscriptionId: value.subscriptionId,
+                  resourceGroup: value.resourceGroup,
+                  webApp: value.webApp,
+                  deploymentSlot: value.deploymentSlot,
+                  targetSlot: value.targetSlot,
+                  releaseName: value.releaseName,
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                },
+                InfraDeploymentType.AzureWebApp
+              )
+            }
+          />
+        )
+      }
       case 'ServerlessAwsLambda': {
         return (
           <StepWidget<ServerlessAwsLambdaSpec>
@@ -469,6 +509,33 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
           />
         )
       }
+      case InfraDeploymentType.SshWinRmAzure: {
+        return (
+          <StepWidget<SshWinRmAzureInfrastructureSpec>
+            factory={factory}
+            key={stage?.stage?.identifier}
+            readonly={isReadonly}
+            initialValues={initialInfrastructureDefinitionValues as SshWinRmAzureInfrastructureSpec}
+            type={StepType.SshWinRmAzure}
+            stepViewType={StepViewType.Edit}
+            allowableTypes={allowableTypes}
+            onUpdate={value => {
+              onUpdateInfrastructureDefinition(
+                {
+                  credentialsRef: value.credentialsRef,
+                  connectorRef: value.connectorRef,
+                  subscriptionId: value.subscriptionId,
+                  resourceGroup: value.resourceGroup,
+                  cluster: value.cluster,
+                  tags: value.tags,
+                  usePublicDns: value.usePublicDns
+                },
+                InfraDeploymentType.SshWinRmAzure
+              )
+            }}
+          />
+        )
+      }
       default: {
         return <div>{getString('cd.steps.common.undefinedType')}</div>
       }
@@ -476,9 +543,9 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
   }
 
   const updateEnvStep = React.useCallback(
-    (value: PipelineInfrastructureV2) => {
+    (value: PipelineInfrastructure) => {
       const stageData = produce(stage, draft => {
-        const infraObj: PipelineInfrastructureV2 = get(draft, 'stage.spec.infrastructure', {})
+        const infraObj: PipelineInfrastructure = get(draft, 'stage.spec.infrastructure', {})
         if (value.environment?.identifier) {
           infraObj.environment = value.environment
           delete infraObj.environmentRef
@@ -502,15 +569,21 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
           <Card className={stageCss.sectionCard}>
             <StepWidget
               type={StepType.DeployEnvironment}
-              readonly={isReadonly || scope !== Scope.PROJECT}
+              readonly={isReadonly}
               initialValues={{
                 environment: get(stage, 'stage.spec.infrastructure.environment', {}),
                 environmentRef:
                   scope === Scope.PROJECT
                     ? get(stage, 'stage.spec.infrastructure.environmentRef', '')
-                    : RUNTIME_INPUT_VALUE
+                    : get(stage, 'stage.spec.infrastructure.environmentRef', '') || RUNTIME_INPUT_VALUE
               }}
-              allowableTypes={allowableTypes}
+              allowableTypes={
+                scope === Scope.PROJECT
+                  ? allowableTypes
+                  : ((allowableTypes as MultiTypeInputType[]).filter(
+                      item => item !== MultiTypeInputType.FIXED
+                    ) as AllowedTypes)
+              }
               onUpdate={val => updateEnvStep(val)}
               factory={factory}
               stepViewType={StepViewType.Edit}

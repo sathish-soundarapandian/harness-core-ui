@@ -140,3 +140,30 @@ export const mockResponse: ResponseBoolean = {
   metaData: {},
   correlationId: ''
 }
+
+export const oAuthConnector: ConnectorInfoDTO = {
+  name: 'Github OAuth',
+  identifier: 'Github_OAuth',
+  type: 'Github',
+  spec: {
+    url: 'https://github.com',
+    validationRepo: 'harness/harness-core',
+    authentication: {
+      type: 'Http',
+      spec: {
+        type: 'OAuth',
+        spec: {
+          tokenRef: 'account.harnessoauthaccesstoken_github'
+        }
+      }
+    },
+    apiAccess: {
+      type: 'OAuth',
+      spec: {
+        tokenRef: 'account.harnessoauthaccesstoken_github'
+      }
+    },
+    executeOnDelegate: false,
+    type: 'Account'
+  }
+}

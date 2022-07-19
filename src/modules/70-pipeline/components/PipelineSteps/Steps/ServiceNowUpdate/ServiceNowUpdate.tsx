@@ -19,7 +19,7 @@ import { FieldType, ServiceNowStaticFields } from '@pipeline/components/Pipeline
 import ServiceNowUpdateDeploymentMode from '@pipeline/components/PipelineSteps/Steps/ServiceNowUpdate/ServiceNowUpdateDeploymentMode'
 import { PipelineStep } from '../../PipelineStep'
 import { StepType } from '../../PipelineStepInterface'
-import { flatObject } from '../Common/ApprovalCommons'
+import { getSanitizedflatObjectForVariablesView } from '../Common/ApprovalCommons'
 import type { ServiceNowUpdateData, ServiceNowUpdateVariableListModeProps } from './types'
 
 import { processFormData, processInitialValues } from './helper'
@@ -209,7 +209,7 @@ export class ServiceNowUpdate extends PipelineStep<ServiceNowUpdateData> {
       const customStepPropsTyped = customStepProps as ServiceNowUpdateVariableListModeProps
       return (
         <VariablesListTable
-          data={flatObject(customStepPropsTyped.variablesData)}
+          data={getSanitizedflatObjectForVariablesView(customStepPropsTyped.variablesData)}
           originalData={initialValues as Record<string, any>}
           metadataMap={customStepPropsTyped.metadataMap}
           className={pipelineVariablesCss.variablePaddingL3}

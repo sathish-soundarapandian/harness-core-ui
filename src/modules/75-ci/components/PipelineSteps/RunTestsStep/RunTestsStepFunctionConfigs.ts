@@ -183,7 +183,15 @@ export const getEditViewValidateFieldsConfig = (
   },
   {
     name: 'spec.reportPaths',
-    type: ValidationFieldTypes.List
+    type: ValidationFieldTypes.List,
+    label: 'ci.runTestsStep.testReportPaths',
+    isRequired: true
+  },
+  {
+    name: 'spec.reports.spec.paths',
+    type: ValidationFieldTypes.List,
+    label: 'ci.runTestsStep.testReportPaths',
+    isRequired: true // only for input set
   },
   {
     name: 'spec.envVariables',
@@ -265,7 +273,9 @@ export function getInputSetViewValidateFieldsConfig(
     },
     {
       name: 'spec.reports.spec.paths',
-      type: ValidationFieldTypes.List
+      type: ValidationFieldTypes.List,
+      label: 'ci.runTestsStep.testReportPaths',
+      isRequired
     },
     {
       name: 'spec.envVariables',

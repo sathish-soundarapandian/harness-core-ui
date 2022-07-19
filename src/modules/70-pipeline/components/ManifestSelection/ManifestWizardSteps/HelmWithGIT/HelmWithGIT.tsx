@@ -16,7 +16,8 @@ import {
   Text,
   StepProps,
   Accordion,
-  ButtonVariation
+  ButtonVariation,
+  AllowedTypes
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
@@ -48,7 +49,7 @@ import helmcss from './HelmWithGIT.module.scss'
 interface HelmWithGITPropType {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
@@ -85,7 +86,7 @@ function HelmWithGIT({
         : prevStepData?.url
       : null
 
-  const getInitialValues = React.useCallback((): HelmWithGITDataType => {
+  const getInitialValues = (): HelmWithGITDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
 
     if (specValues) {
@@ -118,7 +119,7 @@ function HelmWithGIT({
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }],
       repoName: getRepositoryName(prevStepData, initialValues)
     }
-  }, [])
+  }
 
   const submitFormData = (formData: HelmWithGITDataType & { store?: string; connectorRef?: string }): void => {
     const manifestObj: ManifestConfigWrapper = {
@@ -348,6 +349,7 @@ function HelmWithGIT({
                   fieldPath="valuesPaths"
                   pathLabel={getString('pipeline.manifestType.valuesYamlPath')}
                   placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                  defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                 />
               </div>
               <Accordion

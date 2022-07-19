@@ -8,9 +8,8 @@
 import React from 'react'
 import produce from 'immer'
 import { set } from 'lodash-es'
-import { MultiTypeInputType, NestedAccordionPanel, Text } from '@wings-software/uicore'
+import { AllowedTypes, NestedAccordionPanel, Text } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
-import cx from 'classnames'
 import type { ExecutionElementConfig, ExecutionWrapperConfig, StepElementConfig } from 'services/cd-ng'
 
 import type { TemplateStepNode } from 'services/pipeline-ng'
@@ -52,7 +51,7 @@ export interface ExecutionCardProps {
   onUpdateExecution(data: ExecutionElementConfig): void
   readonly?: boolean
   path?: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepsFactory: AbstractStepFactory
 }
 
@@ -205,7 +204,7 @@ export function ExecutionCardPanel(props: ExecutionCardProps): React.ReactElemen
         </VariableAccordionSummary>
       }
       panelClassName={css.panel}
-      summaryClassName={cx(css.variableBorderBottom, css.accordianSummaryL1)}
+      summaryClassName={css.accordianSummaryL1}
       details={<ExecutionCard {...props} />}
     />
   )

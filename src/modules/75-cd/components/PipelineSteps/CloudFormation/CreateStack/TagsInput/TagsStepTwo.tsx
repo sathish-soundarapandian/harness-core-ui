@@ -21,7 +21,8 @@ import {
   MultiTypeInputType,
   getMultiTypeFromValue,
   FormInput,
-  SelectOption
+  SelectOption,
+  AllowedTypes
 } from '@harness/uicore'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
@@ -34,7 +35,7 @@ import css from '../../CloudFormation.module.scss'
 
 const Account = 'Account'
 interface StepTwoProps {
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   onSubmit: (values: any, prevStepData: any) => void
   initialValues: any
 }
@@ -219,7 +220,11 @@ const TagsStepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
                   <MultiTypeFieldSelector
                     name={name}
                     style={{ width: 370 }}
-                    allowedTypes={allowableTypes.filter(item => item !== MultiTypeInputType.EXPRESSION)}
+                    allowedTypes={
+                      (allowableTypes as MultiTypeInputType[]).filter(
+                        item => item !== MultiTypeInputType.EXPRESSION
+                      ) as AllowedTypes
+                    }
                     label={
                       <Text flex={{ inline: true }}>
                         {getString(
@@ -233,7 +238,9 @@ const TagsStepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
                       label=""
                       multiTextInputProps={{
                         expressions,
-                        allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME)
+                        allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                          item => item !== MultiTypeInputType.RUNTIME
+                        ) as AllowedTypes
                       }}
                     />
                   </MultiTypeFieldSelector>

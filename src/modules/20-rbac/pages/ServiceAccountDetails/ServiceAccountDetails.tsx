@@ -26,7 +26,8 @@ import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PrincipalType } from '@rbac/utils/utils'
-import { isCommunityPlan } from '@common/utils/utils'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { useGetCommunity } from '@common/utils/utils'
 import css from './ServiceAccountDetails.module.scss'
 
 const ServiceAccountDetails: React.FC = () => {
@@ -34,7 +35,7 @@ const ServiceAccountDetails: React.FC = () => {
   const { accountId, orgIdentifier, projectIdentifier, module, serviceAccountIdentifier } = useParams<
     ProjectPathProps & ServiceAccountPathProps & ModulePathParams
   >()
-  const isCommunity = isCommunityPlan()
+  const isCommunity = useGetCommunity()
 
   const { data, loading, error, refetch } = useListAggregatedServiceAccounts({
     queryParams: {
@@ -52,12 +53,14 @@ const ServiceAccountDetails: React.FC = () => {
     onSuccess: refetch
   })
 
+  const { getRBACErrorMessage } = useRBACError()
+
   const serviceAccountData = data?.data?.content?.[0]
 
   useDocumentTitle([serviceAccountData?.serviceAccount?.name || '', getString('serviceAccount')])
 
   if (loading) return <PageSpinner />
-  if (error) return <PageError message={(error.data as Error)?.message || error.message} onClick={() => refetch()} />
+  if (error) return <PageError message={getRBACErrorMessage(error)} onClick={() => refetch()} />
   if (!serviceAccountData) return <PageError onClick={() => refetch()} />
 
   return (

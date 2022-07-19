@@ -183,7 +183,7 @@ const ConfigureMSTeamsNotifications: React.FC<ConfigureMSTeamsNotificationsProps
         <Text>{getString('notifications.helpMSTeams')}</Text>
 
         <a
-          href="https://ngdocs.harness.io/article/xcb28vgn82-send-notifications-to-microsoft-teams"
+          href="https://docs.harness.io/article/xcb28vgn82-send-notifications-to-microsoft-teams"
           rel="noreferrer"
           target="_blank"
         >
@@ -192,8 +192,11 @@ const ConfigureMSTeamsNotifications: React.FC<ConfigureMSTeamsNotificationsProps
         <Formik<MSTeamsNotificationConfiguration>
           onSubmit={handleSubmit}
           formName="configureMSTeamsNotifications"
-          validationSchema={Yup.object({
-            msTeamKeys: Yup.array().of(Yup.string().required(getString('notifications.errors.msTeamUrlRequired')))
+          validationSchema={Yup.object().shape({
+            msTeamKeys: Yup.array().when('userGroups', {
+              is: val => isEmpty(val),
+              then: Yup.array().of(Yup.string().required(getString('notifications.errors.msTeamUrlRequired')))
+            })
           })}
           initialValues={{
             msTeamKeys: [],

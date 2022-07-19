@@ -16,7 +16,8 @@ import {
   projectPathProps,
   servicePathProps,
   environmentGroupPathProps,
-  environmentPathProps
+  environmentPathProps,
+  pipelineModuleParams
 } from '@common/utils/routeUtils'
 import type { ProjectPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
@@ -32,7 +33,7 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import CDSideNav from '@cd/components/CDSideNav/CDSideNav'
 import CDHomePage from '@cd/pages/home/CDHomePage'
 import CDDashboardPage from '@cd/pages/dashboard/CDDashboardPage'
-import CDPipelineStudioWrapper from '@cd/pages/pipeline-studio/CDPipelineStudioWrapper'
+import CDPipelineStudio from '@cd/pages/pipeline-studio/CDPipelineStudio'
 import { ConnectorRouteDestinations } from '@connectors/RouteDestinations'
 import { DelegateRouteDestinations } from '@delegates/RouteDestinations'
 import { GitSyncRouteDestinations } from '@gitsync/RouteDestinations'
@@ -42,6 +43,7 @@ import { TemplateRouteDestinations } from '@templates-library/RouteDestinations'
 import { TriggersRouteDestinations } from '@triggers/RouteDestinations'
 import { VariableRouteDestinations } from '@variables/RouteDestinations'
 import { SecretRouteDestinations } from '@secrets/RouteDestinations'
+import FileStorePage from '@filestore/pages/filestore/FileStorePage'
 import CDPipelineDeploymentList from '@cd/pages/pipeline-deployment-list/CDPipelineDeploymentList'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -57,7 +59,7 @@ import TriggerFactory from '@pipeline/factories/ArtifactTriggerInputFactory/inde
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { LicenseRedirectProps, LICENSE_STATE_NAMES } from 'framework/LicenseStore/LicenseStoreContext'
-import { isCommunityPlan } from '@common/utils/utils'
+import { useGetCommunity } from '@common/utils/utils'
 import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import type { ModuleListCardProps } from '@projects-orgs/components/ModuleListCard/ModuleListCard'
@@ -82,12 +84,12 @@ import { getBannerText } from './utils/renderMessageUtils'
 import ServiceStudio from './components/Services/ServiceStudio/ServiceStudio'
 
 RbacFactory.registerResourceCategory(ResourceCategory.GITOPS, {
-  icon: 'gitops-agent',
+  icon: 'gitops-blue-circle',
   label: 'cd.gitOps'
 })
 
 RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_AGENT, {
-  icon: 'gitops-agent',
+  icon: 'gitops-agents-blue-circle',
   label: 'common.agents',
   category: ResourceCategory.GITOPS,
   permissionLabels: {
@@ -98,7 +100,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_AGENT, {
 })
 
 RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_APP, {
-  icon: 'gitops-agent',
+  icon: 'gitops-applications-blue-circle',
   label: 'applications',
   category: ResourceCategory.GITOPS,
   permissionLabels: {
@@ -111,7 +113,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_APP, {
 })
 
 RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_CERT, {
-  icon: 'gitops-agent',
+  icon: 'gitops-repository-certificates-blue-circle',
   label: 'common.repositoryCertificates',
   category: ResourceCategory.GITOPS,
   permissionLabels: {
@@ -122,7 +124,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_CERT, {
 })
 
 RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_CLUSTER, {
-  icon: 'gitops-agent',
+  icon: 'gitops-clusters-blue-circle',
   label: 'common.clusters',
   category: ResourceCategory.GITOPS,
   permissionLabels: {
@@ -133,7 +135,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_CLUSTER, {
 })
 
 RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_GPGKEY, {
-  icon: 'gitops-agent',
+  icon: 'gitops-gnupg-key-blue-circle',
   label: 'common.gnupgKeys',
   category: ResourceCategory.GITOPS,
   permissionLabels: {
@@ -144,7 +146,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_GPGKEY, {
 })
 
 RbacFactory.registerResourceTypeHandler(ResourceType.GITOPS_REPOSITORY, {
-  icon: 'gitops-agent',
+  icon: 'gitops-repository-blue-circle',
   label: 'repositories',
   category: ResourceCategory.GITOPS,
   permissionLabels: {
@@ -195,7 +197,7 @@ const CDDashboardPageOrRedirect = (): React.ReactElement => {
   const params = useParams<ProjectPathProps & ModuleListCardProps>()
   const { module } = params
   const { selectedProject } = useAppStore()
-  const isCommunity = isCommunityPlan()
+  const isCommunity = useGetCommunity()
 
   if (!isCommunity) {
     return <CDDashboardPage />
@@ -247,7 +249,12 @@ TriggerFactory.registerTriggerForm(TriggerFormType.Artifact, {
   component: KubernetesArtifacts,
   baseFactory: artifactSourceBaseFactory
 })
-const isCommunity = isCommunityPlan()
+
+const ServiceComponent = (): React.ReactElement => {
+  const isCommunity = useGetCommunity()
+
+  return !isCommunity ? <ServiceStudio /> : <Services />
+}
 
 export default (
   <>
@@ -300,7 +307,7 @@ export default (
       })}
       pageName={PAGE_NAME.ServiceStudio}
     >
-      {!isCommunity ? <ServiceStudio /> : <Services />}
+      <ServiceComponent />
     </RouteWithLayout>
     <RouteWithLayout
       exact
@@ -340,10 +347,19 @@ export default (
     >
       <EnvironmentGroupDetails />
     </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CDSideNavProps}
+      path={routes.toFileStore({ ...accountPathProps, ...projectPathProps, ...pipelineModuleParams })}
+      pageName={PAGE_NAME.FileStorePage}
+    >
+      <FileStorePage />
+    </RouteWithLayout>
 
     {
       PipelineRouteDestinations({
-        pipelineStudioComponent: CDPipelineStudioWrapper,
+        pipelineStudioComponent: CDPipelineStudio,
         pipelineStudioPageName: PAGE_NAME.CDPipelineStudio,
         pipelineDeploymentListComponent: CDPipelineDeploymentList,
         pipelineDeploymentListPageName: PAGE_NAME.CDPipelineDeploymentList,

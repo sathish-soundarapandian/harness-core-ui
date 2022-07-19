@@ -17,6 +17,7 @@ import type { ServiceDefinition } from 'services/cd-ng'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
+import VariableListReadOnlyView from '@pipeline/components/WorkflowVariablesSelection/VariableListReadOnlyView'
 import { setupMode } from '../K8sServiceSpecHelper'
 import type { KubernetesServiceInputFormProps } from '../K8sServiceSpecInterface'
 import css from '../K8sServiceSpec.module.scss'
@@ -45,13 +46,15 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
 
   const {
     state: {
+      templateServiceData,
       selectionState: { selectedStageId }
     },
     getStageFromPipeline
   } = usePipelineContext()
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
-  const selectedDeploymentType = deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating)
+  const selectedDeploymentType =
+    deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating, templateServiceData)
 
   return (
     <div className={css.serviceDefinition}>
@@ -104,14 +107,17 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
         </div>
         <Card className={css.sectionCard} id={getString('common.variables')}>
           <div className={css.tabSubHeading}>{getString('common.variables')}</div>
-          <WorkflowVariables
-            tabName={DeployTabs.SERVICE}
-            formName={'addEditServiceCustomVariableForm'}
-            factory={factory as any}
-            isPropagating={isPropagating}
-            isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-            readonly={!!readonly}
-          />
+          {isReadonlyServiceMode ? (
+            <VariableListReadOnlyView />
+          ) : (
+            <WorkflowVariables
+              tabName={DeployTabs.SERVICE}
+              formName={'addEditServiceCustomVariableForm'}
+              factory={factory as any}
+              isPropagating={isPropagating}
+              readonly={!!readonly}
+            />
+          )}
         </Card>
       </div>
     </div>

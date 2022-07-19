@@ -6,17 +6,22 @@
  */
 
 import React from 'react'
-import { Layout, getMultiTypeFromValue, MultiTypeInputType, Text, Icon, IconName } from '@wings-software/uicore'
-import { isEmpty, get, defaultTo } from 'lodash-es'
+import {
+  Layout,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  Text,
+  Icon,
+  IconName,
+  AllowedTypes
+} from '@wings-software/uicore'
+import { isEmpty, get, defaultTo, set } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import type {
-  DeploymentStageConfig,
-  PipelineInfoConfig,
-  StageElementConfig,
-  StageElementWrapperConfig
-} from 'services/cd-ng'
+import produce from 'immer'
+import type { DeploymentStageConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig, StageElementWrapperConfig, StageElementConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import type { AllNGVariables } from '@pipeline/utils/types'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -29,6 +34,7 @@ import { useDeepCompareEffect } from '@common/hooks'
 import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isCodebaseFieldsRuntimeInputs } from '@pipeline/utils/CIUtils'
+import { RunPipelineFormContextProvider } from '@pipeline/context/RunPipelineFormContext'
 import { StageInputSetForm } from './StageInputSetForm'
 import { StageAdvancedInputSetForm } from './StageAdvancedInputSetForm'
 import { CICodebaseInputSetForm } from './CICodebaseInputSetForm'
@@ -40,7 +46,7 @@ import type {
 } from '../PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
 import type { AbstractStepFactory } from '../AbstractSteps/AbstractStepFactory'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
-import { getStageFromPipeline } from '../PipelineStudio/StepUtil'
+import { getStageFromPipeline, getTemplatePath } from '../PipelineStudio/StepUtil'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import css from './PipelineInputSetForm.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -56,7 +62,7 @@ export interface PipelineInputSetFormProps {
   isRunPipelineForm?: boolean
   listOfSelectedStages?: string[]
   isRetryFormStageSelected?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   viewTypeMetadata?: Record<string, boolean>
   gitAwareForTriggerEnabled?: boolean
 }
@@ -85,7 +91,7 @@ export function StageFormInternal({
   readonly?: boolean
   viewType: StepViewType
   stageClassName?: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   executionIdentifier?: string
 }): JSX.Element {
   const { getString } = useStrings()
@@ -129,7 +135,9 @@ export function StageFormInternal({
           allowableTypes={allowableTypes}
         />
       )}
-      {(!isEmpty(template?.stage?.when) || !isEmpty(template?.stage?.delegateSelectors)) && (
+      {(!isEmpty(template?.stage?.when) ||
+        !isEmpty(template?.stage?.delegateSelectors) ||
+        !isEmpty(template?.stage?.strategy)) && (
         <StageAdvancedInputSetForm
           stageIdentifier={allValues?.stage?.identifier}
           path={path}
@@ -162,7 +170,7 @@ export function StageForm({
   hideTitle?: boolean
   stageClassName?: string
   executionIdentifier?: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }): JSX.Element {
   const isTemplateStage = !!template?.stage?.template
   const type = isTemplateStage
@@ -286,7 +294,11 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
               canAddVariable: true
             }}
             // pipeline varibales do not support execution time inputs
-            allowableTypes={allowableTypes.filter(type => type !== MultiTypeInputType.RUNTIME)}
+            allowableTypes={
+              (allowableTypes as MultiTypeInputType[]).filter(
+                type => type !== MultiTypeInputType.RUNTIME
+              ) as AllowedTypes
+            }
             readonly={readonly}
             type={StepType.CustomVariable}
             stepViewType={viewType}
@@ -404,22 +416,36 @@ export function PipelineInputSetForm(props: Omit<PipelineInputSetFormProps, 'all
         accountPathProps,
         template: props.template
       }).then(data => {
-        if (data.length > 0) {
-          setTemplate(Object.assign(props.template, ...data))
-        }
+        setTemplate(Object.assign(props.template, ...data))
       })
     }
   }, [props?.template])
 
+  function updateTemplate<T>(updatedData: T, path: string): void {
+    const templatePath = getTemplatePath(path, props.path as string)
+    setTemplate(
+      produce(template, draft => {
+        set(draft, templatePath, updatedData)
+      })
+    )
+  }
+
+  function getTemplate<T>(path: string): T | PipelineInfoConfig {
+    const templatePath = getTemplatePath(path, props.path as string)
+    return get(template, templatePath)
+  }
+
   return (
-    <PipelineInputSetFormInternal
-      {...props}
-      template={template}
-      allowableTypes={
-        NG_EXECUTION_INPUT
-          ? [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
-          : [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
-      }
-    />
+    <RunPipelineFormContextProvider template={getTemplate} updateTemplate={updateTemplate}>
+      <PipelineInputSetFormInternal
+        {...props}
+        template={template}
+        allowableTypes={
+          NG_EXECUTION_INPUT
+            ? [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+            : [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+        }
+      />
+    </RunPipelineFormContextProvider>
   )
 }

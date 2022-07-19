@@ -33,6 +33,7 @@ const getDefaultOptions = (data: DataType): Highcharts.Options => ({
       formatter: function () {
         return `${this.pos + 1}`
       },
+
       style: {
         fontSize: 'var(--font-size-xsmall)',
         color: 'var(--grey-400)'

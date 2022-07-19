@@ -10,9 +10,9 @@
   display: inline-block;
   font-size: small;
   font-weight: 500;
-  margin-top: var(--spacing-2) !important;
+  margin-top: var(--spacing-1) !important;
   margin-right: var(--spacing-5);
-  margin-bottom: var(--spacing-3);
+  margin-bottom: var(--spacing-1);
   cursor: pointer;
   border-radius: 4px;
 }
@@ -22,38 +22,73 @@
 }
 
 .harnessTag {
-  color: var(--blue-700);
-  background: var(--blue-100);
-  border: 1px solid var(--blue-700);
+  color: var(--primary-8);
+  background: var(--primary-1);
+  border: 1px solid var(--primary-5);
 }
 
 .ceTag {
-  color: var(--teal-900);
-  background: var(--teal-100);
-  border: 1px solid var(--teal-900);
+  color: var(--ccm-foreground);
+  background: var(--ccm-background);
+  border: 1px solid var(--ccm-border);
 }
 .ciTag {
-  color: var(--primary-7);
-  background: var(--primary-2);
-  border: 1px solid var(--primary-7);
+  color: var(--ci-foreground);
+  background: var(--ci-background);
+  border: 1px solid var(--ci-border);
 }
 .cdTag {
-  color: var(--green-700);
-  background: var(--green-100);
-  border: 1px solid var(--green-700);
+  color: var(--cd-foreground);
+  background: var(--cd-background);
+  border: 1px solid var(--cd-border);
 }
 .cfTag {
-  color: var(--yellow-700);
-  background: var(--yellow-100);
-  border: 1px solid var(--yellow-700);
+  color: var(--ff-foreground);
+  background: var(--ff-background);
+  border: 1px solid var(--ff-border);
 }
-.cgCdTag {
-  color: var(--orange-700);
-  background: var(--orange-100);
-  border: 1px solid var(--orange-700);
+.stoTag {
+  color: var(--sto-foreground);
+  background: var(--sto-background);
+  border: 1px solid var(--sto-border);
 }
 
 .predefinedTags {
+  // Continuous Delivery
+  --cd-foreground: #30841f;
+  --cd-border: #5fb34e;
+  --cd-background: #f6fff2;
+
+  // Continuous Integration
+  --ci-foreground: #0672b6;
+  --ci-border: #2bb1f2;
+  --ci-background: #e2f5ff;
+
+  // Cloud Cost Management
+  --ccm-foreground: #24807f;
+  --ccm-border: #01c9cc;
+  --ccm-background: #ecffff;
+
+  // Feature Flag Management
+  --ff-foreground: #c05809;
+  --ff-border: #ee8625;
+  --ff-background: #fcf4e3;
+
+  // Service Reliability Management
+  --srm-foreground: #6938c0;
+  --srm-border: #ae82fc;
+  --srm-background: #f6f1ff;
+
+  // Security Test Orchestration
+  --sto-foreground: #1947ec;
+  --sto-border: #4791ff;
+  --sto-background: #ebefff;
+
+  // Chaos Engineering
+  --ce-foreground: #9a0041;
+  --ce-border: #ff006a;
+  --ce-background: #fff1f7;
+
   margin-top: var(--spacing-4);
   section,
   button {

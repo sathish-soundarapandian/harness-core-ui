@@ -118,7 +118,11 @@ export interface GitProvider {
 }
 
 export const AllSaaSGitProviders: GitProvider[] = [
-  { icon: 'github', label: 'common.repo_provider.githubLabel', type: Connectors.GITHUB },
+  {
+    icon: 'github',
+    label: 'common.repo_provider.githubLabel',
+    type: Connectors.GITHUB
+  },
   { icon: 'gitlab', label: 'common.repo_provider.gitlabLabel', type: Connectors.GITLAB },
   { icon: 'bitbucket-blue', label: 'pipeline.manifestType.bitBucketLabel', type: Connectors.BITBUCKET }
 ]
@@ -224,10 +228,14 @@ export const getFullRepoName = (repository: UserRepoResponse): string => {
 export const DELEGATE_INSTALLATION_REFETCH_DELAY = 10000
 export const MAX_TIMEOUT_DELEGATE_INSTALLATION = 1000 * 60 * 10 // ten minutes
 
-export const OAUTH_REDIRECT_URL_PREFIX = `${location.protocol}//${location.host}/gateway/`
-
 export const BitbucketPRTriggerActions: BitbucketPRSpec['actions'] = ['Create', 'Update']
 
 export const GitHubPRTriggerActions: GithubPRSpec['actions'] = ['Reopen', 'Synchronize', 'Open']
 
 export const GitlabPRTriggerActions: GitlabPRSpec['actions'] = ['Reopen', 'Sync', 'Open']
+
+export const AccessTokenPermissionsDocLinks: Map<ConnectorInfoDTO['type'], string> = new Map([
+  [Connectors.GITHUB, 'https://docs.harness.io/article/jd77qvieuw#step_3_credentials'],
+  [Connectors.GITLAB, 'https://docs.harness.io/article/5abnoghjgo#password_personal_access_token'],
+  [Connectors.BITBUCKET, 'https://docs.harness.io/article/iz5tucdwyu#personal_access_token']
+])

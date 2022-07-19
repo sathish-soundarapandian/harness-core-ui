@@ -20,7 +20,8 @@ import {
   getMultiTypeFromValue,
   HarnessDocTooltip,
   MultiTypeInputType,
-  Container
+  Container,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { String, useStrings } from 'framework/strings'
@@ -220,7 +221,9 @@ function FormContent({
                                   label=""
                                   placeholder={getString('valueLabel')}
                                   multiTextInputProps={{
-                                    allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME),
+                                    allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                      item => item !== MultiTypeInputType.RUNTIME
+                                    ) as AllowedTypes,
                                     expressions
                                   }}
                                 />

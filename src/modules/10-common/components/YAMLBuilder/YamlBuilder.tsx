@@ -13,7 +13,7 @@ import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import '@wings-software/monaco-yaml/lib/esm/monaco.contribution'
 import { IKeyboardEvent, languages } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { editor } from 'monaco-editor/esm/vs/editor/editor.api'
-import { debounce, isEmpty, truncate, throttle, defaultTo, attempt, every } from 'lodash-es'
+import { debounce, isEmpty, truncate, throttle, defaultTo, attempt, every, isEqualWith, isNil } from 'lodash-es'
 import { useToaster } from '@common/exports'
 import { useParams } from 'react-router-dom'
 import SplitPane from 'react-split-pane'
@@ -160,6 +160,10 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   useEffect(() => {
     bind?.(handler)
+
+    return () => {
+      bind?.(undefined)
+    }
   }, [bind, handler])
 
   useEffect(() => {
@@ -240,18 +244,21 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   /* #region Handle various interactions with the editor */
 
-  const onYamlChange = debounce((updatedYaml: string): void => {
-    setCurrentYaml(updatedYaml)
-    yamlRef.current = updatedYaml
-    verifyYAML({
-      updatedYaml,
-      setYamlValidationErrors,
-      showError,
-      schema,
-      errorMessage: yamlError
-    })
-    onChange?.(!(updatedYaml === ''))
-  }, 500)
+  const onYamlChange = useCallback(
+    debounce((updatedYaml: string): void => {
+      setCurrentYaml(updatedYaml)
+      yamlRef.current = updatedYaml
+      verifyYAML({
+        updatedYaml,
+        setYamlValidationErrors,
+        showError,
+        schema,
+        errorMessage: yamlError
+      })
+      onChange?.(!(updatedYaml === ''))
+    }, 500),
+    [setYamlValidationErrors, showError, schema, yamlError, setCurrentYaml, onChange]
+  )
 
   const showNoPermissionError = useCallback(
     throttle(() => {
@@ -481,7 +488,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         <li className={css.item} title={value} key={key}>
           {getString('yamlBuilder.lineNumberLabel')}&nbsp;
           {key + 1},&nbsp;
-          {truncate(value.toLowerCase(), { length: MAX_ERR_MSSG_LENGTH })}
+          {truncate(value, { length: MAX_ERR_MSSG_LENGTH })}
         </li>
       )
       errors.push(error)
@@ -612,3 +619,14 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 }
 
 export default YAMLBuilder
+
+export const YamlBuilderMemo = React.memo(YAMLBuilder, (prevProps, nextProps) => {
+  if (isNil(prevProps.schema) && !isNil(nextProps.schema)) {
+    return false
+  }
+  return isEqualWith(nextProps, prevProps, (_arg1, _arg2, key) => {
+    if (['existingJSON', 'onExpressionTrigger', 'schema', 'onEnableEditMode'].indexOf(key as string) > -1) {
+      return true
+    }
+  })
+})

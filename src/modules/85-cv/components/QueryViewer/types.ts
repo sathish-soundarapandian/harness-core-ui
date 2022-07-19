@@ -22,6 +22,10 @@ export interface QueryContentProps {
   isAutoFetch?: boolean
   mandatoryFields?: any[]
   staleRecordsWarning?: string
+  textAreaPlaceholder?: string
+  isTemplate?: boolean
+  expressions?: string[]
+  isConnectorRuntimeOrExpression?: boolean
 }
 
 export interface QueryViewerProps {
@@ -43,6 +47,9 @@ export interface QueryViewerProps {
   recordsClassName?: string
   fetchEntityName?: string
   dataTooltipId?: string
+  isTemplate?: boolean
+  expressions?: string[]
+  isConnectorRuntimeOrExpression?: boolean
 }
 
 export interface QueryViewDialogProps extends RecordsProps {

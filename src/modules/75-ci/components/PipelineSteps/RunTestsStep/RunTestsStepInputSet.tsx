@@ -7,7 +7,15 @@
 
 import React from 'react'
 import { connect } from 'formik'
-import { Text, getMultiTypeFromValue, MultiTypeInputType, FormikForm, Container, Layout } from '@wings-software/uicore'
+import {
+  Text,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  FormikForm,
+  Container,
+  Layout,
+  AllowedTypes
+} from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { isEmpty, startCase } from 'lodash-es'
 import cx from 'classnames'
@@ -19,6 +27,9 @@ import { FormMultiTypeCheckboxField } from '@common/components'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { ConnectorReferenceProps } from '@common/components/MultiTypeList/MultiTypeList'
+import { MultiTypeListInputSet } from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
 import type { RunTestsStepProps } from './RunTestsStep'
@@ -26,11 +37,12 @@ import { getBuildEnvironmentOptions, getCSharpBuildToolOptions, getFrameworkVers
 import { CIStep } from '../CIStep/CIStep'
 import { ConnectorRefWithImage } from '../CIStep/ConnectorRefWithImage'
 import { getOptionalSubLabel, renderMultiTypeInputWithAllowedValues } from '../CIStep/CIStepOptionalConfig'
+import { SupportedInputTypesForListItems } from '../CIStep/StepUtils'
 import { RunAndRunTestStepInputCommonFields } from '../CIStep/RunAndRunTestStepInputCommonFields'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = props => {
-  const { template, path, readonly, stepViewType, allowableTypes } = props
+  const { template, path, readonly, stepViewType, allowableTypes, formik } = props
   const { getString } = useStrings()
 
   const { expressions } = useVariablesExpression()
@@ -83,6 +95,68 @@ export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = props => {
       </Container>
     ),
     []
+  )
+
+  const renderMultiTypeListInputSet = React.useCallback(
+    ({
+      name,
+      tooltipId,
+      labelKey,
+      placeholderKey,
+      withObjectStructure,
+      keyName,
+      allowedTypes,
+      allowedTypesForEntries,
+      showConnectorRef,
+      connectorTypes,
+      connectorRefRenderer,
+      restrictToSingleEntry
+    }: {
+      name: string
+      tooltipId: string
+      labelKey: keyof StringsMap
+      placeholderKey?: keyof StringsMap
+      withObjectStructure?: boolean
+      keyName?: string
+      allowedTypes: AllowedTypes
+      allowedTypesForEntries: AllowedTypes
+      restrictToSingleEntry?: boolean
+    } & ConnectorReferenceProps) => (
+      <MultiTypeListInputSet
+        name={name}
+        multiTextInputProps={{
+          expressions,
+          allowableTypes: allowedTypesForEntries
+        }}
+        multiTypeFieldSelectorProps={{
+          label: (
+            <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}>
+              <Text
+                tooltipProps={tooltipId ? { dataTooltipId: tooltipId } : {}}
+                style={{ display: 'flex', alignItems: 'center' }}
+                className={css.inpLabel}
+                color={Color.GREY_800}
+                font={{ size: 'small', weight: 'semi-bold' }}
+              >
+                {getString(labelKey)}
+              </Text>
+            </Layout.Horizontal>
+          ),
+          allowedTypes: allowedTypes
+        }}
+        placeholder={placeholderKey ? getString(placeholderKey) : ''}
+        disabled={readonly}
+        formik={formik}
+        withObjectStructure={withObjectStructure}
+        keyName={keyName}
+        showConnectorRef={showConnectorRef}
+        connectorTypes={connectorTypes}
+        connectorRefRenderer={connectorRefRenderer}
+        restrictToSingleEntry={restrictToSingleEntry}
+        persistEmptyStringDefault={true}
+      />
+    ),
+    [expressions]
   )
 
   return (
@@ -299,6 +373,19 @@ export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = props => {
           />
         </Container>
       )}
+      {getMultiTypeFromValue(template?.spec?.reports?.spec?.paths) === MultiTypeInputType.RUNTIME && (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          {renderMultiTypeListInputSet({
+            name: `${prefix}spec.reports.spec.paths`,
+            placeholderKey: 'pipelineSteps.reportPathsPlaceholder',
+            labelKey: 'ci.runTestsStep.testReportPaths',
+            allowedTypes: [MultiTypeInputType.FIXED],
+            allowedTypesForEntries: SupportedInputTypesForListItems,
+            tooltipId: 'reportPaths'
+          })}
+        </Container>
+      )}
+
       {getMultiTypeFromValue(template?.spec?.preCommand) === MultiTypeInputType.RUNTIME ? (
         shouldRenderRunTimeInputViewWithAllowedValues('spec.preCommand', template) ? (
           <Container className={cx(css.formGroup, stepCss)}>
@@ -335,7 +422,7 @@ export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = props => {
           renderCommandEditor(`${prefix}spec.postCommand`, 'ci.postCommandLabel', 'runTestsPostCommand')
         )
       ) : null}
-      <RunAndRunTestStepInputCommonFields {...props} />
+      <RunAndRunTestStepInputCommonFields {...props} stepType={StepType.RunTests} />
     </FormikForm>
   )
 }

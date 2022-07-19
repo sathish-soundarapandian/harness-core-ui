@@ -6,9 +6,11 @@
  */
 
 import React from 'react'
+
 import { useParams } from 'react-router-dom'
 
 import { Button, ButtonSize, ButtonVariation, Container } from '@harness/uicore'
+
 import { useGetClusterList } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
@@ -33,7 +35,9 @@ const GitOpsCluster = (props: { envRef: string }): React.ReactElement => {
       environmentIdentifier: props?.envRef
     }
   })
+
   const { getString } = useStrings()
+
   return (
     <Container padding={{ left: 'medium', right: 'medium' }}>
       <>
@@ -49,19 +53,19 @@ const GitOpsCluster = (props: { envRef: string }): React.ReactElement => {
         >
           {getString('cd.selectClusterLabel')}
         </Button>
-        <Container border={{ top: true }}>
+        <Container padding={{ top: 'medium' }}>
           <ClusterTableView linkedClusters={data} loading={loading} refetch={refetch} {...props} />
-          {showSelectClusterModal ? (
-            <AddCluster
-              linkedClusterResponse={data}
-              onHide={() => {
-                setShowClusterModal(false)
-              }}
-              refetch={refetch}
-              envRef={props.envRef}
-            />
-          ) : null}
         </Container>
+        {showSelectClusterModal ? (
+          <AddCluster
+            linkedClusterResponse={data}
+            onHide={() => {
+              setShowClusterModal(false)
+            }}
+            refetch={refetch}
+            envRef={props.envRef}
+          />
+        ) : null}
       </>
     </Container>
   )

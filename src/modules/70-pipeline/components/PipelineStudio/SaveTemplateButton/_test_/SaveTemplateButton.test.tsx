@@ -7,24 +7,33 @@
 
 import React from 'react'
 import { act, fireEvent, render } from '@testing-library/react'
-import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
+import { omit } from 'lodash-es'
+import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
-import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import pipelineContextMock from '@pipeline/components/PipelineStudio/RightDrawer/__tests__/stateMock'
-import { stepTemplateMock } from '@pipeline/utils/__tests__/useSaveTemplate.test'
-import type { ConfigModalProps } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
-import { DefaultTemplate } from 'framework/Templates/templates'
+import * as hooks from '@pipeline/components/PipelineStudio/SaveTemplateButton/useSaveAsTemplate'
 import { SaveTemplateButton, SaveTemplateButtonProps } from '../SaveTemplateButton'
 
-const mockChildComponent = jest.fn()
-jest.mock('framework/Templates/TemplateConfigModal/TemplateConfigModal', () => ({
-  ...(jest.requireActual('framework/Templates/TemplateConfigModal/TemplateConfigModal') as any),
-  TemplateConfigModal: (props: ConfigModalProps) => {
-    mockChildComponent(props)
-    return <div className="template-config-modal-mock"></div>
+const saveMock = jest.fn()
+
+const useSaveAsTemplateMock = jest.spyOn(hooks, 'useSaveAsTemplate').mockReturnValue({
+  save: saveMock
+})
+
+const stepTemplateMock = {
+  name: 'Test Http Template',
+  identifier: 'Test_Http_Template',
+  versionLabel: 'v1',
+  type: 'Step',
+  projectIdentifier: 'Yogesh_Test',
+  orgIdentifier: 'default',
+  tags: {},
+  spec: {
+    type: 'Http',
+    timeout: '1m 40s',
+    spec: { url: '<+input>', method: 'GET', headers: [], outputVariables: [], requestBody: '<+input>' }
   }
-}))
+}
 
 const baseProps: SaveTemplateButtonProps = {
   data: {
@@ -34,7 +43,11 @@ const baseProps: SaveTemplateButtonProps = {
     description: 'some description',
     tags: { tag1: '', tag2: '' }
   },
-  type: 'Stage'
+  type: 'Stage',
+  gitDetails: {
+    repoIdentifier: 'repo',
+    branch: 'branch'
+  }
 }
 const PATH = routes.toPipelineStudio({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })
 const PATH_PARAMS = {
@@ -46,44 +59,33 @@ const PATH_PARAMS = {
 }
 
 describe('<SaveTemplateButton /> tests', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
   test('should match snapshot', async () => {
     const { container } = render(
-      <PipelineContext.Provider value={pipelineContextMock}>
-        <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
-          <SaveTemplateButton {...baseProps} />
-        </TestWrapper>
-      </PipelineContext.Provider>
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
+        <SaveTemplateButton {...baseProps} />
+      </TestWrapper>
     )
     expect(container).toMatchSnapshot()
   })
 
-  test('should open template save dialog on click', async () => {
+  test('should call useSaveAsTemplate method with correct params on click', async () => {
     const { getByText } = render(
-      <PipelineContext.Provider value={pipelineContextMock}>
-        <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
-          <SaveTemplateButton {...baseProps} />
-        </TestWrapper>
-      </PipelineContext.Provider>
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
+        <SaveTemplateButton {...baseProps} />
+      </TestWrapper>
     )
+
+    expect(useSaveAsTemplateMock).toBeCalledWith({ ...omit(baseProps, 'buttonProps'), fireSuccessEvent: true })
 
     const saveAsTemplateBtn = getByText('common.saveAsTemplate')
     await act(async () => {
       fireEvent.click(saveAsTemplateBtn)
     })
 
-    expect(mockChildComponent).toHaveBeenCalledWith(
-      expect.objectContaining({
-        initialValues: {
-          ...DefaultTemplate,
-          type: 'Stage',
-          projectIdentifier: 'Milos2',
-          orgIdentifier: 'CV',
-          spec: stepTemplateMock.spec,
-          repo: '',
-          branch: ''
-        }
-      })
-    )
-    expect(findDialogContainer()).toBeDefined()
+    expect(saveMock).toBeCalled()
   })
 })

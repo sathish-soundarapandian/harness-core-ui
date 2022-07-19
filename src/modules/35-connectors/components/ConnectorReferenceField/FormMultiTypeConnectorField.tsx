@@ -78,6 +78,7 @@ export interface MultiTypeConnectorFieldProps extends Omit<ConnectorReferenceFie
   multitypeInputValue?: MultiTypeInputType
   connectorLabelClass?: string
   onLoadingFinish?: () => void
+  setConnector?: any
 }
 export interface ConnectorReferenceDTO extends ConnectorInfoDTO {
   status: ConnectorResponse['status']
@@ -107,6 +108,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     multitypeInputValue,
     connectorLabelClass: connectorLabelClassFromProps = '',
     createNewLabel,
+    setConnector,
     ...restProps
   } = props
   const hasError = errorCheck(name, formik)
@@ -231,6 +233,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
         }
         setSelectedValue(value)
         props?.onLoadingFinish?.()
+        setConnector?.(connectorData?.data)
       } else if (error) {
         if (!setRefValue) {
           formik?.setFieldValue(name, '')
@@ -312,24 +315,13 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     }
   }
 
-  const [canUpdateSelectedConnector] = usePermission(
-    {
-      resource: {
-        resourceType: ResourceType.CONNECTOR,
-        resourceIdentifier: selectedValue?.connector?.identifier || ''
-      },
-      permissions: [PermissionIdentifier.UPDATE_CONNECTOR]
-    },
-    []
-  )
-
   if (typeof type === 'string' && typeof selectedValue === 'object') {
     optionalReferenceSelectProps.editRenderer = getEditRenderer(
       selectedValue,
       openConnectorModal,
       selectedValue?.connector?.type || type,
       getString,
-      canUpdateSelectedConnector
+      { accountIdentifier, projectIdentifier, orgIdentifier }
     )
   } else if (Array.isArray(type) && typeof selectedValue === 'object') {
     optionalReferenceSelectProps.editRenderer = getEditRenderer(
@@ -337,7 +329,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
       openConnectorModal,
       selectedValue?.connector?.type,
       getString,
-      canUpdateSelectedConnector
+      { accountIdentifier, projectIdentifier, orgIdentifier }
     )
   }
   const [pagedConnectorData, setPagedConnectorData] = useState<ResponsePageConnectorResponse>({})

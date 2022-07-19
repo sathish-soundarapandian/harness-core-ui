@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Accordion,
   Layout,
@@ -17,7 +17,8 @@ import {
   MultiTypeInputType,
   Text,
   ButtonVariation,
-  getErrorInfoFromErrorObject
+  getErrorInfoFromErrorObject,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { FontVariation } from '@harness/design-system'
@@ -44,7 +45,7 @@ import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
 interface HelmWithGcsPropType {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
@@ -85,7 +86,7 @@ function HelmWithGcs({
     value: item
   }))
 
-  const onBucketNameFocus = useCallback((): void => {
+  const onBucketNameFocus = (): void => {
     if (!bucketData?.data) {
       refetchBuckets({
         queryParams: {
@@ -96,8 +97,7 @@ function HelmWithGcs({
         }
       })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bucketData?.data, prevStepData?.connectorRef?.value, refetchBuckets])
+  }
 
   const getInitialValues = (): HelmWithGcsDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
@@ -394,6 +394,7 @@ function HelmWithGcs({
                   fieldPath="valuesPaths"
                   pathLabel={getString('pipeline.manifestType.valuesYamlPath')}
                   placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                  defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                 />
               </div>
 

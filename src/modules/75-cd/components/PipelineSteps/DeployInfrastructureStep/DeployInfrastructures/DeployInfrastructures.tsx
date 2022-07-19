@@ -5,18 +5,23 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
-import type { FormikProps } from 'formik'
+import { connect, FormikProps } from 'formik'
 import cx from 'classnames'
+import { parse } from 'yaml'
+import { Spinner } from '@blueprintjs/core'
 
 import {
+  AllowedTypes,
   ButtonSize,
   ButtonVariation,
+  Container,
   Dialog,
   FormInput,
   getMultiTypeFromValue,
+  Layout,
   MultiTypeInputType,
   SelectOption,
   useToaster
@@ -24,7 +29,12 @@ import {
 import { useModalHook } from '@harness/use-modal'
 
 import { useStrings } from 'framework/strings'
-import { InfrastructureResponse, InfrastructureResponseDTO, useGetInfrastructureList } from 'services/cd-ng'
+import {
+  InfrastructureResponse,
+  InfrastructureResponseDTO,
+  useGetInfrastructureInputs,
+  useGetInfrastructureList
+} from 'services/cd-ng'
 
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 
@@ -33,38 +43,45 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
-import { InfrastructureModal } from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfrastructureModal'
+import InfrastructureModal from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfrastructureModal'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
-import { isEditInfrastructure, PipelineInfrastructureV2 } from '../utils'
+import { useRunPipelineFormContext } from '@pipeline/context/RunPipelineFormContext'
+import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
+import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
+import { isEditInfrastructure } from '../utils'
 
 import css from './DeployInfrastructures.module.scss'
 
 interface DeployInfrastructuresProps {
-  formikRef: React.MutableRefObject<FormikProps<unknown> | null>
+  formik?: FormikProps<DeployStageConfig>
   readonly?: boolean
-  initialValues?: PipelineInfrastructureV2
-  environmentIdentifier: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
+  initialValues: DeployStageConfig
+  environmentRef?: string
+  path?: string
 }
 
-export default function DeployInfrastructures({
-  formikRef,
-  readonly,
+function DeployInfrastructures({
   initialValues,
-  environmentIdentifier,
-  allowableTypes
-}: DeployInfrastructuresProps) {
+  formik,
+  readonly,
+  allowableTypes,
+  environmentRef,
+  path
+}: DeployInfrastructuresProps): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { expressions } = useVariablesExpression()
 
-  const [infrastructureRefType, setInfrastructureRefType] = useState<MultiTypeInputType>(
-    getMultiTypeFromValue((formikRef.current as any)?.values?.infrastructureRef)
-  )
+  const environmentIdentifier = useMemo(() => {
+    return defaultTo(environmentRef || formik?.values?.environment?.environmentRef, '')
+  }, [formik?.values?.environment?.environmentRef])
+
+  const { updateTemplate } = useRunPipelineFormContext()
 
   const {
     data: infrastructuresResponse,
@@ -79,9 +96,63 @@ export default function DeployInfrastructures({
     }
   })
 
+  const {
+    data: infrastructureInputsResponse,
+    loading: infrastructureInputsLoading,
+    refetch: refetchInfrastructureInputs
+  } = useGetInfrastructureInputs({
+    lazy: true
+  })
+
   const [infrastructures, setInfrastructures] = useState<InfrastructureResponseDTO[]>()
-  const [infrastructuresSelectOptions, setInfrastructuresSelectOptions] = useState<SelectOption[]>()
   const [selectedInfrastructure, setSelectedInfrastructure] = useState<string | undefined>()
+  const [infrastructuresSelectOptions, setInfrastructuresSelectOptions] = useState<SelectOption[]>()
+  const [infrastructureRefType, setInfrastructureRefType] = useState<MultiTypeInputType>(
+    getMultiTypeFromValue(initialValues.infrastructureRef)
+  )
+
+  useEffect(() => {
+    if (!infrastructureInputsLoading) {
+      if (infrastructureInputsResponse?.data?.inputSetTemplateYaml) {
+        const parsedInfrastructureDefinitionYaml = parse(
+          defaultTo(infrastructureInputsResponse?.data?.inputSetTemplateYaml, '{}')
+        )
+
+        if (path) {
+          formik?.setFieldValue(
+            `${path}.infrastructureDefinitions[0]`,
+            clearRuntimeInput(parsedInfrastructureDefinitionYaml.infrastructureDefinitions[0])
+          )
+          updateTemplate(
+            parsedInfrastructureDefinitionYaml.infrastructureDefinitions[0],
+            `${path}.infrastructureDefinitions[0]`
+          )
+        } else {
+          formik?.setFieldValue('infrastructureInputs', parsedInfrastructureDefinitionYaml)
+        }
+      }
+    } else {
+      formik?.setFieldValue('infrastructureInputs', undefined)
+    }
+  }, [infrastructureInputsLoading])
+
+  useEffect(() => {
+    if (selectedInfrastructure) {
+      const parsedInfraYaml = parse(defaultTo(selectedInfrastructure, '{}'))
+      refetchInfrastructureInputs({
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier,
+          projectIdentifier,
+          environmentIdentifier,
+          infraIdentifiers: [parsedInfraYaml?.infrastructureDefinition?.identifier]
+        },
+        queryParamStringifyOptions: {
+          arrayFormat: 'comma'
+        }
+      })
+    }
+  }, [selectedInfrastructure])
 
   useEffect(() => {
     if (!infrastructuresLoading && !get(infrastructuresResponse, 'data.empty')) {
@@ -110,24 +181,31 @@ export default function DeployInfrastructures({
     if (
       !isEmpty(infrastructuresSelectOptions) &&
       !isNil(infrastructuresSelectOptions) &&
-      (initialValues as any)?.infrastructureRef
+      initialValues.infrastructureRef
     ) {
-      if (getMultiTypeFromValue((initialValues as any)?.infrastructureRef) === MultiTypeInputType.FIXED) {
-        const doesExist =
-          infrastructuresSelectOptions.filter(
-            infra => infra.value === ((initialValues as any)?.infrastructureRef as unknown as string)
-          ).length > 0
-        if (!doesExist) {
+      if (getMultiTypeFromValue(initialValues.infrastructureRef) === MultiTypeInputType.FIXED) {
+        const existingInfrastructure = infrastructuresSelectOptions.find(
+          infra => infra.value === initialValues.infrastructureRef
+        )
+        if (!existingInfrastructure) {
           if (!readonly) {
-            formikRef.current?.setFieldValue('infrastructureRef', '')
+            formik?.setFieldValue(path ? `${path}.infrastructureDefinitions[0].identifier` : 'infrastructureRef', '')
           } else {
             const options = [...infrastructuresSelectOptions]
             options.push({
-              label: (initialValues as any)?.infrastructureRef,
-              value: (initialValues as any)?.infrastructureRef
+              label: initialValues.infrastructureRef,
+              value: initialValues.infrastructureRef
             })
             setInfrastructuresSelectOptions(options)
           }
+        } else {
+          formik?.setFieldValue(
+            path ? `${path}.infrastructureDefinitions[0].identifier` : 'infrastructureRef',
+            existingInfrastructure.value
+          )
+          setSelectedInfrastructure(
+            infrastructures?.filter(infra => infra.identifier === existingInfrastructure?.value)?.[0]?.yaml
+          )
         }
       }
     }
@@ -139,22 +217,17 @@ export default function DeployInfrastructures({
     }
   }, [infrastructuresError])
 
-  const updateInfrastructuresList = (value: InfrastructureResponseDTO) => {
-    formikRef.current?.setValues({
-      ...(formikRef.current as any).values,
-      infrastructureRef: { value: value.identifier, label: value.name }
-    })
-
-    if (!isNil(infrastructures) && !isEmpty(infrastructures)) {
-      const newInfrastructureList = [...infrastructures]
-      const existingIndex = newInfrastructureList.findIndex(item => item.identifier === value.identifier)
-      if (existingIndex >= 0) {
-        newInfrastructureList.splice(existingIndex, 1, value)
-      } else {
-        newInfrastructureList.unshift(value)
-      }
-      setInfrastructures(newInfrastructureList)
+  const updateInfrastructuresList = (values: InfrastructureResponseDTO) => {
+    const newInfrastructureList = [...defaultTo(infrastructures, [])]
+    const existingIndex = newInfrastructureList.findIndex(item => item.identifier === values.identifier)
+    if (existingIndex >= 0) {
+      newInfrastructureList.splice(existingIndex, 1, values)
+    } else {
+      newInfrastructureList.unshift(values)
     }
+    setInfrastructures(newInfrastructureList)
+    setSelectedInfrastructure(newInfrastructureList[existingIndex >= 0 ? existingIndex : 0]?.yaml)
+    formik?.setFieldValue('infrastructureRef', values.identifier)
     hideInfrastructuresModal()
   }
 
@@ -167,7 +240,11 @@ export default function DeployInfrastructures({
         canOutsideClickClose
         enforceFocus={false}
         onClose={hideInfrastructuresModal}
-        title={getString('cd.infrastructure.createNew')}
+        title={
+          isEditInfrastructure(selectedInfrastructure)
+            ? getString('cd.infrastructure.edit')
+            : getString('cd.infrastructure.createNew')
+        }
         className={cx('padded-dialog', css.dialogStyles)}
       >
         <InfrastructureModal
@@ -179,15 +256,19 @@ export default function DeployInfrastructures({
         />
       </Dialog>
     ),
-    [formikRef.current, selectedInfrastructure, setSelectedInfrastructure]
+    [environmentIdentifier, selectedInfrastructure, setSelectedInfrastructure]
   )
 
   return (
-    <>
+    <Layout.Horizontal
+      className={css.formRow}
+      spacing="medium"
+      flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
+    >
       <FormInput.MultiTypeInput
         label={getString('cd.pipelineSteps.environmentTab.specifyYourInfrastructure')}
         tooltipProps={{ dataTooltipId: 'specifyYourInfrastructure' }}
-        name="infrastructureRef"
+        name={path ? `${path}.infrastructureDefinitions[0].identifier` : 'infrastructureRef'}
         useValue
         disabled={readonly || (infrastructureRefType === MultiTypeInputType.FIXED && infrastructuresLoading)}
         placeholder={
@@ -199,12 +280,9 @@ export default function DeployInfrastructures({
           onTypeChange: setInfrastructureRefType,
           width: 280,
           onChange: item => {
-            if ((item as SelectOption).value !== (formikRef.current?.values as any)?.infrastructureRef) {
-              formikRef.current?.setFieldValue('infrastructureDefinitions', [(item as SelectOption)?.value])
-              setSelectedInfrastructure(
-                infrastructures?.filter(infra => infra.identifier === (item as SelectOption)?.value)?.[0].yaml
-              )
-            }
+            setSelectedInfrastructure(
+              infrastructures?.filter(infra => infra.identifier === (item as SelectOption)?.value)?.[0]?.yaml
+            )
           },
           selectProps: {
             addClearBtn: !readonly,
@@ -215,9 +293,14 @@ export default function DeployInfrastructures({
         }}
         selectItems={defaultTo(infrastructuresSelectOptions, [])}
       />
-      {infrastructureRefType === MultiTypeInputType.FIXED && (
+      {infrastructureInputsLoading && (
+        <Container margin={{ top: 'xlarge' }}>
+          <Spinner size={20} />
+        </Container>
+      )}
+      {!path && infrastructureRefType === MultiTypeInputType.FIXED && (
         <RbacButton
-          margin={{ bottom: 'small' }}
+          margin={{ top: 'xlarge' }}
           size={ButtonSize.SMALL}
           variation={ButtonVariation.LINK}
           disabled={readonly}
@@ -229,13 +312,15 @@ export default function DeployInfrastructures({
             permission: PermissionIdentifier.EDIT_ENVIRONMENT
           }}
           text={
-            isEditInfrastructure(formikRef.current?.values)
+            isEditInfrastructure(selectedInfrastructure)
               ? getString('common.editName', { name: getString('infrastructureText') })
               : getString('common.plusNewName', { name: getString('infrastructureText') })
           }
-          id={isEditInfrastructure(formikRef.current?.values) ? 'edit-infrastructure' : 'add-new-infrastructure'}
+          id={isEditInfrastructure(selectedInfrastructure) ? 'edit-infrastructure' : 'add-new-infrastructure'}
         />
       )}
-    </>
+    </Layout.Horizontal>
   )
 }
+
+export default connect(DeployInfrastructures)

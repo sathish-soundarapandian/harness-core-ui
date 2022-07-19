@@ -25,7 +25,7 @@ import {
 } from '../../../support/85-cv/monitoredService/health-sources/NewRelic/constants'
 import { Connectors } from '../../../utils/connctors-utils'
 
-describe('Create empty monitored service', () => {
+describe.skip('Create empty monitored service', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       return false
@@ -38,6 +38,7 @@ describe('Create empty monitored service', () => {
       { allServicesCount: 1, servicesAtRiskCount: 0 }
     )
     cy.visitChangeIntelligence()
+    cy.visitSRMMonitoredServicePage()
   })
 
   it('Add new NewRelic monitored service ', () => {

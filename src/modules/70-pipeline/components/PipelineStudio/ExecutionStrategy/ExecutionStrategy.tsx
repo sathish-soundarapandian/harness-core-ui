@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react'
 import YAML from 'yaml'
-import { Classes, Switch } from '@blueprintjs/core'
+import { Switch } from '@blueprintjs/core'
 import {
   Text,
   Icon,
@@ -19,24 +19,24 @@ import {
   Container,
   PageError
 } from '@wings-software/uicore'
-import { defaultTo, get, isEmpty, set, startCase } from 'lodash-es'
-import { Color } from '@harness/design-system'
+import { defaultTo, isEmpty, set, startCase } from 'lodash-es'
+import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import produce from 'immer'
 import {
   DeploymentStageConfig,
   GetExecutionStrategyYamlQueryParams,
-  StageElementConfig,
-  StageElementWrapperConfig,
   useGetExecutionStrategyList,
   useGetExecutionStrategyYaml
 } from 'services/cd-ng'
+import type { StageElementConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
 import { PageSpinner } from '@common/components'
-import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import { getSelectedDeploymentType, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { getServiceDefinitionType, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerTypes } from '../PipelineContext/PipelineActions'
 import Default from './resources/BlankCanvas.png'
@@ -46,8 +46,11 @@ import HelmDeploymentBasic from './resources/Helm-Deployment-basic.mp4'
 import BlueGreenVideo from './resources/Blue-Green-deployment.mp4'
 import CanaryVideo from './resources/Canary-deployment.mp4'
 import Rolling from './resources/Rolling-Update-deployment.png'
+import AddContinuousVerification from './resources/addContinuousVerification.svg'
 import BlueGreen from './resources/Blue-Green-deployment.png'
 import Canary from './resources/Canary-deployment.png'
+import { isNewServiceEnvEntity } from '../CommonUtils/DeployStageSetupShellUtils'
+import { cvLearnMoreHref } from './ExecutionStrategy.constant'
 import css from './ExecutionStrategy.module.scss'
 
 export interface ExecutionStrategyProps {
@@ -95,25 +98,29 @@ function ExecutionStrategyRef(
 ): JSX.Element {
   const { selectedStage } = props
   const {
-    state: { pipelineView },
+    state: { pipelineView, templateServiceData },
     updateStage,
     updatePipelineView,
     getStageFromPipeline
   } = usePipelineContext()
   const { getString } = useStrings()
+  const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+
   const [strategiesByDeploymentType, setStrategies] = useState([])
   const [isSubmitDisabled, disableSubmit] = useState(false)
-  const [isVerifyEnabled, setIsVerifyEnabled] = useState(false)
+  const [isVerifyEnabled, setIsVerifyEnabled] = useState(true)
   const [showPlayButton, setShowPlayButton] = useState<boolean>(false)
   const logger = loggerFor(ModuleName.CD)
+
   const serviceDefinitionType = useCallback((): GetExecutionStrategyYamlQueryParams['serviceDefinitionType'] => {
-    const isPropagating = get(selectedStage, 'stage.spec.serviceConfig.useFromStage', null)
-    return getSelectedDeploymentType(
-      selectedStage as StageElementWrapper<DeploymentStageElementConfig>,
+    return getServiceDefinitionType(
+      selectedStage,
       getStageFromPipeline,
-      isPropagating
+      isNewServiceEnvEntity,
+      isSvcEnvEntityEnabled,
+      templateServiceData
     )
-  }, [getStageFromPipeline, selectedStage])
+  }, [getStageFromPipeline, isSvcEnvEntityEnabled, selectedStage, templateServiceData])
 
   const [selectedStrategy, setSelectedStrategy] = useState<StrategyType>(
     serviceDefinitionType() === ServiceDeploymentType.ServerlessAwsLambda ? 'Basic' : 'Rolling'
@@ -364,17 +371,38 @@ function ExecutionStrategyRef(
                   {selectedStrategy !== 'Default' && (
                     <>
                       <Steps strategy={selectedStrategy} />
-                      <section className={css.enableVerificationSection}>
-                        <Switch
-                          checked={isVerifyEnabled}
-                          onChange={() => setIsVerifyEnabled(prevIsVerifyEnabled => !prevIsVerifyEnabled)}
-                          className={cx(Classes.SMALL, css.toggleVerify)}
-                          data-testid="enable-verification-options-switch"
-                        />
-                        <Text className={css.enableVerification}>
-                          {getString('pipeline.enableVerificationOptions')}
-                        </Text>
-                      </section>
+
+                      <Layout.Horizontal margin={{ top: 'medium', bottom: 'large' }}>
+                        <Container className={css.enableVerificationDetail}>
+                          <Text font={{ variation: FontVariation.H4 }}>
+                            {getString('pipeline.enableVerificationTitle')}
+                          </Text>
+                          <Text className={css.info} margin={{ top: 'medium' }} color={Color.BLACK}>
+                            {getString('pipeline.enableVerificationHelpText')}{' '}
+                            <a href={cvLearnMoreHref} rel="noreferrer" target="_blank">
+                              {getString('pipeline.createPipeline.learnMore')}
+                            </a>
+                          </Text>
+                          <Switch
+                            checked={isVerifyEnabled}
+                            onChange={() => setIsVerifyEnabled(prevIsVerifyEnabled => !prevIsVerifyEnabled)}
+                            data-testid="enable-verification-options-switch"
+                            className={css.cvEnableSwitch}
+                            labelElement={
+                              <Text font={{ variation: FontVariation.BODY1 }} style={{ fontWeight: 500 }}>
+                                {getString('pipeline.enableVerificationOptions')}
+                              </Text>
+                            }
+                          />
+                        </Container>
+                        <Container>
+                          <img
+                            className={css.enableVerificationImage}
+                            src={AddContinuousVerification}
+                            data-testid="blank-canvas-image"
+                          />
+                        </Container>
+                      </Layout.Horizontal>
                     </>
                   )}
                 </section>

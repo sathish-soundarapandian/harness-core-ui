@@ -13,7 +13,7 @@ import { defaultTo, isUndefined, omit, omitBy, isNull, noop } from 'lodash-es'
 import type { MutateMethod } from 'restful-react'
 import { Button, ButtonVariation, Container, Formik, Layout, Popover } from '@wings-software/uicore'
 import { Classes } from '@blueprintjs/core'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import {
   CreateInputSetForPipelineQueryParams,
   EntityGitDetails,
@@ -236,8 +236,7 @@ function SaveAsInputSet({
         'connectorRef',
         'repoName',
         'filePath',
-        'storeType',
-        'remoteType'
+        'storeType'
       )
       setSavedInputSetObj(inputSetObj)
       setInitialGitDetails(gitDetails as EntityGitDetails)
@@ -277,10 +276,10 @@ function SaveAsInputSet({
               onSubmit={input => {
                 handleSubmit(
                   input,
-                  { repoIdentifier: input.repo, branch: input.branch },
+                  { repoIdentifier: input.repo, branch: input.branch, repoName: input.repo },
                   {
                     connectorRef: input.connectorRef,
-                    repoName: input.repoName,
+                    repoName: input.repo,
                     branch: input.branch,
                     filePath: input.filePath,
                     storeType: input.storeType
@@ -338,7 +337,6 @@ function SaveAsInputSet({
                           formikProps={createInputSetFormikProps as any}
                           handleSubmit={noop}
                           isEdit={false}
-                          showRemoteTypeSelection={false}
                           disableFields={{
                             connectorRef: true,
                             repoName: true,

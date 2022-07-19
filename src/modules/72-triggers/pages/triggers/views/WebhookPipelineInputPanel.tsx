@@ -21,25 +21,27 @@ import { Color } from '@harness/design-system'
 import { merge, cloneDeep, isEmpty, defaultTo, get, debounce } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { InputSetSelector, InputSetSelectorProps } from '@pipeline/components/InputSetSelector/InputSetSelector'
-import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/cd-ng'
 import {
+  PipelineInfoConfig,
+  StageElementWrapperConfig,
   useGetTemplateFromPipeline,
   getInputSetForPipelinePromise,
   useGetMergeInputSetFromPipelineTemplateWithListInput,
-  InputSetResponse
+  InputSetResponse,
+  ResponseInputSetResponse
 } from 'services/pipeline-ng'
 import { PipelineInputSetForm } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
 import { isCloneCodebaseEnabledAtLeastOneStage } from '@pipeline/utils/CIUtils'
 import { useStrings } from 'framework/strings'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
-import { clearRuntimeInput } from '@pipeline/components/PipelineStudio/StepUtil'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
-import { mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
+import { clearRuntimeInput, mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
 import { memoizedParse } from '@common/utils/YamlHelperMethods'
-import type { Pipeline } from '@pipeline/utils/types'
+import type { InputSetDTO, Pipeline } from '@pipeline/utils/types'
+import NewInputSetModal from '@pipeline/components/InputSetForm/NewInputSetModal'
 import {
   ciCodebaseBuild,
   ciCodebaseBuildPullRequest,
@@ -48,8 +50,10 @@ import {
   TriggerTypes,
   eventTypes,
   getTriggerInputSetsBranchQueryParameter,
-  DEFAULT_TRIGGER_BRANCH,
-  getErrorMessage
+  getErrorMessage,
+  TriggerGitEventTypes,
+  TriggerGitEvent,
+  ciCodebaseBuildIssueComment
 } from '../utils/TriggersWizardPageUtils'
 import css from './WebhookPipelineInputPanel.module.scss'
 
@@ -360,6 +364,12 @@ function WebhookPipelineInputPanelForm({
           .then(results => {
             const error = (results || []).find(result => get(result, 'status') === 'ERROR')
             if (error) {
+              if (!inputSetSelected) {
+                formikProps.setValues({
+                  ...formikProps.values,
+                  inputSetSelected: []
+                })
+              }
               setInputSetError(getErrorMessage(error))
             } else if (results?.length) {
               const inputSets = (results as unknown as { data: InputSetResponse }[]).map(
@@ -387,7 +397,14 @@ function WebhookPipelineInputPanelForm({
         fetchInputSets()
       }
     },
-    [formikProps?.values?.inputSetRefs, inputSetSelected, inputSetQueryParams]
+    [
+      formikProps?.values?.inputSetRefs,
+      inputSetSelected,
+      inputSetQueryParams,
+      fetchInputSetsInProgress,
+      selectedInputSets,
+      formikProps
+    ]
   )
 
   useEffect(() => {
@@ -438,8 +455,12 @@ function WebhookPipelineInputPanelForm({
     pipelineIdentifier,
     resolvedPipeline
   ])
-  const pipelineBranchNamePlaceHolder =
-    formikProps?.values?.triggerType === TriggerTypes.WEBHOOK ? DEFAULT_TRIGGER_BRANCH : getString('common.branchName')
+  const pipelineReferenceBranchPlaceHolder = useMemo(() => {
+    if (formikProps?.values?.triggerType === TriggerTypes.WEBHOOK) {
+      return ciCodebaseBuild.spec.branch
+    }
+    return getString('common.branchName')
+  }, [formikProps?.values?.triggerType, formikProps?.values?.event, getString])
 
   const showPipelineInputSetSelector = useMemo(
     () => !isEmpty(pipeline) && !!template?.data?.inputSetTemplateYaml,
@@ -463,6 +484,48 @@ function WebhookPipelineInputPanelForm({
       }
     }, 1000),
     [selectedInputSets]
+  )
+  const [showNewInputSetModal, setShowNewInputSetModal] = useState(false)
+  const inputSetInitialValue = useMemo(() => {
+    const event = formikProps?.values?.event
+    return TriggerGitEventTypes.includes(event) && !!pipeline?.properties?.ci?.codebase
+      ? ({
+          pipeline: {
+            properties: {
+              ci: {
+                codebase: {
+                  build: {
+                    ...(event === TriggerGitEvent.PUSH ? ciCodebaseBuild : undefined),
+                    ...(event === TriggerGitEvent.ISSUE_COMMENT ? ciCodebaseBuildIssueComment : undefined),
+                    ...(event === TriggerGitEvent.PULL_REQUEST ? ciCodebaseBuildPullRequest : undefined)
+                  }
+                }
+              }
+            }
+          }
+        } as unknown as InputSetDTO)
+      : undefined
+  }, [formikProps, pipeline?.properties?.ci?.codebase])
+  const onNewInputSetSuccess = useCallback(
+    (response: ResponseInputSetResponse) => {
+      const inputSet = response.data as InputSetResponse
+      const _inputSetSelected = (selectedInputSets || []).concat({
+        label: inputSet.name as string,
+        value: inputSet.identifier as string,
+        type: 'INPUT_SET',
+        gitDetails: inputSet.gitDetails
+      })
+
+      setInputSetError('')
+      setSelectedInputSets(_inputSetSelected)
+
+      formikProps.setValues({
+        ...formikProps.values,
+        inputSetSelected: _inputSetSelected,
+        inputSetRefs: _inputSetSelected.map(_inputSet => _inputSet.value)
+      })
+    },
+    [formikProps, selectedInputSets]
   )
 
   useEffect(() => {
@@ -510,10 +573,20 @@ function WebhookPipelineInputPanelForm({
                     selectedValueClass={css.inputSetSelectedValue}
                     selectedRepo={gitAwareForTriggerEnabled ? repoName : repoIdentifier}
                     selectedBranch={inputSetSelectedBranch}
+                    showNewInputSet={gitAwareForTriggerEnabled}
+                    onNewInputSetClick={() => setShowNewInputSetModal(true)}
                   />
                 </GitSyncStoreProvider>
                 {inputSetError ? <Text intent="danger">{inputSetError}</Text> : null}
                 <div className={css.divider} />
+                {showNewInputSetModal && (
+                  <NewInputSetModal
+                    inputSetInitialValue={inputSetInitialValue}
+                    isModalOpen={showNewInputSetModal}
+                    closeModal={() => setShowNewInputSetModal(false)}
+                    onCreateSuccess={onNewInputSetSuccess}
+                  />
+                )}
               </div>
             ) : null}
             {gitAwareForTriggerEnabled && (
@@ -530,7 +603,7 @@ function WebhookPipelineInputPanelForm({
                 <Container className={cx(css.refBranchOuter, css.halfWidth)}>
                   <FormInput.Text
                     name="pipelineBranchName"
-                    placeholder={pipelineBranchNamePlaceHolder}
+                    placeholder={pipelineReferenceBranchPlaceHolder}
                     inputGroup={{
                       onInput: reevaluateInputSetMerge
                     }}

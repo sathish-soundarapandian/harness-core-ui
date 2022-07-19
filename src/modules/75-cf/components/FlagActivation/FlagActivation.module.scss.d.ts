@@ -12,6 +12,7 @@ declare const styles: {
   readonly editContainer: string
   readonly envSelect: string
   readonly environmentHeaderContainer: string
+  readonly flagPipelinePanel: string
   readonly formContainer: string
   readonly switch: string
   readonly tabContainer: string

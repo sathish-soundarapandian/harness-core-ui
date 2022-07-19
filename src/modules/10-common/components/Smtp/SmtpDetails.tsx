@@ -76,7 +76,7 @@ const SmtpDetails: React.FC = () => {
           value: (
             <>
               <Checkbox label={getString('common.smtp.enableSSL')} checked={smtpData?.value?.useSSL} />
-              <Checkbox label={getString('common.smtp.startTSL')} checked={smtpData?.value?.startTLS} />
+              <Checkbox label={getString('common.smtp.startTLS')} checked={smtpData?.value?.startTLS} />
             </>
           )
         },

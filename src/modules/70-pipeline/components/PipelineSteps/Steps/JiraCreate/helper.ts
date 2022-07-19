@@ -21,9 +21,11 @@ export const resetForm = (formik: FormikProps<JiraCreateData>, parent: string) =
   if (parent === 'projectKey') {
     formik.setFieldValue('spec.issueType', '')
     formik.setFieldValue('spec.fields', [])
+    formik.setFieldValue('spec.selectedRequiredFields', [])
   }
   if (parent === 'issueType') {
     formik.setFieldValue('spec.fields', [])
+    formik.setFieldValue('spec.selectedRequiredFields', [])
   }
 }
 
@@ -181,4 +183,8 @@ export const updateMap = (alreadySelectedFields: JiraFieldNG[]): Record<string, 
     })
   }
   return map
+}
+
+export const isRuntimeOrExpressionType = (fieldType: MultiTypeInputType): boolean => {
+  return fieldType === MultiTypeInputType.EXPRESSION || fieldType === MultiTypeInputType.RUNTIME
 }

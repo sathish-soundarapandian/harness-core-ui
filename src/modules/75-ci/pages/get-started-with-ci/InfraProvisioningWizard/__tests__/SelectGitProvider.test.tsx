@@ -16,6 +16,8 @@ import { AllBuildLocationsForSaaS, Hosting, InfraProvisiongWizardStepId } from '
 
 const pathParams = { accountId: 'accountId', orgIdentifier: 'orgId', projectIdentifier: 'projectId' }
 
+const updateConnector = jest.fn()
+const createConnector = jest.fn()
 jest.mock('services/cd-ng', () => ({
   useCreateDefaultScmConnector: jest.fn().mockImplementation(() => {
     return {
@@ -43,7 +45,9 @@ jest.mock('services/cd-ng', () => ({
           ]
         })
     }
-  })
+  }),
+  useUpdateConnector: jest.fn().mockImplementation(() => ({ mutate: updateConnector })),
+  useCreateConnector: jest.fn().mockImplementation(() => ({ mutate: createConnector }))
 }))
 
 describe('Test SelectGitProvider component', () => {
@@ -90,12 +94,13 @@ describe('Test SelectGitProvider component', () => {
     })
     expect(gitProviderCards[0].classList.contains('Card--selected')).toBe(true)
 
-    expect(getByText('ci.getStartedWithCI.oAuthLabel')).toBeInTheDocument()
+    expect(getByText('common.oAuthLabel')).toBeInTheDocument()
     expect(getByText('ci.getStartedWithCI.accessTokenLabel')).toBeInTheDocument()
   })
 
   test('User selects Github provider and Access Token authentication method', async () => {
     window.open = jest.fn()
+    global.fetch = jest.fn()
     const { container, getByText, getAllByText } = render(
       <TestWrapper
         path={routes.toGetStartedWithCI({
@@ -116,7 +121,7 @@ describe('Test SelectGitProvider component', () => {
 
     // Access token field should be visible only for Access Token auth method
     await act(async () => {
-      fireEvent.click(getByText('ci.getStartedWithCI.oAuthLabel'))
+      fireEvent.click(getByText('common.oAuthLabel'))
     })
     expect(container.querySelector('span[data-tooltip-id="accessToken"]')).not.toBeTruthy()
     // Test Connection button look up should fail
@@ -173,6 +178,66 @@ describe('Test SelectGitProvider component', () => {
     expect(getAllByText('ci.getStartedWithCI.fieldIsMissing').length).toBe(2)
   })
 
+  test('User selects Github provider and OAuth authentication method', async () => {
+    window.open = jest.fn()
+    window.addEventListener = jest.fn()
+    global.fetch = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        text: () => Promise.resolve('https://github.com/auth/login')
+      })
+    )
+    const { container, getByText } = render(
+      <TestWrapper
+        path={routes.toGetStartedWithCI({
+          ...pathParams,
+          module: 'ci'
+        })}
+        pathParams={{
+          ...pathParams,
+          module: 'ci'
+        }}
+      >
+        <SelectGitProvider enableNextBtn={jest.fn()} disableNextBtn={jest.fn()} selectedHosting={Hosting.SaaS} />
+      </TestWrapper>
+    )
+    await act(async () => {
+      fireEvent.click((Array.from(container.querySelectorAll('div[class*="bp3-card"]')) as HTMLElement[])[0])
+    })
+
+    await act(async () => {
+      fireEvent.click(getByText('common.oAuthLabel'))
+    })
+    expect(global.fetch).toBeCalled()
+  })
+
+  test('User selects Gitlab provider and OAuth authentication method', async () => {
+    window.open = jest.fn()
+    window.addEventListener = jest.fn()
+    global.fetch = jest.fn()
+    const { container, getByText } = render(
+      <TestWrapper
+        path={routes.toGetStartedWithCI({
+          ...pathParams,
+          module: 'ci'
+        })}
+        pathParams={{
+          ...pathParams,
+          module: 'ci'
+        }}
+      >
+        <SelectGitProvider enableNextBtn={jest.fn()} disableNextBtn={jest.fn()} selectedHosting={Hosting.SaaS} />
+      </TestWrapper>
+    )
+    await act(async () => {
+      fireEvent.click((Array.from(container.querySelectorAll('div[class*="bp3-card"]')) as HTMLElement[])[1])
+    })
+
+    await act(async () => {
+      fireEvent.click(getByText('common.oAuthLabel'))
+    })
+    expect(global.fetch).not.toBeCalled()
+  })
+
   test('User selects Gitlab provider and Access Key authentication method', async () => {
     window.open = jest.fn()
     const { container, getByText } = render(
@@ -195,7 +260,7 @@ describe('Test SelectGitProvider component', () => {
 
     // Access Key field should be visible only for Access Key auth method
     await act(async () => {
-      fireEvent.click(getByText('ci.getStartedWithCI.oAuthLabel'))
+      fireEvent.click(getByText('common.oAuthLabel'))
     })
     expect(container.querySelector('span[data-tooltip-id="accessKey"]')).not.toBeTruthy()
     // Test Connection button look up should fail
@@ -266,7 +331,7 @@ describe('Test SelectGitProvider component', () => {
 
     // Username and Application Password fields should be visible only for Username & Application Password auth method
     await act(async () => {
-      fireEvent.click(getByText('ci.getStartedWithCI.oAuthLabel'))
+      fireEvent.click(getByText('common.oAuthLabel'))
     })
     expect(container.querySelector('span[data-tooltip-id="username"]')).not.toBeTruthy()
     expect(container.querySelector('span[data-tooltip-id="applicationPassword"]')).not.toBeTruthy()

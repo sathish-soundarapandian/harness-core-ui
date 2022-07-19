@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { MultiTypeInputType, Text } from '@wings-software/uicore'
+import { AllowedTypes, Text } from '@wings-software/uicore'
 
 import { String } from 'framework/strings'
 import type { AbstractStepFactory } from './AbstractStepFactory'
@@ -25,7 +25,7 @@ export interface StepWidgetProps<T = unknown, U = unknown> extends Omit<StepProp
   onUpdate?: (data: any) => void
   onChange?: (data: any) => void
   readonly?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export function StepWidget<T = unknown, U = unknown>(

@@ -7,7 +7,11 @@
 
 import React from 'react'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
-import { MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
+import {
+  AllowedTypesWithRunTime,
+  MultiTypeInputType,
+  VisualYamlSelectedView as SelectedView
+} from '@wings-software/uicore'
 
 import produce from 'immer'
 import { cloneDeep, get, set } from 'lodash-es'
@@ -20,7 +24,7 @@ import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mo
 import { Scope } from '@common/interfaces/SecretsInterface'
 import * as PipelineCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/PipelineCard'
 import * as StageCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/StageCard'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useCreateVariablesV2 } from 'services/pipeline-ng'
 import { useGetYamlWithTemplateRefsResolved } from 'services/template-ng'
 
@@ -43,7 +47,11 @@ const pipelineContext: any = {
     selectionState: { selectedStageId: 'stage_1' }
   } as any,
   contextType: 'Pipeline',
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   stepsFactory: factory,
   stagesMap: {},
   isReadonly: false,

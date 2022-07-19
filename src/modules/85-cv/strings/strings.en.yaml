@@ -53,7 +53,7 @@ jobNamePlaceholder: Enter a Job Name
 identifierPlaceholder: Enter an Identifier
 throughput: Throughput
 responseTime: Response Time
-serviceHealthTrend: Service Health Trend
+serviceHealthTrend: Service Health Score and SLO Performance Trend
 query: Query
 selectQuery: Select Query (Optional)
 addNew: + Add New
@@ -194,6 +194,7 @@ monitoringSources:
   queryName: Query Name
   riskProfile: Risk Profile
   riskCategoryLabel: Risk Category
+  riskCategoryTemplateNote: Provide in format 'Category / MetricType'
   baselineDeviation: Deviation Compared to Baseline
   higherCounts: Higher value is higher risk
   lowerCounts: Lower value is higher risk
@@ -211,6 +212,11 @@ monitoringSources:
   totalMappedQueries: '{{total}} {{query}} mapped'
   appD:
     appdPathTitle: AppDynamics Path
+    applicationName: Application Name
+    tierName: Tier Name
+    completeMetricPath: Complete Metric Path
+    serviceInstanceMetricPath: Service Instance Label Path
+    serviceInstanceFieldName: Service Instance Field Name
     appdChartTitle: Chart & Record
     appdPathDetail: Select base path for AppD Metric
     appdMetricDetail: Select metric path for AppD Metric
@@ -371,9 +377,11 @@ monitoringSources:
       recordCount: Current query yields too many records. Please change query to yield one record.
   splunk:
     splunkLogsQuery: SPLUNK Logs Query
+    splunkMetric: Splunk Metrics
     savedSearchQuery: Select saved query
     submitQueryToSeeRecords: Submit query to see records from Splunk
     staleRecordsWarning: Records not upated with latest query. Please fetch records
+    defaultSplunkMetricName: Splunk Metric
   gcoLogs:
     query: QUERY
     gcoLogsServiceInstance: Add service instance
@@ -473,6 +481,7 @@ monitoredServices:
   changeMonitoredServiceType: Change Monitored Service Type
   changeMonitoredServiceTypeMessage: Changing monitored service type will reset change sources
   sloErrorBudget: SLO / Error Budget
+  executedBy: Executed By
   serviceHealth:
     last4Hrs: Last 4 hours
     last24Hrs: Last 24 hours
@@ -516,7 +525,7 @@ notifications:
   newNotificationRule: New Notification Rule
   notificationName: Notification Name
   deleteNotification: Delete notfication {{ name }}
-  configureAlertConditions: Configure the alert conditions for which you want to be notified.
+  configureAlertConditions: Configure the conditions for which you want to be notified
   serviceHealth: Changes and Service Health
   serviceHealthDescription: Focuses on changes to a service's code, configuration, behaviour, deployment and infrastructure.
   sloDescription: Focuses on SLO target and error budget changes on a given SLO.
@@ -627,7 +636,7 @@ healthSource:
       trierLabel: Find an AppDynamics tier
       tierPlaceholder: Type an tier name
       metricPackLabel: Select Metric Packs to be monitored
-      serviceInstance: Specify a service instance path
+      serviceInstance: Specify a service instance label path
       validation:
         application: Please select applications
         tier: Please select tier
@@ -651,8 +660,11 @@ healthSource:
       defaultMetricName: Dynatrace metric
       submitQueryLabel: Submit query to see Dynatrace metrics
       keyRequestRequiredLabel: Only services with marked Key Requests are shown
+  splunkMetric:
+    queryTextareaPlaceholder: 'Please write a splunk query that outputs table for time, value. Use span of 1m. Example: source="access_log" status < 400 | bucket _time span=1m | stats p99(response_time) as value by _time | rename _time as time | fields time value'
 templates:
   healthSourceDetails: Health Source Details
+sensitivityValidation: Sensitivity should be high, medium or low
 slos:
   title: SLOs
   deleteSLO: Delete SLO

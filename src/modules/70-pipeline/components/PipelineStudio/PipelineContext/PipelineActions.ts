@@ -8,7 +8,7 @@
 import { clone } from 'lodash-es'
 import type { IDrawerProps } from '@blueprintjs/core'
 import type { GetDataError } from 'restful-react'
-import type { YamlSnippetMetaData, PipelineInfoConfig } from 'services/cd-ng'
+import type { YamlSnippetMetaData } from 'services/cd-ng'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import type * as Diagram from '@pipeline/components/Diagram'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
@@ -17,11 +17,11 @@ import type {
   EntityValidityDetails,
   ErrorNodeSummary,
   Failure,
-  YamlSchemaErrorWrapperDTO
+  YamlSchemaErrorWrapperDTO,
+  PipelineInfoConfig
 } from 'services/pipeline-ng'
 import type { DependencyElement } from 'services/ci'
-import type { TemplateType } from '@common/interfaces/RouteInterfaces'
-import type { TemplateSummaryResponse } from 'services/template-ng'
+import type { TemplateServiceDataType } from '@pipeline/utils/templateUtils'
 import type { StepState } from '../ExecutionGraph/ExecutionGraphUtil'
 import type { AdvancedPanels, StepOrStepGroupOrTemplateStepData } from '../StepCommands/StepCommandTypes'
 
@@ -35,6 +35,7 @@ export enum PipelineActions {
   UpdatePipeline = 'UpdatePipeline',
   SetYamlHandler = 'SetYamlHandler',
   SetTemplateTypes = 'SetTemplateTypes',
+  SetTemplateServiceData = 'SetTemplateServiceData',
   PipelineSaved = 'PipelineSaved',
   UpdateSchemaErrorsFlag = 'UpdateSchemaErrorsFlag',
   Success = 'Success',
@@ -103,15 +104,6 @@ export interface DrawerData extends Omit<IDrawerProps, 'isOpen'> {
   }
 }
 
-export interface SelectorData {
-  templateType: TemplateType
-  selectedChildType?: string
-  allChildTypes?: string[]
-  selectedTemplate?: TemplateSummaryResponse
-  onSubmit?: (template: TemplateSummaryResponse, isCopied: boolean) => void
-  onCancel?: () => void
-}
-
 export interface PipelineViewData {
   isSplitViewOpen: boolean
   isYamlEditable: boolean
@@ -137,6 +129,7 @@ export interface PipelineReducerState {
   error?: string
   schemaErrors: boolean
   templateTypes: { [key: string]: string }
+  templateServiceData: TemplateServiceDataType
   storeMetadata?: StoreMetadata
   gitDetails: EntityGitDetails
   entityValidityDetails: EntityValidityDetails
@@ -168,6 +161,7 @@ export interface ActionResponse {
   pipelineIdentifier?: string
   yamlHandler?: YamlBuilderHandlerBinding
   templateTypes?: { [key: string]: string }
+  templateServiceData?: TemplateServiceDataType
   originalPipeline?: PipelineInfoConfig
   isBEPipelineUpdated?: boolean
   pipelineView?: PipelineViewData
@@ -200,6 +194,10 @@ const setTemplateTypes = (response: ActionResponse): ActionReturnType => ({
   type: PipelineActions.SetTemplateTypes,
   response
 })
+const setTemplateServiceData = (response: ActionResponse): ActionReturnType => ({
+  type: PipelineActions.SetTemplateServiceData,
+  response
+})
 const updating = (): ActionReturnType => ({ type: PipelineActions.UpdatePipeline })
 const fetching = (): ActionReturnType => ({ type: PipelineActions.Fetching })
 const pipelineSavedAction = (response: ActionResponse): ActionReturnType => ({
@@ -227,6 +225,7 @@ export const PipelineContextActions = {
   updateTemplateView,
   setYamlHandler,
   setTemplateTypes,
+  setTemplateServiceData,
   success,
   error,
   updateSchemaErrorsFlag,
@@ -251,6 +250,7 @@ export const initialState: PipelineReducerState = {
   gitDetails: {},
   entityValidityDetails: {},
   templateTypes: {},
+  templateServiceData: {},
   isLoading: false,
   isBEPipelineUpdated: false,
   isDBInitialized: false,
@@ -290,6 +290,11 @@ export const PipelineReducer = (state = initialState, data: ActionReturnType): P
       return {
         ...state,
         templateTypes: data.response?.templateTypes || {}
+      }
+    case PipelineActions.SetTemplateServiceData:
+      return {
+        ...state,
+        templateServiceData: data.response?.templateServiceData || {}
       }
     case PipelineActions.UpdatePipelineView:
       return {

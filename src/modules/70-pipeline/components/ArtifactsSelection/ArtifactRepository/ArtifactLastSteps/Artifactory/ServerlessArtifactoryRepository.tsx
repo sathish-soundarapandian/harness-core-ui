@@ -11,7 +11,15 @@ import { get, map, memoize } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { Menu } from '@blueprintjs/core'
 import type { GetDataError } from 'restful-react'
-import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
+import {
+  AllowedTypes,
+  FormInput,
+  getMultiTypeFromValue,
+  Layout,
+  MultiTypeInputType,
+  SelectOption,
+  Text
+} from '@harness/uicore'
 import type { ImagePathTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { Failure, useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -35,7 +43,7 @@ function NoRepositoryResults({ error }: { error: GetDataError<Failure | Error> |
 export interface ServerlessArtifactoryRepositoryProps {
   expressions: string[]
   isReadonly?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   formik: FormikProps<ImagePathTypes>
   connectorRef: string
   fieldName: string

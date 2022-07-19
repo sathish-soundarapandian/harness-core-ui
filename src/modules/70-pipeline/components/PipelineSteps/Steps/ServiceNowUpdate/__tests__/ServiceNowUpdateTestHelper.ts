@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import type { UseGetMockData } from '@common/utils/testUtils'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -45,7 +45,11 @@ export const getServiceNowUpdateEditModeProps = (): ServiceNowUpdateStepModeProp
     }
   },
   onUpdate: jest.fn(),
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   stepViewType: StepViewType.Edit
 })
 export const getServiceNowUpdateTemplateTypeEditModeProps = (): ServiceNowUpdateStepModeProps => ({
@@ -74,7 +78,11 @@ export const getServiceNowUpdateTemplateTypeEditModeProps = (): ServiceNowUpdate
     }
   },
   onUpdate: jest.fn(),
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   stepViewType: StepViewType.Edit
 })
 
@@ -94,7 +102,11 @@ export const getServiceNowUpdateEditModePropsWithConnectorId = (): ServiceNowUpd
     }
   },
   onUpdate: jest.fn(),
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   stepViewType: StepViewType.Edit
 })
 
@@ -120,7 +132,11 @@ export const getServiceNowUpdateEditModePropsWithValues = (): ServiceNowUpdateSt
     }
   },
   onUpdate: jest.fn(),
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   stepViewType: StepViewType.Edit
 })
 

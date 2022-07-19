@@ -121,6 +121,7 @@ export const useSRMNotificationModal = ({
                   name={getString('overview')}
                   data={notificationRules}
                   existingNotificationNames={getExistingNotificationNames?.(index)}
+                  isEdit={isEdit}
                 />
                 {notificationRulesComponent}
                 <NotificationMethods

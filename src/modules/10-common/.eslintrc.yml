@@ -9,9 +9,10 @@ rules:
         - modules/18-audit-trail/*
         - modules/20-rbac/*
         - modules/25-governance/*
-        - modules/27-sto/*
+        - modules/28-et/*
         - modules/30-delegates/*
         - modules/30-secrets/*
+        - modules/31-filestore/*
         - modules/31-variables/*
         - modules/33-auth-settings/*
         - modules/35-connectors/*
@@ -35,9 +36,10 @@ rules:
         - '@rbac/*'
         - '@default-settings/*'
         - '@governance/*'
-        - '@sto/*'
+        - '@et/*'
         - '@delegates/*'
         - '@secrets/*'
+        - '@filestore/*'
         - '@variables/*'
         - '@auth-settings/*'
         - '@connectors/*'

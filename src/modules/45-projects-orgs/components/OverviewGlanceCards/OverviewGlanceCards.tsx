@@ -6,9 +6,9 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Card, Icon, Layout } from '@wings-software/uicore'
+import { Card, Icon, Layout, Text } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import GlanceCard, { GlanceCardProps } from '@common/components/GlanceCard/GlanceCard'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { CountChangeDetails, ResponseExecutionResponseCountOverview, useGetCounts } from 'services/dashboard-service'
@@ -56,13 +56,14 @@ const getDataForCard = (
       glanceCardData = {
         title: projectsTitleId,
         iconName: 'nav-project',
-        iconSize: 16
+        iconSize: 20
       }
       break
     case OverviewGalanceCard.SERVICES:
       glanceCardData = {
         title: serviceTitleId,
-        iconName: 'services'
+        iconName: 'services',
+        iconSize: 22
       }
       break
     case OverviewGalanceCard.ENV:
@@ -74,13 +75,33 @@ const getDataForCard = (
     case OverviewGalanceCard.PIPELINES:
       glanceCardData = {
         title: pipelineTitleId,
-        iconName: 'pipeline',
-        iconSize: 38
+        iconName: 'pipeline'
       }
   }
   glanceCardData.number = countDetails.count
   if (countChange) {
-    glanceCardData.delta = countChange > 0 ? `+${countChange.toString()}` : countChange.toString()
+    glanceCardData.intent = countChange > 0 ? 'success' : 'danger'
+    const rateColor = countChange > 0 ? 'var(--green-800)' : 'var(--red-700)'
+    glanceCardData.delta = (
+      <Layout.Horizontal>
+        <Icon
+          size={14}
+          name={countChange > 0 ? 'caret-up' : 'caret-down'}
+          style={{
+            color: rateColor
+          }}
+        />
+        <Text font={{ variation: FontVariation.TINY_SEMI }} style={{ color: rateColor }}>
+          {new Intl.NumberFormat('default', {
+            notation: 'compact',
+            compactDisplay: 'short',
+            unitDisplay: 'long',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+          }).format(countChange)}
+        </Text>
+      </Layout.Horizontal>
+    )
   }
 
   return glanceCardData
@@ -94,7 +115,7 @@ const RenderGlanceCard: React.FC<RenderGlanceCardProps> = props => {
       <Icon name="spinner" size={24} color={Color.PRIMARY_7} />
     </Card>
   ) : (
-    <GlanceCard {...data} styling={data.title === projectsTitleId} title={getString(data.title)} />
+    <GlanceCard {...data} title={getString(data.title)} />
   )
 }
 
@@ -156,22 +177,19 @@ const OverviewGlanceCards: React.FC<OverviewGlanceCardsProp> = props => {
     countResponse?.data?.response || glanceCardData?.data?.response || {}
 
   return (
-    <Layout.Horizontal spacing="large">
-      <Layout.Vertical spacing="large">
+    <Layout.Horizontal spacing="large" className={css.container}>
+      <div className={css.glanceCards}>
         <RenderGlanceCard loading={!!loading} data={getDataForCard(OverviewGalanceCard.PROJECT, projectsCountDetail)} />
-        <RenderGlanceCard loading={!!loading} data={getDataForCard(OverviewGalanceCard.ENV, envCountDetail)} />
-      </Layout.Vertical>
-      <Layout.Vertical spacing="large">
         <RenderGlanceCard
           loading={!!loading}
           data={getDataForCard(OverviewGalanceCard.SERVICES, servicesCountDetail)}
         />
-
+        <RenderGlanceCard loading={!!loading} data={getDataForCard(OverviewGalanceCard.ENV, envCountDetail)} />
         <RenderGlanceCard
           loading={!!loading}
           data={getDataForCard(OverviewGalanceCard.PIPELINES, pipelinesCountDetail)}
         />
-      </Layout.Vertical>
+      </div>
     </Layout.Horizontal>
   )
 }

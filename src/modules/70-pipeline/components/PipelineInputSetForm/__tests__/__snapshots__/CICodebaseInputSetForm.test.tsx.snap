@@ -1349,9 +1349,9 @@ exports[`CICodebaseInputSetForm tests Run Pipeline from Template Form Initial Re
         >
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main"
-            style="--text-line-clamp: 1; width: 385px;"
+            style="--text-line-clamp: 1;"
           >
-            https://github.com/
+            
           </p>
         </div>
         
@@ -1936,7 +1936,7 @@ exports[`CICodebaseInputSetForm tests Run Pipeline from Template Form Initial Re
         >
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main"
-            style="--text-line-clamp: 1; width: 385px;"
+            style="--text-line-clamp: 1;"
           >
             https://github.com/&lt;+input&gt;
           </p>
@@ -2639,7 +2639,7 @@ exports[`CICodebaseInputSetForm tests Run Pipeline from Template Form Re-Run Pip
         >
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main"
-            style="--text-line-clamp: 1; width: 385px;"
+            style="--text-line-clamp: 1;"
           >
             https://github.com/repo
           </p>

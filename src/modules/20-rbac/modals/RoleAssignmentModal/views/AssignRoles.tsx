@@ -34,7 +34,7 @@ import {
   getPrincipalScopeFromValue
 } from '@common/components/EntityReference/EntityReference'
 import UserGroupsInput from '@common/components/UserGroupsInput/UserGroupsInput'
-import { isCommunityPlan } from '@common/utils/utils'
+import { useGetCommunity } from '@common/utils/utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import RoleAssignmentForm from './RoleAssignmentForm'
@@ -62,9 +62,9 @@ const AssignRoles: React.FC<UserGroupRoleAssignmentData> = props => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const scope = getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
   const { getString } = useStrings()
-  const { ACCOUNT_BASIC_ROLE } = useFeatureFlags()
+  const { ACCOUNT_BASIC_ROLE, ACCOUNT_BASIC_ROLE_ONLY } = useFeatureFlags()
   const { getRBACErrorMessage } = useRBACError()
-  const isCommunity = isCommunityPlan()
+  const isCommunity = useGetCommunity()
   const { showSuccess } = useToaster()
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
   const { mutate: createRoleAssignment, loading: saving } = usePostRoleAssignments({
@@ -75,7 +75,8 @@ const AssignRoles: React.FC<UserGroupRoleAssignmentData> = props => {
     scope,
     getString,
     isCommunity,
-    isAccountBasicRolePresent(scope, !!ACCOUNT_BASIC_ROLE)
+    isAccountBasicRolePresent(scope, !!ACCOUNT_BASIC_ROLE),
+    !!ACCOUNT_BASIC_ROLE_ONLY
   )
 
   const handleRoleAssignment = async (values: UserGroupRoleAssignmentValues): Promise<void> => {

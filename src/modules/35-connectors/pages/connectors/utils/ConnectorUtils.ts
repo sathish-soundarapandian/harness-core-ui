@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { pick, isString } from 'lodash-es'
+import { pick, isString, get } from 'lodash-es'
 import type { IconName, StepProps } from '@wings-software/uicore'
 import { Connectors, EntityTypes } from '@connectors/constants'
 import type {
@@ -82,6 +82,7 @@ export const DockerProviderType = {
 
 export const GitUrlType = {
   ACCOUNT: 'Account',
+  PROJECT: 'Project', // Used in Azure Repos
   REPO: 'Repo'
 }
 
@@ -180,6 +181,9 @@ export const useGetHelpPanel = (refernceId: string, width: number) => {
 }
 const getGitAuthSpec = (formData: FormData) => {
   const { authType = '' } = formData
+  const oAuthAccessTokenRef = formData.oAuthAccessTokenRef || get(formData, 'spec.authentication.spec.spec.tokenRef')
+  const oAuthRefreshTokenRef =
+    formData.oAuthRefreshTokenRef || get(formData, 'spec.authentication.spec.spec.refreshTokenRef')
   switch (authType) {
     case GitAuthTypes.USER_PASSWORD:
       return {
@@ -197,6 +201,26 @@ const getGitAuthSpec = (formData: FormData) => {
       return {
         kerberosKeyRef: formData.kerberosKey.referenceString
       }
+    case GitAuthTypes.OAUTH:
+      return {
+        tokenRef: oAuthAccessTokenRef,
+        ...(oAuthRefreshTokenRef && {
+          refreshTokenRef: oAuthRefreshTokenRef
+        })
+      }
+    default:
+      return {}
+  }
+}
+
+const getGitApiAccessSpec = (formData: FormData): Record<string, any> => {
+  const { authType = '' } = formData
+  switch (authType) {
+    case GitAuthTypes.OAUTH:
+      return getGitAuthSpec(formData)
+    case GitAuthTypes.USER_PASSWORD:
+    case GitAuthTypes.USER_TOKEN:
+    case GitAuthTypes.KERBEROS:
     default:
       return {}
   }
@@ -227,13 +251,18 @@ export const buildGithubPayload = (formData: FormData) => {
                 spec: getGitAuthSpec(formData)
               }
       },
-      apiAccess: { type: formData.apiAuthType, spec: {} }
+      apiAccess: {
+        type: formData.authType === GitAuthTypes.OAUTH ? GitAuthTypes.OAUTH : formData.apiAuthType,
+        spec: {}
+      }
     }
   }
 
   if (formData.enableAPIAccess) {
     savedData.spec.apiAccess.spec =
-      formData.apiAuthType === GitAPIAuthTypes.TOKEN
+      formData.authType === GitAuthTypes.OAUTH
+        ? getGitApiAccessSpec(formData)
+        : formData.apiAuthType === GitAPIAuthTypes.TOKEN
         ? {
             tokenRef: formData.apiAccessToken.referenceString
           }
@@ -348,7 +377,6 @@ export const buildAzureRepoPayload = (formData: FormData) => {
       type: formData.urlType,
       url: formData.url,
       ...(formData.validationRepo ? { validationRepo: formData.validationRepo } : {}),
-      ...(formData.validationProject ? { validationProject: formData.validationProject } : {}),
       authentication: {
         type: formData.connectionType,
         spec:
@@ -972,6 +1000,8 @@ export const buildVaultPayload = (formData: FormData): BuildVaultPayloadReturnTy
         formData.engineType === 'manual' ? formData.secretEngineName : formData.secretEngine?.split('@@@')[0],
       secretEngineVersion:
         formData.engineType === 'manual' ? formData.secretEngineVersion : formData.secretEngine?.split('@@@')[1],
+      k8sAuthEndpoint:
+        formData.accessType === HashiCorpVaultAccessTypes.K8s_AUTH ? formData.k8sAuthEndpoint : undefined,
       vaultK8sAuthRole:
         formData.accessType === HashiCorpVaultAccessTypes.K8s_AUTH ? formData?.vaultK8sAuthRole : undefined,
       serviceAccountTokenPath:
@@ -1851,6 +1881,7 @@ export const setupVaultFormData = async (connectorInfo: ConnectorInfoDTO, accoun
     useAwsIam: connectorInfoSpec.useAwsIam,
     awsRegion: connectorInfoSpec.awsRegion,
     useK8sAuth: connectorInfoSpec.useK8sAuth,
+    k8sAuthEndpoint: connectorInfoSpec?.k8sAuthEndpoint || '',
     vaultK8sAuthRole: connectorInfoSpec?.vaultK8sAuthRole || '',
     serviceAccountTokenPath: connectorInfoSpec?.serviceAccountTokenPath || ''
   }
@@ -1951,7 +1982,7 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
   }
 }
 
-export const getConnectorDisplayName = (type: string) => {
+export const getConnectorDisplayName = (type: string): string => {
   switch (type) {
     case Connectors.KUBERNETES_CLUSTER:
       return 'Kubernetes cluster'
@@ -2019,6 +2050,8 @@ export const getConnectorDisplayName = (type: string) => {
       return 'GCP'
     case Connectors.AZURE:
       return 'Azure'
+    case Connectors.ERROR_TRACKING:
+      return 'Error Tracking'
     default:
       return ''
   }
@@ -2125,6 +2158,8 @@ export const getUrlValueByType = (type: ConnectorInfoDTO['type'], connector: Con
       return connector.spec.credential.spec?.masterUrl
     case Connectors.DOCKER:
       return connector.spec.dockerRegistryUrl
+    case Connectors.JENKINS:
+      return connector.spec.jenkinsUrl
     case Connectors.NEXUS:
       return connector.spec.nexusServerUrl
 
@@ -2241,4 +2276,33 @@ export const showCustomErrorSuggestion = (connectorType: string) => {
 export const showEditAndViewPermission = (connectorType: string) => {
   const connectorsList: string[] = [Connectors.CE_KUBERNETES, Connectors.CEAWS, Connectors.CE_AZURE, Connectors.CE_GCP]
   return Boolean(connectorsList.includes(connectorType))
+}
+
+export enum GitAuthenticationProtocol {
+  HTTP = 'http',
+  HTTPS = 'https',
+  SSH = 'ssh'
+}
+
+export const getCompleteConnectorUrl = ({
+  partialUrl,
+  repoName,
+  connectorType,
+  gitAuthProtocol
+}: {
+  partialUrl: string
+  repoName: string
+  connectorType: ConnectorConfigDTO['type']
+  gitAuthProtocol: GitAuthenticationProtocol
+}): string => {
+  if (!partialUrl || !repoName || !connectorType) {
+    return ''
+  }
+  return (partialUrl[partialUrl.length - 1] === '/' ? partialUrl : partialUrl + '/')
+    .concat(
+      connectorType === Connectors.AZURE_REPO && gitAuthProtocol.toLowerCase() !== GitAuthenticationProtocol.SSH
+        ? '_git/'
+        : ''
+    )
+    .concat(repoName)
 }

@@ -5,9 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback } from 'react'
+import React from 'react'
 
 import {
+  AllowedTypes,
   Button,
   ButtonVariation,
   Formik,
@@ -33,7 +34,7 @@ import css from '../K8sValuesManifest/ManifestDetails.module.scss'
 interface InheritFromManifestPropType {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   selectedManifest: ManifestTypes | null
   handleSubmit: (data: ManifestConfigWrapper) => void
@@ -54,7 +55,7 @@ function InheritFromManifest({
 }: StepProps<ConnectorConfigDTO> & InheritFromManifestPropType): React.ReactElement {
   const { getString } = useStrings()
 
-  const getInitialValues = useCallback((): InheritFromManifestDataType => {
+  const getInitialValues = (): InheritFromManifestDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
 
     if (specValues) {
@@ -71,9 +72,9 @@ function InheritFromManifest({
       identifier: '',
       paths: [{ path: '', uuid: uuid('', nameSpace()) }]
     }
-  }, [])
+  }
 
-  const submitFormData = (formData: InheritFromManifestDataType & { store?: string; connectorRef?: string }): void => {
+  const submitFormData = (formData: InheritFromManifestDataType & { store?: string }): void => {
     const manifestObj: ManifestConfigWrapper = {
       manifest: {
         identifier: formData.identifier,
@@ -147,6 +148,7 @@ function InheritFromManifest({
                     fieldPath="paths"
                     pathLabel={getString('fileFolderPathText')}
                     placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                    defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                   />
                 </div>
 

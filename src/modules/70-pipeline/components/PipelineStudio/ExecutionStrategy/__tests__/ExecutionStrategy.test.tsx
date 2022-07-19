@@ -8,7 +8,7 @@
 import React from 'react'
 import { fireEvent, render, act, getByTestId, getByText, getAllByTestId, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import type { StageElementWrapperConfig } from 'services/cd-ng'
+import type { StageElementWrapperConfig } from 'services/pipeline-ng'
 import * as cdngServices from 'services/cd-ng'
 import { ExecutionStrategy } from '../ExecutionStrategy'
 import {
@@ -382,7 +382,7 @@ describe('ExecutionStrategy test', () => {
       </TestWrapper>
     )
     const checkBox = container.querySelector('[data-testid="enable-verification-options-switch"]')
-    expect(checkBox).not.toBeChecked()
+    expect(checkBox).toBeChecked()
     fireEvent.click(checkBox!)
     setTimeout(() => {
       expect(checkBox).toBeChecked()

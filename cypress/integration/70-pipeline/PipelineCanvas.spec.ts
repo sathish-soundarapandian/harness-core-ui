@@ -408,7 +408,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
     yamlValidations('stage1', 'region1')
   })
 
-  it(`runtime values to region, stage in infrastructure tab`, () => {
+  it.skip(`runtime values to region, stage in infrastructure tab`, () => {
     cy.visit(pipelineStudioRoute, { timeout: 30000 })
     cy.visitPageAssertion()
     cy.get(`div[data-testid="pipeline-studio"]`, {
@@ -452,9 +452,8 @@ describe('ServerlessAwsLambda as deployment type', () => {
 
     // Select Stage
     cy.contains('p', 'Stage 1').click()
-    cy.wait(1000)
     cy.wait('@servicesCall')
-    cy.wait('@cdFailureStrategiesYaml')
+    cy.wait(1000)
     cy.wait('@stepLibrary')
     cy.wait(1000)
 
@@ -517,7 +516,6 @@ describe('ServerlessAwsLambda as deployment type', () => {
     cy.contains('p', 'Stage 1').click()
     cy.wait(1000)
     cy.wait('@servicesCall')
-    cy.wait('@cdFailureStrategiesYaml')
     cy.wait('@stepLibrary')
     cy.wait(1000)
 
@@ -527,8 +525,8 @@ describe('ServerlessAwsLambda as deployment type', () => {
     // Got to Execution tab, 4 diff Execution Strategies should appear
     // Use Rolling strategy and check if respective step is added
     cy.contains('span', 'Execution').click()
-    cy.wait('@executionStratergies')
     cy.wait('@kubernetesYamlSnippet')
+    cy.wait(1000)
     cy.contains('section', 'Rolling').should('be.visible')
     cy.contains('section', 'Blue Green').should('be.visible')
     cy.contains('section', 'Canary').should('be.visible')

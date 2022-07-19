@@ -75,7 +75,11 @@ export const useDownloadPerspectiveGridAsCsv = (options: Props) => {
 
   useEffect(() => {
     try {
-      if (!isUndefined(downloadConfig) && dataRefetchRef.current === downloadData.length) {
+      if (
+        !isUndefined(downloadConfig) &&
+        dataRefetchRef.current === downloadData.length &&
+        !downloadGridData.fetching
+      ) {
         downloadPerspectiveGridAsCsv({
           csvFileName: downloadConfig.fileName,
           downloadData: downloadData as QlceViewEntityStatsDataPoint[],
@@ -182,7 +186,7 @@ export const useDownloadPerspectiveGridAsCsv = (options: Props) => {
         </Formik>
       </Dialog>
     )
-  }, [perspectiveTotalCount, downloadGridData, selectedColumnsToDownload])
+  }, [perspectiveTotalCount, downloadGridData.fetching, selectedColumnsToDownload])
 
   return [openDownloadCSVModal, closeDownloadCSVModal]
 }

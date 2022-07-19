@@ -39,6 +39,21 @@ export const mockAuthDataLoading: UseGetMockDataWithMutateAndRefetch<ResponseHar
   }
 }
 
+export const mockAuthDataAuthFalse: UseGetMockDataWithMutateAndRefetch<ResponseHarnessApprovalInstanceAuthorization> = {
+  refetch: jest.fn(),
+  mutate: jest.fn(),
+  loading: false,
+  data: {
+    correlationId: '',
+    status: 'SUCCESS',
+    metaData: null as unknown as undefined,
+    data: {
+      authorized: false,
+      reason: 'User is not authorised'
+    }
+  }
+}
+
 export const mockApprovalData: UseGetMockDataWithMutateAndRefetch<ResponseApprovalInstanceResponse> = {
   refetch: jest.fn(),
   mutate: jest.fn(),
@@ -212,6 +227,64 @@ export const mockServiceNowApprovalDataError: UseGetMockDataWithMutateAndRefetch
     metaData: null as unknown as undefined,
     data: {
       type: 'ServiceNowApproval',
+      id: 'approvalInstanceId',
+      status: 'FAILED',
+      details: {}
+    }
+  }
+}
+
+export const mockCustomApprovalDataLoading: UseGetMockDataWithMutateAndRefetch<ResponseApprovalInstanceResponse> = {
+  refetch: jest.fn(),
+  mutate: jest.fn(),
+  loading: true,
+  data: {
+    correlationId: '',
+    status: 'SUCCESS',
+    metaData: null as unknown as undefined,
+    data: {
+      type: 'CustomApproval',
+      id: 'approvalInstanceId',
+      status: 'WAITING',
+      details: {
+        someDetail: 'someDetail'
+      }
+    }
+  }
+}
+
+export const mockCustomApprovalData: UseGetMockDataWithMutateAndRefetch<ResponseApprovalInstanceResponse> = {
+  refetch: jest.fn(),
+  mutate: jest.fn(),
+  loading: false,
+  data: {
+    correlationId: '',
+    status: 'SUCCESS',
+    metaData: null as unknown as undefined,
+    data: {
+      type: 'CustomApproval',
+      id: 'approvalInstanceId',
+      status: 'WAITING',
+      details: {
+        someDetail: 'someDetail'
+      }
+    }
+  }
+}
+
+export const mockCustomApprovalDataError: UseGetMockDataWithMutateAndRefetch<ResponseApprovalInstanceResponse> = {
+  refetch: jest.fn(),
+  mutate: jest.fn(),
+  loading: false,
+  // eslint-disable-next-line
+  // @ts-ignore
+  error: 'someerror',
+  data: {
+    correlationId: '',
+    status: 'ERROR',
+    metaData: null as unknown as undefined,
+    data: {
+      type: 'CustomApproval',
       id: 'approvalInstanceId',
       status: 'FAILED',
       details: {}

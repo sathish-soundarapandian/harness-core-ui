@@ -6,7 +6,15 @@
  */
 
 import React from 'react'
-import { IconName, Formik, FormInput, Layout, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import {
+  IconName,
+  Formik,
+  FormInput,
+  Layout,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  AllowedTypes
+} from '@wings-software/uicore'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
@@ -57,7 +65,7 @@ interface ServerlessLambdaRollbackProps {
   initialValues: ServerlessLambdaRollbackData
   onUpdate?: (data: ServerlessLambdaRollbackData) => void
   onChange?: (data: ServerlessLambdaRollbackData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   readonly?: boolean
   stepViewType?: StepViewType
   isNewStep?: boolean

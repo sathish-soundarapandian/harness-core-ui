@@ -7,10 +7,10 @@
 
 import { isNull, isUndefined, omitBy, isEmpty, get, set, flatten, cloneDeep } from 'lodash-es'
 import { string, array, object, ObjectSchema } from 'yup'
-import type { PipelineInfoConfig, ConnectorResponse, ManifestConfigWrapper, NGVariable } from 'services/cd-ng'
+import type { ConnectorResponse, ManifestConfigWrapper } from 'services/cd-ng'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import type { NGTriggerSourceV2 } from 'services/pipeline-ng'
+import type { NGTriggerSourceV2, PipelineInfoConfig, NGVariable } from 'services/pipeline-ng'
 import { connectorUrlType } from '@connectors/constants'
 import type { PanelInterface } from '@common/components/Wizard/Wizard'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
@@ -36,6 +36,7 @@ export const CUSTOM = 'Custom'
 export const AWS_CODECOMMIT = 'AWS_CODECOMMIT'
 export const AwsCodeCommit = 'AwsCodeCommit'
 export const PRIMARY_ARTIFACT = 'primary'
+export const AZURE_REPO = 'AZURE_REPO'
 
 export const eventTypes = {
   PUSH: 'Push',
@@ -43,7 +44,9 @@ export const eventTypes = {
   TAG: 'Tag',
   PULL_REQUEST: 'PullRequest',
   MERGE_REQUEST: 'MergeRequest',
-  ISSUE_COMMENT: 'IssueComment'
+  ISSUE_COMMENT: 'IssueComment',
+  PR_COMMENT: 'PRComment',
+  MR_COMMENT: 'MRComment'
 }
 
 export const getArtifactId = (isManifest?: boolean, selectedArtifactId?: string) => {
@@ -209,7 +212,10 @@ const checkValidTriggerConfiguration = ({
     if (!formikValues['connectorRef'] || !formikValues['event'] || !formikValues['actions']) return false
     // onEdit case, waiting for api response
     else if (formikValues['connectorRef']?.value && !formikValues['connectorRef'].connector) return true
-    else if (!connectorURLType || !!(connectorURLType === connectorUrlType.ACCOUNT && !formikValues.repoName))
+    else if (
+      !connectorURLType ||
+      !!([connectorURLType.ACCOUNT, connectorURLType.PROJECT].includes(connectorURLType) && !formikValues.repoName)
+    )
       return false
   }
   return true
@@ -401,6 +407,7 @@ export const getValidationSchema = (
               !connectorURLType ||
               (connectorURLType === connectorUrlType.ACCOUNT && repoName?.trim()) ||
               (connectorURLType === connectorUrlType.REGION && repoName?.trim()) ||
+              (connectorURLType === connectorUrlType.PROJECT && repoName?.trim()) ||
               connectorURLType === connectorUrlType.REPO
             )
           }
@@ -645,6 +652,13 @@ export const ciCodebaseBuildPullRequest = {
   type: 'PR',
   spec: {
     number: '<+trigger.prNumber>'
+  }
+}
+
+export const ciCodebaseBuildIssueComment = {
+  type: 'tag',
+  spec: {
+    tag: '<+trigger.tag>'
   }
 }
 
@@ -1935,17 +1949,33 @@ export function getTriggerInputSetsBranchQueryParameter({
   branch?: string
 }): string {
   return gitAwareForTriggerEnabled
-    ? pipelineBranchName === DEFAULT_TRIGGER_BRANCH
+    ? [
+        ciCodebaseBuildIssueComment.spec.tag,
+        ciCodebaseBuildPullRequest.spec.number,
+        ciCodebaseBuild.spec.branch
+      ].includes(pipelineBranchName)
       ? branch
       : pipelineBranchName
     : branch
 }
 
-export const UPDATING_INVALID_TRIGGER_IN_GIT =
-  'Invalid request: Failed while updating Trigger: Please check the requested file path / branch / Github repo name if they exist or not.'
-
-export const SAVING_INVALID_TRIGGER_IN_GIT =
-  'Invalid request: Failed while Saving Trigger: Please check the requested file path / branch / Github repo name if they exist or not.'
-
 export const getErrorMessage = (error: any): string =>
   get(error, 'data.error', get(error, 'data.message', error?.message))
+
+export enum TriggerGitEvent {
+  PULL_REQUEST = 'PullRequest',
+  ISSUE_COMMENT = 'IssueComment',
+  PUSH = 'Push',
+  MR_COMMENT = 'MRComment',
+  PR_COMMENT = 'PRComment'
+}
+
+export const TriggerGitEventTypes: Readonly<string[]> = [
+  TriggerGitEvent.PULL_REQUEST,
+  TriggerGitEvent.ISSUE_COMMENT,
+  TriggerGitEvent.PUSH,
+  TriggerGitEvent.MR_COMMENT,
+  TriggerGitEvent.PR_COMMENT
+]
+
+export const isHarnessExpression = (str = ''): boolean => str.startsWith('<+') && str.endsWith('>')

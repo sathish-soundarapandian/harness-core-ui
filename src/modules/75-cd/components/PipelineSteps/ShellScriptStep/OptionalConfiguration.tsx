@@ -8,6 +8,7 @@
 import React from 'react'
 import { FormikProps, FieldArray } from 'formik'
 import {
+  AllowedTypes,
   Button,
   ButtonVariation,
   FormikForm,
@@ -52,7 +53,7 @@ export const targetTypeOptions: IOptionProps[] = [
 export default function OptionalConfiguration(props: {
   formik: FormikProps<ShellScriptFormData>
   readonly?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }): React.ReactElement {
   const { formik, readonly, allowableTypes } = props
   const { values: formValues, setFieldValue } = formik

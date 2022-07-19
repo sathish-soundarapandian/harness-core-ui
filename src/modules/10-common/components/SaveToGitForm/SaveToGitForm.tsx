@@ -61,6 +61,7 @@ interface SaveToGitFormProps {
   projectIdentifier: string
   isEditing: boolean
   resource: GitResourceInterface
+  disableCreatingNewBranch: boolean
 }
 
 interface ModalConfigureProps {
@@ -83,7 +84,7 @@ export interface SaveToGitFormInterface {
 }
 
 const SaveToGitForm: React.FC<ModalConfigureProps & SaveToGitFormProps> = props => {
-  const { accountId, projectIdentifier, orgIdentifier, isEditing = false, resource } = props
+  const { accountId, projectIdentifier, orgIdentifier, isEditing = false, disableCreatingNewBranch, resource } = props
   const { getString } = useStrings()
   const { currentUserInfo: currentLoggedInUser } = useAppStore()
   const { gitSyncRepos, loadingRepos, codeManagers, loadingCodeManagers } = useGitSyncStore()
@@ -422,8 +423,9 @@ const SaveToGitForm: React.FC<ModalConfigureProps & SaveToGitFormProps> = props 
                       <Radio
                         data-test="newBranchRadioBtn"
                         large
-                        onChange={() => handleBranchTypeChange(true, formik)}
+                        onChange={() => !disableCreatingNewBranch && handleBranchTypeChange(true, formik)}
                         checked={isNewBranch}
+                        disabled={disableCreatingNewBranch}
                       >
                         <Icon name="git-new-branch" color={Color.GREY_700}></Icon>
                         <Text inline margin={{ left: 'small' }}>

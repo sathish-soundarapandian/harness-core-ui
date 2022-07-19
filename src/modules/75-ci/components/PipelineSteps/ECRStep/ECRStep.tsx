@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { IconName, MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@wings-software/uicore'
 import type { FormikErrors } from 'formik'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -83,7 +83,7 @@ export interface ECRStepProps {
   stepViewType: StepViewType
   onUpdate?: (data: ECRStepData) => void
   onChange?: (data: ECRStepData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   formik?: any
 }
 
@@ -97,6 +97,7 @@ export class ECRStep extends PipelineStep<ECRStepData> {
   protected stepName = 'Build and Push to ECR'
   protected stepIcon: IconName = 'ecr-step'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ECR'
+  protected stepAdditionalInfo: keyof StringsMap = 'pipeline.linuxOnly'
   protected stepPaletteVisible = false
 
   protected defaultValues: ECRStepData = {

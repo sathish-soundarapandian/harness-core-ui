@@ -20,6 +20,7 @@ import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PrincipalType } from '@rbac/utils/utils'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { setPageNumber } from '@common/utils/utils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getPrincipalScopeFromDTO } from '@common/components/EntityReference/EntityReference'
@@ -96,6 +97,8 @@ const UserGroupsPage: React.FC = () => {
     </Layout.Horizontal>
   )
 
+  const { getRBACErrorMessage } = useRBACError()
+
   return (
     <>
       {data?.data?.content?.length || searchTerm || loading || error ? (
@@ -124,7 +127,7 @@ const UserGroupsPage: React.FC = () => {
 
       <Page.Body
         loading={loading}
-        error={(error?.data as Error)?.message || error?.message}
+        error={error ? getRBACErrorMessage(error) : ''}
         retryOnError={() => refetch()}
         noData={{
           when: () => !data?.data?.content?.length,

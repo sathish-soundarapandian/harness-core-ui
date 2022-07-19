@@ -647,7 +647,7 @@ exports[`smtp details render smtp creation dialog 1`] = `
                         class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
                         data-tooltip-id="smtpStepDetailsForm_startTLS"
                       >
-                        common.smtp.startTSL
+                        common.smtp.startTLS
                       </span>
                     </label>
                   </div>

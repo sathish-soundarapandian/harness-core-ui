@@ -6,8 +6,8 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Container, Layout, Icon, Text } from '@wings-software/uicore'
-import { Intent, Color } from '@harness/design-system'
+import { Container, Icon, Layout, Text } from '@wings-software/uicore'
+import { Color, Intent } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import EnvironmentDialog from '@cf/components/CreateEnvironmentDialog/EnvironmentDialog'
 import { useEnvironmentSelectV2 } from '@cf/hooks/useEnvironmentSelectV2'
@@ -141,7 +141,7 @@ export const SelectEnvironmentView: React.FC<SelectEnvironmentViewProps> = props
                 intent: Intent.NONE,
                 minimal: false,
                 style: { color: 'var(--blue-500)' },
-                text: getString('cf.onboarding.sdkButtonLabel')
+                text: getString('cf.environments.apiKeys.addKeyTitle')
               }}
             />
           </Layout.Horizontal>

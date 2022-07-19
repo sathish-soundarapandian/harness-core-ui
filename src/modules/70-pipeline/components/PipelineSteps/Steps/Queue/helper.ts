@@ -5,16 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes } from '@wings-software/uicore'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { StepElementConfig } from 'services/cd-ng'
 import type { StringsMap } from 'stringTypes'
 
 export const SCOPE_KEYS = {
   PIPELINE: 'Pipeline',
-  STAGE: 'Stage',
-  STEP_GROUP: 'StepGroup',
-  PLAN: 'Plan'
+  STAGE: 'Stage'
 }
 
 export interface QueueData extends StepElementConfig {
@@ -28,7 +26,7 @@ export interface QueueProps {
   initialValues: QueueData
   onUpdate?: (data: QueueData) => void
   stepViewType: StepViewType
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   isNewStep?: boolean
   inputSetData?: {
     template?: QueueData
@@ -43,7 +41,5 @@ export const getScopeOptions = (
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
 ) => [
   { label: getString('common.pipeline'), value: SCOPE_KEYS.PIPELINE },
-  { label: getString('common.stage'), value: SCOPE_KEYS.STAGE },
-  { label: getString('stepGroup'), value: SCOPE_KEYS.STEP_GROUP },
-  { label: getString('common.subscriptions.overview.plan'), value: SCOPE_KEYS.PLAN }
+  { label: getString('common.stage'), value: SCOPE_KEYS.STAGE }
 ]

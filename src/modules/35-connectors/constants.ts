@@ -53,6 +53,7 @@ export interface CreateConnectorModalProps {
   setIsEditMode: (val: boolean) => void
   connectorInfo: ConnectorInfoDTO | void
   gitDetails?: IGitContextFormProps
+  status?: ConnectorConnectivityDetails
   connectivityMode?: ConnectivityModeType
   setConnectivityMode?: (val: ConnectivityModeType) => void
   accountId: string
@@ -157,7 +158,8 @@ export const ActivityType: ActivityType = {
 export const connectorUrlType = {
   ACCOUNT: 'Account',
   REPO: 'Repo',
-  REGION: 'Region'
+  REGION: 'Region',
+  PROJECT: 'Project'
 }
 
 export const CONNECTOR_CREDENTIALS_STEP_IDENTIFIER = 'CONNECTOR_CREDENTIALS_STEP_IDENTIFIER'
@@ -169,14 +171,14 @@ export const SECRET_MANAGER_TESTCONNECTION_STEP_INDEX = 2
 export const connectorHelperUrls = {
   ceAwsLaunchConsole: 'https://console.aws.amazon.com/billing/home?#/reports',
   ceAwscostUsageReportSteps:
-    'https://ngdocs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#step_2_cost_and_usage_report',
+    'https://docs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#step_2_cost_and_usage_report',
   ceAwsNoAccount:
     'https://newdocs.helpdocs.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#review_aws_access_permissions',
   ceAwsRoleARNsteps:
-    'https://ngdocs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#step_4_create_cross_account_role',
+    'https://docs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#step_4_create_cross_account_role',
   ceAzureLaunchConsole: 'https://portal.azure.com/#blade/Microsoft_Azure_CostManagement/Menu/exports',
   ceAzureBillingExport:
-    'https://ngdocs.harness.io/article/v682mz6qfd-set-up-cost-visibility-for-azure#step_2_azure_billing_exports'
+    'https://docs.harness.io/article/v682mz6qfd-set-up-cost-visibility-for-azure#step_2_azure_billing_exports'
 }
 
 export const CONNECTOR_MODAL_MIN_WIDTH = 1175

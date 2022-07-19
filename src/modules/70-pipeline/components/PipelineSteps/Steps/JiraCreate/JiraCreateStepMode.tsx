@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { isEmpty } from 'lodash-es'
+import { isEmpty, get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Dialog, Intent } from '@blueprintjs/core'
 import cx from 'classnames'
@@ -14,15 +14,16 @@ import * as Yup from 'yup'
 import { FieldArray, FormikProps } from 'formik'
 import {
   Accordion,
+  AllowedTypes,
   Button,
+  FormError,
   Formik,
   FormikForm,
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  Text,
   PageSpinner,
-  FormError
+  Text
 } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -47,7 +48,7 @@ import type {
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { useQueryParams } from '@common/hooks'
+import { useQueryParams, useDeepCompareEffect } from '@common/hooks'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { JiraProjectSelectOption } from '../JiraApproval/types'
 import { getGenuineValue, setIssueTypeOptions } from '../JiraApproval/helper'
@@ -64,13 +65,26 @@ import {
   getInitialValueForSelectedField,
   getKVFieldsToBeAddedInForm,
   getSelectedFieldsToBeAddedInForm,
+  isRuntimeOrExpressionType,
   processFormData,
   resetForm
 } from './helper'
-import { JiraFieldsRenderer } from './JiraFieldsRenderer'
+import {
+  JiraFieldsRenderer,
+  shouldShowTextField,
+  shouldShowMultiSelectField,
+  shouldShowMultiTypeField
+} from './JiraFieldsRenderer'
 import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './JiraCreate.module.scss'
+
+const getUnsupportedRequiredFields = (requiredFields: JiraFieldNGWithValue[]): JiraFieldNGWithValue[] => {
+  return requiredFields.filter(
+    (field: JiraFieldNGWithValue) =>
+      !(shouldShowTextField(field) || shouldShowMultiSelectField(field) || shouldShowMultiTypeField(field))
+  )
+}
 
 function FormContent({
   formik,
@@ -95,8 +109,11 @@ function FormContent({
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [projectOptions, setProjectOptions] = useState<JiraProjectSelectOption[]>([])
   const [projectMetadata, setProjectMetadata] = useState<JiraProjectNG>()
+  const [unsupportedRequiredFields, setUnsupportedRequiredFields] = useState<JiraFieldNGWithValue[]>([])
   const [count, setCount] = React.useState(0)
   const [connectorValueType, setConnectorValueType] = useState<MultiTypeInputType>(MultiTypeInputType.FIXED)
+  const [projectValueType, setProjectValueType] = useState<MultiTypeInputType>(MultiTypeInputType.FIXED)
+  const [issueValueType, setIssueValueType] = useState<MultiTypeInputType>(MultiTypeInputType.FIXED)
   const jiraType = 'createMode'
   const commonParams = {
     accountIdentifier: accountId,
@@ -115,6 +132,16 @@ function FormContent({
       ? (formik.values.spec.issueType as JiraProjectSelectOption).key
       : undefined
 
+  const requiredFields = get(formik.values, 'spec.selectedRequiredFields', []) as JiraFieldNGWithValue[]
+
+  useDeepCompareEffect(() => {
+    if (isEmpty(requiredFields)) {
+      setUnsupportedRequiredFields([])
+    } else {
+      setUnsupportedRequiredFields(getUnsupportedRequiredFields(requiredFields))
+    }
+  }, [requiredFields])
+
   useEffect(() => {
     // If connector value changes in form, fetch projects
     // second block is needed so that we don't fetch projects if type is expression
@@ -126,7 +153,7 @@ function FormContent({
           connectorRef: connectorRefFixedValue.toString()
         }
       })
-    } else if (connectorRefFixedValue !== undefined) {
+    } else if (connectorRefFixedValue !== undefined || isRuntimeOrExpressionType(connectorValueType)) {
       // Undefined check is needed so that form is not set to dirty as soon as we open
       // This means we've cleared the value or marked runtime/expression
       // Flush the selected optional fields, and move everything to key value fields
@@ -135,6 +162,15 @@ function FormContent({
       formik.setFieldValue('spec.selectedOptionalFields', [])
     }
   }, [connectorRefFixedValue])
+
+  // Resolves the value of project key when the component mounts or updates if required
+  useEffect(() => {
+    if (projectKeyFixedValue && projectOptions?.length > 0) {
+      const unresolvedProjectKeyOption = formik.values.spec.projectKey as JiraProjectSelectOption
+      const resolvedLabel = projectOptions.find(project => project.key === unresolvedProjectKeyOption.key)?.label
+      formik.setFieldValue('spec.projectKey', { ...unresolvedProjectKeyOption, label: resolvedLabel })
+    }
+  }, [projectKeyFixedValue, projectOptions])
 
   useEffect(() => {
     // If project value changes in form, fetch metadata
@@ -146,7 +182,10 @@ function FormContent({
           projectKey: projectKeyFixedValue.toString()
         }
       })
-    } else if (connectorRefFixedValue !== undefined && projectKeyFixedValue !== undefined) {
+    } else if (
+      (connectorRefFixedValue !== undefined && projectKeyFixedValue !== undefined) ||
+      isRuntimeOrExpressionType(projectValueType)
+    ) {
       // Undefined check is needed so that form is not set to dirty as soon as we open
       // This means we've cleared the value or marked runtime/expression
       // Flush the selected optional and required fields, and move everything to key value fields
@@ -163,8 +202,8 @@ function FormContent({
       const fieldKeys = Object.keys(issueTypeData?.fields || {})
       const formikOptionalFields: JiraFieldNGWithValue[] = []
       const formikRequiredFields: JiraFieldNGWithValue[] = []
-      fieldKeys.forEach(keyy => {
-        const field = issueTypeData?.fields[keyy]
+      fieldKeys.forEach(fieldKey => {
+        const field = issueTypeData?.fields[fieldKey]
         if (field) {
           const savedValueForThisField = getInitialValueForSelectedField(formik.values.spec.fields, field)
           if (savedValueForThisField && !field.required) {
@@ -189,7 +228,7 @@ function FormContent({
         formikRequiredFields
       )
       formik.setFieldValue('spec.fields', toBeUpdatedKVFields)
-    } else if (issueTypeFixedValue !== undefined) {
+    } else if (issueTypeFixedValue !== undefined || isRuntimeOrExpressionType(issueValueType)) {
       // Undefined check is needed so that form is not set to dirty as soon as we open
       // This means we've cleared the value or marked runtime/expression
       // Flush the selected additional fields, and move everything to key value fields
@@ -384,8 +423,9 @@ function FormContent({
             multiTypeInputProps={{
               expressions,
               allowableTypes,
-              onChange: (value: unknown) => {
+              onChange: (value: unknown, _unused, multiType) => {
                 // Clear dependent fields
+                setProjectValueType(multiType)
                 if ((value as JiraProjectSelectOption)?.key !== projectKeyFixedValue) {
                   resetForm(formik, 'projectKey')
                   setCount(count + 1)
@@ -445,11 +485,11 @@ function FormContent({
             multiTypeInputProps={{
               expressions,
               allowableTypes,
-              onChange: (value: unknown) => {
+              onChange: (value: unknown, _unused, multiType) => {
+                setIssueValueType(multiType)
                 // Clear dependent fields
                 if ((value as JiraProjectSelectOption)?.key !== issueTypeFixedValue) {
                   resetForm(formik, 'issueType')
-                  formik.setFieldValue('spec.selectedRequiredFields', [])
                   setCount(count + 1)
                 }
               }
@@ -475,6 +515,21 @@ function FormContent({
             readonly={readonly}
           />
         </div>
+        {unsupportedRequiredFields?.length > 0 && (
+          <Text
+            inline
+            icon="circle-cross"
+            width={350}
+            lineClamp={1}
+            iconProps={{ size: 16, color: 'red700', padding: { right: 'small' } }}
+            intent={Intent.DANGER}
+            tooltipProps={{ isDark: true, popoverClassName: css.tooltip }}
+          >
+            {getString('pipeline.jiraCreateStep.unsupportedRequiredFieldsError', {
+              fields: unsupportedRequiredFields.map(field => field.name).join(', ')
+            })}
+          </Text>
+        )}
 
         <div className={stepCss.noLookDivider} />
       </React.Fragment>
@@ -525,7 +580,9 @@ function FormContent({
                                   placeholder={getString('common.valuePlaceholder')}
                                   disabled={isApprovalStepFieldDisabled(readonly)}
                                   multiTextInputProps={{
-                                    allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME),
+                                    allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                      item => item !== MultiTypeInputType.RUNTIME
+                                    ) as AllowedTypes,
                                     expressions
                                   }}
                                 />

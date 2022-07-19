@@ -199,7 +199,7 @@ describe('<ExecutionLandingPage /> tests', () => {
     jest.runOnlyPendingTimers()
 
     expect(getByTestId('autoSelectedStageId').innerHTML).toBe(stage)
-    expect(getByTestId('autoSelectedStepId').innerHTML).toBe(runningStep)
+    expect(getByTestId('autoSelectedStepId').innerHTML).toBe(runningStep?.node)
   })
 
   test('auto stage should not work when user has selected a stage/step', () => {

@@ -11,7 +11,7 @@ import { render, fireEvent, queryByText, queryByAttribute, waitFor } from '@test
 import { act } from 'react-dom/test-utils'
 import { TestWrapper } from '@common/utils/testUtils'
 import { InputTypes, fillAtForm, clickSubmit } from '@common/utils/JestFormHelper'
-
+import * as hostedBuilds from '@common/hooks/useHostedBuild'
 import { GitConnectionType } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import CreateGithubConnector from '../CreateGithubConnector'
@@ -21,7 +21,8 @@ import {
   usernameTokenWithAPIAccessGithubApp,
   usernameTokenWithAPIAccessToken,
   backButtonMock,
-  usernameTokenWithAPIAccessGithubAppManager
+  usernameTokenWithAPIAccessGithubAppManager,
+  oAuthConnector
 } from './githubMocks'
 import { backButtonTest } from '../../commonTest'
 
@@ -323,5 +324,52 @@ describe('Create Github connector Wizard', () => {
       },
       { queryParams: {} } // gitSync disabled for account level
     )
+  })
+
+  test('Render OAuth git authentication view', async () => {
+    window.addEventListener = jest.fn()
+    global.fetch = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        text: () => Promise.resolve('https://github.com/auth/login')
+      })
+    )
+    jest.spyOn(hostedBuilds, 'useHostedBuilds').mockReturnValue({
+      enabledHostedBuildsForFreeUsers: true,
+      enabledHostedBuilds: false
+    })
+    const { container, getByText } = render(
+      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+        <CreateGithubConnector
+          {...commonProps}
+          isEditMode={true}
+          connectorInfo={oAuthConnector}
+          mock={mockResponse}
+          connectivityMode={ConnectivityModeType.Manager}
+          status={{ status: 'SUCCESS' }}
+        />
+      </TestWrapper>
+    )
+    await act(async () => {
+      clickSubmit(container)
+    })
+    await act(async () => {
+      clickSubmit(container)
+    })
+
+    expect(container.querySelector('input[name="authType"][value="common.oAuthLabel"]')).toBeInTheDocument()
+
+    expect(getByText('connectors.oAuth.configured')).toBeInTheDocument()
+
+    const relinkBtn = getByText('connectors.relinkToGitProvider')
+
+    expect(relinkBtn).toBeInTheDocument()
+
+    await act(async () => {
+      fireEvent.click(relinkBtn)
+    })
+
+    expect(getByText('connectors.oAuth.inProgress')).toBeInTheDocument()
+
+    expect(global.fetch).toBeCalled()
   })
 })

@@ -20,7 +20,8 @@ import {
   Layout,
   MultiTypeInputType,
   Text,
-  StepWizard
+  StepWizard,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { Classes, Dialog, IOptionProps, IDialogProps } from '@blueprintjs/core'
@@ -535,7 +536,9 @@ function TerraformPlanWidget(
                           placeholder={getString('cd.enterTragets')}
                           multiTextInputProps={{
                             expressions,
-                            allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME)
+                            allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                              item => item !== MultiTypeInputType.RUNTIME
+                            ) as AllowedTypes
                           }}
                           multiTypeFieldSelectorProps={{
                             label: (
@@ -554,7 +557,9 @@ function TerraformPlanWidget(
                           name="spec.configuration.environmentVariables"
                           valueMultiTextInputProps={{
                             expressions,
-                            allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME)
+                            allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                              item => item !== MultiTypeInputType.RUNTIME
+                            ) as AllowedTypes
                           }}
                           multiTypeFieldSelectorProps={{
                             disableTypeSelection: true,

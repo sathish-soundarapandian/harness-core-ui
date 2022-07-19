@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
+import { Color } from '@harness/design-system'
 import { FilterProps, TableFilters } from '@cf/components/TableFilters/TableFilters'
 import type { Features } from 'services/cf'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { FeatureFlagStatus } from '../FlagStatus'
-
 export interface FlagTableFiltersProps {
-  features?: Features | null
+  features: Features | null
   currentFilter: FilterProps | Record<string, any>
   updateTableFilter: (filter: FilterProps | Record<string, any>) => void
 }
@@ -28,7 +30,7 @@ export const FlagFilterValues = {
   PERMANENT: 'permanent'
 }
 
-export const featureFlagFilters = (features?: Features | null): Array<FilterProps> => [
+export const featureFlagFilters = (features: Features | null): Array<FilterProps> => [
   {
     queryProps: {},
     label: 'cf.flagFilters.allFlags',
@@ -48,29 +50,34 @@ export const featureFlagFilters = (features?: Features | null): Array<FilterProp
   },
   {
     queryProps: { key: FlagFilterKeys.STATUS, value: FlagFilterValues.RECENTLY_ACCESSED },
-    label: 'cf.flagFilters.last24',
-    total: features?.featureCounts?.totalRecentlyAccessed || 0
+    label: 'cf.flagFilters.recentlyAccessed',
+    total: features?.featureCounts?.totalRecentlyAccessed || 0,
+    tooltipId: 'ff_flagFilters_recentlyAccessed'
   },
   {
     queryProps: { key: FlagFilterKeys.STATUS, value: FlagFilterValues.ACTIVE },
     label: 'cf.flagFilters.active',
     total: features?.featureCounts?.totalActive || 0,
-    tooltipId: 'ff_flagFilters_activeFlags'
+    tooltipId: 'ff_flagFilters_activeFlags',
+    filterTotalColor: Color.PRIMARY_5
   },
   {
     queryProps: { key: FlagFilterKeys.STATUS, value: FlagFilterValues.POTENTIALLY_STALE },
     label: 'cf.flagFilters.potentiallyStale',
     total: features?.featureCounts?.totalPotentiallyStale || 0,
-    tooltipId: 'ff_flagFilters_potentiallyStaleFlags'
+    tooltipId: 'ff_flagFilters_potentiallyStaleFlags',
+    filterTotalColor: Color.ORANGE_800
   }
 ]
 
 export const FlagTableFilters: React.FC<FlagTableFiltersProps> = ({ features, currentFilter, updateTableFilter }) => {
-  return (
-    <TableFilters
-      filters={featureFlagFilters(features)}
-      currentFilter={currentFilter}
-      updateTableFilter={updateTableFilter}
-    />
-  )
+  const DISPLAY_ACTIVE_FILTER = useFeatureFlag(FeatureFlag.FFM_3938_STALE_FLAGS_ACTIVE_CARD_HIDE_SHOW)
+  let filters = featureFlagFilters(features)
+
+  // remove 'Active Flags' filter card if feature flag FFM_3938_STALE_FLAGS_ACTIVE_CARD_HIDE_SHOW is not enabled
+  if (!DISPLAY_ACTIVE_FILTER) {
+    filters = filters.filter(filter => filter.label !== 'cf.flagFilters.active')
+  }
+
+  return <TableFilters filters={filters} currentFilter={currentFilter} updateTableFilter={updateTableFilter} />
 }

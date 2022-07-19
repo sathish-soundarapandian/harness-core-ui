@@ -8,24 +8,28 @@
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import { v4 as uuid } from 'uuid'
 import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@wings-software/uicore'
-import type { GraphLayoutNode, PipelineExecutionSummary } from 'services/pipeline-ng'
-import type { StringKeys } from 'framework/strings'
 import type {
-  Infrastructure,
+  GraphLayoutNode,
+  PipelineExecutionSummary,
   PipelineInfoConfig,
   StageElementConfig,
+  StageElementWrapperConfig
+} from 'services/pipeline-ng'
+import type { StringKeys } from 'framework/strings'
+import type {
+  GetExecutionStrategyYamlQueryParams,
+  Infrastructure,
   ServerlessAwsLambdaInfrastructure,
   ServiceDefinition
 } from 'services/cd-ng'
 import { connectorTypes } from '@pipeline/utils/constants'
-import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { getStageFromPipeline as getStageByPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
 import type { DependencyElement } from 'services/ci'
 import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/types'
 import type { InputSetDTO } from './types'
 import type { DeploymentStageElementConfig, PipelineStageWrapper, StageElementWrapper } from './pipelineTypes'
+import type { TemplateServiceDataType } from './templateUtils'
 
 export enum StageType {
   DEPLOY = 'Deployment',
@@ -35,7 +39,10 @@ export enum StageType {
   APPROVAL = 'Approval',
   CUSTOM = 'Custom',
   Template = 'Template',
-  SECURITY = 'SecurityTests'
+  SECURITY = 'SecurityTests',
+  MATRIX = 'MATRIX',
+  FOR = 'FOR',
+  PARALLELISM = 'PARALLELISM'
 }
 
 export enum ServiceDeploymentType {
@@ -44,7 +51,7 @@ export enum ServiceDeploymentType {
   amazonEcs = 'amazonEcs',
   amazonAmi = 'amazonAmi',
   awsCodeDeploy = 'awsCodeDeploy',
-  winrm = 'winrm',
+  winrm = 'WinRm',
   awsLambda = 'awsLambda',
   pcf = 'pcf',
   ssh = 'Ssh',
@@ -53,7 +60,8 @@ export enum ServiceDeploymentType {
   ServerlessAzureFunctions = 'ServerlessAzureFunctions',
   ServerlessGoogleFunctions = 'ServerlessGoogleFunctions',
   AmazonSAM = 'AwsSAM',
-  AzureFunctions = 'AzureFunctions'
+  AzureFunctions = 'AzureFunctions',
+  AzureWebApp = 'AzureWebApp'
 }
 
 export type ServerlessGCPInfrastructure = Infrastructure & {
@@ -95,6 +103,14 @@ export function isCIStage(node?: GraphLayoutNode): boolean {
 
 export function hasCDStage(pipelineExecution?: PipelineExecutionSummary): boolean {
   return pipelineExecution?.modules?.includes('cd') || !isEmpty(pipelineExecution?.moduleInfo?.cd)
+}
+
+export function hasServiceDetail(pipelineExecution?: PipelineExecutionSummary): boolean {
+  return pipelineExecution?.modules?.includes('serviceDetail') || false
+}
+
+export function hasOverviewDetail(pipelineExecution?: PipelineExecutionSummary): boolean {
+  return pipelineExecution?.modules?.includes('overviewPage') || false
 }
 
 export function hasCIStage(pipelineExecution?: PipelineExecutionSummary): boolean {
@@ -222,15 +238,17 @@ export const isSSHWinRMDeploymentType = (deploymentType: string): boolean => {
   return deploymentType === ServiceDeploymentType.winrm || deploymentType === ServiceDeploymentType.ssh
 }
 
+export const isAzureWebAppDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.AzureWebApp
+}
+
 export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessAwsLambda]: 'Amazon Web Services Details',
   [ServiceDeploymentType.ServerlessAzureFunctions]: 'Azure Details',
+  [ServiceDeploymentType.AzureWebApp]: 'Web App Details',
   [ServiceDeploymentType.ServerlessGoogleFunctions]: 'GCP Details',
-  [ServiceDeploymentType.Pdc]: 'Infrastructure definition'
-}
-
-export const isServerlessManifestType = (selectedManifest: ManifestTypes | null): boolean => {
-  return selectedManifest === ManifestDataType.ServerlessAwsLambda
+  [ServiceDeploymentType.Pdc]: 'Infrastructure definition',
+  [ServiceDeploymentType.winrm]: 'WinRM'
 }
 
 export const getSelectedDeploymentType = (
@@ -239,14 +257,47 @@ export const getSelectedDeploymentType = (
     stageId: string,
     pipeline?: PipelineInfoConfig
   ) => PipelineStageWrapper<T>,
-  isPropagating = false
+  isPropagating = false,
+  templateServiceData?: TemplateServiceDataType
 ): ServiceDefinition['type'] => {
   if (isPropagating) {
     const parentStageId = get(stage, 'stage.spec.serviceConfig.useFromStage.stage', null)
     const parentStage = getStageFromPipeline<DeploymentStageElementConfig>(defaultTo(parentStageId, ''))
+    const isParentStageTemplate = get(parentStage, 'stage.stage.template.templateRef')
+    if (isParentStageTemplate && templateServiceData) {
+      return get(templateServiceData, isParentStageTemplate)
+    }
     return get(parentStage, 'stage.stage.spec.serviceConfig.serviceDefinition.type', null)
   }
   return get(stage, 'stage.spec.serviceConfig.serviceDefinition.type', null)
+}
+
+export const getDeploymentTypeWithSvcEnvFF = (
+  stage: StageElementWrapper<DeploymentStageElementConfig> | undefined
+): ServiceDefinition['type'] => {
+  return get(stage, 'stage.spec.deploymentType', null)
+}
+
+export const getServiceDefinitionType = (
+  selectedStage: StageElementWrapperConfig | undefined,
+  getStageFromPipeline: <T extends StageElementConfig = StageElementConfig>(
+    stageId: string,
+    pipeline?: PipelineInfoConfig
+  ) => PipelineStageWrapper<T>,
+  isNewServiceEnvEntity: (isSvcEnvEntityEnabled: boolean, stage: DeploymentStageElementConfig) => boolean,
+  isSvcEnvEntityEnabled: boolean,
+  templateServiceData: TemplateServiceDataType
+): GetExecutionStrategyYamlQueryParams['serviceDefinitionType'] => {
+  const isPropagating = get(selectedStage, 'stage.spec.serviceConfig.useFromStage', null)
+  if (isNewServiceEnvEntity(isSvcEnvEntityEnabled, selectedStage?.stage as DeploymentStageElementConfig)) {
+    return getDeploymentTypeWithSvcEnvFF(selectedStage as StageElementWrapper<DeploymentStageElementConfig>)
+  }
+  return getSelectedDeploymentType(
+    selectedStage as StageElementWrapper<DeploymentStageElementConfig>,
+    getStageFromPipeline,
+    isPropagating,
+    templateServiceData
+  )
 }
 
 export const getStageDeploymentType = (
@@ -369,6 +420,12 @@ export const deleteStageData = (stage?: DeploymentStageElementConfig): void => {
     delete stage?.spec?.execution?.rollbackSteps
   }
 }
+export const deleteServiceData = (stage?: DeploymentStageElementConfig): void => {
+  if (stage) {
+    delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.artifacts
+    delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.manifests
+  }
+}
 //This is to delete stage data in case of new service/ env entity
 export const deleteStageInfo = (stage?: any): void => {
   if (stage) {
@@ -389,6 +446,9 @@ export const infraDefinitionTypeMapping: { [key: string]: string } = {
 export const getStepTypeByDeploymentType = (deploymentType: string): StepType => {
   if (isServerlessDeploymentType(deploymentType)) {
     return StepType.ServerlessAwsLambda
+  }
+  if (deploymentType === ServiceDeploymentType.AzureWebApp) {
+    return StepType.AzureWebAppServiceSpec
   }
   return StepType.K8sServiceSpec
 }

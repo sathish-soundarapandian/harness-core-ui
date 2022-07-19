@@ -46,6 +46,8 @@ import { useStrings } from 'framework/strings'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, SecretActions } from '@common/constants/TrackingConstants'
+import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import VaultFormFields from './views/VaultFormFields'
 import LocalFormFields from './views/LocalFormFields'
 
@@ -74,11 +76,17 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
   const { onSuccess, connectorTypeContext, privateSecret } = props
   const propsSecret = props.secret
   const { accountId: accountIdentifier, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { OPA_SECRET_GOVERNANCE } = useFeatureFlags()
   const { showSuccess } = useToaster()
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
   const secretTypeFromProps = props.type
   const [type, setType] = useState<SecretResponseWrapper['secret']['type']>(secretTypeFromProps || 'SecretText')
   const [secret, setSecret] = useState<SecretDTOV2>()
+  const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal({
+    considerWarningAsError: false,
+    errorHeaderMsg: 'secrets.policyEvaluations.failedToSave',
+    warningHeaderMsg: 'secrets.policyEvaluations.warning'
+  })
 
   const {
     loading: loadingSecret,
@@ -224,15 +232,20 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
   const { trackEvent } = useTelemetry()
 
   const handleSubmit = async (data: SecretFormData): Promise<void> => {
+    let response
+    let successMessage: string
     try {
       if (editing) {
         if (type === 'SecretText') {
-          await updateSecretText(createSecretTextData(data, editing))
+          response = await updateSecretText(createSecretTextData(data, editing))
         }
         if (type === 'SecretFile') {
-          await updateSecretFile(createFormData(data, editing) as any)
+          response = await updateSecretFile(createFormData(data, editing) as any)
         }
-        showSuccess(`Secret '${data.name}' updated successfully`)
+        successMessage = getString('secrets.secret.successMessage', {
+          name: data.name,
+          action: 'updated'
+        })
       } else {
         trackEvent(SecretActions.SaveCreateSecret, {
           category: Category.SECRET,
@@ -240,15 +253,24 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
           data
         })
         if (type === 'SecretText') {
-          await createSecretText(createSecretTextData(data))
+          response = await createSecretText(createSecretTextData(data))
         }
         if (type === 'SecretFile') {
-          await createSecretFile(createFormData(data) as any)
+          response = await createSecretFile(createFormData(data) as any)
         }
-        showSuccess(`Secret '${data.name}' created successfully`)
+        successMessage = getString('secrets.secret.successMessage', {
+          name: data.name,
+          action: 'created'
+        })
       }
 
-      onSuccess?.(data)
+      conditionallyOpenGovernanceErrorModal(
+        OPA_SECRET_GOVERNANCE ? response?.data?.governanceMetadata : undefined,
+        () => {
+          showSuccess(successMessage)
+          onSuccess?.(data)
+        }
+      )
     } catch (error) {
       modalErrorHandler?.showDanger(getRBACErrorMessage(error))
     }

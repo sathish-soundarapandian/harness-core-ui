@@ -1,0 +1,29 @@
+{
+  "metaData": {},
+  "resource": {
+    "delegateGroupDetails": [
+      {
+        "groupId": "oXr_EWWgRI-lDvqf0K-YdA",
+        "delegateGroupIdentifier": "tempdelegatepr",
+        "delegateType": "KUBERNETES",
+        "groupName": "temp-delegate-pr",
+        "groupImplicitSelectors": { "temp-delegate-pr": "GROUP_NAME" },
+        "lastHeartBeat": 1656067212766,
+        "connectivityStatus": "connected",
+        "activelyConnected": true,
+        "grpcActive": false,
+        "delegateInstanceDetails": [
+          {
+            "uuid": "m_V_YLEuQDekxnBHxRvv2g",
+            "lastHeartbeat": 1656067212766,
+            "activelyConnected": true,
+            "hostName": "temp-delegate-pr-0",
+            "tokenActive": true
+          }
+        ],
+        "tokenActive": true
+      }
+    ]
+  },
+  "responseMessages": []
+}

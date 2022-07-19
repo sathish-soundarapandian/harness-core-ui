@@ -29,6 +29,20 @@
       }
     }
   }
+
+  .yamlBuilder {
+    padding: var(--spacing-large);
+    position: relative;
+
+    .buttonsWrapper {
+      position: absolute;
+      right: var(--spacing-xxxlarge);
+      top: var(--spacing-xxlarge);
+      display: flex;
+      column-gap: var(--spacing-large);
+      align-items: center;
+    }
+  }
 }
 .serviceModal {
   margin-bottom: var(--spacing-small);

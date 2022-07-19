@@ -1,6 +1,7 @@
 secrets: Secrets
 home: Home
 welcome: Welcome
+help: Help
 dashboards: Dashboards
 setup: Setup
 agent: Agent
@@ -33,6 +34,7 @@ pipeline: Pipeline
 templateStartLabel: Start with Template
 duplicateId: 'Duplicate Identifier'
 createPipeline: Create a Pipeline
+importFromGit: Import From Git
 production: Production
 addVariable: Add Variable
 advanced: '{{ $.advancedTitle }}'
@@ -64,6 +66,7 @@ remove: Remove
 member: Member
 showMore: Show More
 showLess: Show Less
+hideAll: Hide All
 moreInfo: More Info
 moreOptions: More options
 viewText: View
@@ -146,6 +149,7 @@ datePickerShortcuts:
   LastMonth: Last Month
   Last2Months: Last 2 Months
 validation:
+  connectorRef: Connector is a required field
   namePatternIsNotValid: 'Name can only contain alphanumerics, _ and -'
   provisionerIdentifierPatternIsNotValid: 'Provisioner Identifier should not contain special characters and spaces'
   provisionerIdentifierIsRequired: 'Provisioner Identifier is required'
@@ -278,6 +282,8 @@ purpose:
     moduleSelectionSubHeading: Take your security tests to the next level using our Harness Security Tests
     security: Security
     tests: '{{$.tests}}'
+  errorTracking:
+    title: Error Tracking
 trialInProgress: Trial in progress
 trialInProgressDescription: A Project contains your pipelines, resources, and team members. Get started by creating your first Project.
 letsGetYouStarted: Let’s get you started
@@ -291,6 +297,7 @@ repo_provider:
   codecommit: CodeCommit
   awscodecommit: AWS Code Commit
   azureDev: Azure Devops
+  azureRepos: Azure Repos
 gitSync:
   branchFetchFailed: Branch fetch failed
   resourceLabel: '{{resource}} Name'
@@ -345,14 +352,13 @@ git:
   gitLabUrlPlaceholderSSH: 'git@gitlab.com:account/'
   bitbucketUrlPlaceholder: 'https://www.bitbucket.com/account/'
   bitbucketPlaceholderSSH: 'git@bitbucket.com:account/'
-  azureReposUrlPlaceholder: 'https://dev.azure.com/<organisationName>'
-  azureReposUrlPlaceholderRepoHttp: 'https://dev.azure.com/<organisationName>/<projectName>/<repositoryName>'
-  azureReposPlaceholderSSH: 'git@ssh.dev.azure.com:v3/<organisationName>'
-  azureReposPlaceholderRepoSSH: 'git@ssh.dev.azure.com:v3/<organisationName>/<projectName>/<repositoryName>'
+  azureReposUrlPlaceholder: 'https://dev.azure.com/<organizationName>/<projectName>'
+  azureReposUrlPlaceholderRepoHttp: 'https://dev.azure.com/<organizationName>/<projectName>/_git/<repositoryName>'
+  azureReposPlaceholderSSH: 'git@ssh.dev.azure.com:v3/<organizationName>'
+  azureReposPlaceholderRepoSSH: 'git@ssh.dev.azure.com:v3/<organizationName>/<projectName>/<repositoryName>'
   enableAPIAccess: 'Enable API access (recommended)'
   APIAccessDescription: 'API Access is required for using “Git Experience”, for creation of Git based triggers, Webhooks management and updating Git statuses'
-  testRepositoryDescription: Please provide a repository to test the credentials. This is required just for checking connectivity. The connector will still be created at account level.
-  testProjectAndRepositoryDescription: Please provide a project and a repository to test the credentials. This is required just for checking connectivity. The connector will still be created at account level.
+  testRepositoryDescription: Please provide a repository to test the credentials. This is required just for checking connectivity. The connector will still be created at {{scope}} level.
   APIAuthentication: 'API Authentication'
   gitHubApp: 'GitHub App'
   installationId: 'GitHub Installation Id'
@@ -363,7 +369,6 @@ git:
   addUserCredentialLabel: Update in user profile
   saveResourceLabel: 'Save {{resource}} to Git'
   selectRepoLabel: Repository Display Name
-  projectNamePlaceholder: 'Example: MyProject'
   filePath: File Path
   folderPath: Folder Path
   commitMessage: Commit message
@@ -769,6 +774,7 @@ upgrade: Upgrade
 contactSupport: Contact Support
 or: Or
 startFreePlan: Start {{module}} Free Plan
+scriptRequired: Script is a required field
 exploreAllPlans: Explore all plans
 duration:
   month: 'Last month'
@@ -784,7 +790,7 @@ smtp:
   smtpConnectivity: SMTP Connectivity Test
   port: Port
   enableSSL: Enable SSL
-  startTSL: Start TSL
+  startTLS: Start TLS
   fromAddress: From Address
   testConnection: Test Connection
   portRequired: Port is required
@@ -821,10 +827,17 @@ scope: '{{ $.delegate.Scope }}'
 community: Community
 resourceCenter:
   title: 'RESOURCE CENTER'
+  productUpdates:
+    title: Product Updates
+    whatsnew: 'What’s New'
+    earlyAcess: Early Access
   ticketmenu:
+    title: 'Contact us'
     tickets: 'My tickets'
     ticketsDesc: 'View and manage your tickets'
     submitDesc: 'Get help from our expert system'
+    submitTicket: Submit a ticket
+    viewTicket: View my ticket
   bottomlayout:
     desc: Other useful resources
     docs: Docs
@@ -901,6 +914,21 @@ gitOps: GitOps
 showHarnessManagedError: Harness Managed Resource cannot be edited
 contentRequired: Content is required
 defaultSettings: Default Settings
+oAuthLabel: OAuth
+import: Import
+importEntityFromGit: Import {{resourceType}} From Git
+serviceOverrides: Service Overrides
 
 # Chaos Module
 chaosText: Chaos
+
+zipCode: Postal / Zip Code
+countryOrRegion: Country or Region
+billingAddress: Billing Address
+city: City
+state: State
+nameOnCard: Name on card
+cardNumber: Card number
+perDeveloper: per developer
+triggerName: Trigger Name
+versionLabel: Version Label

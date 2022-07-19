@@ -34,7 +34,7 @@ export interface PrometheusSetupSource {
   healthSourceIdentifier: string
   healthSourceName: string
   product: SelectOption
-  connectorRef?: string
+  connectorRef?: { value: string } | string
 }
 
 export type MapPrometheusQueryToService = {

@@ -7,7 +7,7 @@
 
 import { cloneDeep, isEmpty } from 'lodash-es'
 import type { FormikProps } from 'formik'
-import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { AllowedTypes, getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { StringKeys } from 'framework/strings'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import type {
@@ -526,13 +526,17 @@ export const createAppDFormData = (
 ): AppDynamicsFomikFormInterface => {
   const mappedMetricsData = mappedMetrics.get(selectedMetric) as MapAppDynamicsMetric
   const metricIdentifier = mappedMetricsData?.metricIdentifier || selectedMetric?.split(' ').join('_')
-  const { basePath = {}, metricPath = {}, completeMetricPath = '' } = mappedMetricsData || {}
+  const { basePath = {}, metricPath = {}, completeMetricPath = '', serviceInstanceMetricPath } = mappedMetricsData || {}
   const lastItemBasePath = Object.keys(basePath)[Object.keys(basePath).length - 1]
   const lastItemMetricPath = Object.keys(metricPath)[Object.keys(metricPath).length - 1]
   const fullPath =
     basePath[lastItemBasePath]?.path && metricPath[lastItemMetricPath]?.path && appDynamicsData.tierName
       ? `${basePath[lastItemBasePath]?.path}|${appDynamicsData.tierName}|${metricPath[lastItemMetricPath]?.path}`
       : ''
+
+  if (isTemplate && serviceInstanceMetricPath === '') {
+    mappedMetricsData.serviceInstanceMetricPath = RUNTIME_INPUT_VALUE
+  }
 
   return {
     name: appDynamicsData.name,
@@ -611,7 +615,7 @@ export const getPlaceholder = (
 ): string => (loading ? getString('loading') : getString(placeholderText))
 
 export const showValidation = (appdApplication?: string, appDTier?: string): boolean =>
-  Boolean(appDTier) && Boolean(appdApplication) && !(appdApplication === '<+input>' || appDTier === '<+input>')
+  Boolean(appDTier) && Boolean(appdApplication) && !(appdApplication === RUNTIME_INPUT_VALUE || appDTier === '<+input>')
 
 export const getTypeOfInput = (value: SelectOption | string) => {
   const selectedItem = typeof value === 'string' ? value : value?.label
@@ -648,7 +652,7 @@ export const setCustomFieldAndValidation = (
   const updatedNonCustomValue = {
     ...nonCustomFeilds,
     appdApplication: value,
-    appDTier: getTypeOfInput(value) !== MultiTypeInputType.FIXED ? '<+input>' : ''
+    appDTier: getTypeOfInput(value) !== MultiTypeInputType.FIXED ? RUNTIME_INPUT_VALUE : ''
   }
   setNonCustomFeilds(updatedNonCustomValue)
   if (validate) {
@@ -667,7 +671,7 @@ export const shouldMakeTierCall = (applicationName: string) =>
   getMultiTypeFromValue(applicationName) !== MultiTypeInputType.RUNTIME &&
   (getMultiTypeFromValue(applicationName) !== MultiTypeInputType.EXPRESSION || /^<+>/.test(applicationName))
 
-export const getAllowedTypes = (isConnectorRuntimeOrExpression: boolean) =>
+export const getAllowedTypes = (isConnectorRuntimeOrExpression: boolean): AllowedTypes =>
   isConnectorRuntimeOrExpression
     ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
     : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]

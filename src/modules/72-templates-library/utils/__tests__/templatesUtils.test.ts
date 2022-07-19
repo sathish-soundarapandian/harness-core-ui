@@ -25,7 +25,7 @@ describe('templatesUtils tests', () => {
   })
 
   test('Test getAllowedTemplateTypes method', () => {
-    expect(getAllowedTemplateTypes(getString, 'cd', true)).toEqual([
+    expect(getAllowedTemplateTypes(getString, 'cd')).toEqual([
       { disabled: false, label: 'step', value: 'Step' },
       { disabled: false, label: 'common.stage', value: 'Stage' },
       { disabled: false, label: 'common.pipeline', value: 'Pipeline' },
@@ -34,7 +34,7 @@ describe('templatesUtils tests', () => {
       { disabled: true, label: 'stepGroup', value: 'StepGroup' },
       { disabled: true, label: 'executionText', value: 'Execution' }
     ])
-    expect(getAllowedTemplateTypes(getString, 'cv', false)).toEqual(
+    expect(getAllowedTemplateTypes(getString, 'cv')).toEqual(
       expect.arrayContaining([
         {
           disabled: false,

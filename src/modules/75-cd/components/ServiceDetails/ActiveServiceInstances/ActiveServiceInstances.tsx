@@ -17,7 +17,7 @@ import {
   useGetEnvBuildInstanceCount
 } from 'services/cd-ng'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
-import { ActiveServiceInstancesContent } from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstancesContent'
+import { ActiveServiceInstancesContent } from './ActiveServiceInstancesContent'
 import { Deployments } from '../DeploymentView/DeploymentView'
 import css from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstances.module.scss'
 
@@ -28,6 +28,7 @@ export enum ServiceDetailTabs {
 
 export const ActiveServiceInstances: React.FC = () => {
   const { getString } = useStrings()
+
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const queryParams: GetEnvBuildInstanceCountQueryParams = {
     accountIdentifier: accountId,
@@ -36,7 +37,12 @@ export const ActiveServiceInstances: React.FC = () => {
     serviceId
   }
 
-  const { data: activeInstancedata } = useGetEnvBuildInstanceCount({ queryParams })
+  const {
+    loading: activeInstanceLoading,
+    data: activeInstanceData,
+    error: activeInstanceError,
+    refetch: activeInstanceRefetch
+  } = useGetEnvBuildInstanceCount({ queryParams })
 
   const queryParamsDeployments: GetEnvArtifactDetailsByServiceIdQueryParams = {
     accountIdentifier: accountId,
@@ -51,9 +57,9 @@ export const ActiveServiceInstances: React.FC = () => {
 
   const isDeploymentTab = (): boolean => {
     return Boolean(
-      activeInstancedata &&
+      activeInstanceData &&
         deploymentData &&
-        !(activeInstancedata?.data?.envBuildIdAndInstanceCountInfoList || []).length &&
+        !(activeInstanceData?.data?.envBuildIdAndInstanceCountInfoList || []).length &&
         (deploymentData?.data?.environmentInfoByServiceId || []).length
     )
   }
@@ -66,7 +72,7 @@ export const ActiveServiceInstances: React.FC = () => {
     } else {
       setDefaultTab(ServiceDetailTabs.ACTIVE)
     }
-  }, [deploymentData, activeInstancedata])
+  }, [deploymentData, activeInstanceData])
 
   const handleTabChange = (data: string): void => {
     setDefaultTab(data as ServiceDetailTabs)
@@ -82,11 +88,20 @@ export const ActiveServiceInstances: React.FC = () => {
             panel={
               <>
                 <ActiveServiceInstancesHeader />
-                <ActiveServiceInstancesContent />
+                <ActiveServiceInstancesContent
+                  loading={activeInstanceLoading}
+                  data={activeInstanceData?.data?.envBuildIdAndInstanceCountInfoList}
+                  error={activeInstanceError}
+                  refetch={activeInstanceRefetch}
+                />
               </>
             }
           />
-          <Tab id={ServiceDetailTabs.DEPLOYMENT} title={getString('deploymentsText')} panel={<Deployments />} />
+          <Tab
+            id={ServiceDetailTabs.DEPLOYMENT}
+            title={getString('pipeline.dashboards.activeDeployments')}
+            panel={<Deployments />}
+          />
         </Tabs>
       </Layout.Vertical>
     </Card>

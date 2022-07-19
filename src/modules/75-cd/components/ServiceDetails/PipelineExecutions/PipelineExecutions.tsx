@@ -15,6 +15,7 @@ import ExecutionCard from '@pipeline/components/ExecutionCard/ExecutionCard'
 import { CardVariant } from '@pipeline/utils/constants'
 import { executionStatusInfoToExecutionSummary } from '@cd/pages/dashboard/CDDashboardPage'
 import { DeploymentsTimeRangeContext } from '@cd/components/Services/common'
+import { DashboardSelected } from '@pipeline/components/ServiceExecutionsCard/ServiceExecutionsCard'
 import { useStrings } from 'framework/strings'
 import { PageSpinner } from '@common/components'
 import pipelineIllustration from '@pipeline/pages/pipelines/images/deploypipeline-illustration.svg'
@@ -78,8 +79,8 @@ export const PipelineExecutions: React.FC = () => {
         {filteredDeployments.map(d => (
           <ExecutionCard
             variant={CardVariant.Minimal}
-            key={d.pipelineIdentifier}
-            pipelineExecution={executionStatusInfoToExecutionSummary(d)}
+            key={d.planExecutionId}
+            pipelineExecution={executionStatusInfoToExecutionSummary(d, DashboardSelected.SERVICEDETAIL)}
           />
         ))}
       </>

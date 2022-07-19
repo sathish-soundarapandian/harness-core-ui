@@ -13,7 +13,9 @@ import {
   getMultiTypeFromValue,
   MultiTypeInput,
   Label,
-  FormError
+  FormError,
+  RUNTIME_INPUT_VALUE,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import { getPlaceholder, getTypeOfInput, setAppDynamicsTier } from '../../AppDHealthSource.utils'
@@ -48,7 +50,7 @@ export default function AppDynamicsTier({
   tierError
 }: AppDynamicsTierInterface): JSX.Element {
   const { getString } = useStrings()
-  const allowedTypes =
+  const allowedTypes: AllowedTypes =
     getMultiTypeFromValue(formikValues?.appdApplication) === MultiTypeInputType.RUNTIME ||
     getMultiTypeFromValue(formikValues?.appdApplication) === MultiTypeInputType.EXPRESSION
       ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
@@ -84,7 +86,9 @@ export default function AppDynamicsTier({
           const selectedItem = item as string | SelectOption
           const selectedValue = typeof selectedItem === 'string' ? selectedItem : selectedItem?.label?.toString()
           setAppDTierCustomField(selectedValue as string)
-          if (!(formikValues?.appdApplication === '<+input>' || formikValues?.appDTier === '<+input>')) {
+          if (
+            !(formikValues?.appdApplication === RUNTIME_INPUT_VALUE || formikValues?.appDTier === RUNTIME_INPUT_VALUE)
+          ) {
             await onValidate(formikValues?.appdApplication, selectedValue, formikValues.metricData)
           }
         }}
@@ -99,7 +103,9 @@ export default function AppDynamicsTier({
       value={setAppDynamicsTier(tierLoading, formikValues?.appDTier, tierOptions) as SelectOption}
       onChange={async item => {
         setAppDTierCustomField(item.label)
-        if (!(formikValues?.appdApplication === '<+input>' || formikValues?.appDTier === '<+input>')) {
+        if (
+          !(formikValues?.appdApplication === RUNTIME_INPUT_VALUE || formikValues?.appDTier === RUNTIME_INPUT_VALUE)
+        ) {
           await onValidate(formikValues.appdApplication, item.label as string, formikValues.metricData)
         }
       }}

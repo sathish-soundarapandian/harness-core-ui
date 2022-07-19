@@ -18,6 +18,7 @@ import {
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import { useStrings } from 'framework/strings'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import css from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstances.module.scss'
 
 export type InstanceData = Record<string, Record<string, InstanceDetailsDTO[]>>
@@ -110,7 +111,10 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
       header: getString('cd.serviceDashboard.instanceDetails'),
       values: [
         {
-          label: getString('cd.serviceDashboard.pod'),
+          label:
+            instanceData.instanceInfoDTO?.type === ServiceDeploymentType.ServerlessAwsLambda
+              ? getString('cd.serviceDashboard.function')
+              : getString('cd.serviceDashboard.pod'),
           value: instanceData.podName || ''
         },
         {

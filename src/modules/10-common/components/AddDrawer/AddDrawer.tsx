@@ -234,6 +234,7 @@ export default function AddDrawer(props: AddDrawerProps): JSX.Element {
                       <section
                         className={css.step}
                         key={item.itemLabel}
+                        data-cy={`${category.categoryLabel}_${item.itemLabel}`}
                         onClick={
                           !item.disabled && featureEnabledTemp
                             ? () => onSelect({ ...Object.assign(item, { categoryValue: category.categoryValue }) })
@@ -272,6 +273,7 @@ export default function AddDrawer(props: AddDrawerProps): JSX.Element {
                         <section
                           className={css.step}
                           key={item.itemLabel}
+                          data-cy={`${category.categoryLabel}_${item.itemLabel}`}
                           onClick={() => {
                             /* istanbul ignore else */ if (item.value !== 'Placeholder') {
                               onSelect({

@@ -119,6 +119,9 @@ const AnomalyFilters: React.FC<AnomalyFiltersProps> = ({ applyFilters, timeRange
         ['awsAccounts', 'AWS Account'],
         ['awsServices', 'AWS Service'],
         ['awsUsageTypes', 'AWS Usage Type'],
+        ['azureSubscriptionGuids', 'AZURE Subscription'],
+        ['azureMeterCategories', 'AZURE Meter Categories'],
+        ['azureResourceGroups', 'AZURE Resource'],
         ['minActualAmount', getString('ce.anomalyDetection.filters.actualSpend')],
         ['minAnomalousSpend', getString('ce.anomalyDetection.filters.anomalousSpend')]
       ]),

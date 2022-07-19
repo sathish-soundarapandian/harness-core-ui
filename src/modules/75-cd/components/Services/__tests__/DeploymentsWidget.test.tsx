@@ -100,7 +100,7 @@ describe('DeploymentsWidget', () => {
       `${deploymentsInfo.data.totalDeploymentsChangeRate}%`
     )
     expect(tickers[1].querySelector('[data-test="tickerText"]')?.textContent).toBe(
-      `${deploymentsInfo.data.failureRate}`
+      `${deploymentsInfo.data.failureRate}%`
     )
     expect(tickers[1].querySelector('[data-test="tickerValue"]')?.textContent).toBe(
       `${deploymentsInfo.data.failureRateChangeRate}%`

@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { Card, Icon, Tag, TagsPopover, Text } from '@wings-software/uicore'
+import React, { useRef } from 'react'
+import { Card, Icon, Tag, TagsPopover, Text, Checkbox } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import { Popover } from '@blueprintjs/core'
@@ -27,7 +27,14 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ExecutionStatus, isExecutionIgnoreFailed, isExecutionNotStarted } from '@pipeline/utils/statusHelpers'
 import executionFactory from '@pipeline/factories/ExecutionFactory'
-import { hasCDStage, hasCIStage, hasSTOStage, StageType } from '@pipeline/utils/stageHelpers'
+import {
+  hasCDStage,
+  hasCIStage,
+  hasOverviewDetail,
+  hasServiceDetail,
+  hasSTOStage,
+  StageType
+} from '@pipeline/utils/stageHelpers'
 import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import GitPopover from '@pipeline/components/GitPopover/GitPopover'
 import { CardVariant } from '@pipeline/utils/constants'
@@ -36,7 +43,11 @@ import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactor
 
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
+import type { ServiceDeploymentInfo } from 'services/cd-ng'
+import { DashboardSelected, ServiceExecutionsCard } from '../ServiceExecutionsCard/ServiceExecutionsCard'
 import MiniExecutionGraph from './MiniExecutionGraph/MiniExecutionGraph'
+import { useExecutionCompareContext } from '../ExecutionCompareYaml/ExecutionCompareContext'
+import { TimePopoverWithLocal } from './TimePopoverWithLocal'
 import css from './ExecutionCard.module.scss'
 
 export interface ExecutionCardProps {
@@ -45,9 +56,15 @@ export interface ExecutionCardProps {
   staticCard?: boolean
   isPipelineInvalid?: boolean
   showGitDetails?: boolean
+  onViewCompiledYaml?: () => void
+  isCD?: boolean
 }
 
-function ExecutionCardFooter({ pipelineExecution, variant }: ExecutionCardProps): React.ReactElement {
+function ExecutionCardFooter({
+  pipelineExecution,
+  variant,
+  isCD = false
+}: Pick<ExecutionCardProps, 'pipelineExecution' | 'variant' | 'isCD'>): React.ReactElement {
   const fontVariation = variant === CardVariant.Minimal ? FontVariation.TINY : FontVariation.SMALL
   const variantSize = variant === CardVariant.Minimal ? 10 : 14
   return (
@@ -82,17 +99,31 @@ function ExecutionCardFooter({ pipelineExecution, variant }: ExecutionCardProps)
         </Text>
       </div>
       <div className={css.timers}>
-        <TimeAgoPopover
-          iconProps={{
-            size: variantSize,
-            color: Color.GREY_900
-          }}
-          icon="calendar"
-          time={defaultTo(pipelineExecution?.startTs, 0)}
-          inline={false}
-          className={css.timeAgo}
-          font={{ variation: fontVariation }}
-        />
+        {isCD ? (
+          <TimePopoverWithLocal
+            iconProps={{
+              size: variantSize,
+              color: Color.GREY_900
+            }}
+            icon="calendar"
+            time={defaultTo(pipelineExecution?.startTs, 0)}
+            inline={false}
+            className={css.timeAgo}
+            font={{ variation: fontVariation }}
+          />
+        ) : (
+          <TimeAgoPopover
+            iconProps={{
+              size: variantSize,
+              color: Color.GREY_900
+            }}
+            icon="calendar"
+            time={defaultTo(pipelineExecution?.startTs, 0)}
+            inline={false}
+            className={css.timeAgo}
+            font={{ variation: fontVariation }}
+          />
+        )}
         <Duration
           icon="time"
           className={css.duration}
@@ -116,7 +147,8 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
     variant = CardVariant.Default,
     staticCard = false,
     isPipelineInvalid,
-    showGitDetails = false
+    showGitDetails = false,
+    onViewCompiledYaml
   } = props
   const { orgIdentifier, projectIdentifier, accountId, module, pipelineIdentifier } =
     useParams<PipelineType<PipelinePathProps>>()
@@ -124,13 +156,17 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
   const { getString } = useStrings()
   const SECURITY = useFeatureFlag(FeatureFlag.SECURITY)
   const HAS_CD = hasCDStage(pipelineExecution)
+  const IS_SERVICEDETAIL = hasServiceDetail(pipelineExecution)
+  const IS_OVERVIEWPAGE = hasOverviewDetail(pipelineExecution)
   const HAS_CI = hasCIStage(pipelineExecution)
   const HAS_STO = hasSTOStage(pipelineExecution)
   const cdInfo = executionFactory.getCardInfo(StageType.DEPLOY)
   const ciInfo = executionFactory.getCardInfo(StageType.BUILD)
   const stoInfo = executionFactory.getCardInfo(StageType.SECURITY)
   const { isGitSimplificationEnabled } = useAppStore()
+  const { isCompareMode, compareItems, addToCompare, removeFromCompare } = useExecutionCompareContext()
 
+  const checkboxRef = useRef<HTMLDivElement>(null)
   const [canEdit, canExecute] = usePermission(
     {
       resourceScope: {
@@ -148,21 +184,38 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
   )
   const disabled = isExecutionNotStarted(pipelineExecution.status)
   const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
-  function handleClick(): void {
-    const { pipelineIdentifier: cardPipelineId, planExecutionId } = pipelineExecution
 
+  const handleClick = (e: any) => {
+    if (checkboxRef.current?.contains(e.target)) return
+    const { pipelineIdentifier: cardPipelineId, planExecutionId } = pipelineExecution
     if (!disabled && cardPipelineId && planExecutionId) {
-      history.push(
-        routes.toExecutionPipelineView({
-          orgIdentifier,
-          pipelineIdentifier: cardPipelineId,
-          executionIdentifier: planExecutionId,
-          projectIdentifier,
-          accountId,
-          module,
-          source
-        })
-      )
+      const route = routes.toExecutionPipelineView({
+        orgIdentifier,
+        pipelineIdentifier: cardPipelineId,
+        executionIdentifier: planExecutionId,
+        projectIdentifier,
+        accountId,
+        module,
+        source
+      })
+
+      //opening in new tab is required for cards present in dashboards
+      if (IS_SERVICEDETAIL || IS_OVERVIEWPAGE) {
+        window.open(`#${route}`)
+      } else {
+        history.push(route)
+      }
+    }
+  }
+
+  const isCompareItem =
+    compareItems?.findIndex(compareItem => compareItem.planExecutionId === pipelineExecution.planExecutionId) >= 0
+
+  const onCompareToggle = () => {
+    if (!isCompareItem) {
+      addToCompare(pipelineExecution)
+    } else {
+      removeFromCompare(pipelineExecution)
     }
   }
 
@@ -178,6 +231,16 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
           <div className={css.header}>
             <div className={css.info}>
               <div className={css.nameGroup}>
+                {isCompareMode && (
+                  <div className={css.compareSelection} ref={checkboxRef}>
+                    <Checkbox
+                      size={12}
+                      checked={isCompareItem}
+                      onChange={onCompareToggle}
+                      disabled={compareItems.length === 2 && !isCompareItem}
+                    />
+                  </div>
+                )}
                 <div className={css.pipelineName}>{pipelineExecution?.name}</div>
                 {variant === CardVariant.Default ? (
                   <String
@@ -206,7 +269,6 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
                         repoName={pipelineExecution?.gitDetails?.repoName}
                         branch={pipelineExecution?.gitDetails?.branch}
                         filePath={pipelineExecution?.gitDetails?.filePath}
-                        fileUrl={pipelineExecution?.gitDetails?.fileUrl}
                         flags={{ readOnly: true }}
                       />
                     </div>
@@ -259,6 +321,8 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
                   }}
                   isPipelineInvalid={isPipelineInvalid}
                   canEdit={canEdit}
+                  onViewCompiledYaml={onViewCompiledYaml}
+                  onCompareExecutions={() => addToCompare(pipelineExecution)}
                   source={source}
                   canExecute={canExecute}
                   canRetry={pipelineExecution.canRetry}
@@ -270,7 +334,7 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
           <div className={css.main}>
             <div className={css.modulesContainer}>
               {pipelineExecution?.stagesExecuted?.length ? (
-                <Tag className={css.singleExecutionTag}>{`${getString('pipeline.singleStageExecution')} 
+                <Tag className={css.singleExecutionTag}>{`${getString('pipeline.singleStageExecution')}
                 ${
                   !!pipelineExecution.stagesExecutedNames &&
                   Object.values(pipelineExecution.stagesExecutedNames).join(', ')
@@ -288,7 +352,7 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
                   })}
                 </div>
               ) : null}
-              {HAS_CD && cdInfo ? (
+              {HAS_CD && cdInfo && !(IS_SERVICEDETAIL || IS_OVERVIEWPAGE) ? (
                 <div className={css.moduleData}>
                   <Icon name={cdInfo.icon} size={20} className={css.moduleIcon} />
                   {React.createElement<ExecutionCardInfoProps>(cdInfo.component, {
@@ -297,6 +361,17 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
                     startingNodeId: defaultTo(pipelineExecution?.startingNodeId, ''),
                     variant
                   })}
+                </div>
+              ) : null}
+              {(IS_SERVICEDETAIL || IS_OVERVIEWPAGE) && cdInfo ? (
+                <div style={{ position: 'relative' }}>
+                  <ServiceExecutionsCard
+                    envIdentifiers={pipelineExecution?.moduleInfo?.cd?.envIdentifiers as string[]}
+                    serviceIdentifiers={
+                      pipelineExecution?.moduleInfo?.cd?.serviceIdentifiers as ServiceDeploymentInfo[]
+                    }
+                    caller={IS_SERVICEDETAIL ? DashboardSelected.SERVICEDETAIL : DashboardSelected.OVERVIEW}
+                  />
                 </div>
               ) : null}
               {SECURITY && HAS_STO && stoInfo ? (
@@ -323,7 +398,7 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
             ) : null}
           </div>
         </div>
-        <ExecutionCardFooter pipelineExecution={pipelineExecution} variant={variant} />
+        <ExecutionCardFooter pipelineExecution={pipelineExecution} variant={variant} isCD={HAS_CD} />
       </div>
     </Card>
   )

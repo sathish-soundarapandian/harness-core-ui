@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import type {
   DatadogLogsHealthSpec,
   DatadogLogsInfo,
@@ -20,12 +21,24 @@ import { MapDatadogLogsFieldNames } from '@cv/pages/health-source/connectors/Dat
 
 export function initializeSelectedMetricsMap(
   defaultSelectedMetricName: string,
-  logsDefinitions?: Map<string, DatadogLogsInfo>
+  logsDefinitions?: Map<string, DatadogLogsInfo>,
+  isConnectorRuntimeOrExpression = false
 ): SelectedAndMappedMetrics {
   return {
     selectedMetric: Array.from(logsDefinitions?.keys() || [])?.[0] || defaultSelectedMetricName,
     mappedMetrics:
-      logsDefinitions || new Map([[defaultSelectedMetricName, { metricName: defaultSelectedMetricName, query: '' }]])
+      logsDefinitions ||
+      new Map([
+        [
+          defaultSelectedMetricName,
+          {
+            metricName: defaultSelectedMetricName,
+            query: isConnectorRuntimeOrExpression ? RUNTIME_INPUT_VALUE : '',
+            indexes: isConnectorRuntimeOrExpression ? RUNTIME_INPUT_VALUE : [],
+            serviceInstanceIdentifierTag: isConnectorRuntimeOrExpression ? RUNTIME_INPUT_VALUE : ''
+          }
+        ]
+      ])
   }
 }
 
@@ -33,7 +46,8 @@ export function updateSelectedMetricsMap({
   updatedMetric,
   oldMetric,
   mappedMetrics,
-  formikProps
+  formikProps,
+  isConnectorRuntimeOrExpression = false
 }: UpdateSelectedMetricsMap): SelectedAndMappedMetrics {
   const updatedMap = new Map(mappedMetrics)
 
@@ -44,7 +58,12 @@ export function updateSelectedMetricsMap({
 
   // if newly created metric create form object
   if (!updatedMap.has(updatedMetric)) {
-    updatedMap.set(updatedMetric, { metricName: updatedMetric, query: '' })
+    updatedMap.set(updatedMetric, {
+      metricName: updatedMetric,
+      query: isConnectorRuntimeOrExpression ? RUNTIME_INPUT_VALUE : '',
+      indexes: isConnectorRuntimeOrExpression ? RUNTIME_INPUT_VALUE : [],
+      serviceInstanceIdentifierTag: isConnectorRuntimeOrExpression ? RUNTIME_INPUT_VALUE : ''
+    })
   }
 
   // update map with current form data
@@ -65,7 +84,7 @@ export function transformDatadogHealthSourceToDatadogLogsSetupSource(sourceData:
       healthSourceIdentifier: sourceData.healthSourceIdentifier,
       logsDefinitions: new Map<string, DatadogLogsInfo>(),
       healthSourceName: sourceData.healthSourceName,
-      connectorRef: sourceData.connectorRef,
+      connectorRef: sourceData.connectorRef.value || sourceData.connectorRef,
       product: { label: DatadogProduct.CLOUD_LOGS, value: DatadogProduct.CLOUD_LOGS }
     }
   }
@@ -86,9 +105,13 @@ export function transformDatadogHealthSourceToDatadogLogsSetupSource(sourceData:
         query: logQueryDefinition.query || '',
         serviceInstanceIdentifierTag: logQueryDefinition.serviceInstanceIdentifier,
         indexes:
-          logQueryDefinition.indexes?.map(logIndex => {
-            return { value: logIndex, label: logIndex }
-          }) || []
+          getMultiTypeFromValue(logQueryDefinition?.indexes) !== MultiTypeInputType.FIXED
+            ? (logQueryDefinition?.indexes as unknown as SelectOption[])
+            : Array.isArray(logQueryDefinition.indexes)
+            ? logQueryDefinition.indexes?.map(logIndex => {
+                return { value: logIndex, label: logIndex }
+              }) || []
+            : []
       })
     }
   }
@@ -104,7 +127,8 @@ export function transformDatadogLogsSetupSourceToHealthSource(
     identifier: setupSource.healthSourceIdentifier,
     name: setupSource.healthSourceName,
     spec: {
-      connectorRef: setupSource?.connectorRef,
+      connectorRef:
+        typeof setupSource?.connectorRef === 'string' ? setupSource?.connectorRef : setupSource?.connectorRef?.value,
       feature: DatadogProduct.CLOUD_LOGS,
       queries: []
     }
@@ -121,8 +145,10 @@ export function transformDatadogLogsSetupSourceToHealthSource(
     logsHealthSpec.queries.push({
       query,
       name: metricName,
+      identifier: metricName.split(' ').join('_'),
       serviceInstanceIdentifier: serviceInstanceIdentifierTag,
-      indexes: indexes?.map(logIndexOption => logIndexOption.value as string) || []
+      indexes:
+        typeof indexes === 'string' ? indexes : indexes?.map(logIndexOption => logIndexOption.value as string) || []
     })
   }
   return dsConfig

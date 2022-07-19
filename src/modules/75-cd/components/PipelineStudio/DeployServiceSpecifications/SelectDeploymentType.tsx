@@ -7,16 +7,29 @@
 
 import React from 'react'
 import { Formik, FormikProps } from 'formik'
-import { noop } from 'lodash-es'
+import { get, noop } from 'lodash-es'
 import { Classes, PopoverInteractionKind } from '@blueprintjs/core'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
-import { Card, Dialog, HarnessDocTooltip, Icon, Layout, Popover, Text, Thumbnail, Utils } from '@wings-software/uicore'
+import {
+  Card,
+  Checkbox,
+  Dialog,
+  FormError,
+  HarnessDocTooltip,
+  Icon,
+  Layout,
+  Popover,
+  Text,
+  Thumbnail,
+  Utils
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { useStrings, UseStringsReturn } from 'framework/strings'
-import { isCommunityPlan } from '@common/utils/utils'
+import { useGetCommunity } from '@common/utils/utils'
+import { errorCheck } from '@common/utils/formikHelpers'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
@@ -37,9 +50,12 @@ export function getServiceDeploymentTypeSchema(
 
 interface SelectServiceDeploymentTypeProps {
   isReadonly: boolean
+  shouldShowGitops: boolean
   handleDeploymentTypeChange: (deploymentType: ServiceDeploymentType) => void
   selectedDeploymentType?: ServiceDeploymentType
   viewContext?: string
+  handleGitOpsCheckChanged?: (ev: React.FormEvent<HTMLInputElement>) => void
+  gitOpsEnabled?: boolean
 }
 
 interface CardListProps {
@@ -49,6 +65,8 @@ interface CardListProps {
   onChange: (deploymentType: ServiceDeploymentType) => void
   allowDisabledItemClick?: boolean
 }
+
+const DEPLOYMENT_TYPE_KEY = 'deploymentType'
 
 const CardList = ({
   items,
@@ -130,12 +148,19 @@ const getServerlessDeploymentTypes = (
   return []
 }
 
-export default function SelectDeploymentType(props: SelectServiceDeploymentTypeProps): JSX.Element {
-  const { selectedDeploymentType, isReadonly } = props
+export default function SelectDeploymentType({
+  selectedDeploymentType,
+  gitOpsEnabled,
+  isReadonly,
+  viewContext,
+  shouldShowGitops,
+  handleDeploymentTypeChange,
+  handleGitOpsCheckChanged
+}: SelectServiceDeploymentTypeProps): JSX.Element {
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
-  const { SERVERLESS_SUPPORT, SSH_NG } = useFeatureFlags()
+  const { SERVERLESS_SUPPORT, SSH_NG, AZURE_WEBAPP_NG } = useFeatureFlags()
 
   const { accountId } = useParams<{
     accountId: string
@@ -162,9 +187,21 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
         icon: 'secret-ssh',
         value: ServiceDeploymentType.ssh
       })
+      baseTypes.push({
+        label: getString('pipeline.serviceDeploymentTypes.winrm'),
+        icon: 'command-winrm',
+        value: ServiceDeploymentType.winrm
+      })
+    }
+    if (AZURE_WEBAPP_NG) {
+      baseTypes.push({
+        label: 'Azure Web App',
+        icon: 'microsoft-azure',
+        value: ServiceDeploymentType.AzureWebApp
+      })
     }
     return [...baseTypes, ...getServerlessDeploymentTypes(getString, SERVERLESS_SUPPORT)] as DeploymentTypeItem[]
-  }, [getString, SERVERLESS_SUPPORT, SSH_NG])
+  }, [getString, SERVERLESS_SUPPORT, SSH_NG, AZURE_WEBAPP_NG])
 
   // Suppported in CG (First Gen - Old Version of Harness App)
   const cgSupportedDeploymentTypes: DeploymentTypeItem[] = React.useMemo(() => {
@@ -185,11 +222,6 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
         value: ServiceDeploymentType.awsCodeDeploy
       },
       {
-        label: getString('pipeline.serviceDeploymentTypes.winrm'),
-        icon: 'command-winrm',
-        value: ServiceDeploymentType.winrm
-      },
-      {
         label: getString('pipeline.serviceDeploymentTypes.awsLambda'),
         icon: 'app-aws-lambda',
         value: ServiceDeploymentType.awsLambda
@@ -206,13 +238,19 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
         icon: 'secret-ssh',
         value: ServiceDeploymentType.ssh
       })
+      types.splice(4, 0, {
+        label: getString('pipeline.serviceDeploymentTypes.winrm'),
+        icon: 'command-winrm',
+        value: ServiceDeploymentType.winrm
+      })
     }
     return types as DeploymentTypeItem[]
-  }, [getString])
+  }, [getString, SSH_NG])
 
   const [cgDeploymentTypes, setCgDeploymentTypes] = React.useState(cgSupportedDeploymentTypes)
   const [ngDeploymentTypes, setNgDeploymentTypes] = React.useState(ngSupportedDeploymentTypes)
-  const isCommunity = isCommunityPlan()
+  const isCommunity = useGetCommunity()
+  const hasError = errorCheck(DEPLOYMENT_TYPE_KEY, formikRef?.current)
 
   const [showCurrentGenSwitcherModal, hideCurrentGenSwitcherModal] = useModalHook(() => {
     return (
@@ -296,7 +334,7 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
             </Text>
             <a
               className={deployServiceCsss.learnMore}
-              href="https://ngdocs.harness.io/article/1fjmm4by22"
+              href="https://docs.harness.io/article/1fjmm4by22"
               rel="noreferrer"
               target="_blank"
             >
@@ -306,24 +344,34 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
         </article>
       )
       return (
-        <Layout.Horizontal margin={{ top: 'medium' }}>
-          <Layout.Vertical padding={props.viewContext ? { right: 'huge' } : { right: 'small' }}>
+        <Layout.Vertical margin={{ top: 'medium' }}>
+          <Layout.Vertical padding={viewContext ? { right: 'huge' } : { right: 'small' }} margin={{ bottom: 'large' }}>
             <div className={cx(stageCss.tabSubHeading, 'ng-tooltip-native')}>
               {getString('common.currentlyAvailable')}
             </div>
             <CardList
               items={ngDeploymentTypes}
               isReadonly={isReadonly}
-              onChange={props.handleDeploymentTypeChange}
+              onChange={handleDeploymentTypeChange}
               selectedValue={selectedDeploymentType}
             />
+            {hasError ? (
+              <FormError
+                name={DEPLOYMENT_TYPE_KEY}
+                errorMessage={get(formikRef?.current?.errors, DEPLOYMENT_TYPE_KEY)}
+              />
+            ) : null}
           </Layout.Vertical>
-          {!!props.viewContext && (
-            <Layout.Vertical border={{ left: true }} padding={{ left: 'huge' }}>
+          {!!viewContext && (
+            <Layout.Vertical
+              padding={{ left: 'huge', bottom: 'large', top: 'large' }}
+              border={{ radius: 2 }}
+              className={deployServiceCsss.comingSoonLayout}
+            >
               <Layout.Horizontal>
                 <div className={deployServiceCsss.comingSoonBanner}>{getString('common.comingSoon')}</div>
                 <div
-                  className={cx(stageCss.tabSubHeading, 'ng-tooltip-native')}
+                  className={cx(stageCss.tabSubHeading, deployServiceCsss.currentGenSupported, 'ng-tooltip-native')}
                   data-tooltip-id="supportedInFirstGeneration"
                 >
                   {getString('common.currentlySupportedOn')}
@@ -363,26 +411,42 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
               />
             </Layout.Vertical>
           )}
-        </Layout.Horizontal>
+        </Layout.Vertical>
       )
     }
     return (
       <CardList
-        items={
-          props.viewContext ? [...ngSupportedDeploymentTypes, ...cgDeploymentTypes] : [...ngSupportedDeploymentTypes]
-        }
+        items={viewContext ? [...ngSupportedDeploymentTypes, ...cgDeploymentTypes] : [...ngSupportedDeploymentTypes]}
         isReadonly={isReadonly}
-        onChange={props.handleDeploymentTypeChange}
+        onChange={handleDeploymentTypeChange}
         selectedValue={selectedDeploymentType}
       />
     )
-  }, [cgDeploymentTypes, ngSupportedDeploymentTypes, getString, isReadonly, props.handleDeploymentTypeChange])
+  }, [cgDeploymentTypes, ngSupportedDeploymentTypes, getString, isReadonly, handleDeploymentTypeChange])
+
+  const renderGitops = (): JSX.Element | null => {
+    if (shouldShowGitops && selectedDeploymentType === ServiceDeploymentType.Kubernetes) {
+      return (
+        <Checkbox
+          label={getString('common.gitOps')}
+          name="gitOpsEnabled"
+          checked={gitOpsEnabled}
+          onChange={handleGitOpsCheckChanged}
+          disabled={isReadonly}
+        />
+      )
+    }
+    return null
+  }
 
   return (
-    <Formik<{ deploymentType: string }>
+    <Formik<{ deploymentType: string; gitOpsEnabled: boolean }>
       onSubmit={noop}
       enableReinitialize={true}
-      initialValues={{ deploymentType: selectedDeploymentType as string }}
+      initialValues={{
+        deploymentType: selectedDeploymentType as string,
+        gitOpsEnabled: shouldShowGitops ? !!gitOpsEnabled : false
+      }}
       validationSchema={Yup.object().shape({
         deploymentType: getServiceDeploymentTypeSchema(getString)
       })}
@@ -390,7 +454,7 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
       {formik => {
         window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.SERVICE }))
         formikRef.current = formik as FormikProps<unknown> | null
-        if (props.viewContext) {
+        if (viewContext) {
           return (
             <Card className={stageCss.sectionCard}>
               <div
@@ -401,6 +465,7 @@ export default function SelectDeploymentType(props: SelectServiceDeploymentTypeP
                 <HarnessDocTooltip tooltipId="stageOverviewDeploymentType" useStandAlone={true} />
               </div>
               {renderDeploymentTypes()}
+              {renderGitops()}
             </Card>
           )
         } else {

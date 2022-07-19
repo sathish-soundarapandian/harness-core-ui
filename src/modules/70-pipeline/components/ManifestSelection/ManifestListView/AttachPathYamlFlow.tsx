@@ -16,7 +16,8 @@ import {
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
-  Icon
+  Icon,
+  AllowedTypes
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Form } from 'formik'
@@ -24,15 +25,16 @@ import * as Yup from 'yup'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
-import { ManifestToPathLabelMap, ManifestToPathMap } from '../Manifesthelper'
-import type { PrimaryManifestType } from '../ManifestInterface'
+import { ManifestStoreMap, ManifestToPathLabelMap, ManifestToPathMap } from '../Manifesthelper'
+import type { ManifestStores, PrimaryManifestType } from '../ManifestInterface'
 import DragnDropPaths from '../DragnDropPaths'
 import css from '../ManifestSelection.module.scss'
 
 interface AttachPathYamlFlowType {
   renderConnectorField: JSX.Element
   manifestType: PrimaryManifestType
-  allowableTypes: MultiTypeInputType[]
+  manifestStore: ManifestStores
+  allowableTypes: AllowedTypes
   expressions: string[]
   attachPathYaml: (formData: ConnectorConfigDTO) => void
   removeValuesYaml: (index: number) => void
@@ -43,6 +45,7 @@ interface AttachPathYamlFlowType {
 function AttachPathYamlFlow({
   renderConnectorField,
   manifestType,
+  manifestStore,
   valuesPaths,
   expressions,
   allowableTypes,
@@ -98,7 +101,8 @@ function AttachPathYamlFlow({
                   allowableTypes={allowableTypes}
                   fieldPath="valuesPaths"
                   pathLabel={ManifestToPathLabelMap[manifestType] && getString(ManifestToPathLabelMap[manifestType])}
-                  placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                  placeholder={getString('pipeline.manifestType.pathPlaceholder')}
+                  defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                 />
                 <Layout.Horizontal>
                   <Button
@@ -117,10 +121,10 @@ function AttachPathYamlFlow({
     [valuesPaths]
   )
 
-  if (ManifestToPathMap[manifestType]) {
+  if (ManifestToPathMap[manifestType] && manifestStore !== ManifestStoreMap.Harness) {
     return (
       <section className={css.valuesList}>
-        {getMultiTypeFromValue(valuesPaths) === MultiTypeInputType.FIXED &&
+        {getMultiTypeFromValue(valuesPaths) === MultiTypeInputType.FIXED ? (
           valuesPaths?.map((valuesPathValue: string, index: number) => (
             <section className={css.valuesListItem} key={`${valuesPathValue}-${index}`}>
               <div className={css.valuesPathList}>
@@ -147,7 +151,14 @@ function AttachPathYamlFlow({
                 )}
               </div>
             </section>
-          ))}
+          ))
+        ) : (
+          <div className={css.valuesPathList}>
+            {`${
+              ManifestToPathLabelMap[manifestType] && getString(ManifestToPathLabelMap[manifestType])
+            }: ${valuesPaths}`}
+          </div>
+        )}
         {!isReadonly && (
           <Button
             className={css.addValuesYaml}

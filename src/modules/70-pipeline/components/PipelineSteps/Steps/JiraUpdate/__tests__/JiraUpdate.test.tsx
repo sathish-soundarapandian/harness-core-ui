@@ -277,7 +277,7 @@ describe('Jira Update tests', () => {
       timeout: '1d',
       type: 'JiraUpdate',
       spec: {
-        connectorRef: 'cid1',
+        connectorRef: 'c1d1',
         issueKey: '<+issueKey>',
         delegateSelectors: undefined,
         transitionTo: { transitionName: '', status: 'Done' },
@@ -381,7 +381,10 @@ describe('Jira Update process form data tests', () => {
       timeout: '10m',
       type: 'JiraUpdate',
       spec: {
-        connectorRef: 'conn',
+        connectorRef: {
+          label: 'conn',
+          value: 'conn'
+        },
         delegateSelectors: undefined,
         issueKey: 'id1',
         transitionTo: {

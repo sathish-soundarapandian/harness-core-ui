@@ -26,7 +26,6 @@ import { useQueryParams } from '@common/hooks'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { FeatureFlag } from '@common/featureFlags'
-import { useTemplateSelector } from '@templates-library/hooks/useTemplateSelector'
 import css from './CFPipelineStudio.module.scss'
 
 const CIPipelineStudio: React.FC = (): JSX.Element => {
@@ -39,7 +38,6 @@ const CIPipelineStudio: React.FC = (): JSX.Element => {
   } = useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { branch, repoIdentifier, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
-  const { getTemplate } = useTemplateSelector()
   const history = useHistory()
   const handleRunPipeline = (): void => {
     history.push(
@@ -61,7 +59,6 @@ const CIPipelineStudio: React.FC = (): JSX.Element => {
   const isCDEnabled = useFeatureFlag(FeatureFlag.CDNG_ENABLED)
   const isCFEnabled = useFeatureFlag(FeatureFlag.CFNG_ENABLED)
   const isCIEnabled = useFeatureFlag(FeatureFlag.CING_ENABLED)
-  const isCustomStageEnabled = useFeatureFlag(FeatureFlag.NG_CUSTOM_STAGE)
   const { licenseInformation } = useLicenseStore()
   return (
     <PipelineProvider
@@ -75,13 +72,11 @@ const CIPipelineStudio: React.FC = (): JSX.Element => {
           licenseInformation['CI'] && isCIEnabled,
           licenseInformation['CD'] && isCDEnabled,
           licenseInformation['CF'] && isCFEnabled,
-          true,
-          isCustomStageEnabled
+          true
         )
       }
       stepsFactory={factory}
       runPipeline={handleRunPipeline}
-      getTemplate={getTemplate}
     >
       <PipelineStudio
         className={css.container}
@@ -100,16 +95,14 @@ export const getCFPipelineStages: (
   isCIEnabled?: boolean,
   isCDEnabled?: boolean,
   isCFEnabled?: boolean,
-  isApprovalStageEnabled?: boolean,
-  isCustomStageEnabled?: boolean
+  isApprovalStageEnabled?: boolean
 ) => React.ReactElement<PipelineStagesProps> = (
   args,
   getString,
   _isCIEnabled = false,
   _isCDEnabled = false,
   isCFEnabled = false,
-  isApprovalStageEnabled = true,
-  isCustomStageEnabled = false
+  isApprovalStageEnabled = true
 ) => {
   return (
     <PipelineStages {...args}>
@@ -118,7 +111,7 @@ export const getCFPipelineStages: (
       {stagesCollection.getStage(StageType.BUILD, isCIEnabled, getString)}
       {stagesCollection.getStage(StageType.PIPELINE, false, getString)} */}
       {stagesCollection.getStage(StageType.APPROVAL, isApprovalStageEnabled, getString)}
-      {stagesCollection.getStage(StageType.CUSTOM, isCustomStageEnabled, getString)}
+      {stagesCollection.getStage(StageType.CUSTOM, true, getString)}
       {stagesCollection.getStage(StageType.Template, false, getString)}
     </PipelineStages>
   )

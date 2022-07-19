@@ -18,7 +18,8 @@ import {
   ButtonSize,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  StepProps
+  StepProps,
+  AllowedTypes as MultiTypeAllowedTypes
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import * as Yup from 'yup'
@@ -35,7 +36,7 @@ import css from './TerraformConfigForm.module.scss'
 interface TerraformConfigStepOneProps {
   data: any
   isReadonly: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: MultiTypeAllowedTypes
   isEditMode: boolean
   selectedConnector: string
   setConnectorView: (val: boolean) => void

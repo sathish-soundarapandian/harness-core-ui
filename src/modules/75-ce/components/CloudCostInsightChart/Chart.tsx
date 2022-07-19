@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import type { OptionsStackingValue } from 'highcharts'
 import moment from 'moment'
 import { Icon } from '@wings-software/uicore'
@@ -15,8 +15,6 @@ import { QlceViewTimeGroupType } from 'services/ce/services'
 import type { PerspectiveAnomalyData } from 'services/ce'
 import formatCost from '@ce/utils/formatCost'
 import routes from '@common/RouteDefinitions'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { useStrings } from 'framework/strings'
 import { CE_DATE_FORMAT_INTERNAL } from '@ce/utils/momentUtils'
 import { generateGroupBy, getCloudProviderFromFields, getFiltersFromEnityMap } from '@ce/utils/anomaliesUtils'
@@ -69,7 +67,6 @@ const GetChart: React.FC<GetChartProps> = ({
   anomaliesCountData
 }) => {
   const [chartObj, setChartObj] = useState<Highcharts.Chart | null>(null)
-  const isAnomaliesEnabled = useFeatureFlag(FeatureFlag.CCM_ANOMALY_DETECTION_NG)
 
   const [forceCounter, setForceCounter] = useState(0)
   const history = useHistory()
@@ -224,11 +221,26 @@ const GetChart: React.FC<GetChartProps> = ({
     return labels || []
   }
 
+  const chartData = useMemo(
+    () =>
+      chart.map(chartItem => {
+        switch (chartItem.name) {
+          case 'Others':
+            return { ...chartItem, color: 'var(--primary-2)' }
+          case 'Unallocated':
+            return { ...chartItem, color: 'var(--blue-100)' }
+          default:
+            return chartItem
+        }
+      }),
+    [chart]
+  )
+
   return (
     <article key={idx} onClick={redirection}>
       <CEChart
         options={{
-          series: chart as any,
+          series: chartData as any,
           chart: {
             zoomType: 'x',
             height: 300,
@@ -261,7 +273,7 @@ const GetChart: React.FC<GetChartProps> = ({
             {
               labels: anomaliesLabels(),
               draggable: '',
-              visible: isAnomaliesEnabled,
+              visible: true,
               labelOptions: {
                 crop: false,
                 useHTML: true,

@@ -8,6 +8,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import { DelegateTypes } from '@delegates/constants'
 import CommonProblems from '../CommonProblems'
 
 describe('Create Common Problems Tab', () => {
@@ -18,5 +19,14 @@ describe('Create Common Problems Tab', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
+  })
+
+  test('render data by passing the delegate type', () => {
+    const { getByText } = render(
+      <TestWrapper>
+        <CommonProblems delegateType={DelegateTypes.DOCKER} />
+      </TestWrapper>
+    )
+    expect(getByText('delegates.delegateNotInstalled.verifyLogs2')).toBeInTheDocument()
   })
 })

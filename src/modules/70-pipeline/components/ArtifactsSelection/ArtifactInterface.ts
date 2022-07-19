@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MultiTypeInputType, SelectOption } from '@wings-software/uicore'
+import type { AllowedTypes, SelectOption } from '@wings-software/uicore'
 import type { FormikValues } from 'formik'
 import type { GetDataError } from 'restful-react'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
@@ -34,7 +34,8 @@ export interface ArtifactListViewProps {
   accountId: string
   refetchConnectors: () => void
   isReadonly: boolean
-  allowSidecar?: boolean
+  isAdditionAllowed: boolean
+  isSidecarAllowed?: boolean
 }
 export interface ArtifactsSelectionProps {
   isPropagating?: boolean
@@ -52,6 +53,7 @@ export type ArtifactType =
   | 'CustomArtifact'
   | 'Acr'
   | 'Jenkins'
+  | 'AmazonS3'
 export interface OrganizationCreationType {
   type: ArtifactType
 }
@@ -87,18 +89,39 @@ export interface CustomArtifactSource extends ImagePathTypes {
   version: string
 }
 
-export interface ImagePathProps {
+export interface AmazonS3InitialValuesType {
+  identifier: string
+  bucketName: string
+  tagType: TagTypes
+  filePath?: string
+  filePathRegex?: string
+}
+
+export interface ImagePathProps<T> {
   key: string
   name: string
   expressions: string[]
   context: number
-  initialValues: ImagePathTypes
+  initialValues: T
   handleSubmit: (data: ArtifactConfig) => void
   artifactIdentifiers: string[]
   isReadonly?: boolean
   selectedArtifact: ArtifactType | null
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   selectedDeploymentType: string
+}
+
+export interface AmazonS3ArtifactProps {
+  key: string
+  name: string
+  expressions: string[]
+  context: number
+  initialValues: AmazonS3InitialValuesType
+  handleSubmit: (data: ArtifactConfig) => void
+  artifactIdentifiers: string[]
+  isReadonly?: boolean
+  selectedArtifact: ArtifactType | null
+  allowableTypes: AllowedTypes
 }
 
 export interface ACRArtifactProps {
@@ -111,7 +134,30 @@ export interface ACRArtifactProps {
   artifactIdentifiers: string[]
   isReadonly?: boolean
   selectedArtifact: ArtifactType | null
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
+}
+
+export interface JenkinsArtifactProps {
+  key: string
+  name: string
+  expressions: string[]
+  context: number
+  initialValues: JenkinsArtifactType
+  handleSubmit: (data: ArtifactConfig) => void
+  artifactIdentifiers: string[]
+  isReadonly?: boolean
+  selectedArtifact: ArtifactType | null
+  allowableTypes: AllowedTypes
+}
+
+export interface JenkinsArtifactType {
+  identifier: string
+  spec: {
+    connectorRef?: string
+    artifactPath?: SelectOption | string
+    build?: SelectOption | string
+    jobName?: SelectOption | string
+  }
 }
 
 export interface ConnectorRefLabelType {
@@ -137,7 +183,7 @@ export interface ArtifactImagePathTagViewProps {
   formik: FormikValues
   expressions: string[]
   isReadonly?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   connectorIdValue: string
   fetchTags: (val: string) => void
   buildDetailsLoading: boolean

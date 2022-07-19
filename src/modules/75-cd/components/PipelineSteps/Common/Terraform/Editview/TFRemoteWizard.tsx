@@ -6,6 +6,7 @@
  */
 
 import {
+  AllowedTypes,
   Button,
   ButtonVariation,
   Formik,
@@ -40,7 +41,7 @@ interface TFRemoteProps {
   onSubmitCallBack: (data: RemoteVar) => void
   isEditMode: boolean
   isReadonly?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 export const TFRemoteWizard: React.FC<StepProps<any> & TFRemoteProps> = ({
   previousStep,
@@ -330,7 +331,11 @@ export const TFRemoteWizard: React.FC<StepProps<any> & TFRemoteProps> = ({
                     name="varFile.spec.store.spec.paths"
                     label={getString('filePaths')}
                     style={{ width: 370 }}
-                    allowedTypes={allowableTypes.filter(item => item !== MultiTypeInputType.EXPRESSION)}
+                    allowedTypes={
+                      (allowableTypes as MultiTypeInputType[]).filter(
+                        item => item !== MultiTypeInputType.EXPRESSION
+                      ) as AllowedTypes
+                    }
                   >
                     <FieldArray
                       name="varFile.spec.store.spec.paths"
@@ -368,7 +373,9 @@ export const TFRemoteWizard: React.FC<StepProps<any> & TFRemoteProps> = ({
                                     label=""
                                     multiTextInputProps={{
                                       expressions,
-                                      allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME)
+                                      allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                        item => item !== MultiTypeInputType.RUNTIME
+                                      ) as AllowedTypes
                                     }}
                                     style={{ width: 320 }}
                                   />

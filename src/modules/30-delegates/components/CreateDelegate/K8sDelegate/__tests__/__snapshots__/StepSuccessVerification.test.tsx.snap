@@ -46,7 +46,6 @@ exports[`Create Step Verification Script Delegate Click back button 1`] = `
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-small"
-            style="margin-right: 24px;"
           >
             delegate.verifyDelegateYamlCmnd
           </p>
@@ -243,7 +242,6 @@ exports[`Create Step Verification Script Delegate Click back button 2`] = `
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-small"
-            style="margin-right: 24px;"
           >
             delegate.verifyDelegateYamlCmnd
           </p>
@@ -412,7 +410,6 @@ exports[`Create Step Verification Script Delegate render data 1`] = `
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-small"
-            style="margin-right: 24px;"
           >
             delegate.verifyDelegateYamlCmnd
           </p>

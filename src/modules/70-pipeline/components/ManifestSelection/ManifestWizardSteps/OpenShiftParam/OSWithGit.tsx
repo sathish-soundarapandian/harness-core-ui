@@ -15,7 +15,8 @@ import {
   MultiTypeInputType,
   Text,
   StepProps,
-  ButtonVariation
+  ButtonVariation,
+  AllowedTypes
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
@@ -49,7 +50,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 interface OpenshiftTemplateWithGITPropType {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
@@ -82,7 +83,7 @@ function OpenShiftParamWithGit({
         : prevStepData?.url
       : null
 
-  const getInitialValues = React.useCallback((): OpenShiftParamDataType => {
+  const getInitialValues = (): OpenShiftParamDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
 
     if (specValues) {
@@ -105,7 +106,7 @@ function OpenShiftParamWithGit({
       paths: [{ path: '', uuid: uuid('', nameSpace()) }],
       repoName: getRepositoryName(prevStepData, initialValues)
     }
-  }, [])
+  }
 
   const submitFormData = (formData: OpenShiftParamDataType & { store?: string; connectorRef?: string }): void => {
     const manifestObj: ManifestConfigWrapper = {
@@ -284,6 +285,7 @@ function OpenShiftParamWithGit({
                     pathLabel={getString('pipelineSteps.paths')}
                     fieldPath="paths"
                     placeholder={getString('pipeline.manifestType.pathPlaceholder')}
+                    defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                   />
                 </div>
                 {getMultiTypeFromValue(formik.values.paths) === MultiTypeInputType.RUNTIME && (

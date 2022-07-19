@@ -5,7 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { SelectOption, MultiSelectOption } from '@wings-software/uicore'
+import {
+  SelectOption,
+  MultiSelectOption,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  RUNTIME_INPUT_VALUE
+} from '@wings-software/uicore'
 import { clone, isNumber } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import type { PrometheusFilter, PrometheusHealthSourceSpec, TimeSeriesMetricDefinition } from 'services/cv'
@@ -278,7 +284,7 @@ export function transformPrometheusHealthSourceToSetupSource(
   const healthSource: UpdatedHealthSource = sourceData?.healthSourceList?.find(
     (source: UpdatedHealthSource) => source.name === sourceData.healthSourceName
   )
-
+  const isConnectorRuntimeOrExpression = getMultiTypeFromValue(sourceData.connectorRef) !== MultiTypeInputType.FIXED
   if (!healthSource) {
     return {
       isEdit: false,
@@ -289,7 +295,7 @@ export function transformPrometheusHealthSourceToSetupSource(
           {
             metricName: getString('cv.monitoringSources.prometheus.prometheusMetric'),
             isManualQuery: false,
-            query: '',
+            query: isConnectorRuntimeOrExpression ? RUNTIME_INPUT_VALUE : '',
             identifier: 'prometheus_metric'
           }
         ]
@@ -347,7 +353,10 @@ export function transformPrometheusSetupSourceToHealthSource(setupSource: Promet
     identifier: setupSource.healthSourceIdentifier,
     name: setupSource.healthSourceName,
     spec: {
-      connectorRef: setupSource?.connectorRef,
+      connectorRef:
+        typeof setupSource?.connectorRef === 'string'
+          ? setupSource?.connectorRef
+          : (setupSource?.connectorRef?.value as string),
       feature: PrometheusProductNames.APM,
       metricDefinitions: []
     }

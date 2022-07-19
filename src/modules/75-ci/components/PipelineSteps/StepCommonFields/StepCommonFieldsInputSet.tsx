@@ -6,7 +6,14 @@
  */
 
 import React from 'react'
-import { Text, getMultiTypeFromValue, MultiTypeInputType, Container, Layout } from '@wings-software/uicore'
+import {
+  Text,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  Container,
+  Layout,
+  AllowedTypes
+} from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
@@ -39,7 +46,7 @@ interface StepCommonFieldsInputSetProps<T> extends Omit<InputSetData<T>, 'path' 
   withoutTimeout?: boolean
   enableFields?: string[]
   stepViewType: StepViewType
-  allowableTypes?: MultiTypeInputType[]
+  allowableTypes?: AllowedTypes
 }
 
 function StepCommonFieldsInputSet<T>(props: StepCommonFieldsInputSetProps<T>): JSX.Element | null {

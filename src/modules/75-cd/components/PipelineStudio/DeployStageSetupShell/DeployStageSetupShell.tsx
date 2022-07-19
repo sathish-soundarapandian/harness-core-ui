@@ -5,17 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { Layout, Tabs, Tab, Button, Icon, ButtonVariation } from '@wings-software/uicore'
+import React, { useCallback } from 'react'
+import { Layout, Tabs, Tab, Button, Icon, ButtonVariation, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import cx from 'classnames'
 import type { HarnessIconName } from '@harness/icons'
 import { Expander, IconName } from '@blueprintjs/core'
-import { defaultTo, get, isEmpty, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, set, debounce } from 'lodash-es'
 import type { ValidationError } from 'yup'
 import YAML from 'yaml'
 import produce from 'immer'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import {
-  DeploymentStageConfig,
+  GetExecutionStrategyYamlQueryParams,
   StageElementConfig,
   useGetExecutionStrategyYaml,
   useGetFailureStrategiesYaml
@@ -30,13 +31,16 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import { AdvancedPanels } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { useStrings } from 'framework/strings'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
-import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
+import {
+  DeployTabs,
+  isNewServiceEnvEntity
+} from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { useQueryParams } from '@common/hooks'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
 import { useAddStepTemplate } from '@pipeline/hooks/useAddStepTemplate'
 import {
-  getSelectedDeploymentType,
+  getServiceDefinitionType,
   isServerlessDeploymentType,
   ServiceDeploymentType,
   StageType
@@ -49,6 +53,7 @@ import DeployServiceSpecifications from '../DeployServiceSpecifications/DeploySe
 import DeployStageSpecifications from '../DeployStageSpecifications/DeployStageSpecifications'
 import DeployAdvancedSpecifications from '../DeployAdvancedSpecifications/DeployAdvancedSpecifications'
 import DeployEnvSpecifications from '../DeployEnvSpecifications/DeployEnvSpecifications'
+import DeployServiceEntitySpecifications from '../DeployServiceSpecifications/DeployServiceEntitySpecifications'
 import css from './DeployStageSetupShell.module.scss'
 
 export const MapStepTypeToIcon: { [key: string]: HarnessIconName } = {
@@ -79,7 +84,8 @@ export default function DeployStageSetupShell(): JSX.Element {
       originalPipeline,
       pipelineView,
       selectionState: { selectedStageId, selectedStepId, selectedSectionId },
-      templateTypes
+      templateTypes,
+      templateServiceData
     },
     contextType,
     stagesMap,
@@ -88,10 +94,12 @@ export default function DeployStageSetupShell(): JSX.Element {
     updateStage,
     getStageFromPipeline,
     updatePipelineView,
+    scope,
     setSelectedStepId,
     getStagePathFromPipeline,
     setSelectedSectionId
   } = pipelineContext
+
   const query = useQueryParams()
   const [incompleteTabs, setIncompleteTabs] = React.useState<{ [key in DeployTabs]?: boolean }>({})
   const [selectedTabId, setSelectedTabId] = React.useState<DeployTabs>(
@@ -101,6 +109,45 @@ export default function DeployStageSetupShell(): JSX.Element {
   const { stage: selectedStage } = getStageFromPipeline<DeploymentStageElementConfig>(defaultTo(selectedStageId, ''))
 
   const selectedStrategy = selectedStage === ServiceDeploymentType.ServerlessAwsLambda ? 'Basic' : 'Rolling'
+
+  const debounceUpdateStage = useCallback(
+    debounce(
+      (changedStage?: StageElementConfig) =>
+        changedStage ? updateStage(changedStage) : /* istanbul ignore next */ Promise.resolve(),
+      300
+    ),
+    [updateStage]
+  )
+
+  const serviceDefinitionType = useCallback((): GetExecutionStrategyYamlQueryParams['serviceDefinitionType'] => {
+    return getServiceDefinitionType(
+      selectedStage,
+      getStageFromPipeline,
+      isNewServiceEnvEntity,
+      NG_SVC_ENV_REDESIGN,
+      templateServiceData
+    )
+  }, [getStageFromPipeline, NG_SVC_ENV_REDESIGN, selectedStage, templateServiceData])
+
+  const setDefaultServiceSchema = useCallback((): Promise<void> => {
+    const stageData = produce(selectedStage, draft => {
+      if (draft) {
+        set(draft, 'stage.spec', {
+          ...selectedStage?.stage?.spec,
+          serviceConfig: {
+            serviceRef: scope === Scope.PROJECT ? '' : RUNTIME_INPUT_VALUE,
+            serviceDefinition: {
+              spec: {
+                variables: []
+              }
+            }
+          }
+        })
+      }
+    })
+
+    return debounceUpdateStage(stageData?.stage)
+  }, [debounceUpdateStage, scope, selectedStage])
 
   React.useEffect(() => {
     const sectionId = (query as any).sectionId || ''
@@ -140,17 +187,20 @@ export default function DeployStageSetupShell(): JSX.Element {
     }
   }, [selectedTabId])
 
-  const selectedDeploymentType = getSelectedDeploymentType(
-    selectedStage,
-    getStageFromPipeline,
-    !!selectedStage?.stage?.spec?.serviceConfig?.useFromStage?.stage
-  )
+  const selectedDeploymentType = serviceDefinitionType()
+
+  const strategyType = isNewServiceEnvEntity(NG_SVC_ENV_REDESIGN, selectedStage as DeploymentStageElementConfig)
+    ? 'GitOps'
+    : selectedDeploymentType === ServiceDeploymentType.ServerlessAwsLambda
+    ? 'Basic'
+    : 'Rolling'
+
   const { data: stageYamlSnippet, loading, refetch } = useGetFailureStrategiesYaml({ lazy: true })
 
   const { data: yamlSnippet, refetch: refetchYamlSnippet } = useGetExecutionStrategyYaml({
     queryParams: {
-      serviceDefinitionType: selectedDeploymentType,
-      strategyType: selectedDeploymentType === ServiceDeploymentType.ServerlessAwsLambda ? 'Basic' : 'Rolling'
+      serviceDefinitionType: selectedDeploymentType as GetExecutionStrategyYamlQueryParams['serviceDefinitionType'],
+      strategyType
     },
     lazy: true
   })
@@ -163,7 +213,7 @@ export default function DeployStageSetupShell(): JSX.Element {
 
   React.useEffect(() => {
     if (
-      isServerlessDeploymentType(selectedDeploymentType) &&
+      (isServerlessDeploymentType(selectedDeploymentType || '') || selectedStage?.stage?.spec?.gitOpsEnabled) &&
       yamlSnippet?.data &&
       selectedStage &&
       isEmpty(selectedStage.stage?.spec?.execution)
@@ -175,7 +225,7 @@ export default function DeployStageSetupShell(): JSX.Element {
           }
           const jsonFromYaml = YAML.parse(defaultTo(yamlSnippet?.data, '{}')) as StageElementConfig
           set(draft, 'stage.failureStrategies', jsonFromYaml.failureStrategies)
-          set(draft, 'stage.spec.execution', defaultTo((jsonFromYaml.spec as DeploymentStageConfig)?.execution, {}))
+          set(draft, 'stage.spec.execution', defaultTo(jsonFromYaml.spec?.execution, {}))
         }).stage as StageElementConfig
       )
     }
@@ -186,7 +236,7 @@ export default function DeployStageSetupShell(): JSX.Element {
     if (!loading && selectedStage?.stage && isEmpty(selectedStage?.stage?.spec?.execution)) {
       if (!stageYamlSnippet?.data) {
         // fetch data on first load of new stage
-        refetch()
+        setTimeout(() => refetch(), 20000)
       } else {
         // update the new stage with the fetched data
         updateStage(
@@ -203,13 +253,15 @@ export default function DeployStageSetupShell(): JSX.Element {
 
   const validate = React.useCallback(() => {
     try {
-      getCDStageValidationSchema(getString, selectedDeploymentType, NG_SVC_ENV_REDESIGN, contextType).validateSync(
-        selectedStage?.stage,
-        {
-          abortEarly: false,
-          context: selectedStage?.stage
-        }
-      )
+      getCDStageValidationSchema(
+        getString,
+        selectedDeploymentType as GetExecutionStrategyYamlQueryParams['serviceDefinitionType'],
+        NG_SVC_ENV_REDESIGN,
+        contextType
+      ).validateSync(selectedStage?.stage, {
+        abortEarly: false,
+        context: selectedStage?.stage
+      })
       setIncompleteTabs({})
     } catch (error) {
       if (error.name !== 'ValidationError') {
@@ -243,18 +295,26 @@ export default function DeployStageSetupShell(): JSX.Element {
   }, [setIncompleteTabs, selectedStage?.stage])
 
   React.useEffect(() => {
+    // if serviceDefinition not selected, redirect to SERVICE - preventing strategies drawer to be opened
+    if (!selectedDeploymentType) {
+      setSelectedTabId(DeployTabs.SERVICE)
+      return
+    }
     if (selectedTabId === DeployTabs.EXECUTION) {
       /* istanbul ignore else */
       if (selectedStage?.stage && selectedStage?.stage.type === StageType.DEPLOY) {
         if (!selectedStage?.stage?.spec?.execution) {
           const stageType = selectedStage?.stage?.type
           const openExecutionStrategy = stageType ? stagesMap[stageType].openExecutionStrategy : true
-          const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(selectedDeploymentType)
-          // Show executiomn strategies when openExecutionStrategy is true and deployment type is not serverless
+          const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(selectedDeploymentType || '')
+          const gitOpsEnabled = selectedStage?.stage?.spec?.gitOpsEnabled
+          // Show executiomn strategies when openExecutionStrategy is true and deployment type is not serverless and
+          // when gitOpsEnabled to true
           if (
             openExecutionStrategy &&
             !isServerlessDeploymentTypeSelected &&
-            selectedSectionId === DeployTabs.EXECUTION
+            selectedSectionId === DeployTabs.EXECUTION &&
+            !gitOpsEnabled
           ) {
             updatePipelineView({
               ...pipelineView,
@@ -284,6 +344,10 @@ export default function DeployStageSetupShell(): JSX.Element {
   }, [selectedStage, selectedTabId, selectedStageId, selectedDeploymentType, selectedSectionId])
 
   React.useEffect(() => {
+    if (!selectedDeploymentType) {
+      setSelectedTabId(DeployTabs.SERVICE)
+      return
+    }
     validate()
   }, [JSON.stringify(selectedStage)])
 
@@ -338,6 +402,7 @@ export default function DeployStageSetupShell(): JSX.Element {
           }
           data-testid="overview"
         />
+
         <Tab
           id={DeployTabs.SERVICE}
           title={
@@ -346,7 +411,15 @@ export default function DeployStageSetupShell(): JSX.Element {
               {getString('service')}
             </span>
           }
-          panel={<DeployServiceSpecifications>{navBtns}</DeployServiceSpecifications>}
+          panel={
+            isNewServiceEnvEntity(NG_SVC_ENV_REDESIGN, selectedStage?.stage as DeploymentStageElementConfig) ? (
+              <DeployServiceEntitySpecifications>{navBtns}</DeployServiceEntitySpecifications>
+            ) : (
+              <DeployServiceSpecifications setDefaultServiceSchema={setDefaultServiceSchema}>
+                {navBtns}
+              </DeployServiceSpecifications>
+            )
+          }
           data-testid="service"
         />
         {NG_SVC_ENV_REDESIGN && isEmpty(selectedStage?.stage?.spec?.infrastructure) && (

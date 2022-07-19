@@ -67,6 +67,10 @@ export enum PermissionIdentifier {
   DELETE_VARIABLE = 'core_variable_delete',
   VIEW_VARIABLE = 'core_variable_view',
   ACCESS_VARIABLE = 'core_variable_access',
+  EDIT_FILE = 'core_file_edit',
+  DELETE_FILE = 'core_file_delete',
+  VIEW_FILE = 'core_file_view',
+  ACCESS_FILE = 'core_file_access',
 
   // FEATURE FLAG PERMISSIONS
   DELETE_FF_FEATUREFLAG = 'ff_featureflag_delete',
@@ -131,5 +135,14 @@ export enum PermissionIdentifier {
   // Chaos Permissions
   VIEW_CHAOSHUB = 'chaos_chaoshub_view',
   EDIT_CHAOSHUB = 'chaos_chaoshub_edit',
-  DELETE_CHAOSHUB = 'chaos_chaoshub_delete'
+  DELETE_CHAOSHUB = 'chaos_chaoshub_delete',
+
+  // STO Permissions
+  VIEW_STO_ISSUE = 'sto_issue_view',
+  VIEW_STO_SCAN = 'sto_scan_view',
+  VIEW_STO_TESTTARGET = 'sto_testtarget_view',
+  EDIT_STO_TESTTARGET = 'sto_testtarget_edit',
+  VIEW_STO_EXEMPTION = 'sto_exemption_view',
+  CREATE_STO_EXEMPTION = 'sto_exemption_create',
+  APPROVE_STO_EXEMPTION = 'sto_exemption_approve'
 }

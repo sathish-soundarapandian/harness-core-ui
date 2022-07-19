@@ -27,7 +27,6 @@ import templateFactory from '@templates-library/components/Templates/TemplatesFa
 import { TemplateStudioHeader } from '@templates-library/components/TemplateStudio/TemplateStudioHeader/TemplateStudioHeader'
 import type { GitQueryParams, ModulePathParams, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
-import { DrawerTypes } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateActions'
 
 import GenericErrorHandler from '@common/pages/GenericErrorHandler/GenericErrorHandler'
 import TemplateYamlView from '@templates-library/components/TemplateStudio/TemplateYamlView/TemplateYamlView'
@@ -42,8 +41,6 @@ import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import { TemplateVariablesContextProvider } from '@pipeline/components/TemplateVariablesContext/TemplateVariablesContext'
 import { RightBar } from '@templates-library/components/TemplateStudio/RightBar/RightBar'
 import { OutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
-import { TemplateSelectorContextProvider } from '@templates-library/components/TemplateSelectorContext/TemplateSelectorContext'
-import { TemplateSelectorDrawer } from '@templates-library/components/TemplateSelectorDrawer/TemplateSelectorDrawer'
 import { TemplateContext } from './TemplateContext/TemplateContext'
 import { getContentAndTitleStringKeys, isValidYaml } from './TemplateStudioUtils'
 import css from './TemplateStudio.module.scss'
@@ -158,9 +155,9 @@ export function TemplateStudio(): React.ReactElement {
     }
     setView(newView)
     updateTemplateView({
+      ...templateView,
       isDrawerOpened: false,
-      isYamlEditable: false,
-      drawerData: { type: DrawerTypes.AddStep }
+      isYamlEditable: false
     })
     return true
   }
@@ -253,79 +250,76 @@ export function TemplateStudio(): React.ReactElement {
   }, [isLoading])
 
   return (
-    <TemplateSelectorContextProvider>
-      <TemplateVariablesContextProvider template={template}>
-        <NavigationCheck
-          when={template?.identifier !== ''}
-          shouldBlockNavigation={nextLocation => {
-            const matchDefault = matchPath(nextLocation.pathname, {
-              path: routes.toTemplateStudio(getPathParams()),
-              exact: true
-            })
-            return (
-              !matchDefault?.isExact &&
-              isUpdated &&
-              !isReadonly &&
-              !(templateIdentifier === DefaultNewTemplateId && isEmpty(template?.name))
-            )
-          }}
-          textProps={{
-            contentText: getString(navigationContentText),
-            titleText: getString(navigationTitleText)
-          }}
-          navigate={newPath => {
-            const isTemplate = matchPath(newPath, {
-              path: routes.toTemplateStudio(getPathParams()),
-              exact: true
-            })
-            !isTemplate?.isExact && deleteTemplateCache()
-            history.push(newPath)
-          }}
-        />
-        <Page.Header
-          className={css.rightMargin}
-          size={'small'}
-          title={<TemplateStudioHeader templateType={templateType as TemplateType} />}
-        />
-        <Page.Body key={key} className={css.rightMargin}>
-          {isLoading && <PageSpinner />}
-          <Layout.Vertical height={'100%'}>
-            {!isLoading && isEmpty(template) && !isGitSyncEnabled && <GenericErrorHandler />}
-            {!isLoading && isEmpty(template) && isGitSyncEnabled && (
-              <NoEntityFound identifier={templateIdentifier} entityType="template" />
-            )}
-            {isInitialized && !isEmpty(template) && (
-              <>
-                <TemplateStudioSubHeader
-                  onViewChange={onViewChange}
-                  getErrors={getErrors}
-                  onGitBranchChange={onGitBranchChange}
+    <TemplateVariablesContextProvider template={template}>
+      <NavigationCheck
+        when={template?.identifier !== ''}
+        shouldBlockNavigation={nextLocation => {
+          const matchDefault = matchPath(nextLocation.pathname, {
+            path: routes.toTemplateStudio(getPathParams()),
+            exact: true
+          })
+          return (
+            !matchDefault?.isExact &&
+            isUpdated &&
+            !isReadonly &&
+            !(templateIdentifier === DefaultNewTemplateId && isEmpty(template?.name))
+          )
+        }}
+        textProps={{
+          contentText: getString(navigationContentText),
+          titleText: getString(navigationTitleText)
+        }}
+        navigate={newPath => {
+          const isTemplate = matchPath(newPath, {
+            path: routes.toTemplateStudio(getPathParams()),
+            exact: true
+          })
+          !isTemplate?.isExact && deleteTemplateCache()
+          history.push(newPath)
+        }}
+      />
+      <Page.Header
+        className={css.rightMargin}
+        size={'small'}
+        title={<TemplateStudioHeader templateType={templateType as TemplateType} />}
+      />
+      <Page.Body key={key} className={css.rightMargin}>
+        {isLoading && <PageSpinner />}
+        <Layout.Vertical height={'100%'}>
+          {!isLoading && isEmpty(template) && !isGitSyncEnabled && <GenericErrorHandler />}
+          {!isLoading && isEmpty(template) && isGitSyncEnabled && (
+            <NoEntityFound identifier={templateIdentifier} entityType="template" />
+          )}
+          {isInitialized && !isEmpty(template) && (
+            <>
+              <TemplateStudioSubHeader
+                onViewChange={onViewChange}
+                getErrors={getErrors}
+                onGitBranchChange={onGitBranchChange}
+              />
+              {templateInputsErrorNodeSummary && (
+                <OutOfSyncErrorStrip
+                  templateInputsErrorNodeSummary={templateInputsErrorNodeSummary}
+                  entity={'Template'}
+                  isReadOnly={isReadonly}
+                  onRefreshEntity={() => {
+                    fetchTemplate({ forceFetch: true, forceUpdate: true })
+                  }}
                 />
-                {templateInputsErrorNodeSummary && (
-                  <OutOfSyncErrorStrip
-                    templateInputsErrorNodeSummary={templateInputsErrorNodeSummary}
-                    entity={'Template'}
-                    isReadOnly={isReadonly}
-                    onRefreshEntity={() => {
-                      fetchTemplate({ forceFetch: true, forceUpdate: true })
-                    }}
-                  />
+              )}
+              <Container className={css.canvasContainer}>
+                {view === SelectedView.VISUAL ? (
+                  /* istanbul ignore next */
+                  templateFactory.getTemplate(templateType)?.renderTemplateCanvas({ formikRef: templateFormikRef })
+                ) : (
+                  <TemplateYamlView />
                 )}
-                <Container className={css.canvasContainer}>
-                  {view === SelectedView.VISUAL ? (
-                    /* istanbul ignore next */
-                    templateFactory.getTemplate(templateType)?.renderTemplateCanvas({ formikRef: templateFormikRef })
-                  ) : (
-                    <TemplateYamlView />
-                  )}
-                </Container>
-              </>
-            )}
-            {templateType !== TemplateType.Pipeline && <RightBar />}
-          </Layout.Vertical>
-        </Page.Body>
-      </TemplateVariablesContextProvider>
-      <TemplateSelectorDrawer />
-    </TemplateSelectorContextProvider>
+              </Container>
+            </>
+          )}
+          {templateType !== TemplateType.Pipeline && <RightBar />}
+        </Layout.Vertical>
+      </Page.Body>
+    </TemplateVariablesContextProvider>
   )
 }

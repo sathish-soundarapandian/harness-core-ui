@@ -108,7 +108,7 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
 
       {getMultiTypeFromValue(template?.spec?.connectorRef) === MultiTypeInputType.RUNTIME ? (
         <FormMultiTypeConnectorField
-          name={`${prefix}spec.conectorRef`}
+          name={`${prefix}spec.connectorRef`}
           label={getString('pipeline.jiraApprovalStep.connectorRef')}
           selected={(initialValues?.spec?.connectorRef as string) || ''}
           placeholder={getString('connectors.selectConnector')}
@@ -145,6 +145,7 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
           label={getString('status')}
           name={`${prefix}spec.transitionTo.status`}
           disabled={isApprovalStepFieldDisabled(readonly)}
+          useValue
           multiTypeInputProps={{
             expressions,
             allowableTypes,

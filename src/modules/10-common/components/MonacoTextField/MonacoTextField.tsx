@@ -38,6 +38,28 @@ export interface ConnectedMonacoTextFieldProps extends MonacoTextFieldProps {
 const VAR_REGEX = /.*<\+.*?/
 const LANG_ID = 'plaintext'
 
+export const getDefaultMonacoConfig = (disabled: boolean): MonacoEditorProps['options'] => ({
+  fontFamily: "'Roboto Mono', monospace",
+  fontSize: 14,
+  minimap: {
+    enabled: false
+  },
+  readOnly: disabled,
+  scrollBeyondLastLine: false,
+  lineNumbers: 'off',
+  glyphMargin: false,
+  folding: false,
+  lineDecorationsWidth: 0,
+  wordWrap: 'on',
+  scrollbar: {
+    verticalScrollbarSize: 0
+  },
+  renderLineHighlight: 'none',
+  wordWrapBreakBeforeCharacters: '',
+  mouseStyle: disabled ? 'default' : 'text',
+  lineNumbersMinChars: 0
+})
+
 export function MonacoText(props: ConnectedMonacoTextFieldProps): React.ReactElement {
   const { formik, name, disabled, expressions, height = 70, fullScreenAllowed, fullScreenTitle } = props
   const [isFullScreen, setFullScreen] = React.useState(false)
@@ -87,29 +109,7 @@ export function MonacoText(props: ConnectedMonacoTextFieldProps): React.ReactEle
         height={fullScreenAllowed && isFullScreen ? '70vh' : height}
         value={value}
         language={LANG_ID}
-        options={
-          {
-            fontFamily: "'Roboto Mono', monospace",
-            fontSize: 14,
-            minimap: {
-              enabled: false
-            },
-            readOnly: disabled,
-            scrollBeyondLastLine: false,
-            lineNumbers: 'off',
-            glyphMargin: false,
-            folding: false,
-            lineDecorationsWidth: 0,
-            wordWrap: 'on',
-            scrollbar: {
-              verticalScrollbarSize: 0
-            },
-            renderLineHighlight: 'none',
-            wordWrapBreakBeforeCharacters: '',
-            mouseStyle: disabled ? 'default' : 'text',
-            lineNumbersMinChars: 0
-          } as MonacoEditorProps['options']
-        }
+        options={getDefaultMonacoConfig(!!disabled)}
         onChange={txt => formik.setFieldValue(name, txt)}
         {...({ name: props.name, 'data-testid': props['data-testid'] } as any)} // this is required for test cases
       />

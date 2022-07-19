@@ -18,7 +18,7 @@ import * as cdngServices from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, triggerPathProps } from '@common/utils/routeUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
-import { clearRuntimeInput } from '@pipeline/components/PipelineStudio/StepUtil'
+import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { PipelineInputSetForm, PipelineInputSetFormProps } from '../PipelineInputSetForm'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')

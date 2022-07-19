@@ -10,10 +10,11 @@ import type { useGetMetricPacks, useGetLabelNames } from 'services/cv'
 export type SelectHealthSourceServicesProps = {
   values: {
     sli: boolean
-    healthScore: boolean
-    continuousVerification: boolean
+    healthScore?: boolean
+    continuousVerification?: boolean
     serviceInstance?: string
     riskCategory?: string
+    serviceInstanceMetricPath?: string
   }
   metricPackResponse: ReturnType<typeof useGetMetricPacks>
   labelNamesResponse?: ReturnType<typeof useGetLabelNames>
@@ -21,4 +22,8 @@ export type SelectHealthSourceServicesProps = {
   hideCV?: boolean
   hideSLIAndHealthScore?: boolean
   isTemplate?: boolean
+  showOnlySLI?: boolean
+  expressions?: string[]
+  isConnectorRuntimeOrExpression?: boolean
+  key?: string
 }

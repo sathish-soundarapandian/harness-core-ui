@@ -23,6 +23,7 @@ interface PerspectiveBuilderSelectorComponentProps {
   fetchMore?: (e: number) => void
   searchText?: string
   createNewTag: (val: string[]) => void
+  initialItemCount?: number
 }
 
 const PerspectiveBuilderSelectorComponent: (props: PerspectiveBuilderSelectorComponentProps) => JSX.Element = ({
@@ -33,7 +34,8 @@ const PerspectiveBuilderSelectorComponent: (props: PerspectiveBuilderSelectorCom
   selectedValues,
   fetchMore,
   searchText,
-  createNewTag
+  createNewTag,
+  initialItemCount
 }) => {
   const { getString } = useStrings()
   const filteredValues = valueList.filter(val => val) as string[]
@@ -58,7 +60,7 @@ const PerspectiveBuilderSelectorComponent: (props: PerspectiveBuilderSelectorCom
               shouldFetchMore && fetchMore && fetchMore(e)
             }
           }
-          initialItemCount={filteredValues.length}
+          initialItemCount={initialItemCount}
           itemContent={(_, value) => {
             const splitSearchResultAt = new RegExp(`(${searchText})`, 'g')
 
@@ -78,7 +80,7 @@ const PerspectiveBuilderSelectorComponent: (props: PerspectiveBuilderSelectorCom
                   className={cx(css.checkbox, css.labelItem)}
                   value={value}
                 />
-                {!exactSearchTextMatch ? (
+                {searchText && !exactSearchTextMatch ? (
                   <>
                     <Text color={Color.GREY_700} font={{ variation: FontVariation.SMALL_SEMI }} lineClamp={1}>
                       {value.split(splitSearchResultAt).map((str, i) => (

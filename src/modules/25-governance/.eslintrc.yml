@@ -5,9 +5,10 @@ rules:
         - lodash.*
         - microfrontends/*
         - '!microfrontends/ChildAppMounter'
-        - modules/27-sto/*
+        - modules/28-et/*
         - modules/30-delegates/*
         - modules/30-secrets/*
+        - modules/31-filestore/*
         - modules/31-variables/*
         - modules/33-auth-settings/*
         - modules/35-connectors/*
@@ -26,9 +27,10 @@ rules:
         - modules/85-cv/*
         - modules/85-sto-steps/*
         - modules/90-gitops/*
-        - '@sto/*'
+        - '@et/*'
         - '@delegates/*'
         - '@secrets/*'
+        - '@filestore/*'
         - '@variables/*'
         - '@auth-settings/*'
         - '@connectors/*'

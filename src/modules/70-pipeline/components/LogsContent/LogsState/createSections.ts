@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { findLast, set, snakeCase } from 'lodash-es'
+import { defaultTo, findLast, set, snakeCase } from 'lodash-es'
 
 import {
   isExecutionComplete,
@@ -49,7 +49,7 @@ export function createSections(state: State, action: Action<ActionType.CreateSec
    *
    * It can be either be a `taskChain`, `task` or `sync`
    */
-  const executableResponse = node?.executableResponses?.[0] || {}
+  const executableResponse = defaultTo(node?.executableResponses?.[0], {})
   const task =
     executableResponse.taskChain ||
     executableResponse.task ||
@@ -58,7 +58,7 @@ export function createSections(state: State, action: Action<ActionType.CreateSec
     executableResponse.child
 
   // eslint-disable-next-line prefer-const
-  let { units = [], logKeys = [] } = task || ({} as any)
+  let { units = [], logKeys = [] } = defaultTo(task, {} as any)
   const progressMap = new Map<string, ProgressMapValue>()
   const isStepComplete = isExecutionComplete(node.status)
   let hasNoUnits = false
@@ -70,6 +70,7 @@ export function createSections(state: State, action: Action<ActionType.CreateSec
 
   if (Array.isArray(node.unitProgresses)) {
     node.unitProgresses.forEach(row => {
+      /* istanbul ignore else */
       if (row.unitName) {
         progressMap.set(row.unitName, {
           status: row.status as UnitLoadingStatus,
@@ -88,16 +89,16 @@ export function createSections(state: State, action: Action<ActionType.CreateSec
        * In case it doesn't, fallback to the 'UNKNOWN' status.
        */
       const unitProgress: ProgressMapValue | undefined = hasNoUnits
-        ? { status: snakeCase(node.status || 'NotStarted').toUpperCase() as UnitLoadingStatus }
+        ? { status: snakeCase(defaultTo(node.status, 'NotStarted')).toUpperCase() as UnitLoadingStatus }
         : progressMap.get(unit)
-      const unitStatus: UnitLoadingStatus = unitProgress?.status || 'NOT_STARTED'
+      const unitStatus: UnitLoadingStatus = defaultTo(unitProgress?.status, 'NOT_STARTED')
       const currentStatus = state.dataMap[key]?.status
       const manuallyToggled = !!state.dataMap[key]?.manuallyToggled
       const isRunning = isExecutionRunningLike(unitStatus)
 
       acc[key] = {
         title: unit,
-        data: isSameStep ? state.dataMap[key]?.data || [] : [],
+        data: isSameStep ? defaultTo(state.dataMap[key]?.data, []) : [],
         isOpen: isSameStep && manuallyToggled ? state.dataMap[key]?.isOpen : isRunning,
         manuallyToggled: isSameStep ? manuallyToggled : false,
         status: isSameStep && NON_MUTATE_STATES.includes(currentStatus) && isRunning ? currentStatus : unitStatus,
@@ -114,6 +115,7 @@ export function createSections(state: State, action: Action<ActionType.CreateSec
 
   let unitToOpen: string | null = null
 
+  /* istanbul ignore else */
   if (logKeys.length > 1) {
     if (isStepComplete) {
       const isStepSuccess = isExecutionSuccess(node.status)
@@ -125,17 +127,18 @@ export function createSections(state: State, action: Action<ActionType.CreateSec
       } else {
         // find and open the first failed section
         const failedUnit = logKeys.find((key: string) => isExecutionFailed(dataMap[key]?.unitStatus))
-        unitToOpen = failedUnit || null
+        unitToOpen = defaultTo(failedUnit, null)
       }
     } else {
       // open the running section
       const runningUnit = findLast(logKeys, key => isExecutionRunningLike(dataMap[key]?.unitStatus))
-      unitToOpen = runningUnit || null
+      unitToOpen = defaultTo(runningUnit, null)
     }
   } else if (logKeys.length === 1) {
     const isExecutionRunning = isExecutionRunningLike(dataMap[logKeys[0]]?.unitStatus)
 
     // only open the unit if it is running/complete
+    /* istanbul ignore else */
     if (isExecutionRunning || isStepComplete) {
       unitToOpen = logKeys[0]
     }
@@ -143,6 +146,7 @@ export function createSections(state: State, action: Action<ActionType.CreateSec
 
   if (unitToOpen && !dataMap[unitToOpen].manuallyToggled) {
     // if we are opening a section the set it to loading
+    /* istanbul ignore else */
     if (dataMap[unitToOpen].status !== 'QUEUED' && !dataMap[unitToOpen].data.length) {
       set(dataMap[unitToOpen], 'status', 'LOADING')
     }

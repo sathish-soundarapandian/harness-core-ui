@@ -9,16 +9,24 @@ import React from 'react'
 import { deleteDB, IDBPDatabase, openDB } from 'idb'
 import { cloneDeep, defaultTo, get, isEmpty, isEqual, isNil, omit, pick } from 'lodash-es'
 import { parse } from 'yaml'
-import { IconName, MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
+import {
+  AllowedTypes,
+  AllowedTypesWithRunTime,
+  IconName,
+  MultiTypeInputType,
+  VisualYamlSelectedView as SelectedView
+} from '@wings-software/uicore'
 import merge from 'lodash-es/merge'
 import type { GetDataError } from 'restful-react'
-import type { PipelineInfoConfig, StageElementConfig, StageElementWrapperConfig } from 'services/cd-ng'
 import type { PermissionCheck } from 'services/rbac'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
 import SessionToken from 'framework/utils/SessionToken'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import {
+  PipelineInfoConfig,
+  StageElementConfig,
+  StageElementWrapperConfig,
   createPipelinePromise,
   CreatePipelineQueryParams,
   createPipelineV2Promise,
@@ -45,7 +53,7 @@ import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { PipelineStageWrapper } from '@pipeline/utils/pipelineTypes'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { GetTemplateProps, GetTemplateResponse, getTemplateTypesByRef } from '@pipeline/utils/templateUtils'
+import { getTemplateTypesByRef, TemplateServiceDataType } from '@pipeline/utils/templateUtils'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import {
   ActionReturnType,
@@ -233,7 +241,7 @@ export interface PipelineContextInterface {
   stepsFactory: AbstractStepFactory
   view: string
   contextType: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   isReadonly: boolean
   scope: Scope
   setSchemaErrorView: (flag: boolean) => void
@@ -242,6 +250,7 @@ export interface PipelineContextInterface {
   fetchPipeline: (args: FetchPipelineUnboundProps) => Promise<void>
   setYamlHandler: (yamlHandler: YamlBuilderHandlerBinding) => void
   setTemplateTypes: (data: { [key: string]: string }) => void
+  setTemplateServiceData: (data: TemplateServiceDataType) => void
   updatePipeline: (pipeline: PipelineInfoConfig) => Promise<void>
   updatePipelineStoreMetadata: (storeMetadata: StoreMetadata, gitDetails: EntityGitDetails) => Promise<void>
   updateGitDetails: (gitDetails: EntityGitDetails) => Promise<void>
@@ -263,7 +272,6 @@ export interface PipelineContextInterface {
   setSelectedSectionId: (selectedSectionId: string | undefined) => void
   setSelection: (selectionState: PipelineSelectionState) => void
   getStagePathFromPipeline(stageId: string, prefix?: string, pipeline?: PipelineInfoConfig): string
-  getTemplate: (data: GetTemplateProps) => Promise<GetTemplateResponse>
 }
 
 interface PipelinePayload {
@@ -434,7 +442,9 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       branch: defaultTo(gitDetails.branch, defaultTo(pipelineWithGitDetails?.gitDetails?.branch, ''))
     }
     if (data && !forceUpdate) {
-      const templateTypes = data.pipeline ? await getTemplateType(data.pipeline, templateQueryParams) : {}
+      const { templateTypes, templateServiceData } = data.pipeline
+        ? await getTemplateType(data.pipeline, templateQueryParams)
+        : { templateTypes: {}, templateServiceData: {} }
       dispatch(
         PipelineContextActions.success({
           error: '',
@@ -447,6 +457,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
               ? pipelineWithGitDetails.gitDetails
               : defaultTo(data?.gitDetails, {}),
           templateTypes,
+          templateServiceData,
           entityValidityDetails: defaultTo(
             pipelineWithGitDetails?.entityValidityDetails,
             defaultTo(data?.entityValidityDetails, {})
@@ -464,7 +475,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       } catch (_) {
         logger.info(DBNotFoundErrorMessage)
       }
-      const templateTypes = await getTemplateType(pipeline, templateQueryParams)
+      const { templateTypes, templateServiceData } = await getTemplateType(pipeline, templateQueryParams)
       dispatch(
         PipelineContextActions.success({
           error: '',
@@ -475,6 +486,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
           gitDetails: payload.gitDetails,
           entityValidityDetails: payload.entityValidityDetails,
           templateTypes,
+          templateServiceData,
           templateInputsErrorNodeSummary,
           yamlSchemaErrorWrapper: payload?.yamlSchemaErrorWrapper
         })
@@ -845,6 +857,7 @@ export const PipelineContext = React.createContext<PipelineContextInterface>({
   getStageFromPipeline: () => ({ stage: undefined, parent: undefined }),
   setYamlHandler: () => undefined,
   setTemplateTypes: () => undefined,
+  setTemplateServiceData: () => undefined,
   updatePipeline: () => new Promise<void>(() => undefined),
   pipelineSaved: () => undefined,
   deletePipelineCache: () => new Promise<void>(() => undefined),
@@ -852,8 +865,7 @@ export const PipelineContext = React.createContext<PipelineContextInterface>({
   setSelectedStepId: (_selectedStepId: string | undefined) => undefined,
   setSelectedSectionId: (_selectedSectionId: string | undefined) => undefined,
   setSelection: (_selectedState: PipelineSelectionState | undefined) => undefined,
-  getStagePathFromPipeline: () => '',
-  getTemplate: () => new Promise<GetTemplateResponse>(() => undefined)
+  getStagePathFromPipeline: () => ''
 })
 
 export interface PipelineProviderProps {
@@ -863,7 +875,6 @@ export interface PipelineProviderProps {
   stagesMap: StagesMap
   runPipeline: (identifier: string) => void
   renderPipelineStage: PipelineContextInterface['renderPipelineStage']
-  getTemplate: PipelineContextInterface['getTemplate']
 }
 
 export function PipelineProvider({
@@ -873,11 +884,14 @@ export function PipelineProvider({
   renderPipelineStage,
   stepsFactory,
   stagesMap,
-  runPipeline,
-  getTemplate
+  runPipeline
 }: React.PropsWithChildren<PipelineProviderProps>): React.ReactElement {
   const contextType = PipelineContextType.Pipeline
-  const allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+  const allowableTypes: AllowedTypesWithRunTime[] = [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ]
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const abortControllerRef = React.useRef<AbortController | null>(null)
   const isMounted = React.useRef(false)
@@ -1024,12 +1038,13 @@ export function PipelineProvider({
         ...queryParams,
         templateListType: 'Stable',
         repoIdentifier: state.gitDetails.repoIdentifier,
-        branch: state.gitDetails.repoIdentifier,
+        branch: state.gitDetails.branch,
         getDefaultFromOtherRepo: true
       },
       templateRefs
-    ).then(resp => {
-      setTemplateTypes(merge(state.templateTypes, resp))
+    ).then(({ templateTypes, templateServiceData }) => {
+      setTemplateTypes(merge(state.templateTypes, templateTypes))
+      setTemplateServiceData(merge(state.templateServiceData, templateServiceData))
     })
   }, [state.pipeline])
 
@@ -1055,6 +1070,10 @@ export function PipelineProvider({
 
   const setTemplateTypes = React.useCallback(templateTypes => {
     dispatch(PipelineContextActions.setTemplateTypes({ templateTypes }))
+  }, [])
+
+  const setTemplateServiceData = React.useCallback(templateServiceData => {
+    dispatch(PipelineContextActions.setTemplateServiceData({ templateServiceData }))
   }, [])
 
   const setSchemaErrorView = React.useCallback(flag => {
@@ -1155,7 +1174,7 @@ export function PipelineProvider({
         setSelection,
         getStagePathFromPipeline,
         setTemplateTypes,
-        getTemplate
+        setTemplateServiceData
       }}
     >
       {children}

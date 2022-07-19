@@ -87,6 +87,7 @@ describe('Test CreatePRStep', () => {
   test('should render edit view as inputset step', () => {
     const { container } = render(
       <TestStepWidget
+        path="stage"
         template={{
           type: StepType.CreatePR,
           name: 'Test A',

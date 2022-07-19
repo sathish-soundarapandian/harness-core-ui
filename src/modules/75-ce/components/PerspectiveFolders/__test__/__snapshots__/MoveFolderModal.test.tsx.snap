@@ -78,7 +78,7 @@ exports[`Test cases for Move Perspective Folder Dialog Should render the modal 1
                   />
                 </svg>
               </span>
-              Default Folder
+              
             </p>
             <div
               class="bp3-form-group"

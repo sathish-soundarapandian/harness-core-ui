@@ -56,7 +56,6 @@ import type { Scope } from '@common/interfaces/SecretsInterface'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { ArtifactActions } from '@common/constants/TrackingConstants'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import { isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
 import StepNexusAuthentication from '@connectors/components/CreateConnector/NexusConnector/StepAuth/StepNexusAuthentication'
 import StepArtifactoryAuthentication from '@connectors/components/CreateConnector/ArtifactoryConnector/StepAuth/StepArtifactoryAuthentication'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -72,7 +71,10 @@ import type {
   InitialArtifactDataType,
   ConnectorRefLabelType,
   ArtifactType,
-  ImagePathProps
+  ImagePathProps,
+  ImagePathTypes,
+  AmazonS3InitialValuesType,
+  JenkinsArtifactType
 } from './ArtifactInterface'
 import {
   ArtifactToConnectorMap,
@@ -80,7 +82,11 @@ import {
   ArtifactIconByType,
   ArtifactTitleIdByType,
   allowedArtifactTypes,
-  ModalViewFor
+  ModalViewFor,
+  isAdditionAllowed,
+  isAllowedCustomArtifactDeploymentTypes,
+  isAllowedACRArtifactDeploymentTypes,
+  isSidecarAllowed
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import NexusArtifact from './ArtifactRepository/ArtifactLastSteps/NexusArtifact/NexusArtifact'
@@ -88,6 +94,8 @@ import Artifactory from './ArtifactRepository/ArtifactLastSteps/Artifactory/Arti
 import { CustomArtifact } from './ArtifactRepository/ArtifactLastSteps/CustomArtifact/CustomArtifact'
 import { showConnectorStep } from './ArtifactUtils'
 import { ACRArtifact } from './ArtifactRepository/ArtifactLastSteps/ACRArtifact/ACRArtifact'
+import { AmazonS3 } from './ArtifactRepository/ArtifactLastSteps/AmazonS3Artifact/AmazonS3'
+import { JenkinsArtifact } from './ArtifactRepository/ArtifactLastSteps/JenkinsArtifact/JenkinsArtifact'
 import css from './ArtifactsSelection.module.scss'
 
 export default function ArtifactsSelection({
@@ -120,27 +128,16 @@ export default function ArtifactsSelection({
   const { expressions } = useVariablesExpression()
 
   const stepWizardTitle = getString('connectors.createNewConnector')
-  const { NG_NEXUS_ARTIFACTORY, CUSTOM_ARTIFACT_NG, NG_AZURE } = useFeatureFlags()
+  const { CUSTOM_ARTIFACT_NG, NG_AZURE } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const getServiceCacheId = `${pipeline.identifier}-${selectedStageId}-service`
   const { getCache } = useCache([getServiceCacheId])
 
   useEffect(() => {
     if (
-      NG_NEXUS_ARTIFACTORY &&
-      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.Nexus3Registry) &&
-      !isServerlessDeploymentType(deploymentType)
-    ) {
-      allowedArtifactTypes[deploymentType].push(
-        ENABLED_ARTIFACT_TYPES.Nexus3Registry,
-        ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry
-      )
-    }
-
-    if (
       CUSTOM_ARTIFACT_NG &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.CustomArtifact) &&
-      !isServerlessDeploymentType(deploymentType)
+      isAllowedCustomArtifactDeploymentTypes(deploymentType)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.CustomArtifact)
     }
@@ -148,7 +145,7 @@ export default function ArtifactsSelection({
     if (
       NG_AZURE &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.Acr) &&
-      !isServerlessDeploymentType(deploymentType)
+      isAllowedACRArtifactDeploymentTypes(deploymentType)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.Acr)
     }
@@ -470,7 +467,9 @@ export default function ArtifactsSelection({
     }
   }, [selectedArtifact])
 
-  const artifactLastStepProps = useCallback((): ImagePathProps => {
+  const artifactLastStepProps = useCallback((): ImagePathProps<
+    ImagePathTypes & AmazonS3InitialValuesType & JenkinsArtifactType
+  > => {
     return {
       key: getString('connectors.stepFourName'),
       name: getString('connectors.stepFourName'),
@@ -620,10 +619,14 @@ export default function ArtifactsSelection({
         return <NexusArtifact {...artifactLastStepProps()} />
       case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
         return <Artifactory {...artifactLastStepProps()} />
+      case ENABLED_ARTIFACT_TYPES.AmazonS3:
+        return <AmazonS3 {...artifactLastStepProps()} />
       case ENABLED_ARTIFACT_TYPES.CustomArtifact:
         return <CustomArtifact {...artifactLastStepProps()} />
       case ENABLED_ARTIFACT_TYPES.Acr:
         return <ACRArtifact {...artifactLastStepProps()} />
+      case ENABLED_ARTIFACT_TYPES.Jenkins:
+        return <JenkinsArtifact {...artifactLastStepProps()} />
       case ENABLED_ARTIFACT_TYPES.DockerRegistry:
       default:
         return <DockerRegistryArtifact {...artifactLastStepProps()} />
@@ -675,7 +678,8 @@ export default function ArtifactsSelection({
       accountId={accountId}
       refetchConnectors={refetchConnectorList}
       isReadonly={readonly}
-      allowSidecar={!isServerlessDeploymentType(deploymentType)}
+      isAdditionAllowed={isAdditionAllowed(deploymentType, readonly)}
+      isSidecarAllowed={isSidecarAllowed(deploymentType, readonly)}
     />
   )
 }

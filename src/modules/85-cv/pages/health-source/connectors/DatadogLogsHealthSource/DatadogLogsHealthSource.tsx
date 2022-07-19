@@ -6,7 +6,7 @@
  */
 
 import React, { useContext, useMemo, useState } from 'react'
-import { Formik, FormikForm, Utils } from '@wings-software/uicore'
+import { Formik, FormikForm, getMultiTypeFromValue, MultiTypeInputType, Utils } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { SetupSourceLayout } from '@cv/components/CVSetupSourcesView/SetupSourceLayout/SetupSourceLayout'
@@ -28,7 +28,7 @@ import type {
 import css from '@cv/pages/health-source/connectors/DatadogLogsHealthSource/DatadogLogsHealthSource.module.scss'
 
 export function DatadogLogsHealthSource(props: DatadogLogsHealthSourceProps): JSX.Element {
-  const { data: sourceData } = props
+  const { data: sourceData, isTemplate, expressions } = props
   const { onPrevious } = useContext(SetupSourceTabsContext)
   const { getString } = useStrings()
   const [rerenderKey, setRerenderKey] = useState('')
@@ -36,10 +36,14 @@ export function DatadogLogsHealthSource(props: DatadogLogsHealthSourceProps): JS
     () => transformDatadogHealthSourceToDatadogLogsSetupSource(sourceData),
     [sourceData]
   )
+  const isConnectorRuntimeOrExpression =
+    getMultiTypeFromValue(transformedSourceData?.connectorRef as string) !== MultiTypeInputType.FIXED
+
   const [{ selectedMetric, mappedMetrics }, setMappedMetrics] = useState<SelectedAndMappedMetrics>(
     initializeSelectedMetricsMap(
       getString('cv.monitoringSources.datadogLogs.datadogLogsQuery'),
-      transformedSourceData.logsDefinitions.size > 0 ? transformedSourceData.logsDefinitions : undefined
+      transformedSourceData.logsDefinitions.size > 0 ? transformedSourceData.logsDefinitions : undefined,
+      isConnectorRuntimeOrExpression
     )
   )
 
@@ -123,7 +127,8 @@ export function DatadogLogsHealthSource(props: DatadogLogsHealthSourceProps): JS
                       updatedMetric: newMetric,
                       oldMetric: oldState.selectedMetric,
                       mappedMetrics: new Map<string, DatadogLogsInfo>(oldState.mappedMetrics),
-                      formikProps
+                      formikProps,
+                      isConnectorRuntimeOrExpression
                     })
                   })
                   setRerenderKey(Utils.randomId())
@@ -131,7 +136,14 @@ export function DatadogLogsHealthSource(props: DatadogLogsHealthSourceProps): JS
                 isValidInput={formikProps.isValid}
               />
             }
-            content={<DatadogLogsMapToService sourceData={sourceData} formikProps={formikProps} />}
+            content={
+              <DatadogLogsMapToService
+                sourceData={sourceData}
+                formikProps={formikProps}
+                isTemplate={isTemplate}
+                expressions={expressions}
+              />
+            }
           />
           <DrawerFooter isSubmit onPrevious={onPrevious} onNext={formikProps.submitForm} />
         </FormikForm>

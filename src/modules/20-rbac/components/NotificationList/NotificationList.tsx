@@ -17,11 +17,14 @@ import {
   Icon,
   Layout,
   SelectOption,
-  Text
+  Text,
+  MultiTypeInputType,
+  getMultiTypeFromValue
 } from '@wings-software/uicore'
 import { Form, FormikProps } from 'formik'
 import produce from 'immer'
 import { useParams } from 'react-router-dom'
+import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { NotificationSettingConfigDTO, usePutUserGroup, UserGroupDTO } from 'services/cd-ng'
 import { TestEmailNotifications } from '@notifications/modals/ConfigureNotificationsModal/views/ConfigureEmailNotifications/ConfigureEmailNotifications'
@@ -49,7 +52,7 @@ interface RowData extends NotificationSettingConfigDTO {
   recipient?: string
   slackWebhookUrl?: string
   pagerDutyKey?: string
-  msTeamKeys?: string
+  microsoftTeamsWebhookUrl?: string
 }
 export interface NotificationOption {
   label: string
@@ -87,6 +90,9 @@ const ChannelRow: React.FC<ChannelRow> = ({
   const [edit, setEdit] = useState<boolean>(false)
   const enableEdit = isCreate || edit
   const { showSuccess, showError } = useToaster()
+  const [selectedInputType, setSelectedInputType] = useState<MultiTypeInputType>(
+    getMultiTypeFromValue(getNotificationByConfig(data)?.value)
+  )
 
   const { mutate: updateNotifications, loading } = usePutUserGroup({
     queryParams: {
@@ -115,7 +121,7 @@ const ChannelRow: React.FC<ChannelRow> = ({
         }
       case 'MSTEAMS':
         return {
-          name: 'msTeamKeys',
+          name: 'microsoftTeamsWebhookUrl',
           textPlaceholder: getString('notifications.labelMSTeam')
         }
       default:
@@ -177,6 +183,25 @@ const ChannelRow: React.FC<ChannelRow> = ({
     }
   }
 
+  const renderInputField = (type: NotificationSettingConfigDTO['type']) => {
+    const { name, textPlaceholder } = getFieldDetails(type)
+    if (type === 'EMAIL') {
+      return <FormInput.Text name={name} placeholder={textPlaceholder} />
+    }
+
+    return (
+      <FormInput.MultiTextInput
+        name={name}
+        label=""
+        placeholder={textPlaceholder}
+        multiTextInputProps={{
+          allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+          onTypeChange: setSelectedInputType
+        }}
+      />
+    )
+  }
+
   return (
     <>
       <Formik<RowData>
@@ -189,15 +214,21 @@ const ChannelRow: React.FC<ChannelRow> = ({
           }),
           slackWebhookUrl: Yup.string().when(['type'], {
             is: 'SLACK',
-            then: URLValidationSchema()
+            then:
+              selectedInputType === MultiTypeInputType.EXPRESSION
+                ? Yup.string().required(getString('common.validation.urlIsRequired'))
+                : URLValidationSchema()
           }),
           pagerDutyKey: Yup.string().when(['type'], {
             is: 'PAGERDUTY',
             then: Yup.string().trim().required(getString('notifications.validationPDKey'))
           }),
-          msTeamKeys: Yup.string().when(['type'], {
+          microsoftTeamsWebhookUrl: Yup.string().when(['type'], {
             is: 'MSTEAMS',
-            then: URLValidationSchema()
+            then:
+              selectedInputType === MultiTypeInputType.EXPRESSION
+                ? Yup.string().required(getString('common.validation.urlIsRequired'))
+                : URLValidationSchema()
           })
         })}
         formName="NotificationForm"
@@ -219,12 +250,7 @@ const ChannelRow: React.FC<ChannelRow> = ({
                         disabled={edit}
                       />
                     </Container>
-                    <Container width="40%">
-                      <FormInput.Text
-                        name={getFieldDetails(formikProps.values.type).name}
-                        placeholder={getFieldDetails(formikProps.values.type).textPlaceholder}
-                      />
-                    </Container>
+                    <Container width="40%">{renderInputField(formikProps.values.type)}</Container>
                   </>
                 ) : (
                   <>
@@ -256,7 +282,8 @@ const ChannelRow: React.FC<ChannelRow> = ({
                         data={formikProps.values as any}
                         onClick={() => handleTest(formikProps)}
                         buttonProps={{
-                          minimal: true
+                          minimal: true,
+                          disabled: selectedInputType === MultiTypeInputType.EXPRESSION
                         }}
                       />
                     ) : null}
@@ -265,15 +292,20 @@ const ChannelRow: React.FC<ChannelRow> = ({
                         data={formikProps.values as any}
                         onClick={() => handleTest(formikProps)}
                         buttonProps={{
-                          minimal: true
+                          minimal: true,
+                          disabled: selectedInputType === MultiTypeInputType.EXPRESSION
                         }}
                       />
                     ) : null}
                     {formikProps.values.type == 'MSTEAMS' ? (
                       <TestMSTeamsNotifications
-                        data={formikProps.values as any}
+                        data={{
+                          userGroups: [],
+                          msTeamKeys: [defaultTo(formikProps.values.microsoftTeamsWebhookUrl, '')]
+                        }}
                         buttonProps={{
-                          minimal: true
+                          minimal: true,
+                          disabled: selectedInputType === MultiTypeInputType.EXPRESSION
                         }}
                         errors={{}}
                         onClick={() => handleTest(formikProps)}
@@ -286,6 +318,7 @@ const ChannelRow: React.FC<ChannelRow> = ({
                         <>
                           <Button icon="edit" minimal onClick={() => setEdit(true)} className={css.button} />
                           <Button
+                            data-testid="trashBtn"
                             icon="trash"
                             minimal
                             onClick={() => handleDelete(formikProps.values)}
@@ -295,7 +328,13 @@ const ChannelRow: React.FC<ChannelRow> = ({
                       )
                     ) : null}
                     {isCreate && !inherited ? (
-                      <Button icon="trash" minimal onClick={() => onRowDelete?.()} className={css.button} />
+                      <Button
+                        data-testid="trashBtn"
+                        icon="trash"
+                        minimal
+                        onClick={() => onRowDelete?.()}
+                        className={css.button}
+                      />
                     ) : null}
                   </Layout.Horizontal>
                 </Container>

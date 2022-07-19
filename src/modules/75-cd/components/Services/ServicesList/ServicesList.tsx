@@ -21,13 +21,19 @@ import {
   Dialog,
   Icon
 } from '@harness/uicore'
-import { Color, Intent } from '@harness/design-system'
+import { Color, FontVariation, Intent } from '@harness/design-system'
 import { Classes, Menu, Position } from '@blueprintjs/core'
 import { defaultTo, pick } from 'lodash-es'
 import type { TableProps } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import routes from '@common/RouteDefinitions'
-import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type {
+  ExecutionPathProps,
+  ModulePathParams,
+  PipelinePathProps,
+  PipelineType,
+  ProjectPathProps
+} from '@common/interfaces/RouteInterfaces'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { DashboardList } from '@cd/components/DashboardList/DashboardList'
 import type { DashboardListProps } from '@cd/components/DashboardList/DashboardList'
@@ -44,6 +50,7 @@ import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
+import { isExecutionNotStarted } from '@pipeline/utils/statusHelpers'
 import { ServiceTabs } from '../utils/ServiceUtils'
 import css from '@cd/components/Services/ServicesList/ServiceList.module.scss'
 
@@ -72,6 +79,9 @@ export interface ServiceListItem {
     id: string
     timestamp: number
     status: string
+    serviceId: string
+    executionId: string
+    planExecutionId?: string
   }
 }
 
@@ -110,7 +120,10 @@ const transformServiceDetailsData = (data: ServiceDetailsDTO[]): ServiceListItem
       name: defaultTo(item.lastPipelineExecuted?.name, ''),
       id: defaultTo(item.lastPipelineExecuted?.pipelineExecutionId, ''),
       timestamp: defaultTo(item.lastPipelineExecuted?.lastExecutedAt, 0),
-      status: defaultTo(item.lastPipelineExecuted?.status, '')
+      status: defaultTo(item.lastPipelineExecuted?.status, ''),
+      executionId: defaultTo(item.lastPipelineExecuted?.identifier, ''),
+      serviceId: defaultTo(item.serviceIdentifier, ''),
+      planExecutionId: defaultTo(item.lastPipelineExecuted?.planExecutionId, '')
     }
   }))
 }
@@ -227,57 +240,34 @@ const RenderServiceInstances: Renderer<CellProps<ServiceListItem>> = ({ row }) =
 
 const RenderLastDeployment: Renderer<CellProps<ServiceListItem>> = ({ row }) => {
   const {
-    lastDeployment: { id, name, timestamp }
+    lastDeployment: { id, name, timestamp, executionId, planExecutionId, status }
   } = row.original
   const { getString } = useStrings()
-  if (!id) {
-    return <></>
-  }
-  return (
-    <Layout.Vertical margin={{ right: 'large' }} flex={{ alignItems: 'flex-start' }}>
-      <Layout.Horizontal
-        margin={{ bottom: 'xsmall' }}
-        flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-        width="100%"
-      >
-        <Text
-          font={{ weight: 'semi-bold' }}
-          color={Color.GREY_700}
-          margin={{ right: 'xsmall' }}
-          className={css.lastDeploymentText}
-        >
-          {name}
-        </Text>
-        <Text font={{ size: 'small' }} color={Color.GREY_500} className={css.lastDeploymentText}>{`(${getString(
-          'cd.serviceDashboard.executionId',
-          {
-            id
-          }
-        )})`}</Text>
-      </Layout.Horizontal>
-      {timestamp ? (
-        <ReactTimeago
-          date={timestamp}
-          component={val => (
-            <Text font={{ size: 'small' }} color={Color.GREY_500}>
-              {val.children}
-            </Text>
-          )}
-        />
-      ) : (
-        <></>
-      )}
-    </Layout.Vertical>
-  )
-}
+  const { showError } = useToaster()
 
-const RenderLastDeploymentStatus: Renderer<CellProps<ServiceListItem>> = ({ row }) => {
-  const {
-    lastDeployment: { id, status }
-  } = row.original
-  const { getString } = useStrings()
-  if (!id) {
-    return <></>
+  const { orgIdentifier, projectIdentifier, accountId, module, pipelineIdentifier } =
+    useParams<PipelineType<PipelinePathProps>>()
+  const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
+
+  const disabled = isExecutionNotStarted(status)
+
+  function handleClick(): void {
+    if (!disabled && id && planExecutionId) {
+      const route = routes.toExecutionPipelineView({
+        orgIdentifier,
+        pipelineIdentifier: executionId,
+        executionIdentifier: planExecutionId,
+        projectIdentifier,
+        accountId,
+        module,
+        source
+      })
+
+      const baseUrl = window.location.href.split('#')[0]
+      window.open(`${baseUrl}#${route}`)
+    } else {
+      showError(getString('cd.serviceDashboard.noLastDeployment'))
+    }
   }
   const [statusBackgroundColor, statusText] =
     status?.toLocaleLowerCase() === DeploymentStatus.SUCCESS
@@ -285,17 +275,55 @@ const RenderLastDeploymentStatus: Renderer<CellProps<ServiceListItem>> = ({ row 
       : status?.toLocaleLowerCase() === DeploymentStatus.FAILED
       ? [Color.RED_600, getString('failed')]
       : [Color.YELLOW_600, status]
+
+  if (!id) {
+    return <></>
+  }
   return (
-    <Layout.Horizontal flex={{ justifyContent: 'flex-end' }}>
-      <Text
-        background={statusBackgroundColor}
-        color={Color.WHITE}
-        font={{ weight: 'semi-bold', size: 'xsmall' }}
-        className={css.statusText}
-        lineClamp={1}
-      >
-        {statusText?.toLocaleUpperCase()}
-      </Text>
+    <Layout.Horizontal className={css.lastDeployment}>
+      <Layout.Vertical margin={{ right: 'large' }} flex={{ alignItems: 'flex-start' }}>
+        <Layout.Horizontal
+          margin={{ bottom: 'xsmall' }}
+          flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+          width="100%"
+        >
+          <Text
+            data-testid={id}
+            font={{ variation: FontVariation.BODY2 }}
+            color={Color.PRIMARY_7}
+            margin={{ right: 'xsmall' }}
+            className={css.lastDeploymentText}
+            lineClamp={1}
+            onClick={e => {
+              e.stopPropagation()
+              handleClick()
+            }}
+          >
+            {name}
+          </Text>
+        </Layout.Horizontal>
+        {timestamp && (
+          <ReactTimeago
+            date={timestamp}
+            component={val => (
+              <Text font={{ size: 'small' }} color={Color.GREY_500}>
+                {' '}
+                {val.children}{' '}
+              </Text>
+            )}
+          />
+        )}
+      </Layout.Vertical>
+      <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
+        <Text
+          background={statusBackgroundColor}
+          color={Color.WHITE}
+          font={{ weight: 'semi-bold', size: 'xsmall' }}
+          className={css.statusText}
+        >
+          {statusText?.toLocaleUpperCase()}
+        </Text>
+      </Layout.Horizontal>
     </Layout.Horizontal>
   )
 }
@@ -513,7 +541,7 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
         {
           Header: getString('service').toLocaleUpperCase(),
           id: 'service',
-          width: '15%',
+          width: '20%',
           Cell: RenderServiceName
         },
         {
@@ -543,24 +571,18 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
         {
           Header: getString('cd.serviceDashboard.frequency').toLocaleUpperCase(),
           id: 'frequency',
-          width: '10%',
+          width: '13%',
           Cell: getRenderTickerCard('frequency')
         },
         {
-          Header: getString('cd.serviceDashboard.lastDeployment').toLocaleUpperCase(),
+          Header: getString('cd.serviceDashboard.lastPipelineExecution').toLocaleUpperCase(),
           id: 'lastDeployment',
-          width: '22%',
+          width: '18%',
           Cell: RenderLastDeployment
         },
         {
           Header: '',
-          id: 'status',
-          width: '5%',
-          Cell: RenderLastDeploymentStatus
-        },
-        {
-          Header: '',
-          width: '3%',
+          width: '4%',
           id: 'action',
           Cell: RenderColumnMenu,
           reload: refetch,

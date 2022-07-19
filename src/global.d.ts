@@ -70,6 +70,7 @@ declare interface Window {
   helpPanelAccessToken: string
   helpPanelSpace: string
   helpPanelEnvironment: 'QA' | 'master'
+  stripeApiKey: string
 }
 
 declare interface WindowEventMap {
@@ -109,9 +110,22 @@ declare module 'sto/App' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
+declare module 'stoV2/App' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'ccmui/MicroFrontendApp' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
 
 declare module 'sto/PipelineSecurityView' {
   import type { PipelineSecurityViewProps } from '@pipeline/interfaces/STOApp'
+  const ChildApp: React.ComponentType<PipelineSecurityViewProps>
+  export default ChildApp
+}
+declare module 'stoV2/PipelineSecurityView' {
   const ChildApp: React.ComponentType<PipelineSecurityViewProps>
   export default ChildApp
 }

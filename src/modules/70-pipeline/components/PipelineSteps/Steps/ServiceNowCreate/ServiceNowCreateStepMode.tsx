@@ -13,6 +13,7 @@ import cx from 'classnames'
 import * as Yup from 'yup'
 import { FieldArray, FormikProps } from 'formik'
 import {
+  AllowedTypes,
   Button,
   Formik,
   FormikForm,
@@ -61,7 +62,7 @@ import type {
   ServiceNowCreateStepModeProps,
   ServiceNowFieldNGWithValue
 } from './types'
-import { FieldType, ServiceNowStaticFields } from './types'
+import { FieldType, ServiceNowStaticFields, TICKET_TYPE_CHANGE_TASK } from './types'
 import {
   convertTemplateFieldsForDisplay,
   getInitialValueForSelectedField,
@@ -153,6 +154,13 @@ function FormContent({
   }, [serviceNowTicketTypesResponse?.data])
   useEffect(() => {
     if (
+      ticketValueType === MultiTypeInputType.FIXED &&
+      ticketTypeKeyFixedValue?.toString() === TICKET_TYPE_CHANGE_TASK
+    ) {
+      formik.setFieldValue('spec.fieldType', FieldType.ConfigureFields)
+      formik.setFieldValue('spec.useServiceNowTemplate', false)
+      setIsTemplateSectionAvailable(false)
+    } else if (
       connectorRefFixedValue &&
       connectorValueType === MultiTypeInputType.FIXED &&
       ticketTypeKeyFixedValue &&
@@ -545,7 +553,9 @@ function FormContent({
                                 placeholder={getString('common.valuePlaceholder')}
                                 disabled={isApprovalStepFieldDisabled(readonly)}
                                 multiTextInputProps={{
-                                  allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME),
+                                  allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                    item => item !== MultiTypeInputType.RUNTIME
+                                  ) as AllowedTypes,
                                   expressions
                                 }}
                               />
@@ -609,7 +619,10 @@ function FormContent({
                     />
                   )}
                 </div>
-                <ServiceNowTemplateFieldsRenderer templateFields={formik.values.spec.templateFields} />
+                <ServiceNowTemplateFieldsRenderer
+                  templateFields={formik.values.spec.templateFields}
+                  templateName={formik.values.spec.templateName}
+                />
               </>
             )}
           </div>

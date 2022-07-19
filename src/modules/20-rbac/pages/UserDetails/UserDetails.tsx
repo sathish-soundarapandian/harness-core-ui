@@ -22,7 +22,8 @@ import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PrincipalType } from '@rbac/utils/utils'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
-import { isCommunityPlan } from '@common/utils/utils'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { useGetCommunity } from '@common/utils/utils'
 import UserGroupTable from './views/UserGroupTable'
 import css from './UserDetails.module.scss'
 
@@ -30,7 +31,7 @@ const UserDetails: React.FC = () => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, module, userIdentifier } =
     useParams<PipelineType<ProjectPathProps & UserPathProps>>()
-  const isCommunity = isCommunityPlan()
+  const isCommunity = useGetCommunity()
 
   const { data, loading, error, refetch } = useGetAggregatedUser({
     userId: userIdentifier,
@@ -45,6 +46,8 @@ const UserDetails: React.FC = () => {
     onSuccess: refetch
   })
 
+  const { getRBACErrorMessage } = useRBACError()
+
   const user = data?.data?.user
 
   useDocumentTitle([user?.name || '', getString('users')])
@@ -53,7 +56,7 @@ const UserDetails: React.FC = () => {
     return <PageSpinner />
   }
   if (error) {
-    return <PageError message={error.message} onClick={() => refetch()} />
+    return <PageError message={getRBACErrorMessage(error)} onClick={() => refetch()} />
   }
   if (!data?.data || !user) {
     return <></>

@@ -6,11 +6,11 @@
  */
 
 :global([data-trial-banner-is-visible] ~ * [data-tab-container]) {
-  height: calc(100vh - 196px);
+  height: calc(100vh - 183px);
 }
 
 .tab-container {
-  height: calc(100vh - 161px);
+  height: calc(100vh - 147px);
   display: grid;
   grid-template-rows: 1fr;
   padding-left: var(--spacing-xlarge);

@@ -13,6 +13,7 @@ import { Intent, Color } from '@harness/design-system'
 import { GraphLayoutNode, NodeRunInfo, useGetBarriersExecutionInfo } from 'services/pipeline-ng'
 import {
   getIconFromStageModule,
+  isNodeTypeMatrixOrFor,
   processExecutionDataForGraph,
   processLayoutNodeMap,
   ProcessLayoutNodeMapResponse,
@@ -55,6 +56,7 @@ import { getExecutionStageDiagramListeners } from '@pipeline/utils/execUtils'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { MatrixNode } from '@pipeline/components/PipelineDiagram/Nodes/MatrixNode/MatrixNode'
 import CDInfo from './components/CD/CDInfo/CDInfo'
 import css from './ExecutionGraph.module.scss'
 
@@ -63,6 +65,7 @@ diagram.registerNode(['Deployment', 'CI'], PipelineStageNode as unknown as React
 diagram.registerNode(DiagramNodeType.CreateNode, CreateNodeStage as unknown as React.FC<BaseReactComponentProps>)
 diagram.registerNode(DiagramNodeType.EndNode, EndNodeStage)
 diagram.registerNode(DiagramNodeType.StartNode, StartNodeStage)
+diagram.registerNode([DiagramNodeType.MatrixNode, DiagramNodeType.ForNode, DiagramNodeType.PARALLELISM], MatrixNode)
 diagram.registerNode(['Approval', 'JiraApproval', 'HarnessApproval', 'default-diamond'], DiamondNodeWidget)
 
 export const CDPipelineStudioNew = diagram.render()
@@ -120,7 +123,7 @@ const processExecutionData = (
 }
 
 export interface ExecutionGraphProps {
-  onSelectedStage(stage: string): void
+  onSelectedStage(stage: string, stageExecId?: string): void
 }
 
 export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactElement {
@@ -171,7 +174,7 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
           setStageSetupIdId('')
         },
         onMouseEnter: onMouseEnterV1,
-        onStepSelect: (id: string) => props.onSelectedStage(id)
+        onStepSelect: (id: string, stageExecId?: string) => props.onSelectedStage(id, stageExecId)
       })
     )
   }, [pipelineExecutionDetail?.pipelineExecutionSummary?.layoutNodeMap, dynamicPopoverHandler])
@@ -242,6 +245,23 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
     )
   }
 
+  const isMatrixNode = React.useCallback((): boolean => {
+    let isMatrixNodePresent = false
+    data?.items?.forEach((obj: PipelineGraphState) => {
+      if (isNodeTypeMatrixOrFor(get(obj, 'type'))) {
+        isMatrixNodePresent = true
+        return
+      }
+      obj?.children?.forEach((parallelNode: PipelineGraphState) => {
+        if (isNodeTypeMatrixOrFor(get(parallelNode, 'type'))) {
+          isMatrixNodePresent = true
+          return
+        }
+      })
+    })
+    return isMatrixNodePresent
+  }, [data?.items])
+
   return (
     <div className={css.main}>
       {isExecutionIgnoreFailed(pipelineExecutionDetail?.pipelineExecutionSummary?.status) ? (
@@ -268,8 +288,9 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
               selectedNodeId={selectedStageId}
               panZoom={false}
               parentSelector=".Pane1"
-              collapsibleProps={{ percentageNodeVisible: 0.8, bottomMarginInPixels: 120 }}
+              {...(!isMatrixNode() && { collapsibleProps: { percentageNodeVisible: 0.8, bottomMarginInPixels: 120 } })}
               graphLinkClassname={css.graphLink}
+              key={executionIdentifier}
             />
           ) : (
             <ExecutionStageDiagram

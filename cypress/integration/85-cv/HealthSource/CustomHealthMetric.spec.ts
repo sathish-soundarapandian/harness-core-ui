@@ -72,9 +72,10 @@ describe('Configure Datadog health source', () => {
       { allServicesCount: 1, servicesAtRiskCount: 0 }
     )
     cy.visitChangeIntelligence()
+    cy.visitSRMMonitoredServicePage()
   })
 
-  it.skip('Add new Custom HealthSource ', () => {
+  it('Add new Custom HealthSource ', () => {
     cy.intercept('GET', baseURLCall, baseURLResponse).as('BaseURLCall')
     cy.intercept('POST', fetchRecordsCall, fetchRecordsRespose).as('FetchRecordsCall')
 

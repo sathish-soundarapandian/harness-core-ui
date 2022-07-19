@@ -134,7 +134,7 @@ export const createRequestBodyPayload = ({
       filterType: 'PipelineExecution',
       pipelineName: pipelineName || '',
       status: _statuses,
-      timeRange: timeRange || [],
+      timeRange: timeRange,
       moduleProperties: _moduleProperties as PipelineExecutionFilterProperties['moduleProperties']
     } as PipelineExecutionFilterProperties
   }

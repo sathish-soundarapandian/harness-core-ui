@@ -20,6 +20,7 @@ import type {
 } from 'services/cd-ng'
 import type { DependencyElement } from 'services/ci'
 import { StepType as PipelineStepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import { EmptyNodeSeparator } from '../StageBuilder/StageBuilderUtil'
 import {
   CreateNewModel,
@@ -820,5 +821,13 @@ export const StepTypeToPipelineIconMap: Record<any, IconName> = {
   [PipelineStepType.HarnessApproval]: 'harness-with-color',
   [PipelineStepType.JiraCreate]: 'jira-create',
   [PipelineStepType.JiraUpdate]: 'jira-update',
-  [PipelineStepType.Barrier]: 'barrier-open'
+  [PipelineStepType.Barrier]: 'barrier-open',
+  [PipelineStepType.CustomApproval]: 'custom-approval'
+}
+
+export const isServiceDependenciesSupported = (stageType: string): boolean => {
+  if (stageType === StageType.BUILD || stageType === StageType.SECURITY) {
+    return true
+  }
+  return false
 }

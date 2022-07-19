@@ -11,6 +11,7 @@ import {
   Button,
   Container,
   ExpandingSearchInput,
+  ExpandingSearchInputHandle,
   Heading,
   Layout,
   Pagination,
@@ -44,7 +45,6 @@ import { UseToggleFeatureFlag, useToggleFeatureFlag } from '@cf/hooks/useToggleF
 import { VariationTypeIcon } from '@cf/components/VariationTypeIcon/VariationTypeIcon'
 import { VariationWithIcon } from '@cf/components/VariationWithIcon/VariationWithIcon'
 import ListingPageTemplate from '@cf/components/ListingPageTemplate/ListingPageTemplate'
-import { NoData } from '@cf/components/NoData/NoData'
 import { useEnvironmentSelectV2 } from '@cf/hooks/useEnvironmentSelectV2'
 import { CFEnvironmentSelect } from '@cf/components/CFEnvironmentSelect/CFEnvironmentSelect'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
@@ -55,7 +55,6 @@ import {
   getDefaultVariation,
   getErrorMessage,
   isFeatureFlagOn,
-  rewriteCurrentLocationWithActiveEnvironment,
   useFeatureFlagTypeToStringMapping
 } from '@cf/utils/CFUtils'
 import { FlagTypeVariations } from '@cf/components/CreateFlagDialog/FlagDialogUtils'
@@ -73,12 +72,12 @@ import { useFeature } from '@common/hooks/useFeatures'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import { FeatureFlag } from '@common/featureFlags'
-import imageURL from '@cf/images/Feature_Flags_Teepee.svg'
 import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import type { FilterProps } from '@cf/components/TableFilters/TableFilters'
 import { FeatureFlagStatus, FlagStatus } from './FlagStatus'
 import { FlagResult } from './FlagResult'
 import { FlagTableFilters } from './components/FlagTableFilters'
+import { NoFeatureFlags } from './components/NoFeatureFlags'
 import css from './FeatureFlagsPage.module.scss'
 
 export interface RenderColumnFlagProps {
@@ -88,6 +87,7 @@ export interface RenderColumnFlagProps {
   toggleFeatureFlag: UseToggleFeatureFlag
   governance: UseGovernancePayload
   update: (status: boolean) => void
+  refetchFlags: () => void
 }
 
 export const RenderColumnFlag: React.FC<RenderColumnFlagProps> = ({
@@ -96,7 +96,8 @@ export const RenderColumnFlag: React.FC<RenderColumnFlagProps> = ({
   toggleFeatureFlag,
   governance,
   cell: { row },
-  update
+  update,
+  refetchFlags
 }) => {
   const data = row.original
   const [status, setStatus] = useState(isFeatureFlagOn(data))
@@ -151,6 +152,7 @@ export const RenderColumnFlag: React.FC<RenderColumnFlagProps> = ({
 
       setStatus(!status)
       update(!status)
+      refetchFlags()
     } catch (error: any) {
       if (error.status === GIT_SYNC_ERROR_CODE) {
         gitSync.handleError(error.data as GitSyncErrorResponse)
@@ -418,6 +420,7 @@ const FeatureFlagsPage: React.FC = () => {
   const { projectIdentifier, orgIdentifier, accountId: accountIdentifier } = useParams<Record<string, string>>()
   const history = useHistory()
   const { activeEnvironment: environmentIdentifier, withActiveEnvironment } = useActiveEnvironment()
+  const searchRef = React.useRef<ExpandingSearchInputHandle>({} as ExpandingSearchInputHandle)
   const [pageNumber, setPageNumber] = useState(0)
   const [searchTerm, setSearchTerm] = useState('')
   const [flagFilter, setFlagFilter] = useState<Record<string, any> | FilterProps>({})
@@ -452,14 +455,7 @@ const FeatureFlagsPage: React.FC = () => {
     refetch: refetchEnvironments,
     environments
   } = useEnvironmentSelectV2({
-    selectedEnvironmentIdentifier: environmentIdentifier,
-    onChange: (_value, _environment, _userEvent) => {
-      rewriteCurrentLocationWithActiveEnvironment(_environment)
-      refetch({ queryParams: { ...queryParams, environmentIdentifier: _environment.identifier as string } })
-    },
-    onEmpty: () => {
-      refetch({ queryParams: { ...queryParams, environmentIdentifier: undefined as unknown as string } })
-    }
+    selectedEnvironmentIdentifier: environmentIdentifier
   })
 
   const toggleFeatureFlag = useToggleFeatureFlag({
@@ -471,8 +467,7 @@ const FeatureFlagsPage: React.FC = () => {
 
   const deleteFlag = useDeleteFeatureFlag({ queryParams })
 
-  const [features, setFeatures] = useState<Features | null>()
-
+  const [features, setFeatures] = useState<Features | null>(null)
   const { getString } = useStrings()
   const [loading, setLoading] = useState(true)
 
@@ -486,7 +481,7 @@ const FeatureFlagsPage: React.FC = () => {
 
   /* Hook needed because lazy loading being used on useGetAllFeatures above means changes to filters are NOT picked up when queryParams memo changes */
   useEffect(() => {
-    refetch({ queryParams: { ...queryParams } })
+    refetch({ queryParams })
   }, [refetch, queryParams])
 
   const gitSyncing = useMemo<boolean>(
@@ -526,6 +521,7 @@ const FeatureFlagsPage: React.FC = () => {
                   setFeatures({ ...features } as Features)
                 }
               }}
+              refetchFlags={() => refetch({ queryParams })}
             />
           )
         }
@@ -587,11 +583,14 @@ const FeatureFlagsPage: React.FC = () => {
     [setSearchTerm, refetch, queryParams, setPageNumber]
   )
 
-  const hasFeatureFlags = features?.features && features?.features?.length > 0
-  const emptyFeatureFlags = !loading && features?.features?.length === 0
+  const emptyFeatureFlags = !features?.features?.length
+  // use emptyFeatureFlags below as temp fallback to ensure FilterCards still display in case featureCounts is unavailable or flag STALE_FLAGS_FFM_1510 is toggled off on backend only
+  const hasFeatureFlags = !!features?.featureCounts?.totalFeatures || !emptyFeatureFlags
   const title = getString('featureFlagsText')
-  const displayToolbar = hasFeatureFlags || searchTerm
   const FILTER_FEATURE_FLAGS = useFeatureFlag(FeatureFlag.STALE_FLAGS_FFM_1510)
+
+  const onClearFilter = (): void => setFlagFilter({})
+  const onClearSearch = (): void => searchRef.current.clear()
 
   return (
     <ListingPageTemplate
@@ -599,13 +598,14 @@ const FeatureFlagsPage: React.FC = () => {
       titleTooltipId="ff_ffListing_heading"
       headerContent={!!environments?.length && <CFEnvironmentSelect component={<EnvironmentSelect />} />}
       toolbar={
-        displayToolbar && (
+        hasFeatureFlags && (
           <>
             <div className={css.leftToolbar}>
               <FlagDialog environment={environmentIdentifier} />
               {gitSync?.isGitSyncActionsEnabled && <GitSyncActions isLoading={gitSync.gitSyncLoading || gitSyncing} />}
             </div>
             <ExpandingSearchInput
+              ref={searchRef}
               alwaysExpanded
               name="findFlag"
               placeholder={getString('search')}
@@ -615,7 +615,7 @@ const FeatureFlagsPage: React.FC = () => {
         )
       }
       pagination={
-        !!features?.features?.length && (
+        !emptyFeatureFlags && (
           <Pagination
             itemCount={features?.itemCount || 0}
             pageSize={features?.pageSize || 0}
@@ -633,13 +633,21 @@ const FeatureFlagsPage: React.FC = () => {
       retryOnError={() => {
         setPageNumber(0)
         refetchEnvironments()
+        refetch()
       }}
     >
-      {hasFeatureFlags && (
-        <Container padding={{ top: 'medium', right: 'xlarge', left: 'xlarge' }}>
-          {FILTER_FEATURE_FLAGS && (
-            <FlagTableFilters features={features} currentFilter={flagFilter} updateTableFilter={setFlagFilter} />
-          )}
+      <Container padding={{ top: 'medium', right: 'xlarge', left: 'xlarge' }}>
+        {FILTER_FEATURE_FLAGS && hasFeatureFlags && (
+          <FlagTableFilters
+            features={features}
+            currentFilter={flagFilter}
+            updateTableFilter={currentFilter => {
+              setPageNumber(0)
+              setFlagFilter(currentFilter)
+            }}
+          />
+        )}
+        {!emptyFeatureFlags ? (
           <TableV2<Feature>
             columns={columns}
             data={features?.features || []}
@@ -656,16 +664,17 @@ const FeatureFlagsPage: React.FC = () => {
               )
             }}
           />
-        </Container>
-      )}
-
-      {!loading && emptyFeatureFlags && (
-        <Container width="100%" height="100%" flex={{ align: 'center-center' }}>
-          <NoData imageURL={imageURL} message={getString(searchTerm ? 'cf.noResultMatch' : 'cf.noFlag')}>
-            <FlagDialog environment={environmentIdentifier} />
-          </NoData>
-        </Container>
-      )}
+        ) : (
+          <NoFeatureFlags
+            hasFeatureFlags={hasFeatureFlags}
+            hasSearchTerm={searchTerm.length > 0}
+            hasFlagFilter={flagFilter.queryProps?.key?.length > 0 && flagFilter.queryProps?.value?.length > 0}
+            environmentIdentifier={environmentIdentifier}
+            clearFilter={onClearFilter}
+            clearSearch={onClearSearch}
+          />
+        )}
+      </Container>
     </ListingPageTemplate>
   )
 }

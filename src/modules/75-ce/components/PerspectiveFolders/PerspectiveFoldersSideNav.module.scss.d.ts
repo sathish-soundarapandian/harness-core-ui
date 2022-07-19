@@ -8,14 +8,17 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly active: string
+  readonly activeFolder: string
   readonly checkbox: string
   readonly customFoldersNav: string
+  readonly folderNameField: string
   readonly foldersList: string
   readonly icon: string
   readonly link: string
   readonly loader: string
   readonly perpectiveSearchWrapper: string
   readonly perspectiveListWrapper: string
+  readonly searchInput: string
   readonly sidenav: string
   readonly sidenavText: string
   readonly sidenavWrapper: string

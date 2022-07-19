@@ -14,7 +14,8 @@ import {
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  Icon
+  Icon,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { debounce, noop, defaultTo } from 'lodash-es'
@@ -46,7 +47,7 @@ export interface ServerlessSpecEditableProps {
   template?: ServerlessInfraTypes
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: ServerlessInfraTypes
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   hasRegion?: boolean
   formInfo: {
     formName: string

@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { FormInput, FormikForm, Container, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { FormInput, FormikForm, Container } from '@wings-software/uicore'
 import { isEmpty } from 'lodash-es'
 
 import { parse } from 'yaml'
@@ -14,17 +14,21 @@ import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type { InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useGetPipeline } from 'services/pipeline-ng'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { spec } from '../../types'
-import { checkIfRunTimeInput } from '../../utils'
+import {
+  checkIfRunTimeInput,
+  isConfiguredMonitoredServiceRunTime,
+  isDefaultMonitoredServiceAndServiceOrEnvRunTime,
+  isTemplatisedMonitoredService
+} from '../../utils'
 import type { ContinousVerificationProps } from './types'
 import {
   baseLineOptions,
   durationOptions,
-  monitoredServiceRefPath,
   trafficSplitPercentageOptions,
   VerificationSensitivityOptions
 } from '../../constants'
@@ -34,8 +38,9 @@ import {
   getInfraAndServiceFromStage
 } from './components/ContinousVerificationInputSetStep.utils'
 
-import { MONITORED_SERVICE_TYPE } from '../ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/SelectMonitoredServiceType.constants'
 import ConfiguredRunTimeMonitoredService from './components/ConfiguredRunTimeMonitoredService/ConfiguredRunTimeMonitoredService'
+import TemplatisedRunTimeMonitoredService from './components/TemplatisedRunTimeMonitoredService/TemplatisedRunTimeMonitoredService'
+import { MONITORED_SERVICE_TYPE } from '../ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/SelectMonitoredServiceType.constants'
 import css from './ContinousVerificationInputSetStep.module.scss'
 
 export function ContinousVerificationInputSetStep(
@@ -85,22 +90,27 @@ export function ContinousVerificationInputSetStep(
   }, [pipeline, formik])
 
   const renderRunTimeMonitoredService = (): JSX.Element => {
-    if (
-      monitoredService?.type === MONITORED_SERVICE_TYPE.CONFIGURED &&
-      checkIfRunTimeInput(monitoredService?.spec?.monitoredServiceRef)
-    ) {
+    const type = monitoredService?.type ?? MONITORED_SERVICE_TYPE.DEFAULT
+    if (isConfiguredMonitoredServiceRunTime(type, monitoredService)) {
       return (
         <ConfiguredRunTimeMonitoredService
           prefix={prefix}
-          monitoredServiceRefPath={monitoredServiceRefPath}
+          expressions={expressions}
+          allowableTypes={allowableTypes}
+          monitoredService={monitoredService}
+        />
+      )
+    } else if (isTemplatisedMonitoredService(type)) {
+      return (
+        <TemplatisedRunTimeMonitoredService
+          prefix={prefix}
           expressions={expressions}
           allowableTypes={allowableTypes}
           monitoredService={monitoredService}
         />
       )
     } else if (
-      serviceIdentifierFromStage === RUNTIME_INPUT_VALUE ||
-      envIdentifierDataFromStage === RUNTIME_INPUT_VALUE
+      isDefaultMonitoredServiceAndServiceOrEnvRunTime(type, serviceIdentifierFromStage, envIdentifierDataFromStage)
     ) {
       return (
         <RunTimeMonitoredService

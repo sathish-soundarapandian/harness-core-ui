@@ -31,7 +31,7 @@ import {
 } from '@common/Redirects'
 import routes from '@common/RouteDefinitions'
 import { RouteWithLayout } from '@common/router'
-import { accountPathProps, executionPathProps, projectPathProps } from '@common/utils/routeUtils'
+import { accountPathProps, executionPathProps, projectPathProps, pipelineModuleParams } from '@common/utils/routeUtils'
 import { ConnectorRouteDestinations } from '@connectors/RouteDestinations'
 import { DelegateRouteDestinations } from '@delegates/RouteDestinations'
 import { GitSyncRouteDestinations } from '@gitsync/RouteDestinations'
@@ -46,7 +46,8 @@ import { SecretRouteDestinations } from '@secrets/RouteDestinations'
 import { TemplateRouteDestinations } from '@templates-library/RouteDestinations'
 import { TriggersRouteDestinations } from '@triggers/RouteDestinations'
 import { VariableRouteDestinations } from '@variables/RouteDestinations'
-import CIPipelineStudioWrapper from '@ci/pages/pipeline-studio/CIPipelineStudioWrapper'
+import FileStorePage from '@filestore/pages/filestore/FileStorePage'
+import CIPipelineStudio from '@ci/pages/pipeline-studio/CIPipelineStudio'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import featureFactory from 'framework/featureStore/FeaturesFactory'
@@ -307,10 +308,19 @@ export default (
         <BuildCommits />
       </ExecutionLandingPage>
     </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CISideNavProps}
+      path={routes.toFileStore({ ...accountPathProps, ...projectPathProps, ...pipelineModuleParams })}
+      pageName={PAGE_NAME.FileStorePage}
+    >
+      <FileStorePage />
+    </RouteWithLayout>
 
     {
       PipelineRouteDestinations({
-        pipelineStudioComponent: CIPipelineStudioWrapper,
+        pipelineStudioComponent: CIPipelineStudio,
         pipelineStudioPageName: PAGE_NAME.CIPipelineStudio,
         pipelineDeploymentListComponent: CIPipelineDeploymentList,
         pipelineDeploymentListPageName: PAGE_NAME.CIPipelineDeploymentList,

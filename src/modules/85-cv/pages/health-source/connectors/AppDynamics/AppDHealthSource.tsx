@@ -283,7 +283,7 @@ export default function AppDMonitoredSource({
         return (
           <FormikForm className={css.formFullheight}>
             <CardWithOuterTitle title={getString('cv.healthSource.connectors.AppDynamics.applicationsAndTiers')}>
-              <Layout.Horizontal spacing={'large'} className={css.horizontalCenterAlign}>
+              <Layout.Horizontal spacing={'large'}>
                 <Container margin={{ bottom: 'small' }} width={'300px'} color={Color.BLACK}>
                   <AppDApplications
                     allowedTypes={getAllowedTypes(isConnectorRuntimeOrExpression)}
@@ -394,6 +394,7 @@ export default function AppDMonitoredSource({
                     selectedMetric={selectedMetric}
                     connectorIdentifier={connectorIdentifier}
                     isTemplate={isTemplate}
+                    expressions={expressions}
                   />
                 </CustomMetric>
               </>

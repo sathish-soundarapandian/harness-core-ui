@@ -49,6 +49,7 @@ export interface AccessControlCheckError {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -627,6 +628,20 @@ export interface AddUsersResponse {
   }
 }
 
+export interface AgentMtlsEndpointDetails {
+  accountId?: string
+  caCertificates?: string
+  fqdn?: string
+  mode?: 'LOOSE' | 'STRICT'
+  uuid?: string
+}
+
+export interface AgentMtlsEndpointRequest {
+  caCertificates?: string
+  domainPrefix?: string
+  mode?: 'LOOSE' | 'STRICT'
+}
+
 export type AmazonS3ArtifactConfig = ArtifactConfig & {
   bucketName: string
   connectorRef: string
@@ -864,6 +879,7 @@ export type AuditFilterProperties = FilterProperties & {
     | 'UNSUCCESSFUL_LOGIN'
     | 'ADD_MEMBERSHIP'
     | 'REMOVE_MEMBERSHIP'
+    | 'ERROR_BUDGET_RESET'
   )[]
   endTime?: number
   environments?: Environment[]
@@ -1154,9 +1170,8 @@ export type AzureRepoConnector = ConnectorConfigDTO & {
   apiAccess?: AzureRepoApiAccess
   authentication: AzureRepoAuthentication
   delegateSelectors?: string[]
-  type: 'Account' | 'Repo'
+  type: 'Project' | 'Repo'
   url: string
-  validationProject?: string
   validationRepo?: string
 }
 
@@ -1241,6 +1256,28 @@ export type AzureWebAppInfrastructure = Infrastructure & {
   webApp: string
 }
 
+export type AzureWebAppInfrastructureDetails = InfrastructureDetails & {
+  deploymentSlot?: string
+  resourceGroup?: string
+  subscriptionId?: string
+  webApp?: string
+}
+
+export type AzureWebAppInstanceInfoDTO = InstanceInfoDTO & {
+  appName: string
+  appServicePlanId?: string
+  deploySlot: string
+  deploySlotId?: string
+  hostName?: string
+  instanceId?: string
+  instanceIp?: string
+  instanceName?: string
+  instanceState?: string
+  instanceType?: string
+  resourceGroup: string
+  subscriptionId: string
+}
+
 export interface AzureWebAppNamesDTO {
   webAppNames?: string[]
 }
@@ -1302,7 +1339,7 @@ export type BitbucketConnector = ConnectorConfigDTO & {
   apiAccess?: BitbucketApiAccess
   authentication: BitbucketAuthentication
   delegateSelectors?: string[]
-  type: 'Account' | 'Repo'
+  type: 'Account' | 'Repo' | 'Project'
   url: string
   validationRepo?: string
 }
@@ -1397,6 +1434,7 @@ export interface CDPipelineModuleInfo {
   envGroupIdentifiers?: string[]
   envIdentifiers?: string[]
   environmentTypes?: ('PreProduction' | 'Production')[]
+  infrastructureIdentifiers?: string[]
   infrastructureTypes?: string[]
   serviceDefinitionTypes?: string[]
   serviceIdentifiers?: string[]
@@ -1556,14 +1594,10 @@ export interface CloudformationTemplateFileSpec {
   type?: string
 }
 
-export interface Cluster {
-  cluster?: ClusterInternal
-  identifier?: string
-}
-
 export interface ClusterBasicDTO {
   identifier?: string
   name?: string
+  scope?: 'ACCOUNT' | 'ORGANIZATION' | 'PROJECT'
 }
 
 export interface ClusterBatchRequest {
@@ -1579,8 +1613,10 @@ export interface ClusterBatchResponse {
   linked?: number
 }
 
-export interface ClusterInternal {
+export interface ClusterFromGitops {
+  identifier?: string
   name?: string
+  scopeLevel?: 'ACCOUNT' | 'ORGANIZATION' | 'PROJECT'
 }
 
 export interface ClusterRequest {
@@ -1588,6 +1624,7 @@ export interface ClusterRequest {
   identifier?: string
   orgIdentifier?: string
   projectIdentifier?: string
+  scope?: 'ACCOUNT' | 'ORGANIZATION' | 'PROJECT'
 }
 
 export interface ClusterResponse {
@@ -1596,6 +1633,7 @@ export interface ClusterResponse {
   linkedAt?: number
   orgIdentifier?: string
   projectIdentifier?: string
+  scope?: 'ACCOUNT' | 'ORGANIZATION' | 'PROJECT'
 }
 
 export interface ClusterYaml {
@@ -2049,6 +2087,12 @@ export interface CustomHealthKeyAndValue {
   valueEncrypted?: boolean
 }
 
+export type CustomRemoteStoreConfig = StoreConfig & {
+  delegateSelectors?: string[]
+  extractionScript: string
+  filePath: string
+}
+
 export type CustomRestrictionDTO = RestrictionDTO & { [key: string]: any }
 
 export type CustomRestrictionMetadataDTO = RestrictionMetadataDTO & {}
@@ -2201,22 +2245,8 @@ export interface DelegateInner {
 }
 
 export interface DelegateMetaInfo {
-  hostName?: string
+  host_name?: string
   id?: string
-}
-
-export interface DelegateMtlsEndpointDetails {
-  accountId?: string
-  caCertificates?: string
-  fqdn?: string
-  mode?: 'LOOSE' | 'STRICT'
-  uuid?: string
-}
-
-export interface DelegateMtlsEndpointRequest {
-  caCertificates?: string
-  domainPrefix?: string
-  mode?: 'LOOSE' | 'STRICT'
 }
 
 export interface DelegateProfileDetailsNg {
@@ -2303,6 +2333,11 @@ export interface DelegateTokenDetails {
   value?: string
 }
 
+export interface DeleteInstancesRequest {
+  deletedCount?: number
+  status?: boolean
+}
+
 export type DeleteManifestPathSpec = DeleteResourcesBaseSpec & {
   allManifestPaths?: boolean
   manifestPaths?: string[]
@@ -2354,7 +2389,7 @@ export interface DeploymentInfo {
 }
 
 export type DeploymentStageConfig = StageInfoConfig & {
-  deploymentType?: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
+  deploymentType?: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApp'
   environment?: EnvironmentYamlV2
   environmentGroup?: EnvironmentGroupYaml
   execution: ExecutionElementConfig
@@ -2774,6 +2809,12 @@ export interface EnvironmentDeploymentInfo {
   environmentInfoByServiceId?: EnvironmentInfoByServiceId[]
 }
 
+export interface EnvironmentDeploymentsInfo {
+  envId?: string
+  envName?: string
+  envType?: string
+}
+
 export interface EnvironmentFilterProperties {
   description?: string
   environmentIdentifiers?: string[]
@@ -2845,6 +2886,7 @@ export interface EnvironmentGroupResponseDTO {
 }
 
 export interface EnvironmentGroupYaml {
+  __uuid?: string
   deployToAll?: boolean
   envGroupRef: string
   environments?: EnvironmentYamlV2[]
@@ -2945,6 +2987,7 @@ export interface Error {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -3265,6 +3308,13 @@ export interface ErrorMetadataDTO {
   type?: string
 }
 
+export interface ErrorNodeSummary {
+  childrenErrorNodes?: ErrorNodeSummary[]
+  nodeInfo?: NodeInfo
+  templateInfo?: TemplateInfo
+  templateResponse?: TemplateResponse
+}
+
 export type ErrorTrackingConnectorDTO = ConnectorConfigDTO & {
   apiKeyRef: string
   delegateSelectors?: string[]
@@ -3305,6 +3355,7 @@ export interface ExecutionElementConfig {
 export interface ExecutionStatusInfo {
   author?: AuthorInfo
   endTs?: number
+  environmentInfoList?: EnvironmentDeploymentsInfo[]
   gitInfo?: GitInfo
   pipelineIdentifier?: string
   pipelineName?: string
@@ -3349,6 +3400,7 @@ export interface Failure {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -4193,7 +4245,7 @@ export interface GitBranchesResponseDTO {
 
 export type GitConfigDTO = ConnectorConfigDTO & {
   branchName?: string
-  connectionType: 'Account' | 'Repo'
+  connectionType: 'Account' | 'Repo' | 'Project'
   delegateSelectors?: string[]
   executeOnDelegate?: boolean
   spec: GitAuthenticationDTO
@@ -4669,6 +4721,31 @@ export interface GitOpsInfoDTO {
   type?: 'CONNECTED_ARGO_PROVIDER' | 'MANAGED_ARGO_PROVIDER'
 }
 
+export type GitOpsInstanceInfoDTO = InstanceInfoDTO & {
+  agentIdentifier?: string
+  appIdentifier?: string
+  clusterIdentifier?: string
+  containerList: K8sContainer[]
+  namespace: string
+  podId?: string
+  podName: string
+}
+
+export interface GitOpsInstanceRequest {
+  accountIdentifier?: string
+  agentIdentifier?: string
+  applicationIdentifier?: string
+  buildId?: string
+  clusterIdentifier?: string
+  creationTimestamp: number
+  envIdentifier?: string
+  instanceInfo: K8sBasicInfo
+  lastDeployedAt: number
+  orgIdentifier?: string
+  projectIdentifier?: string
+  serviceIdentifier?: string
+}
+
 export interface GitOpsProvider {
   description?: string
   identifier: string
@@ -5097,7 +5174,7 @@ export type GithubConnector = ConnectorConfigDTO & {
   authentication: GithubAuthentication
   delegateSelectors?: string[]
   executeOnDelegate?: boolean
-  type: 'Account' | 'Repo'
+  type: 'Account' | 'Repo' | 'Project'
   url: string
   validationRepo?: string
 }
@@ -5155,7 +5232,7 @@ export type GithubUsernameToken = GithubHttpCredentialsSpecDTO & {
 
 export interface GitlabApiAccess {
   spec?: GitlabApiAccessSpecDTO
-  type: 'Token'
+  type: 'Token' | 'OAuth'
 }
 
 export interface GitlabApiAccessSpecDTO {
@@ -5171,7 +5248,7 @@ export type GitlabConnector = ConnectorConfigDTO & {
   apiAccess?: GitlabApiAccess
   authentication: GitlabAuthentication
   delegateSelectors?: string[]
-  type: 'Account' | 'Repo'
+  type: 'Account' | 'Repo' | 'Project'
   url: string
   validationRepo?: string
 }
@@ -5182,7 +5259,7 @@ export interface GitlabCredentialsDTO {
 
 export type GitlabHttpCredentials = GitlabCredentialsDTO & {
   spec: GitlabHttpCredentialsSpecDTO
-  type: 'UsernamePassword' | 'UsernameToken' | 'Kerberos'
+  type: 'UsernamePassword' | 'UsernameToken' | 'Kerberos' | 'OAuth'
 }
 
 export interface GitlabHttpCredentialsSpecDTO {
@@ -5191,6 +5268,11 @@ export interface GitlabHttpCredentialsSpecDTO {
 
 export type GitlabKerberos = GitlabHttpCredentialsSpecDTO & {
   kerberosKeyRef: string
+}
+
+export type GitlabOauth = GitlabHttpCredentialsSpecDTO & {
+  refreshTokenRef: string
+  tokenRef: string
 }
 
 export type GitlabSCMDTO = SourceCodeManagerDTO & {
@@ -5420,6 +5502,7 @@ export type IgnoreFailureActionConfig = FailureStrategyActionConfig & {
 
 export interface InfraExecutionSummary {
   identifier?: string
+  infrastructureIdentifier?: string
   name?: string
   type?: string
 }
@@ -5632,6 +5715,30 @@ export interface InstanceDetailsDTO {
   terraformInstance?: string
 }
 
+export interface InstanceGroupedByArtifact {
+  artifactVersion?: string
+  instanceGroupedByEnvironmentList?: InstanceGroupedByEnvironment[]
+}
+
+export interface InstanceGroupedByArtifactList {
+  instanceGroupedByArtifactList?: InstanceGroupedByArtifact[]
+}
+
+export interface InstanceGroupedByEnvironment {
+  envId?: string
+  envName?: string
+  instanceGroupedByInfraList?: InstanceGroupedByInfrastructure[]
+}
+
+export interface InstanceGroupedByInfrastructure {
+  count?: number
+  infraIdentifier?: string
+  infraName?: string
+  lastDeployedAt?: string
+  lastPipelineExecutionId?: string
+  lastPipelineExecutionName?: string
+}
+
 export interface InstanceInfoDTO {
   podName?: string
   type?: string
@@ -5649,6 +5756,8 @@ export interface InstanceSelectionWrapper {
 export interface InstancesByBuildIdList {
   instancesByBuildIdList?: InstanceDetailsByBuildId[]
 }
+
+export type InvalidFieldsDTO = ErrorMetadataDTO & {}
 
 export interface Invite {
   accountIdentifier: string
@@ -5688,6 +5797,18 @@ export interface ItemParams {
   lookupKey?: string
   priceId?: string
   quantity?: number
+}
+
+export type JenkinsArtifactConfig = ArtifactConfig & {
+  artifactPath?: string
+  build?: string
+  connectorRef: string
+  jobName: string
+}
+
+export type JenkinsArtifactSummary = ArtifactSummary & {
+  build?: string
+  jobName?: string
 }
 
 export interface JenkinsAuthCredentialsDTO {
@@ -5861,6 +5982,13 @@ export type K8sBGSwapServicesStepInfo = StepSpecType & {
   skipDryRun?: boolean
 }
 
+export interface K8sBasicInfo {
+  containerList?: K8sContainer[]
+  namespace: string
+  podId: string
+  podName: string
+}
+
 export type K8sBlueGreenStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   skipDryRun?: boolean
@@ -6023,6 +6151,7 @@ export type KubernetesUserNamePasswordDTO = KubernetesAuthCredentialDTO & {
 }
 
 export type KustomizeManifest = ManifestAttributes & {
+  manifestScope?: string
   metadata?: string
   patchesPaths?: string[]
   pluginPath?: string
@@ -6571,6 +6700,12 @@ export interface NodeErrorInfo {
   type?: string
 }
 
+export interface NodeInfo {
+  identifier?: string
+  localFqn?: string
+  name?: string
+}
+
 export interface NodeList {
   length?: number
 }
@@ -6808,8 +6943,8 @@ export interface PageApiKeyAggregateDTO {
   totalPages?: number
 }
 
-export interface PageCluster {
-  content?: Cluster[]
+export interface PageClusterFromGitops {
+  content?: ClusterFromGitops[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -7327,6 +7462,9 @@ export type PercentageInstanceSelection = InstanceSelectionBase & {
 
 export interface PermissionCheck {
   permission?: string
+  resourceAttributes?: {
+    [key: string]: string
+  }
   resourceIdentifier?: string
   resourceScope?: ResourceScope
   resourceType?: string
@@ -7964,6 +8102,13 @@ export interface ResponseDelegateStatus {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseDeleteInstancesRequest {
+  correlationId?: string
+  data?: DeleteInstancesRequest
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseDeploymentStatsSummary {
   correlationId?: string
   data?: DeploymentStatsSummary
@@ -8219,6 +8364,13 @@ export interface ResponseInfrastructureResponse {
 export interface ResponseInstanceCountDetailsByEnvTypeAndServiceId {
   correlationId?: string
   data?: InstanceCountDetailsByEnvTypeAndServiceId
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseInstanceGroupedByArtifactList {
+  correlationId?: string
+  data?: InstanceGroupedByArtifactList
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -8590,7 +8742,7 @@ export interface ResponseListServiceAccountDTO {
 
 export interface ResponseListServiceDefinitionType {
   correlationId?: string
-  data?: ('Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps')[]
+  data?: ('Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApp')[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -8736,6 +8888,7 @@ export interface ResponseMessage {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -9159,9 +9312,9 @@ export interface ResponsePageApiKeyAggregateDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponsePageCluster {
+export interface ResponsePageClusterFromGitops {
   correlationId?: string
-  data?: PageCluster
+  data?: PageClusterFromGitops
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -9792,6 +9945,14 @@ export interface RestResponse {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseAgentMtlsEndpointDetails {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: AgentMtlsEndpointDetails
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseAuthenticationSettingsResponse {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -9840,14 +10001,6 @@ export interface RestResponseDelegateGroupListing {
   responseMessages?: ResponseMessage[]
 }
 
-export interface RestResponseDelegateMtlsEndpointDetails {
-  metaData?: {
-    [key: string]: { [key: string]: any }
-  }
-  resource?: DelegateMtlsEndpointDetails
-  responseMessages?: ResponseMessage[]
-}
-
 export interface RestResponseDelegateProfileDetailsNg {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -9877,6 +10030,14 @@ export interface RestResponseLdapTestResponse {
     [key: string]: { [key: string]: any }
   }
   resource?: LdapTestResponse
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseListDelegateGroupDTO {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: DelegateGroupDTO[]
   responseMessages?: ResponseMessage[]
 }
 
@@ -10622,7 +10783,7 @@ export interface ServiceDashboardInfo {
 
 export interface ServiceDefinition {
   spec: ServiceSpec
-  type: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
+  type: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApp'
 }
 
 export interface ServiceDeployment {
@@ -10632,6 +10793,7 @@ export interface ServiceDeployment {
 }
 
 export interface ServiceDeploymentInfo {
+  image?: string
   serviceName?: string
   serviceTag?: string
 }
@@ -11175,6 +11337,7 @@ export interface StoreConfigWrapper {
   metadata?: string
   spec: StoreConfig
   type:
+    | 'CustomRemote'
     | 'Git'
     | 'Github'
     | 'Bitbucket'
@@ -11284,6 +11447,12 @@ export type TemplateFilterProperties = FilterProperties & {
   templateNames?: string[]
 }
 
+export interface TemplateInfo {
+  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'Script'
+  templateIdentifier?: string
+  versionLabel?: string
+}
+
 export interface TemplateInputsErrorDTO {
   fieldName?: string
   identifierOfErrorSource?: string
@@ -11301,6 +11470,28 @@ export interface TemplateLinkConfig {
   templateInputs?: JsonNode
   templateRef: string
   versionLabel?: string
+}
+
+export interface TemplateResponse {
+  accountId: string
+  childType?: string
+  description?: string
+  entityValidityDetails?: EntityValidityDetails
+  gitDetails?: EntityGitDetails
+  identifier: string
+  lastUpdatedAt?: number
+  name: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  stableTemplate?: boolean
+  tags?: {
+    [key: string]: string
+  }
+  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'Script'
+  templateScope?: 'account' | 'org' | 'project' | 'unknown'
+  version?: number
+  versionLabel?: string
+  yaml?: string
 }
 
 export type TerraformApplyStepInfo = StepSpecType & {
@@ -11714,6 +11905,11 @@ export interface UtmInfo {
   utmTerm?: string
 }
 
+export type ValidateTemplateInputsResponseDTO = ErrorMetadataDTO & {
+  errorNodeSummary?: ErrorNodeSummary
+  validYaml?: boolean
+}
+
 export interface ValidationError {
   error?: string
   fieldId?: string
@@ -11781,6 +11977,7 @@ export type VaultConnectorDTO = ConnectorConfigDTO & {
   basePath?: string
   default?: boolean
   delegateSelectors?: string[]
+  k8sAuthEndpoint?: string
   namespace?: string
   readOnly?: boolean
   renewalIntervalMinutes: number
@@ -11804,6 +12001,7 @@ export interface VaultCredentialDTO {
 }
 
 export type VaultK8sCredentialDTO = VaultCredentialDTO & {
+  k8sAuthEndpoint?: string
   serviceAccountTokenPath?: string
   vaultK8sAuthRole?: string
 }
@@ -11972,6 +12170,8 @@ export type GcrRequestDTORequestBody = GcrRequestDTO
 
 export type GitFullSyncConfigRequestDTORequestBody = GitFullSyncConfigRequestDTO
 
+export type GitOpsInstanceRequestArrayRequestBody = GitOpsInstanceRequest[]
+
 export type GitOpsProviderRequestBody = GitOpsProvider
 
 export type GitSyncConfigRequestBody = GitSyncConfig
@@ -11983,6 +12183,8 @@ export type InfrastructureRequestDTORequestBody = InfrastructureRequestDTO
 export type LDAPSettingsRequestBody = LDAPSettings
 
 export type LandingDashboardRequestCDRequestBody = LandingDashboardRequestCD
+
+export type LdapSettingsRequestBody = LdapSettings
 
 export type NgSmtpDTORequestBody = NgSmtpDTO
 
@@ -12032,7 +12234,7 @@ export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody = string
 
-export type ProcessPollingResultNgBodyRequestBody = string[]
+export type SubscribeBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -13029,6 +13231,420 @@ export const getActivitiesSummaryPromise = (
     props,
     signal
   )
+
+export interface CheckAgentMtlsEndpointDomainPrefixAvailabilityQueryParams {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier: string
+  /**
+   * The domain prefix to check.
+   */
+  domainPrefix: string
+}
+
+export type CheckAgentMtlsEndpointDomainPrefixAvailabilityProps = Omit<
+  GetProps<RestResponseBoolean, unknown, CheckAgentMtlsEndpointDomainPrefixAvailabilityQueryParams, void>,
+  'path'
+>
+
+/**
+ * Checks whether a given agent mTLS endpoint domain prefix is available.
+ */
+export const CheckAgentMtlsEndpointDomainPrefixAvailability = (
+  props: CheckAgentMtlsEndpointDomainPrefixAvailabilityProps
+) => (
+  <Get<RestResponseBoolean, unknown, CheckAgentMtlsEndpointDomainPrefixAvailabilityQueryParams, void>
+    path={`/agent/mtls/check-availability`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseCheckAgentMtlsEndpointDomainPrefixAvailabilityProps = Omit<
+  UseGetProps<RestResponseBoolean, unknown, CheckAgentMtlsEndpointDomainPrefixAvailabilityQueryParams, void>,
+  'path'
+>
+
+/**
+ * Checks whether a given agent mTLS endpoint domain prefix is available.
+ */
+export const useCheckAgentMtlsEndpointDomainPrefixAvailability = (
+  props: UseCheckAgentMtlsEndpointDomainPrefixAvailabilityProps
+) =>
+  useGet<RestResponseBoolean, unknown, CheckAgentMtlsEndpointDomainPrefixAvailabilityQueryParams, void>(
+    `/agent/mtls/check-availability`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Checks whether a given agent mTLS endpoint domain prefix is available.
+ */
+export const checkAgentMtlsEndpointDomainPrefixAvailabilityPromise = (
+  props: GetUsingFetchProps<
+    RestResponseBoolean,
+    unknown,
+    CheckAgentMtlsEndpointDomainPrefixAvailabilityQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponseBoolean, unknown, CheckAgentMtlsEndpointDomainPrefixAvailabilityQueryParams, void>(
+    getConfig('ng/api'),
+    `/agent/mtls/check-availability`,
+    props,
+    signal
+  )
+
+export interface DeleteAgentMtlsEndpointForAccountQueryParams {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier: string
+}
+
+export type DeleteAgentMtlsEndpointForAccountProps = Omit<
+  MutateProps<RestResponseBoolean, unknown, DeleteAgentMtlsEndpointForAccountQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Removes the agent mTLS endpoint for an account.
+ */
+export const DeleteAgentMtlsEndpointForAccount = (props: DeleteAgentMtlsEndpointForAccountProps) => (
+  <Mutate<RestResponseBoolean, unknown, DeleteAgentMtlsEndpointForAccountQueryParams, void, void>
+    verb="DELETE"
+    path={`/agent/mtls/endpoint`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseDeleteAgentMtlsEndpointForAccountProps = Omit<
+  UseMutateProps<RestResponseBoolean, unknown, DeleteAgentMtlsEndpointForAccountQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Removes the agent mTLS endpoint for an account.
+ */
+export const useDeleteAgentMtlsEndpointForAccount = (props: UseDeleteAgentMtlsEndpointForAccountProps) =>
+  useMutate<RestResponseBoolean, unknown, DeleteAgentMtlsEndpointForAccountQueryParams, void, void>(
+    'DELETE',
+    `/agent/mtls/endpoint`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Removes the agent mTLS endpoint for an account.
+ */
+export const deleteAgentMtlsEndpointForAccountPromise = (
+  props: MutateUsingFetchProps<RestResponseBoolean, unknown, DeleteAgentMtlsEndpointForAccountQueryParams, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseBoolean, unknown, DeleteAgentMtlsEndpointForAccountQueryParams, void, void>(
+    'DELETE',
+    getConfig('ng/api'),
+    `/agent/mtls/endpoint`,
+    props,
+    signal
+  )
+
+export interface GetAgentMtlsEndpointForAccountQueryParams {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier: string
+}
+
+export type GetAgentMtlsEndpointForAccountProps = Omit<
+  GetProps<RestResponseAgentMtlsEndpointDetails, unknown, GetAgentMtlsEndpointForAccountQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets the agent mTLS endpoint for an account.
+ */
+export const GetAgentMtlsEndpointForAccount = (props: GetAgentMtlsEndpointForAccountProps) => (
+  <Get<RestResponseAgentMtlsEndpointDetails, unknown, GetAgentMtlsEndpointForAccountQueryParams, void>
+    path={`/agent/mtls/endpoint`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetAgentMtlsEndpointForAccountProps = Omit<
+  UseGetProps<RestResponseAgentMtlsEndpointDetails, unknown, GetAgentMtlsEndpointForAccountQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets the agent mTLS endpoint for an account.
+ */
+export const useGetAgentMtlsEndpointForAccount = (props: UseGetAgentMtlsEndpointForAccountProps) =>
+  useGet<RestResponseAgentMtlsEndpointDetails, unknown, GetAgentMtlsEndpointForAccountQueryParams, void>(
+    `/agent/mtls/endpoint`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets the agent mTLS endpoint for an account.
+ */
+export const getAgentMtlsEndpointForAccountPromise = (
+  props: GetUsingFetchProps<
+    RestResponseAgentMtlsEndpointDetails,
+    unknown,
+    GetAgentMtlsEndpointForAccountQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponseAgentMtlsEndpointDetails, unknown, GetAgentMtlsEndpointForAccountQueryParams, void>(
+    getConfig('ng/api'),
+    `/agent/mtls/endpoint`,
+    props,
+    signal
+  )
+
+export interface PatchAgentMtlsEndpointForAccountQueryParams {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier: string
+}
+
+export type PatchAgentMtlsEndpointForAccountProps = Omit<
+  MutateProps<
+    RestResponseAgentMtlsEndpointDetails,
+    unknown,
+    PatchAgentMtlsEndpointForAccountQueryParams,
+    AgentMtlsEndpointRequest,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Updates selected properties of the existing agent mTLS endpoint for an account.
+ */
+export const PatchAgentMtlsEndpointForAccount = (props: PatchAgentMtlsEndpointForAccountProps) => (
+  <Mutate<
+    RestResponseAgentMtlsEndpointDetails,
+    unknown,
+    PatchAgentMtlsEndpointForAccountQueryParams,
+    AgentMtlsEndpointRequest,
+    void
+  >
+    verb="PATCH"
+    path={`/agent/mtls/endpoint`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UsePatchAgentMtlsEndpointForAccountProps = Omit<
+  UseMutateProps<
+    RestResponseAgentMtlsEndpointDetails,
+    unknown,
+    PatchAgentMtlsEndpointForAccountQueryParams,
+    AgentMtlsEndpointRequest,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Updates selected properties of the existing agent mTLS endpoint for an account.
+ */
+export const usePatchAgentMtlsEndpointForAccount = (props: UsePatchAgentMtlsEndpointForAccountProps) =>
+  useMutate<
+    RestResponseAgentMtlsEndpointDetails,
+    unknown,
+    PatchAgentMtlsEndpointForAccountQueryParams,
+    AgentMtlsEndpointRequest,
+    void
+  >('PATCH', `/agent/mtls/endpoint`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Updates selected properties of the existing agent mTLS endpoint for an account.
+ */
+export const patchAgentMtlsEndpointForAccountPromise = (
+  props: MutateUsingFetchProps<
+    RestResponseAgentMtlsEndpointDetails,
+    unknown,
+    PatchAgentMtlsEndpointForAccountQueryParams,
+    AgentMtlsEndpointRequest,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseAgentMtlsEndpointDetails,
+    unknown,
+    PatchAgentMtlsEndpointForAccountQueryParams,
+    AgentMtlsEndpointRequest,
+    void
+  >('PATCH', getConfig('ng/api'), `/agent/mtls/endpoint`, props, signal)
+
+export interface CreateAgentMtlsEndpointForAccountQueryParams {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier: string
+}
+
+export type CreateAgentMtlsEndpointForAccountProps = Omit<
+  MutateProps<
+    RestResponseAgentMtlsEndpointDetails,
+    unknown,
+    CreateAgentMtlsEndpointForAccountQueryParams,
+    AgentMtlsEndpointRequest,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Creates the agent mTLS endpoint for an account.
+ */
+export const CreateAgentMtlsEndpointForAccount = (props: CreateAgentMtlsEndpointForAccountProps) => (
+  <Mutate<
+    RestResponseAgentMtlsEndpointDetails,
+    unknown,
+    CreateAgentMtlsEndpointForAccountQueryParams,
+    AgentMtlsEndpointRequest,
+    void
+  >
+    verb="POST"
+    path={`/agent/mtls/endpoint`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseCreateAgentMtlsEndpointForAccountProps = Omit<
+  UseMutateProps<
+    RestResponseAgentMtlsEndpointDetails,
+    unknown,
+    CreateAgentMtlsEndpointForAccountQueryParams,
+    AgentMtlsEndpointRequest,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Creates the agent mTLS endpoint for an account.
+ */
+export const useCreateAgentMtlsEndpointForAccount = (props: UseCreateAgentMtlsEndpointForAccountProps) =>
+  useMutate<
+    RestResponseAgentMtlsEndpointDetails,
+    unknown,
+    CreateAgentMtlsEndpointForAccountQueryParams,
+    AgentMtlsEndpointRequest,
+    void
+  >('POST', `/agent/mtls/endpoint`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Creates the agent mTLS endpoint for an account.
+ */
+export const createAgentMtlsEndpointForAccountPromise = (
+  props: MutateUsingFetchProps<
+    RestResponseAgentMtlsEndpointDetails,
+    unknown,
+    CreateAgentMtlsEndpointForAccountQueryParams,
+    AgentMtlsEndpointRequest,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseAgentMtlsEndpointDetails,
+    unknown,
+    CreateAgentMtlsEndpointForAccountQueryParams,
+    AgentMtlsEndpointRequest,
+    void
+  >('POST', getConfig('ng/api'), `/agent/mtls/endpoint`, props, signal)
+
+export interface UpdateAgentMtlsEndpointForAccountQueryParams {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier: string
+}
+
+export type UpdateAgentMtlsEndpointForAccountProps = Omit<
+  MutateProps<
+    RestResponseAgentMtlsEndpointDetails,
+    unknown,
+    UpdateAgentMtlsEndpointForAccountQueryParams,
+    AgentMtlsEndpointRequest,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Updates the existing agent mTLS endpoint for an account.
+ */
+export const UpdateAgentMtlsEndpointForAccount = (props: UpdateAgentMtlsEndpointForAccountProps) => (
+  <Mutate<
+    RestResponseAgentMtlsEndpointDetails,
+    unknown,
+    UpdateAgentMtlsEndpointForAccountQueryParams,
+    AgentMtlsEndpointRequest,
+    void
+  >
+    verb="PUT"
+    path={`/agent/mtls/endpoint`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateAgentMtlsEndpointForAccountProps = Omit<
+  UseMutateProps<
+    RestResponseAgentMtlsEndpointDetails,
+    unknown,
+    UpdateAgentMtlsEndpointForAccountQueryParams,
+    AgentMtlsEndpointRequest,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Updates the existing agent mTLS endpoint for an account.
+ */
+export const useUpdateAgentMtlsEndpointForAccount = (props: UseUpdateAgentMtlsEndpointForAccountProps) =>
+  useMutate<
+    RestResponseAgentMtlsEndpointDetails,
+    unknown,
+    UpdateAgentMtlsEndpointForAccountQueryParams,
+    AgentMtlsEndpointRequest,
+    void
+  >('PUT', `/agent/mtls/endpoint`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Updates the existing agent mTLS endpoint for an account.
+ */
+export const updateAgentMtlsEndpointForAccountPromise = (
+  props: MutateUsingFetchProps<
+    RestResponseAgentMtlsEndpointDetails,
+    unknown,
+    UpdateAgentMtlsEndpointForAccountQueryParams,
+    AgentMtlsEndpointRequest,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseAgentMtlsEndpointDetails,
+    unknown,
+    UpdateAgentMtlsEndpointForAccountQueryParams,
+    AgentMtlsEndpointRequest,
+    void
+  >('PUT', getConfig('ng/api'), `/agent/mtls/endpoint`, props, signal)
 
 export interface GetAccountResourcesCountQueryParams {
   accountIdentifier: string
@@ -15870,7 +16486,7 @@ export interface GetBuildsForJenkinsQueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
-  artifactPaths: string[]
+  artifactPath?: string
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -19728,6 +20344,62 @@ export const getDeploymentHealthPromise = (
     signal
   )
 
+export interface GetActiveServiceDeploymentsQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  serviceId: string
+}
+
+export type GetActiveServiceDeploymentsProps = Omit<
+  GetProps<ResponseInstanceGroupedByArtifactList, Failure | Error, GetActiveServiceDeploymentsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Information about artifacts for a particular service, deployed to different environments
+ */
+export const GetActiveServiceDeployments = (props: GetActiveServiceDeploymentsProps) => (
+  <Get<ResponseInstanceGroupedByArtifactList, Failure | Error, GetActiveServiceDeploymentsQueryParams, void>
+    path={`/dashboard/getActiveServiceDeployments`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetActiveServiceDeploymentsProps = Omit<
+  UseGetProps<ResponseInstanceGroupedByArtifactList, Failure | Error, GetActiveServiceDeploymentsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Information about artifacts for a particular service, deployed to different environments
+ */
+export const useGetActiveServiceDeployments = (props: UseGetActiveServiceDeploymentsProps) =>
+  useGet<ResponseInstanceGroupedByArtifactList, Failure | Error, GetActiveServiceDeploymentsQueryParams, void>(
+    `/dashboard/getActiveServiceDeployments`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get Information about artifacts for a particular service, deployed to different environments
+ */
+export const getActiveServiceDeploymentsPromise = (
+  props: GetUsingFetchProps<
+    ResponseInstanceGroupedByArtifactList,
+    Failure | Error,
+    GetActiveServiceDeploymentsQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseInstanceGroupedByArtifactList, Failure | Error, GetActiveServiceDeploymentsQueryParams, void>(
+    getConfig('ng/api'),
+    `/dashboard/getActiveServiceDeployments`,
+    props,
+    signal
+  )
+
 export interface GetActiveServiceInstanceSummaryQueryParams {
   accountIdentifier: string
   orgIdentifier: string
@@ -19784,6 +20456,62 @@ export const getActiveServiceInstanceSummaryPromise = (
     GetActiveServiceInstanceSummaryQueryParams,
     void
   >(getConfig('ng/api'), `/dashboard/getActiveServiceInstanceSummary`, props, signal)
+
+export interface GetActiveServiceInstancesQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  serviceId: string
+}
+
+export type GetActiveServiceInstancesProps = Omit<
+  GetProps<ResponseInstanceGroupedByArtifactList, Failure | Error, GetActiveServiceInstancesQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get list of artifact version, last pipeline execution, environment, infrastructure with instance count
+ */
+export const GetActiveServiceInstances = (props: GetActiveServiceInstancesProps) => (
+  <Get<ResponseInstanceGroupedByArtifactList, Failure | Error, GetActiveServiceInstancesQueryParams, void>
+    path={`/dashboard/getActiveServiceInstances`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetActiveServiceInstancesProps = Omit<
+  UseGetProps<ResponseInstanceGroupedByArtifactList, Failure | Error, GetActiveServiceInstancesQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get list of artifact version, last pipeline execution, environment, infrastructure with instance count
+ */
+export const useGetActiveServiceInstances = (props: UseGetActiveServiceInstancesProps) =>
+  useGet<ResponseInstanceGroupedByArtifactList, Failure | Error, GetActiveServiceInstancesQueryParams, void>(
+    `/dashboard/getActiveServiceInstances`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get list of artifact version, last pipeline execution, environment, infrastructure with instance count
+ */
+export const getActiveServiceInstancesPromise = (
+  props: GetUsingFetchProps<
+    ResponseInstanceGroupedByArtifactList,
+    Failure | Error,
+    GetActiveServiceInstancesQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseInstanceGroupedByArtifactList, Failure | Error, GetActiveServiceInstancesQueryParams, void>(
+    getConfig('ng/api'),
+    `/dashboard/getActiveServiceInstances`,
+    props,
+    signal
+  )
 
 export interface GetDeploymentsQueryParams {
   accountIdentifier: string
@@ -20593,6 +21321,85 @@ export const getServiceDetailsPromise = (
     signal
   )
 
+export interface ListDelegateGroupsUsingTagsQueryParams {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type ListDelegateGroupsUsingTagsProps = Omit<
+  MutateProps<
+    RestResponseListDelegateGroupDTO,
+    unknown,
+    ListDelegateGroupsUsingTagsQueryParams,
+    DelegateGroupTagsRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * List delegate groups that are having mentioned tags.
+ */
+export const ListDelegateGroupsUsingTags = (props: ListDelegateGroupsUsingTagsProps) => (
+  <Mutate<
+    RestResponseListDelegateGroupDTO,
+    unknown,
+    ListDelegateGroupsUsingTagsQueryParams,
+    DelegateGroupTagsRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/delegate-group-tags/delegate-groups`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseListDelegateGroupsUsingTagsProps = Omit<
+  UseMutateProps<
+    RestResponseListDelegateGroupDTO,
+    unknown,
+    ListDelegateGroupsUsingTagsQueryParams,
+    DelegateGroupTagsRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * List delegate groups that are having mentioned tags.
+ */
+export const useListDelegateGroupsUsingTags = (props: UseListDelegateGroupsUsingTagsProps) =>
+  useMutate<
+    RestResponseListDelegateGroupDTO,
+    unknown,
+    ListDelegateGroupsUsingTagsQueryParams,
+    DelegateGroupTagsRequestBody,
+    void
+  >('POST', `/delegate-group-tags/delegate-groups`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * List delegate groups that are having mentioned tags.
+ */
+export const listDelegateGroupsUsingTagsPromise = (
+  props: MutateUsingFetchProps<
+    RestResponseListDelegateGroupDTO,
+    unknown,
+    ListDelegateGroupsUsingTagsQueryParams,
+    DelegateGroupTagsRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseListDelegateGroupDTO,
+    unknown,
+    ListDelegateGroupsUsingTagsQueryParams,
+    DelegateGroupTagsRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/delegate-group-tags/delegate-groups`, props, signal)
+
 export interface DeleteTagsFromDelegateGroupQueryParams {
   accountIdentifier?: string
   orgIdentifier?: string
@@ -20915,426 +21722,6 @@ export const updateTagsOfDelegateGroupPromise = (
     DelegateGroupTagsRequestBody,
     UpdateTagsOfDelegateGroupPathParams
   >('PUT', getConfig('ng/api'), `/delegate-group-tags/${groupIdentifier}`, props, signal)
-
-export interface CheckDelegateMtlsEndpointDomainPrefixAvailabilityQueryParams {
-  /**
-   * Account Identifier for the Entity.
-   */
-  accountIdentifier: string
-  /**
-   * The domain prefix to check.
-   */
-  domainPrefix: string
-}
-
-export type CheckDelegateMtlsEndpointDomainPrefixAvailabilityProps = Omit<
-  GetProps<RestResponseBoolean, unknown, CheckDelegateMtlsEndpointDomainPrefixAvailabilityQueryParams, void>,
-  'path'
->
-
-/**
- * Checks whether a given delegate mTLS endpoint domain prefix is available.
- */
-export const CheckDelegateMtlsEndpointDomainPrefixAvailability = (
-  props: CheckDelegateMtlsEndpointDomainPrefixAvailabilityProps
-) => (
-  <Get<RestResponseBoolean, unknown, CheckDelegateMtlsEndpointDomainPrefixAvailabilityQueryParams, void>
-    path={`/delegate-mtls/check-availability`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseCheckDelegateMtlsEndpointDomainPrefixAvailabilityProps = Omit<
-  UseGetProps<RestResponseBoolean, unknown, CheckDelegateMtlsEndpointDomainPrefixAvailabilityQueryParams, void>,
-  'path'
->
-
-/**
- * Checks whether a given delegate mTLS endpoint domain prefix is available.
- */
-export const useCheckDelegateMtlsEndpointDomainPrefixAvailability = (
-  props: UseCheckDelegateMtlsEndpointDomainPrefixAvailabilityProps
-) =>
-  useGet<RestResponseBoolean, unknown, CheckDelegateMtlsEndpointDomainPrefixAvailabilityQueryParams, void>(
-    `/delegate-mtls/check-availability`,
-    { base: getConfig('ng/api'), ...props }
-  )
-
-/**
- * Checks whether a given delegate mTLS endpoint domain prefix is available.
- */
-export const checkDelegateMtlsEndpointDomainPrefixAvailabilityPromise = (
-  props: GetUsingFetchProps<
-    RestResponseBoolean,
-    unknown,
-    CheckDelegateMtlsEndpointDomainPrefixAvailabilityQueryParams,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<RestResponseBoolean, unknown, CheckDelegateMtlsEndpointDomainPrefixAvailabilityQueryParams, void>(
-    getConfig('ng/api'),
-    `/delegate-mtls/check-availability`,
-    props,
-    signal
-  )
-
-export interface DeleteDelegateMtlsEndpointForAccountQueryParams {
-  /**
-   * Account Identifier for the Entity.
-   */
-  accountIdentifier: string
-}
-
-export type DeleteDelegateMtlsEndpointForAccountProps = Omit<
-  MutateProps<RestResponseBoolean, unknown, DeleteDelegateMtlsEndpointForAccountQueryParams, void, void>,
-  'path' | 'verb'
->
-
-/**
- * Removes the delegate mTLS endpoint for an account.
- */
-export const DeleteDelegateMtlsEndpointForAccount = (props: DeleteDelegateMtlsEndpointForAccountProps) => (
-  <Mutate<RestResponseBoolean, unknown, DeleteDelegateMtlsEndpointForAccountQueryParams, void, void>
-    verb="DELETE"
-    path={`/delegate-mtls/endpoint`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseDeleteDelegateMtlsEndpointForAccountProps = Omit<
-  UseMutateProps<RestResponseBoolean, unknown, DeleteDelegateMtlsEndpointForAccountQueryParams, void, void>,
-  'path' | 'verb'
->
-
-/**
- * Removes the delegate mTLS endpoint for an account.
- */
-export const useDeleteDelegateMtlsEndpointForAccount = (props: UseDeleteDelegateMtlsEndpointForAccountProps) =>
-  useMutate<RestResponseBoolean, unknown, DeleteDelegateMtlsEndpointForAccountQueryParams, void, void>(
-    'DELETE',
-    `/delegate-mtls/endpoint`,
-    { base: getConfig('ng/api'), ...props }
-  )
-
-/**
- * Removes the delegate mTLS endpoint for an account.
- */
-export const deleteDelegateMtlsEndpointForAccountPromise = (
-  props: MutateUsingFetchProps<
-    RestResponseBoolean,
-    unknown,
-    DeleteDelegateMtlsEndpointForAccountQueryParams,
-    void,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<RestResponseBoolean, unknown, DeleteDelegateMtlsEndpointForAccountQueryParams, void, void>(
-    'DELETE',
-    getConfig('ng/api'),
-    `/delegate-mtls/endpoint`,
-    props,
-    signal
-  )
-
-export interface GetDelegateMtlsEndpointForAccountQueryParams {
-  /**
-   * Account Identifier for the Entity.
-   */
-  accountIdentifier: string
-}
-
-export type GetDelegateMtlsEndpointForAccountProps = Omit<
-  GetProps<RestResponseDelegateMtlsEndpointDetails, unknown, GetDelegateMtlsEndpointForAccountQueryParams, void>,
-  'path'
->
-
-/**
- * Gets the delegate mTLS endpoint for an account.
- */
-export const GetDelegateMtlsEndpointForAccount = (props: GetDelegateMtlsEndpointForAccountProps) => (
-  <Get<RestResponseDelegateMtlsEndpointDetails, unknown, GetDelegateMtlsEndpointForAccountQueryParams, void>
-    path={`/delegate-mtls/endpoint`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetDelegateMtlsEndpointForAccountProps = Omit<
-  UseGetProps<RestResponseDelegateMtlsEndpointDetails, unknown, GetDelegateMtlsEndpointForAccountQueryParams, void>,
-  'path'
->
-
-/**
- * Gets the delegate mTLS endpoint for an account.
- */
-export const useGetDelegateMtlsEndpointForAccount = (props: UseGetDelegateMtlsEndpointForAccountProps) =>
-  useGet<RestResponseDelegateMtlsEndpointDetails, unknown, GetDelegateMtlsEndpointForAccountQueryParams, void>(
-    `/delegate-mtls/endpoint`,
-    { base: getConfig('ng/api'), ...props }
-  )
-
-/**
- * Gets the delegate mTLS endpoint for an account.
- */
-export const getDelegateMtlsEndpointForAccountPromise = (
-  props: GetUsingFetchProps<
-    RestResponseDelegateMtlsEndpointDetails,
-    unknown,
-    GetDelegateMtlsEndpointForAccountQueryParams,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<RestResponseDelegateMtlsEndpointDetails, unknown, GetDelegateMtlsEndpointForAccountQueryParams, void>(
-    getConfig('ng/api'),
-    `/delegate-mtls/endpoint`,
-    props,
-    signal
-  )
-
-export interface PatchDelegateMtlsEndpointForAccountQueryParams {
-  /**
-   * Account Identifier for the Entity.
-   */
-  accountIdentifier: string
-}
-
-export type PatchDelegateMtlsEndpointForAccountProps = Omit<
-  MutateProps<
-    RestResponseDelegateMtlsEndpointDetails,
-    unknown,
-    PatchDelegateMtlsEndpointForAccountQueryParams,
-    DelegateMtlsEndpointRequest,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Updates selected properties of the existing delegate mTLS endpoint for an account.
- */
-export const PatchDelegateMtlsEndpointForAccount = (props: PatchDelegateMtlsEndpointForAccountProps) => (
-  <Mutate<
-    RestResponseDelegateMtlsEndpointDetails,
-    unknown,
-    PatchDelegateMtlsEndpointForAccountQueryParams,
-    DelegateMtlsEndpointRequest,
-    void
-  >
-    verb="PATCH"
-    path={`/delegate-mtls/endpoint`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UsePatchDelegateMtlsEndpointForAccountProps = Omit<
-  UseMutateProps<
-    RestResponseDelegateMtlsEndpointDetails,
-    unknown,
-    PatchDelegateMtlsEndpointForAccountQueryParams,
-    DelegateMtlsEndpointRequest,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Updates selected properties of the existing delegate mTLS endpoint for an account.
- */
-export const usePatchDelegateMtlsEndpointForAccount = (props: UsePatchDelegateMtlsEndpointForAccountProps) =>
-  useMutate<
-    RestResponseDelegateMtlsEndpointDetails,
-    unknown,
-    PatchDelegateMtlsEndpointForAccountQueryParams,
-    DelegateMtlsEndpointRequest,
-    void
-  >('PATCH', `/delegate-mtls/endpoint`, { base: getConfig('ng/api'), ...props })
-
-/**
- * Updates selected properties of the existing delegate mTLS endpoint for an account.
- */
-export const patchDelegateMtlsEndpointForAccountPromise = (
-  props: MutateUsingFetchProps<
-    RestResponseDelegateMtlsEndpointDetails,
-    unknown,
-    PatchDelegateMtlsEndpointForAccountQueryParams,
-    DelegateMtlsEndpointRequest,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    RestResponseDelegateMtlsEndpointDetails,
-    unknown,
-    PatchDelegateMtlsEndpointForAccountQueryParams,
-    DelegateMtlsEndpointRequest,
-    void
-  >('PATCH', getConfig('ng/api'), `/delegate-mtls/endpoint`, props, signal)
-
-export interface CreateDelegateMtlsEndpointForAccountQueryParams {
-  /**
-   * Account Identifier for the Entity.
-   */
-  accountIdentifier: string
-}
-
-export type CreateDelegateMtlsEndpointForAccountProps = Omit<
-  MutateProps<
-    RestResponseDelegateMtlsEndpointDetails,
-    unknown,
-    CreateDelegateMtlsEndpointForAccountQueryParams,
-    DelegateMtlsEndpointRequest,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Creates the delegate mTLS endpoint for an account.
- */
-export const CreateDelegateMtlsEndpointForAccount = (props: CreateDelegateMtlsEndpointForAccountProps) => (
-  <Mutate<
-    RestResponseDelegateMtlsEndpointDetails,
-    unknown,
-    CreateDelegateMtlsEndpointForAccountQueryParams,
-    DelegateMtlsEndpointRequest,
-    void
-  >
-    verb="POST"
-    path={`/delegate-mtls/endpoint`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseCreateDelegateMtlsEndpointForAccountProps = Omit<
-  UseMutateProps<
-    RestResponseDelegateMtlsEndpointDetails,
-    unknown,
-    CreateDelegateMtlsEndpointForAccountQueryParams,
-    DelegateMtlsEndpointRequest,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Creates the delegate mTLS endpoint for an account.
- */
-export const useCreateDelegateMtlsEndpointForAccount = (props: UseCreateDelegateMtlsEndpointForAccountProps) =>
-  useMutate<
-    RestResponseDelegateMtlsEndpointDetails,
-    unknown,
-    CreateDelegateMtlsEndpointForAccountQueryParams,
-    DelegateMtlsEndpointRequest,
-    void
-  >('POST', `/delegate-mtls/endpoint`, { base: getConfig('ng/api'), ...props })
-
-/**
- * Creates the delegate mTLS endpoint for an account.
- */
-export const createDelegateMtlsEndpointForAccountPromise = (
-  props: MutateUsingFetchProps<
-    RestResponseDelegateMtlsEndpointDetails,
-    unknown,
-    CreateDelegateMtlsEndpointForAccountQueryParams,
-    DelegateMtlsEndpointRequest,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    RestResponseDelegateMtlsEndpointDetails,
-    unknown,
-    CreateDelegateMtlsEndpointForAccountQueryParams,
-    DelegateMtlsEndpointRequest,
-    void
-  >('POST', getConfig('ng/api'), `/delegate-mtls/endpoint`, props, signal)
-
-export interface UpdateDelegateMtlsEndpointForAccountQueryParams {
-  /**
-   * Account Identifier for the Entity.
-   */
-  accountIdentifier: string
-}
-
-export type UpdateDelegateMtlsEndpointForAccountProps = Omit<
-  MutateProps<
-    RestResponseDelegateMtlsEndpointDetails,
-    unknown,
-    UpdateDelegateMtlsEndpointForAccountQueryParams,
-    DelegateMtlsEndpointRequest,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Updates the existing delegate mTLS endpoint for an account.
- */
-export const UpdateDelegateMtlsEndpointForAccount = (props: UpdateDelegateMtlsEndpointForAccountProps) => (
-  <Mutate<
-    RestResponseDelegateMtlsEndpointDetails,
-    unknown,
-    UpdateDelegateMtlsEndpointForAccountQueryParams,
-    DelegateMtlsEndpointRequest,
-    void
-  >
-    verb="PUT"
-    path={`/delegate-mtls/endpoint`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseUpdateDelegateMtlsEndpointForAccountProps = Omit<
-  UseMutateProps<
-    RestResponseDelegateMtlsEndpointDetails,
-    unknown,
-    UpdateDelegateMtlsEndpointForAccountQueryParams,
-    DelegateMtlsEndpointRequest,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Updates the existing delegate mTLS endpoint for an account.
- */
-export const useUpdateDelegateMtlsEndpointForAccount = (props: UseUpdateDelegateMtlsEndpointForAccountProps) =>
-  useMutate<
-    RestResponseDelegateMtlsEndpointDetails,
-    unknown,
-    UpdateDelegateMtlsEndpointForAccountQueryParams,
-    DelegateMtlsEndpointRequest,
-    void
-  >('PUT', `/delegate-mtls/endpoint`, { base: getConfig('ng/api'), ...props })
-
-/**
- * Updates the existing delegate mTLS endpoint for an account.
- */
-export const updateDelegateMtlsEndpointForAccountPromise = (
-  props: MutateUsingFetchProps<
-    RestResponseDelegateMtlsEndpointDetails,
-    unknown,
-    UpdateDelegateMtlsEndpointForAccountQueryParams,
-    DelegateMtlsEndpointRequest,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    RestResponseDelegateMtlsEndpointDetails,
-    unknown,
-    UpdateDelegateMtlsEndpointForAccountQueryParams,
-    DelegateMtlsEndpointRequest,
-    void
-  >('PUT', getConfig('ng/api'), `/delegate-mtls/endpoint`, props, signal)
 
 export interface ListDelegateProfilesNgQueryParams {
   offset?: string
@@ -28286,7 +28673,7 @@ export interface GetClusterListFromSourceQueryParams {
 }
 
 export type GetClusterListFromSourceProps = Omit<
-  GetProps<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>,
+  GetProps<ResponsePageClusterFromGitops, Failure | Error, GetClusterListFromSourceQueryParams, void>,
   'path'
 >
 
@@ -28294,7 +28681,7 @@ export type GetClusterListFromSourceProps = Omit<
  * Gets cluster list from Gitops Service
  */
 export const GetClusterListFromSource = (props: GetClusterListFromSourceProps) => (
-  <Get<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>
+  <Get<ResponsePageClusterFromGitops, Failure | Error, GetClusterListFromSourceQueryParams, void>
     path={`/gitops/clusters/listFromGitops`}
     base={getConfig('ng/api')}
     {...props}
@@ -28302,7 +28689,7 @@ export const GetClusterListFromSource = (props: GetClusterListFromSourceProps) =
 )
 
 export type UseGetClusterListFromSourceProps = Omit<
-  UseGetProps<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>,
+  UseGetProps<ResponsePageClusterFromGitops, Failure | Error, GetClusterListFromSourceQueryParams, void>,
   'path'
 >
 
@@ -28310,7 +28697,7 @@ export type UseGetClusterListFromSourceProps = Omit<
  * Gets cluster list from Gitops Service
  */
 export const useGetClusterListFromSource = (props: UseGetClusterListFromSourceProps) =>
-  useGet<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>(
+  useGet<ResponsePageClusterFromGitops, Failure | Error, GetClusterListFromSourceQueryParams, void>(
     `/gitops/clusters/listFromGitops`,
     { base: getConfig('ng/api'), ...props }
   )
@@ -28319,10 +28706,10 @@ export const useGetClusterListFromSource = (props: UseGetClusterListFromSourcePr
  * Gets cluster list from Gitops Service
  */
 export const getClusterListFromSourcePromise = (
-  props: GetUsingFetchProps<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>,
+  props: GetUsingFetchProps<ResponsePageClusterFromGitops, Failure | Error, GetClusterListFromSourceQueryParams, void>,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponsePageCluster, Failure | Error, GetClusterListFromSourceQueryParams, void>(
+  getUsingFetch<ResponsePageClusterFromGitops, Failure | Error, GetClusterListFromSourceQueryParams, void>(
     getConfig('ng/api'),
     `/gitops/clusters/listFromGitops`,
     props,
@@ -28334,6 +28721,7 @@ export interface DeleteClusterQueryParams {
   orgIdentifier?: string
   projectIdentifier?: string
   environmentIdentifier?: string
+  scope?: 'ACCOUNT' | 'ORGANIZATION' | 'PROJECT'
 }
 
 export type DeleteClusterProps = Omit<
@@ -29641,6 +30029,162 @@ export const getInstanceNGDataPromise = (
     props,
     signal
   )
+
+export interface DeleteGitOpsInstancesQueryParams {
+  accountIdentifier?: string
+}
+
+export type DeleteGitOpsInstancesProps = Omit<
+  MutateProps<
+    ResponseDeleteInstancesRequest,
+    Failure | Error,
+    DeleteGitOpsInstancesQueryParams,
+    GitOpsInstanceRequestArrayRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Delete instances
+ */
+export const DeleteGitOpsInstances = (props: DeleteGitOpsInstancesProps) => (
+  <Mutate<
+    ResponseDeleteInstancesRequest,
+    Failure | Error,
+    DeleteGitOpsInstancesQueryParams,
+    GitOpsInstanceRequestArrayRequestBody,
+    void
+  >
+    verb="DELETE"
+    path={`/instancesync/gitops`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseDeleteGitOpsInstancesProps = Omit<
+  UseMutateProps<
+    ResponseDeleteInstancesRequest,
+    Failure | Error,
+    DeleteGitOpsInstancesQueryParams,
+    GitOpsInstanceRequestArrayRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Delete instances
+ */
+export const useDeleteGitOpsInstances = (props: UseDeleteGitOpsInstancesProps) =>
+  useMutate<
+    ResponseDeleteInstancesRequest,
+    Failure | Error,
+    DeleteGitOpsInstancesQueryParams,
+    GitOpsInstanceRequestArrayRequestBody,
+    void
+  >('DELETE', `/instancesync/gitops`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Delete instances
+ */
+export const deleteGitOpsInstancesPromise = (
+  props: MutateUsingFetchProps<
+    ResponseDeleteInstancesRequest,
+    Failure | Error,
+    DeleteGitOpsInstancesQueryParams,
+    GitOpsInstanceRequestArrayRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseDeleteInstancesRequest,
+    Failure | Error,
+    DeleteGitOpsInstancesQueryParams,
+    GitOpsInstanceRequestArrayRequestBody,
+    void
+  >('DELETE', getConfig('ng/api'), `/instancesync/gitops`, props, signal)
+
+export interface CreateGitOpsInstancesQueryParams {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type CreateGitOpsInstancesProps = Omit<
+  MutateProps<
+    ResponseBoolean,
+    Failure | Error,
+    CreateGitOpsInstancesQueryParams,
+    GitOpsInstanceRequestArrayRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Create instances and save in DB
+ */
+export const CreateGitOpsInstances = (props: CreateGitOpsInstancesProps) => (
+  <Mutate<
+    ResponseBoolean,
+    Failure | Error,
+    CreateGitOpsInstancesQueryParams,
+    GitOpsInstanceRequestArrayRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/instancesync/gitops`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseCreateGitOpsInstancesProps = Omit<
+  UseMutateProps<
+    ResponseBoolean,
+    Failure | Error,
+    CreateGitOpsInstancesQueryParams,
+    GitOpsInstanceRequestArrayRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Create instances and save in DB
+ */
+export const useCreateGitOpsInstances = (props: UseCreateGitOpsInstancesProps) =>
+  useMutate<
+    ResponseBoolean,
+    Failure | Error,
+    CreateGitOpsInstancesQueryParams,
+    GitOpsInstanceRequestArrayRequestBody,
+    void
+  >('POST', `/instancesync/gitops`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Create instances and save in DB
+ */
+export const createGitOpsInstancesPromise = (
+  props: MutateUsingFetchProps<
+    ResponseBoolean,
+    Failure | Error,
+    CreateGitOpsInstancesQueryParams,
+    GitOpsInstanceRequestArrayRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseBoolean,
+    Failure | Error,
+    CreateGitOpsInstancesQueryParams,
+    GitOpsInstanceRequestArrayRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/instancesync/gitops`, props, signal)
 
 export interface GetInstanceSyncPerpetualTaskResponseQueryParams {
   accountIdentifier: string
@@ -31369,7 +31913,7 @@ export type ValidateLdapConnectionSettingsProps = Omit<
     RestResponseLdapTestResponse,
     Failure | Error,
     ValidateLdapConnectionSettingsQueryParams,
-    LdapSettings,
+    LdapSettingsRequestBody,
     void
   >,
   'path' | 'verb'
@@ -31379,9 +31923,15 @@ export type ValidateLdapConnectionSettingsProps = Omit<
  * Validates Ldap Connection Setting
  */
 export const ValidateLdapConnectionSettings = (props: ValidateLdapConnectionSettingsProps) => (
-  <Mutate<RestResponseLdapTestResponse, Failure | Error, ValidateLdapConnectionSettingsQueryParams, LdapSettings, void>
+  <Mutate<
+    RestResponseLdapTestResponse,
+    Failure | Error,
+    ValidateLdapConnectionSettingsQueryParams,
+    LdapSettingsRequestBody,
+    void
+  >
     verb="POST"
-    path={`/ng/ldap/test/connection`}
+    path={`/ng/ldap/settings/test/connection`}
     base={getConfig('ng/api')}
     {...props}
   />
@@ -31392,7 +31942,7 @@ export type UseValidateLdapConnectionSettingsProps = Omit<
     RestResponseLdapTestResponse,
     Failure | Error,
     ValidateLdapConnectionSettingsQueryParams,
-    LdapSettings,
+    LdapSettingsRequestBody,
     void
   >,
   'path' | 'verb'
@@ -31406,9 +31956,9 @@ export const useValidateLdapConnectionSettings = (props: UseValidateLdapConnecti
     RestResponseLdapTestResponse,
     Failure | Error,
     ValidateLdapConnectionSettingsQueryParams,
-    LdapSettings,
+    LdapSettingsRequestBody,
     void
-  >('POST', `/ng/ldap/test/connection`, { base: getConfig('ng/api'), ...props })
+  >('POST', `/ng/ldap/settings/test/connection`, { base: getConfig('ng/api'), ...props })
 
 /**
  * Validates Ldap Connection Setting
@@ -31418,7 +31968,7 @@ export const validateLdapConnectionSettingsPromise = (
     RestResponseLdapTestResponse,
     Failure | Error,
     ValidateLdapConnectionSettingsQueryParams,
-    LdapSettings,
+    LdapSettingsRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -31427,9 +31977,167 @@ export const validateLdapConnectionSettingsPromise = (
     RestResponseLdapTestResponse,
     Failure | Error,
     ValidateLdapConnectionSettingsQueryParams,
-    LdapSettings,
+    LdapSettingsRequestBody,
     void
-  >('POST', getConfig('ng/api'), `/ng/ldap/test/connection`, props, signal)
+  >('POST', getConfig('ng/api'), `/ng/ldap/settings/test/connection`, props, signal)
+
+export interface ValidateLdapGroupSettingsQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type ValidateLdapGroupSettingsProps = Omit<
+  MutateProps<
+    RestResponseLdapTestResponse,
+    Failure | Error,
+    ValidateLdapGroupSettingsQueryParams,
+    LdapSettingsRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Validates Ldap Group Setting
+ */
+export const ValidateLdapGroupSettings = (props: ValidateLdapGroupSettingsProps) => (
+  <Mutate<
+    RestResponseLdapTestResponse,
+    Failure | Error,
+    ValidateLdapGroupSettingsQueryParams,
+    LdapSettingsRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/ng/ldap/settings/test/group`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseValidateLdapGroupSettingsProps = Omit<
+  UseMutateProps<
+    RestResponseLdapTestResponse,
+    Failure | Error,
+    ValidateLdapGroupSettingsQueryParams,
+    LdapSettingsRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Validates Ldap Group Setting
+ */
+export const useValidateLdapGroupSettings = (props: UseValidateLdapGroupSettingsProps) =>
+  useMutate<
+    RestResponseLdapTestResponse,
+    Failure | Error,
+    ValidateLdapGroupSettingsQueryParams,
+    LdapSettingsRequestBody,
+    void
+  >('POST', `/ng/ldap/settings/test/group`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Validates Ldap Group Setting
+ */
+export const validateLdapGroupSettingsPromise = (
+  props: MutateUsingFetchProps<
+    RestResponseLdapTestResponse,
+    Failure | Error,
+    ValidateLdapGroupSettingsQueryParams,
+    LdapSettingsRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseLdapTestResponse,
+    Failure | Error,
+    ValidateLdapGroupSettingsQueryParams,
+    LdapSettingsRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/ng/ldap/settings/test/group`, props, signal)
+
+export interface ValidateLdapUserSettingsQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type ValidateLdapUserSettingsProps = Omit<
+  MutateProps<
+    RestResponseLdapTestResponse,
+    Failure | Error,
+    ValidateLdapUserSettingsQueryParams,
+    LdapSettingsRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Validates Ldap User Setting
+ */
+export const ValidateLdapUserSettings = (props: ValidateLdapUserSettingsProps) => (
+  <Mutate<
+    RestResponseLdapTestResponse,
+    Failure | Error,
+    ValidateLdapUserSettingsQueryParams,
+    LdapSettingsRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/ng/ldap/settings/test/user`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseValidateLdapUserSettingsProps = Omit<
+  UseMutateProps<
+    RestResponseLdapTestResponse,
+    Failure | Error,
+    ValidateLdapUserSettingsQueryParams,
+    LdapSettingsRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Validates Ldap User Setting
+ */
+export const useValidateLdapUserSettings = (props: UseValidateLdapUserSettingsProps) =>
+  useMutate<
+    RestResponseLdapTestResponse,
+    Failure | Error,
+    ValidateLdapUserSettingsQueryParams,
+    LdapSettingsRequestBody,
+    void
+  >('POST', `/ng/ldap/settings/test/user`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Validates Ldap User Setting
+ */
+export const validateLdapUserSettingsPromise = (
+  props: MutateUsingFetchProps<
+    RestResponseLdapTestResponse,
+    Failure | Error,
+    ValidateLdapUserSettingsQueryParams,
+    LdapSettingsRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseLdapTestResponse,
+    Failure | Error,
+    ValidateLdapUserSettingsQueryParams,
+    LdapSettingsRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/ng/ldap/settings/test/user`, props, signal)
 
 export interface SearchLdapGroupsQueryParams {
   accountIdentifier?: string
@@ -32542,7 +33250,7 @@ export const getServiceDefinitionTypesPromise = (
   )
 
 export interface GetStepsQueryParams {
-  serviceDefinitionType: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
+  serviceDefinitionType: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApp'
 }
 
 export type GetStepsProps = Omit<GetProps<ResponseStepCategory, Failure | Error, GetStepsQueryParams, void>, 'path'>
@@ -32679,7 +33387,7 @@ export const getProvisionerExecutionStrategyYamlPromise = (
   )
 
 export interface GetExecutionStrategyYamlQueryParams {
-  serviceDefinitionType: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
+  serviceDefinitionType: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApp'
   strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
   includeVerify?: boolean
 }
@@ -32741,7 +33449,7 @@ export type ProcessPollingResultNgProps = Omit<
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    ProcessPollingResultNgBodyRequestBody,
+    SubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >,
   'path' | 'verb'
@@ -32753,7 +33461,7 @@ export const ProcessPollingResultNg = ({ perpetualTaskId, ...props }: ProcessPol
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    ProcessPollingResultNgBodyRequestBody,
+    SubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >
     verb="POST"
@@ -32768,7 +33476,7 @@ export type UseProcessPollingResultNgProps = Omit<
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    ProcessPollingResultNgBodyRequestBody,
+    SubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >,
   'path' | 'verb'
@@ -32780,7 +33488,7 @@ export const useProcessPollingResultNg = ({ perpetualTaskId, ...props }: UseProc
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    ProcessPollingResultNgBodyRequestBody,
+    SubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >(
     'POST',
@@ -32796,7 +33504,7 @@ export const processPollingResultNgPromise = (
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    ProcessPollingResultNgBodyRequestBody,
+    SubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   > & { perpetualTaskId: string },
   signal?: RequestInit['signal']
@@ -32805,17 +33513,17 @@ export const processPollingResultNgPromise = (
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    ProcessPollingResultNgBodyRequestBody,
+    SubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >('POST', getConfig('ng/api'), `/polling/delegate-response/${perpetualTaskId}`, props, signal)
 
 export type SubscribeProps = Omit<
-  MutateProps<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
+  MutateProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const Subscribe = (props: SubscribeProps) => (
-  <Mutate<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>
+  <Mutate<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>
     verb="POST"
     path={`/polling/subscribe`}
     base={getConfig('ng/api')}
@@ -32824,28 +33532,22 @@ export const Subscribe = (props: SubscribeProps) => (
 )
 
 export type UseSubscribeProps = Omit<
-  UseMutateProps<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
+  UseMutateProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const useSubscribe = (props: UseSubscribeProps) =>
-  useMutate<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
+  useMutate<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>(
     'POST',
     `/polling/subscribe`,
     { base: getConfig('ng/api'), ...props }
   )
 
 export const subscribePromise = (
-  props: MutateUsingFetchProps<
-    ResponsePollingResponseDTO,
-    Failure | Error,
-    void,
-    ProcessPollingResultNgBodyRequestBody,
-    void
-  >,
+  props: MutateUsingFetchProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
+  mutateUsingFetch<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/polling/subscribe`,
@@ -32854,12 +33556,12 @@ export const subscribePromise = (
   )
 
 export type UnsubscribeProps = Omit<
-  MutateProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
+  MutateProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const Unsubscribe = (props: UnsubscribeProps) => (
-  <Mutate<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>
+  <Mutate<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>
     verb="POST"
     path={`/polling/unsubscribe`}
     base={getConfig('ng/api')}
@@ -32868,22 +33570,21 @@ export const Unsubscribe = (props: UnsubscribeProps) => (
 )
 
 export type UseUnsubscribeProps = Omit<
-  UseMutateProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
+  UseMutateProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const useUnsubscribe = (props: UseUnsubscribeProps) =>
-  useMutate<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
-    'POST',
-    `/polling/unsubscribe`,
-    { base: getConfig('ng/api'), ...props }
-  )
+  useMutate<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>('POST', `/polling/unsubscribe`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
 
 export const unsubscribePromise = (
-  props: MutateUsingFetchProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
+  props: MutateUsingFetchProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
+  mutateUsingFetch<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/polling/unsubscribe`,
@@ -36065,7 +36766,7 @@ export interface GetServiceListQueryParams {
   searchTerm?: string
   serviceIdentifiers?: string[]
   sort?: string[]
-  type?: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
+  type?: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApp'
   gitOpsEnabled?: boolean
 }
 
@@ -36407,7 +37108,7 @@ export interface GetServiceAccessListQueryParams {
   searchTerm?: string
   serviceIdentifiers?: string[]
   sort?: string[]
-  type?: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApps'
+  type?: 'Kubernetes' | 'NativeHelm' | 'Ssh' | 'WinRm' | 'ServerlessAwsLambda' | 'AzureWebApp'
   gitOpsEnabled?: boolean
 }
 

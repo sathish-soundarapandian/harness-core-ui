@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useCallback } from 'react'
+import { get } from 'lodash-es'
 import { FormInput, Text, TextInput, HarnessDocTooltip } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
@@ -16,11 +17,12 @@ import {
   ConnectorReferenceField,
   ConnectorReferenceDTO
 } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { getCompleteConnectorUrl } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import { AWS_CODECOMMIT } from '../utils/TriggersWizardPageUtils'
+import { AWS_CODECOMMIT, AZURE_REPO } from '../utils/TriggersWizardPageUtils'
 import { GitSourceProviders } from '../utils/TriggersListUtils'
 import css from './ConnectorSection.module.scss'
 interface ConnectorSectionInterface {
@@ -63,9 +65,21 @@ export const ConnectorSection: React.FC<ConnectorSectionInterface> = ({ formikPr
       }
     }
   })
+
+  const getSourceRepo = useCallback((repoProvider: ConnectorConfigDTO['type']): string => {
+    switch (repoProvider) {
+      case GitSourceProviders.AWS_CODECOMMIT.value:
+        return AWS_CODECOMMIT
+      case GitSourceProviders.AZURE_REPO.value:
+        return AZURE_REPO
+      default:
+        return repoProvider
+    }
+  }, [])
+
   const connectorUrl = connectorRef?.connector?.spec?.url
   const constructRepoUrl = `${connectorUrl}${connectorUrl?.endsWith('/') ? '' : '/'}`
-  const updatedSourceRepo = sourceRepo === GitSourceProviders.AWS_CODECOMMIT.value ? AWS_CODECOMMIT : sourceRepo
+  const updatedSourceRepo = getSourceRepo(sourceRepo)
   const renderRepoUrl = (): JSX.Element | null => {
     const connectorURLType = connectorRef?.connector?.spec?.type
     if (connectorURLType === connectorUrlType.REPO) {
@@ -88,7 +102,9 @@ export const ConnectorSection: React.FC<ConnectorSectionInterface> = ({ formikPr
           />
         </>
       )
-    } else if (connectorURLType === connectorUrlType.ACCOUNT || connectorURLType === connectorUrlType.REGION) {
+    } else if (
+      [connectorUrlType.ACCOUNT, connectorUrlType.REGION, connectorUrlType.PROJECT].includes(connectorURLType)
+    ) {
       return (
         <>
           <FormInput.Text
@@ -99,7 +115,12 @@ export const ConnectorSection: React.FC<ConnectorSectionInterface> = ({ formikPr
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLiveRepoName(e.target.value)}
           />
           <Text data-name="" style={{ marginBottom: 'var(--spacing-medium)' }} color={Color.GREY_400}>
-            {`${constructRepoUrl}${liveRepoName}`}
+            {getCompleteConnectorUrl({
+              partialUrl: constructRepoUrl,
+              repoName: liveRepoName,
+              connectorType: get(connectorRef, 'connector.type', ''),
+              gitAuthProtocol: get(connectorRef, 'connector.spec.authentication.type', '')
+            })}
           </Text>
         </>
       )
@@ -133,7 +154,7 @@ export const ConnectorSection: React.FC<ConnectorSectionInterface> = ({ formikPr
         color={Color.PRIMARY_7}
         data-name="plusAdd"
         onClick={() => {
-          openConnectorModal(false, Connectors[sourceRepo?.toUpperCase()], {
+          openConnectorModal(false, Connectors[getSourceRepo(sourceRepo)?.toUpperCase()], {
             gitDetails: { repoIdentifier, branch, getDefaultFromOtherRepo: true }
           }) // isEditMode, type, and connectorInfo
         }}

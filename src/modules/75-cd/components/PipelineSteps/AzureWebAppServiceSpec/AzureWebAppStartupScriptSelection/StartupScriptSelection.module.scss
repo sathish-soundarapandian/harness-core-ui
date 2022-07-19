@@ -1,0 +1,134 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.startupScriptWizard {
+  width: 100%;
+  span[data-icon='docs'] {
+    svg > path {
+      fill: none;
+    }
+  }
+}
+
+.addStartupScript {
+  padding: 0px !important;
+}
+
+.rowItem {
+  padding: var(--spacing-medium) 0;
+  border-bottom: solid 1px var(--grey-100);
+
+  span.type {
+    color: var(--grey-900) !important;
+    font-weight: 900;
+    display: grid;
+    grid-template-columns: 1fr 10px;
+  }
+  font-size: 14px !important;
+
+  > p {
+    cursor: pointer;
+    color: var(--primary-7) !important;
+  }
+
+  .columnId {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    gap: var(--spacing-small);
+    align-items: start;
+    margin-top: 2px;
+    padding-left: var(--spacing-xsmall);
+  }
+
+  .connectorNameField {
+    display: flex;
+    align-items: center;
+
+    .connectorName {
+      display: inline-flex;
+      color: var(--grey-500);
+      margin-right: var(--spacing-small);
+      max-width: 236px;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+.startupScriptList {
+  display: grid;
+  grid-template-columns: 300px 300px auto;
+  column-gap: var(--spacing-medium);
+  align-items: center;
+
+  &.list-header {
+    border-bottom: solid 1px var(--grey-100);
+    padding-bottom: var(--spacing-medium);
+    text-transform: uppercase;
+  }
+
+  .startupScriptLocation {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .startupScriptListButton {
+    justify-content: flex-end;
+  }
+}
+
+.noWrap {
+  white-space: nowrap;
+}
+
+.createConnectorWizard {
+  flex-grow: 1;
+  display: flex;
+}
+
+.crossIcon {
+  position: absolute;
+  right: var(--spacing-large);
+  top: var(--spacing-large);
+}
+
+.modal {
+  [class*='bp3-dialog-header'] button {
+    z-index: 2;
+  }
+}
+
+.optionsViewContainer {
+  margin: var(--spacing-small) 0 0 var(--spacing-small) !important;
+
+  .startupScriptForm {
+    min-height: 470px;
+
+    .connectorContainer {
+      .addStartupScript {
+        margin-top: 25px;
+      }
+      .configureOptions {
+        margin-top: 21px;
+      }
+    }
+  }
+}
+
+.thumbnailSelect {
+  cursor: pointer;
+}
+
+.saveBtn {
+  position: relative;
+  bottom: 0;
+}
+
+.borderRadius {
+  border-radius: 4px;
+}

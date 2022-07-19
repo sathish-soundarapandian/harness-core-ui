@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypes, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
 import { String, useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import css from '../ManifestWizardSteps.module.scss'
@@ -15,7 +15,7 @@ import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
 interface GitRepositoryNameProps {
   accountUrl: string
   expressions: Array<string>
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   fieldValue: string | undefined
   changeFieldValue: (val: string) => void
   isReadonly?: boolean

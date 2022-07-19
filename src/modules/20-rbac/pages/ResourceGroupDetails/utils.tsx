@@ -280,6 +280,10 @@ export const includeProjects = (orgScopes?: ScopeSelector[]): boolean => {
   return orgScopes?.filter(item => item.filter === 'INCLUDING_CHILD_SCOPES' || !!item.projectIdentifier).length !== 0
 }
 
+export const includedProjectsLength = (orgScopes?: ScopeSelector[]): number => {
+  return orgScopes?.filter(item => item.filter === 'INCLUDING_CHILD_SCOPES' || !!item.projectIdentifier).length || 0
+}
+
 export const getAllProjects = (orgScopes?: ScopeSelector[]): string[] => {
   return (
     orgScopes

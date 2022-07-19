@@ -24,8 +24,10 @@ import { useHistory } from 'react-router-dom'
 import { isEmpty, defaultTo, keyBy } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import type { PipelineConfig, PipelineInfoConfig, ResponseJsonNode } from 'services/cd-ng'
 import {
+  PipelineConfig,
+  PipelineInfoConfig,
+  ResponseJsonNode,
   useGetPipeline,
   usePostPipelineExecuteWithInputSetYaml,
   useRePostPipelineExecuteWithInputSetYaml,
@@ -53,6 +55,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacButton from '@rbac/components/Button/Button'
 import {
   ALL_STAGE_VALUE,
+  clearRuntimeInput,
   getAllStageData,
   getAllStageItem,
   getFeaturePropsForRunPipelineButton,
@@ -71,10 +74,12 @@ import {
 } from '@pipeline/utils/CIUtils'
 import { useDeepCompareEffect } from '@common/hooks/useDeepCompareEffect'
 import { StoreType } from '@common/constants/GitSyncTypes'
+import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { PipelineErrorView } from '@pipeline/components/RunPipelineModal/PipelineErrorView'
-import { clearRuntimeInput, validatePipeline, getErrorsList } from '../PipelineStudio/StepUtil'
+import { getErrorsList } from '@pipeline/utils/errorUtils'
+import { validatePipeline } from '../PipelineStudio/StepUtil'
 import { PreFlightCheckModal } from '../PreFlightCheckModal/PreFlightCheckModal'
-import { YamlBuilderMemo } from '../PipelineStudio/PipelineYamlView/PipelineYamlView'
+
 import factory from '../PipelineSteps/PipelineStepFactory'
 import { StepViewType } from '../AbstractSteps/Step'
 import SaveAsInputSet from './SaveAsInputSet'

@@ -25,7 +25,7 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import { PageSpinner } from '@common/components'
 import { PipelineInputSetFormInternal } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { Error, PipelineInfoConfig } from 'services/cd-ng'
+import type { Error, PipelineInfoConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { validatePipeline } from '@pipeline/components/PipelineStudio/StepUtil'
 import { ErrorsStrip } from '@pipeline/components/ErrorsStrip/ErrorsStrip'
@@ -75,7 +75,7 @@ export function TemplatePipelineSpecifications(): JSX.Element {
       getDefaultFromOtherRepo: true
     },
     body: {
-      originalEntityYaml: yamlStringify(dummyPipeline.current)
+      originalEntityYaml: yamlStringify({ pipeline: dummyPipeline.current })
     }
   })
 
@@ -108,7 +108,7 @@ export function TemplatePipelineSpecifications(): JSX.Element {
 
   React.useEffect(() => {
     if (pipelineResponse?.data?.mergedPipelineYaml) {
-      setAllValues(parse(pipelineResponse?.data?.mergedPipelineYaml))
+      setAllValues(parse(pipelineResponse.data.mergedPipelineYaml).pipeline)
     }
   }, [pipelineResponse?.data?.mergedPipelineYaml])
 

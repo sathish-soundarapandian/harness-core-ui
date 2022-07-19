@@ -7,6 +7,7 @@
 
 import React, { useCallback } from 'react'
 import {
+  AllowedTypes,
   Button,
   ButtonVariation,
   Formik,
@@ -36,7 +37,7 @@ import css from '../K8sValuesManifest/ManifestDetails.module.scss'
 interface InlinePropType {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   selectedManifest: ManifestTypes | null
   handleSubmit: (data: ManifestConfigWrapper) => void

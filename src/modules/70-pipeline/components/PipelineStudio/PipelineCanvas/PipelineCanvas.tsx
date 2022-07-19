@@ -27,7 +27,7 @@ import { useHistory, useParams, matchPath } from 'react-router-dom'
 import { parse } from 'yaml'
 import { defaultTo, isEmpty, isEqual, merge, omit } from 'lodash-es'
 import produce from 'immer'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { AppStoreContext, useAppStore } from 'framework/AppStore/AppStoreContext'
 import { NavigationCheck } from '@common/components/NavigationCheck/NavigationCheck'
@@ -69,6 +69,7 @@ import { useSaveTemplateListener } from '@pipeline/components/PipelineStudio/hoo
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { OutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
+import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import CreatePipelines from '../CreateModal/PipelineCreate'
 import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
@@ -89,7 +90,6 @@ interface PipelineWithGitContextFormProps extends PipelineInfoConfig {
   branch?: string
   connectorRef?: string
   filePath?: string
-  remoteType?: string
   storeType?: string
 }
 
@@ -141,9 +141,9 @@ export function PipelineCanvas({
     isReadonly,
     updatePipelineView,
     setSelectedStageId,
-    setSelectedSectionId,
-    getTemplate
+    setSelectedSectionId
   } = usePipelineContext()
+  const { getTemplate } = useTemplateSelector()
   const {
     repoIdentifier,
     branch,
@@ -333,7 +333,6 @@ export function PipelineCanvas({
                 branch: branch || gitDetails.branch || '',
                 connectorRef: connectorRef || '',
                 storeType: storeType || '',
-                remoteType: 'create',
                 filePath: gitDetails.filePath
               })}
               closeModal={onCloseCreate}
@@ -441,7 +440,6 @@ export function PipelineCanvas({
       delete (pipeline as PipelineWithGitContextFormProps).branch
       delete (pipeline as PipelineWithGitContextFormProps).connectorRef
       delete (pipeline as PipelineWithGitContextFormProps).filePath
-      delete (pipeline as PipelineWithGitContextFormProps).remoteType
       delete (pipeline as PipelineWithGitContextFormProps).storeType
       updatePipeline(pipeline)
       if (currStoreMetadata?.storeType) {
@@ -453,11 +451,23 @@ export function PipelineCanvas({
           updatedGitDetails = { ...gitDetails, ...updatedGitDetails }
         }
         updateGitDetails(updatedGitDetails).then(() => {
-          if (updatedGitDetails && !currStoreMetadata?.storeType) {
-            updateQueryParams(
-              { repoIdentifier: updatedGitDetails.repoIdentifier, branch: updatedGitDetails.branch },
-              { skipNulls: true }
-            )
+          if (updatedGitDetails) {
+            if (isGitSyncEnabled) {
+              updateQueryParams(
+                { repoIdentifier: updatedGitDetails.repoIdentifier, branch: updatedGitDetails.branch },
+                { skipNulls: true }
+              )
+            } else if (isGitSimplificationEnabled && currStoreMetadata?.storeType === StoreType.REMOTE) {
+              updateQueryParams(
+                {
+                  connectorRef: currStoreMetadata.connectorRef,
+                  repoName: updatedGitDetails?.repoName,
+                  branch: updatedGitDetails.branch,
+                  storeType: currStoreMetadata.storeType as StoreType
+                },
+                { skipNulls: true }
+              )
+            }
           }
         })
       }
@@ -486,8 +496,8 @@ export function PipelineCanvas({
   React.useEffect(() => {
     if (useTemplate && (!isGitSyncEnabled || !isEmpty(gitDetails))) {
       getPipelineTemplate()
-        .catch(_error => {
-          onCloseCreate()
+        .catch(_ => {
+          // Do nothing.. user cancelled template selection
         })
         .finally(() => {
           setUseTemplate(false)
@@ -579,7 +589,7 @@ export function PipelineCanvas({
       gitDetails.repoName &&
       gitDetails.branch &&
       updatePipelineStoreMetadata({ connectorRef, storeType }, gitDetails)
-  }, [isPipelineRemote, gitDetails])
+  }, [isPipelineRemote, gitDetails, connectorRef, storeType])
 
   const [openRunPipelineModal, closeRunPipelineModal] = useModalHook(
     () =>
@@ -785,7 +795,7 @@ export function PipelineCanvas({
             history.push(newPath)
           }}
         />
-        <div>
+        <Layout.Vertical height={'100%'}>
           <div className={css.titleBar}>
             <div className={css.breadcrumbsMenu}>
               <div className={css.pipelineMetadataContainer}>
@@ -908,18 +918,20 @@ export function PipelineCanvas({
               </div>
             </div>
           </div>
-        </div>
-        {templateInputsErrorNodeSummary && (
-          <OutOfSyncErrorStrip
-            templateInputsErrorNodeSummary={templateInputsErrorNodeSummary}
-            entity={'Pipeline'}
-            isReadOnly={isReadonly}
-            onRefreshEntity={() => {
-              fetchPipeline({ forceFetch: true, forceUpdate: true })
-            }}
-          />
-        )}
-        {isYaml ? <PipelineYamlView /> : pipeline.template ? <TemplatePipelineBuilder /> : <StageBuilder />}
+          {templateInputsErrorNodeSummary && (
+            <OutOfSyncErrorStrip
+              templateInputsErrorNodeSummary={templateInputsErrorNodeSummary}
+              entity={'Pipeline'}
+              isReadOnly={isReadonly}
+              onRefreshEntity={() => {
+                fetchPipeline({ forceFetch: true, forceUpdate: true })
+              }}
+            />
+          )}
+          <Container className={css.builderContainer}>
+            {isYaml ? <PipelineYamlView /> : pipeline.template ? <TemplatePipelineBuilder /> : <StageBuilder />}
+          </Container>
+        </Layout.Vertical>
       </div>
       <RightBar />
     </PipelineVariablesContextProvider>

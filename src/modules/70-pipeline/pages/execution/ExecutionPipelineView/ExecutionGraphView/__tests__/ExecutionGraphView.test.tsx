@@ -89,6 +89,7 @@ const contextValue = (mock: any = mockCD): ExecutionContextParams => ({
     mock.data.pipelineExecutionSummary.startingNodeId
   ),
   selectedStageId: 'google_1',
+  selectedStageExecutionId: '',
   selectedStepId: '',
   loading: false,
   isDataLoadedForSelectedStage: true,
@@ -97,7 +98,8 @@ const contextValue = (mock: any = mockCD): ExecutionContextParams => ({
   setLogsToken: jest.fn(),
   addNewNodeToMap: jest.fn(),
   setSelectedStepId: jest.fn(),
-  setSelectedStageId: jest.fn()
+  setSelectedStageId: jest.fn(),
+  setSelectedStageExecutionId: jest.fn()
 })
 
 const fetchMock = jest.spyOn(global, 'fetch' as any)

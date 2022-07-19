@@ -1,0 +1,10 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "yamlPipeline": "pipeline:\n    name: testPipeline_Cypress\n    identifier: testPipeline_Cypress\n    projectIdentifier: defaultproject\n    orgIdentifier: default\n    tags: {}\n    stages:\n        - stage:\n              name: Jenkins\n              identifier: Jenkins\n              description: \"\"\n              type: Approval\n              spec:\n                  execution:\n                      steps:\n                          - step:\n                                type: JenkinsBuild\n                                name: jenkinsStep\n                                identifier: jenkinsStep\n                                spec:\n                                    connectorRef: <+input>\n                                    jobParameter:\n                                        - name: booleankey\n                                          value: \"true\"\n                                          type: String\n                                          id: 4de6ac87-dca9-4aa9-9773-dfc68f7a3577\n                                        - name: name\n                                          value: test name\n                                          type: String\n                                          id: a05bf3bc-3af5-476c-af19-609431d7467a\n                                        - name: test\n                                          value: \"123\"\n                                          type: String\n                                          id: 30508615-ee24-4658-82c4-91700aa8ee91\n                                    delegateSelectors: []\n                                    unstableStatusAsSuccess: false\n                                    captureEnvironmentVariable: false\n                                    jobName: <+input>\n                                timeout: 10m\n                  serviceDependencies: []\n              tags: {}\n",
+    "entityValidityDetails": { "valid": true, "invalidYaml": null },
+    "modules": ["pms"]
+  },
+  "metaData": null,
+  "correlationId": "55084aa5-0175-4b62-afa8-610b165f705a"
+}

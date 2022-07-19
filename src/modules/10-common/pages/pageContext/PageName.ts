@@ -41,6 +41,7 @@ export enum PAGE_NAME {
   CIPipelineStudio = 'CIPipelineStudio',
   FullPageLogView = 'FullPageLogView',
   PipelinesPage = 'PipelinesPage',
+  PipelineListPage = 'PipelineListPage',
   InputSetList = 'InputSetList',
   DeploymentsList = 'DeploymentsList',
   EnhancedInputSetForm = 'EnhancedInputSetForm',
@@ -66,6 +67,7 @@ export enum PAGE_NAME {
   CDPipelineStudio = 'CDPipelineStudio',
   CDPipelineDeploymentList = 'CDPipelineDeploymentList',
   GitOpsPage = 'GitOpsPage',
+  FileStorePage = 'FileStorePage',
   AccountConfiguration = 'AccountConfiguration',
   AccountOverview = 'AccountOverview',
   SubscriptionsPage = 'SubscriptionsPage',
@@ -107,5 +109,7 @@ export enum PAGE_NAME {
   CEWorkloadDetailsPage = 'CEWorkloadDetailsPage',
   CENodeDetailsPage = 'CENodeDetailsPage',
   CEAnomaliesOverviewPage = 'CEAnomaliesOverviewPage',
-  CEBusinessMapping = 'CEBusinessMapping'
+  CEBusinessMapping = 'CEBusinessMapping',
+  ErrorTrackingListPage = 'ErrorTrackingListPage',
+  OPAPolicyDashboard = 'OPAPolicyDashboard'
 }

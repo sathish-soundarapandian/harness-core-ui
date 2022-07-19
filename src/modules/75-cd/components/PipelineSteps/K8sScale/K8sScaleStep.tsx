@@ -13,7 +13,8 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   SelectOption,
-  MultiSelectOption
+  MultiSelectOption,
+  AllowedTypes
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import * as Yup from 'yup'
@@ -65,7 +66,7 @@ interface K8sScaleProps {
   initialValues: K8sScaleData
   onUpdate?: (data: K8sScaleData) => void
   onChange?: (data: K8sScaleData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   isNewStep?: boolean
   template?: K8sScaleData

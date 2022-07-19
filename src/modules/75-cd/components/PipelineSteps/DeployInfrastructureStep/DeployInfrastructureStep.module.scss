@@ -29,9 +29,6 @@
       margin-bottom: 0px !important;
     }
   }
-  > button {
-    margin-top: 25px !important;
-  }
 }
 
 .label {
@@ -55,4 +52,22 @@
 .dialogStyles {
   width: 1024px !important;
   min-height: 600px;
+}
+
+.fullWidth {
+  width: 100% !important;
+}
+
+.sectionContent {
+  box-shadow: none !important;
+
+  :global {
+    .customVariables {
+      padding-left: 0;
+      padding-right: 0;
+      margin-left: 0;
+      margin-right: 0;
+      border: none;
+    }
+  }
 }

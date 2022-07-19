@@ -31,6 +31,7 @@ describe.skip('Health Source - Google Cloud Operations', () => {
       { allServicesCount: 1, servicesAtRiskCount: 0 }
     )
     cy.visitChangeIntelligence()
+    cy.visitSRMMonitoredServicePage()
   })
 
   it('should be able to add GCO Health Source with manual query', () => {

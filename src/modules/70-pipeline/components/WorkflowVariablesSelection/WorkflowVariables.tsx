@@ -19,8 +19,7 @@ import type {
 } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableEditable'
 
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import { useCache } from '@common/hooks/useCache'
-import type { ServiceDefinition, StageElementConfig, StageElementWrapperConfig } from 'services/cd-ng'
+import type { StageElementConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import type { AbstractStepFactory } from '../AbstractSteps/AbstractStepFactory'
 import { getFlattenedStages, getStageIndexFromPipeline } from '../PipelineStudio/StageBuilder/StageBuilderUtil'
 import { StepViewType } from '../AbstractSteps/Step'
@@ -32,7 +31,6 @@ export interface WorkflowVariablesProps {
   formName?: string
   factory: AbstractStepFactory
   readonly?: boolean
-  isReadonlyServiceMode: boolean
 }
 
 export default function WorkflowVariables({
@@ -40,7 +38,6 @@ export default function WorkflowVariables({
   tabName,
   formName,
   factory,
-  isReadonlyServiceMode,
   readonly
 }: WorkflowVariablesProps): JSX.Element | null {
   const {
@@ -58,9 +55,6 @@ export default function WorkflowVariables({
   const parentStage = serviceConfig.useFromStage?.stage
   const { metadataMap } = usePipelineVariables()
   const [parentStageData, setParentStageData] = React.useState<StageElementWrapperConfig>()
-  const getServiceCacheId = `${pipeline.identifier}-${selectedStageId}-service`
-  const { getCache } = useCache([getServiceCacheId])
-  const serviceInfo = getCache<ServiceDefinition>(getServiceCacheId)
 
   React.useEffect(() => {
     if (isEmpty(parentStageData) && parentStage) {
@@ -98,15 +92,11 @@ export default function WorkflowVariables({
   }
 
   const getInitialValues = useCallback((): Variable[] => {
-    if (isReadonlyServiceMode && !isEmpty(serviceInfo)) {
-      return defaultTo(serviceInfo?.spec.variables, []) as Variable[]
-    }
-
     if (isPropagating) {
       return (predefinedSetsPath?.variables || []) as Variable[]
     }
     return (stageSpec?.variables || []) as Variable[]
-  }, [isReadonlyServiceMode, serviceInfo, isPropagating, stageSpec?.variables, predefinedSetsPath?.variables])
+  }, [isPropagating, stageSpec?.variables, predefinedSetsPath?.variables])
 
   const getYamlPropertiesForVariables = (): Variable[] => {
     if (isPropagating) {

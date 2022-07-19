@@ -17,7 +17,8 @@ import {
   FlexExpander,
   Page,
   Icon,
-  IconName
+  IconName,
+  ExpandingSearchInputHandle
 } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo, pick } from 'lodash-es'
@@ -33,7 +34,8 @@ import {
   CEView,
   useClonePerspective,
   useGetFolders,
-  useDeleteFolder
+  useDeleteFolder,
+  useUpdateFolder
 } from 'services/ce'
 import {
   CcmMetaData,
@@ -319,16 +321,17 @@ const PerspectiveListPage: React.FC = () => {
   const [quickFilters, setQuickFilters] = useState<Record<string, boolean>>({})
   const { trackPage, trackEvent } = useTelemetry()
   const [defaultFolderId, setDefaultFolderId] = useState('')
-  const [selectedFolderId, setSelectedFolder] = useQueryParamsState<string | undefined>('folderId', defaultFolderId)
-
+  const [sampleFolderId, setSampleFolderId] = useState('')
+  const [selectedFolderId, setSelectedFolder] = useQueryParamsState<string | undefined>('folderId', '')
   const [isRefetchFolders, setRefetchFolders] = useState(false)
   const [refetchPerspectives, setRefetchPerspectives] = useState(false)
+  const searchRef = React.useRef<ExpandingSearchInputHandle>()
 
   useDocumentTitle(getString('ce.perspectives.sideNavText'), true)
 
   const [result, executeQuery] = useFetchAllPerspectivesQuery({
     variables: {
-      folderId: selectedFolderId || defaultFolderId
+      folderId: selectedFolderId || ''
     }
   })
   const { data, fetching } = result
@@ -356,6 +359,9 @@ const PerspectiveListPage: React.FC = () => {
     executeQuery({
       requestPolicy: 'network-only'
     })
+    if (searchParam) {
+      searchRef.current?.clear()
+    }
   }, [selectedFolderId])
 
   useEffect(() => {
@@ -370,10 +376,9 @@ const PerspectiveListPage: React.FC = () => {
   useEffect(() => {
     if (foldersList) {
       const defaultFolder = foldersList.filter(folders => folders.viewType === folderViewType.DEFAULT)
+      const sampleFolder = foldersList.filter(folders => folders.viewType === folderViewType.SAMPLE)
       setDefaultFolderId(defaultFolder[0]?.uuid || '')
-      if (!selectedFolderId) {
-        setSelectedFolder(defaultFolderId)
-      }
+      setSampleFolderId(sampleFolder[0]?.uuid || '')
     }
   }, [foldersList])
 
@@ -404,6 +409,12 @@ const PerspectiveListPage: React.FC = () => {
     }
   })
 
+  const { mutate: updatePerspectiveFolder } = useUpdateFolder({
+    queryParams: {
+      accountIdentifier: accountId
+    }
+  })
+
   const [ccmMetaResult] = useFetchCcmMetaDataQuery()
   const { data: ccmData, fetching: fetchingCCMMetaData } = ccmMetaResult
 
@@ -416,8 +427,10 @@ const PerspectiveListPage: React.FC = () => {
       viewVersion: 'v1'
     }
 
+    const folderId = selectedFolderId === sampleFolderId ? defaultFolderId : selectedFolderId
+
     formData['name'] = `Perspective-${generateId(6).toUpperCase()}`
-    formData = { ...CREATE_CALL_OBJECT, ...formData, folderId: selectedFolderId }
+    formData = { ...CREATE_CALL_OBJECT, ...formData, folderId }
 
     try {
       const response = await createView(formData as CEView)
@@ -518,6 +531,21 @@ const PerspectiveListPage: React.FC = () => {
     }
   }
 
+  const updateFolder = async (folderId: string, folderName: string, isPinned: boolean) => {
+    try {
+      await updatePerspectiveFolder({
+        uuid: folderId,
+        name: folderName,
+        pinned: isPinned
+      })
+      showSuccess(getString('ce.perspectives.folders.folderUpdated'))
+      fetchFoldersList()
+    } catch (e) {
+      const errMessage = e.data.message
+      showError(errMessage)
+    }
+  }
+
   const navigateToPerspectiveDetailsPage: (
     perspectiveId: string,
     viewState: ViewState,
@@ -605,6 +633,7 @@ const PerspectiveListPage: React.FC = () => {
           foldersLoading={foldersLoading}
           defaultFolderId={defaultFolderId}
           deleteFolder={deleteFolder}
+          updateFolder={updateFolder}
         />
         <div style={{ flex: 1 }}>
           {pespectiveList.length ? (
@@ -633,6 +662,7 @@ const PerspectiveListPage: React.FC = () => {
                 onChange={text => {
                   setSearchParam(text.trim())
                 }}
+                ref={searchRef}
                 className={css.search}
               />
               <Layout.Horizontal>

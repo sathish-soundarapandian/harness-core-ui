@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes } from '@wings-software/uicore'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import type {
   StepElementConfig,
@@ -22,7 +22,8 @@ export enum AdvancedPanels {
   PreRequisites = 'preRequisites',
   FailureStrategy = 'failureStrategy',
   DelegateSelectors = 'delegateSelectors',
-  ConditionalExecution = 'conditionalExecution'
+  ConditionalExecution = 'conditionalExecution',
+  LoopingStrategy = 'loopingStrategy'
 }
 
 export enum StepCommandsViews {
@@ -47,7 +48,7 @@ export interface StepCommandsProps {
   stepViewType?: StepViewType
   className?: string
   viewType?: StepCommandsViews
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export enum TabTypes {
@@ -64,4 +65,5 @@ export type Values = StepOrStepGroupOrTemplateStepData & {
   when?: StepWhenCondition
   failureStrategies?: FailureStrategyConfig[]
   template?: TemplateLinkConfig
+  strategy?: any
 }

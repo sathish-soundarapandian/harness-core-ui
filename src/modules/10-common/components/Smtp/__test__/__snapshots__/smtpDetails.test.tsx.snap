@@ -284,7 +284,7 @@ exports[`smtp details render smtp details 1`] = `
                 <span
                   class="bp3-control-indicator"
                 />
-                common.smtp.startTSL
+                common.smtp.startTLS
               </label>
             </span>
           </div>

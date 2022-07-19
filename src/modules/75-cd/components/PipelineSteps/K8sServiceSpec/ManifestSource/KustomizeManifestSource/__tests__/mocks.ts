@@ -24,6 +24,22 @@ export const manifests = [
         skipResourceVersioning: false
       }
     }
+  },
+  {
+    manifest: {
+      identifier: 'manifestIdentifier',
+      type: 'K8sManifest',
+      spec: {
+        valuesPaths: '<+input>',
+        manifestScope: '<+input>',
+        store: {
+          type: 'Harness',
+          spec: {
+            files: '<+input>'
+          }
+        }
+      }
+    }
   }
 ]
 
@@ -45,6 +61,22 @@ export const template = {
           },
           pluginPath: '<+input>',
           skipResourceVersioning: false
+        }
+      }
+    },
+    {
+      manifest: {
+        identifier: 'ident',
+        type: 'K8sManifest',
+        spec: {
+          valuesPaths: '<+input>',
+          manifestScope: '<+input>',
+          store: {
+            type: 'Harness',
+            spec: {
+              files: '<+input>'
+            }
+          }
         }
       }
     }

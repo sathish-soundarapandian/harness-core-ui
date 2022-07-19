@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType, FormInput, FormikForm } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormInput, FormikForm, AllowedTypes } from '@wings-software/uicore'
 import { isEmpty, get, isArray } from 'lodash-es'
 import cx from 'classnames'
 
@@ -16,7 +16,6 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { ShellScriptMonacoField, ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
@@ -28,7 +27,7 @@ export interface ShellScriptInputSetStepProps {
   initialValues: ShellScriptFormData
   onUpdate?: (data: ShellScriptFormData) => void
   onChange?: (data: ShellScriptFormData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   readonly?: boolean
   template?: ShellScriptData
@@ -41,7 +40,6 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
   const { expressions } = useVariablesExpression()
   const scriptType: ScriptType = get(initialValues, 'spec.shell') || 'Bash'
   const prefix = isEmpty(path) ? '' : `${path}.`
-  const { NG_EXECUTION_INPUT } = useFeatureFlags()
 
   return (
     <FormikForm>
@@ -52,8 +50,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
               enableConfigureOptions: false,
               allowableTypes,
               expressions,
-              disabled: readonly,
-              useExecutionTimeInput: NG_EXECUTION_INPUT
+              disabled: readonly
             }}
             label={getString('pipelineSteps.timeoutLabel')}
             name={`${prefix}timeout`}
@@ -72,7 +69,6 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
             allowedTypes={allowableTypes}
             disableTypeSelection={readonly}
             skipRenderValueInExpressionLabel
-            useExecutionTimeInput={NG_EXECUTION_INPUT}
             expressionRender={() => {
               return (
                 <ShellScriptMonacoField
@@ -131,8 +127,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                             multiTextInputProps={{
                               allowableTypes,
                               expressions,
-                              disabled: readonly,
-                              useExecutionTimeInput: NG_EXECUTION_INPUT
+                              disabled: readonly
                             }}
                             label=""
                             disabled={readonly}
@@ -186,8 +181,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                             multiTextInputProps={{
                               allowableTypes,
                               expressions,
-                              disabled: readonly,
-                              useExecutionTimeInput: NG_EXECUTION_INPUT
+                              disabled: readonly
                             }}
                             label=""
                             disabled={readonly}
@@ -211,8 +205,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
             multiTextInputProps={{
               expressions,
               disabled: readonly,
-              allowableTypes,
-              useExecutionTimeInput: NG_EXECUTION_INPUT
+              allowableTypes
             }}
             disabled={readonly}
             name={`${prefix}spec.executionTarget.host`}
@@ -229,7 +222,6 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
             name={`${prefix}spec.executionTarget.connectorRef`}
             label={getString('sshConnector')}
             disabled={readonly}
-            useExecutionTimeInput={NG_EXECUTION_INPUT}
           />
         </div>
       )}
@@ -243,8 +235,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
             multiTextInputProps={{
               expressions,
               disabled: readonly,
-              allowableTypes,
-              useExecutionTimeInput: NG_EXECUTION_INPUT
+              allowableTypes
             }}
             name={`${prefix}spec.executionTarget.workingDirectory`}
           />

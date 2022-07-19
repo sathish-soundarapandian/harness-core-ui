@@ -6,7 +6,7 @@
  */
 
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { PubSubAction } from './PubSubAction'
 import type { PipelineActions } from './types'
 

@@ -6,10 +6,10 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, act, fireEvent, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
-import { InfraProvisiongWizardStepId } from '../Constants'
+import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { InfraProvisioningWizard } from '../InfraProvisioningWizard'
 import { repos } from '../mocks/repositories'
 
@@ -22,13 +22,40 @@ jest.mock('services/pipeline-ng', () => ({
       }
     })
   ),
-  useCreateTrigger: jest.fn().mockImplementation(() =>
-    Promise.resolve({
-      status: 'SUCCESS'
-    })
-  )
+  useCreateTrigger: jest.fn().mockImplementation(() => {
+    return {
+      mutate: jest.fn(() =>
+        Promise.resolve({
+          status: 'SUCCESS'
+        })
+      )
+    }
+  })
 }))
 
+const updateConnector = jest.fn()
+const createConnector = jest.fn(() =>
+  Promise.resolve({
+    status: 'SUCCESS',
+    data: {
+      connector: {
+        name: 'test git connector',
+        identifier: 'test_git_connector',
+        type: 'Github',
+        spec: {
+          dockerRegistryUrl: 'https;//github.com',
+          auth: {
+            type: 'UsernamePassword',
+            spec: { username: 'testpass', passwordRef: 'account.testpass' }
+          }
+        }
+      },
+      createdAt: 1607289652713,
+      lastModifiedAt: 1607289652713,
+      status: 'SUCCESS'
+    }
+  })
+)
 jest.mock('services/cd-ng', () => ({
   useCreateDefaultScmConnector: jest.fn().mockImplementation(() => {
     return {
@@ -45,20 +72,58 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetListOfAllReposByRefConnector: jest.fn().mockImplementation(() => {
     return { data: { data: repos, status: 'SUCCESS' }, refetch: jest.fn(), error: null, loading: false }
-  })
+  }),
+  useUpdateConnector: jest.fn().mockImplementation(() => ({ mutate: updateConnector })),
+  useCreateConnector: jest.fn().mockImplementation(() => ({ mutate: createConnector }))
 }))
 
 const pathParams = { accountId: 'accountId', orgIdentifier: 'orgId', projectIdentifier: 'projectId' }
 
+const routesToPipelineStudio = jest.spyOn(routes, 'toPipelineStudio')
 describe('Render and test InfraProvisioningWizard', () => {
-  test('Test Wizard Navigation with starting with Select Git Provider as first step', async () => {
-    const { getByText } = render(
+  test('Test Wizard Navigation end-to-end', async () => {
+    global.fetch = jest.fn()
+    const { container, getByText } = render(
       <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
-        <InfraProvisioningWizard lastConfiguredWizardStepId={InfraProvisiongWizardStepId.SelectGitProvider} />
+        <InfraProvisioningWizard />
       </TestWrapper>
     )
+    await act(async () => {
+      fireEvent.click((Array.from(container.querySelectorAll('div[class*="bp3-card"]')) as HTMLElement[])[0])
+    })
 
-    expect(getByText('ci.getStartedWithCI.codeRepo')).toBeTruthy()
-    expect(getByText('next: ci.getStartedWithCI.selectRepo')).toBeTruthy()
+    await act(async () => {
+      fireEvent.click(getByText('ci.getStartedWithCI.accessTokenLabel'))
+    })
+
+    await waitFor(() =>
+      fillAtForm([
+        {
+          container,
+          fieldId: 'accessToken',
+          type: InputTypes.TEXTFIELD,
+          value: 'sample-access-token'
+        }
+      ])
+    )
+
+    const testConnectionBtn = container.querySelector("button[id='test-connection-btn']") as Element
+    await act(async () => {
+      fireEvent.click(testConnectionBtn)
+    })
+
+    await act(async () => {
+      fireEvent.click(getByText('next: ci.getStartedWithCI.selectRepo'))
+    })
+
+    await act(async () => {
+      fireEvent.click(getByText('community/wings-software/wingsui'))
+    })
+
+    await act(async () => {
+      fireEvent.click(getByText('ci.getStartedWithCI.createPipeline'))
+    })
+
+    expect(routesToPipelineStudio).toHaveBeenCalled()
   })
 })

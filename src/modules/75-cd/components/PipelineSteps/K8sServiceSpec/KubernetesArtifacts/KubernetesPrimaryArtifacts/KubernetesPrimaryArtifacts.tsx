@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect } from 'react'
-import { get, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 
@@ -34,8 +34,11 @@ export const KubernetesPrimaryArtifacts = (props: KubernetesArtifactsProps): Rea
   const artifactSource = props.type && artifactSourceBaseFactory.getArtifactSource(props.type)
   const artifact =
     props.fromTrigger && props.artifact
-      ? { ...props.artifact, spec: { ...props.artifacts?.primary?.spec, ...props.artifact?.spec } }
-      : props.artifacts?.primary
+      ? {
+          ...props.artifact,
+          spec: { ...defaultTo(props.artifacts, props.template.artifacts)?.primary?.spec, ...props.artifact?.spec }
+        }
+      : defaultTo(props.artifacts, props.template.artifacts)?.primary
   const artifactPath = 'primary'
 
   useEffect(() => {

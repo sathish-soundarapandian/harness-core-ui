@@ -110,7 +110,6 @@ export interface AnalysisState {
     | 'CANARY_TIME_SERIES'
     | 'DEPLOYMENT_LOG_ANALYSIS'
     | 'SERVICE_GUARD_LOG_ANALYSIS'
-    | 'ACTIVITY_VERIFICATION'
     | 'SERVICE_GUARD_TIME_SERIES'
     | 'TEST_TIME_SERIES'
     | 'DEPLOYMENT_LOG_CLUSTER'
@@ -602,7 +601,6 @@ export interface CVConfig {
   deploymentVerificationEnabled?: boolean
   eligibleForDemo?: boolean
   enabled?: boolean
-  envIdentifier: string
   firstTimeDataCollectionStartTime?: number
   firstTimeDataCollectionTimeRange?: TimeRange
   fullyQualifiedIdentifier?: string
@@ -614,11 +612,11 @@ export interface CVConfig {
   orgIdentifier: string
   productName?: string
   projectIdentifier: string
-  serviceIdentifier: string
   slienabled?: boolean
   type?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
+    | 'SPLUNK_METRIC'
     | 'STACKDRIVER'
     | 'STACKDRIVER_LOG'
     | 'KUBERNETES'
@@ -684,7 +682,7 @@ export type CVNGMSTeamsChannelSpec = CVNGNotificationChannelSpec & {
 
 export interface CVNGNotificationChannel {
   spec: CVNGNotificationChannelSpec
-  type?: 'Email' | 'Slack' | 'Pagerduty' | 'Msteams'
+  type?: 'Email' | 'Slack' | 'PagerDuty' | 'MsTeams'
 }
 
 export interface CVNGNotificationChannelSpec {
@@ -879,6 +877,8 @@ export interface ConnectorInfoDTO {
     | 'ErrorTracking'
     | 'Pdc'
     | 'AzureRepo'
+    | 'Jenkins'
+    | 'OciHelmRepo'
 }
 
 export interface ControlClusterSummary {
@@ -907,7 +907,7 @@ export type CustomHealthConnectorDTO = ConnectorConfigDTO & {
 }
 
 export interface CustomHealthKeyAndValue {
-  encryptedValueRef?: SecretRefData
+  encryptedValueRef?: string
   key: string
   value?: string
   valueEncrypted?: boolean
@@ -1005,6 +1005,7 @@ export interface DataCollectionRequest {
     | 'DYNATRACE_VALIDATION_REQUEST'
     | 'DYNATRACE_SAMPLE_DATA_REQUEST'
     | 'DYNATRACE_METRIC_LIST_REQUEST'
+    | 'SPLUNK_METRIC_SAMPLE_DATA'
 }
 
 export interface DataCollectionTask {
@@ -1469,6 +1470,7 @@ export interface Error {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -1560,9 +1562,11 @@ export interface Error {
     | 'HTTP_RESPONSE_EXCEPTION'
     | 'SCM_NOT_FOUND_ERROR'
     | 'SCM_CONFLICT_ERROR'
+    | 'SCM_CONFLICT_ERROR_V2'
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
     | 'DATA'
     | 'CONTEXT'
@@ -1594,6 +1598,14 @@ export interface Error {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
+    | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'SPOTINST_NULL_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1846,6 +1858,7 @@ export interface Failure {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -1937,9 +1950,11 @@ export interface Failure {
     | 'HTTP_RESPONSE_EXCEPTION'
     | 'SCM_NOT_FOUND_ERROR'
     | 'SCM_CONFLICT_ERROR'
+    | 'SCM_CONFLICT_ERROR_V2'
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
     | 'DATA'
     | 'CONTEXT'
@@ -1971,6 +1986,14 @@ export interface Failure {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
+    | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'SPOTINST_NULL_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2055,7 +2078,7 @@ export type GitSSHAuthenticationDTO = GitAuthenticationDTO & {
 
 export interface GithubApiAccess {
   spec?: GithubApiAccessSpecDTO
-  type: 'GithubApp' | 'Token'
+  type: 'GithubApp' | 'Token' | 'OAuth'
 }
 
 export interface GithubApiAccessSpecDTO {
@@ -2089,11 +2112,15 @@ export interface GithubCredentialsDTO {
 
 export type GithubHttpCredentials = GithubCredentialsDTO & {
   spec: GithubHttpCredentialsSpecDTO
-  type: 'UsernamePassword' | 'UsernameToken'
+  type: 'UsernamePassword' | 'UsernameToken' | 'OAuth'
 }
 
 export interface GithubHttpCredentialsSpecDTO {
   [key: string]: any
+}
+
+export type GithubOauth = GithubHttpCredentialsSpecDTO & {
+  tokenRef: string
 }
 
 export type GithubSshCredentials = GithubCredentialsDTO & {
@@ -2248,6 +2275,7 @@ export interface HealthSource {
     | 'ErrorTracking'
     | 'CustomHealthMetric'
     | 'CustomHealthLog'
+    | 'SplunkMetric'
 }
 
 export interface HealthSourceDTO {
@@ -2256,6 +2284,7 @@ export interface HealthSourceDTO {
   type?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
+    | 'SPLUNK_METRIC'
     | 'STACKDRIVER'
     | 'STACKDRIVER_LOG'
     | 'KUBERNETES'
@@ -2359,6 +2388,31 @@ export interface InputSetTemplateResponse {
   inputSetTemplateYaml?: string
 }
 
+export interface JenkinsAuthCredentialsDTO {
+  [key: string]: any
+}
+
+export interface JenkinsAuthenticationDTO {
+  spec?: JenkinsAuthCredentialsDTO
+  type: 'UsernamePassword' | 'Anonymous' | 'Bearer Token(HTTP Header)'
+}
+
+export type JenkinsBearerTokenDTO = JenkinsAuthCredentialsDTO & {
+  tokenRef: string
+}
+
+export type JenkinsConnectorDTO = ConnectorConfigDTO & {
+  auth?: JenkinsAuthenticationDTO
+  delegateSelectors?: string[]
+  jenkinsUrl: string
+}
+
+export type JenkinsUserNamePasswordDTO = JenkinsAuthCredentialsDTO & {
+  passwordRef: string
+  username?: string
+  usernameRef?: string
+}
+
 export type JiraConnector = ConnectorConfigDTO & {
   delegateSelectors?: string[]
   jiraUrl: string
@@ -2382,6 +2436,7 @@ export interface KubernetesAuthDTO {
 
 export type KubernetesChangeEventMetadata = ChangeEventMetadata & {
   action?: 'Add' | 'Update' | 'Delete'
+  dependentMonitoredService?: string
   kind?: string
   message?: string
   namespace?: string
@@ -2528,7 +2583,6 @@ export interface LogAnalysisCluster {
   analysisEndTime?: number
   analysisMinute?: number
   analysisStartTime?: number
-  compressedText?: string[]
   createdAt?: number
   evicted?: boolean
   firstSeenTime?: number
@@ -2739,6 +2793,7 @@ export interface MetricPack {
   dataSourceType:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
+    | 'SPLUNK_METRIC'
     | 'STACKDRIVER'
     | 'STACKDRIVER_LOG'
     | 'KUBERNETES'
@@ -2764,6 +2819,7 @@ export interface MetricPackDTO {
   dataSourceType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
+    | 'SPLUNK_METRIC'
     | 'STACKDRIVER'
     | 'STACKDRIVER_LOG'
     | 'KUBERNETES'
@@ -2791,6 +2847,10 @@ export interface MetricPackValidationResponse {
 
 export interface MetricResponseMapping {
   metricValueJsonPath?: string
+  relativeMetricListJsonPath?: string
+  relativeMetricValueJsonPath?: string
+  relativeServiceInstanceValueJsonPath?: string
+  relativeTimestampJsonPath?: string
   serviceInstanceJsonPath?: string
   timestampFormat?: string
   timestampJsonPath?: string
@@ -2829,6 +2889,7 @@ export interface MonitoredServiceChangeDetailSLO {
 export interface MonitoredServiceDTO {
   dependencies?: ServiceDependencyDTO[]
   description?: string
+  enabled?: boolean
   environmentRef?: string
   environmentRefList?: string[]
   identifier: string
@@ -2841,8 +2902,7 @@ export interface MonitoredServiceDTO {
   tags: {
     [key: string]: string
   }
-  templateIdentifier?: string
-  templateVersionLabel?: string
+  template?: TemplateDTO
   type: 'Application' | 'Infrastructure'
 }
 
@@ -2857,6 +2917,7 @@ export interface MonitoredServiceListItemDTO {
   historicalTrend?: HistoricalTrend
   identifier?: string
   name?: string
+  serviceLicenseEnabled?: boolean
   serviceName?: string
   serviceRef?: string
   sloHealthIndicators?: SloHealthIndicatorDTO[]
@@ -3001,6 +3062,27 @@ export interface NotificationRuleResponse {
   enabled?: boolean
   lastModifiedAt?: number
   notificationRule: NotificationRuleDTO
+}
+
+export interface OciHelmAuthCredentialsDTO {
+  [key: string]: any
+}
+
+export interface OciHelmAuthenticationDTO {
+  spec?: OciHelmAuthCredentialsDTO
+  type: 'UsernamePassword' | 'Anonymous'
+}
+
+export type OciHelmConnectorDTO = ConnectorConfigDTO & {
+  auth?: OciHelmAuthenticationDTO
+  delegateSelectors?: string[]
+  helmRepoUrl: string
+}
+
+export type OciHelmUsernamePasswordDTO = OciHelmAuthCredentialsDTO & {
+  passwordRef: string
+  username?: string
+  usernameRef?: string
 }
 
 export interface OnboardingRequestDTO {
@@ -3318,7 +3400,10 @@ export interface ProjectParams {
 
 export type PrometheusConnectorDTO = ConnectorConfigDTO & {
   delegateSelectors?: string[]
+  headers?: CustomHealthKeyAndValue[]
+  passwordRef?: string
   url: string
+  username?: string
 }
 
 export interface PrometheusFilter {
@@ -3720,6 +3805,7 @@ export interface ResponseMessage {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -3811,9 +3897,11 @@ export interface ResponseMessage {
     | 'HTTP_RESPONSE_EXCEPTION'
     | 'SCM_NOT_FOUND_ERROR'
     | 'SCM_CONFLICT_ERROR'
+    | 'SCM_CONFLICT_ERROR_V2'
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
     | 'DATA'
     | 'CONTEXT'
@@ -3845,6 +3933,14 @@ export interface ResponseMessage {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
+    | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'SPOTINST_NULL_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4500,6 +4596,14 @@ export interface RestResponseSetString {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseSortedSetTimeSeriesSampleDTO {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: TimeSeriesSampleDTO[]
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseString {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -4753,13 +4857,6 @@ export type ScmErrorMetadataDTO = ErrorMetadataDTO & {
   conflictCommitId?: string
 }
 
-export interface SecretRefData {
-  decryptedValue?: string[]
-  identifier?: string
-  null?: boolean
-  scope?: 'account' | 'org' | 'project' | 'unknown'
-}
-
 export interface ServiceDependencyDTO {
   dependencyMetadata?: ServiceDependencyMetadata
   monitoredServiceIdentifier?: string
@@ -4805,6 +4902,7 @@ export interface ServiceLevelIndicator {
   accountId?: string
   createNextTaskIteration?: number
   createdAt?: number
+  enabled?: boolean
   firstTimeDataCollectionTimeRange?: TimeRange
   healthSourceIdentifier?: string
   identifier?: string
@@ -4842,6 +4940,7 @@ export interface ServiceLevelObjective {
   accountId?: string
   createdAt?: number
   desc?: string
+  enabled?: boolean
   healthSourceIdentifier?: string
   identifier?: string
   lastUpdatedAt?: number
@@ -4930,16 +5029,34 @@ export type SplunkHealthSourceSpec = HealthSourceSpec & {
   queries: QueryDTO[]
 }
 
+export interface SplunkMetricDefinition {
+  analysis?: AnalysisDTO
+  groupName: string
+  identifier: string
+  metricName: string
+  query: string
+  riskProfile?: RiskProfile
+  sli?: Slidto
+}
+
+export type SplunkMetricHealthSourceSpec = HealthSourceSpec & {
+  feature: string
+  metricDefinitions?: SplunkMetricDefinition[]
+}
+
 export interface SplunkSavedSearch {
   searchQuery?: string
   title?: string
 }
 
 export interface StackTraceElement {
+  classLoaderName?: string
   className?: string
   fileName?: string
   lineNumber?: number
   methodName?: string
+  moduleName?: string
+  moduleVersion?: string
   nativeMethod?: boolean
 }
 
@@ -4985,6 +5102,11 @@ export type SumoLogicConnectorDTO = ConnectorConfigDTO & {
 
 export interface TaskInfo {
   taskType?: 'LIVE_MONITORING' | 'DEPLOYMENT' | 'SLI'
+}
+
+export interface TemplateDTO {
+  templateRef: string
+  versionLabel: string
 }
 
 export interface TemplateInputsErrorDTO {
@@ -5117,6 +5239,7 @@ export interface TimeSeriesMetricDataDTO {
   dataSourceType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
+    | 'SPLUNK_METRIC'
     | 'STACKDRIVER'
     | 'STACKDRIVER_LOG'
     | 'KUBERNETES'
@@ -5211,6 +5334,7 @@ export interface TimeSeriesThreshold {
   dataSourceType:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
+    | 'SPLUNK_METRIC'
     | 'STACKDRIVER'
     | 'STACKDRIVER_LOG'
     | 'KUBERNETES'
@@ -5247,6 +5371,7 @@ export interface TimeSeriesThresholdDTO {
   dataSourceType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
+    | 'SPLUNK_METRIC'
     | 'STACKDRIVER'
     | 'STACKDRIVER_LOG'
     | 'KUBERNETES'
@@ -5298,6 +5423,7 @@ export interface TransactionMetricInfo {
   dataSourceType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
+    | 'SPLUNK_METRIC'
     | 'STACKDRIVER'
     | 'STACKDRIVER_LOG'
     | 'KUBERNETES'
@@ -5384,9 +5510,11 @@ export interface VerificationJob {
   activitySourceIdentifier?: string
   allMonitoringSourcesEnabled?: boolean
   createdAt?: number
+  cvConfigs?: CVConfig[]
   dataSources?: (
     | 'APP_DYNAMICS'
     | 'SPLUNK'
+    | 'SPLUNK_METRIC'
     | 'STACKDRIVER'
     | 'STACKDRIVER_LOG'
     | 'KUBERNETES'
@@ -5406,6 +5534,7 @@ export interface VerificationJob {
   identifier: string
   jobName: string
   lastUpdatedAt?: number
+  monitoredServiceIdentifier?: string
   monitoringSources?: string[]
   orgIdentifier?: string
   projectIdentifier?: string
@@ -5422,6 +5551,7 @@ export interface VerificationJobDTO {
   dataSources?: (
     | 'APP_DYNAMICS'
     | 'SPLUNK'
+    | 'SPLUNK_METRIC'
     | 'STACKDRIVER'
     | 'STACKDRIVER_LOG'
     | 'KUBERNETES'
@@ -5644,7 +5774,7 @@ export type ServiceLevelObjectiveDTORequestBody = ServiceLevelObjectiveDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type SaveMonitoredServiceFromYamlBodyRequestBody = string
+export type UpdateMonitoredServiceFromYamlBodyRequestBody = string
 
 export interface ChangeEventListQueryParams {
   serviceIdentifiers?: string[]
@@ -5899,250 +6029,6 @@ export const getChangeEventDetailPromise = (
     signal
   )
 
-export interface GetDeploymentLogAnalysisClustersQueryParams {
-  accountId: string
-  hostName?: string
-  healthSource?: string[]
-  healthSources?: string[]
-  clusterType?: ('BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT')[]
-  clusterTypes?: ('BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT')[]
-}
-
-export interface GetDeploymentLogAnalysisClustersPathParams {
-  activityId: string
-}
-
-export type GetDeploymentLogAnalysisClustersProps = Omit<
-  GetProps<
-    RestResponseListLogAnalysisClusterChartDTO,
-    unknown,
-    GetDeploymentLogAnalysisClustersQueryParams,
-    GetDeploymentLogAnalysisClustersPathParams
-  >,
-  'path'
-> &
-  GetDeploymentLogAnalysisClustersPathParams
-
-/**
- * get logs for given activity
- */
-export const GetDeploymentLogAnalysisClusters = ({ activityId, ...props }: GetDeploymentLogAnalysisClustersProps) => (
-  <Get<
-    RestResponseListLogAnalysisClusterChartDTO,
-    unknown,
-    GetDeploymentLogAnalysisClustersQueryParams,
-    GetDeploymentLogAnalysisClustersPathParams
-  >
-    path={`/activity/${activityId}/clusters`}
-    base={getConfig('cv/api')}
-    {...props}
-  />
-)
-
-export type UseGetDeploymentLogAnalysisClustersProps = Omit<
-  UseGetProps<
-    RestResponseListLogAnalysisClusterChartDTO,
-    unknown,
-    GetDeploymentLogAnalysisClustersQueryParams,
-    GetDeploymentLogAnalysisClustersPathParams
-  >,
-  'path'
-> &
-  GetDeploymentLogAnalysisClustersPathParams
-
-/**
- * get logs for given activity
- */
-export const useGetDeploymentLogAnalysisClusters = ({
-  activityId,
-  ...props
-}: UseGetDeploymentLogAnalysisClustersProps) =>
-  useGet<
-    RestResponseListLogAnalysisClusterChartDTO,
-    unknown,
-    GetDeploymentLogAnalysisClustersQueryParams,
-    GetDeploymentLogAnalysisClustersPathParams
-  >((paramsInPath: GetDeploymentLogAnalysisClustersPathParams) => `/activity/${paramsInPath.activityId}/clusters`, {
-    base: getConfig('cv/api'),
-    pathParams: { activityId },
-    ...props
-  })
-
-/**
- * get logs for given activity
- */
-export const getDeploymentLogAnalysisClustersPromise = (
-  {
-    activityId,
-    ...props
-  }: GetUsingFetchProps<
-    RestResponseListLogAnalysisClusterChartDTO,
-    unknown,
-    GetDeploymentLogAnalysisClustersQueryParams,
-    GetDeploymentLogAnalysisClustersPathParams
-  > & { activityId: string },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<
-    RestResponseListLogAnalysisClusterChartDTO,
-    unknown,
-    GetDeploymentLogAnalysisClustersQueryParams,
-    GetDeploymentLogAnalysisClustersPathParams
-  >(getConfig('cv/api'), `/activity/${activityId}/clusters`, props, signal)
-
-export interface GetDeploymentLogAnalysisResultQueryParams {
-  accountId: string
-  label?: number
-  pageNumber: number
-  pageSize: number
-  hostName?: string
-  healthSource?: string[]
-  healthSources?: string[]
-  clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
-  clusterTypes?: ('BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT')[]
-}
-
-export interface GetDeploymentLogAnalysisResultPathParams {
-  activityId: string
-}
-
-export type GetDeploymentLogAnalysisResultProps = Omit<
-  GetProps<
-    RestResponsePageLogAnalysisClusterDTO,
-    unknown,
-    GetDeploymentLogAnalysisResultQueryParams,
-    GetDeploymentLogAnalysisResultPathParams
-  >,
-  'path'
-> &
-  GetDeploymentLogAnalysisResultPathParams
-
-/**
- * get logs for given activity
- */
-export const GetDeploymentLogAnalysisResult = ({ activityId, ...props }: GetDeploymentLogAnalysisResultProps) => (
-  <Get<
-    RestResponsePageLogAnalysisClusterDTO,
-    unknown,
-    GetDeploymentLogAnalysisResultQueryParams,
-    GetDeploymentLogAnalysisResultPathParams
-  >
-    path={`/activity/${activityId}/deployment-log-analysis-data`}
-    base={getConfig('cv/api')}
-    {...props}
-  />
-)
-
-export type UseGetDeploymentLogAnalysisResultProps = Omit<
-  UseGetProps<
-    RestResponsePageLogAnalysisClusterDTO,
-    unknown,
-    GetDeploymentLogAnalysisResultQueryParams,
-    GetDeploymentLogAnalysisResultPathParams
-  >,
-  'path'
-> &
-  GetDeploymentLogAnalysisResultPathParams
-
-/**
- * get logs for given activity
- */
-export const useGetDeploymentLogAnalysisResult = ({ activityId, ...props }: UseGetDeploymentLogAnalysisResultProps) =>
-  useGet<
-    RestResponsePageLogAnalysisClusterDTO,
-    unknown,
-    GetDeploymentLogAnalysisResultQueryParams,
-    GetDeploymentLogAnalysisResultPathParams
-  >(
-    (paramsInPath: GetDeploymentLogAnalysisResultPathParams) =>
-      `/activity/${paramsInPath.activityId}/deployment-log-analysis-data`,
-    { base: getConfig('cv/api'), pathParams: { activityId }, ...props }
-  )
-
-/**
- * get logs for given activity
- */
-export const getDeploymentLogAnalysisResultPromise = (
-  {
-    activityId,
-    ...props
-  }: GetUsingFetchProps<
-    RestResponsePageLogAnalysisClusterDTO,
-    unknown,
-    GetDeploymentLogAnalysisResultQueryParams,
-    GetDeploymentLogAnalysisResultPathParams
-  > & { activityId: string },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<
-    RestResponsePageLogAnalysisClusterDTO,
-    unknown,
-    GetDeploymentLogAnalysisResultQueryParams,
-    GetDeploymentLogAnalysisResultPathParams
-  >(getConfig('cv/api'), `/activity/${activityId}/deployment-log-analysis-data`, props, signal)
-
-export interface GetHealthSourcesQueryParams {
-  accountId: string
-}
-
-export interface GetHealthSourcesPathParams {
-  activityId: string
-}
-
-export type GetHealthSourcesProps = Omit<
-  GetProps<RestResponseSetHealthSourceDTO, unknown, GetHealthSourcesQueryParams, GetHealthSourcesPathParams>,
-  'path'
-> &
-  GetHealthSourcesPathParams
-
-/**
- * get health sources  for an activity
- */
-export const GetHealthSources = ({ activityId, ...props }: GetHealthSourcesProps) => (
-  <Get<RestResponseSetHealthSourceDTO, unknown, GetHealthSourcesQueryParams, GetHealthSourcesPathParams>
-    path={`/activity/${activityId}/healthSources`}
-    base={getConfig('cv/api')}
-    {...props}
-  />
-)
-
-export type UseGetHealthSourcesProps = Omit<
-  UseGetProps<RestResponseSetHealthSourceDTO, unknown, GetHealthSourcesQueryParams, GetHealthSourcesPathParams>,
-  'path'
-> &
-  GetHealthSourcesPathParams
-
-/**
- * get health sources  for an activity
- */
-export const useGetHealthSources = ({ activityId, ...props }: UseGetHealthSourcesProps) =>
-  useGet<RestResponseSetHealthSourceDTO, unknown, GetHealthSourcesQueryParams, GetHealthSourcesPathParams>(
-    (paramsInPath: GetHealthSourcesPathParams) => `/activity/${paramsInPath.activityId}/healthSources`,
-    { base: getConfig('cv/api'), pathParams: { activityId }, ...props }
-  )
-
-/**
- * get health sources  for an activity
- */
-export const getHealthSourcesPromise = (
-  {
-    activityId,
-    ...props
-  }: GetUsingFetchProps<
-    RestResponseSetHealthSourceDTO,
-    unknown,
-    GetHealthSourcesQueryParams,
-    GetHealthSourcesPathParams
-  > & { activityId: string },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<RestResponseSetHealthSourceDTO, unknown, GetHealthSourcesQueryParams, GetHealthSourcesPathParams>(
-    getConfig('cv/api'),
-    `/activity/${activityId}/healthSources`,
-    props,
-    signal
-  )
-
 export interface GetAppDynamicsApplicationsQueryParams {
   accountId: string
   orgIdentifier: string
@@ -6252,6 +6138,59 @@ export const getAppdynamicsBaseFoldersPromise = (
   getUsingFetch<ResponseListString, Failure | Error, GetAppdynamicsBaseFoldersQueryParams, void>(
     getConfig('cv/api'),
     `/appdynamics/base-folders`,
+    props,
+    signal
+  )
+
+export interface GetCompleteServiceInstanceMetricPathQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  connectorIdentifier: string
+  appName: string
+  completeMetricPath: string
+}
+
+export type GetCompleteServiceInstanceMetricPathProps = Omit<
+  GetProps<ResponseString, Failure | Error, GetCompleteServiceInstanceMetricPathQueryParams, void>,
+  'path'
+>
+
+/**
+ * get complete service instance metric path for an application and a complete metric path
+ */
+export const GetCompleteServiceInstanceMetricPath = (props: GetCompleteServiceInstanceMetricPathProps) => (
+  <Get<ResponseString, Failure | Error, GetCompleteServiceInstanceMetricPathQueryParams, void>
+    path={`/appdynamics/complete-service-instance-metric-path`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetCompleteServiceInstanceMetricPathProps = Omit<
+  UseGetProps<ResponseString, Failure | Error, GetCompleteServiceInstanceMetricPathQueryParams, void>,
+  'path'
+>
+
+/**
+ * get complete service instance metric path for an application and a complete metric path
+ */
+export const useGetCompleteServiceInstanceMetricPath = (props: UseGetCompleteServiceInstanceMetricPathProps) =>
+  useGet<ResponseString, Failure | Error, GetCompleteServiceInstanceMetricPathQueryParams, void>(
+    `/appdynamics/complete-service-instance-metric-path`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * get complete service instance metric path for an application and a complete metric path
+ */
+export const getCompleteServiceInstanceMetricPathPromise = (
+  props: GetUsingFetchProps<ResponseString, Failure | Error, GetCompleteServiceInstanceMetricPathQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseString, Failure | Error, GetCompleteServiceInstanceMetricPathQueryParams, void>(
+    getConfig('cv/api'),
+    `/appdynamics/complete-service-instance-metric-path`,
     props,
     signal
   )
@@ -6399,6 +6338,69 @@ export const getAppDynamicsMetricDataPromise = (
     MetricPackDTOArrayRequestBody,
     void
   >('POST', getConfig('cv/api'), `/appdynamics/metric-data`, props, signal)
+
+export interface GetAppdynamicsMetricDataByPathV2QueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  connectorIdentifier: string
+  appName: string
+  completeMetricPath: string
+}
+
+export type GetAppdynamicsMetricDataByPathV2Props = Omit<
+  GetProps<ResponseAppdynamicsMetricDataResponse, Failure | Error, GetAppdynamicsMetricDataByPathV2QueryParams, void>,
+  'path'
+>
+
+/**
+ * get all appdynamics metric data for an application and a complete metric path
+ */
+export const GetAppdynamicsMetricDataByPathV2 = (props: GetAppdynamicsMetricDataByPathV2Props) => (
+  <Get<ResponseAppdynamicsMetricDataResponse, Failure | Error, GetAppdynamicsMetricDataByPathV2QueryParams, void>
+    path={`/appdynamics/metric-data/v2`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetAppdynamicsMetricDataByPathV2Props = Omit<
+  UseGetProps<
+    ResponseAppdynamicsMetricDataResponse,
+    Failure | Error,
+    GetAppdynamicsMetricDataByPathV2QueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * get all appdynamics metric data for an application and a complete metric path
+ */
+export const useGetAppdynamicsMetricDataByPathV2 = (props: UseGetAppdynamicsMetricDataByPathV2Props) =>
+  useGet<ResponseAppdynamicsMetricDataResponse, Failure | Error, GetAppdynamicsMetricDataByPathV2QueryParams, void>(
+    `/appdynamics/metric-data/v2`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * get all appdynamics metric data for an application and a complete metric path
+ */
+export const getAppdynamicsMetricDataByPathV2Promise = (
+  props: GetUsingFetchProps<
+    ResponseAppdynamicsMetricDataResponse,
+    Failure | Error,
+    GetAppdynamicsMetricDataByPathV2QueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseAppdynamicsMetricDataResponse,
+    Failure | Error,
+    GetAppdynamicsMetricDataByPathV2QueryParams,
+    void
+  >(getConfig('cv/api'), `/appdynamics/metric-data/v2`, props, signal)
 
 export interface GetAppdynamicsMetricStructureQueryParams {
   accountId: string
@@ -8011,123 +8013,6 @@ export const getWorkloadsPromise = (
     signal
   )
 
-export interface GetAllLogsClusterDataQueryParams {
-  accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
-  monitoredServiceIdentifier?: string
-  clusterTypes?: ('KNOWN' | 'UNEXPECTED' | 'UNKNOWN')[]
-  startTime: number
-  endTime: number
-  healthSources?: string[]
-}
-
-export type GetAllLogsClusterDataProps = Omit<
-  GetProps<RestResponseListLiveMonitoringLogAnalysisClusterDTO, unknown, GetAllLogsClusterDataQueryParams, void>,
-  'path'
->
-
-/**
- * get all log cluster data for a time range
- */
-export const GetAllLogsClusterData = (props: GetAllLogsClusterDataProps) => (
-  <Get<RestResponseListLiveMonitoringLogAnalysisClusterDTO, unknown, GetAllLogsClusterDataQueryParams, void>
-    path={`/log-dashboard/logs-cluster`}
-    base={getConfig('cv/api')}
-    {...props}
-  />
-)
-
-export type UseGetAllLogsClusterDataProps = Omit<
-  UseGetProps<RestResponseListLiveMonitoringLogAnalysisClusterDTO, unknown, GetAllLogsClusterDataQueryParams, void>,
-  'path'
->
-
-/**
- * get all log cluster data for a time range
- */
-export const useGetAllLogsClusterData = (props: UseGetAllLogsClusterDataProps) =>
-  useGet<RestResponseListLiveMonitoringLogAnalysisClusterDTO, unknown, GetAllLogsClusterDataQueryParams, void>(
-    `/log-dashboard/logs-cluster`,
-    { base: getConfig('cv/api'), ...props }
-  )
-
-/**
- * get all log cluster data for a time range
- */
-export const getAllLogsClusterDataPromise = (
-  props: GetUsingFetchProps<
-    RestResponseListLiveMonitoringLogAnalysisClusterDTO,
-    unknown,
-    GetAllLogsClusterDataQueryParams,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<RestResponseListLiveMonitoringLogAnalysisClusterDTO, unknown, GetAllLogsClusterDataQueryParams, void>(
-    getConfig('cv/api'),
-    `/log-dashboard/logs-cluster`,
-    props,
-    signal
-  )
-
-export interface GetAllLogsDataQueryParams {
-  accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
-  monitoredServiceIdentifier?: string
-  clusterTypes?: ('KNOWN' | 'UNEXPECTED' | 'UNKNOWN')[]
-  startTime: number
-  endTime: number
-  healthSources?: string[]
-  page?: number
-  size?: number
-}
-
-export type GetAllLogsDataProps = Omit<
-  GetProps<RestResponsePageAnalyzedLogDataDTO, unknown, GetAllLogsDataQueryParams, void>,
-  'path'
->
-
-/**
- * get all log data for a time range
- */
-export const GetAllLogsData = (props: GetAllLogsDataProps) => (
-  <Get<RestResponsePageAnalyzedLogDataDTO, unknown, GetAllLogsDataQueryParams, void>
-    path={`/log-dashboard/logs-data`}
-    base={getConfig('cv/api')}
-    {...props}
-  />
-)
-
-export type UseGetAllLogsDataProps = Omit<
-  UseGetProps<RestResponsePageAnalyzedLogDataDTO, unknown, GetAllLogsDataQueryParams, void>,
-  'path'
->
-
-/**
- * get all log data for a time range
- */
-export const useGetAllLogsData = (props: UseGetAllLogsDataProps) =>
-  useGet<RestResponsePageAnalyzedLogDataDTO, unknown, GetAllLogsDataQueryParams, void>(`/log-dashboard/logs-data`, {
-    base: getConfig('cv/api'),
-    ...props
-  })
-
-/**
- * get all log data for a time range
- */
-export const getAllLogsDataPromise = (
-  props: GetUsingFetchProps<RestResponsePageAnalyzedLogDataDTO, unknown, GetAllLogsDataQueryParams, void>,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<RestResponsePageAnalyzedLogDataDTO, unknown, GetAllLogsDataQueryParams, void>(
-    getConfig('cv/api'),
-    `/log-dashboard/logs-data`,
-    props,
-    signal
-  )
-
 export interface GetAllRadarChartLogsClusterDataQueryParams {
   accountId: string
   orgIdentifier: string
@@ -8282,6 +8167,7 @@ export interface GetMetricPacksQueryParams {
   dataSourceType:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
+    | 'SPLUNK_METRIC'
     | 'STACKDRIVER'
     | 'STACKDRIVER_LOG'
     | 'KUBERNETES'
@@ -8346,6 +8232,7 @@ export interface SaveMetricPacksQueryParams {
   dataSourceType:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
+    | 'SPLUNK_METRIC'
     | 'STACKDRIVER'
     | 'STACKDRIVER_LOG'
     | 'KUBERNETES'
@@ -8410,10 +8297,10 @@ export interface ListMonitoredServiceQueryParams {
   orgIdentifier: string
   projectIdentifier: string
   environmentIdentifier?: string
-  offset?: number
-  pageSize?: number
+  offset: number
+  pageSize: number
   filter?: string
-  servicesAtRiskFilter?: boolean
+  servicesAtRiskFilter: boolean
 }
 
 export type ListMonitoredServiceProps = Omit<
@@ -8727,9 +8614,9 @@ export const createDefaultMonitoredServicePromise = (
   )
 
 export interface GetMonitoredServiceListEnvironmentsQueryParams {
-  accountId?: string
-  orgIdentifier?: string
-  projectIdentifier?: string
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
 }
 
 export type GetMonitoredServiceListEnvironmentsProps = Omit<
@@ -8848,8 +8735,8 @@ export interface GetMonitoredServiceListQueryParams {
   projectIdentifier: string
   environmentIdentifier?: string
   environmentIdentifiers?: string[]
-  offset?: number
-  pageSize?: number
+  offset: number
+  pageSize: number
   filter?: string
 }
 
@@ -8901,8 +8788,8 @@ export interface GetMonitoredServiceFromServiceAndEnvironmentQueryParams {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
-  serviceIdentifier?: string
-  environmentIdentifier?: string
+  serviceIdentifier: string
+  environmentIdentifier: string
 }
 
 export type GetMonitoredServiceFromServiceAndEnvironmentProps = Omit<
@@ -8969,7 +8856,7 @@ export type SaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -8983,7 +8870,7 @@ export const SaveMonitoredServiceFromYaml = (props: SaveMonitoredServiceFromYaml
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -8998,7 +8885,7 @@ export type UseSaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -9012,7 +8899,7 @@ export const useSaveMonitoredServiceFromYaml = (props: UseSaveMonitoredServiceFr
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', `/monitored-service/yaml`, { base: getConfig('cv/api'), ...props })
 
@@ -9024,7 +8911,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -9033,7 +8920,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', getConfig('cv/api'), `/monitored-service/yaml`, props, signal)
 
@@ -9365,7 +9252,7 @@ export interface SetHealthMonitoringFlagQueryParams {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
-  enable?: boolean
+  enable: boolean
 }
 
 export interface SetHealthMonitoringFlagPathParams {
@@ -9552,8 +9439,8 @@ export interface GetMonitoredServiceOverAllHealthScoreQueryParams {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
-  duration?: 'FOUR_HOURS' | 'TWENTY_FOUR_HOURS' | 'THREE_DAYS' | 'SEVEN_DAYS' | 'THIRTY_DAYS'
-  endTime?: number
+  duration: 'FOUR_HOURS' | 'TWENTY_FOUR_HOURS' | 'THREE_DAYS' | 'SEVEN_DAYS' | 'THIRTY_DAYS'
+  endTime: number
 }
 
 export interface GetMonitoredServiceOverAllHealthScorePathParams {
@@ -12013,6 +11900,64 @@ export const resetErrorBudgetPromise = (
     ResetErrorBudgetPathParams
   >('POST', getConfig('cv/api'), `/slo/${identifier}/resetErrorBudget`, props, signal)
 
+export interface GetSplunkMetricSampleDataQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  connectorIdentifier: string
+  query: string
+  requestGuid: string
+}
+
+export type GetSplunkMetricSampleDataProps = Omit<
+  GetProps<RestResponseSortedSetTimeSeriesSampleDTO, unknown, GetSplunkMetricSampleDataQueryParams, void>,
+  'path'
+>
+
+/**
+ * validates given setting for splunk data source
+ */
+export const GetSplunkMetricSampleData = (props: GetSplunkMetricSampleDataProps) => (
+  <Get<RestResponseSortedSetTimeSeriesSampleDTO, unknown, GetSplunkMetricSampleDataQueryParams, void>
+    path={`/splunk/metric-sample-data`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetSplunkMetricSampleDataProps = Omit<
+  UseGetProps<RestResponseSortedSetTimeSeriesSampleDTO, unknown, GetSplunkMetricSampleDataQueryParams, void>,
+  'path'
+>
+
+/**
+ * validates given setting for splunk data source
+ */
+export const useGetSplunkMetricSampleData = (props: UseGetSplunkMetricSampleDataProps) =>
+  useGet<RestResponseSortedSetTimeSeriesSampleDTO, unknown, GetSplunkMetricSampleDataQueryParams, void>(
+    `/splunk/metric-sample-data`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * validates given setting for splunk data source
+ */
+export const getSplunkMetricSampleDataPromise = (
+  props: GetUsingFetchProps<
+    RestResponseSortedSetTimeSeriesSampleDTO,
+    unknown,
+    GetSplunkMetricSampleDataQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponseSortedSetTimeSeriesSampleDTO, unknown, GetSplunkMetricSampleDataQueryParams, void>(
+    getConfig('cv/api'),
+    `/splunk/metric-sample-data`,
+    props,
+    signal
+  )
+
 export interface GetSplunkSampleDataQueryParams {
   accountId: string
   orgIdentifier: string
@@ -13193,7 +13138,7 @@ export type GetVerifyStepDeploymentRadarChartLogAnalysisClustersProps = Omit<
   GetVerifyStepDeploymentRadarChartLogAnalysisClustersPathParams
 
 /**
- * get radar chart logs for given verify step
+ * get radar chart logs clusters for given verify step
  */
 export const GetVerifyStepDeploymentRadarChartLogAnalysisClusters = ({
   verifyStepExecutionId,
@@ -13223,7 +13168,7 @@ export type UseGetVerifyStepDeploymentRadarChartLogAnalysisClustersProps = Omit<
   GetVerifyStepDeploymentRadarChartLogAnalysisClustersPathParams
 
 /**
- * get radar chart logs for given verify step
+ * get radar chart logs clusters for given verify step
  */
 export const useGetVerifyStepDeploymentRadarChartLogAnalysisClusters = ({
   verifyStepExecutionId,
@@ -13241,7 +13186,7 @@ export const useGetVerifyStepDeploymentRadarChartLogAnalysisClusters = ({
   )
 
 /**
- * get radar chart logs for given verify step
+ * get radar chart logs clusters for given verify step
  */
 export const getVerifyStepDeploymentRadarChartLogAnalysisClustersPromise = (
   {

@@ -31,7 +31,7 @@ import { Classes, Dialog, Tooltip } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 
 import {
   getInputSetForPipelinePromise,
@@ -65,20 +65,24 @@ import { useToaster } from '@common/exports'
 import routes from '@common/RouteDefinitions'
 import { useQueryParams } from '@common/hooks'
 import { StoreType } from '@common/constants/GitSyncTypes'
-import { getFeaturePropsForRunPipelineButton, mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
+import {
+  clearRuntimeInput,
+  getFeaturePropsForRunPipelineButton,
+  mergeTemplateWithInputSetData
+} from '@pipeline/utils/runPipelineUtils'
 import type { InputSetDTO, Pipeline } from '@pipeline/utils/types'
 import { PipelineErrorView } from '@pipeline/components/RunPipelineModal/PipelineErrorView'
+import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
+import { getErrorsList } from '@pipeline/utils/errorUtils'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 import GitPopover from '../GitPopover/GitPopover'
 import SelectStagetoRetry from './SelectStagetoRetry'
-import { YamlBuilderMemo } from '../PipelineStudio/PipelineYamlView/PipelineYamlView'
 import factory from '../PipelineSteps/PipelineStepFactory'
 
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
 import { StepViewType } from '../AbstractSteps/Step'
-import { clearRuntimeInput, getErrorsList, validatePipeline } from '../PipelineStudio/StepUtil'
-
+import { validatePipeline } from '../PipelineStudio/StepUtil'
 import SaveAsInputSet from '../RunPipelineModal/SaveAsInputSet'
 import { InputSetSelector, InputSetSelectorProps } from '../InputSetSelector/InputSetSelector'
 import SelectExistingInputsOrProvideNew from '../RunPipelineModal/SelectExistingOrProvide'
@@ -108,8 +112,15 @@ function RetryPipeline({
   const { getRBACErrorMessage } = useRBACError()
   const history = useHistory()
 
-  const { projectIdentifier, orgIdentifier, pipelineIdentifier, accountId, executionIdentifier, module, source } =
-    useParams<PipelineType<ExecutionPathProps>>()
+  const {
+    projectIdentifier,
+    orgIdentifier,
+    pipelineIdentifier,
+    accountId,
+    executionIdentifier,
+    module,
+    source = 'executions'
+  } = useParams<PipelineType<ExecutionPathProps>>()
 
   const { pipelineExecutionDetail } = useExecutionContext()
 

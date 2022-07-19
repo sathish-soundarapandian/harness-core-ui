@@ -16,7 +16,8 @@ import {
   Text,
   StepProps,
   Accordion,
-  ButtonVariation
+  ButtonVariation,
+  AllowedTypes
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
@@ -47,7 +48,7 @@ import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
 interface KustomizeWithGITPropType {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
@@ -82,7 +83,7 @@ function KustomizeWithGIT({
         : prevStepData?.url
       : null
 
-  const getInitialValues = React.useCallback((): KustomizeWithGITDataType => {
+  const getInitialValues = (): KustomizeWithGITDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
 
     if (specValues) {
@@ -109,7 +110,7 @@ function KustomizeWithGIT({
       repoName: getRepositoryName(prevStepData, initialValues),
       pluginPath: ''
     }
-  }, [])
+  }
 
   const submitFormData = (formData: KustomizeWithGITDataType & { store?: string; connectorRef?: string }): void => {
     const manifestObj: ManifestConfigWrapper = {
@@ -362,6 +363,7 @@ function KustomizeWithGIT({
                   fieldPath="patchesPaths"
                   pathLabel={getString('pipeline.manifestTypeLabels.KustomizePatches')}
                   placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                  defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                 />
               </div>
               <Accordion

@@ -255,6 +255,21 @@ const routes = {
       })
     }
   ),
+
+  toFileStore: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
+      const path = `resources/file-store`
+      return getScopeBasedRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path
+      })
+    }
+  ),
+
   toVariables: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
       const path = `resources/variables`
@@ -714,6 +729,10 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines`
   ),
+  toPipelineList: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipeline-list`
+  ),
   toGitOps: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/gitops`
@@ -995,6 +1014,17 @@ const routes = {
       source
     }: PipelineType<ExecutionPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/security`
+  ),
+  toExecutionErrorTrackingView: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+      executionIdentifier,
+      module,
+      source
+    }: PipelineType<ExecutionPathProps>) =>
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/et`
   ),
   /********************************************************************************************************************/
   toTemplates: withAccountId(
@@ -1478,7 +1508,7 @@ const routes = {
   ),
   toCEPerspectives: withAccountId(() => `/ce/perspectives`),
   toCEBudgets: withAccountId(() => '/ce/budgets'),
-  toCEBudgetDetails: withAccountId(
+  toCEBudgetDetailsOld: withAccountId(
     ({
       budgetId,
       budgetName
@@ -1486,6 +1516,15 @@ const routes = {
       budgetId: string
       budgetName: string
     }) => `/ce/budget/${budgetId}/${budgetName}`
+  ),
+  toCEBudgetDetails: withAccountId(
+    ({
+      budgetId,
+      budgetName
+    }: AccountPathProps & {
+      budgetId: string
+      budgetName: string
+    }) => `/ce/budgets/${budgetId}/${budgetName}`
   ),
   toCEPerspectiveWorkloadDetails: withAccountId(
     ({
@@ -1537,6 +1576,11 @@ const routes = {
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
       `/sto/orgs/${orgIdentifier}/projects/${projectIdentifier}/targets`
   ),
+  toSTOSecurityReview: withAccountId(() => '/sto/security-review'),
+  toSTOProjectSecurityReview: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
+      `/sto/orgs/${orgIdentifier}/projects/${projectIdentifier}/security-review`
+  ),
   /********************************************************************************************************************/
   toOldCustomDashboard: withAccountId(() => '/home/dashboards*'),
   toCustomDashboard: withAccountId(() => '/dashboards'),
@@ -1560,17 +1604,17 @@ const routes = {
   ),
 
   // These RoutesDestinations are defined in the MicroFrontend
-  toChaosWorkflows: withAccountId(
+  toChaosScenarios: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
-      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/workflows`
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/scenarios`
   ),
   toChaosHubs: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
       `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-hubs`
   ),
-  toChaosAgents: withAccountId(
+  toChaosDelegate: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
-      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/agents`
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-delegates`
   )
 }
 

@@ -33,6 +33,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import RetryPipeline from '../RetryPipeline/RetryPipeline'
 import { useRunPipelineModal } from '../RunPipelineModal/useRunPipelineModal'
+import { useExecutionCompareContext } from '../ExecutionCompareYaml/ExecutionCompareContext'
 import css from './ExecutionActions.module.scss'
 
 const commonButtonProps: ButtonProps = {
@@ -66,8 +67,9 @@ export interface ExecutionActionsProps {
   showEditButton?: boolean
   isPipelineInvalid?: boolean
   source: ExecutionPathProps['source']
+  onViewCompiledYaml?: () => void
+  onCompareExecutions?: () => void
 }
-
 function getValidExecutionActions(canExecute: boolean, executionStatus?: ExecutionStatus) {
   return {
     canAbort: isExecutionActive(executionStatus) && canExecute,
@@ -139,7 +141,9 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
     modules,
     source,
     showEditButton = true,
-    isPipelineInvalid
+    isPipelineInvalid,
+    onViewCompiledYaml,
+    onCompareExecutions
   } = props
   const {
     orgIdentifier,
@@ -167,6 +171,7 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
   const { getString } = useStrings()
   const location = useLocation()
   const { isGitSyncEnabled } = useAppStore()
+  const { isCompareMode } = useExecutionCompareContext()
 
   const { openDialog: openAbortDialog } = useConfirmationDialog({
     cancelButtonText: getString('cancel'),
@@ -379,6 +384,16 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
             <MenuItem text={getString(pauseText)} onClick={pausePipeline} disabled={!canPause} />
             <MenuItem text={getString(abortText)} onClick={openAbortDialog} disabled={!canAbort} />
             <MenuItem text={getString(resumeText)} onClick={resumePipeline} disabled={!canResume} />
+            {onViewCompiledYaml && (
+              <MenuItem text={getString('pipeline.execution.actions.viewCompiledYaml')} onClick={onViewCompiledYaml} />
+            )}
+            {onCompareExecutions && (
+              <MenuItem
+                text={getString('pipeline.execution.actions.compareExecutions')}
+                onClick={onCompareExecutions}
+                disabled={isCompareMode}
+              />
+            )}
             {showRetryPipeline() && (
               <RbacMenuItem
                 featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}

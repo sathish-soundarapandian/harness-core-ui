@@ -50,6 +50,7 @@ const DeployServiceInputStep: React.FC<DeployServiceProps & { formik?: any }> = 
       accountId: string
     }>
   >()
+
   const { showError, clear } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { expressions } = useVariablesExpression()
@@ -58,16 +59,10 @@ const DeployServiceInputStep: React.FC<DeployServiceProps & { formik?: any }> = 
     error,
     refetch
   } = useGetServiceAccessList({
-    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier },
-    lazy: true
+    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
   })
 
   const [services, setService] = React.useState<SelectOption[]>([])
-
-  React.useEffect(() => {
-    refetch()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   React.useEffect(() => {
     if (serviceResponse?.data?.length) {
@@ -144,6 +139,7 @@ const DeployServiceInputStep: React.FC<DeployServiceProps & { formik?: any }> = 
     clear()
     showError(getRBACErrorMessage(error), undefined, 'cd.svc.list.error')
   }
+
   return (
     <>
       {getMultiTypeFromValue(inputSetData?.template?.serviceRef) === MultiTypeInputType.RUNTIME && (

@@ -15,17 +15,24 @@ import { useGenerateKubernetesYaml, DelegateSetupDetails, GenerateKubernetesYaml
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, DelegateActions } from '@common/constants/TrackingConstants'
+import {
+  GenerateNgHelmValuesYamlQueryParams,
+  useGenerateNgHelmValuesYaml,
+  DelegateSetupDetails as HelmDelegateSetupDetails
+} from 'services/cd-ng'
 
 import type { K8sDelegateWizardData } from '../DelegateSetupStep/DelegateSetupStep'
 
+import { DelegateType } from '../DelegateSetupStep/DelegateSetupStep.types'
 import css from '../CreateK8sDelegate.module.scss'
 
-const k8sFileName = 'harness-delegate.yml'
+const k8sFileName = 'harness-delegate-values.yaml'
 
 const Stepk8ReviewScript: React.FC<StepProps<K8sDelegateWizardData>> = props => {
+  const { prevStepData } = props
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const { mutate: downloadYaml } = useGenerateKubernetesYaml({
+  const { mutate: downloadKubernetesYaml } = useGenerateKubernetesYaml({
     queryParams: {
       accountId,
       orgId: orgIdentifier,
@@ -33,19 +40,33 @@ const Stepk8ReviewScript: React.FC<StepProps<K8sDelegateWizardData>> = props => 
       fileFormat: 'text/plain'
     } as GenerateKubernetesYamlQueryParams
   })
+  const { mutate: downloadNgHelmValuesYaml } = useGenerateNgHelmValuesYaml({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    } as GenerateNgHelmValuesYamlQueryParams
+  })
   const linkRef = React.useRef<HTMLAnchorElement>(null)
   const [generatedYaml, setGeneratedYaml] = React.useState<string>()
+  const delegateType = prevStepData?.delegateYaml?.delegateType || DelegateType.KUBERNETES
+  const isDelegateTypeHelm = delegateType === DelegateType.HELM_CHART
 
   const onGenYaml = async (): Promise<void> => {
-    const data = props?.prevStepData?.delegateYaml || {}
-    set(data, 'delegateType', 'KUBERNETES')
-    const response = await downloadYaml(data as DelegateSetupDetails)
+    const data = prevStepData?.delegateYaml || {}
+    set(data, 'delegateType', delegateType)
+    let response
+    if (isDelegateTypeHelm) {
+      response = await downloadNgHelmValuesYaml(data as HelmDelegateSetupDetails)
+    } else {
+      response = await downloadKubernetesYaml(data as DelegateSetupDetails)
+    }
     setGeneratedYaml(response as any)
   }
 
   React.useEffect(() => {
-    if (props?.prevStepData?.generatedYaml) {
-      setGeneratedYaml(props?.prevStepData?.generatedYaml)
+    if (prevStepData?.generatedYaml) {
+      setGeneratedYaml(prevStepData?.generatedYaml)
     } else {
       onGenYaml()
     }
@@ -133,13 +154,19 @@ const Stepk8ReviewScript: React.FC<StepProps<K8sDelegateWizardData>> = props => 
           </Layout.Horizontal>
           <Layout.Vertical padding="small">
             <Text lineClamp={3} width={514} font="small">
-              {getString('delegate.reviewScript.descriptionProxySettings')}
+              {isDelegateTypeHelm
+                ? getString('delegates.reviewScript.descriptionHelmProxySettings')
+                : getString('delegate.reviewScript.descriptionProxySettings')}
             </Text>
             <Text lineClamp={3} width={514} font="small">
               {getString('delegates.reviewScript.docLinkBefore')}
               <a
                 rel="noreferrer"
-                href="https://ngdocs.harness.io/article/5ww21ewdt8-configure-delegate-proxy-settings"
+                href={
+                  isDelegateTypeHelm
+                    ? 'https://docs.harness.io/article/5ww21ewdt8-configure-delegate-proxy-settings#kubernetes_proxy_settings'
+                    : 'https://docs.harness.io/article/5ww21ewdt8-configure-delegate-proxy-settings'
+                }
                 target="_blank"
               >
                 {getString('delegates.reviewScript.docLink')}

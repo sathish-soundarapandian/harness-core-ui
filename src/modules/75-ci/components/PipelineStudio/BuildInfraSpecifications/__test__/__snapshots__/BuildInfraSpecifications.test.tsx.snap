@@ -83,28 +83,32 @@ exports[`BuildInfraSpecifications snapshot tests for AWS Build Infra Render AWS 
                                 </span>
                                 <span
                                   class="bp3-icon StyledProps--main"
-                                  data-icon="service-aws"
+                                  data-icon="service-vm"
                                 >
                                   <svg
+                                    fill="none"
                                     height="26"
-                                    viewBox="0 0 14 10"
+                                    viewBox="0 0 32 33"
                                     width="26"
                                     xmlns="http://www.w3.org/2000/svg"
                                   >
                                     <path
-                                      d="M4 3.9v.4c0 .1.1.2.1.3v.1c0 .1 0 .1-.1.1l-.1.2h-.1s-.1 0-.1-.1c-.1.1-.2 0-.2-.1s-.1-.2-.1-.3c-.4.5-.9.7-1.4.7-.4 0-.7-.1-.9-.3S.7 4.3.7 4c0-.4.1-.7.4-.9s.6-.4 1.1-.4h.5c.2 0 .3.1.5.1v-.3c0-.3-.1-.6-.2-.7-.1-.2-.3-.2-.7-.2-.2 0-.3 0-.5.1-.2 0-.3.1-.5.2 0 0-.1 0-.2.1H1v-.5-.2l.1-.1c.3-.1.4-.1.6-.2.3 0 .5-.1.8-.1.5 0 .9.1 1.2.4s.3.6.3 1.1zm-1.8.7c.2 0 .3 0 .5-.1.1-.1.3-.2.4-.3s.1-.2.1-.3V3.3c-.1 0-.2 0-.3-.1h-.4c-.3 0-.5.1-.7.2s-.3.3-.3.5.1.4.2.5.3.2.5.2zm3.6.5h-.2s-.1-.1-.1-.2l-1-3.6v-.2c0-.1 0-.1.1-.1H5.2s.1.1.1.2l.8 3 .7-3c0-.1 0-.1.1-.2h.8s.1.1.1.2l.7 3 .8-3c0-.1 0-.1.1-.2H10c.1 0 .1 0 .1.1v.2L8.8 4.8c0 .1 0 .2-.1.2h-.5c-.1.1-.2.1-.2 0 0 0-.1-.1-.1-.2l-.7-2.9-.7 2.9c0 .1 0 .1-.1.2h-.2zm5.9.1c-.2 0-.5 0-.7-.1s-.4-.1-.5-.2c-.1 0-.1-.1-.1-.1v-.4c0-.1 0-.1.1-.1h.2c.2.1.3.1.5.2.2 0 .4.1.5.1.3 0 .5 0 .7-.1.1-.1.2-.3.2-.4s0-.2-.1-.3-.2-.2-.5-.2l-.7-.2c-.3-.1-.6-.3-.7-.5s-.2-.4-.2-.7c0-.2 0-.3.1-.5.1-.1.2-.3.3-.4s.3-.2.5-.2c.2-.1.4-.1.6-.1h.6c.1 0 .2 0 .3.1.1 0 .1 0 .2.1.1 0 .1.1.1.1V1.6c0 .1 0 .1-.1.1s-.1 0-.2-.1c-.3-.1-.6-.2-.9-.2s-.5 0-.6.1-.2.2-.2.4c0 .1 0 .2.1.3s.3.2.5.2l.6.2c.3.1.6.2.7.4s.2.4.2.6 0 .4-.1.5c-.1.2-.2.3-.3.4-.1.5-.3.5-.5.6s-.4.1-.6.1z"
-                                      fill="#252f3e"
+                                      d="M19.923 24.662v-6.97l2.346 3.845 1.926-6.355v7.044"
+                                      stroke="#4F5162"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
                                     />
-                                    <g
-                                      fill="#f90"
-                                    >
-                                      <path
-                                        d="M12.5 7.4C11 8.5 8.9 9.1 7 9.1c-2.6 0-5-1-6.7-2.6-.1-.1 0-.3.2-.2 1.9 1.1 4.3 1.8 6.7 1.8 1.8 0 3.5-.4 5.1-1.1.2-.1.5.2.2.4z"
-                                      />
-                                      <path
-                                        d="M13.1 6.7c-.2-.2-1.3-.1-1.7-.1-.1 0-.2-.1 0-.2.9-.6 2.3-.4 2.4-.2.2.2 0 1.6-.8 2.3-.1.1-.2 0-.2-.1.1-.5.5-1.5.3-1.7z"
-                                      />
-                                    </g>
+                                    <path
+                                      d="M27.464 10.319V22.98a1 1 0 01-.497.864l-10.99 6.395m11.487-19.921L16.602 3.857a1 1 0 00-1.018-.003L4.591 10.319m22.873 0L15.977 17.07m0 13.168L5.085 23.846a1 1 0 01-.494-.862V10.319m11.386 19.92V17.072M4.591 10.32l11.386 6.752"
+                                      stroke="#4F5162"
+                                      stroke-linejoin="round"
+                                    />
+                                    <path
+                                      d="M8.725 16.235l.962 7.373 2.802-5.273"
+                                      stroke="#4F5162"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                    />
                                   </svg>
                                 </span>
                               </div>
@@ -672,28 +676,32 @@ exports[`BuildInfraSpecifications snapshot tests for AWS Build Infra initializes
                               >
                                 <span
                                   class="bp3-icon StyledProps--main"
-                                  data-icon="service-aws"
+                                  data-icon="service-vm"
                                 >
                                   <svg
+                                    fill="none"
                                     height="26"
-                                    viewBox="0 0 14 10"
+                                    viewBox="0 0 32 33"
                                     width="26"
                                     xmlns="http://www.w3.org/2000/svg"
                                   >
                                     <path
-                                      d="M4 3.9v.4c0 .1.1.2.1.3v.1c0 .1 0 .1-.1.1l-.1.2h-.1s-.1 0-.1-.1c-.1.1-.2 0-.2-.1s-.1-.2-.1-.3c-.4.5-.9.7-1.4.7-.4 0-.7-.1-.9-.3S.7 4.3.7 4c0-.4.1-.7.4-.9s.6-.4 1.1-.4h.5c.2 0 .3.1.5.1v-.3c0-.3-.1-.6-.2-.7-.1-.2-.3-.2-.7-.2-.2 0-.3 0-.5.1-.2 0-.3.1-.5.2 0 0-.1 0-.2.1H1v-.5-.2l.1-.1c.3-.1.4-.1.6-.2.3 0 .5-.1.8-.1.5 0 .9.1 1.2.4s.3.6.3 1.1zm-1.8.7c.2 0 .3 0 .5-.1.1-.1.3-.2.4-.3s.1-.2.1-.3V3.3c-.1 0-.2 0-.3-.1h-.4c-.3 0-.5.1-.7.2s-.3.3-.3.5.1.4.2.5.3.2.5.2zm3.6.5h-.2s-.1-.1-.1-.2l-1-3.6v-.2c0-.1 0-.1.1-.1H5.2s.1.1.1.2l.8 3 .7-3c0-.1 0-.1.1-.2h.8s.1.1.1.2l.7 3 .8-3c0-.1 0-.1.1-.2H10c.1 0 .1 0 .1.1v.2L8.8 4.8c0 .1 0 .2-.1.2h-.5c-.1.1-.2.1-.2 0 0 0-.1-.1-.1-.2l-.7-2.9-.7 2.9c0 .1 0 .1-.1.2h-.2zm5.9.1c-.2 0-.5 0-.7-.1s-.4-.1-.5-.2c-.1 0-.1-.1-.1-.1v-.4c0-.1 0-.1.1-.1h.2c.2.1.3.1.5.2.2 0 .4.1.5.1.3 0 .5 0 .7-.1.1-.1.2-.3.2-.4s0-.2-.1-.3-.2-.2-.5-.2l-.7-.2c-.3-.1-.6-.3-.7-.5s-.2-.4-.2-.7c0-.2 0-.3.1-.5.1-.1.2-.3.3-.4s.3-.2.5-.2c.2-.1.4-.1.6-.1h.6c.1 0 .2 0 .3.1.1 0 .1 0 .2.1.1 0 .1.1.1.1V1.6c0 .1 0 .1-.1.1s-.1 0-.2-.1c-.3-.1-.6-.2-.9-.2s-.5 0-.6.1-.2.2-.2.4c0 .1 0 .2.1.3s.3.2.5.2l.6.2c.3.1.6.2.7.4s.2.4.2.6 0 .4-.1.5c-.1.2-.2.3-.3.4-.1.5-.3.5-.5.6s-.4.1-.6.1z"
-                                      fill="#252f3e"
+                                      d="M19.923 24.662v-6.97l2.346 3.845 1.926-6.355v7.044"
+                                      stroke="#4F5162"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
                                     />
-                                    <g
-                                      fill="#f90"
-                                    >
-                                      <path
-                                        d="M12.5 7.4C11 8.5 8.9 9.1 7 9.1c-2.6 0-5-1-6.7-2.6-.1-.1 0-.3.2-.2 1.9 1.1 4.3 1.8 6.7 1.8 1.8 0 3.5-.4 5.1-1.1.2-.1.5.2.2.4z"
-                                      />
-                                      <path
-                                        d="M13.1 6.7c-.2-.2-1.3-.1-1.7-.1-.1 0-.2-.1 0-.2.9-.6 2.3-.4 2.4-.2.2.2 0 1.6-.8 2.3-.1.1-.2 0-.2-.1.1-.5.5-1.5.3-1.7z"
-                                      />
-                                    </g>
+                                    <path
+                                      d="M27.464 10.319V22.98a1 1 0 01-.497.864l-10.99 6.395m11.487-19.921L16.602 3.857a1 1 0 00-1.018-.003L4.591 10.319m22.873 0L15.977 17.07m0 13.168L5.085 23.846a1 1 0 01-.494-.862V10.319m11.386 19.92V17.072M4.591 10.32l11.386 6.752"
+                                      stroke="#4F5162"
+                                      stroke-linejoin="round"
+                                    />
+                                    <path
+                                      d="M8.725 16.235l.962 7.373 2.802-5.273"
+                                      stroke="#4F5162"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                    />
                                   </svg>
                                 </span>
                               </div>
@@ -1192,6 +1200,115 @@ exports[`BuildInfraSpecifications snapshot tests for K8s Build Infra Renders wit
                           class="fieldsGroup withoutSpacing"
                         >
                           <div
+                            style="width: 300px;"
+                          >
+                            <div
+                              class="Text--withDocsTooltip"
+                              data-tooltip-id="os"
+                            >
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+                              >
+                                pipeline.infraSpecifications.os
+                              </p>
+                            </div>
+                            <div
+                              style="display: flex; align-items: center;"
+                            >
+                              <div
+                                class="bp3-form-group"
+                                data-id="os-3"
+                                style="margin-bottom: 0px; flex-grow: 1;"
+                              >
+                                
+                                <div
+                                  class="bp3-form-content"
+                                >
+                                  <div
+                                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                                  >
+                                    <div
+                                      class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
+                                    >
+                                      <div
+                                        class="bp3-popover-target"
+                                      >
+                                        <div
+                                          class="bp3-input-group"
+                                        >
+                                          <input
+                                            autocomplete="off"
+                                            class="bp3-input"
+                                            name="os"
+                                            placeholder="Search..."
+                                            style="padding-right: 0px;"
+                                            type="text"
+                                            value="delegate.cardData.linux.name"
+                                          />
+                                          <span
+                                            class="bp3-input-action"
+                                          >
+                                            <span
+                                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                                              icon="chevron-down"
+                                            >
+                                              <svg
+                                                data-icon="chevron-down"
+                                                height="14"
+                                                viewBox="0 0 16 16"
+                                                width="14"
+                                              >
+                                                <desc>
+                                                  chevron-down
+                                                </desc>
+                                                <path
+                                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                                  fill-rule="evenodd"
+                                                />
+                                              </svg>
+                                            </span>
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <span
+                                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                                    >
+                                      <span
+                                        class="bp3-popover-target"
+                                      >
+                                        <button
+                                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                        >
+                                          <span
+                                            class="bp3-icon StyledProps--main"
+                                            data-icon="fixed-input"
+                                          >
+                                            <svg
+                                              height="12"
+                                              viewBox="0 0 9 9"
+                                              width="12"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <path
+                                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                                fill="currentColor"
+                                              />
+                                            </svg>
+                                          </span>
+                                        </button>
+                                      </span>
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="fieldsGroup withoutSpacing"
+                        >
+                          <div
                             class="connectorLabel"
                           >
                             <div
@@ -1219,7 +1336,7 @@ exports[`BuildInfraSpecifications snapshot tests for K8s Build Infra Renders wit
                             >
                               <div
                                 class="bp3-form-group"
-                                data-id="undefined-3"
+                                data-id="undefined-4"
                                 style="margin-bottom: 0px;"
                               >
                                 <div
@@ -1680,6 +1797,115 @@ exports[`BuildInfraSpecifications snapshot tests for K8s Build Infra able to sel
                         class="fieldsGroup withoutSpacing"
                       >
                         <div
+                          style="width: 300px;"
+                        >
+                          <div
+                            class="Text--withDocsTooltip"
+                            data-tooltip-id="os"
+                          >
+                            <p
+                              class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+                            >
+                              pipeline.infraSpecifications.os
+                            </p>
+                          </div>
+                          <div
+                            style="display: flex; align-items: center;"
+                          >
+                            <div
+                              class="bp3-form-group"
+                              data-id="os-2"
+                              style="margin-bottom: 0px; flex-grow: 1;"
+                            >
+                              
+                              <div
+                                class="bp3-form-content"
+                              >
+                                <div
+                                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                                >
+                                  <div
+                                    class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
+                                  >
+                                    <div
+                                      class="bp3-popover-target"
+                                    >
+                                      <div
+                                        class="bp3-input-group"
+                                      >
+                                        <input
+                                          autocomplete="off"
+                                          class="bp3-input"
+                                          name="os"
+                                          placeholder="Search..."
+                                          style="padding-right: 0px;"
+                                          type="text"
+                                          value="delegate.cardData.linux.name"
+                                        />
+                                        <span
+                                          class="bp3-input-action"
+                                        >
+                                          <span
+                                            class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                                            icon="chevron-down"
+                                          >
+                                            <svg
+                                              data-icon="chevron-down"
+                                              height="14"
+                                              viewBox="0 0 16 16"
+                                              width="14"
+                                            >
+                                              <desc>
+                                                chevron-down
+                                              </desc>
+                                              <path
+                                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                                fill-rule="evenodd"
+                                              />
+                                            </svg>
+                                          </span>
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <span
+                                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                                  >
+                                    <span
+                                      class="bp3-popover-target"
+                                    >
+                                      <button
+                                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                      >
+                                        <span
+                                          class="bp3-icon StyledProps--main"
+                                          data-icon="fixed-input"
+                                        >
+                                          <svg
+                                            height="12"
+                                            viewBox="0 0 9 9"
+                                            width="12"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                              fill="currentColor"
+                                            />
+                                          </svg>
+                                        </span>
+                                      </button>
+                                    </span>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="fieldsGroup withoutSpacing"
+                      >
+                        <div
                           class="connectorLabel"
                         >
                           <div
@@ -1707,7 +1933,7 @@ exports[`BuildInfraSpecifications snapshot tests for K8s Build Infra able to sel
                           >
                             <div
                               class="bp3-form-group"
-                              data-id="undefined-2"
+                              data-id="undefined-3"
                               style="margin-bottom: 0px;"
                             >
                               <div
@@ -2111,6 +2337,115 @@ exports[`BuildInfraSpecifications snapshot tests for K8s Build Infra initializes
                         class="fieldsGroup withoutSpacing"
                       >
                         <div
+                          style="width: 300px;"
+                        >
+                          <div
+                            class="Text--withDocsTooltip"
+                            data-tooltip-id="os"
+                          >
+                            <p
+                              class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+                            >
+                              pipeline.infraSpecifications.os
+                            </p>
+                          </div>
+                          <div
+                            style="display: flex; align-items: center;"
+                          >
+                            <div
+                              class="bp3-form-group"
+                              data-id="os-2"
+                              style="margin-bottom: 0px; flex-grow: 1;"
+                            >
+                              
+                              <div
+                                class="bp3-form-content"
+                              >
+                                <div
+                                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                                >
+                                  <div
+                                    class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
+                                  >
+                                    <div
+                                      class="bp3-popover-target"
+                                    >
+                                      <div
+                                        class="bp3-input-group"
+                                      >
+                                        <input
+                                          autocomplete="off"
+                                          class="bp3-input"
+                                          name="os"
+                                          placeholder="Search..."
+                                          style="padding-right: 0px;"
+                                          type="text"
+                                          value="delegate.cardData.linux.name"
+                                        />
+                                        <span
+                                          class="bp3-input-action"
+                                        >
+                                          <span
+                                            class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                                            icon="chevron-down"
+                                          >
+                                            <svg
+                                              data-icon="chevron-down"
+                                              height="14"
+                                              viewBox="0 0 16 16"
+                                              width="14"
+                                            >
+                                              <desc>
+                                                chevron-down
+                                              </desc>
+                                              <path
+                                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                                fill-rule="evenodd"
+                                              />
+                                            </svg>
+                                          </span>
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <span
+                                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                                  >
+                                    <span
+                                      class="bp3-popover-target"
+                                    >
+                                      <button
+                                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                                      >
+                                        <span
+                                          class="bp3-icon StyledProps--main"
+                                          data-icon="fixed-input"
+                                        >
+                                          <svg
+                                            height="12"
+                                            viewBox="0 0 9 9"
+                                            width="12"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                              fill="currentColor"
+                                            />
+                                          </svg>
+                                        </span>
+                                      </button>
+                                    </span>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="fieldsGroup withoutSpacing"
+                      >
+                        <div
                           class="connectorLabel"
                         >
                           <div
@@ -2138,7 +2473,7 @@ exports[`BuildInfraSpecifications snapshot tests for K8s Build Infra initializes
                           >
                             <div
                               class="bp3-form-group"
-                              data-id="undefined-2"
+                              data-id="undefined-3"
                               style="margin-bottom: 0px;"
                             >
                               <div

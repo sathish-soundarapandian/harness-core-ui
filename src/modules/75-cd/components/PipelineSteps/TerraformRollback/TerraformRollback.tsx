@@ -6,7 +6,14 @@
  */
 
 import React from 'react'
-import { Formik, FormInput, getMultiTypeFromValue, IconName, MultiTypeInputType } from '@wings-software/uicore'
+import {
+  AllowedTypes,
+  Formik,
+  FormInput,
+  getMultiTypeFromValue,
+  IconName,
+  MultiTypeInputType
+} from '@wings-software/uicore'
 import * as Yup from 'yup'
 import cx from 'classnames'
 
@@ -40,7 +47,7 @@ interface TerraformRollbackProps {
   initialValues: TFRollbackData
   onUpdate?: (data: TFRollbackData) => void
   onChange?: (data: TFRollbackData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   isNewStep?: boolean
   inputSetData?: {

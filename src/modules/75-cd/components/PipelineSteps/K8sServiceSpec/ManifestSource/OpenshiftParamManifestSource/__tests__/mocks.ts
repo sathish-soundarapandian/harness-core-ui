@@ -23,6 +23,36 @@ export const manifests = [
         }
       }
     }
+  },
+  {
+    manifest: {
+      identifier: 'manifestidentifier',
+      type: 'OpenShiftParams',
+      spec: {
+        store: {
+          type: 'InheritFromManifest',
+          spec: {
+            paths: ['./filepath']
+          }
+        }
+      }
+    }
+  },
+  {
+    manifest: {
+      identifier: 'manifestIdentifier',
+      type: 'OpenShiftParams',
+      spec: {
+        store: {
+          type: 'CustomeRemote',
+          spec: {
+            filePath: 'file-path',
+            extractionScript: 'script',
+            delegateSelectors: ['delegate-selector']
+          }
+        }
+      }
+    }
   }
 ]
 
@@ -41,6 +71,36 @@ export const template = {
               paths: '<+input>',
               repoName: '<+input>',
               branch: '<+input>'
+            }
+          }
+        }
+      }
+    },
+    {
+      manifest: {
+        identifier: 'manifestidentifier',
+        type: 'OpenShiftParams',
+        spec: {
+          store: {
+            type: 'InheritFromManifest',
+            spec: {
+              paths: ['./filepath']
+            }
+          }
+        }
+      }
+    },
+    {
+      manifest: {
+        identifier: 'ident',
+        type: 'OpenShiftParams',
+        spec: {
+          store: {
+            type: 'CustomeRemote',
+            spec: {
+              filePath: '<+input>',
+              extractionScript: 'script',
+              delegateSelectors: ['delegate-selector']
             }
           }
         }

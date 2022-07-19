@@ -38,9 +38,12 @@ import {
 import ExperimentalInput from '../../K8sServiceSpecForms/ExperimentalInput'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
-  getYamlData,
+  getDefaultQueryParam,
+  getFinalQueryParamValue,
+  getFqnPath,
   isArtifactSourceRuntime,
   isFieldfromTriggerTabDisabled,
+  isNewServiceEnvEntity,
   resetTags,
   shouldFetchTagsSource
 } from '../artifactSourceUtils'
@@ -67,6 +70,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     pipelineIdentifier,
     branch,
     stageIdentifier,
+    serviceIdentifier,
     isTagsSelectionDisabled,
     allowableTypes,
     fromTrigger,
@@ -94,13 +98,30 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     repository: ''
   })
 
+  const connectorRefValue = getDefaultQueryParam(
+    artifact?.spec?.connectorRef,
+    get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
+  )
+  const subscriptionIdValue = getDefaultQueryParam(
+    artifact?.spec?.subscriptionId,
+    get(initialValues?.artifacts, `${artifactPath}.spec.subscriptionId`, '')
+  )
+  const registryValue = getDefaultQueryParam(
+    artifact?.spec?.registry,
+    get(initialValues?.artifacts, `${artifactPath}.spec.registry`, '')
+  )
+  const repositoryValue = getDefaultQueryParam(
+    artifact?.spec?.repository,
+    get(initialValues?.artifacts, `${artifactPath}.spec.repository`, '')
+  )
+
   const {
     data: acrTagsData,
     loading: fetchingTags,
     refetch: fetchTags,
     error: fetchTagsError
   } = useMutateAsGet(useGetBuildDetailsForAcrArtifactWithYaml, {
-    body: yamlStringify(getYamlData(formik?.values)),
+    body: yamlStringify(formik?.values),
     requestOptions: {
       headers: {
         'content-type': 'application/json'
@@ -112,26 +133,13 @@ const Content = (props: ACRRenderContent): JSX.Element => {
       orgIdentifier,
       repoIdentifier,
       branch,
-      connectorRef:
-        getMultiTypeFromValue(artifact?.spec?.connectorRef) !== MultiTypeInputType.RUNTIME
-          ? artifact?.spec?.connectorRef
-          : get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, ''),
-      subscriptionId:
-        getMultiTypeFromValue(artifact?.spec?.subscriptionId) !== MultiTypeInputType.RUNTIME
-          ? artifact?.spec?.subscriptionId
-          : get(initialValues, `artifacts.${artifactPath}.spec.subscriptionId`, ''),
-      registry:
-        getMultiTypeFromValue(artifact?.spec?.registry) !== MultiTypeInputType.RUNTIME
-          ? artifact?.spec?.registry
-          : get(initialValues, `artifacts.${artifactPath}.spec.registry`, ''),
-      repository:
-        getMultiTypeFromValue(artifact?.spec?.repository) !== MultiTypeInputType.RUNTIME
-          ? artifact?.spec?.repository
-          : get(initialValues, `artifacts.${artifactPath}.spec.repository`, ''),
+      connectorRef: getFinalQueryParamValue(connectorRefValue),
+      subscriptionId: getFinalQueryParamValue(subscriptionIdValue),
+      registry: getFinalQueryParamValue(registryValue),
+      repository: getFinalQueryParamValue(repositoryValue),
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
-      fqnPath: /* istanbul ignore next */ isPropagatedStage
-        ? `pipeline.stages.${stageIdentifier}.spec.serviceConfig.stageOverrides.artifacts.${artifactPath}.spec.tag`
-        : `pipeline.stages.${stageIdentifier}.spec.serviceConfig.serviceDefinition.spec.artifacts.${artifactPath}.spec.tag`
+      serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+      fqnPath: getFqnPath(path as string, !!isPropagatedStage, stageIdentifier, defaultTo(artifactPath, ''))
     },
     lazy: true
   })
@@ -267,14 +275,6 @@ const Content = (props: ACRRenderContent): JSX.Element => {
       })) || /* istanbul ignore next */ []
     setRepositories(options)
   }, [repositoriesData])
-
-  const connectorRefValue =
-    get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '') || artifact?.spec?.connectorRef
-  const subscriptionIdValue =
-    get(initialValues, `artifacts.${artifactPath}.spec.subscriptionId`, '') || artifact?.spec?.subscriptionId
-  const registryValue = get(initialValues, `artifacts.${artifactPath}.spec.registry`, '') || artifact?.spec?.registry
-  const repositoryValue =
-    get(initialValues, `artifacts.${artifactPath}.spec.repository`, '') || artifact?.spec?.repository
 
   const fetchTagsEnabled = (): void => {
     if (canFetchTags()) {
@@ -573,22 +573,22 @@ export class ACRArtifactSource extends ArtifactSourceBase<ArtifactSourceRenderPr
   isTagsSelectionDisabled(props: ArtifactSourceRenderProps): boolean {
     const { initialValues, artifactPath, artifact } = props
 
-    const isConnectorPresent =
-      getMultiTypeFromValue(artifact?.spec?.connectorRef) !== MultiTypeInputType.RUNTIME
-        ? artifact?.spec?.connectorRef
-        : get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
-    const isSubscriptionPresent =
-      getMultiTypeFromValue(artifact?.spec?.subscriptionId) !== MultiTypeInputType.RUNTIME
-        ? artifact?.spec?.subscriptionId
-        : get(initialValues, `artifacts.${artifactPath}.spec.subscriptionId`, '')
-    const isRegistryPresent =
-      getMultiTypeFromValue(artifact?.spec?.registry) !== MultiTypeInputType.RUNTIME
-        ? artifact?.spec?.registry
-        : get(initialValues, `artifacts.${artifactPath}.spec.registry`, '')
-    const isRepositoryPresent =
-      getMultiTypeFromValue(artifact?.spec?.repository) !== MultiTypeInputType.RUNTIME
-        ? artifact?.spec?.repository
-        : get(initialValues, `artifacts.${artifactPath}.spec.repository`, '')
+    const isConnectorPresent = getDefaultQueryParam(
+      artifact?.spec?.connectorRef,
+      get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '')
+    )
+    const isSubscriptionPresent = getDefaultQueryParam(
+      artifact?.spec?.subscriptionId,
+      get(initialValues, `artifacts.${artifactPath}.spec.subscriptionId`, '')
+    )
+    const isRegistryPresent = getDefaultQueryParam(
+      artifact?.spec?.registry,
+      get(initialValues, `artifacts.${artifactPath}.spec.registry`, '')
+    )
+    const isRepositoryPresent = getDefaultQueryParam(
+      artifact?.spec?.repository,
+      get(initialValues, `artifacts.${artifactPath}.spec.repository`, '')
+    )
 
     return !(isConnectorPresent && isSubscriptionPresent && isRegistryPresent && isRepositoryPresent)
   }

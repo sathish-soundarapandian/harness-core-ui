@@ -19,10 +19,11 @@ const ExactSharedPackages = [
   '@blueprintjs/core',
   '@blueprintjs/select',
   '@blueprintjs/datetime',
-  'restful-react'
+  'restful-react',
+  'urql'
 ]
 
-module.exports = ({ enableGitOpsUI, enableSTO, enableChaosUI }) => {
+module.exports = ({ enableGitOpsUI, enableSTO, enableChaosUI, enableCCMUI }) => {
   const remotes = {}
 
   if (enableGitOpsUI) {
@@ -35,8 +36,13 @@ module.exports = ({ enableGitOpsUI, enableSTO, enableChaosUI }) => {
   remotes.governance = "governance@[window.getApiBaseUrl('pm/remoteEntry.js')]"
   // }
 
+  if (enableCCMUI) {
+    remotes.ccmui = "ccmui@[window.getApiBaseUrl('ccmui/remoteEntry.js')]"
+  }
+
   if (enableSTO) {
     remotes.sto = "sto@[window.getApiBaseUrl('sto/remoteEntry.js')]"
+    remotes.stoV2 = "stoV2@[window.getApiBaseUrl('sto/v2/remoteEntry.js')]"
   }
 
   if (enableChaosUI) {
@@ -50,17 +56,10 @@ module.exports = ({ enableGitOpsUI, enableSTO, enableChaosUI }) => {
   }
 
   const shared = {
-    '@harness/uicore': packageJSON.dependencies['@harness/uicore'],
     ...mapValues(pick(packageJSON.dependencies, ExactSharedPackages), version => ({
       singleton: true,
       requiredVersion: version
     }))
-  }
-
-  if (process.env.NODE_ENV === 'development' && packageJSON.dependencies['@harness/uicore']?.includes('yalc')) {
-    shared['@harness/uicore'] = {
-      requiredVersion: packageJSON.dependencies['@harness/uicore']
-    }
   }
 
   return {

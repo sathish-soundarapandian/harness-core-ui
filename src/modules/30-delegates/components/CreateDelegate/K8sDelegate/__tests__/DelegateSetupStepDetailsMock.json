@@ -1,0 +1,11 @@
+{
+  "name": "del-test",
+  "size": "SMALL",
+  "description": "A dummy test",
+  "k8sConfigDetails": {
+    "k8sPermissionType": "NAMESPACE_ADMIN",
+    "namespace": ""
+  },
+  "tokenName": "del-test-token",
+  "delegateType": "KUBERNETES"
+}

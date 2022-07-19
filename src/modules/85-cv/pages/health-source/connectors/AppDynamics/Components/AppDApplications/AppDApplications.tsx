@@ -7,7 +7,16 @@
 
 import React, { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { SelectOption, FormInput, MultiTypeInputType, FormError, MultiTypeInput, Label } from '@wings-software/uicore'
+import {
+  SelectOption,
+  FormInput,
+  MultiTypeInputType,
+  FormError,
+  MultiTypeInput,
+  Label,
+  RUNTIME_INPUT_VALUE,
+  AllowedTypes
+} from '@wings-software/uicore'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { getPlaceholder, getTypeOfInput, setAppDynamicsApplication } from '../../AppDHealthSource.utils'
@@ -24,7 +33,7 @@ interface AppDApplicationsInterface {
   isTemplate?: boolean
   expressions?: string[]
   applicationError?: string
-  allowedTypes?: MultiTypeInputType[]
+  allowedTypes?: AllowedTypes
 }
 
 export default function AppDApplications({
@@ -91,7 +100,7 @@ export default function AppDApplications({
           }
           const selectedItem = item as string | SelectOption
           const selectedValue = typeof selectedItem === 'string' ? selectedItem : selectedItem?.label?.toString()
-          if (selectedValue && selectedValue !== '<+input>' && !/^</.test(selectedValue)) {
+          if (selectedValue && selectedValue !== RUNTIME_INPUT_VALUE && !/^</.test(selectedValue)) {
             refetchTier({
               queryParams: {
                 appName: selectedValue,

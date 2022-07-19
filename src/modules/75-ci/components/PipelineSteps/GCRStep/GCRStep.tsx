@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { IconName, MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@wings-software/uicore'
 import type { FormikErrors } from 'formik'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -82,7 +82,7 @@ export interface GCRStepProps {
   stepViewType: StepViewType
   onUpdate?: (data: GCRStepData) => void
   onChange?: (data: GCRStepData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   formik?: any
 }
 
@@ -96,6 +96,7 @@ export class GCRStep extends PipelineStep<GCRStepData> {
   protected stepName = 'Build and Push to GCR'
   protected stepIcon: IconName = 'gcr-step'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.GCR'
+  protected stepAdditionalInfo: keyof StringsMap = 'pipeline.linuxOnly'
   protected stepPaletteVisible = false
 
   protected defaultValues: GCRStepData = {

@@ -35,6 +35,7 @@ import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { AllMultiTypeInputTypesForStep } from '@ci/components/PipelineSteps/CIStep/StepUtils'
 import { FormConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
+import { healthSourceTypeMapping } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
 import { ConnectorRefFieldName, HEALTHSOURCE_LIST } from './DefineHealthSource.constant'
 import {
   getFeatureOption,
@@ -59,6 +60,8 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
     ProjectPathProps & { identifier: string; templateType?: string }
   >()
   const { isEdit } = sourceData
+
+  const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
 
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.ERROR_TRACKING_ENABLED)
   const isDynatraceAPMEnabled = useFeatureFlag(FeatureFlag.DYNATRACE_APM_ENABLED)
@@ -85,7 +88,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
 
   const isCardSelected = useCallback((name, formik) => {
     if (formik?.values?.product?.value) {
-      const features = getFeatureOption(name, getString)
+      const features = getFeatureOption(name, getString, isSplunkMetricEnabled)
       return features.some(el => el?.value === formik.values.product.value)
     } else {
       if (name === Connectors.GCP && formik?.values?.sourceType === HealthSourcesType.Stackdriver) {
@@ -108,13 +111,13 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
             </Text>
           }
           placeholder={getString('cv.healthSource.connectors.selectConnector', {
-            sourceType: formik?.values?.sourceType
+            sourceType: healthSourceTypeMapping(formik?.values?.sourceType)
           })}
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
           width={400}
-          type={formik?.values?.sourceType}
+          type={healthSourceTypeMapping(formik?.values?.sourceType)}
           multiTypeProps={{ expressions, allowableTypes: AllMultiTypeInputTypesForStep }}
           onChange={(value: any) => {
             const connectorValue =
@@ -182,7 +185,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
         }}
       >
         {formik => {
-          let featureOption = getFeatureOption(formik?.values?.sourceType, getString)
+          let featureOption = getFeatureOption(formik?.values?.sourceType, getString, isSplunkMetricEnabled)
           if (formik.values?.sourceType === HealthSourceTypes.CustomHealth) {
             featureOption = modifyCustomHealthFeatureBasedOnFF(isCustomLogEnabled, isCustomMetricEnabled, featureOption)
           }
@@ -221,7 +224,11 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
                                     className={css.squareCard}
                                     onClick={() => {
                                       formik.setFieldValue('sourceType', connectorTypeName)
-                                      let featureOptionConnectorType = getFeatureOption(connectorTypeName, getString)
+                                      let featureOptionConnectorType = getFeatureOption(
+                                        connectorTypeName,
+                                        getString,
+                                        isSplunkMetricEnabled
+                                      )
                                       if (connectorTypeName === HealthSourceTypes.CustomHealth) {
                                         featureOptionConnectorType = modifyCustomHealthFeatureBasedOnFF(
                                           isCustomLogEnabled,

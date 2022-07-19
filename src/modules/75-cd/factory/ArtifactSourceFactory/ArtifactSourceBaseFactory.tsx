@@ -6,11 +6,13 @@
  */
 
 import { ACRArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/ACRArtifactSource/ACRArtifactSource'
+import { AmazonS3ArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/AmazonS3ArtifactSource/AmazonS3ArtifactSource'
 import { ArtifactoryArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/ArtifactoryArtifactSource/ArtifactoryArtifactSource'
 import { CustomArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/CustomArtifactSource/CustomArtifactSource'
 import { DockerArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/DockerArtifactSource/DockerArtifactSource'
 import { ECRArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/ECRArtifactSource/ECRArtifactSource'
 import { GCRArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/GCRArtifactSource/GCRArtifactSource'
+import { JenkinsArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/JenkinsArtifactSource/JenkinsArtifactSource'
 import { NexusArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/NexusArtifactSource/NexusArtifactSource'
 import type { ArtifactSourceBase } from './ArtifactSourceBase'
 
@@ -44,4 +46,6 @@ artifactSourceBaseFactory.registerArtifactSource(new NexusArtifactSource())
 artifactSourceBaseFactory.registerArtifactSource(new ArtifactoryArtifactSource())
 artifactSourceBaseFactory.registerArtifactSource(new CustomArtifactSource())
 artifactSourceBaseFactory.registerArtifactSource(new ACRArtifactSource())
+artifactSourceBaseFactory.registerArtifactSource(new AmazonS3ArtifactSource())
+artifactSourceBaseFactory.registerArtifactSource(new JenkinsArtifactSource())
 export default artifactSourceBaseFactory

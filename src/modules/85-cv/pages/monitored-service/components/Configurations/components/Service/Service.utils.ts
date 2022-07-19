@@ -31,7 +31,9 @@ export const getInitFormData = (
       type: MonitoredServiceType.APPLICATION as MonitoredServiceForm['type'],
       environmentRef: templateValue?.spec?.environmentRef,
       environmentRefList: [],
-      sources: templateValue?.spec?.sources,
+      sources: isEdit
+        ? templateValue?.spec?.sources
+        : { changeSources: defaultMonitoredService?.sources?.changeSources, ...templateValue?.spec?.sources },
       dependencies: [],
       ...(templateValue?.spec?.notificationRuleRefs && {
         notificationRuleRefs: templateValue?.spec?.notificationRuleRefs

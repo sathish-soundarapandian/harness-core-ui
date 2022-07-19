@@ -110,7 +110,7 @@ describe('RUN PIPELINE MODAL - deploy stage', () => {
       })
 
       cy.wait(1000)
-
+      cy.visitPageAssertion('#aboutService')
       // Service tab config
       cy.get('input[name="serviceRef"]').click({ force: true })
       cy.contains('p', 'testService').click({ force: true })

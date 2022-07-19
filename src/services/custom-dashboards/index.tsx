@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Harness Inc. All rights reserved.
+ * Copyright 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -58,7 +58,7 @@ export interface DashboardFolderModel {
 
 export interface DashboardModel {
   created_at: string
-  data_source: ('CD' | 'CE' | 'CF' | 'CI' | 'CG_CD')[]
+  data_source: ('CD' | 'CE' | 'CF' | 'CI' | 'CI_TI' | 'CG_CD' | 'STO')[]
   description: string
   favorite_count: number
   folder: DashboardFolderModel
@@ -139,6 +139,10 @@ export interface GetFoldersResponse {
   pages: number
   resource?: FolderModel[]
   responseMessages?: string
+}
+
+export interface GetOotbFolderIdResponse {
+  resource?: string
 }
 
 export interface PatchFolderRequestBody {
@@ -293,16 +297,16 @@ export const cloneDashboardPromise = (
   )
 
 export interface GetFolderQueryParams {
+  page?: number
+  pageSize?: number
   accountId: string
   isAdmin?: boolean
-  pageSize?: number
-  page?: number
 }
 
 export type GetFolderProps = Omit<GetProps<GetFolderResponse, ErrorResponse, GetFolderQueryParams, void>, 'path'>
 
 /**
- * Get a folders details.
+ * Get all sub-folders in account.
  */
 export const GetFolder = (props: GetFolderProps) => (
   <Get<GetFolderResponse, ErrorResponse, GetFolderQueryParams, void>
@@ -315,7 +319,7 @@ export const GetFolder = (props: GetFolderProps) => (
 export type UseGetFolderProps = Omit<UseGetProps<GetFolderResponse, ErrorResponse, GetFolderQueryParams, void>, 'path'>
 
 /**
- * Get a folders details.
+ * Get all sub-folders in account.
  */
 export const useGetFolder = (props: UseGetFolderProps) =>
   useGet<GetFolderResponse, ErrorResponse, GetFolderQueryParams, void>(`/folder`, {
@@ -324,7 +328,7 @@ export const useGetFolder = (props: UseGetFolderProps) =>
   })
 
 /**
- * Get a folders details.
+ * Get all sub-folders in account.
  */
 export const getFolderPromise = (
   props: GetUsingFetchProps<GetFolderResponse, ErrorResponse, GetFolderQueryParams, void>,
@@ -451,9 +455,57 @@ export const createFolderPromise = (
     signal
   )
 
-export interface GetFolderDetailQueryParams {
+export interface GetOotbFolderIdQueryParams {
   accountId: string
+}
+
+export type GetOotbFolderIdProps = Omit<
+  GetProps<GetOotbFolderIdResponse, ErrorResponse, GetOotbFolderIdQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get out of the box folder ID.
+ */
+export const GetOotbFolderId = (props: GetOotbFolderIdProps) => (
+  <Get<GetOotbFolderIdResponse, ErrorResponse, GetOotbFolderIdQueryParams, void>
+    path={`/folder/ootb`}
+    base={getConfig('dashboard/')}
+    {...props}
+  />
+)
+
+export type UseGetOotbFolderIdProps = Omit<
+  UseGetProps<GetOotbFolderIdResponse, ErrorResponse, GetOotbFolderIdQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get out of the box folder ID.
+ */
+export const useGetOotbFolderId = (props: UseGetOotbFolderIdProps) =>
+  useGet<GetOotbFolderIdResponse, ErrorResponse, GetOotbFolderIdQueryParams, void>(`/folder/ootb`, {
+    base: getConfig('dashboard/'),
+    ...props
+  })
+
+/**
+ * Get out of the box folder ID.
+ */
+export const getOotbFolderIdPromise = (
+  props: GetUsingFetchProps<GetOotbFolderIdResponse, ErrorResponse, GetOotbFolderIdQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<GetOotbFolderIdResponse, ErrorResponse, GetOotbFolderIdQueryParams, void>(
+    getConfig('dashboard/'),
+    `/folder/ootb`,
+    props,
+    signal
+  )
+
+export interface GetFolderDetailQueryParams {
   folderId: string
+  accountId: string
 }
 
 export type GetFolderDetailProps = Omit<
@@ -501,6 +553,7 @@ export const getFolderDetailPromise = (
   )
 
 export interface DeleteDashboardQueryParams {
+  folderId: string
   accountId: string
 }
 
@@ -558,11 +611,11 @@ export const deleteDashboardPromise = (
   )
 
 export interface GetFoldersQueryParams {
-  pageSize: number
   sortBy?: string
-  accountId: string
+  pageSize: number
   searchTerm?: string
   page: number
+  accountId: string
 }
 
 export type GetFoldersProps = Omit<GetProps<GetFoldersResponse, ErrorResponse, GetFoldersQueryParams, void>, 'path'>
@@ -607,14 +660,14 @@ export const getFoldersPromise = (
   )
 
 export interface SearchQueryParams {
-  pageSize: number
-  sortBy?: string
-  accountId: string
-  searchTerm?: string
-  folderId: string
   customTag: string
+  sortBy?: string
+  pageSize: number
+  searchTerm?: string
   tags: string
   page: number
+  folderId: string
+  accountId: string
 }
 
 export type SearchProps = Omit<GetProps<SearchResponse, ErrorResponse, SearchQueryParams, void>, 'path'>
@@ -656,9 +709,9 @@ export const searchPromise = (
   )
 
 export interface CreateSignedUrlQueryParams {
-  accountId: string
-  src: string
   dashboardId: string
+  src: string
+  accountId: string
 }
 
 export type CreateSignedUrlProps = Omit<

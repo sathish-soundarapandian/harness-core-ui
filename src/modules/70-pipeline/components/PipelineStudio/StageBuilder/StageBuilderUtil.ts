@@ -12,12 +12,8 @@ import { v4 as uuid } from 'uuid'
 import type { NodeModelListener, LinkModelListener, DiagramEngine } from '@projectstorm/react-diagrams-core'
 import produce from 'immer'
 import { parse } from 'yaml'
-import type {
-  StageElementWrapperConfig,
-  PageConnectorResponse,
-  PipelineInfoConfig,
-  DeploymentStageConfig
-} from 'services/cd-ng'
+import type { PageConnectorResponse, DeploymentStageConfig } from 'services/cd-ng'
+import type { StageElementWrapperConfig, PipelineInfoConfig } from 'services/pipeline-ng'
 import type * as Diagram from '@pipeline/components/Diagram'
 import {
   getIdentifierFromValue,
@@ -78,7 +74,6 @@ export interface PopoverData {
   onClickGroupStage?: (stageId: string, type: StageType) => void
   renderPipelineStage: PipelineContextInterface['renderPipelineStage']
   isHoverView?: boolean
-  getTemplate: PipelineContextInterface['getTemplate']
   templateTypes: { [key: string]: string }
   newPipelineStudioEnabled?: boolean
 }
@@ -443,7 +438,6 @@ export const getLinkEventListeners = (
   ) => void,
   updateMoveStageDetails: (moveStageDetails: MoveStageDetailsType) => void,
   confirmMoveStage: () => void,
-  getTemplate: PipelineContextInterface['getTemplate'],
   stageMap: Map<string, StageState>,
   newPipelineStudioEnabled?: boolean
 ): LinkModelListener => {
@@ -475,7 +469,6 @@ export const getLinkEventListeners = (
             renderPipelineStage,
             contextType,
             templateTypes,
-            getTemplate,
             newPipelineStudioEnabled
           },
           { useArrows: false, darkMode: false, fixedPosition: false }
@@ -569,9 +562,9 @@ export const getNodeEventListerner = (
 
   updateMoveStageDetails: (moveStageDetails: MoveStageDetailsType) => void,
   confirmMoveStage: () => void,
-  getTemplate: PipelineContextInterface['getTemplate'],
   stageMap: Map<string, StageState>,
-  newPipelineStudioEnabled?: boolean
+  newPipelineStudioEnabled?: boolean,
+  sectionId?: string | null
 ): NodeModelListener => {
   const {
     state: {
@@ -606,7 +599,6 @@ export const getNodeEventListerner = (
               stagesMap,
               contextType,
               templateTypes,
-              getTemplate,
               newPipelineStudioEnabled
             },
             { useArrows: true, darkMode: false, fixedPosition: false }
@@ -633,14 +625,13 @@ export const getNodeEventListerner = (
                   renderPipelineStage,
                   contextType,
                   templateTypes,
-                  getTemplate,
                   newPipelineStudioEnabled
                 },
                 { useArrows: false, darkMode: false, fixedPosition: false }
               )
               setSelectionRef.current({ stageId: undefined, sectionId: undefined })
             } else {
-              setSelectionRef.current({ stageId: data?.stage?.identifier, sectionId: undefined })
+              setSelectionRef.current({ stageId: data?.stage?.identifier, sectionId })
             }
           } /* istanbul ignore else */ else if (!isSplitViewOpen) {
             if (stageMap.has(data?.stage?.identifier || '')) {
@@ -662,7 +653,6 @@ export const getNodeEventListerner = (
                   renderPipelineStage,
                   contextType,
                   templateTypes,
-                  getTemplate,
                   newPipelineStudioEnabled
                 },
                 { useArrows: false, darkMode: false, fixedPosition: false }
@@ -701,7 +691,6 @@ export const getNodeEventListerner = (
             renderPipelineStage,
             contextType,
             templateTypes,
-            getTemplate,
             newPipelineStudioEnabled
           },
           { useArrows: false, darkMode: false, fixedPosition: false },
@@ -801,7 +790,6 @@ export const getNodeEventListerner = (
             renderPipelineStage,
             contextType,
             templateTypes,
-            getTemplate,
             newPipelineStudioEnabled
           },
           { useArrows: true, darkMode: false, fixedPosition: false, placement: 'top' },

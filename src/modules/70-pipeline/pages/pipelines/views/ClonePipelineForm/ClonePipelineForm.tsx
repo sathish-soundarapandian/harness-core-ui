@@ -6,15 +6,28 @@
  */
 
 import React from 'react'
-import { defaultTo, set, get } from 'lodash-es'
+import { defaultTo, set, get, noop } from 'lodash-es'
 import produce from 'immer'
 import { useHistory, useParams } from 'react-router-dom'
-import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
-import { Button, Dialog, Formik, FormikForm, FormInput, Layout, SelectOption, useToaster } from '@harness/uicore'
+import {
+  Button,
+  Dialog,
+  Formik,
+  FormikForm,
+  FormInput,
+  Layout,
+  SelectOption,
+  useToaster,
+  Text,
+  FontVariation,
+  Color,
+  Icon
+} from '@harness/uicore'
+import { Divider } from '@blueprintjs/core'
+
 import { useStrings } from 'framework/strings'
 import { NameIdDescriptionTags } from '@common/components'
-import type { ClonePipelineProperties, PMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { useClonePipeline } from 'services/pipeline-ng'
 import {
   OrganizationResponse,
@@ -26,23 +39,27 @@ import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInt
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { NameSchema, IdentifierSchema } from '@common/utils/Validation'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import routes from '@common/RouteDefinitions'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { InlineRemoteSelect } from '@common/components/InlineRemoteSelect/InlineRemoteSelect'
+import { StoreType } from '@common/constants/GitSyncTypes'
+import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
+
+import {
+  getValidationSchema,
+  OriginalPipeline,
+  FormState,
+  getInitialValues,
+  processFormData
+} from './ClonePipelineFormUtils'
 
 import css from './ClonePipelineForm.module.scss'
 
 export interface ClonePipelineFormProps {
   isOpen: boolean
   onClose(e?: React.SyntheticEvent): void
-  originalPipeline: Pick<PMSPipelineSummaryResponse, 'name' | 'identifier' | 'description' | 'tags'>
-}
-
-export interface FormState extends Required<ClonePipelineProperties> {
-  name?: string
-  identifier?: string
-  description?: string
-  tags?: Record<string, string>
+  originalPipeline: OriginalPipeline
 }
 
 export function ClonePipelineForm(props: ClonePipelineFormProps): React.ReactElement {
@@ -72,12 +89,11 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
+  const { isGitSimplificationEnabled, selectedProject } = useAppStore()
+  const [projectsQuery, setProjectsQuery] = React.useState('')
+  const [selectedOrg, setSelectedOrg] = React.useState(orgIdentifier)
 
-  const { mutate: clonePipeline } = useClonePipeline({
-    queryParams: {
-      accountIdentifier: accountId
-    }
-  })
+  const { mutate: clonePipeline } = useClonePipeline({})
   const { data: orgData, loading: orgDataLoading } = useGetOrganizationList({
     queryParams: {
       accountIdentifier: accountId,
@@ -85,15 +101,13 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
     },
     lazy: !isOpen
   })
-  const {
-    data: projectData,
-    loading: projectDataLoading,
-    refetch: refetchProjectsData
-  } = useGetProjectAggregateDTOList({
+  const { data: projectData, loading: projectDataLoading } = useGetProjectAggregateDTOList({
     queryParams: {
       accountIdentifier: accountId,
-      orgIdentifier
+      orgIdentifier: selectedOrg,
+      searchTerm: projectsQuery || undefined
     },
+    debounce: 400,
     lazy: !isOpen
   })
 
@@ -109,21 +123,35 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
 
   const projects: SelectOption[] = React.useMemo(() => {
     const data: ProjectAggregateDTO[] = get(projectData, 'data.content', [])
-    return data.map(project => {
+    let isSelectedProjectPresent = false
+
+    const options = data.map(project => {
+      isSelectedProjectPresent =
+        isSelectedProjectPresent || project.projectResponse.project.identifier === selectedProject?.identifier
+
       return {
         label: project.projectResponse.project.name,
         value: project.projectResponse.project.identifier
       }
     })
-  }, [projectData])
+
+    if (
+      !isSelectedProjectPresent && // selected project not present in list
+      selectedProject && // selected project is defined
+      selectedProject.orgIdentifier === selectedOrg && // selected project belongs to selected org
+      !projectsQuery // project searchTerm is not set
+    ) {
+      options.unshift({
+        label: selectedProject.name,
+        value: selectedProject.identifier
+      })
+    }
+
+    return options
+  }, [projectData, selectedProject, projectsQuery, selectedOrg])
 
   function handleOrgChange(item: SelectOption): void {
-    refetchProjectsData({
-      queryParams: {
-        accountIdentifier: accountId,
-        orgIdentifier: item.value as string
-      }
-    })
+    setSelectedOrg(item.value as string)
 
     /* istanbul ignore else */
     if (formikRef.current) {
@@ -137,19 +165,9 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
 
   async function handleSubmit(formData: FormState): Promise<FormState> {
     try {
-      const data: Required<ClonePipelineProperties> = {
-        sourceConfig: { ...formData.sourceConfig },
-        destinationConfig: {
-          ...formData.destinationConfig,
-          pipelineIdentifier: formData.identifier,
-          pipelineName: formData.name,
-          description: formData.description,
-          tags: formData.tags
-        },
-        cloneConfig: { ...formData.cloneConfig }
-      }
+      const [data, queryParams] = processFormData(formData, accountId)
 
-      await clonePipeline(data)
+      await clonePipeline(data, { queryParams })
 
       showSuccess(
         getString('pipeline.cloneSuccess', {
@@ -175,31 +193,9 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
 
     return formData
   }
-
-  const loading = orgDataLoading || projectDataLoading
   const initialvalues: FormState = React.useMemo(
-    () => ({
-      name: `${originalPipeline.name} - Clone`,
-      identifier: `${originalPipeline.identifier}_Clone`,
-      tags: originalPipeline.tags,
-      description: originalPipeline.description,
-      sourceConfig: {
-        orgIdentifier,
-        projectIdentifier,
-        pipelineIdentifier: originalPipeline.identifier
-      },
-      destinationConfig: {
-        orgIdentifier,
-        projectIdentifier
-      },
-      cloneConfig: {
-        connectors: false,
-        inputSets: false,
-        templates: false,
-        triggers: false
-      }
-    }),
-    [originalPipeline, orgIdentifier, projectIdentifier]
+    () => getInitialValues({ originalPipeline, orgIdentifier, projectIdentifier, isGitSimplificationEnabled }),
+    [originalPipeline, orgIdentifier, projectIdentifier, isGitSimplificationEnabled]
   )
 
   return (
@@ -208,36 +204,62 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
         formName="clone-pipeline"
         initialValues={initialvalues}
         onSubmit={handleSubmit}
-        formLoading={loading}
-        validationSchema={Yup.object().shape({
-          name: NameSchema(),
-          identifier: IdentifierSchema(),
-          destinationConfig: Yup.object().shape({
-            orgIdentifier: Yup.string().trim().required(getString('validation.orgValidation')),
-            projectIdentifier: Yup.string().trim().required(getString('common.validation.projectIsRequired'))
-          })
-        })}
+        validationSchema={getValidationSchema(getString)}
       >
         {formikProps => {
           formikRef.current = formikProps
+          const { storeType } = formikProps.values
 
           return (
             <FormikForm className={css.form}>
-              <NameIdDescriptionTags formikProps={formikProps} />
-              <FormInput.Select
-                selectProps={{ usePortal: true }}
-                label={getString('orgLabel')}
-                name="destinationConfig.orgIdentifier"
-                items={organizations}
-                onChange={handleOrgChange}
-              />
-              <FormInput.Select
-                key={get(formikProps.values, 'destinationConfig.orgIdentifier')}
-                selectProps={{ usePortal: true }}
-                label={getString('projectLabel')}
-                name="destinationConfig.projectIdentifier"
-                items={projects}
-              />
+              <div className={css.container}>
+                <NameIdDescriptionTags formikProps={formikProps} />
+              </div>
+              <Divider />
+              <Text font={{ variation: FontVariation.H6 }} className={css.choosePipelineSetupHeader}>
+                {getString('pipeline.createPipeline.choosePipelineSetupHeader')}
+              </Text>
+              {isGitSimplificationEnabled ? (
+                <InlineRemoteSelect
+                  className={css.inlineRemoteSelect}
+                  selected={formikProps.values.storeType}
+                  onChange={item => formikProps.setFieldValue('storeType', item.type)}
+                  getCardDisabledStatus={() => false}
+                />
+              ) : null}
+              {storeType === StoreType.INLINE ? (
+                <div className={css.container}>
+                  <div className={css.inputWithSpinner}>
+                    <FormInput.Select
+                      selectProps={{ usePortal: true }}
+                      label={getString('orgLabel')}
+                      name="destinationConfig.orgIdentifier"
+                      items={organizations}
+                      onChange={handleOrgChange}
+                    />
+                    {orgDataLoading ? <Icon name="steps-spinner" size={18} color={Color.PRIMARY_7} /> : null}
+                  </div>
+                  <div className={css.inputWithSpinner}>
+                    <FormInput.Select
+                      key={get(formikProps.values, 'destinationConfig.orgIdentifier')}
+                      selectProps={{ usePortal: true }}
+                      label={getString('projectLabel')}
+                      name="destinationConfig.projectIdentifier"
+                      items={projects}
+                      onQueryChange={setProjectsQuery}
+                    />
+                    {projectDataLoading ? <Icon name="steps-spinner" size={18} color={Color.PRIMARY_7} /> : null}
+                  </div>
+                </div>
+              ) : null}
+              {storeType === StoreType.REMOTE ? (
+                <React.Fragment>
+                  <GitSyncForm formikProps={formikProps as any} handleSubmit={noop} isEdit={false} initialValues={{}} />
+                  <div className={css.container}>
+                    <FormInput.TextArea label={getString('common.git.commitMessage')} name="commitMsg" />
+                  </div>
+                </React.Fragment>
+              ) : null}
               <Layout.Horizontal padding={{ top: 'large' }} spacing="medium">
                 <RbacButton
                   permission={{

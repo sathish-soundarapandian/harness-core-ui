@@ -97,7 +97,7 @@ module.exports = {
     target: process.env.STO_API_URL || 'http://localhost:4000'
   },
   '/sto': {
-    pathRewrite: { '^/sto': '' },
+    pathRewrite: { '^/sto(/v2)?': '' },
     target: process.env.STO_UI_URL || 'http://localhost:3002'
   },
   '/gitops': {
@@ -106,18 +106,22 @@ module.exports = {
   },
   '/chaos': {
     pathRewrite: { '^/chaos': '' },
-    target: 'http://localhost:8184'
+    target: process.env.CHAOS_UI_URL || 'https://localhost:8184'
   },
   '/et': {
     pathRewrite: { '^/et': '' },
     target: process.env.ERROR_TRACKING_URL || 'http://localhost:9191'
   },
   '/audit/api': {
-    pathRewrite: { '^/ng/api': '' },
+    pathRewrite: { '^/audit/api': '/api' },
     target: targetLocalHost ? 'http://localhost:9005' : baseUrl
   },
   '/auth': {
     pathRewrite: { '^/auth': '' },
     target: 'https://app.harness.io/auth'
+  },
+  '/ccmui': {
+    pathRewrite: { '^/ccmui': '' },
+    target: process.env.CCM_UI_URL || 'https://localhost:8183'
   }
 }

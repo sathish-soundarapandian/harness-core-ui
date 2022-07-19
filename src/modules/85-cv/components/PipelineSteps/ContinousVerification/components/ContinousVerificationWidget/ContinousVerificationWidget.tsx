@@ -21,8 +21,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { ContinousVerificationData } from '../../types'
 import type { ContinousVerificationWidgetProps } from './types'
 import { ContinousVerificationWidgetSections } from './components/ContinousVerificationWidgetSections/ContinousVerificationWidgetSections'
-import { MONITORED_SERVICE_TYPE } from './components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/SelectMonitoredServiceType.constants'
-import { healthSourcesValidation, monitoredServiceRefValidation } from './ContinousVerificationWidget.utils'
+import { getMonitoredServiceRefFromType, validateMonitoredService } from './ContinousVerificationWidget.utils'
 
 /**
  * Spec
@@ -33,37 +32,40 @@ export function ContinousVerificationWidget(
   { initialValues, onUpdate, isNewStep, stepViewType, onChange, allowableTypes }: ContinousVerificationWidgetProps,
   formikRef: StepFormikFowardRef
 ): JSX.Element {
-  const values = { ...initialValues, spec: { ...initialValues.spec } }
+  const values = {
+    ...initialValues,
+    spec: {
+      ...initialValues.spec,
+      ...(initialValues?.spec?.monitoredService && { initialMonitoredService: initialValues?.spec?.monitoredService })
+    }
+  }
   const { getString } = useStrings()
   const { CVNG_TEMPLATE_VERIFY_STEP } = useFeatureFlags()
 
   const validateForm = (formData: ContinousVerificationData): FormikErrors<ContinousVerificationData> => {
-    const errors: FormikErrors<ContinousVerificationData> = {}
-    const monitoredServiceRef = formData?.spec?.monitoredServiceRef
-    const healthSources = formData?.spec?.healthSources
-    let spec = {}
-    if (
-      formData?.spec?.monitoredService?.type !== MONITORED_SERVICE_TYPE.DEFAULT &&
-      !formData?.spec?.monitoredService?.spec?.monitoredServiceRef
-    ) {
-      spec = {
-        monitoredService: {
-          spec: {
-            monitoredServiceRef: 'Monitored service is required'
-          }
-        }
-      }
-      errors['spec'] = spec
-    }
+    let errors: FormikErrors<ContinousVerificationData> = {}
+    const {
+      healthSources = [],
+      monitoredService: { type },
+      monitoredService,
+      initialMonitoredService
+    } = formData?.spec || {}
 
-    if (stepViewType === 'Template' && formData?.spec?.monitoredService?.type !== MONITORED_SERVICE_TYPE.DEFAULT) {
-      spec = monitoredServiceRefValidation(monitoredServiceRef, spec, errors)
-      spec = healthSourcesValidation(monitoredServiceRef, healthSources, spec, getString, errors)
-    } else if (stepViewType !== 'Template') {
-      spec = monitoredServiceRefValidation(monitoredServiceRef, spec, errors)
-      spec = healthSourcesValidation(monitoredServiceRef, healthSources, spec, getString, errors)
-    }
-
+    const monitoredServiceRef = getMonitoredServiceRefFromType(monitoredService, type, formData)
+    const { monitoredServiceTemplateRef = '', templateInputs = {} as unknown } = monitoredService?.spec || {}
+    const { templateInputs: initialTemplateInputs = {} } = initialMonitoredService?.spec || {}
+    const templateInputsToValidate = (!isEmpty(initialTemplateInputs) ? initialTemplateInputs : templateInputs) as any
+    errors = validateMonitoredService(
+      type,
+      stepViewType,
+      monitoredServiceRef,
+      errors,
+      healthSources,
+      getString,
+      monitoredServiceTemplateRef,
+      templateInputsToValidate,
+      templateInputs
+    )
     return errors
   }
 
@@ -94,6 +96,7 @@ export function ContinousVerificationWidget(
         if (CVNG_TEMPLATE_VERIFY_STEP) {
           const errors = validateForm(data)
           if (!isEmpty(errors)) {
+            onChange?.(data)
             return errors
           } else {
             onChange?.(data)

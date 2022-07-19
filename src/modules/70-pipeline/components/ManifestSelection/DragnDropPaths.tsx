@@ -7,7 +7,6 @@
 
 import React from 'react'
 import { FieldArray, FormikValues } from 'formik'
-import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import {
   Layout,
   FormInput,
@@ -16,7 +15,8 @@ import {
   Text,
   Button,
   Icon,
-  ButtonSize
+  ButtonSize,
+  AllowedTypes
 } from '@wings-software/uicore'
 
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
@@ -25,17 +25,16 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 
 import css from './ManifestWizardSteps/K8sValuesManifest/ManifestDetails.module.scss'
 
-export interface DragnDropPathsProps {
+export interface DragnDropPathsProps<T = unknown> {
   formik: FormikValues
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
-  allowOnlyOneFilePath?: boolean
+  allowableTypes: AllowedTypes
   pathLabel: string
   fieldPath: string
   placeholder: string
+  defaultValue: T
+  allowOnlyOneFilePath?: boolean
 }
-
-const defaultValueToReset = [{ path: '', uuid: uuid('', nameSpace()) }]
 
 function DragnDropPaths({
   formik,
@@ -44,6 +43,7 @@ function DragnDropPaths({
   pathLabel,
   fieldPath,
   placeholder,
+  defaultValue,
   allowOnlyOneFilePath
 }: DragnDropPathsProps): React.ReactElement {
   const { getString } = useStrings()
@@ -64,8 +64,12 @@ function DragnDropPaths({
         {(provided, _snapshot) => (
           <div {...provided.droppableProps} ref={provided.innerRef}>
             <MultiTypeFieldSelector
-              defaultValueToReset={defaultValueToReset}
-              allowedTypes={allowableTypes.filter(allowedType => allowedType !== MultiTypeInputType.EXPRESSION)}
+              defaultValueToReset={[defaultValue]}
+              allowedTypes={
+                (allowableTypes as MultiTypeInputType[]).filter(
+                  allowedType => allowedType !== MultiTypeInputType.EXPRESSION
+                ) as AllowedTypes
+              }
               name={fieldPath}
               label={<Text>{pathLabel}</Text>}
             >
@@ -77,42 +81,43 @@ function DragnDropPaths({
                       <Draggable key={draggablepath.uuid} draggableId={draggablepath.uuid} index={index}>
                         {providedDrag => (
                           <Layout.Horizontal
-                            spacing="small"
-                            key={draggablepath.uuid}
                             flex={{ distribution: 'space-between', alignItems: 'flex-start' }}
+                            key={draggablepath.uuid}
                             ref={providedDrag.innerRef}
                             {...providedDrag.draggableProps}
                             {...providedDrag.dragHandleProps}
                           >
-                            {!allowOnlyOneFilePath && (
-                              <>
-                                <Icon name="drag-handle-vertical" className={css.drag} />
-                                <Text className={css.text}>{`${index + 1}.`}</Text>
-                              </>
-                            )}
-                            <FormInput.MultiTextInput
-                              label={''}
-                              placeholder={placeholder}
-                              name={`${fieldPath}[${index}].path`}
-                              style={{ width: 275 }}
-                              multiTextInputProps={{
-                                expressions,
-                                allowableTypes: allowableTypes.filter(
-                                  allowedType => allowedType !== MultiTypeInputType.RUNTIME
-                                )
-                              }}
-                            />
+                            <Layout.Horizontal spacing="medium" style={{ alignItems: 'baseline' }}>
+                              {!allowOnlyOneFilePath && (
+                                <>
+                                  <Icon name="drag-handle-vertical" className={css.drag} />
+                                  <Text className={css.text}>{`${index + 1}.`}</Text>
+                                </>
+                              )}
+                              <FormInput.MultiTextInput
+                                label={''}
+                                placeholder={placeholder}
+                                name={`${fieldPath}[${index}].path`}
+                                style={{ width: 275 }}
+                                multiTextInputProps={{
+                                  expressions,
+                                  allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                    allowedType => allowedType !== MultiTypeInputType.RUNTIME
+                                  ) as AllowedTypes
+                                }}
+                              />
 
-                            {formik.values?.[fieldPath]?.length > 1 && (
-                              <Button minimal icon="main-trash" onClick={() => arrayHelpers.remove(index)} />
-                            )}
+                              {formik.values[fieldPath]?.length > 1 && (
+                                <Button minimal icon="main-trash" onClick={() => arrayHelpers.remove(index)} />
+                              )}
+                            </Layout.Horizontal>
                           </Layout.Horizontal>
                         )}
                       </Draggable>
                     ))}
                     {provided.placeholder}
 
-                    {allowOnlyOneFilePath && formik.values?.paths.length === 1 ? null : (
+                    {allowOnlyOneFilePath && formik.values[fieldPath].length === 1 ? null : (
                       <span>
                         <Button
                           text={getString('addFileText')}
@@ -120,7 +125,7 @@ function DragnDropPaths({
                           size={ButtonSize.SMALL}
                           variation={ButtonVariation.LINK}
                           className={css.addFileButton}
-                          onClick={() => arrayHelpers.push({ path: '', uuid: uuid('', nameSpace()) })}
+                          onClick={() => arrayHelpers.push(defaultValue)}
                         />
                       </span>
                     )}

@@ -9,6 +9,7 @@ import React, { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import set from 'lodash-es/set'
 import get from 'lodash-es/get'
+import { isNull, isUndefined, omitBy } from 'lodash-es'
 import {
   Container,
   Button,
@@ -21,7 +22,13 @@ import {
 import { useStrings } from 'framework/strings'
 import { useSideNavContext } from 'framework/SideNavStore/SideNavContext'
 import routes from '@common/RouteDefinitions'
-import { ResponseScmConnectorResponse, useCreateDefaultScmConnector, UserRepoResponse } from 'services/cd-ng'
+import {
+  ResponseConnectorResponse,
+  ResponseScmConnectorResponse,
+  useCreateDefaultScmConnector,
+  UserRepoResponse,
+  useUpdateConnector
+} from 'services/cd-ng'
 import {
   createPipelineV2Promise,
   NGTriggerConfigV2,
@@ -31,7 +38,7 @@ import {
 } from 'services/pipeline-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import { Status } from '@common/utils/CIConstants'
+import { Status } from '@common/utils/Constants'
 import { Connectors } from '@connectors/constants'
 import {
   eventTypes,
@@ -49,13 +56,12 @@ import {
   DEFAULT_PIPELINE_PAYLOAD,
   OAUTH2_USER_NAME,
   getFullRepoName,
-  BitbucketPRTriggerActions,
-  GitHubPRTriggerActions,
-  GitlabPRTriggerActions,
-  Hosting
+  Hosting,
+  GitAuthenticationMethod
 } from './Constants'
 import { SelectGitProvider, SelectGitProviderRef } from './SelectGitProvider'
 import { SelectRepository, SelectRepositoryRef } from './SelectRepository'
+import { getPRTriggerActions } from '../../../utils/HostedBuildsUtils'
 
 import css from './InfraProvisioningWizard.module.scss'
 
@@ -87,6 +93,9 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const { mutate: createSCMConnector } = useCreateDefaultScmConnector({
     queryParams: { accountIdentifier: accountId }
   })
+  const { mutate: updateConnector } = useUpdateConnector({
+    queryParams: { accountIdentifier: accountId }
+  })
 
   const constructPipelinePayload = React.useCallback(
     (repository: UserRepoResponse): string | undefined => {
@@ -113,22 +122,6 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     [projectIdentifier, orgIdentifier, selectGitProviderRef.current?.validatedConnector?.identifier]
   )
 
-  const getPRTriggerActions = React.useCallback(() => {
-    switch (selectGitProviderRef?.current?.values?.gitProvider?.type) {
-      case Connectors.GITHUB:
-        return GitHubPRTriggerActions
-
-      case Connectors.GITLAB:
-        return GitlabPRTriggerActions
-
-      case Connectors.BITBUCKET:
-        return BitbucketPRTriggerActions
-
-      default:
-        return []
-    }
-  }, [selectGitProviderRef?.current?.values?.gitProvider])
-
   const constructTriggerPayload = React.useCallback(
     ({
       pipelineId,
@@ -137,18 +130,23 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
       pipelineId: string
       eventType: string
     }): NGTriggerConfigV2 | TriggerConfigDTO | undefined => {
+      if (!selectGitProviderRef?.current?.values?.gitProvider?.type) {
+        return
+      }
       if (!pipelineId) {
         return
       }
 
-      const pipelineInputYAML = {
-        identifier: pipelineId,
-        properties: {
-          ci: {
-            codebase: {
-              build: [eventTypes.PULL_REQUEST, eventTypes.MERGE_REQUEST].includes(eventType)
-                ? ciCodebaseBuildPullRequest
-                : ciCodebaseBuild
+      const pipelineInput = {
+        pipeline: {
+          identifier: pipelineId,
+          properties: {
+            ci: {
+              codebase: {
+                build: [eventTypes.PULL_REQUEST, eventTypes.MERGE_REQUEST].includes(eventType)
+                  ? ciCodebaseBuildPullRequest
+                  : ciCodebaseBuild
+              }
             }
           }
         }
@@ -164,23 +162,30 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         source: {
           type: 'Webhook',
           spec: {
-            type: selectGitProviderRef?.current?.values?.gitProvider?.type,
+            type: selectGitProviderRef.current.values.gitProvider.type,
             spec: {
               type: eventType,
               spec: {
-                connectorRef: selectGitProviderRef.current?.validatedConnector?.identifier,
+                connectorRef: `${ACCOUNT_SCOPE_PREFIX}${selectGitProviderRef.current?.validatedConnector?.identifier}`,
+                repoName: selectRepositoryRef.current?.repository
+                  ? getFullRepoName(selectRepositoryRef.current?.repository)
+                  : '',
                 autoAbortPreviousExecutions: false,
                 actions: [eventTypes.PULL_REQUEST, eventTypes.MERGE_REQUEST].includes(eventType)
-                  ? getPRTriggerActions()
+                  ? getPRTriggerActions(selectGitProviderRef.current.values.gitProvider.type)
                   : []
               }
             }
           }
         },
-        inputYaml: yamlStringify(clearNullUndefined(pipelineInputYAML))
+        inputYaml: yamlStringify(omitBy(omitBy(pipelineInput, isUndefined), isNull))
       }
     },
-    [selectGitProviderRef.current?.validatedConnector?.identifier, selectGitProviderRef?.current?.values?.gitProvider]
+    [
+      selectGitProviderRef.current?.validatedConnector?.identifier,
+      selectGitProviderRef?.current?.values?.gitProvider,
+      selectRepositoryRef.current?.repository
+    ]
   )
 
   const [wizardStepStatus, setWizardStepStatus] = useState<Map<InfraProvisiongWizardStepId, StepStatus>>(
@@ -200,6 +205,104 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     }
   }, [])
 
+  const setupPipelineAndTriggers = React.useCallback((): void => {
+    if (selectRepositoryRef.current?.repository) {
+      try {
+        createPipelineV2Promise({
+          body: constructPipelinePayload(selectRepositoryRef.current.repository) || '',
+          queryParams: {
+            accountIdentifier: accountId,
+            orgIdentifier,
+            projectIdentifier
+          },
+          requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
+        })
+          .then((createPipelineResponse: ResponsePipelineSaveResponse) => {
+            const { status } = createPipelineResponse
+            if (status === Status.SUCCESS && createPipelineResponse?.data?.identifier) {
+              const commonQueryParams = {
+                accountIdentifier: accountId,
+                orgIdentifier,
+                projectIdentifier,
+                targetIdentifier: createPipelineResponse?.data?.identifier
+              }
+
+              const createPRTrigger = createTrigger(
+                yamlStringify({
+                  trigger: clearNullUndefined(
+                    constructTriggerPayload({
+                      pipelineId: createPipelineResponse?.data?.identifier,
+                      eventType:
+                        selectGitProviderRef?.current?.values?.gitProvider?.type &&
+                        [Connectors.GITHUB, Connectors.BITBUCKET].includes(
+                          selectGitProviderRef?.current?.values?.gitProvider?.type
+                        )
+                          ? eventTypes.PULL_REQUEST
+                          : eventTypes.MERGE_REQUEST
+                    }) || {}
+                  )
+                }) as any,
+                { queryParams: commonQueryParams }
+              )
+
+              const createPushTrigger = createTrigger(
+                yamlStringify({
+                  trigger: clearNullUndefined(
+                    constructTriggerPayload({
+                      pipelineId: createPipelineResponse?.data?.identifier,
+                      eventType: eventTypes.PUSH
+                    }) || {}
+                  )
+                }) as any,
+                { queryParams: commonQueryParams }
+              )
+
+              Promise.all([createPushTrigger, createPRTrigger])
+                .then((createTriggerResponses: [ResponseNGTriggerResponse, ResponseNGTriggerResponse]) => {
+                  const [createPushTriggerResponse, createPRTriggerResponse] = createTriggerResponses
+                  if (
+                    createPushTriggerResponse?.status === Status.SUCCESS &&
+                    createPRTriggerResponse?.status === Status.SUCCESS
+                  ) {
+                    setDisableBtn(false)
+                    setShowPageLoader(false)
+                    setShowGetStartedTabInMainMenu(false)
+                    if (createPipelineResponse?.data?.identifier) {
+                      history.push(
+                        routes.toPipelineStudio({
+                          accountId: accountId,
+                          module: 'ci',
+                          orgIdentifier,
+                          projectIdentifier,
+                          pipelineIdentifier: createPipelineResponse?.data?.identifier,
+                          stageId: getString('buildText')
+                        })
+                      )
+                    }
+                  }
+                })
+                .catch(triggerCreationError => {
+                  showErrorToaster(triggerCreationError?.data?.message)
+                  setDisableBtn(false)
+                  setShowPageLoader(false)
+                })
+            } else {
+              showErrorToaster((createPipelineResponse as Error)?.message)
+              setDisableBtn(false)
+              setShowPageLoader(false)
+            }
+          })
+          .catch(() => {
+            setDisableBtn(false)
+            setShowPageLoader(false)
+          })
+      } catch (e) {
+        setDisableBtn(false)
+        setShowPageLoader(false)
+      }
+    }
+  }, [selectRepositoryRef.current?.repository])
+
   const WizardSteps: Map<InfraProvisiongWizardStepId, WizardStep> = new Map([
     [
       InfraProvisiongWizardStepId.SelectGitProvider,
@@ -213,7 +316,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           />
         ),
         onClickNext: () => {
-          const { values, setFieldTouched, validate } = selectGitProviderRef.current || {}
+          const { values, setFieldTouched, validate, validatedConnector } = selectGitProviderRef.current || {}
           const { gitProvider, gitAuthenticationMethod } = values || {}
           if (!gitProvider) {
             setFieldTouched?.('gitProvider', true)
@@ -223,7 +326,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             setFieldTouched?.('gitAuthenticationMethod', true)
             return
           }
-          if (validate?.()) {
+          if ((gitAuthenticationMethod === GitAuthenticationMethod.OAuth && validatedConnector) || validate?.()) {
             setCurrentWizardStepId(InfraProvisiongWizardStepId.SelectRepository)
             updateStepStatus([InfraProvisiongWizardStepId.SelectGitProvider], StepStatus.Success)
             updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.InProgress)
@@ -257,115 +360,49 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.Success)
             setDisableBtn(true)
             setShowPageLoader(true)
-            createSCMConnector({
-              connector: set(
-                set(
+            if (selectGitProviderRef.current?.values?.gitAuthenticationMethod !== GitAuthenticationMethod.OAuth) {
+              createSCMConnector({
+                connector: set(
+                  set(
+                    selectGitProviderRef.current.validatedConnector,
+                    'spec.validationRepo',
+                    getFullRepoName(selectRepositoryRef?.current?.repository || {})
+                  ),
+                  'spec.authentication.spec.spec.username',
+                  get(selectGitProviderRef.current.validatedConnector, 'spec.authentication.spec.spec.username') ??
+                    OAUTH2_USER_NAME
+                ),
+                secret: selectGitProviderRef?.current?.validatedSecret
+              })
+                .then((scmConnectorResponse: ResponseScmConnectorResponse) => {
+                  if (scmConnectorResponse.status === Status.SUCCESS) {
+                    setupPipelineAndTriggers()
+                  }
+                })
+                .catch(scmCtrErr => {
+                  showErrorToaster(scmCtrErr?.data?.message)
+                  setDisableBtn(false)
+                  setShowPageLoader(false)
+                })
+            } else {
+              updateConnector({
+                connector: set(
                   selectGitProviderRef.current.validatedConnector,
                   'spec.validationRepo',
                   getFullRepoName(selectRepositoryRef?.current?.repository || {})
-                ),
-                'spec.authentication.spec.spec.username',
-                get(selectGitProviderRef.current.validatedConnector, 'spec.authentication.spec.spec.username') ??
-                  OAUTH2_USER_NAME
-              ),
-              secret: selectGitProviderRef?.current?.validatedSecret
-            }).then((validateRepositoryResponse: ResponseScmConnectorResponse) => {
-              if (validateRepositoryResponse.status === Status.SUCCESS) {
-                try {
-                  createPipelineV2Promise({
-                    body: constructPipelinePayload(selectedRepo) || '',
-                    queryParams: {
-                      accountIdentifier: accountId,
-                      orgIdentifier,
-                      projectIdentifier
-                    },
-                    requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
-                  })
-                    .then((createPipelineResponse: ResponsePipelineSaveResponse) => {
-                      const { status } = createPipelineResponse
-                      if (status === Status.SUCCESS && createPipelineResponse?.data?.identifier) {
-                        const commonQueryParams = {
-                          accountIdentifier: accountId,
-                          orgIdentifier,
-                          projectIdentifier,
-                          targetIdentifier: createPipelineResponse?.data?.identifier
-                        }
-
-                        const createPRTrigger = createTrigger(
-                          yamlStringify({
-                            trigger: clearNullUndefined(
-                              constructTriggerPayload({
-                                pipelineId: createPipelineResponse?.data?.identifier,
-                                eventType:
-                                  selectGitProviderRef?.current?.values?.gitProvider?.type &&
-                                  [Connectors.GITHUB, Connectors.BITBUCKET].includes(
-                                    selectGitProviderRef?.current?.values?.gitProvider?.type
-                                  )
-                                    ? eventTypes.PULL_REQUEST
-                                    : eventTypes.MERGE_REQUEST
-                              }) || {}
-                            )
-                          }) as any,
-                          { queryParams: commonQueryParams }
-                        )
-
-                        const createPushTrigger = createTrigger(
-                          yamlStringify({
-                            trigger: clearNullUndefined(
-                              constructTriggerPayload({
-                                pipelineId: createPipelineResponse?.data?.identifier,
-                                eventType: eventTypes.PUSH
-                              }) || {}
-                            )
-                          }) as any,
-                          { queryParams: commonQueryParams }
-                        )
-
-                        Promise.all([createPushTrigger, createPRTrigger])
-                          .then((createTriggerResponses: [ResponseNGTriggerResponse, ResponseNGTriggerResponse]) => {
-                            const [createPushTriggerResponse, createPRTriggerResponse] = createTriggerResponses
-                            if (
-                              createPushTriggerResponse?.status === Status.SUCCESS &&
-                              createPRTriggerResponse?.status === Status.SUCCESS
-                            ) {
-                              setDisableBtn(false)
-                              setShowPageLoader(false)
-                              setShowGetStartedTabInMainMenu(false)
-                              if (createPipelineResponse?.data?.identifier) {
-                                history.push(
-                                  routes.toPipelineStudio({
-                                    accountId: accountId,
-                                    module: 'ci',
-                                    orgIdentifier,
-                                    projectIdentifier,
-                                    pipelineIdentifier: createPipelineResponse?.data?.identifier,
-                                    stageId: getString('buildText')
-                                  })
-                                )
-                              }
-                            }
-                          })
-                          .catch(triggerCreationError => {
-                            showErrorToaster(triggerCreationError?.data?.message)
-                            setDisableBtn(false)
-                            setShowPageLoader(false)
-                          })
-                      } else {
-                        showErrorToaster((createPipelineResponse as Error)?.message)
-                        setDisableBtn(false)
-                        setShowPageLoader(false)
-                      }
-                    })
-                    .catch(() => {
-                      setDisableBtn(false)
-                      setShowPageLoader(false)
-                    })
-                } catch (e) {
+                )
+              })
+                .then((oAuthConnectoResponse: ResponseConnectorResponse) => {
+                  if (oAuthConnectoResponse.status === Status.SUCCESS) {
+                    setupPipelineAndTriggers()
+                  }
+                })
+                .catch(oAuthCtrErr => {
+                  showErrorToaster(oAuthCtrErr?.data?.message)
                   setDisableBtn(false)
                   setShowPageLoader(false)
-                }
-              }
-            })
+                })
+            }
           } else {
             setShowError(true)
           }
@@ -398,8 +435,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         <MultiStepProgressIndicator
           progressMap={
             new Map([
-              [0, wizardStepStatus.get(InfraProvisiongWizardStepId.SelectGitProvider) || 'TODO'],
-              [1, wizardStepStatus.get(InfraProvisiongWizardStepId.SelectRepository) || 'TODO']
+              [0, { StepStatus: wizardStepStatus.get(InfraProvisiongWizardStepId.SelectGitProvider) || 'TODO' }],
+              [1, { StepStatus: wizardStepStatus.get(InfraProvisiongWizardStepId.SelectRepository) || 'TODO' }]
             ])
           }
         />

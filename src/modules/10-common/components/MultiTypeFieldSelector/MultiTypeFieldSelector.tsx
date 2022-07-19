@@ -15,7 +15,9 @@ import {
   DataTooltipInterface,
   HarnessDocTooltip,
   FormInput,
-  EXECUTION_TIME_INPUT_VALUE
+  EXECUTION_TIME_INPUT_VALUE,
+  AllowedTypes,
+  AllowedTypesWithExecutionTime
 } from '@wings-software/uicore'
 import { IFormGroupProps, Intent, FormGroup } from '@blueprintjs/core'
 import { FormikContextType, connect } from 'formik'
@@ -34,8 +36,7 @@ export interface MultiTypeFieldSelectorProps extends Omit<IFormGroupProps, 'labe
   disableTypeSelection?: boolean
   skipRenderValueInExpressionLabel?: boolean
   expressionRender?(): React.ReactNode
-  allowedTypes?: MultiTypeInputType[]
-  useExecutionTimeInput?: boolean
+  allowedTypes?: AllowedTypes
   isOptional?: boolean
   optionalLabel?: string
   tooltipProps?: DataTooltipInterface
@@ -66,7 +67,6 @@ export function MultiTypeFieldSelector(props: ConnectedMultiTypeFieldSelectorPro
     optionalLabel = '(optional)',
     onTypeChange,
     supportListOfExpressions,
-    useExecutionTimeInput,
     ...restProps
   } = props
   const error = get(formik?.errors, name)
@@ -96,7 +96,11 @@ export function MultiTypeFieldSelector(props: ConnectedMultiTypeFieldSelectorPro
       return
     }
 
-    const runtimeValue = useExecutionTimeInput ? EXECUTION_TIME_INPUT_VALUE : RUNTIME_INPUT_VALUE
+    const runtimeValue =
+      Array.isArray(allowedTypes) &&
+      (allowedTypes as AllowedTypesWithExecutionTime[]).includes(MultiTypeInputType.EXECUTION_TIME)
+        ? EXECUTION_TIME_INPUT_VALUE
+        : RUNTIME_INPUT_VALUE
     formik.setFieldValue(name, newType === MultiTypeInputType.RUNTIME ? runtimeValue : defaultValueToReset)
   }
 

@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import cx from 'classnames'
-import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
+import { FormInput, Layout, MultiTypeInputType } from '@harness/uicore'
 import { defaultTo, get } from 'lodash-es'
 import {
   ManifestDataType,
@@ -25,41 +25,64 @@ import { GitConfigDTO, useGetBucketListForS3, useGetGCSBucketList } from 'servic
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
-import { getConnectorRef, isFieldfromTriggerTabDisabled, shouldDisplayRepositoryName } from '../ManifestSourceUtils'
+import { FileSelectList } from '@filestore/components/FileStoreList/FileStoreList'
+import { SELECT_FILES_TYPE } from '@filestore/utils/constants'
+import {
+  getDefaultQueryParam,
+  getFinalQueryParamData,
+  getFqnPath,
+  isFieldfromTriggerTabDisabled,
+  isNewServiceEntity,
+  shouldDisplayRepositoryName
+} from '../ManifestSourceUtils'
 import { isFieldFixedType, isFieldRuntime } from '../../K8sServiceSpecHelper'
 import ExperimentalInput from '../../K8sServiceSpecForms/ExperimentalInput'
+import CustomRemoteManifestRuntimeFields from '../ManifestSourceRuntimeFields/CustomRemoteManifestRuntimeFields'
+import ManifestCommonRuntimeFields from '../ManifestSourceRuntimeFields/ManifestCommonRuntimeFields'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
-const Content = ({
-  initialValues,
-  template,
-  path,
-  manifestPath,
-  manifest,
-  fromTrigger,
-  allowableTypes,
-  readonly,
-  formik,
-  accountId,
-  projectIdentifier,
-  orgIdentifier,
-  repoIdentifier,
-  branch,
-  stageIdentifier
-}: ManifestSourceRenderProps): React.ReactElement => {
+const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
+  const {
+    initialValues,
+    template,
+    path,
+    manifestPath,
+    manifest,
+    fromTrigger,
+    allowableTypes,
+    readonly,
+    formik,
+    accountId,
+    projectIdentifier,
+    orgIdentifier,
+    repoIdentifier,
+    branch,
+    stageIdentifier,
+    serviceIdentifier
+  } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const [showRepoName, setShowRepoName] = useState(true)
+  const manifestStoreType = get(template, `${manifestPath}.spec.store.type`, null)
 
   const { data: regionData } = useListAwsRegions({
     queryParams: {
       accountId
     }
   })
-  const getRegionData = (): string => {
-    return getMultiTypeFromValue(manifest?.spec.store?.spec.region) !== MultiTypeInputType.RUNTIME
-      ? manifest?.spec.store?.spec.region
-      : get(initialValues, `${manifestPath}.spec.store.spec.region`, '')
+
+  const commonQueryParam = {
+    accountIdentifier: accountId,
+    orgIdentifier,
+    projectIdentifier,
+    connectorRef: getFinalQueryParamData(
+      getDefaultQueryParam(
+        manifest?.spec?.store?.spec.connectorRef,
+        get(initialValues, `${manifestPath}.spec.store.spec.connectorRef`, '')
+      )
+    ),
+    serviceId: isNewServiceEntity(path as string) ? serviceIdentifier : undefined,
+    fqnPath: isNewServiceEntity(path as string) ? getFqnPath(stageIdentifier, manifestPath as string) : undefined
   }
 
   const {
@@ -68,14 +91,13 @@ const Content = ({
     refetch: refetchS3Buckets
   } = useGetBucketListForS3({
     queryParams: {
-      connectorRef: getConnectorRef(
-        manifest?.spec.store?.spec.connectorRef,
-        get(initialValues, `${manifestPath}.spec.store.spec.connectorRef`, '')
-      ),
-      region: getRegionData(),
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier
+      ...commonQueryParam,
+      region: getFinalQueryParamData(
+        getDefaultQueryParam(
+          manifest?.spec?.store?.spec.region,
+          get(initialValues, `${manifestPath}.spec.store.spec.region`, '')
+        )
+      )
     },
     lazy: true
   })
@@ -96,15 +118,7 @@ const Content = ({
     loading: gcsBucketLoading,
     refetch: refetchGcsBucket
   } = useGetGCSBucketList({
-    queryParams: {
-      connectorRef: getConnectorRef(
-        manifest?.spec.store?.spec.connectorRef,
-        get(initialValues, `${manifestPath}.spec.store.spec.connectorRef`, '')
-      ),
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier
-    },
+    queryParams: commonQueryParam,
     lazy: true
   })
 
@@ -129,7 +143,6 @@ const Content = ({
   }
 
   const renderBucketListforS3Gcs = (): React.ReactElement | null => {
-    const manifestStoreType = get(template, `${manifestPath}.spec.store.type`, null)
     if (manifestStoreType === ManifestStoreMap.S3) {
       return (
         <ExperimentalInput
@@ -142,11 +155,14 @@ const Content = ({
             onFocus: () => {
               if (
                 !s3BucketList?.data &&
-                getConnectorRef(
-                  manifest?.spec.store.spec.connectorRef,
+                getDefaultQueryParam(
+                  manifest?.spec?.spec.connectorRef,
                   get(initialValues, `${manifestPath}.spec.store.spec.connectorRef`, '')
                 ) &&
-                getRegionData()
+                getDefaultQueryParam(
+                  manifest?.spec?.store?.spec.region,
+                  get(initialValues, `${manifestPath}.spec.store.spec.region`, '')
+                )
               ) {
                 refetchS3Buckets()
               }
@@ -179,8 +195,8 @@ const Content = ({
             onFocus: () => {
               if (
                 !gcsBucketData?.data &&
-                getConnectorRef(
-                  manifest?.spec.store.spec.connectorRef,
+                getDefaultQueryParam(
+                  manifest?.spec?.store.spec.connectorRef,
                   get(initialValues, `${manifestPath}.spec.store.spec.connectorRef`, '')
                 )
               ) {
@@ -256,7 +272,7 @@ const Content = ({
             accountIdentifier={accountId}
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}
-            type={ManifestToConnectorMap[defaultTo(manifest?.spec.store?.type, '')]}
+            type={ManifestToConnectorMap[defaultTo(manifest?.spec?.store?.type, '')]}
             onChange={(selected, _itemType, multiType) => {
               const item = selected as unknown as { record?: GitConfigDTO; scope: Scope }
               if (multiType === MultiTypeInputType.FIXED) {
@@ -415,19 +431,35 @@ const Content = ({
 
       {isFieldRuntime(`${manifestPath}.spec.valuesPaths`, template) && (
         <div className={css.verticalSpacingInput}>
-          <List
-            labelClassName={css.listLabel}
-            label={getString('pipeline.manifestType.valuesYamlPath')}
-            name={`${path}.${manifestPath}.spec.valuesPaths`}
-            placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
-            disabled={isFieldDisabled(`${manifestPath}.spec.valuesPaths`)}
-            style={{ marginBottom: 'var(--spacing-small)' }}
-            expressions={expressions}
-            isNameOfArrayType
-          />
+          {manifestStoreType === ManifestStoreMap.Harness ? (
+            <FileSelectList
+              labelClassName={css.listLabel}
+              label={getString('pipeline.manifestType.valuesYamlPath')}
+              name={`${path}.${manifestPath}.spec.valuesPaths`}
+              placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+              disabled={isFieldDisabled(`${manifestPath}.spec.valuesPaths`)}
+              style={{ marginBottom: 'var(--spacing-small)' }}
+              expressions={expressions}
+              isNameOfArrayType
+              type={SELECT_FILES_TYPE.FILE_STORE}
+              formik={formik}
+            />
+          ) : (
+            <List
+              labelClassName={css.listLabel}
+              label={getString('pipeline.manifestType.valuesYamlPath')}
+              name={`${path}.${manifestPath}.spec.valuesPaths`}
+              placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+              disabled={isFieldDisabled(`${manifestPath}.spec.valuesPaths`)}
+              style={{ marginBottom: 'var(--spacing-small)' }}
+              expressions={expressions}
+              isNameOfArrayType
+            />
+          )}
         </div>
       )}
-
+      <CustomRemoteManifestRuntimeFields {...props} />
+      <ManifestCommonRuntimeFields {...props} />
       {isFieldRuntime(`${manifestPath}.spec.skipResourceVersioning`, template) && (
         <div className={css.verticalSpacingInput}>
           <FormMultiTypeCheckboxField

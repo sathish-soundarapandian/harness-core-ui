@@ -8,17 +8,14 @@
 import React from 'react'
 import { useModalHook } from '@harness/use-modal'
 import produce from 'immer'
-import { defaultTo, merge, omit } from 'lodash-es'
+import { omit } from 'lodash-es'
 import { Dialog } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import { DefaultTemplate } from 'framework/Templates/templates'
-import type { NGTemplateInfoConfig } from 'services/template-ng'
-import { ModalProps, TemplateConfigModal } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
-import type { ProjectPathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import { useQueryParams } from '@common/hooks'
+import { ModalProps, TemplateConfigModal, Intent } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useSaveTemplate } from '@pipeline/utils/useSaveTemplate'
 import type { JsonNode } from 'services/cd-ng'
-import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 import type { SaveTemplateButtonProps } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
 import { useStrings } from 'framework/strings'
 import css from './SaveAsTemplate.module.scss'
@@ -33,32 +30,22 @@ interface SaveAsTemplateProps extends Omit<SaveTemplateButtonProps, 'buttonProps
 
 export function useSaveAsTemplate({
   data,
+  gitDetails,
   type,
   fireSuccessEvent = false
 }: SaveAsTemplateProps): TemplateActionsReturnType {
   const { orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const [template, setTemplate] = React.useState<NGTemplateInfoConfig>()
   const [modalProps, setModalProps] = React.useState<ModalProps>()
-  const { isGitSyncEnabled } = React.useContext(AppStoreContext)
   const { getString } = useStrings()
   const [showConfigModal, hideConfigModal] = useModalHook(
     () => (
       <Dialog enforceFocus={false} isOpen={true} className={css.configDialog}>
-        {modalProps && template && (
-          <TemplateConfigModal
-            initialValues={merge(template, { repo: defaultTo(repoIdentifier, ''), branch: defaultTo(branch, '') })}
-            onClose={hideConfigModal}
-            modalProps={modalProps}
-          />
-        )}
+        {modalProps && <TemplateConfigModal {...modalProps} onClose={hideConfigModal} />}
       </Dialog>
     ),
-    [template, modalProps, repoIdentifier, branch]
+    [modalProps]
   )
   const { saveAndPublish } = useSaveTemplate({
-    template: template as NGTemplateInfoConfig,
-    gitDetails: { repoIdentifier, branch },
     isPipelineStudio: true,
     fireSuccessEvent
   })
@@ -66,8 +53,8 @@ export function useSaveAsTemplate({
   const onSaveAsTemplate = async () => {
     try {
       const finalData = typeof data === 'function' ? await data() : data
-      setTemplate(
-        produce(DefaultTemplate, draft => {
+      setModalProps({
+        initialValues: produce(DefaultTemplate, draft => {
           draft.projectIdentifier = projectIdentifier
           draft.orgIdentifier = orgIdentifier
           draft.type = type
@@ -80,12 +67,12 @@ export function useSaveAsTemplate({
             'orgIdentifier',
             'projectIdentifier'
           ) as JsonNode
-        })
-      )
-      setModalProps({
-        title: getString('common.template.saveAsNewTemplateHeading'),
+        }),
         promise: saveAndPublish,
-        shouldGetComment: !isGitSyncEnabled
+        gitDetails,
+        title: getString('common.template.saveAsNewTemplateHeading'),
+        allowScopeChange: true,
+        intent: Intent.SAVE
       })
       showConfigModal()
     } catch (_error) {

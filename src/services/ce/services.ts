@@ -38,8 +38,8 @@ export function useCcmMetaDataQuery(options?: Omit<Urql.UseQueryArgs<CcmMetaData
   return Urql.useQuery<CcmMetaDataQuery>({ query: CcmMetaDataDocument, ...options })
 }
 export const FetchAllPerspectivesDocument = gql`
-  query FetchAllPerspectives($folderId: String) {
-    perspectives(folderId: $folderId) {
+  query FetchAllPerspectives($folderId: String, $sortCriteria: QLCEViewSortCriteriaInput = null) {
+    perspectives(folderId: $folderId, sortCriteria: $sortCriteria) {
       sampleViews {
         id
         name
@@ -61,6 +61,7 @@ export const FetchAllPerspectivesDocument = gql`
         reportScheduledConfigured
         dataSources
         folderId
+        folderName
         groupBy {
           fieldId
           fieldName
@@ -142,6 +143,7 @@ export const FetchBudgetSummaryDocument = gql`
         basedOn
         percentage
         emailAddresses
+        slackWebhooks
         userGroupIds
       }
     }
@@ -722,12 +724,13 @@ export const FetchPerspectiveTimeSeriesDocument = gql`
     $filters: [QLCEViewFilterWrapperInput]
     $groupBy: [QLCEViewGroupByInput]
     $limit: Int
+    $preferences: QLCEViewPreferencesInput
   ) {
     perspectiveTimeSeriesStats(
       filters: $filters
       groupBy: $groupBy
       limit: $limit
-      preferences: { includeOthers: false, includeUnallocatedCost: false }
+      preferences: $preferences
       aggregateFunction: [{ operationType: SUM, columnName: "cost" }]
       sortCriteria: [{ sortType: COST, sortOrder: DESCENDING }]
     ) {
@@ -1211,6 +1214,7 @@ export type CcmMetaDataQuery = {
 
 export type FetchAllPerspectivesQueryVariables = Exact<{
   folderId: InputMaybe<Scalars['String']>
+  sortCriteria?: InputMaybe<QlceViewSortCriteriaInput>
 }>
 
 export type FetchAllPerspectivesQuery = {
@@ -1240,6 +1244,7 @@ export type FetchAllPerspectivesQuery = {
       reportScheduledConfigured: boolean
       dataSources: Array<ViewFieldIdentifier | null> | null
       folderId: string | null
+      folderName: string | null
       groupBy: {
         __typename?: 'QLCEViewField'
         fieldId: string
@@ -1324,6 +1329,7 @@ export type FetchBudgetSummaryQuery = {
       basedOn: AlertThresholdBase | null
       percentage: number
       emailAddresses: Array<string | null> | null
+      slackWebhooks: Array<string | null> | null
       userGroupIds: Array<string | null> | null
     } | null> | null
   } | null
@@ -1813,6 +1819,7 @@ export type FetchPerspectiveTimeSeriesQueryVariables = Exact<{
   filters: InputMaybe<Array<InputMaybe<QlceViewFilterWrapperInput>> | InputMaybe<QlceViewFilterWrapperInput>>
   groupBy: InputMaybe<Array<InputMaybe<QlceViewGroupByInput>> | InputMaybe<QlceViewGroupByInput>>
   limit: InputMaybe<Scalars['Int']>
+  preferences: InputMaybe<QlceViewPreferencesInput>
 }>
 
 export type FetchPerspectiveTimeSeriesQuery = {
@@ -2740,6 +2747,7 @@ export type QlceView = {
   createdBy: Maybe<Scalars['String']>
   dataSources: Maybe<Array<Maybe<ViewFieldIdentifier>>>
   folderId: Maybe<Scalars['String']>
+  folderName: Maybe<Scalars['String']>
   groupBy: Maybe<QlceViewField>
   id: Maybe<Scalars['String']>
   lastUpdatedAt: Maybe<Scalars['Long']>
@@ -2848,6 +2856,7 @@ export type QlceViewSortCriteriaInput = {
 export enum QlceViewSortType {
   ClusterCost = 'CLUSTER_COST',
   Cost = 'COST',
+  Name = 'NAME',
   Time = 'TIME'
 }
 
@@ -3041,6 +3050,7 @@ export type QueryPerspectiveTrendStatsArgs = {
 /** Query root */
 export type QueryPerspectivesArgs = {
   folderId: InputMaybe<Scalars['String']>
+  sortCriteria: InputMaybe<QlceViewSortCriteriaInput>
 }
 
 /** Query root */
@@ -3255,7 +3265,6 @@ export enum ViewTimeRangeType {
 export enum ViewType {
   Customer = 'CUSTOMER',
   Default = 'DEFAULT',
-  DefaultAzure = 'DEFAULT_AZURE',
   Sample = 'SAMPLE'
 }
 

@@ -116,6 +116,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for App Dynam
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+              data-cy="connector-overview-heading"
             >
               connectors.appDynamicsDetails
             </p>
@@ -384,7 +385,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Artifacto
   >
     <div
       class="contentContainer"
-      style="width: 100%;"
+      style="width: 900px;"
     >
       <div
         class="StepWizard--main StepWizard--navBar"
@@ -496,6 +497,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Artifacto
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+              data-cy="connector-overview-heading"
             >
               overview
             </p>
@@ -753,6 +755,15 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Artifacto
         </span>
       </div>
     </div>
+    <div
+      class="helpPanelContainer"
+    >
+      <div
+        style="min-width: 275px; height: 560px;"
+      >
+        Help Panel
+      </div>
+    </div>
   </div>
 </div>
 `;
@@ -889,6 +900,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for BITBUCKET
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+              data-cy="connector-overview-heading"
             >
               overview
             </p>
@@ -1157,7 +1169,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for DOCKER 1`
   >
     <div
       class="contentContainer"
-      style="width: 100%;"
+      style="width: 900px;"
     >
       <div
         class="StepWizard--main StepWizard--navBar"
@@ -1271,6 +1283,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for DOCKER 1`
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+              data-cy="connector-overview-heading"
             >
               overview
             </p>
@@ -1528,6 +1541,15 @@ exports[`Create connector Wizard should open CreateConnectorWizard for DOCKER 1`
         </span>
       </div>
     </div>
+    <div
+      class="helpPanelContainer"
+    >
+      <div
+        style="min-width: 275px; height: 560px;"
+      >
+        Help Panel
+      </div>
+    </div>
   </div>
 </div>
 `;
@@ -1539,7 +1561,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for GCP 1`] =
   >
     <div
       class="contentContainer"
-      style="width: 100%;"
+      style="width: 900px;"
     >
       <div
         class="StepWizard--main StepWizard--navBar"
@@ -1706,6 +1728,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for GCP 1`] =
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+              data-cy="connector-overview-heading"
             >
               overview
             </p>
@@ -1963,6 +1986,15 @@ exports[`Create connector Wizard should open CreateConnectorWizard for GCP 1`] =
         </span>
       </div>
     </div>
+    <div
+      class="helpPanelContainer"
+    >
+      <div
+        style="min-width: 275px; height: 560px;"
+      >
+        Help Panel
+      </div>
+    </div>
   </div>
 </div>
 `;
@@ -1974,7 +2006,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for GCP KMS 1
   >
     <div
       class="contentContainer"
-      style="width: 100%;"
+      style="width: 900px;"
     >
       <div
         class="StepWizard--main StepWizard--navBar"
@@ -2103,6 +2135,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for GCP KMS 1
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+              data-cy="connector-overview-heading"
             >
               overview
             </p>
@@ -2360,6 +2393,15 @@ exports[`Create connector Wizard should open CreateConnectorWizard for GCP KMS 1
         </span>
       </div>
     </div>
+    <div
+      class="helpPanelContainer"
+    >
+      <div
+        style="min-width: 275px; height: 560px;"
+      >
+        Help Panel
+      </div>
+    </div>
   </div>
 </div>
 `;
@@ -2495,6 +2537,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Git 1`] =
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+              data-cy="connector-overview-heading"
             >
               overview
             </p>
@@ -2886,6 +2929,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Github 1`
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+              data-cy="connector-overview-heading"
             >
               overview
             </p>
@@ -3302,6 +3346,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Gitlab 1`
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+              data-cy="connector-overview-heading"
             >
               overview
             </p>
@@ -3570,7 +3615,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Jira 1`] 
   >
     <div
       class="contentContainer"
-      style="width: 100%;"
+      style="width: 900px;"
     >
       <div
         class="StepWizard--main StepWizard--navBar"
@@ -3720,6 +3765,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Jira 1`] 
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+              data-cy="connector-overview-heading"
             >
               overview
             </p>
@@ -3977,6 +4023,15 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Jira 1`] 
         </span>
       </div>
     </div>
+    <div
+      class="helpPanelContainer"
+    >
+      <div
+        style="min-width: 275px; height: 560px;"
+      >
+        Help Panel
+      </div>
+    </div>
   </div>
 </div>
 `;
@@ -3988,7 +4043,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Nexus 1`]
   >
     <div
       class="contentContainer"
-      style="width: 100%;"
+      style="width: 900px;"
     >
       <div
         class="StepWizard--main StepWizard--navBar"
@@ -4113,6 +4168,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Nexus 1`]
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+              data-cy="connector-overview-heading"
             >
               overview
             </p>
@@ -4370,6 +4426,15 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Nexus 1`]
         </span>
       </div>
     </div>
+    <div
+      class="helpPanelContainer"
+    >
+      <div
+        style="min-width: 275px; height: 560px;"
+      >
+        Help Panel
+      </div>
+    </div>
   </div>
 </div>
 `;
@@ -4485,6 +4550,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Prometheu
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+              data-cy="connector-overview-heading"
             >
               overview
             </p>
@@ -4876,6 +4942,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Splunk 1`
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+              data-cy="connector-overview-heading"
             >
               connectors.splunkConnectorDetails
             </p>
@@ -5144,7 +5211,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for VAULT 1`]
   >
     <div
       class="contentContainer"
-      style="width: 100%;"
+      style="width: 900px;"
     >
       <div
         class="StepWizard--main StepWizard--navBar"
@@ -5269,6 +5336,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for VAULT 1`]
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+              data-cy="connector-overview-heading"
             >
               connectors.hashicorpVaultDetails
             </p>
@@ -5526,6 +5594,15 @@ exports[`Create connector Wizard should open CreateConnectorWizard for VAULT 1`]
         </span>
       </div>
     </div>
+    <div
+      class="helpPanelContainer"
+    >
+      <div
+        style="min-width: 275px; height: 560px;"
+      >
+        Help Panel
+      </div>
+    </div>
   </div>
 </div>
 `;
@@ -5689,6 +5766,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for custom 1`
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+              data-cy="connector-overview-heading"
             >
               overview
             </p>
@@ -5957,7 +6035,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for k8 1`] = 
   >
     <div
       class="contentContainer"
-      style="width: 100%;"
+      style="width: 900px;"
     >
       <div
         class="StepWizard--main StepWizard--navBar"
@@ -6076,6 +6154,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for k8 1`] = 
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+              data-cy="connector-overview-heading"
             >
               overview
             </p>
@@ -6331,6 +6410,15 @@ exports[`Create connector Wizard should open CreateConnectorWizard for k8 1`] = 
             />
           </svg>
         </span>
+      </div>
+    </div>
+    <div
+      class="helpPanelContainer"
+    >
+      <div
+        style="min-width: 275px; height: 560px;"
+      >
+        Help Panel
       </div>
     </div>
   </div>

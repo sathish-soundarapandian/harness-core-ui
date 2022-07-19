@@ -29,10 +29,6 @@ const createToken = jest.fn().mockResolvedValue({
   resource: mockTokens[0]
 })
 
-jest.mock('services/portal', () => ({
-  useGetDelegatesByToken: jest.fn().mockImplementation(() => ({}))
-}))
-
 jest.mock('services/cd-ng', () => ({
   useCreateDelegateToken: jest.fn().mockImplementation(() => ({
     mutate: createToken
@@ -42,6 +38,12 @@ jest.mock('services/cd-ng', () => ({
       resource: mockTokens
     },
     refetch: jest.fn()
+  })),
+  useGetDelegateGroupsUsingToken: jest.fn().mockImplementation(() => ({
+    data: {
+      resource: []
+    },
+    loading: false
   })),
   revokeDelegateTokenPromise: jest.fn().mockImplementation(() => undefined)
 }))

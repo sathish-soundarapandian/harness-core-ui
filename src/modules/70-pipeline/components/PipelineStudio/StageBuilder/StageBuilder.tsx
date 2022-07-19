@@ -16,7 +16,7 @@ import produce from 'immer'
 import { DynamicPopover, DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { StageActions } from '@common/constants/TrackingConstants'
-import type { PipelineInfoConfig, StageElementConfig, StageElementWrapperConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig, StageElementConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { CanvasButtons } from '@pipeline/components/CanvasButtons/CanvasButtons'
 import { moveStageToFocusDelayed } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
@@ -24,7 +24,7 @@ import { useValidationErrors } from '@pipeline/components/PipelineStudio/Pipline
 import HoverCard from '@pipeline/components/HoverCard/HoverCard'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 import ConditionalExecutionTooltip from '@pipeline/components/ConditionalExecutionToolTip/ConditionalExecutionTooltip'
-import { useGlobalEventListener } from '@common/hooks'
+import { useGlobalEventListener, useQueryParams } from '@common/hooks'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { getPipelineGraphData } from '@pipeline/components/PipelineDiagram/PipelineGraph/PipelineGraphUtils'
@@ -38,6 +38,7 @@ import StartNodeStage from '@pipeline/components/PipelineDiagram/Nodes/StartNode
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import type { DeploymentStageConfig } from 'services/cd-ng'
 import {
   CanvasWidget,
   createEngine,
@@ -62,13 +63,15 @@ import {
   getNodeEventListerner,
   MoveDirection,
   MoveStageDetailsType,
-  moveStage
+  moveStage,
+  getFlattenedStages
 } from './StageBuilderUtil'
 import { useStageBuilderCanvasState } from './useStageBuilderCanvasState'
 import { StageList } from './views/StageList'
 import { SplitViewTypes } from '../PipelineContext/PipelineActions'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { getNodeListenersOld, getLinkListernersOld } from './StageBuildOldUtils'
+import type { PipelineSelectionState } from '../PipelineQueryParamState/usePipelineQueryParam'
 import css from './StageBuilder.module.scss'
 
 const diagram = new DiagramFactory('graph')
@@ -126,7 +129,6 @@ export const renderPopover = ({
   renderPipelineStage,
   isHoverView,
   contextType,
-  getTemplate,
   templateTypes,
   newPipelineStudioEnabled
 }: PopoverData): JSX.Element => {
@@ -149,8 +151,7 @@ export const renderPopover = ({
           }
           onSubmitPrimaryData?.(values, identifier)
         }
-      },
-      getTemplate
+      }
     })
   } else if (isGroupStage) {
     return (
@@ -186,8 +187,7 @@ export const renderPopover = ({
           addStageNew?.(getNewStageFromType(type as any), isParallel, !isParallel, event?.node)
         }
       },
-      contextType: contextType,
-      getTemplate
+      contextType: contextType
     })
   }
   return renderPipelineStage({
@@ -202,8 +202,7 @@ export const renderPopover = ({
         addStage?.(getNewStageFromType(type as any), isParallel, event)
       }
     },
-    contextType: contextType,
-    getTemplate
+    contextType: contextType
   })
 }
 
@@ -228,9 +227,9 @@ function StageBuilder(): JSX.Element {
     updatePipelineView,
     renderPipelineStage,
     getStageFromPipeline,
-    setSelection,
-    getTemplate
+    setSelection
   } = usePipelineContext()
+  const { sectionId } = useQueryParams<PipelineSelectionState>()
 
   // NOTE: we are using ref as setSelection is getting cached somewhere
   const setSelectionRef = React.useRef(setSelection)
@@ -250,11 +249,30 @@ function StageBuilder(): JSX.Element {
 
   const [deleteId, setDeleteId] = React.useState<string | undefined>(undefined)
   const { showSuccess, showError } = useToaster()
+
+  let deletionContentText = `${getString('stageConfirmationText', {
+    name: getStageFromPipeline(deleteId || '').stage?.stage?.name || deleteId,
+    id: deleteId
+  })} `
+
+  if (deleteId) {
+    const propagatingStages = getFlattenedStages(pipeline)
+      .stages?.filter(
+        currentStage =>
+          (currentStage.stage?.spec as DeploymentStageConfig)?.serviceConfig?.useFromStage?.stage === deleteId
+      )
+      ?.reduce((prev, next) => {
+        return prev ? `${prev}, ${next.stage?.name}` : next.stage?.name || ''
+      }, '')
+
+    if (propagatingStages)
+      deletionContentText = getString('pipeline.parentStageDeleteWarning', {
+        propagatingStages
+      })
+  }
+
   const { openDialog: confirmDeleteStage } = useConfirmationDialog({
-    contentText: `${getString('stageConfirmationText', {
-      name: getStageFromPipeline(deleteId || '').stage?.stage?.name || deleteId,
-      id: deleteId
-    })} `,
+    contentText: deletionContentText,
     titleText: getString('deletePipelineStage'),
     confirmButtonText: getString('delete'),
     cancelButtonText: getString('cancel'),
@@ -616,7 +634,6 @@ function StageBuilder(): JSX.Element {
     addStage,
     updateMoveStageDetails,
     confirmMoveStage,
-    getTemplate,
     stageMap,
     engine
   )
@@ -631,9 +648,9 @@ function StageBuilder(): JSX.Element {
     addStageNew,
     updateMoveStageDetails,
     confirmMoveStage,
-    getTemplate,
     stageMap,
-    newPipelineStudioEnabled
+    newPipelineStudioEnabled,
+    sectionId
   )
 
   const resetPipelineStages = (stages: StageElementWrapperConfig[]): void => {
@@ -657,7 +674,6 @@ function StageBuilder(): JSX.Element {
     openSplitView,
     updateMoveStageDetails,
     confirmMoveStage,
-    getTemplate,
     stageMap
   )
 
@@ -667,7 +683,6 @@ function StageBuilder(): JSX.Element {
     addStageNew,
     updateMoveStageDetails,
     confirmMoveStage,
-    getTemplate,
     stageMap,
     newPipelineStudioEnabled
   )
@@ -779,7 +794,7 @@ function StageBuilder(): JSX.Element {
         >
           {newPipelineStudioEnabled ? (
             <div
-              className={cx(css.canvas, { [css.graphActions]: !isSplitViewOpen })}
+              className={css.canvas}
               ref={canvasRef}
               onClick={e => {
                 const div = e.target as HTMLDivElement

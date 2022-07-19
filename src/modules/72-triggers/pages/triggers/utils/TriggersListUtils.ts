@@ -8,6 +8,7 @@
 import type { IconName } from '@wings-software/uicore'
 // temporary mock data
 import { parse } from 'yaml'
+import type { ConnectorInfoDTO } from 'services/cd-ng'
 import type { AddDrawerMapInterface } from '@common/components/AddDrawer/AddDrawer'
 import type { StringKeys } from 'framework/strings'
 import {
@@ -22,10 +23,14 @@ import {
 } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { TriggerTypes, AWS_CODECOMMIT, AwsCodeCommit } from './TriggersWizardPageUtils'
 
-export const GitSourceProviders: Record<string, { value: string; iconName: IconName }> = {
+export const GitSourceProviders: Record<
+  string,
+  { value: ConnectorInfoDTO['type'] | 'AwsCodeCommit' | 'Custom'; iconName: IconName }
+> = {
   GITHUB: { value: 'Github', iconName: 'github' },
   GITLAB: { value: 'Gitlab', iconName: 'service-gotlab' },
   BITBUCKET: { value: 'Bitbucket', iconName: 'bitbucket-selected' },
+  AZURE_REPO: { value: 'AzureRepo', iconName: 'service-azure' },
   AWS_CODECOMMIT: { value: 'AwsCodeCommit', iconName: 'service-aws-code-deploy' },
   CUSTOM: { value: 'Custom', iconName: 'build' }
 }
@@ -70,7 +75,10 @@ export const getTriggerIcon = ({
   return 'yaml-builder-trigger'
 }
 
-const triggerDrawerMap = (getString: (key: StringKeys) => string): AddDrawerMapInterface => ({
+const triggerDrawerMap = (
+  getString: (key: StringKeys) => string,
+  includeAzureReposTrigger?: boolean
+): AddDrawerMapInterface => ({
   drawerLabel: getString('common.triggersLabel'),
   showAllLabel: getString('triggers.showAllTriggers'),
   categories: [
@@ -93,6 +101,15 @@ const triggerDrawerMap = (getString: (key: StringKeys) => string): AddDrawerMapI
           value: GitSourceProviders.BITBUCKET.value,
           iconName: GitSourceProviders.BITBUCKET.iconName
         },
+        ...(includeAzureReposTrigger
+          ? [
+              {
+                itemLabel: getString('common.repo_provider.azureRepos'),
+                value: GitSourceProviders.AZURE_REPO.value,
+                iconName: GitSourceProviders.AZURE_REPO.iconName as IconName
+              }
+            ]
+          : []),
         {
           itemLabel: getString('common.repo_provider.awscodecommit'),
           value: GitSourceProviders.AWS_CODECOMMIT.value,
@@ -177,12 +194,15 @@ export const getSourceRepoOptions = (getString: (str: StringKeys) => string): { 
   { label: getString('common.repo_provider.githubLabel'), value: GitSourceProviders.GITHUB.value },
   { label: getString('common.repo_provider.gitlabLabel'), value: GitSourceProviders.GITLAB.value },
   { label: getString('common.repo_provider.bitbucketLabel'), value: GitSourceProviders.BITBUCKET.value },
+  { label: getString('common.repo_provider.azureRepos'), value: GitSourceProviders.AZURE_REPO.value },
   { label: getString('common.repo_provider.codecommit'), value: GitSourceProviders.AWS_CODECOMMIT.value },
   { label: getString('common.repo_provider.customLabel'), value: GitSourceProviders.CUSTOM.value }
 ]
 
-export const getCategoryItems = (getString: (key: StringKeys) => string): AddDrawerMapInterface =>
-  triggerDrawerMap(getString)
+export const getCategoryItems = (
+  getString: (key: StringKeys) => string,
+  includeAzureReposTrigger?: boolean
+): AddDrawerMapInterface => triggerDrawerMap(getString, includeAzureReposTrigger)
 
 export interface ItemInterface {
   itemLabel: string

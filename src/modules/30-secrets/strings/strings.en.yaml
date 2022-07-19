@@ -76,5 +76,9 @@ secret:
   newSecretText: New Secret Text
   newSecretFile: New Secret File
   secretNotFound: 'Secret not found'
+  successMessage: Secret '{{name}}' {{action}} successfully
 secretsTitle: 'Resources: Secrets'
 createSecret: Create a Secret
+policyEvaluations:
+  failedToSave: Secret cannot be saved due to the policy evaluation failures
+  warning: Secret saved with policy warnings

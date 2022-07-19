@@ -10,11 +10,11 @@
 }
 
 :global([data-trial-banner-is-visible] ~ * [data-is-new-targetting-rules='false']) {
-  height: calc(100vh - 200px);
+  height: calc(100vh - 183px);
 }
 
 .tabContainer {
-  height: calc(100% - 160px);
+  height: calc(100% - 147px);
   overflow-y: auto;
   :global {
     .bp3-tab-list {
@@ -81,4 +81,11 @@
 [aria-selected='true'] > .tabTitle {
   font-weight: 600 !important;
   color: var(gray-900) !important;
+}
+
+.flagPipelinePanel {
+  height: calc(100vh - 120px);
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
 }

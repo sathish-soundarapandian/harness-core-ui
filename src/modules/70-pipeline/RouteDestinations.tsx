@@ -37,6 +37,7 @@ import FullPageLogView from '@pipeline/pages/full-page-log-view/FullPageLogView'
 import InputSetList from '@pipeline/pages/inputSet-list/InputSetList'
 import PipelineDetails from '@pipeline/pages/pipeline-details/PipelineDetails'
 import PipelinesPage from '@pipeline/pages/pipelines/PipelinesPage'
+import { PipelineListPage } from '@pipeline/pages/pipeline-list/PipelineListPage'
 import DeploymentsList from '@pipeline/pages/deployments-list/DeploymentsList'
 import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import '@pipeline/components/CommonPipelineStages/ApprovalStage'
@@ -56,10 +57,13 @@ import ServiceResourceModal from '@pipeline/components/RbacResourceModals/Servic
 import EnvironmentResourceModal from '@pipeline/components/RbacResourceModals/EnvironmentResourceModal/EnvironmentResourceModal'
 import EnvironmentGroupsResourceModal from '@pipeline/components/RbacResourceModals/EnvironmentGroupsResourceModal/EnvironmentGroupsResourceModal'
 import { HarnessApprovalView } from '@pipeline/components/execution/StepDetails/views/HarnessApprovalView/HarnessApprovalView'
+import { HarnessApprovalLogsView } from '@pipeline/components/execution/StepDetails/views/HarnessApprovalView/HarnessApprovalLogsView'
 import { JiraApprovalView } from '@pipeline/components/execution/StepDetails/views/JiraApprovalView/JiraApprovalView'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { ServiceNowApprovalView } from '@pipeline/components/execution/StepDetails/views/ServiceNowApprovalView/ServiceNowApprovalView'
+import { CustomApprovalView } from '@pipeline/components/execution/StepDetails/views/CustomApprovalView/CustomApprovalView'
 import { PolicyEvaluationView } from '@pipeline/components/execution/StepDetails/views/PolicyEvaluationView/PolicyEvaluationView'
+import { QueueStepView } from '@pipeline/components/execution/StepDetails/views/QueueStepView/QueueStepView'
 import type { ResourceDTO } from 'services/audit'
 import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTrailFactory'
 import routes from '@common/RouteDefinitions'
@@ -67,6 +71,7 @@ import { ServiceNowCreateUpdateView } from '@pipeline/components/execution/StepD
 import { ModuleName } from 'framework/types/ModuleName'
 import PipelineResourceRenderer from './components/RbacResourceModals/PipelineResourceRenderer/PipelineResourceRenderer'
 import { JiraCreateUpdateView } from './components/execution/StepDetails/views/JiraCreateUpdateView/JiraCreateUpdateView'
+import ExecutionErrorTrackingView from './pages/execution/ExecutionErrorTrackingView/ExecutionErrorTrackingView'
 /**
  * Register RBAC resources
  */
@@ -129,6 +134,10 @@ ExecFactory.registerStepDetails(StepType.HarnessApproval, {
   component: HarnessApprovalView
 })
 
+ExecFactory.registerConsoleViewStepDetails(StepType.HarnessApproval, {
+  component: HarnessApprovalLogsView
+})
+
 ExecFactory.registerStepDetails(StepType.JiraCreate, {
   component: JiraCreateUpdateView
 })
@@ -145,6 +154,10 @@ ExecFactory.registerStepDetails(StepType.ServiceNowApproval, {
   component: ServiceNowApprovalView
 })
 
+ExecFactory.registerStepDetails(StepType.CustomApproval, {
+  component: CustomApprovalView
+})
+
 ExecFactory.registerStepDetails(StepType.ServiceNowCreate, {
   component: ServiceNowCreateUpdateView
 })
@@ -154,6 +167,10 @@ ExecFactory.registerStepDetails(StepType.ServiceNowUpdate, {
 
 ExecFactory.registerStepDetails(StepType.Policy, {
   component: PolicyEvaluationView
+})
+
+ExecFactory.registerStepDetails(StepType.Queue, {
+  component: QueueStepView
 })
 
 /**
@@ -283,6 +300,15 @@ export function PipelineRouteDestinations({
         exact
         licenseRedirectData={licenseRedirectData}
         sidebarProps={sidebarProps}
+        path={routes.toPipelineList({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
+        pageName={PAGE_NAME.PipelineListPage}
+      >
+        <PipelineListPage />
+      </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={sidebarProps}
         path={routes.toPipelines({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
         pageName={PAGE_NAME.PipelinesPage}
       >
@@ -366,6 +392,21 @@ export function PipelineRouteDestinations({
       >
         <ExecutionLandingPage>
           <ExecutionSecurityView />
+        </ExecutionLandingPage>
+      </RouteWithLayout>
+      <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={sidebarProps}
+        layout={MinimalLayout}
+        path={routes.toExecutionErrorTrackingView({
+          ...accountPathProps,
+          ...executionPathProps,
+          ...moduleParams
+        })}
+        pageName={PAGE_NAME.ErrorTrackingListPage}
+      >
+        <ExecutionLandingPage>
+          <ExecutionErrorTrackingView />
         </ExecutionLandingPage>
       </RouteWithLayout>
       <RouteWithLayout

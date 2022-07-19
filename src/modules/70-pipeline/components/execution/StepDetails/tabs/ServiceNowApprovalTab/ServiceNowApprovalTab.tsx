@@ -22,12 +22,13 @@ export type ApprovalData =
   | null
 
 export interface ServiceNowApprovalTabProps {
-  approvalData: ApprovalData
+  approvalData: ApprovalInstanceResponse
   isWaiting: boolean
 }
 
 export function ServiceNowApprovalTab(props: ServiceNowApprovalTabProps): React.ReactElement {
-  const { approvalData, isWaiting } = props
+  const { isWaiting } = props
+  const approvalData = props.approvalData as ApprovalData
   const wasApproved = !isWaiting && approvalData?.status === ApprovalStatus.APPROVED
   const wasRejected =
     !isWaiting && (approvalData?.status === ApprovalStatus.REJECTED || approvalData?.status === ApprovalStatus.EXPIRED)

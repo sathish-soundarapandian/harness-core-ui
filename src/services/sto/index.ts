@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom'
 import { useGet } from 'restful-react'
 import type { GetState } from 'restful-react/dist/Get'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 export interface ErrorResponse {
   message: string
@@ -29,9 +30,10 @@ export interface IssueCounts {
 
 export function useIssueCounts(pipelineId: string, executionId: string): GetState<IssueCounts, ErrorResponse> {
   const { projectIdentifier: projectId, orgIdentifier: orgId, accountId } = useParams<PipelinePathProps>()
+  const { STO_API_V2 } = useFeatureFlags()
 
   return useGet<IssueCounts, ErrorResponse>({
-    path: '/sto/api/v1/issue-counts',
+    path: `/sto/api/${STO_API_V2 ? 'v2' : 'v1'}/issue-counts`,
     queryParams: {
       accountId,
       orgId,

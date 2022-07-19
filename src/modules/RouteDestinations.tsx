@@ -15,6 +15,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import AuthSettingsRoutes from '@auth-settings/RouteDestinations'
 import secretsRoutes from '@secrets/RouteDestinations'
 import variableRoutes from '@variables/RouteDestinations'
+import fileStoreRoutes from '@filestore/RouteDestinations'
 import rbacRoutes from '@rbac/RouteDestinations'
 import projectsOrgsRoutes from '@projects-orgs/RouteDestinations'
 import connectorRoutes from '@connectors/RouteDestinations'
@@ -33,10 +34,6 @@ import DASHBOARDRoutes from '@dashboards/RouteDestinations'
 import AccountSideNav from '@common/components/AccountSideNav/AccountSideNav'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import NotFoundPage from '@common/pages/404/NotFoundPage'
-import { String } from 'framework/strings'
-import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
-import RbacFactory from '@rbac/factories/RbacFactory'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import defaultSettingsRoutes from '@default-settings/RouteDestinations'
 
 export const AccountSideNavProps: SidebarContext = {
@@ -44,34 +41,6 @@ export const AccountSideNavProps: SidebarContext = {
   icon: 'nav-settings',
   title: 'Account Settings'
 }
-
-RbacFactory.registerResourceCategory(ResourceCategory.CHANGEINTELLIGENCE_FUNCTION, {
-  icon: 'cv-main',
-  label: 'common.purpose.cv.serviceReliability'
-})
-
-RbacFactory.registerResourceTypeHandler(ResourceType.MONITOREDSERVICE, {
-  icon: 'cv-main',
-  label: 'cv.monitoredServices.title',
-  category: ResourceCategory.CHANGEINTELLIGENCE_FUNCTION,
-  permissionLabels: {
-    [PermissionIdentifier.VIEW_MONITORED_SERVICE]: <String stringID="rbac.permissionLabels.view" />,
-    [PermissionIdentifier.EDIT_MONITORED_SERVICE]: <String stringID="rbac.permissionLabels.createEdit" />,
-    [PermissionIdentifier.DELETE_MONITORED_SERVICE]: <String stringID="delete" />,
-    [PermissionIdentifier.TOGGLE_MONITORED_SERVICE]: <String stringID="cf.rbac.featureflag.toggle" />
-  }
-})
-
-RbacFactory.registerResourceTypeHandler(ResourceType.SLO, {
-  icon: 'cv-main',
-  label: 'cv.SLO',
-  category: ResourceCategory.CHANGEINTELLIGENCE_FUNCTION,
-  permissionLabels: {
-    [PermissionIdentifier.VIEW_SLO_SERVICE]: <String stringID="rbac.permissionLabels.view" />,
-    [PermissionIdentifier.EDIT_SLO_SERVICE]: <String stringID="rbac.permissionLabels.createEdit" />,
-    [PermissionIdentifier.DELETE_SLO_SERVICE]: <String stringID="delete" />
-  }
-})
 
 export default function RouteDestinations(): React.ReactElement {
   const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, SECURITY, CHAOS_ENABLED } =
@@ -86,18 +55,23 @@ export default function RouteDestinations(): React.ReactElement {
       {rbacRoutes.props.children}
       {defaultSettingsRoutes.props.children}
       {delegatesRoutes.props.children}
+      {fileStoreRoutes.props.children}
       {projectsOrgsRoutes.props.children}
       {DASHBOARDRoutes.props.children}
       {GovernanceRoutes.props.children}
       {connectorRoutes.props.children}
       {tempatesRoutes.props.children}
       {userProfileRoutes.props.children}
-      {CHAOS_ENABLED ? ChaosRoutes.props.children : null}
+      {CHAOS_ENABLED ? ChaosRoutes().props.children : null}
       {CING_ENABLED ? CIRoutes.props.children : null}
       {CDNG_ENABLED ? CDRoutes.props.children : null}
       {CVNG_ENABLED ? CVRoutes.props.children : null}
       {GitOpsRoutes.props.children}
-      {SECURITY ? STORoutes.props.children : null}
+      {SECURITY ? (
+        <Route path="/account/:accountId/:module(sto)">
+          <STORoutes />
+        </Route>
+      ) : null}
       <Route path="/account/:accountId/settings">
         <AuthSettingsRoutes />
       </Route>

@@ -15,8 +15,10 @@ import {
   Radio,
   useToaster,
   MultiTypeInputType,
-  getMultiTypeFromValue
+  getMultiTypeFromValue,
+  RUNTIME_INPUT_VALUE
 } from '@wings-software/uicore'
+import { defaultTo } from 'lodash-es'
 import { FontVariation, Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
@@ -29,7 +31,12 @@ import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSo
 import { initializeGroupNames } from '@cv/pages/health-source/common/GroupName/GroupName.utils'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useStrings } from 'framework/strings'
-import { useGetMetricPacks, useGetServiceInstanceMetricPath, AppDMetricDefinitions } from 'services/cv'
+import {
+  useGetMetricPacks,
+  useGetServiceInstanceMetricPath,
+  AppDMetricDefinitions,
+  useGetCompleteServiceInstanceMetricPath
+} from 'services/cv'
 import { AppDynamicsMonitoringSourceFieldNames } from '../../AppDHealthSource.constants'
 import { PATHTYPE } from './AppDCustomMetricForm.constants'
 import {
@@ -48,7 +55,8 @@ import css from '../../AppDHealthSource.module.scss'
 import basePathStyle from '../BasePath/BasePath.module.scss'
 
 export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterface) {
-  const { formikValues, formikSetField, mappedMetrics, selectedMetric, connectorIdentifier, isTemplate } = props
+  const { formikValues, formikSetField, mappedMetrics, selectedMetric, connectorIdentifier, isTemplate, expressions } =
+    props
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -63,15 +71,23 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
     error: serviceInstanceError
   } = useGetServiceInstanceMetricPath({ lazy: true })
 
+  const {
+    data: completeServiceInsanceData,
+    refetch: refetchcompleteServiceInsance,
+    error: completeServiceInstanceError
+  } = useGetCompleteServiceInstanceMetricPath({ lazy: true })
+
   useEffect(() => {
     if (serviceInstanceError) {
       showError(getErrorMessage(serviceInstanceError))
+    } else if (completeServiceInstanceError) {
+      showError(getErrorMessage(completeServiceInstanceError))
     }
   }, [serviceInstanceError])
 
   useEffect(() => {
     const hasRuntimeField = checkRuntimeFields(formikValues)
-    if (formikValues?.continuousVerification && !hasRuntimeField) {
+    if (formikValues?.continuousVerification && !hasRuntimeField && !isTemplate) {
       refetchServiceInsance({
         queryParams: {
           accountId,
@@ -84,6 +100,26 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
           metricPath: getMetricPathValue(formikValues?.metricPath)
         }
       })
+    } else if (
+      isTemplate &&
+      formikValues?.continuousVerification &&
+      formikValues?.completeMetricPath &&
+      !hasRuntimeField
+    ) {
+      refetchcompleteServiceInsance({
+        queryParams: {
+          accountId,
+          orgIdentifier,
+          projectIdentifier,
+          connectorIdentifier,
+          appName: formikValues.appdApplication,
+          completeMetricPath: formikValues.completeMetricPath
+        }
+      })
+    }
+
+    if (getMultiTypeFromValue(formikValues.serviceInstanceMetricPath) === MultiTypeInputType.FIXED) {
+      formikSetField('serviceInstanceMetricPath', RUNTIME_INPUT_VALUE)
     }
   }, [
     formikValues?.continuousVerification,
@@ -93,8 +129,12 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
   ])
 
   useEffect(() => {
-    setServiceIntance({ serviceInsanceData, formikValues, formikSetField })
-  }, [serviceInsanceData, formikValues?.continuousVerification])
+    setServiceIntance({
+      serviceInsanceData: serviceInsanceData || completeServiceInsanceData,
+      formikValues,
+      formikSetField
+    })
+  }, [serviceInsanceData, completeServiceInsanceData, formikValues?.continuousVerification])
 
   const [appdGroupName, setAppdGroupName] = useState<SelectOption[]>(initializeGroupNames(mappedMetrics, getString))
   const basePathValue = getBasePathValue(formikValues?.basePath)
@@ -119,7 +159,9 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
     [basePathValue, formikValues.appDTier, metricPathValue]
   )
 
-  const [multiTypeValue, setmultiTypeValue] = useState(getTypeOfInput(formikValues?.completeMetricPath as string))
+  const [completeMetricPathType, setCompleteMetricPathType] = useState(
+    getTypeOfInput(formikValues?.completeMetricPath as string)
+  )
 
   return (
     <Container className={css.main}>
@@ -166,12 +208,16 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
                   />
                 ) : (
                   <FormInput.MultiTextInput
+                    key={formikValues.metricIdentifier}
                     className={css.fullPath}
                     name={PATHTYPE.CompleteMetricPath}
                     label={''}
+                    multiTextInputProps={{
+                      expressions
+                    }}
                     onChange={(_v, _type, multiType) => {
-                      if (multiTypeValue !== multiType) {
-                        setmultiTypeValue(multiType)
+                      if (completeMetricPathType !== multiType) {
+                        setCompleteMetricPathType(multiType)
                       }
                     }}
                     tooltipProps={{ dataTooltipId: 'appDynamicsCompletePath' }}
@@ -234,7 +280,7 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
                 {getMultiTypeFromValue(formikValues.appdApplication) !== MultiTypeInputType.FIXED ||
                 getMultiTypeFromValue(formikValues.appDTier) !== MultiTypeInputType.FIXED ||
                 getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED ||
-                multiTypeValue !== MultiTypeInputType.FIXED ? (
+                completeMetricPathType !== MultiTypeInputType.FIXED ? (
                   <>
                     <Text className={basePathStyle.basePathValue} font={{ variation: FontVariation.SMALL_SEMI }}>
                       {getString('cv.customHealthSource.chartRuntimeWarning')}
@@ -247,6 +293,7 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
                     tier={formikValues.appDTier}
                     baseFolder={getBasePathValue(formikValues?.basePath)}
                     metricPath={getMetricPathValue(formikValues?.metricPath)}
+                    completeMetricPath={defaultTo(formikValues.completeMetricPath, '')}
                     fullPath={formikValues?.pathType === PATHTYPE.FullPath ? formikValues.fullPath : undefined}
                   />
                 )}
@@ -259,13 +306,16 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
             details={
               <>
                 <SelectHealthSourceServices
+                  key={formikValues.metricIdentifier}
                   values={{
                     sli: !!formikValues?.sli,
                     healthScore: !!formikValues?.healthScore,
                     continuousVerification: !!formikValues?.continuousVerification,
-                    riskCategory: formikValues?.riskCategory
+                    riskCategory: formikValues?.riskCategory,
+                    serviceInstanceMetricPath: formikValues?.serviceInstanceMetricPath
                   }}
                   isTemplate={isTemplate}
+                  expressions={expressions}
                   metricPackResponse={metricPackResponse}
                   hideServiceIdentifier
                 />
