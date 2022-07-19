@@ -156,6 +156,11 @@ const triggerDrawerMap = (
           iconName: ArtifactIconByType.Acr
         },
         {
+          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AmazonS3]),
+          value: ENABLED_ARTIFACT_TYPES.AmazonS3,
+          iconName: ArtifactIconByType.AmazonS3
+        },
+        {
           itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Jenkins]),
           value: ENABLED_ARTIFACT_TYPES.Jenkins,
           iconName: ArtifactIconByType.Jenkins
