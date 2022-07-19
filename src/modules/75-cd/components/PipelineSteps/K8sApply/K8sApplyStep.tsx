@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useCallback } from 'react'
 import {
   Button,
   ButtonVariation,
@@ -33,7 +33,7 @@ import {
   StepViewType,
   ValidateInputSetProps
 } from '@pipeline/components/AbstractSteps/Step'
-import type { ManifestConfigWrapper } from 'services/cd-ng'
+import type { GetExecutionStrategyYamlQueryParams, ManifestConfigWrapper } from 'services/cd-ng'
 
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { FormMultiTypeCheckboxField } from '@common/components'
@@ -52,8 +52,11 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import List from '@common/components/List/List'
 import type { StringsMap } from 'stringTypes'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { getSelectedDeploymentType } from '@pipeline/utils/stageHelpers'
+import { getServiceDefinitionType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
+import { FeatureFlag } from '@common/featureFlags'
+import { isNewServiceEnvEntity } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { K8sOverrideValuesRuntimeFields } from './K8sOverrideValuesRuntimeFields'
 import K8sOverrideValuesManifest from './K8sOverrideValuesManifest'
 import type {
@@ -95,7 +98,17 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
   } = usePipelineContext()
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
-  const selectedDeploymentType = getSelectedDeploymentType(stage, getStageFromPipeline, false, templateServiceData)
+  const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+
+  const selectedDeploymentType = useCallback((): GetExecutionStrategyYamlQueryParams['serviceDefinitionType'] => {
+    return getServiceDefinitionType(
+      stage,
+      getStageFromPipeline,
+      isNewServiceEnvEntity,
+      isSvcEnvEnabled,
+      templateServiceData
+    )
+  }, [getStageFromPipeline, isSvcEnvEnabled, stage, templateServiceData])
 
   const { expressions } = useVariablesExpression()
 
@@ -285,7 +298,7 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
               </div>
               <div className={stepCss.divider} />
               <div>
-                <K8sOverrideValuesManifest deploymentType={selectedDeploymentType} formik={formik} />
+                <K8sOverrideValuesManifest deploymentType={selectedDeploymentType()} formik={formik} />
               </div>
             </>
           )
