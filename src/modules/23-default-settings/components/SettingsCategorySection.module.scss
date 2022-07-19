@@ -4,17 +4,21 @@
 .settingTable {
   display: grid;
   grid-template-columns: 2fr 2fr 3fr;
-  align-items: center;
-  row-gap: 10px;
+  align-items: flex-start;
+  row-gap: 15px;
+  margin-left: 28px;
 }
 .settingOverrideRestore {
   display: grid;
   grid-template-columns: 1fr 3fr;
-  align-items: center;
+  align-items: flex-start;
 }
 .settingRestore {
   justify-self: flex-start;
 }
 .summaryCard {
+  width: 80%;
+}
+.defaultSettingRenderer {
   width: 80%;
 }

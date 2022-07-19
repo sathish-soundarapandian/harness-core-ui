@@ -1,4 +1,13 @@
-import { Accordion, Card, OverlaySpinner, PageSpinner } from '@harness/uicore'
+import {
+  Accordion,
+  Card,
+  getErrorInfoFromErrorObject,
+  OverlaySpinner,
+  PageSpinner,
+  useToaster,
+  Text,
+  FontVariation
+} from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import React, { useState } from 'react'
 import DefaultSettingsFactory from '@default-settings/factories/DefaultSettingsFactory'
@@ -22,15 +31,22 @@ interface SettingsCategorySectionProps {
     settingDTO: SettingDTO,
     updateType: SettingRequestDTO['updateType']
   ) => void
+  otherSettingsWhichAreChanged: Map<SettingType, SettingRequestDTO>
+  settingErrorMessages: Map<SettingType, string>
 }
 
-const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({ settingCategory, onSettingChange }) => {
+const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
+  settingCategory,
+  onSettingChange,
+  otherSettingsWhichAreChanged,
+  settingErrorMessages
+}) => {
   const settingCategoryHandler = DefaultSettingsFactory.getSettingCategoryHandler(settingCategory)
   const { projectIdentifier, orgIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
 
   const { getString } = useStrings()
   if (!settingCategoryHandler) return null
-  const { label, settingTypes: registeredSettingTypes, featureFlag } = settingCategoryHandler
+  const { label, settingTypes: registeredSettingTypes, featureFlag, icon } = settingCategoryHandler
   let enableFeatureFlag = true
   if (featureFlag) {
     enableFeatureFlag = useFeatureFlag(featureFlag)
@@ -41,11 +57,12 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({ setti
 
   const [settingTypes, updateSettingTypes] = useState<Set<SettingType>>(new Set())
   const [settingResponseDTO, updateSettingResponseDTO] = useState<SettingResponseDTO[]>()
+
+  const { showError } = useToaster()
   const [refiedSettingTypesWithDTO, updateRefiedSettingTypesWithDTO] =
     useState<{ [Key in SettingType]?: SettingResponseDTO }>()
   const [loadingSettingTypes, updateLoadingSettingTypes] = useState(false)
   const categorySectionOpen = async () => {
-    console.log('calling api')
     if (!settingTypes.size) {
       updateLoadingSettingTypes(true)
       try {
@@ -64,6 +81,7 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({ setti
         updateSettingResponseDTO(data.data)
         updateSettingTypes(settingTypesTemp)
       } catch (error) {
+        showError(getErrorInfoFromErrorObject(error))
       } finally {
         updateLoadingSettingTypes(false)
       }
@@ -85,7 +103,6 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({ setti
           ...prevSettings,
           [settingType]: selectedSettingTypeDTO
         }
-        console.log(updatesSettingDTO)
         updateRefiedSettingTypesWithDTO(updatesSettingDTO)
         onSettingChange(settingType, selectedSettingTypeDTO.setting, 'UPDATE')
       }
@@ -106,7 +123,6 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({ setti
           ...prevSettings,
           [settingType]: selectedSettingTypeDTO
         }
-        console.log(updatesSettingDTO)
         updateRefiedSettingTypesWithDTO(updatesSettingDTO)
         onSettingChange(settingType, selectedSettingTypeDTO.setting, 'UPDATE')
       }
@@ -121,14 +137,13 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({ setti
         const defaultValue = selectedSettingTypeDTO?.setting.defaultValue
         selectedSettingTypeDTO = {
           ...selectedSettingTypeDTO,
-          setting: { ...selectedSettingTypeDTO.setting, value: 'modified' + defaultValue }
+          setting: { ...selectedSettingTypeDTO.setting, value: defaultValue }
         }
 
         const updatesSettingDTO = {
           ...prevSettings,
           [settingType]: selectedSettingTypeDTO
         }
-        console.log(updatesSettingDTO)
         updateRefiedSettingTypesWithDTO(updatesSettingDTO)
         onSettingChange(settingType, selectedSettingTypeDTO.setting, 'RESTORE')
       }
@@ -140,7 +155,6 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({ setti
       <Accordion
         summaryClassName={css.summarySetting}
         onChange={openTabId => {
-          console.log({ openTab: openTabId })
           if (openTabId) {
             categorySectionOpen()
           }
@@ -153,16 +167,22 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({ setti
               <PageSpinner />
             ) : (
               <SettingCategorySectionContents
+                otherSettingsWhichAreChanged={otherSettingsWhichAreChanged}
                 onSelectionChange={onSelectionChange}
                 onRestore={onRestore}
                 onAllowOverride={onAllowOverride}
                 settingsTypesSet={settingTypes}
                 settingTypesResponseDTO={refiedSettingTypesWithDTO}
+                settingErrorMessages={settingErrorMessages}
               />
             )
           }
           id={settingCategory}
-          summary={getString(label)}
+          summary={
+            <Text font={{ variation: FontVariation.H5 }} icon={icon} iconProps={{ margin: { right: 'small' } }}>
+              {getString(label)}
+            </Text>
+          }
         />
       </Accordion>
     </Card>

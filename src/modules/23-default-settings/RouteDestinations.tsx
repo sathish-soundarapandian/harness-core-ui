@@ -1,5 +1,5 @@
 import { RouteWithLayout } from '@common/router'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import SettingsList from '@default-settings/pages/SettingsList'
 import routes from '@common/RouteDefinitions'
 
@@ -10,8 +10,16 @@ import type { SettingCategory } from '@default-settings/interfaces/SettingType'
 import { SettingType } from './interfaces/SettingType'
 import { FeatureFlag } from '@common/featureFlags'
 import SettingTypeRow from './components/SettingTypeRow'
+import {
+  DefaultSettingStringDropDown,
+  DefaultSettingNumberTextbox,
+  DefaultSettingTextbox,
+  DefaultSettingRadioBtnWithTrueAndFalse,
+  DefaultSettingCheckBoxWithTrueAndFalse
+} from './components/ReusableHandlers'
+import { isUndefined } from 'lodash'
 DefaultSettingsFactory.registerSettingCategory('CD', {
-  icon: 'res-secrets',
+  icon: 'cd-main',
   label: 'common.purpose.cd.continuous',
   settingTypes: new Set([
     SettingType.TEST_SETTING_ID,
@@ -27,7 +35,7 @@ DefaultSettingsFactory.registerSettingCategory('CD', {
   ])
 })
 DefaultSettingsFactory.registerSettingCategory('CI', {
-  icon: 'res-secrets',
+  icon: 'ci-main',
   label: 'common.purpose.ci.continuous',
   settingTypes: new Set([
     SettingType.TEST_SETTING_ID,
@@ -45,7 +53,7 @@ DefaultSettingsFactory.registerSettingCategory('CI', {
   ])
 })
 DefaultSettingsFactory.registerSettingCategory('CORE', {
-  icon: 'res-secrets',
+  icon: 'access-control',
   label: 'account',
   settingTypes: new Set([
     SettingType.TEST_SETTING_ID,
@@ -60,26 +68,12 @@ DefaultSettingsFactory.registerSettingCategory('CORE', {
     SettingType.test_setting_CORE_2
   ])
 })
-const ExampleRenderer: React.FC<SettingRendererProps> = props => {
-  console.log({ props })
-  return (
-    <>
-      <input
-        type="text"
-        value={props.settingValue}
-        onChange={event => props.onSettingSelectionChange(event.currentTarget.value)}
-      />
-    </>
-  )
-}
+
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.TEST_SETTING_ID, {
   label: 'connector',
   settingRenderer: props => (
-    <ExampleRenderer
-      identifier={props.identifier}
-      onSettingSelectionChange={props.onSettingSelectionChange}
-      onRestore={props.onRestore}
-      settingValue={props.settingValue}
+    <DefaultSettingTextbox
+      {...props}
 
       //settingType={props.settingType}
     />
@@ -87,113 +81,65 @@ DefaultSettingsFactory.registerSettingTypeHandler(SettingType.TEST_SETTING_ID, {
 })
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.TEST_SETTING_ID_2, {
   label: 'secretManagers',
-  settingRenderer: props => (
-    <ExampleRenderer
-      identifier={props.identifier}
-      onSettingSelectionChange={props.onSettingSelectionChange}
-      onRestore={props.onRestore}
-      settingValue={props.settingValue}
-    />
-  )
+  settingRenderer: props => <DefaultSettingTextbox {...props} />
 })
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.ACCOUNT, {
   label: 'account',
-  settingRenderer: props => (
-    <ExampleRenderer
-      identifier={props.identifier}
-      onSettingSelectionChange={props.onSettingSelectionChange}
-      onRestore={props.onRestore}
-      settingValue={props.settingValue}
-    />
-  )
+  settingRenderer: props => <DefaultSettingTextbox {...props} />
 })
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CORE_1, {
-  label: 'connector',
-  settingRenderer: props => (
-    <ExampleRenderer
-      identifier={props.identifier}
-      onSettingSelectionChange={props.onSettingSelectionChange}
-      onRestore={props.onRestore}
-      settingValue={props.settingValue}
+  label: 'common.accountSetting.connector.disableBISMHeading',
+  settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />
+})
+
+const DependendentValues: React.FC<SettingRendererProps> = ({ otherSettingsWhichAreChanged, ...otherProps }) => {
+  const isEvenorOdd = (number: string | undefined) => {
+    if (isUndefined(number)) {
+      return ''
+    }
+    console.log({ number }, parseInt(number) % 2 ? 'Odd' : 'Even')
+
+    return parseInt(number) % 2 ? 'Odd' : 'Even'
+  }
+  const [settingValue, updateSettingValue] = useState(
+    isEvenorOdd(otherSettingsWhichAreChanged.get(SettingType.test_setting_CD_3)?.value)
+  )
+  useEffect(() => {
+    console.log('otherSettingsWhichAreChanged', { otherSettingsWhichAreChanged })
+    updateSettingValue(isEvenorOdd(otherSettingsWhichAreChanged.get(SettingType.test_setting_CD_3)?.value))
+  }, [otherSettingsWhichAreChanged.get(SettingType.test_setting_CD_3)?.value])
+  return (
+    <DefaultSettingTextbox
+      {...otherProps}
+      otherSettingsWhichAreChanged={otherSettingsWhichAreChanged}
+      settingValue={settingValue}
     />
   )
-})
+}
+
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CORE_2, {
   label: 'pipeline.ACR.name',
-  settingRenderer: props => (
-    <ExampleRenderer
-      identifier={props.identifier}
-      onSettingSelectionChange={props.onSettingSelectionChange}
-      onRestore={props.onRestore}
-      settingValue={props.settingValue}
-    />
-  )
+  settingRenderer: props => <DependendentValues {...props} />
 })
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CD_1, {
   label: 'orgLabel',
-  settingRenderer: props => (
-    <ExampleRenderer
-      identifier={props.identifier}
-      onSettingSelectionChange={props.onSettingSelectionChange}
-      onRestore={props.onRestore}
-      settingValue={props.settingValue}
-    />
-  )
+  settingRenderer: props => <DefaultSettingNumberTextbox {...props} />
 })
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CD_2, {
   label: 'projectLabel',
-  settingRenderer: props => (
-    <ExampleRenderer
-      identifier={props.identifier}
-      onSettingSelectionChange={props.onSettingSelectionChange}
-      onRestore={props.onRestore}
-      settingValue={props.settingValue}
-    />
-  )
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />
 })
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CD_3, {
   label: 'summary',
-  settingRenderer: props => (
-    <ExampleRenderer
-      identifier={props.identifier}
-      onSettingSelectionChange={props.onSettingSelectionChange}
-      onRestore={props.onRestore}
-      settingValue={props.settingValue}
-    />
-  )
-})
-DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CD_3, {
-  label: 'summary',
-  settingRenderer: props => (
-    <ExampleRenderer
-      identifier={props.identifier}
-      onSettingSelectionChange={props.onSettingSelectionChange}
-      onRestore={props.onRestore}
-      settingValue={props.settingValue}
-    />
-  )
+  settingRenderer: props => <DefaultSettingNumberTextbox {...props} />
 })
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CI_1, {
   label: 'abort',
-  settingRenderer: props => (
-    <ExampleRenderer
-      identifier={props.identifier}
-      onSettingSelectionChange={props.onSettingSelectionChange}
-      onRestore={props.onRestore}
-      settingValue={props.settingValue}
-    />
-  )
+  settingRenderer: props => <DefaultSettingStringDropDown {...props} />
 })
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CI_2, {
   label: 'dashboardLabel',
-  settingRenderer: props => (
-    <ExampleRenderer
-      identifier={props.identifier}
-      onSettingSelectionChange={props.onSettingSelectionChange}
-      onRestore={props.onRestore}
-      settingValue={props.settingValue}
-    />
-  )
+  settingRenderer: props => <DefaultSettingStringDropDown {...props} />
 })
 export default (
   <>

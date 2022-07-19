@@ -11,18 +11,17 @@ import type { SettingCategory, SettingType } from '@default-settings/interfaces/
 import type { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import type { FeatureFlag } from '@common/featureFlags'
+import type { SettingDTO, SettingRequestDTO } from 'services/cd-ng'
 
-export enum SettingTypeDefaultHandler {
-  CHECK_BOX = 'CHECK_BOX',
-  DROP_DOWN = 'DROP_DOWN',
-  RADIO_BTN = 'RADIO_BTN',
-  TEXT_BOX = 'TEXT_BOX'
-}
+
+
 export interface SettingRendererProps {
   identifier: any
   onSettingSelectionChange: (val: string) => void
   onRestore: () => void
   settingValue: any
+  allowedValues?: SettingDTO['allowedValues'] | undefined
+  otherSettingsWhichAreChanged: Map<SettingType, SettingRequestDTO>
 }
 export interface SettingHandler {
   label: keyof StringsMap
@@ -68,9 +67,7 @@ class DefaultSettingsFactory {
     return this.map.get(settingType)
   }
 
-  // isRegisteredSettingType(settingType: SettingType): boolean {
-  //   return this.map.has(settingType)
-  // }
+  
 }
 
 export default new DefaultSettingsFactory()

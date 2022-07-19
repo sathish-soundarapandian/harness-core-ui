@@ -6,20 +6,25 @@ import SettingTypeRow from './SettingTypeRow'
 import { Layout } from '@harness/uicore'
 
 import css from './SettingsCategorySection.module.scss'
-import type { SettingResponseDTO } from 'services/cd-ng'
+import type { SettingRequestDTO, SettingResponseDTO } from 'services/cd-ng'
 interface SettingTypeRowProps {
   settingsTypesSet: Set<SettingType> | undefined
   onSelectionChange: (settingType: SettingType, val: string) => void
   onRestore: (settingType: SettingType) => void
   settingTypesResponseDTO: { [Key in SettingType]?: SettingResponseDTO } | undefined
   onAllowOverride: (val: boolean, settingType: SettingType) => void
+  otherSettingsWhichAreChanged: Map<SettingType, SettingRequestDTO>
+
+  settingErrorMessages: Map<SettingType, string>
 }
 const SettingCategorySectionContents: React.FC<SettingTypeRowProps> = ({
   settingsTypesSet,
   onRestore,
   onSelectionChange,
   settingTypesResponseDTO,
-  onAllowOverride
+  onAllowOverride,
+  otherSettingsWhichAreChanged,
+  settingErrorMessages
 }) => {
   if (!settingsTypesSet) {
     return null
@@ -43,6 +48,10 @@ const SettingCategorySectionContents: React.FC<SettingTypeRowProps> = ({
         }
         return (
           <SettingTypeRow
+            otherSettingsWhichAreChanged={otherSettingsWhichAreChanged}
+            allowedValues={
+              settingTypesResponseDTO ? settingTypesResponseDTO[settingTypeKey]?.setting.allowedValues : undefined
+            }
             settingType={settingTypeKey}
             onRestore={() => onRestoreLocal(settingTypeKey)}
             settingTypeHandler={settingTypeHandler}
@@ -58,6 +67,7 @@ const SettingCategorySectionContents: React.FC<SettingTypeRowProps> = ({
                 settingTypesResponseDTO[settingTypeKey]?.setting.allowOverrides
               )
             }
+            errorMessage={settingErrorMessages.get(settingTypeKey) || ''}
           />
         )
       })}

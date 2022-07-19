@@ -1,9 +1,10 @@
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import type { SettingHandler } from '@default-settings/factories/DefaultSettingsFactory'
+import type { SettingHandler, SettingRendererProps } from '@default-settings/factories/DefaultSettingsFactory'
 import type { SettingType } from '@default-settings/interfaces/SettingType'
-import { Button, ButtonSize, ButtonVariation, Checkbox, Color, Layout } from '@harness/uicore'
+import { Button, ButtonSize, ButtonVariation, Checkbox, Color, Layout, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import React from 'react'
+import type { SettingRequestDTO } from 'services/cd-ng'
 
 import css from './SettingsCategorySection.module.scss'
 interface SettingTypeRowProps {
@@ -14,6 +15,9 @@ interface SettingTypeRowProps {
   settingType: SettingType
   onAllowOverride: (checked: boolean) => void
   allowOverride: boolean
+  allowedValues: SettingRendererProps['allowedValues']
+  otherSettingsWhichAreChanged: Map<SettingType, SettingRequestDTO>
+  errorMessage: string
 }
 const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
   settingTypeHandler,
@@ -22,7 +26,10 @@ const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
   settingType,
   onRestore,
   onAllowOverride,
-  allowOverride
+  allowOverride,
+  allowedValues,
+  otherSettingsWhichAreChanged,
+  errorMessage
 }) => {
   const { label, settingRenderer, featureFlag } = settingTypeHandler
   const { getString } = useStrings()
@@ -36,22 +43,28 @@ const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
 
   return (
     <>
-      <span>{getString(label)}</span>
-      <span>
+      <Text>{getString(label)}</Text>
+      <Layout.Vertical>
         {settingRenderer &&
           settingRenderer({
             identifier: settingType,
             onSettingSelectionChange: onSelectionChange,
             onRestore,
-            settingValue
+            settingValue,
+            allowedValues,
+            otherSettingsWhichAreChanged
           })}
-      </span>
+        {errorMessage && (
+          <Text lineClamp={1} intent="danger">
+            {errorMessage}
+          </Text>
+        )}
+      </Layout.Vertical>
       <span className={css.settingOverrideRestore}>
         <Checkbox
           label={getString('defaultSettings.allowOverrides')}
           checked={allowOverride}
           onChange={(event: React.FormEvent<HTMLInputElement>) => {
-            console.log({ event })
             onAllowOverride(event.currentTarget.checked)
           }}
         />

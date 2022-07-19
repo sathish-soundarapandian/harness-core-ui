@@ -7,7 +7,7 @@ import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
 import { useStrings } from 'framework/strings'
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Button, ButtonVariation, Layout } from '@harness/uicore'
+import { Button, ButtonVariation, getErrorInfoFromErrorObject, Layout, useToaster } from '@harness/uicore'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import DefaultSettingsFactory from '@default-settings/factories/DefaultSettingsFactory'
 import { SettingDTO, SettingRequestDTO, updateSettingValuePromise, useUpdateSettingValue } from 'services/cd-ng'
@@ -15,37 +15,49 @@ import css from './SettingsList.module.scss'
 import type { SettingCategory, SettingType } from '../interfaces/SettingType'
 import type { SettingCategoryHandler } from '../factories/DefaultSettingsFactory'
 import SettingsCategorySection from '../components/SettingsCategorySection'
+import { getError } from '@pipeline/pages/execution/ExecutionTestView/TestsUtils'
 const SettingsList = () => {
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
   //const [savingSettingInProgress, updateSavingSettingInProgress] = useState<boolean>(false)
   const defaultSettingsCategory: SettingCategory[] = DefaultSettingsFactory.getSettingCategoryNamesList()
   const [changedSettings, updateChangedSettings] = useState<Map<SettingType, SettingRequestDTO>>(new Map())
+  const [settingErrrorMessage, updateSettingErrrorMessage] = useState<Map<SettingType, string>>(new Map())
+  const [disableSave, updateDisableSave] = useState<boolean>(true)
+  const { showError } = useToaster()
   const onSettingChange = (
     settingType: SettingType,
     settingDTO: SettingDTO,
     updateType: SettingRequestDTO['updateType']
   ) => {
-    const exisitingChangedSettings = changedSettings
+    if (disableSave) {
+      updateDisableSave(false)
+    }
+    const exisitingChangedSettings = new Map(changedSettings)
     const { allowOverrides, identifier, value } = settingDTO
     exisitingChangedSettings.set(settingType, { allowOverrides, updateType, identifier, value })
-    console.log({ exisitingChangedSettings })
     updateChangedSettings(exisitingChangedSettings)
   }
   const { loading: savingSettingInProgress, mutate: updateSettingValue } = useUpdateSettingValue({
     queryParams: { projectIdentifier: projectIdentifier, accountIdentifier: accountId, orgIdentifier }
   })
   const saveSettings = () => {
-    //updateSavingSettingInProgress(true)
-    console.log(Array.from(changedSettings.values()))
-    if (true) {
-      updateSettingValue(Array.from(changedSettings.values()))
-        .then(data => {
-          console.log(data)
+    updateSettingErrrorMessage(new Map())
+    try {
+      updateSettingValue(Array.from(changedSettings.values())).then(data => {
+        const errorMap = new Map()
+        data.data?.forEach(setting => {
+          if (!setting.updateStatus && setting.errorMessage) {
+            errorMap.set(setting.identifier, setting.errorMessage)
+          }
         })
-        .finally(() => {
-          //updateSavingSettingInProgress(false)
-        })
+        updateSettingErrrorMessage(errorMap)
+        if (!errorMap.size) {
+          updateDisableSave(true)
+        }
+      })
+    } catch (error) {
+      showError(getErrorInfoFromErrorObject(error))
     }
   }
   return (
@@ -60,7 +72,14 @@ const SettingsList = () => {
             }}
           />
         }
-        toolbar={<Button text={getString('save')} variation={ButtonVariation.PRIMARY} onClick={saveSettings} />}
+        toolbar={
+          <Button
+            text={getString('save')}
+            disabled={disableSave}
+            variation={ButtonVariation.PRIMARY}
+            onClick={saveSettings}
+          />
+        }
         breadcrumbs={
           <NGBreadcrumbs
             links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
@@ -71,7 +90,14 @@ const SettingsList = () => {
       <Page.Body>
         <Layout.Vertical className={css.settingList}>
           {defaultSettingsCategory.map(key => {
-            return <SettingsCategorySection settingCategory={key} onSettingChange={onSettingChange} />
+            return (
+              <SettingsCategorySection
+                settingCategory={key}
+                onSettingChange={onSettingChange}
+                otherSettingsWhichAreChanged={changedSettings}
+                settingErrorMessages={settingErrrorMessage}
+              />
+            )
           })}
         </Layout.Vertical>
       </Page.Body>
