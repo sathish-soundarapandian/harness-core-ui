@@ -24,7 +24,9 @@ import {
   CodeBaseType
 } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
 import { FormMultiTypeRadioGroupField } from '@common/components/MultiTypeRadioGroup/MultiTypeRadioGroup'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+
 export const useGetPropagatedStageById = (
   stageId: string
 ): StageElementWrapper<BuildStageElementConfig> | undefined => {
@@ -120,7 +122,8 @@ export const renderBuild = ({
   formik,
   allowableTypes,
   path,
-  triggerIdentifier
+  triggerIdentifier,
+  stepViewType
 }: {
   expressions: string[]
   getString: UseStringsReturn['getString']
@@ -130,6 +133,7 @@ export const renderBuild = ({
   readonly?: boolean
   path?: string
   triggerIdentifier?: string
+  stepViewType?: string
 }) => {
   const radioLabels = getBuildTypeLabels(getString)
   const prefix = isEmpty(path) ? '' : `${path}.`
@@ -164,7 +168,10 @@ export const renderBuild = ({
           { label: radioLabels['tag'], value: CodebaseTypes.tag }
         ]}
         onChange={handleTypeChange}
-        className={cx(css.radioGroup, isBuildRuntimeInput && css.bottomMargin0)}
+        className={cx(
+          (isEmpty(buildTypeValue) || isBuildRuntimeInput || stepViewType === StepViewType.DeploymentForm) &&
+            css.bottomMargin0
+        )}
         tooltipProps={{
           dataTooltipId: 'buildType'
         }}

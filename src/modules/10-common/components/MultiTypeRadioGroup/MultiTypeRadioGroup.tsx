@@ -42,7 +42,11 @@ export const MultiTypeRadioGroup: React.FC<MultiTypeRadioGroupProps> = ({
       const { onChange } = props
       return (
         <RadioGroup
-          className={cx(css.input, className)}
+          className={cx(
+            css.input,
+            rest?.allowableTypes && rest.allowableTypes.length > 1 && css.multiTypeInputs,
+            className
+          )}
           {...restProps}
           options={options}
           selectedValue={value as string}

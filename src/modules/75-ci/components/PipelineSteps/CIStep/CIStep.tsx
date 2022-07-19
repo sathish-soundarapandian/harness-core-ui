@@ -310,7 +310,8 @@ export const CIStep: React.FC<CIStepProps> = props => {
             formik,
             path,
             triggerIdentifier,
-            allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
+            allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep,
+            stepViewType
           })}
         </Container>
       )}
