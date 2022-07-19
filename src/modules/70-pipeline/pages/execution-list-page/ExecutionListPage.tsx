@@ -8,21 +8,39 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { HarnessDocTooltip } from '@wings-software/uicore'
+import { useModalHook } from '@harness/use-modal'
+import { Dialog, IDialogProps } from '@blueprintjs/core'
+
 import { useStrings } from 'framework/strings'
+import PipelineModalListView from '@pipeline/components/PipelineModalListView/PipelineModalListView'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { Page } from '@common/exports'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import type { StringsMap } from 'stringTypes'
-import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
-import { ExecutionListTable } from './ExecutionListTable/ExecutionListTable'
+import { ExecutionList } from '../execution-list/ExecutionList'
 import css from './ExecutionListPage.module.scss'
-import { ExecutionListSubHeader } from './ExecutionListSubHeader/ExecutionListSubHeader'
 
-export function ExecutionList(): React.ReactElement {
-  const { module } = useParams<PipelineType<ProjectPathProps>>()
+export default function ExecutionListPage(): React.ReactElement {
+  const { projectIdentifier, orgIdentifier, accountId, module } = useParams<PipelineType<ProjectPathProps>>()
   const { getString } = useStrings()
+
   useDocumentTitle([getString('pipelines'), getString('executionsText')])
+
+  const runPipelineDialogProps: IDialogProps = {
+    isOpen: true,
+    enforceFocus: false,
+    style: { minWidth: 800, minHeight: 280, backgroundColor: 'var(--grey-50)' }
+  }
+
+  const [openModal, hideModal] = useModalHook(
+    () => (
+      <Dialog {...runPipelineDialogProps}>
+        <PipelineModalListView onClose={hideModal} />
+      </Dialog>
+    ),
+    [projectIdentifier, orgIdentifier, accountId]
+  )
 
   let textIdentifier: keyof StringsMap
   switch (module) {
@@ -37,7 +55,7 @@ export function ExecutionList(): React.ReactElement {
   }
 
   return (
-    <GitSyncStoreProvider>
+    <div className={css.main}>
       <Page.Header
         title={
           <div className="ng-tooltip-native">
@@ -47,8 +65,7 @@ export function ExecutionList(): React.ReactElement {
         }
         breadcrumbs={<NGBreadcrumbs links={[]} />}
       />
-      <ExecutionListSubHeader />
-      <ExecutionListTable />
-    </GitSyncStoreProvider>
+      <ExecutionList onRunPipeline={openModal} />
+    </div>
   )
 }

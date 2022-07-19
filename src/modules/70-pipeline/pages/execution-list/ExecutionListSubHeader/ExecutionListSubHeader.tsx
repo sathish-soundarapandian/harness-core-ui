@@ -30,20 +30,19 @@ import { useExecutionListFilterContext } from '../ExecutionListFilterContext/Exe
 import { ExecutionFilters } from '../ExecutionListFilter/ExecutionListFilter'
 import type { QuickStatusParam } from '../types'
 import css from './ExecutionListSubHeader.module.scss'
+import type { ExecutionListProps } from '../ExecutionList'
 
 export interface FilterQueryParams {
   query?: string
   pipeline?: string
   status?: ExecutionStatus | null
 }
-export interface ExecutionListSubHeaderProps {
-  onRunPipeline(): void
-  isPipelineInvalid?: boolean
-}
 
 const defaultPageNumber = 1
 
-export function ExecutionListSubHeader(props: ExecutionListSubHeaderProps): React.ReactElement {
+export function ExecutionListSubHeader(
+  props: Pick<ExecutionListProps, 'isPipelineInvalid' | 'onRunPipeline'>
+): React.ReactElement {
   const { module, pipelineIdentifier } = useParams<Partial<PipelineType<PipelinePathProps>>>()
   const { queryParams } = useExecutionListFilterContext()
   const { updateQueryParams } = useUpdateQueryParams<Partial<GetListOfExecutionsQueryParams>>()

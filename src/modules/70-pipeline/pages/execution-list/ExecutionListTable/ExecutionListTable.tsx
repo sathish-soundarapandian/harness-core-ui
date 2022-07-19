@@ -37,14 +37,7 @@ type CustomColumn<T extends Record<string, any>> = Column<T> & {
   accessor: keyof PipelineExecutionSummary
 } & Partial<ExecutionListTableProps>
 
-export function ExecutionListTable({
-  data,
-  gotoPage,
-  onDeletePipeline,
-  onDelete,
-  sortBy,
-  setSortBy
-}: ExecutionListTableProps): React.ReactElement {
+export function ExecutionListTable({ data, gotoPage, sortBy, setSortBy }: ExecutionListTableProps): React.ReactElement {
   const { getString } = useStrings()
   const {
     content = [],
@@ -113,22 +106,25 @@ export function ExecutionListTable({
   )
 
   return (
-    <TableV2<PagePipelineExecutionSummary>
-      className={css.table}
-      columns={columns}
-      data={content}
-      pagination={
-        totalElements > size
-          ? {
-              itemCount: totalElements,
-              pageSize: size,
-              pageCount: totalPages,
-              pageIndex: number,
-              gotoPage
-            }
-          : undefined
-      }
-      sortable
-    />
+    <>
+      <TableV2<PagePipelineExecutionSummary>
+        className={css.table}
+        columns={columns}
+        data={content}
+        pagination={
+          totalElements > size
+            ? {
+                itemCount: totalElements,
+                pageSize: size,
+                pageCount: totalPages,
+                pageIndex: number,
+                gotoPage
+              }
+            : undefined
+        }
+        sortable
+      />
+      <ExecutionsPagination pipelineExecutionSummary={executions} />
+    </>
   )
 }

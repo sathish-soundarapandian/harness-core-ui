@@ -1,4 +1,4 @@
-.noDeploymentSection {
+.noExecutions {
   display: flex;
   height: 100%;
   align-items: center;
@@ -8,13 +8,13 @@
     width: 320px;
     margin-bottom: 40px;
   }
-  .noDeploymentText {
+  .noExecutionsText {
     font-size: 20px !important;
     font-weight: bold !important;
     line-height: 28px !important;
     color: var(--grey-600) !important;
   }
-  .aboutDeployment {
+  .noExecutionsAboutText {
     font-size: 16px !important;
     font-weight: normal !important;
     line-height: 24px !important;
@@ -22,7 +22,7 @@
   }
 }
 
-.createModalCss {
+.overviewNoExecutions {
   :global {
     .bp3-overlay-backdrop,
     .bp3-overlay {

@@ -7,6 +7,11 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly main: string
+  readonly image: string
+  readonly noExecutions: string
+  readonly noExecutionsAboutText: string
+  readonly noExecutionsText: string
+  readonly noPipelineText: string
+  readonly overviewNoExecutions: string
 }
 export default styles
