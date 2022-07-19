@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { MultiTypeInputType, NestedAccordionPanel, Text } from '@wings-software/uicore'
+import { AllowedTypes, NestedAccordionPanel, Text } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo, isEmpty, lowerCase } from 'lodash-es'
 import type { ServiceConfig, ServiceSpec, StageElementConfig } from 'services/cd-ng'
@@ -38,7 +38,7 @@ export interface ServiceCardProps {
   onUpdateServiceConfig(data: ServiceSpec): void
   readonly?: boolean
   path?: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepsFactory: AbstractStepFactory
 }
 

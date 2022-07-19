@@ -1,6 +1,7 @@
 secrets: Secrets
 home: Home
 welcome: Welcome
+help: Help
 dashboards: Dashboards
 setup: Setup
 agent: Agent
@@ -345,12 +346,12 @@ git:
   gitLabRepoUrl: 'GitLab Repository URL'
   bitbucketRepoUrl: 'Bitbucket Repository URL'
   azureReposRepoUrl: 'Azure Repos Repository URL'
-  gitHubUrlPlaceholder: 'https://www.github.com/account/'
+  gitHubUrlPlaceholder: 'https://github.com/account/'
   gitHubUrlPlaceholderSSH: 'git@github.com:account/'
-  gitLabUrlPlaceholder: 'https://www.gitlab.com/account/'
+  gitLabUrlPlaceholder: 'https://gitlab.com/account/'
   gitLabUrlPlaceholderSSH: 'git@gitlab.com:account/'
-  bitbucketUrlPlaceholder: 'https://www.bitbucket.com/account/'
-  bitbucketPlaceholderSSH: 'git@bitbucket.com:account/'
+  bitbucketUrlPlaceholder: 'https://bitbucket.org/'
+  bitbucketPlaceholderSSH: 'git@bitbucket.org'
   azureReposUrlPlaceholder: 'https://dev.azure.com/<organizationName>/<projectName>'
   azureReposUrlPlaceholderRepoHttp: 'https://dev.azure.com/<organizationName>/<projectName>/_git/<repositoryName>'
   azureReposPlaceholderSSH: 'git@ssh.dev.azure.com:v3/<organizationName>'

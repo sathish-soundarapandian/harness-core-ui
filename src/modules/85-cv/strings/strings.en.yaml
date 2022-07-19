@@ -215,7 +215,7 @@ monitoringSources:
     applicationName: Application Name
     tierName: Tier Name
     completeMetricPath: Complete Metric Path
-    serviceInstanceMetricPath: Service Instance Metric Path
+    serviceInstanceMetricPath: Service Instance Label Path
     serviceInstanceFieldName: Service Instance Field Name
     appdChartTitle: Chart & Record
     appdPathDetail: Select base path for AppD Metric
@@ -636,7 +636,7 @@ healthSource:
       trierLabel: Find an AppDynamics tier
       tierPlaceholder: Type an tier name
       metricPackLabel: Select Metric Packs to be monitored
-      serviceInstance: Specify a service instance path
+      serviceInstance: Specify a service instance label path
       validation:
         application: Please select applications
         tier: Please select tier

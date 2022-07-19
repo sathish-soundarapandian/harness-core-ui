@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { MultiTypeInputType } from '@harness/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import pipelineContextMock from '@pipeline/components/ManifestSelection/__tests__/pipeline_mock.json'
 import connectorsData from '@pipeline/components/ManifestSelection/__tests__/connectors_mock.json'
 import type { ConnectorTypes, StartupScriptSelectionProps } from '../StartupScriptInterface.types'
@@ -102,7 +102,11 @@ export const propStepTwo = {
   key: 'pipeline.startupScript.fileDetails',
   name: 'pipeline.startupScript.fileDetails',
   expressions: [],
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   stepName: 'pipeline.startupScript.fileDetails',
   initialValues: {
     ...startupScript,
@@ -126,7 +130,11 @@ export const propStepOne = {
     connectorRef: '<+input>'
   } as any,
   expressions: [],
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   prevStepData: { ...prevStepData },
   nextStep: jest.fn()
 }
@@ -135,7 +143,11 @@ export const propWizard = {
   connectorTypes: ['Git', 'Github', 'GitLab', 'Bitbucket'] as Array<ConnectorTypes>,
   newConnectorView: true,
   expressions: [],
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   handleConnectorViewChange: jest.fn(),
   handleStoreChange: jest.fn(),
   initialValues: {

@@ -14,6 +14,7 @@ import { parse } from 'yaml'
 import { Spinner } from '@blueprintjs/core'
 
 import {
+  AllowedTypes,
   ButtonSize,
   ButtonVariation,
   Container,
@@ -56,7 +57,7 @@ import css from './DeployInfrastructures.module.scss'
 interface DeployInfrastructuresProps {
   formik?: FormikProps<DeployStageConfig>
   readonly?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: DeployStageConfig
   environmentRef?: string
   path?: string
@@ -69,7 +70,7 @@ function DeployInfrastructures({
   allowableTypes,
   environmentRef,
   path
-}: DeployInfrastructuresProps) {
+}: DeployInfrastructuresProps): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
   const { showError } = useToaster()

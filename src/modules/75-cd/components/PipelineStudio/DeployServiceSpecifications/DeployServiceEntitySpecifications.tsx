@@ -9,6 +9,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from 're
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import {
+  AllowedTypes,
   Card,
   Container,
   getMultiTypeFromValue,
@@ -294,7 +295,9 @@ export default function DeployServiceEntitySpecifications({
               allowableTypes={
                 scope === Scope.PROJECT
                   ? allowableTypes
-                  : allowableTypes.filter(item => item !== MultiTypeInputType.FIXED)
+                  : ((allowableTypes as MultiTypeInputType[]).filter(
+                      item => item !== MultiTypeInputType.FIXED
+                    ) as AllowedTypes)
               }
               onUpdate={data => updateService(data)}
               factory={factory}

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Card, Color, FormInput, Layout, MultiTypeInputType, Text } from '@harness/uicore'
+import { AllowedTypes, Card, Color, FormInput, Layout, Text } from '@harness/uicore'
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import type { VerifyStepMonitoredService } from '@cv/components/PipelineSteps/ContinousVerification/types'
@@ -30,7 +30,7 @@ export interface TemplatisedRunTimeMonitoredServiceProps {
   prefix: string
   monitoredService?: VerifyStepMonitoredService
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export default function TemplatisedRunTimeMonitoredService(

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { cloneDeep, defaultTo, isEmpty, isEqual, merge, noop, set } from 'lodash-es'
-import { MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import produce from 'immer'
 import {
   PipelineContext,
@@ -100,7 +100,11 @@ export function ServicePipelineProvider({
   contextType,
   children
 }: React.PropsWithChildren<ServicePipelineProviderProps>): React.ReactElement {
-  const allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+  const allowableTypes: AllowedTypesWithRunTime[] = [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ]
 
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()

@@ -542,7 +542,7 @@ exports[`ActiveServiceInstancesContent should render error 1`] = `
             style="height: 360px;"
           >
             <div
-              class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-align-center-center"
+              class="StyledProps--font StyledProps--main PageError--pageError StyledProps--flex StyledProps--flex-align-center-center"
               style="width: 100%; height: 100%;"
             >
               <div

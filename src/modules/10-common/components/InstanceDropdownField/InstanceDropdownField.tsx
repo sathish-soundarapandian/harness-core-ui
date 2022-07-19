@@ -7,6 +7,7 @@
 
 import React from 'react'
 import {
+  AllowedTypes,
   Button,
   FormikTooltipContext,
   getMultiTypeFromValue,
@@ -118,7 +119,7 @@ interface InstanceDropdownFieldProps extends Omit<IFormGroupProps, 'label' | 'pl
   value: InstanceFieldValue
   label: string | JSX.Element
   expressions: string[]
-  allowableTypes?: MultiTypeInputType[]
+  allowableTypes?: AllowedTypes
   disabledType?: boolean
   readonly?: boolean
   name: string

@@ -16,7 +16,8 @@ import {
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
-  Icon
+  Icon,
+  AllowedTypes
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Form } from 'formik'
@@ -33,7 +34,7 @@ interface AttachPathYamlFlowType {
   renderConnectorField: JSX.Element
   manifestType: PrimaryManifestType
   manifestStore: ManifestStores
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   expressions: string[]
   attachPathYaml: (formData: ConnectorConfigDTO) => void
   removeValuesYaml: (index: number) => void

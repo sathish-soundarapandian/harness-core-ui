@@ -7,7 +7,7 @@
 
 import { fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
 import React from 'react'
-import { MultiTypeInputType } from '@harness/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
@@ -26,7 +26,11 @@ const initialValues = {
 const props = {
   stepName: 'Manifest details',
   expressions: [],
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   handleSubmit: jest.fn(),
   selectedManifest: 'Values' as ManifestTypes,
   manifestIdsList: [],
@@ -70,7 +74,11 @@ describe('Inline tests', () => {
       stepName: 'Manifest details',
       manifestIdsList: [],
       expressions: [],
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.RUNTIME,
+        MultiTypeInputType.EXPRESSION
+      ] as AllowedTypesWithRunTime[],
       initialValues: {
         identifier: 'testidentifier',
         type: ManifestDataType.KustomizePatches,

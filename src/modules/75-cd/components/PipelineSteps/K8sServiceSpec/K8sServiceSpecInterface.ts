@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes } from '@wings-software/uicore'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type {
@@ -39,7 +39,7 @@ export interface KubernetesServiceInputFormProps {
   path?: string
   stageIdentifier: string
   formik?: any
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export interface LastQueryData {
@@ -64,7 +64,7 @@ export interface KubernetesArtifactsProps {
   path?: string
   initialValues: K8SDirectServiceStep
   readonly: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   fromTrigger?: boolean
   artifact?: PrimaryArtifact | SidecarArtifact
   isSidecar?: boolean
@@ -83,7 +83,7 @@ export interface KubernetesManifestsProps {
   serviceIdentifier?: string
   formik?: any
   fromTrigger?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   manifest?: ManifestConfig
   manifestPath?: string
 }

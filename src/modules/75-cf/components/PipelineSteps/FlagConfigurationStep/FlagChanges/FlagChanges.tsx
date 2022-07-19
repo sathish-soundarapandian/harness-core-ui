@@ -8,6 +8,7 @@
 import React, { FC, useCallback, useEffect, useMemo } from 'react'
 import { get } from 'lodash-es'
 import {
+  AllowedTypes,
   Container,
   getMultiTypeFromValue,
   Heading,
@@ -26,7 +27,7 @@ import FlagChangesForm, { FlagChangesFormProps } from './FlagChangesForm'
 import subSectionCSS from './SubSection.module.scss'
 import css from './FlagChanges.module.scss'
 
-const allowedTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+const allowedTypes: AllowedTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
 
 export interface FlagChangesProps {
   selectedFeature?: Feature | typeof RUNTIME_INPUT_VALUE

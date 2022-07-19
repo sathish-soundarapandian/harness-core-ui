@@ -1172,6 +1172,7 @@ configFiles:
   encryptedFiles: 'Encrypted file(s)'
   fileType: 'File Type'
   encryptedLocation: 'Secrets Manager Name'
+  addConfigFile: '+ Add Config File'
   error:
     fileType: 'File type is required'
     identifier: 'Config file identifier is required'

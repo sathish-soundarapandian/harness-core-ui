@@ -263,25 +263,6 @@
   }
 }
 
-.matrixLabel {
-  position: absolute;
-  top: -70px;
-  background: #c19eff !important;
-  height: 120px;
-  z-index: 0;
-  left: -3px;
-  width: 66px;
-  color: var(--white);
-  padding: 5px !important;
-  border-radius: 5px;
-  &.marginTop {
-    top: -25px !important;
-  }
-}
-.stepGroupMatrixLabel {
-  top: -15px !important;
-}
-
 .matrixFooter {
   position: absolute;
   bottom: 0;

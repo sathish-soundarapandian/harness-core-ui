@@ -8,12 +8,14 @@
 import React from 'react'
 import cx from 'classnames'
 import * as Yup from 'yup'
-import { Formik, FormInput } from '@harness/uicore'
+import { Formik, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { NameSchema } from '@common/utils/Validation'
 import { useQueryParams } from '@common/hooks'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -52,7 +54,14 @@ export const AzureWebAppSwapSlotRef = (
       }}
       validationSchema={Yup.object().shape({
         name: NameSchema({ requiredErrorMsg: getString('pipelineSteps.stepNameRequired') }),
-        timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum'))
+        timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
+        spec: Yup.object().shape({
+          targetSlot: Yup.string().required(
+            getString('common.validation.fieldIsRequired', {
+              name: 'Target slot'
+            })
+          )
+        })
       })}
     >
       {formik => {
@@ -75,6 +84,32 @@ export const AzureWebAppSwapSlotRef = (
                 multiTypeDurationProps={{ enableConfigureOptions: false, expressions, allowableTypes }}
                 disabled={readonly}
               />
+            </div>
+            <div className={stepCss.divider} />
+            <div className={cx(stepCss.formGroup, stepCss.lg)}>
+              <FormInput.MultiTextInput
+                name="spec.targetSlot"
+                placeholder={'Specify target slot'}
+                label={'Target Slot'}
+                multiTextInputProps={{ expressions, allowableTypes }}
+                disabled={readonly}
+              />
+              {getMultiTypeFromValue(get(formik, 'values.spec.webApp')) === MultiTypeInputType.RUNTIME && (
+                <ConfigureOptions
+                  value={get(formik, 'values.spec.targetSlot') as string}
+                  type="String"
+                  variableName="spec.targetSlot"
+                  showRequiredField={false}
+                  showDefaultField={false}
+                  showAdvanced={true}
+                  onChange={
+                    /* istanbul ignore next */ value => {
+                      formik?.setFieldValue('spec.targetSlot', value)
+                    }
+                  }
+                  isReadonly={readonly}
+                />
+              )}
             </div>
           </>
         )

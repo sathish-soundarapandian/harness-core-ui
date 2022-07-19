@@ -12,6 +12,7 @@ import type { FormikProps } from 'formik'
 import cx from 'classnames'
 import {
   Accordion,
+  AllowedTypes,
   Checkbox,
   Formik,
   FormInput,
@@ -37,7 +38,7 @@ interface ShellScriptWidgetProps {
   initialValues: CommandScriptsFormData
   onUpdate?: (data: CommandScriptsFormData) => void
   onChange?: (data: CommandScriptsFormData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   readonly?: boolean
   stepViewType?: StepViewType
   isNewStep?: boolean

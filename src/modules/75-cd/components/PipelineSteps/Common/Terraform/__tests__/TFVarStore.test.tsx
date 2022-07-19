@@ -9,7 +9,7 @@ import React from 'react'
 
 import { render, queryByAttribute, fireEvent, act, screen } from '@testing-library/react'
 
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { TFVarStore } from '../Editview/TFVarStore'
 
@@ -21,7 +21,11 @@ const props = {
     }
   },
   isEditMode: false,
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.EXPRESSION,
+    MultiTypeInputType.RUNTIME
+  ] as AllowedTypesWithRunTime[],
   handleConnectorViewChange: jest.fn(),
   setSelectedConnector: jest.fn()
 }
@@ -64,7 +68,11 @@ describe('Terraform Var Store tests', () => {
         }
       },
       isEditMode: true,
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME],
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.EXPRESSION,
+        MultiTypeInputType.RUNTIME
+      ] as AllowedTypesWithRunTime[],
       handleConnectorViewChange: jest.fn(),
       setSelectedConnector: jest.fn()
     }
@@ -96,7 +104,11 @@ describe('Terraform Var Store tests', () => {
         }
       },
       isEditMode: true,
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME],
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.EXPRESSION,
+        MultiTypeInputType.RUNTIME
+      ] as AllowedTypesWithRunTime[],
       handleConnectorViewChange: jest.fn(),
       setSelectedConnector: jest.fn()
     }
@@ -129,7 +141,11 @@ describe('Terraform Var Store tests', () => {
       },
       isEditMode: true,
       isReadOnly: false,
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME],
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.EXPRESSION,
+        MultiTypeInputType.RUNTIME
+      ] as AllowedTypesWithRunTime[],
       handleConnectorViewChange: jest.fn(),
       setSelectedConnector: jest.fn()
     }

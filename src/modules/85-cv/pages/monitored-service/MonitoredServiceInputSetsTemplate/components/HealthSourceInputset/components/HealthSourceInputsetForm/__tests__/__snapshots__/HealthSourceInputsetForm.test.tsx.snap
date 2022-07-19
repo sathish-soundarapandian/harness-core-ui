@@ -462,7 +462,7 @@ exports[`Validate HealthSourceInputsetForm should render HealthSourceInputsetFor
               class="Tooltip--acenter"
               data-tooltip-id="wrapperComponent_sources.healthSources.1.spec.metricDefinitions.0.analysis.deploymentVerification.serviceInstanceMetricPath"
             >
-              cv.healthSource.connectors.AppDynamics.serviceInstance
+              cv.monitoringSources.appD.serviceInstanceMetricPath
             </span>
              
             <span

@@ -4,7 +4,7 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import type { IconName, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes, IconName } from '@harness/uicore'
 
 import { Connectors } from '@connectors/constants'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
@@ -18,7 +18,7 @@ export interface ReleaseRepoListViewProps {
   listOfManifests: Array<any>
   isReadonly: boolean
   deploymentType: ServiceDefinition['type']
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   allowOnlyOne?: boolean
 }
 

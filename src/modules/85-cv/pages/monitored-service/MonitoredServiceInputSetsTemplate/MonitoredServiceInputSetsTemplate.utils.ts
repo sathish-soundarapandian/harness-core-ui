@@ -21,7 +21,7 @@ export const getLabelByName = (name: string, getString: UseStringsReturn['getStr
     case 'completeMetricPath':
       return getString('cv.healthSource.connectors.AppDynamics.metricPathType.text')
     case 'serviceInstanceMetricPath':
-      return getString('cv.healthSource.connectors.AppDynamics.serviceInstance')
+      return getString('cv.monitoringSources.appD.serviceInstanceMetricPath')
     case 'serviceInstanceFieldName':
     case 'serviceInstanceIdentifier':
       return getString('cv.monitoringSources.serviceInstanceIdentifier')

@@ -54,11 +54,11 @@
     background: var(--theme-light-nav-panel-bg) !important;
   }
   svg {
-    padding-left: 8px;
     path {
       fill: var(--grey-200);
     }
   }
+  text-transform: uppercase;
 }
 
 .communityTooltip {

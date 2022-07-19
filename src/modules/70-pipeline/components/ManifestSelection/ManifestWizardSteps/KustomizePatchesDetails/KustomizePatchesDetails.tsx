@@ -16,7 +16,8 @@ import {
   MultiTypeInputType,
   Formik,
   ButtonVariation,
-  Icon
+  Icon,
+  AllowedTypes
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { Form, FieldArray, FieldArrayRenderProps } from 'formik'
@@ -50,7 +51,7 @@ interface KustomizePathPropTypes {
   name?: string
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
@@ -100,8 +101,8 @@ const renderBranch = (
   label: string,
   placeholder: string,
   expressions?: any,
-  allowableTypes?: MultiTypeInputType[]
-) => {
+  allowableTypes?: AllowedTypes
+): React.ReactElement => {
   return (
     <div
       className={cx(helmcss.halfWidth, {
@@ -137,8 +138,8 @@ const renderCommitId = (
   label: string,
   placeholder: string,
   expressions?: any,
-  allowableTypes?: MultiTypeInputType[]
-) => {
+  allowableTypes?: AllowedTypes
+): React.ReactElement => {
   return (
     <div
       className={cx(helmcss.halfWidth, {
@@ -181,8 +182,8 @@ const renderPathArr = ({
   manifestPathPlaceholder: string
   pathPlaceholder: string
   expressions: any
-  allowableTypes: MultiTypeInputType[]
-}) => {
+  allowableTypes: AllowedTypes
+}): React.ReactElement => {
   return (
     <>
       <Icon name="drag-handle-vertical" className={css.drag} />
@@ -194,7 +195,9 @@ const renderPathArr = ({
         style={{ width: 275 }}
         multiTextInputProps={{
           expressions,
-          allowableTypes: allowableTypes.filter(allowedType => allowedType !== MultiTypeInputType.RUNTIME)
+          allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+            allowedType => allowedType !== MultiTypeInputType.RUNTIME
+          ) as AllowedTypes
         }}
       />
     </>

@@ -1011,7 +1011,7 @@ export const onSubmitPayload = {
     metricDefinitions: [
       {
         analysis: {
-          deploymentVerification: { enabled: false, serviceInstanceMetricPath: undefined },
+          deploymentVerification: { enabled: false, serviceInstanceMetricPath: '' },
           liveMonitoring: { enabled: true },
           riskProfile: { category: 'Errors', metricType: 'ERROR', thresholdTypes: ['ACT_WHEN_HIGHER'] }
         },
@@ -1020,7 +1020,8 @@ export const onSubmitPayload = {
         identifier: 'appdMetric',
         metricName: 'appdMetric',
         metricPath: 'Calls per Minute',
-        sli: { enabled: true }
+        sli: { enabled: true },
+        completeMetricPath: undefined
       }
     ],
     metricPacks: [{ identifier: 'Performance' }, { identifier: 'Errors' }],

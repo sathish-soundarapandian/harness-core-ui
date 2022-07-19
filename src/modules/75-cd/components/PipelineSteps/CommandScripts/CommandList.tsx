@@ -11,6 +11,7 @@ import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautif
 import { defaultTo } from 'lodash-es'
 import cx from 'classnames'
 import {
+  AllowedTypes,
   Button,
   ButtonVariation,
   FontVariation,
@@ -19,7 +20,6 @@ import {
   Icon,
   Label,
   Layout,
-  MultiTypeInputType,
   Text
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
@@ -29,7 +29,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './CommandScripts.module.scss'
 
 interface CommandListProps {
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   readonly?: boolean
 }
 

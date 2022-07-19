@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { FormInput, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
+import { FormInput, AllowedTypes, SelectOption } from '@wings-software/uicore'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
@@ -17,7 +17,7 @@ import ConfigureFields from '../ConfigureFields/ConfigureFields'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 interface SelectVerificationTypeProps {
   formik: FormikProps<ContinousVerificationData>
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export default function SelectVerificationType(props: SelectVerificationTypeProps): React.ReactElement {

@@ -13,6 +13,7 @@ import cx from 'classnames'
 import * as Yup from 'yup'
 import { FieldArray, FormikProps } from 'formik'
 import {
+  AllowedTypes,
   Button,
   Formik,
   FormikForm,
@@ -552,7 +553,9 @@ function FormContent({
                                 placeholder={getString('common.valuePlaceholder')}
                                 disabled={isApprovalStepFieldDisabled(readonly)}
                                 multiTextInputProps={{
-                                  allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME),
+                                  allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                    item => item !== MultiTypeInputType.RUNTIME
+                                  ) as AllowedTypes,
                                   expressions
                                 }}
                               />

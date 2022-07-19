@@ -14,7 +14,7 @@ import _refiner from 'refiner-js'
 import { Drawer, Position } from '@blueprintjs/core'
 import cx from 'classnames'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { useStrings } from 'framework/strings'
+import { useStrings, String } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetCommunity } from '@common/utils/utils'
 import { getButton } from './ResourceCenterUtil'
@@ -46,7 +46,7 @@ export const ResourceCenter = (): React.ReactElement => {
   const [show, setShow] = useState<boolean>(false)
 
   const isCommunity = useGetCommunity()
-  const { EARLY_ACCESS_ENABLED, SHOW_NG_REFINER_FEEDBACK } = useFeatureFlags()
+  const { SHOW_NG_REFINER_FEEDBACK } = useFeatureFlags()
   useEffect(() => {
     _refiner('dismissForm', refinerSurveryId)
     _refiner('setProject', refinerProjectId)
@@ -104,17 +104,21 @@ export const ResourceCenter = (): React.ReactElement => {
 
   if (!show) {
     return (
-      <Icon
-        name={'nav-help'}
-        onClick={e => {
-          e.stopPropagation()
-          e.preventDefault()
-          setShow(true)
-        }}
-        size={30}
-        data-testid="question"
-        className={css.helpCenterIcon}
-      />
+      <Layout.Vertical flex spacing="xsmall" className={css.helpCenterIcon}>
+        <Icon
+          name={'nav-help'}
+          onClick={e => {
+            e.stopPropagation()
+            e.preventDefault()
+            setShow(true)
+          }}
+          size={20}
+          data-testid="question"
+        />
+        <Text font={{ size: 'xsmall', align: 'center' }} color={Color.WHITE}>
+          <String stringID="common.help" />
+        </Text>
+      </Layout.Vertical>
     )
   }
 
@@ -158,27 +162,25 @@ export const ResourceCenter = (): React.ReactElement => {
           <CommunitySubmitTicket />
         ) : (
           <>
-            {EARLY_ACCESS_ENABLED && (
-              <ResourceSection
-                title={getString('common.resourceCenter.productUpdates.title')}
-                resources={[
-                  {
-                    title: getString('common.resourceCenter.productUpdates.whatsnew'),
-                    icon: 'stars',
-                    iconClassname: css.iconFilled,
-                    onClick: (e: React.MouseEvent<Element, MouseEvent>) => openWhatsNew(e),
-                    testId: 'whatsnew'
-                  },
-                  {
-                    title: getString('common.resourceCenter.productUpdates.earlyAcess'),
-                    icon: 'flag-tick',
-                    iconClassname: css.iconFilled,
-                    onClick: (e: React.MouseEvent<Element, MouseEvent>) => openEarlyAccess(e),
-                    testId: 'early-access'
-                  }
-                ]}
-              />
-            )}
+            <ResourceSection
+              title={getString('common.resourceCenter.productUpdates.title')}
+              resources={[
+                {
+                  title: getString('common.resourceCenter.productUpdates.whatsnew'),
+                  icon: 'stars',
+                  iconClassname: css.iconFilled,
+                  onClick: (e: React.MouseEvent<Element, MouseEvent>) => openWhatsNew(e),
+                  testId: 'whatsnew'
+                },
+                {
+                  title: getString('common.resourceCenter.productUpdates.earlyAcess'),
+                  icon: 'flag-tick',
+                  iconClassname: css.iconFilled,
+                  onClick: (e: React.MouseEvent<Element, MouseEvent>) => openEarlyAccess(e),
+                  testId: 'early-access'
+                }
+              ]}
+            />
             <ResourceSection
               title={getString('common.resourceCenter.ticketmenu.title')}
               resources={getContactUsTiles}

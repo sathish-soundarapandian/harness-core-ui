@@ -8,7 +8,7 @@
 import React from 'react'
 import { isEmpty } from 'lodash-es'
 import cx from 'classnames'
-import { FormikForm, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
+import { FormikForm, MultiTypeInputType, getMultiTypeFromValue, FormInput } from '@harness/uicore'
 import { connect, FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -45,6 +45,20 @@ export function AzureWebAppSwapSlotInputStepRef<T extends AzureWebAppSwapSlotDat
           </div>
         )
       }
+      {isRuntime(inputSetData?.template?.spec?.targetSlot as string) && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormInput.MultiTextInput
+            label={'Target Slot'}
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.targetSlot`}
+            disabled={readonly}
+            multiTextInputProps={{
+              expressions,
+              disabled: readonly,
+              allowableTypes
+            }}
+          />
+        </div>
+      )}
     </FormikForm>
   )
 }

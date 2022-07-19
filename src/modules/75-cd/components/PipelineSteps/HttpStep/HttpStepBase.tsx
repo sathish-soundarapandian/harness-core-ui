@@ -6,7 +6,13 @@
  */
 
 import React from 'react'
-import { SelectOption, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import {
+  SelectOption,
+  FormInput,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  AllowedTypes
+} from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
 
@@ -35,7 +41,7 @@ export default function HttpStepBase(props: {
   isNewStep?: boolean
   readonly?: boolean
   stepViewType?: StepViewType
-  allowableTypes?: MultiTypeInputType[]
+  allowableTypes?: AllowedTypes
 }): React.ReactElement {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()

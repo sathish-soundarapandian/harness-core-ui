@@ -21,7 +21,8 @@ import {
   getMultiTypeFromValue,
   StepProps,
   Text,
-  ButtonSize
+  ButtonSize,
+  AllowedTypes as MultiTypeAllowedTypes
 } from '@wings-software/uicore'
 import { Form } from 'formik'
 import { Color } from '@harness/design-system'
@@ -37,7 +38,7 @@ import css from './TerraformVarfile.module.scss'
 interface TFVarStoreProps {
   initialValues: any
   isEditMode: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: MultiTypeAllowedTypes
   handleConnectorViewChange?: () => void
   isReadonly?: boolean
   setConnectorView?: (val: boolean) => void

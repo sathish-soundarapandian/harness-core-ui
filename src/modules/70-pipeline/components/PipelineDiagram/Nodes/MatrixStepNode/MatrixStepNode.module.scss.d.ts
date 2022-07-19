@@ -27,7 +27,6 @@ declare const styles: {
   readonly markerStart: string
   readonly matrixBorderWrapper: string
   readonly matrixFooter: string
-  readonly matrixLabel: string
   readonly nestedGroup: string
   readonly nestedStepGroup: string
   readonly nodeNameText: string
@@ -40,7 +39,6 @@ declare const styles: {
   readonly stepGroup: string
   readonly stepGroupBody: string
   readonly stepGroupHeader: string
-  readonly stepGroupMatrixLabel: string
   readonly stepGroupNode: string
   readonly stepGroupNormal: string
   readonly stepGroupParent: string

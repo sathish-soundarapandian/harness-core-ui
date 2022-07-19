@@ -56,6 +56,7 @@ export enum ServiceDeploymentType {
   awsLambda = 'awsLambda',
   pcf = 'pcf',
   Pdc = 'Pdc',
+  ssh = 'ssh',
   Ssh = 'Ssh',
   ServerlessAwsLambda = 'ServerlessAwsLambda',
   ServerlessAzureFunctions = 'ServerlessAzureFunctions',
@@ -246,7 +247,7 @@ export const isAzureWebAppDeploymentType = (deploymentType: string): boolean => 
 export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessAwsLambda]: 'Amazon Web Services Details',
   [ServiceDeploymentType.ServerlessAzureFunctions]: 'Azure Details',
-  [ServiceDeploymentType.AzureWebApp]: 'Web App Details',
+  [ServiceDeploymentType.AzureWebApp]: 'Web App Infrastructure Details',
   [ServiceDeploymentType.ServerlessGoogleFunctions]: 'GCP Details',
   [ServiceDeploymentType.Ssh]: 'Infrastructure definition',
   [ServiceDeploymentType.winrm]: 'WinRM'
@@ -264,9 +265,9 @@ export const getSelectedDeploymentType = (
   if (isPropagating) {
     const parentStageId = get(stage, 'stage.spec.serviceConfig.useFromStage.stage', null)
     const parentStage = getStageFromPipeline<DeploymentStageElementConfig>(defaultTo(parentStageId, ''))
-    const isParentStageTemplate = get(parentStage, 'stage.stage.template.templateRef')
-    if (isParentStageTemplate && templateServiceData) {
-      return get(templateServiceData, isParentStageTemplate)
+    const parentStageTemplateRef = get(parentStage, 'stage.stage.template.templateRef')
+    if (parentStageTemplateRef && templateServiceData) {
+      return get(templateServiceData, parentStageTemplateRef)
     }
     return get(parentStage, 'stage.stage.spec.serviceConfig.serviceDefinition.type', null)
   }
@@ -459,7 +460,7 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
   if (isServerlessDeploymentType(deploymentType)) {
     return StepType.ServerlessAwsLambda
   }
-  if (deploymentType === ServiceDeploymentType.Ssh) {
+  if (deploymentType === ServiceDeploymentType.Ssh || deploymentType === ServiceDeploymentType.ssh) {
     return StepType.SshServiceSpec
   }
   if (deploymentType === ServiceDeploymentType.WinRm) {

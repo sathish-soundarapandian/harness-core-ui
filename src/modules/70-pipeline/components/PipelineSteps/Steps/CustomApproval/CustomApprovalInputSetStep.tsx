@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType, FormInput, FormikForm } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormInput, FormikForm, AllowedTypes } from '@wings-software/uicore'
 import { isEmpty, get, isArray } from 'lodash-es'
 import cx from 'classnames'
 
@@ -28,7 +28,7 @@ export interface CustomApprovalInputSetStepProps {
   initialValues: CustomApprovalFormData
   onUpdate?: (data: CustomApprovalFormData) => void
   onChange?: (data: CustomApprovalFormData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   readonly?: boolean
   template?: CustomApprovalData

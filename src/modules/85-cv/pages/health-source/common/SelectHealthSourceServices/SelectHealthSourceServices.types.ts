@@ -14,6 +14,7 @@ export type SelectHealthSourceServicesProps = {
     continuousVerification?: boolean
     serviceInstance?: string
     riskCategory?: string
+    serviceInstanceMetricPath?: string
   }
   metricPackResponse: ReturnType<typeof useGetMetricPacks>
   labelNamesResponse?: ReturnType<typeof useGetLabelNames>

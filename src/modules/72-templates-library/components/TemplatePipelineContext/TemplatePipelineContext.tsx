@@ -7,7 +7,11 @@
 
 import React from 'react'
 import { cloneDeep, get, isEmpty, isEqual, noop } from 'lodash-es'
-import { MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
+import {
+  AllowedTypesWithRunTime,
+  MultiTypeInputType,
+  VisualYamlSelectedView as SelectedView
+} from '@wings-software/uicore'
 import merge from 'lodash-es/merge'
 import {
   findAllByKey,
@@ -60,7 +64,11 @@ export function TemplatePipelineProvider({
   contextType,
   children
 }: React.PropsWithChildren<TemplatePipelineProviderProps>): React.ReactElement {
-  const allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+  const allowableTypes: AllowedTypesWithRunTime[] = [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ]
   const { licenseInformation } = useLicenseStore()
   const isCDEnabled = useFeatureFlag(FeatureFlag.CDNG_ENABLED) && !!licenseInformation['CD']
   const isCIEnabled = useFeatureFlag(FeatureFlag.CING_ENABLED) && !!licenseInformation['CI']

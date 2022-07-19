@@ -35,7 +35,7 @@ export class AzureSwapSlot extends PipelineStep<AzureWebAppSwapSlotStepInfo> {
   protected type = StepType.AzureSwapSlot
   protected stepIcon: IconName = 'command-swap'
   protected stepIconColor = Color.GREY_700
-  protected stepName = 'Azure Web App Swap Deployment'
+  protected stepName = 'Azure Swap Slot'
   protected stepDescription: keyof StringsMap = 'cd.azureWebAppSwapSlotDescription'
   protected stepIconSize = 25
 
@@ -44,7 +44,9 @@ export class AzureSwapSlot extends PipelineStep<AzureWebAppSwapSlotStepInfo> {
     name: '',
     identifier: '',
     timeout: '10m',
-    spec: {}
+    spec: {
+      targetSlot: ''
+    }
   }
 
   /* istanbul ignore next */

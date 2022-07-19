@@ -7,7 +7,8 @@ import {
   DataTooltipInterface,
   HarnessDocTooltip,
   FormInput,
-  Container
+  Container,
+  AllowedTypes
 } from '@harness/uicore'
 import { IFormGroupProps, Intent, FormGroup } from '@blueprintjs/core'
 import { FormikContextType, connect } from 'formik'
@@ -26,8 +27,7 @@ export interface MultiTypeFieldSelectorProps extends Omit<IFormGroupProps, 'labe
   disableTypeSelection?: boolean
   skipRenderValueInExpressionLabel?: boolean
   expressionRender?(): React.ReactNode
-  allowedTypes?: MultiTypeInputType[]
-  useExecutionTimeInput?: boolean
+  allowedTypes?: AllowedTypes
   isOptional?: boolean
   optionalLabel?: string
   tooltipProps?: DataTooltipInterface
@@ -65,7 +65,6 @@ export function MultiTypeFileSelect(props: ConnectedMultiTypeFieldSelectorProps)
     optionalLabel = '(optional)',
     onTypeChange,
     supportListOfExpressions,
-    useExecutionTimeInput,
     defaultType,
     changed,
     localId,

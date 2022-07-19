@@ -20,7 +20,8 @@ import {
   ButtonSize,
   ButtonVariation,
   Table,
-  Text
+  Text,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import type { Column } from 'react-table'
@@ -83,7 +84,7 @@ interface GcpInfrastructureSpecEditableProps {
   template?: PdcInfrastructureTemplate
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: PdcInfrastructure
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 interface PDCInfrastructureUI {

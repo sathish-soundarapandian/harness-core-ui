@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyrig as MultiInputht 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -20,7 +20,8 @@ import {
   Text,
   StepWizard,
   ButtonVariation,
-  Icon
+  Icon,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
@@ -525,7 +526,9 @@ export default function TerraformEditView(
                             <MultiTypeList
                               multiTextInputProps={{
                                 expressions,
-                                allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME)
+                                allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                  item => item !== MultiTypeInputType.RUNTIME
+                                ) as AllowedTypes
                               }}
                               name="spec.configuration.spec.targets"
                               placeholder={getString('cd.enterTragets')}
@@ -545,7 +548,9 @@ export default function TerraformEditView(
                             <MultiTypeMap
                               valueMultiTextInputProps={{
                                 expressions,
-                                allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME)
+                                allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                  item => item !== MultiTypeInputType.RUNTIME
+                                ) as AllowedTypes
                               }}
                               name="spec.configuration.spec.environmentVariables"
                               multiTypeFieldSelectorProps={{

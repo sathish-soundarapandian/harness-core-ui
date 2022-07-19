@@ -7,6 +7,7 @@
 
 import React from 'react'
 import {
+  AllowedTypes,
   Button,
   ButtonVariation,
   Formik,
@@ -30,7 +31,7 @@ import css from '../K8sValuesManifest/ManifestDetails.module.scss'
 
 interface HarnessFileStorePropType {
   stepName: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   selectedManifest: ManifestTypes | null
   handleSubmit: (data: ManifestConfigWrapper) => void
@@ -142,7 +143,11 @@ function HarnessFileStore({
                   <div className={css.halfWidth}>
                     <MultiTypeFieldSelector
                       defaultValueToReset={['']}
-                      allowedTypes={allowableTypes.filter(allowedType => allowedType !== MultiTypeInputType.EXPRESSION)}
+                      allowedTypes={
+                        (allowableTypes as MultiTypeInputType[]).filter(
+                          allowedType => allowedType !== MultiTypeInputType.EXPRESSION
+                        ) as AllowedTypes
+                      }
                       name="files"
                       label={getString('resourcePage.fileStore')}
                     >
@@ -179,9 +184,11 @@ function HarnessFileStore({
                     <div className={css.halfWidth}>
                       <MultiTypeFieldSelector
                         defaultValueToReset={['']}
-                        allowedTypes={allowableTypes.filter(
-                          allowedType => allowedType !== MultiTypeInputType.EXPRESSION
-                        )}
+                        allowedTypes={
+                          (allowableTypes as MultiTypeInputType[]).filter(
+                            allowedType => allowedType !== MultiTypeInputType.EXPRESSION
+                          ) as AllowedTypes
+                        }
                         name="valuesPaths"
                         label={getString('pipeline.manifestType.valuesYamlPath')}
                       >
@@ -220,9 +227,11 @@ function HarnessFileStore({
                     <div className={css.halfWidth}>
                       <MultiTypeFieldSelector
                         defaultValueToReset={['']}
-                        allowedTypes={allowableTypes.filter(
-                          allowedType => allowedType !== MultiTypeInputType.EXPRESSION
-                        )}
+                        allowedTypes={
+                          (allowableTypes as MultiTypeInputType[]).filter(
+                            allowedType => allowedType !== MultiTypeInputType.EXPRESSION
+                          ) as AllowedTypes
+                        }
                         name="paramsPaths"
                         label={getString('pipeline.manifestType.paramsYamlPath')}
                       >

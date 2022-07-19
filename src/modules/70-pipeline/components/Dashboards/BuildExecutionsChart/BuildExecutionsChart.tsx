@@ -141,14 +141,6 @@ export function ExecutionsChart({
           series: [
             {
               type: 'column',
-              name: 'empty',
-              color: 'var(--ci-color-gray-100)',
-              showInLegend: false,
-              enableMouseTracking: false,
-              data: empty
-            },
-            {
-              type: 'column',
               name: 'Failed',
               color: 'var(--ci-color-red-500)',
               data: failed,
@@ -310,7 +302,6 @@ const defaultChartOptions: Highcharts.Options = {
         color: '#9293AB'
       }
     },
-    gridLineWidth: 0,
     lineWidth: 0
   },
   plotOptions: {

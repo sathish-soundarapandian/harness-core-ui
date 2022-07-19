@@ -9,7 +9,6 @@ import type { MultiTypeInputType, IconName } from '@harness/uicore'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 
 import type { ServiceDefinition, StageElementConfig } from 'services/cd-ng'
-import type { PipelineInfoConfig } from 'services/pipeline-ng'
 
 export interface ConfigFilesSelectionProps {
   isPropagating?: boolean
@@ -19,15 +18,13 @@ export interface ConfigFilesSelectionProps {
 export interface ConfigFilesListViewProps {
   isReadonly: boolean
   isPropagating?: boolean
-  allowOnlyOne?: boolean
   deploymentType: ServiceDefinition['type']
   allowableTypes: MultiTypeInputType[]
   stage: StageElementWrapper | undefined
-  pipeline: PipelineInfoConfig
   updateStage: (stage: StageElementConfig) => Promise<void>
   selectedConfig: ConfigFileType
   setSelectedConfig: (config: ConfigFileType) => void
-  listOfConfigFiles: any[]
+  selectedServiceResponse: any
 }
 
 export type ConfigFileType = 'Harness' | 'Git' | 'Gitlab' | 'Github' | 'Bitbucket'

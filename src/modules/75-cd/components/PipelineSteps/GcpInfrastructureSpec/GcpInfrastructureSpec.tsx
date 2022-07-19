@@ -18,7 +18,8 @@ import {
   MultiTypeInputType,
   Icon,
   SelectOption,
-  Accordion
+  Accordion,
+  AllowedTypes
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import * as Yup from 'yup'
@@ -100,7 +101,7 @@ interface GcpInfrastructureSpecEditableProps {
   template?: K8sGcpInfrastructureTemplate
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: K8sGcpInfrastructure
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 interface K8sGcpInfrastructureUI extends Omit<K8sGcpInfrastructure, 'cluster'> {

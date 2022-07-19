@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MultiTypeInputType, SelectOption } from '@wings-software/uicore'
+import type { AllowedTypes, SelectOption } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
 
 import type { GetDataError } from 'restful-react'
@@ -46,7 +46,7 @@ export interface SnowApprovalVariableListModeProps {
 export interface SnowApprovalDeploymentModeProps {
   stepViewType: StepViewType
   initialValues: ServiceNowApprovalData
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   onUpdate?: (data: ServiceNowApprovalData) => void
   inputSetData?: InputSetData<ServiceNowApprovalData>
   formik?: any
@@ -55,7 +55,7 @@ export interface SnowApprovalDeploymentModeProps {
 export interface ServiceNowApprovalStepModeProps {
   stepViewType: StepViewType
   initialValues: ServiceNowApprovalData
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   onUpdate?: (data: ServiceNowApprovalData) => void
   onChange?: (data: ServiceNowApprovalData) => void
   isNewStep?: boolean
@@ -64,7 +64,7 @@ export interface ServiceNowApprovalStepModeProps {
 export interface ServiceNowFormContentInterface {
   formik: FormikProps<ServiceNowApprovalData>
   stepViewType: StepViewType
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   isNewStep?: boolean
   readonly?: boolean
   refetchServiceNowTicketTypes: (props: UseGetServiceNowTicketTypesProps) => Promise<void>

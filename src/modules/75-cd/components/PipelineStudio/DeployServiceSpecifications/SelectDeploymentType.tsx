@@ -187,6 +187,11 @@ export default function SelectDeploymentType({
         icon: 'secret-ssh',
         value: ServiceDeploymentType.Ssh
       })
+      baseTypes.push({
+        label: getString('pipeline.serviceDeploymentTypes.winrm'),
+        icon: 'command-winrm',
+        value: ServiceDeploymentType.WinRm
+      })
     }
     if (AZURE_WEBAPP_NG) {
       baseTypes.push({

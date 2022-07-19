@@ -8,7 +8,14 @@
 import React from 'react'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
-import { Accordion, FormInput, getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
+import {
+  Accordion,
+  AllowedTypes,
+  FormInput,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  SelectOption
+} from '@wings-software/uicore'
 import { get } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'
@@ -30,7 +37,7 @@ export default function CreatePRScript(props: {
   isNewStep: boolean
   readonly?: boolean
   stepViewType?: StepViewType
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }): React.ReactElement {
   const {
     formik: { values: formValues, setFieldValue },

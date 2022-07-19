@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { IconName, MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 import { parse } from 'yaml'
 import get from 'lodash-es/get'
@@ -85,7 +85,7 @@ export interface DependencyProps {
   stepViewType: StepViewType
   onUpdate?: (data: DependencyData) => void
   onChange?: (data: DependencyData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   formik?: any
 }
 

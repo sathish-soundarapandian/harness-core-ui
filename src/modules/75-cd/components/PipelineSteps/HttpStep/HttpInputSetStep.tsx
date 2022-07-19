@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType, FormInput } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormInput, AllowedTypes } from '@wings-software/uicore'
 import { isEmpty, isArray } from 'lodash-es'
 import cx from 'classnames'
 
@@ -18,7 +18,6 @@ import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeTextAreaField } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { HttpStepFormData, HttpStepData, HttpStepHeaderConfig, HttpStepOutputVariable } from './types'
 import { httpStepType } from './HttpStepBase'
 
@@ -32,7 +31,7 @@ export interface HttpInputSetStepProps {
   readonly?: boolean
   template?: HttpStepData
   path: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export default function HttpInputSetStep(props: HttpInputSetStepProps): React.ReactElement {
@@ -40,7 +39,6 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
   const { getString } = useStrings()
   const prefix = isEmpty(path) ? '' : `${path}.`
   const { expressions } = useVariablesExpression()
-  const { NG_EXECUTION_INPUT } = useFeatureFlags()
 
   return (
     <React.Fragment>
@@ -53,8 +51,7 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
               enableConfigureOptions: false,
               expressions,
               disabled: readonly,
-              allowableTypes,
-              useExecutionTimeInput: NG_EXECUTION_INPUT
+              allowableTypes
             }}
             disabled={readonly}
           />
@@ -69,8 +66,7 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
             multiTextInputProps={{
               expressions,
               disabled: readonly,
-              allowableTypes,
-              useExecutionTimeInput: NG_EXECUTION_INPUT
+              allowableTypes
             }}
             disabled={readonly}
           />
@@ -86,8 +82,7 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
             multiTypeInputProps={{
               expressions,
               disabled: readonly,
-              allowableTypes,
-              useExecutionTimeInput: NG_EXECUTION_INPUT
+              allowableTypes
             }}
             disabled={readonly}
           />
@@ -103,8 +98,7 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
               enableConfigureOptions: false,
               expressions,
               disabled: readonly,
-              allowableTypes,
-              useExecutionTimeInput: NG_EXECUTION_INPUT
+              allowableTypes
             }}
             disabled={readonly}
           />
@@ -119,8 +113,7 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
             multiTextInputProps={{
               expressions,
               disabled: readonly,
-              allowableTypes,
-              useExecutionTimeInput: NG_EXECUTION_INPUT
+              allowableTypes
             }}
           />
         </div>
@@ -156,8 +149,7 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
                           multiTextInputProps={{
                             allowableTypes: allowableTypes,
                             expressions,
-                            disabled: readonly,
-                            useExecutionTimeInput: NG_EXECUTION_INPUT
+                            disabled: readonly
                           }}
                           label=""
                         />
@@ -201,8 +193,7 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
                             multiTextInputProps={{
                               allowableTypes,
                               expressions,
-                              disabled: readonly,
-                              useExecutionTimeInput: NG_EXECUTION_INPUT
+                              disabled: readonly
                             }}
                             label=""
                           />

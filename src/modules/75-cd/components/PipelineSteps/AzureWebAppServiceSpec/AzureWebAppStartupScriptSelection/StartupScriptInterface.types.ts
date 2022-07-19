@@ -6,7 +6,7 @@
  */
 
 import type { IconName } from '@harness/icons'
-import type { MultiTypeInputType, StepProps } from '@harness/uicore'
+import type { AllowedTypes as MultiTypeAllowedTypes, StepProps } from '@harness/uicore'
 import { Connectors } from '@connectors/constants'
 import type { StringKeys } from 'framework/strings'
 import type {
@@ -76,7 +76,7 @@ export interface StartupScriptWizardStepsProps<T> {
   initialValues: StartupScriptWizardInitData
   newConnectorView: boolean
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: MultiTypeAllowedTypes
   newConnectorSteps?: any
   lastSteps: React.ReactElement<StepProps<ConnectorConfigDTO>> | null
   isReadonly: boolean
@@ -87,7 +87,7 @@ export interface StartupScriptWizardStepsProps<T> {
 export interface StartupScriptWizardStepTwoProps {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: MultiTypeAllowedTypes
   initialValues: StoreConfigWrapper
   handleSubmit: (data: StoreConfigWrapper) => void
   isReadonly?: boolean
@@ -116,7 +116,7 @@ export interface StartupScriptListViewProps {
   connectors: PageConnectorResponse | undefined
   refetchConnectors: () => void
   isReadonly: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: MultiTypeAllowedTypes
   startupScript: StoreConfigWrapper
 }
 
@@ -124,7 +124,7 @@ export interface StartupScriptLastStepProps {
   key: string
   name: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: MultiTypeAllowedTypes
   stepName: string
   initialValues: StoreConfigWrapper
   handleSubmit: (data: StoreConfigWrapper) => void
@@ -135,7 +135,7 @@ export interface StartupScriptLastStepProps {
 export interface StartupScriptPropType {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: MultiTypeAllowedTypes
   isReadonly: boolean
   connectorTypes: Array<ConnectorTypes>
   initialValues: StartupScriptWizardInitData

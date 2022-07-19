@@ -8,19 +8,18 @@
 import React from 'react'
 import { FieldArray } from 'formik'
 import { isArray, isEmpty } from 'lodash-es'
-import { FormInput, MultiTypeInputType } from '@harness/uicore'
+import { AllowedTypes, FormInput } from '@harness/uicore'
 
 import type { StepElementConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { scriptInputType, scriptOutputType } from '../../ShellScriptStep/shellScriptTypes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './InputOutputVariablesInputSet.module.scss'
 
 interface InputOutputVariablesInputSetProps {
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   template?: StepElementConfig
   path?: string
   readonly?: boolean
@@ -31,7 +30,6 @@ export function InputOutputVariablesInputSet(props: InputOutputVariablesInputSet
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { NG_EXECUTION_INPUT } = useFeatureFlags()
   const prefix = isEmpty(path) ? '' : `${path}.`
 
   return (
@@ -73,8 +71,7 @@ export function InputOutputVariablesInputSet(props: InputOutputVariablesInputSet
                             multiTextInputProps={{
                               allowableTypes,
                               expressions,
-                              disabled: readonly,
-                              useExecutionTimeInput: NG_EXECUTION_INPUT
+                              disabled: readonly
                             }}
                             label=""
                             disabled={readonly}
@@ -128,8 +125,7 @@ export function InputOutputVariablesInputSet(props: InputOutputVariablesInputSet
                             multiTextInputProps={{
                               allowableTypes,
                               expressions,
-                              disabled: readonly,
-                              useExecutionTimeInput: NG_EXECUTION_INPUT
+                              disabled: readonly
                             }}
                             label=""
                             disabled={readonly}

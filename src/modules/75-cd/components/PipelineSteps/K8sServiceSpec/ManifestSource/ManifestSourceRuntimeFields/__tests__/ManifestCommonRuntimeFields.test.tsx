@@ -8,7 +8,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 
-import { MultiTypeInputType } from '@harness/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import type { ManifestConfigWrapper, ServiceSpec } from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ManifestSourceBaseFactory } from '@cd/factory/ManifestSourceFactory/ManifestSourceBaseFactory'
@@ -25,7 +25,7 @@ describe('K8sManifestSource tests', () => {
     stageIdentifier,
     path,
     initialValues: { manifests: manifests as ManifestConfigWrapper[] },
-    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION] as AllowedTypesWithRunTime[]
   }
   test('Should match snapshot', () => {
     const { container } = render(

@@ -6,7 +6,7 @@
  */
 
 import React, { CSSProperties, useEffect, useMemo, useState } from 'react'
-import { FormInput, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
+import { AllowedTypes, FormInput, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -24,7 +24,7 @@ interface BaseFieldProps {
   formik?: FormikProps<ContinousVerificationData>
   expressions?: string[]
   isSimpleDropdown?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export function getDefaultBaselineOptions(getString: UseStringsReturn['getString']): SelectOption[] {

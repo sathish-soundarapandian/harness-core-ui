@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MultiTypeInputType, SelectOption } from '@wings-software/uicore'
+import type { AllowedTypes, SelectOption } from '@wings-software/uicore'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type {
@@ -61,7 +61,7 @@ export interface ManifestListViewProps {
   listOfManifests: ManifestConfigWrapper[]
   isReadonly: boolean
   deploymentType: ServiceDefinition['type']
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   updateManifestList: (obj: ManifestConfigWrapper, idx: number) => void
   removeManifestConfig: (idx: number) => void
   attachPathYaml: (formData: ConnectorConfigDTO, manifestId: string, manifestType: PrimaryManifestType) => void
@@ -88,7 +88,7 @@ export interface ManifestLastStepProps {
   key: string
   name: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepName: string
   initialValues: ManifestConfig
   handleSubmit: (data: ManifestConfigWrapper) => void

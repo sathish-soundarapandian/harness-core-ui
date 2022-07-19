@@ -7,7 +7,7 @@
 
 import React, { forwardRef } from 'react'
 import * as Yup from 'yup'
-import { isEmpty } from 'lodash-es'
+import { isEmpty, set } from 'lodash-es'
 import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { yupToFormErrors, FormikErrors } from 'formik'
 import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
@@ -34,7 +34,7 @@ export class AzureSlotDeployment extends PipelineStep<AzureSlotDeploymentStepInf
 
   protected type = StepType.AzureSlotDeployment
   protected stepIcon: IconName = 'slot-deployment'
-  protected stepName = 'Azure Web Apps Rollback'
+  protected stepName = 'Azure Slot Deployment'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.AzureSlotDeployment'
   protected stepIconSize = 25
 
@@ -42,7 +42,11 @@ export class AzureSlotDeployment extends PipelineStep<AzureSlotDeploymentStepInf
     type: StepType.AzureSlotDeployment,
     name: '',
     identifier: '',
-    timeout: '10m'
+    timeout: '10m',
+    spec: {
+      webApp: '',
+      deploymentSlot: ''
+    }
   }
 
   /* istanbul ignore next */
@@ -66,6 +70,20 @@ export class AzureSlotDeployment extends PipelineStep<AzureSlotDeploymentStepInf
           Object.assign(errors, err)
         }
       }
+    }
+    if (
+      getMultiTypeFromValue(template?.spec?.webApp) === MultiTypeInputType.RUNTIME &&
+      isRequired &&
+      isEmpty(data?.spec?.webApp)
+    ) {
+      set(errors, 'spec.webApp', getString?.('fieldRequired', { field: 'Web App' }))
+    }
+    if (
+      getMultiTypeFromValue(template?.spec?.deploymentSlot) === MultiTypeInputType.RUNTIME &&
+      isRequired &&
+      isEmpty(data?.spec?.deploymentSlot)
+    ) {
+      set(errors, 'spec.deploymentSlot', getString?.('fieldRequired', { field: 'Deployment Slot' }))
     }
     if (isEmpty(errors.spec)) {
       delete errors.spec

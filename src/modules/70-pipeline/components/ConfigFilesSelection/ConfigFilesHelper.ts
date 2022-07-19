@@ -5,7 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+<<<<<<< HEAD
 import { IconName, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
+=======
+import type { IconName } from '@harness/uicore'
+>>>>>>> develop
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { Connectors } from '@connectors/constants'
 
@@ -88,6 +92,7 @@ export enum FILE_TYPE_VALUES {
 }
 
 export const prepareConfigFilesValue = (formData: ConfigFileHarnessDataType & { store?: string }) => {
+<<<<<<< HEAD
   const { fileType, files } = formData
 
   const typeValue = getMultiTypeFromValue(
@@ -96,10 +101,15 @@ export const prepareConfigFilesValue = (formData: ConfigFileHarnessDataType & { 
     true
   )
   const isRunTime = typeValue === MultiTypeInputType.RUNTIME
+=======
+  const { fileType } = formData
+
+>>>>>>> develop
   const filesData: any = {
     files: [],
     secretFiles: []
   }
+<<<<<<< HEAD
   if (fileType === FILE_TYPE_VALUES.FILE_STORE && !isRunTime) {
     filesData.files = formData?.files
   }
@@ -111,12 +121,19 @@ export const prepareConfigFilesValue = (formData: ConfigFileHarnessDataType & { 
     filesData.secretFiles = formData?.files
   }
   if (fileType === FILE_TYPE_VALUES.ENCRYPTED && isRunTime) {
+=======
+  if (fileType === FILE_TYPE_VALUES.FILE_STORE) {
+    filesData.files = formData?.files
+  }
+  if (fileType === FILE_TYPE_VALUES.ENCRYPTED) {
+>>>>>>> develop
     filesData.secretFiles = formData?.files
   }
 
   return filesData
 }
 
+<<<<<<< HEAD
 // const prepareInitialValuesConfigFile = (
 //   listOfConfigFiles: any,
 //   configFileIndex: number,
@@ -154,6 +171,8 @@ export const prepareConfigFilesValue = (formData: ConfigFileHarnessDataType & { 
 //   }
 // }
 
+=======
+>>>>>>> develop
 export const ENABLE_CONFIG_FILES = {
   Harness: 'Harness'
 }

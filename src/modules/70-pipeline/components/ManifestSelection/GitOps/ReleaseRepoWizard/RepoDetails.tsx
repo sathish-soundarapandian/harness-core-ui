@@ -16,7 +16,8 @@ import {
   Text,
   StepProps,
   ButtonVariation,
-  RUNTIME_INPUT_VALUE
+  RUNTIME_INPUT_VALUE,
+  AllowedTypes
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
@@ -43,7 +44,7 @@ interface ReleaseRepoDataType {
 interface ReleaseRepoProps {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ReleaseRepoManifest
   manifest: any
   handleSubmit: (data: ReleaseRepoManifest) => void
@@ -94,7 +95,7 @@ function FormField({
   expressions: string[]
   label: string
   isReadonly: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   fieldName: string
 }): React.ReactElement {
   return (

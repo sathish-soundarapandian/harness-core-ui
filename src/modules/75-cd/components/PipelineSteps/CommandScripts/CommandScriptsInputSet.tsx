@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
-import { FormikForm, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { AllowedTypes, FormikForm, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -22,7 +22,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 interface CommandScriptsInputSetProps {
   initialValues: CommandScriptsData
   stepViewType: StepViewType
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   inputSetData: {
     template?: CommandScriptsData
     path?: string

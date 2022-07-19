@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Card, MultiTypeInputType, NestedAccordionPanel, Text } from '@wings-software/uicore'
+import { Card, AllowedTypes, NestedAccordionPanel, Text } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation, Color } from '@harness/design-system'
 import { isEmpty, lowerCase } from 'lodash-es'
@@ -35,7 +35,7 @@ export interface PipelineCardProps {
   metadataMap: PipelineVariablesData['metadataMap']
   updatePipeline(pipeline: PipelineInfoConfig): void
   readonly?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export default function PipelineCard(props: PipelineCardProps): React.ReactElement {

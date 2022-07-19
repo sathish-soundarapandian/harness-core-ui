@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, Icon, StepWizard, StepProps, MultiTypeInputType } from '@wings-software/uicore'
+import { Text, Icon, StepWizard, StepProps, AllowedTypes } from '@wings-software/uicore'
 import type { IconProps } from '@harness/icons'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -31,7 +31,7 @@ interface ManifestWizardStepsProps<T, U> {
   labels: ConnectorRefLabelType
   newConnectorView: boolean
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   newConnectorSteps?: any
   lastSteps: Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> | null
   iconsProps: IconProps

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { MultiTypeInputType, StepWizard } from '@harness/uicore'
+import { AllowedTypes, StepWizard } from '@harness/uicore'
 import React from 'react'
 import { get } from 'lodash-es'
 
@@ -33,7 +33,7 @@ interface ReleaseRepoStepProps {
   labels: ConnectorRefLabelType
   newConnectorView: boolean
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   newConnectorSteps?: any
 
   isReadonly: boolean

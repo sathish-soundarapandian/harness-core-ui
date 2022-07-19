@@ -12,7 +12,8 @@ import {
   MultiTypeInputMenu,
   MultiTypeInputType,
   MultiTypeIcon,
-  MultiTypeIconSize
+  MultiTypeIconSize,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { Popover } from '@blueprintjs/core'
 import cx from 'classnames'
@@ -21,7 +22,7 @@ import css from './MultiTypeSelectorButton.module.scss'
 export interface MultiTypeSelectorButtonProps {
   type: MultiTypeInputType
   onChange: (type: MultiTypeInputType) => void
-  allowedTypes: MultiTypeInputType[]
+  allowedTypes: AllowedTypes
   disabled?: boolean
 }
 

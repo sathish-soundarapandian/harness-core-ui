@@ -8,13 +8,22 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly accordionSummary: string
+  readonly accordionTitle: string
+  readonly configFileVariablesTable: string
+  readonly customVariables: string
   readonly inputWidth: string
   readonly inputheader: string
   readonly layoutVerticalSpacing: string
   readonly listLabel: string
   readonly manifestInfoTooltip: string
+  readonly nestedAccordions: string
   readonly nopadLeft: string
+  readonly notwide: string
+  readonly sectionCard: string
+  readonly serviceDefinition: string
   readonly subheading: string
+  readonly tabHeading: string
+  readonly tabSubHeading: string
   readonly verticalSpacingInput: string
 }
 export default styles

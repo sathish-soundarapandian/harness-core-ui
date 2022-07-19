@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { IconName, MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@wings-software/uicore'
 import type { FormikErrors, FormikProps } from 'formik'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import type { UseStringsReturn } from 'framework/strings'
@@ -56,7 +56,7 @@ export interface StepProps<T, U = unknown> {
   readonly?: boolean
   formikRef?: StepFormikFowardRef<T>
   customStepProps?: U
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export function setFormikRef<T = unknown, U = unknown>(ref: StepFormikFowardRef<T>, formik: FormikProps<U>): void {

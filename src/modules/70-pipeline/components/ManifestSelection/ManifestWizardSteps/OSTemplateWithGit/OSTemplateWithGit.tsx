@@ -16,7 +16,8 @@ import {
   Text,
   StepProps,
   Accordion,
-  ButtonVariation
+  ButtonVariation,
+  AllowedTypes
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { Form } from 'formik'
@@ -46,7 +47,7 @@ import templateCss from './OSTemplateWithGit.module.scss'
 interface OpenshiftTemplateWithGITPropType {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>

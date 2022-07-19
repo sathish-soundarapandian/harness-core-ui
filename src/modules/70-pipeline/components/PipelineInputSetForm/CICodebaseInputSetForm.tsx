@@ -18,7 +18,8 @@ import {
   Icon,
   TextInput,
   RUNTIME_INPUT_VALUE,
-  SelectOption
+  SelectOption,
+  AllowedTypesWithRunTime
 } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { connect } from 'formik'
@@ -425,7 +426,7 @@ function CICodebaseInputSetFormInternal({
     )
   }
 
-  const AllowableTypesForCodebaseProperties = useMemo(() => {
+  const AllowableTypesForCodebaseProperties = useMemo((): AllowedTypesWithRunTime[] => {
     return viewTypeMetadata?.isTemplateBuilder || viewTypeMetadata?.isTemplateDetailDrawer
       ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED]
       : [MultiTypeInputType.FIXED]

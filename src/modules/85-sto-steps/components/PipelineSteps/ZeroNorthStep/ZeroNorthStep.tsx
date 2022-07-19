@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { IconName, MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@wings-software/uicore'
 import type { FormikErrors } from 'formik'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -72,7 +72,7 @@ export interface ZeroNorthStepProps {
   stepViewType: StepViewType
   onUpdate?: (data: ZeroNorthStepData) => void
   onChange?: (data: ZeroNorthStepData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export class ZeroNorthStep extends PipelineStep<ZeroNorthStepData> {

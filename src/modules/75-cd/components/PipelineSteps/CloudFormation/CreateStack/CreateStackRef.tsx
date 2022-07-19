@@ -24,7 +24,8 @@ import {
   SelectOption,
   Button,
   Icon,
-  useToaster
+  useToaster,
+  AllowedTypes
 } from '@harness/uicore'
 import { map, get, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
@@ -688,7 +689,11 @@ export const CreateStack = (
                         </Text>
                       }
                       defaultValueToReset=""
-                      allowedTypes={allowableTypes.filter(item => item !== MultiTypeInputType.EXPRESSION)}
+                      allowedTypes={
+                        (allowableTypes as MultiTypeInputType[]).filter(
+                          item => item !== MultiTypeInputType.EXPRESSION
+                        ) as AllowedTypes
+                      }
                       skipRenderValueInExpressionLabel
                       disabled={readonly}
                     >
@@ -715,7 +720,11 @@ export const CreateStack = (
                         </Text>
                       }
                       defaultValueToReset=""
-                      allowedTypes={allowableTypes.filter(item => item !== MultiTypeInputType.EXPRESSION)}
+                      allowedTypes={
+                        (allowableTypes as MultiTypeInputType[]).filter(
+                          item => item !== MultiTypeInputType.EXPRESSION
+                        ) as AllowedTypes
+                      }
                       skipRenderValueInExpressionLabel
                       disabled={readonly}
                     >
@@ -760,6 +769,8 @@ export const CreateStack = (
                 /* istanbul ignore next */
                 setInlineParams(false)
               }}
+              readonly={readonly}
+              allowableTypes={allowableTypes}
               awsConnectorRef={awsConnector}
               type={templateFileType}
               region={awsRegion}

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { findAllByText, findByText, fireEvent, render } from '@testing-library/react'
-import { MultiTypeInputType } from '@harness/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { renderHook } from '@testing-library/react-hooks'
 
 import { TestWrapper } from '@common/utils/testUtils'
@@ -26,7 +26,11 @@ const submitFn = jest.fn()
 
 const props = {
   expressions: [],
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   lastSteps: [],
   nextStep: submitFn,
   types: [

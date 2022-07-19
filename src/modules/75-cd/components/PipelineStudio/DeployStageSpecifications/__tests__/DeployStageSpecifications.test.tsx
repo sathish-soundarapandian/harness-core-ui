@@ -8,7 +8,7 @@
 import React from 'react'
 import { render, fireEvent, act, findByText, waitFor } from '@testing-library/react'
 
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   PipelineContext,
@@ -68,7 +68,11 @@ const getPipelineContext = (): PipelineContextInterface => ({
     templateServiceData: {}
   },
   contextType: PipelineContextType.Pipeline,
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   setSchemaErrorView: jest.fn(),
   stagesMap: {},
   updatePipelineStoreMetadata: jest.fn(),

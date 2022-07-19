@@ -18,6 +18,7 @@ import { NodeType } from '../../types'
 import SVGMarker from '../SVGMarker'
 import { getPositionOfAddIcon } from '../utils'
 import { useNodeDimensionContext } from '../NodeDimensionStore'
+import MatrixNodeLabelWrapper from '../MatrixNodeLabelWrapper'
 import css from './StepGroupNode.module.scss'
 import defaultCss from '../DefaultNode/DefaultNode.module.scss'
 
@@ -53,6 +54,7 @@ export function StepGroupNode(props: any): JSX.Element {
     }
   }, [stepsData])
 
+  const nodeType = Object.keys(props?.data?.stepGroup?.strategy || {})[0]
   return (
     <>
       {isNodeCollapsed && DefaultNode ? (
@@ -65,6 +67,9 @@ export function StepGroupNode(props: any): JSX.Element {
         />
       ) : (
         <div style={{ position: 'relative' }}>
+          {props.data?.loopingStrategyEnabled && (
+            <MatrixNodeLabelWrapper isParallelNode={props?.isParallelNode} nodeType={nodeType} />
+          )}
           <div
             onMouseOver={e => {
               e.stopPropagation()

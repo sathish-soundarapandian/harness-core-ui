@@ -26,6 +26,7 @@ import { useModalHook } from '@harness/use-modal'
 import { useHistory, useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import { defaultTo, isEmpty, pick } from 'lodash-es'
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { Page, StringUtils, useToaster } from '@common/exports'
 import routes from '@common/RouteDefinitions'
 import {
@@ -889,6 +890,7 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
             )}
           </GitSyncStoreProvider>
         )}
+        <HelpPanel referenceId="Pipelines" type={HelpPanelType.FLOATING_CONTAINER} />
       </Page.Body>
     </>
   )

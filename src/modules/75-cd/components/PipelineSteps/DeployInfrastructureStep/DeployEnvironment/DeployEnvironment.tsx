@@ -14,6 +14,7 @@ import { Spinner } from '@blueprintjs/core'
 import produce from 'immer'
 
 import {
+  AllowedTypes,
   ButtonSize,
   ButtonVariation,
   Container,
@@ -59,7 +60,7 @@ interface DeployEnvironmentProps {
   initialValues: DeployStageConfig
   formik?: FormikProps<DeployStageConfig>
   readonly?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   serviceRef?: string
   path?: string
   gitOpsEnabled?: boolean

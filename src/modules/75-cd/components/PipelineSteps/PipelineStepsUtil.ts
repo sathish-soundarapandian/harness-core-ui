@@ -192,8 +192,6 @@ export const getInfrastructureDefinitionValidationSchema = (
     if (deploymentType === ServiceDeploymentType.ServerlessAwsLambda) {
       return getValidationSchemaWithRegion(getString)
     }
-    return getValidationSchema(getString)
-  } else {
     if (deploymentType === ServiceDeploymentType.Ssh) {
       return Yup.object().shape({
         credentialsRef: getCredentialsRefSchema(getString)

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { MultiTypeInputType, NestedAccordionPanel, Text } from '@wings-software/uicore'
+import { AllowedTypes, NestedAccordionPanel, Text } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import cx from 'classnames'
 import { isEmpty, lowerCase } from 'lodash-es'
@@ -38,7 +38,7 @@ export interface InfrastructureCardProps {
   onUpdateInfrastructureProvisioner(data: ExecutionElementConfig): void
   path?: string
   readonly?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepsFactory: AbstractStepFactory
 }
 

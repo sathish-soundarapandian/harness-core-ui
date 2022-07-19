@@ -56,17 +56,10 @@ module.exports = ({ enableGitOpsUI, enableSTO, enableChaosUI, enableCCMUI }) => 
   }
 
   const shared = {
-    '@harness/uicore': packageJSON.dependencies['@harness/uicore'],
     ...mapValues(pick(packageJSON.dependencies, ExactSharedPackages), version => ({
       singleton: true,
       requiredVersion: version
     }))
-  }
-
-  if (process.env.NODE_ENV === 'development' && packageJSON.dependencies['@harness/uicore']?.includes('yalc')) {
-    shared['@harness/uicore'] = {
-      requiredVersion: packageJSON.dependencies['@harness/uicore']
-    }
   }
 
   return {

@@ -16,6 +16,7 @@ import type {
 import type { ResponseString } from 'services/cd-ng'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { MONITORED_SERVICE_TYPE } from './SelectMonitoredServiceType.constants'
+import type { ServiceAndEnv } from './SelectMonitoredServiceType.types'
 
 export function getTemplateData(
   spec: VerifyStepMonitoredService['spec'],
@@ -64,6 +65,14 @@ export function getInitialHealthSourceVariables(
   formValues: ContinousVerificationData
 ): MonitoredServiceTemplateVariable[] {
   return formValues?.spec?.monitoredService?.spec?.templateInputs?.variables || []
+}
+
+export function getInitialServiceAndEnv(formValues: ContinousVerificationData): ServiceAndEnv {
+  const { serviceRef = '', environmentRef = '' } = formValues?.spec?.monitoredService?.spec?.templateInputs || {}
+  return {
+    serviceRef,
+    environmentRef
+  }
 }
 
 export function getInitialHealthSources(

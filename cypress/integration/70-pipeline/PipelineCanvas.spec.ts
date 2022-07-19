@@ -259,7 +259,6 @@ describe('Execution Stages', () => {
       return false
     })
     cy.initializeRoute()
-
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
     cy.intercept('POST', pipelineSaveCall, { fixture: 'pipeline/api/pipelines.post' })
     cy.intercept('POST', stepLibrary, { fixture: 'ng/api/stepLibrary' }).as('stepLibrary')
@@ -316,7 +315,7 @@ describe('Execution Stages', () => {
     cy.get('*[class^="ExecutionGraph-module_canvas"]')
       .should('be.visible')
       .within(() => {
-        cy.get('span[data-icon="zoom-out"]').click()
+        cy.get('span[data-icon="zoom-out"]').click({ force: true })
         cy.get('p[data-name="node-name"]').contains('Add step').click({ force: true })
         cy.wait(1000)
         cy.get('[class*="ExecutionGraph-module_add-step-popover"]', { withinSubject: null })
@@ -463,11 +462,11 @@ describe('ServerlessAwsLambda as deployment type', () => {
 
     // Got to Execution tab, Serverless Aws Lambda Deploy should be added by default
     // Switching between Rollback and Execution should work as expected
-    cy.contains('span', 'Execution').click()
+    cy.contains('span', 'Execution').click({ force: true })
     cy.contains('p', 'Serverless Aws Lambda Deploy')
-    cy.contains('p', 'Rollback').click()
+    cy.contains('p', 'Rollback').click({ force: true })
     cy.contains('p', 'Serverless Aws Lambda Rollback')
-    cy.contains('p', 'Execution').click()
+    cy.contains('p', 'Execution').click({ force: true })
     cy.contains('p', 'Serverless Aws Lambda Deploy')
 
     // Add another Serverless Lambda Deploy Step

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { StepWizard, Icon, MultiTypeInputType } from '@wings-software/uicore'
+import { StepWizard, Icon, AllowedTypes } from '@wings-software/uicore'
 import type { IconProps } from '@harness/icons'
 import { String, StringKeys, useStrings } from 'framework/strings'
 import { ArtifactoryRepoType } from '../ArtifactRepository/ArtifactoryRepoType'
@@ -33,7 +33,7 @@ interface ArtifactWizardProps {
   newConnectorView: boolean
   iconsProps: IconProps | undefined
   isReadonly: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   showConnectorStep: boolean
 }
 

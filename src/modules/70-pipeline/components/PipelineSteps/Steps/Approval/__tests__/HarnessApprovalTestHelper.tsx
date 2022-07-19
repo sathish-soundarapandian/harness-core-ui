@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import type { UseGetMockData } from '@common/utils/testUtils'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { ResponsePageUserGroupDTO } from 'services/cd-ng'
@@ -47,7 +47,11 @@ export const getHarnessApprovalEditModePropsAsExpressions = (): HarnessApprovalS
     }
   },
   onUpdate: jest.fn(),
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   stepViewType: StepViewType.Edit
 })
 
@@ -69,7 +73,11 @@ export const getHarnessApprovalEditModePropsMinimumCountNegative = (): HarnessAp
     }
   },
   onUpdate: jest.fn(),
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   stepViewType: StepViewType.Edit
 })
 
@@ -97,7 +105,11 @@ export const getHarnessApprovalEditModePropsWithValues = (): HarnessApprovalStep
   },
   onUpdate: jest.fn(),
   onChange: jest.fn(),
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   stepViewType: StepViewType.Edit
 })
 

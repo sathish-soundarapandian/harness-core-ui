@@ -19,7 +19,7 @@ import {
   FormikTooltipContext,
   HarnessDocTooltip,
   ButtonVariation,
-  MultiTypeInputType
+  AllowedTypes
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { Classes, MenuItem, Popover, PopoverInteractionKind, Menu, Dialog, IDialogProps } from '@blueprintjs/core'
@@ -41,7 +41,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 interface TfVarFileProps {
   formik: FormikProps<TerraformData>
   isReadonly?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   getNewConnectorSteps?: any
   setSelectedConnector?: any
   selectedConnector?: string

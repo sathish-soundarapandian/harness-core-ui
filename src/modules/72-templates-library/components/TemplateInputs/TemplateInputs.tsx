@@ -13,7 +13,8 @@ import {
   Layout,
   Formik,
   getMultiTypeFromValue,
-  PageError
+  PageError,
+  AllowedTypesWithRunTime
 } from '@wings-software/uicore'
 import { parse } from 'yaml'
 import { Color } from '@harness/design-system'
@@ -63,7 +64,11 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = props => {
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
-  const allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+  const allowableTypes = [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.EXPRESSION,
+    MultiTypeInputType.RUNTIME
+  ] as AllowedTypesWithRunTime[]
   const templateEntityType =
     (template as TemplateSummaryResponse).templateEntityType || (template as NGTemplateInfoConfigWithGitDetails).type
   const repo =

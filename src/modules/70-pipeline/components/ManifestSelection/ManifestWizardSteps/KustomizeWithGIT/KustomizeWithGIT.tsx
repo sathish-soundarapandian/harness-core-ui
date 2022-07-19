@@ -16,7 +16,8 @@ import {
   Text,
   StepProps,
   Accordion,
-  ButtonVariation
+  ButtonVariation,
+  AllowedTypes
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
@@ -47,7 +48,7 @@ import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
 interface KustomizeWithGITPropType {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>

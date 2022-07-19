@@ -387,6 +387,7 @@ export interface StringsMap {
   'common.headerCompanyName': string
   'common.headerDefaultAccount': string
   'common.headers': string
+  'common.help': string
   'common.hideAll': string
   'common.home': string
   'common.hourly': string
@@ -2849,6 +2850,10 @@ export interface StringsMap {
   'pipeline.conditionalExecution.toolTip.resolvedVariables': string
   'pipeline.conditionalExecution.toolTip.stageTitle': string
   'pipeline.conditionalExecution.toolTip.stepTitle': string
+<<<<<<< HEAD
+=======
+  'pipeline.configFiles.addConfigFile': string
+>>>>>>> develop
   'pipeline.configFiles.encryptedFiles': string
   'pipeline.configFiles.encryptedLocation': string
   'pipeline.configFiles.error.file': string
@@ -3935,6 +3940,7 @@ export interface StringsMap {
   'cd.cloudFormation.errors.templateRequired': string
   'cd.cloudFormation.errors.value': string
   'cd.cloudFormation.inlineParameterFiles': string
+  'cd.cloudFormation.overrideParameterFileDetails': string
   'cd.cloudFormation.paramFileConnector': string
   'cd.cloudFormation.parameterFileDetails': string
   'cd.cloudFormation.parameterFilePaths': string
@@ -5839,9 +5845,6 @@ export interface StringsMap {
   'ci.getStartedWithCI.flexibleInfra': string
   'ci.getStartedWithCI.flexibleInfraHelpText': string
   'ci.getStartedWithCI.genericGit': string
-  'ci.getStartedWithCI.gitProviderURLs.bitbucket': string
-  'ci.getStartedWithCI.gitProviderURLs.github': string
-  'ci.getStartedWithCI.gitProviderURLs.gitlab': string
   'ci.getStartedWithCI.hostedByHarness': string
   'ci.getStartedWithCI.hostedByHarnessBuildLocation': string
   'ci.getStartedWithCI.hosting': string

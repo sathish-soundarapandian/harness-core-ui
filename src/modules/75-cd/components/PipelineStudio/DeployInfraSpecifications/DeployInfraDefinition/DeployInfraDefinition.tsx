@@ -7,7 +7,15 @@
 
 import React, { useEffect, useState } from 'react'
 import YAML from 'yaml'
-import { Accordion, Card, Container, MultiTypeInputType, RUNTIME_INPUT_VALUE, Text } from '@wings-software/uicore'
+import {
+  Accordion,
+  AllowedTypes,
+  Card,
+  Container,
+  MultiTypeInputType,
+  RUNTIME_INPUT_VALUE,
+  Text
+} from '@wings-software/uicore'
 import { debounce, defaultTo, get, isEmpty, isNil, omit, set } from 'lodash-es'
 import produce from 'immer'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -50,6 +58,7 @@ import {
   getCustomStepProps,
   getSelectedDeploymentType,
   isServerlessDeploymentType,
+  isAzureWebAppDeploymentType,
   ServerlessInfraTypes,
   StageType
 } from '@pipeline/utils/stageHelpers'
@@ -390,10 +399,6 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   connectorRef: value.connectorRef,
                   subscriptionId: value.subscriptionId,
                   resourceGroup: value.resourceGroup,
-                  webApp: value.webApp,
-                  deploymentSlot: value.deploymentSlot,
-                  targetSlot: value.targetSlot,
-                  releaseName: value.releaseName,
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments
                 },
                 InfraDeploymentType.AzureWebApp
@@ -589,7 +594,9 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
               allowableTypes={
                 scope === Scope.PROJECT
                   ? allowableTypes
-                  : allowableTypes.filter(item => item !== MultiTypeInputType.FIXED)
+                  : ((allowableTypes as MultiTypeInputType[]).filter(
+                      item => item !== MultiTypeInputType.FIXED
+                    ) as AllowedTypes)
               }
               onUpdate={val => updateEnvStep(val)}
               factory={factory}
@@ -604,25 +611,27 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
           </div>
         </>
       )}
-      <Card className={stageCss.sectionCard}>
-        {!isServerlessDeploymentType(selectedDeploymentType) && (
-          <Text margin={{ bottom: 'medium' }} className={stageCss.info}>
-            <StringWithTooltip
-              tooltipId="pipelineStep.infrastructureDefinitionMethod"
-              stringId="pipelineSteps.deploy.infrastructure.selectMethod"
-            />
-          </Text>
-        )}
-        <SelectInfrastructureType
-          infraGroups={infraGroups}
-          isReadonly={isReadonly}
-          selectedInfrastructureType={selectedInfrastructureType}
-          onChange={deploymentType => {
-            setSelectedInfrastructureType(deploymentType)
-            resetInfrastructureDefinition(deploymentType)
-          }}
-        />
-      </Card>
+      {!isAzureWebAppDeploymentType(selectedDeploymentType) && (
+        <Card className={stageCss.sectionCard}>
+          {!isServerlessDeploymentType(selectedDeploymentType) && (
+            <Text margin={{ bottom: 'medium' }} className={stageCss.info}>
+              <StringWithTooltip
+                tooltipId="pipelineStep.infrastructureDefinitionMethod"
+                stringId="pipelineSteps.deploy.infrastructure.selectMethod"
+              />
+            </Text>
+          )}
+          <SelectInfrastructureType
+            infraGroups={infraGroups}
+            isReadonly={isReadonly}
+            selectedInfrastructureType={selectedInfrastructureType}
+            onChange={deploymentType => {
+              setSelectedInfrastructureType(deploymentType)
+              resetInfrastructureDefinition(deploymentType)
+            }}
+          />
+        </Card>
+      )}
       {contextType !== PipelineContextType.Standalone &&
       selectedInfrastructureType &&
       !isServerlessDeploymentType(selectedDeploymentType) ? (

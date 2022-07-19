@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { IconName, MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@wings-software/uicore'
 import { parse } from 'yaml'
 import get from 'lodash-es/get'
 import type { FormikErrors } from 'formik'
@@ -88,7 +88,7 @@ export interface DockerHubStepProps {
   stepViewType: StepViewType
   onUpdate?: (data: DockerHubStepData) => void
   onChange?: (data: DockerHubStepData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   formik?: any
 }
 

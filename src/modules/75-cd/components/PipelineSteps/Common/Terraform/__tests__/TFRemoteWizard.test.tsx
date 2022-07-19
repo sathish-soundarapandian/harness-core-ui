@@ -8,7 +8,7 @@
 import React from 'react'
 
 import { fireEvent, render } from '@testing-library/react'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { TFRemoteWizard } from '../Editview/TFRemoteWizard'
 
@@ -16,7 +16,11 @@ const props = {
   name: 'Terraform Var File Details',
   onSubmitCallBack: jest.fn(),
   isEditMode: false,
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.EXPRESSION,
+    MultiTypeInputType.RUNTIME
+  ] as AllowedTypesWithRunTime[]
 }
 
 const testProps = {
@@ -47,7 +51,11 @@ const testProps = {
       }
     }
   },
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.EXPRESSION,
+    MultiTypeInputType.RUNTIME
+  ] as AllowedTypesWithRunTime[]
 }
 
 describe('Terraform Remote Form tests', () => {
@@ -87,7 +95,11 @@ describe('Terraform Remote Form tests', () => {
           }
         }
       },
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.EXPRESSION,
+        MultiTypeInputType.RUNTIME
+      ] as AllowedTypesWithRunTime[]
     }
     const { container, getByText } = render(
       <TestWrapper>
@@ -117,7 +129,11 @@ describe('Terraform Remote Form tests', () => {
           }
         }
       },
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.EXPRESSION,
+        MultiTypeInputType.RUNTIME
+      ] as AllowedTypesWithRunTime[]
     }
     const { container, getByText } = render(
       <TestWrapper>
@@ -147,7 +163,11 @@ describe('Terraform Remote Form tests', () => {
           }
         }
       },
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.EXPRESSION,
+        MultiTypeInputType.RUNTIME
+      ] as AllowedTypesWithRunTime[]
     }
     const { container, getByText } = render(
       <TestWrapper>
@@ -177,7 +197,11 @@ describe('Terraform Remote Form tests', () => {
           }
         }
       },
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.EXPRESSION,
+        MultiTypeInputType.RUNTIME
+      ] as AllowedTypesWithRunTime[]
     }
     const { container } = render(
       <TestWrapper>

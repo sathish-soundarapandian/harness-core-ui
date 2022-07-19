@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Container, FormInput, MultiTypeInputType, useToaster } from '@harness/uicore'
+import { Container, FormInput, AllowedTypes, useToaster } from '@harness/uicore'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
@@ -39,7 +39,7 @@ import { isMonitoredServiceFixedInput } from './ConfiguredMonitoredService.utils
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 interface ConfiguredMonitoredServiceProps {
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   formik: FormikProps<ContinousVerificationData>
 }
 

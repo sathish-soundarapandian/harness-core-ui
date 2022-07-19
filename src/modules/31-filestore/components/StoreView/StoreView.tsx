@@ -13,6 +13,7 @@ import { FileStoreNodeTypes } from '@filestore/interfaces/FileStore'
 import NodesList from '@filestore/components/NodesList/NodesList'
 import FileView from '@filestore/components/FileView/FileView'
 import CurrentPathComponent from '@filestore/components/CurrentPathComponent/CurrentPathComponent'
+import css from './StoreView.module.scss'
 
 export default function StoreView(): React.ReactElement {
   const { getString } = useStrings()
@@ -31,6 +32,7 @@ export default function StoreView(): React.ReactElement {
   }
 
   return (
+<<<<<<< HEAD
     <Container
       style={{
         width: '100%',
@@ -39,6 +41,9 @@ export default function StoreView(): React.ReactElement {
         overflowY: 'scroll'
       }}
     >
+=======
+    <Container className={css.storeView} height={!isModalView ? 'calc(100vh - 75px)' : 'auto'}>
+>>>>>>> develop
       <CurrentPathComponent />
       {currentNode?.type === FileStoreNodeTypes.FOLDER ? <NodesList /> : <FileView />}
     </Container>

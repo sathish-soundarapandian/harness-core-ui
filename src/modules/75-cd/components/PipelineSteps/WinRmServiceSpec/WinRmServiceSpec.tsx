@@ -32,11 +32,11 @@ import { getConnectorName, getConnectorValue } from '@triggers/pages/triggers/ut
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import type { K8SDirectServiceStep } from '@pipeline/factories/ArtifactTriggerInputFactory/types'
 import {
-  K8sServiceSpecVariablesForm,
-  K8sServiceSpecVariablesFormProps
-} from '../K8sServiceSpec/K8sServiceSpecVariablesForm'
-import { KubernetesServiceSpecInputSetMode } from '../K8sServiceSpec/KubernetesServiceSpecInputSetMode'
-import KubernetesServiceSpecEditable from '../K8sServiceSpec/K8sServiceSpecForms/KubernetesServiceSpecEditable'
+  SshServiceSpecVariablesForm,
+  SshServiceSpecVariablesFormProps
+} from '@cd/components/PipelineSteps/SshServiceSpec/SshServiceSpecVariablesForm'
+import { SshServiceSpecInputSetMode } from '@cd/components/PipelineSteps/SshServiceSpec/SshServiceSpecInputSetMode'
+import SshServiceSpecEditable from '@cd/components/PipelineSteps/SshServiceSpec/SshServiceSpecForm/SshServiceSpecEditable'
 import { getYamlData } from '../K8sServiceSpec/ArtifactSource/artifactSourceUtils'
 
 const logger = loggerFor(ModuleName.CD)
@@ -309,8 +309,8 @@ export class WinRmServiceSpec extends Step<ServiceSpec> {
 
     if (stepViewType === StepViewType.InputVariable) {
       return (
-        <K8sServiceSpecVariablesForm
-          {...(customStepProps as K8sServiceSpecVariablesFormProps)}
+        <SshServiceSpecVariablesForm
+          {...(customStepProps as SshServiceSpecVariablesFormProps)}
           initialValues={initialValues}
           stepsFactory={factory}
           onUpdate={onUpdate}
@@ -321,8 +321,8 @@ export class WinRmServiceSpec extends Step<ServiceSpec> {
 
     if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
       return (
-        <KubernetesServiceSpecInputSetMode
-          {...(customStepProps as K8sServiceSpecVariablesFormProps)}
+        <SshServiceSpecInputSetMode
+          {...(customStepProps as SshServiceSpecVariablesFormProps)}
           initialValues={initialValues}
           onUpdate={onUpdate}
           stepViewType={stepViewType}
@@ -336,8 +336,8 @@ export class WinRmServiceSpec extends Step<ServiceSpec> {
     }
 
     return (
-      <KubernetesServiceSpecEditable
-        {...(customStepProps as K8sServiceSpecVariablesFormProps)}
+      <SshServiceSpecEditable
+        {...(customStepProps as SshServiceSpecVariablesFormProps)}
         factory={factory}
         initialValues={initialValues}
         onUpdate={onUpdate}

@@ -4,7 +4,7 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import type { MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { K8sApplyStepInfo, ManifestConfigWrapper, StepElementConfig } from 'services/cd-ng'
@@ -40,7 +40,7 @@ export interface K8sApplyProps {
   initialValues: K8sApplyData
   onUpdate?: (data: K8sApplyData) => void
   onChange?: (data: K8sApplyData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   isNewStep?: boolean
   isDisabled?: boolean

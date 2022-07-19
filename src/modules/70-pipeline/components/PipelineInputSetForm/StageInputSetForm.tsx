@@ -15,7 +15,8 @@ import {
   Layout,
   MultiTypeInputType,
   Text,
-  RUNTIME_INPUT_VALUE
+  RUNTIME_INPUT_VALUE,
+  AllowedTypes
 } from '@harness/uicore'
 import { connect } from 'formik'
 import { Color, FontVariation } from '@harness/design-system'
@@ -98,7 +99,7 @@ function ServiceDependencyForm({
   readonly?: boolean
   viewType?: StepViewType
   path: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }): JSX.Element {
   const { getString } = useStrings()
   return (
@@ -145,7 +146,7 @@ function StepFormInternal({
   readonly?: boolean
   viewType?: StepViewType
   path: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }): JSX.Element {
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -213,7 +214,7 @@ export function StepForm({
   readonly?: boolean
   viewType?: StepViewType
   path: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   hideTitle?: boolean
 }): JSX.Element {
   const { getString } = useStrings()
@@ -272,7 +273,7 @@ export interface StageInputSetFormProps {
   viewType: StepViewType
   stageIdentifier?: string
   executionIdentifier?: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 function ExecutionWrapperInputSetForm(props: {
@@ -283,7 +284,7 @@ function ExecutionWrapperInputSetForm(props: {
   values?: ExecutionWrapperConfig[]
   readonly?: boolean
   viewType: StepViewType
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   executionIdentifier?: string
 }): JSX.Element {
   const { stepsTemplate, allValues, values, path, formik, readonly, viewType, allowableTypes, executionIdentifier } =
@@ -474,7 +475,7 @@ export function StageInputSetFormInternal({
       labelKey: keyof StringsMap
       placeholderKey?: keyof StringsMap
       fieldPath: string
-      allowedTypes?: MultiTypeInputType[]
+      allowedTypes?: AllowedTypes
     }) => {
       if (!name) {
         return
@@ -765,7 +766,9 @@ export function StageInputSetFormInternal({
                 allowableTypes={
                   scope === Scope.PROJECT
                     ? allowableTypes
-                    : allowableTypes.filter(item => item !== MultiTypeInputType.FIXED)
+                    : ((allowableTypes as MultiTypeInputType[]).filter(
+                        item => item !== MultiTypeInputType.FIXED
+                      ) as AllowedTypes)
                 }
                 readonly={readonly}
                 customStepProps={{ stageIdentifier }}
@@ -834,7 +837,9 @@ export function StageInputSetFormInternal({
                 allowableTypes={
                   scope === Scope.PROJECT
                     ? allowableTypes
-                    : allowableTypes.filter(item => item !== MultiTypeInputType.FIXED)
+                    : ((allowableTypes as MultiTypeInputType[]).filter(
+                        item => item !== MultiTypeInputType.FIXED
+                      ) as AllowedTypes)
                 }
                 readonly={readonly}
                 customStepProps={{
@@ -1305,7 +1310,9 @@ export function StageInputSetFormInternal({
                 allowableTypes={
                   scope === Scope.PROJECT
                     ? allowableTypes
-                    : allowableTypes.filter(item => item !== MultiTypeInputType.FIXED)
+                    : ((allowableTypes as MultiTypeInputType[]).filter(
+                        item => item !== MultiTypeInputType.FIXED
+                      ) as AllowedTypes)
                 }
                 path={`${path}.infrastructure`}
                 readonly={readonly}
@@ -1320,7 +1327,7 @@ export function StageInputSetFormInternal({
                 allValues={
                   deploymentStage?.infrastructure?.infrastructureDefinition?.spec || /* istanbul ignore next */ {}
                 }
-                /* Use this only if you are using a single infrastructure. If you are using multiple infrastructures, \ 
+                /* Use this only if you are using a single infrastructure. If you are using multiple infrastructures, \
               please refer to step widget under path - environment?.infrastructureDefinitions */
                 type={
                   ((infraDefinitionTypeMapping[

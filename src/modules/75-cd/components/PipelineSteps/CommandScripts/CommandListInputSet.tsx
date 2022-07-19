@@ -9,13 +9,21 @@ import React from 'react'
 import { FieldArray } from 'formik'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import cx from 'classnames'
-import { Color, Container, getMultiTypeFromValue, Icon, Layout, MultiTypeInputType, Text } from '@harness/uicore'
+import {
+  AllowedTypes,
+  Color,
+  Container,
+  getMultiTypeFromValue,
+  Icon,
+  Layout,
+  MultiTypeInputType,
+  Text
+} from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ScriptType, ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { CommandScriptsData, CopyCommandUnit, CustomScriptCommandUnit } from './CommandScriptsTypes'
@@ -25,7 +33,7 @@ import css from './CommandListInputSet.module.scss'
 interface CommandListInputSetProps {
   initialValues: CommandScriptsData
   stepViewType: StepViewType
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   template?: CommandScriptsData
   path?: string
   readonly?: boolean
@@ -36,7 +44,6 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
   const { getString } = useStrings()
   const prefix = isEmpty(path) ? '' : `${path}.`
   const { expressions } = useVariablesExpression()
-  const { NG_EXECUTION_INPUT } = useFeatureFlags()
   const scriptType: ScriptType = get(initialValues, 'spec.shell', 'Bash')
 
   return (
@@ -117,7 +124,6 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
                           allowedTypes={allowableTypes}
                           disableTypeSelection={readonly}
                           skipRenderValueInExpressionLabel
-                          useExecutionTimeInput={NG_EXECUTION_INPUT}
                           expressionRender={() => {
                             return (
                               <ShellScriptMonacoField

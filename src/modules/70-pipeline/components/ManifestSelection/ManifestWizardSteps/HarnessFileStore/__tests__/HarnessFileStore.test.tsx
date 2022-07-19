@@ -16,7 +16,7 @@ import {
   getByText as getElementByText,
   queryByText
 } from '@testing-library/react'
-import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import userEvent from '@testing-library/user-event'
 import { omit } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -34,7 +34,11 @@ jest.mock('services/portal', () => ({
 const props = {
   stepName: 'Manifest details',
   expressions: [],
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   handleSubmit: jest.fn(),
   selectedManifest: 'K8sManifest' as ManifestTypes,
   manifestIdsList: [],
@@ -138,7 +142,11 @@ describe('Harness File Store tests', () => {
       stepName: 'Manifest details',
       manifestIdsList: [],
       expressions: [],
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.RUNTIME,
+        MultiTypeInputType.EXPRESSION
+      ] as AllowedTypesWithRunTime[],
       initialValues: {
         identifier: 'testidentifier',
         type: ManifestDataType.K8sManifest,
@@ -208,7 +216,11 @@ describe('Harness File Store tests', () => {
       stepName: 'Manifest details',
       manifestIdsList: [],
       expressions: [],
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.RUNTIME,
+        MultiTypeInputType.EXPRESSION
+      ] as AllowedTypesWithRunTime[],
       initialValues: {
         identifier: 'testidentifier',
         type: ManifestDataType.K8sManifest,
@@ -247,7 +259,11 @@ describe('Harness File Store tests', () => {
     const manifestProps = {
       stepName: 'Manifest details',
       expressions: [],
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.RUNTIME,
+        MultiTypeInputType.EXPRESSION
+      ] as AllowedTypesWithRunTime[],
       handleSubmit: jest.fn(),
       selectedManifest: 'Values' as ManifestTypes,
       manifestIdsList: [],

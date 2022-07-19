@@ -142,16 +142,16 @@ $ yarn test
 
 ### Hotfix Process
 
-1. Find out which release branch you need to hotfix. You can do that checking the currently deployed version in the environment you want to hotfix. For eg. For UAT environment, you can hit https://uat.harness.io/ng/static/version.json to get the currently deployed version. (eg. `0.53.4`)
+1. Find out which release branch you need to hotfix. You can do that checking the currently deployed version in the environment you want to hotfix. For eg. For prod environment, you can hit https://app.harness.io/ng/static/version.json to get the currently deployed version. (eg. `0.53.4`)
 2. Create a branch from the corresponding release branch (eg. `release/0.53.x`) which you want to hotfix
 3. Commit your changes on your branch
-4. Bump up the patch version in `package.json` (eg. 0.53.0 -> 0.53.1)
+4. Bump up the patch version in `package.json` (eg. 0.53.4 -> 0.53.5)
 5. Raise PR with these changes
-6. When this PR gets merged, this [Workflow](https://uat.harness.io/ng/#/account/sjmVqavzTuS1segZNyZqbA/ci/orgs/default/projects/uiprchecks/pipelines/build_release_branch/executions) will create a new build for you automatically
+6. When this PR gets merged, this [Pipeline](https://stage.harness.io/ng/#/account/wFHXHD0RRQWoO8tIZT5YVw/ci/orgs/Harness/projects/RELEASEBUILDS/pipelines/nextGenUI_release_build/executions) will create a new build for you automatically
 7. Please inform Ops/QE team to deploy your new build, especially in QA, UAT or prod environment.
-8. Make sure to raise a PR with the same changes (minus the version bump) for `master` branch too. Otherwise your changes will get overriden with next deployment.
+8. Make sure to raise a PR with the same changes (minus the version bump) for `develop` branch too. Otherwise your changes will get overriden with next deployment.
 
-## For wndows environment setup only
+## For windows environment setup only
 
 #### Download Git bash for windows
 

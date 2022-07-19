@@ -7,7 +7,7 @@
 
 import type { FormikProps } from 'formik'
 import type { GetDataError } from 'restful-react'
-import type { MultiSelectOption, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
+import type { MultiSelectOption, AllowedTypes, SelectOption } from '@wings-software/uicore'
 import type { InputSetData, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type {
   Failure,
@@ -64,7 +64,7 @@ export interface ServiceNowCreateStepModeProps {
   initialValues: ServiceNowCreateData
   onUpdate?: (data: ServiceNowCreateData) => void
   onChange?: (data: ServiceNowCreateData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   isNewStep?: boolean
   readonly?: boolean
 }
@@ -72,7 +72,7 @@ export interface ServiceNowCreateStepModeProps {
 export interface ServiceNowCreateFormContentInterface {
   formik: FormikProps<ServiceNowCreateData>
   stepViewType: StepViewType
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   isNewStep?: boolean
   readonly?: boolean
   refetchServiceNowTicketTypes: (props: UseGetServiceNowTicketTypesProps) => Promise<void>
@@ -116,7 +116,7 @@ export interface ServiceNowCreateDeploymentModeProps {
   stepViewType: StepViewType
   initialValues: ServiceNowCreateData
   onUpdate?: (data: ServiceNowCreateData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   inputSetData?: InputSetData<ServiceNowCreateData>
   formik?: any
 }

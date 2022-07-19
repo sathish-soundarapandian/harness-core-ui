@@ -15,7 +15,8 @@ import {
   Radio,
   useToaster,
   MultiTypeInputType,
-  getMultiTypeFromValue
+  getMultiTypeFromValue,
+  RUNTIME_INPUT_VALUE
 } from '@wings-software/uicore'
 import { defaultTo } from 'lodash-es'
 import { FontVariation, Color } from '@harness/design-system'
@@ -115,6 +116,10 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
           completeMetricPath: formikValues.completeMetricPath
         }
       })
+    }
+
+    if (getMultiTypeFromValue(formikValues.serviceInstanceMetricPath) === MultiTypeInputType.FIXED) {
+      formikSetField('serviceInstanceMetricPath', RUNTIME_INPUT_VALUE)
     }
   }, [
     formikValues?.continuousVerification,
@@ -306,7 +311,8 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
                     sli: !!formikValues?.sli,
                     healthScore: !!formikValues?.healthScore,
                     continuousVerification: !!formikValues?.continuousVerification,
-                    riskCategory: formikValues?.riskCategory
+                    riskCategory: formikValues?.riskCategory,
+                    serviceInstanceMetricPath: formikValues?.serviceInstanceMetricPath
                   }}
                   isTemplate={isTemplate}
                   expressions={expressions}

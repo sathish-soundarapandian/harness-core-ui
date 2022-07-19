@@ -40,7 +40,9 @@ describe('Test Azure Web App Rollback step', () => {
         name: 'swap slot',
         timeout: '10m',
         identifier: 'swap slot',
-        spec: {}
+        spec: {
+          targetSlot: 'targetSlot'
+        }
       },
       isNewStep: true,
       readonly: true
@@ -58,7 +60,9 @@ describe('Test Azure Web App Rollback step', () => {
         name: 'swap slot',
         timeout: '10m',
         identifier: 'swap slot',
-        spec: {}
+        spec: {
+          targetSlot: 'targetSlot'
+        }
       },
       isNewStep: false,
       readonly: true,
@@ -81,7 +85,9 @@ describe('Test Azure Web App Rollback step', () => {
         name: '',
         timeout: '',
         identifier: '',
-        spec: {}
+        spec: {
+          targetSlot: ''
+        }
       },
       isNewStep: false,
       readonly: true,
@@ -103,7 +109,9 @@ describe('Test Azure Web App Rollback step', () => {
         name: 'swap slot',
         timeout: RUNTIME_INPUT_VALUE,
         identifier: 'swap slot',
-        spec: {}
+        spec: {
+          targetSlot: RUNTIME_INPUT_VALUE
+        }
       },
       isNewStep: false,
       readonly: true,
@@ -124,7 +132,9 @@ describe('Test Azure Web App Rollback step', () => {
         name: 'azure_web_swap slot',
         timeout: '',
         identifier: 'azure_web_swap slot',
-        spec: {}
+        spec: {
+          targetSlot: ''
+        }
       },
       isNewStep: false,
       readonly: false,
@@ -144,7 +154,9 @@ describe('Test Azure Web App Rollback step', () => {
         name: 'swap slot',
         timeout: '10m',
         identifier: 'swap slot',
-        spec: {}
+        spec: {
+          targetSlot: 'targetSlot'
+        }
       },
       isNewStep: false,
       readonly: true
@@ -160,7 +172,9 @@ describe('Test Azure Web App Rollback step', () => {
         name: 'swap slot',
         timeout: '10m',
         identifier: 'swap slot',
-        spec: {}
+        spec: {
+          targetSlot: 'targetSlot'
+        }
       },
       stageIdentifier: 'qaStage',
       onUpdate: jest.fn(),

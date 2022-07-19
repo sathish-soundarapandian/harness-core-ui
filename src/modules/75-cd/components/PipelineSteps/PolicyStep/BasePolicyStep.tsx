@@ -9,7 +9,7 @@ import React, { useState } from 'react'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
 
-import { SelectOption, FormInput, MultiTypeInputType } from '@harness/uicore'
+import { SelectOption, FormInput, AllowedTypes } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -32,7 +32,7 @@ export default function BasePolicyStep(props: {
   isNewStep: boolean
   readonly?: boolean
   stepViewType?: StepViewType
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }): React.ReactElement {
   const { isNewStep, readonly, stepViewType, allowableTypes } = props
 

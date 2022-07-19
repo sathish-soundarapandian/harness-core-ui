@@ -413,7 +413,7 @@ cdng:
     applicationNameValidation: Application Name is required.
     tierNameValidation: Tier Name is required.
     completeMetricPathValidation: Complete Metric Path is required.
-    serviceInstanceMetricPathValidation: Service Instance Metric Path is required.
+    serviceInstanceMetricPathValidation: Service Instance Label Path is required.
     serviceInstanceFieldNameValidation: Service Instance Field Name is required.
   verificationSensitivityLabel:
     high: High

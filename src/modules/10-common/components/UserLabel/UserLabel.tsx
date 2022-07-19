@@ -51,7 +51,7 @@ export function UserLabel(props: UserLabelProps): React.ReactElement {
                 {name}
               </Text>
               {email ? (
-                <Text font={{ size: 'small' }} color={Color.PRIMARY_5}>
+                <Text font={{ size: 'small' }} color={Color.GREY_200}>
                   {email}
                 </Text>
               ) : null}

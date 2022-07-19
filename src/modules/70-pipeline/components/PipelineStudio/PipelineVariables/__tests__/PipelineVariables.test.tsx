@@ -7,7 +7,11 @@
 
 import React from 'react'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
-import { MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
+import {
+  AllowedTypesWithRunTime,
+  MultiTypeInputType,
+  VisualYamlSelectedView as SelectedView
+} from '@wings-software/uicore'
 
 import produce from 'immer'
 import { cloneDeep, get, set } from 'lodash-es'
@@ -43,7 +47,11 @@ const pipelineContext: any = {
     selectionState: { selectedStageId: 'stage_1' }
   } as any,
   contextType: 'Pipeline',
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   stepsFactory: factory,
   stagesMap: {},
   isReadonly: false,

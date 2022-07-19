@@ -8,7 +8,13 @@
 import React from 'react'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
-import { FormInput, getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
+import {
+  AllowedTypes,
+  FormInput,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  SelectOption
+} from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -32,7 +38,7 @@ export default function BaseShellScript(props: {
   isNewStep: boolean
   readonly?: boolean
   stepViewType?: StepViewType
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }): React.ReactElement {
   const {
     formik: { values: formValues, setFieldValue },

@@ -15,7 +15,7 @@ import {
   waitFor,
   getByText as getElementByText
 } from '@testing-library/react'
-import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
@@ -27,7 +27,11 @@ jest.mock('uuid')
 const props = {
   stepName: 'Manifest details',
   expressions: [],
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   handleSubmit: jest.fn(),
   selectedManifest: 'Values' as ManifestTypes,
   manifestIdsList: [],
@@ -117,7 +121,11 @@ describe('Custom remote tests', () => {
       stepName: 'Manifest details',
       manifestIdsList: [],
       expressions: [],
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.RUNTIME,
+        MultiTypeInputType.EXPRESSION
+      ] as AllowedTypesWithRunTime[],
       initialValues: {
         identifier: 'testidentifier',
         type: ManifestDataType.KustomizePatches,
@@ -184,7 +192,11 @@ describe('Custom remote tests', () => {
       stepName: 'Manifest details',
       manifestIdsList: [],
       expressions: [],
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.RUNTIME,
+        MultiTypeInputType.EXPRESSION
+      ] as AllowedTypesWithRunTime[],
       initialValues: {
         identifier: 'testidentifier',
         type: ManifestDataType.Values,

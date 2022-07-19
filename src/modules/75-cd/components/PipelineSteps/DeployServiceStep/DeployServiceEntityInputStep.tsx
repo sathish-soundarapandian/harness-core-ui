@@ -14,6 +14,7 @@ import {
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
+  RUNTIME_INPUT_VALUE,
   useToaster
 } from '@harness/uicore'
 import { defaultTo, get, isEmpty } from 'lodash-es'
@@ -58,6 +59,7 @@ function DeployServiceEntityInputStep({
   const { showError, clear } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { template: getTemplate, updateTemplate } = useRunPipelineFormContext()
+  const isStageTemplateInputSetForm = inputSetData?.path?.startsWith('template.templateInputs')
   const { accountId, projectIdentifier, orgIdentifier } = useParams<
     PipelineType<{
       orgIdentifier: string
@@ -141,7 +143,9 @@ function DeployServiceEntityInputStep({
           if (isEmpty(serviceInputsFormikValue)) {
             formik?.setFieldValue(
               `${inputSetData?.path}.serviceInputs`,
-              clearRuntimeInput(serviceInputSetResponse?.serviceInputs)
+              isStageTemplateInputSetForm
+                ? serviceInputSetResponse?.serviceInputs
+                : clearRuntimeInput(serviceInputSetResponse?.serviceInputs)
             )
           }
         }
@@ -209,6 +213,31 @@ function DeployServiceEntityInputStep({
     showError(getRBACErrorMessage(error), undefined, 'cd.svc.list.error')
   }
 
+  const onServiceRefChange = (value: any): void => {
+    if (
+      isStageTemplateInputSetForm &&
+      getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME &&
+      inputSetData?.path
+    ) {
+      formik?.setFieldValue(inputSetData.path, {
+        serviceRef: RUNTIME_INPUT_VALUE,
+        serviceInputs: RUNTIME_INPUT_VALUE
+      })
+      return
+    }
+    if (isEmpty(value?.value)) {
+      formik?.setFieldValue(`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}serviceInputs`, {})
+      updateTemplate({}, `${inputSetData?.path}.serviceInputs`)
+    } else {
+      refetchServiceInputs({
+        pathParams: {
+          serviceIdentifier: value.value
+        },
+        queryParams
+      })
+    }
+  }
+
   return (
     <>
       {getMultiTypeFromValue(inputSetData?.template?.serviceRef) === MultiTypeInputType.RUNTIME && (
@@ -227,22 +256,7 @@ function DeployServiceEntityInputStep({
                 addClearBtn: true && !inputSetData?.readonly,
                 items: services
               },
-              onChange: (value: any) => {
-                if (isEmpty(value?.value)) {
-                  formik?.setFieldValue(
-                    `${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}serviceInputs`,
-                    {}
-                  )
-                  updateTemplate({}, `${inputSetData?.path}.serviceInputs`)
-                } else {
-                  refetchServiceInputs({
-                    pathParams: {
-                      serviceIdentifier: value.value
-                    },
-                    queryParams
-                  })
-                }
-              }
+              onChange: onServiceRefChange
             }}
             disabled={inputSetData?.readonly}
             className={css.inputWidth}

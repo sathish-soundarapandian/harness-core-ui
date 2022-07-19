@@ -7,7 +7,7 @@
 
 import React from 'react'
 
-import { MultiTypeInputType } from '@harness/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { findByText, fireEvent, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 
@@ -82,7 +82,11 @@ const props = {
   ],
   isReadonly: false,
   deploymentType: 'Kubernetes' as any,
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[]
 }
 
 const editProps = {
@@ -118,7 +122,11 @@ const editProps = {
   listOfManifests: [],
   isReadonly: false,
   deploymentType: 'Kubernetes' as any,
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[]
 }
 describe('Release repo list view ', () => {
   test('initial render with manifests', () => {

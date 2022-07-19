@@ -7,7 +7,11 @@
 
 import React from 'react'
 import { cloneDeep, isEqual, noop } from 'lodash-es'
-import { MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
+import {
+  AllowedTypesWithRunTime,
+  MultiTypeInputType,
+  VisualYamlSelectedView as SelectedView
+} from '@wings-software/uicore'
 import {
   PipelineContext,
   PipelineContextType
@@ -49,7 +53,11 @@ export function InfrastructurePipelineProvider({
   isReadOnly,
   children
 }: React.PropsWithChildren<InfrastructurePipelineProviderProps>): React.ReactElement {
-  const allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+  const allowableTypes: AllowedTypesWithRunTime[] = [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ]
   const { getString } = useStrings()
   const [state, dispatch] = React.useReducer(PipelineReducer, initialState)
   const [view, setView] = useLocalStorage<SelectedView>('pipeline_studio_view', SelectedView.VISUAL)

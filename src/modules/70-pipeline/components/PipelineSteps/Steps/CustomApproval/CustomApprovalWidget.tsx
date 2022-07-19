@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Accordion, Formik, MultiTypeInputType } from '@wings-software/uicore'
+import { Accordion, Formik, AllowedTypes } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 
@@ -31,7 +31,7 @@ interface CustomApprovalWidgetProps {
   initialValues: CustomApprovalFormData
   onUpdate?: (data: CustomApprovalFormData) => void
   onChange?: (data: CustomApprovalFormData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   readonly?: boolean
   stepViewType?: StepViewType
   isNewStep?: boolean

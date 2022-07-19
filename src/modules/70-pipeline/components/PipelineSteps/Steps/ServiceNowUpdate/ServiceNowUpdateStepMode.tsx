@@ -20,7 +20,8 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Text,
-  PageSpinner
+  PageSpinner,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -574,7 +575,9 @@ function FormContent({
                                 placeholder={getString('common.valuePlaceholder')}
                                 disabled={isApprovalStepFieldDisabled(readonly)}
                                 multiTextInputProps={{
-                                  allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME),
+                                  allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                    item => item !== MultiTypeInputType.RUNTIME
+                                  ) as AllowedTypes,
                                   expressions
                                 }}
                               />

@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback } from 'react'
-import { MultiTypeInputType, NestedAccordionProvider, PageError } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, NestedAccordionProvider, PageError } from '@wings-software/uicore'
 import { isEmpty, omit, set } from 'lodash-es'
 import { produce } from 'immer'
 import {
@@ -36,7 +36,11 @@ const TemplateVariables: React.FC = (): JSX.Element => {
     updateTemplateView
   } = React.useContext(TemplateContext)
   const { originalTemplate, variablesTemplate, metadataMap, error, initLoading } = useTemplateVariables()
-  const allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+  const allowableTypes: AllowedTypesWithRunTime[] = [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ]
   const [templateAtState, setTemplateAtState] = React.useState<NGTemplateInfoConfig>(originalTemplate)
 
   const onUpdate = useCallback(

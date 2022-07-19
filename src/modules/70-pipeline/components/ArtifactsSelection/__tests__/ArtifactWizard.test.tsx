@@ -8,7 +8,7 @@
 import React from 'react'
 import userEvent from '@testing-library/user-event'
 import { findAllByText, findByText, fireEvent, queryByAttribute, render } from '@testing-library/react'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import ArtifactWizard from '../ArtifactWizard/ArtifactWizard'
@@ -38,7 +38,11 @@ jest.mock('services/cd-ng', () => ({
 const laststepProps = {
   name: 'Artifact Location',
   expressions: [''],
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   context: 1,
   initialValues: {
     identifier: 'id',
@@ -56,7 +60,11 @@ const laststepProps = {
 const AmazsonS3LastStepProps = {
   name: 'Artifact Location',
   expressions: [''],
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   context: 1,
   initialValues: {
     identifier: '',

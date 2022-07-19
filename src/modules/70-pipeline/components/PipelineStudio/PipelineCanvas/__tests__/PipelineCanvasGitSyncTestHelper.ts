@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { PipelineContextInterface } from '../../PipelineContext/PipelineContext'
 import type { PipelineSelectionState } from '../../PipelineQueryParamState/usePipelineQueryParam'
@@ -208,7 +208,11 @@ const pipelineContextMock: PipelineContextInterface = {
     getStepIcon: () => 'run-step'
   } as any,
   contextType: 'Pipeline',
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   stagesMap: {},
   setSchemaErrorView: () => undefined,
   isReadonly: false,

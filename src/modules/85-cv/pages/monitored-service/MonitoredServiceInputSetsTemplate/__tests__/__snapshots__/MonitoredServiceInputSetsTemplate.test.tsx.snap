@@ -571,7 +571,7 @@ exports[`Test MonitoredServiceInputSetsTemplate Should render when props are pas
                       class="Tooltip--acenter"
                       data-tooltip-id="MonitoredServiceForm_sources.healthSources.1.spec.metricDefinitions.0.analysis.deploymentVerification.serviceInstanceMetricPath"
                     >
-                      cv.healthSource.connectors.AppDynamics.serviceInstance
+                      cv.monitoringSources.appD.serviceInstanceMetricPath
                     </span>
                      
                     <span
@@ -751,7 +751,7 @@ exports[`Test MonitoredServiceInputSetsTemplate should render error state 1`] = 
       class="bp3-card bp3-elevation-0 Card--card cardStyle"
     >
       <div
-        class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-align-center-center"
+        class="StyledProps--font StyledProps--main PageError--pageError StyledProps--flex StyledProps--flex-align-center-center"
         style="width: 100%; height: 100%;"
       >
         <div
@@ -1818,7 +1818,7 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
                       class="Tooltip--acenter"
                       data-tooltip-id="MonitoredServiceForm_sources.healthSources.1.spec.metricDefinitions.0.analysis.deploymentVerification.serviceInstanceMetricPath"
                     >
-                      cv.healthSource.connectors.AppDynamics.serviceInstance
+                      cv.monitoringSources.appD.serviceInstanceMetricPath
                     </span>
                      
                     <span

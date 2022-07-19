@@ -14,7 +14,8 @@ import {
   FormError,
   MultiTypeInput,
   Label,
-  RUNTIME_INPUT_VALUE
+  RUNTIME_INPUT_VALUE,
+  AllowedTypes
 } from '@wings-software/uicore'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
@@ -32,7 +33,7 @@ interface AppDApplicationsInterface {
   isTemplate?: boolean
   expressions?: string[]
   applicationError?: string
-  allowedTypes?: MultiTypeInputType[]
+  allowedTypes?: AllowedTypes
 }
 
 export default function AppDApplications({

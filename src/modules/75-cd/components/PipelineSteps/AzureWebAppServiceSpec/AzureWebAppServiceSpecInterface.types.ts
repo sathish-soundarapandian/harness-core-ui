@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore'
 import type { AzureWebAppConfigBaseFactory } from '@cd/factory/AzureWebAppConfigFactory/AzureWebAppConfigFactory'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -32,7 +32,7 @@ export interface AzureWebAppServiceSpecFormProps {
   stageIdentifier: string
   formik?: any
   serviceIdentifier?: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export enum AzureWebAppConfigType {
@@ -52,7 +52,7 @@ export interface AzureWebAppConfigProps {
   serviceIdentifier?: string
   formik?: any
   fromTrigger?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   azureWebAppConfig?: StoreConfigWrapper
   azureWebAppConfigPath?: string
   type?: AzureWebAppConfigType
@@ -69,5 +69,5 @@ export interface AzureWebAppServiceSpecVariablesFormProps {
   variablesData: AzureWebAppServiceSpec
   readonly?: boolean
   path?: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }

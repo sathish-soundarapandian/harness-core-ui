@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { MultiTypeInputType } from '@harness/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import type {
@@ -22,7 +22,11 @@ const getArtifactImagePathTagViewProps = (isArtifactPath = false): ArtifactImage
     formik: {},
     expressions: [''],
     isReadonly: false,
-    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+    allowableTypes: [
+      MultiTypeInputType.FIXED,
+      MultiTypeInputType.RUNTIME,
+      MultiTypeInputType.EXPRESSION
+    ] as AllowedTypesWithRunTime[],
     connectorIdValue: 'connectorId',
     fetchTags: jest.fn(),
     buildDetailsLoading: false,

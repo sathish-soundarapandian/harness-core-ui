@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { act, findByText, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   ArtifactType,
@@ -20,7 +20,11 @@ import { NexusArtifact } from '../NexusArtifact'
 const props = {
   name: 'Artifact details',
   expressions: [],
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   context: 2,
   handleSubmit: jest.fn(),
   artifactIdentifiers: [],

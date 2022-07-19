@@ -62,7 +62,7 @@ exports[`Validate MetricDefinitionInptsetForm should render MetricDefinitionInpt
             class="Tooltip--acenter"
             data-tooltip-id="wrapperComponent_sources.healthSources.0.spec.0.analysis.deploymentVerification.serviceInstanceMetricPath"
           >
-            cv.healthSource.connectors.AppDynamics.serviceInstance
+            cv.monitoringSources.appD.serviceInstanceMetricPath
           </span>
            
           <span
@@ -147,7 +147,7 @@ exports[`Validate MetricDefinitionInptsetForm should render MetricDefinitionInpt
             class="Tooltip--acenter"
             data-tooltip-id="wrapperComponent_sources.healthSources.0.spec.1.analysis.deploymentVerification.serviceInstanceMetricPath"
           >
-            cv.healthSource.connectors.AppDynamics.serviceInstance
+            cv.monitoringSources.appD.serviceInstanceMetricPath
           </span>
            
           <span

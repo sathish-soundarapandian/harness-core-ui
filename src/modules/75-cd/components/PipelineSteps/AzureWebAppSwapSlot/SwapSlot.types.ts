@@ -5,10 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
-import type { StepSpecType, VariableMergeServiceResponse } from 'services/pipeline-ng'
+import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 
 export interface AzureWebAppSwapSlotStepInfo {
   name: string
@@ -21,7 +21,9 @@ export interface AzureWebAppSwapSlotData {
   name: string
   identifier: string
   timeout: string
-  spec?: StepSpecType
+  spec: {
+    targetSlot: string
+  }
 }
 
 export interface AzureWebAppSwapSlotVariableStepProps {
@@ -37,7 +39,7 @@ export interface AzureWebAppSwapSlotProps<T = AzureWebAppSwapSlotData> {
   initialValues: T
   onUpdate?: (data: T) => void
   onChange?: (data: T) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   configTypes?: SelectOption[]
   isNewStep?: boolean
