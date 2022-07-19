@@ -10,7 +10,7 @@ import type { FormikErrors } from 'formik'
 import { get, isEmpty, set } from 'lodash-es'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
-import { FormInput, MultiTypeInputType, Container, Text } from '@wings-software/uicore'
+import { FormInput, MultiTypeInputType, Container, Text, FormError } from '@wings-software/uicore'
 import type { UseFromStageInfraYaml } from 'services/ci'
 import type { StringsMap } from 'stringTypes'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -84,19 +84,21 @@ export const SupportedInputTypesForListTypeFieldInInputSetView = [MultiTypeInput
 
 export const renderBuildTypeInputField = ({
   type,
-  inputLabels,
+  getString,
   readonly,
   expressions,
   allowableTypes,
   prefix
 }: {
   type: CodeBaseType
-  inputLabels: Record<string, string>
+  getString: UseStringsReturn['getString']
   allowableTypes: MultiTypeInputType[]
   readonly?: boolean
   expressions?: string[]
   prefix?: string
 }): JSX.Element => {
+  const inputLabels = getBuildTypeInputLabels(getString)
+
   return (
     <FormInput.MultiTextInput
       label={<Text font={{ variation: FontVariation.FORM_LABEL }}>{inputLabels[type]}</Text>}
@@ -117,7 +119,8 @@ export const renderBuild = ({
   getString,
   formik,
   allowableTypes,
-  path
+  path,
+  triggerIdentifier
 }: {
   expressions: string[]
   getString: UseStringsReturn['getString']
@@ -126,15 +129,16 @@ export const renderBuild = ({
   connectorType?: ConnectorInfoDTO['type']
   readonly?: boolean
   path?: string
+  triggerIdentifier?: string
 }) => {
   const radioLabels = getBuildTypeLabels(getString)
-  const inputLabels = getBuildTypeInputLabels(getString)
   const prefix = isEmpty(path) ? '' : `${path}.`
   const buildTypeValue = get(formik?.values, `${prefix}spec.build.type`)
   // either can be true onEdit or onChange before Saving
   const isBuildRuntimeInput =
     isRuntimeInput(get(formik?.values, `${prefix}spec.build`)) || isRuntimeInput(buildTypeValue)
-
+  const buildTypeError = get(formik?.errors, `${prefix}spec.build`)
+  const shouldShowError = formik?.submitCount > 0 || triggerIdentifier // do not prematurely show error but should display on Triggers form
   const handleTypeChange = (newType: any = CodebaseTypes.branch): void => {
     const newValuesSpec = get(formik.values, `${prefix}spec`)
     if (isRuntimeInput(newType)) {
@@ -171,11 +175,12 @@ export const renderBuild = ({
           allowableTypes: allowableTypes.filter(type => type !== MultiTypeInputType.EXPRESSION)
         }}
       />
+      {shouldShowError && buildTypeError && <FormError errorMessage={buildTypeError} name="build.type" />}
       {buildTypeValue === CodebaseTypes.branch
-        ? renderBuildTypeInputField({ inputLabels, type: buildTypeValue, readonly, allowableTypes, prefix })
+        ? renderBuildTypeInputField({ getString, type: buildTypeValue, readonly, allowableTypes, prefix })
         : null}
       {buildTypeValue === CodebaseTypes.tag
-        ? renderBuildTypeInputField({ inputLabels, type: buildTypeValue, readonly, allowableTypes, prefix })
+        ? renderBuildTypeInputField({ getString, type: buildTypeValue, readonly, allowableTypes, prefix })
         : null}
     </Container>
   )

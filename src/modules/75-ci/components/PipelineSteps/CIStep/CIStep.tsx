@@ -19,7 +19,8 @@ import {
   useGitScope,
   shouldRenderRunTimeInputViewWithAllowedValues,
   getConnectorRefWidth,
-  isRuntimeInput
+  isRuntimeInput,
+  CodebaseTypes
 } from '@pipeline/utils/CIUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -33,7 +34,8 @@ import {
   SupportedInputTypesForListItems,
   SupportedInputTypesForListTypeField,
   SupportedInputTypesForListTypeFieldInInputSetView,
-  renderBuild
+  renderBuild,
+  renderBuildTypeInputField
 } from './StepUtils'
 import { renderMultiTypeInputWithAllowedValues, renderMultiTypeListInputSet } from './CIStepOptionalConfig'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -55,10 +57,11 @@ interface CIStepProps {
 
 export const CIStep: React.FC<CIStepProps> = props => {
   const { isNewStep, readonly, stepLabel, enableFields, stepViewType, path, isInputSetView, formik, template } = props
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<{
+  const { accountId, projectIdentifier, orgIdentifier, triggerIdentifier } = useParams<{
     projectIdentifier: string
     orgIdentifier: string
     accountId: string
+    triggerIdentifier: string
   }>()
   const { getString } = useStrings()
   const gitScope = useGitScope()
@@ -269,10 +272,10 @@ export const CIStep: React.FC<CIStepProps> = props => {
             setCodebaseRuntimeInputs: enableFields['spec.connectorAndRepo'].setCodebaseRuntimeInputs,
             codebaseRuntimeInputs: enableFields['spec.connectorAndRepo'].codebaseRuntimeInputs,
             connectorAndRepoNamePath: `${prefix}spec`,
-            // classnames: cx(css.formGroup, css.lg, css.bottomMargin5),
             allowableTypes: isInputSetView
               ? [MultiTypeInputType.FIXED]
-              : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+              : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
+            codeBaseInputFieldFormName: { repoName: `${prefix}spec.repoName` }
           })}
         </Container>
       )}
@@ -306,7 +309,46 @@ export const CIStep: React.FC<CIStepProps> = props => {
             getString,
             formik,
             path,
+            triggerIdentifier,
             allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
+          })}
+        </Container>
+      )}
+      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.build.spec.branch') && formik && (
+        <Container
+          className={cx(
+            css.formGroup,
+            stepCss,
+            !isRuntimeInput(formik?.values?.spec?.build) && !isRuntimeInput(formik?.values?.spec?.build?.type)
+              ? css.bottomMargin5
+              : css.bottomMargin2
+          )}
+        >
+          {renderBuildTypeInputField({
+            getString,
+            type: CodebaseTypes.branch,
+            readonly,
+            allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep,
+            prefix
+          })}
+        </Container>
+      )}
+      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.build.spec.tag') && formik && (
+        <Container
+          className={cx(
+            css.formGroup,
+            stepCss,
+            !isRuntimeInput(formik?.values?.spec?.build) && !isRuntimeInput(formik?.values?.spec?.build?.type)
+              ? css.bottomMargin5
+              : css.bottomMargin2
+          )}
+        >
+          {renderBuildTypeInputField({
+            getString,
+            type: CodebaseTypes.tag,
+            readonly,
+            allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep,
+            prefix
           })}
         </Container>
       )}

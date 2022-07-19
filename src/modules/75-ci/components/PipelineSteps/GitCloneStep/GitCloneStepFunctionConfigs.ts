@@ -65,7 +65,7 @@ export const transformValuesFieldsConfig = [
   }
 ]
 
-export const getEditViewValidateFieldsConfig = (isBuildTypeRequired?: boolean) => [
+export const getEditViewValidateFieldsConfig = [
   {
     name: 'identifier',
     type: ValidationFieldTypes.Identifier,
@@ -85,10 +85,10 @@ export const getEditViewValidateFieldsConfig = (isBuildTypeRequired?: boolean) =
     isRequired: true
   },
   {
-    name: 'spec.build.type',
+    name: 'spec.build',
     type: ValidationFieldTypes.Text,
     label: 'filters.executions.buildType',
-    isRequired: isBuildTypeRequired ? true : false
+    isRequired: true
   },
   {
     name: 'spec.cloneDirectory',
@@ -125,15 +125,27 @@ export const getEditViewValidateFieldsConfig = (isBuildTypeRequired?: boolean) =
   }
 ]
 
-export function getInputSetViewValidateFieldsConfig(
+export function getInputSetViewValidateFieldsConfig({
   isRequired = true
-): Array<{ name: string; type: ValidationFieldTypes; label?: string; isRequired?: boolean }> {
+}: {
+  isRequired: boolean
+}): Array<{ name: string; type: ValidationFieldTypes; label?: string; isRequired?: boolean }> {
   return [
     {
       name: 'spec.connectorRef',
       type: ValidationFieldTypes.Text,
       label: 'pipelineSteps.connectorLabel',
       isRequired
+    },
+    {
+      name: 'spec.repoName',
+      type: ValidationFieldTypes.Text,
+      label: 'common.repositoryName'
+      // isRequired // depending on connector url type
+    },
+    {
+      name: 'spec.depth',
+      type: ValidationFieldTypes.Numeric
     },
     {
       name: 'spec.runAsUser',
@@ -150,6 +162,30 @@ export function getInputSetViewValidateFieldsConfig(
     {
       name: 'timeout',
       type: ValidationFieldTypes.Timeout
+    },
+    {
+      name: 'spec.build',
+      type: ValidationFieldTypes.Text,
+      label: 'filters.executions.buildType',
+      isRequired: isRequired
+    },
+    {
+      name: 'spec.build.spec.branch',
+      type: ValidationFieldTypes.Text,
+      label: 'common.branchName',
+      isRequired: isRequired
+    },
+    {
+      name: 'spec.build.spec.tag',
+      type: ValidationFieldTypes.Text,
+      label: 'common.tagName',
+      isRequired: isRequired
+    },
+    {
+      name: 'spec.cloneDirectory',
+      type: ValidationFieldTypes.Text,
+      label: 'pipeline.gitCloneStep.cloneDirectory',
+      isRequired
     }
   ]
 }

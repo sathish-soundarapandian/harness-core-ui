@@ -71,7 +71,8 @@ export const renderConnectorAndRepoName = ({
   codebaseRuntimeInputs,
   connectorWidth,
   connectorAndRepoNamePath,
-  allowableTypes
+  allowableTypes,
+  codeBaseInputFieldFormName
 }: {
   values: { [key: string]: any }
   setFieldValue: (field: string, value: any) => void
@@ -94,11 +95,15 @@ export const renderConnectorAndRepoName = ({
   connectorWidth?: number
   connectorAndRepoNamePath?: string // coming from step / input set
   allowableTypes: MultiTypeInputType[]
+  codeBaseInputFieldFormName?: { [key: string]: string }
 }): JSX.Element => {
   const connectorFieldName = connectorAndRepoNamePath ? `${connectorAndRepoNamePath}.connectorRef` : 'connectorRef'
   const connectorValue = get(values, connectorFieldName)
   const repoNameFieldName = connectorAndRepoNamePath ? `${connectorAndRepoNamePath}.repoName` : 'repoName'
   const repoNameValue = get(values, repoNameFieldName)
+  const repoNameWidth =
+    connectorWidth && isRuntimeInput(repoNameValue) ? connectorWidth + runtimeInputGearWidth : connectorWidth
+
   const connectorAllowableTypes = allowableTypes.filter(type => type !== MultiTypeInputType.EXPRESSION)
   return (
     <>
@@ -135,7 +140,8 @@ export const renderConnectorAndRepoName = ({
               connectorRefType,
               setConnectionType,
               setConnectorUrl,
-              setFieldValue
+              setFieldValue,
+              codeBaseInputFieldFormName
             })
             /* istanbul ignore next */
             setCodebaseRuntimeInputs({
@@ -148,15 +154,15 @@ export const renderConnectorAndRepoName = ({
       </Container>
 
       {!isRuntimeInput(connectorValue) && connectionType === ConnectionType.Repo ? (
-        <>
+        <Container width={repoNameWidth}>
           <Text font={{ variation: FontVariation.FORM_LABEL }} margin={{ bottom: 'xsmall' }}>
             {getString('common.repositoryName')}
           </Text>
           <TextInput name={repoNameFieldName} value={connectorUrl} style={{ flexGrow: 1 }} disabled />
-        </>
+        </Container>
       ) : (
         <>
-          <Container width={connectorWidth} className={cx(css.bottomMargin3)}>
+          <Container width={repoNameWidth} className={cx(css.bottomMargin3)}>
             <MultiTypeTextField
               key={`connector-runtimeinput-${codebaseRuntimeInputs.connectorRef}`} // handle reload RepoName from ConnectorRef as Runtime to Fixed
               label={

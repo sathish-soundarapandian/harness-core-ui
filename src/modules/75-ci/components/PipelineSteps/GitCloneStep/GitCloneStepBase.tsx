@@ -88,9 +88,7 @@ export const GitCloneStepBase = (
         onChange?.(schemaValues)
         return validate(
           valuesToValidate,
-          getEditViewValidateFieldsConfig(
-            !isRuntimeInput(valuesToValidate?.spec?.connectorRef) && !isRuntimeInput(valuesToValidate?.spec?.build)
-          ),
+          getEditViewValidateFieldsConfig,
           {
             initialValues,
             steps: currentStage?.stage?.spec?.execution?.steps || {},

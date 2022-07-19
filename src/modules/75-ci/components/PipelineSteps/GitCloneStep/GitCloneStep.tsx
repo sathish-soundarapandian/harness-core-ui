@@ -125,7 +125,15 @@ export class GitCloneStep extends PipelineStep<GitCloneStepData> {
   }: ValidateInputSetProps<GitCloneStepData>): FormikErrors<GitCloneStepData> {
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (getString) {
-      return validateInputSet(data, template, getInputSetViewValidateFieldsConfig(isRequired), { getString }, viewType)
+      return validateInputSet(
+        data,
+        template,
+        getInputSetViewValidateFieldsConfig({
+          isRequired
+        }),
+        { getString },
+        viewType
+      )
     }
 
     return {}

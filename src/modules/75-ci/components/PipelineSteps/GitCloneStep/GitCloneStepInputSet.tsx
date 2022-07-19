@@ -71,6 +71,14 @@ export const GitCloneStepInputSetBasic: React.FC<GitCloneStepProps> = ({
           ...(getMultiTypeFromValue(template?.spec?.build as string) === MultiTypeInputType.RUNTIME && {
             'spec.build': {}
           }),
+          ...(getMultiTypeFromValue((template?.spec?.build as any)?.spec?.branch as string) ===
+            MultiTypeInputType.RUNTIME && {
+            'spec.build.spec.branch': {}
+          }),
+          ...(getMultiTypeFromValue((template?.spec?.build as any)?.spec?.tag as string) ===
+            MultiTypeInputType.RUNTIME && {
+            'spec.build.spec.tag': {}
+          }),
           ...(getMultiTypeFromValue(template?.spec?.cloneDirectory) === MultiTypeInputType.RUNTIME && {
             'spec.cloneDirectory': { tooltipId: 'cloneDirectory' }
           })
