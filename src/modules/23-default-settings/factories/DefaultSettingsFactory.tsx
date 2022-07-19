@@ -7,13 +7,11 @@
 
 import type React from 'react'
 import type { DropDown, IconName } from '@harness/uicore'
-import type { SettingCategory, SettingType } from '@default-settings/interfaces/SettingType'
+import type { SettingCategory, SettingGroups, SettingType } from '@default-settings/interfaces/SettingType'
 import type { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import type { FeatureFlag } from '@common/featureFlags'
 import type { SettingDTO, SettingRequestDTO } from 'services/cd-ng'
-
-
 
 export interface SettingRendererProps {
   identifier: any
@@ -28,12 +26,16 @@ export interface SettingHandler {
   settingRenderer?: (props: SettingRendererProps) => React.ReactElement
   featureFlag?: FeatureFlag
 }
-
+export interface GroupedSettings {
+  groupName?: keyof StringsMap
+  groupId?: SettingGroups
+  settingTypes: Set<SettingType>
+}
 export interface SettingCategoryHandler {
   icon: IconName
   label: keyof StringsMap
-  settingTypes?: Set<SettingType>
   featureFlag?: FeatureFlag
+  settings: GroupedSettings[]
 }
 
 class DefaultSettingsFactory {
@@ -66,8 +68,6 @@ class DefaultSettingsFactory {
   getSettingTypeHandler(settingType: SettingType): SettingHandler | undefined {
     return this.map.get(settingType)
   }
-
-  
 }
 
 export default new DefaultSettingsFactory()

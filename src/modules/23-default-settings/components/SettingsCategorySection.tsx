@@ -39,7 +39,7 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
 
   const { getString } = useStrings()
   if (!settingCategoryHandler) return null
-  const { label, settingTypes: registeredSettingTypes, featureFlag, icon } = settingCategoryHandler
+  const { label, settings: registeredGroupedSettings, featureFlag, icon } = settingCategoryHandler
   let enableFeatureFlag = true
   if (featureFlag) {
     enableFeatureFlag = useFeatureFlag(featureFlag)
@@ -64,10 +64,8 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
         const settingTypesTemp: Set<SettingType> = new Set()
         const refiedSettingTypesWithDTOLocal: { [Key in SettingType]?: SettingResponseDTO } = {}
         data?.data?.forEach(val => {
-          if (registeredSettingTypes?.has(val.setting.identifier as SettingType)) {
-            refiedSettingTypesWithDTOLocal[val.setting.identifier as SettingType] = val
-            settingTypesTemp.add(val.setting.identifier as SettingType)
-          }
+          refiedSettingTypesWithDTOLocal[val.setting.identifier as SettingType] = val
+          settingTypesTemp.add(val.setting.identifier as SettingType)
         })
         updateRefiedSettingTypesWithDTO(refiedSettingTypesWithDTOLocal)
         updateSettingTypes(settingTypesTemp)
@@ -165,6 +163,7 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
                 settingsTypesSet={settingTypes}
                 settingTypesResponseDTO={refiedSettingTypesWithDTO}
                 settingErrorMessages={settingErrorMessages}
+                registeredGroupedSettings={registeredGroupedSettings}
               />
             )
           }
