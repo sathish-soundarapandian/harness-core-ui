@@ -21,7 +21,7 @@ import type { StringsMap } from 'stringTypes'
 import { ExecutionList } from '../execution-list/ExecutionList'
 import css from './ExecutionListPage.module.scss'
 
-export default function ExecutionListPage(): React.ReactElement {
+export function ExecutionListPage(): React.ReactElement {
   const { projectIdentifier, orgIdentifier, accountId, module } = useParams<PipelineType<ProjectPathProps>>()
   const { getString } = useStrings()
 

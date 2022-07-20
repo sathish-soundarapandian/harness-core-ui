@@ -64,9 +64,9 @@ const ExecutionListFilterContext = React.createContext({} as ExecutionListFilter
 export function ExecutionListFilterContextProvider({ children }: { children: React.ReactNode }): React.ReactElement {
   const { orgIdentifier, projectIdentifier, accountId } = useParams<PipelineType<PipelinePathProps>>()
   const queryParams = useQueryParams<QueryParams & GitQueryParams>({ processQueryParams })
+  const { filterIdentifier, myDeployments, status, searchTerm } = queryParams
   const { replaceQueryParams } = useUpdateQueryParams<Partial<GetListOfExecutionsQueryParams>>()
 
-  const { filterIdentifier, myDeployments, status, searchTerm } = queryParams
   const isAnyFilterApplied =
     myDeployments ||
     (Array.isArray(status) && status.length > 0) ||
@@ -98,7 +98,7 @@ export function ExecutionListFilterContextProvider({ children }: { children: Rea
         isAnyFilterApplied,
         isSavedFilterApplied:
           !!filterIdentifier && filterIdentifier !== StringUtils.getIdentifierFromName(UNSAVED_FILTER),
-        queryParams,
+        queryParams: queryParams,
         clearFilter
       }}
     >

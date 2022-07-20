@@ -12,7 +12,6 @@ import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { String, useStrings } from 'framework/strings'
 import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
-
 import StatusSelect from '@pipeline/components/StatusSelect/StatusSelect'
 import NewPipelineSelect from '@pipeline/components/NewPipelineSelect/NewPipelineSelect'
 import { getFeaturePropsForRunPipelineButton, getRbacButtonModules } from '@pipeline/utils/runPipelineUtils'
@@ -23,14 +22,13 @@ import type { GetListOfExecutionsQueryParams } from 'services/pipeline-ng'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-
 import { ExecutionCompareYaml } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareYaml'
 import { useExecutionCompareContext } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
 import { useExecutionListFilterContext } from '../ExecutionListFilterContext/ExecutionListFilterContext'
-import { ExecutionFilters } from '../ExecutionListFilter/ExecutionListFilter'
+import { ExecutionListFilter } from '../ExecutionListFilter/ExecutionListFilter'
 import type { QuickStatusParam } from '../types'
-import css from './ExecutionListSubHeader.module.scss'
 import type { ExecutionListProps } from '../ExecutionList'
+import css from './ExecutionListSubHeader.module.scss'
 
 export interface FilterQueryParams {
   query?: string
@@ -178,7 +176,7 @@ export function ExecutionListSubHeader(
           width={200}
           className={css.expandSearch}
         />
-        <ExecutionFilters />
+        <ExecutionListFilter />
       </div>
     </Page.SubHeader>
   )

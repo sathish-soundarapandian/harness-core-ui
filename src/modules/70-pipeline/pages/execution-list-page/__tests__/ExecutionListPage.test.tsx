@@ -10,17 +10,15 @@ import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
-
-import data from '../../pipeline-deployment-list/__tests__/execution-list.json'
+import filters from '@pipeline/pages/execution-list/__mocks__/filters.json'
+import executionList from '@pipeline/pages/execution-list/__mocks__/execution-list.json'
 import pipelines from '../../../components/PipelineModalListView/__tests__/RunPipelineListViewMocks'
-import filters from '../../pipeline-deployment-list/__tests__/filters.json'
 import services from '../../pipelines/__tests__/mocks/services.json'
 import environments from '../../pipelines/__tests__/mocks/environments.json'
-import DeploymentsList from '../ExecutionListPage'
+import { ExecutionListPage } from '../ExecutionListPage'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('@common/utils/YamlUtils', () => ({}))
-
 jest.mock('@pipeline/components/Dashboards/PipelineSummaryCards/PipelineSummaryCards', () => () => <div />)
 jest.mock('@pipeline/components/Dashboards/BuildExecutionsChart/PipelineBuildExecutionsChart', () => () => <div />)
 
@@ -28,7 +26,7 @@ const mockGetCallFunction = jest.fn()
 
 jest.mock('services/pipeline-ng', () => ({
   useGetListOfExecutions: jest.fn(() => ({
-    mutate: jest.fn(() => Promise.resolve(data)),
+    mutate: jest.fn(() => Promise.resolve(executionList)),
     loading: false,
     cancel: jest.fn()
   })),
@@ -93,11 +91,11 @@ const testParams = {
   module: 'cd'
 }
 
-describe('Pipeline Deployments List', () => {
+describe('ExecutionListPage', () => {
   test('CD module', () => {
     const { queryByText, queryAllByText } = render(
       <TestWrapper path={testPath} pathParams={testParams}>
-        <DeploymentsList />
+        <ExecutionListPage />
       </TestWrapper>
     )
 
@@ -108,7 +106,7 @@ describe('Pipeline Deployments List', () => {
   test('CI module', () => {
     const { queryByText, queryAllByText } = render(
       <TestWrapper path={testPath} pathParams={{ ...testParams, module: 'ci' }}>
-        <DeploymentsList />
+        <ExecutionListPage />
       </TestWrapper>
     )
 
@@ -119,7 +117,7 @@ describe('Pipeline Deployments List', () => {
   test('STO module', () => {
     const { queryByText, queryAllByText } = render(
       <TestWrapper path={testPath} pathParams={{ ...testParams, module: 'sto' }}>
-        <DeploymentsList />
+        <ExecutionListPage />
       </TestWrapper>
     )
 

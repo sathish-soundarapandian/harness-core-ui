@@ -18,6 +18,12 @@ export function usePolling(
   const [isPolling, setIsPolling] = useState(false)
   const visible = useTabVisible()
 
+  /**
+   * At any moment of time, only one polling is done
+   * Only do polling on first page
+   * When component is loading, wait until loading is done
+   * When polling call (API) is being processed, wait until it's done then re-schedule
+   */
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
       if (page === 1 && !isLoading && visible) {
@@ -32,8 +38,7 @@ export function usePolling(
     return () => {
       window.clearTimeout(timeoutId)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, isLoading, visible])
+  }, [page, isLoading, visible, fn])
 
   return isPolling
 }

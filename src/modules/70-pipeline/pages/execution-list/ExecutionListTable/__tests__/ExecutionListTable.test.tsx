@@ -7,16 +7,14 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-
 import { TestWrapper } from '@common/utils/testUtils'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitions'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
-import type { PipelineExecutionSummary } from 'services/pipeline-ng'
-
-import ExecutionsList from '../ExecutionsList'
-import filters from '../../__tests__/filters.json'
-import data from '../../__tests__/execution-list.json'
+import type { PagePipelineExecutionSummary } from 'services/pipeline-ng'
+import filters from '@pipeline/pages/execution-list/__mocks__/filters.json'
+import executionList from '@pipeline/pages/execution-list/__mocks__/execution-list.json'
+import { ExecutionListTable } from '../ExecutionListTable'
 
 jest.mock('@common/utils/YamlUtils', () => ({}))
 jest.mock('services/pipeline-ng', () => ({
@@ -29,7 +27,7 @@ jest.mock('services/pipeline-ng', () => ({
   useGetInputsetYaml: jest.fn(() => ({ data: null }))
 }))
 
-describe('<ExecutionsList /> test', () => {
+describe('ExecutionListTable', () => {
   test('snapshot testing', () => {
     const { container } = render(
       <TestWrapper
@@ -43,8 +41,8 @@ describe('<ExecutionsList /> test', () => {
         }}
         defaultAppStoreValues={defaultAppStoreValues}
       >
-        <ExecutionsList
-          pipelineExecutionSummary={data.data.content as PipelineExecutionSummary[]}
+        <ExecutionListTable
+          executionList={executionList.data as PagePipelineExecutionSummary}
           onViewCompiledYaml={jest.fn()}
         />
       </TestWrapper>
@@ -64,7 +62,10 @@ describe('<ExecutionsList /> test', () => {
         }}
         defaultAppStoreValues={defaultAppStoreValues}
       >
-        <ExecutionsList pipelineExecutionSummary={[] as PipelineExecutionSummary[]} onViewCompiledYaml={jest.fn()} />
+        <ExecutionListTable
+          executionList={executionList.data as PagePipelineExecutionSummary}
+          onViewCompiledYaml={jest.fn()}
+        />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()

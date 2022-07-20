@@ -12,7 +12,6 @@ import type { SelectOption } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import { isEmpty, pick } from 'lodash-es'
-
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { FilterDTO, PipelineExecutionFilterProperties } from 'services/pipeline-ng'
@@ -37,7 +36,6 @@ import {
   createRequestBodyPayload
 } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
 import type { CrudOperation } from '@common/components/Filter/FilterCRUD/FilterCRUD'
-
 import { StringUtils } from '@common/exports'
 import {
   isObjectEmpty,
@@ -48,9 +46,9 @@ import {
 import { dispatchCustomEvent } from '@pipeline/components/PipelineDiagram/PipelineGraph/PipelineGraphUtils'
 import { FORM_CLICK_EVENT } from '@common/components/InputDatePicker/InputDatePicker'
 import { deploymentTypeLabel } from '@pipeline/utils/DeploymentTypeUtils'
-import { useFiltersContext } from '../../FiltersContext/FiltersContext'
-import PipelineFilterForm from '../../PipelineFilterForm/PipelineFilterForm'
 import type { StringQueryParams } from '../types'
+import { ExecutionListFilterForm } from '../ExecutionListFilterForm/ExecutionListFilterForm'
+import { useExecutionListFilterContext } from '../ExecutionListFilterContext/ExecutionListFilterContext'
 import css from './ExecutionListFilter.module.scss'
 export interface ExecutionFilterQueryParams {
   filter?: string
@@ -58,7 +56,7 @@ export interface ExecutionFilterQueryParams {
 
 const UNSAVED_FILTER_IDENTIFIER = StringUtils.getIdentifierFromName(UNSAVED_FILTER)
 
-export function ExecutionFilters(): React.ReactElement {
+export function ExecutionListFilter(): React.ReactElement {
   const [loading, setLoading] = React.useState(false)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelineType<PipelinePathProps>>()
   const { state: isFiltersDrawerOpen, open: openFilterDrawer, close: hideFilterDrawer } = useBooleanStatus()
@@ -68,7 +66,7 @@ export function ExecutionFilters(): React.ReactElement {
   const isCDEnabled = (selectedProject?.modules && selectedProject.modules?.indexOf('CD') > -1) || false
   const isCIEnabled = (selectedProject?.modules && selectedProject.modules?.indexOf('CI') > -1) || false
   const filterRef = React.useRef<FilterRef<FilterDTO> | null>(null)
-  const { savedFilters: filters, isFetchingFilters, refetchFilters, queryParams } = useFiltersContext()
+  const { filterList, isFetchingFilterList, refetchFilterList, queryParams } = useExecutionListFilterContext()
 
   const { data: servicesResponse, loading: isFetchingServices } = useGetServiceListForProject({
     queryParams: { accountId, orgIdentifier, projectIdentifier },
@@ -120,7 +118,7 @@ export function ExecutionFilters(): React.ReactElement {
 
   const appliedFilter =
     queryParams.filterIdentifier && queryParams.filterIdentifier !== UNSAVED_FILTER_IDENTIFIER
-      ? getFilterByIdentifier(queryParams.filterIdentifier, filters)
+      ? getFilterByIdentifier(queryParams.filterIdentifier, filterList)
       : queryParams.filters && !isEmpty(queryParams.filters)
       ? {
           name: UNSAVED_FILTER,
@@ -218,7 +216,7 @@ export function ExecutionFilters(): React.ReactElement {
     }
 
     setLoading(false)
-    refetchFilters()
+    refetchFilterList()
   }
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
@@ -233,7 +231,7 @@ export function ExecutionFilters(): React.ReactElement {
     if (identifier === appliedFilter?.identifier) {
       reset()
     }
-    refetchFilters()
+    refetchFilterList()
   }
 
   function handleFilterClick(filterIdentifier: string): void {
@@ -253,7 +251,7 @@ export function ExecutionFilters(): React.ReactElement {
     <div className={css.executionFilter} onClick={() => dispatchCustomEvent(FORM_CLICK_EVENT, {})}>
       <FilterSelector<FilterDTO>
         appliedFilter={appliedFilter}
-        filters={filters}
+        filters={filterList}
         onFilterBtnClick={openFilterDrawer}
         onFilterSelect={handleFilterSelection}
         fieldToLabelMapping={fieldToLabelMapping}
@@ -262,7 +260,7 @@ export function ExecutionFilters(): React.ReactElement {
       <Filter<PipelineExecutionFormType, FilterDTO>
         isOpen={isFiltersDrawerOpen}
         formFields={
-          <PipelineFilterForm<PipelineExecutionFormType>
+          <ExecutionListFilterForm<PipelineExecutionFormType>
             isCDEnabled={isCDEnabled}
             isCIEnabled={isCIEnabled}
             initialValues={{
@@ -291,8 +289,8 @@ export function ExecutionFilters(): React.ReactElement {
           },
           metadata: { name, filterVisibility, identifier, filterProperties: {} }
         }}
-        filters={filters}
-        isRefreshingFilters={isFetchingFilters || isFetchingMetaData || loading}
+        filters={filterList}
+        isRefreshingFilters={isFetchingFilterList || isFetchingMetaData || loading}
         onApply={onApply}
         onClose={() => hideFilterDrawer()}
         onSaveOrUpdate={handleSaveOrUpdate}
@@ -307,7 +305,7 @@ export function ExecutionFilters(): React.ReactElement {
             ['DELETE', deleteFilter]
           ])
         }
-        onSuccessfulCrudOperation={() => refetchFilters()}
+        onSuccessfulCrudOperation={refetchFilterList}
         validationSchema={Yup.object().shape({
           branch: Yup.string().when('buildType', {
             is: BUILD_TYPE.BRANCH,

@@ -1042,6 +1042,7 @@ executionList:
   servicesDeployedText: 'Services deployed ({{size}})'
   artifactDeployedText: 'Artifacts deployed ({{size}})'
   EnvironmentsText: 'Environments ({{size}})'
+
 replacedExpressions: Replaced Expressions
 expressionRequired: Expression value is required.
 nativeHelm: Native Helm

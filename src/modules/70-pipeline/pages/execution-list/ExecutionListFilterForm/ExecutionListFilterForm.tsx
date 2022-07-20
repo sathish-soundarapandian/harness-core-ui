@@ -23,7 +23,7 @@ import InputDatePicker from '@common/components/InputDatePicker/InputDatePicker'
 import css from './ExecutionListFilterForm.module.scss'
 
 export type FormView = 'PIPELINE-META'
-interface PipelineFilterFormProps<T> {
+interface ExecutionListFilterFormProps<T> {
   formikProps?: FormikProps<T>
   type: FilterProperties['filterType']
   isCDEnabled: boolean
@@ -33,13 +33,13 @@ interface PipelineFilterFormProps<T> {
 
 const NO_SELECTION = { label: '', value: '' }
 
-export default function PipelineFilterForm<
+export function ExecutionListFilterForm<
   T extends {
     buildType?: BuildTypeContext['buildType']
     deploymentType?: DeploymentTypeContext['deploymentType']
     infrastructureType?: DeploymentTypeContext['infrastructureType']
   }
->(props: PipelineFilterFormProps<T>): React.ReactElement {
+>(props: ExecutionListFilterFormProps<T>): React.ReactElement {
   const { getString } = useStrings()
   const { module } = useParams<ModulePathParams>()
   const { type, formikProps, isCDEnabled, isCIEnabled, initialValues } = props

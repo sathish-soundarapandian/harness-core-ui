@@ -9,7 +9,7 @@
 declare const styles: {
   readonly image: string
   readonly noExecutions: string
-  readonly noExecutionsAboutText: string
+  readonly noExecutionsSubText: string
   readonly noExecutionsText: string
   readonly noPipelineText: string
   readonly overviewNoExecutions: string

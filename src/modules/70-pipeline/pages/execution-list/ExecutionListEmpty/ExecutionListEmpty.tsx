@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import { Color } from '@harness/design-system'
 import { Button, ButtonVariation, Icon, IconName, Layout, Text } from '@wings-software/uicore'
 import React from 'react'
@@ -24,32 +31,32 @@ export function ExecutionListEmpty({
   let icon: IconName
   let illustration: string
   let noExecutionsText: keyof StringsMap
-  let noExecutionsAboutText: keyof StringsMap
+  let noExecutionsSubText: keyof StringsMap
 
   switch (module) {
     case 'ci':
       icon = 'ci-main'
       illustration = ciExecutionListIllustration
       noExecutionsText = 'pipeline.noBuildsText'
-      noExecutionsAboutText = 'noBuildsText'
+      noExecutionsSubText = 'noBuildsText'
       break
 
     case 'sto':
       icon = 'sto-color-filled'
       illustration = stoExecutionListIllustration
       noExecutionsText = 'stoSteps.noScansText'
-      noExecutionsAboutText = 'stoSteps.noScansRunPipelineText'
+      noExecutionsSubText = 'stoSteps.noScansRunPipelineText'
       break
 
     default:
       icon = 'cd-main'
       illustration = cdExecutionListIllustration
       noExecutionsText = 'pipeline.noDeploymentText'
-      noExecutionsAboutText = 'noDeploymentText'
+      noExecutionsSubText = 'noDeploymentText'
   }
 
   if (hasNoPipelines) {
-    noExecutionsAboutText = 'pipeline.noPipelineText'
+    noExecutionsSubText = 'pipeline.noPipelineText'
   }
 
   return (
@@ -77,8 +84,8 @@ export function ExecutionListEmpty({
             {getString(noExecutionsText)}
           </Text>
           {!loading && (
-            <Text className={css.noExecutionsAboutText} margin={{ top: 'xsmall', bottom: 'xlarge' }}>
-              {getString(noExecutionsAboutText)}
+            <Text className={css.noExecutionsSubText} margin={{ top: 'xsmall', bottom: 'xlarge' }}>
+              {getString(noExecutionsSubText)}
             </Text>
           )}
           <EmptyAction />

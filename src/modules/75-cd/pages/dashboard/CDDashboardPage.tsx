@@ -38,14 +38,12 @@ import {
 } from '@common/components/TimeRangeSelector/TimeRangeSelector'
 import { DeploymentsTimeRangeContext } from '@cd/components/Services/common'
 import { useLocalStorage, useMutateAsGet, useQueryParams } from '@common/hooks'
-import PipelineDeploymentList, {
-  processQueryParams
-} from '@pipeline/pages/pipeline-deployment-list/PipelineDeploymentList'
 import PipelineModalListView from '@pipeline/components/PipelineModalListView/PipelineModalListView'
-
 import { TitleWithToolTipId } from '@common/components/Title/TitleWithToolTipId'
-import type { QueryParams } from '@pipeline/pages/pipeline-deployment-list/types'
 import { DashboardSelected } from '@pipeline/components/ServiceExecutionsCard/ServiceExecutionsCard'
+import { ExecutionList } from '@pipeline/pages/execution-list/ExecutionList'
+import type { QueryParams } from '@pipeline/pages/execution-list/types'
+import { processQueryParams } from '@pipeline/pages/execution-list/ExecutionListFilterContext/ExecutionListFilterContext'
 import DeploymentsHealthCards from './DeploymentsHealthCards'
 import DeploymentExecutionsChart from './DeploymentExecutionsChart'
 import WorkloadCard from './DeploymentCards/WorkloadCard'
@@ -86,7 +84,7 @@ const NoDataOverviewPage = (): JSX.Element => {
         margin: 16
       }}
     >
-      <PipelineDeploymentList onRunPipeline={openModal} isCDOverview />
+      <ExecutionList onRunPipeline={openModal} isOverviewPage />
     </div>
   )
 }

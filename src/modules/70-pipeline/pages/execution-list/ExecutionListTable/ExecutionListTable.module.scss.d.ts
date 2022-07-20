@@ -7,11 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly actionButton: string
-  readonly avatar: string
-  readonly link: string
-  readonly storeTypeColumn: string
-  readonly storeTypeColumnContainer: string
-  readonly table: string
+  readonly main: string
+  readonly pagination: string
 }
 export default styles

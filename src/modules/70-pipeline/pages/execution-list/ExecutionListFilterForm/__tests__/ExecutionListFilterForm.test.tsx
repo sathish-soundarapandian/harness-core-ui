@@ -19,7 +19,7 @@ import {
   PipelineExecutionFormType
 } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
 
-import PipelineFilterForm from '../ExecutionListFilterForm'
+import { ExecutionListFilterForm } from '../ExecutionListFilterForm'
 import services from '../../../pipelines/__tests__/mocks/services.json'
 import deploymentTypes from '../../../pipelines/__tests__/mocks/deploymentTypes.json'
 import environments from '../../../pipelines/__tests__/mocks/environments.json'
@@ -39,7 +39,7 @@ function WrapperComponent(): JSX.Element {
     <TestWrapper path={TEST_PATH} pathParams={params} defaultAppStoreValues={defaultAppStoreValues}>
       <Formik initialValues={{}} onSubmit={() => undefined} formName="pipelineFilterFormTest">
         <FormikForm>
-          <PipelineFilterForm<PipelineExecutionFormType>
+          <ExecutionListFilterForm<PipelineExecutionFormType>
             isCDEnabled={true}
             isCIEnabled={true}
             initialValues={{
@@ -55,7 +55,7 @@ function WrapperComponent(): JSX.Element {
   )
 }
 
-describe('<PipelineFilterForm /> test', () => {
+describe('<ExecutionListFilterForm /> test', () => {
   test('snapshot testing', () => {
     const { container } = render(<WrapperComponent />)
     expect(container).toMatchSnapshot()

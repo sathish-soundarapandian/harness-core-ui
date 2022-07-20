@@ -9,17 +9,15 @@ import React from 'react'
 import { fireEvent, getByTestId, getByText, queryByAttribute, render, waitFor } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 import { useLocation } from 'react-router-dom'
-
 import { TestWrapper } from '@common/utils/testUtils'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitions'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
-import filters from '@pipeline/pages/pipeline-deployment-list/__tests__/filters.json'
+import filters from '@pipeline/pages/execution-list/__mocks__/filters.json'
 import services from '@pipeline/pages/pipelines/__tests__/mocks/services.json'
 import environments from '@pipeline/pages/pipelines/__tests__/mocks/environments.json'
 import mocks from '@pipeline/components/PipelineModalListView/__tests__/RunPipelineListViewMocks'
-
-import { PipelineDeploymentListHeader } from '../ExecutionListSubHeader'
+import { ExecutionListSubHeader } from '../ExecutionListSubHeader'
 
 const mockGetCallFunction = jest.fn()
 
@@ -74,13 +72,13 @@ function ComponentWrapper(): React.ReactElement {
   const location = useLocation()
   return (
     <React.Fragment>
-      <PipelineDeploymentListHeader onRunPipeline={jest.fn()} />
+      <ExecutionListSubHeader onRunPipeline={jest.fn()} />
       <div data-testid="location">{`${location.pathname}${location.search}`}</div>
     </React.Fragment>
   )
 }
 
-describe('<PipelineDeploymentListHeader /> test', () => {
+describe('ExecutionListSubHeader', () => {
   let renderedComponent: HTMLElement
   beforeEach(async () => {
     await act(async () => {

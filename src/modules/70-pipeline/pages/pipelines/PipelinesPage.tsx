@@ -86,7 +86,7 @@ import type { StoreType } from '@common/constants/GitSyncTypes'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
 import { PipelineGridView } from './views/PipelineGridView'
 import { PipelineListView } from './views/PipelineListView'
-import PipelineFilterForm from '../pipeline-deployment-list/PipelineFilterForm/PipelineFilterForm'
+import { ExecutionListFilterForm } from '../execution-list/ExecutionListFilterForm/ExecutionListFilterForm'
 import pipelineIllustration from './images/deploypipeline-illustration.svg'
 import buildpipelineIllustration from './images/buildpipeline-illustration.svg'
 import flagpipelineIllustration from './images/flagpipeline-illustration.svg'
@@ -541,7 +541,7 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
     ) : (
       <Filter<PipelineFormType, FilterDTO>
         formFields={
-          <PipelineFilterForm<PipelineFormType>
+          <ExecutionListFilterForm<PipelineFormType>
             isCDEnabled={isCDEnabled}
             isCIEnabled={isCIEnabled}
             initialValues={{

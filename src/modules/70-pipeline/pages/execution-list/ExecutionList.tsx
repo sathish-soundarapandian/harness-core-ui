@@ -5,35 +5,32 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { Container, PageSpinner } from '@wings-software/uicore'
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, HarnessDocTooltip, PageSpinner } from '@wings-software/uicore'
-import { useStrings } from 'framework/strings'
-import type { PipelinePathProps, PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { Page } from '@common/exports'
-import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
-import type { StringsMap } from 'stringTypes'
-import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
+import { useMutateAsGet } from '@common/hooks'
+import { useModuleInfo } from '@common/hooks/useModuleInfo'
+import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import { useGetCommunity } from '@common/utils/utils'
+import PipelineBuildExecutionsChart from '@pipeline/components/Dashboards/BuildExecutionsChart/PipelineBuildExecutionsChart'
+import PipelineSummaryCards from '@pipeline/components/Dashboards/PipelineSummaryCards/PipelineSummaryCards'
 import { ExecutionCompareProvider } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
-import { ExecutionListTable } from './ExecutionListTable/ExecutionListTable'
-import { ExecutionListSubHeader } from './ExecutionListSubHeader/ExecutionListSubHeader'
+import { ExecutionCompiledYaml } from '@pipeline/components/ExecutionCompiledYaml/ExecutionCompiledYaml'
+import { usePolling } from '@pipeline/hooks/usePolling'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
+import { PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipeline-ng'
+import { ExecutionListEmpty } from './ExecutionListEmpty/ExecutionListEmpty'
+import { OverviewExecutionListEmpty } from './ExecutionListEmpty/OverviewExecutionListEmpty'
 import {
   ExecutionListFilterContextProvider,
   useExecutionListFilterContext
 } from './ExecutionListFilterContext/ExecutionListFilterContext'
+import { ExecutionListSubHeader } from './ExecutionListSubHeader/ExecutionListSubHeader'
+import { ExecutionListTable } from './ExecutionListTable/ExecutionListTable'
 import css from './ExecutionList.module.scss'
-import { useMutateAsGet } from '@common/hooks'
-import { PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipeline-ng'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { usePolling } from '@pipeline/hooks/usePolling'
-import { useGetCommunity } from '@common/utils/utils'
-import { useModuleInfo } from '@common/hooks/useModuleInfo'
-import PipelineBuildExecutionsChart from '@pipeline/components/Dashboards/BuildExecutionsChart/PipelineBuildExecutionsChart'
-import PipelineSummaryCards from '@pipeline/components/Dashboards/PipelineSummaryCards/PipelineSummaryCards'
-import { OverviewExecutionListEmpty } from './ExecutionListEmpty/OverviewExecutionListEmpty'
-import { ExecutionListEmpty } from './ExecutionListEmpty/ExecutionListEmpty'
-import { ExecutionCompiledYaml } from '@pipeline/components/ExecutionCompiledYaml/ExecutionCompiledYaml'
 
 export interface ExecutionListProps {
   onRunPipeline(): void
@@ -42,7 +39,7 @@ export interface ExecutionListProps {
   isOverviewPage?: boolean
 }
 
-export function ExecutionList(props: ExecutionListProps): React.ReactElement {
+function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   const { showHealthAndExecution, isOverviewPage, ...rest } = props
   const { orgIdentifier, projectIdentifier, pipelineIdentifier, accountId } =
     useParams<PipelineType<PipelinePathProps>>()
@@ -95,10 +92,9 @@ export function ExecutionList(props: ExecutionListProps): React.ReactElement {
 
   const isCommunity = useGetCommunity()
   const isCommunityAndCDModule = module === 'cd' && isCommunity
-
   const isPolling = usePolling(fetchExecutions, page, loading)
-  const executionList = data?.data?.content || []
-  const hasExecutions = executionList.length > 0 || isAnyFilterApplied
+  const executionList = data?.data
+  const hasExecutions = executionList?.totalElements && executionList?.totalElements > 0
   const isInitialLoading = loading && !isPolling
 
   if (isOverviewPage && !isInitialLoading) {
@@ -106,28 +102,42 @@ export function ExecutionList(props: ExecutionListProps): React.ReactElement {
   }
 
   return (
-    <GitSyncStoreProvider>
-      <ExecutionListFilterContextProvider>
-        <ExecutionCompareProvider>
-          <ExecutionListSubHeader {...rest} />
-          <Page.Body error={(error?.data as Error)?.message || error?.message} retryOnError={fetchExecutions}>
-            {showHealthAndExecution && !isCommunityAndCDModule && (
-              <Container className={css.healthAndExecutions}>
-                <PipelineSummaryCards />
-                <PipelineBuildExecutionsChart />
-              </Container>
-            )}
-            <ExecutionCompiledYaml onClose={() => setViewCompiledYaml(undefined)} executionSummary={viewCompiledYaml} />
-            {isInitialLoading ? (
-              <PageSpinner />
-            ) : executions.length > 0 ? (
-              <ExecutionListTable executionList={executionList} {...rest} />
-            ) : (
-              <ExecutionListEmpty {...rest} />
-            )}
-          </Page.Body>
-        </ExecutionCompareProvider>
-      </ExecutionListFilterContextProvider>
-    </GitSyncStoreProvider>
+    <>
+      {(hasExecutions || isAnyFilterApplied) && <ExecutionListSubHeader {...rest} />}
+
+      <Page.Body error={(error?.data as Error)?.message || error?.message} retryOnError={fetchExecutions}>
+        {showHealthAndExecution && !isCommunityAndCDModule && (
+          <Container className={css.healthAndExecutions}>
+            <PipelineSummaryCards />
+            <PipelineBuildExecutionsChart />
+          </Container>
+        )}
+
+        <ExecutionCompiledYaml onClose={() => setViewCompiledYaml(undefined)} executionSummary={viewCompiledYaml} />
+
+        {isInitialLoading ? (
+          <PageSpinner />
+        ) : hasExecutions ? (
+          <ExecutionListTable executionList={executionList} onViewCompiledYaml={setViewCompiledYaml} {...rest} />
+        ) : (
+          <ExecutionListEmpty {...rest} />
+        )}
+      </Page.Body>
+    </>
+  )
+}
+
+export function ExecutionList(props: ExecutionListProps): React.ReactElement {
+  return (
+    <>
+      <GitSyncStoreProvider>
+        <ExecutionListFilterContextProvider>
+          <ExecutionCompareProvider>
+            <ExecutionListInternal {...props} />
+          </ExecutionCompareProvider>
+        </ExecutionListFilterContextProvider>
+      </GitSyncStoreProvider>
+      <HelpPanel referenceId="ExecutionHistory" type={HelpPanelType.FLOATING_CONTAINER} />
+    </>
   )
 }

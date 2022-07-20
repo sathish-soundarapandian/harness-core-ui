@@ -22,20 +22,18 @@ import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@comm
 import routes from '@common/RouteDefinitions'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import { useGetListOfExecutions, useGetExecutionData } from 'services/pipeline-ng'
-
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
-import PipelineDeploymentList from '../PipelineDeploymentList'
-import data from './execution-list.json'
+import filters from '@pipeline/pages/execution-list/__mocks__/filters.json'
+import executionList from '@pipeline/pages/execution-list/__mocks__/execution-list.json'
+import { ExecutionList } from '../ExecutionList'
 import pipelines from '../../../components/PipelineModalListView/__tests__/RunPipelineListViewMocks'
-import filters from './filters.json'
 import deploymentTypes from '../../pipelines/__tests__/mocks/deploymentTypes.json'
 import services from '../../pipelines/__tests__/mocks/services.json'
 import environments from '../../pipelines/__tests__/mocks/environments.json'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('@common/utils/YamlUtils', () => ({}))
-
 jest.mock('@pipeline/components/Dashboards/PipelineSummaryCards/PipelineSummaryCards', () => () => <div />)
 jest.mock('@pipeline/components/Dashboards/BuildExecutionsChart/PipelineBuildExecutionsChart', () => () => <div />)
 
@@ -47,7 +45,7 @@ jest.mock('react-monaco-editor', () => ({
 
 jest.mock('services/pipeline-ng', () => ({
   useGetListOfExecutions: jest.fn(() => ({
-    mutate: jest.fn(() => Promise.resolve(data)),
+    mutate: jest.fn(() => Promise.resolve(executionList)),
     loading: false,
     cancel: jest.fn()
   })),
@@ -110,7 +108,7 @@ function ComponentWrapper(): React.ReactElement {
   const location = useLocation()
   return (
     <React.Fragment>
-      <PipelineDeploymentList onRunPipeline={jest.fn()} />
+      <ExecutionList onRunPipeline={jest.fn()} />
       <div data-testid="location">{`${location.pathname}${location.search}`}</div>
     </React.Fragment>
   )
@@ -150,7 +148,7 @@ describe('Test Pipeline Deployment list', () => {
         }}
         defaultAppStoreValues={defaultAppStoreValues}
       >
-        <PipelineDeploymentList onRunPipeline={jest.fn()} />
+        <ExecutionList onRunPipeline={jest.fn()} />
       </TestWrapper>
     )
     await waitFor(() => findAllByText('http_pipeline', { selector: '.pipelineName' }))
