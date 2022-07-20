@@ -7,7 +7,6 @@
 
 import React, { useEffect } from 'react'
 import { Route, useHistory, useParams } from 'react-router-dom'
-import { Container } from '@wings-software/uicore'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps } from '@common/utils/routeUtils'
 import { RouteWithLayout } from '@common/router'
@@ -130,11 +129,7 @@ export const GovernanceRouteDestinations: React.FC<{
         pageName={PAGE_NAME.OPAPolicyDashboard}
       >
         <GovernanceRemoteComponentMounter
-          spinner={
-            <Container height="100%" flex={{ align: 'center-center' }}>
-              <ContainerSpinner />
-            </Container>
-          }
+          spinner={<ContainerSpinner height="100vh" flex={{ align: 'center-center' }} />}
         />
       </RouteWithLayout>
     </Route>
