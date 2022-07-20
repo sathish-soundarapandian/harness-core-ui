@@ -164,7 +164,7 @@ describe('Pipeline Execution History', () => {
     }).as('pipelineHealth')
 
     cy.visitPageAssertion()
-    cy.get('[class*=PipelineDeploymentList-module_healthAndExecutions] > :nth-child(1)').within(() => {
+    cy.findByTestId('health-and-executions').within(() => {
       cy.findByText('Pipeline health').should('exist')
       cy.findByText('Last 30 days').click()
       cy.findByText('Last 60 days').click({ force: true })
@@ -201,7 +201,7 @@ describe('Pipeline Execution History', () => {
     }).as('pipelineExecution')
 
     cy.visitPageAssertion()
-    cy.get('[class*=PipelineDeploymentList-module_healthAndExecutions] > :nth-child(2)').within(() => {
+    cy.findByTestId('health-and-executions').within(() => {
       cy.findByText('Executions').should('exist')
       cy.findByText('# of executions').should('exist')
       cy.findByText('Date').should('exist')

@@ -201,6 +201,7 @@ exports[`<CIPipelineDeploymentList /> tests snapshot test 1`] = `
   >
     <div
       class="StyledProps--font StyledProps--main healthAndExecutions"
+      data-testid="health-and-executions"
     >
       <div />
       <div />

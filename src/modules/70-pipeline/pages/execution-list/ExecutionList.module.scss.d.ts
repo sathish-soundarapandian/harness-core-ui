@@ -7,16 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly aboutDeployment: string
-  readonly clearFilterText: string
-  readonly createModalCss: string
   readonly healthAndExecutions: string
-  readonly image: string
-  readonly loading: string
-  readonly main: string
-  readonly noData: string
-  readonly noDeploymentSection: string
-  readonly noDeploymentText: string
-  readonly noPipelineText: string
 }
 export default styles

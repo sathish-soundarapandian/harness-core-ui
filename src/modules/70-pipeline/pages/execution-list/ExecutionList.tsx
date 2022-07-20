@@ -107,7 +107,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
 
       <Page.Body error={(error?.data as Error)?.message || error?.message} retryOnError={fetchExecutions}>
         {showHealthAndExecution && !isCommunityAndCDModule && (
-          <Container className={css.healthAndExecutions}>
+          <Container className={css.healthAndExecutions} data-testid="health-and-executions">
             <PipelineSummaryCards />
             <PipelineBuildExecutionsChart />
           </Container>
