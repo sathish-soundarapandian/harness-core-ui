@@ -6,15 +6,14 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, screen, waitForElementToBeRemoved } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import filters from '@pipeline/pages/execution-list/__mocks__/filters.json'
-import executionList from '@pipeline/pages/execution-list/__mocks__/execution-list.json'
-import pipelines from '../../../components/PipelineModalListView/__tests__/RunPipelineListViewMocks'
 import services from '../../pipelines/__tests__/mocks/services.json'
 import environments from '../../pipelines/__tests__/mocks/environments.json'
+import deploymentTypes from '../../pipelines/__tests__/mocks/deploymentTypes.json'
 import { ExecutionListPage } from '../ExecutionListPage'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
@@ -26,13 +25,13 @@ const mockGetCallFunction = jest.fn()
 
 jest.mock('services/pipeline-ng', () => ({
   useGetListOfExecutions: jest.fn(() => ({
-    mutate: jest.fn(() => Promise.resolve(executionList)),
+    mutate: jest.fn(() => Promise.resolve({})),
     loading: false,
     cancel: jest.fn()
   })),
   useGetPipelineList: jest.fn().mockImplementation(args => {
     mockGetCallFunction(args)
-    return { mutate: jest.fn(() => Promise.resolve(pipelines)), cancel: jest.fn(), loading: false }
+    return { mutate: jest.fn(() => Promise.resolve({})), cancel: jest.fn(), loading: false }
   }),
   useHandleInterrupt: jest.fn(() => ({})),
   useHandleStageInterrupt: jest.fn(() => ({})),
@@ -54,7 +53,8 @@ jest.mock('services/pipeline-ng', () => ({
     mutate: jest.fn(),
     loading: false,
     cancel: jest.fn()
-  }))
+  })),
+  useGetInputsetYaml: jest.fn(() => ({ data: null }))
 }))
 
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))
@@ -75,7 +75,10 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetSourceCodeManagers: jest.fn().mockImplementation(() => {
     return { data: sourceCodeManagers, refetch: jest.fn() }
-  })
+  }),
+  useGetServiceDefinitionTypes: jest
+    .fn()
+    .mockImplementation(() => ({ loading: false, data: deploymentTypes, refetch: jest.fn() }))
 }))
 
 const testPath = routes.toDeployments({
@@ -92,36 +95,39 @@ const testParams = {
 }
 
 describe('ExecutionListPage', () => {
-  test('CD module', () => {
-    const { queryByText, queryAllByText } = render(
+  test('CD module', async () => {
+    render(
       <TestWrapper path={testPath} pathParams={testParams}>
         <ExecutionListPage />
       </TestWrapper>
     )
-
-    expect(queryByText('pipeline.noDeploymentText')).toBeTruthy()
-    expect(queryAllByText('deploymentsText')).toBeTruthy()
+    await waitForElementToBeRemoved(() => screen.getByText('Loading, please wait...'))
+    const noDeploymentText = await screen.findByText('pipeline.noDeploymentText')
+    expect(noDeploymentText).toBeInTheDocument()
+    expect(screen.getByText('noDeploymentText')).toBeInTheDocument()
   })
 
-  test('CI module', () => {
-    const { queryByText, queryAllByText } = render(
+  test('CI module', async () => {
+    render(
       <TestWrapper path={testPath} pathParams={{ ...testParams, module: 'ci' }}>
         <ExecutionListPage />
       </TestWrapper>
     )
-
-    expect(queryByText('pipeline.noBuildsText')).toBeTruthy()
-    expect(queryAllByText('buildsText')).toBeTruthy()
+    await waitForElementToBeRemoved(() => screen.getByText('Loading, please wait...'))
+    const noBuildsText = await screen.findByText('pipeline.noBuildsText')
+    expect(noBuildsText).toBeInTheDocument()
+    expect(screen.getByText('noBuildsText')).toBeInTheDocument()
   })
 
-  test('STO module', () => {
-    const { queryByText, queryAllByText } = render(
+  test('STO module', async () => {
+    render(
       <TestWrapper path={testPath} pathParams={{ ...testParams, module: 'sto' }}>
         <ExecutionListPage />
       </TestWrapper>
     )
-
-    expect(queryByText('stoSteps.noScansText')).toBeTruthy()
-    expect(queryAllByText('common.purpose.sto.continuous')).toBeTruthy()
+    await waitForElementToBeRemoved(() => screen.getByText('Loading, please wait...'))
+    const noScansText = await screen.findByText('stoSteps.noScansText')
+    expect(noScansText).toBeInTheDocument()
+    expect(screen.getByText('stoSteps.noScansRunPipelineText')).toBeInTheDocument()
   })
 })
