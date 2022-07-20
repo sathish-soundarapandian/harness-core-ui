@@ -18,6 +18,7 @@ import services from '@pipeline/pages/pipelines/__tests__/mocks/services.json'
 import environments from '@pipeline/pages/pipelines/__tests__/mocks/environments.json'
 import mocks from '@pipeline/components/PipelineModalListView/__tests__/RunPipelineListViewMocks'
 import { ExecutionListSubHeader } from '../ExecutionListSubHeader'
+import { ExecutionListFilterContextProvider } from '../../ExecutionListFilterContext/ExecutionListFilterContext'
 
 const mockGetCallFunction = jest.fn()
 
@@ -71,10 +72,10 @@ const TEST_PATH = routes.toPipelines({ ...accountPathProps, ...pipelinePathProps
 function ComponentWrapper(): React.ReactElement {
   const location = useLocation()
   return (
-    <React.Fragment>
+    <ExecutionListFilterContextProvider>
       <ExecutionListSubHeader onRunPipeline={jest.fn()} />
       <div data-testid="location">{`${location.pathname}${location.search}`}</div>
-    </React.Fragment>
+    </ExecutionListFilterContextProvider>
   )
 }
 

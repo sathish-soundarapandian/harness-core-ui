@@ -41,9 +41,12 @@ import { useLocalStorage, useMutateAsGet, useQueryParams } from '@common/hooks'
 import PipelineModalListView from '@pipeline/components/PipelineModalListView/PipelineModalListView'
 import { TitleWithToolTipId } from '@common/components/Title/TitleWithToolTipId'
 import { DashboardSelected } from '@pipeline/components/ServiceExecutionsCard/ServiceExecutionsCard'
-import { ExecutionList } from '@pipeline/pages/execution-list/ExecutionList'
 import type { QueryParams } from '@pipeline/pages/execution-list/types'
-import { processQueryParams } from '@pipeline/pages/execution-list/ExecutionListFilterContext/ExecutionListFilterContext'
+import {
+  ExecutionListFilterContextProvider,
+  processQueryParams
+} from '@pipeline/pages/execution-list/ExecutionListFilterContext/ExecutionListFilterContext'
+import { OverviewExecutionListEmpty } from '@pipeline/pages/execution-list/ExecutionListEmpty/OverviewExecutionListEmpty'
 import DeploymentsHealthCards from './DeploymentsHealthCards'
 import DeploymentExecutionsChart from './DeploymentExecutionsChart'
 import WorkloadCard from './DeploymentCards/WorkloadCard'
@@ -84,7 +87,9 @@ const NoDataOverviewPage = (): JSX.Element => {
         margin: 16
       }}
     >
-      <ExecutionList onRunPipeline={openModal} isOverviewPage />
+      <ExecutionListFilterContextProvider>
+        <OverviewExecutionListEmpty onRunPipeline={openModal} />
+      </ExecutionListFilterContextProvider>
     </div>
   )
 }

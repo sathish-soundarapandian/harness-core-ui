@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<CIPipelineDeploymentList /> tests snapshot test 1`] = `
+exports[`Test Pipeline Deployment list should render deployment list 1`] = `
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageSubHeader--container main StyledProps--flex"
@@ -29,7 +29,7 @@ exports[`<CIPipelineDeploymentList /> tests snapshot test 1`] = `
         <span
           class="bp3-control-indicator"
         />
-        pipeline.myBuildsText
+        pipeline.myDeploymentsText
       </label>
       <div
         class="bp3-popover-wrapper MultiSelectDropDown--main"
@@ -200,12 +200,6 @@ exports[`<CIPipelineDeploymentList /> tests snapshot test 1`] = `
     data-name="page-body"
   >
     <div
-      class="StyledProps--font StyledProps--main healthAndExecutions"
-    >
-      <div />
-      <div />
-    </div>
-    <div
       class="main"
     >
       <div
@@ -236,7 +230,7 @@ exports[`<CIPipelineDeploymentList /> tests snapshot test 1`] = `
                   <span
                     class="executionId"
                   >
-                    execution.pipelineIdentifierTextCI
+                    execution.pipelineIdentifierTextCD
                   </span>
                 </div>
                 <div
@@ -635,7 +629,7 @@ exports[`<CIPipelineDeploymentList /> tests snapshot test 1`] = `
                   <span
                     class="executionId"
                   >
-                    execution.pipelineIdentifierTextCI
+                    execution.pipelineIdentifierTextCD
                   </span>
                 </div>
                 <div
@@ -1012,7 +1006,7 @@ exports[`<CIPipelineDeploymentList /> tests snapshot test 1`] = `
                   <span
                     class="executionId"
                   >
-                    execution.pipelineIdentifierTextCI
+                    execution.pipelineIdentifierTextCD
                   </span>
                 </div>
                 <div

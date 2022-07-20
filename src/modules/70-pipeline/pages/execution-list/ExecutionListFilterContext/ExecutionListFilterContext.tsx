@@ -70,7 +70,7 @@ export function ExecutionListFilterContextProvider({ children }: { children: Rea
   const isAnyFilterApplied =
     myDeployments ||
     (Array.isArray(status) && status.length > 0) ||
-    [(queryParams.pipelineIdentifier, queryParams.filters, filterIdentifier, searchTerm)].some(
+    [queryParams.pipelineIdentifier, queryParams.filters, filterIdentifier, searchTerm].some(
       filter => filter !== undefined
     )
 
