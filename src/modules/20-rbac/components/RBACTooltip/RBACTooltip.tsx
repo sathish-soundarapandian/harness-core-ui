@@ -26,9 +26,10 @@ interface Props {
   resourceType: ResourceType
   resourceScope?: ResourceScope
   className?: string
+  showLearnMore?: boolean
 }
 
-const RBACTooltip: React.FC<Props> = ({ permission, resourceType, resourceScope, className }) => {
+const RBACTooltip: React.FC<Props> = ({ permission, resourceType, resourceScope, className, showLearnMore }) => {
   const { getString } = useStrings()
   const { selectedProject } = useAppStore()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -83,6 +84,11 @@ const RBACTooltip: React.FC<Props> = ({ permission, resourceType, resourceScope,
         <span>{` ${resourceTypeHandler?.label && getString(resourceTypeHandler?.label)}`}</span>
         {'"'}
         <span>{` ${getString('rbac.in')} ${getScopeSuffix()}`}</span>
+        {showLearnMore && (
+          <a href="https://docs.harness.io/article/x0z3r0bv99-detect-cloud-cost-anomalies-with-ccm">
+            {getString('learnMore')}
+          </a>
+        )}
       </Text>
     </Layout.Vertical>
   )

@@ -663,6 +663,7 @@ const PerspectiveListPage: React.FC = () => {
                     intent="primary"
                     text={getString('ce.perspectives.newPerspective')}
                     icon="plus"
+                    showTooltipLearnMore={true}
                     featuresProps={{
                       featuresRequest: {
                         featureNames: [FeatureIdentifier.PERSPECTIVES]

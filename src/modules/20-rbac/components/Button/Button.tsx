@@ -19,6 +19,7 @@ import { getPermissionRequestFromProps } from '@rbac/utils/utils'
 export interface ButtonProps extends CoreButtonProps {
   permission?: Omit<PermissionsRequest, 'permissions'> & { permission: PermissionIdentifier }
   featuresProps?: FeaturesProps & { warningMessage?: string }
+  showTooltipLearnMore?: boolean
 }
 
 export interface BtnProps {
@@ -31,6 +32,7 @@ const RbacButton: React.FC<ButtonProps> = ({
   permission: permissionRequest,
   featuresProps,
   tooltipProps,
+  showTooltipLearnMore,
   ...restProps
 }) => {
   const [canDoAction] = usePermission(getPermissionRequestFromProps(permissionRequest), [permissionRequest])
@@ -52,6 +54,7 @@ const RbacButton: React.FC<ButtonProps> = ({
             permission={permissionRequest.permission}
             resourceType={permissionRequest.resource.resourceType}
             resourceScope={permissionRequest.resourceScope}
+            showLearnMore={showTooltipLearnMore}
           />
         )
       }
@@ -75,6 +78,7 @@ const RbacButton: React.FC<ButtonProps> = ({
             permission={permissionRequest.permission}
             resourceType={permissionRequest.resource.resourceType}
             resourceScope={permissionRequest.resourceScope}
+            showLearnMore={showTooltipLearnMore}
           />
         )
       }
