@@ -6,7 +6,15 @@
  */
 
 import React from 'react'
-import { fireEvent, getByText as getElementByText, render, waitFor } from '@testing-library/react'
+import {
+  act,
+  findByText,
+  fireEvent,
+  getByText as getElementByText,
+  queryByAttribute,
+  render,
+  waitFor
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Button } from '@harness/uicore'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
@@ -22,7 +30,7 @@ jest.mock('services/pipeline-ng', () => ({
 }))
 
 const getGitConnector = jest.fn(() => Promise.resolve(gitConnectorMock))
-const fetchRepos = jest.fn(() => Promise.resolve(mockRepos))
+const fetchRepos = jest.fn().mockReturnValue(mockRepos)
 const fetchBranches = jest.fn(() => Promise.resolve(mockBranches))
 
 jest.mock('services/cd-ng', () => ({
@@ -31,7 +39,7 @@ jest.mock('services/cd-ng', () => ({
     return { data: gitConnectorMock.data.content[0], refetch: getGitConnector, loading: false }
   }),
   useGetListOfReposByRefConnector: jest.fn().mockImplementation(() => {
-    return { refetch: fetchRepos, data: mockRepos }
+    return { refetch: fetchRepos, data: mockRepos, loading: false, error: null }
   }),
   useGetListOfBranchesByRefConnectorV2: jest.fn().mockImplementation(() => {
     return { data: mockBranches, refetch: fetchBranches }
@@ -131,5 +139,78 @@ describe('useImportEntity tests', () => {
     const cancelButton = getByText('cancel')
     userEvent.click(cancelButton)
     await waitFor(() => expect(portalDivs).toHaveLength(0))
+  })
+
+  test('clicking on Import button should close modal and call onSuccess', async () => {
+    const { container, getByText, debug } = render(
+      <TestWrapper path={TEST_PIPELINES_PATH} pathParams={TEST_PATH_PARAMS}>
+        <Component />
+      </TestWrapper>
+    )
+    const dummyButton = getElementByText(container, 'My Button')
+    fireEvent.click(dummyButton)
+
+    const portalDivs = document.getElementsByClassName('bp3-portal')
+    await waitFor(() => expect(portalDivs).toHaveLength(1))
+    const importPipelineDiv = portalDivs[0] as HTMLElement
+    await waitFor(() => expect(getElementByText(importPipelineDiv, 'common.importEntityFromGit')).toBeInTheDocument())
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', importPipelineDiv, name)
+    // Name
+    const nameInput = queryByNameAttribute('name') as HTMLInputElement
+    expect(nameInput.value).toBe('')
+    userEvent.type(nameInput, 'Import Pipeline 1')
+    // Connector
+    const connnectorRefInput = queryByAttribute('data-testid', importPipelineDiv, /connectorRef/)
+    expect(connnectorRefInput).toBeTruthy()
+    userEvent.click(connnectorRefInput!)
+    await act(async () => {
+      const connectorSelectorDialog = document.getElementsByClassName('bp3-dialog')[1] as HTMLElement
+      const targetConnector = await findByText(connectorSelectorDialog as HTMLElement, 'ValidGithubRepo')
+      expect(targetConnector).toBeTruthy()
+      fireEvent.click(targetConnector)
+      const applySelected = getElementByText(connectorSelectorDialog, 'entityReference.apply')
+      await act(async () => {
+        fireEvent.click(applySelected)
+      })
+    })
+    expect(fetchRepos).toBeCalled()
+    expect(fetchRepos).toHaveBeenCalledTimes(1)
+
+    const dropdownIcons = importPipelineDiv.querySelectorAll('[data-icon="chevron-down"]')
+    expect(dropdownIcons).toHaveLength(3)
+    // Repo
+    const repoInput = queryByNameAttribute('repo') as HTMLInputElement
+    expect(repoInput.value).toBe('')
+    const repoDropDownIcon = dropdownIcons[1]
+    act(() => {
+      fireEvent.click(repoDropDownIcon!)
+    })
+    expect(fetchRepos).toHaveBeenCalledTimes(1)
+    expect(portalDivs.length).toBe(3)
+    const repoPortalDiv = portalDivs[2] as HTMLElement
+    debug(repoPortalDiv!)
+    const repoSelectListMenu = repoPortalDiv.querySelector('.bp3-menu')
+    const firstRepoOption = await findByText(repoSelectListMenu as HTMLElement, 'repo1')
+    expect(firstRepoOption).toBeDefined()
+    userEvent.click(firstRepoOption)
+    expect(repoInput.value).toBe('repo1')
+    // // Branch
+    // const branchInput = queryByNameAttribute('name') as HTMLInputElement
+    // expect(branchInput.value).toBe('')
+    // const branchDropDownIcon = dropdownIcons[2]
+    // fireEvent.click(branchDropDownIcon!)
+    // expect(fetchBranches).toHaveBeenCalledTimes(1)
+    // expect(portalDivs.length).toBe(3)
+    // const branchPortalDiv = portalDivs[2]
+    // const branchSelectListMenu = branchPortalDiv.querySelector('.bp3-menu')
+    // const thirdOption = await findByText(branchSelectListMenu as HTMLElement, 'main-patch')
+    // expect(thirdOption).toBeDefined()
+    // userEvent.click(thirdOption)
+    // expect(branchInput.value).toBe('main-patch')
+
+    const importButton = getByText('common.import')
+    userEvent.click(importButton)
+    await waitFor(() => expect(portalDivs).toHaveLength(0))
+    await waitFor(() => expect(onSuccess).toBeCalled())
   })
 })
