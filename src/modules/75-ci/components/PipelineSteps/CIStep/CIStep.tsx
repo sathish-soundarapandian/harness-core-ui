@@ -261,7 +261,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
             setConnectorUrl: enableFields['spec.connectorAndRepo'].setConnectorUrl,
             getString,
             errors: formik.errors,
-            loading: false,
+            loading: enableFields['spec.connectorAndRepo'].loading,
             accountId,
             projectIdentifier,
             orgIdentifier,

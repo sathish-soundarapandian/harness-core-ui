@@ -180,7 +180,10 @@ export const renderConnectorAndRepoName = ({
                   expressions,
                   allowableTypes
                 },
-                disabled: isReadonly || (isRuntimeInput(connectorValue) && isRuntimeInput(repoNameValue)) // connector is a runtime input
+                disabled:
+                  (!repoNameValue && loading) ||
+                  isReadonly ||
+                  (isRuntimeInput(connectorValue) && isRuntimeInput(repoNameValue)) // connector is a runtime input
               }}
             />
           </Container>

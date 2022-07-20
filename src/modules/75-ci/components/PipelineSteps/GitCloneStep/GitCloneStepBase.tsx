@@ -8,11 +8,12 @@
 import React from 'react'
 import { Formik, FormikForm, Accordion, Container } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
-import { get } from 'lodash-es'
+import { get, isEmpty } from 'lodash-es'
+import { useParams } from 'react-router-dom'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { useQueryParams } from '@common/hooks'
-import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
 import StepCommonFields, {
@@ -28,6 +29,10 @@ import {
   runtimeInputGearWidth,
   CodebaseRuntimeInputsInterface
 } from '@pipeline/components/PipelineStudio/RightBar/RightBarUtils'
+import { useGetConnector } from 'services/cd-ng'
+import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import { Scope } from '@common/interfaces/SecretsInterface'
+import { Connectors } from '@connectors/constants'
 import { CIStepOptionalConfig } from '../CIStep/CIStepOptionalConfig'
 import { transformValuesFieldsConfig, getEditViewValidateFieldsConfig } from './GitCloneStepFunctionConfigs'
 import type { GitCloneStepProps, GitCloneStepData, GitCloneStepDataUI } from './GitCloneStep'
@@ -59,19 +64,54 @@ export const GitCloneStepBase = (
   const [codebaseRuntimeInputs, setCodebaseRuntimeInputs] = React.useState<CodebaseRuntimeInputsInterface>({
     ...(isRuntimeInput(codebaseConnector) && { connectorRef: true, repoName: true })
   })
-  // const codeBaseTypePath = `spec.build.type`
-  // const [codeBaseType, setCodeBaseType] = React.useState<CodeBaseType | string | undefined>(
-  //   get(formikRef?.current?.values, codeBaseTypePath)
-  // )
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<
+    PipelineType<{
+      orgIdentifier: string
+      projectIdentifier: string
+      pipelineIdentifier: string
+      accountId: string
+    }>
+  >()
+  const initialScope = getScopeFromValue((initialValues.spec?.connectorRef as string) || '')
 
-  // React.useEffect(() => {
-  //   if (formikRef?.current?.values?.spec?.connectorRef === RUNTIME_INPUT_VALUE) {
-  //     const newValuesSpec = { ...formikRef?.current?.values?.spec }
-  //     newValuesSpec.repoName = RUNTIME_INPUT_VALUE
-  //     formikRef?.current?.setValues({ ...formikRef?.current?.values, spec: newValuesSpec })
-  //     setCodeBaseType(undefined)
-  //   }
-  // }, [formikRef?.current?.values?.spec?.connectorRef])
+  const {
+    data: connector,
+    loading,
+    refetch
+  } = useGetConnector({
+    identifier: initialValues.spec?.connectorRef,
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier: initialScope === Scope.ORG || initialScope === Scope.PROJECT ? orgIdentifier : undefined,
+      projectIdentifier: initialScope === Scope.PROJECT ? projectIdentifier : undefined,
+      ...(repoIdentifier && branch ? { repoIdentifier, branch, getDefaultFromOtherRepo: true } : {})
+    },
+    lazy: true,
+    debounce: 300
+  })
+
+  React.useEffect(() => {
+    if (!isEmpty(initialValues.spec?.connectorRef) && !isRuntimeInput(initialValues.spec.connectorRef)) {
+      refetch()
+    }
+  }, [initialValues.spec?.connectorRef])
+
+  React.useEffect(() => {
+    if (connector?.data?.connector) {
+      setConnectionType(
+        connector?.data?.connector?.type === Connectors.GIT
+          ? connector?.data?.connector.spec.connectionType
+          : connector?.data?.connector.spec.type
+      )
+      setConnectorUrl(connector?.data?.connector.spec.url)
+    }
+  }, [
+    connector?.data?.connector,
+    connector?.data?.connector?.spec.type,
+    connector?.data?.connector?.spec.url,
+    setConnectionType,
+    setConnectorUrl
+  ])
   return (
     <Formik
       initialValues={getInitialValuesInCorrectFormat<GitCloneStepData, GitCloneStepDataUI>(
@@ -111,18 +151,6 @@ export const GitCloneStepBase = (
         const connectorWidth = getConnectorRefWidth('DefaultView')
         const connectorRefValue = formik.values.spec?.connectorRef
         const isConnectorRuntimeInput = isRuntimeInput(connectorRefValue)
-        // const codeBaseTypePath = `spec.build.type`
-        // const [codeBaseType, setCodeBaseType] = React.useState<CodeBaseType | string | undefined>(
-        //   get(formik?.values, codeBaseTypePath)
-        // )
-        // React.useEffect(() => {
-        //   if (formik?.values?.spec?.connectorRef === RUNTIME_INPUT_VALUE) {
-        //     const newValuesSpec = { ...formik?.values?.spec }
-        //     newValuesSpec.repoName = RUNTIME_INPUT_VALUE
-        //     formik?.setValues({ ...formik?.values, spec: newValuesSpec })
-        //     setCodeBaseType(undefined)
-        //   }
-        // }, [formik?.values?.spec?.connectorRef])
         return (
           <FormikForm>
             <CIStep
@@ -137,6 +165,7 @@ export const GitCloneStepBase = (
                   connectionType,
                   connectorWidth: isConnectorRuntimeInput ? connectorWidth - runtimeInputGearWidth : connectorWidth,
                   setConnectionType,
+                  loading,
                   setConnectorUrl,
                   repoIdentifier,
                   branch,

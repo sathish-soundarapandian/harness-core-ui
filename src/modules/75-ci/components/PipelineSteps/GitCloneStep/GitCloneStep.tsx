@@ -34,16 +34,6 @@ export interface GitCloneStepSpec {
       }
     | string // hardcoded <+input> when connectorRef is a runtimeinput
   cloneDirectory: string
-  // image: string
-  // privileged?: boolean
-  // reports?: {
-  //   type: 'JUnit'
-  //   spec: {
-  //     paths: MultiTypeListType
-  //   }
-  // }
-  // settings?: MultiTypeMapType
-  // imagePullPolicy?: MultiTypeSelectOption
   runAsUser?: string
   resources?: Resources
   depth?: number
@@ -62,13 +52,13 @@ export interface GitCloneStepData {
 export interface GitCloneStepSpecUI
   extends Omit<GitCloneStepSpec, 'connectorRef' | 'reports' | 'settings' | 'pull' | 'resources'> {
   connectorRef: MultiTypeConnectorRef
-  // reportPaths?: MultiTypeListUIType
-  // settings?: MultiTypeMapUIType
-  // TODO: Right now we do not support Image Pull Policy but will do in the future
-  // pull?: MultiTypeSelectOption
-  // runAsUser?: string
+  cloneDirectory: string
   limitMemory?: string
   limitCPU?: string
+  runAsUser?: string
+  resources?: Resources
+  depth?: number
+  sslVerify?: boolean
 }
 
 // Interface for the form
