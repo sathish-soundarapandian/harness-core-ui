@@ -11,6 +11,7 @@ import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@wings-so
 import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
 import { getConnectorRefWidth, isRuntimeInput, shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
 import { useQueryParams } from '@common/hooks'
+import type { Build } from 'services/pipeline-ng'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import {
   CodebaseRuntimeInputsInterface,
@@ -71,11 +72,11 @@ export const GitCloneStepInputSetBasic: React.FC<GitCloneStepProps> = ({
           ...(getMultiTypeFromValue(template?.spec?.build as string) === MultiTypeInputType.RUNTIME && {
             'spec.build': {}
           }),
-          ...(getMultiTypeFromValue((template?.spec?.build as any)?.spec?.branch as string) ===
+          ...(getMultiTypeFromValue((template?.spec?.build as Build)?.spec?.branch as string) ===
             MultiTypeInputType.RUNTIME && {
             'spec.build.spec.branch': {}
           }),
-          ...(getMultiTypeFromValue((template?.spec?.build as any)?.spec?.tag as string) ===
+          ...(getMultiTypeFromValue((template?.spec?.build as Build)?.spec?.tag as string) ===
             MultiTypeInputType.RUNTIME && {
             'spec.build.spec.tag': {}
           }),

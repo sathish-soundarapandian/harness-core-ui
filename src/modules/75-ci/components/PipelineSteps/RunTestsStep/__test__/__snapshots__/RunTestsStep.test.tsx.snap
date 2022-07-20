@@ -232,12 +232,12 @@ exports[`RunTests Step Edit View Error tracking should render properly 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 385px;"
+                    style="width: 373px;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-spec.connectorRef"
-                      style="width: 385px;"
+                      style="width: 373px;"
                       type="button"
                     >
                       <span
@@ -2295,7 +2295,7 @@ exports[`RunTests Step Edit View renders runtime inputs 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                    style="width: 385px;"
+                    style="width: 373px;"
                   >
                     <div
                       class="TextInput--main MultiTypeInput--input"
@@ -3619,12 +3619,12 @@ exports[`RunTests Step Edit View should render properly 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 385px;"
+                    style="width: 373px;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-spec.connectorRef"
-                      style="width: 385px;"
+                      style="width: 373px;"
                       type="button"
                     >
                       <span

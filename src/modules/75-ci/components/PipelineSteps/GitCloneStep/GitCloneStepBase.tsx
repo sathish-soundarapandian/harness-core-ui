@@ -72,7 +72,7 @@ export const GitCloneStepBase = (
       accountId: string
     }>
   >()
-  const initialScope = getScopeFromValue((initialValues.spec?.connectorRef as string) || '')
+  const initialScope = getScopeFromValue(initialValues.spec?.connectorRef || '')
 
   const {
     data: connector,

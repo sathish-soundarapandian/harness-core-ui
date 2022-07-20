@@ -102,7 +102,7 @@ export const renderConnectorAndRepoName = ({
   codebaseRuntimeInputs: CodebaseRuntimeInputsInterface
   connectorWidth?: number
   connectorAndRepoNamePath?: string // coming from step / input set
-  allowableTypes: AllowedTypes
+  allowableTypes: AllowedTypes // expression can be used for repoName
   codeBaseInputFieldFormName?: { [key: string]: string }
 }): JSX.Element => {
   const connectorFieldName = connectorAndRepoNamePath ? `${connectorAndRepoNamePath}.connectorRef` : 'connectorRef'
@@ -112,9 +112,9 @@ export const renderConnectorAndRepoName = ({
   const repoNameWidth =
     connectorWidth && isRuntimeInput(repoNameValue) ? connectorWidth + runtimeInputGearWidth : connectorWidth
 
-  const connectorAllowableTypes =
-    Array.isArray(allowableTypes) &&
-    (allowableTypes as MultiTypeInputType[]).filter(type => type !== MultiTypeInputType.EXPRESSION)
+  const connectorAllowableTypes = Array.isArray(allowableTypes)
+    ? (allowableTypes as MultiTypeInputType[])?.filter(type => type !== MultiTypeInputType.EXPRESSION)
+    : allowableTypes
   return (
     <>
       <Container className={cx(css.bottomMargin3)}>
@@ -139,7 +139,7 @@ export const renderConnectorAndRepoName = ({
           multiTypeProps={{
             expressions,
             disabled: isReadonly,
-            allowableTypes: connectorAllowableTypes as any // BE does not support expressions
+            allowableTypes: connectorAllowableTypes // BE does not support expressions
           }}
           setRefValue
           onChange={(value, _valueType, connectorRefType) => {
@@ -197,7 +197,7 @@ export const renderConnectorAndRepoName = ({
               }}
             />
           </Container>
-          {!isRuntimeInput(connectorValue) && !isRuntimeInput(repoNameValue) && connectorUrl?.length > 0 ? (
+          {!isRuntimeInput(connectorValue) && !isRuntimeInput(repoNameValue) && connectorUrl?.length > 0 && (
             <div className={css.predefinedValue}>
               <Text lineClamp={1}>
                 {getCompleteConnectorUrl({
@@ -208,7 +208,7 @@ export const renderConnectorAndRepoName = ({
                 })}
               </Text>
             </div>
-          ) : null}
+          )}
         </>
       )}
     </>

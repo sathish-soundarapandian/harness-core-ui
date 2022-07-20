@@ -13,6 +13,7 @@ import { FontVariation } from '@harness/design-system'
 import {
   AllowedTypesWithExecutionTime,
   AllowedTypesWithRunTime,
+  AllowedTypes,
   FormInput,
   MultiTypeInputType,
   Container,
@@ -111,7 +112,7 @@ export const renderBuildTypeInputField = ({
 }: {
   type: CodeBaseType
   getString: UseStringsReturn['getString']
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   readonly?: boolean
   expressions?: string[]
   prefix?: string
@@ -145,7 +146,7 @@ export const renderBuild = ({
   expressions: string[]
   getString: UseStringsReturn['getString']
   formik: any
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   connectorType?: ConnectorInfoDTO['type']
   readonly?: boolean
   path?: string
@@ -155,7 +156,6 @@ export const renderBuild = ({
   const radioLabels = getBuildTypeLabels(getString)
   const prefix = isEmpty(path) ? '' : `${path}.`
   const buildTypeValue = get(formik?.values, `${prefix}spec.build.type`)
-  // either can be true onEdit or onChange before Saving
   const isBuildRuntimeInput =
     isRuntimeInput(get(formik?.values, `${prefix}spec.build`)) || isRuntimeInput(buildTypeValue)
   const buildTypeError = get(formik?.errors, `${prefix}spec.build`)
@@ -196,7 +196,9 @@ export const renderBuild = ({
           name: `${prefix}spec.build.type`,
           expressions,
           disabled: readonly,
-          allowableTypes: allowableTypes.filter(type => type !== MultiTypeInputType.EXPRESSION)
+          allowableTypes: (Array.isArray(allowableTypes)
+            ? (allowableTypes as MultiTypeInputType[]).filter(type => type !== MultiTypeInputType.EXPRESSION)
+            : allowableTypes) as AllowedTypes // dependent downstream field can support expression
         }}
       />
       {shouldShowError && buildTypeError && <FormError errorMessage={buildTypeError} name="build.type" />}
