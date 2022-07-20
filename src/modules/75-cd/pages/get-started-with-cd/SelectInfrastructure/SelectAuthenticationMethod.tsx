@@ -33,7 +33,7 @@ import {
 } from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelector/DelegateSelector'
 import { Connectors } from '@connectors/constants'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import type { ResponseConnectorResponse, ResponseMessage } from 'services/cd-ng'
+import type { ConnectorInfoDTO, ResponseConnectorResponse, ResponseMessage } from 'services/cd-ng'
 import useCreateEditConnector, { BuildPayloadProps } from '@connectors/hooks/useCreateEditConnector'
 import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
 import { CLIENT_KEY_ALGO_OPTIONS } from '../DeployProvisioningWizard/Constants'
@@ -48,7 +48,7 @@ interface DelegateSelectorStepData extends BuildPayloadProps {
 export interface SelectAuthenticationMethodRef {
   values: SelectAuthenticationMethodInterface
   validate: () => boolean
-  connectorResponse?: ResponseConnectorResponse
+  validatedConnector?: ConnectorInfoDTO
   submitForm?: FormikProps<SelectAuthenticationMethodInterface>['submitForm']
 }
 
@@ -272,8 +272,9 @@ const SelectAuthenticationMethodRef = (
   }
 
   const setForwardRef = ({
-    values
-  }: // setFieldTouched
+    values,
+    validatedConnector
+  }: 
   Omit<SelectAuthenticationMethodRef, 'validate'>): void => {
     if (!forwardRef) {
       return
@@ -285,7 +286,7 @@ const SelectAuthenticationMethodRef = (
     if (values) {
       forwardRef.current = {
         values,
-        connectorResponse,
+        validatedConnector,
         validate: validateAuthMethodSetup,
         submitForm: formikProps?.submitForm
       }
@@ -295,10 +296,12 @@ const SelectAuthenticationMethodRef = (
   useEffect(() => {
     if (formikProps?.values) {
       setForwardRef({
-        values: formikProps.values
+        values: formikProps.values,
+        validatedConnector: connectorResponse?.data?.connector
       })
     }
-  }, [formikProps?.values])
+  }, [formikProps?.values, connectorResponse?.data?.connector])
+
 
   const authOptions: Array<AuthOptionInterface> = [
     {
@@ -507,8 +510,9 @@ const SelectAuthenticationMethodRef = (
                     name={getString('connectors.stepThreeName')}
                     connectorInfo={connectorResponse?.data?.connector}
                     type={Connectors.KUBERNETES_CLUSTER}
-                    setIsEditMode={() => false}
-                  />
+                    setIsEditMode={() => false} 
+                    isStep={false}   
+                 />
                 </div>
               ) : null}
             </>

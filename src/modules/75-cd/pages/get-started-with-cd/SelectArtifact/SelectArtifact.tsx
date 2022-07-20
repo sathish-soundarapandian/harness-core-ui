@@ -131,10 +131,10 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
 
   const openSelectRepoAccordion = (): boolean | undefined => {
     const { validate } = selectGitProviderRef.current || {}
-    // const condition = selectGitProviderRef.current?.testConnectionStatus === TestStatus.SUCCESS
+    const condition = selectGitProviderRef.current?.testConnectionStatus === TestStatus.SUCCESS
     if (
       validate?.()
-      // && condition
+      && condition
     ) {
       return true
     } else {

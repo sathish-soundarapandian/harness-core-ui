@@ -56,14 +56,8 @@ import defaultCss from '../DeployProvisioningWizard/DeployProvisioningWizard.mod
 import css from './SelectInfrastructure.module.scss'
 export interface SelectInfrastructureRef {
   values: SelectInfrastructureInterface
-  setFieldTouched(
-    field: keyof SelectInfrastructureInterface & string,
-    isTouched?: boolean,
-    shouldValidate?: boolean
-  ): void
   validate?: () => boolean
   showValidationErrors?: () => void
-  authValues?: SelectAuthenticationMethodInterface
   submitForm?: FormikProps<SelectInfrastructureInterface>['submitForm']
 }
 export interface SelectInfrastructureInterface extends SelectAuthenticationMethodInterface {
@@ -102,10 +96,6 @@ const SelectInfrastructureRef = (
   const selectAuthenticationMethodRef = React.useRef<SelectAuthenticationMethodRef | null>(null)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getRBACErrorMessage } = useRBACError()
-  // useEffect(() => {
-  //   if (infrastructureType) enableNextBtn()
-  //   else disableNextBtn()
-  // })
 
   const defaultInitialFormData: SelectAuthenticationMethodInterface = {
     authType: AuthTypes.USER_PASSWORD,
@@ -137,17 +127,18 @@ const SelectInfrastructureRef = (
   })
 
   const openSetUpDelegateAccordion = (): boolean | undefined => {
-    const validate = selectAuthenticationMethodRef?.current?.validate()
-    if (validate && isEmpty(formikRef?.current?.errors)) {
+    const validate = selectAuthenticationMethodRef.current?.validate()
+    if (validate && isEmpty(formikRef?.current?.errors) ) {
       props.enableNextBtn()
       return true
     } else {
-      props.disableNextBtn()
+    props.disableNextBtn()
       return false
     }
   }
 
-  const setForwardRef = ({ values, setFieldTouched }: Omit<SelectInfrastructureRef, 'validate'>): void => {
+
+  const setForwardRef = ({ values}: Omit<SelectInfrastructureRef, 'validate'>): void => {
     if (!forwardRef) {
       return
     }
@@ -158,8 +149,6 @@ const SelectInfrastructureRef = (
     if (values) {
       forwardRef.current = {
         values,
-        setFieldTouched: setFieldTouched,
-        // authValues: selectAuthenticationMethodRef?.current?.values
         // validate: validateInfraSetup
         submitForm: formikRef?.current?.submitForm
       }
@@ -173,13 +162,12 @@ const SelectInfrastructureRef = (
   })
 
   useEffect(() => {
-    if (formikRef.current?.values && formikRef.current?.setFieldTouched) {
+    if (formikRef.current?.values) {
       setForwardRef({
-        values: formikRef.current.values,
-        setFieldTouched: formikRef.current.setFieldTouched
+        values: formikRef.current.values
       })
     }
-  }, [formikRef?.current, formikRef?.current?.values, formikRef?.current?.setFieldTouched])
+  }, [formikRef?.current, formikRef?.current?.values])
 
   const { showSuccess, showError, clear } = useToaster()
   const handleSubmit = async (values: SelectInfrastructureInterface): Promise<SelectInfrastructureInterface> => {
@@ -227,7 +215,7 @@ const SelectInfrastructureRef = (
     })
     try {
       const cleanEnvironmentData = cleanEnvironmentDataUtil(updatedContextEnvironment as ServiceRequestDTO)
-
+      if(selectAuthenticationMethodRef.current?.validatedConnector){
       const response = await createEnvironment({ ...cleanEnvironmentData, orgIdentifier, projectIdentifier })
       if (response.status === 'SUCCESS') {
         clear()
@@ -314,10 +302,15 @@ const SelectInfrastructureRef = (
       } else {
         throw response
       }
-    } catch (error: any) {
+    }
+    else{
+      showError('Test Connector to create pipeline')
+    }
+   }catch (error: any) {
       showError(getRBACErrorMessage(error))
       return Promise.resolve({} as SelectInfrastructureInterface)
     }
+    return Promise.resolve({} as SelectInfrastructureInterface)
   }
 
   const borderBottom = <div className={defaultCss.repoborderBottom} />
@@ -369,7 +362,7 @@ const SelectInfrastructureRef = (
           return (
             <Form>
               <Container className={css.workloadType}>
-                {props.disableNextBtn()}
+               {props.disableNextBtn()}
                 <CardSelect
                   data={InfrastructureTypes}
                   cornerSelected={true}

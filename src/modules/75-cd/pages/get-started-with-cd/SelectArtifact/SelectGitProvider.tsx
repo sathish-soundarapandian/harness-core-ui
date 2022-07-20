@@ -117,12 +117,12 @@ const SelectGitProviderRef = (
     queryParams: { accountIdentifier: accountId }
   })
 
-  useEffect(() => {
-    if (shouldRenderAuthFormFields()) {
-      setTestConnectionStatus(TestStatus.NOT_INITIATED)
-      enableNextBtn()
-    }
-  }, [gitProvider, authMethod, selectedHosting])
+  // useEffect(() => {
+  //   if (shouldRenderAuthFormFields()) {
+  //     setTestConnectionStatus(TestStatus.NOT_INITIATED)
+  //     enableNextBtn()
+  //   }
+  // }, [gitProvider, authMethod, selectedHosting])
 
   useEffect(() => {
     if (gitProvider) {
@@ -302,7 +302,7 @@ const SelectGitProviderRef = (
               type="submit"
               onClick={() => {
                 if (validateGitProviderSetup()) {
-                  setTestConnectionStatus(TestStatus.IN_PROGRESS)
+                  setTestConnectionStatus(TestStatus.IN_PROGRESS)                  
                   setTestConnectionErrors([])
                   if (gitProvider?.type) {
                     const createSecretPayload = getSecretPayload()
@@ -367,8 +367,8 @@ const SelectGitProviderRef = (
             />
             {testConnectionStatus === TestStatus.FAILED &&
             Array.isArray(testConnectionErrors) &&
-            testConnectionErrors.length > 0 ? (
-              <Container padding={{ top: 'medium', bottom: 'medium' }} ref={scrollRef}>
+            testConnectionErrors.length > 0 ? (           
+              <Container padding={{ top: 'medium', bottom: 'medium' }} ref={scrollRef}>         
                 <ErrorHandler responseMessages={testConnectionErrors || []} />
               </Container>
             ) : null}
@@ -436,10 +436,11 @@ const SelectGitProviderRef = (
           style={{ width: '40%' }}
           label={<Text font={{ variation: FontVariation.FORM_LABEL }}>{getString(label)}</Text>}
           tooltipProps={{ dataTooltipId: tooltipId }}
-          disabled={testConnectionStatus === TestStatus.IN_PROGRESS}
+          // disabled={testConnectionStatus === TestStatus.IN_PROGRESS}
           inputGroup={{
             type: inputGroupType ?? 'text'
           }}
+          onChange={()=>setTestConnectionStatus(TestStatus.NOT_INITIATED)}
         />
       )
     },

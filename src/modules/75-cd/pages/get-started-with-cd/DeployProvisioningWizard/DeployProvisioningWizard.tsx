@@ -30,10 +30,12 @@ import {
 } from './Constants'
 import { SelectWorkload, SelectWorkloadRef } from '../SelectWorkload/SelectWorkload'
 import { SelectInfrastructure, SelectInfrastructureRef } from '../SelectInfrastructure/SelectInfrastructure'
+import type { SelectAuthenticationMethodRef } from '../SelectInfrastructure/SelectAuthenticationMethod'
 import { SelectArtifact, SelectArtifactRef } from '../SelectArtifact/SelectArtifact'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import { DEFAULT_PIPELINE_PAYLOAD, getUniqueEntityIdentifier, PipelineRefPayload } from '../cdOnboardingUtils'
 import css from './DeployProvisioningWizard.module.scss'
+
 
 export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> = props => {
   const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.SelectWorkload } = props
@@ -46,6 +48,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
   const selectWorkloadRef = React.useRef<SelectWorkloadRef | null>(null)
   const selectArtifactRef = React.useRef<SelectArtifactRef | null>(null)
   const selectInfrastructureRef = React.useRef<SelectInfrastructureRef | null>(null)
+  const selectAuthenticationMethodRef = React.useRef<SelectAuthenticationMethodRef | null>(null)
   // const [showError, setShowError] = useState<boolean>(false)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   // const history = useHistory()
@@ -234,12 +237,16 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           //   setFieldTouched?.('infraType', true)
           //   return
           // }
-          const { submitForm } = selectInfrastructureRef.current || {}
-
+          const { submitForm } = selectInfrastructureRef.current    || {}
+          const {validatedConnector}=selectAuthenticationMethodRef.current||{}
           try {
-            setShowPageLoader(true)
             submitForm?.()
-          } catch (_e) {
+            if(validatedConnector){
+              setShowPageLoader(true)
+            }
+            }
+           
+           catch (_e) {
             // catch any errors and do nothing
           }
         },

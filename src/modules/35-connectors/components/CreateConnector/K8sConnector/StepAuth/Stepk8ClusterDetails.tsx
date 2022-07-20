@@ -366,7 +366,6 @@ const Stepk8ClusterDetails: React.FC<StepProps<Stepk8ClusterDetailsProps> & K8Cl
       >
         {getString('details')}
       </Text>
-
       <Formik
         initialValues={{
           ...initialValues,
@@ -422,7 +421,6 @@ const Stepk8ClusterDetails: React.FC<StepProps<Stepk8ClusterDetailsProps> & K8Cl
                 <></>
               )}
             </Container>
-
             <Layout.Horizontal padding={{ top: 'small' }} spacing="medium">
               <Button
                 text={getString('back')}
