@@ -6,13 +6,13 @@
  */
 
 import React from 'react'
-import { fireEvent, render, waitFor, act, getByText } from '@testing-library/react'
+import { render, waitFor, waitForElementToBeRemoved, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import { CurrentLocation, TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import filters from '@pipeline/pages/execution-list/__mocks__/filters.json'
-import executionList from '@pipeline/pages/execution-list/__mocks__/execution-list.json'
 import services from '@pipeline/pages/pipelines/__tests__/mocks/services.json'
 import deploymentTypes from '@pipeline/pages/pipelines/__tests__/mocks/deploymentTypes.json'
 import environments from '@pipeline/pages/pipelines/__tests__/mocks/environments.json'
@@ -32,7 +32,7 @@ jest.mock('services/pipeline-ng', () => ({
   useGetExecutionData: jest.fn().mockReturnValue({}),
   useGetPipelineSummary: getMockFor_useGetPipeline,
   useGetListOfExecutions: jest.fn(() => ({
-    mutate: jest.fn(() => Promise.resolve(executionList)),
+    mutate: jest.fn(() => Promise.resolve({})),
     loading: false,
     cancel: jest.fn()
   })),
@@ -137,7 +137,7 @@ describe('<CIPipelineDeploymentList /> tests', () => {
   })
 
   test('call run pipeline', async () => {
-    const { container, getByTestId } = render(
+    const { getByTestId } = render(
       <TestWrapper
         path={TEST_PATH}
         pathParams={{
@@ -152,12 +152,9 @@ describe('<CIPipelineDeploymentList /> tests', () => {
         <ComponentWrapper />
       </TestWrapper>
     )
-
-    const runButton = getByText(container, 'pipeline.runAPipeline')
-    act(() => {
-      fireEvent.click(runButton)
-    })
-
+    await waitForElementToBeRemoved(() => screen.getByText('Loading, please wait...'))
+    const runButton = await screen.findByText('pipeline.runAPipeline')
+    userEvent.click(runButton)
     expect(getByTestId('location')).toMatchInlineSnapshot(`
       <div
         data-testid="location"
