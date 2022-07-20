@@ -22,6 +22,7 @@ import { usePolling } from '@pipeline/hooks/usePolling'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipeline-ng'
+import useTabVisible from '@common/hooks/useTabVisible'
 import { ExecutionListEmpty } from './ExecutionListEmpty/ExecutionListEmpty'
 import { OverviewExecutionListEmpty } from './ExecutionListEmpty/OverviewExecutionListEmpty'
 import {
@@ -60,7 +61,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
 
   const {
     data,
-    loading,
+    initLoading,
     refetch: fetchExecutions,
     error
   } = useMutateAsGet(useGetListOfExecutions, {
@@ -89,15 +90,15 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
           filterType: 'PipelineExecution'
         }
   })
+  const tabVisible = useTabVisible()
+  usePolling(fetchExecutions, page === 1 && !initLoading && tabVisible)
 
   const isCommunity = useGetCommunity()
   const isCommunityAndCDModule = module === 'cd' && isCommunity
-  const isPolling = usePolling(fetchExecutions, page, loading)
   const executionList = data?.data
   const hasExecutions = executionList?.totalElements && executionList?.totalElements > 0
-  const isInitialLoading = loading && !isPolling
 
-  if (isOverviewPage && !isInitialLoading) {
+  if (isOverviewPage && !initLoading && !hasExecutions) {
     return <OverviewExecutionListEmpty {...rest} />
   }
 
@@ -114,8 +115,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
         )}
 
         <ExecutionCompiledYaml onClose={() => setViewCompiledYaml(undefined)} executionSummary={viewCompiledYaml} />
-
-        {isInitialLoading ? (
+        {initLoading ? (
           <PageSpinner />
         ) : hasExecutions ? (
           <ExecutionListTable executionList={executionList} onViewCompiledYaml={setViewCompiledYaml} {...rest} />

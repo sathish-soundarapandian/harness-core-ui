@@ -5,18 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { useEffect, useState } from 'react'
-import useTabVisible from '@common/hooks/useTabVisible'
+import { useEffect, useRef, useState, useLayoutEffect } from 'react'
 
 const POLLING_INTERVAL_IN_MS = 5_000
 
-export function usePolling(
-  fn: (props?: any) => Promise<void> | undefined,
-  page: number | undefined,
-  isLoading: boolean
-) {
+export function usePolling(callback: (props?: any) => Promise<void> | undefined, startPolling: boolean) {
+  const savedCallback = useRef(callback)
   const [isPolling, setIsPolling] = useState(false)
-  const visible = useTabVisible()
+
+  // Remember the latest callback if it changes.
+  useLayoutEffect(() => {
+    savedCallback.current = callback
+  }, [callback])
 
   /**
    * At any moment of time, only one polling is done
@@ -25,20 +25,16 @@ export function usePolling(
    * When polling call (API) is being processed, wait until it's done then re-schedule
    */
   useEffect(() => {
-    const timeoutId = window.setTimeout(() => {
-      if (page === 1 && !isLoading && visible) {
-        setIsPolling(true)
-        fn()?.then(
-          () => setIsPolling(false),
-          () => setIsPolling(false)
-        )
-      }
+    if (!startPolling) {
+      return
+    }
+    const timerId = setTimeout(() => {
+      setIsPolling(true)
+      savedCallback.current()?.finally(() => setIsPolling(false))
     }, POLLING_INTERVAL_IN_MS)
 
-    return () => {
-      window.clearTimeout(timeoutId)
-    }
-  }, [page, isLoading, visible, fn])
+    return () => clearTimeout(timerId)
+  }, [startPolling])
 
   return isPolling
 }
