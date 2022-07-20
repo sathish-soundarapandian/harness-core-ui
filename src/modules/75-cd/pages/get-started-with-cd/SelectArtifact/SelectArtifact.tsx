@@ -28,7 +28,7 @@ import produce from 'immer'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
-import { ManifestConfigWrapper, NGServiceConfig, useUpdateServiceV2 } from 'services/cd-ng'
+import { ManifestConfigWrapper, NGServiceConfig, UserRepoResponse, useUpdateServiceV2 } from 'services/cd-ng'
 import { GitRepoName, ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
@@ -38,7 +38,7 @@ import type { SelectGitProviderRef } from './SelectGitProvider'
 import { ACCOUNT_SCOPE_PREFIX, ArtifactProviders, ArtifactType, Hosting } from '../DeployProvisioningWizard/Constants'
 
 import { SelectGitProvider } from './SelectGitProvider'
-import { SelectRepository, SelectRepositoryRef } from './SelectRepository'
+import { SelectRepository } from './SelectRepository'
 import { ProvideManifest, ProvideManifestRef } from './ProvideManifest'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import { getStoreType } from '../cdOnboardingUtils'
@@ -57,6 +57,7 @@ export interface SelectArtifactInterface {
   gitFetchType?: 'Branch' | 'Commit'
   paths?: string[] | any
   valuesPaths?: string[] | any
+  repository?: UserRepoResponse // SelectRepo data
 }
 
 interface SelectArtifactProps {
@@ -84,7 +85,6 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
   const formikRef = useRef<FormikContextType<SelectArtifactInterface>>()
   const [disableBtn, setDisableBtn] = useState<boolean>(false)
   const selectGitProviderRef = React.useRef<SelectGitProviderRef | null>(null)
-  const selectRepositoryRef = React.useRef<SelectRepositoryRef | null>(null)
   const provideManifestRef = React.useRef<ProvideManifestRef | null>(null)
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -102,15 +102,13 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
 
   useEffect(() => {
     const gitValues = selectGitProviderRef?.current?.values
-    const repoValues = selectRepositoryRef?.current?.repository
-    const manifestValues = formikRef?.current?.values
+    const manifestValues = omit(formikRef?.current?.values, 'repository')
     const gitTestConnectionStatus = isEqual(get(serviceData, 'data.gitValues'), gitValues)
       ? get(serviceData, 'data.gitConnectionStatus')
       : selectGitProviderRef.current?.testConnectionStatus
     const updatedContextService = produce(serviceData as NGServiceConfig, draft => {
       set(draft, 'data.gitValues', gitValues)
       set(draft, 'data.manifestValues', manifestValues)
-      set(draft, 'data.repoValues', repoValues)
       set(draft, 'data.gitConnectionStatus', gitTestConnectionStatus)
     })
     saveServiceData({ service: updatedContextService })
@@ -129,12 +127,7 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    formikRef?.current?.values,
-    formikRef?.current?.setFieldTouched,
-    selectGitProviderRef?.current?.values,
-    selectRepositoryRef?.current?.repository
-  ])
+  }, [formikRef?.current?.values, formikRef?.current?.setFieldTouched, selectGitProviderRef?.current?.values])
 
   const openSelectRepoAccordion = (): boolean | undefined => {
     const { validate } = selectGitProviderRef.current || {}
@@ -151,13 +144,13 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
   }
 
   const openProvideManifestAccordion = React.useCallback((): boolean | undefined => {
-    if (selectRepositoryRef.current?.repository?.name) {
+    if (formikRef?.current?.values?.repository?.name) {
       return true
     } else {
       // disableNextBtn()
       return false
     }
-  }, [selectRepositoryRef?.current?.repository])
+  }, [formikRef?.current?.values?.repository])
 
   const validateProvideManifestDetails = React.useCallback((): boolean => {
     if (isEmpty(formikRef?.current?.errors)) {
@@ -172,11 +165,11 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
   const { showError, showSuccess } = useToaster()
   const handleSubmit = async (values: SelectArtifactInterface): Promise<SelectArtifactInterface> => {
     const gitValues = selectGitProviderRef?.current?.values
-    const repoValues = selectRepositoryRef?.current?.repository
     const manifestValues = formikRef?.current?.values
     try {
       const getManifestDetails = (): ManifestConfigWrapper => {
-        const { branch, commitId, gitFetchType, identifier, paths, valuesPaths } = formikRef?.current?.values || {}
+        const { branch, commitId, gitFetchType, identifier, paths, valuesPaths, repository } =
+          formikRef?.current?.values || {}
 
         const selectedManifest = ManifestDataType.K8sManifest as ManifestTypes
 
@@ -208,7 +201,7 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
           set(manifestObj, 'manifest.spec.skipResourceVersioning', false)
         }
         if (connectionType === GitRepoName.Account) {
-          set(manifestObj, 'manifest.spec.store.spec.repoName', repoValues?.name)
+          set(manifestObj, 'manifest.spec.store.spec.repoName', repository?.name)
         }
 
         set(manifestObj, 'manifest.spec.store.type', getStoreType(gitValues?.gitProvider?.type))
@@ -228,7 +221,7 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
         set(draft, 'data.artifactType', values?.artifactType)
         set(draft, 'data.gitValues', gitValues)
         set(draft, 'data.manifestValues', manifestValues)
-        set(draft, 'data.repoValues', repoValues)
+        // set(draft, 'data.repoValues', values?.repository)
       })
       saveServiceData({ service: updatedContextService })
 
@@ -264,6 +257,7 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
 
   const getInitialValues = React.useCallback((): SelectArtifactInterface => {
     const initialValues = get(serviceData, 'serviceDefinition.spec.manifests[0].manifest', {})
+    const initialRepoValue = get(serviceData, 'data.repoValues')
     const specValues = get(initialValues, 'spec.store.spec', null)
 
     if (specValues) {
@@ -279,7 +273,8 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
           typeof initialValues?.spec?.valuesPaths === 'string'
             ? initialValues?.spec?.valuesPaths
             : initialValues?.spec?.valuesPaths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) })),
-        artifactType: get(serviceData, 'data.artifactType') || undefined
+        artifactType: get(serviceData, 'data.artifactType') || undefined,
+        repository: initialRepoValue
       }
     }
     return {
@@ -289,7 +284,8 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
       commitId: undefined,
       paths: [{ path: '', uuid: uuid('', nameSpace()) }],
       valuesPaths: [],
-      artifactType: get(serviceData, 'data.artifactType') || undefined
+      artifactType: get(serviceData, 'data.artifactType') || undefined,
+      repository: initialRepoValue
     }
   }, [])
 
@@ -326,6 +322,15 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
     return <PageSpinner />
   }
 
+  const onRepositoryChange = async (repository: UserRepoResponse) => {
+    if (repository) {
+      formikRef.current?.setFieldValue('repository', repository)
+      const updatedContextService = produce(serviceData as NGServiceConfig, draft => {
+        set(draft, 'data.repoValues', repository)
+      })
+      await saveServiceData({ service: updatedContextService })
+    }
+  }
   return (
     <Layout.Vertical width="80%">
       <Text font={{ variation: FontVariation.H4 }}>{getString('cd.getStartedWithCD.artifactLocation')}</Text>
@@ -382,11 +387,11 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
                   activeId={
                     isActiveAccordion
                       ? 'codeRepo'
-                      : openSelectRepoAccordion()
-                      ? 'selectYourRepo'
-                      : openProvideManifestAccordion()
-                      ? 'provideManifest'
-                      : ''
+                      : // : openSelectRepoAccordion()
+                        // ? 'selectYourRepo'
+                        // : openProvideManifestAccordion()
+                        // ? 'provideManifest'
+                        ''
                   }
                 >
                   <Accordion.Panel
@@ -417,21 +422,21 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
                     summary={
                       <Layout.Horizontal flex={{ justifyContent: 'space-around' }}>
                         <Text font={{ variation: FontVariation.H5 }}>{getString('common.selectYourRepo')}</Text>
-                        {openProvideManifestAccordion() ? (
+                        {formikProps?.values?.repository?.name ? (
                           <Icon name="success-tick" size={20} className={css.accordionStatus} />
-                        ) : !selectRepositoryRef?.current?.repository?.name ? (
+                        ) : (
                           <Icon name="danger-icon" size={20} className={css.accordionStatus} />
-                        ) : null}
+                        )}
                       </Layout.Horizontal>
                     }
                     details={
                       <SelectRepository
-                        ref={selectRepositoryRef}
-                        selectedRepository={get(serviceData, 'data.repoValues')}
+                        selectedRepository={formikProps.values?.repository}
                         validatedConnectorRef={
                           get(serviceData, 'data.gitValues.gitProvider.type') ||
                           selectGitProviderRef.current?.values?.gitProvider?.type
                         }
+                        onChange={onRepositoryChange}
                         disableNextBtn={() => setDisableBtn(true)}
                         enableNextBtn={() => setDisableBtn(false)}
                       ></SelectRepository>

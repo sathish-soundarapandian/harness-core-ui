@@ -42,6 +42,7 @@ interface SelectRepositoryProps {
   selectedRepository?: UserRepoResponse
   showError?: boolean
   validatedConnectorRef?: string
+  onChange?: (repository: UserRepoResponse) => void
   disableNextBtn: () => void
   enableNextBtn: () => void
 }
@@ -50,7 +51,7 @@ const SelectRepositoryRef = (
   props: SelectRepositoryProps,
   forwardRef: SelectRepositoryForwardRef
 ): React.ReactElement => {
-  const { selectedRepository, showError, validatedConnectorRef, disableNextBtn, enableNextBtn } = props
+  const { selectedRepository, showError, validatedConnectorRef, disableNextBtn, enableNextBtn, onChange } = props
   const { getString } = useStrings()
   const [repository, setRepository] = useState<UserRepoResponse | undefined>(selectedRepository)
   const [query, setQuery] = useState<string>('')
@@ -116,6 +117,9 @@ const SelectRepositoryRef = (
     }
   }, [query])
 
+  useEffect(() => {
+    repository && onChange?.(repository)
+  }, [repository])
   useEffect(() => {
     if (!forwardRef) {
       return
