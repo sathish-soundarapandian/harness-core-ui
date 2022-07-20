@@ -19,6 +19,8 @@ import environments from '@pipeline/pages/pipelines/__tests__/mocks/environments
 import pipelines from '@pipeline/components/PipelineModalListView/__tests__/RunPipelineListViewMocks'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import { getMockFor_useGetPipeline } from '@pipeline/components/RunPipelineModal/__tests__/mocks'
+import executionList from '@pipeline/pages/execution-list/__mocks__/execution-list.json'
+import { useGetListOfExecutions } from 'services/pipeline-ng'
 import CIPipelineDeploymentList from '../CFPipelineDeploymentList'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder', () => ({ children }: { children: JSX.Element }) => (
@@ -30,12 +32,12 @@ const mockGetCallFunction = jest.fn()
 
 jest.mock('services/pipeline-ng', () => ({
   useGetExecutionData: jest.fn().mockReturnValue({}),
-  useGetPipelineSummary: getMockFor_useGetPipeline,
   useGetListOfExecutions: jest.fn(() => ({
-    mutate: jest.fn(() => Promise.resolve({})),
+    mutate: jest.fn(() => Promise.resolve(executionList)),
     loading: false,
     cancel: jest.fn()
   })),
+  useGetPipelineSummary: getMockFor_useGetPipeline,
   useGetTemplateFromPipeline: jest.fn(() => ({ data: {} })),
   useGetPipeline: jest.fn(() => ({ data: {} })),
   useGetPipelineList: jest.fn().mockImplementation(args => {
@@ -114,6 +116,7 @@ describe('<CIPipelineDeploymentList /> tests', () => {
   afterAll(() => {
     jest.spyOn(global.Date, 'now').mockReset()
   })
+
   test('snapshot test', async () => {
     const { container, findAllByText } = render(
       <TestWrapper
@@ -130,13 +133,19 @@ describe('<CIPipelineDeploymentList /> tests', () => {
         <CIPipelineDeploymentList />
       </TestWrapper>
     )
-
+    await waitForElementToBeRemoved(() => screen.getByText('Loading, please wait...'))
     await waitFor(() => findAllByText('http_pipeline', { selector: '.pipelineName' }))
-
     expect(container).toMatchSnapshot()
   })
 
   test('call run pipeline', async () => {
+    const useGetListOfExecutionsMock = useGetListOfExecutions as jest.MockedFunction<any>
+    useGetListOfExecutionsMock.mockImplementation(() => ({
+      mutate: jest.fn(() => Promise.resolve({})),
+      loading: false,
+      cancel: jest.fn()
+    }))
+
     const { getByTestId } = render(
       <TestWrapper
         path={TEST_PATH}
