@@ -74,7 +74,7 @@ export interface CICodebaseInputSetFormProps {
 
 type AcceptableValue = boolean | string | number | SelectOption | string[] | MultiSelectOption[]
 
-type CodeBaseType = 'branch' | 'tag' | 'PR'
+export type CodeBaseType = 'branch' | 'tag' | 'PR'
 
 const TriggerTypes = {
   SCHEDULED: 'Scheduled'
@@ -87,7 +87,7 @@ export enum ConnectionType {
   Project = 'Project' // Azure Repos
 }
 
-const inputNames = {
+export const buildTypeInputNames: Record<string, string> = {
   branch: 'branch',
   tag: 'tag',
   PR: 'number'
@@ -191,6 +191,31 @@ export const handleCIConnectorRefOnChange = ({
     )
   }
 }
+export const getBuildTypeLabels = (getString: UseStringsReturn['getString']) => ({
+  branch: getString('gitBranch'),
+  tag: getString('gitTag'),
+  PR: getString('pipeline.gitPullRequest')
+})
+
+export const getBuildTypeInputLabels = (getString: UseStringsReturn['getString']) => ({
+  branch: getString('common.branchName'),
+  tag: getString('common.tagName'),
+  PR: getString('pipeline.ciCodebase.pullRequestNumber')
+})
+
+export const getCodebaseInputFieldName = (formattedPath: string) => ({
+  branch: `${formattedPath}properties.ci.codebase.build.spec.branch`,
+  tag: `${formattedPath}properties.ci.codebase.build.spec.tag`,
+  PR: `${formattedPath}properties.ci.codebase.build.spec.number`,
+  connectorRef: `${formattedPath}properties.ci.codebase.connectorRef`,
+  repoName: `${formattedPath}properties.ci.codebase.repoName`,
+  depth: `${formattedPath}properties.ci.codebase.depth`,
+  sslVerify: `${formattedPath}properties.ci.codebase.sslVerify`,
+  prCloneStrategy: `${formattedPath}properties.ci.codebase.prCloneStrategy`,
+  memoryLimit: `${formattedPath}properties.ci.codebase.resources.limits.memory`,
+  cpuLimit: `${formattedPath}properties.ci.codebase.resources.limits.cpu`
+})
+
 const getViewType = ({
   viewType,
   viewTypeMetadata
@@ -266,31 +291,11 @@ function CICodebaseInputSetFormInternal({
   const isTemplatePipeline = !!template?.template
   const finalTemplate = isTemplatePipeline ? (template?.template?.templateInputs as PipelineInfoConfig) : template
 
-  const radioLabels = {
-    branch: getString('gitBranch'),
-    tag: getString('gitTag'),
-    PR: getString('pipeline.gitPullRequest')
-  }
+  const radioLabels = getBuildTypeLabels(getString)
   const codebaseTypeError = get(formik?.errors, codeBaseTypePath)
 
-  const inputLabels = {
-    branch: getString('common.branchName'),
-    tag: getString('common.tagName'),
-    PR: getString('pipeline.ciCodebase.pullRequestNumber')
-  }
-
-  const codeBaseInputFieldFormName = {
-    branch: `${formattedPath}properties.ci.codebase.build.spec.branch`,
-    tag: `${formattedPath}properties.ci.codebase.build.spec.tag`,
-    PR: `${formattedPath}properties.ci.codebase.build.spec.number`,
-    connectorRef: `${formattedPath}properties.ci.codebase.connectorRef`,
-    repoName: `${formattedPath}properties.ci.codebase.repoName`,
-    depth: `${formattedPath}properties.ci.codebase.depth`,
-    sslVerify: `${formattedPath}properties.ci.codebase.sslVerify`,
-    prCloneStrategy: `${formattedPath}properties.ci.codebase.prCloneStrategy`,
-    memoryLimit: `${formattedPath}properties.ci.codebase.resources.limits.memory`,
-    cpuLimit: `${formattedPath}properties.ci.codebase.resources.limits.cpu`
-  }
+  const inputLabels = getBuildTypeInputLabels(getString)
+  const codeBaseInputFieldFormName = getCodebaseInputFieldName(formattedPath)
 
   const showBuildAsDisabledTextField = useMemo(() => {
     return (
@@ -557,14 +562,14 @@ function CICodebaseInputSetFormInternal({
       savedValues.current = Object.assign(savedValues.current, {
         [codeBaseType]: get(
           formik?.values,
-          `${formattedPath}properties.ci.codebase.build.spec.${inputNames[codeBaseType]}`,
+          `${formattedPath}properties.ci.codebase.build.spec.${buildTypeInputNames[codeBaseType]}`,
           ''
         )
       })
       const existingValues = { ...formik?.values }
       let updatedValues = set(existingValues, codeBaseTypePath, codeBaseType)
       updatedValues = set(existingValues, buildSpecPath, {
-        [inputNames[codeBaseType]]: savedValues.current[codeBaseType]
+        [buildTypeInputNames[codeBaseType]]: savedValues.current[codeBaseType]
       })
       formik?.setValues(updatedValues)
     }
@@ -574,9 +579,9 @@ function CICodebaseInputSetFormInternal({
     formik?.setFieldValue(`${formattedPath}properties.ci.codebase.build`, '')
     formik?.setFieldValue(codeBaseTypePath, newType)
     if (!isInputTouched && triggerIdentifier && isNotScheduledTrigger) {
-      formik?.setFieldValue(buildSpecPath, { [inputNames[newType]]: defaultValues[newType] })
+      formik?.setFieldValue(buildSpecPath, { [buildTypeInputNames[newType]]: defaultValues[newType] })
     } else {
-      formik?.setFieldValue(buildSpecPath, { [inputNames[newType]]: savedValues.current[newType] })
+      formik?.setFieldValue(buildSpecPath, { [buildTypeInputNames[newType]]: savedValues.current[newType] })
     }
   }
   const renderCodeBaseTypeInput = (type: CodeBaseType): JSX.Element => {

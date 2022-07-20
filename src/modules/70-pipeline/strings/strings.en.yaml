@@ -892,6 +892,10 @@ ciCodebase:
     optionalLimitMemory: Invalid Limit Memory. To learn more, hover over the Set Container Resources tooltip. You may use the default value provided.
     optionalLimitCPU: Invalid Limit CPU. To learn more, hover over the Set Container Resources tooltip. You may use the default value provided.
     pullRequestNumber: Pull Request Number must be a positive integer.
+gitCloneStep:
+  cloneDirectory: Clone Directory
+  validation:
+    associatedBuildInput: Associated build input
 tagDependencyRequired: required to fetch the tags
 artifactPathDependencyRequired: required to fetch the artifact paths
 artifactRepositoryDependencyRequired: 'Artifactory Connector is required to fetch repositories. You can make this field Runtime input otherwise.'
@@ -955,6 +959,7 @@ stepDescription:
   AzureSlotDeployment: Select the Web App and source and target deployment slots for the deployment.
   CustomApproval: Custom Approval
   AzureTrafficShift: Shift network traffic to the new Web App version in the deployment slot.
+  GitClone: Clone a Git repository to a directory in addition to the codebase Git clone
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy

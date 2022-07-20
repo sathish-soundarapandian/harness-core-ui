@@ -14,7 +14,8 @@ import {
   Button,
   Switch,
   RUNTIME_INPUT_VALUE,
-  IconName
+  IconName,
+  MultiTypeInputType
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
@@ -335,7 +336,12 @@ export const EditStageView: React.FC<EditStageView> = ({
                     isReadonly,
                     setCodebaseRuntimeInputs,
                     codebaseRuntimeInputs,
-                    connectorWidth: 366
+                    connectorWidth: 366,
+                    allowableTypes: [
+                      MultiTypeInputType.FIXED,
+                      MultiTypeInputType.EXPRESSION,
+                      MultiTypeInputType.RUNTIME
+                    ]
                   })}
                 </div>
               )}
