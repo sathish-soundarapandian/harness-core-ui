@@ -2676,6 +2676,7 @@ export interface StringsMap {
   'pipeline.additionalConfiguration': string
   'pipeline.advancedOptions': string
   'pipeline.allStages': string
+  'pipeline.amazonS3DependencyRequired': string
   'pipeline.and': string
   'pipeline.appServiceConfig.applicationSettings.file': string
   'pipeline.appServiceConfig.applicationSettings.fileDetails': string
