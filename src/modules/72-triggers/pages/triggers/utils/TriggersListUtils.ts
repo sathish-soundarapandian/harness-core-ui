@@ -154,17 +154,18 @@ const triggerDrawerMap = (
           itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Acr]),
           value: ENABLED_ARTIFACT_TYPES.Acr,
           iconName: ArtifactIconByType.Acr
-        },
-        {
-          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AmazonS3]),
-          value: ENABLED_ARTIFACT_TYPES.AmazonS3,
-          iconName: ArtifactIconByType.AmazonS3
-        },
-        {
-          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Jenkins]),
-          value: ENABLED_ARTIFACT_TYPES.Jenkins,
-          iconName: ArtifactIconByType.Jenkins
         }
+        // Uncomment this to enable AmazonS3 and Jenkins triggers
+        // {
+        //   itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AmazonS3]),
+        //   value: ENABLED_ARTIFACT_TYPES.AmazonS3,
+        //   iconName: ArtifactIconByType.AmazonS3
+        // },
+        // {
+        //   itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Jenkins]),
+        //   value: ENABLED_ARTIFACT_TYPES.Jenkins,
+        //   iconName: ArtifactIconByType.Jenkins
+        // }
       ]
     },
     {
