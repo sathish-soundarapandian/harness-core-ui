@@ -32,14 +32,9 @@ import { SelectWorkload, SelectWorkloadRef } from '../SelectWorkload/SelectWorkl
 import { SelectInfrastructure, SelectInfrastructureRef } from '../SelectInfrastructure/SelectInfrastructure'
 import { SelectArtifact, SelectArtifactRef } from '../SelectArtifact/SelectArtifact'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
-import { DEFAULT_PIPELINE_PAYLOAD, getUniqueEntityIdentifier } from '../cdOnboardingUtils'
+import { DEFAULT_PIPELINE_PAYLOAD, getUniqueEntityIdentifier, PipelineRefPayload } from '../cdOnboardingUtils'
 import css from './DeployProvisioningWizard.module.scss'
 
-export interface PipelineRefPayload {
-  serviceRef: string
-  environmentRef: string
-  infraStructureRef: string
-}
 export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> = props => {
   const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.SelectWorkload } = props
   const { getString } = useStrings()
@@ -71,7 +66,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
   const constructPipelinePayload = React.useCallback(
     (repository: UserRepoResponse, data: PipelineRefPayload): string | undefined => {
       const { name: repoName, namespace } = repository
-      const { serviceRef, environmentRef, infraStructureRef } = data
+      const { serviceRef, environmentRef, infraStructureRef, deploymentType } = data
 
       if (!repoName || !namespace || !serviceRef || !environmentRef || !infraStructureRef) {
         return
@@ -84,6 +79,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
       )}_${StringUtils.getIdentifierFromName(uniquePipelineId)}` // pipeline identifier cannot have spaces
       payload.pipeline.projectIdentifier = projectIdentifier
       payload.pipeline.orgIdentifier = orgIdentifier
+      payload.pipeline.stages[0].stage.spec.deploymentType = deploymentType
       payload.pipeline.stages[0].stage.spec.service.serviceRef = serviceRef
       payload.pipeline.stages[0].stage.spec.environment.environmentRef = environmentRef
       payload.pipeline.stages[0].stage.spec.environment.infrastructureDefinitions[0].identifier = infraStructureRef

@@ -41,6 +41,7 @@ import { SelectGitProvider } from './SelectGitProvider'
 import { SelectRepository, SelectRepositoryRef } from './SelectRepository'
 import { ProvideManifest, ProvideManifestRef } from './ProvideManifest'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
+import { getStoreType } from '../cdOnboardingUtils'
 import css from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
 export interface SelectArtifactRef {
@@ -210,7 +211,7 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
           set(manifestObj, 'manifest.spec.store.spec.repoName', repoValues?.name)
         }
 
-        set(manifestObj, 'manifest.spec.store.type', gitValues?.gitProvider?.type)
+        set(manifestObj, 'manifest.spec.store.type', getStoreType(gitValues?.gitProvider?.type))
         set(
           manifestObj,
           'manifest.spec.store.spec.connectorRef',

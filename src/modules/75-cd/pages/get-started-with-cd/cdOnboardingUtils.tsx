@@ -1,9 +1,19 @@
+import { gitStoreTypes } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import type { ManifestStores } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import type {
+  ConnectorInfoDTO,
   EnvironmentRequestDTO,
   EnvironmentResponseDTO,
   ServiceDefinition,
   ServiceRequestDTO
 } from 'services/cd-ng'
+
+export interface PipelineRefPayload {
+  serviceRef: string
+  environmentRef: string
+  infraStructureRef: string
+  deploymentType: string
+}
 
 export const DefaultNewStageName = 'Stage Name'
 export const DefaultNewStageId = 'stage_id'
@@ -68,12 +78,12 @@ export const DEFAULT_PIPELINE_PAYLOAD = {
           description: '',
           type: DEFAULT_STAGE_TYPE,
           spec: {
-            deploymentType: 'Kubernetes',
-            service: { serviceRef: 'servicePipeline_123' },
+            deploymentType: '',
+            service: { serviceRef: '' },
             environment: {
-              environmentRef: 'servicePipe_123',
+              environmentRef: '',
               deployToAll: false,
-              infrastructureDefinitions: [{ identifier: 'envPipeline_123' }]
+              infrastructureDefinitions: [{ identifier: '' }]
             },
             execution: {
               steps: [
@@ -90,6 +100,15 @@ export const DEFAULT_PIPELINE_PAYLOAD = {
                       outputVariables: [],
                       executionTarget: {}
                     }
+                  }
+                },
+                {
+                  step: {
+                    type: 'K8sRollingRollback',
+                    name: 'Rolling Rollback',
+                    identifier: 'Rolling_Rollback',
+                    spec: { skipDryRun: false },
+                    timeout: '10m'
                   }
                 }
               ]
@@ -146,4 +165,10 @@ export const cleanEnvironmentDataUtil = (values: EnvironmentResponseDTO): Enviro
 export const getUniqueEntityIdentifier = (entity = ''): string => {
   const UNIQUE_PIPELINE_ID = new Date().getTime().toString()
   return `${entity.replace(/-/g, '_')}_${UNIQUE_PIPELINE_ID}`
+}
+
+export const getStoreType = (gitProviderType?: ConnectorInfoDTO['type']): ManifestStores | undefined => {
+  return gitStoreTypes.find(store => {
+    return store.toLowerCase() === gitProviderType?.toLowerCase()
+  })
 }

@@ -46,7 +46,12 @@ import {
   SelectAuthenticationMethodRef
 } from './SelectAuthenticationMethod'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
-import { cleanEnvironmentDataUtil, getUniqueEntityIdentifier, newEnvironmentState } from '../cdOnboardingUtils'
+import {
+  cleanEnvironmentDataUtil,
+  getUniqueEntityIdentifier,
+  newEnvironmentState,
+  PipelineRefPayload
+} from '../cdOnboardingUtils'
 import defaultCss from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 import css from './SelectInfrastructure.module.scss'
 export interface SelectInfrastructureRef {
@@ -71,7 +76,7 @@ export interface SelectInfrastructureInterface extends SelectAuthenticationMetho
 interface SelectInfrastructureProps {
   disableNextBtn: () => void
   enableNextBtn: () => void
-  onSuccess?: (data: any) => void
+  onSuccess?: (data: PipelineRefPayload) => void
 }
 
 export type SelectInfrastructureForwardRef =
@@ -284,9 +289,10 @@ const SelectInfrastructureRef = (
         })
           .then(infraResponse => {
             const refsData = {
-              serviceRef: serviceData?.identifier,
+              serviceRef: serviceData.identifier,
               environmentRef: environmentIdentifier,
-              infraStructureRef: infraIdentifier
+              infraStructureRef: infraIdentifier,
+              deploymentType: serviceData.serviceDefinition.type
             }
             if (infraResponse.status === 'SUCCESS') {
               props?.onSuccess?.(refsData)
