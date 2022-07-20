@@ -195,11 +195,6 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
                 getMultiTypeFromValue(artifact?.spec?.connectorRef) === MultiTypeInputType.RUNTIME &&
                 getString('pipeline.dependencyRequired')
               }
-              helperText={
-                !get(formik, `values.${path}.artifacts.${artifactPath}.spec.connectorRef`)?.length &&
-                getMultiTypeFromValue(artifact?.spec?.connectorRef) === MultiTypeInputType.RUNTIME &&
-                getString('pipeline.amazonS3DependencyRequired')
-              }
               useValue
               multiTypeInputProps={{
                 expressions,
