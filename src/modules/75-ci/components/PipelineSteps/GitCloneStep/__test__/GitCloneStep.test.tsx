@@ -6,10 +6,10 @@
  */
 
 import React from 'react'
-import { render, waitFor } from '@testing-library/react'
+import { render, waitFor, act } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import userEvent from '@testing-library/user-event'
-import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import * as cdng from 'services/cd-ng'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
@@ -69,7 +69,7 @@ describe('Git Clone Step', () => {
       expect(container.querySelector('[name="spec.build.spec.branch"]')).toHaveAttribute('value', RUNTIME_INPUT_VALUE)
     })
 
-    test('should render onEdit runtime input values properly', () => {
+    test('should render onEdit runtime input values properly', async () => {
       const { container } = render(
         <TestStepWidget
           initialValues={onEditInitialValuesAllRuntimeInputs}
@@ -83,14 +83,6 @@ describe('Git Clone Step', () => {
   })
 
   describe('InputSet View Render', () => {
-    test('should render properly', () => {
-      const { container } = render(
-        <TestStepWidget initialValues={{}} type={StepType.GitClone} stepViewType={StepViewType.InputSet} />
-      )
-
-      expect(container).toMatchSnapshot()
-    })
-
     test('should render all fields', async () => {
       const template = {
         type: StepType.GitClone,
@@ -204,6 +196,145 @@ describe('Git Clone Step', () => {
     })
   })
 
+  describe('InputVariable View', () => {
+    test('should render properly', () => {
+      const { container } = render(
+        <TestStepWidget
+          initialValues={{
+            identifier: 'Test_A',
+            name: 'Test A',
+            type: StepType.GitClone,
+            spec: {
+              connectorRef: 'mtranacctconnector',
+              repoName: 'abct',
+              cloneDirectory: '/harness',
+              depth: 1,
+              sslVerify: false,
+              runAsUser: '1000',
+              resources: {
+                limits: {
+                  memory: '1G',
+                  cpu: '100m'
+                }
+              },
+              build: {
+                type: 'branch',
+                spec: {
+                  branch: 'azz'
+                }
+              }
+            },
+            description: 'adsfs',
+            timeout: '1d'
+          }}
+          customStepProps={{
+            stageIdentifier: 'qaStage',
+            metadataMap: {
+              'step-name': {
+                yamlProperties: {
+                  fqn: 'pipeline.stages.qaStage.execution.steps.gitClone.name',
+                  localName: 'step.gitClone.name'
+                }
+              },
+              'step-description': {
+                yamlProperties: {
+                  fqn: 'pipeline.stages.qaStage.execution.steps.gitClone.description',
+                  localName: 'step.gitClone.description'
+                }
+              },
+              'step-timeout': {
+                yamlProperties: {
+                  fqn: 'pipeline.stages.qaStage.execution.steps.gitClone.timeout',
+                  localName: 'step.gitClone.timeout'
+                }
+              },
+              'step-connectorRef': {
+                yamlProperties: {
+                  fqn: 'pipeline.stages.qaStage.execution.steps.gitClone.spec.connectorRef',
+                  localName: 'step.gitClone.spec.connectorRef'
+                }
+              },
+              'step-repoName': {
+                yamlProperties: {
+                  fqn: 'pipeline.stages.qaStage.execution.steps.gitClone.spec.repoName',
+                  localName: 'step.gitClone.spec.repoName'
+                }
+              },
+              'step-cloneDirectory': {
+                yamlProperties: {
+                  fqn: 'pipeline.stages.qaStage.execution.steps.gitClone.spec.cloneDirectory',
+                  localName: 'step.gitClone.spec.cloneDirectory'
+                }
+              },
+              'step-depth': {
+                yamlProperties: {
+                  fqn: 'pipeline.stages.qaStage.execution.steps.gitClone.spec.depth',
+                  localName: 'step.gitClone.spec.depth'
+                }
+              },
+              'step-build': {
+                yamlProperties: {
+                  fqn: 'pipeline.stages.qaStage.execution.steps.gitClone.spec.build',
+                  localName: 'step.gitClone.spec.build'
+                }
+              },
+              'step-sslVerify': {
+                yamlProperties: {
+                  fqn: 'pipeline.stages.qaStage.execution.steps.gitClone.spec.sslVerify',
+                  localName: 'step.gitClone.spec.sslVerify'
+                }
+              },
+              'step-runAsUser': {
+                yamlProperties: {
+                  fqn: 'pipeline.stages.qaStage.execution.steps.gitClone.spec.runAsUser',
+                  localName: 'step.gitClone.spec.runAsUser'
+                }
+              },
+              'step-limitMemory': {
+                yamlProperties: {
+                  fqn: 'pipeline.stages.qaStage.execution.steps.gitClone.spec.resources.limits.memory',
+                  localName: 'step.gitClone.spec.resources.limits.memory'
+                }
+              },
+              'step-limitCPU': {
+                yamlProperties: {
+                  fqn: 'pipeline.stages.qaStage.execution.steps.gitClone.spec.resources.limits.cpu',
+                  localName: 'step.gitClone.resources.spec.limits.cpu'
+                }
+              }
+            },
+            variablesData: {
+              type: StepType.GitClone,
+              identifier: 'plugin',
+              name: 'step-name',
+              description: 'step-description',
+              timeout: 'step-timeout',
+              spec: {
+                connectorRef: 'step-connectorRef',
+                repoName: 'step-repoName',
+                cloneDirectory: 'step-cloneDirectory',
+                depth: 'step-depth',
+                sslVerify: 'step-sslVerify',
+                runAsUser: 'step-runAsUser',
+                build: 'step-build',
+                resources: {
+                  limits: {
+                    memory: 'step-limitMemory',
+                    cpu: 'step-limitCPU'
+                  }
+                }
+              }
+            }
+          }}
+          type={StepType.GitClone}
+          stepViewType={StepViewType.InputVariable}
+        />
+      )
+
+      expect(container).toMatchSnapshot()
+    })
+  })
+
   describe('Interactivity', () => {
     test('should render tag name on switching build type', async () => {
       jest.spyOn(cdng, 'useGetConnector').mockReturnValue(AccountConnectorResponse as any)
@@ -231,5 +362,26 @@ describe('Git Clone Step', () => {
         expect(document.body.querySelector('[name="spec.build.spec.tag"]')).toBeInTheDocument()
       })
     })
+  })
+})
+
+describe('Payload Comparison', () => {
+  test('should submit onEdit runtime input values properly', async () => {
+    const onUpdate = jest.fn()
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    const { container } = render(
+      <TestStepWidget
+        initialValues={onEditInitialValuesAllRuntimeInputs}
+        type={StepType.GitClone}
+        stepViewType={StepViewType.Edit}
+        onUpdate={onUpdate}
+        ref={ref}
+      />
+    )
+
+    expect(container).toMatchSnapshot()
+
+    await act(() => ref.current?.submitForm()!)
+    expect(onUpdate).toHaveBeenCalledWith(onEditInitialValuesAllRuntimeInputs)
   })
 })

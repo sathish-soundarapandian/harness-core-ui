@@ -176,7 +176,6 @@ export const onEditInitialValuesFixed2 = {
 }
 
 export const onEditInitialValuesAllRuntimeInputs = {
-  type: 'GitClone',
   name: 'git-clone-repoconnector',
   identifier: 'gitclonerepoconnector',
   spec: {
