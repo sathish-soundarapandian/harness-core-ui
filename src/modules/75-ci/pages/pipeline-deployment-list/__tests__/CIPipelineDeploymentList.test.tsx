@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import { CurrentLocation, TestWrapper } from '@common/utils/testUtils'
@@ -138,7 +138,7 @@ describe('<CIPipelineDeploymentList /> tests', () => {
   })
 
   test('call run pipeline', async () => {
-    const { findByText, getByTestId } = render(
+    const { getByTestId } = render(
       <TestWrapper
         path={TEST_PATH}
         pathParams={{
@@ -154,9 +154,8 @@ describe('<CIPipelineDeploymentList /> tests', () => {
       </TestWrapper>
     )
 
-    const runButton = await findByText('runPipelineText')
+    const runButton = await screen.findByText('runPipelineText')
     fireEvent.click(runButton)
-
     expect(getByTestId('location')).toMatchInlineSnapshot(`
       <div
         data-testid="location"

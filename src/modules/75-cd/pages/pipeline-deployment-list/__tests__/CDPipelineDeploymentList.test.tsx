@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { noop } from 'lodash-es'
 import routes from '@common/RouteDefinitions'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
@@ -142,7 +142,7 @@ describe('<CDPipelineDeploymentList /> tests', () => {
   })
 
   test('call run pipeline', async () => {
-    const { findByText } = render(
+    render(
       <TestWrapper
         path={routes.toPipelineDeploymentList({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
         pathParams={{
@@ -158,7 +158,7 @@ describe('<CDPipelineDeploymentList /> tests', () => {
       </TestWrapper>
     )
 
-    const runButton = await findByText('runPipelineText')
+    const runButton = await screen.findByText('runPipelineText')
     fireEvent.click(runButton)
     const form = findDialogContainer()
     expect(form).toBeTruthy()
