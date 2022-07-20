@@ -7,6 +7,7 @@ import { useStrings } from 'framework/strings'
 import type { SettingRequestDTO } from 'services/cd-ng'
 
 import css from './SettingsCategorySection.module.scss'
+import { useFormikContext } from 'formik'
 interface SettingTypeRowProps {
   settingTypeHandler: SettingHandler
   onSelectionChange: (val: string) => void
@@ -18,6 +19,7 @@ interface SettingTypeRowProps {
   allowedValues: SettingRendererProps['allowedValues']
   otherSettingsWhichAreChanged: Map<SettingType, SettingRequestDTO>
   errorMessage: string
+  otherSettings?: Map<SettingType, SettingRequestDTO>
 }
 const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
   settingTypeHandler,
@@ -32,6 +34,9 @@ const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
   errorMessage
 }) => {
   const { label, settingRenderer, featureFlag } = settingTypeHandler
+
+  const { setFieldValue, values } = useFormikContext()
+  console.log(values)
   const { getString } = useStrings()
   let enableFeatureFlag = true
   if (featureFlag) {
@@ -52,7 +57,8 @@ const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
             onRestore,
             settingValue,
             allowedValues,
-            otherSettingsWhichAreChanged
+            otherSettingsWhichAreChanged,
+            setFieldValue
           })}
         {errorMessage && (
           <Text lineClamp={1} intent="danger">

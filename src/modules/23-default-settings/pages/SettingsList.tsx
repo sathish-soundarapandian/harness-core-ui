@@ -1,6 +1,14 @@
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Button, ButtonVariation, getErrorInfoFromErrorObject, Layout, useToaster } from '@harness/uicore'
+import {
+  Button,
+  ButtonVariation,
+  FormikForm,
+  FormInput,
+  getErrorInfoFromErrorObject,
+  Layout,
+  useToaster
+} from '@harness/uicore'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 
 import ScopedTitle from '@common/components/Title/ScopedTitle'
@@ -14,6 +22,9 @@ import { SettingDTO, SettingRequestDTO, useUpdateSettingValue } from 'services/c
 import type { SettingCategory, SettingType } from '../interfaces/SettingType'
 import SettingsCategorySection from '../components/SettingsCategorySection'
 import css from './SettingsList.module.scss'
+import { Formik } from 'formik'
+
+import * as Yup from 'yup'
 const SettingsList = () => {
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
@@ -58,47 +69,74 @@ const SettingsList = () => {
       showError(getErrorInfoFromErrorObject(error))
     }
   }
+  const [validationScheme, updateValidationScheme] = useState({})
+  const updateValidation = (val: any) => {
+    updateValidationScheme({ ...validationScheme, ...val })
+  }
   return (
     <>
-      <Page.Header
-        title={
-          <ScopedTitle
-            title={{
-              [Scope.PROJECT]: getString('common.defaultSettings'),
-              [Scope.ORG]: getString('common.defaultSettings'),
-              [Scope.ACCOUNT]: getString('common.defaultSettings')
-            }}
-          />
-        }
-        toolbar={
-          <Button
-            text={getString('save')}
-            disabled={disableSave}
-            variation={ButtonVariation.PRIMARY}
-            onClick={saveSettings}
-          />
-        }
-        breadcrumbs={
-          <NGBreadcrumbs
-            links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
-          />
-        }
-      />
-      {savingSettingInProgress && <Page.Spinner message={getString('secrets.secret.saving')}></Page.Spinner>}
-      <Page.Body>
-        <Layout.Vertical className={css.settingList}>
-          {defaultSettingsCategory.map(key => {
-            return (
-              <SettingsCategorySection
-                settingCategory={key}
-                onSettingChange={onSettingChange}
-                otherSettingsWhichAreChanged={changedSettings}
-                settingErrorMessages={settingErrrorMessage}
+      <Formik
+        initialValues={{}}
+        validationSchema={Yup.object(validationScheme)}
+        onSubmit={values => {
+          console.log(values)
+          saveSettings()
+        }}
+      >
+        {() => {
+          return (
+            <FormikForm>
+              <Page.Header
+                title={
+                  <ScopedTitle
+                    title={{
+                      [Scope.PROJECT]: getString('common.defaultSettings'),
+                      [Scope.ORG]: getString('common.defaultSettings'),
+                      [Scope.ACCOUNT]: getString('common.defaultSettings')
+                    }}
+                  />
+                }
+                toolbar={
+                  <Button
+                    text={getString('save')}
+                    disabled={disableSave}
+                    variation={ButtonVariation.PRIMARY}
+                    type="submit"
+                  />
+                }
+                breadcrumbs={
+                  <NGBreadcrumbs
+                    links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
+                  />
+                }
               />
-            )
-          })}
-        </Layout.Vertical>
-      </Page.Body>
+              {savingSettingInProgress && <Page.Spinner message={getString('secrets.secret.saving')}></Page.Spinner>}
+              <Page.Body>
+                <FormInput.Text
+                  name="firstName"
+                  placeholder="First Name"
+                  tooltipProps={{
+                    dataTooltipId: 'nameTextField'
+                  }}
+                />
+                <Layout.Vertical className={css.settingList}>
+                  {defaultSettingsCategory.map(key => {
+                    return (
+                      <SettingsCategorySection
+                        settingCategory={key}
+                        onSettingChange={onSettingChange}
+                        otherSettingsWhichAreChanged={changedSettings}
+                        settingErrorMessages={settingErrrorMessage}
+                        updateValidationSchema={updateValidation}
+                      />
+                    )
+                  })}
+                </Layout.Vertical>
+              </Page.Body>
+            </FormikForm>
+          )
+        }}
+      </Formik>
     </>
   )
 }

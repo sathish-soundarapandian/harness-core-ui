@@ -112,7 +112,12 @@ DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CORE_
   settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />
 })
 
-const DependendentValues: React.FC<SettingRendererProps> = ({ otherSettingsWhichAreChanged, ...otherProps }) => {
+const DependendentValues: React.FC<SettingRendererProps> = ({
+  otherSettingsWhichAreChanged,
+  setFieldValue,
+
+  ...otherProps
+}) => {
   const isEvenorOdd = (number: string | undefined) => {
     if (isUndefined(number)) {
       return ''
@@ -126,15 +131,18 @@ const DependendentValues: React.FC<SettingRendererProps> = ({ otherSettingsWhich
   )
   useEffect(() => {
     console.log('otherSettingsWhichAreChanged', { otherSettingsWhichAreChanged })
-    updateSettingValue(isEvenorOdd(otherSettingsWhichAreChanged.get(SettingType.test_setting_CI_2)?.value))
+    setFieldValue(
+      otherProps.identifier,
+      isEvenorOdd(otherSettingsWhichAreChanged.get(SettingType.test_setting_CI_2)?.value)
+    )
   }, [otherSettingsWhichAreChanged.get(SettingType.test_setting_CI_2)?.value])
   return (
     <span>
       <span>Depeneedent</span>
       <DefaultSettingTextbox
+        setFieldValue={setFieldValue}
         {...otherProps}
         otherSettingsWhichAreChanged={otherSettingsWhichAreChanged}
-        settingValue={settingValue}
       />
     </span>
   )
@@ -146,7 +154,7 @@ DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CORE_
 })
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CD_1, {
   label: 'orgLabel',
-  settingRenderer: props => <DefaultSettingNumberTextbox {...props} />
+  settingRenderer: props => <DefaultSettingTextbox {...props} />
 })
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CD_2, {
   label: 'projectLabel',

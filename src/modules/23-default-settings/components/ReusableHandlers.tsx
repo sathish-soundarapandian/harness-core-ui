@@ -1,5 +1,5 @@
 import React, { FormEvent } from 'react'
-import { Checkbox, DropDown, TextInput } from '@harness/uicore'
+import { Checkbox, DropDown, FormInput, TextInput } from '@harness/uicore'
 import { Radio, RadioGroup } from '@blueprintjs/core'
 import type { SettingDTO } from 'services/cd-ng'
 import type { SettingRendererProps } from '@default-settings/factories/DefaultSettingsFactory'
@@ -7,15 +7,11 @@ import type { StringsMap } from 'framework/strings/StringsContext'
 import { useStrings } from 'framework/strings'
 import css from './SettingsCategorySection.module.scss'
 
-interface SettingsDefaultHandlerProps {
-  valueType: SettingDTO['valueType']
-  allowedValues: SettingDTO['allowedValues']
-}
-
 export const DefaultSettingStringDropDown: React.FC<SettingRendererProps> = ({
   allowedValues,
   onSettingSelectionChange,
-  settingValue
+  settingValue,
+  identifier
 }) => {
   if (allowedValues && allowedValues.length) {
     const options = allowedValues.map(val => {
@@ -26,13 +22,13 @@ export const DefaultSettingStringDropDown: React.FC<SettingRendererProps> = ({
     })
     return (
       <>
-        <DropDown
+        <FormInput.Select
+          name={identifier}
           className={css.defaultSettingRenderer}
           items={options}
           onChange={option => {
             onSettingSelectionChange(option.value as string)
           }}
-          value={settingValue}
         />
       </>
     )
@@ -42,17 +38,18 @@ export const DefaultSettingStringDropDown: React.FC<SettingRendererProps> = ({
 
 export const DefaultSettingNumberTextbox: React.FC<SettingRendererProps> = ({
   onSettingSelectionChange,
-  settingValue
+  settingValue,
+  identifier
 }) => {
   return (
     <>
-      <TextInput
+      <FormInput.Text
+        name={identifier}
         className={css.defaultSettingRenderer}
-        type={'number'}
+        inputGroup={{ type: 'number' }}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           onSettingSelectionChange(e.target.value)
         }}
-        value={settingValue}
       />
     </>
   )
@@ -66,32 +63,36 @@ export const DefaultSettingRadioBtnWithTrueAndFalse: React.FC<DefaultSettingRadi
   settingValue,
   otherSettingsWhichAreChanged,
   falseLabel,
-  trueLabel
+  trueLabel,
+  identifier
 }) => {
   const { getString } = useStrings()
 
   return (
-    // used blueprintjs radiogroup since uicore radiobtngroup is not getting updated with latest settingValue
-    <RadioGroup
+    <FormInput.RadioGroup
       inline={true}
       onChange={(e: FormEvent<HTMLInputElement>) => {
         onSettingSelectionChange(e.currentTarget.value)
       }}
-      selectedValue={settingValue}
-    >
-      <Radio label={trueLabel ? getString(trueLabel) : getString('cf.shared.true')} value="true" />
-      <Radio label={falseLabel ? getString(falseLabel) : getString('cf.shared.false')} value="false" />
-    </RadioGroup>
+      name={identifier}
+      items={[
+        { label: trueLabel ? getString(trueLabel) : getString('cf.shared.true'), value: 'true' },
+        { label: falseLabel ? getString(falseLabel) : getString('cf.shared.false'), value: 'false' }
+      ]}
+    />
   )
 }
 export const DefaultSettingCheckBoxWithTrueAndFalse: React.FC<DefaultSettingRadioBtnWithTrueAndFalseProps> = ({
   onSettingSelectionChange,
   settingValue,
-  otherSettingsWhichAreChanged
+  otherSettingsWhichAreChanged,
+  identifier
 }) => {
   return (
     <>
-      <Checkbox
+      <FormInput.CheckBox
+        name={identifier}
+        label=""
         className={css.defaultSettingRenderer}
         onChange={(e: FormEvent<HTMLInputElement>) => {
           onSettingSelectionChange(e.currentTarget.checked ? 'true' : 'false')
@@ -104,16 +105,17 @@ export const DefaultSettingCheckBoxWithTrueAndFalse: React.FC<DefaultSettingRadi
 export const DefaultSettingTextbox: React.FC<SettingRendererProps> = ({
   onSettingSelectionChange,
   settingValue,
+  identifier,
   otherSettingsWhichAreChanged
 }) => {
   return (
     <>
-      <TextInput
+      <FormInput.Text
+        name={identifier}
         className={css.defaultSettingRenderer}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           onSettingSelectionChange(e.target.value)
         }}
-        value={settingValue || ''}
       />
     </>
   )

@@ -14,9 +14,12 @@ import DefaultSettingsFactory from '@default-settings/factories/DefaultSettingsF
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { getSettingsListPromise, SettingDTO, SettingRequestDTO, SettingResponseDTO } from 'services/cd-ng'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import type { SettingCategory, SettingType } from '../interfaces/SettingType'
+import { SettingCategory, SettingType } from '../interfaces/SettingType'
 import SettingCategorySectionContents from './SettingCategorySectionContents'
 import css from './SettingsCategorySection.module.scss'
+import { useFormikContext } from 'formik'
+
+import * as Yup from 'yup'
 interface SettingsCategorySectionProps {
   settingCategory: SettingCategory
   onSettingChange: (
@@ -26,14 +29,18 @@ interface SettingsCategorySectionProps {
   ) => void
   otherSettingsWhichAreChanged: Map<SettingType, SettingRequestDTO>
   settingErrorMessages: Map<SettingType, string>
+  updateValidationSchema: (val: Yup.ObjectSchema<object | undefined>) => void
 }
 
 const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
   settingCategory,
   onSettingChange,
   otherSettingsWhichAreChanged,
-  settingErrorMessages
+  settingErrorMessages,
+  updateValidationSchema
 }) => {
+  const { initialValues, setFieldValue } = useFormikContext()
+
   const settingCategoryHandler = DefaultSettingsFactory.getSettingCategoryHandler(settingCategory)
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps & ModulePathParams>()
 
@@ -63,10 +70,17 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
         })
         const settingTypesTemp: Set<SettingType> = new Set()
         const refiedSettingTypesWithDTOLocal: { [Key in SettingType]?: SettingResponseDTO } = {}
+
+        const valid: any = {}
         data?.data?.forEach(val => {
           refiedSettingTypesWithDTOLocal[val.setting.identifier as SettingType] = val
+          setFieldValue(val.setting.identifier, val.setting.value)
+          valid[val.setting.identifier] = Yup.string().max(15, 'Must be 15 characters or less').required('Required')
           settingTypesTemp.add(val.setting.identifier as SettingType)
         })
+
+        updateValidationSchema(valid)
+        console.log({ initialValues })
         updateRefiedSettingTypesWithDTO(refiedSettingTypesWithDTOLocal)
         updateSettingTypes(settingTypesTemp)
       } catch (error) {
@@ -133,6 +147,7 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
           ...prevSettings,
           [settingType]: selectedSettingTypeDTO
         }
+        setFieldValue(settingType, defaultValue)
         updateRefiedSettingTypesWithDTO(updatesSettingDTO)
         onSettingChange(settingType, selectedSettingTypeDTO.setting, 'RESTORE')
       }

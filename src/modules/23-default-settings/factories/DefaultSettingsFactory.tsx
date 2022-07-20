@@ -20,6 +20,7 @@ export interface SettingRendererProps {
   settingValue: any
   allowedValues?: SettingDTO['allowedValues'] | undefined
   otherSettingsWhichAreChanged: Map<SettingType, SettingRequestDTO>
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
 }
 export interface SettingHandler {
   label: keyof StringsMap
