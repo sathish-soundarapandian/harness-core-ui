@@ -157,8 +157,7 @@ DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CORE_
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CD_1, {
   label: 'orgLabel',
   settingRenderer: props => <DefaultSettingTextbox {...props} />,
-  yupValidation: Yup.string().max(15, 'Must be 15 characters or less').required('Required'),
-  featureFlag: FeatureFlag.NG_SETTINGS_1
+  yupValidation: Yup.string().max(15, 'Must be 15 characters or less').required('Required')
 })
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CD_2, {
   label: 'projectLabel',
