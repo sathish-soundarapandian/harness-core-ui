@@ -12,6 +12,7 @@ import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import { Menu, MenuItem, Position } from '@blueprintjs/core'
 import { useHistory, useParams } from 'react-router-dom'
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { Page } from '@common/exports'
 import {
   InputSetSummaryResponse,
@@ -230,6 +231,7 @@ function InputSetList(): React.ReactElement {
 
   return (
     <>
+      <HelpPanel referenceId="InputSet" type={HelpPanelType.FLOATING_CONTAINER} />
       <Page.SubHeader>
         <Layout.Horizontal>
           <Popover

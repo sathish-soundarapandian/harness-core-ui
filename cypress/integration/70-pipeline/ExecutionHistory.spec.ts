@@ -219,7 +219,7 @@ describe('Pipeline Execution History', () => {
   })
 
   // Execution List
-  it('loads successful, aborted and failed pipelines', () => {
+  it.skip('loads successful, aborted and failed pipelines', () => {
     // Fixtures
     cy.intercept('GET', pipelineSummaryCallAPI, {
       fixture: 'pipeline/api/executionHistory/executionSummary.json'
