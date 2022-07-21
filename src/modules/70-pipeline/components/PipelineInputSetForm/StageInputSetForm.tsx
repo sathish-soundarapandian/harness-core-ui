@@ -914,7 +914,7 @@ export function StageInputSetFormInternal({
             customStepProps={{
               getString,
               allValues: deploymentStage?.environment,
-              gitOpsEnabled: (deploymentStage as DeployStageConfig).gitOpsEnabled
+              gitOpsEnabled: (deploymentStage as DeployStageConfig)?.gitOpsEnabled
             }}
           />
           {(deploymentStageTemplate as DeployStageConfig).environment?.infrastructureDefinitions &&

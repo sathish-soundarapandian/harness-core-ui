@@ -8,7 +8,6 @@
 import type { AllowedTypes } from '@harness/uicore'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
-import type { StepSpecType } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 
 export interface AzureSlotDeploymentStepInfo {
@@ -22,7 +21,10 @@ export interface AzureSlotDeploymentData {
   name: string
   identifier: string
   timeout: string
-  spec?: StepSpecType
+  spec: {
+    webApp: string
+    deploymentSlot: string
+  }
 }
 
 export interface AzureSlotDeploymentVariableStepProps {

@@ -32,8 +32,8 @@ import {
   jiraApprovalStageYamlSnippet,
   snowApprovalStageYamlSnippet,
   serverlessLambdaYamlSnippet,
-  yamlSnippet,
-  executionStratergies,
+  strategiesYamlSnippets,
+  executionStrategies,
   pageHeaderClassName
 } from '../../support/70-pipeline/constants'
 import { connectorsListAPI } from '../../support/35-connectors/constants'
@@ -259,7 +259,6 @@ describe('Execution Stages', () => {
       return false
     })
     cy.initializeRoute()
-
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
     cy.intercept('POST', pipelineSaveCall, { fixture: 'pipeline/api/pipelines.post' })
     cy.intercept('POST', stepLibrary, { fixture: 'ng/api/stepLibrary' }).as('stepLibrary')
@@ -316,7 +315,7 @@ describe('Execution Stages', () => {
     cy.get('*[class^="ExecutionGraph-module_canvas"]')
       .should('be.visible')
       .within(() => {
-        cy.get('span[data-icon="zoom-out"]').click()
+        cy.get('span[data-icon="zoom-out"]').click({ force: true })
         cy.get('p[data-name="node-name"]').contains('Add step').click({ force: true })
         cy.wait(1000)
         cy.get('[class*="ExecutionGraph-module_add-step-popover"]', { withinSubject: null })
@@ -463,11 +462,11 @@ describe('ServerlessAwsLambda as deployment type', () => {
 
     // Got to Execution tab, Serverless Aws Lambda Deploy should be added by default
     // Switching between Rollback and Execution should work as expected
-    cy.contains('span', 'Execution').click()
+    cy.contains('span', 'Execution').click({ force: true })
     cy.contains('p', 'Serverless Aws Lambda Deploy')
-    cy.contains('p', 'Rollback').click()
+    cy.contains('p', 'Rollback').click({ force: true })
     cy.contains('p', 'Serverless Aws Lambda Rollback')
-    cy.contains('p', 'Execution').click()
+    cy.contains('p', 'Execution').click({ force: true })
     cy.contains('p', 'Serverless Aws Lambda Deploy')
 
     // Add another Serverless Lambda Deploy Step
@@ -500,8 +499,10 @@ describe('ServerlessAwsLambda as deployment type', () => {
       fixture: 'pipeline/api/pipelines/failureStrategiesYaml'
     }).as('cdFailureStrategiesYaml')
     cy.intercept('POST', connectorsListAPI, { fixture: 'ng/api/connectors' }).as('connectorsList')
-    cy.intercept('GET', yamlSnippet, { fixture: 'ng/api/pipelines/kubernetesYamlSnippet' }).as('kubernetesYamlSnippet')
-    cy.intercept('GET', executionStratergies, { fixture: 'pipeline/api/pipelines/strategies.json' }).as(
+    cy.intercept('GET', strategiesYamlSnippets, { fixture: 'ng/api/pipelines/kubernetesYamlSnippet' }).as(
+      'kubernetesYamlSnippet'
+    )
+    cy.intercept('GET', executionStrategies, { fixture: 'pipeline/api/pipelines/strategies.json' }).as(
       'executionStratergies'
     )
 
@@ -521,11 +522,12 @@ describe('ServerlessAwsLambda as deployment type', () => {
 
     // Select Kubernetes as deployment type
     cy.contains('p', 'Kubernetes').click()
+    cy.findByDisplayValue('Kubernetes').should('be.checked')
+    cy.wait('@kubernetesYamlSnippet')
 
     // Got to Execution tab, 4 diff Execution Strategies should appear
     // Use Rolling strategy and check if respective step is added
     cy.contains('span', 'Execution').click()
-    cy.wait('@kubernetesYamlSnippet')
     cy.wait(1000)
     cy.contains('section', 'Rolling').should('be.visible')
     cy.contains('section', 'Blue Green').should('be.visible')

@@ -257,6 +257,70 @@ export const pipelineWithTagBuild = {
   ]
 }
 
+export const pipelineWithPRBuild = {
+  name: 'cipipeline',
+  identifier: 'cipipeline',
+  projectIdentifier: 'vbci',
+  orgIdentifier: 'default',
+  tags: {},
+  properties: {
+    ci: {
+      codebase: {
+        connectorRef: 'account.testGitConnectors',
+        build: {
+          type: 'PR',
+          spec: {}
+        }
+      }
+    }
+  },
+  stages: [
+    {
+      stage: {
+        name: 'S1',
+        identifier: 'S1',
+        type: 'CI',
+        spec: {
+          cloneCodebase: true,
+          infrastructure: {
+            type: 'KubernetesDirect',
+            spec: {
+              connectorRef: 'account.testGitConnectors',
+              namespace: 'harness-delegate-pmdemo'
+            }
+          },
+          execution: {
+            steps: [
+              {
+                step: {
+                  type: 'Run',
+                  name: 'print commit sha',
+                  identifier: 'print_commit_sha',
+                  spec: {
+                    connectorRef: 'account.testGitConnectors',
+                    image: '<+input>',
+                    command: 'echo <+codebase.commitSha>',
+                    privileged: false
+                  }
+                }
+              }
+            ]
+          },
+          serviceConfig: {
+            serviceRef: '',
+            serviceDefinition: {
+              type: 'Kubernetes',
+              spec: {
+                variables: []
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
+
 export const pipelineWithDeploymentStage = {
   name: 'cipipeline',
   identifier: 'cipipeline',

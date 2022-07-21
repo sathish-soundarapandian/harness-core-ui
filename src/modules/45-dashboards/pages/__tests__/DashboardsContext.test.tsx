@@ -14,7 +14,7 @@ import routes from '@common/RouteDefinitions'
 import { accountPathProps } from '@common/utils/routeUtils'
 import { DashboardsContextProvider, useDashboardsContext } from '../DashboardsContext'
 
-const wrapper = ({ children }: React.PropsWithChildren<unknown>) => (
+const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
   <TestWrapper
     path={routes.toCustomDashboardHome({ ...accountPathProps, folderId: ':folderId' })}
     pathParams={{ accountId: '1234', folderId: '5678' }}

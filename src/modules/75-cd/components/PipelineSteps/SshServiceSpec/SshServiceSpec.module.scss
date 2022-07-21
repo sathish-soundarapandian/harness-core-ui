@@ -1,0 +1,88 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.nopad-left {
+  padding-left: 0 !important;
+}
+
+.accordionSummary {
+  width: 100%;
+  background: var(--white);
+  margin-top: 0 !important;
+}
+.subheading {
+  font-weight: 600;
+}
+.inputheader {
+  font-weight: 600 !important;
+  font-size: var(--font-size-small) !important;
+}
+.manifestInfoTooltip {
+  margin-left: var(--spacing-small);
+}
+.inputWidth {
+  width: 50% !important;
+}
+
+.layoutVerticalSpacing {
+  margin-top: var(--spacing-main) !important;
+  .vertical-spacing-input {
+    margin-bottom: var(--spacing-small);
+  }
+  :global {
+    .bp3-form-group {
+      margin-bottom: 0;
+    }
+  }
+}
+.listLabel {
+  margin-bottom: var(--spacing-small);
+}
+.nestedAccordions {
+  box-shadow: none !important;
+}
+
+.serviceDefinition {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.sectionCard {
+  width: 1024px;
+  margin-top: var(--spacing-3);
+  padding: var(--spacing-7) !important;
+  &.notwide {
+    width: auto;
+  }
+  background-color: var(--white);
+}
+.tabSubHeading {
+  font-size: var(--font-size-normal);
+  color: var(--grey-800);
+  margin-bottom: var(--spacing-5);
+  font-weight: 600;
+}
+.accordionTitle {
+  background-color: transparent;
+}
+
+.tabHeading {
+  font-size: 16px;
+  color: var(--black);
+  margin-top: var(--spacing-7);
+  font-weight: 600;
+}
+
+.configFileVariablesTable {
+  & + & {
+    margin-top: var(--spacing-large);
+  }
+}
+
+.customVariables {
+  padding: 0 var(--spacing-large);
+}

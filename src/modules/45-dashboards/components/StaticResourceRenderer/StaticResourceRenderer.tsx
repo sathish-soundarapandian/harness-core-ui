@@ -49,7 +49,7 @@ const StaticResourceRenderer = <T extends ResourceHandlerTableData>({
         }
       }
     ],
-    [onResourceSelectionChange, resourceType]
+    [onResourceSelectionChange, columns, resourceType]
   )
 
   return <Table<T> columns={staticResourceColumns} data={data} bpTableProps={{ bordered: false }} hideHeaders={true} />

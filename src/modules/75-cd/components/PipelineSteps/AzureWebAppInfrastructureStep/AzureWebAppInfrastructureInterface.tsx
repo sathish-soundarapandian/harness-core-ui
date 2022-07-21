@@ -62,38 +62,6 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
           return true
         }
       })
-    }),
-    webApp: Yup.lazy((value): Yup.Schema<unknown> => {
-      /* istanbul ignore else */ if (typeof value === 'string') {
-        return Yup.string().required(getString('common.validation.fieldIsRequired', { name: 'Web App' }))
-      }
-      return Yup.object().test({
-        test(valueObj: SelectOption): boolean | Yup.ValidationError {
-          if (isEmpty(valueObj) || isEmpty(valueObj.value)) {
-            return this.createError({
-              message: getString('common.validation.fieldIsRequired', { name: 'Web App' })
-            })
-          }
-          return true
-        }
-      })
-    }),
-    deploymentSlot: Yup.lazy((value): Yup.Schema<unknown> => {
-      /* istanbul ignore else */ if (typeof value === 'string') {
-        return Yup.string().required(
-          getString('common.validation.fieldIsRequired', { name: 'Web App Deployment Slot' })
-        )
-      }
-      return Yup.object().test({
-        test(valueObj: SelectOption): boolean | Yup.ValidationError {
-          if (isEmpty(valueObj) || isEmpty(valueObj.value)) {
-            return this.createError({
-              message: getString('common.validation.fieldIsRequired', { name: 'Web App Deployment Slot' })
-            })
-          }
-          return true
-        }
-      })
     })
   })
 }

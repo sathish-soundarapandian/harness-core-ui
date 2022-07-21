@@ -77,7 +77,10 @@
     opacity: 0;
     right: 0;
   }
-  background: rgba(244, 251, 255, 0.25);
+  background: linear-gradient(90deg, var(--white) 9px, transparent 1%) center,
+    linear-gradient(#f6fcff 9px, transparent 1%) center, #bbc1c4;
+  background-size: 10px 10px;
+
   border-radius: 8px;
   border: dashed 1px var(--primary-4);
 

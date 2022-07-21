@@ -313,7 +313,7 @@ function DeployInfrastructures({
           }}
           text={
             isEditInfrastructure(selectedInfrastructure)
-              ? getString('common.editName', { name: getString('infrastructureText') })
+              ? getString('edit')
               : getString('common.plusNewName', { name: getString('infrastructureText') })
           }
           id={isEditInfrastructure(selectedInfrastructure) ? 'edit-infrastructure' : 'add-new-infrastructure'}

@@ -70,6 +70,10 @@ export const getTriggerIcon = ({
         return ArtifactIconByType.DockerRegistry
       case ENABLED_ARTIFACT_TYPES.Acr:
         return ArtifactIconByType.Acr
+      case ENABLED_ARTIFACT_TYPES.AmazonS3:
+        return ArtifactIconByType.AmazonS3
+      case ENABLED_ARTIFACT_TYPES.Jenkins:
+        return ArtifactIconByType.Jenkins
     }
   }
   return 'yaml-builder-trigger'

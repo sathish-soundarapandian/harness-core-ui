@@ -34,9 +34,10 @@ interface FileStoreNodeDTOWithScope extends FileStoreNodeDTO {
 
 interface UseFileStoreModalProps {
   applySelected: (file: any) => void
+  fileUsage?: string
 }
 
-const useFileStoreModal = ({ applySelected }: UseFileStoreModalProps): UseFileStoreModalReturn => {
+const useFileStoreModal = ({ applySelected, fileUsage }: UseFileStoreModalProps): UseFileStoreModalReturn => {
   const [activeTab, setActiveTab] = useState<string>(Scope.ACCOUNT)
   const { getString } = useStrings()
 
@@ -65,8 +66,6 @@ const useFileStoreModal = ({ applySelected }: UseFileStoreModalProps): UseFileSt
   }
 
   const handleCancelSelectedFile = (): void => {
-    applySelected({})
-    setSelectedFile({} as FileStoreNodeDTOWithScope)
     hideModal()
   }
 
@@ -77,7 +76,8 @@ const useFileStoreModal = ({ applySelected }: UseFileStoreModalProps): UseFileSt
 
   const commonProps = {
     isModalView: true,
-    onNodeChange: handleSelectFile
+    onNodeChange: handleSelectFile,
+    fileUsage
   }
 
   const renderTab = (

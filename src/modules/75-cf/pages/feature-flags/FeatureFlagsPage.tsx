@@ -172,7 +172,9 @@ export const RenderColumnFlag: React.FC<RenderColumnFlagProps> = ({
         <Text font={{ weight: 'bold' }} color={Color.WHITE} padding={{ bottom: 'large' }}>
           {getString('cf.noEnvironment.title')}
         </Text>
-        <Text color={Color.GREY_200}>{getString('cf.noEnvironment.message')}</Text>
+        <Text color={Color.GREY_200}>
+          <String stringID={'cf.noEnvironment.message'} useRichText />
+        </Text>
       </Layout.Vertical>
     </Popover>
   )

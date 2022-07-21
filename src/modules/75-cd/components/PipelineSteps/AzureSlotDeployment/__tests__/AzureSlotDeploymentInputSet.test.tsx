@@ -17,11 +17,19 @@ import AzureSlotDeploymentInputSet from '../AzureSlotDeploymentInputSet'
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 const initialValues = {
-  timeout: '10m'
+  timeout: '10m',
+  spec: {
+    webApp: 'webApp',
+    deploymentSlot: 'deploymentSlot'
+  }
 }
 
 const template: any = {
-  timeout: RUNTIME_INPUT_VALUE
+  timeout: RUNTIME_INPUT_VALUE,
+  spec: {
+    webApp: RUNTIME_INPUT_VALUE,
+    deploymentSlot: RUNTIME_INPUT_VALUE
+  }
 }
 
 describe('Test Azure Slot Deployment input set', () => {

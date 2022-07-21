@@ -32,7 +32,7 @@ interface ControlPosition {
   y: number
 }
 
-const DEFAULT_POSITION: ControlPosition = { x: 30, y: 60 }
+const DEFAULT_POSITION: ControlPosition = { x: 30, y: 80 }
 export interface PipelineGraphProps {
   data: PipelineGraphState[]
   fireEvent: (event: any) => void

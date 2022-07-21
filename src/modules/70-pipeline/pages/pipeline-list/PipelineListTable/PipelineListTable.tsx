@@ -31,10 +31,6 @@ interface PipelineListTableProps {
   sortBy?: string[]
 }
 
-type CustomColumn<T extends Record<string, any>> = Column<T> & {
-  accessor: keyof PMSPipelineSummaryResponse
-} & Partial<PipelineListTableProps>
-
 export function PipelineListTable({
   data,
   gotoPage,
@@ -53,20 +49,22 @@ export function PipelineListTable({
   } = data || ({} as PagePMSPipelineSummaryResponse)
   const [currentSort, currentOrder] = sortBy || []
 
-  const getServerSortProps = (accessor: string) => ({
-    enableServerSort: true,
-    isServerSorted: currentSort === accessor,
-    isServerSortedDesc: currentOrder === 'DESC',
-    getSortedColumn: ({ sort }: SortBy) => {
-      setSortBy([sort, currentOrder === 'DESC' ? 'ASC' : 'DESC'])
+  const columns: Column<PMSPipelineSummaryResponse>[] = React.useMemo(() => {
+    const getServerSortProps = (id: string) => {
+      return {
+        enableServerSort: true,
+        isServerSorted: currentSort === id,
+        isServerSortedDesc: currentOrder === 'DESC',
+        getSortedColumn: ({ sort }: SortBy) => {
+          setSortBy([sort, currentOrder === 'DESC' ? 'ASC' : 'DESC'])
+        }
+      }
     }
-  })
-  const columns: CustomColumn<PMSPipelineSummaryResponse>[] = React.useMemo(
-    () => [
+    return [
       {
         Header: getString('filters.executions.pipelineName'),
         accessor: 'name',
-        width: '20%',
+        width: '25%',
         Cell: PipelineNameCell,
         serverSortProps: getServerSortProps('name')
       },
@@ -79,17 +77,17 @@ export function PipelineListTable({
       },
       {
         Header: getString('pipeline.recentTenExecutions').toUpperCase(),
-        accessor: 'executionSummaryInfo',
-        width: '30%',
+        accessor: 'recentTenExecutions',
+        width: '25%',
         Cell: RecentTenExecutionsCell,
         disableSortBy: true
       },
       {
         Header: getString('pipeline.lastExecution').toUpperCase(),
-        accessor: 'description',
+        accessor: 'executionSummaryInfo.lastExecutionTs',
         width: '20%',
-        disableSortBy: true,
-        Cell: LastExecutionCell
+        Cell: LastExecutionCell,
+        serverSortProps: getServerSortProps('executionSummaryInfo.lastExecutionTs')
       },
       {
         Header: getString('pipeline.lastModified').toUpperCase(),
@@ -100,19 +98,18 @@ export function PipelineListTable({
       },
       {
         Header: '',
-        accessor: 'version',
+        accessor: 'menu',
         width: '5%',
         Cell: MenuCell,
         disableSortBy: true,
         onDeletePipeline,
         onDelete
       }
-    ],
-    []
-  )
+    ] as unknown as Column<PMSPipelineSummaryResponse>[]
+  }, [currentOrder, currentSort])
 
   return (
-    <TableV2<PMSPipelineSummaryResponse>
+    <TableV2
       className={css.table}
       columns={columns}
       data={content}

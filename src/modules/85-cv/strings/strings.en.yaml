@@ -481,7 +481,6 @@ monitoredServices:
   changeMonitoredServiceType: Change Monitored Service Type
   changeMonitoredServiceTypeMessage: Changing monitored service type will reset change sources
   sloErrorBudget: SLO / Error Budget
-  executedBy: Executed By
   serviceHealth:
     last4Hrs: Last 4 hours
     last24Hrs: Last 24 hours

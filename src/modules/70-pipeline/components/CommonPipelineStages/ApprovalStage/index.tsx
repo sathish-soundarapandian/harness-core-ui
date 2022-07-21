@@ -36,7 +36,6 @@ const getStageEditorImplementation = (
     iconsStyle={{ color: 'var(--pipeline-approval-stage-color)' }}
     isDisabled={!isEnabled}
     isApproval={true}
-    isTemplateSupported={true}
   />
 )
 

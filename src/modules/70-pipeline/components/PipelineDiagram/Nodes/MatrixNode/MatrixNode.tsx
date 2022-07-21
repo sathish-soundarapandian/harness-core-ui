@@ -24,6 +24,7 @@ import { BaseReactComponentProps, NodeType, PipelineGraphState, PipelineGraphTyp
 import { getPositionOfAddIcon } from '../utils'
 import { getPipelineGraphData } from '../../PipelineGraph/PipelineGraphUtils'
 import { NodeStatusIndicator } from '../NodeStatusIndicator'
+import MatrixNodeLabelWrapper from '../MatrixNodeLabelWrapper'
 import css from './MatrixNode.module.scss'
 import defaultCss from '../DefaultNode/DefaultNode.module.scss'
 
@@ -158,16 +159,7 @@ export function MatrixNode(props: any): JSX.Element {
   return (
     <>
       <div style={{ position: 'relative' }}>
-        <Layout.Horizontal
-          className={cx(css.matrixLabel, {
-            [css.marginTop]: props?.isParallelNode
-          })}
-        >
-          <Icon size={16} name="looping" style={{ marginRight: '5px' }} color={Color.WHITE} />
-          <Text color={Color.WHITE} font="small" style={{ paddingRight: '5px' }}>
-            {props?.data?.nodeType}
-          </Text>
-        </Layout.Horizontal>
+        <MatrixNodeLabelWrapper isParallelNode={props?.isParallelNode} nodeType={props?.data?.nodeType} />
         <div
           onMouseOver={e => {
             e.stopPropagation()
@@ -213,7 +205,6 @@ export function MatrixNode(props: any): JSX.Element {
             <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
               <Layout.Horizontal
                 spacing="small"
-                style={{ width: '60%' }}
                 onMouseOver={e => {
                   e.stopPropagation()
                 }}

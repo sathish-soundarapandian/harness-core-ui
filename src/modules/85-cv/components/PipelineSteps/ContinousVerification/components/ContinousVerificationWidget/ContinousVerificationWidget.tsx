@@ -17,7 +17,6 @@ import { useStrings } from 'framework/strings'
 
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { ContinousVerificationData } from '../../types'
 import type { ContinousVerificationWidgetProps } from './types'
 import { ContinousVerificationWidgetSections } from './components/ContinousVerificationWidgetSections/ContinousVerificationWidgetSections'
@@ -40,7 +39,6 @@ export function ContinousVerificationWidget(
     }
   }
   const { getString } = useStrings()
-  const { CVNG_TEMPLATE_VERIFY_STEP } = useFeatureFlags()
 
   const validateForm = (formData: ContinousVerificationData): FormikErrors<ContinousVerificationData> => {
     let errors: FormikErrors<ContinousVerificationData> = {}
@@ -93,14 +91,10 @@ export function ContinousVerificationWidget(
         onUpdate?.(submit)
       }}
       validate={data => {
-        if (CVNG_TEMPLATE_VERIFY_STEP) {
-          const errors = validateForm(data)
-          if (!isEmpty(errors)) {
-            onChange?.(data)
-            return errors
-          } else {
-            onChange?.(data)
-          }
+        const errors = validateForm(data)
+        if (!isEmpty(errors)) {
+          onChange?.(data)
+          return errors
         } else {
           onChange?.(data)
         }

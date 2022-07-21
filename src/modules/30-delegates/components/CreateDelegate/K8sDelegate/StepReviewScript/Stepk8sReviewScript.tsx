@@ -24,9 +24,8 @@ import {
 import type { K8sDelegateWizardData } from '../DelegateSetupStep/DelegateSetupStep'
 
 import { DelegateType } from '../DelegateSetupStep/DelegateSetupStep.types'
+import { DelegateFileName } from '../K8sDelegate.constants'
 import css from '../CreateK8sDelegate.module.scss'
-
-const k8sFileName = 'harness-delegate-values.yaml'
 
 const Stepk8ReviewScript: React.FC<StepProps<K8sDelegateWizardData>> = props => {
   const { prevStepData } = props
@@ -51,6 +50,7 @@ const Stepk8ReviewScript: React.FC<StepProps<K8sDelegateWizardData>> = props => 
   const [generatedYaml, setGeneratedYaml] = React.useState<string>()
   const delegateType = prevStepData?.delegateYaml?.delegateType || DelegateType.KUBERNETES
   const isDelegateTypeHelm = delegateType === DelegateType.HELM_CHART
+  const delegateFileName = isDelegateTypeHelm ? DelegateFileName.helmFileName : DelegateFileName.k8sFileName
 
   const onGenYaml = async (): Promise<void> => {
     const data = prevStepData?.delegateYaml || {}
@@ -78,7 +78,7 @@ const Stepk8ReviewScript: React.FC<StepProps<K8sDelegateWizardData>> = props => 
     if (linkRef?.current) {
       const content = new Blob([generatedYaml as BlobPart], { type: 'data:text/plain;charset=utf-8' })
       linkRef.current.href = window.URL.createObjectURL(content)
-      linkRef.current.download = k8sFileName
+      linkRef.current.download = delegateFileName
       linkRef.current.click()
     }
   }
@@ -89,7 +89,7 @@ const Stepk8ReviewScript: React.FC<StepProps<K8sDelegateWizardData>> = props => 
           <div className={css.collapseDiv}>
             <YamlBuilder
               entityType="Delegates"
-              fileName={k8sFileName}
+              fileName={delegateFileName}
               isReadOnlyMode={true}
               isEditModeSupported={false}
               hideErrorMesageOnReadOnlyMode={true}

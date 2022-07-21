@@ -122,6 +122,7 @@ queueStep:
   scope: Run next queued execution after completion of
   queuedExecutions: Queued Executions
   queuedByResourceKey: 'Queued by Resource Key:'
+  noQueuedExecutions: No queued executions
 jenkinsStep:
   addJobParameters: Add Job Parameter
   validations:
@@ -588,7 +589,7 @@ artifactTriggerConfigPanel:
   runtimeInput: 'Runtime Input'
   chartVersionRuntimeInput: 'Some {{artifact}} references may be unselectable because {{ runTimeStr }} must be a runtime input.'
   artifactReferenceUnique: 'Some {{artifact}} references may not be available for selection because they must be unique and not from a previous stage'
-  tagArtifactPath: Tag or Artifact Path
+  tagArtifactPathBuild: Tag or Artifact Path or Build
 dashboards:
   failedBuilds: Failed Builds
   activeBuilds: Active Builds
@@ -876,9 +877,11 @@ ciCodebase:
     optionalPrCloneStrategy: Value must be one of these values [{{values}}]. You may use the default value provided.
     optionalLimitMemory: Invalid Limit Memory. To learn more, hover over the Set Container Resources tooltip. You may use the default value provided.
     optionalLimitCPU: Invalid Limit CPU. To learn more, hover over the Set Container Resources tooltip. You may use the default value provided.
+    pullRequestNumber: Pull Request Number must be a positive integer.
 tagDependencyRequired: required to fetch the tags
 artifactPathDependencyRequired: required to fetch the artifact paths
 artifactRepositoryDependencyRequired: 'Artifactory Connector is required to fetch repositories. You can make this field Runtime input otherwise.'
+dependencyRequired: 'Connector is required to fetch buckets'
 myDeploymentsText: My Deployments
 myBuildsText: My Builds
 mySecurityTestsText: My Security Tests
@@ -1042,6 +1045,7 @@ executionList:
   servicesDeployedText: 'Services deployed ({{size}})'
   artifactDeployedText: 'Artifacts deployed ({{size}})'
   EnvironmentsText: 'Environments ({{size}})'
+
 replacedExpressions: Replaced Expressions
 expressionRequired: Expression value is required.
 nativeHelm: Native Helm
@@ -1163,6 +1167,21 @@ ACR:
   repositoryPlaceholder: 'Select or add Repository'
   repositoryError: 'No repository found with given Registry'
   tagError: 'No tags found with given Connector, Subscription Id, Registry and Repository'
+configFiles:
+  title: 'Config File {{type}}'
+  source: 'Config File Source'
+  selectFileType: 'Select file type'
+  plainText: 'Plain text'
+  identifierLabel: 'Config File Identifier'
+  encryptedFiles: 'Encrypted file(s)'
+  fileType: 'File Type'
+  encryptedLocation: 'Secrets Manager Name'
+  addConfigFile: '+ Add Config File'
+  error:
+    fileType: 'File type is required'
+    identifier: 'Config file identifier is required'
+    files: 'File(s) is required'
+    file: 'This field is required'
 OverviewEmptyStates:
   createPipelineHeaderMsg: Set up a Pipeline and run your first deployment!
   createPipelineInfo: A Harness Pipeline is a series of stages that performs operations like building and deploying software.
@@ -1182,16 +1201,14 @@ recentTenExecutions: 'Recent 10 Executions'
 lastExecution: 'Last Execution'
 lastModified: 'Last Modified'
 executionId: Execution Id
-lastExecutedBy: Last Executed By
 imageTag: 'image: {{image}}'
+fileSource: 'File Source'
+fileDetails: 'File Details'
 appServiceConfig:
   title: App Services Configuration
   applicationSettings:
     name: Application Settings
     file: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File'
-    scriptFile: '{{$.pipeline.appServiceConfig.applicationSettings.name}} Script File'
-    scriptFileSource: '{{$.pipeline.appServiceConfig.applicationSettings.name}} Script File Source'
-    scriptFileDetails: '{{$.pipeline.appServiceConfig.applicationSettings.name}} Script File Details'
     fileDetails: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File Details'
     fileSource: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File Source'
     filePath: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File Path'
@@ -1199,9 +1216,6 @@ appServiceConfig:
   connectionStrings:
     name: Connection Strings
     file: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File'
-    scriptFile: '{{$.pipeline.appServiceConfig.connectionStrings.name}} Script File'
-    scriptFileSource: '{{$.pipeline.appServiceConfig.connectionStrings.name}} Script File Source'
-    scriptFileDetails: '{{$.pipeline.appServiceConfig.connectionStrings.name}} Script File Details'
     fileDetails: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Details'
     fileSource: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Source'
     filePath: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Path'
@@ -1209,7 +1223,6 @@ appServiceConfig:
 startupScript:
   name: Startup Script
   subtitle: 'Specify Azure Web App Startup Script Type'
-  file: '{{$.pipeline.startupScript.name}} File'
   fileDetails: '{{$.pipeline.startupScript.name}} File Details'
   fileSource: '{{$.pipeline.startupScript.name}} File Source'
   scriptFilePath: 'Script File Path'

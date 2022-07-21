@@ -20,7 +20,8 @@ import {
   templateWithRuntimeTimeout,
   pipelineTemplateOriginalPipeline,
   pipelineTemplateTemplate,
-  pipelineTemplateResolvedPipeline
+  pipelineTemplateResolvedPipeline,
+  pipelineWithPRBuild
 } from './mock'
 
 jest.mock('@common/utils/YamlUtils', () => ({
@@ -87,6 +88,20 @@ describe('Test StepUtils', () => {
     expect(isMatch(errors, { properties: { ci: { codebase: { build: { spec: {} } } } } })).toBeTruthy()
     expect(has(errors, 'properties.ci.codebase.build.spec.tag')).toBeTruthy()
   })
+
+  test('Test validateCICodebase method for pipeline with PR build', () => {
+    const errors = validateCICodebase({
+      pipeline: pipelineWithPRBuild as PipelineInfoConfig,
+      originalPipeline: pipelineWithPRBuild as PipelineInfoConfig,
+      // eslint-disable-next-line
+      // @ts-ignore
+      template: pipelineTemplateWithRuntimeInput as PipelineInfoConfig,
+      viewType: StepViewType.InputSet
+    })
+    expect(isMatch(errors, { properties: { ci: { codebase: { build: { spec: {} } } } } })).toBeTruthy()
+    expect(has(errors, 'properties.ci.codebase.build.spec.number')).toBeTruthy()
+  })
+
   test('Test validateCodebase method for pipeline with deployment stage', () => {
     const errors = validatePipeline({
       pipeline: pipelineWithDeploymentStage as PipelineInfoConfig,

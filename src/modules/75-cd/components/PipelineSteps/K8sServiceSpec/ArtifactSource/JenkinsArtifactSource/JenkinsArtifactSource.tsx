@@ -32,6 +32,7 @@ import {
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -310,12 +311,13 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                     : getString('select')
                   : getString('select')
               }
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.jobName`)}
               value={getJobDetailsValue()}
               selectItems={jobDetails}
               selectWithSubmenuTypeInputProps={{
                 allowableTypes,
                 expressions,
-                width: 500,
+                width: 400,
                 selectWithSubmenuProps: {
                   loading: fetchingJobs,
                   items: jobDetails,
@@ -367,13 +369,14 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               label={getString('pipeline.artifactPathLabel')}
               name={`${path}.artifacts.${artifactPath}.spec.artifactPath`}
               useValue
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.artifactPath`)}
               placeholder={
                 fetchingArtifacts ? getString('loading') : getString('pipeline.selectArtifactPathPlaceholder')
               }
               multiTypeInputProps={{
                 onTypeChange: (type: MultiTypeInputType) =>
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.artifactPath`, type),
-                width: 500,
+                width: 400,
                 expressions,
                 allowableTypes,
                 onChange: (newFilePath: any) => {
@@ -402,16 +405,17 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               selectItems={artifactPaths || []}
             />
           )}
-          {isFieldRuntime(`artifacts.${artifactPath}.spec.build`, template) && (
+          {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.build`, template) && (
             <FormInput.MultiTypeInput
               label={getString('pipeline.jenkinsBuild')}
               name={`${path}.artifacts.${artifactPath}.spec.build`}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.build`)}
               useValue
               placeholder={fetchingBuild ? getString('loading') : getString('pipeline.selectJenkinsBuildsPlaceholder')}
               multiTypeInputProps={{
                 onTypeChange: (type: MultiTypeInputType) =>
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.build`, type),
-                width: 500,
+                width: 400,
                 expressions,
                 allowableTypes,
                 selectProps: {
@@ -421,6 +425,19 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 }
               }}
               selectItems={build || []}
+            />
+          )}
+
+          {!!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.build`, template) && (
+            <FormInput.MultiTextInput
+              label={getString('pipeline.jenkinsBuild')}
+              multiTextInputProps={{
+                expressions,
+                value: TriggerDefaultFieldList.build,
+                allowableTypes
+              }}
+              disabled={true}
+              name={`${path}.artifacts.${artifactPath}.spec.build`}
             />
           )}
         </Layout.Vertical>

@@ -16,6 +16,7 @@ import merge from 'lodash-es/merge'
 import {
   findAllByKey,
   PipelineContext,
+  PipelineContextInterface,
   PipelineContextType
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { getTemplateTypesByRef } from '@pipeline/utils/templateUtils'
@@ -40,28 +41,28 @@ import type {
   StageElementWrapperConfig,
   GetPipelineQueryParams
 } from 'services/pipeline-ng'
-import { PipelineStages, PipelineStagesProps } from '@pipeline/components/PipelineStages/PipelineStages'
-import { StageType } from '@pipeline/utils/stageHelpers'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
-import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { PipelineSelectionState } from '@pipeline/components/PipelineStudio/PipelineQueryParamState/usePipelineQueryParam'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
+import type { EntityGitDetails } from 'services/template-ng'
 
 export interface TemplatePipelineProviderProps {
   queryParams: GetPipelineQueryParams
   initialValue: PipelineInfoConfig
+  gitDetails: EntityGitDetails
   onUpdatePipeline: (pipeline: PipelineInfoConfig) => void
   contextType: PipelineContextType
   isReadOnly: boolean
+  renderPipelineStage?: PipelineContextInterface['renderPipelineStage']
 }
 
 export function TemplatePipelineProvider({
   queryParams,
   initialValue,
+  gitDetails,
   onUpdatePipeline,
   isReadOnly,
   contextType,
+  renderPipelineStage,
   children
 }: React.PropsWithChildren<TemplatePipelineProviderProps>): React.ReactElement {
   const allowableTypes: AllowedTypesWithRunTime[] = [
@@ -69,11 +70,6 @@ export function TemplatePipelineProvider({
     MultiTypeInputType.RUNTIME,
     MultiTypeInputType.EXPRESSION
   ]
-  const { licenseInformation } = useLicenseStore()
-  const isCDEnabled = useFeatureFlag(FeatureFlag.CDNG_ENABLED) && !!licenseInformation['CD']
-  const isCIEnabled = useFeatureFlag(FeatureFlag.CING_ENABLED) && !!licenseInformation['CI']
-  const isCFEnabled = useFeatureFlag(FeatureFlag.CFNG_ENABLED) && !!licenseInformation['CF']
-  const isSTOEnabled = useFeatureFlag(FeatureFlag.SECURITY_STAGE)
   const { getString } = useStrings()
   const [state, dispatch] = React.useReducer(PipelineReducer, initialState)
   const [view, setView] = useLocalStorage<SelectedView>('pipeline_studio_view', SelectedView.VISUAL)
@@ -89,21 +85,6 @@ export function TemplatePipelineProvider({
     },
     [state.pipeline, state.pipeline?.stages]
   )
-
-  const renderPipelineStage = (args: Omit<PipelineStagesProps, 'children'>) => {
-    return (
-      <PipelineStages {...args}>
-        {stagesCollection.getStage(StageType.BUILD, isCIEnabled, getString)}
-        {stagesCollection.getStage(StageType.DEPLOY, isCDEnabled, getString)}
-        {stagesCollection.getStage(StageType.APPROVAL, true, getString)}
-        {stagesCollection.getStage(StageType.FEATURE, isCFEnabled, getString)}
-        {stagesCollection.getStage(StageType.SECURITY, isSTOEnabled, getString)}
-        {stagesCollection.getStage(StageType.PIPELINE, false, getString)}
-        {stagesCollection.getStage(StageType.CUSTOM, true, getString)}
-        {stagesCollection.getStage(StageType.Template, false, getString)}
-      </PipelineStages>
-    )
-  }
 
   const updatePipeline = async (pipelineArg: PipelineInfoConfig | ((p: PipelineInfoConfig) => PipelineInfoConfig)) => {
     let pipeline = pipelineArg
@@ -155,7 +136,8 @@ export function TemplatePipelineProvider({
         pipeline: initialValue,
         originalPipeline: cloneDeep(initialValue),
         isBEPipelineUpdated: false,
-        isUpdated: false
+        isUpdated: false,
+        gitDetails
       })
     )
     if (templateRefs.length > 0) {
@@ -165,8 +147,8 @@ export function TemplatePipelineProvider({
           orgIdentifier: queryParams.orgIdentifier,
           projectIdentifier: queryParams.projectIdentifier,
           templateListType: 'Stable',
-          repoIdentifier: queryParams.repoIdentifier,
-          branch: queryParams.branch,
+          repoIdentifier: gitDetails.repoIdentifier,
+          branch: gitDetails.branch,
           getDefaultFromOtherRepo: true
         },
         templateRefs
@@ -230,7 +212,7 @@ export function TemplatePipelineProvider({
 
   React.useEffect(() => {
     fetchPipeline()
-  }, [initialValue])
+  }, [initialValue, gitDetails])
 
   return (
     <PipelineContext.Provider
@@ -246,7 +228,7 @@ export function TemplatePipelineProvider({
         setSchemaErrorView,
         stagesMap: stagesCollection.getAllStagesAttributes(getString),
         getStageFromPipeline,
-        renderPipelineStage,
+        renderPipelineStage: renderPipelineStage || (() => <></>),
         fetchPipeline: Promise.resolve,
         updateGitDetails: Promise.resolve,
         updatePipelineStoreMetadata: Promise.resolve,

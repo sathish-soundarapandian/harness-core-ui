@@ -298,36 +298,6 @@ describe('ServiceNow Update tests', () => {
     })
   })
 
-  test('Template section is disabled for - CHANGE TASK ticket type', async () => {
-    const ref = React.createRef<StepFormikRef<unknown>>()
-    const props = { ...getServiceNowUpdateEditModePropsWithValues() }
-    props.initialValues.spec = {
-      useServiceNowTemplate: false,
-      connectorRef: 'cid1',
-      ticketType: 'CHANGE_TASK',
-      ticketNumber: '<+ticketNumber>',
-      fieldType: FieldType.ConfigureFields,
-      templateName: undefined,
-      fields: [
-        { name: 'short_description', value: 'short description' },
-        { name: 'description', value: 'descriptionval' }
-      ]
-    }
-
-    const { container } = render(
-      <TestStepWidget
-        initialValues={props.initialValues}
-        type={StepType.ServiceNowUpdate}
-        stepViewType={StepViewType.Edit}
-        ref={ref}
-        onUpdate={props.onUpdate}
-      />
-    )
-    const createFromTemplate = queryByAttribute('value', container, 'CreateFromTemplate')
-
-    expect(createFromTemplate).toHaveProperty('disabled')
-  })
-
   test('Minimum time cannot be less than 10s', () => {
     const response = new ServiceNowUpdate().validateInputSet({
       data: {

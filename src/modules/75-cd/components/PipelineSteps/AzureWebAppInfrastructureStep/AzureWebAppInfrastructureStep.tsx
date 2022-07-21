@@ -14,8 +14,6 @@ import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import {
-  getAzureWebAppNamesPromise,
-  getAzureWebAppDeploymentSlotsPromise,
   getAzureResourceGroupsBySubscriptionPromise,
   getAzureSubscriptionsPromise,
   getConnectorListV2Promise,
@@ -45,15 +43,9 @@ const logger = loggerFor(ModuleName.CD)
 const yamlErrorMessage = 'cd.parsingYamlError'
 
 export interface AzureWebAppInfrastructureUI
-  extends Omit<
-    AzureWebAppInfrastructure,
-    'subscriptionId' | 'webApp' | 'resourceGroup' | 'deploymentSlot' | 'targetSlot'
-  > {
+  extends Omit<AzureWebAppInfrastructure, 'subscriptionId' | 'resourceGroup'> {
   subscriptionId: AzureFieldTypes
-  webApp: AzureFieldTypes
-  deploymentSlot: AzureFieldTypes
   resourceGroup: AzureFieldTypes
-  targetSlot?: AzureFieldTypes
 }
 
 const AzureWebAppInfrastructureSpecVariablesForm: React.FC<AzureWebAppInfrastructureSpecEditableProps> = ({
@@ -79,9 +71,6 @@ interface AzureWebAppInfrastructureSpecStep extends AzureWebAppInfrastructure {
 const AzureWebAppConnectorRegex = /^.+infrastructure\.infrastructureDefinition\.spec\.connectorRef$/
 const AzureWebAppSubscriptionRegex = /^.+infrastructure\.infrastructureDefinition\.spec\.subscriptionId$/
 const AzureWebAppResourceGroupRegex = /^.+infrastructure\.infrastructureDefinition\.spec\.resourceGroup$/
-const AzureWebAppWebAppRegex = /^.+infrastructure\.infrastructureDefinition\.spec\.webApp$/
-const AzureWebAppDeploymentSlotRegex = /^.+infrastructure\.infrastructureDefinition\.spec\.deploymentSlot$/
-const AzureWebAppTargetSlotRegex = /^.+infrastructure\.infrastructureDefinition\.spec\.targetSlot$/
 const AzureWebAppType = 'AzureWebApp'
 
 export class AzureWebAppInfrastructureSpec extends PipelineStep<AzureWebAppInfrastructureSpecStep> {
@@ -90,11 +79,7 @@ export class AzureWebAppInfrastructureSpec extends PipelineStep<AzureWebAppInfra
   protected defaultValues: AzureWebAppInfrastructure = {
     connectorRef: '',
     subscriptionId: '',
-    webApp: '',
-    resourceGroup: '',
-    deploymentSlot: '',
-    targetSlot: '',
-    releaseName: ''
+    resourceGroup: ''
   }
 
   protected stepIcon: IconName = 'azurewebapp'
@@ -111,9 +96,6 @@ export class AzureWebAppInfrastructureSpec extends PipelineStep<AzureWebAppInfra
     this.invocationMap.set(AzureWebAppConnectorRegex, this.getConnectorsListForYaml.bind(this))
     this.invocationMap.set(AzureWebAppSubscriptionRegex, this.getSubscriptionListForYaml.bind(this))
     this.invocationMap.set(AzureWebAppResourceGroupRegex, this.getResourceGroupListForYaml.bind(this))
-    this.invocationMap.set(AzureWebAppWebAppRegex, this.getWebAppListForYaml.bind(this))
-    this.invocationMap.set(AzureWebAppDeploymentSlotRegex, this.getDeploymentSlotListForYaml.bind(this))
-    this.invocationMap.set(AzureWebAppTargetSlotRegex, this.getDeploymentSlotListForYaml.bind(this))
 
     this._hasStepVariables = true
   }
@@ -255,112 +237,6 @@ export class AzureWebAppInfrastructureSpec extends PipelineStep<AzureWebAppInfra
     return Promise.resolve([])
   }
 
-  protected getWebAppListForYaml(
-    path: string,
-    yaml: string,
-    params: Record<string, unknown>
-  ): Promise<CompletionItemInterface[]> {
-    let pipelineObj
-    try {
-      pipelineObj = parse(yaml)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      /* istanbul ignore next */ logger.error(yamlErrorMessage, err)
-    }
-    const { accountId, projectIdentifier, orgIdentifier } = params as {
-      accountId: string
-      orgIdentifier: string
-      projectIdentifier: string
-    }
-    // /* istanbul ignore else */
-    if (pipelineObj) {
-      const obj = get(pipelineObj, path.replace('.spec.webApp', ''))
-      if (
-        obj?.type === AzureWebAppType &&
-        obj?.spec?.connectorRef &&
-        getMultiTypeFromValue(obj.spec?.connectorRef) === MultiTypeInputType.FIXED &&
-        obj?.spec?.subscriptionId &&
-        getMultiTypeFromValue(obj.spec?.subscriptionId) === MultiTypeInputType.FIXED &&
-        obj?.spec?.resourceGroup &&
-        getMultiTypeFromValue(obj.spec?.resourceGroup) === MultiTypeInputType.FIXED
-      ) {
-        return getAzureWebAppNamesPromise({
-          queryParams: {
-            accountIdentifier: accountId,
-            orgIdentifier,
-            projectIdentifier,
-            connectorRef: obj.spec?.connectorRef
-          },
-          subscriptionId: obj.spec?.subscriptionId,
-          resourceGroup: obj.spec?.resourceGroup
-        }).then(
-          response =>
-            response?.data?.webAppNames?.map(name => ({
-              label: name,
-              insertText: name,
-              kind: CompletionItemKind.Field
-            })) || /* istanbul ignore next */ []
-        )
-      }
-    }
-
-    return Promise.resolve([])
-  }
-  protected getDeploymentSlotListForYaml(
-    path: string,
-    yaml: string,
-    params: Record<string, unknown>
-  ): Promise<CompletionItemInterface[]> {
-    let pipelineObj
-    try {
-      pipelineObj = parse(yaml)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      /* istanbul ignore next */ logger.error(yamlErrorMessage, err)
-    }
-    const { accountId, projectIdentifier, orgIdentifier } = params as {
-      accountId: string
-      orgIdentifier: string
-      projectIdentifier: string
-    }
-    // /* istanbul ignore else */
-    if (pipelineObj) {
-      const obj = get(pipelineObj, path.replace('.spec.deploymentSlot', ''))
-      if (
-        obj?.type === AzureWebAppType &&
-        obj?.spec?.connectorRef &&
-        getMultiTypeFromValue(obj.spec?.connectorRef) === MultiTypeInputType.FIXED &&
-        obj?.spec?.subscriptionId &&
-        getMultiTypeFromValue(obj.spec?.subscriptionId) === MultiTypeInputType.FIXED &&
-        obj?.spec?.resourceGroup &&
-        getMultiTypeFromValue(obj.spec?.resourceGroup) === MultiTypeInputType.FIXED &&
-        obj?.spec?.webApp &&
-        getMultiTypeFromValue(obj.spec?.webApp) === MultiTypeInputType.FIXED
-      ) {
-        return getAzureWebAppDeploymentSlotsPromise({
-          queryParams: {
-            accountIdentifier: accountId,
-            orgIdentifier,
-            projectIdentifier,
-            connectorRef: obj.spec?.connectorRef
-          },
-          subscriptionId: obj.spec?.subscriptionId,
-          resourceGroup: obj.spec?.resourceGroup,
-          webAppName: obj.spec?.webApp
-        }).then(
-          response =>
-            response?.data?.deploymentSlots?.map(slot => ({
-              label: slot.type,
-              insertText: slot.name,
-              kind: CompletionItemKind.Field
-            })) || /* istanbul ignore next */ []
-        )
-      }
-    }
-
-    return Promise.resolve([])
-  }
-
   validateInputSet({
     data,
     template,
@@ -389,16 +265,6 @@ export class AzureWebAppInfrastructureSpec extends PipelineStep<AzureWebAppInfra
       getMultiTypeFromValue(template?.resourceGroup) === MultiTypeInputType.RUNTIME
     ) {
       errors.resourceGroup = getString?.('common.validation.fieldIsRequired', { name: getString(resourceGroupLabel) })
-    }
-    if (isEmpty(data.webApp) && isRequired && getMultiTypeFromValue(template?.webApp) === MultiTypeInputType.RUNTIME) {
-      errors.webApp = getString?.('common.validation.fieldIsRequired', { name: 'Web App' })
-    }
-    if (
-      isEmpty(data.deploymentSlot) &&
-      isRequired &&
-      getMultiTypeFromValue(template?.deploymentSlot) === MultiTypeInputType.RUNTIME
-    ) {
-      errors.deploymentSlot = getString?.('common.validation.fieldIsRequired', { name: 'Web App Deployment Slot' })
     }
     return errors
   }

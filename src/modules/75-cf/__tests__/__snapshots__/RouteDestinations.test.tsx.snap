@@ -357,6 +357,8 @@ Array [
           "title": "Feature Flags",
         }
       }
+      templateStudioComponent={[Function]}
+      templateStudioPageName="CFTemplateStudioWrapper"
     />
     <ConnectorRouteDestinations
       licenseRedirectData={

@@ -429,7 +429,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     <Layout.Vertical
       padding={{ left: 'huge', right: 'huge', top: 'huge' }}
       flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
-      height="100%"
+      className={css.wizard}
     >
       <Container padding={{ top: 'large', bottom: 'large' }}>
         <MultiStepProgressIndicator

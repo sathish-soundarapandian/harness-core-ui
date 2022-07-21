@@ -50,6 +50,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
 import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useRunPipelineFormContext } from '@pipeline/context/RunPipelineFormContext'
 import AddEditEnvironmentModal from '../AddEditEnvironmentModal'
 import { isEditEnvironment } from '../utils'
@@ -64,6 +65,7 @@ interface DeployEnvironmentProps {
   serviceRef?: string
   path?: string
   gitOpsEnabled?: boolean
+  stepViewType?: StepViewType
 }
 
 function DeployEnvironment({
@@ -73,12 +75,20 @@ function DeployEnvironment({
   allowableTypes,
   serviceRef,
   path,
-  gitOpsEnabled
+  gitOpsEnabled,
+  stepViewType
 }: DeployEnvironmentProps) {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
+
+  const [environments, setEnvironments] = useState<EnvironmentResponseDTO[]>()
+  const [selectedEnvironment, setSelectedEnvironment] = useState<EnvironmentResponseDTO>()
+  const [environmentsSelectOptions, setEnvironmentsSelectOptions] = useState<SelectOption[]>()
+  const [environmentRefType, setEnvironmentRefType] = useState<MultiTypeInputType>(
+    getMultiTypeFromValue(initialValues.environment?.environmentRef)
+  )
 
   const {
     data: environmentsResponse,
@@ -93,7 +103,8 @@ function DeployEnvironment({
     body: {
       filterType: 'Environment'
     },
-    lazy: !orgIdentifier
+    lazy:
+      !orgIdentifier || (stepViewType === StepViewType.InputSet && environmentRefType === MultiTypeInputType.RUNTIME)
   })
 
   const {
@@ -112,12 +123,6 @@ function DeployEnvironment({
     lazy: true
   })
 
-  const [environments, setEnvironments] = useState<EnvironmentResponseDTO[]>()
-  const [selectedEnvironment, setSelectedEnvironment] = useState<EnvironmentResponseDTO>()
-  const [environmentsSelectOptions, setEnvironmentsSelectOptions] = useState<SelectOption[]>()
-  const [environmentRefType, setEnvironmentRefType] = useState<MultiTypeInputType>(
-    getMultiTypeFromValue(initialValues.environment?.environmentRef)
-  )
   const { template: getTemplate, updateTemplate } = useRunPipelineFormContext()
 
   useEffect(() => {
@@ -203,13 +208,25 @@ function DeployEnvironment({
         }
       })
       const environmentValues = get(formik?.values, `${path}`)
+
       if (environmentValues) {
-        delete environmentValues.environmentInputs
-        delete environmentValues.serviceOverrideInputs
+        if (environmentValues.environmentRef === RUNTIME_INPUT_VALUE) {
+          environmentValues.environmentInputs = RUNTIME_INPUT_VALUE
+          environmentValues.serviceOverrideInputs = RUNTIME_INPUT_VALUE
+        } else {
+          delete environmentValues.environmentInputs
+          delete environmentValues.serviceOverrideInputs
+        }
+
         formik?.setFieldValue(path, {
           ...environmentValues,
-          ...(!gitOpsEnabled && { infrastructureDefinitions: [] }),
-          ...(gitOpsEnabled && { gitOpsClusters: [] })
+          ...(!gitOpsEnabled && {
+            infrastructureDefinitions:
+              environmentValues.environmentRef === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : []
+          }),
+          ...(gitOpsEnabled && {
+            gitOpsClusters: environmentValues.environmentRef === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : []
+          })
         })
         updateTemplate(updatedTemplate, path)
       }
@@ -385,7 +402,7 @@ function DeployEnvironment({
           }}
           text={
             isEditEnvironment(selectedEnvironment)
-              ? getString('common.editName', { name: getString('environment') })
+              ? getString('edit')
               : getString('common.plusNewName', { name: getString('environment') })
           }
           id={isEditEnvironment(selectedEnvironment) ? 'edit-environment' : 'add-new-environment'}

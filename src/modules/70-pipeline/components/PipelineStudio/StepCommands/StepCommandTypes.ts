@@ -15,7 +15,7 @@ import type {
 } from 'services/cd-ng'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { TemplateStepNode, TemplateLinkConfig } from 'services/pipeline-ng'
+import type { TemplateStepNode, TemplateLinkConfig, EntityGitDetails } from 'services/pipeline-ng'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 
 export enum AdvancedPanels {
@@ -49,6 +49,7 @@ export interface StepCommandsProps {
   className?: string
   viewType?: StepCommandsViews
   allowableTypes: AllowedTypes
+  gitDetails?: EntityGitDetails
 }
 
 export enum TabTypes {

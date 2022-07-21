@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import type { ExecutionNode } from 'services/pipeline-ng'
+import { ExecutionNode, ResourceConstraintDetail, useGetResourceConstraintsExecutionInfo } from 'services/pipeline-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import { QueueStepView } from '../QueueStepView/QueueStepView'
 
@@ -53,13 +53,67 @@ const step: ExecutionNode = {
   strategyMetadata: undefined
 }
 
+jest.mock('services/pipeline-ng', () => ({
+  useGetResourceConstraintsExecutionInfo: jest.fn(() => ({}))
+}))
+
+const mockData = (resourceConstraints: ResourceConstraintDetail[]) => {
+  // eslint-disable-next-line
+  // @ts-ignore
+  useGetResourceConstraintsExecutionInfo.mockImplementation(() => ({
+    refetch: jest.fn(),
+    mutate: jest.fn(),
+    loading: false,
+    data: {
+      correlationId: '',
+      status: 'SUCCESS',
+      metaData: null as unknown as undefined,
+      data: {
+        resourceConstraints
+      }
+    }
+  }))
+}
+
 describe('Queue Step View Test', () => {
-  test('snapshot test', () => {
+  test('snapshot test - empty resourceConstraints', () => {
+    mockData([])
     const { container } = render(
       <TestWrapper>
         <QueueStepView step={step} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
+  })
+
+  test('test - have resourceConstraints', () => {
+    mockData([
+      {
+        accountId: 'ACCOUNT_ID_1',
+        orgIdentifier: 'ORG_1',
+        pipelineIdentifier: 'PIPELINE_1',
+        pipelineName: 'ishant pipeline',
+        planExecutionId: 'PLAN_EXECUTION_1',
+        projectIdentifier: 'PROJ_1',
+        state: 'ACTIVE',
+        startTs: 1658257698974
+      },
+      {
+        accountId: 'ACCOUNT_ID_1',
+        orgIdentifier: 'ORG_2',
+        pipelineIdentifier: 'PIPELINE_2',
+        pipelineName: 'ishant pipeline_2',
+        planExecutionId: 'PLAN_EXECUTION_2',
+        projectIdentifier: 'PROJ_12',
+        state: 'BLOCKED',
+        startTs: 1658257711585
+      }
+    ])
+    render(
+      <TestWrapper pathParams={{ executionIdentifier: 'PLAN_EXECUTION_1' }}>
+        <QueueStepView step={step} />
+      </TestWrapper>
+    )
+    expect(document.getElementsByClassName('detailsTab')[0]).toMatchSnapshot('2 resource constraints')
   })
 })

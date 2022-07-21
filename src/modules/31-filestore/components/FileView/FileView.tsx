@@ -32,7 +32,7 @@ export default function FileView(): React.ReactElement {
     >
       {error ? (
         <DeletedView error={error} />
-      ) : (
+      ) : !isModalView ? (
         <Tabs
           id={'serviceLandingPageTabs'}
           selectedTabId={activeTab}
@@ -56,6 +56,12 @@ export default function FileView(): React.ReactElement {
             },
             { id: FILE_VIEW_TAB.ACTIVITY_LOG, title: getString('activityLog'), panel: <div /> }
           ]}
+        />
+      ) : (
+        <FileDetails
+          handleError={(errorType: string) => {
+            setError(errorType)
+          }}
         />
       )}
     </Container>

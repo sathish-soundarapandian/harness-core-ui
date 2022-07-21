@@ -6,19 +6,21 @@
  */
 
 import React from 'react'
-import { fireEvent, render, waitFor, act, getByText } from '@testing-library/react'
+import { render, waitFor, waitForElementToBeRemoved, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import { CurrentLocation, TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
-import data from '@pipeline/pages/pipeline-deployment-list/__tests__/execution-list.json'
+import filters from '@pipeline/pages/execution-list/__mocks__/filters.json'
 import services from '@pipeline/pages/pipelines/__tests__/mocks/services.json'
 import deploymentTypes from '@pipeline/pages/pipelines/__tests__/mocks/deploymentTypes.json'
 import environments from '@pipeline/pages/pipelines/__tests__/mocks/environments.json'
-import filters from '@pipeline/pages/pipeline-deployment-list/__tests__/filters.json'
 import pipelines from '@pipeline/components/PipelineModalListView/__tests__/RunPipelineListViewMocks'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import { getMockFor_useGetPipeline } from '@pipeline/components/RunPipelineModal/__tests__/mocks'
+import executionList from '@pipeline/pages/execution-list/__mocks__/execution-list.json'
+import { useGetListOfExecutions } from 'services/pipeline-ng'
 import CIPipelineDeploymentList from '../CFPipelineDeploymentList'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder', () => ({ children }: { children: JSX.Element }) => (
@@ -30,12 +32,12 @@ const mockGetCallFunction = jest.fn()
 
 jest.mock('services/pipeline-ng', () => ({
   useGetExecutionData: jest.fn().mockReturnValue({}),
-  useGetPipelineSummary: getMockFor_useGetPipeline,
   useGetListOfExecutions: jest.fn(() => ({
-    mutate: jest.fn(() => Promise.resolve(data)),
+    mutate: jest.fn(() => Promise.resolve(executionList)),
     loading: false,
     cancel: jest.fn()
   })),
+  useGetPipelineSummary: getMockFor_useGetPipeline,
   useGetTemplateFromPipeline: jest.fn(() => ({ data: {} })),
   useGetPipeline: jest.fn(() => ({ data: {} })),
   useGetPipelineList: jest.fn().mockImplementation(args => {
@@ -114,6 +116,7 @@ describe('<CIPipelineDeploymentList /> tests', () => {
   afterAll(() => {
     jest.spyOn(global.Date, 'now').mockReset()
   })
+
   test('snapshot test', async () => {
     const { container, findAllByText } = render(
       <TestWrapper
@@ -130,14 +133,20 @@ describe('<CIPipelineDeploymentList /> tests', () => {
         <CIPipelineDeploymentList />
       </TestWrapper>
     )
-
+    await waitForElementToBeRemoved(() => screen.getByText('Loading, please wait...'))
     await waitFor(() => findAllByText('http_pipeline', { selector: '.pipelineName' }))
-
     expect(container).toMatchSnapshot()
   })
 
   test('call run pipeline', async () => {
-    const { container, getByTestId } = render(
+    const useGetListOfExecutionsMock = useGetListOfExecutions as jest.MockedFunction<any>
+    useGetListOfExecutionsMock.mockImplementation(() => ({
+      mutate: jest.fn(() => Promise.resolve({})),
+      loading: false,
+      cancel: jest.fn()
+    }))
+
+    const { getByTestId } = render(
       <TestWrapper
         path={TEST_PATH}
         pathParams={{
@@ -152,12 +161,9 @@ describe('<CIPipelineDeploymentList /> tests', () => {
         <ComponentWrapper />
       </TestWrapper>
     )
-
-    const runButton = getByText(container, 'pipeline.runAPipeline')
-    act(() => {
-      fireEvent.click(runButton)
-    })
-
+    await waitForElementToBeRemoved(() => screen.getByText('Loading, please wait...'))
+    const runButton = await screen.findByText('pipeline.runAPipeline')
+    userEvent.click(runButton)
     expect(getByTestId('location')).toMatchInlineSnapshot(`
       <div
         data-testid="location"

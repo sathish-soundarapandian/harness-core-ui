@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect, useRef, Dispatch, SetStateAction, useMemo } from 'react'
+import React, { useState, useEffect, useRef, Dispatch, SetStateAction, useMemo, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
-import { get, isEmpty, isUndefined, set } from 'lodash-es'
+import { debounce, get, isEmpty, isUndefined, noop, set } from 'lodash-es'
 import {
   FormInput,
   MultiTypeInputType,
@@ -19,17 +19,28 @@ import {
   TextInput,
   RUNTIME_INPUT_VALUE,
   SelectOption,
-  AllowedTypesWithRunTime
+  AllowedTypesWithRunTime,
+  MultiSelectOption
 } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { connect } from 'formik'
 import { StringKeys, useStrings, UseStringsReturn } from 'framework/strings'
-import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import {
+  getIdentifierFromValue,
+  getScopeFromDTO,
+  getScopeFromValue
+} from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { getReference } from '@common/utils/utils'
 import { Connectors } from '@connectors/constants'
 import { getCompleteConnectorUrl, GitAuthenticationProtocol } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { ConnectorInfoDTO, useGetConnector } from 'services/cd-ng'
+import {
+  ConnectorInfoDTO,
+  getListOfBranchesByRefConnectorV2Promise,
+  ResponseGitBranchesResponseDTO,
+  useGetConnector
+} from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { ConnectorRefWidthKeys, getPrCloneStrategyOptions, sslVerifyOptions } from '@pipeline/utils/constants'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
@@ -37,7 +48,12 @@ import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeTe
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import { CodebaseTypes, getConnectorRefWidth, isRuntimeInput } from '@pipeline/utils/CIUtils'
+import {
+  CodebaseTypes,
+  getCodebaseRepoNameFromConnector,
+  getConnectorRefWidth,
+  isRuntimeInput
+} from '@pipeline/utils/CIUtils'
 import { StepViewType } from '../AbstractSteps/Step'
 import css from './CICodebaseInputSetForm.module.scss'
 export interface CICodebaseInputSetFormProps {
@@ -49,6 +65,8 @@ export interface CICodebaseInputSetFormProps {
   viewType: StepViewType
   viewTypeMetadata?: Record<string, boolean>
 }
+
+type AcceptableValue = boolean | string | number | SelectOption | string[] | MultiSelectOption[]
 
 type CodeBaseType = 'branch' | 'tag' | 'PR'
 
@@ -114,7 +132,8 @@ export const handleCIConnectorRefOnChange = ({
   setFieldValue,
   setIsConnectorExpression,
   setGitAuthProtocol,
-  codeBaseInputFieldFormName
+  codeBaseInputFieldFormName,
+  viewType
 }: {
   value: ConnectorRefInterface | undefined
   connectorRefType: MultiTypeInputType
@@ -124,9 +143,13 @@ export const handleCIConnectorRefOnChange = ({
   setGitAuthProtocol?: React.Dispatch<React.SetStateAction<GitAuthenticationProtocol>>
   setIsConnectorExpression?: Dispatch<SetStateAction<boolean>> // used in inputset form
   codeBaseInputFieldFormName?: { [key: string]: string } // only used when setting nested values in input set
+  viewType?: StepViewType
 }): void => {
   const newConnectorRef = value as ConnectorRefInterface
   setGitAuthProtocol?.(get(value, 'record.spec.authentication.type'))
+  if (viewType === StepViewType.DeploymentForm) {
+    setFieldValue(codeBaseInputFieldFormName?.branch || 'branch', '')
+  }
   if (connectorRefType === MultiTypeInputType.FIXED) {
     const connectionType = newConnectorRef?.record?.spec?.type
     if (connectionType === ConnectionType.Account) {
@@ -229,6 +252,9 @@ function CICodebaseInputSetFormInternal({
   const prCloneStrategyOptions = getPrCloneStrategyOptions(getString)
   const [codeBaseType, setCodeBaseType] = useState<CodeBaseType | undefined>(get(formik?.values, codeBaseTypePath))
   const [gitAuthProtocol, setGitAuthProtocol] = useState<GitAuthenticationProtocol>(GitAuthenticationProtocol.HTTPS)
+  const [codebaseConnector, setCodebaseConnector] = useState<ConnectorInfoDTO>()
+  const [shouldFetchDefaultBranchForRepo, setShouldFetchDefaultBranchForRepo] = useState<boolean>(false)
+  const [isDefaultBranchSet, setIsDefaultBranchSet] = useState<boolean>(false)
 
   const radioLabels = {
     branch: getString('gitBranch'),
@@ -273,8 +299,37 @@ function CICodebaseInputSetFormInternal({
   useEffect(() => {
     if (get(formik?.values, buildPath) === RUNTIME_INPUT_VALUE) {
       setCodeBaseType(undefined)
+    } else if (viewType === StepViewType.DeploymentForm && !get(formik?.values, buildPath)) {
+      setCodeBaseType(CodebaseTypes.branch)
     }
-  }, [get(formik?.values, buildPath)])
+  }, [get(formik?.values, buildPath), viewType])
+
+  const repoNameFromUserInput = useMemo(
+    (): string => (get(formik?.values, codeBaseInputFieldFormName.repoName) as string)?.trim(),
+    [get(formik?.values, codeBaseInputFieldFormName.repoName)]
+  )
+
+  const setRepoNameinFormikValues = useCallback(
+    (repoName: AcceptableValue | undefined) => formik.setFieldValue(codeBaseInputFieldFormName.repoName, repoName),
+    []
+  )
+
+  const debouncedFetchBranchesForRepo = React.useRef(debounce(setRepoNameinFormikValues || noop, 2000)).current
+
+  // Cleanup debounce
+  useEffect(() => {
+    return () => {
+      debouncedFetchBranchesForRepo.flush()
+    }
+  }, [])
+
+  useEffect(() => {
+    if (viewType === StepViewType.DeploymentForm && codeBaseType === CodebaseTypes.branch && repoNameFromUserInput) {
+      setShouldFetchDefaultBranchForRepo(true)
+      setIsDefaultBranchSet(false)
+      formik?.setFieldValue(codeBaseInputFieldFormName.branch, '')
+    }
+  }, [repoNameFromUserInput, viewType, codeBaseType])
 
   const codeBaseInputDefaultValue = {
     depth: 50,
@@ -312,6 +367,7 @@ function CICodebaseInputSetFormInternal({
 
   useEffect(() => {
     if (!loadingConnectorDetails && !isUndefined(connectorDetails)) {
+      setCodebaseConnector(connectorDetails?.data?.connector)
       setConnectorType(get(connectorDetails, 'data.connector.type', '') as ConnectorInfoDTO['type'])
     }
 
@@ -323,13 +379,83 @@ function CICodebaseInputSetFormInternal({
       )
       setConnectorUrl(connectorDetails?.data?.connector.spec.url)
       if (
-        connectorDetails?.data?.connector?.spec?.type === ConnectionType.Repo ||
-        connectorDetails?.data?.connector?.spec?.type === ConnectionType.Region
+        [ConnectionType.Project, ConnectionType.Repo, ConnectionType.Region].includes(
+          connectorDetails?.data?.connector?.spec?.type
+        )
       ) {
         formik.setFieldValue(codeBaseInputFieldFormName.repoName, undefined)
       }
     }
   }, [loadingConnectorDetails, connectorDetails])
+
+  useEffect(() => {
+    // Default branch needs to be set only if not specified by the user already for "branch" type build, only on Run Pipeline form
+    if (
+      viewType === StepViewType.DeploymentForm &&
+      codeBaseType === CodebaseTypes.branch &&
+      !get(formik?.values, codeBaseInputFieldFormName.branch) &&
+      !isDefaultBranchSet &&
+      codebaseConnector
+    ) {
+      const connectorReference =
+        get(originalPipeline, 'properties.ci.codebase.connectorRef', '') === RUNTIME_INPUT_VALUE
+          ? getReference(getScopeFromDTO(codebaseConnector), codebaseConnector.identifier)
+          : get(originalPipeline, 'properties.ci.codebase.connectorRef', '')
+
+      const codebaseConnectorConnectionType = get(codebaseConnector, 'spec.type', '') as ConnectionType
+      const isRepoNameRuntime: boolean =
+        get(originalPipeline, 'properties.ci.codebase.repoName', '') === RUNTIME_INPUT_VALUE
+      const repoNameFromPipelineCodebaseProperties: string = get(
+        originalPipeline,
+        'properties.ci.codebase.repoName',
+        ''
+      )
+      const repoName =
+        connectionType === ConnectionType.Repo
+          ? getCodebaseRepoNameFromConnector(codebaseConnector, getString)
+          : isRepoNameRuntime
+          ? repoNameFromUserInput
+          : repoNameFromPipelineCodebaseProperties
+
+      if (
+        ([ConnectionType.Account, ConnectionType.Project].includes(codebaseConnectorConnectionType) &&
+          (repoNameFromPipelineCodebaseProperties || (isRepoNameRuntime && shouldFetchDefaultBranchForRepo))) ||
+        codebaseConnectorConnectionType === ConnectionType.Repo
+      ) {
+        try {
+          getListOfBranchesByRefConnectorV2Promise({
+            queryParams: {
+              connectorRef: connectorReference,
+              accountIdentifier: accountId,
+              orgIdentifier,
+              projectIdentifier,
+              repoName: encodeURI(repoName),
+              size: 1
+            }
+          })
+            .then((result: ResponseGitBranchesResponseDTO) => {
+              setShouldFetchDefaultBranchForRepo(false)
+              formik.setFieldValue(codeBaseInputFieldFormName.branch, result.data?.defaultBranch?.name || '')
+              if (result.data?.defaultBranch?.name) {
+                setIsDefaultBranchSet(true)
+              }
+            })
+            .catch(_e => {
+              setShouldFetchDefaultBranchForRepo(false)
+            })
+        } catch (e) {
+          setShouldFetchDefaultBranchForRepo(false)
+        }
+      }
+    }
+  }, [
+    codeBaseType,
+    originalPipeline,
+    codebaseConnector,
+    shouldFetchDefaultBranchForRepo,
+    isDefaultBranchSet,
+    repoNameFromUserInput
+  ])
 
   useEffect(() => {
     const type = get(formik?.values, codeBaseTypePath) as CodeBaseType
@@ -394,14 +520,18 @@ function CICodebaseInputSetFormInternal({
           ''
         )
       })
-      formik?.setFieldValue(buildSpecPath, { [inputNames[codeBaseType]]: savedValues.current[codeBaseType] })
+      const existingValues = { ...formik?.values }
+      let updatedValues = set(existingValues, codeBaseTypePath, codeBaseType)
+      updatedValues = set(existingValues, buildSpecPath, {
+        [inputNames[codeBaseType]]: savedValues.current[codeBaseType]
+      })
+      formik?.setValues(updatedValues)
     }
   }, [codeBaseType])
 
   const handleTypeChange = (newType: CodeBaseType): void => {
     formik?.setFieldValue(`${formattedPath}properties.ci.codebase.build`, '')
     formik?.setFieldValue(codeBaseTypePath, newType)
-
     if (!isInputTouched && triggerIdentifier && isNotScheduledTrigger) {
       formik?.setFieldValue(buildSpecPath, { [inputNames[newType]]: defaultValues[newType] })
     } else {
@@ -466,7 +596,8 @@ function CICodebaseInputSetFormInternal({
                   disabled: readonly,
                   allowableTypes: AllowableTypesForCodebaseProperties
                 }}
-                onChange={(value, _valueType, connectorRefType) =>
+                onChange={(value, _valueType, connectorRefType) => {
+                  setIsDefaultBranchSet(false)
                   handleCIConnectorRefOnChange({
                     value: value as ConnectorRefInterface,
                     connectorRefType,
@@ -475,9 +606,10 @@ function CICodebaseInputSetFormInternal({
                     setFieldValue: formik?.setFieldValue as (field: string, value: any) => void,
                     codeBaseInputFieldFormName,
                     setGitAuthProtocol,
-                    setIsConnectorExpression
+                    setIsConnectorExpression,
+                    viewType
                   })
-                }
+                }}
               />
             </Container>
           )}
@@ -517,7 +649,8 @@ function CICodebaseInputSetFormInternal({
                         expressions,
                         allowableTypes: AllowableTypesForCodebaseProperties
                       },
-                      disabled: readonly
+                      disabled: readonly,
+                      onChange: debouncedFetchBranchesForRepo
                     }}
                   />
                 </Container>

@@ -66,6 +66,7 @@ import CIDashboardPage from './pages/dashboard/CIDashboardPage'
 import GetStartedWithCI from './pages/get-started-with-ci/GetStartedWithCI'
 import CIHomePage from './pages/home/CIHomePage'
 import CITrialHomePage from './pages/home/CITrialHomePage'
+import { CITemplateStudioWrapper } from './components/TemplateStudio/CITemplateStudioWrapper/CITemplateStudioWrapper'
 
 executionFactory.registerCardInfo(StageType.BUILD, {
   icon: 'ci-main',
@@ -380,6 +381,8 @@ export default (
 
     {
       TemplateRouteDestinations({
+        templateStudioComponent: CITemplateStudioWrapper,
+        templateStudioPageName: PAGE_NAME.CITemplateStudioWrapper,
         moduleParams,
         licenseRedirectData,
         sidebarProps: CISideNavProps

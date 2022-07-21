@@ -38,7 +38,6 @@ import InputSetList from '@pipeline/pages/inputSet-list/InputSetList'
 import PipelineDetails from '@pipeline/pages/pipeline-details/PipelineDetails'
 import PipelinesPage from '@pipeline/pages/pipelines/PipelinesPage'
 import { PipelineListPage } from '@pipeline/pages/pipeline-list/PipelineListPage'
-import DeploymentsList from '@pipeline/pages/deployments-list/DeploymentsList'
 import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import '@pipeline/components/CommonPipelineStages/ApprovalStage'
 import '@pipeline/components/CommonPipelineStages/CustomStage'
@@ -72,6 +71,7 @@ import { ModuleName } from 'framework/types/ModuleName'
 import PipelineResourceRenderer from './components/RbacResourceModals/PipelineResourceRenderer/PipelineResourceRenderer'
 import { JiraCreateUpdateView } from './components/execution/StepDetails/views/JiraCreateUpdateView/JiraCreateUpdateView'
 import ExecutionErrorTrackingView from './pages/execution/ExecutionErrorTrackingView/ExecutionErrorTrackingView'
+import { ExecutionListPage } from './pages/execution-list-page/ExecutionListPage'
 /**
  * Register RBAC resources
  */
@@ -320,7 +320,7 @@ export function PipelineRouteDestinations({
         sidebarProps={sidebarProps}
         path={routes.toDeployments({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
       >
-        <DeploymentsList />
+        <ExecutionListPage />
       </RouteWithLayout>
       <RouteWithLayout
         exact

@@ -32,14 +32,24 @@ export function useIssueCounts(pipelineId: string, executionId: string): GetStat
   const { projectIdentifier: projectId, orgIdentifier: orgId, accountId } = useParams<PipelinePathProps>()
   const { STO_API_V2 } = useFeatureFlags()
 
-  return useGet<IssueCounts, ErrorResponse>({
-    path: `/sto/api/${STO_API_V2 ? 'v2' : 'v1'}/issue-counts`,
+  let { data, ...rest } = useGet<IssueCounts | Record<string, IssueCounts>, ErrorResponse>({
+    path: `/sto/api/${STO_API_V2 ? 'v2/frontend' : 'v1'}/issue-counts`,
     queryParams: {
       accountId,
       orgId,
       projectId,
       pipelineId,
-      executionId
+      ...(STO_API_V2 ? { executionIds: executionId } : { executionId })
     }
   })
+
+  if (STO_API_V2) {
+    if (data) {
+      data = ((data as Record<string, IssueCounts>)[executionId] as IssueCounts) || {}
+    }
+  } else {
+    data = data as IssueCounts
+  }
+
+  return { data, ...rest }
 }

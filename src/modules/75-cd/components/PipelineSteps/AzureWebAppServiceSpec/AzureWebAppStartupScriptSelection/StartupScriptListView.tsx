@@ -161,8 +161,8 @@ function StartupScriptListView({
 
   const lastStepProps = useCallback((): StartupScriptLastStepProps => {
     return {
-      key: getString('pipeline.startupScript.fileDetails'),
-      name: getString('pipeline.startupScript.fileDetails'),
+      key: getString('pipeline.fileDetails'),
+      name: getString('pipeline.fileDetails'),
       expressions,
       allowableTypes,
       stepName: getString('pipeline.startupScript.fileDetails'),

@@ -8,7 +8,7 @@
 .header {
   background-color: var(--yellow-100);
   font-size: var(--font-size-normal);
-  box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.08), 0px 0.5px 2px rgba(96, 97, 112, 0.16);
+  box-shadow: 0 0 1px rgba(40, 41, 61, 0.08), 0 0.5px 2px rgba(96, 97, 112, 0.16);
   padding: var(--spacing-medium) var(--spacing-large);
 }
 
@@ -53,4 +53,12 @@
 }
 .listItemState {
   width: 65px;
+}
+
+.noDataContainer {
+  color: var(--grey-600);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 60px;
 }

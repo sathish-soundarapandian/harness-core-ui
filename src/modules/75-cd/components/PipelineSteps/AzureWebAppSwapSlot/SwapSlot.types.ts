@@ -8,7 +8,7 @@
 import type { AllowedTypes } from '@harness/uicore'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
-import type { StepSpecType, VariableMergeServiceResponse } from 'services/pipeline-ng'
+import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 
 export interface AzureWebAppSwapSlotStepInfo {
   name: string
@@ -21,7 +21,9 @@ export interface AzureWebAppSwapSlotData {
   name: string
   identifier: string
   timeout: string
-  spec?: StepSpecType
+  spec: {
+    targetSlot: string
+  }
 }
 
 export interface AzureWebAppSwapSlotVariableStepProps {

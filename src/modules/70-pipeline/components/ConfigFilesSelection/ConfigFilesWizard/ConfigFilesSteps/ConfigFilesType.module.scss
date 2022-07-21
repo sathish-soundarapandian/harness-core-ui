@@ -1,0 +1,173 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.existingDocker {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+
+  div[class*='StepWizard---navStep']:nth-of-type(2) {
+    display: none !important;
+  }
+}
+
+.radioGroupContainer {
+  display: flex;
+}
+
+.firstep {
+  padding: var(--spacing-small) 0 0 var(--spacing-small) !important;
+  height: 100%;
+  div[class*='OverlaySpinner'] {
+    height: 100%;
+  }
+
+  .heading {
+    color: var(--grey-800);
+    font-size: var(--font-size-medium);
+    letter-spacing: 0;
+  }
+  .connectorForm {
+    height: 100%;
+    min-height: 400px;
+  }
+
+  .configFileSelect {
+    button.bp3-button {
+      width: 380px;
+    }
+  }
+  .imagePathContainer {
+    display: grid;
+    grid-template-columns: 400px 20px;
+    margin-top: var(--spacing-large);
+    div.configureOptions {
+      position: relative;
+      top: 22px;
+    }
+  }
+  .connectorContainer {
+    .addNewArtifact {
+      margin-top: 25px;
+    }
+    .configureOptions {
+      margin-top: 21px;
+    }
+  }
+  .tagGroup {
+    width: 60%;
+    margin-top: var(--spacing-large);
+    .radioGroup {
+      > div > div {
+        display: flex;
+        justify-content: flex-start;
+        > label {
+          font-size: var(--font-size-normal);
+          color: var(--radio-group-label);
+          margin-right: 100px;
+        }
+      }
+    }
+  }
+}
+
+.padSmall {
+  padding: var(--spacing-small);
+}
+
+.headerContainer {
+  min-height: 400px;
+}
+
+.optionsViewGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 1fr;
+  grid-column-gap: var(--spacing-large);
+  grid-row-gap: 0px;
+
+  > div {
+    background-color: var(--white) !important;
+  }
+}
+
+.squareCardContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 85px;
+  margin-right: var(--spacing-small);
+}
+
+.artifactIcon {
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+  margin-bottom: var(--spacing-small);
+}
+
+.tagInputButton {
+  :global(.bp3-button) {
+    overflow-wrap: anywhere;
+    height: auto !important;
+    max-height: initial !important;
+    padding-right: var(--spacing-xlarge) !important;
+  }
+  :global(.bp3-menu) {
+    max-height: 100px !important;
+  }
+}
+.thumbnailSelect {
+  cursor: pointer;
+}
+.saveBtn {
+  position: relative;
+  bottom: 0;
+}
+
+.optionsViewContainer {
+  margin: var(--spacing-small) 0 0 var(--spacing-small) !important;
+  .configContainer {
+    display: flex;
+    flex-direction: column;
+    min-height: 470px;
+    justify-content: space-between;
+  }
+  .configFilesForm {
+    min-height: 470px;
+
+    .connectorContainer {
+      .addNewConfigFiles {
+        margin-top: 25px;
+      }
+      .configureOptions {
+        margin-top: 21px;
+      }
+    }
+  }
+}
+
+.blackText {
+  color: var(--black);
+  font-size: 13px;
+  &.active {
+    color: var(--grey-900);
+    font-weight: 500;
+  }
+}
+
+.encOption {
+  margin-left: var(--spacing-medium);
+}
+.identifierField {
+  width: 340px;
+  margin-bottom: var(--spacing-xlarge);
+  margin-top: var(--spacing-xlarge);
+}
+.selectFileType {
+  margin-top: var(--spacing-large);
+  margin-bottom: var(--spacing-xxlarge);
+}

@@ -179,6 +179,11 @@ exports[`AmazonS3ArtifactSource tests renders fine for all Runtime values when f
                   </div>
                 </div>
               </div>
+              <div
+                class="bp3-form-helper-text"
+              >
+                pipeline.dependencyRequired
+              </div>
             </div>
           </div>
           <div
@@ -406,6 +411,11 @@ exports[`AmazonS3ArtifactSource tests renders fine for all Runtime values when f
                     </div>
                   </div>
                 </div>
+              </div>
+              <div
+                class="bp3-form-helper-text"
+              >
+                pipeline.dependencyRequired
               </div>
             </div>
           </div>

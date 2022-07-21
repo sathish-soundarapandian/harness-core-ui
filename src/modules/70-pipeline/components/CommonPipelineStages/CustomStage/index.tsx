@@ -32,7 +32,6 @@ const getStageEditorImplementation = (isEnabled: boolean, _getString: UseStrings
     hoverIcon="custom-stage"
     isDisabled={!isEnabled}
     isApproval={false}
-    isTemplateSupported={true}
   />
 )
 

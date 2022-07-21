@@ -18,6 +18,7 @@ import { BaseReactComponentProps, NodeType, PipelineGraphState } from '../../typ
 import { getPositionOfAddIcon } from '../utils'
 import { Dimensions, useNodeDimensionContext } from '../NodeDimensionStore'
 import { NodeStatusIndicator } from '../NodeStatusIndicator'
+import MatrixNodeLabelWrapper from '../MatrixNodeLabelWrapper'
 import css from './MatrixStepNode.module.scss'
 import defaultCss from '../DefaultNode/DefaultNode.module.scss'
 
@@ -129,17 +130,11 @@ export function MatrixStepNode(props: any): JSX.Element {
   return (
     <>
       <div style={{ position: 'relative' }}>
-        <Layout.Horizontal
-          className={cx(css.matrixLabel, {
-            [css.stepGroupMatrixLabel]: isNestedStepGroup,
-            [css.marginTop]: props?.isParallelNode
-          })}
-        >
-          <Icon size={16} name="looping" style={{ marginRight: '5px' }} color={Color.WHITE} />
-          <Text color={Color.WHITE} font="small" style={{ paddingRight: '5px' }}>
-            {nodeType}
-          </Text>
-        </Layout.Horizontal>
+        <MatrixNodeLabelWrapper
+          isParallelNode={props?.isParallelNode}
+          nodeType={nodeType}
+          isNestedStepGroup={isNestedStepGroup}
+        />
         <div
           onMouseOver={e => {
             e.stopPropagation()
@@ -189,7 +184,6 @@ export function MatrixStepNode(props: any): JSX.Element {
             <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
               <Layout.Horizontal
                 spacing="small"
-                style={{ width: '60%' }}
                 onMouseOver={e => {
                   e.stopPropagation()
                 }}

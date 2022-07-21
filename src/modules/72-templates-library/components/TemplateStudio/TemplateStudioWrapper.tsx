@@ -17,8 +17,13 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
+import type { PipelineContextInterface } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
-export const TemplateStudioWrapper: React.FC = (): JSX.Element => {
+interface TemplateStudioWrapperProps {
+  renderPipelineStage?: PipelineContextInterface['renderPipelineStage']
+}
+
+export const TemplateStudioWrapper: (props: TemplateStudioWrapperProps) => JSX.Element = ({ renderPipelineStage }) => {
   const { accountId, projectIdentifier, orgIdentifier, templateIdentifier, templateType } = useParams<
     TemplateStudioPathProps & ModulePathParams
   >()
@@ -29,6 +34,7 @@ export const TemplateStudioWrapper: React.FC = (): JSX.Element => {
       templateIdentifier={templateIdentifier}
       versionLabel={versionLabel}
       templateType={templateType}
+      renderPipelineStage={renderPipelineStage}
     >
       <GitSyncStoreProvider>
         <TemplateStudio />

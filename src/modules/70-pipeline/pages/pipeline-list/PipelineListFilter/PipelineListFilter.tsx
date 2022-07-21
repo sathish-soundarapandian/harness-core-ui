@@ -43,7 +43,7 @@ import {
   usePostFilter,
   useUpdateFilter
 } from 'services/pipeline-ng'
-import PipelineFilterForm from '../../pipeline-deployment-list/PipelineFilterForm/PipelineFilterForm'
+import { ExecutionListFilterForm } from '../../execution-list/ExecutionListFilterForm/ExecutionListFilterForm'
 import type { PipelineListPagePathParams, PipelineListPageQueryParams } from '../types'
 import { usePipeLineListFilterMapper } from './usePipelineListFilterMapper'
 
@@ -227,7 +227,7 @@ export function PipelineListFilter({
     ) : (
       <Filter<PipelineFormType, FilterDTO>
         formFields={
-          <PipelineFilterForm<PipelineFormType>
+          <ExecutionListFilterForm<PipelineFormType>
             isCDEnabled={isCDEnabled}
             isCIEnabled={isCIEnabled}
             initialValues={{

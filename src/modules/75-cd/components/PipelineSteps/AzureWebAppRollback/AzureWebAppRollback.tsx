@@ -127,6 +127,7 @@ export class AzureWebAppRollback extends PipelineStep<AzureWebAppRollbackStepInf
         isNewStep={isNewStep}
         ref={formikRef}
         readonly={readonly}
+        stepViewType={stepViewType}
       />
     )
   }

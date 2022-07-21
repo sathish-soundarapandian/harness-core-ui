@@ -25,6 +25,7 @@
       }
       .DropDown--dropdownButton {
         background-color: var(--white) !important;
+        column-gap: var(--spacing-4);
       }
     }
   }

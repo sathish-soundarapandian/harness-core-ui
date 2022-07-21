@@ -19,19 +19,18 @@ import type { PipelineInfoConfig, StageElementConfig } from 'services/pipeline-n
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { DefaultPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
-import type { ProjectPathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { sanitize } from '@common/utils/JSONUtils'
-import { useQueryParams } from '@common/hooks'
 import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
 const StageTemplateCanvasWrapper = (_props: unknown, formikRef: TemplateFormRef) => {
   const {
-    state: { template, isLoading, isUpdated },
+    state: { template, isLoading, isUpdated, gitDetails },
     updateTemplate,
-    isReadonly
+    isReadonly,
+    renderPipelineStage
   } = React.useContext(TemplateContext)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-  const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
 
   const createPipelineFromTemplate = () =>
     produce({ ...DefaultPipeline }, draft => {
@@ -63,11 +62,13 @@ const StageTemplateCanvasWrapper = (_props: unknown, formikRef: TemplateFormRef)
 
   return (
     <TemplatePipelineProvider
-      queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier, repoIdentifier, branch }}
+      queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier }}
       initialValue={pipeline}
+      gitDetails={gitDetails}
       onUpdatePipeline={onUpdatePipeline}
       contextType={PipelineContextType.StageTemplate}
       isReadOnly={isReadonly}
+      renderPipelineStage={renderPipelineStage}
     >
       <StageTemplateCanvasWithRef ref={formikRef} />
     </TemplatePipelineProvider>

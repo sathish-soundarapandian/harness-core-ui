@@ -51,6 +51,7 @@ import { RedirectToModuleTrialHomeFactory, RedirectToSubscriptionsFactory } from
 import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
 import { LICENSE_STATE_NAMES, LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
+import { CFTemplateStudioWrapper } from '@cf/components/TemplateStudio/CFTemplateStudioWrapper/CFTemplateStudioWrapper'
 import { registerFeatureFlagPipelineStage } from './pages/pipeline-studio/views/FeatureFlagStage'
 import { registerFlagConfigurationPipelineStep } from './components/PipelineSteps'
 import { TargetsPage } from './pages/target-management/targets/TargetsPage'
@@ -327,6 +328,8 @@ const CFRoutes: FC = () => {
 
       <Route path="/account/:accountId/:module(cf)">
         <TemplateRouteDestinations
+          templateStudioComponent={CFTemplateStudioWrapper}
+          templateStudioPageName={PAGE_NAME.CFTemplateStudioWrapper}
           moduleParams={moduleParams}
           licenseRedirectData={licenseRedirectData}
           sidebarProps={CFSideNavProps}

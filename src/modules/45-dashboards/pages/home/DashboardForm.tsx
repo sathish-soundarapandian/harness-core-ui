@@ -51,6 +51,10 @@ export interface DashboardFormikValues {
   name: string
 }
 
+function hasMatchingFolderId(folders: SelectOption[], folderId: string): boolean {
+  return !folders.some((item: SelectOption) => item.value === folderId)
+}
+
 const DashboardForm: React.FC<DashboardFormProps> = ({
   formData,
   title,
@@ -70,13 +74,6 @@ const DashboardForm: React.FC<DashboardFormProps> = ({
     queryParams: { accountId, page: 1, pageSize: 100 }
   })
 
-  function isMissingFolderId(folders: SelectOption[]): boolean {
-    if (formData?.folderId) {
-      return !folders.some((item: SelectOption) => item.value === formData.folderId)
-    }
-    return false
-  }
-
   React.useEffect(() => {
     const errorResponse = error?.data as ErrorResponse
     if (errorResponse?.responseMessages) {
@@ -94,16 +91,15 @@ const DashboardForm: React.FC<DashboardFormProps> = ({
   }, [foldersList])
 
   const initialValues: DashboardFormikValues = React.useMemo(() => {
-    let initialFolderId = formData?.folderId || folderId || ''
-    if (isMissingFolderId(folderListItems)) {
-      initialFolderId = SHARED_FOLDER_ID
-    }
+    const initialFolderId: string = formData?.folderId || folderId
+    const selectedFolderId = hasMatchingFolderId(folderListItems, initialFolderId) ? SHARED_FOLDER_ID : initialFolderId
+
     return {
-      folderId: initialFolderId,
+      folderId: selectedFolderId,
       name: formData?.name || '',
       description: formData?.description?.split(TAGS_SEPARATOR) || []
     }
-  }, [folderListItems])
+  }, [folderId, folderListItems, formData?.description, formData?.folderId, formData?.name])
 
   return (
     <Layout.Vertical padding="xxlarge" spacing="large">

@@ -26,6 +26,7 @@ import { useModalHook } from '@harness/use-modal'
 import { useHistory, useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import { defaultTo, isEmpty, pick } from 'lodash-es'
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { Page, StringUtils, useToaster } from '@common/exports'
 import routes from '@common/RouteDefinitions'
 import {
@@ -85,7 +86,7 @@ import type { StoreType } from '@common/constants/GitSyncTypes'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
 import { PipelineGridView } from './views/PipelineGridView'
 import { PipelineListView } from './views/PipelineListView'
-import PipelineFilterForm from '../pipeline-deployment-list/PipelineFilterForm/PipelineFilterForm'
+import { ExecutionListFilterForm } from '../execution-list/ExecutionListFilterForm/ExecutionListFilterForm'
 import pipelineIllustration from './images/deploypipeline-illustration.svg'
 import buildpipelineIllustration from './images/buildpipeline-illustration.svg'
 import flagpipelineIllustration from './images/flagpipeline-illustration.svg'
@@ -540,7 +541,7 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
     ) : (
       <Filter<PipelineFormType, FilterDTO>
         formFields={
-          <PipelineFilterForm<PipelineFormType>
+          <ExecutionListFilterForm<PipelineFormType>
             isCDEnabled={isCDEnabled}
             isCIEnabled={isCIEnabled}
             initialValues={{
@@ -889,6 +890,7 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
             )}
           </GitSyncStoreProvider>
         )}
+        <HelpPanel referenceId="Pipelines" type={HelpPanelType.FLOATING_CONTAINER} />
       </Page.Body>
     </>
   )

@@ -11,7 +11,7 @@ import classnames from 'classnames'
 import { useParams, NavLink } from 'react-router-dom'
 import moment from 'moment'
 import { Spinner } from '@blueprintjs/core'
-import { Layout } from '@harness/uicore'
+import { Color, Icon, Layout } from '@harness/uicore'
 import routes from '@common/RouteDefinitions'
 import { useStrings, StringKeys } from 'framework/strings'
 import type { Module } from 'framework/types/ModuleName'
@@ -50,7 +50,12 @@ const renderData = (
 ) => {
   const resourceConstraints = resourceConstraintsData?.data?.resourceConstraints || []
   if (!resourceConstraints.length) {
-    return 'No Executions'
+    return (
+      <div className={css.noDataContainer}>
+        <Icon color={Color.GREY_300} size={64} name="queue-step" style={{ marginBottom: '20px' }} />
+        <span>{getString('pipeline.queueStep.noQueuedExecutions')}</span>
+      </div>
+    )
   }
   const { executionIdentifier, orgIdentifier, projectIdentifier, pipelineIdentifier, accountId, module } = params
 

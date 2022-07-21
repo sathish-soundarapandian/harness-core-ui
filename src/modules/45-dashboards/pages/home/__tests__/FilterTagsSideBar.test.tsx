@@ -27,7 +27,7 @@ const renderComponent = (props: Partial<FilterTagsSideBarProps> = {}): RenderRes
     </TestWrapper>
   )
 
-const buildTagsResponse = (isLoading: boolean, tags = '') => {
+const buildTagsResponse = (isLoading: boolean, tags = ''): any => {
   return {
     data: {
       resource: {

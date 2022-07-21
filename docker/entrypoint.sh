@@ -33,5 +33,6 @@ then
   sed -i "s|\"static\/main\.\(.*\)\.js\"|\"//static.harness.io/ng-static/main.\1.js\"|" index.html
   sed -i "s|\"static\/styles\.\(.*\)\.css\"|\"//static.harness.io/ng-static/styles.\1.css\"|" index.html
 fi
+
 echo "Using $NGINX_CONFIG_FILE for nginx"
 nginx -c $NGINX_CONFIG_FILE -g 'daemon off;'

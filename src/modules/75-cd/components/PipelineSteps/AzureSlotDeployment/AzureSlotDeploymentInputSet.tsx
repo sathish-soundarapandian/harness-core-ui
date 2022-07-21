@@ -8,7 +8,7 @@
 import React from 'react'
 import { isEmpty } from 'lodash-es'
 import cx from 'classnames'
-import { FormikForm, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
+import { FormikForm, MultiTypeInputType, getMultiTypeFromValue, FormInput } from '@harness/uicore'
 import { connect, FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -45,6 +45,34 @@ export function AzureSlotDeploymentInputSetRef<T extends AzureSlotDeploymentData
           </div>
         )
       }
+      {isRuntime(inputSetData?.template?.spec?.webApp as string) && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormInput.MultiTextInput
+            label={'Web App Name'}
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.webApp`}
+            disabled={readonly}
+            multiTextInputProps={{
+              expressions,
+              disabled: readonly,
+              allowableTypes
+            }}
+          />
+        </div>
+      )}
+      {isRuntime(inputSetData?.template?.spec?.deploymentSlot as string) && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormInput.MultiTextInput
+            label={'Deployment Slot'}
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.deploymentSlot`}
+            disabled={readonly}
+            multiTextInputProps={{
+              expressions,
+              disabled: readonly,
+              allowableTypes
+            }}
+          />
+        </div>
+      )}
     </FormikForm>
   )
 }

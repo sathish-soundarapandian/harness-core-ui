@@ -9,11 +9,13 @@ import type React from 'react'
 import type { Diagnostic } from 'vscode-languageserver-types'
 import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { OverviewChartsWithToggleProps } from '@common/components/OverviewChartsWithToggle/OverviewChartsWithToggle'
+import type { NavigationCheckProps } from '@common/components/NavigationCheck/NavigationCheck'
 
 export interface ChaosCustomMicroFrontendProps {
   customComponents: {
     ConnectorReferenceField: React.ComponentType<ConnectorReferenceFieldProps>
     OverviewChartsWithToggle: React.ComponentType<OverviewChartsWithToggleProps>
     validateYAMLWithSchema: (yamlString: string, schema: Record<string, any>) => Promise<Diagnostic[]>
+    NavigationCheck: React.ComponentType<NavigationCheckProps>
   }
 }

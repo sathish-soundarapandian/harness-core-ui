@@ -46,14 +46,14 @@ const DashboardViewPage: React.FC = () => {
 
   const responseMessages = useMemo(() => (error?.data as ErrorResponse)?.responseMessages, [error])
 
-  const generateSignedUrl = async (): Promise<void> => {
-    const { resource } = (await createSignedUrl()) || {}
-    setEmbedUrl(resource)
-  }
-
   React.useEffect(() => {
+    const generateSignedUrl = async (): Promise<void> => {
+      const { resource } = (await createSignedUrl()) || {}
+      setEmbedUrl(resource)
+    }
+
     generateSignedUrl()
-  }, [viewId])
+  }, [createSignedUrl, viewId])
 
   React.useEffect(() => {
     const lookerEventHandler = (event: MessageEvent<string>): void => {
@@ -70,7 +70,7 @@ const DashboardViewPage: React.FC = () => {
     return () => {
       window.removeEventListener('message', lookerEventHandler)
     }
-  }, [])
+  }, [history, viewId])
 
   const { data: folderDetail, refetch: fetchFolderDetail } = useGetFolderDetail({
     lazy: true,
@@ -81,7 +81,7 @@ const DashboardViewPage: React.FC = () => {
     if (folderId !== SHARED_FOLDER_ID) {
       fetchFolderDetail()
     }
-  }, [accountId, folderId])
+  }, [accountId, fetchFolderDetail, folderId])
 
   const { data: dashboardDetail } = useGetDashboardDetail({ dashboard_id: viewId, queryParams: { accountId } })
 
@@ -104,7 +104,8 @@ const DashboardViewPage: React.FC = () => {
         label: dashboardDetail.title
       })
     includeBreadcrumbs(links)
-  }, [folderDetail, dashboardDetail, accountId, viewId, embedUrl])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [folderDetail?.resource, dashboardDetail, accountId, viewId, embedUrl])
 
   return (
     <Page.Body

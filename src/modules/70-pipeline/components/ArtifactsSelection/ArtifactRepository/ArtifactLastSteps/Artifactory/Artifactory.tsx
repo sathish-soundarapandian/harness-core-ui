@@ -37,7 +37,7 @@ import {
   resetTag,
   shouldFetchTags
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
-import { isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
+import { isServerlessDeploymentType, isSshOrWinrmDeploymentType } from '@pipeline/utils/stageHelpers'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type {
   ArtifactType,
@@ -82,7 +82,7 @@ function Artifactory({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(selectedDeploymentType)
-
+  const isSSHWinRmDeploymentType = isSshOrWinrmDeploymentType(selectedDeploymentType)
   const schemaObject = {
     artifactPath: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactPath')),
     repository: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
@@ -148,7 +148,7 @@ function Artifactory({
     queryParams: {
       artifactPath: lastQueryData.artifactPath,
       repository: lastQueryData.repository,
-      repositoryFormat: isServerlessDeploymentTypeSelected ? 'generic' : repositoryFormat,
+      repositoryFormat: isServerlessDeploymentTypeSelected || isSSHWinRmDeploymentType ? 'generic' : repositoryFormat,
       connectorRef: getConnectorRefQueryData(),
       accountIdentifier: accountId,
       orgIdentifier,
@@ -217,7 +217,7 @@ function Artifactory({
     merge(artifactObj.spec, {
       repository: getRepositoryValue(formData, isServerlessDeploymentTypeSelected),
       repositoryUrl: formData?.repositoryUrl,
-      repositoryFormat: isServerlessDeploymentTypeSelected ? 'generic' : repositoryFormat
+      repositoryFormat: isServerlessDeploymentTypeSelected || isSSHWinRmDeploymentType ? 'generic' : repositoryFormat
     })
     handleSubmit(artifactObj)
   }

@@ -484,16 +484,25 @@ export const validateCICodebase = ({
       set(errors, 'properties.ci.codebase.build.spec.tag', getString?.('fieldRequired', { field: getString('gitTag') }))
     }
 
-    if (
-      pipeline?.properties?.ci?.codebase?.build?.type === CodebaseTypes.PR &&
-      isEmpty(pipeline?.properties?.ci?.codebase?.build?.spec?.number) &&
-      !isInputSetForm
-    ) {
-      set(
-        errors,
-        'properties.ci.codebase.build.spec.number',
-        getString?.('fieldRequired', { field: getString?.('pipeline.gitPullRequestNumber') })
-      )
+    if (pipeline?.properties?.ci?.codebase?.build?.type === CodebaseTypes.PR && !isInputSetForm) {
+      if (
+        isNaN(pipeline?.properties?.ci?.codebase?.build?.spec?.number) ||
+        !Number.isInteger(parseFloat(pipeline?.properties?.ci?.codebase?.build?.spec?.number)) ||
+        parseFloat(pipeline?.properties?.ci?.codebase?.build?.spec?.number) < 1
+      ) {
+        set(
+          errors,
+          'properties.ci.codebase.build.spec.number',
+          getString?.('pipeline.ciCodebase.validation.pullRequestNumber')
+        )
+      }
+      if (isEmpty(pipeline?.properties?.ci?.codebase?.build?.spec?.number)) {
+        set(
+          errors,
+          'properties.ci.codebase.build.spec.number',
+          getString?.('fieldRequired', { field: getString?.('pipeline.gitPullRequestNumber') })
+        )
+      }
     }
   }
 
