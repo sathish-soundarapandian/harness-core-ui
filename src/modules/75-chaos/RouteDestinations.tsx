@@ -8,6 +8,7 @@
 import React from 'react'
 import { Redirect, useParams } from 'react-router-dom'
 import { OverviewChartsWithToggle } from '@common/components/OverviewChartsWithToggle/OverviewChartsWithToggle'
+import { NavigationCheck } from '@common/components/NavigationCheck/NavigationCheck'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import routes from '@common/RouteDefinitions'
@@ -448,7 +449,8 @@ export default function ChaosRoutes(): React.ReactElement {
           customComponents={{
             ConnectorReferenceField,
             OverviewChartsWithToggle,
-            validateYAMLWithSchema
+            validateYAMLWithSchema,
+            NavigationCheck
           }}
         />
       </RouteWithLayout>

@@ -21,7 +21,9 @@ const props = () =>
       name: 'swap slot',
       timeout: '10m',
       identifier: 'swap slot',
-      spec: {}
+      spec: {
+        targetSlot: 'targetSlot'
+      }
     },
     stageIdentifier: 'qaStage',
     onUpdate: jest.fn(),
@@ -31,7 +33,9 @@ const props = () =>
       name: 'swap slot',
       timeout: '10m',
       identifier: 'swap slot',
-      spec: {}
+      spec: {
+        targetSlot: 'targetSlot'
+      }
     },
     stepType: StepType.AzureSwapSlot
   } as AzureWebAppSwapSlotVariableStepProps)
@@ -45,7 +49,9 @@ describe('Azure Web App Swap Slot step Variable view ', () => {
           name: 'swap slot',
           timeout: '10m',
           identifier: 'swap slot',
-          spec: {}
+          spec: {
+            targetSlot: 'targetSlot'
+          }
         }}
         {...{
           stageIdentifier: 'qaStage',
@@ -67,7 +73,9 @@ describe('Azure Web App Swap Slot step Variable view ', () => {
             name: '',
             timeout: '',
             identifier: '',
-            spec: {}
+            spec: {
+              targetSlot: 'targetSlot'
+            }
           }}
           {...{
             stageIdentifier: 'qaStage',

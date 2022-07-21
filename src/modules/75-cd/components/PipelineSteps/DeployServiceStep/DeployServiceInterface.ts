@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { ServiceConfig, ServiceDefinition, ServiceRequestDTO, ServiceResponseDTO } from 'services/cd-ng'
@@ -27,7 +27,7 @@ export interface DeployServiceProps {
     path?: string
     readonly?: boolean
   }
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   serviceLabel?: string
   customStepProps?: DeployServiceCustomStepPropType
 }

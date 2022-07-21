@@ -7,7 +7,7 @@
 
 import { cloneDeep, isEmpty } from 'lodash-es'
 import type { FormikProps } from 'formik'
-import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import { AllowedTypes, getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { StringKeys } from 'framework/strings'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import type {
@@ -671,7 +671,7 @@ export const shouldMakeTierCall = (applicationName: string) =>
   getMultiTypeFromValue(applicationName) !== MultiTypeInputType.RUNTIME &&
   (getMultiTypeFromValue(applicationName) !== MultiTypeInputType.EXPRESSION || /^<+>/.test(applicationName))
 
-export const getAllowedTypes = (isConnectorRuntimeOrExpression: boolean) =>
+export const getAllowedTypes = (isConnectorRuntimeOrExpression: boolean): AllowedTypes =>
   isConnectorRuntimeOrExpression
     ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
     : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]

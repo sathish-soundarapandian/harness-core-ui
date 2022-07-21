@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useLayoutEffect } from 'react'
 import cx from 'classnames'
 import { NavLink as Link, useParams } from 'react-router-dom'
 import type { NavLinkProps } from 'react-router-dom'
@@ -41,6 +41,19 @@ export default function L1Nav(): React.ReactElement {
   } = useFeatureFlags()
 
   const { currentUserInfo: user } = useAppStore()
+
+  useLayoutEffect(() => {
+    // main nav consists of two UL sections with classname "css.navList"
+    const items = Array.from(document.querySelectorAll(`.${css.navList}`))
+    // add the real height of both sections
+    // real height is needed because number of items can change based on feature flags, license etc
+    const minNavHeight = items.reduce((previousValue, listitem) => {
+      return previousValue + listitem.getBoundingClientRect().height
+    }, 0)
+    // set the CSS variable defined in src/modules/10-common/layouts/layouts.module.scss
+    const root = document.querySelector(':root') as HTMLElement
+    root.style.setProperty('--main-nav-height', `${minNavHeight}px`)
+  })
 
   return (
     <nav className={css.main}>
@@ -180,7 +193,6 @@ export default function L1Nav(): React.ReactElement {
           </li>
         )}
       </ul>
-
       <ul className={css.navList}>
         {RESOURCE_CENTER_ENABLED && (
           <li className={css.navItem}>

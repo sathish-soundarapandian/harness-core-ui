@@ -93,6 +93,7 @@ interface FileStoreProps {
   onNodeChange?: (node: any) => void
   scope?: string
   queryParams?: any
+  fileUsage?: string
 }
 
 export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreProps) => {
@@ -503,11 +504,13 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
     <>
       <Page.Header
         breadcrumbs={
-          !isModalView && (
-            <NGBreadcrumbs
-              links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
-            />
-          )
+          <>
+            {!isModalView && (
+              <NGBreadcrumbs
+                links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
+              />
+            )}
+          </>
         }
         title={!isModalView && getString('resourcePage.fileStore')}
         content={
@@ -522,7 +525,7 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
             <Container data-name="fileStoreSearchContainer">
               <ExpandingSearchInput
                 alwaysExpanded
-                width={isModalView ? 1020 : 200}
+                width={isModalView ? 1300 : 200}
                 placeholder={getString('search')}
                 throttle={200}
                 onChange={(query: string) => {
@@ -532,16 +535,18 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
                 className={css.expandSearch}
               />
             </Container>
-            <FilterSelector<FilterDTO>
-              appliedFilter={appliedFilter}
-              filters={filters}
-              onFilterBtnClick={openFilterDrawer}
-              onFilterSelect={handleFilterSelection}
-              fieldToLabelMapping={fieldToLabelMapping}
-              filterWithValidFields={removeNullAndEmpty(
-                pick(flattenObject(appliedFilter?.filterProperties || {}), ...fieldToLabelMapping.keys())
-              )}
-            />
+            {!isModalView && (
+              <FilterSelector<FilterDTO>
+                appliedFilter={appliedFilter}
+                filters={filters}
+                onFilterBtnClick={openFilterDrawer}
+                onFilterSelect={handleFilterSelection}
+                fieldToLabelMapping={fieldToLabelMapping}
+                filterWithValidFields={removeNullAndEmpty(
+                  pick(flattenObject(appliedFilter?.filterProperties || {}), ...fieldToLabelMapping.keys())
+                )}
+              />
+            )}
           </Layout.Horizontal>
         }
       />

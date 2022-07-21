@@ -8,7 +8,7 @@
 import React, { useCallback } from 'react'
 import cx from 'classnames'
 import { isEmpty, isNull, isUndefined } from 'lodash-es'
-import { Button, FormInput, Layout, MultiTypeInputType } from '@wings-software/uicore'
+import { Button, FormInput, Layout, AllowedTypes } from '@wings-software/uicore'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { ServiceNowFieldNG } from 'services/cd-ng'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
@@ -20,7 +20,7 @@ export interface ServiceNowFieldsRendererProps {
   selectedFields?: ServiceNowFieldNGWithValue[]
   readonly?: boolean
   onDelete?: (index: number, selectedField: ServiceNowFieldNG) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 interface MappedComponentInterface {

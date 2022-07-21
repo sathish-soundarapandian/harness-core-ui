@@ -12,7 +12,8 @@ import {
   Layout,
   Container,
   MultiTypeInputType,
-  getMultiTypeFromValue
+  getMultiTypeFromValue,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { isEmpty, get, set } from 'lodash-es'
@@ -35,14 +36,14 @@ interface StageAdvancedInputSetFormProps {
   path: string
   readonly?: boolean
   stageIdentifier?: string
-  allowableTypes?: MultiTypeInputType[]
+  allowableTypes?: AllowedTypes
   delegateSelectors?: string[] | string
 }
 
 interface ConditionalExecutionFormProps {
   readonly?: boolean
   path: string
-  allowableTypes?: MultiTypeInputType[]
+  allowableTypes?: AllowedTypes
   formik?: FormikContextType<any>
 }
 

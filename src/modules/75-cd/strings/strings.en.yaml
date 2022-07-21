@@ -52,7 +52,7 @@ steps:
     azure: 'Microsoft Azure'
     subscription: '{{ $.common.subscriptionId }}'
     subscriptionPlaceholder: '{{ $.common.subscriptionPlaceholder }}'
-    resourceGroupPlaceholder: 'Select or add Resource Group'
+    resourceGroupPlaceholder: 'Select or specify Resource Group'
     resourceGroupError: 'No resource groups found with given Subscription'
     clusterError: 'No cluster found with given Resource Group'
   azureWebAppInfra:
@@ -66,6 +66,7 @@ steps:
     webAppNameError: 'No web app names groups found with given Resource Group'
     deploymentSlotError: 'No deployment slots groups found with given Web App Name'
     targetSlotError: 'No target slots found with given Web App Name'
+    webAppInfraheader: 'Web App Infrastructure Details'
   serverless:
     regionPlaceholder: Specify a region
     stagePlaceholder: Specify a stage
@@ -332,6 +333,7 @@ cloudFormation:
   specifyCapabilities: Specify Capabilities
   parameterFiles: Cloud Formation Parameter Files
   parameterFileDetails: Parameter File Details
+  overrideParameterFileDetails: Override Parameter File Details
   specifyParameterFiles: Specify Parameter Files...
   inlineParameterFiles: CloudFormation Parameters Overrides
   specifyInlineParameterFiles: Specify Inline Parameters...

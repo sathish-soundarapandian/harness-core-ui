@@ -126,6 +126,7 @@ export class CFRollbackStack extends PipelineStep<RollbackStackStepInfo> {
         isNewStep={isNewStep}
         ref={formikRef}
         readonly={readonly}
+        stepViewType={stepViewType}
       />
     )
   }

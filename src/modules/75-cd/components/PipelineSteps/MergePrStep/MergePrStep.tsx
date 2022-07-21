@@ -8,7 +8,14 @@
 import React from 'react'
 import cx from 'classnames'
 
-import { Formik, FormInput, getMultiTypeFromValue, IconName, MultiTypeInputType } from '@wings-software/uicore'
+import {
+  AllowedTypes,
+  Formik,
+  FormInput,
+  getMultiTypeFromValue,
+  IconName,
+  MultiTypeInputType
+} from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
 
@@ -44,7 +51,7 @@ interface MergePrProps {
   initialValues: StepElementConfig
   onUpdate?: (data: StepElementConfig) => void
   onChange?: (data: StepElementConfig) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   isNewStep?: boolean
   readonly?: boolean

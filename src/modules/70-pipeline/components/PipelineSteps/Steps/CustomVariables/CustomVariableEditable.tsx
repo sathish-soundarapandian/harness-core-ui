@@ -14,7 +14,8 @@ import {
   getMultiTypeFromValue,
   useNestedAccordion,
   ButtonVariation,
-  ButtonSize
+  ButtonSize,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { Formik, FieldArray } from 'formik'
 import { v4 as uuid } from 'uuid'
@@ -66,7 +67,7 @@ export interface CustomVariableEditableProps extends CustomVariableEditableExtra
   onUpdate?: (data: CustomVariablesData) => void
   stepViewType?: StepViewType
   readonly?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export function CustomVariableEditable(props: CustomVariableEditableProps): React.ReactElement {

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, findByText, fireEvent, findAllByText, waitFor } from '@testing-library/react'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
 import type { ManifestConfigWrapper, ServiceDefinition } from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
@@ -53,7 +53,11 @@ const manifestListCommonProps = {
   removeManifestConfig: jest.fn(),
   attachPathYaml: jest.fn(),
   removeValuesYaml: jest.fn(),
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[]
 }
 
 describe('ManifestSelection tests', () => {

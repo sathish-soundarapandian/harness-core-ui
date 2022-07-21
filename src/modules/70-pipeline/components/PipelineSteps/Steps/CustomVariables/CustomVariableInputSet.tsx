@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, FormInput, MultiTypeInputType, getMultiTypeFromValue, SelectOption } from '@harness/uicore'
+import { Text, FormInput, MultiTypeInputType, getMultiTypeFromValue, SelectOption, AllowedTypes } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { defaultTo, get } from 'lodash-es'
@@ -39,7 +39,7 @@ export interface CustomVariableInputSetProps extends CustomVariableInputSetExtra
   onUpdate?: (data: CustomVariablesData) => void
   stepViewType?: StepViewType
   inputSetData?: InputSetData<CustomVariablesData>
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   className?: string
 }
 

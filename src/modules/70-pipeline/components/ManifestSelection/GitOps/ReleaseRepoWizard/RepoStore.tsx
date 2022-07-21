@@ -19,7 +19,8 @@ import {
   IconName,
   ButtonVariation,
   FormikForm,
-  ButtonSize
+  ButtonSize,
+  AllowedTypes
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
@@ -49,7 +50,7 @@ import css from '../../ManifestWizardSteps/ManifestWizardSteps.module.scss'
 interface ReleaseRepoStorePropType {
   stepName: string
   expressions?: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   isReadonly: boolean
   initialValues?: any
   handleConnectorViewChange: () => void

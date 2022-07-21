@@ -7,7 +7,7 @@
 
 import type { FormikProps } from 'formik'
 import type { GetDataError } from 'restful-react'
-import type { MultiTypeInputType, SelectOption } from '@wings-software/uicore'
+import type { AllowedTypes, SelectOption } from '@wings-software/uicore'
 import type { InputSetData, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { Failure } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
@@ -62,7 +62,7 @@ export interface JenkinsStepVariableListModeProps {
 export interface JenkinsStepDeploymentModeProps {
   stepViewType: StepViewType
   initialValues: JenkinsStepData
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   onUpdate?: (data: JenkinsStepData) => void
   inputSetData?: InputSetData<JenkinsStepData>
   formik?: any
@@ -71,7 +71,7 @@ export interface JenkinsStepDeploymentModeProps {
 export interface JenkinsStepStepModeProps {
   stepViewType: StepViewType
   initialValues: JenkinsStepData
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   onUpdate?: (data: JenkinsStepData) => void
   onChange?: (data: JenkinsStepData) => void
   isNewStep?: boolean
@@ -81,7 +81,7 @@ export interface JenkinsStepStepModeProps {
 export interface JenkinsFormContentInterface {
   formik: FormikProps<JenkinsStepData>
   stepViewType: StepViewType
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   projectsFetchError?: GetDataError<Failure | Error> | null
   projectMetadataFetchError?: GetDataError<Failure | Error> | null
   isNewStep?: boolean

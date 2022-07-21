@@ -16,7 +16,8 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Text,
-  ButtonVariation
+  ButtonVariation,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { Form } from 'formik'
 import * as Yup from 'yup'
@@ -40,7 +41,7 @@ import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
 interface HelmWithHttpPropType {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>

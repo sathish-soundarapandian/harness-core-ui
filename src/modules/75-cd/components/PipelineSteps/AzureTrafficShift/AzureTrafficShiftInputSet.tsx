@@ -51,7 +51,7 @@ export function AzureTrafficShiftInputSetRef<T extends AzureTrafficShiftData = A
           <div className={cx(stepCss.formGroup, stepCss.md)}>
             <FormInput.MultiTextInput
               label={getString('pipeline.traffic')}
-              name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}traffic`}
+              name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.traffic`}
               disabled={readonly}
               multiTextInputProps={{
                 expressions,

@@ -8,7 +8,7 @@
 import React, { useState } from 'react'
 import type { FieldArrayRenderProps } from 'formik'
 import { Dialog } from '@blueprintjs/core'
-import type { MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore'
 import { HideModal, useModalHook } from '@harness/use-modal'
 
 import { useStrings } from 'framework/strings'
@@ -27,7 +27,7 @@ interface UseImportResourceReturnType {
 }
 
 interface UseImportResourceProps {
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   readonly?: boolean
 }
 

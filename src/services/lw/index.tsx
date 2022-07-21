@@ -948,6 +948,7 @@ export interface ListAccessPointsQueryParams {
   region?: string
   cloud_account_id: string
   accountIdentifier: string
+  subnet?: string
 }
 
 export interface ListAccessPointsPathParams {
@@ -1181,6 +1182,7 @@ export interface AccessPointResourcesQueryParams {
   accountIdentifier: string
   service?: string
   cluster?: string
+  subnet?: string
 }
 
 export interface AccessPointResourcesPathParams {
@@ -2065,6 +2067,7 @@ export interface SavingsOfServiceQueryParams {
   from?: string
   to?: string
   group_by?: string
+  dry_run?: boolean
 }
 
 export interface SavingsOfServicePathParams {

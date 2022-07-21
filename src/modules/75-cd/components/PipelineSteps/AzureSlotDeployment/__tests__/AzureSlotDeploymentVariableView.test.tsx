@@ -19,13 +19,21 @@ const props = {
     type: 'AzureSlotDeployment',
     name: 'asd',
     identifier: 'asd',
-    timeout: '10s'
+    timeout: '10s',
+    spec: {
+      webApp: 'webApp',
+      deploymentSlot: 'deploymentSlot'
+    }
   },
   originalData: {
     type: 'AzureSlotDeployment',
     name: 'asd',
     identifier: 'asd',
-    timeout: '10s'
+    timeout: '10s',
+    spec: {
+      webApp: 'webApp',
+      deploymentSlot: 'deploymentSlot'
+    }
   },
   stageIdentifier: 'qaStage',
   onUpdate: jest.fn(),
@@ -54,7 +62,11 @@ describe('Azure Slot Deployment Variable view ', () => {
           type: 'AzureSlotDeployment',
           name: 'asd',
           identifier: 'asd',
-          timeout: '10m'
+          timeout: '10m',
+          spec: {
+            webApp: 'webApp',
+            deploymentSlot: 'deploymentSlot'
+          }
         }}
         stepType={StepType.AzureSlotDeployment}
         onUpdate={() => jest.fn()}
@@ -77,7 +89,11 @@ describe('Azure Slot Deployment Variable view ', () => {
             type: 'AzureSlotDeployment',
             name: 'asd',
             identifier: 'asd',
-            timeout: '10m'
+            timeout: '10m',
+            spec: {
+              webApp: 'webApp',
+              deploymentSlot: 'deploymentSlot'
+            }
           }}
           stepType={StepType.AzureSlotDeployment}
           onUpdate={() => jest.fn()}
@@ -111,7 +127,11 @@ describe('Azure Slot Deployment Variable view ', () => {
             type: 'AzureSlotDeployment',
             name: 'asd',
             identifier: 'asd',
-            timeout: '10m'
+            timeout: '10m',
+            spec: {
+              webApp: 'webApp',
+              deploymentSlot: 'deploymentSlot'
+            }
           }}
         />
       </TestWrapper>

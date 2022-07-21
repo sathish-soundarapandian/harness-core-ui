@@ -9,7 +9,7 @@ import React, { useEffect, useState } from 'react'
 import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
 import { connect, FormikProps } from 'formik'
 
-import { FormInput, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
+import { AllowedTypes, FormInput, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import type { EnvironmentGroupResponseDTO, EnvironmentResponse, EnvironmentResponseDTO } from 'services/cd-ng'
@@ -24,7 +24,7 @@ interface DeployEnvironmentInEnvGroupProps {
   formik?: FormikProps<DeployStageConfig>
   readonly: boolean
   selectedEnvironmentGroup: EnvironmentGroupResponseDTO
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 function DeployEnvironmentInEnvGroup({
@@ -32,7 +32,7 @@ function DeployEnvironmentInEnvGroup({
   readonly,
   selectedEnvironmentGroup,
   allowableTypes
-}: DeployEnvironmentInEnvGroupProps) {
+}: DeployEnvironmentInEnvGroupProps): React.ReactElement {
   const { getString } = useStrings()
 
   const [environments, setEnvironments] = useState<EnvironmentResponseDTO[]>()

@@ -19,7 +19,6 @@
     [role*='row'] {
       padding: 0;
       box-shadow: none !important;
-      align-items: center;
       &:hover {
         background: rgba(220, 238, 255, 0.5) !important;
         border-color: transparent !important;
@@ -53,7 +52,6 @@
 
     [role*='row'] {
       box-shadow: none !important;
-      align-items: center !important;
 
       &:hover {
         background: transparent !important;

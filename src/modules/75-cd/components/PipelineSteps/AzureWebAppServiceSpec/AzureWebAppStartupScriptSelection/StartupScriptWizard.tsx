@@ -38,10 +38,10 @@ export function StartupScriptWizard<T>({
       iconProps={{
         size: 37
       }}
-      title={getString('pipeline.startupScript.file')}
+      title={getString('pipeline.startupScript.name')}
     >
       <StartupScriptWizardStepOne
-        name={getString('pipeline.startupScript.fileSource')}
+        name={getString('pipeline.fileSource')}
         stepName={getString('pipeline.startupScript.fileSource')}
         key={getString('pipeline.startupScript.fileSource')}
         expressions={expressions}

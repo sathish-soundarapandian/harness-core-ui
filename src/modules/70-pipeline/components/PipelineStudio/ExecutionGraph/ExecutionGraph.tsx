@@ -47,6 +47,7 @@ import EndNodeStep from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndN
 import StartNodeStep from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNodeStep'
 import { CIDependencyNode } from '@pipeline/components/PipelineDiagram/Nodes/StepGroupNode/CIDependencyNode'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
+import { NodeDimensionProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeDimensionStore'
 import { ExecutionStepModel, GridStyleInterface } from './ExecutionStepModel'
 import { StepType as PipelineStepType } from '../../PipelineSteps/PipelineStepInterface'
 import {
@@ -1118,22 +1119,24 @@ function ExecutionGraphRef<T extends StageElementConfig>(
         )}
         {newPipelineStudioEnabled ? (
           <>
-            <CDPipelineStudioNew
-              parentSelector=".Pane2"
-              selectedNodeId={selectedStepId}
-              loaderComponent={DiagramLoader}
-              data={stepsData}
-              createNodeTitle={getString('addStep')}
-              graphActionsLayout={canvasButtonsLayout}
-              graphLinkClassname={css.graphLink}
-            />
-            {hasRollback && (
-              <RollbackToggleSwitch
-                style={{ top: 62, ...rollBackPropsStyle, background: Color.WHITE }}
-                active={state.isRollback ? StepsType.Rollback : StepsType.Normal}
-                onChange={type => onRollbackToggleSwitchClick(type)}
+            <NodeDimensionProvider>
+              <CDPipelineStudioNew
+                parentSelector=".Pane2"
+                selectedNodeId={selectedStepId}
+                loaderComponent={DiagramLoader}
+                data={stepsData}
+                createNodeTitle={getString('addStep')}
+                graphActionsLayout={canvasButtonsLayout}
+                graphLinkClassname={css.graphLink}
               />
-            )}
+              {hasRollback && (
+                <RollbackToggleSwitch
+                  style={{ top: 62, ...rollBackPropsStyle, background: Color.WHITE }}
+                  active={state.isRollback ? StepsType.Rollback : StepsType.Normal}
+                  onChange={type => onRollbackToggleSwitchClick(type)}
+                />
+              )}
+            </NodeDimensionProvider>
           </>
         ) : (
           <>

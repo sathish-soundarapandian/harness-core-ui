@@ -6,16 +6,16 @@
  */
 
 import React from 'react'
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import { CurrentLocation, TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
-import data from '@pipeline/pages/pipeline-deployment-list/__tests__/execution-list.json'
+import filters from '@pipeline/pages/execution-list/__mocks__/filters.json'
+import executionList from '@pipeline/pages/execution-list/__mocks__/execution-list.json'
 import deploymentTypes from '@pipeline/pages/pipelines/__tests__/mocks/deploymentTypes.json'
 import services from '@pipeline/pages/pipelines/__tests__/mocks/services.json'
 import environments from '@pipeline/pages/pipelines/__tests__/mocks/environments.json'
-import filters from '@pipeline/pages/pipeline-deployment-list/__tests__/filters.json'
 import pipelines from '@pipeline/components/PipelineModalListView/__tests__/RunPipelineListViewMocks'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import { getMockFor_useGetPipeline } from '@pipeline/components/RunPipelineModal/__tests__/mocks'
@@ -33,7 +33,7 @@ jest.mock('services/pipeline-ng', () => ({
   useGetExecutionData: jest.fn().mockReturnValue({}),
   useGetPipelineSummary: getMockFor_useGetPipeline,
   useGetListOfExecutions: jest.fn(() => ({
-    mutate: jest.fn(() => Promise.resolve(data)),
+    mutate: jest.fn(() => Promise.resolve(executionList)),
     loading: false,
     cancel: jest.fn()
   })),
@@ -138,7 +138,7 @@ describe('<CIPipelineDeploymentList /> tests', () => {
   })
 
   test('call run pipeline', async () => {
-    const { findByText, getByTestId } = render(
+    const { getByTestId } = render(
       <TestWrapper
         path={TEST_PATH}
         pathParams={{
@@ -154,9 +154,8 @@ describe('<CIPipelineDeploymentList /> tests', () => {
       </TestWrapper>
     )
 
-    const runButton = await findByText('runPipelineText')
+    const runButton = await screen.findByText('runPipelineText')
     fireEvent.click(runButton)
-
     expect(getByTestId('location')).toMatchInlineSnapshot(`
       <div
         data-testid="location"

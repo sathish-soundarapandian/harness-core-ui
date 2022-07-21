@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Card, Color, FormInput, Layout, MultiTypeInputType, Text } from '@harness/uicore'
+import { AllowedTypes, Card, Color, FormInput, Layout, Text } from '@harness/uicore'
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -23,7 +23,7 @@ import { spacingMedium } from './MonitoredServiceInputTemplatesHealthSources.con
 interface MonitoredServiceInputTemplatesHealthSourcesProps {
   templateIdentifier: string
   versionLabel: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   healthSources: TemplateInputs['sources']['healthSources']
 }
 

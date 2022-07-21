@@ -7,13 +7,17 @@
 
 import React from 'react'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 
 import { TerraformConfigStepOne } from '../Editview/TerraformConfigFormStepOne'
 import { TerraformConfigStepTwo } from '../Editview/TerraformConfigFormStepTwo'
 
-const allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+const allowableTypes: AllowedTypesWithRunTime[] = [
+  MultiTypeInputType.FIXED,
+  MultiTypeInputType.RUNTIME,
+  MultiTypeInputType.EXPRESSION
+]
 let isTerraformPlan = false
 const renderStepOneComponent = (data: any): void => {
   render(

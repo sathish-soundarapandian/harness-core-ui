@@ -6,7 +6,15 @@
  */
 
 import React from 'react'
-import { Layout, getMultiTypeFromValue, MultiTypeInputType, Text, Icon, IconName } from '@wings-software/uicore'
+import {
+  Layout,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  Text,
+  Icon,
+  IconName,
+  AllowedTypes
+} from '@wings-software/uicore'
 import { isEmpty, get, defaultTo, set } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
@@ -54,7 +62,7 @@ export interface PipelineInputSetFormProps {
   isRunPipelineForm?: boolean
   listOfSelectedStages?: string[]
   isRetryFormStageSelected?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   viewTypeMetadata?: Record<string, boolean>
   gitAwareForTriggerEnabled?: boolean
 }
@@ -83,7 +91,7 @@ export function StageFormInternal({
   readonly?: boolean
   viewType: StepViewType
   stageClassName?: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   executionIdentifier?: string
 }): JSX.Element {
   const { getString } = useStrings()
@@ -162,7 +170,7 @@ export function StageForm({
   hideTitle?: boolean
   stageClassName?: string
   executionIdentifier?: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }): JSX.Element {
   const isTemplateStage = !!template?.stage?.template
   const type = isTemplateStage
@@ -286,7 +294,11 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
               canAddVariable: true
             }}
             // pipeline varibales do not support execution time inputs
-            allowableTypes={allowableTypes.filter(type => type !== MultiTypeInputType.RUNTIME)}
+            allowableTypes={
+              (allowableTypes as MultiTypeInputType[]).filter(
+                type => type !== MultiTypeInputType.RUNTIME
+              ) as AllowedTypes
+            }
             readonly={readonly}
             type={StepType.CustomVariable}
             stepViewType={viewType}

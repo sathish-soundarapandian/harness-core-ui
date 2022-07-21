@@ -10,7 +10,15 @@ import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
 import { connect, FormikProps } from 'formik'
 
-import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, useToaster } from '@harness/uicore'
+import {
+  FormInput,
+  getMultiTypeFromValue,
+  Layout,
+  MultiTypeInputType,
+  SelectOption,
+  useToaster,
+  AllowedTypes as MultiTypeAllowedValues
+} from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import { EnvironmentGroupResponse, EnvironmentGroupResponseDTO, useGetEnvironmentGroupList } from 'services/cd-ng'
@@ -28,7 +36,7 @@ interface DeployEnvironmentGroupProps {
   initialValues: DeployStageConfig
   formik?: FormikProps<DeployStageConfig>
   readonly?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: MultiTypeAllowedValues
   serviceRef?: string
   path?: string
 }

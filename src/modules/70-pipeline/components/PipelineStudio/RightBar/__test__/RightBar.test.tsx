@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
-import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import { factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -126,7 +126,11 @@ export const pipelineContext: PipelineContextInterface = {
   updatePipeline: jest.fn(),
   state: stateMock as any,
   contextType: 'Pipeline',
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   stepsFactory: factory,
   stagesMap: {},
   isReadonly: false,

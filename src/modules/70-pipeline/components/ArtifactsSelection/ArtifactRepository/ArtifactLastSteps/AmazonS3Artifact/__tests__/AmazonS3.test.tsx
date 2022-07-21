@@ -17,7 +17,7 @@ import {
   queryAllByAttribute
 } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { MultiTypeInputType, RUNTIME_INPUT_VALUE, StepProps } from '@harness/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE, StepProps } from '@harness/uicore'
 
 import * as cdng from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -51,7 +51,11 @@ export const props: Omit<StepProps<cdng.ConnectorConfigDTO> & AmazonS3ArtifactPr
   key: 'key',
   name: 'Artifact details',
   expressions: [],
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   context: 1,
   handleSubmit: onSubmit,
   artifactIdentifiers: [],

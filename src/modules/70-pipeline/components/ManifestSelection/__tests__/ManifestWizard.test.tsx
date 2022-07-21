@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { findAllByText, findByText, fireEvent, render } from '@testing-library/react'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import type { ManifestConfig } from 'services/cd-ng'
 import { ManifestWizard } from '../ManifestWizard/ManifestWizard'
@@ -260,7 +260,11 @@ describe('ManifestSelection tests', () => {
     const laststepProps = {
       name: 'Manifest Details',
       expressions: [''],
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.RUNTIME,
+        MultiTypeInputType.EXPRESSION
+      ] as AllowedTypesWithRunTime[],
       stepName: 'Manifest Details Step',
       initialValues: null as unknown as ManifestConfig,
       handleSubmit: jest.fn(),
@@ -302,7 +306,11 @@ describe('ManifestSelection tests', () => {
     const laststepProps = {
       name: 'Manifest Details',
       expressions: [''],
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.RUNTIME,
+        MultiTypeInputType.EXPRESSION
+      ] as AllowedTypesWithRunTime[],
       stepName: 'Manifest Details Step',
       manifestIdsList: [],
       initialValues: {

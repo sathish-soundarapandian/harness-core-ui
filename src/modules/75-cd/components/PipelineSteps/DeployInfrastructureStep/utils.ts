@@ -14,7 +14,8 @@ import {
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
   SelectOption,
-  MultiSelectWithSubmenuOption
+  MultiSelectWithSubmenuOption,
+  AllowedTypes
 } from '@harness/uicore'
 import type { EnvironmentResponseDTO } from 'services/cd-ng'
 import type { UseStringsReturn } from 'framework/strings'
@@ -28,7 +29,7 @@ export interface DeployInfrastructureProps {
   initialValues: DeployStageConfig
   onUpdate?: (data: DeployStageConfig) => void
   readonly: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   serviceRef?: string
   inputSetData?: {

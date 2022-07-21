@@ -7,7 +7,7 @@
 
 import type { FormikProps } from 'formik'
 import type { GetDataError } from 'restful-react'
-import type { MultiTypeInputType, SelectOption } from '@wings-software/uicore'
+import type { AllowedTypes, SelectOption } from '@wings-software/uicore'
 import type { InputSetData, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type {
   Failure,
@@ -44,7 +44,7 @@ export interface JiraUpdateStepModeProps {
   initialValues: JiraUpdateData
   onUpdate?: (data: JiraUpdateData) => void
   onChange?: (data: JiraUpdateData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   isNewStep?: boolean
   readonly?: boolean
 }
@@ -52,7 +52,7 @@ export interface JiraUpdateStepModeProps {
 export interface JiraUpdateFormContentInterface {
   formik: FormikProps<JiraUpdateData>
   stepViewType: StepViewType
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   refetchProjects: (props: UseGetJiraProjectsProps) => Promise<void>
   refetchStatuses: (props: UseGetJiraStatusesProps) => Promise<void>
   fetchingProjects: boolean
@@ -70,7 +70,7 @@ export interface JiraUpdateDeploymentModeProps {
   initialValues: JiraUpdateData
   onUpdate?: (data: JiraUpdateData) => void
   inputSetData?: InputSetData<JiraUpdateData>
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   formik?: any
 }
 

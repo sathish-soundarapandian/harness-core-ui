@@ -19,7 +19,8 @@ import {
   IconName,
   ButtonVariation,
   FormikForm,
-  ButtonSize
+  ButtonSize,
+  AllowedTypes
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
@@ -51,7 +52,7 @@ import css from './ManifestWizardSteps.module.scss'
 interface ManifestStorePropType {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   isReadonly: boolean
   manifestStoreTypes: Array<ManifestStores>
   initialValues: ManifestStepInitData

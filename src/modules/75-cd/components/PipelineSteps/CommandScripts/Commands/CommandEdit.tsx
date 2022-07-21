@@ -15,7 +15,7 @@ import {
   Formik,
   FormikForm,
   FormInput,
-  MultiTypeInputType,
+  AllowedTypes,
   SelectOption
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
@@ -29,7 +29,7 @@ import css from './CommandEdit.module.scss'
 interface CommandEditProps {
   isEdit: boolean
   initialValues: CommandUnitType
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   readonly?: boolean
   onAddEditCommand: (commandData: CommandUnitType) => void
   onCancelClick: () => void

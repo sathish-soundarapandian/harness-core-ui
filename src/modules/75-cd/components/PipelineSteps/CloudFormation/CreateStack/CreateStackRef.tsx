@@ -24,7 +24,8 @@ import {
   SelectOption,
   Button,
   Icon,
-  useToaster
+  useToaster,
+  AllowedTypes
 } from '@harness/uicore'
 import { map, get, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
@@ -33,17 +34,18 @@ import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { IdentifierSchemaWithOutName, NameSchema, ConnectorRefSchema } from '@common/utils/Validation'
+import { IdentifierSchemaWithOutName, ConnectorRefSchema } from '@common/utils/Validation'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useListAwsRegions } from 'services/portal'
 import { useCFCapabilitiesForAws, useCFStatesForAws, useGetIamRolesForAws } from 'services/cd-ng'
 import { Connectors } from '@connectors/constants'
 import { useQueryParams } from '@common/hooks'
+import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { TFMonaco } from '../../Common/Terraform/Editview/TFMonacoEditor'
 import CFRemoteWizard from './RemoteFilesForm/CFRemoteWizard'
 import { InlineParameterFile } from './InlineParameterFile'
@@ -61,7 +63,15 @@ enum TemplateTypes {
 }
 
 export const CreateStack = (
-  { allowableTypes, isNewStep, readonly = false, initialValues, onUpdate, onChange }: CloudFormationCreateStackProps,
+  {
+    allowableTypes,
+    isNewStep,
+    readonly = false,
+    initialValues,
+    onUpdate,
+    onChange,
+    stepViewType
+  }: CloudFormationCreateStackProps,
   formikRef: StepFormikFowardRef
 ): JSX.Element => {
   const { getString } = useStrings()
@@ -224,7 +234,7 @@ export const CreateStack = (
         onUpdate?.(payload)
       }}
       validationSchema={Yup.object().shape({
-        name: NameSchema({ requiredErrorMsg: getString('pipelineSteps.stepNameRequired') }),
+        ...getNameAndIdentifierSchema(getString, stepViewType),
         timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
         spec: Yup.object().shape({
           provisionerIdentifier: Yup.lazy((value): Yup.Schema<unknown> => {
@@ -287,15 +297,17 @@ export const CreateStack = (
         const templateError = get(errors, 'spec.configuration.templateFile.spec.store.spec.connectorRef')
         return (
           <>
-            <div className={cx(stepCss.formGroup, stepCss.lg)}>
-              <FormInput.InputWithIdentifier
-                inputLabel={getString('name')}
-                isIdentifierEditable={isNewStep}
-                inputGroupProps={{
-                  disabled: readonly
-                }}
-              />
-            </div>
+            {stepViewType !== StepViewType.Template && (
+              <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                <FormInput.InputWithIdentifier
+                  inputLabel={getString('name')}
+                  isIdentifierEditable={isNewStep}
+                  inputGroupProps={{
+                    disabled: readonly
+                  }}
+                />
+              </div>
+            )}
             <div className={cx(stepCss.formGroup, stepCss.sm)}>
               <FormMultiTypeDurationField
                 name="timeout"
@@ -688,7 +700,11 @@ export const CreateStack = (
                         </Text>
                       }
                       defaultValueToReset=""
-                      allowedTypes={allowableTypes.filter(item => item !== MultiTypeInputType.EXPRESSION)}
+                      allowedTypes={
+                        (allowableTypes as MultiTypeInputType[]).filter(
+                          item => item !== MultiTypeInputType.EXPRESSION
+                        ) as AllowedTypes
+                      }
                       skipRenderValueInExpressionLabel
                       disabled={readonly}
                     >
@@ -715,7 +731,11 @@ export const CreateStack = (
                         </Text>
                       }
                       defaultValueToReset=""
-                      allowedTypes={allowableTypes.filter(item => item !== MultiTypeInputType.EXPRESSION)}
+                      allowedTypes={
+                        (allowableTypes as MultiTypeInputType[]).filter(
+                          item => item !== MultiTypeInputType.EXPRESSION
+                        ) as AllowedTypes
+                      }
                       skipRenderValueInExpressionLabel
                       disabled={readonly}
                     >
@@ -760,6 +780,8 @@ export const CreateStack = (
                 /* istanbul ignore next */
                 setInlineParams(false)
               }}
+              readonly={readonly}
+              allowableTypes={allowableTypes}
               awsConnectorRef={awsConnector}
               type={templateFileType}
               region={awsRegion}

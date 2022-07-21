@@ -20,7 +20,9 @@ const initialValues = {
   name: 'test name',
   identifier: 'test_identifier',
   timeout: '10m',
-  spec: {}
+  spec: {
+    targetSlot: 'targetSlot'
+  }
 }
 
 const renderComponent = (data: any) => {
@@ -54,7 +56,9 @@ describe('Test Azure Web App Swap Slot input set', () => {
       name: 'test name',
       identifier: 'test_identifier',
       timeout: '10m',
-      spec: {}
+      spec: {
+        targetSlot: 'test_targetSlot'
+      }
     }
     const { container } = renderComponent(data)
     expect(container).toMatchSnapshot()

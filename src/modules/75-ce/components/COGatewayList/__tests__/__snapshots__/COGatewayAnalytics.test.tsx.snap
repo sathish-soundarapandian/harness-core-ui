@@ -502,7 +502,7 @@ exports[`Autostopping rule analytics drawer render analytics drawer 1`] = `
         <p
           class="StyledProps--font StyledProps--main"
         >
-          Showing data for Last 7 days
+          ce.co.ruleDrawer.lastWeekDataLabel
         </p>
       </div>
       <h3
@@ -1111,7 +1111,7 @@ exports[`Autostopping rule analytics drawer render k8s rule analytics drawer 1`]
         <p
           class="StyledProps--font StyledProps--main"
         >
-          Showing data for Last 7 days
+          ce.co.ruleDrawer.lastWeekDataLabel
         </p>
       </div>
       <h3

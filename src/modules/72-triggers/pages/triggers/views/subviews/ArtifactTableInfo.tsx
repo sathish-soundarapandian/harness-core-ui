@@ -378,7 +378,7 @@ const ArtifactTableInfo = (props: ArtifactTableInfoInterface): JSX.Element => {
             artifact: artifactOrManifestText.toLowerCase(),
             runTimeStr: isManifest
               ? getString('pipeline.manifestType.http.chartVersion')
-              : getString('pipeline.artifactTriggerConfigPanel.tagArtifactPath')
+              : getString('pipeline.artifactTriggerConfigPanel.tagArtifactPathBuild')
           })}
         </Text>
       )}

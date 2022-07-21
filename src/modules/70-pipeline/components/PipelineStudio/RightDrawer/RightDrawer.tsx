@@ -408,6 +408,7 @@ export function RightDrawer(): React.ReactElement {
       pipelineView: { drawerData, isDrawerOpened, isSplitViewOpen },
       pipelineView,
       selectionState: { selectedStageId, selectedStepId },
+      gitDetails,
       pipeline
     },
     allowableTypes,
@@ -789,6 +790,7 @@ export function RightDrawer(): React.ReactElement {
           isStepGroup={data.stepConfig.isStepGroup}
           hiddenPanels={data.stepConfig.hiddenAdvancedPanels}
           stageType={stageType as StageType}
+          gitDetails={gitDetails}
         />
       )}
       {type === DrawerTypes.AddStep && selectedStageId && data?.paletteData && (

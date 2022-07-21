@@ -31,7 +31,9 @@ const enableGitOpsUI = process.env.ENABLE_GITOPSUI !== 'false'
 const enableChaosUI = process.env.ENABLE_CHAOS === 'true'
 const enableCCMUI = process.env.ENABLE_CCM_UI === 'true'
 const enableSTO = process.env.ENABLE_STO !== 'false'
-const HARNESS_ENABLE_NG_AUTH_UI = process.env.HARNESS_ENABLE_NG_AUTH_UI !== 'false'
+
+console.log('Common build flags')
+console.table({ enableGovernance, enableGitOpsUI, enableChaosUI, enableCCMUI, enableSTO })
 
 const config = {
   context: CONTEXT,

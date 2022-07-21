@@ -11,6 +11,7 @@ import { defaultTo, get, isEmpty, isEqual, isNil, uniqBy } from 'lodash-es'
 import { connect, FormikProps } from 'formik'
 
 import {
+  AllowedTypes,
   FormInput,
   getMultiTypeFromValue,
   MultiSelectTypeInput,
@@ -36,11 +37,17 @@ interface DeployClusterProps {
   formik?: FormikProps<DeployStageConfig>
   readonly?: boolean
   environmentIdentifier: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   path?: string
 }
 
-function DeployClusters({ formik, readonly, environmentIdentifier, allowableTypes, path }: DeployClusterProps) {
+function DeployClusters({
+  formik,
+  readonly,
+  environmentIdentifier,
+  allowableTypes,
+  path
+}: DeployClusterProps): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
   const { showError } = useToaster()

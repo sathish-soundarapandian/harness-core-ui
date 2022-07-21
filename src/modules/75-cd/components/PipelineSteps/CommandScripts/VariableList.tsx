@@ -9,7 +9,7 @@ import React from 'react'
 import { get } from 'lodash-es'
 import { FieldArray, FormikProps } from 'formik'
 import { v4 as uuid } from 'uuid'
-import { Button, ButtonVariation, FormInput, MultiTypeInputType } from '@wings-software/uicore'
+import { Button, ButtonVariation, FormInput, AllowedTypes } from '@wings-software/uicore'
 
 import type { NGVariable } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -25,7 +25,7 @@ interface VariableListProps {
   fieldName: string
   fieldLabel: string
   readonly?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export const VariableList = (props: VariableListProps): React.ReactElement => {

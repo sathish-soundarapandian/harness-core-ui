@@ -86,7 +86,7 @@ exports[`AzureWebAppConfigSelection initial render 1`] = `
         <span
           class="StepWizard--title StepWizard--header"
         >
-          pipeline.appServiceConfig.applicationSettings.scriptFile
+          pipeline.appServiceConfig.applicationSettings.name
         </span>
         <div
           class="StepWizard--navStep StepWizard--activeStep"
@@ -100,7 +100,7 @@ exports[`AzureWebAppConfigSelection initial render 1`] = `
             class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
             style="--text-line-clamp: 2; width: 200px;"
           >
-            pipeline.appServiceConfig.applicationSettings.scriptFileSource
+            pipeline.fileSource
           </p>
           <p
             class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
@@ -121,7 +121,7 @@ exports[`AzureWebAppConfigSelection initial render 1`] = `
             class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
             style="--text-line-clamp: 2; width: 200px;"
           >
-            pipeline.appServiceConfig.applicationSettings.scriptFileDetails
+            pipeline.fileDetails
           </p>
         </div>
       </div>

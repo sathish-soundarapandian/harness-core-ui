@@ -6,11 +6,13 @@
  */
 
 import React from 'react'
+import { get, pick } from 'lodash-es'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import type {
   AzureSlotDeploymentData,
   AzureSlotDeploymentVariableStepProps
 } from './AzureSlotDeploymentInterface.types'
+
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 export function AzureSlotDeploymentVariableStep({
@@ -18,10 +20,11 @@ export function AzureSlotDeploymentVariableStep({
   metadataMap,
   initialValues
 }: AzureSlotDeploymentVariableStepProps): React.ReactElement {
+  const data: Record<any, any> = pick(get(variablesData, 'spec', {}), ['webApp', 'deploymentSlot'])
   return (
     <VariablesListTable
-      data={variablesData}
-      originalData={initialValues}
+      data={data}
+      originalData={initialValues as Record<string, any>}
       metadataMap={metadataMap}
       className={pipelineVariableCss.variablePaddingL3}
     />

@@ -20,7 +20,8 @@ import {
   MultiTypeInputType,
   Container,
   Checkbox,
-  StepProps
+  StepProps,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
@@ -36,7 +37,7 @@ import type { Connector } from '../TerraformInterfaces'
 import css from './TerraformConfigForm.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 interface TerraformConfigStepTwoProps {
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   isReadonly: boolean
   onSubmitCallBack: any
   isTerraformPlan?: boolean

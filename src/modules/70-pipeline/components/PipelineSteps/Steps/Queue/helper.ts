@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes } from '@wings-software/uicore'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { StepElementConfig } from 'services/cd-ng'
 import type { StringsMap } from 'stringTypes'
@@ -26,7 +26,7 @@ export interface QueueProps {
   initialValues: QueueData
   onUpdate?: (data: QueueData) => void
   stepViewType: StepViewType
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   isNewStep?: boolean
   inputSetData?: {
     template?: QueueData

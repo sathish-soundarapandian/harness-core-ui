@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { defaultTo } from 'lodash-es'
-import { Text, NestedAccordionPanel, MultiTypeInputType } from '@wings-software/uicore'
+import { Text, NestedAccordionPanel, AllowedTypes } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import cx from 'classnames'
 import type {
@@ -34,7 +34,7 @@ export interface MonitoredServiceCardProps {
   metadataMap: PipelineVariablesData['metadataMap']
   readonly?: boolean
   path?: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepsFactory: AbstractStepFactory
   updateMonitoredService: (monitoredService: MonitoredServiceConfig) => Promise<void>
 }

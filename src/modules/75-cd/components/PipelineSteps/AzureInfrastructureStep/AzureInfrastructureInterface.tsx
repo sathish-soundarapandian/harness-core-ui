@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MultiTypeInputType, SelectOption } from '@harness/uicore'
+import type { AllowedTypes, SelectOption } from '@harness/uicore'
 import * as Yup from 'yup'
 import { isEmpty } from 'lodash-es'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -90,5 +90,5 @@ export interface AzureInfrastructureSpecEditableProps {
   template?: AzureInfrastructureTemplate
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: K8sAzureInfrastructure
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }

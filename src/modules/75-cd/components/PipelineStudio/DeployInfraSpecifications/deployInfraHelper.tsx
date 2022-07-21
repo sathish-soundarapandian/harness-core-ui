@@ -126,19 +126,11 @@ export const getInfrastructureDefaultValue = (
       const connectorRef = infrastructure?.spec?.connectorRef
       const subscriptionId = infrastructure?.spec?.subscriptionId
       const resourceGroup = infrastructure?.spec?.resourceGroup
-      const webApp = infrastructure?.spec?.webApp
-      const deploymentSlot = infrastructure?.spec?.deploymentSlot
-      const targetSlot = infrastructure?.spec?.targetSlot
-      const releaseName = infrastructure?.spec?.releaseName ?? DEFAULT_RELEASE_NAME
 
       return {
         connectorRef,
         subscriptionId,
         resourceGroup,
-        webApp,
-        deploymentSlot,
-        targetSlot,
-        releaseName,
         allowSimultaneousDeployments
       }
     }
@@ -192,6 +184,7 @@ export const getInfraGroups = (
   featureFlags: Record<string, boolean>
 ): InfrastructureGroup[] => {
   const { NG_AZURE } = featureFlags
+
   return isServerlessDeploymentType(deploymentType)
     ? [
         {

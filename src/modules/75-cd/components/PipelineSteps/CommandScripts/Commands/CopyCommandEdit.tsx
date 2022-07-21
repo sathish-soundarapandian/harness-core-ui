@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { FormikProps } from 'formik'
-import { Color, Container, FormInput, MultiTypeInputType, Text } from '@harness/uicore'
+import { Color, Container, FormInput, AllowedTypes, Text } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
@@ -17,7 +17,7 @@ import css from './CommandEdit.module.scss'
 
 interface CopyCommandEditProps {
   formik: FormikProps<CommandUnitType>
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   readonly?: boolean
 }
 

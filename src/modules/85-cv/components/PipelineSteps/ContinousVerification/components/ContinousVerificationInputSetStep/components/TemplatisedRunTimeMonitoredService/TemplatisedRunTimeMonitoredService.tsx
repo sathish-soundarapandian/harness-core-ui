@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Card, Color, FormInput, Layout, MultiTypeInputType, Text } from '@harness/uicore'
+import { AllowedTypes, Card, Color, FormInput, Layout, Text } from '@harness/uicore'
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import type { VerifyStepMonitoredService } from '@cv/components/PipelineSteps/ContinousVerification/types'
@@ -30,7 +30,7 @@ export interface TemplatisedRunTimeMonitoredServiceProps {
   prefix: string
   monitoredService?: VerifyStepMonitoredService
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export default function TemplatisedRunTimeMonitoredService(
@@ -87,7 +87,7 @@ export default function TemplatisedRunTimeMonitoredService(
                       accountIdentifier={accountId}
                       projectIdentifier={projectIdentifier}
                       orgIdentifier={orgIdentifier}
-                      width={391}
+                      width={370}
                       name={`${prefix}spec.monitoredService.spec.templateInputs.${input.path}`}
                       label={getString('connector')}
                       placeholder={getString('cv.healthSource.connectors.selectConnector', {
@@ -97,6 +97,7 @@ export default function TemplatisedRunTimeMonitoredService(
                       setRefValue
                       multiTypeProps={{ allowableTypes, expressions }}
                       type={healthSource?.type}
+                      enableConfigureOptions={false}
                     />
                   )
                 } else {

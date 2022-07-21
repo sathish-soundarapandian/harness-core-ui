@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { MultiTypeInputType } from '@harness/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import pipelineContextMock from '@pipeline/components/ManifestSelection/__tests__/pipeline_mock.json'
 import connectorsData from '@pipeline/components/ManifestSelection/__tests__/connectors_mock.json'
 import {
@@ -132,7 +132,11 @@ export const propStepTwo = {
   key: 'pipeline.applicationSettings.fileDetails',
   name: 'pipeline.applicationSettings.fileDetails',
   expressions: [],
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   stepName: 'pipeline.applicationSettings.fileDetails',
   initialValues: {
     ...applicationSettings,
@@ -156,7 +160,11 @@ export const propStepOne = {
     connectorRef: '<+input>'
   } as any,
   expressions: [],
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   prevStepData: { ...prevStepData },
   nextStep: jest.fn()
 }
@@ -165,7 +173,11 @@ export const propWizard = {
   connectorTypes: ['Git', 'Github', 'GitLab', 'Bitbucket'] as Array<ConnectorTypes>,
   newConnectorView: true,
   expressions: [],
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   handleConnectorViewChange: jest.fn(),
   handleStoreChange: jest.fn(),
   initialValues: {

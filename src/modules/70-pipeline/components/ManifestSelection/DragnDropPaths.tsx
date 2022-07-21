@@ -15,7 +15,8 @@ import {
   Text,
   Button,
   Icon,
-  ButtonSize
+  ButtonSize,
+  AllowedTypes
 } from '@wings-software/uicore'
 
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
@@ -27,7 +28,7 @@ import css from './ManifestWizardSteps/K8sValuesManifest/ManifestDetails.module.
 export interface DragnDropPathsProps<T = unknown> {
   formik: FormikValues
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   pathLabel: string
   fieldPath: string
   placeholder: string
@@ -64,7 +65,11 @@ function DragnDropPaths({
           <div {...provided.droppableProps} ref={provided.innerRef}>
             <MultiTypeFieldSelector
               defaultValueToReset={[defaultValue]}
-              allowedTypes={allowableTypes.filter(allowedType => allowedType !== MultiTypeInputType.EXPRESSION)}
+              allowedTypes={
+                (allowableTypes as MultiTypeInputType[]).filter(
+                  allowedType => allowedType !== MultiTypeInputType.EXPRESSION
+                ) as AllowedTypes
+              }
               name={fieldPath}
               label={<Text>{pathLabel}</Text>}
             >
@@ -96,9 +101,9 @@ function DragnDropPaths({
                                 style={{ width: 275 }}
                                 multiTextInputProps={{
                                   expressions,
-                                  allowableTypes: allowableTypes.filter(
+                                  allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
                                     allowedType => allowedType !== MultiTypeInputType.RUNTIME
-                                  )
+                                  ) as AllowedTypes
                                 }}
                               />
 

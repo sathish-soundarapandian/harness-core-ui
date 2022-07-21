@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { FormikProps, FieldArray } from 'formik'
-import { Button, ButtonVariation, FormikForm, FormInput, MultiTypeInputType } from '@wings-software/uicore'
+import { Button, ButtonVariation, FormikForm, FormInput, AllowedTypes } from '@wings-software/uicore'
 import { v4 as uuid } from 'uuid'
 import type { IOptionProps } from '@blueprintjs/core'
 
@@ -36,7 +36,7 @@ export const targetTypeOptions: IOptionProps[] = [
 export default function OptionalConfiguration(props: {
   formik: FormikProps<CustomApprovalFormData>
   readonly?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }): React.ReactElement {
   const { formik, readonly, allowableTypes } = props
   const { values: formValues } = formik

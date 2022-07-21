@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { connect } from 'formik'
-import { Layout, MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypes, Layout } from '@wings-software/uicore'
 import cx from 'classnames'
 
 import { useStrings } from 'framework/strings'
@@ -38,7 +38,7 @@ export interface KubernetesInputSetProps {
   stageIdentifier: string
   serviceIdentifier?: string
   formik?: any
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 const KubernetesServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetProps): React.ReactElement => {
   const {

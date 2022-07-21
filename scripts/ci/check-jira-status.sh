@@ -5,22 +5,35 @@
 # https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
 
 set +e
-
-PROJECTS="ART|BT|CCE|CCM|CDS|CE|CI|COMP|CV|CVNG|DEL|DOC|DX|ER|FFM|OPA|OPS|PIP|PL|SEC|STO|SWAT|GTM|ONP|PIE|LWG|CHAOS"
+. scripts/ci/read-jira-projects.sh
+if [ "$?" -ne 0 ]
+then
+  exit 1
+fi
 
 KEY=`echo "${ghprbPullTitle}" | grep -o -iE "\[(${PROJECTS})-[0-9]+]:" | grep -o -iE "(${PROJECTS})-[0-9]+"`
 
 echo "${ghprbPullTitle}"
-echo $KEY
+echo "$KEY"
 
 jira_response=`curl -X GET -H "Content-Type: application/json" https://harness.atlassian.net/rest/api/2/issue/${KEY}?fields=issuetype,customfield_10687,customfield_10709,customfield_10748,customfield_10763,customfield_10785 --user $JIRA_USERNAME:$JIRA_PASSWORD`
 
-issuetype=`echo "${jira_response}" | jq ".fields.issuetype.name" | tr -d '"'`
-bug_resolution=`echo "${jira_response}" | jq ".fields.customfield_10687" | tr -d '"'`
-jira_resolved_as=`echo "${jira_response}" | jq ".fields.customfield_10709" | tr -d '"'`
-phase_injected=`echo "${jira_response}" | jq ".fields.customfield_10748" | tr -d '"'`
-what_changed=`echo "${jira_response}" | jq ".fields.customfield_10763" | tr -d '"'`
-ff_added=`echo "${jira_response}" | jq ".fields.customfield_10785.value" | tr -d '"'`
+
+if [[ "$KEY" == BT-* || "$KEY" == SPG-* ]]
+then
+  bug_resolution="n/a"
+  what_changed="n/a"
+  ff_added="n/a"
+  jira_resolved_as="n/a"
+  phase_injected="n/a"
+else
+  issuetype=`echo "${jira_response}" | jq ".fields.issuetype.name" | tr -d '"'`
+  bug_resolution=`echo "${jira_response}" | jq ".fields.customfield_10687" | tr -d '"'`
+  jira_resolved_as=`echo "${jira_response}" | jq ".fields.customfield_10709" | tr -d '"'`
+  phase_injected=`echo "${jira_response}" | jq ".fields.customfield_10748" | tr -d '"'`
+  what_changed=`echo "${jira_response}" | jq ".fields.customfield_10763" | tr -d '"'`
+  ff_added=`echo "${jira_response}" | jq ".fields.customfield_10785.value" | tr -d '"'`
+fi
 
 echo "issueType is ${issuetype}"
 

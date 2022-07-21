@@ -8,7 +8,7 @@
 import React from 'react'
 import produce from 'immer'
 import { set } from 'lodash-es'
-import { MultiTypeInputType, NestedAccordionPanel, Text } from '@wings-software/uicore'
+import { AllowedTypes, NestedAccordionPanel, Text } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import type { ExecutionElementConfig, ExecutionWrapperConfig, StepElementConfig } from 'services/cd-ng'
 
@@ -51,7 +51,7 @@ export interface ExecutionCardProps {
   onUpdateExecution(data: ExecutionElementConfig): void
   readonly?: boolean
   path?: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepsFactory: AbstractStepFactory
 }
 

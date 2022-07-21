@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Formik, IconName, MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypes, Formik, IconName } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
 import type { FormikErrors, FormikProps } from 'formik'
@@ -48,7 +48,7 @@ interface CreatePrProps {
   initialValues: CreatePRStepData
   onUpdate?: (data: CreatePRStepData) => void
   onChange?: (data: CreatePRStepData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   isNewStep?: boolean
   readonly?: boolean

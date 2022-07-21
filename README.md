@@ -142,7 +142,7 @@ $ yarn test
 
 ### Hotfix Process
 
-1. Find out which release branch you need to hotfix. You can do that checking the currently deployed version in the environment you want to hotfix. For eg. For UAT environment, you can hit https://uat.harness.io/ng/static/version.json to get the currently deployed version. (ex. `0.53.4`)
+1. Find out which release branch you need to hotfix. You can do that checking the currently deployed version in the environment you want to hotfix. For example, for prod environment you can hit https://app.harness.io/ng/static/version.json to get the currently deployed version. (ex. `0.53.4`)
 2. Create a branch from the corresponding release branch (ex. `release/0.53.x`) which you want to hotfix
 3. Commit your changes on your branch
 4. Bump up the patch version in `package.json` (ex. 0.53.4 -> 0.53.5)

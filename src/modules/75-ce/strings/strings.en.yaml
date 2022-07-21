@@ -75,6 +75,7 @@ co:
     spendVsSavings: 'Spend vs savings'
     dbInstances: 'DB Instance'
     dbInstancesPlural: 'DB Instances'
+    lastWeekDataLabel: 'Showing data for Last 7 days'
   autoStoppingRule:
     limitWarningMessage: You have used {{count}} / {{limit}} free Autostopping rules included in your current plan. Consider upgrading for unlimited Autostopping rules.
     helpText:

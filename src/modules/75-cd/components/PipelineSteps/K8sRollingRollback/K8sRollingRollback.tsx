@@ -6,7 +6,15 @@
  */
 
 import React from 'react'
-import { IconName, Formik, FormInput, Layout, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import {
+  IconName,
+  Formik,
+  FormInput,
+  Layout,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  AllowedTypes
+} from '@wings-software/uicore'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
@@ -51,7 +59,7 @@ interface K8sRollingRollbackProps {
   initialValues: K8sRollingRollbackData
   onUpdate?: (data: K8sRollingRollbackData) => void
   onChange?: (data: K8sRollingRollbackData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   readonly?: boolean
   stepViewType?: StepViewType
   isNewStep?: boolean

@@ -137,6 +137,7 @@ export class AzureTrafficShift extends PipelineStep<AzureTrafficShiftStepInfo> {
         isNewStep={isNewStep}
         ref={formikRef}
         readonly={readonly}
+        stepViewType={stepViewType}
       />
     )
   }

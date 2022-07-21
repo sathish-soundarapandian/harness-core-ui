@@ -3,16 +3,21 @@
 # Use of this source code is governed by the PolyForm Shield 1.0.0 license
 # that can be found in the licenses directory at the root of this repository, also available at
 # https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
-
 set +e
-
-PR_MESSAGE=`echo "${ghprbPullTitle}" | grep -iE '(feat|fix|chore|refactor): \[(PLG|ART|BT|CCE|CCM|CDB|CDS|CE|CI|COMP|SRM|DEL|DOC|DX|ER|FFM|OPA|OPS|PIP|PL|SEC|STO|SWAT|GTM|ONP|PIE|LWG|GIT|OENG|BG|CHAOS)-[0-9]+]:'`
+. scripts/ci/read-jira-projects.sh
+if [ "$?" -ne 0 ]
+then
+  exit 1
+fi
+COMMIT_CONTENT="\[feat]|\[fix]|\[techdebt]|\[refactor]|feat|fix|techdebt|refactor"
+PR_MESSAGE=`echo "${ghprbPullTitle}" | grep -iE "^(${COMMIT_CONTENT}[\ ]*):[\ ]*\[(${PROJECTS})-[0-9]+][:\ ]*"`
 echo "PR message is : ${PR_MESSAGE}"
 
 if [ -z "$PR_MESSAGE" ]
 then
     echo The PR title \"${ghprbPullTitle}\"
     echo "does not match the expectations"
-    echo 'Make sure that your message starts with [PLG|ART|BT|CCE|CCM|CDB|CDS|CE|CI|COMP|SRM|DEL|DOC|DX|ER|FFM|OPS|PIP|PL|SEC|STO|SWAT|GTM|ONP|OPA|ART|PIE|LWG|GIT|OENG|BG|CHAOS-<number>]: <description>'
+    echo "Make sure that your commit message is in format -> ${COMMIT_CONTENT}: [${PROJECTS}-<number>]: <description>"
+    echo "Example -> \"feat: [BT-100]: Commit Message\""
     exit 1
 fi

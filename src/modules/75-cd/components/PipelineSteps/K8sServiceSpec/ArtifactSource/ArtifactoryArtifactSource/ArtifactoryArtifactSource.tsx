@@ -9,7 +9,7 @@ import React, { useState, useMemo } from 'react'
 import { defaultTo, get } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
 
-import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypes, FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@wings-software/uicore'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useMutateAsGet } from '@common/hooks'
@@ -56,7 +56,7 @@ interface TagFieldsProps extends ArtifactoryRenderContent {
   template: ServiceSpec
   stageIdentifier: string
   path?: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   fromTrigger?: boolean
   artifact?: PrimaryArtifact | SidecarArtifact
   selectedDeploymentType: ServiceDeploymentType

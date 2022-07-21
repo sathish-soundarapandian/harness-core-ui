@@ -48,7 +48,8 @@ export function ApprovalStageSetupShellMode(): React.ReactElement {
   const {
     state: {
       pipeline,
-      selectionState: { selectedStageId = '', selectedStepId }
+      selectionState: { selectedStageId = '', selectedStepId },
+      gitDetails
     },
     contextType,
     getStageFromPipeline,
@@ -208,7 +209,7 @@ export function ApprovalStageSetupShellMode(): React.ReactElement {
         {isTemplatesEnabled && isContextTypeNotStageTemplate(contextType) && selectedStage?.stage && (
           <>
             <Expander />
-            <SaveTemplateButton data={selectedStage?.stage} type={'Stage'} />
+            <SaveTemplateButton data={selectedStage?.stage} type={'Stage'} gitDetails={gitDetails} />
           </>
         )}
       </Tabs>

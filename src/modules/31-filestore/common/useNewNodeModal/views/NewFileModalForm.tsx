@@ -29,6 +29,7 @@ import { getFileUsageNameByType, getMimeTypeByName } from '@filestore/utils/File
 import { FileStoreNodeTypes, FileUsage, NewFileDTO, NewFileFormDTO } from '@filestore/interfaces/FileStore'
 import type { FileStoreContextState, FileStoreNodeDTO } from '@filestore/components/FileStoreContext/FileStoreContext'
 import { FILE_STORE_ROOT, SEARCH_FILES } from '@filestore/utils/constants'
+import css from '../useNewNodeModal.module.scss'
 
 interface NewFileModalData {
   data?: NewFileDTO
@@ -58,12 +59,12 @@ export const getTags = (tags?: NGTag[]) => {
 
 const NewFileForm: React.FC<NewFileModalData> = props => {
   const { close, editMode = false, tempNode, fileStoreContext, currentNode, notCurrentNode } = props
-  const { updateCurrentNode, removeFromTempNodes, getNode, queryParams, setUnsavedNodes } = fileStoreContext
+  const { updateCurrentNode, removeFromTempNodes, getNode, queryParams, setUnsavedNodes, fileUsage } = fileStoreContext
   const [initialValues, setInitialValues] = useState<Omit<NewFileDTO, 'type'>>({
     name: '',
     description: '',
     identifier: '',
-    fileUsage: null,
+    fileUsage: fileUsage || null,
     content: '',
     tags: []
   })
@@ -241,7 +242,15 @@ const NewFileForm: React.FC<NewFileModalData> = props => {
                   }}
                 />
                 <FormInput.Select
-                  style={{ width: 180 }}
+                  className={css.fileUsage}
+                  value={
+                    formikProps?.values?.fileUsage
+                      ? {
+                          label: getFileUsageNameByType(formikProps?.values?.fileUsage as FileUsage),
+                          value: formikProps?.values?.fileUsage
+                        }
+                      : null
+                  }
                   items={fileUsageItems}
                   name="fileUsage"
                   label={getString('filestore.view.fileUsage')}

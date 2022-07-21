@@ -5,10 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
-import type { StepSpecType } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 
 export interface AzureSlotDeploymentStepInfo {
@@ -22,7 +21,10 @@ export interface AzureSlotDeploymentData {
   name: string
   identifier: string
   timeout: string
-  spec?: StepSpecType
+  spec: {
+    webApp: string
+    deploymentSlot: string
+  }
 }
 
 export interface AzureSlotDeploymentVariableStepProps {
@@ -39,7 +41,7 @@ export interface AzureSlotDeploymentProps<T = AzureSlotDeploymentData> {
   initialValues: T
   onUpdate?: (data: T) => void
   onChange?: (data: T) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   configTypes?: SelectOption[]
   isNewStep?: boolean

@@ -6,7 +6,14 @@
  */
 
 import React from 'react'
-import { IconName, Formik, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import {
+  IconName,
+  Formik,
+  FormInput,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  AllowedTypes
+} from '@wings-software/uicore'
 import cx from 'classnames'
 import * as Yup from 'yup'
 
@@ -45,7 +52,7 @@ interface ServerlessLambdaDeployProps {
   onUpdate?: (data: StepElementConfig) => void
   stepViewType?: StepViewType
   onChange?: (data: StepElementConfig) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   readonly?: boolean
   isNewStep?: boolean
   inputSetData: {

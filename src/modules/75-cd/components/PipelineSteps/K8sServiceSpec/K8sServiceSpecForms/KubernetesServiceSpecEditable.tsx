@@ -79,7 +79,6 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
               readonly={!!readonly}
             />
           </Card>
-
           <Card
             className={css.sectionCard}
             id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}

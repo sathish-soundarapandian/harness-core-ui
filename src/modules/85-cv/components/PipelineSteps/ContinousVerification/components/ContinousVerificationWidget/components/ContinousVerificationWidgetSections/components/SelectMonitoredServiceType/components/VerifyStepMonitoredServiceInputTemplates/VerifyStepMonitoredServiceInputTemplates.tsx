@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Card, FormInput, MultiTypeInputType } from '@harness/uicore'
+import { Card, FormInput, AllowedTypes } from '@harness/uicore'
 import { Text } from '@wings-software/uicore'
 import {
   useGetHarnessEnvironments,
@@ -22,7 +22,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './VerifyStepMonitoredServiceInputTemplates.module.scss'
 
 interface VerifyStepMonitoredServiceInputTemplatesProps {
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   healthSources: TemplateInputs['sources']['healthSources']
   healthSourcesVariables: TemplateInputs['variables']
   versionLabel: string

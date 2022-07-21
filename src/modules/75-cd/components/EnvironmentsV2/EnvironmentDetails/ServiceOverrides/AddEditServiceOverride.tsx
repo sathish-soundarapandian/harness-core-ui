@@ -211,7 +211,13 @@ export default function AddEditServiceOverride({
     const { name, type, value } = defaultTo(formikRef.current?.values.variableOverride, {})
     const { variableOverride: { name: newName, type: newType, value: newValue } = {} } = values
 
-    if ((name === newName && type === newType && value === newValue) || isEmpty(newName) || isEmpty(newValue)) {
+    if (
+      (name === newName && type === newType && value === newValue) ||
+      isEmpty(newName) ||
+      (newType === 'String' && isEmpty(newValue)) ||
+      // the above condition of isEmpty does not work for numbers and hence the additional check below
+      (newType === 'Number' && newValue === '')
+    ) {
       setIsModified(false)
     } else {
       setIsModified(true)

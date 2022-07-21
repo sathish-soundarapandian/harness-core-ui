@@ -334,6 +334,11 @@
             "name": "group_by",
             "in": "query",
             "type": "string"
+          },
+          {
+            "name": "dry_run",
+            "in": "query",
+            "type": "boolean"
           }
         ],
         "tags": ["Savings"],
@@ -772,6 +777,11 @@
             "in": "query",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "subnet",
+            "in": "query",
+            "type": "string"
           }
         ],
         "tags": ["ListAccessPoints"],
@@ -906,6 +916,11 @@
           "name": "cluster",
           "in": "query",
           "required": false,
+          "type": "string"
+        },
+        {
+          "name": "subnet",
+          "in": "query",
           "type": "string"
         }
       ],

@@ -38,14 +38,15 @@ import {
 } from '@common/components/TimeRangeSelector/TimeRangeSelector'
 import { DeploymentsTimeRangeContext } from '@cd/components/Services/common'
 import { useLocalStorage, useMutateAsGet, useQueryParams } from '@common/hooks'
-import PipelineDeploymentList, {
-  processQueryParams
-} from '@pipeline/pages/pipeline-deployment-list/PipelineDeploymentList'
 import PipelineModalListView from '@pipeline/components/PipelineModalListView/PipelineModalListView'
-
 import { TitleWithToolTipId } from '@common/components/Title/TitleWithToolTipId'
-import type { QueryParams } from '@pipeline/pages/pipeline-deployment-list/types'
 import { DashboardSelected } from '@pipeline/components/ServiceExecutionsCard/ServiceExecutionsCard'
+import type { QueryParams } from '@pipeline/pages/execution-list/types'
+import {
+  ExecutionListFilterContextProvider,
+  processQueryParams
+} from '@pipeline/pages/execution-list/ExecutionListFilterContext/ExecutionListFilterContext'
+import { OverviewExecutionListEmpty } from '@pipeline/pages/execution-list/ExecutionListEmpty/OverviewExecutionListEmpty'
 import DeploymentsHealthCards from './DeploymentsHealthCards'
 import DeploymentExecutionsChart from './DeploymentExecutionsChart'
 import WorkloadCard from './DeploymentCards/WorkloadCard'
@@ -86,7 +87,9 @@ const NoDataOverviewPage = (): JSX.Element => {
         margin: 16
       }}
     >
-      <PipelineDeploymentList onRunPipeline={openModal} isCDOverview />
+      <ExecutionListFilterContextProvider>
+        <OverviewExecutionListEmpty onRunPipeline={openModal} />
+      </ExecutionListFilterContextProvider>
     </div>
   )
 }

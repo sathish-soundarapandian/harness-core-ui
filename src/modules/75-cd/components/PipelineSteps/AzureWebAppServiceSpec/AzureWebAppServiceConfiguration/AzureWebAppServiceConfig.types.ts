@@ -6,7 +6,7 @@
  */
 
 import type { IconName } from '@harness/icons'
-import type { MultiTypeInputType, StepProps } from '@harness/uicore'
+import type { AllowedTypes as MultiTypeAllowedTypes, StepProps } from '@harness/uicore'
 import { Connectors } from '@connectors/constants'
 import type { StringKeys } from 'framework/strings'
 import type {
@@ -79,7 +79,7 @@ export interface LastStepProps {
   key: string
   name: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: MultiTypeAllowedTypes
   stepName: string
   initialValues: StoreConfigWrapper
   handleSubmit: (data: StoreConfigWrapper) => void
@@ -109,7 +109,7 @@ export interface AzureWebAppListViewProps {
   refetchStringsConnectors: () => void
   refetchSettingsConnectors: () => void
   deploymentType?: ServiceDefinition['type']
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: MultiTypeAllowedTypes
   applicationSettings?: StoreConfigWrapper
   connectionStrings?: StoreConfigWrapper
   selectedOption: ModalViewOption | undefined
@@ -132,7 +132,7 @@ export interface AzureWebAppServiceConfigWizardStepsProps<T> {
   initialValues: AzureWebAppServiceConfigWizardInitData
   newConnectorView: boolean
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: MultiTypeAllowedTypes
   newConnectorSteps?: any
   lastSteps: React.ReactElement<StepProps<ConnectorConfigDTO>> | null
   isReadonly: boolean
@@ -144,7 +144,7 @@ export interface AzureWebAppServiceConfigWizardStepsProps<T> {
 export interface AzureWebAppServicesStepOneProps {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: MultiTypeAllowedTypes
   isReadonly: boolean
   connectorTypes: Array<ConnectorTypes>
   initialValues: AzureWebAppServiceConfigWizardInitData
@@ -157,7 +157,7 @@ export interface AzureWebAppServicesStepOneProps {
 export interface AzureWebAppServiceStepTwoProps {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: MultiTypeAllowedTypes
   initialValues: StoreConfigWrapper
   handleSubmit: (data: StoreConfigWrapper) => void
   isReadonly?: boolean

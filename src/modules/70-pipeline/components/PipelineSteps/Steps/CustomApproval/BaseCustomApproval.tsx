@@ -10,6 +10,7 @@ import { FieldArray, FormikProps } from 'formik'
 import cx from 'classnames'
 import { v4 as uuid } from 'uuid'
 import {
+  AllowedTypes,
   Button,
   ButtonVariation,
   Container,
@@ -46,7 +47,7 @@ export default function BaseCustomApproval(props: {
   isNewStep: boolean
   readonly?: boolean
   stepViewType?: StepViewType
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }): React.ReactElement {
   const { formik, isNewStep, readonly, stepViewType, allowableTypes } = props
   const { values: formValues, setFieldValue } = formik

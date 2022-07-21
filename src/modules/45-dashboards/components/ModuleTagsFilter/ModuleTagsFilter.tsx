@@ -14,14 +14,19 @@ import moduleTagCss from '@dashboards/common/ModuleTags.module.scss'
 
 export interface ModuleTagsFilterProps {
   selectedFilter: MappedDashboardTagOptions
-  setPredefinedFilter: (moduleName: string, checked: boolean) => void
+  setPredefinedFilter: (moduleName: DashboardTags, checked: boolean) => void
 }
 
 const ModuleTagsFilter: React.FC<ModuleTagsFilterProps> = ({ selectedFilter, setPredefinedFilter }) => {
   const { getString } = useStrings()
   const { CENG_ENABLED, CING_ENABLED, CDNG_ENABLED, CFNG_ENABLED, CUSTOM_DASHBOARD_V2, SECURITY } = useFeatureFlags()
 
-  const renderTagsFilter = (moduleName: DashboardTags, cssClass: string, text: StringKeys, isEnabled = false) => {
+  const renderTagsFilter = (
+    moduleName: DashboardTags,
+    cssClass: string,
+    text: StringKeys,
+    isEnabled = false
+  ): React.ReactNode => {
     return (
       isEnabled && (
         <Layout.Horizontal flex={{ alignItems: 'center' }}>

@@ -9,17 +9,7 @@ import React from 'react'
 import { defaultTo } from 'lodash-es'
 import { FieldArray, FormikProps } from 'formik'
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
-import {
-  Button,
-  ButtonVariation,
-  Color,
-  Container,
-  FormInput,
-  Icon,
-  Layout,
-  MultiTypeInputType,
-  Text
-} from '@harness/uicore'
+import { Button, ButtonVariation, Color, Container, FormInput, Icon, Layout, AllowedTypes, Text } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import type { CommandUnitType, CustomScriptCommandUnit } from '../CommandScriptsTypes'
@@ -27,7 +17,7 @@ import css from './TailFilesEdit.module.scss'
 
 interface TailFilesEditProps {
   formik: FormikProps<CommandUnitType>
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   readonly?: boolean
 }
 

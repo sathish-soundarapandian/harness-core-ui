@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { MultiTypeInputType } from '@harness/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { findByText, fireEvent, render, waitFor } from '@testing-library/react'
 import React from 'react'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
@@ -74,7 +74,11 @@ describe('OverrideYamlValues List View tests', () => {
     const props = {
       isReadonly: false,
       deploymentType: 'Kubernetes' as ServiceDefinition['type'],
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.RUNTIME,
+        MultiTypeInputType.EXPRESSION
+      ] as AllowedTypesWithRunTime[],
       listOfManifests: [formik.values]
     }
     const responseState = {
@@ -107,7 +111,11 @@ describe('OverrideYamlValues List View tests', () => {
     const props = {
       isReadonly: false,
       deploymentType: 'Kubernetes' as ServiceDefinition['type'],
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.RUNTIME,
+        MultiTypeInputType.EXPRESSION
+      ] as AllowedTypesWithRunTime[],
       listOfManifests: [formik.values]
     }
     const responseState = {

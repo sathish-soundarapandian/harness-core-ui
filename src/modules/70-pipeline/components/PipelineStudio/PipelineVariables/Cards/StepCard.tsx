@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { MultiTypeInputType, NestedAccordionPanel, Text } from '@wings-software/uicore'
+import { AllowedTypes, NestedAccordionPanel, Text } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import type { StepElementConfig } from 'services/cd-ng'
@@ -30,7 +30,7 @@ export interface StepCardProps {
   stepPath: string
   readonly?: boolean
   path?: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepsFactory: AbstractStepFactory // REQUIRED (pass to addUpdateGraph)
 }
 
@@ -117,7 +117,7 @@ export interface StepGroupCardProps {
   stepGroupOriginalName: string
   readonly?: boolean
   path?: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepsFactory: AbstractStepFactory
 }
 

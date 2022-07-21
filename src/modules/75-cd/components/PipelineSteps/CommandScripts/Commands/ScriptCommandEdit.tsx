@@ -9,6 +9,7 @@ import React from 'react'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
 import {
+  AllowedTypes,
   Color,
   Container,
   FormInput,
@@ -31,7 +32,7 @@ import css from './CommandEdit.module.scss'
 
 interface ScriptCommandEditProps {
   formik: FormikProps<CommandUnitType>
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   readonly?: boolean
 }
 

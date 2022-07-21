@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { ButtonVariation, Container, FormInput, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
+import { ButtonVariation, Container, FormInput, AllowedTypes, SelectOption } from '@wings-software/uicore'
 import cx from 'classnames'
 
 import type { FormikProps } from 'formik'
@@ -38,7 +38,7 @@ import css from './SelectMonitoredServiceType.module.scss'
 
 export interface SelectMonitoredServiceTypeProps {
   formik: FormikProps<ContinousVerificationData>
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export default function SelectMonitoredServiceType(props: SelectMonitoredServiceTypeProps): React.ReactElement {

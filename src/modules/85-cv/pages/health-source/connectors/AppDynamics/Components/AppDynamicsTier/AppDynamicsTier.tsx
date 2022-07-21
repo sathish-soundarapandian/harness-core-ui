@@ -14,7 +14,8 @@ import {
   MultiTypeInput,
   Label,
   FormError,
-  RUNTIME_INPUT_VALUE
+  RUNTIME_INPUT_VALUE,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import { getPlaceholder, getTypeOfInput, setAppDynamicsTier } from '../../AppDHealthSource.utils'
@@ -49,7 +50,7 @@ export default function AppDynamicsTier({
   tierError
 }: AppDynamicsTierInterface): JSX.Element {
   const { getString } = useStrings()
-  const allowedTypes =
+  const allowedTypes: AllowedTypes =
     getMultiTypeFromValue(formikValues?.appdApplication) === MultiTypeInputType.RUNTIME ||
     getMultiTypeFromValue(formikValues?.appdApplication) === MultiTypeInputType.EXPRESSION
       ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]

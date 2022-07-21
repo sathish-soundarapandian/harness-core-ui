@@ -5,15 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { MultiTypeInputProps, MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypes, MultiTypeInputProps, MultiTypeInputType } from '@wings-software/uicore'
 
 export function getMultiTypeInputProps(
   expressions: string[] | undefined,
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 ): Omit<MultiTypeInputProps, 'name'> {
   return expressions
     ? { expressions, allowableTypes }
     : {
-        allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.EXPRESSION)
+        allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+          item => item !== MultiTypeInputType.EXPRESSION
+        ) as AllowedTypes
       }
 }

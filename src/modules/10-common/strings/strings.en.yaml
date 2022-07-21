@@ -346,12 +346,12 @@ git:
   gitLabRepoUrl: 'GitLab Repository URL'
   bitbucketRepoUrl: 'Bitbucket Repository URL'
   azureReposRepoUrl: 'Azure Repos Repository URL'
-  gitHubUrlPlaceholder: 'https://www.github.com/account/'
+  gitHubUrlPlaceholder: 'https://github.com/account/'
   gitHubUrlPlaceholderSSH: 'git@github.com:account/'
-  gitLabUrlPlaceholder: 'https://www.gitlab.com/account/'
+  gitLabUrlPlaceholder: 'https://gitlab.com/account/'
   gitLabUrlPlaceholderSSH: 'git@gitlab.com:account/'
-  bitbucketUrlPlaceholder: 'https://www.bitbucket.com/account/'
-  bitbucketPlaceholderSSH: 'git@bitbucket.com:account/'
+  bitbucketUrlPlaceholder: 'https://bitbucket.org/'
+  bitbucketPlaceholderSSH: 'git@bitbucket.org'
   azureReposUrlPlaceholder: 'https://dev.azure.com/<organizationName>/<projectName>'
   azureReposUrlPlaceholderRepoHttp: 'https://dev.azure.com/<organizationName>/<projectName>/_git/<repositoryName>'
   azureReposPlaceholderSSH: 'git@ssh.dev.azure.com:v3/<organizationName>'
@@ -877,7 +877,7 @@ deleteEnvironment:
 90days: 90 Days
 180days: 180 Days
 noexpiration: No Expiration
-subscriptionPlaceholder: 'Select or add Subscription Id'
+subscriptionPlaceholder: 'Select or specify Subscription Id'
 azureConnector: Azure Connector
 environmentList: Environment List
 environmentGroup:
@@ -917,6 +917,7 @@ oAuthLabel: OAuth
 import: Import
 importEntityFromGit: Import {{resourceType}} From Git
 serviceOverrides: Service Overrides
+invalidIdentifiers: 'Identifier must not be one of the following values: {{identifiers}}'
 
 # Chaos Module
 chaosText: Chaos
@@ -931,3 +932,4 @@ cardNumber: Card number
 perDeveloper: per developer
 triggerName: Trigger Name
 versionLabel: Version Label
+executedBy: Executed By

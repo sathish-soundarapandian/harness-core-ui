@@ -8,6 +8,7 @@
 import React from 'react'
 import {
   Accordion,
+  AllowedTypes,
   Button,
   ButtonVariation,
   Formik,
@@ -35,7 +36,7 @@ import css from '../K8sValuesManifest/ManifestDetails.module.scss'
 
 interface KustomizeWithHarnessStorePropType {
   stepName: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   selectedManifest: ManifestTypes | null
   handleSubmit: (data: ManifestConfigWrapper) => void
@@ -170,7 +171,11 @@ function KustomizeWithHarnessStore({
                   <div className={css.halfWidth}>
                     <MultiTypeFieldSelector
                       defaultValueToReset={[{ path: '', scope: 'account' }]}
-                      allowedTypes={allowableTypes.filter(allowedType => allowedType !== MultiTypeInputType.EXPRESSION)}
+                      allowedTypes={
+                        (allowableTypes as MultiTypeInputType[]).filter(
+                          allowedType => allowedType !== MultiTypeInputType.EXPRESSION
+                        ) as AllowedTypes
+                      }
                       name="files"
                       label={getString('resourcePage.fileStore')}
                     >
@@ -206,7 +211,11 @@ function KustomizeWithHarnessStore({
                   <div className={css.halfWidth}>
                     <MultiTypeFieldSelector
                       defaultValueToReset={['']}
-                      allowedTypes={allowableTypes.filter(allowedType => allowedType !== MultiTypeInputType.EXPRESSION)}
+                      allowedTypes={
+                        (allowableTypes as MultiTypeInputType[]).filter(
+                          allowedType => allowedType !== MultiTypeInputType.EXPRESSION
+                        ) as AllowedTypes
+                      }
                       name="patchesPaths"
                       label={getString('pipeline.manifestTypeLabels.KustomizePatches')}
                     >

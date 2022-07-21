@@ -7,6 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import {
+  AllowedTypes,
   Formik,
   FormInput,
   getMultiTypeFromValue,
@@ -67,7 +68,7 @@ interface BarrierProps {
   initialValues: BarrierData
   onUpdate?: (data: BarrierData) => void
   stepViewType: StepViewType
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   isNewStep?: boolean
   inputSetData?: {
     template?: BarrierData
@@ -168,7 +169,9 @@ function BarrierWidget(props: BarrierProps, formikRef: StepFormikFowardRef<Barri
                   label={getString('pipelineSteps.timeoutLabel')}
                   multiTypeDurationProps={{
                     enableConfigureOptions: false,
-                    allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.EXPRESSION)
+                    allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                      item => item !== MultiTypeInputType.EXPRESSION
+                    ) as AllowedTypes
                   }}
                 />
                 {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
@@ -197,7 +200,9 @@ function BarrierWidget(props: BarrierProps, formikRef: StepFormikFowardRef<Barri
                   selectItems={barriers}
                   multiTypeInputProps={{
                     expressions,
-                    allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.EXPRESSION)
+                    allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                      item => item !== MultiTypeInputType.EXPRESSION
+                    ) as AllowedTypes
                   }}
                 />
                 {getMultiTypeFromValue(formik?.values?.spec?.barrierRef) === MultiTypeInputType.RUNTIME && (

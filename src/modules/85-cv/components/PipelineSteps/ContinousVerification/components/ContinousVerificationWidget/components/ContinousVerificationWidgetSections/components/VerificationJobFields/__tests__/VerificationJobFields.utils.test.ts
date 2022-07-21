@@ -5,13 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypesWithRunTime } from '@wings-software/uicore'
 import { getMultiTypeInputProps } from '../VerificationJobFields.utils'
 
 describe('Test for VerificationJobFields Utils', () => {
   test('Test if getMultiTypeInputProps method gives correct results', () => {
     expect(
-      getMultiTypeInputProps(['infrastructure', 'pipeline'], ['FIXED', 'RUNTIME', 'EXPRESSION'] as MultiTypeInputType[])
+      getMultiTypeInputProps(['infrastructure', 'pipeline'], [
+        'FIXED',
+        'RUNTIME',
+        'EXPRESSION'
+      ] as AllowedTypesWithRunTime[])
     ).toEqual({
       expressions: ['infrastructure', 'pipeline'],
       allowableTypes: ['FIXED', 'RUNTIME', 'EXPRESSION']

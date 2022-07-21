@@ -25,7 +25,8 @@ import {
   VisualYamlToggle,
   getErrorInfoFromErrorObject,
   Container,
-  PageSpinner
+  PageSpinner,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
 import * as Yup from 'yup'
@@ -376,7 +377,7 @@ export interface DeployEnvironmentProps {
     path?: string
     readonly?: boolean
   }
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 interface DeployEnvironmentState {

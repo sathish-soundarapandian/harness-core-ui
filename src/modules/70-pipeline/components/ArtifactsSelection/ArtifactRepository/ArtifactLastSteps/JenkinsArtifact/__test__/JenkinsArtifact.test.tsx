@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
-import { MultiTypeInputType, RUNTIME_INPUT_VALUE, StepProps } from '@harness/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE, StepProps } from '@harness/uicore'
 import {
   mockConnectorsResponse,
   mockJobResponse
@@ -54,7 +54,11 @@ export const props: Omit<StepProps<cdng.ConnectorConfigDTO> & JenkinsArtifactPro
   key: 'key',
   name: 'Artifact details',
   expressions: [],
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   context: 1,
   handleSubmit: onSubmit,
   artifactIdentifiers: [],

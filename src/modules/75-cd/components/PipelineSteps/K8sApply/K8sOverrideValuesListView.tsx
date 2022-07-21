@@ -16,7 +16,7 @@ import {
   Text,
   ButtonSize,
   ButtonVariation,
-  MultiTypeInputType
+  AllowedTypes
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { useParams } from 'react-router-dom'
@@ -68,7 +68,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 interface K8sManifestListViewProps {
   listOfManifests: Array<any>
   isReadonly: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   formik: FormikProps<K8sApplyFormData>
   deploymentType: ServiceDefinition['type']
 }

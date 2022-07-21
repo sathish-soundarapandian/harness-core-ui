@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import type { MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypesWithRunTime } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 
 import type {
@@ -71,7 +71,7 @@ describe('Unit tests for TemplatisedRunTimeMonitoredService', () => {
         }
       },
       expressions: ['org.identifier', 'org.name'],
-      allowableTypes: ['FIXED', 'RUNTIME', 'EXPRESSION'] as MultiTypeInputType[]
+      allowableTypes: ['FIXED', 'RUNTIME', 'EXPRESSION'] as AllowedTypesWithRunTime[]
     }
     const { getByText } = render(<WrapperComponent {...props} />)
     expect(getByText('service')).toBeInTheDocument()
@@ -84,7 +84,7 @@ describe('Unit tests for TemplatisedRunTimeMonitoredService', () => {
     const props = {
       prefix: 'stages[0].stage.spec.execution.steps[0].step.',
       expressions: [],
-      allowableTypes: ['FIXED', 'EXPRESSION'] as MultiTypeInputType[],
+      allowableTypes: ['FIXED', 'EXPRESSION'] as AllowedTypesWithRunTime[],
       monitoredService: {
         type: 'Template',
         spec: {

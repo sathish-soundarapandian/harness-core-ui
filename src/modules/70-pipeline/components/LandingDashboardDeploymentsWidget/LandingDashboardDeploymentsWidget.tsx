@@ -443,9 +443,11 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
                     color: Color.RED_500
                   }
                 ],
-          trend: `${Math.round(
-            service.countWithSuccessFailureDetails?.countChangeAndCountChangeRateInfo?.countChangeRate ?? 0
-          )}%`
+          trend: `${
+            Math.round(
+              (service.countWithSuccessFailureDetails?.countChangeAndCountChangeRateInfo?.countChangeRate ?? 0) * 100
+            ) / 100
+          }%`
         }
       }
     )

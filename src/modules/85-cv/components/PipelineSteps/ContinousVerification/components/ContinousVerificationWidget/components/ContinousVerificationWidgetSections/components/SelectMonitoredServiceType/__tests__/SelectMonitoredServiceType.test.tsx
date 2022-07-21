@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import type { MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypesWithRunTime } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 
 import SelectMonitoredServiceType, { SelectMonitoredServiceTypeProps } from '../SelectMonitoredServiceType'
@@ -73,7 +73,7 @@ describe('Unit tests for SelectMonitoredServiceType', () => {
   test('Verify if correct template inputs are rendered in the verify step', async () => {
     const props = {
       formik: mockedFormikWithTemplatesData,
-      allowableTypes: ['FIXED', 'RUNTIME', 'EXPRESSION'] as MultiTypeInputType[]
+      allowableTypes: ['FIXED', 'RUNTIME', 'EXPRESSION'] as AllowedTypesWithRunTime[]
     }
     const { getByText } = render(<WrapperComponent {...props} />)
     // validate service and env.
@@ -96,7 +96,7 @@ describe('Unit tests for SelectMonitoredServiceType', () => {
   test('Verify if select button template button is present to select the template', () => {
     const props = {
       formik: mockedFormikWithTemplatesData,
-      allowableTypes: ['FIXED', 'RUNTIME', 'EXPRESSION'] as MultiTypeInputType[]
+      allowableTypes: ['FIXED', 'RUNTIME', 'EXPRESSION'] as AllowedTypesWithRunTime[]
     }
     const { queryByText } = render(<WrapperComponent {...props} />)
     const useTemplateButton = queryByText('common.useTemplate')

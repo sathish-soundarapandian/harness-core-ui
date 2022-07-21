@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { MultiTypeInputType, NestedAccordionPanel, Text } from '@wings-software/uicore'
+import { AllowedTypes, NestedAccordionPanel, Text } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { get } from 'lodash-es'
 import type { DeploymentStageConfig, ExecutionElementConfig, Infrastructure, StageElementConfig } from 'services/cd-ng'
@@ -25,7 +25,7 @@ export interface EnvironmentCardProps {
   metadataMap: PipelineVariablesData['metadataMap']
   path?: string
   readonly?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepsFactory: AbstractStepFactory
   onUpdateInfrastructure: (data: Infrastructure) => void
   onUpdateInfrastructureProvisioner: (data: ExecutionElementConfig) => void

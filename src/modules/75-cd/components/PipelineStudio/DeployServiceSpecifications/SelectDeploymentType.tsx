@@ -185,12 +185,12 @@ export default function SelectDeploymentType({
       baseTypes.push({
         label: getString('pipeline.serviceDeploymentTypes.ssh'),
         icon: 'secret-ssh',
-        value: ServiceDeploymentType.ssh
+        value: ServiceDeploymentType.Ssh
       })
       baseTypes.push({
         label: getString('pipeline.serviceDeploymentTypes.winrm'),
         icon: 'command-winrm',
-        value: ServiceDeploymentType.winrm
+        value: ServiceDeploymentType.WinRm
       })
     }
     if (AZURE_WEBAPP_NG) {
@@ -236,12 +236,12 @@ export default function SelectDeploymentType({
       types.splice(3, 0, {
         label: getString('pipeline.serviceDeploymentTypes.ssh'),
         icon: 'secret-ssh',
-        value: ServiceDeploymentType.ssh
+        value: ServiceDeploymentType.Ssh
       })
       types.splice(4, 0, {
         label: getString('pipeline.serviceDeploymentTypes.winrm'),
         icon: 'command-winrm',
-        value: ServiceDeploymentType.winrm
+        value: ServiceDeploymentType.WinRm
       })
     }
     return types as DeploymentTypeItem[]

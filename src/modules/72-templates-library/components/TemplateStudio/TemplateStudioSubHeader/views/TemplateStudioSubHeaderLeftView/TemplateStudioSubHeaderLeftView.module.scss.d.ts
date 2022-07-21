@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly createTemplateDialog: string
+  readonly dropdown: string
   readonly subHeaderLeftView: string
   readonly templateName: string
   readonly versionDropDown: string

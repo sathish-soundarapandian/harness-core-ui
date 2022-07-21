@@ -16,7 +16,8 @@ import {
   Layout,
   MultiTypeInputType,
   StepProps,
-  ButtonSize
+  ButtonSize,
+  AllowedTypes
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
@@ -43,7 +44,7 @@ interface ArtifactConnectorProps {
   isReadonly: boolean
   initialValues: InitialArtifactDataType
   selectedArtifact: ArtifactType | null
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export function ArtifactConnector(props: StepProps<ConnectorConfigDTO> & ArtifactConnectorProps): React.ReactElement {

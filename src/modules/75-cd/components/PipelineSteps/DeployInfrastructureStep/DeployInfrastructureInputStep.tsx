@@ -14,6 +14,7 @@ import { defaultTo, get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useDeepCompareEffect } from '@common/hooks'
 import { CustomVariableInputSet } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
 import DeployInfrastructures from './DeployInfrastructures/DeployInfrastructures'
 import DeployEnvironment from './DeployEnvironment/DeployEnvironment'
@@ -28,7 +29,8 @@ function DeployInfrastructureInputStepInternal({
   initialValues,
   allowableTypes,
   formik,
-  gitOpsEnabled
+  gitOpsEnabled,
+  stepViewType
 }: DeployInfrastructureProps & { formik?: any }) {
   const { getString } = useStrings()
   const [isInfrastructureDefinitionRuntime, setIsInfrastructureDefinitionRuntime] = useState(false)
@@ -37,6 +39,12 @@ function DeployInfrastructureInputStepInternal({
   useDeepCompareEffect(() => {
     if ((inputSetData?.template?.environment?.infrastructureDefinitions as unknown as string) === RUNTIME_INPUT_VALUE) {
       setIsInfrastructureDefinitionRuntime(true)
+
+      // This will have to be removed once multi infra support is implemented.
+      // Current issue is with the mismatch in the structure required and structure that should be used
+      if (stepViewType === StepViewType.InputSet) {
+        formik.setFieldValue(`${inputSetData?.path}.infrastructureDefinitions[0].identifier`, RUNTIME_INPUT_VALUE)
+      }
     }
   }, [inputSetData?.template?.environment?.infrastructureDefinitions])
 
@@ -72,6 +80,7 @@ function DeployInfrastructureInputStepInternal({
             path={inputSetData?.path}
             serviceRef={initialValues.service?.serviceRef}
             gitOpsEnabled={gitOpsEnabled}
+            stepViewType={stepViewType}
           />
         </Container>
       )}
@@ -134,6 +143,7 @@ function DeployInfrastructureInputStepInternal({
             )}
 
             {initialValues.environment?.environmentRef === RUNTIME_INPUT_VALUE &&
+              stepViewType !== StepViewType.InputSet &&
               get(formik.values, `${inputSetData?.path}.environmentRef`) && (
                 <>
                   <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>

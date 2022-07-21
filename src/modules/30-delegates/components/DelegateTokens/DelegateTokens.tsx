@@ -28,10 +28,9 @@ import {
 
 import { PageSpinner } from '@common/components'
 
-import { useGetDelegateTokens, GetDelegateTokensQueryParams } from 'services/cd-ng'
+import { useGetDelegateTokens, GetDelegateTokensQueryParams, DelegateTokenDetails } from 'services/cd-ng'
 
 import { useStrings } from 'framework/strings'
-import type { DelegateTokenDetails } from 'services/portal'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, DelegateActions } from '@common/constants/TrackingConstants'
 
@@ -110,7 +109,7 @@ export const DelegateListing: React.FC = () => {
   )
   const RenderColumnCreatedBy: Renderer<CellProps<DelegateTokenDetails>> = ({ row }) => (
     <span className={css.tokenCellText}>
-      {row.original?.createdByNgUser?.username?.toLowerCase?.() || getString('na')}
+      {row.original?.createdByNgUser?.jwtclaims?.username?.toLowerCase?.() || getString('na')}
     </span>
   )
   const RenderColumnStatus: Renderer<CellProps<DelegateTokenDetails>> = ({ row }) => (

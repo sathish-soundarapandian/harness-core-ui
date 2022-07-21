@@ -179,9 +179,9 @@ function AzureWebAppListView({
     switch (selectedOption) {
       case ModalViewOption.APPLICATIONSETTING:
         return {
-          wizardName: getString('pipeline.appServiceConfig.applicationSettings.scriptFile'),
-          firstStepName: getString('pipeline.appServiceConfig.applicationSettings.scriptFileSource'),
-          secondStepName: getString('pipeline.appServiceConfig.applicationSettings.scriptFileDetails'),
+          wizardName: getString('pipeline.appServiceConfig.applicationSettings.name'),
+          firstStepName: getString('pipeline.fileSource'),
+          secondStepName: getString('pipeline.fileDetails'),
           firstStepTitle: getString('pipeline.appServiceConfig.applicationSettings.fileSource'),
           firstStepSubtitle: getString('pipeline.appServiceConfig.applicationSettings.subtitle'),
           secondStepTitle: getString('pipeline.appServiceConfig.applicationSettings.fileDetails'),
@@ -189,9 +189,9 @@ function AzureWebAppListView({
         }
       case ModalViewOption.CONNECTIONSTRING:
         return {
-          wizardName: getString('pipeline.appServiceConfig.connectionStrings.scriptFile'),
-          firstStepName: getString('pipeline.appServiceConfig.connectionStrings.scriptFileSource'),
-          secondStepName: getString('pipeline.appServiceConfig.connectionStrings.scriptFileDetails'),
+          wizardName: getString('pipeline.appServiceConfig.connectionStrings.name'),
+          firstStepName: getString('pipeline.fileSource'),
+          secondStepName: getString('pipeline.fileDetails'),
           firstStepTitle: getString('pipeline.appServiceConfig.connectionStrings.fileSource'),
           firstStepSubtitle: getString('pipeline.appServiceConfig.connectionStrings.subtitle'),
           secondStepTitle: getString('pipeline.appServiceConfig.connectionStrings.fileDetails'),

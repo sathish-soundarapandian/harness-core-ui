@@ -5,11 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { StringKeys } from 'framework/strings'
+import type { ConnectorInfoDTO } from 'services/cd-ng'
 import {
   shouldRenderRunTimeInputView,
   shouldRenderRunTimeInputViewWithAllowedValues,
-  getAllowedValuesFromTemplate
+  getAllowedValuesFromTemplate,
+  getCodebaseRepoNameFromConnector
 } from '../CIUtils'
+
+function getString(key: StringKeys): StringKeys | string {
+  return key === 'connectors.gitProviderURLs.github' ? 'https://github.com' : key
+}
 
 describe('Test CIUtils', () => {
   test('Test shouldRenderRunTimeInputView method', () => {
@@ -75,5 +82,36 @@ describe('Test CIUtils', () => {
         )
       )
     ).toBe(JSON.stringify([{ label: 'val1', value: 'val1' }]))
+  })
+
+  test('Test getCodebaseRepoNameFromConnector method', () => {
+    let codebaseConnector: ConnectorInfoDTO = {
+      name: 'test-connector',
+      identifier: 'test_connector',
+      orgIdentifier: 'orgId',
+      projectIdentifier: 'projId',
+      type: 'Github',
+      spec: {
+        url: 'https://github.com/harness/test-repo',
+        validationRepo: null,
+        authentication: {
+          type: 'Http',
+          spec: {
+            type: 'UsernameToken',
+            spec: { username: 'username', tokenRef: 'tokenRef' }
+          }
+        },
+        apiAccess: { type: 'Token', spec: { tokenRef: 'tokenRef' } },
+        delegateSelectors: [],
+        executeOnDelegate: false,
+        type: 'Repo'
+      }
+    }
+    expect(getCodebaseRepoNameFromConnector(codebaseConnector, getString)).toBe('test-repo')
+    codebaseConnector = {
+      ...codebaseConnector,
+      spec: { type: 'Account', url: 'https://github.com', validationRepo: 'test-repo2' }
+    }
+    expect(getCodebaseRepoNameFromConnector(codebaseConnector, getString)).toBe('test-repo2')
   })
 })

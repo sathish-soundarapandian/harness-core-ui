@@ -9,7 +9,13 @@ import React from 'react'
 import { deleteDB, IDBPDatabase, openDB } from 'idb'
 import { cloneDeep, defaultTo, get, isEmpty, isEqual, isNil, omit, pick } from 'lodash-es'
 import { parse } from 'yaml'
-import { IconName, MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
+import {
+  AllowedTypes,
+  AllowedTypesWithRunTime,
+  IconName,
+  MultiTypeInputType,
+  VisualYamlSelectedView as SelectedView
+} from '@wings-software/uicore'
 import merge from 'lodash-es/merge'
 import type { GetDataError } from 'restful-react'
 import type { PermissionCheck } from 'services/rbac'
@@ -235,7 +241,7 @@ export interface PipelineContextInterface {
   stepsFactory: AbstractStepFactory
   view: string
   contextType: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   isReadonly: boolean
   scope: Scope
   setSchemaErrorView: (flag: boolean) => void
@@ -881,7 +887,11 @@ export function PipelineProvider({
   runPipeline
 }: React.PropsWithChildren<PipelineProviderProps>): React.ReactElement {
   const contextType = PipelineContextType.Pipeline
-  const allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+  const allowableTypes: AllowedTypesWithRunTime[] = [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ]
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const abortControllerRef = React.useRef<AbortController | null>(null)
   const isMounted = React.useRef(false)

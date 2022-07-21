@@ -6,14 +6,14 @@
  */
 
 import React from 'react'
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { noop } from 'lodash-es'
 import routes from '@common/RouteDefinitions'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
-import filters from '@pipeline/pages/pipeline-deployment-list/__tests__/filters.json'
+import filters from '@pipeline/pages/execution-list/__mocks__/filters.json'
 import deploymentTypes from '@pipeline/pages/pipelines/__tests__/mocks/deploymentTypes.json'
 import services from '@pipeline/pages/pipelines/__tests__/mocks/services.json'
 import environments from '@pipeline/pages/pipelines/__tests__/mocks/environments.json'
@@ -142,7 +142,7 @@ describe('<CDPipelineDeploymentList /> tests', () => {
   })
 
   test('call run pipeline', async () => {
-    const { findByText } = render(
+    render(
       <TestWrapper
         path={routes.toPipelineDeploymentList({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
         pathParams={{
@@ -158,7 +158,7 @@ describe('<CDPipelineDeploymentList /> tests', () => {
       </TestWrapper>
     )
 
-    const runButton = await findByText('runPipelineText')
+    const runButton = await screen.findByText('runPipelineText')
     fireEvent.click(runButton)
     const form = findDialogContainer()
     expect(form).toBeTruthy()

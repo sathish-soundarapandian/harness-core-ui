@@ -14,7 +14,8 @@ export enum ExtensionType {
   TEXT = 'txt',
   BASH = 'sh',
   POWER_SHELL = 'ps',
-  YML = 'yml'
+  YML = 'yml',
+  TPL = 'tpl'
 }
 
 export enum LanguageType {
@@ -23,7 +24,8 @@ export enum LanguageType {
   TEXT = 'plaintext',
   BASH = 'shell',
   POWER_SHELL = 'powershell',
-  YML = 'yaml'
+  YML = 'yaml',
+  TPL = 'tpl'
 }
 
 export enum FSErrosType {

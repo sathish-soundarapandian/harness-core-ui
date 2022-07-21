@@ -196,7 +196,7 @@ exports[`CDHomePage snapshot test should render Trial Home page when return succ
 exports[`CDHomePage snapshot test should return error page if call fails 1`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-align-center-center"
+    class="StyledProps--font StyledProps--main PageError--pageError StyledProps--flex StyledProps--flex-align-center-center"
     style="width: 100%; height: 100%;"
   >
     <div
@@ -325,7 +325,7 @@ exports[`CDHomePage snapshot test should show a loading spinner 1`] = `
 exports[`CDHomePage snapshot test should show an error page 1`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-align-center-center"
+    class="StyledProps--font StyledProps--main PageError--pageError StyledProps--flex StyledProps--flex-align-center-center"
     style="width: 100%; height: 100%;"
   >
     <div

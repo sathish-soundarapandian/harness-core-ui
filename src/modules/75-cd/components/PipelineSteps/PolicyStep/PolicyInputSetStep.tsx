@@ -9,7 +9,7 @@ import React from 'react'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
 
-import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { AllowedTypes, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -27,7 +27,7 @@ export default function PolicyInputSetStep(props: {
   readonly?: boolean
   template?: PolicyStepData
   path?: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }): React.ReactElement {
   const { readonly, template, path, allowableTypes } = props
   const { getString } = useStrings()

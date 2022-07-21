@@ -9,7 +9,9 @@
 declare const styles: {
   readonly actionButton: string
   readonly avatar: string
+  readonly hidden: string
   readonly link: string
+  readonly recentExecutions: string
   readonly storeTypeColumn: string
   readonly storeTypeColumnContainer: string
   readonly table: string

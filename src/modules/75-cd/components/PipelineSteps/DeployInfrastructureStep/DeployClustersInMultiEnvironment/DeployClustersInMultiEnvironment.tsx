@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom'
 import { defaultTo, get, isNil } from 'lodash-es'
 import { connect, FormikProps } from 'formik'
 
-import { FormInput, MultiTypeInputType, useToaster, MultiSelectWithSubmenuOption } from '@harness/uicore'
+import { FormInput, MultiTypeInputType, useToaster, MultiSelectWithSubmenuOption, AllowedTypes } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import { ClusterResponse, useGetClusterList } from 'services/cd-ng'
@@ -26,10 +26,10 @@ import css from './DeployClustersInMultiEnvironment.module.scss'
 interface DeployClustersInMultiEnvironmentProps {
   formik?: FormikProps<DeployStageConfig>
   readonly?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
-function DeployClustersInMultiEnvironment({ formik }: DeployClustersInMultiEnvironmentProps) {
+function DeployClustersInMultiEnvironment({ formik }: DeployClustersInMultiEnvironmentProps): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
   const { showError } = useToaster()

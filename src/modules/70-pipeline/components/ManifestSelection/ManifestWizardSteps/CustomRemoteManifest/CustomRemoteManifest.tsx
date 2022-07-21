@@ -8,6 +8,7 @@
 import React from 'react'
 import {
   Accordion,
+  AllowedTypes,
   Button,
   ButtonVariation,
   Formik,
@@ -40,7 +41,7 @@ import css from '../K8sValuesManifest/ManifestDetails.module.scss'
 interface CustomRemoteManifestPropType {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   selectedManifest: ManifestTypes | null
   handleSubmit: (data: ManifestConfigWrapper) => void

@@ -97,7 +97,7 @@ const DashboardResourceModalBody: React.FC<DashboardResourceModalBodyProps> = ({
     queryParams: { accountId: accountIdentifier }
   })
 
-  const includeOotbBeforeOnChange = (items: string[]) => {
+  const includeOotbBeforeOnChange = (items: string[]): void => {
     if (ootbFolder?.resource) {
       items = items.filter((val: string) => val !== ootbFolder.resource)
       if (items.length > 0) {

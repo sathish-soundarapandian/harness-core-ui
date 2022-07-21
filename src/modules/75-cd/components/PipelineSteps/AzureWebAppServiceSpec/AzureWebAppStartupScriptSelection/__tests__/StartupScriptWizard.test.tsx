@@ -61,7 +61,7 @@ describe('StartupScriptWizard & stepOne', () => {
     expect(submit).toBeDefined()
 
     fireEvent.click(submit)
-    await waitFor(() => expect(getByText('pipeline.startupScript.file')).toBeUndefined)
+    await waitFor(() => expect(getByText('pipeline.startupScript.name')).toBeUndefined)
   })
 
   test('runtime stepOne', async () => {
@@ -107,7 +107,7 @@ describe('StartupScriptWizard & stepOne', () => {
         <StartupScriptWizard {...propWizard} lastSteps={null} />
       </TestWrapper>
     )
-    expect(getByText('pipeline.startupScript.file')).toBeTruthy()
+    expect(getByText('pipeline.startupScript.name')).toBeTruthy()
   })
 
   test('stepOne with prevStepData', async () => {

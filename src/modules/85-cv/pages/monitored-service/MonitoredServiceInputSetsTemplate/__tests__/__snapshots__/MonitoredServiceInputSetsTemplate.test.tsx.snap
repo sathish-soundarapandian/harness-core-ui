@@ -751,7 +751,7 @@ exports[`Test MonitoredServiceInputSetsTemplate should render error state 1`] = 
       class="bp3-card bp3-elevation-0 Card--card cardStyle"
     >
       <div
-        class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-align-center-center"
+        class="StyledProps--font StyledProps--main PageError--pageError StyledProps--flex StyledProps--flex-align-center-center"
         style="width: 100%; height: 100%;"
       >
         <div

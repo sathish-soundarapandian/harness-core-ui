@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect } from 'react'
-import { FormInput, MultiTypeInputType } from '@wings-software/uicore'
+import { FormInput, AllowedTypes } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -18,7 +18,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export default function ConfigureFields(props: {
   formik: FormikProps<ContinousVerificationData>
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }): React.ReactElement {
   const {
     formik: { values: formValues, setFieldValue },

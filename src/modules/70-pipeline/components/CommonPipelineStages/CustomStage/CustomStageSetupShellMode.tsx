@@ -34,7 +34,8 @@ export function CustomStageSetupShellMode(): React.ReactElement {
   const {
     state: {
       pipeline,
-      selectionState: { selectedStageId = '', selectedStepId }
+      selectionState: { selectedStageId = '', selectedStepId },
+      gitDetails
     },
     contextType,
     getStageFromPipeline,
@@ -156,7 +157,7 @@ export function CustomStageSetupShellMode(): React.ReactElement {
           /* istanbul ignore next */ selectedStage?.stage && (
             <>
               <Expander />
-              <SaveTemplateButton data={selectedStage.stage} type={'Stage'} />
+              <SaveTemplateButton data={selectedStage.stage} type={'Stage'} gitDetails={gitDetails} />
             </>
           )}
       </Tabs>

@@ -630,15 +630,15 @@ exports[`Azure Traffic Shift step Should render input set view 1`] = `
         >
           <div
             class="bp3-form-group"
-            data-id="/abc.traffic-1"
+            data-id="/abc.spec.traffic-1"
           >
             <label
               class="bp3-label"
-              for="/abc.traffic"
+              for="/abc.spec.traffic"
             >
               <span
                 class="Tooltip--acenter"
-                data-tooltip-id="stepTestUtilForm_/abc.traffic"
+                data-tooltip-id="stepTestUtilForm_/abc.spec.traffic"
               >
                 pipeline.traffic
               </span>
@@ -659,7 +659,7 @@ exports[`Azure Traffic Shift step Should render input set view 1`] = `
                   <input
                     autocomplete="off"
                     class="bp3-input"
-                    name="/abc.traffic"
+                    name="/abc.spec.traffic"
                     type="text"
                     value=""
                   />

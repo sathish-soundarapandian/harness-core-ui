@@ -16,7 +16,8 @@ import {
   Color,
   Button,
   FormInput,
-  MultiSelectOption
+  MultiSelectOption,
+  AllowedTypes
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -29,7 +30,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../../CloudFormation.module.scss'
 
 interface TagsProps {
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   readonly: boolean | undefined
   formik: any
   regions: MultiSelectOption[]
@@ -97,7 +98,11 @@ export const Tags = ({ allowableTypes, readonly = false, formik, regions }: Tags
             name="spec.configuration.tags.spec.content"
             label={tagLabel()}
             defaultValueToReset=""
-            allowedTypes={allowableTypes.filter(item => item !== MultiTypeInputType.EXPRESSION)}
+            allowedTypes={
+              (allowableTypes as MultiTypeInputType[]).filter(
+                item => item !== MultiTypeInputType.EXPRESSION
+              ) as AllowedTypes
+            }
             skipRenderValueInExpressionLabel
             disabled={readonly}
           >

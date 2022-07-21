@@ -38,7 +38,7 @@ import ModuleTagsFilter from '@dashboards/components/ModuleTagsFilter/ModuleTags
 import { ErrorResponse, useDeleteDashboard, useGetFolderDetail, useSearch } from 'services/custom-dashboards'
 import routes from '@common/RouteDefinitions'
 
-import { DashboardLayoutViews, MappedDashboardTagOptions } from '@dashboards/types/DashboardTypes'
+import { DashboardLayoutViews, DashboardTags, MappedDashboardTagOptions } from '@dashboards/types/DashboardTypes'
 import { SHARED_FOLDER_ID } from '@dashboards/constants'
 import { useStrings } from 'framework/strings'
 import Dashboards from './Dashboards'
@@ -177,12 +177,13 @@ const HomePage: React.FC = () => {
     if (isNotShared) {
       fetchFolderDetail()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId, folderId])
 
-  const setPredefinedFilter = (filterType: string, isChecked: boolean): void => {
-    const updatedValue: any = {}
+  const setPredefinedFilter = (filterType: DashboardTags, isChecked: boolean): void => {
+    const updatedValue: MappedDashboardTagOptions = { ...selectedTags }
     updatedValue[filterType] = isChecked
-    setCheckboxFilter({ ...selectedTags, ...updatedValue })
+    setCheckboxFilter(updatedValue)
     setPage(0)
   }
 
@@ -210,6 +211,7 @@ const HomePage: React.FC = () => {
     includeBreadcrumbs(
       getBreadcrumbLinks(folderDetail || {}, accountId, folderId, getString('dashboards.homePage.folders'))
     )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [folderDetail, accountId, folderId])
 
   const onDeleteDashboard = async (dashboardId: string): Promise<void> => {
