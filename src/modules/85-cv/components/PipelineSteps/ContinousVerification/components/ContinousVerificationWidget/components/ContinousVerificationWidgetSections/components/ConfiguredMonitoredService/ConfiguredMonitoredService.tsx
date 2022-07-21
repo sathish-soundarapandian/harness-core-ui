@@ -46,7 +46,8 @@ interface ConfiguredMonitoredServiceProps {
 export default function ConfiguredMonitoredService(props: ConfiguredMonitoredServiceProps): JSX.Element {
   const {
     allowableTypes,
-    formik: { values: formValues, setFieldValue }
+    formik: { values: formValues, setFieldValue },
+    formik
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -127,8 +128,8 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
         identifier: monitoredService?.identifier as string,
         name: monitoredService?.name as string
       })
-      // const formNewValues = { ...formValues, spec: newSpecs }
-      // formik.resetForm({ values: formNewValues })
+      const formNewValues = { ...formValues, spec: newSpecs }
+      formik.resetForm({ values: formNewValues })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monitoredService])

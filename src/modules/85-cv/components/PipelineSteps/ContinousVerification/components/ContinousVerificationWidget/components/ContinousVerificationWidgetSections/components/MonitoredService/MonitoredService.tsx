@@ -38,7 +38,8 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './MonitoredService.module.scss'
 
 export default function MonitoredService({
-  formik: { values: formValues, setFieldValue }
+  formik: { values: formValues, setFieldValue },
+  formik
 }: MonitoredServiceProps): JSX.Element {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & AccountPathProps>()
   const [monitoredService, setMonitoredService] = useState({
@@ -115,8 +116,8 @@ export default function MonitoredService({
       })
     }
 
-    // const formNewValues = { ...formValues, spec: newSpecs }
-    // formik.resetForm({ values: formNewValues })
+    const formNewValues = { ...formValues, spec: newSpecs }
+    formik.resetForm({ values: formNewValues })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monitoredServiceData, error, loading, environmentIdentifier, serviceIdentifier])
 
