@@ -399,12 +399,9 @@ const Stepk8ClusterDetails: React.FC<StepProps<Stepk8ClusterDetailsProps> & K8Cl
                     name="masterUrl"
                     className={css.formFieldWidth}
                   />
+
                   <Container className={css.authHeaderRow}>
-                    <Text
-                      font={{ variation: FontVariation.H6 }}
-                      inline
-                      tooltipProps={{ dataTooltipId: 'K8sAuthenticationTooltip' }}
-                    >
+                    <Text font={{ variation: FontVariation.H6 }} inline>
                       {getString('authentication')}
                     </Text>
                     <FormInput.Select

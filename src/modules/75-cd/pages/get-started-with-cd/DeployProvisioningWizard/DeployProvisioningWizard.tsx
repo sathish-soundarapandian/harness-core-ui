@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-imports */
 /*
  * Copyright 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
@@ -7,12 +6,10 @@
  */
 
 import React, { useState } from 'react'
-
 import { Container, Button, ButtonVariation, Layout, MultiStepProgressIndicator, PageSpinner } from '@harness/uicore'
 import { get } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { createPipelineV2Promise, ResponsePipelineSaveResponse } from 'services/pipeline-ng'
@@ -20,17 +17,9 @@ import { Status } from '@common/utils/Constants'
 import routes from '@common/RouteDefinitions'
 import type { UserRepoResponse } from 'services/cd-ng'
 import { StringUtils } from '@common/exports'
-import {
-  WizardStep,
-  StepStatus,
-  DeployProvisiongWizardStepId,
-  DeployProvisioningWizardProps
-
-  // eslint-disable-next-line import/namespace
-} from './Constants'
+import { WizardStep, StepStatus, DeployProvisiongWizardStepId, DeployProvisioningWizardProps } from './Constants'
 import { SelectWorkload, SelectWorkloadRef } from '../SelectWorkload/SelectWorkload'
 import { SelectInfrastructure, SelectInfrastructureRef } from '../SelectInfrastructure/SelectInfrastructure'
-import type { SelectAuthenticationMethodRef } from '../SelectInfrastructure/SelectAuthenticationMethod'
 import { SelectArtifact, SelectArtifactRef } from '../SelectArtifact/SelectArtifact'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import { DEFAULT_PIPELINE_PAYLOAD, getUniqueEntityIdentifier, PipelineRefPayload } from '../cdOnboardingUtils'
@@ -47,10 +36,9 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
   const selectWorkloadRef = React.useRef<SelectWorkloadRef | null>(null)
   const selectArtifactRef = React.useRef<SelectArtifactRef | null>(null)
   const selectInfrastructureRef = React.useRef<SelectInfrastructureRef | null>(null)
-  const selectAuthenticationMethodRef = React.useRef<SelectAuthenticationMethodRef | null>(null)
-  // const [showError, setShowError] = useState<boolean>(false)
+
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-  // const history = useHistory()
+
   const [showPageLoader, setShowPageLoader] = useState<boolean>(false)
 
   const [wizardStepStatus, setWizardStepStatus] = useState<Map<DeployProvisiongWizardStepId, StepStatus>>(
@@ -174,6 +162,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           <SelectArtifact
             ref={selectArtifactRef}
             onSuccess={() => {
+              setDisableBtn(true)
               setCurrentWizardStepId(DeployProvisiongWizardStepId.SelectInfrastructure)
               updateStepStatus(
                 [DeployProvisiongWizardStepId.SelectWorkload, DeployProvisiongWizardStepId.SelectArtifact],
@@ -231,12 +220,9 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
         },
         onClickNext: async () => {
           const { submitForm } = selectInfrastructureRef.current || {}
-          const { validatedConnector } = selectAuthenticationMethodRef.current || {}
           try {
+            setShowPageLoader(true)
             submitForm?.()
-            if (validatedConnector) {
-              setShowPageLoader(true)
-            }
           } catch (_e) {
             // catch any errors and do nothing
           }

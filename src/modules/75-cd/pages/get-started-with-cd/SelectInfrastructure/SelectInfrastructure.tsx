@@ -38,7 +38,6 @@ import {
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { InfrastructureTypes, InfrastructureType } from '../DeployProvisioningWizard/Constants'
 import {
   SelectAuthenticationMethod,
@@ -48,6 +47,7 @@ import {
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import {
   cleanEnvironmentDataUtil,
+  defaultInitialAuthFormData,
   getUniqueEntityIdentifier,
   newEnvironmentState,
   PipelineRefPayload
@@ -55,16 +55,13 @@ import {
 import defaultCss from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 import css from './SelectInfrastructure.module.scss'
 export interface SelectInfrastructureRef {
-  values: SelectInfrastructureInterface
-  validate?: () => boolean
-  showValidationErrors?: () => void
   submitForm?: FormikProps<SelectInfrastructureInterface>['submitForm']
 }
 export interface SelectInfrastructureInterface extends SelectAuthenticationMethodInterface {
-  infraType: string
-  envId: string
-  infraId: string
-  namespace: string
+  infraType?: string
+  envId?: string
+  infraId?: string
+  namespace?: string
 }
 
 interface SelectInfrastructureProps {
@@ -88,7 +85,7 @@ const SelectInfrastructureRef = (
     saveInfrastructureData,
     state: { environment: environmentData, infrastructure: infrastructureData, service: serviceData }
   } = useCDOnboardingContext()
-  const [disableBtn, setDisableBtn] = useState<boolean>(false)
+
   const [infrastructureType, setInfrastructureType] = useState<InfrastructureType | undefined>(
     InfrastructureTypes.find((item: InfrastructureType) => item.value === infrastructureData?.type)
   )
@@ -97,29 +94,6 @@ const SelectInfrastructureRef = (
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getRBACErrorMessage } = useRBACError()
 
-  const defaultInitialFormData: SelectAuthenticationMethodInterface = {
-    authType: AuthTypes.USER_PASSWORD,
-    delegateType: defaultTo(get(infrastructureData, 'data.delegateType'), ''),
-    masterUrl: defaultTo(get(infrastructureData, 'data.masterUrl'), ''),
-    username: get(infrastructureData, 'data.username') || '',
-    password: get(infrastructureData, 'data.password') || undefined,
-    serviceAccountToken: get(infrastructureData, 'data.serviceAccountToken') || undefined,
-    oidcIssuerUrl: get(infrastructureData, 'data.oidcIssueUrl') || '',
-    oidcUsername: get(infrastructureData, 'data.oidcIssueUsername') || undefined,
-    oidcPassword: get(infrastructureData, 'data.oidcPassword') || undefined,
-    oidcCleintId: get(infrastructureData, 'data.oidcCleintId') || undefined,
-    oidcCleintSecret: get(infrastructureData, 'data.oidcCleintSecret') || undefined,
-    oidcScopes: get(infrastructureData, 'data.oidcScopes') || '',
-    clientKey: get(infrastructureData, 'data.clientKey') || undefined,
-    clientKeyCertificate: get(infrastructureData, 'data.clientKeyCertificate') || undefined,
-    clientKeyPassphrase: undefined,
-    clientKeyAlgo: get(infrastructureData, 'data.clientKeyAlgo') || '',
-    clientKeyCACertificate: undefined,
-    connectorName: get(infrastructureData, 'infrastructure.infrastructureDefinition.spec.connectorRef') || '',
-    connectorIdentifier:
-      get(infrastructureData, 'infrastructure.infrastructureDefinition.spec.connectorIdentifier') || '',
-    delegateSelectors: []
-  }
   const { loading: createEnvLoading, mutate: createEnvironment } = useCreateEnvironmentV2({
     queryParams: {
       accountIdentifier: accountId
@@ -129,15 +103,13 @@ const SelectInfrastructureRef = (
   const openSetUpDelegateAccordion = (): boolean | undefined => {
     const validate = selectAuthenticationMethodRef.current?.validate()
     if (validate && isEmpty(formikRef?.current?.errors)) {
-      props.enableNextBtn()
       return true
     } else {
-      props.disableNextBtn()
       return false
     }
   }
 
-  const setForwardRef = ({ values }: Omit<SelectInfrastructureRef, 'validate'>): void => {
+  const setForwardRef = (): void => {
     if (!forwardRef) {
       return
     }
@@ -145,12 +117,8 @@ const SelectInfrastructureRef = (
       return
     }
 
-    if (values) {
-      forwardRef.current = {
-        values,
-        // validate: validateInfraSetup
-        submitForm: formikRef?.current?.submitForm
-      }
+    forwardRef.current = {
+      submitForm: formikRef?.current?.submitForm
     }
   }
 
@@ -162,45 +130,14 @@ const SelectInfrastructureRef = (
 
   useEffect(() => {
     if (formikRef.current?.values) {
-      setForwardRef({
-        values: formikRef.current.values
-      })
+      setForwardRef()
     }
   }, [formikRef?.current, formikRef?.current?.values])
 
   const { showSuccess, showError, clear } = useToaster()
   const handleSubmit = async (values: SelectInfrastructureInterface): Promise<SelectInfrastructureInterface> => {
-    const {
-      envId,
-      infraId,
-      infraType,
-      namespace,
-      masterUrl,
-      connectorName,
-      delegateType,
-      username,
-      password,
-      serviceAccountToken,
-      oidcCleintId,
-      oidcIssuerUrl,
-      oidcPassword,
-      oidcUsername,
-      oidcCleintSecret,
-      clientKey,
-      clientKeyCertificate,
-      clientKeyAlgo,
-      connectorIdentifier,
-      authType
-    } = values || {}
-    if (!infraType) {
-      showError(getString('common.validation.fieldIsRequired', { name: 'Infrastructure Type' }))
-    } else if (!envId) {
-      showError(getString('fieldRequired', { field: 'Environment' }))
-    } else if (!infraId) {
-      showError(getString('common.validation.fieldIsRequired', { name: 'Infrastructure' }))
-    } else if (!namespace) {
-      showError(getString('common.validation.fieldIsRequired', { name: 'Namespace' }))
-    }
+    const { envId, infraId, infraType, namespace, connectorIdentifier } = values || {}
+
     const environmentIdentifier = getUniqueEntityIdentifier(envId as string)
     const infraIdentifier = getUniqueEntityIdentifier(infraId as string)
     const updatedContextEnvironment = produce(newEnvironmentState.environment, draft => {
@@ -215,100 +152,80 @@ const SelectInfrastructureRef = (
     })
     try {
       const cleanEnvironmentData = cleanEnvironmentDataUtil(updatedContextEnvironment as ServiceRequestDTO)
-      if (selectAuthenticationMethodRef.current?.validatedConnector) {
-        const response = await createEnvironment({ ...cleanEnvironmentData, orgIdentifier, projectIdentifier })
-        if (response.status === 'SUCCESS') {
-          clear()
-          showSuccess(getString('cd.environmentCreated'))
-          envId &&
-            saveEnvironmentData({
-              environment: updatedContextEnvironment,
-              environmentResponse: response
-            })
-          const updatedContextInfra = produce(newEnvironmentState.infrastructure, draft => {
-            set(draft, 'name', infraId)
-            set(draft, 'identifier', infraIdentifier)
-            set(draft, 'type', infraType)
-            set(draft, 'environmentRef', envId)
-            set(draft, 'infrastructureDefinition.spec.namespace', namespace)
-            set(draft, 'infrastructureDefinition.spec.connectorRef', connectorIdentifier)
-            set(draft, 'data.connectorName', connectorName)
-            set(draft, 'data.connectorIdentifier', connectorIdentifier)
-            set(draft, 'data.authType', authType)
-            set(draft, 'data.delegateType', delegateType)
-            set(draft, 'data.masterUrl', masterUrl)
-            set(draft, 'data.username', username)
-            set(draft, 'data.password', password)
-            set(draft, 'data.serviceAccountToken', serviceAccountToken)
-            set(draft, 'data.oidcCleintId', oidcCleintId)
-            set(draft, 'data.oidcIssueUrl', oidcIssuerUrl)
-            set(draft, 'data.oidcPassword', oidcPassword)
-            set(draft, 'data.oidcUsername', oidcUsername)
-            set(draft, 'data.oidcCleintSecret', oidcCleintSecret)
-            set(draft, 'data.clientKey', clientKey)
-            set(draft, 'data.clientKeyAlgo', clientKeyAlgo)
-            set(draft, 'data.clientKeyCertificate', clientKeyCertificate)
+      const response = await createEnvironment({ ...cleanEnvironmentData, orgIdentifier, projectIdentifier })
+      if (response.status === 'SUCCESS') {
+        clear()
+        showSuccess(getString('cd.environmentCreated'))
+        envId &&
+          saveEnvironmentData({
+            environment: updatedContextEnvironment,
+            environmentResponse: response
           })
+        const updatedContextInfra = produce(newEnvironmentState.infrastructure, draft => {
+          set(draft, 'name', infraId)
+          set(draft, 'identifier', getUniqueEntityIdentifier(infraId))
+          set(draft, 'type', infraType)
+          set(draft, 'environmentRef', envId)
+          set(draft, 'infrastructureDefinition.spec.namespace', namespace)
+          set(draft, 'infrastructureDefinition.spec.connectorRef', connectorIdentifier)
+          set(draft, 'data.connectorAuthValues', values)
+        })
 
-          saveInfrastructureData({
-            infrastructure: { ...updatedContextInfra }
-          })
-          const body: InfrastructureRequestDTORequestBody = {
-            name: infraId,
-            identifier: infraIdentifier,
-            description: '',
-            tags: {},
-            orgIdentifier,
-            projectIdentifier,
-            type: infraType as InfrastructureRequestDTO['type'],
-            environmentRef: environmentIdentifier
-          }
-
-          createInfrastructure({
-            ...body,
-            yaml: yamlStringify({
-              infrastructureDefinition: {
-                ...body,
-                spec: get(updatedContextInfra, 'infrastructureDefinition.spec'),
-                allowSimultaneousDeployments: false
-              }
-            })
-          })
-            .then(infraResponse => {
-              const refsData = {
-                serviceRef: serviceData.identifier,
-                environmentRef: environmentIdentifier,
-                infraStructureRef: infraIdentifier,
-                deploymentType: serviceData.serviceDefinition.type
-              }
-              if (infraResponse.status === 'SUCCESS') {
-                props?.onSuccess?.(refsData)
-                showSuccess(
-                  getString('cd.infrastructure.created', {
-                    identifier: infraResponse.data?.infrastructure?.identifier
-                  })
-                )
-                return Promise.resolve(values)
-              } else {
-                throw infraResponse
-              }
-            })
-            .catch(e => {
-              showError(getErrorInfoFromErrorObject(e))
-            })
-
-          return Promise.resolve(values)
-        } else {
-          throw response
+        saveInfrastructureData({
+          infrastructure: { ...updatedContextInfra }
+        })
+        const body: InfrastructureRequestDTORequestBody = {
+          name: infraId,
+          identifier: infraIdentifier,
+          description: '',
+          tags: {},
+          orgIdentifier,
+          projectIdentifier,
+          type: infraType as InfrastructureRequestDTO['type'],
+          environmentRef: environmentIdentifier
         }
+
+        createInfrastructure({
+          ...body,
+          yaml: yamlStringify({
+            infrastructureDefinition: {
+              ...body,
+              spec: get(updatedContextInfra, 'infrastructureDefinition.spec'),
+              allowSimultaneousDeployments: false
+            }
+          })
+        })
+          .then(infraResponse => {
+            const refsData = {
+              serviceRef: serviceData.identifier,
+              environmentRef: environmentIdentifier,
+              infraStructureRef: infraIdentifier,
+              deploymentType: serviceData.serviceDefinition.type
+            }
+            if (infraResponse.status === 'SUCCESS') {
+              props?.onSuccess?.(refsData)
+              showSuccess(
+                getString('cd.infrastructure.created', {
+                  identifier: infraResponse.data?.infrastructure?.identifier
+                })
+              )
+              return Promise.resolve(values)
+            } else {
+              throw infraResponse
+            }
+          })
+          .catch(e => {
+            showError(getErrorInfoFromErrorObject(e))
+          })
+
+        return Promise.resolve(values)
       } else {
-        showError('Test Connector to create pipeline')
+        throw response
       }
     } catch (error: any) {
       showError(getRBACErrorMessage(error))
       return Promise.resolve({} as SelectInfrastructureInterface)
     }
-    return Promise.resolve({} as SelectInfrastructureInterface)
   }
 
   const borderBottom = <div className={defaultCss.repoborderBottom} />
@@ -345,11 +262,11 @@ const SelectInfrastructureRef = (
       <Text font={{ variation: FontVariation.H4 }}>{getString('cd.getStartedWithCD.workloadDeploy')}</Text>
       <Formik<SelectInfrastructureInterface>
         initialValues={{
-          ...defaultInitialFormData,
-          infraType: get(infrastructureData, 'type') || '',
-          envId: get(environmentData, 'name') || '',
-          infraId: get(infrastructureData, 'name') || '',
-          namespace: get(infrastructureData, 'infrastructureDefinition.spec.namespace') || ''
+          ...defaultInitialAuthFormData(infrastructureData),
+          infraType: defaultTo(get(infrastructureData, 'type'), ''),
+          envId: defaultTo(get(environmentData, 'name'), ''),
+          infraId: defaultTo(get(infrastructureData, 'name'), ''),
+          namespace: defaultTo(get(infrastructureData, 'infrastructureDefinition.spec.namespace'), '')
         }}
         formName="cdInfrastructure"
         onSubmit={handleSubmit}
@@ -360,7 +277,6 @@ const SelectInfrastructureRef = (
           return (
             <Form>
               <Container className={css.workloadType}>
-                {props.disableNextBtn()}
                 <CardSelect
                   data={InfrastructureTypes}
                   cornerSelected={true}
@@ -433,8 +349,8 @@ const SelectInfrastructureRef = (
                         onSuccess={data => {
                           return data
                         }}
-                        disableNextBtn={() => setDisableBtn(true)}
-                        enableNextBtn={() => setDisableBtn(disableBtn)}
+                        disableNextBtn={props.disableNextBtn}
+                        enableNextBtn={props.enableNextBtn}
                       ></SelectAuthenticationMethod>
                     }
                   />

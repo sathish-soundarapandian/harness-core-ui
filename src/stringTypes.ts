@@ -302,6 +302,7 @@ export interface StringsMap {
   'common.getStarted.selectArtifact': string
   'common.getStarted.selectInfra': string
   'common.getStarted.selectWorkload': string
+  'common.getStarted.specificDelegate': string
   'common.getStarted.verifyConnection': string
   'common.git.APIAccessDescription': string
   'common.git.APIAuthentication': string

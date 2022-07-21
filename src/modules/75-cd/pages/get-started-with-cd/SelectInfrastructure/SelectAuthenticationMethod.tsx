@@ -20,6 +20,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Form, FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
+import type { SelectInfrastructureInterface } from './SelectInfrastructure'
 import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import { buildKubPayload, DelegateTypes } from '@connectors/pages/connectors/utils/ConnectorUtils'
@@ -33,7 +34,7 @@ import {
 } from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelector/DelegateSelector'
 import { Connectors } from '@connectors/constants'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import type { ConnectorInfoDTO, ResponseConnectorResponse, ResponseMessage } from 'services/cd-ng'
+import type { ResponseConnectorResponse, ResponseMessage } from 'services/cd-ng'
 import useCreateEditConnector, { BuildPayloadProps } from '@connectors/hooks/useCreateEditConnector'
 import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
 import { CLIENT_KEY_ALGO_OPTIONS } from '../DeployProvisioningWizard/Constants'
@@ -46,9 +47,7 @@ interface DelegateSelectorStepData extends BuildPayloadProps {
 }
 
 export interface SelectAuthenticationMethodRef {
-  values: SelectAuthenticationMethodInterface
   validate: () => boolean
-  validatedConnector?: ConnectorInfoDTO
   submitForm?: FormikProps<SelectAuthenticationMethodInterface>['submitForm']
 }
 
@@ -88,9 +87,8 @@ interface AuthOptionInterface {
 interface SelectAuthenticationMethodProps {
   disableNextBtn: () => void
   enableNextBtn: () => void
-  authValues?: SelectAuthenticationMethodInterface
-  onSuccess?: (value: any) => void
-  formikProps: FormikProps<any>
+  onSuccess?: (value: SelectInfrastructureInterface) => void
+  formikProps: FormikProps<SelectAuthenticationMethodInterface>
 }
 
 const SelectAuthenticationMethodRef = (
@@ -181,9 +179,11 @@ const SelectAuthenticationMethodRef = (
 
   const afterSuccessHandler = (response: ResponseConnectorResponse): void => {
     if (response?.status === 'SUCCESS') {
+      props.enableNextBtn()
       setConnectorResponse(response)
       setTestConnectionStatus(TestStatus.SUCCESS)
     } else {
+      props.disableNextBtn()
       setTestConnectionStatus(TestStatus.FAILED)
     }
   }
@@ -271,7 +271,7 @@ const SelectAuthenticationMethodRef = (
     }
   }
 
-  const setForwardRef = ({ values, validatedConnector }: Omit<SelectAuthenticationMethodRef, 'validate'>): void => {
+  const setForwardRef = ({}: Omit<SelectAuthenticationMethodRef, 'validate'>): void => {
     if (!forwardRef) {
       return
     }
@@ -279,24 +279,17 @@ const SelectAuthenticationMethodRef = (
       return
     }
 
-    if (values) {
-      forwardRef.current = {
-        values,
-        validatedConnector,
-        validate: validateAuthMethodSetup,
-        submitForm: formikProps?.submitForm
-      }
+    forwardRef.current = {
+      validate: validateAuthMethodSetup,
+      submitForm: formikProps?.submitForm
     }
   }
 
   useEffect(() => {
     if (formikProps?.values) {
-      setForwardRef({
-        values: formikProps.values,
-        validatedConnector: connectorResponse?.data?.connector
-      })
+      setForwardRef({})
     }
-  }, [formikProps?.values, connectorResponse?.data?.connector])
+  }, [formikProps?.values])
 
   const authOptions: Array<AuthOptionInterface> = [
     {
@@ -441,7 +434,7 @@ const SelectAuthenticationMethodRef = (
             <Button
               className={css.credentialsButton}
               round
-              text={'Use from a specific harness Delegate'}
+              text={getString('common.getStarted.specificDelegate')}
               onClick={() => {
                 formikProps?.setFieldValue('delegateType', DelegateTypes.DELEGATE_IN_CLUSTER)
                 setMode(DelegateOptions.DelegateOptionsSelective)

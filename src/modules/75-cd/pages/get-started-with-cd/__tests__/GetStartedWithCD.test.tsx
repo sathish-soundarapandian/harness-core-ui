@@ -22,7 +22,7 @@ describe('Test Get Started With CD', () => {
         <GetStartedWithCD />
       </TestWrapper>
     )
-    const createPipelineBtn = getByText('common.createPipeline')
+    const createPipelineBtn = getByText('getStarted')
     expect(createPipelineBtn).toBeInTheDocument()
   })
 })

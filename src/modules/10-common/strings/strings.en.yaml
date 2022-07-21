@@ -955,4 +955,5 @@ getStarted:
   appPassword: Application Password
   apiUrlLabel: API URL
   authMethodLabel: Authentication method
+  specificDelegate: Use from a specific harness Delegate
 selectYourRepo: Select your Repository

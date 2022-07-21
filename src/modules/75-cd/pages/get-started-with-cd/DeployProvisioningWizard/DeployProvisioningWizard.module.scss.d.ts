@@ -19,16 +19,12 @@ declare const styles: {
   readonly authTitle: string
   readonly borderBottom: string
   readonly credentialsButton: string
-  readonly crossIcon: string
   readonly footer: string
-  readonly formError: string
   readonly formInput: string
   readonly header: string
   readonly icons: string
   readonly learnMore: string
   readonly main: string
-  readonly marginTop: string
-  readonly modal: string
   readonly noDelegateWarning: string
   readonly provisioningSuccessful: string
   readonly repoCard: string

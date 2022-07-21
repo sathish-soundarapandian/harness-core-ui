@@ -39,14 +39,13 @@ import { ACCOUNT_SCOPE_PREFIX, ArtifactProviders, ArtifactType, Hosting } from '
 
 import { SelectGitProvider } from './SelectGitProvider'
 import { SelectRepository } from './SelectRepository'
-import { ProvideManifest, ProvideManifestRef } from './ProvideManifest'
+import { ProvideManifest } from './ProvideManifest'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import { getStoreType } from '../cdOnboardingUtils'
 import css from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
 export interface SelectArtifactRef {
   submitForm?: FormikProps<SelectArtifactInterface>['submitForm']
-  getErrors?: () => FormikProps<SelectArtifactInterface>['errors']
   resetForm?: FormikProps<SelectArtifactInterface>['resetForm']
 }
 export interface SelectArtifactInterface {
@@ -85,7 +84,6 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
   const formikRef = useRef<FormikContextType<SelectArtifactInterface>>()
   const [disableBtn, setDisableBtn] = useState<boolean>(false)
   const selectGitProviderRef = React.useRef<SelectGitProviderRef | null>(null)
-  const provideManifestRef = React.useRef<ProvideManifestRef | null>(null)
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
@@ -130,9 +128,8 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
   }, [formikRef?.current?.values, formikRef?.current?.setFieldTouched, selectGitProviderRef?.current?.values])
 
   const openSelectRepoAccordion = (): boolean | undefined => {
-    const { validate } = selectGitProviderRef.current || {}
-    const condition = selectGitProviderRef.current?.testConnectionStatus === TestStatus.SUCCESS
-    if (validate?.() && condition) {
+    const { validate, testConnectionStatus } = selectGitProviderRef.current || {}
+    if (validate?.() && testConnectionStatus === TestStatus.SUCCESS) {
       return true
     } else {
       disableNextBtn()
@@ -144,7 +141,6 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
     if (formikRef?.current?.values?.repository?.name) {
       return true
     } else {
-      // disableNextBtn()
       return false
     }
   }, [formikRef?.current?.values?.repository])
@@ -250,8 +246,6 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
     }
   }
 
-  const isActiveAccordion: boolean = artifactType ? true : false
-
   const getInitialValues = React.useCallback((): SelectArtifactInterface => {
     const initialValues = get(serviceData, 'serviceDefinition.spec.manifests[0].manifest', {})
     const initialRepoValue = get(serviceData, 'data.repoValues')
@@ -289,7 +283,6 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
   const validationSchema = Yup.object().shape({
     artifactType: Yup.string().required(getString('validation.nameRequired')),
     identifier: Yup.string().required(getString('validation.nameRequired')),
-
     branch: Yup.string().when('gitFetchType', {
       is: 'Branch',
       then: Yup.string().trim().required(getString('validation.branchName'))
@@ -376,19 +369,8 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
 
               <div className={css.repoborderBottom} />
 
-              {isActiveAccordion ? (
-                <Accordion
-                  className={css.accordion}
-                  activeId={
-                    isActiveAccordion
-                      ? 'codeRepo'
-                      : // : openSelectRepoAccordion()
-                        // ? 'selectYourRepo'
-                        // : openProvideManifestAccordion()
-                        // ? 'provideManifest'
-                        ''
-                  }
-                >
+              {artifactType ? (
+                <Accordion className={css.accordion} activeId={artifactType ? 'codeRepo' : ''}>
                   <Accordion.Panel
                     id="codeRepo"
                     summary={
@@ -453,10 +435,8 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
                     }
                     details={
                       <ProvideManifest
-                        ref={provideManifestRef}
-                        // onSuccess={getManifestDetails}
                         formikProps={formikProps}
-                        initialValues={get(serviceData, 'serviceDefinition.spec.manifests[0].manifest', {})}
+                        initialValues={get(serviceData, 'serviceDefinition.spec.manifests[0].,manifest', {})}
                         disableNextBtn={() => setDisableBtn(true)}
                         enableNextBtn={() => setDisableBtn(disableBtn)}
                       />

@@ -43,7 +43,6 @@ import css from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scs
 
 export interface SelectWorkloadRef {
   submitForm?: FormikProps<SelectWorkloadInterface>['submitForm']
-  getErrors?: () => FormikProps<SelectWorkloadInterface>['errors']
 }
 export interface SelectWorkloadInterface {
   workloadType?: WorkloadType

@@ -234,13 +234,6 @@ const SelectGitProviderRef = (
     }
   }, [oAuthSecretIntercepted.current])
 
-  // useEffect(() => {
-  //   if (shouldRenderAuthFormFields()) {
-  //     setTestConnectionStatus(TestStatus.NOT_INITIATED)
-  //     enableNextBtn()
-  //   }
-  // }, [gitProvider, authMethod, selectedHosting])
-
   useEffect(() => {
     if (gitProvider) {
       if (selectedHosting === Hosting.SaaS) {
@@ -559,7 +552,6 @@ const SelectGitProviderRef = (
           style={{ width: '40%' }}
           label={<Text font={{ variation: FontVariation.FORM_LABEL }}>{getString(label)}</Text>}
           tooltipProps={{ dataTooltipId: tooltipId }}
-          // disabled={testConnectionStatus === TestStatus.IN_PROGRESS}
           inputGroup={{
             type: inputGroupType ?? 'text'
           }}

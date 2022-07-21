@@ -180,27 +180,6 @@
   padding-left: var(--spacing-small) !important;
 }
 
-.marginTop {
-  margin-top: 56px;
-}
-
-.modal {
-  [class*='bp3-dialog-header'] button {
-    z-index: 2;
-  }
-}
-
-.crossIcon {
-  position: absolute;
-  right: var(--spacing-large);
-  top: var(--spacing-large);
-}
-
-.formError {
-  margin-top: -10px;
-  margin-bottom: var(--spacing-small);
-}
-
 .credentialsButton {
   width: 300px;
   display: flex;
