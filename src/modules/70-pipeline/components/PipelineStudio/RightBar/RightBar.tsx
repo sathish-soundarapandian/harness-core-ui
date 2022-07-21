@@ -570,6 +570,7 @@ export function RightBar(): JSX.Element {
                       connectionType,
                       setConnectionType,
                       setConnectorUrl,
+                      connector: connector?.data?.connector,
                       getString,
                       errors,
                       loading,

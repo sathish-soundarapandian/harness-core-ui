@@ -141,7 +141,7 @@ export function getInputSetViewValidateFieldsConfig({
       name: 'spec.repoName',
       type: ValidationFieldTypes.Text,
       label: 'common.repositoryName'
-      // isRequired // depending on connector url type
+      // isRequired // depending on connector url type or if only this is required
     },
     {
       name: 'spec.depth',

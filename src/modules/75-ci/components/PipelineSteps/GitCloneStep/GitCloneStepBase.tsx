@@ -171,7 +171,8 @@ export const GitCloneStepBase = (
                   branch,
                   isReadonly,
                   setCodebaseRuntimeInputs,
-                  codebaseRuntimeInputs
+                  codebaseRuntimeInputs,
+                  connector: connector?.data?.connector
                 },
                 ['spec.build']: {},
                 ['spec.cloneDirectory']: { tooltipId: 'cloneDirectory' }

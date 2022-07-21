@@ -8,15 +8,19 @@
 import React from 'react'
 import { connect } from 'formik'
 import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@wings-software/uicore'
+import { useParams } from 'react-router-dom'
+import { get, isEmpty } from 'lodash-es'
 import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
 import { getConnectorRefWidth, isRuntimeInput, shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
 import { useQueryParams } from '@common/hooks'
 import type { Build } from 'services/pipeline-ng'
-import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import {
-  CodebaseRuntimeInputsInterface,
-  runtimeInputGearWidth
-} from '@pipeline/components/PipelineStudio/RightBar/RightBarUtils'
+import { useGetConnector } from 'services/cd-ng'
+import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import { Scope } from '@common/interfaces/SecretsInterface'
+import { Connectors } from '@connectors/constants'
+import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { CodebaseRuntimeInputsInterface } from '@pipeline/components/PipelineStudio/RightBar/RightBarUtils'
+import { ConnectionType } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
 import { CIStepOptionalConfig } from '../CIStep/CIStepOptionalConfig'
 import { CIStep } from '../CIStep/CIStep'
 import type { GitCloneStepProps } from './GitCloneStep'
@@ -33,13 +37,63 @@ export const GitCloneStepInputSetBasic: React.FC<GitCloneStepProps> = ({
   const [connectionType, setConnectionType] = React.useState('')
   const [connectorUrl, setConnectorUrl] = React.useState('')
   const connectorWidth = getConnectorRefWidth('DefaultView')
-  const connectorRefValue = formik.values.spec?.connectorRef
-  const isConnectorRuntimeInput = isRuntimeInput(connectorRefValue)
-  const codebaseConnector = formik.values?.spec?.connectorRef
+  const codebaseConnector = get(formik.values, `${path}.spec.connectorRef`)
+  const initialScope = getScopeFromValue(codebaseConnector || '')
 
   const [codebaseRuntimeInputs, setCodebaseRuntimeInputs] = React.useState<CodebaseRuntimeInputsInterface>({
     ...(isRuntimeInput(codebaseConnector) && { connectorRef: true, repoName: true })
   })
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<
+    PipelineType<{
+      orgIdentifier: string
+      projectIdentifier: string
+      pipelineIdentifier: string
+      accountId: string
+    }>
+  >()
+  const {
+    data: connector,
+    loading,
+    refetch
+  } = useGetConnector({
+    identifier: codebaseConnector,
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier: initialScope === Scope.ORG || initialScope === Scope.PROJECT ? orgIdentifier : undefined,
+      projectIdentifier: initialScope === Scope.PROJECT ? projectIdentifier : undefined,
+      ...(repoIdentifier && branch ? { repoIdentifier, branch, getDefaultFromOtherRepo: true } : {})
+    },
+    lazy: true,
+    debounce: 300
+  })
+
+  React.useEffect(() => {
+    if (!isEmpty(codebaseConnector) && !isRuntimeInput(codebaseConnector)) {
+      refetch()
+    }
+  }, [codebaseConnector])
+
+  React.useEffect(() => {
+    if (connector?.data?.connector) {
+      setConnectionType(
+        connector.data.connector.type === Connectors.GIT
+          ? connector.data.connector.spec.connectionType
+          : connector.data.connector.spec.type
+      )
+      setConnectorUrl(connector.data.connector.spec.url)
+      if (connector.data.connector.spec?.type === ConnectionType.Repo) {
+        // clear dependent repoName
+        formik.setFieldValue(`${path || ''}.spec.repoName`, undefined)
+      }
+    }
+  }, [
+    connector?.data?.connector,
+    connector?.data?.connector?.spec.type,
+    connector?.data?.connector?.spec.url,
+    setConnectionType,
+    setConnectorUrl
+  ])
+
   return (
     <FormikForm className={css.removeBpPopoverWrapperTopMargin}>
       <CIStep
@@ -55,14 +109,16 @@ export const GitCloneStepInputSetBasic: React.FC<GitCloneStepProps> = ({
               'spec.connectorAndRepo': {
                 connectorUrl,
                 connectionType,
-                connectorWidth: isConnectorRuntimeInput ? connectorWidth - runtimeInputGearWidth : connectorWidth,
+                connectorWidth,
                 setConnectionType,
                 setConnectorUrl,
+                loading,
                 repoIdentifier,
                 branch,
                 isReadonly: readonly,
                 setCodebaseRuntimeInputs,
-                codebaseRuntimeInputs
+                codebaseRuntimeInputs,
+                connector: connector?.data?.connector
               }
             }),
           ...(getMultiTypeFromValue(template?.spec?.connectorRef) !== MultiTypeInputType.RUNTIME &&

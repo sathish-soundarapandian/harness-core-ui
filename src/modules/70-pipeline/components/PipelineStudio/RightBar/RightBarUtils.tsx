@@ -17,6 +17,7 @@ import {
 } from '@wings-software/uicore'
 import { get, set } from 'lodash-es'
 import { FontVariation } from '@harness/design-system'
+import type { ConnectorInfoDTO } from 'services/cd-ng'
 import type { UseStringsReturn } from 'framework/strings'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
@@ -65,6 +66,7 @@ export const renderConnectorAndRepoName = ({
   connectionType,
   setConnectionType,
   setConnectorUrl,
+  connector,
   getString,
   errors,
   loading,
@@ -88,6 +90,7 @@ export const renderConnectorAndRepoName = ({
   connectionType: string
   setConnectionType: Dispatch<SetStateAction<string>>
   setConnectorUrl: Dispatch<SetStateAction<string>>
+  connector?: ConnectorInfoDTO
   getString: UseStringsReturn['getString']
   errors: { [key: string]: any }
   loading: boolean
@@ -112,9 +115,6 @@ export const renderConnectorAndRepoName = ({
   const repoNameWidth =
     connectorWidth && isRuntimeInput(repoNameValue) ? connectorWidth + runtimeInputGearWidth : connectorWidth
 
-  const connectorAllowableTypes = Array.isArray(allowableTypes)
-    ? (allowableTypes as MultiTypeInputType[])?.filter(type => type !== MultiTypeInputType.EXPRESSION)
-    : allowableTypes
   return (
     <>
       <Container className={cx(css.bottomMargin3)}>
@@ -139,8 +139,9 @@ export const renderConnectorAndRepoName = ({
           multiTypeProps={{
             expressions,
             disabled: isReadonly,
-            allowableTypes: connectorAllowableTypes // BE does not support expressions
+            allowableTypes
           }}
+          tooltipProps={{ dataTooltipId: 'rightBarForm_connectorRef' }}
           setRefValue
           onChange={(value, _valueType, connectorRefType) => {
             // add coverage once connector select available in jest tests
@@ -165,7 +166,11 @@ export const renderConnectorAndRepoName = ({
 
       {!isRuntimeInput(connectorValue) && connectionType === ConnectionType.Repo ? (
         <Container width={repoNameWidth}>
-          <Text font={{ variation: FontVariation.FORM_LABEL }} margin={{ bottom: 'xsmall' }}>
+          <Text
+            font={{ variation: FontVariation.FORM_LABEL }}
+            margin={{ bottom: 'xsmall' }}
+            tooltipProps={{ dataTooltipId: 'rightBarForm_repoName' }}
+          >
             {getString('common.repositoryName')}
           </Text>
           <TextInput name={repoNameFieldName} value={connectorUrl} style={{ flexGrow: 1 }} disabled />
@@ -202,9 +207,9 @@ export const renderConnectorAndRepoName = ({
               <Text lineClamp={1}>
                 {getCompleteConnectorUrl({
                   partialUrl: connectorUrl,
-                  repoName: values.repoName,
-                  connectorType: get(values, 'connectorRef.connector.type'),
-                  gitAuthProtocol: get(values, 'connectorRef.connector.spec.authentication.type')
+                  repoName: repoNameValue,
+                  connectorType: get(connector, 'type'),
+                  gitAuthProtocol: get(connector, 'spec.authentication.type')
                 })}
               </Text>
             </div>

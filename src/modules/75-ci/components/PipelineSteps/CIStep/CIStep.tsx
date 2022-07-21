@@ -10,7 +10,7 @@ import { isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
-import { FormInput, Text, Container, AllowedTypes, MultiTypeInputType } from '@wings-software/uicore'
+import { FormInput, Text, Container, AllowedTypes } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { MultiTypeTextField, MultiTypeTextProps } from '@common/components/MultiTypeText/MultiTypeText'
 import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
@@ -259,6 +259,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
             connectorWidth: enableFields['spec.connectorAndRepo'].connectorWidth,
             setConnectionType: enableFields['spec.connectorAndRepo'].setConnectionType,
             setConnectorUrl: enableFields['spec.connectorAndRepo'].setConnectorUrl,
+            connector: enableFields['spec.connectorAndRepo'].connector,
             getString,
             errors: formik.errors,
             loading: enableFields['spec.connectorAndRepo'].loading,
@@ -272,14 +273,28 @@ export const CIStep: React.FC<CIStepProps> = props => {
             setCodebaseRuntimeInputs: enableFields['spec.connectorAndRepo'].setCodebaseRuntimeInputs,
             codebaseRuntimeInputs: enableFields['spec.connectorAndRepo'].codebaseRuntimeInputs,
             connectorAndRepoNamePath: `${prefix}spec`,
-            allowableTypes: isInputSetView
-              ? [MultiTypeInputType.FIXED]
-              : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
+            allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep,
             codeBaseInputFieldFormName: { repoName: `${prefix}spec.repoName` }
           })}
         </Container>
       )}
-
+      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.repoName') && (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          {renderMultiTypeTextField({
+            name: `${prefix}spec.repoName`,
+            tooltipId: enableFields['spec.repoName'].tooltipId,
+            labelKey: 'common.repositoryName',
+            inputProps: {
+              multiTextInputProps: {
+                expressions,
+                allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
+              },
+              disabled: readonly
+            },
+            fieldPath: 'spec.repoName'
+          })}
+        </Container>
+      )}
       {!enableFields['spec.connectorRef']?.shouldHide &&
       Object.prototype.hasOwnProperty.call(enableFields, 'spec.image') ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
