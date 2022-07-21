@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { isUndefined } from 'lodash'
+import React, { useEffect } from 'react'
+import { isUndefined } from 'lodash-es'
 import * as Yup from 'yup'
 import { RouteWithLayout } from '@common/router'
 import SettingsList from '@default-settings/pages/SettingsList'
@@ -11,8 +11,8 @@ import DefaultSettingsFactory, { SettingRendererProps } from '@default-settings/
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
+import { FeatureFlag } from '@common/featureFlags'
 import {
-  DefaultSettingStringDropDown,
   DefaultSettingNumberTextbox,
   DefaultSettingTextbox,
   DefaultSettingRadioBtnWithTrueAndFalse,
@@ -134,15 +134,11 @@ const DependendentValues: React.FC<SettingRendererProps> = ({
     if (isUndefined(number)) {
       return ''
     }
-    console.log({ number }, parseInt(number) % 2 ? 'Odd' : 'Even')
 
     return parseInt(number) % 2 ? 'Odd' : 'Even'
   }
-  const [settingValue, updateSettingValue] = useState(
-    isEvenorOdd(allSettings.get(SettingType.test_setting_CD_3)?.value)
-  )
+
   useEffect(() => {
-    console.log('otherSettingsWhichAreChanged', { allSettings })
     setFieldValue(otherProps.identifier, isEvenorOdd(allSettings.get(SettingType.test_setting_CI_2)?.value))
   }, [allSettings.get(SettingType.test_setting_CI_2)?.value])
   return (
@@ -161,7 +157,8 @@ DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CORE_
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CD_1, {
   label: 'orgLabel',
   settingRenderer: props => <DefaultSettingTextbox {...props} />,
-  yupValidation: Yup.string().max(15, 'Must be 15 characters or less').required('Required')
+  yupValidation: Yup.string().max(15, 'Must be 15 characters or less').required('Required'),
+  featureFlag: FeatureFlag.NG_SETTINGS_1
 })
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CD_2, {
   label: 'projectLabel',

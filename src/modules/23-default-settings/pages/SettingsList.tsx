@@ -19,7 +19,7 @@ import css from './SettingsList.module.scss'
 
 const SettingsList = () => {
   const { getString } = useStrings()
-  const { projectIdentifier, orgIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
+  const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps & ModulePathParams>()
   //const [savingSettingInProgress, updateSavingSettingInProgress] = useState<boolean>(false)
   const defaultSettingsCategory: SettingCategory[] = DefaultSettingsFactory.getSettingCategoryNamesList()
   const [changedSettings, updateChangedSettings] = useState<Map<SettingType, SettingRequestDTO>>(new Map())
@@ -72,14 +72,7 @@ const SettingsList = () => {
   }
   return (
     <>
-      <Formik
-        initialValues={{}}
-        validationSchema={Yup.object(validationScheme as any)}
-        onSubmit={values => {
-          console.log(values)
-          saveSettings()
-        }}
-      >
+      <Formik initialValues={{}} validationSchema={Yup.object(validationScheme as any)} onSubmit={saveSettings}>
         {() => {
           return (
             <FormikForm>
@@ -107,18 +100,19 @@ const SettingsList = () => {
                   />
                 }
               />
-              {savingSettingInProgress && <Page.Spinner message={getString('secrets.secret.saving')}></Page.Spinner>}
+              {savingSettingInProgress && <Page.Spinner message={getString('common.saving')}></Page.Spinner>}
               <Page.Body>
                 <Layout.Vertical className={css.settingList}>
-                  {defaultSettingsCategory.map(key => {
+                  {defaultSettingsCategory.map(categ => {
                     return (
                       <SettingsCategorySection
-                        settingCategory={key}
+                        settingCategory={categ}
                         allSettings={allSettings}
                         updateAllSettings={updateAllSettingsLocal}
                         onSettingChange={onSettingChange}
                         settingErrorMessages={settingErrrorMessage}
                         updateValidationSchema={updateValidation}
+                        key={categ}
                       />
                     )
                   })}

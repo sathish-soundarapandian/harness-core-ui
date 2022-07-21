@@ -20,8 +20,6 @@ shared:
   pleaseSelectVariation: Please select a variation first.
   getStarted: '{{ $.getStarted }}'
   quickGuide: Quick Guide
-  true: 'true'
-  false: 'false'
 messages:
   flagCreated: Flag created.
   flagUpdated: Flag updated.

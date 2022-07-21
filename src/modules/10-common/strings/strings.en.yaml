@@ -932,3 +932,6 @@ cardNumber: Card number
 perDeveloper: per developer
 triggerName: Trigger Name
 versionLabel: Version Label
+true: 'true'
+false: 'false'
+saving: 'Saving'

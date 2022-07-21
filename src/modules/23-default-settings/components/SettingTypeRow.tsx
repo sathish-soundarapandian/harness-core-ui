@@ -1,7 +1,7 @@
 import { Button, ButtonSize, ButtonVariation, Checkbox, Color, Layout, Text } from '@harness/uicore'
 import React from 'react'
 import { useFormikContext } from 'formik'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { SettingHandler, SettingRendererProps } from '@default-settings/factories/DefaultSettingsFactory'
 import type { SettingType } from '@default-settings/interfaces/SettingType'
 import { useStrings } from 'framework/strings'
@@ -36,12 +36,12 @@ const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
 }) => {
   const { label, settingRenderer, featureFlag } = settingTypeHandler
 
-  const { setFieldValue, values } = useFormikContext()
-  console.log(values)
+  const { setFieldValue } = useFormikContext()
   const { getString } = useStrings()
   let enableFeatureFlag = true
+  const currentFeatureFlagsInSystem = useFeatureFlags()
   if (featureFlag) {
-    enableFeatureFlag = useFeatureFlag(featureFlag)
+    enableFeatureFlag = !!currentFeatureFlagsInSystem[featureFlag]
   }
   if (!enableFeatureFlag) {
     return null

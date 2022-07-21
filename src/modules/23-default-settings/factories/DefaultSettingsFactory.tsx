@@ -15,7 +15,7 @@ import type {
 } from '@default-settings/interfaces/SettingType'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import type { FeatureFlag } from '@common/featureFlags'
-import type { SettingDTO, SettingRequestDTO } from 'services/cd-ng'
+import type { SettingDTO } from 'services/cd-ng'
 
 export interface SettingRendererProps {
   identifier: any

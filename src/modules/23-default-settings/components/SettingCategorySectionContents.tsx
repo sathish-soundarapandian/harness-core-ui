@@ -3,7 +3,7 @@ import { FontVariation, Text } from '@harness/uicore'
 import type { SettingType } from '@default-settings/interfaces/SettingType'
 
 import DefaultSettingsFactory, { GroupedSettings } from '@default-settings/factories/DefaultSettingsFactory'
-import type { SettingDTO, SettingRequestDTO, SettingResponseDTO } from 'services/cd-ng'
+import type { SettingDTO, SettingResponseDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import SettingTypeRow from './SettingTypeRow'
 import css from './SettingsCategorySection.module.scss'
@@ -61,6 +61,7 @@ const SettingCategorySectionContents: React.FC<SettingCategorySectionContentsPro
           }
           return (
             <SettingTypeRow
+              key={settingTypeKey}
               allSettings={allSettings}
               allowedValues={
                 settingTypesResponseDTO ? settingTypesResponseDTO[settingTypeKey]?.setting.allowedValues : undefined

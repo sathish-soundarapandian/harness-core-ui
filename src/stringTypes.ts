@@ -256,6 +256,7 @@ export interface StringsMap {
   'common.extendTrial.feedback.title': string
   'common.extendTrial.heading': string
   'common.failureRate': string
+  'common.false': string
   'common.feature.keepGettingShipDone.requestUpgrade': string
   'common.feature.keepGettingShipDone.title': string
   'common.feature.levelUp.description': string
@@ -633,6 +634,7 @@ export interface StringsMap {
   'common.saveAndClose': string
   'common.saveAsTemplate': string
   'common.savedSuccessfully': string
+  'common.saving': string
   'common.scope': string
   'common.scriptRequired': string
   'common.searchOther': string
@@ -786,6 +788,7 @@ export interface StringsMap {
   'common.triggerLabel': string
   'common.triggerName': string
   'common.triggersLabel': string
+  'common.true': string
   'common.unlimited': string
   'common.unsavedChanges': string
   'common.updating': string
@@ -1342,7 +1345,6 @@ export interface StringsMap {
   'secrets.secret.placeholderSecretReference': string
   'secrets.secret.placeholderSecretValue': string
   'secrets.secret.referenceSecret': string
-  'secrets.secret.saving': string
   'secrets.secret.secretActivity': string
   'secrets.secret.secretCreated': string
   'secrets.secret.secretNotFound': string
@@ -5643,7 +5645,6 @@ export interface StringsMap {
   'cf.shared.archived': string
   'cf.shared.environment': string
   'cf.shared.evaluations': string
-  'cf.shared.false': string
   'cf.shared.flags': string
   'cf.shared.getStarted': string
   'cf.shared.individual': string
@@ -5659,7 +5660,6 @@ export interface StringsMap {
   'cf.shared.target': string
   'cf.shared.targetManagement': string
   'cf.shared.targets': string
-  'cf.shared.true': string
   'cf.shared.variation': string
   'cf.shared.variations': string
   'cf.targetDetail.addFlagToTarget': string

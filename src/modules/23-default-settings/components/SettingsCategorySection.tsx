@@ -6,15 +6,14 @@ import {
   Text,
   FontVariation,
   Container,
-  Icon,
-  Color
+  Icon
 } from '@harness/uicore'
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import DefaultSettingsFactory from '@default-settings/factories/DefaultSettingsFactory'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getSettingsListPromise, SettingDTO, SettingRequestDTO, SettingResponseDTO } from 'services/cd-ng'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { SettingCategory, SettingType, SettingYupValidation } from '../interfaces/SettingType'
@@ -42,21 +41,15 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
   allSettings,
   updateAllSettings
 }) => {
-  const { initialValues, setFieldValue } = useFormikContext()
+  const { setFieldValue } = useFormikContext()
 
   const settingCategoryHandler = DefaultSettingsFactory.getSettingCategoryHandler(settingCategory)
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps & ModulePathParams>()
 
   const { getString } = useStrings()
-  if (!settingCategoryHandler) return null
-  const { label, settings: registeredGroupedSettings, featureFlag, icon } = settingCategoryHandler
+
   let enableFeatureFlag = true
-  if (featureFlag) {
-    enableFeatureFlag = useFeatureFlag(featureFlag)
-  }
-  if (!enableFeatureFlag) {
-    return null
-  }
+  const currentFeatureFlagsInSystem = useFeatureFlags()
 
   const [settingTypes, updateSettingTypes] = useState<Set<SettingType>>(new Set())
 
@@ -89,7 +82,6 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
         updateAllSettings(categorySettings)
         updateAllSettingDTO(categorySettings)
         updateValidationSchema(validationsSchema)
-        console.log({ initialValues })
         updateRefiedSettingTypesWithDTO(refiedSettingTypesWithDTOLocal)
         updateSettingTypes(settingTypesTemp)
       } catch (error) {
@@ -184,7 +176,17 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
       }
     }
   }
+  if (!settingCategoryHandler) {
+    return null
+  }
+  const { label, settings: registeredGroupedSettings, featureFlag, icon } = settingCategoryHandler
+  if (featureFlag) {
+    enableFeatureFlag = !!currentFeatureFlagsInSystem[featureFlag]
+  }
 
+  if (!enableFeatureFlag) {
+    return null
+  }
   return (
     <Card className={css.summaryCard}>
       <Accordion

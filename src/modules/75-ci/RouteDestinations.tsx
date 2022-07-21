@@ -53,6 +53,7 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import featureFactory from 'framework/featureStore/FeaturesFactory'
 import { LICENSE_STATE_NAMES, LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
+import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
 import { CIExecutionCardSummary } from './components/CIExecutionCardSummary/CIExecutionCardSummary'
 import { CIExecutionSummary } from './components/CIExecutionSummary/CIExecutionSummary'
 import CISideNav from './components/CISideNav/CISideNav'
@@ -65,7 +66,6 @@ import CIDashboardPage from './pages/dashboard/CIDashboardPage'
 import GetStartedWithCI from './pages/get-started-with-ci/GetStartedWithCI'
 import CIHomePage from './pages/home/CIHomePage'
 import CITrialHomePage from './pages/home/CITrialHomePage'
-import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
 
 executionFactory.registerCardInfo(StageType.BUILD, {
   icon: 'ci-main',

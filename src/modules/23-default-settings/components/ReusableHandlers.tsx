@@ -1,7 +1,6 @@
 import React, { FormEvent } from 'react'
-import { Checkbox, DropDown, FormInput, TextInput } from '@harness/uicore'
+import { FormInput } from '@harness/uicore'
 import { Radio, RadioGroup } from '@blueprintjs/core'
-import type { SettingDTO } from 'services/cd-ng'
 import type { SettingRendererProps } from '@default-settings/factories/DefaultSettingsFactory'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import { useStrings } from 'framework/strings'
@@ -10,7 +9,6 @@ import css from './SettingsCategorySection.module.scss'
 export const DefaultSettingStringDropDown: React.FC<SettingRendererProps> = ({
   allowedValues,
   onSettingSelectionChange,
-  settingValue,
   identifier
 }) => {
   if (allowedValues && allowedValues.length) {
@@ -38,7 +36,6 @@ export const DefaultSettingStringDropDown: React.FC<SettingRendererProps> = ({
 
 export const DefaultSettingNumberTextbox: React.FC<SettingRendererProps> = ({
   onSettingSelectionChange,
-  settingValue,
   identifier
 }) => {
   return (
@@ -61,7 +58,6 @@ export interface DefaultSettingRadioBtnWithTrueAndFalseProps extends SettingRend
 export const DefaultSettingRadioBtnWithTrueAndFalse: React.FC<DefaultSettingRadioBtnWithTrueAndFalseProps> = ({
   onSettingSelectionChange,
   settingValue,
-  otherSettingsWhichAreChanged,
   falseLabel,
   trueLabel,
   identifier
@@ -79,8 +75,8 @@ export const DefaultSettingRadioBtnWithTrueAndFalse: React.FC<DefaultSettingRadi
         }}
         selectedValue={settingValue}
       >
-        <Radio label={trueLabel ? getString(trueLabel) : getString('cf.shared.true')} value="true" />
-        <Radio label={falseLabel ? getString(falseLabel) : getString('cf.shared.false')} value="false" />
+        <Radio label={trueLabel ? getString(trueLabel) : getString('common.true')} value="true" />
+        <Radio label={falseLabel ? getString(falseLabel) : getString('common.false')} value="false" />
       </RadioGroup>
     </>
   )
@@ -88,7 +84,6 @@ export const DefaultSettingRadioBtnWithTrueAndFalse: React.FC<DefaultSettingRadi
 export const DefaultSettingCheckBoxWithTrueAndFalse: React.FC<DefaultSettingRadioBtnWithTrueAndFalseProps> = ({
   onSettingSelectionChange,
   settingValue,
-  otherSettingsWhichAreChanged,
   identifier
 }) => {
   return (
@@ -105,12 +100,7 @@ export const DefaultSettingCheckBoxWithTrueAndFalse: React.FC<DefaultSettingRadi
     </>
   )
 }
-export const DefaultSettingTextbox: React.FC<SettingRendererProps> = ({
-  onSettingSelectionChange,
-  settingValue,
-  identifier,
-  otherSettingsWhichAreChanged
-}) => {
+export const DefaultSettingTextbox: React.FC<SettingRendererProps> = ({ onSettingSelectionChange, identifier }) => {
   return (
     <>
       <FormInput.Text

@@ -411,7 +411,7 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
               <Button
                 intent="primary"
                 type="submit"
-                text={loading ? getString('secrets.secret.saving') : getString('save')}
+                text={loading ? getString('common.saving') : getString('save')}
                 margin={{ top: 'large' }}
                 disabled={loading || !typeOfSelectedSecretManager}
                 variation={ButtonVariation.PRIMARY}
