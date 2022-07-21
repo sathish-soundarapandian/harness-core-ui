@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly defaultSettingRenderer: string
+  readonly detailSettings: string
   readonly settingOverrideRestore: string
   readonly settingRestore: string
   readonly settingTable: string

@@ -1156,6 +1156,7 @@ export interface StringsMap {
   'rbac.youAreMissingTheFollowingPermission': string
   'rbac.youAreNotAuthorizedTo': string
   'defaultSettings.allowOverrides': string
+  'defaultSettings.noSettingToDisplay': string
   'defaultSettings.restoreToDefault': string
   'governance.permissions.governancePolicies': string
   'governance.permissions.governancePolicySets': string

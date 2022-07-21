@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { isUndefined } from 'lodash'
+import * as Yup from 'yup'
 import { RouteWithLayout } from '@common/router'
 import SettingsList from '@default-settings/pages/SettingsList'
 import routes from '@common/RouteDefinitions'
 
-import { projectPathProps } from '@common/utils/routeUtils'
+import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { AccountSideNavProps } from '@common/RouteDestinations'
 import DefaultSettingsFactory, { SettingRendererProps } from '@default-settings/factories/DefaultSettingsFactory'
-import { SettingGroups, SettingType } from './interfaces/SettingType'
+import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import type { SidebarContext } from '@common/navigation/SidebarProvider'
+import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import {
   DefaultSettingStringDropDown,
   DefaultSettingNumberTextbox,
@@ -15,6 +18,7 @@ import {
   DefaultSettingRadioBtnWithTrueAndFalse,
   DefaultSettingCheckBoxWithTrueAndFalse
 } from './components/ReusableHandlers'
+import { SettingGroups, SettingType } from './interfaces/SettingType'
 DefaultSettingsFactory.registerSettingCategory('CD', {
   icon: 'cd-main',
   label: 'common.purpose.cd.continuous',
@@ -80,40 +84,48 @@ DefaultSettingsFactory.registerSettingTypeHandler(SettingType.TEST_SETTING_ID, {
 
       //settingType={props.settingType}
     />
-  )
+  ),
+  yupValidation: Yup.string().max(15, 'Must be 15 characters or less').required('Required')
 })
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.TEST_SETTING_ID_2, {
   label: 'secretManagers',
-  settingRenderer: props => <DefaultSettingTextbox {...props} />
+  settingRenderer: props => <DefaultSettingTextbox {...props} />,
+  yupValidation: Yup.string().max(15, 'Must be 15 characters or less').required('Required')
 })
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CI_3, {
   label: 'secretType',
-  settingRenderer: props => <DependendentValues {...props} />
+  settingRenderer: props => <DependendentValues {...props} />,
+  yupValidation: Yup.string().max(15, 'Must be 15 characters or less').required('Required')
 })
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CI_4, {
   label: 'secrets.confirmDelete',
-  settingRenderer: props => <DefaultSettingTextbox {...props} />
+  settingRenderer: props => <DefaultSettingTextbox {...props} />,
+  yupValidation: Yup.string().max(15, 'Must be 15 characters or less').required('Required')
 })
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CI_5, {
   label: 'secrets.createSSHCredWizard.btnVerifyConnection',
-  settingRenderer: props => <DefaultSettingTextbox {...props} />
+  settingRenderer: props => <DefaultSettingTextbox {...props} />,
+  yupValidation: Yup.string().max(15, 'Must be 15 characters or less').required('Required')
 })
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CI_6, {
   label: 'secrets.createSSHCredWizard.titleAuth',
-  settingRenderer: props => <DefaultSettingTextbox {...props} />
+  settingRenderer: props => <DefaultSettingTextbox {...props} />,
+  yupValidation: Yup.string().max(15, 'Must be 15 characters or less').required('Required')
 })
 
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.ACCOUNT, {
   label: 'account',
-  settingRenderer: props => <DefaultSettingTextbox {...props} />
+  settingRenderer: props => <DefaultSettingTextbox {...props} />,
+  yupValidation: Yup.string().max(15, 'Must be 15 characters or less').required('Required')
 })
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CORE_1, {
   label: 'common.accountSetting.connector.disableBISMHeading',
-  settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />
+  settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />,
+  yupValidation: Yup.string().max(15, 'Must be 15 characters or less').required('Required')
 })
 
 const DependendentValues: React.FC<SettingRendererProps> = ({
-  otherSettingsWhichAreChanged,
+  allSettings,
   setFieldValue,
 
   ...otherProps
@@ -127,58 +139,78 @@ const DependendentValues: React.FC<SettingRendererProps> = ({
     return parseInt(number) % 2 ? 'Odd' : 'Even'
   }
   const [settingValue, updateSettingValue] = useState(
-    isEvenorOdd(otherSettingsWhichAreChanged.get(SettingType.test_setting_CD_3)?.value)
+    isEvenorOdd(allSettings.get(SettingType.test_setting_CD_3)?.value)
   )
   useEffect(() => {
-    console.log('otherSettingsWhichAreChanged', { otherSettingsWhichAreChanged })
-    setFieldValue(
-      otherProps.identifier,
-      isEvenorOdd(otherSettingsWhichAreChanged.get(SettingType.test_setting_CI_2)?.value)
-    )
-  }, [otherSettingsWhichAreChanged.get(SettingType.test_setting_CI_2)?.value])
+    console.log('otherSettingsWhichAreChanged', { allSettings })
+    setFieldValue(otherProps.identifier, isEvenorOdd(allSettings.get(SettingType.test_setting_CI_2)?.value))
+  }, [allSettings.get(SettingType.test_setting_CI_2)?.value])
   return (
     <span>
       <span>Depeneedent</span>
-      <DefaultSettingTextbox
-        setFieldValue={setFieldValue}
-        {...otherProps}
-        otherSettingsWhichAreChanged={otherSettingsWhichAreChanged}
-      />
+      <DefaultSettingTextbox setFieldValue={setFieldValue} {...otherProps} allSettings={allSettings} />
     </span>
   )
 }
 
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CORE_2, {
   label: 'pipeline.ACR.name',
-  settingRenderer: props => <DependendentValues {...props} />
+  settingRenderer: props => <DependendentValues {...props} />,
+  yupValidation: Yup.string().max(15, 'Must be 15 characters or less').required('Required')
 })
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CD_1, {
   label: 'orgLabel',
-  settingRenderer: props => <DefaultSettingTextbox {...props} />
+  settingRenderer: props => <DefaultSettingTextbox {...props} />,
+  yupValidation: Yup.string().max(15, 'Must be 15 characters or less').required('Required')
 })
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CD_2, {
   label: 'projectLabel',
-  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
+  yupValidation: Yup.string().max(15, 'Must be 15 characters or less').required('Required')
 })
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CD_3, {
   label: 'summary',
-  settingRenderer: props => <DefaultSettingNumberTextbox {...props} />
+  settingRenderer: props => <DefaultSettingNumberTextbox {...props} />,
+  yupValidation: Yup.string().max(15, 'Must be 15 characters or less').required('Required')
 })
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.TEST_SETTING_CI, {
   label: 'abort',
-  settingRenderer: props => <DefaultSettingTextbox {...props} />
+  settingRenderer: props => <DefaultSettingTextbox {...props} />,
+  yupValidation: Yup.string().max(15, 'Must be 15 characters or less').required('Required')
 })
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CI_2, {
   label: 'dashboardLabel',
-  settingRenderer: props => <DefaultSettingNumberTextbox {...props} />
+  settingRenderer: props => <DefaultSettingNumberTextbox {...props} />,
+  yupValidation: Yup.string().max(15, 'Must be 15 characters or less').required('Required')
 })
 DefaultSettingsFactory.registerSettingTypeHandler(SettingType.test_setting_CI_7, {
   label: 'secrets.createSSHCredWizard.validateKeypath',
-  settingRenderer: props => <DefaultSettingTextbox {...props} />
+  settingRenderer: props => <DefaultSettingTextbox {...props} />,
+  yupValidation: Yup.string().max(15, 'Must be 15 characters or less').required('Required')
 })
 export default (
   <>
-    <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toDefaultSettings({ ...projectPathProps })} exact>
+    <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toDefaultSettings({ ...accountPathProps })} exact>
+      <SettingsList />
+    </RouteWithLayout>
+  </>
+)
+export const DefaultSettingsRouteDestinations: React.FC<{
+  moduleParams: ModulePathParams
+  licenseRedirectData?: LicenseRedirectProps
+  sidebarProps?: SidebarContext
+}> = ({ moduleParams, licenseRedirectData, sidebarProps }) => (
+  <>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={sidebarProps}
+      path={routes.toDefaultSettings({
+        ...accountPathProps,
+        ...projectPathProps,
+        ...moduleParams
+      })}
+    >
       <SettingsList />
     </RouteWithLayout>
   </>

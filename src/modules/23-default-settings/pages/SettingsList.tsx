@@ -1,14 +1,8 @@
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import {
-  Button,
-  ButtonVariation,
-  FormikForm,
-  FormInput,
-  getErrorInfoFromErrorObject,
-  Layout,
-  useToaster
-} from '@harness/uicore'
+import { Button, ButtonVariation, FormikForm, getErrorInfoFromErrorObject, Layout, useToaster } from '@harness/uicore'
+import { Formik } from 'formik'
+import * as Yup from 'yup'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 
 import ScopedTitle from '@common/components/Title/ScopedTitle'
@@ -19,18 +13,17 @@ import { useStrings } from 'framework/strings'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import DefaultSettingsFactory from '@default-settings/factories/DefaultSettingsFactory'
 import { SettingDTO, SettingRequestDTO, useUpdateSettingValue } from 'services/cd-ng'
-import type { SettingCategory, SettingType } from '../interfaces/SettingType'
+import type { SettingCategory, SettingType, SettingYupValidation } from '../interfaces/SettingType'
 import SettingsCategorySection from '../components/SettingsCategorySection'
 import css from './SettingsList.module.scss'
-import { Formik } from 'formik'
 
-import * as Yup from 'yup'
 const SettingsList = () => {
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
   //const [savingSettingInProgress, updateSavingSettingInProgress] = useState<boolean>(false)
   const defaultSettingsCategory: SettingCategory[] = DefaultSettingsFactory.getSettingCategoryNamesList()
   const [changedSettings, updateChangedSettings] = useState<Map<SettingType, SettingRequestDTO>>(new Map())
+  const [allSettings, updateAllSettings] = useState<Map<SettingType, SettingDTO>>(new Map())
   const [settingErrrorMessage, updateSettingErrrorMessage] = useState<Map<SettingType, string>>(new Map())
   const [disableSave, updateDisableSave] = useState<boolean>(true)
   const { showError } = useToaster()
@@ -63,21 +56,25 @@ const SettingsList = () => {
         updateSettingErrrorMessage(errorMap)
         if (!errorMap.size) {
           updateDisableSave(true)
+          updateChangedSettings(new Map())
         }
       })
     } catch (error) {
       showError(getErrorInfoFromErrorObject(error))
     }
   }
-  const [validationScheme, updateValidationScheme] = useState({})
-  const updateValidation = (val: any) => {
+  const [validationScheme, updateValidationScheme] = useState<SettingYupValidation>({})
+  const updateValidation = (val: SettingYupValidation) => {
     updateValidationScheme({ ...validationScheme, ...val })
+  }
+  const updateAllSettingsLocal = (settings: Map<SettingType, SettingDTO>) => {
+    updateAllSettings(new Map([...allSettings, ...settings]))
   }
   return (
     <>
       <Formik
         initialValues={{}}
-        validationSchema={Yup.object(validationScheme)}
+        validationSchema={Yup.object(validationScheme as any)}
         onSubmit={values => {
           console.log(values)
           saveSettings()
@@ -112,20 +109,14 @@ const SettingsList = () => {
               />
               {savingSettingInProgress && <Page.Spinner message={getString('secrets.secret.saving')}></Page.Spinner>}
               <Page.Body>
-                <FormInput.Text
-                  name="firstName"
-                  placeholder="First Name"
-                  tooltipProps={{
-                    dataTooltipId: 'nameTextField'
-                  }}
-                />
                 <Layout.Vertical className={css.settingList}>
                   {defaultSettingsCategory.map(key => {
                     return (
                       <SettingsCategorySection
                         settingCategory={key}
+                        allSettings={allSettings}
+                        updateAllSettings={updateAllSettingsLocal}
                         onSettingChange={onSettingChange}
-                        otherSettingsWhichAreChanged={changedSettings}
                         settingErrorMessages={settingErrrorMessage}
                         updateValidationSchema={updateValidation}
                       />

@@ -65,6 +65,7 @@ import CIDashboardPage from './pages/dashboard/CIDashboardPage'
 import GetStartedWithCI from './pages/get-started-with-ci/GetStartedWithCI'
 import CIHomePage from './pages/home/CIHomePage'
 import CITrialHomePage from './pages/home/CITrialHomePage'
+import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
 
 executionFactory.registerCardInfo(StageType.BUILD, {
   icon: 'ci-main',
@@ -340,6 +341,13 @@ export default (
 
     {
       ConnectorRouteDestinations({
+        moduleParams,
+        licenseRedirectData,
+        sidebarProps: CISideNavProps
+      })?.props.children
+    }
+    {
+      DefaultSettingsRouteDestinations({
         moduleParams,
         licenseRedirectData,
         sidebarProps: CISideNavProps

@@ -1,13 +1,13 @@
 import { Button, ButtonSize, ButtonVariation, Checkbox, Color, Layout, Text } from '@harness/uicore'
 import React from 'react'
+import { useFormikContext } from 'formik'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import type { SettingHandler, SettingRendererProps } from '@default-settings/factories/DefaultSettingsFactory'
 import type { SettingType } from '@default-settings/interfaces/SettingType'
 import { useStrings } from 'framework/strings'
-import type { SettingRequestDTO } from 'services/cd-ng'
+import type { SettingDTO, SettingRequestDTO } from 'services/cd-ng'
 
 import css from './SettingsCategorySection.module.scss'
-import { useFormikContext } from 'formik'
 interface SettingTypeRowProps {
   settingTypeHandler: SettingHandler
   onSelectionChange: (val: string) => void
@@ -17,9 +17,10 @@ interface SettingTypeRowProps {
   onAllowOverride: (checked: boolean) => void
   allowOverride: boolean
   allowedValues: SettingRendererProps['allowedValues']
-  otherSettingsWhichAreChanged: Map<SettingType, SettingRequestDTO>
   errorMessage: string
   otherSettings?: Map<SettingType, SettingRequestDTO>
+
+  allSettings: Map<SettingType, SettingDTO>
 }
 const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
   settingTypeHandler,
@@ -30,7 +31,7 @@ const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
   onAllowOverride,
   allowOverride,
   allowedValues,
-  otherSettingsWhichAreChanged,
+  allSettings,
   errorMessage
 }) => {
   const { label, settingRenderer, featureFlag } = settingTypeHandler
@@ -57,7 +58,7 @@ const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
             onRestore,
             settingValue,
             allowedValues,
-            otherSettingsWhichAreChanged,
+            allSettings,
             setFieldValue
           })}
         {errorMessage && (

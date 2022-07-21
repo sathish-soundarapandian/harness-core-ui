@@ -2,24 +2,25 @@ import {
   Accordion,
   Card,
   getErrorInfoFromErrorObject,
-  PageSpinner,
   useToaster,
   Text,
-  FontVariation
+  FontVariation,
+  Container,
+  Icon,
+  Color
 } from '@harness/uicore'
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import DefaultSettingsFactory from '@default-settings/factories/DefaultSettingsFactory'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { getSettingsListPromise, SettingDTO, SettingRequestDTO, SettingResponseDTO } from 'services/cd-ng'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { SettingCategory, SettingType } from '../interfaces/SettingType'
+import type { SettingCategory, SettingType, SettingYupValidation } from '../interfaces/SettingType'
 import SettingCategorySectionContents from './SettingCategorySectionContents'
 import css from './SettingsCategorySection.module.scss'
-import { useFormikContext } from 'formik'
 
-import * as Yup from 'yup'
 interface SettingsCategorySectionProps {
   settingCategory: SettingCategory
   onSettingChange: (
@@ -27,17 +28,19 @@ interface SettingsCategorySectionProps {
     settingDTO: SettingDTO,
     updateType: SettingRequestDTO['updateType']
   ) => void
-  otherSettingsWhichAreChanged: Map<SettingType, SettingRequestDTO>
+  updateAllSettings: (settings: Map<SettingType, SettingDTO>) => void
+  allSettings: Map<SettingType, SettingDTO>
   settingErrorMessages: Map<SettingType, string>
-  updateValidationSchema: (val: Yup.ObjectSchema<object | undefined>) => void
+  updateValidationSchema: (val: SettingYupValidation) => void
 }
 
 const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
   settingCategory,
   onSettingChange,
-  otherSettingsWhichAreChanged,
   settingErrorMessages,
-  updateValidationSchema
+  updateValidationSchema,
+  allSettings,
+  updateAllSettings
 }) => {
   const { initialValues, setFieldValue } = useFormikContext()
 
@@ -61,6 +64,7 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
   const [refiedSettingTypesWithDTO, updateRefiedSettingTypesWithDTO] =
     useState<{ [Key in SettingType]?: SettingResponseDTO }>()
   const [loadingSettingTypes, updateLoadingSettingTypes] = useState(false)
+  const [allSettingDTO, updateAllSettingDTO] = useState<Map<SettingType, SettingDTO>>(new Map())
   const categorySectionOpen = async () => {
     if (!settingTypes.size) {
       updateLoadingSettingTypes(true)
@@ -70,16 +74,21 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
         })
         const settingTypesTemp: Set<SettingType> = new Set()
         const refiedSettingTypesWithDTOLocal: { [Key in SettingType]?: SettingResponseDTO } = {}
-
-        const valid: any = {}
+        const categorySettings = new Map()
+        const validationsSchema: SettingYupValidation = {}
         data?.data?.forEach(val => {
           refiedSettingTypesWithDTOLocal[val.setting.identifier as SettingType] = val
+          categorySettings.set(val.setting.identifier as SettingType, val.setting)
           setFieldValue(val.setting.identifier, val.setting.value)
-          valid[val.setting.identifier] = Yup.string().max(15, 'Must be 15 characters or less').required('Required')
+          validationsSchema[val.setting.identifier as SettingType] = DefaultSettingsFactory.getYupValidationForSetting(
+            val.setting.identifier as SettingType
+          )
+
           settingTypesTemp.add(val.setting.identifier as SettingType)
         })
-
-        updateValidationSchema(valid)
+        updateAllSettings(categorySettings)
+        updateAllSettingDTO(categorySettings)
+        updateValidationSchema(validationsSchema)
         console.log({ initialValues })
         updateRefiedSettingTypesWithDTO(refiedSettingTypesWithDTOLocal)
         updateSettingTypes(settingTypesTemp)
@@ -89,6 +98,11 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
         updateLoadingSettingTypes(false)
       }
     }
+  }
+  const updateChagnedSettingLocal = (settingType: SettingType, settingTypeDTO: SettingDTO) => {
+    const changedSetting = new Map()
+    changedSetting.set(settingType, settingTypeDTO)
+    updateAllSettings(changedSetting)
   }
 
   const onSelectionChange = (settingType: SettingType, val: string) => {
@@ -108,6 +122,12 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
         }
         updateRefiedSettingTypesWithDTO(updatesSettingDTO)
         onSettingChange(settingType, selectedSettingTypeDTO.setting, 'UPDATE')
+
+        const oldSettingDTO = allSettingDTO.get(settingType)
+        if (oldSettingDTO) {
+          oldSettingDTO.value = val
+          updateChagnedSettingLocal(settingType, oldSettingDTO)
+        }
       }
     }
   }
@@ -128,6 +148,12 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
         }
         updateRefiedSettingTypesWithDTO(updatesSettingDTO)
         onSettingChange(settingType, selectedSettingTypeDTO.setting, 'UPDATE')
+
+        const oldSettingDTO = allSettingDTO.get(settingType)
+        if (oldSettingDTO) {
+          oldSettingDTO.allowOverrides = checked
+          updateChagnedSettingLocal(settingType, oldSettingDTO)
+        }
       }
     }
   }
@@ -150,6 +176,11 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
         setFieldValue(settingType, defaultValue)
         updateRefiedSettingTypesWithDTO(updatesSettingDTO)
         onSettingChange(settingType, selectedSettingTypeDTO.setting, 'RESTORE')
+        const oldSettingDTO = allSettingDTO.get(settingType)
+        if (oldSettingDTO) {
+          oldSettingDTO.value = defaultValue
+          updateChagnedSettingLocal(settingType, oldSettingDTO)
+        }
       }
     }
   }
@@ -158,6 +189,7 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
     <Card className={css.summaryCard}>
       <Accordion
         summaryClassName={css.summarySetting}
+        detailsClassName={css.detailSettings}
         onChange={openTabId => {
           if (openTabId) {
             categorySectionOpen()
@@ -168,10 +200,12 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
         <Accordion.Panel
           details={
             loadingSettingTypes ? (
-              <PageSpinner />
-            ) : (
+              <Container flex={{ justifyContent: 'center' }}>
+                <Icon name="spinner" size={30} />
+              </Container>
+            ) : settingTypes.size ? (
               <SettingCategorySectionContents
-                otherSettingsWhichAreChanged={otherSettingsWhichAreChanged}
+                allSettings={allSettings}
                 onSelectionChange={onSelectionChange}
                 onRestore={onRestore}
                 onAllowOverride={onAllowOverride}
@@ -180,6 +214,10 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
                 settingErrorMessages={settingErrorMessages}
                 registeredGroupedSettings={registeredGroupedSettings}
               />
+            ) : (
+              <Container flex={{ justifyContent: 'center' }}>
+                <Text font={{ variation: FontVariation.BODY2 }}>{getString('defaultSettings.noSettingToDisplay')}</Text>
+              </Container>
             )
           }
           id={settingCategory}

@@ -69,17 +69,20 @@ export const DefaultSettingRadioBtnWithTrueAndFalse: React.FC<DefaultSettingRadi
   const { getString } = useStrings()
 
   return (
-    <FormInput.RadioGroup
-      inline={true}
-      onChange={(e: FormEvent<HTMLInputElement>) => {
-        onSettingSelectionChange(e.currentTarget.value)
-      }}
-      name={identifier}
-      items={[
-        { label: trueLabel ? getString(trueLabel) : getString('cf.shared.true'), value: 'true' },
-        { label: falseLabel ? getString(falseLabel) : getString('cf.shared.false'), value: 'false' }
-      ]}
-    />
+    // used blueprintjs radiogroup since uicore form input  is not getting updated with latest settingValue
+    <>
+      <RadioGroup
+        name={identifier}
+        inline={true}
+        onChange={(e: FormEvent<HTMLInputElement>) => {
+          onSettingSelectionChange(e.currentTarget.value)
+        }}
+        selectedValue={settingValue}
+      >
+        <Radio label={trueLabel ? getString(trueLabel) : getString('cf.shared.true')} value="true" />
+        <Radio label={falseLabel ? getString(falseLabel) : getString('cf.shared.false')} value="false" />
+      </RadioGroup>
+    </>
   )
 }
 export const DefaultSettingCheckBoxWithTrueAndFalse: React.FC<DefaultSettingRadioBtnWithTrueAndFalseProps> = ({

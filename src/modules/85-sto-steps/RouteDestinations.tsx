@@ -40,6 +40,7 @@ import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { String as LocaleString } from 'framework/strings'
+import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
 
 const STOSideNavProps: SidebarContext = {
   navComponent: STOSideNav,
@@ -180,6 +181,11 @@ const RouteDestinations: React.FC = () => {
           sidebarProps={STOSideNavProps}
         />
         <ConnectorRouteDestinations
+          moduleParams={moduleParams}
+          // licenseRedirectData={licenseRedirectData}
+          sidebarProps={STOSideNavProps}
+        />
+        <DefaultSettingsRouteDestinations
           moduleParams={moduleParams}
           // licenseRedirectData={licenseRedirectData}
           sidebarProps={STOSideNavProps}

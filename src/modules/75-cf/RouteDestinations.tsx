@@ -50,6 +50,7 @@ import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { RedirectToModuleTrialHomeFactory, RedirectToSubscriptionsFactory } from '@common/Redirects'
 import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
 import { LICENSE_STATE_NAMES, LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
+import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
 import { registerFeatureFlagPipelineStage } from './pages/pipeline-studio/views/FeatureFlagStage'
 import { registerFlagConfigurationPipelineStep } from './components/PipelineSteps'
 import { TargetsPage } from './pages/target-management/targets/TargetsPage'
@@ -331,6 +332,11 @@ const CFRoutes: FC = () => {
           sidebarProps={CFSideNavProps}
         />
         <ConnectorRouteDestinations
+          moduleParams={moduleParams}
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CFSideNavProps}
+        />
+        <DefaultSettingsRouteDestinations
           moduleParams={moduleParams}
           licenseRedirectData={licenseRedirectData}
           sidebarProps={CFSideNavProps}

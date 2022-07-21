@@ -1,3 +1,4 @@
+import type * as Yup from 'yup'
 import type { SettingDTO } from 'services/cd-ng'
 export type SettingCategory = SettingDTO['category']
 export enum SettingType {
@@ -21,4 +22,13 @@ export enum SettingType {
 export enum SettingGroups {
   group_2 = 'group_2',
   group_1 = 'group_1'
+}
+export type YupValidation =
+  | Yup.BooleanSchema
+  | Yup.StringSchema
+  | Yup.DateSchema
+  | Yup.MixedSchema<any>
+  | Yup.NumberSchema
+export type SettingYupValidation = {
+  [Key in SettingType]?: YupValidation
 }

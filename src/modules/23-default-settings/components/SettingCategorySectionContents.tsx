@@ -1,21 +1,22 @@
 import React from 'react'
+import { FontVariation, Text } from '@harness/uicore'
 import type { SettingType } from '@default-settings/interfaces/SettingType'
 
 import DefaultSettingsFactory, { GroupedSettings } from '@default-settings/factories/DefaultSettingsFactory'
-import type { SettingRequestDTO, SettingResponseDTO } from 'services/cd-ng'
-import SettingTypeRow from './SettingTypeRow'
-import { FontVariation, Text } from '@harness/uicore'
-import css from './SettingsCategorySection.module.scss'
+import type { SettingDTO, SettingRequestDTO, SettingResponseDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
+import SettingTypeRow from './SettingTypeRow'
+import css from './SettingsCategorySection.module.scss'
 interface SettingCategorySectionContentsProps {
   settingsTypesSet: Set<SettingType> | undefined
   onSelectionChange: (settingType: SettingType, val: string) => void
   onRestore: (settingType: SettingType) => void
   settingTypesResponseDTO: { [Key in SettingType]?: SettingResponseDTO } | undefined
   onAllowOverride: (val: boolean, settingType: SettingType) => void
-  otherSettingsWhichAreChanged: Map<SettingType, SettingRequestDTO>
   settingErrorMessages: Map<SettingType, string>
   registeredGroupedSettings: GroupedSettings[]
+
+  allSettings: Map<SettingType, SettingDTO>
 }
 const SettingCategorySectionContents: React.FC<SettingCategorySectionContentsProps> = ({
   settingsTypesSet,
@@ -23,7 +24,7 @@ const SettingCategorySectionContents: React.FC<SettingCategorySectionContentsPro
   onSelectionChange,
   settingTypesResponseDTO,
   onAllowOverride,
-  otherSettingsWhichAreChanged,
+  allSettings,
   settingErrorMessages,
   registeredGroupedSettings
 }) => {
@@ -60,7 +61,7 @@ const SettingCategorySectionContents: React.FC<SettingCategorySectionContentsPro
           }
           return (
             <SettingTypeRow
-              otherSettingsWhichAreChanged={otherSettingsWhichAreChanged}
+              allSettings={allSettings}
               allowedValues={
                 settingTypesResponseDTO ? settingTypesResponseDTO[settingTypeKey]?.setting.allowedValues : undefined
               }

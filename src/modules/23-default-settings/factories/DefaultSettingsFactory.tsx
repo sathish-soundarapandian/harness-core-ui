@@ -6,9 +6,13 @@
  */
 
 import type React from 'react'
-import type { DropDown, IconName } from '@harness/uicore'
-import type { SettingCategory, SettingGroups, SettingType } from '@default-settings/interfaces/SettingType'
-import type { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import type { IconName } from '@harness/uicore'
+import type {
+  SettingCategory,
+  SettingGroups,
+  SettingType,
+  YupValidation
+} from '@default-settings/interfaces/SettingType'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import type { FeatureFlag } from '@common/featureFlags'
 import type { SettingDTO, SettingRequestDTO } from 'services/cd-ng'
@@ -19,12 +23,14 @@ export interface SettingRendererProps {
   onRestore: () => void
   settingValue: any
   allowedValues?: SettingDTO['allowedValues'] | undefined
-  otherSettingsWhichAreChanged: Map<SettingType, SettingRequestDTO>
-  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
+
+  allSettings: Map<SettingType, SettingDTO>
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void
 }
 export interface SettingHandler {
   label: keyof StringsMap
   settingRenderer?: (props: SettingRendererProps) => React.ReactElement
+  yupValidation: YupValidation
   featureFlag?: FeatureFlag
 }
 export interface GroupedSettings {
@@ -68,6 +74,9 @@ class DefaultSettingsFactory {
 
   getSettingTypeHandler(settingType: SettingType): SettingHandler | undefined {
     return this.map.get(settingType)
+  }
+  getYupValidationForSetting(settingType: SettingType): YupValidation | undefined {
+    return this.map.get(settingType)?.yupValidation
   }
 }
 

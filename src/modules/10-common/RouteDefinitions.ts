@@ -68,7 +68,20 @@ const routes = {
       })
     }
   ),
-  toDefaultSettings: withAccountId(() => '/resources/default-settings'),
+  toDefaultSettings: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
+      const path = `resources/default-settings`
+      return getScopeBasedRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path
+      })
+    }
+  ),
+
   toUser: withAccountId(() => '/user'),
   toSubscriptions: withAccountId(({ moduleCard, tab }: SubscriptionQueryParams) => {
     const url = '/settings/subscriptions'
