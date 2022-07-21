@@ -22,7 +22,7 @@ export interface OutOfSyncErrorStripProps {
   entity: 'Pipeline' | 'Template'
   isReadOnly: boolean
   onRefreshEntity: () => void
-  originalEntityYaml: string
+  originalEntityYaml?: string
   storeMetadata?: StoreMetadata
 }
 

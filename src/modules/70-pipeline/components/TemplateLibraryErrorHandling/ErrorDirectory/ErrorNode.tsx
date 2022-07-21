@@ -11,7 +11,9 @@ import { FontVariation } from '@harness/design-system'
 import { Intent, Radio } from '@blueprintjs/core'
 import { defaultTo, isEqual, noop } from 'lodash-es'
 import cx from 'classnames'
-import type { ErrorNodeSummary, TemplateResponse } from 'services/template-ng'
+import { parse } from 'yaml'
+import type { ErrorNodeSummary, NGTemplateInfoConfig, TemplateResponse } from 'services/template-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import css from './ErrorNode.module.scss'
 
 export interface ErrorDirectoryProps {
@@ -19,13 +21,15 @@ export interface ErrorDirectoryProps {
   resolvedTemplateResponses?: TemplateResponse[]
   selectedErrorNodeSummary?: ErrorNodeSummary
   setSelectedErrorNodeSummary: (errorNodeSummary: ErrorNodeSummary) => void
+  originalEntityYaml?: string
 }
 
 export function ErrorNode({
   templateInputsErrorNodeSummary,
   resolvedTemplateResponses = [],
   selectedErrorNodeSummary,
-  setSelectedErrorNodeSummary
+  setSelectedErrorNodeSummary,
+  originalEntityYaml = ''
 }: ErrorDirectoryProps) {
   const { childrenErrorNodes, nodeInfo, templateResponse } = templateInputsErrorNodeSummary
 
@@ -48,6 +52,22 @@ export function ErrorNode({
     [resolvedTemplateResponses]
   )
 
+  const title = React.useMemo(() => {
+    if (templateResponse) {
+      return `${templateResponse?.templateEntityType}: ${nodeInfo?.name}: ${templateResponse?.identifier} (${templateResponse?.versionLabel})`
+    } else if (nodeInfo) {
+      return `Pipeline: ${nodeInfo?.name}`
+    } else {
+      const originalEntity = parse(originalEntityYaml)
+      if (originalEntity.pipeline) {
+        return `Pipeline: ${(originalEntity?.pipeline as PipelineInfoConfig).name}`
+      } else {
+        const template = originalEntity?.template as NGTemplateInfoConfig
+        return `${template.type}: ${template.name}: ${template.identifier} (${template.versionLabel})`
+      }
+    }
+  }, [templateResponse, nodeInfo, originalEntityYaml])
+
   return (
     <Container className={css.mainContainer}>
       <Layout.Vertical>
@@ -64,10 +84,7 @@ export function ErrorNode({
             <Container className={css.label} margin={{ right: 'medium' }}>
               <Layout.Horizontal spacing={'xsmall'}>
                 <Text lineClamp={1} font={{ variation: FontVariation.SMALL }}>
-                  {templateResponse
-                    ? `${templateResponse?.templateEntityType}: ${nodeInfo?.name}: ${templateResponse?.identifier} (
-                  ${templateResponse?.versionLabel})`
-                    : `Pipeline: ${nodeInfo?.name}`}
+                  {title}
                 </Text>
                 {templateResponse && <Icon name="template-library" size={8} />}
               </Layout.Horizontal>

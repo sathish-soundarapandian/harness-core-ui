@@ -39,15 +39,17 @@ import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
 import routes from '@common/RouteDefinitions'
+import type { UseSaveSuccessResponse } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import css from './ReconcileDialog.module.scss'
 
 export interface ReconcileDialogProps {
   templateInputsErrorNodeSummary: ErrorNodeSummary
   entity: 'Pipeline' | 'Template'
-  setResolvedTemplateResponses: (resolvedTemplateInfos: TemplateResponse[]) => void
+  setResolvedTemplateResponses?: (resolvedTemplateInfos: TemplateResponse[]) => void
   reload: () => void
-  originalEntityYaml: string
+  originalEntityYaml?: string
   storeMetadata?: StoreMetadata
+  onSaveEntity?: (latestEntityYaml: string, currStoreMetadata: StoreMetadata) => Promise<UseSaveSuccessResponse>
 }
 
 export function ReconcileDialog({
@@ -90,7 +92,7 @@ export function ReconcileDialog({
   }, [])
 
   React.useEffect(() => {
-    setResolvedTemplates(resolvedTemplateResponses)
+    setResolvedTemplates?.(resolvedTemplateResponses)
   }, [resolvedTemplateResponses])
 
   React.useEffect(() => {
@@ -324,23 +326,26 @@ export function ReconcileDialog({
                     </Text>
                   </Layout.Vertical>
                 </Container>
-                <Button
-                  text={
-                    hasChildren
-                      ? getString('pipeline.reconcileDialog.updateAllLabel')
-                      : getString('pipeline.reconcileDialog.updateEntityLabel', { entity })
-                  }
-                  variation={ButtonVariation.PRIMARY}
-                  width={248}
-                  disabled={!updateButtonEnabled}
-                  onClick={onUpdateAll}
-                />
+                {isEmpty(originalEntityYaml) && (
+                  <Button
+                    text={
+                      hasChildren
+                        ? getString('pipeline.reconcileDialog.updateAllLabel')
+                        : getString('pipeline.reconcileDialog.updateEntityLabel', { entity })
+                    }
+                    variation={ButtonVariation.PRIMARY}
+                    width={248}
+                    disabled={!updateButtonEnabled}
+                    onClick={onUpdateAll}
+                  />
+                )}
                 {hasChildren && (
                   <ErrorNode
                     templateInputsErrorNodeSummary={templateInputsErrorNodeSummary}
                     resolvedTemplateResponses={resolvedTemplateResponses}
                     selectedErrorNodeSummary={selectedErrorNodeSummary}
                     setSelectedErrorNodeSummary={setSelectedErrorNodeSummary}
+                    originalEntityYaml={originalEntityYaml}
                   />
                 )}
               </Layout.Vertical>

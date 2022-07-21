@@ -8,7 +8,7 @@
 import React, { useRef } from 'react'
 import { Button, ButtonSize, ButtonVariation, Container, Layout, Text } from '@wings-software/uicore'
 import { Color } from '@wings-software/design-system'
-import { defaultTo, isEqual } from 'lodash-es'
+import { defaultTo, isEmpty, isEqual } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { MonacoDiffEditor } from 'react-monaco-editor'
 import { PageError, PageSpinner } from '@harness/uicore'
@@ -38,14 +38,14 @@ export interface YamlDiffViewProps {
   errorNodeSummary?: ErrorNodeSummary
   resolvedTemplateResponses?: TemplateResponse[]
   onUpdate: (refreshedYaml: string) => Promise<void>
-  originalEntityYaml: string
+  originalEntityYaml?: string
 }
 
 export function YamlDiffView({
   errorNodeSummary,
   resolvedTemplateResponses = [],
   onUpdate,
-  originalEntityYaml
+  originalEntityYaml = ''
 }: YamlDiffViewProps) {
   const { getString } = useStrings()
   const { isGitSyncEnabled } = useAppStore()
@@ -203,7 +203,7 @@ export function YamlDiffView({
                     ) : (
                       <Button
                         variation={ButtonVariation.PRIMARY}
-                        text={getString('update')}
+                        text={isEmpty(originalEntityYaml) ? getString('save') : getString('update')}
                         onClick={onNodeUpdate}
                         size={ButtonSize.SMALL}
                       />

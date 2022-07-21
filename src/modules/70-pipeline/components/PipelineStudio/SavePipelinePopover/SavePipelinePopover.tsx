@@ -9,11 +9,11 @@ import React from 'react'
 import {
   Button,
   ButtonVariation,
-  VisualYamlSelectedView as SelectedView,
-  useToaster,
+  PopoverProps,
   SplitButton,
   SplitButtonOption,
-  PopoverProps
+  useToaster,
+  VisualYamlSelectedView as SelectedView
 } from '@wings-software/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, noop, omit } from 'lodash-es'
@@ -42,7 +42,7 @@ import type {
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { useSaveAsTemplate } from '@pipeline/components/PipelineStudio/SaveTemplateButton/useSaveAsTemplate'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import type { PipelineInfoConfig, GovernanceMetadata } from 'services/pipeline-ng'
+import type { GovernanceMetadata, PipelineInfoConfig } from 'services/pipeline-ng'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { AccessControlCheckError } from 'services/rbac'
@@ -50,6 +50,8 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { EvaluationModal } from '@governance/EvaluationModal'
 import type { SaveToGitFormV2Interface } from '@common/components/SaveToGitFormV2/SaveToGitFormV2'
 import { SCHEMA_VALIDATION_FAILED } from '@common/interfaces/GitSyncInterface'
+import useTemplateErrors from '@pipeline/components/PipelineStudio/PipelineCanvas/TemplateErrors/useTemplateErrors'
+import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import usePipelineErrors from '../PipelineCanvas/PipelineErrors/usePipelineErrors'
 
 export interface SavePipelinePopoverProps extends PopoverProps {
@@ -122,6 +124,12 @@ export function SavePipelinePopover({ toPipelineStudio }: SavePipelinePopoverPro
 
   const { save } = useSaveAsTemplate({ data: pipeline, type: 'Pipeline', gitDetails })
   const { openPipelineErrorsModal } = usePipelineErrors()
+  const { openTemplateErrorsModal } = useTemplateErrors({
+    entity: 'Pipeline',
+    originalEntityYaml: yamlStringify({ pipeline }),
+    storeMetadata,
+    onSave: Promise.resolve
+  })
   const navigateToLocation = (newPipelineId: string, updatedGitDetails?: SaveToGitFormInterface): void => {
     history.replace(
       toPipelineStudio({
@@ -222,6 +230,8 @@ export function SavePipelinePopover({ toPipelineStudio }: SavePipelinePopoverPro
           // isGitSyncEnabled true
           throw { code: SCHEMA_VALIDATION_FAILED }
         }
+      } else if (!isEmpty((response as any)?.metadata?.errorNodeSummary)) {
+        openTemplateErrorsModal((response as any)?.metadata?.errorNodeSummary)
       } else if (isGitSyncEnabled || currStoreMetadata?.storeType === StoreType.REMOTE) {
         throw response
       } else {
