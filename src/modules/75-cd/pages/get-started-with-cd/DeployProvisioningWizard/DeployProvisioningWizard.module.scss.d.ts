@@ -30,6 +30,7 @@ declare const styles: {
   readonly marginTop: string
   readonly modal: string
   readonly noDelegateWarning: string
+  readonly provisioningSuccessful: string
   readonly repoCard: string
   readonly repoborderBottom: string
   readonly repositories: string

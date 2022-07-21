@@ -227,3 +227,8 @@
 .noDelegateWarning {
   max-width: 480px;
 }
+.provisioningSuccessful {
+  width: fit-content !important;
+  background-color: var(--green-50) !important;
+  border-radius: 4px;
+}

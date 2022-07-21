@@ -132,10 +132,7 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
   const openSelectRepoAccordion = (): boolean | undefined => {
     const { validate } = selectGitProviderRef.current || {}
     const condition = selectGitProviderRef.current?.testConnectionStatus === TestStatus.SUCCESS
-    if (
-      validate?.()
-      && condition
-    ) {
+    if (validate?.() && condition) {
       return true
     } else {
       disableNextBtn()
@@ -302,7 +299,6 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
       then: Yup.string().trim().required(getString('validation.commitId'))
     }),
     paths: Yup.lazy((_value): Yup.Schema<unknown> => {
-      // return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
       return Yup.array().of(
         Yup.object().shape({
           path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))
@@ -310,7 +306,6 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
       )
     }),
     valuesPaths: Yup.lazy((_value): Yup.Schema<unknown> => {
-      // return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
       return Yup.array().of(
         Yup.object().shape({
           path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))

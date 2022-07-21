@@ -170,7 +170,6 @@ getStartedWithCI:
   onCloudLabel: on Cloud
   onPremLabel: On-prem
   codeRepo: Which code repository do you use?
-  authMethodLabel: Authentication method
   createPipeline: Create Pipeline
   provisioningSuccessful: Provisioning successful
   provisioningFailed: Provisioning failed

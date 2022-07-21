@@ -954,4 +954,5 @@ getStarted:
   verifyConnection: Verify connection before you can continue
   appPassword: Application Password
   apiUrlLabel: API URL
+  authMethodLabel: Authentication method
 selectYourRepo: Select your Repository

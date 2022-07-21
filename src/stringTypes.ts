@@ -288,6 +288,7 @@ export interface StringsMap {
   'common.getStarted.apiUrlLabel': string
   'common.getStarted.appPassword': string
   'common.getStarted.authMethod': string
+  'common.getStarted.authMethodLabel': string
   'common.getStarted.buildPipeline': string
   'common.getStarted.codeRepoLabel': string
   'common.getStarted.codebaseHelptext': string
@@ -5837,7 +5838,6 @@ export interface StringsMap {
   'ci.description': string
   'ci.executionLabel': string
   'ci.fileStore': string
-  'ci.getStartedWithCI.authMethodLabel': string
   'ci.getStartedWithCI.awsBuildLocation': string
   'ci.getStartedWithCI.buildLocation': string
   'ci.getStartedWithCI.buildyourOwnPipeline': string

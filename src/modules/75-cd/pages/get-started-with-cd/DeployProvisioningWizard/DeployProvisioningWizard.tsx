@@ -36,7 +36,6 @@ import { useCDOnboardingContext } from '../CDOnboardingStore'
 import { DEFAULT_PIPELINE_PAYLOAD, getUniqueEntityIdentifier, PipelineRefPayload } from '../cdOnboardingUtils'
 import css from './DeployProvisioningWizard.module.scss'
 
-
 export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> = props => {
   const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.SelectWorkload } = props
   const { getString } = useStrings()
@@ -231,22 +230,14 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           updateStepStatus([DeployProvisiongWizardStepId.SelectInfrastructure], StepStatus.ToDo)
         },
         onClickNext: async () => {
-          // const { values, setFieldTouched, authValues } = selectInfrastructureRef.current || {}
-          // const { infraType, envId, infraId, namespace } = values || {}
-          // if (!infraType) {
-          //   setFieldTouched?.('infraType', true)
-          //   return
-          // }
-          const { submitForm } = selectInfrastructureRef.current    || {}
-          const {validatedConnector}=selectAuthenticationMethodRef.current||{}
+          const { submitForm } = selectInfrastructureRef.current || {}
+          const { validatedConnector } = selectAuthenticationMethodRef.current || {}
           try {
             submitForm?.()
-            if(validatedConnector){
+            if (validatedConnector) {
               setShowPageLoader(true)
             }
-            }
-           
-           catch (_e) {
+          } catch (_e) {
             // catch any errors and do nothing
           }
         },

@@ -271,11 +271,7 @@ const SelectAuthenticationMethodRef = (
     }
   }
 
-  const setForwardRef = ({
-    values,
-    validatedConnector
-  }: 
-  Omit<SelectAuthenticationMethodRef, 'validate'>): void => {
+  const setForwardRef = ({ values, validatedConnector }: Omit<SelectAuthenticationMethodRef, 'validate'>): void => {
     if (!forwardRef) {
       return
     }
@@ -301,7 +297,6 @@ const SelectAuthenticationMethodRef = (
       })
     }
   }, [formikProps?.values, connectorResponse?.data?.connector])
-
 
   const authOptions: Array<AuthOptionInterface> = [
     {
@@ -510,9 +505,9 @@ const SelectAuthenticationMethodRef = (
                     name={getString('connectors.stepThreeName')}
                     connectorInfo={connectorResponse?.data?.connector}
                     type={Connectors.KUBERNETES_CLUSTER}
-                    setIsEditMode={() => false} 
-                    isStep={false}   
-                 />
+                    setIsEditMode={() => false}
+                    isStep={false}
+                  />
                 </div>
               ) : null}
             </>

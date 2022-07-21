@@ -67,8 +67,11 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
         )}
         {
           // enabledHostedBuildsForFreeUsers && !showGetStartedTabInMainMenu &&
-          isCIorCD && (
-            <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCD({ ...params, module })} />
+          isCIorCD && module && (
+            <SidebarLink
+              label={getString('getStarted')}
+              to={routes.toGetStartedWithCD({ accountId, orgIdentifier, projectIdentifier, module })}
+            />
           )
         }
       </Layout.Vertical>

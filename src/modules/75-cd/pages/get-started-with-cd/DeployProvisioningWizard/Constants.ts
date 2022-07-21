@@ -258,3 +258,8 @@ export enum DelegtaAuthMethod {
   ManualConfig = 'ManualConfig',
   InheritFromDelegate = 'InheritFromDelegate'
 }
+export const AccessTokenPermissionsDocLinks: Map<ConnectorInfoDTO['type'], string> = new Map([
+  [Connectors.GITHUB, 'https://docs.harness.io/article/jd77qvieuw#step_3_credentials'],
+  [Connectors.GITLAB, 'https://docs.harness.io/article/5abnoghjgo#password_personal_access_token'],
+  [Connectors.BITBUCKET, 'https://docs.harness.io/article/iz5tucdwyu#personal_access_token']
+])

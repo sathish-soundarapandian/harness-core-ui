@@ -1,7 +1,10 @@
+import { set } from 'lodash-es'
+import { Connectors } from '@connectors/constants'
 import { gitStoreTypes } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import type { ManifestStores } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import type {
   ConnectorInfoDTO,
+  ConnectorRequestBody,
   EnvironmentRequestDTO,
   EnvironmentResponseDTO,
   ServiceDefinition,
@@ -171,4 +174,69 @@ export const getStoreType = (gitProviderType?: ConnectorInfoDTO['type']): Manife
   return gitStoreTypes.find(store => {
     return store.toLowerCase() === gitProviderType?.toLowerCase()
   })
+}
+
+const OAuthConnectorPayload: ConnectorRequestBody = {
+  connector: {
+    name: '',
+    identifier: '',
+    type: 'Github',
+    spec: {
+      authentication: {
+        type: 'Http',
+        spec: {
+          type: 'OAuth',
+          spec: {
+            tokenRef: ''
+          }
+        }
+      },
+      apiAccess: {
+        type: 'OAuth',
+        spec: {
+          tokenRef: ''
+        }
+      },
+      executeOnDelegate: true,
+      type: 'Account'
+    }
+  }
+}
+
+export const getOAuthConnectorPayload = ({
+  tokenRef,
+  refreshTokenRef,
+  gitProviderType
+}: {
+  tokenRef: string
+  refreshTokenRef?: string
+  gitProviderType?: ConnectorInfoDTO['type']
+}): ConnectorRequestBody => {
+  let updatedConnectorPayload: ConnectorRequestBody = {}
+  updatedConnectorPayload = set(OAuthConnectorPayload, 'connector.name', `${gitProviderType} OAuth`)
+  updatedConnectorPayload = set(
+    OAuthConnectorPayload,
+    'connector.identifier',
+    `${gitProviderType}_OAuth_${new Date().getTime()}`
+  )
+  updatedConnectorPayload = set(OAuthConnectorPayload, 'connector.type', gitProviderType)
+  switch (gitProviderType) {
+    case Connectors.GITHUB:
+      updatedConnectorPayload = set(OAuthConnectorPayload, 'connector.spec.authentication.spec.spec', { tokenRef })
+      updatedConnectorPayload = set(OAuthConnectorPayload, 'connector.spec.apiAccess.spec', { tokenRef })
+      return updatedConnectorPayload
+    case Connectors.GITLAB:
+    case Connectors.BITBUCKET:
+      updatedConnectorPayload = set(OAuthConnectorPayload, 'connector.spec.authentication.spec.spec', {
+        tokenRef,
+        refreshTokenRef
+      })
+      updatedConnectorPayload = set(OAuthConnectorPayload, 'connector.spec.apiAccess.spec', {
+        tokenRef,
+        refreshTokenRef
+      })
+      return updatedConnectorPayload
+    default:
+      return updatedConnectorPayload
+  }
 }

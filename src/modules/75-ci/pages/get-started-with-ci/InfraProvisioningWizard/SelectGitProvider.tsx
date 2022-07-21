@@ -958,7 +958,7 @@ const SelectGitProviderRef = (
                             <FormError
                               name={'gitAuthenticationMethod'}
                               errorMessage={getString('common.getStarted.plsChoose', {
-                                field: `an ${getString('ci.getStartedWithCI.authMethodLabel').toLowerCase()}`
+                                field: `an ${getString('common.getStarted.authMethodLabel').toLowerCase()}`
                               })}
                             />
                           </Container>
