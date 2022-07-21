@@ -4691,6 +4691,7 @@ export interface StringsMap {
   'ce.co.ruleDetailsHeader.resourcesManaged': string
   'ce.co.ruleDrawer.dbInstances': string
   'ce.co.ruleDrawer.dbInstancesPlural': string
+  'ce.co.ruleDrawer.lastWeekDataLabel': string
   'ce.co.ruleDrawer.logs': string
   'ce.co.ruleDrawer.spendVsSavings': string
   'ce.co.ruleDrawer.usageTime': string
