@@ -147,8 +147,8 @@ $ yarn test
 3. Commit your changes on your branch
 4. Bump up the patch version in `package.json` (ex. 0.53.4 -> 0.53.5)
 5. Raise PR with these changes
-6. When this PR gets merged, this [Workflow](https://uat.harness.io/ng/#/account/sjmVqavzTuS1segZNyZqbA/ci/orgs/default/projects/uiprchecks/pipelines/build_release_branch/executions) will create a new build for you automatically
-7. On UAT or Prod, inform Ops team to deploy your new build. On QA, you can build and deploy, yourself, using Slack slash commands. See https://harness.atlassian.net/wiki/spaces/PD/pages/21077197030/Build+and+Deployment+of+QA+Using+Slack
+6. When this PR gets merged, this [Pipeline](https://stage.harness.io/ng/#/account/wFHXHD0RRQWoO8tIZT5YVw/ci/orgs/Harness/projects/RELEASEBUILDS/pipelines/nextGenUI_release_build/executions) will create a new build for you automatically
+7. 7. On UAT or Prod, inform Ops team to deploy your new build. On QA, you can build and deploy, yourself, using Slack slash commands. See https://harness.atlassian.net/wiki/spaces/PD/pages/21077197030/Build+and+Deployment+of+QA+Using+Slack
 8. Make sure to raise a second PR with the same changes (minus the version bump) for `develop` branch (QA hotfix) or `master` branch (Prod hotfix). Otherwise your changes will get overriden with next deployment.
 
 ## For windows environment setup only
