@@ -40,6 +40,7 @@ export interface AccessControlCheckError {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -56,6 +57,7 @@ export interface AccessControlCheckError {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -191,6 +193,7 @@ export interface AccessControlCheckError {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -203,6 +206,7 @@ export interface AccessControlCheckError {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -337,6 +341,8 @@ export interface AccessControlCheckError {
     | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
   correlationId?: string
   detailedMessage?: string
@@ -376,6 +382,7 @@ export interface AuditEventDTO {
     | 'UNSUCCESSFUL_LOGIN'
     | 'ADD_MEMBERSHIP'
     | 'REMOVE_MEMBERSHIP'
+    | 'ERROR_BUDGET_RESET'
   auditEventData?: AuditEventData
   auditId?: string
   authenticationInfo: AuthenticationInfoDTO
@@ -399,6 +406,7 @@ export interface AuditEventData {
     | 'AddCollaboratorAuditEventData'
     | 'TemplateAuditEventData'
     | 'OpaAuditEventData'
+    | 'ChaosAuditEventData'
     | 'USER_INVITE'
     | 'USER_MEMBERSHIP'
 }
@@ -422,6 +430,7 @@ export interface AuditFilterProperties {
     | 'UNSUCCESSFUL_LOGIN'
     | 'ADD_MEMBERSHIP'
     | 'REMOVE_MEMBERSHIP'
+    | 'ERROR_BUDGET_RESET'
   )[]
   endTime?: number
   environments?: Environment[]
@@ -459,6 +468,10 @@ export interface AuthenticationInfoDTO {
     [key: string]: string
   }
   principal: Principal
+}
+
+export type ChaosAuditEventData = AuditEventData & {
+  eventModule?: string
 }
 
 export type DynamicResourceSelector = ResourceSelector & {
@@ -504,6 +517,7 @@ export interface Error {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -520,6 +534,7 @@ export interface Error {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -655,6 +670,7 @@ export interface Error {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -667,6 +683,7 @@ export interface Error {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -801,6 +818,8 @@ export interface Error {
     | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
   correlationId?: string
   detailedMessage?: string
@@ -842,6 +861,7 @@ export interface Failure {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -858,6 +878,7 @@ export interface Failure {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -993,6 +1014,7 @@ export interface Failure {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -1005,6 +1027,7 @@ export interface Failure {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -1139,6 +1162,8 @@ export interface Failure {
     | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
   correlationId?: string
   errors?: ValidationError[]
@@ -1182,13 +1207,6 @@ export interface HttpRequestInfo {
 export type InvitationSource = Source & {}
 
 export type MSTeamSettingDTO = NotificationSettingDTO & {}
-
-export interface NodeErrorInfo {
-  fqn?: string
-  identifier?: string
-  name?: string
-  type?: string
-}
 
 export interface NotificationDTO {
   accountIdentifier?: string
@@ -1264,6 +1282,9 @@ export type PagerDutySettingDTO = NotificationSettingDTO & {}
 
 export interface PermissionCheck {
   permission?: string
+  resourceAttributes?: {
+    [key: string]: string
+  }
   resourceIdentifier?: string
   resourceScope?: ResourceScope
   resourceType?: string
@@ -1313,11 +1334,17 @@ export interface ResourceDTO {
     | 'MONITORED_SERVICE'
     | 'CHAOS_AGENT'
     | 'CHAOS_WORKFLOW'
+    | 'CHAOS_GITOPS'
     | 'SERVICE_LEVEL_OBJECTIVE'
     | 'PERSPECTIVE'
     | 'PERSPECTIVE_BUDGET'
     | 'PERSPECTIVE_REPORT'
     | 'COST_CATEGORY'
+    | 'SMTP'
+    | 'PERSPECTIVE_FOLDER'
+    | 'AUTOSTOPPING_RULE'
+    | 'AUTOSTOPPING_LB'
+    | 'AUTOSTOPPING_STARTSTOP'
 }
 
 export interface ResourceGroupDTO {
@@ -1459,6 +1486,7 @@ export interface ResponseMessage {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -1475,6 +1503,7 @@ export interface ResponseMessage {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -1610,6 +1639,7 @@ export interface ResponseMessage {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -1622,6 +1652,7 @@ export interface ResponseMessage {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -1756,6 +1787,8 @@ export interface ResponseMessage {
     | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
   exception?: Throwable
   failureTypes?: (
@@ -1848,16 +1881,6 @@ export interface RoleBinding {
   roleIdentifier?: string
 }
 
-export type SampleErrorMetadataDTO = ErrorMetadataDTO & {
-  sampleMap?: {
-    [key: string]: string
-  }
-}
-
-export type ScmErrorMetadataDTO = ErrorMetadataDTO & {
-  conflictCommitId?: string
-}
-
 export interface Scope {
   accountIdentifier?: string
   orgIdentifier?: string
@@ -1910,19 +1933,6 @@ export type TemplateEventData = AuditEventData & {
   templateUpdateEventType?: string
 }
 
-export interface TemplateInputsErrorDTO {
-  fieldName?: string
-  identifierOfErrorSource?: string
-  message?: string
-}
-
-export type TemplateInputsErrorMetadataDTO = ErrorMetadataDTO & {
-  errorMap?: {
-    [key: string]: TemplateInputsErrorDTO
-  }
-  errorYaml?: string
-}
-
 export interface Throwable {
   cause?: Throwable
   localizedMessage?: string
@@ -1953,23 +1963,11 @@ export interface YamlDiffRecordDTO {
   oldYaml?: string
 }
 
-export interface YamlSchemaErrorDTO {
-  fqn?: string
-  hintMessage?: string
-  message?: string
-  stageInfo?: NodeErrorInfo
-  stepInfo?: NodeErrorInfo
-}
-
-export type YamlSchemaErrorWrapperDTO = ErrorMetadataDTO & {
-  schemaErrors?: YamlSchemaErrorDTO[]
-}
-
 export type FilterDTORequestBody = FilterDTO
 
 export type ResourceGroupRequestRequestBody = ResourceGroupRequest
 
-export type PutTemplateRequestBody = void
+export type InsertOrUpdateTemplateRequestBody = void
 
 export interface GetAuditFilterListQueryParams {
   pageIndex?: number
@@ -3325,7 +3323,13 @@ export interface InsertOrUpdateTemplateQueryParams {
 }
 
 export type InsertOrUpdateTemplateProps = Omit<
-  MutateProps<ResponseTemplateDTO, Failure | Error, InsertOrUpdateTemplateQueryParams, PutTemplateRequestBody, void>,
+  MutateProps<
+    ResponseTemplateDTO,
+    Failure | Error,
+    InsertOrUpdateTemplateQueryParams,
+    InsertOrUpdateTemplateRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -3333,7 +3337,13 @@ export type InsertOrUpdateTemplateProps = Omit<
  * Update a template if exists else create
  */
 export const InsertOrUpdateTemplate = (props: InsertOrUpdateTemplateProps) => (
-  <Mutate<ResponseTemplateDTO, Failure | Error, InsertOrUpdateTemplateQueryParams, PutTemplateRequestBody, void>
+  <Mutate<
+    ResponseTemplateDTO,
+    Failure | Error,
+    InsertOrUpdateTemplateQueryParams,
+    InsertOrUpdateTemplateRequestBody,
+    void
+  >
     verb="PUT"
     path={`/templates/insertOrUpdate`}
     base={getConfig('audit/api')}
@@ -3342,7 +3352,13 @@ export const InsertOrUpdateTemplate = (props: InsertOrUpdateTemplateProps) => (
 )
 
 export type UseInsertOrUpdateTemplateProps = Omit<
-  UseMutateProps<ResponseTemplateDTO, Failure | Error, InsertOrUpdateTemplateQueryParams, PutTemplateRequestBody, void>,
+  UseMutateProps<
+    ResponseTemplateDTO,
+    Failure | Error,
+    InsertOrUpdateTemplateQueryParams,
+    InsertOrUpdateTemplateRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -3350,11 +3366,13 @@ export type UseInsertOrUpdateTemplateProps = Omit<
  * Update a template if exists else create
  */
 export const useInsertOrUpdateTemplate = (props: UseInsertOrUpdateTemplateProps) =>
-  useMutate<ResponseTemplateDTO, Failure | Error, InsertOrUpdateTemplateQueryParams, PutTemplateRequestBody, void>(
-    'PUT',
-    `/templates/insertOrUpdate`,
-    { base: getConfig('audit/api'), ...props }
-  )
+  useMutate<
+    ResponseTemplateDTO,
+    Failure | Error,
+    InsertOrUpdateTemplateQueryParams,
+    InsertOrUpdateTemplateRequestBody,
+    void
+  >('PUT', `/templates/insertOrUpdate`, { base: getConfig('audit/api'), ...props })
 
 /**
  * Update a template if exists else create
@@ -3364,7 +3382,7 @@ export const insertOrUpdateTemplatePromise = (
     ResponseTemplateDTO,
     Failure | Error,
     InsertOrUpdateTemplateQueryParams,
-    PutTemplateRequestBody,
+    InsertOrUpdateTemplateRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -3373,7 +3391,7 @@ export const insertOrUpdateTemplatePromise = (
     ResponseTemplateDTO,
     Failure | Error,
     InsertOrUpdateTemplateQueryParams,
-    PutTemplateRequestBody,
+    InsertOrUpdateTemplateRequestBody,
     void
   >('PUT', getConfig('audit/api'), `/templates/insertOrUpdate`, props, signal)
 
@@ -3499,7 +3517,7 @@ export type PutTemplateProps = Omit<
     ResponseTemplateDTO,
     Failure | Error,
     PutTemplateQueryParams,
-    PutTemplateRequestBody,
+    InsertOrUpdateTemplateRequestBody,
     PutTemplatePathParams
   >,
   'path' | 'verb'
@@ -3510,7 +3528,13 @@ export type PutTemplateProps = Omit<
  * Update a template
  */
 export const PutTemplate = ({ identifier, ...props }: PutTemplateProps) => (
-  <Mutate<ResponseTemplateDTO, Failure | Error, PutTemplateQueryParams, PutTemplateRequestBody, PutTemplatePathParams>
+  <Mutate<
+    ResponseTemplateDTO,
+    Failure | Error,
+    PutTemplateQueryParams,
+    InsertOrUpdateTemplateRequestBody,
+    PutTemplatePathParams
+  >
     verb="PUT"
     path={`/templates/${identifier}`}
     base={getConfig('audit/api')}
@@ -3523,7 +3547,7 @@ export type UsePutTemplateProps = Omit<
     ResponseTemplateDTO,
     Failure | Error,
     PutTemplateQueryParams,
-    PutTemplateRequestBody,
+    InsertOrUpdateTemplateRequestBody,
     PutTemplatePathParams
   >,
   'path' | 'verb'
@@ -3538,7 +3562,7 @@ export const usePutTemplate = ({ identifier, ...props }: UsePutTemplateProps) =>
     ResponseTemplateDTO,
     Failure | Error,
     PutTemplateQueryParams,
-    PutTemplateRequestBody,
+    InsertOrUpdateTemplateRequestBody,
     PutTemplatePathParams
   >('PUT', (paramsInPath: PutTemplatePathParams) => `/templates/${paramsInPath.identifier}`, {
     base: getConfig('audit/api'),
@@ -3557,7 +3581,7 @@ export const putTemplatePromise = (
     ResponseTemplateDTO,
     Failure | Error,
     PutTemplateQueryParams,
-    PutTemplateRequestBody,
+    InsertOrUpdateTemplateRequestBody,
     PutTemplatePathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -3566,6 +3590,6 @@ export const putTemplatePromise = (
     ResponseTemplateDTO,
     Failure | Error,
     PutTemplateQueryParams,
-    PutTemplateRequestBody,
+    InsertOrUpdateTemplateRequestBody,
     PutTemplatePathParams
   >('PUT', getConfig('audit/api'), `/templates/${identifier}`, props, signal)
