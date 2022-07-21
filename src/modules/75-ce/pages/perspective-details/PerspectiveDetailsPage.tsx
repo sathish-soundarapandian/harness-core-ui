@@ -74,6 +74,7 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import css from './PerspectiveDetailsPage.module.scss'
 
 const PAGE_SIZE = 10
@@ -177,6 +178,16 @@ const PerspectiveHeader: React.FC<{ title: string; viewType: string }> = ({ titl
       toolbar={
         <Button
           disabled={isDefaultPerspective || !canEdit}
+          tooltip={
+            isDefaultPerspective ? (
+              <Text padding="small">{getString('ce.perspectives.editDefaultPerspective')}</Text>
+            ) : !canEdit ? (
+              <RBACTooltip
+                permission={PermissionIdentifier.EDIT_CCM_PERSPECTIVE}
+                resourceType={ResourceType.CCM_PERSPECTIVE}
+              />
+            ) : undefined
+          }
           text={getString('edit')}
           icon="edit"
           intent="primary"

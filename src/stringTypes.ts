@@ -4987,6 +4987,8 @@ export interface StringsMap {
   'ce.perspectives.createPerspective.validationErrors.nameError': string
   'ce.perspectives.createPerspective.validationErrors.nameLengthError': string
   'ce.perspectives.createPerspective.validationErrors.ruleError': string
+  'ce.perspectives.deleteDefaultPerspective': string
+  'ce.perspectives.editDefaultPerspective': string
   'ce.perspectives.emptyStateDesc': string
   'ce.perspectives.emptyStateTitle': string
   'ce.perspectives.enterAmount': string

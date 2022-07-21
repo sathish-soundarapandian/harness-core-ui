@@ -33,6 +33,7 @@ import HandleError from '@ce/components/PermissionError/PermissionError'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import PermissionError from '@ce/images/permission-error.svg'
 import { usePermission } from '@rbac/hooks/usePermission'
+import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 
 const BusinessMappingPage: () => React.ReactElement = () => {
   const { accountId } = useParams<AccountPathProps>()
@@ -128,6 +129,14 @@ const BusinessMappingPage: () => React.ReactElement = () => {
             buttonText={getString('ce.businessMapping.newButton')}
             buttonAction={() => setDrawerOpen(true)}
             isBtnDisabled={!canEdit}
+            buttonTooltip={
+              !canEdit ? (
+                <RBACTooltip
+                  permission={PermissionIdentifier.EDIT_CCM_COST_CATEGORY}
+                  resourceType={ResourceType.CCM_COST_CATEGORY}
+                />
+              ) : undefined
+            }
           />
           {NewCostCategoryDrawer}
         </PageBody>

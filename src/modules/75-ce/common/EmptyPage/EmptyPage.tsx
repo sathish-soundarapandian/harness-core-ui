@@ -17,6 +17,7 @@ interface EmptyPageProps {
   buttonText?: string
   buttonAction?: () => void
   isBtnDisabled?: boolean
+  buttonTooltip?: JSX.Element | undefined
 }
 
 const EmptyPage: (props: EmptyPageProps) => React.ReactElement = ({
@@ -24,7 +25,8 @@ const EmptyPage: (props: EmptyPageProps) => React.ReactElement = ({
   subtitle,
   buttonAction,
   buttonText,
-  isBtnDisabled
+  isBtnDisabled,
+  buttonTooltip
 }) => {
   return (
     <Container className={css.empty}>
@@ -46,6 +48,7 @@ const EmptyPage: (props: EmptyPageProps) => React.ReactElement = ({
       {buttonText ? (
         <Button
           disabled={isBtnDisabled}
+          tooltip={buttonTooltip}
           margin={{
             top: 'large'
           }}

@@ -11,6 +11,7 @@ declare const styles: {
   readonly cardContent: string
   readonly folderName: string
   readonly mainGridContainer: string
+  readonly popover: string
   readonly ribbonTopLeft: string
   readonly sampleRibbon: string
 }

@@ -65,6 +65,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import HandleError from '@ce/components/PermissionError/PermissionError'
 import PermissionError from '@ce/images/permission-error.svg'
 import { usePermission } from '@rbac/hooks/usePermission'
+import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import bgImage from './images/perspectiveBg.png'
 import css from './PerspectiveListPage.module.scss'
 
@@ -723,6 +724,14 @@ const PerspectiveListPage: React.FC = () => {
                     createNewPerspective({})
                   }}
                   isBtnDisabled={!canEdit}
+                  buttonTooltip={
+                    !canEdit ? (
+                      <RBACTooltip
+                        permission={PermissionIdentifier.EDIT_CCM_PERSPECTIVE}
+                        resourceType={ResourceType.CCM_PERSPECTIVE}
+                      />
+                    ) : undefined
+                  }
                 />
               ) : null}
               <Container

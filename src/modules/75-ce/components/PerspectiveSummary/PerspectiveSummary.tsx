@@ -42,6 +42,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { usePermission } from '@rbac/hooks/usePermission'
 import RbacButton from '@rbac/components/Button/Button'
+import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import RecommendationSummaryCard from './RecommendationSummaryCard'
 import css from './PerspectiveSummary.module.scss'
 
@@ -189,6 +190,11 @@ const BudgetCard: (props: BudgetCardProps) => JSX.Element | null = ({ budgetData
           font={FontVariation.SMALL}
           variation={ButtonVariation.LINK}
           disabled={!canEdit}
+          tooltip={
+            !canEdit ? (
+              <RBACTooltip permission={PermissionIdentifier.EDIT_CCM_BUDGET} resourceType={ResourceType.CCM_BUDGETS} />
+            ) : undefined
+          }
         >
           {getString('ce.perspectives.budgets.viewText')}
         </Link>

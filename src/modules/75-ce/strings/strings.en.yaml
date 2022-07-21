@@ -679,6 +679,8 @@ savedYamlSuccess: YAML validated successfully
 uploadCertiHeader: Upload a new certificate for the Application Load Balancer
 perspectives:
   newPerspective: New Perspective
+  editDefaultPerspective: These perspectives are not allowed to edit
+  deleteDefaultPerspective: These perspectives are not allowed to delete
   newPerspectiveLimitWarning: You have used {{count}} / {{limit}} free perspectives incuded in your current plan. Consider upgrading for unlimited perspectives.
   allPerspectiveTxt: 'All ({{ count }})'
   recentPerspectiveTxt: 'Recent ({{ count }})'

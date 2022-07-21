@@ -28,7 +28,9 @@ import { useStrings } from 'framework/strings'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import useMoveFolderModal from '../PerspectiveFolders/MoveFolderModal'
+import PopoverMenuItem from './PerspectiveMenuItems'
 import css from './PerspectiveGridView.module.scss'
 
 interface PerspectiveGridCardProps {
@@ -147,27 +149,70 @@ const PerpsectiveGridCard: (props: PerspectiveGridCardProps) => JSX.Element | nu
             }}
           >
             <Menu>
-              <Menu.Item disabled={isDefaultPerspective || !canEdit} onClick={editClick} icon="edit" text="Edit" />
-              <Menu.Item
+              <PopoverMenuItem
+                disabled={isDefaultPerspective || !canEdit}
+                onClick={editClick}
+                icon="edit"
+                text="Edit"
+                tooltip={
+                  isDefaultPerspective ? (
+                    <Text padding="small">{getString('ce.perspectives.editDefaultPerspective')}</Text>
+                  ) : !canEdit ? (
+                    <RBACTooltip
+                      permission={PermissionIdentifier.EDIT_CCM_PERSPECTIVE}
+                      resourceType={ResourceType.CCM_PERSPECTIVE}
+                    />
+                  ) : undefined
+                }
+              />
+              <PopoverMenuItem
                 disabled={!canEdit}
                 onClick={onCloneClick}
                 icon="duplicate"
                 text="Clone"
                 data-testid={`clone-perspective-${data?.id}`}
+                tooltip={
+                  !canEdit ? (
+                    <RBACTooltip
+                      permission={PermissionIdentifier.EDIT_CCM_PERSPECTIVE}
+                      resourceType={ResourceType.CCM_PERSPECTIVE}
+                    />
+                  ) : undefined
+                }
               />
-              <Menu.Item
+              <PopoverMenuItem
                 disabled={isDefaultPerspective || !canDelete}
                 className={Classes.POPOVER_DISMISS}
                 onClick={onDeleteClick}
                 icon="trash"
                 text="Delete"
+                tooltip={
+                  isDefaultPerspective ? (
+                    <Text padding="small">{getString('ce.perspectives.deleteDefaultPerspective')}</Text>
+                  ) : !canDelete ? (
+                    <RBACTooltip
+                      permission={PermissionIdentifier.DELETE_CCM_PERSPECTIVE}
+                      resourceType={ResourceType.CCM_PERSPECTIVE}
+                    />
+                  ) : undefined
+                }
               />
-              <Menu.Item
+              <PopoverMenuItem
                 disabled={isDefaultPerspective || !canEdit}
                 className={Classes.POPOVER_DISMISS}
                 onClick={openMoveFoldersModal}
                 icon="add-to-folder"
                 text={getString('ce.perspectives.folders.moveToLabel')}
+                tooltip={
+                  isDefaultPerspective ? (
+                    <Text padding="small">{getString('ce.perspectives.editDefaultPerspective')}</Text>
+                  ) : !canEdit ? (
+                    <RBACTooltip
+                      permission={PermissionIdentifier.EDIT_CCM_PERSPECTIVE}
+                      resourceType={ResourceType.CCM_PERSPECTIVE}
+                    />
+                  ) : undefined
+                }
               />
             </Menu>
           </Container>
