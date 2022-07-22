@@ -383,16 +383,18 @@ const CERoutes: React.FC = () => {
             <BudgetDetails />
           </RouteWithLayout>
         ) : null}
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCERecommendations({ ...accountPathProps, ...projectPathProps })}
-          exact
-          pageName={PAGE_NAME.CERecommendationList}
-        >
-          <RecommendationList />
-        </RouteWithLayout>
-        )
+        {!enableMicroFrontend ? (
+          <RouteWithLayout
+            licenseRedirectData={licenseRedirectData}
+            sidebarProps={CESideNavProps}
+            path={routes.toCERecommendations({ ...accountPathProps, ...projectPathProps })}
+            exact
+            pageName={PAGE_NAME.CERecommendationList}
+          >
+            <RecommendationList />
+          </RouteWithLayout>
+        ) : null}
+
         <RouteWithLayout
           licenseRedirectData={licenseRedirectData}
           sidebarProps={CESideNavProps}
@@ -563,7 +565,8 @@ const CERoutes: React.FC = () => {
           <RouteWithLayout
             path={[
               routes.toCEBudgets({ ...accountPathProps }),
-              routes.toCEBudgetDetails({ ...accountPathProps, budgetId: ':budgetId', budgetName: ':budgetName' })
+              routes.toCEBudgetDetails({ ...accountPathProps, budgetId: ':budgetId', budgetName: ':budgetName' }),
+              routes.toCERecommendations({ ...accountPathProps, ...projectPathProps })
             ]}
             sidebarProps={CESideNavProps}
           >
