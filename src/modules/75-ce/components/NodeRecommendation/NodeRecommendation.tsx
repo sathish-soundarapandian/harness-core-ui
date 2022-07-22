@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useMemo, useReducer, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import {
   Container,
   Layout,
@@ -51,6 +51,7 @@ import {
   getProviderIcon,
   isResourceConsistent
 } from '@ce/utils/recommendationUtils'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { InstanceFamiliesModalTab } from '../InstanceFamiliesModalTab/InstanceFamiliesModalTab'
 import ResourceUtilizationCharts from './ResourceUtilizationCharts'
 import { ACTIONS, Action, IState } from './constants'
@@ -145,7 +146,7 @@ const NodeRecommendationDetails: React.FC<NodeRecommendationDetailsProps> = ({
   const { showError } = useToaster()
   const timeRangeFilter = GET_NODEPOOL_DATE_RANGE[timeRange.value]
 
-  const [buffer, setBuffer] = useState(0)
+  const [buffer, setBuffer] = useQueryParamsState('bufferValue', 0)
   const [tuneRecomVisible, setTuneRecomVisible] = useState(true)
 
   const { includeTypes, includeSeries, excludeTypes, excludeSeries } = defaultTo(
@@ -172,9 +173,10 @@ const NodeRecommendationDetails: React.FC<NodeRecommendationDetailsProps> = ({
     excludeSeries: excludeSeries || []
   }
   const [recomDetails, setRecomDetails] = useState(recommendationDetails)
+  const [tuningParams, setTuningParams] = useQueryParamsState<IState | undefined>('tuningParams', initialState)
   const [state, dispatch] = useReducer(
     reducer,
-    useMemo(() => initialState as IState, [])
+    useMemo(() => (tuningParams || initialState) as IState, [])
   )
 
   const [updatedState, setUpdatedState] = useState(initialState)
@@ -207,6 +209,7 @@ const NodeRecommendationDetails: React.FC<NodeRecommendationDetailsProps> = ({
           setRecomDetails(newState)
         }
         setUpdatedState(addBufferToState(state, buffer))
+        setTuningParams(state)
         UpdatePreferenceToaster.show({ message: getString('ce.nodeRecommendation.updatePreferences'), icon: 'tick' })
       } catch (e: any) {
         showError(e?.data?.title === 'recommendation problem' ? e?.data?.detail : getErrorInfoFromErrorObject(e))
@@ -217,6 +220,7 @@ const NodeRecommendationDetails: React.FC<NodeRecommendationDetailsProps> = ({
   }
 
   const currentTimeRange = useRef<NodepoolTimeRangeValue>(timeRange)
+  const firstRender = useRef(true)
 
   useDidMountEffect(() => {
     dispatch({
@@ -229,12 +233,17 @@ const NodeRecommendationDetails: React.FC<NodeRecommendationDetailsProps> = ({
         minNodes: +defaultTo(minNodes, 0).toFixed(2)
       }
     })
+    setTuningParams(undefined)
 
     currentTimeRange.current = timeRange
-  }, [timeRange])
+  }, [JSON.stringify(timeRange)])
 
-  useDidMountEffect(() => {
-    updateRecommendationDetails()
+  useEffect(() => {
+    if (!firstRender.current || !isEqual(initialState, tuningParams) || buffer) {
+      updateRecommendationDetails()
+    }
+
+    firstRender.current = false
   }, [currentTimeRange.current])
 
   const [showModal, hideModal] = useModalHook(() => {
@@ -327,7 +336,9 @@ const NodeRecommendationDetails: React.FC<NodeRecommendationDetailsProps> = ({
             </Container>
           </Layout.Horizontal>
           <Recommender stats={recommendationStats} details={recomDetails} loading={loading} />
-          <TuneRecommendationHelpText toggleCardVisible={() => setTuneRecomVisible(prevState => !prevState)} />
+          <TuneRecommendationHelpText
+            toggleCardVisible={() => setTuneRecomVisible((prevState: boolean) => !prevState)}
+          />
         </Card>
       </Layout.Vertical>
       <Layout.Vertical spacing="large" padding="xlarge">

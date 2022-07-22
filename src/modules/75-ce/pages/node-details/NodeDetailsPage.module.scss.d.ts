@@ -11,5 +11,6 @@ declare const styles: {
   readonly aggregationTags: string
   readonly aggregationText: string
   readonly emptyContainer: string
+  readonly pageCtn: string
 }
 export default styles

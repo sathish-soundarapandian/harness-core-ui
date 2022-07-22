@@ -8,7 +8,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import {
-  Heading,
   Layout,
   Tabs,
   Tab,
@@ -19,7 +18,7 @@ import {
   PageBody,
   PageSpinner
 } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@wings-software/design-system'
 import { Breadcrumbs } from '@common/components/Breadcrumbs/Breadcrumbs'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
@@ -48,9 +47,9 @@ const PerspectiveHeader: React.FC<{ title: string }> = ({ title }) => {
             }
           ]}
         />
-        <Heading color="grey800" level={2}>
+        <Text color={Color.GREY_800} font={{ variation: FontVariation.H4 }}>
           {title}
-        </Heading>
+        </Text>
       </Layout.Vertical>
     </Layout.Horizontal>
   )

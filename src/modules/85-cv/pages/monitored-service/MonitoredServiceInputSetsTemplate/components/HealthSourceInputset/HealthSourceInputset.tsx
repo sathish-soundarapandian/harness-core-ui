@@ -13,26 +13,28 @@ import { useStrings } from 'framework/strings'
 import { useGetTemplate } from 'services/template-ng'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
-import type { TemplateDataInterface } from '../../MonitoredServiceInputSetsTemplate'
 import HealthSourceInputsetTable from './components/HealthSourceInputsetTable/HealthSourceInputsetTable'
 import HealthSourceInputsetForm from './components/HealthSourceInputsetForm/HealthSourceInputsetForm'
+import type {
+  MonitoredServiceTemplateInterface,
+  TemplateDataInterface,
+  YamlResponseInterface
+} from '../../MonitoredServiceInputSetsTemplate.types'
 import css from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.module.scss'
 
 interface HealthSourceInputsetInterface {
-  sourceType: string
   templateRefData: TemplateDataInterface
   healthSourcesWithRuntimeList: string[]
   isReadOnlyInputSet?: boolean
 }
 
 export default function HealthSourceInputset({
-  sourceType,
   templateRefData,
   isReadOnlyInputSet,
   healthSourcesWithRuntimeList
 }: HealthSourceInputsetInterface): JSX.Element {
   const { getString } = useStrings()
-  const [monitoredServiceYaml, setMonitoredServiceYaml] = React.useState<any>({})
+  const [monitoredServiceYaml, setMonitoredServiceYaml] = React.useState<MonitoredServiceTemplateInterface>()
   // Complete Yaml of Template
   const {
     data: msTemplateResponse,
@@ -59,7 +61,7 @@ export default function HealthSourceInputset({
   // Set complete Yaml as state variable
   React.useEffect(() => {
     if (msTemplateResponse && msTemplateResponse?.data?.yaml) {
-      const yaml = parse(msTemplateResponse?.data?.yaml) as any
+      const yaml = parse(msTemplateResponse?.data?.yaml) as YamlResponseInterface
       const filteredHealthSourceList = yaml?.template?.spec?.sources?.healthSources?.filter((i: any) =>
         healthSourcesWithRuntimeList?.includes(i.identifier)
       )
@@ -68,11 +70,11 @@ export default function HealthSourceInputset({
         spec: {
           ...yaml?.template.spec,
           sources: {
-            ...yaml?.template.spec.sources,
+            ...yaml?.template?.spec?.sources,
             healthSources: filteredHealthSourceList
           }
         }
-      }
+      } as MonitoredServiceTemplateInterface
       setMonitoredServiceYaml(filteredTemplate)
     }
   }, [msTemplateResponse])
@@ -88,11 +90,7 @@ export default function HealthSourceInputset({
     content = (
       <>
         <HealthSourceInputsetTable healthSources={healthSources} />
-        <HealthSourceInputsetForm
-          sourceType={sourceType}
-          healthSources={healthSources}
-          isReadOnlyInputSet={isReadOnlyInputSet}
-        />
+        <HealthSourceInputsetForm healthSources={healthSources} isReadOnlyInputSet={isReadOnlyInputSet} />
       </>
     )
   }

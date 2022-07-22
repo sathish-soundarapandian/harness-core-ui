@@ -157,6 +157,8 @@ export function getProductBasedOnType(
       return getFeatureOption(Connectors.CUSTOM_HEALTH, getString)[1]
     case 'CustomHealthMetric':
       return getFeatureOption(Connectors.CUSTOM_HEALTH, getString)[0]
+    case Connectors.PROMETHEUS:
+      return getFeatureOption(Connectors.PROMETHEUS, getString)[0]
     default:
       return { ...currProduct } as SelectOption
   }
@@ -166,7 +168,8 @@ export const getInitialValues = (sourceData: any, getString: UseStringsReturn['g
   const currentHealthSource = sourceData?.healthSourceList?.find(
     (el: any) => el?.identifier === sourceData?.healthSourceIdentifier
   )
-  const selectedFeature = currentHealthSource?.spec?.feature
+  // TODO: remove check for prometheus when BE changes are done
+  const selectedFeature = currentHealthSource?.type === Connectors.PROMETHEUS ? '' : currentHealthSource?.spec?.feature
   const initialValues = {
     [ConnectorRefFieldName]: '',
     ...sourceData,

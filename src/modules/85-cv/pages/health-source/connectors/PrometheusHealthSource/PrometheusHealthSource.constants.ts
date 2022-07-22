@@ -48,7 +48,7 @@ export type MapPrometheusQueryToService = {
   additionalFilter?: MultiSelectOption[]
   aggregator?: string
   riskCategory?: string
-  serviceInstance?: string
+  serviceInstance?: string | SelectOption
   recordCount?: number
   lowerBaselineDeviation?: boolean
   higherBaselineDeviation?: boolean

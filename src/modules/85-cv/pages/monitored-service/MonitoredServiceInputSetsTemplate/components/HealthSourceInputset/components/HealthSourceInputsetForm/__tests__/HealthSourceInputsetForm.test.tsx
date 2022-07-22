@@ -97,11 +97,7 @@ describe('Validate HealthSourceInputsetForm', () => {
           onSubmit={() => undefined}
           formName="wrapperComponent"
         >
-          <HealthSourceInputsetForm
-            sourceType={'AppDynamics'}
-            isReadOnlyInputSet={false}
-            healthSources={healthSourcesMock}
-          />
+          <HealthSourceInputsetForm isReadOnlyInputSet={false} healthSources={healthSourcesMock} />
         </Formik>
       </TestWrapper>
     )
@@ -110,17 +106,13 @@ describe('Validate HealthSourceInputsetForm', () => {
   test('should render HealthSourceInputsetForm with no data', () => {
     const { container, rerender } = render(
       <TestWrapper>
-        <HealthSourceInputsetForm
-          sourceType={'AppDynamics'}
-          isReadOnlyInputSet={false}
-          healthSources={[{ spec: {} }]}
-        />
+        <HealthSourceInputsetForm isReadOnlyInputSet={false} healthSources={[{ spec: {} }]} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
     rerender(
       <TestWrapper>
-        <HealthSourceInputsetForm sourceType={'AppDynamics'} isReadOnlyInputSet={true} healthSources={[]} />
+        <HealthSourceInputsetForm isReadOnlyInputSet={true} healthSources={[]} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()

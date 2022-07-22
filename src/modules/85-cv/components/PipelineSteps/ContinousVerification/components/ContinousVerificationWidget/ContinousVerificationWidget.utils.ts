@@ -6,7 +6,7 @@
  */
 
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
-import type { FormikErrors } from 'formik'
+import type { FormikErrors, FormikProps } from 'formik'
 import { set } from 'lodash-es'
 import {
   getValidationLabelByNameForTemplateInputs,
@@ -17,6 +17,7 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type {
   ContinousVerificationData,
   MonitoredServiceTemplateVariable,
+  spec,
   VerifyStepMonitoredService
 } from '../../types'
 import { isAnExpression } from './components/ContinousVerificationWidgetSections/components/MonitoredService/MonitoredService.utils'
@@ -248,4 +249,21 @@ export function validateMetricDefinitions(
 
 export function shouldValidateTemplateInputs(templateInputsToValidate: any, key: string, templateInputs: any): boolean {
   return templateInputsToValidate[key] !== 'object' && !templateInputs[key]
+}
+
+export function resetFormik(
+  formValues: ContinousVerificationData,
+  newSpecs: {
+    monitoredServiceRef?: string | undefined
+    monitoredServiceName?: string | undefined
+    type?: string | undefined
+    healthSources?: { identifier: string }[] | undefined
+    spec?: spec | undefined
+    monitoredService: VerifyStepMonitoredService
+    initialMonitoredService?: VerifyStepMonitoredService | undefined
+  },
+  formik: FormikProps<ContinousVerificationData>
+): void {
+  const formNewValues = { ...formValues, spec: newSpecs }
+  formik.resetForm({ values: formNewValues })
 }

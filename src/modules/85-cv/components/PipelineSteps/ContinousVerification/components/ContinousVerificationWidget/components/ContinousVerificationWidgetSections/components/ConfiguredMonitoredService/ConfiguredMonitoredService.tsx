@@ -29,13 +29,17 @@ import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { RowData } from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { getMonitoredServiceRef } from '@cv/components/PipelineSteps/ContinousVerification/utils'
+import { resetFormik } from '@cv/components/PipelineSteps/ContinousVerification/components/ContinousVerificationWidget/ContinousVerificationWidget.utils'
 import { getMultiTypeInputProps } from '../VerificationJobFields/VerificationJobFields.utils'
 import {
   getEnvironmentIdentifierFromStage,
   getNewSpecs,
   getServiceIdentifierFromStage
 } from '../MonitoredService/MonitoredService.utils'
-import { isMonitoredServiceFixedInput } from './ConfiguredMonitoredService.utils'
+import {
+  isFirstTimeOpenForConfiguredMonitoredSvc,
+  isMonitoredServiceFixedInput
+} from './ConfiguredMonitoredService.utils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 interface ConfiguredMonitoredServiceProps {
@@ -46,7 +50,8 @@ interface ConfiguredMonitoredServiceProps {
 export default function ConfiguredMonitoredService(props: ConfiguredMonitoredServiceProps): JSX.Element {
   const {
     allowableTypes,
-    formik: { values: formValues, setFieldValue }
+    formik: { values: formValues, setFieldValue },
+    formik
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -127,8 +132,10 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
         identifier: monitoredService?.identifier as string,
         name: monitoredService?.name as string
       })
-      // const formNewValues = { ...formValues, spec: newSpecs }
-      // formik.resetForm({ values: formNewValues })
+
+      if (isFirstTimeOpenForConfiguredMonitoredSvc(formValues, monitoredServiceData)) {
+        resetFormik(formValues, newSpecs, formik)
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monitoredService])

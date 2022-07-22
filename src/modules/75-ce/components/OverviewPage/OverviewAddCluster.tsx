@@ -14,13 +14,12 @@ import type { ConnectorInfoDTO } from 'services/cd-ng'
 import AddClusterImage from './images/AddCluster.svg'
 import css from './OverviewPage.module.scss'
 
-const OverviewAddCluster = ({
-  onAddClusterSuccess,
-  descriptionText
-}: {
+export interface OverviewAddClusterProps {
   onAddClusterSuccess: () => void
   descriptionText?: string
-}) => {
+}
+
+const OverviewAddCluster = ({ onAddClusterSuccess, descriptionText }: OverviewAddClusterProps) => {
   const { getString } = useStrings()
   const { openConnectorModal, hideConnectorModal } = useCreateConnectorModal({
     onSuccess: () => {

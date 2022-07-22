@@ -18,6 +18,7 @@
     box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16) !important;
     border-radius: 8px;
     border: 1px solid var(--primary-7) !important;
+    margin-bottom: var(--spacing-medium);
   }
 
   .loader {
@@ -93,6 +94,17 @@
   right: var(--spacing-xlarge);
 }
 
-.subtext {
-  font-size: 13px;
+.collapseCard {
+  padding: var(--spacing-medium) var(--spacing-large) !important;
+
+  &.cardOpen {
+    padding-bottom: 0 !important;
+  }
+
+  .chevron {
+    size: 18px;
+    color: var(--primary-7);
+    cursor: pointer;
+    margin-right: var(--spacing-small);
+  }
 }

@@ -4947,6 +4947,7 @@ export interface StringsMap {
   'ce.perspectives.confirmDeletePerspectiveTitle': string
   'ce.perspectives.cost': string
   'ce.perspectives.costTrend': string
+  'ce.perspectives.createPerspective.budgetsReportsAlerts': string
   'ce.perspectives.createPerspective.createCustomField': string
   'ce.perspectives.createPerspective.filters.addRuleText': string
   'ce.perspectives.createPerspective.filters.chooseOperand': string

@@ -432,7 +432,7 @@ const PerspectiveDetailsPage: React.FC = () => {
     <>
       <PerspectiveHeader title={persName} viewType={perspectiveData?.viewType || ViewType.Default} />
 
-      <PageBody loading={loading}>
+      <PageBody loading={loading} className={css.pageCtn}>
         <PersepectiveExplorerFilters
           featureEnabled={!isFreeEdition}
           setFilters={setFilters}

@@ -26,19 +26,22 @@ import Card from '@cv/components/Card/Card'
 import VerifyStepHealthSourceTable from '@cv/pages/health-source/HealthSourceTable/VerifyStepHealthSourceTable'
 import type { RowData } from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
+import { resetFormik } from '@cv/components/PipelineSteps/ContinousVerification/components/ContinousVerificationWidget/ContinousVerificationWidget.utils'
 import type { MonitoredServiceProps } from './MonitoredService.types'
 import {
   getEnvironmentIdentifierFromStage,
   getNewSpecs,
   getServiceIdentifierFromStage,
-  isAnExpression
+  isAnExpression,
+  isFirstTimeOpenForDefaultMonitoredSvc
 } from './MonitoredService.utils'
 import { MONITORED_SERVICE_EXPRESSION } from './MonitoredService.constants'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './MonitoredService.module.scss'
 
 export default function MonitoredService({
-  formik: { values: formValues, setFieldValue }
+  formik: { values: formValues, setFieldValue },
+  formik
 }: MonitoredServiceProps): JSX.Element {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & AccountPathProps>()
   const [monitoredService, setMonitoredService] = useState({
@@ -115,8 +118,10 @@ export default function MonitoredService({
       })
     }
 
-    // const formNewValues = { ...formValues, spec: newSpecs }
-    // formik.resetForm({ values: formNewValues })
+    if (isFirstTimeOpenForDefaultMonitoredSvc(formValues, monitoredServiceData)) {
+      resetFormik(formValues, newSpecs, formik)
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monitoredServiceData, error, loading, environmentIdentifier, serviceIdentifier])
 

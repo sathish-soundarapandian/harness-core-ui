@@ -22,13 +22,11 @@ import css from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/M
 
 interface HealthSourceInputsetFormInterface {
   healthSources: any
-  sourceType: string
   isReadOnlyInputSet?: boolean
 }
 
 export default function HealthSourceInputsetForm({
   healthSources,
-  sourceType,
   isReadOnlyInputSet
 }: HealthSourceInputsetFormInterface): JSX.Element {
   const { getString } = useStrings()
@@ -64,7 +62,9 @@ export default function HealthSourceInputsetForm({
                   accountIdentifier={accountId}
                   projectIdentifier={projectIdentifier}
                   orgIdentifier={orgIdentifier}
-                  placeholder={getString('cv.healthSource.connectors.selectConnector', { sourceType })}
+                  placeholder={getString('cv.healthSource.connectors.selectConnector', {
+                    sourceType: healthSource?.type
+                  })}
                   tooltipProps={{ dataTooltipId: 'selectHealthSourceConnector' }}
                 />
               )

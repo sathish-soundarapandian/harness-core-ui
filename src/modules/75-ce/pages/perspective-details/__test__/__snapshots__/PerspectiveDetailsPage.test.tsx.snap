@@ -162,7 +162,7 @@ exports[`test cases for Perspective details Page should be able to render no dat
     </button>
   </div>
   <div
-    class="StyledProps--font StyledProps--main PageBody--pageBody"
+    class="StyledProps--font StyledProps--main PageBody--pageBody pageCtn"
     data-name="page-body"
   >
     <div
@@ -1024,7 +1024,7 @@ exports[`test cases for Perspective details Page should be able to render the de
     </button>
   </div>
   <div
-    class="StyledProps--font StyledProps--main PageBody--pageBody"
+    class="StyledProps--font StyledProps--main PageBody--pageBody pageCtn"
     data-name="page-body"
   >
     <div

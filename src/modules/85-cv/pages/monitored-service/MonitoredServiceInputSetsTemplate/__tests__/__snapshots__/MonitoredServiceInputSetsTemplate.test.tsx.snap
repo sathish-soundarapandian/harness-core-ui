@@ -1120,7 +1120,9 @@ exports[`Test MonitoredServiceInputSetsTemplate should render no data state 1`] 
           </div>
         </div>
         <button
-          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--variation Button--variation-primary"
+          class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--variation Button--variation-primary"
+          disabled=""
+          tabindex="-1"
           type="button"
         >
           <span
