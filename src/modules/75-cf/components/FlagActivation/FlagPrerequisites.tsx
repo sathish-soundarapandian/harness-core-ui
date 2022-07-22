@@ -98,8 +98,8 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
   })
 
   const featureList = useMemo(() => {
-    return searchedFeatures?.features?.filter(_feature => _feature.identifier !== featureFlag.identifier) || []
-  }, [featureFlag.identifier, searchedFeatures?.features?.filter])
+    return searchedFeatures?.features?.filter(_feature => _feature.identifier !== featureFlag.identifier)
+  }, [featureFlag.identifier, searchedFeatures?.features])
 
   const [isEditingPrerequisites, setEditingPrerequisites] = useState<boolean>(false)
 

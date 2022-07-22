@@ -54,7 +54,7 @@ exports[`FlagPrerequisites it should render correctly 1`] = `
                         placeholder="- Select -"
                         style="padding-right: 0px;"
                         type="text"
-                        value=""
+                        value="Bool_2"
                       />
                       <span
                         class="bp3-input-action"
@@ -172,7 +172,7 @@ exports[`FlagPrerequisites it should render correctly 1`] = `
                         placeholder="- Select -"
                         style="padding-right: 0px;"
                         type="text"
-                        value=""
+                        value="Multivar_1"
                       />
                       <span
                         class="bp3-input-action"
@@ -290,7 +290,7 @@ exports[`FlagPrerequisites it should render correctly 1`] = `
                         placeholder="- Select -"
                         style="padding-right: 0px;"
                         type="text"
-                        value=""
+                        value="Test_Bool_1"
                       />
                       <span
                         class="bp3-input-action"
