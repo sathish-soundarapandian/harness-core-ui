@@ -7,12 +7,13 @@
 
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { ResponseSetupStatus, RestResponseDelegateGroupListing, useProvisionResourcesForCI } from 'services/cd-ng'
-import { useGetDelegateGroupsNGV2WithFilter, DelegateFilterProperties, DelegateGroupDetails } from 'services/portal'
+import { ResponseSetupStatus, useProvisionResourcesForCI } from 'services/cd-ng'
+import { useGetDelegateGroupByIdentifier } from 'services/portal'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   DELEGATE_INSTALLATION_REFETCH_DELAY,
   MAX_TIMEOUT_DELEGATE_INSTALLATION,
+  ProvisionedByHarnessDelegateGroupIdentifier,
   ProvisioningStatus
 } from '@ci/pages/get-started-with-ci/InfraProvisioningWizard/Constants'
 
@@ -20,8 +21,6 @@ interface ProvisionDelegateForHostedBuildsReturns {
   initiateProvisioning: () => void
   delegateProvisioningStatus: ProvisioningStatus
 }
-
-const HARNESS_PROVISIONED_DELEGATE_GROUP_NAME = 'harness-kubernetes-delegate'
 
 export function useProvisionDelegateForHostedBuilds(): ProvisionDelegateForHostedBuildsReturns {
   const [initProvisioning, setInitProvisioning] = useState<boolean>()
@@ -31,14 +30,15 @@ export function useProvisionDelegateForHostedBuilds(): ProvisionDelegateForHoste
   )
   const { accountId } = useParams<AccountPathProps>()
 
-  const { mutate: fetchDelegates } = useGetDelegateGroupsNGV2WithFilter({
-    queryParams: {
-      accountId,
-      searchTerm: HARNESS_PROVISIONED_DELEGATE_GROUP_NAME
-    }
+  const {
+    data: delegateDetails,
+    refetch: fetchDelegateDetails,
+    loading: fetchingDelegateDetails
+  } = useGetDelegateGroupByIdentifier({
+    identifier: ProvisionedByHarnessDelegateGroupIdentifier,
+    queryParams: { accountId },
+    lazy: true
   })
-
-  const fetchDelegatesFilterPayload: DelegateFilterProperties = { filterType: 'Delegate', status: 'ENABLED' }
 
   const { mutate: startProvisioning } = useProvisionResourcesForCI({
     queryParams: {
@@ -52,11 +52,15 @@ export function useProvisionDelegateForHostedBuilds(): ProvisionDelegateForHoste
   })
 
   useEffect(() => {
+    if (!fetchingDelegateDetails && delegateDetails?.resource && delegateDetails.resource?.activelyConnected) {
+      setDelegateProvisioningStatus(ProvisioningStatus.SUCCESS)
+      setStartPolling(false)
+    }
+  }, [fetchingDelegateDetails, delegateDetails])
+
+  useEffect(() => {
     if (startPolling) {
-      const timerId = setInterval(
-        () => fetchDelegates(fetchDelegatesFilterPayload),
-        DELEGATE_INSTALLATION_REFETCH_DELAY
-      )
+      const timerId = setInterval(() => fetchDelegateDetails, DELEGATE_INSTALLATION_REFETCH_DELAY)
       return () => clearInterval(timerId)
     }
   })
@@ -83,17 +87,7 @@ export function useProvisionDelegateForHostedBuilds(): ProvisionDelegateForHoste
             startProvisioningStatus === ProvisioningStatus[ProvisioningStatus.SUCCESS] &&
             startProvisioningData === ProvisioningStatus[ProvisioningStatus.SUCCESS]
           ) {
-            fetchDelegates(fetchDelegatesFilterPayload).then((result: RestResponseDelegateGroupListing) => {
-              if (
-                result?.resource?.delegateGroupDetails?.some(
-                  (item: DelegateGroupDetails) => item.connectivityStatus && item.connectivityStatus === 'connected'
-                )
-              ) {
-                setDelegateProvisioningStatus(ProvisioningStatus.SUCCESS)
-                setStartPolling(false)
-              }
-            })
-
+            fetchDelegateDetails()
             setStartPolling(true)
           } else {
             setDelegateProvisioningStatus(ProvisioningStatus.FAILURE)

@@ -239,3 +239,5 @@ export const AccessTokenPermissionsDocLinks: Map<ConnectorInfoDTO['type'], strin
   [Connectors.GITLAB, 'https://docs.harness.io/article/5abnoghjgo#password_personal_access_token'],
   [Connectors.BITBUCKET, 'https://docs.harness.io/article/iz5tucdwyu#personal_access_token']
 ])
+
+export const ProvisionedByHarnessDelegateGroupIdentifier = '_harness_kubernetes_delegate' // unique identifier of delegate installed and managed by Harness for Hosted by Harness infra offering
