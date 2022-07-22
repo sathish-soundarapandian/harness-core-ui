@@ -72,7 +72,7 @@ export default function GetStartedWithCI(): React.ReactElement {
               <Layout.Horizontal padding={{ top: 'xxlarge', bottom: 'huge' }}>
                 {renderBuildPipelineStep({
                   iconProps: { name: 'services', size: 18, className: cx(css.icon, css.paddingXSmall) },
-                  label: 'common.getStarted.selectWorkload'
+                  label: 'common.selectWorkload'
                 })}
                 {renderBuildPipelineStep({
                   iconProps: {

@@ -216,6 +216,7 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
         set(draft, 'data.manifestValues', manifestValues)
         // set(draft, 'data.repoValues', values?.repository)
       })
+
       saveServiceData({ service: updatedContextService })
 
       const serviceBody = { service: { ...omit(cloneDeep(updatedContextService), 'data') } }
@@ -239,7 +240,6 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
       showSuccess('Service updated successfully')
       props?.onSuccess?.()
       return Promise.resolve(values)
-      // })
     } catch (e: any) {
       showError(e?.data?.message || e?.message || getString('commonError'))
       return Promise.resolve({} as SelectArtifactInterface)
@@ -278,7 +278,7 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
       artifactType: get(serviceData, 'data.artifactType') || undefined,
       repository: initialRepoValue
     }
-  }, [])
+  }, [get(serviceData, 'serviceDefinition.spec.manifests[0].manifest', {})])
 
   const validationSchema = Yup.object().shape({
     artifactType: Yup.string().required(getString('validation.nameRequired')),
@@ -436,7 +436,7 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
                     details={
                       <ProvideManifest
                         formikProps={formikProps}
-                        initialValues={get(serviceData, 'serviceDefinition.spec.manifests[0].,manifest', {})}
+                        initialValues={get(serviceData, 'serviceDefinition.spec.manifests[0].manifest', {})}
                         disableNextBtn={() => setDisableBtn(true)}
                         enableNextBtn={() => setDisableBtn(disableBtn)}
                       />

@@ -11,15 +11,14 @@ import React from 'react'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { useStrings } from 'framework/strings'
 import DragnDropPaths from '@pipeline/components/ManifestSelection/DragnDropPaths'
-import type { ManifestConfigWrapper } from 'services/cd-ng'
+import type { ManifestConfig } from 'services/cd-ng'
 import { gitFetchTypeList, GitFetchTypes } from '../DeployProvisioningWizard/Constants'
 import type { SelectArtifactInterface } from './SelectArtifact'
 
 interface ProvideManifestProps {
-  initialValues: ManifestConfigWrapper
+  initialValues: ManifestConfig
   disableNextBtn: () => void
   enableNextBtn: () => void
-  onSuccess?: (value: ManifestConfigWrapper) => void
   formikProps: FormikProps<SelectArtifactInterface>
 }
 

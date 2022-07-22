@@ -301,7 +301,6 @@ export interface StringsMap {
   'common.getStarted.searchRepo': string
   'common.getStarted.selectArtifact': string
   'common.getStarted.selectInfra': string
-  'common.getStarted.selectWorkload': string
   'common.getStarted.specificDelegate': string
   'common.getStarted.verifyConnection': string
   'common.git.APIAccessDescription': string
@@ -673,6 +672,7 @@ export interface StringsMap {
   'common.selectType': string
   'common.selectUserGroups': string
   'common.selectVersion': string
+  'common.selectWorkload': string
   'common.selectYourRepo': string
   'common.selected': string
   'common.serviceCreated': string

@@ -933,13 +933,13 @@ perDeveloper: per developer
 triggerName: Trigger Name
 versionLabel: Version Label
 executedBy: Executed By
+selectWorkload: Select Workload
 
 # Onboarding
 getStarted:
   firstPipeline: 'Let’s get you started with your first Pipeline!'
   buildPipeline: Build Pipeline
   quicklyCreate: Quickly create a Pipeline using your own codebase and our intuitive visual editor.
-  selectWorkload: Select Workload
   selectArtifact: Select Artifact
   selectInfra: Select Infrastructure
   fetchingRepos: Please wait while we fetch repositories...
