@@ -52,7 +52,7 @@ export function useProvisionDelegateForHostedBuilds(): ProvisionDelegateForHoste
   })
 
   useEffect(() => {
-    if (!fetchingDelegateDetails && delegateDetails?.resource && delegateDetails.resource?.activelyConnected) {
+    if (!fetchingDelegateDetails && delegateDetails?.resource?.activelyConnected) {
       setDelegateProvisioningStatus(ProvisioningStatus.SUCCESS)
       setStartPolling(false)
     }
