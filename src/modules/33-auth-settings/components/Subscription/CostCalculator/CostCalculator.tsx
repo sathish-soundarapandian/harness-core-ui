@@ -77,20 +77,22 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
   })
 
   const prices = data?.data?.prices
-  React.useMemo(() => {
+
+  React.useEffect(() => {
     const newProductPrices: ProductPricesProp = { monthly: [], yearly: [] }
     if (prices) {
       prices.forEach(price => {
-        if (price.lookupKey?.includes(LookUpKeyFrequencyType.MONTHLY)) {
+        if (price.metaData?.billed?.includes(LookUpKeyFrequencyType.MONTHLY)) {
           newProductPrices.monthly.push(price)
         }
-        if (price.lookupKey?.includes(LookUpKeyFrequencyType.YEARLY)) {
+        if (price.metaData?.billed?.includes(LookUpKeyFrequencyType.YEARLY)) {
           newProductPrices.yearly.push(price)
         }
         if (price.lookupKey === LookUpKeyType.PREMIUM_SUPPORT) {
           newProductPrices.yearly.push(price)
         }
       })
+
       setSubscriptionProps({
         ...subscriptionProps,
         productPrices: newProductPrices

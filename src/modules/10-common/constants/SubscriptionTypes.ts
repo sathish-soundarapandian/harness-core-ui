@@ -112,6 +112,6 @@ export enum LookUpKeyType {
 }
 
 export enum LookUpKeyFrequencyType {
-  YEARLY = 'YEARLY',
-  MONTHLY = 'MONTHLY'
+  YEARLY = 'Yearly',
+  MONTHLY = 'Monthly'
 }

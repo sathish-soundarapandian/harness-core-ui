@@ -38,7 +38,7 @@ export function getProductPrices(plan: Editions, time: TimeType, productPrices: 
 
   if (time === TimeType.MONTHLY) {
     productPrices.monthly.forEach(price => {
-      if (price.lookupKey?.includes(plan)) {
+      if (price.metaData?.edition?.includes(plan)) {
         prices.push(price)
       }
     })
@@ -46,7 +46,7 @@ export function getProductPrices(plan: Editions, time: TimeType, productPrices: 
 
   if (time === TimeType.YEARLY) {
     productPrices.yearly.forEach(price => {
-      if (price.lookupKey?.includes(plan)) {
+      if (price.metaData?.edition?.includes(plan)) {
         prices.push(price)
       }
     })
@@ -79,11 +79,11 @@ export function getCostCalculatorBodyByModule({
   switch (module) {
     case 'cf': {
       let licenseUnitPrice = getDollarAmount(
-        productPricesByPayFreq.find(price => price.lookupKey?.includes(LookUpKeyType.DEVELOPERS))?.unitAmount
+        productPricesByPayFreq.find(price => price.metaData?.type?.includes(LookUpKeyType.DEVELOPERS))?.unitAmount
       )
 
       let mauUnitPrice = getDollarAmount(
-        productPricesByPayFreq.find(price => price.lookupKey?.includes(LookUpKeyType.MAU))?.unitAmount
+        productPricesByPayFreq.find(price => price.metaData?.type?.includes(LookUpKeyType.MAU))?.unitAmount
       )
 
       if (paymentFrequency === TimeType.YEARLY) {
@@ -194,7 +194,7 @@ export function getSubscriptionBreakdownsByModuleAndFrequency({
     case 'cf': {
       if (paymentFreq === TimeType.MONTHLY) {
         const developerUnitPrice = getDollarAmount(
-          productPrices.monthly?.find(product => product.lookupKey?.includes(LookUpKeyType.DEVELOPERS))?.unitAmount
+          productPrices.monthly?.find(product => product.metaData?.type?.includes(LookUpKeyType.DEVELOPERS))?.unitAmount
         )
         products.push({
           paymentFrequency: paymentFreq,
@@ -203,23 +203,33 @@ export function getSubscriptionBreakdownsByModuleAndFrequency({
           quantity: quantities?.featureFlag?.numberOfDevelopers || 0,
           unitPrice: developerUnitPrice
         })
+
+        const numberOfMauMonthly = (quantities?.featureFlag?.numberOfMau || 0) * 1000
         const mauUnitPrice = getDollarAmount(
-          productPrices.monthly?.find(product => product.lookupKey?.includes(LookUpKeyType.MAU))?.unitAmount
+          productPrices.monthly?.find(productPrice => {
+            const priceMin = strToNumber(productPrice.metaData?.min || '')
+            const priceMax = strToNumber(productPrice.metaData?.max || '')
+            const isValidRange = numberOfMauMonthly >= priceMin && numberOfMauMonthly <= priceMax
+            if (productPrice.metaData?.type?.includes(LookUpKeyType.MAU) && isValidRange) {
+              return productPrice
+            }
+          })?.unitAmount
         )
         products.push({
           paymentFrequency: paymentFreq,
           description: 'authSettings.costCalculator.maus',
           unitDescription: 'authSettings.costCalculator.mau.perkMau',
           underComment: 'authSettings.costCalculator.mau.kMauFree',
-          quantity: quantities?.featureFlag?.numberOfMau || 0,
+          quantity: numberOfMauMonthly,
           unitPrice: mauUnitPrice
         })
       }
       if (paymentFreq === TimeType.YEARLY) {
         const developerUnitPrice = getDollarAmount(
-          productPrices.yearly?.find(product => product.lookupKey?.includes(LookUpKeyType.DEVELOPERS))?.unitAmount,
+          productPrices.yearly?.find(product => product.metaData?.type?.includes(LookUpKeyType.DEVELOPERS))?.unitAmount,
           true
         )
+
         products.push({
           paymentFrequency: paymentFreq,
           description: 'common.subscriptions.usage.developers',
@@ -227,8 +237,17 @@ export function getSubscriptionBreakdownsByModuleAndFrequency({
           quantity: quantities?.featureFlag?.numberOfDevelopers || 0,
           unitPrice: developerUnitPrice
         })
+        const numberOfMauYearly = (quantities?.featureFlag?.numberOfMau || 0) * 1000
+
         const mauUnitPrice = getDollarAmount(
-          productPrices.yearly?.find(product => product.lookupKey?.includes(LookUpKeyType.MAU))?.unitAmount,
+          productPrices.yearly?.find(productPrice => {
+            const priceMin = strToNumber(productPrice.metaData?.min || '')
+            const priceMax = strToNumber(productPrice.metaData?.max || '')
+            const isValidRange = numberOfMauYearly >= priceMin && numberOfMauYearly <= priceMax
+            if (productPrice.metaData?.type?.includes(LookUpKeyType.MAU) && isValidRange) {
+              return productPrice
+            }
+          })?.unitAmount,
           true
         )
         products.push({
@@ -236,7 +255,7 @@ export function getSubscriptionBreakdownsByModuleAndFrequency({
           description: 'authSettings.costCalculator.maus',
           unitDescription: 'authSettings.costCalculator.mau.permMau',
           underComment: 'authSettings.costCalculator.mau.mMauFree',
-          quantity: quantities?.featureFlag?.numberOfMau || 0,
+          quantity: numberOfMauYearly,
           unitPrice: mauUnitPrice
         })
       }
@@ -245,3 +264,5 @@ export function getSubscriptionBreakdownsByModuleAndFrequency({
 
   return products
 }
+
+export const strToNumber = (str: string): number => Number.parseInt(str.replace(/,/g, ''))
