@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly infraInputs: string
+  readonly marginTop: string
   readonly workloadType: string
 }
 export default styles

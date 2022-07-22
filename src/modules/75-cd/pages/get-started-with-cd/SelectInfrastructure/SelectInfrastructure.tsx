@@ -19,7 +19,7 @@ import {
   FormInput,
   useToaster,
   PageSpinner,
-  getErrorInfoFromErrorObject
+  FormError
 } from '@harness/uicore'
 import type { FormikContextType, FormikProps } from 'formik'
 import { defaultTo, get, isEmpty, set } from 'lodash-es'
@@ -38,6 +38,8 @@ import {
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
+import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
 import { InfrastructureTypes, InfrastructureType } from '../DeployProvisioningWizard/Constants'
 import {
   SelectAuthenticationMethod,
@@ -47,13 +49,13 @@ import {
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import {
   cleanEnvironmentDataUtil,
-  defaultInitialAuthFormData,
   getUniqueEntityIdentifier,
   newEnvironmentState,
   PipelineRefPayload
 } from '../cdOnboardingUtils'
 import defaultCss from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 import css from './SelectInfrastructure.module.scss'
+
 export interface SelectInfrastructureRef {
   submitForm?: FormikProps<SelectInfrastructureInterface>['submitForm']
 }
@@ -93,8 +95,8 @@ const SelectInfrastructureRef = (
   const selectAuthenticationMethodRef = React.useRef<SelectAuthenticationMethodRef | null>(null)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getRBACErrorMessage } = useRBACError()
-
-  const { loading: createEnvLoading, mutate: createEnvironment } = useCreateEnvironmentV2({
+  const [showPageLoader, setShowPageLoader] = useState<boolean>(false)
+  const { mutate: createEnvironment } = useCreateEnvironmentV2({
     queryParams: {
       accountIdentifier: accountId
     }
@@ -105,6 +107,7 @@ const SelectInfrastructureRef = (
     if (validate && isEmpty(formikRef?.current?.errors)) {
       return true
     } else {
+      props.disableNextBtn()
       return false
     }
   }
@@ -136,19 +139,14 @@ const SelectInfrastructureRef = (
 
   const { showSuccess, showError, clear } = useToaster()
   const handleSubmit = async (values: SelectInfrastructureInterface): Promise<SelectInfrastructureInterface> => {
+    setShowPageLoader(true)
     const { envId, infraId, infraType, namespace, connectorIdentifier } = values || {}
 
     const environmentIdentifier = getUniqueEntityIdentifier(envId as string)
     const infraIdentifier = getUniqueEntityIdentifier(infraId as string)
     const updatedContextEnvironment = produce(newEnvironmentState.environment, draft => {
       set(draft, 'name', envId)
-      set(
-        draft,
-        'identifier',
-        // isEnvironmentNameUpdated ?
-        environmentIdentifier
-        // : get(environmentData, 'identifier')
-      )
+      set(draft, 'identifier', environmentIdentifier)
     })
     try {
       const cleanEnvironmentData = cleanEnvironmentDataUtil(updatedContextEnvironment as ServiceRequestDTO)
@@ -204,6 +202,7 @@ const SelectInfrastructureRef = (
             }
             if (infraResponse.status === 'SUCCESS') {
               props?.onSuccess?.(refsData)
+              setShowPageLoader(false)
               showSuccess(
                 getString('cd.infrastructure.created', {
                   identifier: infraResponse.data?.infrastructure?.identifier
@@ -215,7 +214,8 @@ const SelectInfrastructureRef = (
             }
           })
           .catch(e => {
-            showError(getErrorInfoFromErrorObject(e))
+            setShowPageLoader(false)
+            throw e
           })
 
         return Promise.resolve(values)
@@ -223,6 +223,7 @@ const SelectInfrastructureRef = (
         throw response
       }
     } catch (error: any) {
+      setShowPageLoader(false)
       showError(getRBACErrorMessage(error))
       return Promise.resolve({} as SelectInfrastructureInterface)
     }
@@ -230,26 +231,27 @@ const SelectInfrastructureRef = (
 
   const borderBottom = <div className={defaultCss.repoborderBottom} />
 
-  if (createEnvLoading) {
+  if (showPageLoader) {
     return <PageSpinner />
   }
 
   const validationSchema = Yup.object().shape({
-    infraType: Yup.string().required(
-      getString('common.getStarted.plsChoose', {
-        field: `${getString('infrastructureText')}`
-      })
-    ),
-    envId: Yup.string().required(
-      getString('common.validation.fieldIsRequired', { name: getString('cd.getStartedWithCD.envName') })
-    ),
-    infraId: Yup.string().required(
-      getString('common.validation.fieldIsRequired', { name: getString('infrastructureText') })
-    ),
-    namespace: Yup.string().required(
-      getString('common.validation.fieldIsRequired', { name: getString('common.namespace') })
-    ),
-    connectorName: Yup.string().required(getString('validation.nameRequired')),
+    envId: Yup.string()
+      .required(getString('common.validation.fieldIsRequired', { name: getString('cd.getStartedWithCD.envName') }))
+      .matches(regexIdentifier, getString('validation.validIdRegex'))
+      .notOneOf(illegalIdentifiers),
+    infraId: Yup.string()
+      .required(getString('common.validation.fieldIsRequired', { name: getString('infrastructureText') }))
+      .matches(regexIdentifier, getString('validation.validIdRegex'))
+      .notOneOf(illegalIdentifiers),
+    namespace: Yup.string()
+      .required(getString('common.validation.fieldIsRequired', { name: getString('common.namespace') }))
+      .matches(regexIdentifier, getString('validation.validIdRegex'))
+      .notOneOf(illegalIdentifiers),
+    connectorName: Yup.string()
+      .required(getString('validation.nameRequired'))
+      .matches(regexIdentifier, getString('validation.validIdRegex'))
+      .notOneOf(illegalIdentifiers),
     delegateType: Yup.string().required(
       getString('connectors.chooseMethodForConnection', {
         name: getString('connectors.k8sConnection')
@@ -262,7 +264,9 @@ const SelectInfrastructureRef = (
       <Text font={{ variation: FontVariation.H4 }}>{getString('cd.getStartedWithCD.workloadDeploy')}</Text>
       <Formik<SelectInfrastructureInterface>
         initialValues={{
-          ...defaultInitialAuthFormData(infrastructureData),
+          ...get(infrastructureData, 'data.connectorAuthValues'),
+          authType: defaultTo(get(infrastructureData, 'data.connectorAuthValues.authType'), AuthTypes.USER_PASSWORD),
+          delegateSelectors: [],
           infraType: defaultTo(get(infrastructureData, 'type'), ''),
           envId: defaultTo(get(environmentData, 'name'), ''),
           infraId: defaultTo(get(infrastructureData, 'name'), ''),
@@ -300,6 +304,15 @@ const SelectInfrastructureRef = (
                   }}
                 />
               </Container>
+              {formikProps.touched.infraType && !formikProps.values.infraType ? (
+                <FormError
+                  name={'infraType'}
+                  errorMessage={getString('common.getStarted.plsChoose', {
+                    field: `${getString('infrastructureText')}`
+                  })}
+                  className={css.marginTop}
+                />
+              ) : null}
               <Layout.Horizontal className={css.infraInputs}>
                 <FormInput.Text
                   tooltipProps={{ dataTooltipId: 'specifyYourEnvironment' }}
@@ -326,10 +339,7 @@ const SelectInfrastructureRef = (
               formikRef?.current?.values?.envId &&
               formikRef?.current?.values?.infraId &&
               formikRef?.current?.values?.namespace ? (
-                <Accordion
-                  className={defaultCss.accordion}
-                  activeId={infrastructureType ? 'authMethod' : 'setUpDelegate'}
-                >
+                <Accordion className={defaultCss.accordion} activeId={infrastructureType ? 'authMethod' : ''}>
                   <Accordion.Panel
                     id="authMethod"
                     summary={

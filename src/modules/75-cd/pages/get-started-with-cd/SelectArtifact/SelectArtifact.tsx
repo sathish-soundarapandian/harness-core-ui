@@ -21,7 +21,6 @@ import {
   PageSpinner
 } from '@harness/uicore'
 import type { FormikContextType, FormikProps } from 'formik'
-// import cx from 'classnames'
 import { cloneDeep, defaultTo, get, isEmpty, isEqual, omit, set } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import produce from 'immer'
@@ -82,7 +81,6 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
     ArtifactProviders.find((item: ArtifactType) => item.value === serviceData?.data?.artifactType)
   )
   const formikRef = useRef<FormikContextType<SelectArtifactInterface>>()
-  const [disableBtn, setDisableBtn] = useState<boolean>(false)
   const selectGitProviderRef = React.useRef<SelectGitProviderRef | null>(null)
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -214,7 +212,6 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
         set(draft, 'data.artifactType', values?.artifactType)
         set(draft, 'data.gitValues', gitValues)
         set(draft, 'data.manifestValues', manifestValues)
-        // set(draft, 'data.repoValues', values?.repository)
       })
 
       saveServiceData({ service: updatedContextService })
@@ -281,7 +278,6 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
   }, [get(serviceData, 'serviceDefinition.spec.manifests[0].manifest', {})])
 
   const validationSchema = Yup.object().shape({
-    artifactType: Yup.string().required(getString('validation.nameRequired')),
     identifier: Yup.string().required(getString('validation.nameRequired')),
     branch: Yup.string().when('gitFetchType', {
       is: 'Branch',
@@ -333,7 +329,6 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
           return (
             <Form>
               <Container padding={{ top: 'xxlarge', bottom: 'xxxlarge' }}>
-                {props.disableNextBtn()}
                 <CardSelect
                   cornerSelected={true}
                   data={ArtifactProviders}
@@ -388,8 +383,8 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
                         ref={selectGitProviderRef}
                         gitValues={get(serviceData, 'data.gitValues', {})}
                         connectionStatus={get(serviceData, 'data.gitConnectionStatus', TestStatus.NOT_INITIATED)}
-                        disableNextBtn={() => setDisableBtn(true)}
-                        enableNextBtn={() => setDisableBtn(false)}
+                        disableNextBtn={props.disableNextBtn}
+                        enableNextBtn={props.enableNextBtn}
                         selectedHosting={Hosting.SaaS}
                       ></SelectGitProvider>
                     }
@@ -414,8 +409,8 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
                           selectGitProviderRef.current?.values?.gitProvider?.type
                         }
                         onChange={onRepositoryChange}
-                        disableNextBtn={() => setDisableBtn(true)}
-                        enableNextBtn={() => setDisableBtn(false)}
+                        disableNextBtn={props.disableNextBtn}
+                        enableNextBtn={props.enableNextBtn}
                       ></SelectRepository>
                     }
                   />
@@ -437,8 +432,6 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
                       <ProvideManifest
                         formikProps={formikProps}
                         initialValues={get(serviceData, 'serviceDefinition.spec.manifests[0].manifest', {})}
-                        disableNextBtn={() => setDisableBtn(true)}
-                        enableNextBtn={() => setDisableBtn(disableBtn)}
                       />
                     }
                   />

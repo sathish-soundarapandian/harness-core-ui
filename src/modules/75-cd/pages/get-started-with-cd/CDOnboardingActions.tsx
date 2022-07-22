@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import { clone } from 'lodash-es'
 import { DefaultNewPipelineId } from '@templates-library/components/TemplateStudio/PipelineTemplateCanvas/PipelineTemplateCanvasWrapper'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
@@ -75,7 +82,6 @@ const success = (response: ActionResponse): ActionReturnType => ({ type: CDOnboa
 const error = (response: ActionResponse): ActionReturnType => ({ type: CDOnboardingActions.Error, response })
 
 export const CDOnboardingContextActions = {
-  // dbInitialized,
   initialized,
   updatePipeline,
   updateService,

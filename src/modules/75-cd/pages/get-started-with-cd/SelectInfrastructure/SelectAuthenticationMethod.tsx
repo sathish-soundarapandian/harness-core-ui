@@ -20,7 +20,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Form, FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import type { SelectInfrastructureInterface } from './SelectInfrastructure'
 import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import { buildKubPayload, DelegateTypes } from '@connectors/pages/connectors/utils/ConnectorUtils'
@@ -39,6 +38,7 @@ import useCreateEditConnector, { BuildPayloadProps } from '@connectors/hooks/use
 import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
 import { CLIENT_KEY_ALGO_OPTIONS } from '../DeployProvisioningWizard/Constants'
 import { getUniqueEntityIdentifier } from '../cdOnboardingUtils'
+import type { SelectInfrastructureInterface } from './SelectInfrastructure'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
@@ -271,7 +271,7 @@ const SelectAuthenticationMethodRef = (
     }
   }
 
-  const setForwardRef = ({}: Omit<SelectAuthenticationMethodRef, 'validate'>): void => {
+  const setForwardRef = (): void => {
     if (!forwardRef) {
       return
     }
@@ -287,7 +287,7 @@ const SelectAuthenticationMethodRef = (
 
   useEffect(() => {
     if (formikProps?.values) {
-      setForwardRef({})
+      setForwardRef()
     }
   }, [formikProps?.values])
 

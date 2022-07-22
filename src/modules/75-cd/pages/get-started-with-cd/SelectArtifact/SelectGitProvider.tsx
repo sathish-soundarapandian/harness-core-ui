@@ -90,7 +90,6 @@ export type SelectGitProviderForwardRef =
   | null
 
 interface SelectGitProviderProps {
-  // className?: string
   gitValues?: SelectGitProviderInterface
   connectionStatus?: TestStatus
   selectedHosting?: Hosting

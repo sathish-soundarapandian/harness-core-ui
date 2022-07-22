@@ -6,7 +6,16 @@
  */
 
 import React, { useState } from 'react'
-import { Container, Button, ButtonVariation, Layout, MultiStepProgressIndicator, PageSpinner } from '@harness/uicore'
+import {
+  Container,
+  Button,
+  ButtonVariation,
+  Layout,
+  MultiStepProgressIndicator,
+  PageSpinner,
+  useToaster,
+  getErrorInfoFromErrorObject
+} from '@harness/uicore'
 import { get } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -26,10 +35,10 @@ import { DEFAULT_PIPELINE_PAYLOAD, getUniqueEntityIdentifier, PipelineRefPayload
 import css from './DeployProvisioningWizard.module.scss'
 
 export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> = props => {
-  const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.SelectWorkload } = props
+  const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.SelectInfrastructure } = props
   const { getString } = useStrings()
   const [disableBtn, setDisableBtn] = useState<boolean>(false)
-
+  const { showError } = useToaster()
   const [currentWizardStepId, setCurrentWizardStepId] =
     useState<DeployProvisiongWizardStepId>(lastConfiguredWizardStepId)
 
@@ -112,6 +121,8 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
         }
       })
     } catch (e) {
+      setShowPageLoader(false)
+      showError(getErrorInfoFromErrorObject(e))
       setDisableBtn(false)
     }
   }
@@ -198,6 +209,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
         stepRender: (
           <SelectInfrastructure
             onSuccess={(data: PipelineRefPayload) => {
+              setShowPageLoader(true)
               setupPipeline(data)
               updateStepStatus(
                 [
@@ -221,7 +233,6 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
         onClickNext: async () => {
           const { submitForm } = selectInfrastructureRef.current || {}
           try {
-            setShowPageLoader(true)
             submitForm?.()
           } catch (_e) {
             // catch any errors and do nothing

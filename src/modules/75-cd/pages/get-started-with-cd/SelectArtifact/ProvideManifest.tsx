@@ -17,8 +17,6 @@ import type { SelectArtifactInterface } from './SelectArtifact'
 
 interface ProvideManifestProps {
   initialValues: ManifestConfig
-  disableNextBtn: () => void
-  enableNextBtn: () => void
   formikProps: FormikProps<SelectArtifactInterface>
 }
 

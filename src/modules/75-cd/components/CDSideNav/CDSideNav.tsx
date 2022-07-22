@@ -65,7 +65,7 @@ export default function CDSideNav(): React.ReactElement {
   const history = useHistory()
   const module = 'cd'
   const { updateAppStore, selectedProject } = useAppStore()
-  const { ARGO_PHASE1, ARGO_PHASE2_MANAGED } = useFeatureFlags()
+  const { ARGO_PHASE1, ARGO_PHASE2_MANAGED, CD_ONBOARDING_ENABLED } = useFeatureFlags()
   // const CIE_HOSTED_BUILDS = true
   const CI_OVERVIEW_PAGE = true
   const { getString } = useStrings()
@@ -86,13 +86,9 @@ export default function CDSideNav(): React.ReactElement {
   })
 
   React.useEffect(() => {
-    if (
-      // CIE_HOSTED_BUILDS &&
-      selectedProject?.identifier
-    ) {
+    if (CD_ONBOARDING_ENABLED && selectedProject?.identifier) {
       fetchPipelines()
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedProject?.identifier])
 

@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import { defaultTo, merge } from 'lodash-es'
 import React from 'react'
 import {
@@ -34,9 +41,9 @@ interface FetchServiceUnboundProps {
 export interface CDOnboardingContextInterface {
   state: CDOnboardingReducerState
   fetchService: (args: FetchServiceUnboundProps) => Promise<void>
-  saveServiceData: any //(args: FetchServiceUnboundProps) => Promise<void>
-  saveEnvironmentData: any //(args: FetchServiceUnboundProps) => Promise<void>
-  saveInfrastructureData: any //(args: FetchServiceUnboundProps) => Promise<void>
+  saveServiceData: any
+  saveEnvironmentData: any
+  saveInfrastructureData: any
 }
 
 export const CDOnboardingContext = React.createContext<CDOnboardingContextInterface>({
@@ -111,24 +118,6 @@ export function CDOnboardingProvider({
       const serviceYaml = yamlParse(defaultTo(serviceDetails.yaml, ''))
       const serviceData = merge(serviceYaml, initialServiceState)
 
-      //   const defaultPipeline = {
-      //     identifier: defaultTo(serviceDetails.identifier, DefaultNewPipelineId),
-      //     name: serviceDetails.name as string,
-      //     description: serviceDetails.description,
-      //     tags: serviceDetails.tags
-      //   }
-      //   const refetchedPipeline = produce({ ...defaultPipeline }, draft => {
-      //     if (!isEmpty(serviceData.service.serviceDefinition)) {
-      //       set(draft, 'stages[0].stage.name', DefaultNewStageName)
-      //       set(draft, 'stages[0].stage.identifier', DefaultNewStageId)
-      //       set(
-      //         draft,
-      //         'stages[0].stage.spec.serviceConfig.serviceDefinition',
-      //         cloneDeep(serviceData.service.serviceDefinition)
-      //       )
-      //       set(draft, 'stages[0].stage.spec.serviceConfig.serviceRef', serviceDetails.identifier)
-      //     }
-      //   })
       dispatch(
         CDOnboardingContextActions.updateService({
           service: serviceData,
@@ -144,8 +133,6 @@ export function CDOnboardingProvider({
           environment: undefined
         })
       )
-      //   dispatch(CDOnboardingContextActions.initialized())
-      //   onUpdatePipeline?.(refetchedPipeline as PipelineInfoConfig)
     }
   }
   const saveServiceData = (serviceObj: { service: any; serviceResponse: ServiceResponseDTO }): any => {
@@ -196,7 +183,6 @@ export function CDOnboardingProvider({
 }
 
 export function useCDOnboardingContext(): CDOnboardingContextInterface {
-  // disabling this because this the definition of usePipelineContext
   // eslint-disable-next-line no-restricted-syntax
   return React.useContext(CDOnboardingContext)
 }

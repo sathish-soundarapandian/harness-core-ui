@@ -19,7 +19,8 @@ import {
   FormikForm as Form,
   FormInput,
   PageSpinner,
-  useToaster
+  useToaster,
+  FormError
 } from '@harness/uicore'
 import type { FormikContextType, FormikProps } from 'formik'
 import { get, isEmpty, set } from 'lodash-es'
@@ -30,6 +31,7 @@ import { useStrings } from 'framework/strings'
 import { NGServiceConfig, ServiceRequestDTO, useCreateServiceV2 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
 import {
   WorkloadType,
   deploymentTypes,
@@ -157,17 +159,10 @@ const SelectWorkloadRef = (props: SelectWorkloadProps, forwardRef: SelectWorkloa
   }
 
   const validationSchema = Yup.object().shape({
-    workloadType: Yup.string().required(getString('cd.workloadRequired')),
-    serviceDeploymentType: Yup.string().required(
-      getString('fieldRequired', {
-        field: getString('deploymentTypeText')
-      })
-    ),
-    serviceRef: Yup.string().required(
-      getString('fieldRequired', {
-        field: getString('cd.serviceName')
-      })
-    )
+    serviceRef: Yup.string()
+      .required(getString('validation.identifierRequired'))
+      .matches(regexIdentifier, getString('validation.validIdRegex'))
+      .notOneOf(illegalIdentifiers)
   })
 
   return (
@@ -209,7 +204,14 @@ const SelectWorkloadRef = (props: SelectWorkloadProps, forwardRef: SelectWorkloa
                     setWorkloadType(item)
                   }}
                 />
-
+                {formikProps.touched.workloadType && !formikProps.values.workloadType ? (
+                  <FormError
+                    name={'workloadType'}
+                    errorMessage={getString('common.getStarted.plsChoose', {
+                      field: `${getString('infrastructureText')}`
+                    })}
+                  />
+                ) : null}
                 <Container className={cx({ [css.borderBottom]: workloadType })} />
               </Container>
 
@@ -240,7 +242,14 @@ const SelectWorkloadRef = (props: SelectWorkloadProps, forwardRef: SelectWorkloa
                         setServiceDeploymnetType(item)
                       }}
                     />
-
+                    {formikProps.touched.serviceDeploymentType && !formikProps.values.serviceDeploymentType ? (
+                      <FormError
+                        name={'serviceDeploymentType'}
+                        errorMessage={getString('common.getStarted.plsChoose', {
+                          field: `${getString('infrastructureText')}`
+                        })}
+                      />
+                    ) : null}
                     {serviceDeploymentType ? (
                       <>
                         <Container className={css.borderBottom} />
