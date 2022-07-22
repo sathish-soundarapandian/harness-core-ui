@@ -225,8 +225,8 @@ export const getFullRepoName = (repository: UserRepoResponse): string => {
   return namespace && repositoryName ? `${namespace}/${repositoryName}` : repositoryName ?? ''
 }
 
-export const DELEGATE_INSTALLATION_REFETCH_DELAY = 10000
-export const MAX_TIMEOUT_DELEGATE_INSTALLATION = 1000 * 60 * 10 // ten minutes
+export const DELEGATE_INSTALLATION_REFETCH_DELAY = 20 * 1000 // 20 secs
+export const MAX_TIMEOUT_DELEGATE_INSTALLATION = 1000 * 60 * 10 // 10 minutes
 
 export const BitbucketPRTriggerActions: BitbucketPRSpec['actions'] = ['Create', 'Update']
 
