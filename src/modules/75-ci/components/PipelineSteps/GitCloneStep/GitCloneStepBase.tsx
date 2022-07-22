@@ -37,7 +37,7 @@ import { CIStepOptionalConfig } from '../CIStep/CIStepOptionalConfig'
 import { transformValuesFieldsConfig, getEditViewValidateFieldsConfig } from './GitCloneStepFunctionConfigs'
 import type { GitCloneStepProps, GitCloneStepData, GitCloneStepDataUI } from './GitCloneStep'
 import { CIStep } from '../CIStep/CIStep'
-import { useGetPropagatedStageById } from '../CIStep/StepUtils'
+import { getIsRepoNameRequired, useGetPropagatedStageById } from '../CIStep/StepUtils'
 import type { CIBuildInfrastructureType } from '../../../constants/Constants'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -95,7 +95,7 @@ export const GitCloneStepBase = (
       refetch()
     }
   }, [initialValues.spec?.connectorRef])
-
+  // should move below to render
   React.useEffect(() => {
     if (connector?.data?.connector) {
       setConnectionType(
@@ -128,7 +128,12 @@ export const GitCloneStepBase = (
         onChange?.(schemaValues)
         return validate(
           valuesToValidate,
-          getEditViewValidateFieldsConfig,
+          getEditViewValidateFieldsConfig({
+            isRepoNameRequired: getIsRepoNameRequired({
+              connectorRef: valuesToValidate.spec?.connectorRef,
+              connectorType: connector?.data?.connector?.spec?.type
+            })
+          }),
           {
             initialValues,
             steps: currentStage?.stage?.spec?.execution?.steps || {},

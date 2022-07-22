@@ -65,7 +65,7 @@ export const transformValuesFieldsConfig = [
   }
 ]
 
-export const getEditViewValidateFieldsConfig = [
+export const getEditViewValidateFieldsConfig = ({ isRepoNameRequired = false }: { isRepoNameRequired?: boolean }) => [
   {
     name: 'identifier',
     type: ValidationFieldTypes.Identifier,
@@ -83,6 +83,12 @@ export const getEditViewValidateFieldsConfig = [
     type: ValidationFieldTypes.Text,
     label: 'pipelineSteps.connectorLabel',
     isRequired: true
+  },
+  {
+    name: 'spec.repoName',
+    type: ValidationFieldTypes.Text,
+    label: 'common.repositoryName',
+    isRequired: isRepoNameRequired
   },
   {
     name: 'spec.build',

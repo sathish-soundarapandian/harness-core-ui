@@ -21,18 +21,17 @@ import { GitCloneStepInputSet } from './GitCloneStepInputSet'
 import { GitCloneStepVariables, GitCloneStepVariablesProps } from './GitCloneStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './GitCloneStepFunctionConfigs'
 
+type BuildInterface = {
+  type: string
+  spec: {
+    branch?: string
+    tag?: string
+  }
+}
 export interface GitCloneStepSpec {
   connectorRef: string
   repoName?: string
-  build:
-    | {
-        type: string
-        spec: {
-          branch?: string
-          tag?: string
-        }
-      }
-    | string // hardcoded <+input> when connectorRef is a runtimeinput
+  build: BuildInterface | string // string when hardcoded <+input>
   cloneDirectory: string
   runAsUser?: string
   resources?: Resources

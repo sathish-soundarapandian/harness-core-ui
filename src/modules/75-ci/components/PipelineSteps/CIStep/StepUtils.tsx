@@ -32,9 +32,11 @@ import {
   getBuildTypeInputLabels,
   CodeBaseType
 } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
+import { ConnectionType } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
 import { FormMultiTypeRadioGroupField } from '@common/components/MultiTypeRadioGroup/MultiTypeRadioGroup'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 
 export const useGetPropagatedStageById = (
   stageId: string
@@ -211,3 +213,11 @@ export const renderBuild = ({
     </Container>
   )
 }
+
+export const getIsRepoNameRequired = ({
+  connectorRef,
+  connectorType
+}: {
+  connectorRef?: string | ConnectorSelectedValue
+  connectorType?: string
+}): boolean => !isRuntimeInput(connectorRef) && connectorType === ConnectionType.Account
