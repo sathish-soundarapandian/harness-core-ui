@@ -4221,13 +4221,13 @@ export type TagBuildSpec = BuildSpec & {
 export type TemplateFilterProperties = FilterProperties & {
   childTypes?: string[]
   description?: string
-  templateEntityTypes?: ('Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'Script')[]
+  templateEntityTypes?: ('Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager')[]
   templateIdentifiers?: string[]
   templateNames?: string[]
 }
 
 export interface TemplateInfo {
-  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'Script'
+  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager'
   templateIdentifier?: string
   versionLabel?: string
 }
@@ -4266,7 +4266,7 @@ export interface TemplateResponse {
   tags?: {
     [key: string]: string
   }
-  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'Script'
+  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager'
   templateScope?: 'account' | 'org' | 'project' | 'unknown'
   version?: number
   versionLabel?: string

@@ -55,7 +55,7 @@ export const templateColorStyleMap: { [keyof in TemplateType]: React.CSSProperti
     stroke: '#D4E7D1',
     fill: '#E4F7E1'
   },
-  [TemplateType.Script]: {
+  [TemplateType.SecretManager]: {
     color: '#CDF4FE',
     stroke: '#A3E9FF',
     fill: '#CDF4FE'
@@ -103,7 +103,7 @@ export const templateStudioColorStyleMap: { [keyof in TemplateType]: React.CSSPr
     stroke: '#D4E7D1',
     fill: '#E4F7E1'
   },
-  [TemplateType.Script]: {
+  [TemplateType.SecretManager]: {
     color: '#CDF4FE',
     stroke: '#A3E9FF',
     fill: '#CDF4FE'
@@ -153,7 +153,7 @@ export const getIconForTemplate = (
 ): IconName | undefined => {
   const templateTye =
     (template as TemplateSummaryResponse)?.templateEntityType || (template as NGTemplateInfoConfigWithGitDetails)?.type
-  if (templateTye === TemplateType.Script) {
+  if (templateTye === TemplateType.SecretManager) {
     return 'script'
   } else if (templateTye === TemplateType.Pipeline) {
     return 'pipeline'

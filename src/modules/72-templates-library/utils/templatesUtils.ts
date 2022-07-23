@@ -18,7 +18,7 @@ export enum TemplateType {
   StepGroup = 'StepGroup',
   Execution = 'Execution',
   MonitoredService = 'MonitoredService',
-  Script = 'Script'
+  SecretManager = 'SecretManager'
 }
 
 export const getAllowedTemplateTypes = (
@@ -66,7 +66,7 @@ export const getAllowedTemplateTypes = (
       ? [
           {
             label: getString('script'),
-            value: TemplateType.Script,
+            value: TemplateType.SecretManager,
             disabled: !scriptTemplateEnabled
           }
         ]
