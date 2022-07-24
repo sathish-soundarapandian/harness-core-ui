@@ -9,8 +9,19 @@ import React from 'react'
 import { fireEvent, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
-import { SelectWorkload } from '../SelectWorkload/SelectWorkload'
-import { deploymentTypes, WorkloadProviders } from '../DeployProvisioningWizard/Constants'
+import { SelectWorkload } from '../SelectWorkload'
+import {
+  deploymentTypes,
+  DeployProvisiongWizardStepId,
+  WorkloadProviders
+} from '../../DeployProvisioningWizard/Constants'
+import { DeployProvisioningWizard } from '../../DeployProvisioningWizard/DeployProvisioningWizard'
+
+jest.mock('services/cd-ng', () => {
+  return {
+    useCreateServiceV2: jest.fn(() => ({ data: null }))
+  }
+})
 const pathParams = { accountId: 'accountId', orgIdentifier: 'orgId', projectIdentifier: 'projectId' }
 const renderComponent = () => {
   return (
@@ -54,5 +65,26 @@ describe('Test SelectWorkload component', () => {
 
     //Renders service name input box
     expect(container.querySelector('span[data-tooltip-id="specifyYourService"]')).toBeTruthy()
+  })
+
+  test('Testing service api call failure', () => {
+    const { container, getByText } = render(
+      <TestWrapper path={routes.toGetStartedWithCD({ ...pathParams, module: 'cd' })} pathParams={pathParams}>
+        <DeployProvisioningWizard lastConfiguredWizardStepId={DeployProvisiongWizardStepId.SelectWorkload} />
+      </TestWrapper>
+    )
+    const workloadProviderCards = Array.from(container.querySelectorAll('div[class*="bp3-card"]')) as HTMLElement[]
+    fireEvent.click(workloadProviderCards[0])
+
+    const serviceDeploymentTypeCards = Array.from(
+      container.querySelectorAll('div[class*="serviceDeploymentTypeCard"]')
+    ) as HTMLElement[]
+
+    fireEvent.click(serviceDeploymentTypeCards[0])
+    try {
+      fireEvent.click(getByText('next: cd.getStartedWithCD.configureRepo'))
+    } catch (e) {
+      expect(e).toBeTruthy()
+    }
   })
 })

@@ -6,12 +6,15 @@
  */
 
 import React from 'react'
-import { fireEvent, render } from '@testing-library/react'
+import { act, fireEvent, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
-import { ArtifactProviders } from '../DeployProvisioningWizard/Constants'
-import { SelectArtifact } from '../SelectArtifact/SelectArtifact'
+import { SelectArtifact } from '../SelectArtifact'
+import { ArtifactProviders, DeployProvisiongWizardStepId } from '../../DeployProvisioningWizard/Constants'
+import { DeployProvisioningWizard } from '../../DeployProvisioningWizard/DeployProvisioningWizard'
+
 const pathParams = { accountId: 'accountId', orgIdentifier: 'orgId', projectIdentifier: 'projectId' }
+
 const renderComponent = () => {
   return (
     <TestWrapper
@@ -33,6 +36,21 @@ describe('Test SelectArtifact component', () => {
     const { container } = render(renderComponent())
     const artifactTypes = Array.from(container.querySelectorAll('div[class*="bp3-card"]')) as HTMLElement[]
     expect(artifactTypes.length).toBe(ArtifactProviders.length)
+  })
+
+  test('Shows error if no artifcat type is chosen', async () => {
+    const { container, getByText } = render(
+      <TestWrapper path={routes.toGetStartedWithCD({ ...pathParams, module: 'cd' })} pathParams={pathParams}>
+        <DeployProvisioningWizard lastConfiguredWizardStepId={DeployProvisiongWizardStepId.SelectArtifact} />
+      </TestWrapper>
+    )
+
+    const nextBtn = getByText('cd.getStartedWithCD.manifestFile')
+    await act(async () => {
+      fireEvent.click(nextBtn)
+    })
+    expect(container.querySelector('span[class*="FormError--error"]')).toBeInTheDocument()
+    expect(getByText('common.getStarted.plsChoose')).toBeTruthy()
   })
 
   test('Renders accordion on selecting artifact', () => {
