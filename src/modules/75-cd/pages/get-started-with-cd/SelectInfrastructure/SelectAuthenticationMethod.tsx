@@ -205,6 +205,7 @@ const SelectAuthenticationMethodRef = (
     if (validateAuthMethodSetup()) {
       setTestConnectionStatus(TestStatus.NOT_INITIATED)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formikProps?.values?.delegateType])
 
   const TestConnection = (): React.ReactElement => {
@@ -289,6 +290,7 @@ const SelectAuthenticationMethodRef = (
     if (formikProps?.values) {
       setForwardRef()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formikProps?.values])
 
   const authOptions: Array<AuthOptionInterface> = [
@@ -407,7 +409,7 @@ const SelectAuthenticationMethodRef = (
           return <></>
       }
     },
-    []
+    [getString]
   )
 
   return (

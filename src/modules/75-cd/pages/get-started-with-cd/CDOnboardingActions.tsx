@@ -8,10 +8,12 @@
 import { clone } from 'lodash-es'
 import { DefaultNewPipelineId } from '@templates-library/components/TemplateStudio/PipelineTemplateCanvas/PipelineTemplateCanvasWrapper'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
-import type { ServiceResponseDTO } from 'services/cd-ng'
+import type { EnvironmentRequestDTO } from 'services/cd-ng'
 import {
   newServiceState as initialServiceState,
-  newEnvironmentState as initialEnvironmentState
+  newEnvironmentState as initialEnvironmentState,
+  ServiceDataType,
+  InfrastructureDataType
 } from './cdOnboardingUtils'
 
 export const DefaultPipeline: PipelineInfoConfig = {
@@ -21,11 +23,9 @@ export const DefaultPipeline: PipelineInfoConfig = {
 
 export interface CDOnboardingReducerState {
   pipeline?: PipelineInfoConfig
-  service?: any
-  serviceResponse: ServiceResponseDTO
-  environment?: any
-  infrastructure?: any
-  environmentResponse: ServiceResponseDTO
+  service?: ServiceDataType
+  environment?: EnvironmentRequestDTO
+  infrastructure?: InfrastructureDataType
   pipelineIdentifier: string
   error?: string
   schemaErrors: boolean
@@ -51,11 +51,9 @@ export interface ActionResponse {
   isUpdated?: boolean
   pipeline?: PipelineInfoConfig
   pipelineIdentifier?: string
-  service?: any
-  environment?: any
-  infrastructure?: any
-  serviceResponse?: ServiceResponseDTO
-  environmentResponse?: any
+  service?: ServiceDataType
+  environment?: EnvironmentRequestDTO
+  infrastructure?: InfrastructureDataType
 }
 
 export interface ActionReturnType {
@@ -95,11 +93,9 @@ export const CDOnboardingContextActions = {
 export const initialState: CDOnboardingReducerState = {
   pipeline: { ...DefaultPipeline },
   pipelineIdentifier: DefaultNewPipelineId,
-  service: initialServiceState.service,
-  serviceResponse: {},
+  service: initialServiceState,
   environment: initialEnvironmentState.environment,
   infrastructure: initialEnvironmentState.infrastructure,
-  environmentResponse: {},
   schemaErrors: false,
   isLoading: false,
   isUpdated: false,
@@ -124,16 +120,12 @@ export const CDOnboardingReducer = (state = initialState, data: ActionReturnType
       return {
         ...state,
         isUpdated: response?.isUpdated ?? true,
-        service: response?.service ? clone(response?.service) : state.service,
-        serviceResponse: response?.serviceResponse ? clone(response?.serviceResponse) : state.serviceResponse
+        service: response?.service ? clone(response?.service) : state.service
       }
     case CDOnboardingActions.UpdateEnvironment:
       return {
         ...state,
-        environment: response?.environment ? clone(response?.environment) : state.environment,
-        environmentResponse: response?.environmentResponse
-          ? clone(response?.environmentResponse)
-          : state.environmentResponse
+        environment: response?.environment ? clone(response?.environment) : state.environment
       }
     case CDOnboardingActions.UpdateInfrastructure:
       return {

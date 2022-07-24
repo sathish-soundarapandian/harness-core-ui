@@ -14,9 +14,16 @@ import type {
   ConnectorRequestBody,
   EnvironmentRequestDTO,
   EnvironmentResponseDTO,
+  Infrastructure,
+  InfrastructureRequestDTO,
+  NGServiceV2InfoConfig,
   ServiceDefinition,
-  ServiceRequestDTO
+  ServiceRequestDTO,
+  UserRepoResponse
 } from 'services/cd-ng'
+import type { TestStatus } from '@common/components/TestConnectionWidget/TestConnectionWidget'
+import type { SelectGitProviderInterface } from './SelectArtifact/SelectGitProvider'
+import type { SelectAuthenticationMethodInterface } from './SelectInfrastructure/SelectAuthenticationMethod'
 
 export interface PipelineRefPayload {
   serviceRef: string
@@ -32,19 +39,31 @@ export const DefaultNewServiceId = '-1'
 const DEFAULT_STAGE_ID = 'Stage'
 const DEFAULT_STAGE_TYPE = 'Deployment'
 
+export interface ServiceData {
+  workloadType: string
+  artifactType: string
+  gitValues: SelectGitProviderInterface
+  gitConnectionStatus: TestStatus
+  repoValues: UserRepoResponse
+}
+
+export type ServiceDataType = NGServiceV2InfoConfig & { data: ServiceData }
+export type InfrastructureDataType = InfrastructureRequestDTO & {
+  infrastructureDefinition: Infrastructure
+  data?: SelectAuthenticationMethodInterface
+}
+
 export const newServiceState = {
-  service: {
-    name: 'sample_service',
-    identifier: 'sample_service',
-    description: '',
-    tags: {},
-    gitOpsEnabled: false,
-    serviceDefinition: {
-      type: '' as ServiceDefinition['type'],
-      spec: {}
-    },
-    data: {}
-  }
+  name: 'sample_service',
+  identifier: 'sample_service',
+  description: '',
+  tags: {},
+  gitOpsEnabled: false,
+  serviceDefinition: {
+    type: '' as ServiceDefinition['type'],
+    spec: {}
+  },
+  data: {} as ServiceData
 }
 
 export const newEnvironmentState = {
@@ -60,16 +79,17 @@ export const newEnvironmentState = {
     identifier: 'sample_infrastructure',
     description: '',
     tags: {},
-    type: '', //infraType
+    type: '' as InfrastructureRequestDTO['type'],
     environmentRef: '',
     infrastructureDefinition: {
       spec: {
         connectorRef: '',
         namespace: '',
         releaseName: 'release-<+INFRA_KEY>'
-      }
+      },
+      type: '' as InfrastructureRequestDTO['type']
     },
-    data: {}
+    data: {} as SelectAuthenticationMethodInterface
   }
 }
 

@@ -27,7 +27,7 @@ import produce from 'immer'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
-import { ManifestConfigWrapper, NGServiceConfig, UserRepoResponse, useUpdateServiceV2 } from 'services/cd-ng'
+import { ManifestConfigWrapper, UserRepoResponse, useUpdateServiceV2 } from 'services/cd-ng'
 import { GitRepoName, ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
@@ -40,7 +40,7 @@ import { SelectGitProvider } from './SelectGitProvider'
 import { SelectRepository } from './SelectRepository'
 import { ProvideManifest } from './ProvideManifest'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
-import { getStoreType } from '../cdOnboardingUtils'
+import { getStoreType, ServiceDataType } from '../cdOnboardingUtils'
 import css from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
 export interface SelectArtifactRef {
@@ -102,12 +102,12 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
     const gitTestConnectionStatus = isEqual(get(serviceData, 'data.gitValues'), gitValues)
       ? get(serviceData, 'data.gitConnectionStatus')
       : selectGitProviderRef.current?.testConnectionStatus
-    const updatedContextService = produce(serviceData as NGServiceConfig, draft => {
+    const updatedContextService = produce(serviceData as ServiceDataType, draft => {
       set(draft, 'data.gitValues', gitValues)
       set(draft, 'data.manifestValues', manifestValues)
       set(draft, 'data.gitConnectionStatus', gitTestConnectionStatus)
     })
-    saveServiceData({ service: updatedContextService })
+    saveServiceData(updatedContextService)
     if (formikRef.current?.values) {
       if (!forwardRef) {
         return
@@ -207,14 +207,14 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
       const connectionType = GitRepoName.Account
       // setting default value
 
-      const updatedContextService = produce(serviceData as NGServiceConfig, draft => {
+      const updatedContextService = produce(serviceData as ServiceDataType, draft => {
         set(draft, 'serviceDefinition.spec.manifests[0]', getManifestDetails())
         set(draft, 'data.artifactType', values?.artifactType)
         set(draft, 'data.gitValues', gitValues)
         set(draft, 'data.manifestValues', manifestValues)
       })
 
-      saveServiceData({ service: updatedContextService })
+      saveServiceData(updatedContextService)
 
       const serviceBody = { service: { ...omit(cloneDeep(updatedContextService), 'data') } }
       if (isEqual(serviceBody, { service: { ...omit(serviceData, 'data') } })) {
@@ -229,9 +229,7 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
       }
 
       const response = await updateService(body)
-      if (response.status === 'SUCCESS') {
-        saveServiceData({ serviceResponse: response })
-      } else {
+      if (response.status !== 'SUCCESS') {
         throw response
       }
       showSuccess('Service updated successfully')
@@ -306,13 +304,13 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
     return <PageSpinner />
   }
 
-  const onRepositoryChange = async (repository: UserRepoResponse) => {
+  const onRepositoryChange = async (repository: UserRepoResponse): Promise<void> => {
     if (repository) {
       formikRef.current?.setFieldValue('repository', repository)
-      const updatedContextService = produce(serviceData as NGServiceConfig, draft => {
+      const updatedContextService = produce(serviceData as ServiceDataType, draft => {
         set(draft, 'data.repoValues', repository)
       })
-      await saveServiceData({ service: updatedContextService })
+      await saveServiceData(updatedContextService)
     }
   }
   return (

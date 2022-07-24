@@ -7,12 +7,7 @@
 
 import { defaultTo, merge } from 'lodash-es'
 import React from 'react'
-import {
-  EnvironmentResponseDTO,
-  getServiceV2Promise,
-  GetServiceV2QueryParams,
-  ServiceResponseDTO
-} from 'services/cd-ng'
+import { EnvironmentRequestDTO, getServiceV2Promise, GetServiceV2QueryParams, ServiceResponseDTO } from 'services/cd-ng'
 import type { GetPipelineQueryParams } from 'services/pipeline-ng'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
@@ -24,7 +19,7 @@ import {
   CDOnboardingReducerState,
   initialState
 } from './CDOnboardingActions'
-import { newServiceState as initialServiceState } from './cdOnboardingUtils'
+import { InfrastructureDataType, newServiceState as initialServiceState, ServiceDataType } from './cdOnboardingUtils'
 
 interface FetchServiceBoundProps {
   dispatch: React.Dispatch<ActionReturnType>
@@ -41,9 +36,9 @@ interface FetchServiceUnboundProps {
 export interface CDOnboardingContextInterface {
   state: CDOnboardingReducerState
   fetchService: (args: FetchServiceUnboundProps) => Promise<void>
-  saveServiceData: any
-  saveEnvironmentData: any
-  saveInfrastructureData: any
+  saveServiceData: (data: ServiceDataType) => void
+  saveEnvironmentData: (data: EnvironmentRequestDTO) => void
+  saveInfrastructureData: (data: InfrastructureDataType) => void
 }
 
 export const CDOnboardingContext = React.createContext<CDOnboardingContextInterface>({
@@ -135,31 +130,17 @@ export function CDOnboardingProvider({
       )
     }
   }
-  const saveServiceData = (serviceObj: { service: any; serviceResponse: ServiceResponseDTO }): any => {
-    dispatch(
-      CDOnboardingContextActions.updateService({
-        service: serviceObj.service,
-        serviceResponse: serviceObj.serviceResponse
-      })
-    )
-  }
+  const saveServiceData = React.useCallback((data: ServiceDataType) => {
+    dispatch(CDOnboardingContextActions.updateService({ service: data }))
+  }, [])
 
-  const saveEnvironmentData = (envObj: { environment: any; environmentResponse: EnvironmentResponseDTO }): any => {
-    dispatch(
-      CDOnboardingContextActions.updateEnvironment({
-        environment: envObj.environment,
-        environmentResponse: envObj.environmentResponse
-      })
-    )
-  }
+  const saveEnvironmentData = React.useCallback((data: EnvironmentRequestDTO) => {
+    dispatch(CDOnboardingContextActions.updateEnvironment({ environment: data }))
+  }, [])
 
-  const saveInfrastructureData = (infraObj: { infrastructure: any }): any => {
-    dispatch(
-      CDOnboardingContextActions.updateInfrastructure({
-        infrastructure: infraObj.infrastructure
-      })
-    )
-  }
+  const saveInfrastructureData = React.useCallback((data: InfrastructureDataType) => {
+    dispatch(CDOnboardingContextActions.updateInfrastructure({ infrastructure: data }))
+  }, [])
 
   const fetchService = _fetchService.bind(null, {
     dispatch,

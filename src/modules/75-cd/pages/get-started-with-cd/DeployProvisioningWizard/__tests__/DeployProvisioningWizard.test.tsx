@@ -6,8 +6,8 @@
  */
 
 import React from 'react'
-import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { fireEvent, render, act, waitFor, findByText } from '@testing-library/react'
+import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { environments, mockData, mockedDelegates, mockSecretList, repos, services } from './mocks'

@@ -29,9 +29,9 @@ import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
 
 import {
+  EnvironmentRequestDTO,
   InfrastructureRequestDTO,
   InfrastructureRequestDTORequestBody,
-  ServiceRequestDTO,
   useCreateEnvironmentV2,
   useCreateInfrastructure
 } from 'services/cd-ng'
@@ -149,16 +149,12 @@ const SelectInfrastructureRef = (
       set(draft, 'identifier', environmentIdentifier)
     })
     try {
-      const cleanEnvironmentData = cleanEnvironmentDataUtil(updatedContextEnvironment as ServiceRequestDTO)
+      const cleanEnvironmentData = cleanEnvironmentDataUtil(updatedContextEnvironment as EnvironmentRequestDTO)
       const response = await createEnvironment({ ...cleanEnvironmentData, orgIdentifier, projectIdentifier })
       if (response.status === 'SUCCESS') {
         clear()
         showSuccess(getString('cd.environmentCreated'))
-        envId &&
-          saveEnvironmentData({
-            environment: updatedContextEnvironment,
-            environmentResponse: response
-          })
+        envId && saveEnvironmentData(updatedContextEnvironment)
         const updatedContextInfra = produce(newEnvironmentState.infrastructure, draft => {
           set(draft, 'name', infraId)
           set(draft, 'identifier', getUniqueEntityIdentifier(infraId))
@@ -169,9 +165,7 @@ const SelectInfrastructureRef = (
           set(draft, 'data.connectorAuthValues', values)
         })
 
-        saveInfrastructureData({
-          infrastructure: { ...updatedContextInfra }
-        })
+        saveInfrastructureData(updatedContextInfra)
         const body: InfrastructureRequestDTORequestBody = {
           name: infraId,
           identifier: infraIdentifier,
@@ -195,10 +189,10 @@ const SelectInfrastructureRef = (
         })
           .then(infraResponse => {
             const refsData = {
-              serviceRef: serviceData.identifier,
+              serviceRef: serviceData?.identifier as string,
               environmentRef: environmentIdentifier,
               infraStructureRef: infraIdentifier,
-              deploymentType: serviceData.serviceDefinition.type
+              deploymentType: serviceData?.serviceDefinition?.type as string
             }
             if (infraResponse.status === 'SUCCESS') {
               props?.onSuccess?.(refsData)

@@ -28,7 +28,7 @@ import produce from 'immer'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
-import { NGServiceConfig, ServiceRequestDTO, useCreateServiceV2 } from 'services/cd-ng'
+import { ServiceRequestDTO, useCreateServiceV2 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
@@ -71,7 +71,7 @@ const SelectWorkloadRef = (props: SelectWorkloadProps, forwardRef: SelectWorkloa
     saveServiceData
   } = useCDOnboardingContext()
   const [workloadType, setWorkloadType] = useState<WorkloadType | undefined>(
-    WorkloadProviders.find((item: WorkloadType) => item.value === serviceData?.data?.workload)
+    WorkloadProviders.find((item: WorkloadType) => item.value === serviceData?.data?.workloadType)
   )
   const [serviceDeploymentType, setServiceDeploymnetType] = useState<ServiceDeploymentTypes | undefined>(
     deploymentTypes.find(item => item.value === serviceData?.serviceDefinition?.type)
@@ -95,6 +95,7 @@ const SelectWorkloadRef = (props: SelectWorkloadProps, forwardRef: SelectWorkloa
     } else {
       disableNextBtn()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formikRef.current?.values])
 
   useEffect(() => {
@@ -121,24 +122,24 @@ const SelectWorkloadRef = (props: SelectWorkloadProps, forwardRef: SelectWorkloa
     const { serviceRef } = values || {}
     const isServiceNameUpdated =
       isEmpty(get(serviceData, 'serviceDefinition.type')) || get(serviceData, 'name') !== serviceRef
-    const updatedContextService = produce(newServiceState as NGServiceConfig, draft => {
-      set(draft, 'service.name', serviceRef)
-      set(
-        draft,
-        'service.identifier',
-        isServiceNameUpdated ? getUniqueEntityIdentifier(serviceRef as string) : get(serviceData, 'identifier')
-      )
-      set(draft, 'service.data.workload', workloadType?.value)
-      set(draft, 'service.serviceDefinition.type', serviceDeploymentType?.value)
-    })
 
-    const cleanServiceData = cleanServiceDataUtil(updatedContextService.service as ServiceRequestDTO)
-    saveServiceData({ service: updatedContextService.service })
     if (isServiceNameUpdated) {
+      const updatedContextService = produce(newServiceState, draft => {
+        set(draft, 'name', serviceRef)
+        set(
+          draft,
+          'identifier',
+          isServiceNameUpdated ? getUniqueEntityIdentifier(serviceRef as string) : get(serviceData, 'identifier')
+        )
+        set(draft, 'serviceDefinition.type', serviceDeploymentType?.value)
+        set(draft, 'data.workloadType', workloadType?.value)
+      })
+
+      const cleanServiceData = cleanServiceDataUtil(updatedContextService as ServiceRequestDTO)
+      saveServiceData(updatedContextService)
       try {
         const response = await createService({ ...cleanServiceData, orgIdentifier, projectIdentifier })
         if (response.status === 'SUCCESS') {
-          serviceRef && saveServiceData({ serviceResponse: response })
           clear()
           showSuccess(getString('cd.serviceCreated'))
           onSuccess()
@@ -170,7 +171,7 @@ const SelectWorkloadRef = (props: SelectWorkloadProps, forwardRef: SelectWorkloa
       <Text font={{ variation: FontVariation.H4 }}>{getString('cd.getStartedWithCD.workloadDeploy')}</Text>
       <Formik<SelectWorkloadInterface>
         initialValues={{
-          workloadType: get(serviceData, 'data.workload') || undefined,
+          workloadType: get(serviceData, 'data.workloadType') || undefined,
           serviceDeploymentType: get(serviceData, 'serviceDefinition.type') || undefined,
           serviceRef: get(serviceData, 'name') || ''
         }}
