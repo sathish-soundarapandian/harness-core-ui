@@ -35,7 +35,7 @@ import { DEFAULT_PIPELINE_PAYLOAD, getUniqueEntityIdentifier, PipelineRefPayload
 import css from './DeployProvisioningWizard.module.scss'
 
 export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> = props => {
-  const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.SelectInfrastructure } = props
+  const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.SelectWorkload } = props
   const { getString } = useStrings()
   const [disableBtn, setDisableBtn] = useState<boolean>(false)
   const { showError } = useToaster()
