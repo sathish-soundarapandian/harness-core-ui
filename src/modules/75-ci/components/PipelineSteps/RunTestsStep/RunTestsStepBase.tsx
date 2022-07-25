@@ -739,7 +739,6 @@ gradle.projectsEvaluated {
                         showOptionalSublabel={true}
                         readonly={readonly}
                         stepViewType={stepViewType}
-                        connectorWidth={373}
                       />
                     ) : null}
                     <Container className={cx(css.formGroup, css.sm, css.bottomMargin5)}>

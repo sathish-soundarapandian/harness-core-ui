@@ -204,11 +204,16 @@ exports[`RightBar Renders all ci codebase inputs as runtime inputs 1`] = `
           <div
             class="StyledProps--font StyledProps--main"
           >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="rightBarForm_repoName"
             >
-              common.repositoryName
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+              >
+                common.repositoryName
+              </p>
+            </div>
             <div
               class="TextInput--main"
             >
@@ -1147,11 +1152,16 @@ exports[`RightBar Renders all ci codebase on edit values 1`] = `
           <div
             class="StyledProps--font StyledProps--main"
           >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="rightBarForm_repoName"
             >
-              common.repositoryName
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+              >
+                common.repositoryName
+              </p>
+            </div>
             <div
               class="TextInput--main"
             >
@@ -1988,11 +1998,16 @@ exports[`RightBar Renders all ci codebase on edit values 2`] = `
           <div
             class="StyledProps--font StyledProps--main"
           >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="rightBarForm_repoName"
             >
-              common.repositoryName
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+              >
+                common.repositoryName
+              </p>
+            </div>
             <div
               class="TextInput--main"
             >
@@ -2857,11 +2872,16 @@ exports[`RightBar Renders validation errors 1`] = `
           <div
             class="StyledProps--font StyledProps--main"
           >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="rightBarForm_repoName"
             >
-              common.repositoryName
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+              >
+                common.repositoryName
+              </p>
+            </div>
             <div
               class="TextInput--main"
             >
