@@ -477,7 +477,7 @@ function FormContent({
         <Accordion.Panel
           id="optional-config"
           summary={getString('common.optionalConfig')}
-          details={<OptionalConfiguration readonly={readonly} allowableTypes={allowableTypes} />}
+          details={<OptionalConfiguration readonly={readonly} />}
         />
       </Accordion>
     </React.Fragment>
