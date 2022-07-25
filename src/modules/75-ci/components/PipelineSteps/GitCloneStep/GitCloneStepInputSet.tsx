@@ -8,7 +8,7 @@
 import React from 'react'
 import { connect } from 'formik'
 import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@wings-software/uicore'
-import { useParams } from 'react-router-dom'
+import { useParams, useLocation } from 'react-router-dom'
 import { get, isEmpty } from 'lodash-es'
 import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
 import { getConnectorRefWidth, isRuntimeInput, shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
@@ -25,6 +25,8 @@ import { CIStepOptionalConfig } from '../CIStep/CIStepOptionalConfig'
 import { CIStep } from '../CIStep/CIStep'
 import type { GitCloneStepProps } from './GitCloneStep'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+
+const TEMPLATES = 'templates'
 
 export const GitCloneStepInputSetBasic: React.FC<GitCloneStepProps> = ({
   template,
@@ -51,6 +53,9 @@ export const GitCloneStepInputSetBasic: React.FC<GitCloneStepProps> = ({
       accountId: string
     }>
   >()
+  const location = useLocation()
+  const pathArray = location?.pathname?.split('/')
+  const isTemplatePreview = pathArray?.[pathArray.length - 1] === TEMPLATES
   const {
     data: connector,
     loading,
@@ -93,7 +98,6 @@ export const GitCloneStepInputSetBasic: React.FC<GitCloneStepProps> = ({
     setConnectionType,
     setConnectorUrl
   ])
-
   return (
     <FormikForm className={css.removeBpPopoverWrapperTopMargin}>
       <CIStep
@@ -126,7 +130,7 @@ export const GitCloneStepInputSetBasic: React.FC<GitCloneStepProps> = ({
               'spec.repoName': { tooltipId: 'repoName' }
             }),
           ...(getMultiTypeFromValue(template?.spec?.build as string) === MultiTypeInputType.RUNTIME && {
-            'spec.build': {}
+            'spec.build': { isTemplatePreview }
           }),
           ...(getMultiTypeFromValue((template?.spec?.build as Build)?.spec?.branch as string) ===
             MultiTypeInputType.RUNTIME && {

@@ -83,7 +83,9 @@ describe('Git Clone Step', () => {
   })
 
   describe('InputSet View Render', () => {
-    test('should render all fields', async () => {
+    test('should render all fields with validations', async () => {
+      const onUpdate = jest.fn()
+      const ref = React.createRef<StepFormikRef<unknown>>()
       const template = {
         type: StepType.GitClone,
         identifier: 'My_GitClone_Step',
@@ -129,8 +131,6 @@ describe('Git Clone Step', () => {
         }
       }
 
-      const onUpdate = jest.fn()
-
       const { container } = render(
         <TestStepWidget
           initialValues={{}}
@@ -139,10 +139,14 @@ describe('Git Clone Step', () => {
           allValues={allValues}
           stepViewType={StepViewType.InputSet}
           onUpdate={onUpdate}
+          ref={ref}
         />
       )
 
+      await act(() => ref.current?.submitForm()!)
       expect(container).toMatchSnapshot()
+
+      expect(onUpdate).not.toHaveBeenCalled()
     })
 
     test('should not render any fields', async () => {
@@ -173,7 +177,7 @@ describe('Git Clone Step', () => {
           build: {
             type: 'branch',
             spec: {
-              branch: 'azz'
+              branch: 'main'
             }
           }
         }
@@ -220,7 +224,7 @@ describe('Git Clone Step', () => {
               build: {
                 type: 'branch',
                 spec: {
-                  branch: 'azz'
+                  branch: 'main'
                 }
               }
             },
@@ -349,7 +353,7 @@ describe('Git Clone Step', () => {
       const gitTagRadio = document.body.querySelector('[value="tag"]')
       const gitBranch = document.body.querySelector('[name="spec.build.spec.branch"]')
       await waitFor(() => {
-        expect(gitBranch).toHaveAttribute('value', 'azz')
+        expect(gitBranch).toHaveAttribute('value', 'main')
       })
       if (gitTagRadio) {
         userEvent.click(gitTagRadio)
@@ -369,7 +373,7 @@ describe('Payload Comparison', () => {
   test('should submit onEdit runtime input values properly', async () => {
     const onUpdate = jest.fn()
     const ref = React.createRef<StepFormikRef<unknown>>()
-    const { container } = render(
+    render(
       <TestStepWidget
         initialValues={onEditInitialValuesAllRuntimeInputs}
         type={StepType.GitClone}
@@ -378,8 +382,6 @@ describe('Payload Comparison', () => {
         ref={ref}
       />
     )
-
-    expect(container).toMatchSnapshot()
 
     await act(() => ref.current?.submitForm()!)
     expect(onUpdate).toHaveBeenCalledWith(onEditInitialValuesAllRuntimeInputs)

@@ -326,7 +326,8 @@ export const CIStep: React.FC<CIStepProps> = props => {
             path,
             triggerIdentifier,
             allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep,
-            stepViewType
+            stepViewType,
+            isTemplatePreview: enableFields['spec.build'].isTemplatePreview
           })}
         </Container>
       )}
@@ -380,7 +381,8 @@ export const CIStep: React.FC<CIStepProps> = props => {
                 expressions,
                 allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
               },
-              disabled: readonly
+              disabled: readonly,
+              placeholder: '/harness'
             },
             fieldPath: 'spec.cloneDirectory'
           })}

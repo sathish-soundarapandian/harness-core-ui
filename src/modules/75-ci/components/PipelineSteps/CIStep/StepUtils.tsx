@@ -30,13 +30,14 @@ import { isRuntimeInput, CodebaseTypes } from '@pipeline/utils/CIUtils'
 import {
   getBuildTypeLabels,
   getBuildTypeInputLabels,
-  CodeBaseType
+  CodeBaseType,
+  ConnectionType
 } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
-import { ConnectionType } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
+import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { FormMultiTypeRadioGroupField } from '@common/components/MultiTypeRadioGroup/MultiTypeRadioGroup'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const useGetPropagatedStageById = (
   stageId: string
@@ -143,7 +144,8 @@ export const renderBuild = ({
   allowableTypes,
   path,
   triggerIdentifier,
-  stepViewType
+  stepViewType,
+  isTemplatePreview
 }: {
   expressions: string[]
   getString: UseStringsReturn['getString']
@@ -154,12 +156,14 @@ export const renderBuild = ({
   path?: string
   triggerIdentifier?: string
   stepViewType?: string
+  isTemplatePreview?: boolean
 }) => {
   const radioLabels = getBuildTypeLabels(getString)
   const prefix = isEmpty(path) ? '' : `${path}.`
+  const buildValue = get(formik?.values, `${prefix}spec.build`)
   const buildTypeValue = get(formik?.values, `${prefix}spec.build.type`)
-  const isBuildRuntimeInput =
-    isRuntimeInput(get(formik?.values, `${prefix}spec.build`)) || isRuntimeInput(buildTypeValue)
+  const isBuildRuntimeInput = isRuntimeInput(buildValue) && stepViewType === StepViewType.InputSet
+  const isBuildTypeRuntimeInput = isRuntimeInput(buildTypeValue)
   const buildTypeError = get(formik?.errors, `${prefix}spec.build`)
   const shouldShowError = formik?.submitCount > 0 || triggerIdentifier // do not prematurely show error but should display on Triggers form
   const handleTypeChange = (newType: any = CodebaseTypes.branch): void => {
@@ -179,37 +183,71 @@ export const renderBuild = ({
 
   return (
     <Container>
-      <FormMultiTypeRadioGroupField
-        name={`${prefix}spec.build.type`}
-        label={getString('filters.executions.buildType')}
-        options={[
-          { label: radioLabels['branch'], value: CodebaseTypes.branch },
-          { label: radioLabels['tag'], value: CodebaseTypes.tag }
-        ]}
-        onChange={handleTypeChange}
-        className={cx(
-          (isEmpty(buildTypeValue) || isBuildRuntimeInput || stepViewType === StepViewType.DeploymentForm) &&
-            css.bottomMargin0
-        )}
-        tooltipProps={{
-          dataTooltipId: 'buildType'
-        }}
-        multiTypeRadioGroup={{
-          name: `${prefix}spec.build.type`,
-          expressions,
-          disabled: readonly,
-          allowableTypes: (Array.isArray(allowableTypes)
-            ? (allowableTypes as MultiTypeInputType[]).filter(type => type !== MultiTypeInputType.EXPRESSION)
-            : allowableTypes) as AllowedTypes // dependent downstream field can support expression
-        }}
-      />
-      {shouldShowError && buildTypeError && <FormError errorMessage={buildTypeError} name="build.type" />}
-      {buildTypeValue === CodebaseTypes.branch
-        ? renderBuildTypeInputField({ getString, type: buildTypeValue, readonly, allowableTypes, prefix })
-        : null}
-      {buildTypeValue === CodebaseTypes.tag
-        ? renderBuildTypeInputField({ getString, type: buildTypeValue, readonly, allowableTypes, prefix })
-        : null}
+      {isBuildRuntimeInput ? (
+        <MultiTypeTextField
+          label={
+            <Text
+              font={{ variation: FontVariation.FORM_LABEL }}
+              margin={{ bottom: 'xsmall' }}
+              tooltipProps={{ dataTooltipId: 'buildType' }}
+            >
+              {getString('filters.executions.buildType')}{' '}
+            </Text>
+          }
+          name={`${prefix}spec.build`}
+          multiTextInputProps={{
+            disabled: isTemplatePreview
+          }}
+        />
+      ) : (
+        <>
+          <FormMultiTypeRadioGroupField
+            name={`${prefix}spec.build.type`}
+            label={getString('filters.executions.buildType')}
+            options={[
+              { label: radioLabels['branch'], value: CodebaseTypes.branch },
+              { label: radioLabels['tag'], value: CodebaseTypes.tag }
+            ]}
+            onChange={handleTypeChange}
+            className={cx(
+              (isEmpty(buildTypeValue) || isBuildTypeRuntimeInput || stepViewType === StepViewType.DeploymentForm) &&
+                css.bottomMargin0
+            )}
+            tooltipProps={{
+              dataTooltipId: 'buildType'
+            }}
+            multiTypeRadioGroup={{
+              name: `${prefix}spec.build.type`,
+              expressions,
+              disabled: readonly,
+              allowableTypes: (Array.isArray(allowableTypes)
+                ? (allowableTypes as MultiTypeInputType[]).filter(type => type !== MultiTypeInputType.EXPRESSION)
+                : allowableTypes) as AllowedTypes // dependent downstream field can support expression
+            }}
+          />
+          {shouldShowError && buildTypeError && <FormError errorMessage={buildTypeError} name="build.type" />}
+          {buildTypeValue === CodebaseTypes.branch
+            ? renderBuildTypeInputField({
+                getString,
+                expressions,
+                type: buildTypeValue,
+                readonly,
+                allowableTypes,
+                prefix
+              })
+            : null}
+          {buildTypeValue === CodebaseTypes.tag
+            ? renderBuildTypeInputField({
+                getString,
+                expressions,
+                type: buildTypeValue,
+                readonly,
+                allowableTypes,
+                prefix
+              })
+            : null}
+        </>
+      )}
     </Container>
   )
 }

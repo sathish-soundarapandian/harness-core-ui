@@ -150,7 +150,7 @@ export const onEditInitialValuesFixed = {
     build: {
       type: 'branch',
       spec: {
-        branch: 'azz'
+        branch: 'main'
       }
     }
   },
