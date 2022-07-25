@@ -33,6 +33,7 @@ import { useStrings } from 'framework/strings'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useGetConnector } from 'services/cd-ng'
 import { resourceToInstanceObject } from './helper'
+import css from './CECOEditGatewayPage.module.scss'
 
 export const CECOEditGatewayPage: React.FC = () => {
   const { accountId, orgIdentifier, projectIdentifier, gatewayIdentifier } = useParams<
@@ -197,7 +198,7 @@ export const CECOEditGatewayPage: React.FC = () => {
           originalRuleDetails={data?.response?.service}
         />
       ) : (
-        <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
+        <div className={css.loaderContainer}>
           <PageSpinner />
         </div>
       )}

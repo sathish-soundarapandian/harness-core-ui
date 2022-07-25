@@ -7,24 +7,28 @@
 
 import React from 'react'
 import {
+  Accordion,
   AllowedTypes,
   Button,
   ButtonVariation,
   Formik,
   FormInput,
+  getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
   StepProps,
   Text
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
-import { FieldArray, Form } from 'formik'
+import { Form } from 'formik'
 import * as Yup from 'yup'
-import { defaultTo, get, set } from 'lodash-es'
+import { get, set } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
-import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import FileStoreSelectField from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
+import MultiConfigSelectField from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/MultiConfigSelectField/MultiConfigSelectField'
+import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
+import { FormMultiTypeCheckboxField } from '@common/components'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { ManifestDataType, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
 import type { HarnessFileStoreDataType, HarnessFileStoreFormData, ManifestTypes } from '../../ManifestInterface'
 import css from '../K8sValuesManifest/ManifestDetails.module.scss'
@@ -33,6 +37,7 @@ interface HarnessFileStorePropType {
   stepName: string
   allowableTypes: AllowedTypes
   initialValues: ManifestConfig
+  expressions: string[]
   selectedManifest: ManifestTypes | null
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
@@ -45,16 +50,22 @@ const showValuesPaths = (selectedManifest: ManifestTypes): boolean => {
 const showParamsPaths = (selectedManifest: ManifestTypes): boolean => {
   return selectedManifest === ManifestDataType.OpenshiftTemplate
 }
-
+const showSkipResourceVersion = (selectedManifest: ManifestTypes): boolean => {
+  return [ManifestDataType.K8sManifest, ManifestDataType.HelmChart, ManifestDataType.OpenshiftTemplate].includes(
+    selectedManifest
+  )
+}
 function HarnessFileStore({
   stepName,
   selectedManifest,
   allowableTypes,
+  expressions,
   initialValues,
   handleSubmit,
   prevStepData,
   previousStep,
-  manifestIdsList
+  manifestIdsList,
+  isReadonly
 }: StepProps<ConnectorConfigDTO> & HarnessFileStorePropType): React.ReactElement {
   const { getString } = useStrings()
 
@@ -67,14 +78,16 @@ function HarnessFileStore({
         ...specValues,
         identifier: initialValues.identifier,
         valuesPaths,
-        paramsPaths
+        paramsPaths,
+        skipResourceVersioning: get(initialValues, 'spec.skipResourceVersioning')
       }
     }
     return {
       identifier: '',
       files: [''],
       valuesPaths: [''],
-      paramsPaths: ['']
+      paramsPaths: [''],
+      skipResourceVersioning: false
     }
   }
 
@@ -101,6 +114,9 @@ function HarnessFileStore({
       if (showParamsPaths(selectedManifest as ManifestTypes)) {
         set(manifestObj, 'manifest.spec.paramsPaths', formData.paramsPaths)
       }
+      if (showSkipResourceVersion(selectedManifest as ManifestTypes)) {
+        set(manifestObj, 'manifest.spec.skipResourceVersioning', formData?.skipResourceVersioning)
+      }
 
       handleSubmit(manifestObj)
     }
@@ -116,7 +132,13 @@ function HarnessFileStore({
         initialValues={getInitialValues()}
         formName="harnessFileStore"
         validationSchema={Yup.object().shape({
-          ...ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName'))
+          ...ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName')),
+          files: Yup.lazy((value): Yup.Schema<unknown> => {
+            if (getMultiTypeFromValue(value as string[]) === MultiTypeInputType.FIXED) {
+              return Yup.array().of(Yup.string().required(getString('pipeline.manifestType.pathRequired')))
+            }
+            return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
+          })
         })}
         onSubmit={formData => {
           submitFormData({
@@ -125,7 +147,7 @@ function HarnessFileStore({
           } as unknown as HarnessFileStoreFormData)
         }}
       >
-        {(formik: { setFieldValue: (a: string, b: string) => void; values: HarnessFileStoreDataType }) => {
+        {formik => {
           return (
             <Form>
               <Layout.Vertical
@@ -141,130 +163,91 @@ function HarnessFileStore({
                     />
                   </div>
                   <div className={css.halfWidth}>
-                    <MultiTypeFieldSelector
-                      defaultValueToReset={['']}
-                      allowedTypes={
-                        (allowableTypes as MultiTypeInputType[]).filter(
-                          allowedType => allowedType !== MultiTypeInputType.EXPRESSION
-                        ) as AllowedTypes
-                      }
+                    <MultiConfigSelectField
                       name="files"
-                      label={getString('resourcePage.fileStore')}
-                    >
-                      <FieldArray
-                        name="files"
-                        render={({ push, remove }) => (
-                          <Layout.Vertical>
-                            {defaultTo(get(formik, 'values.files'), []).map((file: string, index: number) => (
-                              <Layout.Horizontal key={file} margin={{ top: 'medium' }}>
-                                <FileStoreSelectField name={`files[${index}]`} />
-                                {index !== 0 && (
-                                  /* istanbul ignore next */ <Button
-                                    minimal
-                                    icon="main-trash"
-                                    onClick={() => remove(index)}
-                                  />
-                                )}
-                              </Layout.Horizontal>
-                            ))}
-                            <span>
-                              <Button
-                                minimal
-                                text={getString('add')}
-                                variation={ButtonVariation.PRIMARY}
-                                onClick={() => push({})}
-                              />
-                            </span>
-                          </Layout.Vertical>
-                        )}
-                      />
-                    </MultiTypeFieldSelector>
+                      allowableTypes={allowableTypes}
+                      fileType={FILE_TYPE_VALUES.FILE_STORE}
+                      formik={formik}
+                      expressions={expressions}
+                      values={formik.values.files}
+                      multiTypeFieldSelectorProps={{
+                        disableTypeSelection: false,
+                        label: <Text>{getString('fileFolderPathText')}</Text>
+                      }}
+                    />
                   </div>
                   {showValuesPaths(selectedManifest as ManifestTypes) && (
                     <div className={css.halfWidth}>
-                      <MultiTypeFieldSelector
-                        defaultValueToReset={['']}
-                        allowedTypes={
-                          (allowableTypes as MultiTypeInputType[]).filter(
-                            allowedType => allowedType !== MultiTypeInputType.EXPRESSION
-                          ) as AllowedTypes
-                        }
+                      <MultiConfigSelectField
                         name="valuesPaths"
-                        label={getString('pipeline.manifestType.valuesYamlPath')}
-                      >
-                        <FieldArray
-                          name="valuesPaths"
-                          render={({ push, remove }) => (
-                            <Layout.Vertical>
-                              {defaultTo(get(formik, 'values.valuesPaths'), []).map((paths: string, index: number) => (
-                                <Layout.Horizontal key={paths} margin={{ top: 'medium' }}>
-                                  <FileStoreSelectField name={`valuesPaths[${index}]`} />
-
-                                  {index !== 0 && (
-                                    /* istanbul ignore next */ <Button
-                                      minimal
-                                      icon="main-trash"
-                                      onClick={() => remove(index)}
-                                    />
-                                  )}
-                                </Layout.Horizontal>
-                              ))}
-                              <span>
-                                <Button
-                                  minimal
-                                  text={getString('add')}
-                                  variation={ButtonVariation.PRIMARY}
-                                  onClick={() => push('')}
-                                />
-                              </span>
-                            </Layout.Vertical>
-                          )}
-                        />
-                      </MultiTypeFieldSelector>
+                        fileType={FILE_TYPE_VALUES.FILE_STORE}
+                        formik={formik}
+                        expressions={expressions}
+                        allowableTypes={allowableTypes}
+                        values={formik.values.valuesPaths}
+                        multiTypeFieldSelectorProps={{
+                          disableTypeSelection: false,
+                          label: <Text>{getString('pipeline.manifestType.valuesYamlPath')}</Text>
+                        }}
+                      />
                     </div>
                   )}
                   {showParamsPaths(selectedManifest as ManifestTypes) && (
                     <div className={css.halfWidth}>
-                      <MultiTypeFieldSelector
-                        defaultValueToReset={['']}
-                        allowedTypes={
-                          (allowableTypes as MultiTypeInputType[]).filter(
-                            allowedType => allowedType !== MultiTypeInputType.EXPRESSION
-                          ) as AllowedTypes
-                        }
+                      <MultiConfigSelectField
                         name="paramsPaths"
-                        label={getString('pipeline.manifestType.paramsYamlPath')}
-                      >
-                        <FieldArray
-                          name="paramsPaths"
-                          render={({ push, remove }) => (
-                            <Layout.Vertical>
-                              {defaultTo(get(formik, 'values.paramsPaths'), []).map((paths: string, index: number) => (
-                                <Layout.Horizontal key={paths} margin={{ top: 'medium' }}>
-                                  <FileStoreSelectField name={`paramsPaths[${index}]`} />
-
-                                  {index !== 0 && (
-                                    /* istanbul ignore next */ <Button
-                                      minimal
-                                      icon="main-trash"
-                                      onClick={() => remove(index)}
-                                    />
-                                  )}
-                                </Layout.Horizontal>
-                              ))}
-                              <span>
-                                <Button
-                                  minimal
-                                  text={getString('add')}
-                                  variation={ButtonVariation.PRIMARY}
-                                  onClick={() => push('')}
-                                />
-                              </span>
-                            </Layout.Vertical>
-                          )}
-                        />
-                      </MultiTypeFieldSelector>
+                        allowableTypes={allowableTypes}
+                        fileType={FILE_TYPE_VALUES.FILE_STORE}
+                        formik={formik}
+                        expressions={expressions}
+                        values={formik.values.paramsPaths}
+                        multiTypeFieldSelectorProps={{
+                          disableTypeSelection: false,
+                          label: <Text>{getString('pipeline.manifestType.paramsYamlPath')}</Text>
+                        }}
+                      />
                     </div>
+                  )}
+                  {showSkipResourceVersion(selectedManifest as ManifestTypes) && (
+                    <Accordion
+                      activeId={get(initialValues, 'spec.skipResourceVersioning') ? getString('advancedTitle') : ''}
+                      className={css.advancedStepOpen}
+                    >
+                      <Accordion.Panel
+                        id={getString('advancedTitle')}
+                        addDomId={true}
+                        summary={getString('advancedTitle')}
+                        details={
+                          <Layout.Horizontal
+                            width={'50%'}
+                            flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
+                            margin={{ bottom: 'huge' }}
+                          >
+                            <FormMultiTypeCheckboxField
+                              name="skipResourceVersioning"
+                              label={getString('skipResourceVersion')}
+                              multiTypeTextbox={{ expressions, allowableTypes }}
+                              className={css.checkbox}
+                            />
+                            {getMultiTypeFromValue(get(formik, 'values.skipResourceVersioning')) ===
+                              MultiTypeInputType.RUNTIME && (
+                              <ConfigureOptions
+                                value={get(formik, 'values.skipResourceVersioning', '') as string}
+                                type="String"
+                                variableName="skipResourceVersioning"
+                                showRequiredField={false}
+                                showDefaultField={false}
+                                showAdvanced={true}
+                                onChange={value => formik.setFieldValue('skipResourceVersioning', value)}
+                                style={{ alignSelf: 'center', marginTop: 11 }}
+                                className={css.addmarginTop}
+                                isReadonly={isReadonly}
+                              />
+                            )}
+                          </Layout.Horizontal>
+                        }
+                      />
+                    </Accordion>
                   )}
                 </div>
 

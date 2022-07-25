@@ -10,7 +10,7 @@
   margin: var(--spacing-medium);
 
   &.loadingContainer {
-    height: calc(100vh - 290px);
+    height: calc(var(--page-min-height) - 290px);
     display: flex;
     align-items: center;
     justify-content: center;

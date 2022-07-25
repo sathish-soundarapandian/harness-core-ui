@@ -34,15 +34,11 @@ import ServiceEnvironmentInputSet from './components/ServiceEnvironmentInputSet/
 import HealthSourceInputset from './components/HealthSourceInputset/HealthSourceInputset'
 import MonitoredServiceInputsetVariables from './components/MonitoredServiceInputsetVariables/MonitoredServiceInputsetVariables'
 import { validateInputSet } from './MonitoredServiceInputSetsTemplate.utils'
+import type {
+  TemplateDataInterface,
+  MonitoredServiceInputSetInterface
+} from './MonitoredServiceInputSetsTemplate.types'
 import css from './MonitoredServiceInputSetsTemplate.module.scss'
-
-export interface TemplateDataInterface {
-  identifier: string
-  accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
-  versionLabel: string
-}
 
 export default function MonitoredServiceInputSetsTemplate({
   templateData
@@ -88,7 +84,7 @@ export default function MonitoredServiceInputSetsTemplate({
 
   // default value for formik
   const [isInputSetCreated, setInputSet] = React.useState(false)
-  const [monitoredServiceInputSet, setMonitoredServiceInputSet] = React.useState<any>({})
+  const [monitoredServiceInputSet, setMonitoredServiceInputSet] = React.useState<MonitoredServiceInputSetInterface>()
 
   // Set InputSet Yaml as state variable
   React.useEffect(() => {
@@ -109,11 +105,11 @@ export default function MonitoredServiceInputSetsTemplate({
     }
   })
 
-  const onSave = async (value: any): Promise<void> => {
-    if (monitoredServiceInputSet.serviceRef !== undefined) {
+  const onSave = (value: MonitoredServiceInputSetInterface): void => {
+    if (monitoredServiceInputSet?.serviceRef !== undefined) {
       monitoredServiceInputSet.serviceRef = value.serviceRef
     }
-    if (monitoredServiceInputSet.environmentRef !== undefined) {
+    if (monitoredServiceInputSet?.environmentRef !== undefined) {
       monitoredServiceInputSet.environmentRef = value.environmentRef
     }
     const populateSource = value.sources ? { sources: value.sources } : {}
@@ -147,7 +143,7 @@ export default function MonitoredServiceInputSetsTemplate({
 
   let content = <></>
   const healthSourcesWithRuntimeList = monitoredServiceInputSet?.sources?.healthSources?.map(
-    (healthSource: any) => healthSource.identifier
+    healthSource => healthSource.identifier as string
   )
   if (loadingTemplateYaml) {
     content = <PageSpinner />
@@ -166,10 +162,14 @@ export default function MonitoredServiceInputSetsTemplate({
           </Card>
           {!isReadOnlyInputSet && (
             <Button
-              disabled={showLoading}
+              disabled={showLoading || isEmpty(monitoredServiceInputSet)}
               loading={showLoading}
               variation={ButtonVariation.PRIMARY}
-              onClick={() => onSave(monitoredServiceInputSet)}
+              onClick={() => {
+                if (monitoredServiceInputSet) {
+                  onSave(monitoredServiceInputSet)
+                }
+              }}
             >
               {getString('submit')}
             </Button>
@@ -179,9 +179,9 @@ export default function MonitoredServiceInputSetsTemplate({
     )
   } else if (monitoredServiceInputSet) {
     content = (
-      <Formik
+      <Formik<MonitoredServiceInputSetInterface>
         formName="MonitoredServiceForm"
-        onSubmit={value => onSave(value)}
+        onSubmit={(values: MonitoredServiceInputSetInterface, _fn) => onSave(values)}
         initialValues={monitoredServiceInputSet}
         enableReinitialize
         validate={value => validateInputSet(value, getString)}
@@ -198,9 +198,8 @@ export default function MonitoredServiceInputSetsTemplate({
                 />
                 <HealthSourceInputset
                   templateRefData={templateRefData}
-                  sourceType={formik?.values?.sourceType}
                   isReadOnlyInputSet={isReadOnlyInputSet}
-                  healthSourcesWithRuntimeList={healthSourcesWithRuntimeList}
+                  healthSourcesWithRuntimeList={defaultTo(healthSourcesWithRuntimeList, [])}
                 />
                 <MonitoredServiceInputsetVariables monitoredServiceVariables={monitoredServiceInputSet?.variables} />
                 {!isReadOnlyInputSet && (

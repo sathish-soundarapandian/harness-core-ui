@@ -39,7 +39,7 @@ const COCreateGatewayContainer: React.FC = () => {
   })
 
   return (
-    <Container background={Color.WHITE} height="100vh">
+    <Container background={Color.WHITE}>
       {!enabled ? (
         <>
           <FeatureWarningBanner
@@ -119,7 +119,7 @@ const COCreateGateway: React.FC = () => {
   }
 
   return (
-    <Container background={Color.WHITE} height="100vh">
+    <Container background={Color.WHITE}>
       {currentTab === 'providerSelector' && (
         <COProviderSelector
           nextTab={nextTab}

@@ -25,6 +25,7 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useGetMonitoredServiceListEnvironments, useGetCountOfServices } from 'services/cv'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
 import { useQueryParams } from '@common/hooks'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
@@ -52,6 +53,7 @@ const MonitoredService: React.FC = () => {
     orgIdentifier,
     projectIdentifier
   }
+  const { CVNG_TEMPLATE_MONITORED_SERVICE } = useFeatureFlags()
 
   const [page, setPage] = useState(0)
   const [selectedView, setSelectedView] = useState<Views>(view === Views.GRID ? Views.GRID : Views.LIST)
@@ -136,7 +138,7 @@ const MonitoredService: React.FC = () => {
               }
             }}
           />
-          {hasMonitoredServices && (
+          {hasMonitoredServices && CVNG_TEMPLATE_MONITORED_SERVICE && (
             <RbacButton
               text={getString('common.useTemplate')}
               variation={ButtonVariation.SECONDARY}

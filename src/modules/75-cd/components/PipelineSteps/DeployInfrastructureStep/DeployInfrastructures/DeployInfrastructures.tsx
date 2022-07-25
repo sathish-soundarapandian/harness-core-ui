@@ -78,8 +78,8 @@ function DeployInfrastructures({
   const { expressions } = useVariablesExpression()
 
   const environmentIdentifier = useMemo(() => {
-    return defaultTo(environmentRef || formik?.values?.environment?.environmentRef, '')
-  }, [formik?.values?.environment?.environmentRef])
+    return defaultTo(environmentRef || /* istanbul ignore next */ formik?.values?.environment?.environmentRef, '')
+  }, [environmentRef, /* istanbul ignore next */ formik?.values?.environment?.environmentRef])
 
   const { updateTemplate } = useRunPipelineFormContext()
 
@@ -137,6 +137,7 @@ function DeployInfrastructures({
   }, [infrastructureInputsLoading])
 
   useEffect(() => {
+    // istanbul ignore else
     if (selectedInfrastructure) {
       const parsedInfraYaml = parse(defaultTo(selectedInfrastructure, '{}'))
       refetchInfrastructureInputs({
@@ -155,6 +156,7 @@ function DeployInfrastructures({
   }, [selectedInfrastructure])
 
   useEffect(() => {
+    // istanbul ignore else
     if (!infrastructuresLoading && !get(infrastructuresResponse, 'data.empty')) {
       setInfrastructures(
         defaultTo(
@@ -168,6 +170,7 @@ function DeployInfrastructures({
   }, [infrastructuresLoading, infrastructuresResponse])
 
   useEffect(() => {
+    // istanbul ignore else
     if (!isNil(infrastructures)) {
       setInfrastructuresSelectOptions(
         infrastructures.map(infrastructure => {
@@ -178,11 +181,13 @@ function DeployInfrastructures({
   }, [infrastructures])
 
   useEffect(() => {
+    // istanbul ignore else
     if (
       !isEmpty(infrastructuresSelectOptions) &&
       !isNil(infrastructuresSelectOptions) &&
       initialValues.infrastructureRef
     ) {
+      // istanbul ignore else
       if (getMultiTypeFromValue(initialValues.infrastructureRef) === MultiTypeInputType.FIXED) {
         const existingInfrastructure = infrastructuresSelectOptions.find(
           infra => infra.value === initialValues.infrastructureRef
@@ -212,12 +217,13 @@ function DeployInfrastructures({
   }, [infrastructuresSelectOptions])
 
   useEffect(() => {
+    // istanbul ignore else
     if (!isNil(infrastructuresError)) {
       showError(getRBACErrorMessage(infrastructuresError))
     }
   }, [infrastructuresError])
 
-  const updateInfrastructuresList = (values: InfrastructureResponseDTO) => {
+  const updateInfrastructuresList = /* istanbul ignore next */ (values: InfrastructureResponseDTO) => {
     const newInfrastructureList = [...defaultTo(infrastructures, [])]
     const existingIndex = newInfrastructureList.findIndex(item => item.identifier === values.identifier)
     if (existingIndex >= 0) {

@@ -79,7 +79,7 @@ describe('<SaveTemplateButton /> tests', () => {
       </TestWrapper>
     )
 
-    expect(useSaveAsTemplateMock).toBeCalledWith({ ...omit(baseProps, 'buttonProps'), fireSuccessEvent: true })
+    expect(useSaveAsTemplateMock).toBeCalledWith(omit(baseProps, 'buttonProps'))
 
     const saveAsTemplateBtn = getByText('common.saveAsTemplate')
     await act(async () => {

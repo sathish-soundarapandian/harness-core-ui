@@ -32,7 +32,8 @@ describe('Unit tests for SLONotificationRuleRow', () => {
     },
     showDeleteNotificationsIcon: true,
     handleChangeField: jest.fn(),
-    handleDeleteNotificationRule: jest.fn()
+    handleDeleteNotificationRule: jest.fn(),
+    index: 0
   }
 
   test('Verify if SLONotificationRuleRow renders', async () => {

@@ -40,7 +40,7 @@ export const deploymentTypeToInfraTypeMap = {
   [ServiceDeploymentType.ServerlessAwsLambda]: InfraDeploymentType.ServerlessAwsLambda,
   [ServiceDeploymentType.ServerlessAzureFunctions]: InfraDeploymentType.ServerlessAzureFunctions,
   [ServiceDeploymentType.ServerlessGoogleFunctions]: InfraDeploymentType.ServerlessGoogleFunctions,
-  [ServiceDeploymentType.ssh]: InfraDeploymentType.PDC
+  [ServiceDeploymentType.Ssh]: InfraDeploymentType.PDC
 }
 
 export function getNameSpaceSchema(

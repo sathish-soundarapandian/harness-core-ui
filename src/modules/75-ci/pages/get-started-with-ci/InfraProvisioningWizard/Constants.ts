@@ -225,8 +225,8 @@ export const getFullRepoName = (repository: UserRepoResponse): string => {
   return namespace && repositoryName ? `${namespace}/${repositoryName}` : repositoryName ?? ''
 }
 
-export const DELEGATE_INSTALLATION_REFETCH_DELAY = 10000
-export const MAX_TIMEOUT_DELEGATE_INSTALLATION = 1000 * 60 * 10 // ten minutes
+export const DELEGATE_INSTALLATION_REFETCH_DELAY = 20 * 1000 // 20 secs
+export const MAX_TIMEOUT_DELEGATE_INSTALLATION = 1000 * 60 * 10 // 10 minutes
 
 export const BitbucketPRTriggerActions: BitbucketPRSpec['actions'] = ['Create', 'Update']
 
@@ -239,3 +239,5 @@ export const AccessTokenPermissionsDocLinks: Map<ConnectorInfoDTO['type'], strin
   [Connectors.GITLAB, 'https://docs.harness.io/article/5abnoghjgo#password_personal_access_token'],
   [Connectors.BITBUCKET, 'https://docs.harness.io/article/iz5tucdwyu#personal_access_token']
 ])
+
+export const ProvisionedByHarnessDelegateGroupIdentifier = '_harness_kubernetes_delegate' // unique group identifier of delegate installed and managed by Harness for Hosted by Harness infra offering

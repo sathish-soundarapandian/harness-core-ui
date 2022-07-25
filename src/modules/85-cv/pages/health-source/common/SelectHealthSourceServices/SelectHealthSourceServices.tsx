@@ -72,7 +72,7 @@ export default function SelectHealthSourceServices({
           <FormInput.MultiTextInput
             key={metricPathMultiType}
             name={'serviceInstanceMetricPath'}
-            label="ServiceInstanceLabel"
+            label={getString('cv.monitoringSources.appD.serviceInstanceMetricPath')}
             onChange={(_value, _valueType, multiType) => {
               if (multiType !== metricPathMultiType) {
                 setMetricPathMultiType(multiType)
@@ -95,7 +95,7 @@ export default function SelectHealthSourceServices({
           metricPackResponse={metricPackResponse}
           labelNamesResponse={labelNamesResponse}
           continuousVerificationEnabled={continuousVerification && !hideServiceIdentifier}
-          serviceInstance={serviceInstance}
+          serviceInstance={typeof serviceInstance === 'string' ? serviceInstance : (serviceInstance?.value as string)}
           riskCategory={riskCategory}
           isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
         />

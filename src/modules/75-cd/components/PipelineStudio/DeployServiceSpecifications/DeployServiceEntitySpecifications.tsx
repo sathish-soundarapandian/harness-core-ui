@@ -206,6 +206,7 @@ export default function DeployServiceEntitySpecifications({
     if (errorMap.size > 0) {
       submitFormsForTab(DeployTabs.SERVICE)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [errorMap])
 
   const updateService = useCallback(
@@ -247,7 +248,7 @@ export default function DeployServiceEntitySpecifications({
         setIsReadOnlyView(false)
       }
     },
-    [debounceUpdateStage, memoizedQueryParam, refetchServiceData, stage]
+    [debounceUpdateStage, memoizedQueryParam, refetchServiceData, refetchServiceInputs, stage]
   )
 
   const getServiceEntityBasedServiceRef = React.useCallback(() => {

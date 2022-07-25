@@ -18,7 +18,7 @@ import type {
 } from '@cd/components/PipelineSteps/DeployServiceStep/DeployServiceInterface'
 
 export interface GitOpsCustomMicroFrontendProps {
-  getLinkForAccountResources(props: GetLinkForAccountResourcesProps): Breadcrumb[]
+  getLinkForAccountResources?(props: GetLinkForAccountResourcesProps): Breadcrumb[]
   customComponents: {
     DeployServiceWidget: React.ComponentType<DeployServiceProps>
     DeployEnvironmentWidget: React.ComponentType<DeployEnvironmentProps>

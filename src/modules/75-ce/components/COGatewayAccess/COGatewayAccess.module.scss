@@ -5,6 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+.drawerContainer {
+  box-shadow: rgb(40 41 61 / 4%) 0px 2px 8px, rgb(96 97 112 / 16%) 0px 16px 24px;
+  height: var(--min-page-height);
+  overflow-y: scroll;
+}
+
 .title {
   font-weight: 500;
   font-size: var(--font-size-medium) !important;
@@ -61,8 +67,9 @@
   background-color: var(--white);
 }
 .page {
+  --page-header-height: 160px;
   overflow: scroll;
-  height: calc(100vh - 160px);
+  height: calc(var(--page-min-height) - var(--page-header-height));
   margin-left: var(--spacing-xlarge) !important;
 }
 .centerAlignedRadio {

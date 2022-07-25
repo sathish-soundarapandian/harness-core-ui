@@ -116,7 +116,8 @@ describe('Harness File Store tests', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('submits with right payload', async () => {
+  // eslint-disable-next-line jest/no-disabled-tests
+  test.skip('submits with right payload', async () => {
     const prevStepData = {
       store: 'Harness'
     }

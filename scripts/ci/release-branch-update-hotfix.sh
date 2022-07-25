@@ -2,7 +2,11 @@
 # Use of this source code is governed by the PolyForm Shield 1.0.0 license
 # that can be found in the licenses directory at the root of this repository, also available at
 # https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
-
+#
+# Note - this seems to be abandoned. As I check Jira for the labels being added below, they seemingly
+# were only added back in August of 2021. Seems like this is a prototype, but not in use anymore.
+# MB - 2022-07-19
+#
 KEYS=`git log --pretty=oneline --abbrev-commit |\
       awk "/${PREVIOUS_CUT_COMMIT_MESSAGE}/ {exit} {print}" |\
       grep -o -iE '(ART|BT|CCE|CCM|CDS|CE|CI|COMP|CV|CVNG|DEL|DOC|DX|ER|FFM|OPS|OPA|PIP|PL|SEC|STO|SWAT|GTM|ONP|PIE|LWG|CHAOS)-[0-9]+' | sort | uniq`

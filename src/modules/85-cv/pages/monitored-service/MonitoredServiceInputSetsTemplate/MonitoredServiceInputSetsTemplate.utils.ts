@@ -11,6 +11,7 @@ import type { UseStringsReturn } from 'framework/strings'
 import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import type { ConnectorInfoDTO } from 'services/cv'
 import { getValidationLabelByNameForTemplateInputs } from '../CVMonitoredService/MonitoredServiceInputSetsTemplate.utils'
+import type { MonitoredServiceInputSetInterface } from './MonitoredServiceInputSetsTemplate.types'
 
 export const getLabelByName = (name: string, getString: UseStringsReturn['getString']): string => {
   switch (name) {
@@ -42,7 +43,7 @@ export const getLabelByName = (name: string, getString: UseStringsReturn['getStr
 
 export const getNestedByCondition = (
   spec: any,
-  list: any[],
+  list: { name: string; path: string }[],
   basePath: string,
   isValid: (value?: string) => boolean
 ): { name: string; path: string }[] => {
@@ -63,7 +64,11 @@ export const getNestedByCondition = (
   return clonedList
 }
 
-export const getNestedRuntimeInputs = (spec: any, list: any[], basePath: string): { name: string; path: string }[] => {
+export const getNestedRuntimeInputs = (
+  spec: any,
+  list: { name: string; path: string }[],
+  basePath: string
+): { name: string; path: string }[] => {
   return getNestedByCondition(
     spec,
     list,
@@ -73,8 +78,8 @@ export const getNestedRuntimeInputs = (spec: any, list: any[], basePath: string)
 }
 
 export const getNestedEmptyFieldsWithPath = (
-  spec: any,
-  list: any[],
+  spec: MonitoredServiceInputSetInterface,
+  list: { name: string; path: string }[],
   basePath: string
 ): { name: string; path: string }[] => {
   return getNestedByCondition(spec, list, basePath, value => isEmpty(value as string))
@@ -90,7 +95,10 @@ export const healthSourceTypeMapping = (type: ConnectorInfoDTO['type']): Connect
   }
 }
 
-export const validateInputSet = (value: any, getString: UseStringsReturn['getString']): { [key: string]: string } => {
+export const validateInputSet = (
+  value: MonitoredServiceInputSetInterface,
+  getString: UseStringsReturn['getString']
+): { [key: string]: string } => {
   const datawithpath = getNestedEmptyFieldsWithPath(value, [], '')
   const errors: { [key: string]: string } = {}
   datawithpath.forEach(item => {

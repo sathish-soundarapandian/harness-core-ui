@@ -17,6 +17,19 @@
   }
 }
 
+.pageContainer {
+  --page-header-height: 138px;
+  .bodyWrapper {
+    height: calc(var(--page-min-height) - var(--page-header-height));
+
+    .listContainer {
+      flex: 1;
+      height: 100%;
+      overflow: scroll;
+    }
+  }
+}
+
 .limitWarningTooltipCtn {
   max-width: 250px;
 }
@@ -54,8 +67,4 @@
       left: 270px;
     }
   }
-}
-
-.bodyWrapper {
-  height: calc(100vh - 73px);
 }

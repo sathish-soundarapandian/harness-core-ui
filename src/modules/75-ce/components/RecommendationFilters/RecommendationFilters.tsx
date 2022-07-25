@@ -23,7 +23,7 @@ import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelec
 import { flattenObject, removeNullAndEmpty } from '@common/components/Filter/utils/FilterUtils'
 import RecommendationFilterDrawer from './FilterDrawer/FilterDrawer'
 
-interface RecommendationFiltersProps {
+export interface RecommendationFiltersProps {
   applyFilters: (filterProperties: CCMRecommendationFilterProperties) => void
 }
 

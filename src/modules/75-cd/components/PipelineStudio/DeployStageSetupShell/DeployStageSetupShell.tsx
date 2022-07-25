@@ -8,7 +8,6 @@
 import React, { useCallback } from 'react'
 import { Layout, Tabs, Tab, Button, Icon, ButtonVariation, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import cx from 'classnames'
-import type { HarnessIconName } from '@harness/icons'
 import { Expander, IconName } from '@blueprintjs/core'
 import { defaultTo, get, isEmpty, set, debounce } from 'lodash-es'
 import type { ValidationError } from 'yup'
@@ -33,6 +32,7 @@ import { useStrings } from 'framework/strings'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import {
   DeployTabs,
+  ExecutionType,
   isNewServiceEnvEntity
 } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { useQueryParams } from '@common/hooks'
@@ -56,14 +56,6 @@ import DeployEnvSpecifications from '../DeployEnvSpecifications/DeployEnvSpecifi
 import DeployServiceEntitySpecifications from '../DeployServiceSpecifications/DeployServiceEntitySpecifications'
 import css from './DeployStageSetupShell.module.scss'
 
-export const MapStepTypeToIcon: { [key: string]: HarnessIconName } = {
-  Deployment: 'pipeline-deploy',
-  CI: 'pipeline-build-select',
-  Approval: 'approval-stage-icon',
-  Pipeline: 'pipeline',
-  Custom: 'custom-stage-icon'
-}
-
 const TabsOrder = [
   DeployTabs.OVERVIEW,
   DeployTabs.SERVICE,
@@ -71,7 +63,6 @@ const TabsOrder = [
   DeployTabs.EXECUTION,
   DeployTabs.ADVANCED
 ]
-
 const iconNames = { tick: 'tick' as IconName }
 
 export default function DeployStageSetupShell(): JSX.Element {
@@ -84,6 +75,7 @@ export default function DeployStageSetupShell(): JSX.Element {
       originalPipeline,
       pipelineView,
       selectionState: { selectedStageId, selectedStepId, selectedSectionId },
+      gitDetails,
       templateTypes,
       templateServiceData
     },
@@ -105,11 +97,10 @@ export default function DeployStageSetupShell(): JSX.Element {
   const [selectedTabId, setSelectedTabId] = React.useState<DeployTabs>(
     selectedStepId ? DeployTabs.EXECUTION : DeployTabs.SERVICE
   )
-
   const { stage: selectedStage } = getStageFromPipeline<DeploymentStageElementConfig>(defaultTo(selectedStageId, ''))
-
-  const selectedStrategy = selectedStage === ServiceDeploymentType.ServerlessAwsLambda ? 'Basic' : 'Rolling'
-
+  const { checkErrorsForTab } = React.useContext(StageErrorContext)
+  const gitOpsEnabled = selectedStage?.stage?.spec?.gitOpsEnabled
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceUpdateStage = useCallback(
     debounce(
       (changedStage?: StageElementConfig) =>
@@ -156,6 +147,7 @@ export default function DeployStageSetupShell(): JSX.Element {
     } else {
       setSelectedSectionId(DeployTabs.SERVICE)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedSectionId])
 
   React.useEffect(() => {
@@ -164,7 +156,12 @@ export default function DeployStageSetupShell(): JSX.Element {
     }
   }, [selectedStepId])
 
-  const { checkErrorsForTab } = React.useContext(StageErrorContext)
+  React.useEffect(() => {
+    /* istanbul ignore else */
+    if (layoutRef.current) {
+      layoutRef.current.scrollTo(0, 0)
+    }
+  }, [selectedTabId])
 
   const handleTabChange = (nextTab: DeployTabs): void => {
     if (
@@ -180,20 +177,17 @@ export default function DeployStageSetupShell(): JSX.Element {
     })
   }
 
-  React.useEffect(() => {
-    /* istanbul ignore else */
-    if (layoutRef.current) {
-      layoutRef.current.scrollTo(0, 0)
-    }
-  }, [selectedTabId])
-
   const selectedDeploymentType = serviceDefinitionType()
 
-  const strategyType = isNewServiceEnvEntity(NG_SVC_ENV_REDESIGN, selectedStage as DeploymentStageElementConfig)
-    ? 'GitOps'
-    : selectedDeploymentType === ServiceDeploymentType.ServerlessAwsLambda
-    ? 'Basic'
-    : 'Rolling'
+  const getStrategyType = (): GetExecutionStrategyYamlQueryParams['strategyType'] => {
+    if (isNewServiceEnvEntity(NG_SVC_ENV_REDESIGN, selectedStage as DeploymentStageElementConfig) && gitOpsEnabled) {
+      return ExecutionType.GITOPS
+    } else if (selectedDeploymentType === ServiceDeploymentType.ServerlessAwsLambda) {
+      return ExecutionType.BASIC
+    }
+    return ExecutionType.ROLLING
+  }
+  const strategyType = getStrategyType()
 
   const { data: stageYamlSnippet, loading, refetch } = useGetFailureStrategiesYaml({ lazy: true })
 
@@ -229,7 +223,7 @@ export default function DeployStageSetupShell(): JSX.Element {
         }).stage as StageElementConfig
       )
     }
-  }, [yamlSnippet?.data, selectedStrategy, selectedDeploymentType, selectedStage])
+  }, [yamlSnippet?.data, selectedStage, selectedDeploymentType, updateStage])
 
   React.useEffect(() => {
     // do the following one if it is a new stage
@@ -249,6 +243,7 @@ export default function DeployStageSetupShell(): JSX.Element {
         )
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stageYamlSnippet])
 
   const validate = React.useCallback(() => {
@@ -292,6 +287,7 @@ export default function DeployStageSetupShell(): JSX.Element {
       }
       setIncompleteTabs(newIncompleteTabs)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setIncompleteTabs, selectedStage?.stage])
 
   React.useEffect(() => {
@@ -307,15 +303,10 @@ export default function DeployStageSetupShell(): JSX.Element {
           const stageType = selectedStage?.stage?.type
           const openExecutionStrategy = stageType ? stagesMap[stageType].openExecutionStrategy : true
           const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(selectedDeploymentType || '')
-          const gitOpsEnabled = selectedStage?.stage?.spec?.gitOpsEnabled
+
           // Show executiomn strategies when openExecutionStrategy is true and deployment type is not serverless and
-          // when gitOpsEnabled to true
-          if (
-            openExecutionStrategy &&
-            !isServerlessDeploymentTypeSelected &&
-            selectedSectionId === DeployTabs.EXECUTION &&
-            !gitOpsEnabled
-          ) {
+          // when gitOpsEnabled to false
+          if (openExecutionStrategy && !isServerlessDeploymentTypeSelected && !gitOpsEnabled) {
             updatePipelineView({
               ...pipelineView,
               isDrawerOpened: true,
@@ -341,7 +332,7 @@ export default function DeployStageSetupShell(): JSX.Element {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedStage, selectedTabId, selectedStageId, selectedDeploymentType, selectedSectionId])
+  }, [selectedStage, selectedTabId, selectedStageId, selectedDeploymentType])
 
   React.useEffect(() => {
     if (!selectedDeploymentType) {
@@ -349,6 +340,7 @@ export default function DeployStageSetupShell(): JSX.Element {
       return
     }
     validate()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(selectedStage)])
 
   const originalStage = selectedStageId ? getStageFromPipeline(selectedStageId, originalPipeline).stage : undefined
@@ -543,6 +535,7 @@ export default function DeployStageSetupShell(): JSX.Element {
             <SaveTemplateButton
               data={selectedStage.stage}
               type={'Stage'}
+              gitDetails={gitDetails}
               buttonProps={{
                 margin: { right: 'medium' },
                 disabled: !!selectedStage.stage.spec?.serviceConfig?.useFromStage

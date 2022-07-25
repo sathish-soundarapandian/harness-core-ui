@@ -17,6 +17,7 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType
 } from '@wings-software/uicore'
+import { FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import { debounce, noop, get, defaultTo } from 'lodash-es'
@@ -30,6 +31,8 @@ import {
 
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { Connectors } from '@connectors/constants'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
@@ -191,6 +194,8 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+
   return (
     <Layout.Vertical spacing="medium">
       <Formik<AzureWebAppInfrastructureUI>
@@ -222,6 +227,11 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
           formikRef.current = formik
           return (
             <FormikForm>
+              <Layout.Vertical flex={{ alignItems: 'flex-start' }} margin={{ bottom: 'medium' }} spacing="medium">
+                <Text font={{ variation: FontVariation.H6 }}>
+                  {isSvcEnvEnabled ? getString('cd.steps.azureWebAppInfra.webAppInfraheader') : ''}
+                </Text>
+              </Layout.Vertical>
               <Layout.Horizontal className={css.formRow} spacing="medium">
                 <FormMultiTypeConnectorField
                   name="connectorRef"

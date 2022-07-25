@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { SelectOption } from '@harness/uicore'
 import type { useGetMetricPacks, useGetLabelNames } from 'services/cv'
 
 export type SelectHealthSourceServicesProps = {
@@ -12,7 +13,7 @@ export type SelectHealthSourceServicesProps = {
     sli: boolean
     healthScore?: boolean
     continuousVerification?: boolean
-    serviceInstance?: string
+    serviceInstance?: string | SelectOption
     riskCategory?: string
     serviceInstanceMetricPath?: string
   }

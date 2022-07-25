@@ -127,7 +127,7 @@ export default function DatadogMetricsDetailsContent(props: DatadogMetricsDetail
     activeMetric?: string,
     aggregator?: DatadogAggregationType,
     selectedMetricTagOptions: SelectOption[] = [],
-    serviceInstanceIdentifier?: string,
+    serviceInstanceIdentifier?: string | SelectOption,
     groupName?: SelectOption
   ): void => {
     const selectedMetricTags = selectedMetricTagOptions?.map(tagOption => tagOption.value as string)
@@ -136,7 +136,9 @@ export default function DatadogMetricsDetailsContent(props: DatadogMetricsDetail
       aggregator,
       selectedMetricTags,
       formikProps.values.groupingTags || [],
-      serviceInstanceIdentifier
+      typeof serviceInstanceIdentifier === 'string'
+        ? serviceInstanceIdentifier
+        : (serviceInstanceIdentifier?.value as string)
     )
     const query = formikProps.values.isManualQuery ? formikProps.values.query : queryBuilder.query
     if (selectedMetric && selectedMetricData) {

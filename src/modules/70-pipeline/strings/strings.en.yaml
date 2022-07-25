@@ -425,10 +425,15 @@ loopingStrategy:
   toggleTypeModal:
     title: Are you sure, you want to switch the looping strategy?
     content: '{{$.pipeline.loopingStrategy.warningText}}'
-  helperText:
-    matrix: Matrix gives the ability to execute the same set of tasks multiple times for a bunch of different configurations.
-    for: Placeholder for helper text of for loop.
-    parallelism: Placeholder for helper text of parallelism
+  matrix:
+    label: Matrix
+    helperText: Matrix gives the ability to execute the same set of tasks multiple times for a bunch of different configurations.
+  repeat:
+    label: Repeat
+    helperText: Repeat gives the ability to execute the same set of tasks multiple times.
+  parallelism:
+    label: Parallelism
+    helperText: If parallelism is set to N > 1, then N independent executors will be set up and each will run that stage/step in parallel.
 selectOrCreatePipeline:
   pipelineNameRequired: Please select a pipeline
   setupHeader: Create or Select a Pipeline
@@ -1201,16 +1206,14 @@ recentTenExecutions: 'Recent 10 Executions'
 lastExecution: 'Last Execution'
 lastModified: 'Last Modified'
 executionId: Execution Id
-lastExecutedBy: Last Executed By
 imageTag: 'image: {{image}}'
+fileSource: 'File Source'
+fileDetails: 'File Details'
 appServiceConfig:
   title: App Services Configuration
   applicationSettings:
     name: Application Settings
     file: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File'
-    scriptFile: '{{$.pipeline.appServiceConfig.applicationSettings.name}} Script File'
-    scriptFileSource: '{{$.pipeline.appServiceConfig.applicationSettings.name}} Script File Source'
-    scriptFileDetails: '{{$.pipeline.appServiceConfig.applicationSettings.name}} Script File Details'
     fileDetails: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File Details'
     fileSource: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File Source'
     filePath: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File Path'
@@ -1218,9 +1221,6 @@ appServiceConfig:
   connectionStrings:
     name: Connection Strings
     file: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File'
-    scriptFile: '{{$.pipeline.appServiceConfig.connectionStrings.name}} Script File'
-    scriptFileSource: '{{$.pipeline.appServiceConfig.connectionStrings.name}} Script File Source'
-    scriptFileDetails: '{{$.pipeline.appServiceConfig.connectionStrings.name}} Script File Details'
     fileDetails: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Details'
     fileSource: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Source'
     filePath: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Path'
@@ -1228,7 +1228,9 @@ appServiceConfig:
 startupScript:
   name: Startup Script
   subtitle: 'Specify Azure Web App Startup Script Type'
-  file: '{{$.pipeline.startupScript.name}} File'
   fileDetails: '{{$.pipeline.startupScript.name}} File Details'
   fileSource: '{{$.pipeline.startupScript.name}} File Source'
   scriptFilePath: 'Script File Path'
+  selectFileType: 'Select file type'
+  fileValidation: 'file is required'
+  plainText: 'Plain Text'

@@ -266,11 +266,11 @@ export const onMetricChange = (
   value: string,
   formikProps: FormikProps<DatadogMetricInfo>,
   onRebuildMetricData: (
-    activeMetric?: string | undefined,
-    aggregator?: DatadogAggregationType | undefined,
+    activeMetric?: string,
+    aggregator?: DatadogAggregationType,
     selectedMetricTagOptions?: SelectOption[],
-    serviceInstanceIdentifier?: string | undefined,
-    groupName?: SelectOption | undefined
+    serviceInstanceIdentifier?: string | SelectOption,
+    groupName?: SelectOption
   ) => void,
   resetActiveMetrics?: () => void
 ): void => {

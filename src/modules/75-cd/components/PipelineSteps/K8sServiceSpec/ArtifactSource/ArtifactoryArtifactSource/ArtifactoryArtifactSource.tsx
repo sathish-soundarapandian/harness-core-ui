@@ -9,7 +9,7 @@ import React, { useState, useMemo } from 'react'
 import { defaultTo, get } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
 
-import { AllowedTypes, FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypes, FormInput, Layout, MultiTypeInputType } from '@wings-software/uicore'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useMutateAsGet } from '@common/hooks'
@@ -197,8 +197,11 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
         (currStage: StageElementWrapper) => currStage.stage?.identifier === props.stageIdentifier
       ).stage.spec as DeploymentStageConfig
     }
-    return selectedStageSpec?.serviceConfig?.serviceDefinition?.type as ServiceDeploymentType
-  }, [props.formik.values.pipeline, props.formik.values.stages, props.stageIdentifier])
+
+    return isNewServiceEnvEntity(path as string)
+      ? (selectedStageSpec?.service?.serviceInputs?.serviceDefinition?.type as ServiceDeploymentType)
+      : (selectedStageSpec?.serviceConfig?.serviceDefinition?.type as ServiceDeploymentType)
+  }, [path, props.formik.values, props.stageIdentifier])
 
   const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(selectedDeploymentType)
 
@@ -450,18 +453,18 @@ export class ArtifactoryArtifactSource extends ArtifactSourceBase<ArtifactSource
     const { initialValues, artifactPath, artifact } = props
 
     if (isServerlessDeploymentTypeSelected) {
-      const isArtifactDirectoryPresent = getImagePath(
+      const isArtifactDirectoryPresent = getDefaultQueryParam(
         artifact?.spec?.artifactDirectory,
         get(initialValues, `artifacts.${artifactPath}.spec.artifactDirectory`, '')
       )
-      const isServerlessConnectorPresent =
-        getMultiTypeFromValue(artifact?.spec?.connectorRef) !== MultiTypeInputType.RUNTIME
-          ? artifact?.spec?.connectorRef
-          : get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
-      const isServerlessRepositoryPresent =
-        getMultiTypeFromValue(artifact?.spec?.repository) !== MultiTypeInputType.RUNTIME
-          ? artifact?.spec?.repository
-          : get(initialValues?.artifacts, `${artifactPath}.spec.repository`, '')
+      const isServerlessConnectorPresent = getDefaultQueryParam(
+        artifact?.spec?.connectorRef,
+        get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '')
+      )
+      const isServerlessRepositoryPresent = getDefaultQueryParam(
+        artifact?.spec?.repository,
+        get(initialValues?.artifacts, `${artifactPath}.spec.repository`, '')
+      )
 
       return !(isArtifactDirectoryPresent && isServerlessConnectorPresent && isServerlessRepositoryPresent)
     }

@@ -3,8 +3,7 @@
 exports[`Test GatewayDetails renders review screen 1`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main"
-    style="overflow: scroll; max-height: 100vh;"
+    class="StyledProps--font StyledProps--main gatewayDetailsContainer"
   >
     <div
       class="breadCrumb breadcrumbs"
@@ -882,8 +881,7 @@ exports[`Test GatewayDetails renders review screen 1`] = `
 exports[`Test GatewayDetails renders review screen 2`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main"
-    style="overflow: scroll; max-height: 100vh;"
+    class="StyledProps--font StyledProps--main gatewayDetailsContainer"
   >
     <div
       class="breadCrumb breadcrumbs"
@@ -1951,8 +1949,7 @@ exports[`Test GatewayDetails renders review screen 2`] = `
 exports[`Test GatewayDetails renders setup access screen 1`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main"
-    style="overflow: scroll; max-height: 100vh;"
+    class="StyledProps--font StyledProps--main gatewayDetailsContainer"
   >
     <div
       class="breadCrumb breadcrumbs"
@@ -2344,8 +2341,7 @@ exports[`Test GatewayDetails renders setup access screen 1`] = `
 exports[`Test GatewayDetails renders setup access screen and move to previous step 1`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main"
-    style="overflow: scroll; max-height: 100vh;"
+    class="StyledProps--font StyledProps--main gatewayDetailsContainer"
   >
     <div
       class="breadCrumb breadcrumbs"
@@ -2737,8 +2733,7 @@ exports[`Test GatewayDetails renders setup access screen and move to previous st
 exports[`Test GatewayDetails renders setup access screen and move to previous step 2`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main"
-    style="overflow: scroll; max-height: 100vh;"
+    class="StyledProps--font StyledProps--main gatewayDetailsContainer"
   >
     <div
       class="breadCrumb breadcrumbs"
@@ -3862,8 +3857,7 @@ exports[`Test GatewayDetails renders setup access screen and move to previous st
 exports[`Test GatewayDetails renders without crashing 1`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main"
-    style="overflow: scroll; max-height: 100vh;"
+    class="StyledProps--font StyledProps--main gatewayDetailsContainer"
   >
     <div
       class="breadCrumb breadcrumbs"

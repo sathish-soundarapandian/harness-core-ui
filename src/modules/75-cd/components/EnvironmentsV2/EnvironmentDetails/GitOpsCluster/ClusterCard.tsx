@@ -47,7 +47,7 @@ const ClusterCard = (props: ClusterCardProps): React.ReactElement => {
       <div className={css.clusterCardRightSide}>
         <Icon name="gitops-clusters" />
         <Layout.Vertical flex={{ justifyContent: 'flex-start' }} spacing="small" margin={{ bottom: 'small' }}>
-          <Text data-id="cluster-id-label" lineClamp={1} color={Color.BLACK} className={css.clusterName}>
+          <Text data-id="cluster-id-label" lineClamp={1} color={Color.BLACK} className={css.clusterName} width={150}>
             {defaultTo(cluster.name, '')}
           </Text>
           <Text
@@ -57,6 +57,7 @@ const ClusterCard = (props: ClusterCardProps): React.ReactElement => {
             color={Color.GREY_400}
             className={css.clusterId}
             margin={{ left: 'medium' }}
+            width={150}
           >
             ID: {cluster.identifier}
           </Text>

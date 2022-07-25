@@ -62,7 +62,6 @@ describe('Validate HealthSourceInputset', () => {
       <TestWrapper>
         <Formik formName="" initialValues={mockInitValue} onSubmit={() => undefined}>
           <HealthSourceInputset
-            sourceType={'AppDynamics'}
             templateRefData={templateRefData}
             isReadOnlyInputSet={true}
             healthSourcesWithRuntimeList={[
@@ -78,7 +77,6 @@ describe('Validate HealthSourceInputset', () => {
       <TestWrapper>
         <Formik formName="" initialValues={mockInitValue} onSubmit={() => undefined}>
           <HealthSourceInputset
-            sourceType={'AppDynamics'}
             templateRefData={templateRefData}
             isReadOnlyInputSet={false}
             healthSourcesWithRuntimeList={[
@@ -106,7 +104,6 @@ describe('Validate HealthSourceInputset', () => {
     const { container } = render(
       <TestWrapper>
         <HealthSourceInputset
-          sourceType={''}
           templateRefData={templateRefData}
           isReadOnlyInputSet={true}
           healthSourcesWithRuntimeList={[]}
@@ -134,7 +131,6 @@ describe('Validate HealthSourceInputset', () => {
     const { container, getByText } = render(
       <TestWrapper>
         <HealthSourceInputset
-          sourceType={'AppDynamics'}
           templateRefData={templateRefData}
           isReadOnlyInputSet={true}
           healthSourcesWithRuntimeList={[]}
@@ -159,7 +155,6 @@ describe('Validate HealthSourceInputset', () => {
     const { container } = render(
       <TestWrapper>
         <HealthSourceInputset
-          sourceType={'AppDynamics'}
           templateRefData={templateRefData}
           isReadOnlyInputSet={true}
           healthSourcesWithRuntimeList={[]}

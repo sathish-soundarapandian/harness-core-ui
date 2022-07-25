@@ -105,11 +105,15 @@ describe('CCM Perspective Creation flow', () => {
 
     cy.contains('span', 'Next').click()
 
-    cy.contains('p', 'Report Schedules(0)').should('exist')
-    cy.contains('p', 'Budget(0)').should('exist')
+    cy.contains('p', 'Reports (0)').should('exist')
+    cy.contains('p', 'Budgets (0)').should('exist')
 
+    cy.get('span[icon="chevron-down"]').each($btn => {
+      cy.wrap($btn).click()
+    })
     cy.contains('span', '+ create new Report schedule').should('exist')
     cy.contains('span', '+ create new Budget').should('exist')
+    cy.contains('span', '+ create new Anomaly Alert').should('exist')
 
     cy.contains('span', 'Next').click()
 

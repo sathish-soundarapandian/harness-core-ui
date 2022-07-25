@@ -4,11 +4,9 @@ exports[`Create Auto Stopping rule Render cloud provider & connector selection s
 <div>
   <div
     class="StyledProps--font StyledProps--main StyledProps--background-white"
-    style="height: 100vh;"
   >
     <div
       class="StyledProps--font StyledProps--main StyledProps--background-white"
-      style="height: 100vh;"
     >
       <div
         class="breadCrumb breadcrumbs"

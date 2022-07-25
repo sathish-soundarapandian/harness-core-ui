@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
+import { getSanitizedflatObjectForVariablesView } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalCommons'
 import type { AzureWebAppSwapSlotData, AzureWebAppSwapSlotVariableStepProps } from './SwapSlot.types'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
@@ -15,8 +16,8 @@ export function AzureWebAppSwapSlotVariableStep(props: AzureWebAppSwapSlotVariab
   const { variablesData = {} as AzureWebAppSwapSlotData, metadataMap, initialValues } = props
   return (
     <VariablesListTable
-      data={variablesData}
-      originalData={initialValues}
+      data={getSanitizedflatObjectForVariablesView(variablesData)}
+      originalData={initialValues as Record<string, any>}
       metadataMap={metadataMap}
       className={pipelineVariableCss.variablePaddingL3}
     />

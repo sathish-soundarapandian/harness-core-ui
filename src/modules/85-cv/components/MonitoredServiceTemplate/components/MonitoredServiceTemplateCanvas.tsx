@@ -9,23 +9,27 @@ import React from 'react'
 import { isEqual } from 'lodash-es'
 import { ConfigurationsWithRef } from '@cv/pages/monitored-service/components/Configurations/Configurations'
 import type { MonitoredServiceForm } from '@cv/pages/monitored-service/components/Configurations/components/Service/Service.types'
-import type { JsonNode } from 'services/template-ng'
+import type { JsonNode, NGTemplateInfoConfig } from 'services/template-ng'
 import { MonitoredServiceProvider } from '@cv/pages/monitored-service/MonitoredServiceContext'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { DefaultSpec } from './MonitoredServiceTemplateCanvas.constants'
+import type { NGMonitoredServiceTemplateInfoConfig } from './MonitoredServiceTemplateCanvas.types'
 
-const MonitoredServiceTemplateCanvas = (_props: unknown, formikRef: TemplateFormRef) => {
+const MonitoredServiceTemplateCanvas = (_props: unknown, formikRef: TemplateFormRef<unknown>) => {
   const { state, updateTemplate } = React.useContext(TemplateContext)
+  const stateTemplate = state.template as NGMonitoredServiceTemplateInfoConfig
   const onUpdate = (formikValue: MonitoredServiceForm) => {
     if (
       !isEqual(state.template.spec, {
         serviceRef: formikValue?.serviceRef,
         environmentRef: formikValue?.environmentRef
-      })
+      }) ||
+      !isEqual(stateTemplate.notificationRuleRefs, formikValue.notificationRuleRefs)
     ) {
       updateTemplate({
         ...state.template,
+        notificationRuleRefs: formikValue.notificationRuleRefs,
         spec: {
           serviceRef: formikValue?.serviceRef,
           environmentRef: formikValue?.environmentRef,
@@ -33,7 +37,7 @@ const MonitoredServiceTemplateCanvas = (_props: unknown, formikRef: TemplateForm
           sources: formikValue?.sources || {},
           variables: state?.template?.spec?.variables
         } as JsonNode
-      })
+      } as NGTemplateInfoConfig)
     }
   }
 

@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom'
 import { Card, Layout, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import {
+  AzureWebAppInstanceInfoDTO,
   GetActiveInstancesByServiceIdEnvIdAndBuildIdsQueryParams,
   InstanceDetailsDTO,
   NativeHelmInstanceInfoDTO,
@@ -106,22 +107,48 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
 
   const instanceData = data?.data?.instancesByBuildIdList?.[0]?.instances[instanceNum] || {}
 
+  function instanceInfoData(deploymentType: string | undefined): any {
+    switch (deploymentType) {
+      case ServiceDeploymentType.AzureWebApp:
+        return [
+          {
+            label: getString('cd.serviceDashboard.webApp'),
+            value: (instanceData.instanceInfoDTO as AzureWebAppInstanceInfoDTO).appName || ''
+          },
+          {
+            label: getString('cd.serviceDashboard.host'),
+            value: (instanceData.instanceInfoDTO as AzureWebAppInstanceInfoDTO).hostName || ''
+          },
+          {
+            label: getString('common.state'),
+            value: (instanceData.instanceInfoDTO as AzureWebAppInstanceInfoDTO).instanceState || ''
+          },
+          {
+            label: getString('cd.serviceDashboard.artifact'),
+            value: instanceData.artifactName || ''
+          }
+        ]
+      default:
+        return [
+          {
+            label:
+              instanceData.instanceInfoDTO?.type === ServiceDeploymentType.ServerlessAwsLambda
+                ? getString('cd.serviceDashboard.function')
+                : getString('cd.serviceDashboard.pod'),
+            value: instanceData.podName || ''
+          },
+          {
+            label: getString('cd.serviceDashboard.artifact'),
+            value: instanceData.artifactName || ''
+          }
+        ]
+    }
+  }
+
   const sectionData: SectionProps[] = [
     {
       header: getString('cd.serviceDashboard.instanceDetails'),
-      values: [
-        {
-          label:
-            instanceData.instanceInfoDTO?.type === ServiceDeploymentType.ServerlessAwsLambda
-              ? getString('cd.serviceDashboard.function')
-              : getString('cd.serviceDashboard.pod'),
-          value: instanceData.podName || ''
-        },
-        {
-          label: getString('cd.serviceDashboard.artifact'),
-          value: instanceData.artifactName || ''
-        }
-      ]
+      values: instanceInfoData(instanceData.instanceInfoDTO?.type)
     },
     {
       header: getString('infrastructureText'),

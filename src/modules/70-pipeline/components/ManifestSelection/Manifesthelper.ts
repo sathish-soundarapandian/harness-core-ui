@@ -126,19 +126,30 @@ export const gitStoreTypes: Array<ManifestStores> = [
   ManifestStoreMap.Bitbucket
 ]
 export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
-  K8sManifest: [...gitStoreTypes, ManifestStoreMap.Harness],
-  Values: [...gitStoreTypes, ManifestStoreMap.InheritFromManifest, ManifestStoreMap.Harness],
+  K8sManifest: [...gitStoreTypes, ManifestStoreMap.Harness, ManifestStoreMap.CustomRemote],
+  Values: [
+    ...gitStoreTypes,
+    ManifestStoreMap.InheritFromManifest,
+    ManifestStoreMap.Harness,
+    ManifestStoreMap.CustomRemote
+  ],
   HelmChart: [
     ...gitStoreTypes,
     ManifestStoreMap.Http,
     ManifestStoreMap.OciHelmChart,
     ManifestStoreMap.S3,
     ManifestStoreMap.Gcs,
-    ManifestStoreMap.Harness
+    ManifestStoreMap.Harness,
+    ManifestStoreMap.CustomRemote
+  ],
+  OpenshiftTemplate: [...gitStoreTypes, ManifestStoreMap.Harness, ManifestStoreMap.CustomRemote],
+  OpenshiftParam: [
+    ...gitStoreTypes,
+    ManifestStoreMap.InheritFromManifest,
+    ManifestStoreMap.Harness,
+    ManifestStoreMap.CustomRemote
   ],
   Kustomize: [...gitStoreTypes, ManifestStoreMap.Harness],
-  OpenshiftTemplate: [...gitStoreTypes, ManifestStoreMap.Harness],
-  OpenshiftParam: [...gitStoreTypes, ManifestStoreMap.InheritFromManifest, ManifestStoreMap.Harness],
   KustomizePatches: [...gitStoreTypes, ManifestStoreMap.InheritFromManifest, ManifestStoreMap.Harness],
   ServerlessAwsLambda: gitStoreTypes
 }

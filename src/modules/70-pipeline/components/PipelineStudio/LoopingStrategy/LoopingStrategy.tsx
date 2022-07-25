@@ -14,7 +14,6 @@ import {
   Container,
   Formik,
   Layout,
-  Link,
   Text,
   useToggleOpen
 } from '@harness/uicore'
@@ -162,15 +161,9 @@ export function LoopingStrategy({
               <Layout.Vertical spacing={'medium'}>
                 <Text color={Color.GREY_700} font={{ size: 'small' }}>
                   {getString('pipeline.loopingStrategy.subTitle', { maxCount: strategyEntries.length })}{' '}
-                  <Link
-                    rel="noreferrer"
-                    color={Color.BLUE_400}
-                    target="_blank"
-                    href={DOCUMENT_URL}
-                    font={{ size: 'small' }}
-                  >
+                  <a rel="noreferrer" target="_blank" href={DOCUMENT_URL}>
                     {getString('pipeline.loopingStrategy.learnMore')}
-                  </Link>
+                  </a>
                 </Text>
                 <Container>
                   <Layout.Horizontal
@@ -192,7 +185,7 @@ export function LoopingStrategy({
                         data-testid={key}
                       >
                         <Text font={{ variation: FontVariation.BODY }} color={Color.PRIMARY_7}>
-                          {item.label}
+                          {getString(item.label)}
                         </Text>
                       </Card>
                     ))}
@@ -206,19 +199,13 @@ export function LoopingStrategy({
                           <Container style={{ flexGrow: 1 }}>
                             <Layout.Vertical>
                               <Text font={{ variation: FontVariation.BODY, weight: 'semi-bold' }}>
-                                {selectedStrategyMetaData.label}
+                                {getString(selectedStrategyMetaData.label)}
                               </Text>
                               <Text color={Color.GREY_700} font={{ size: 'small' }}>
                                 {getString(selectedStrategyMetaData.helperText)}{' '}
-                                <Link
-                                  rel="noreferrer"
-                                  color={Color.BLUE_400}
-                                  target="_blank"
-                                  href={selectedStrategyMetaData.helperLink}
-                                  font={{ size: 'small' }}
-                                >
+                                <a rel="noreferrer" target="_blank" href={selectedStrategyMetaData.helperLink}>
                                   {getString('learnMore')}
-                                </Link>
+                                </a>
                               </Text>
                             </Layout.Vertical>
                           </Container>

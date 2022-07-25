@@ -17,6 +17,7 @@ import { PageSpinner } from '@common/components'
 import RbacButton from '@rbac/components/Button/Button'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import { useTelemetry } from '@common/hooks/useTelemetry'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
@@ -90,7 +91,8 @@ export class ChildAppMounter<T = never> extends React.Component<
             MonacoDiffEditor
           }}
           hooks={{
-            useDocumentTitle
+            useDocumentTitle,
+            useTelemetry
           }}
         >
           {children}

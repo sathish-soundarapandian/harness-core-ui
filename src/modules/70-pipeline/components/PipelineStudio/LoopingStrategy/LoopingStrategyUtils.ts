@@ -9,34 +9,34 @@ import type { StringsMap } from 'stringTypes'
 
 export enum LoopingStrategyEnum {
   Matrix = 'matrix',
-  For = 'for',
+  Repeat = 'repeat',
   Parallelism = 'parallelism'
 }
 
 export interface LoopingStrategy {
-  label: string
-  defaultValue: any
+  label: keyof StringsMap
+  defaultValue: unknown
   helperText: keyof StringsMap
   helperLink: string
 }
 
 export const AvailableStrategies: Record<LoopingStrategyEnum, LoopingStrategy> = {
   [LoopingStrategyEnum.Matrix]: {
-    label: 'Matrix',
+    label: 'pipeline.loopingStrategy.matrix.label',
     defaultValue: {},
-    helperText: 'pipeline.loopingStrategy.helperText.matrix',
-    helperLink: 'https://www.google.com'
+    helperText: 'pipeline.loopingStrategy.matrix.helperText',
+    helperLink: 'https://docs.harness.io'
   },
-  [LoopingStrategyEnum.For]: {
-    label: 'For Loop',
+  [LoopingStrategyEnum.Repeat]: {
+    label: 'pipeline.loopingStrategy.repeat.label',
     defaultValue: {},
-    helperText: 'pipeline.loopingStrategy.helperText.for',
-    helperLink: 'https://www.google.com'
+    helperText: 'pipeline.loopingStrategy.repeat.helperText',
+    helperLink: 'https://docs.harness.io'
   },
   [LoopingStrategyEnum.Parallelism]: {
-    label: 'Parallelism',
+    label: 'pipeline.loopingStrategy.parallelism.label',
     defaultValue: 1,
-    helperText: 'pipeline.loopingStrategy.helperText.parallelism',
-    helperLink: 'https://www.google.com'
+    helperText: 'pipeline.loopingStrategy.parallelism.helperText',
+    helperLink: 'https://docs.harness.io'
   }
 }

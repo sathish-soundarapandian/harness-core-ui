@@ -61,6 +61,7 @@ export default function CloudMetricsHealthSource<T>(props: CloudMetricsHealthSou
   const [shouldShowChart, setShouldShowChart] = useState<boolean>(false)
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorRef) !== MultiTypeInputType.FIXED
+  const isQueryRuntimeOrExpression = getMultiTypeFromValue(selectedMetricInfo?.query) !== MultiTypeInputType.FIXED
   const sampleData = useMemo(() => {
     return transformSampleDataIntoHighchartOptions(selectedMetricInfo?.timeseriesData || [])
   }, [selectedMetricInfo?.timeseriesData])
@@ -184,7 +185,7 @@ export default function CloudMetricsHealthSource<T>(props: CloudMetricsHealthSou
                   />
                   <MetricsValidationChart
                     submitQueryText={
-                      isConnectorRuntimeOrExpression
+                      isQueryRuntimeOrExpression
                         ? 'cv.customHealthSource.chartRuntimeWarning'
                         : 'cv.monitoringSources.datadogLogs.submitQueryToSeeRecords'
                     }
@@ -192,7 +193,7 @@ export default function CloudMetricsHealthSource<T>(props: CloudMetricsHealthSou
                     error={timeseriesDataError}
                     sampleData={sampleData}
                     queryValue={selectedMetricInfo?.query}
-                    isQueryExecuted={shouldShowChart}
+                    isQueryExecuted={isQueryRuntimeOrExpression ? !isQueryRuntimeOrExpression : shouldShowChart}
                     onRetry={async () => {
                       if (!formikProps?.values?.query?.length) {
                         return

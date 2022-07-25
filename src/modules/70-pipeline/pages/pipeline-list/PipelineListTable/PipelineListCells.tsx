@@ -13,7 +13,8 @@ import defaultTo from 'lodash-es/defaultTo'
 import { useParams, Link } from 'react-router-dom'
 import type { CellProps, Renderer } from 'react-table'
 import ReactTimeago from 'react-timeago'
-import React from 'react'
+import React, { ReactNode } from 'react'
+import cx from 'classnames'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import routes from '@common/RouteDefinitions'
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
@@ -28,15 +29,16 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import { Badge } from '@pipeline/pages/utils/Badge/Badge'
 import { getReadableDateTime } from '@common/utils/dateUtils'
-import type { PMSPipelineSummaryResponse } from 'services/pipeline-ng'
+import type { PMSPipelineSummaryResponse, RecentExecutionInfoDTO } from 'services/pipeline-ng'
 import { ClonePipelineForm } from '@pipeline/pages/pipelines/views/ClonePipelineForm/ClonePipelineForm'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
-import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
+import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
+import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getRouteProps } from '../PipelineListUtils'
 import type { PipelineListPagePathParams } from '../types'
 import css from './PipelineListTable.module.scss'
 
-const LabeValue = ({ label, value }: { label: string; value: string | undefined }) => {
+const LabeValue = ({ label, value }: { label: string; value: ReactNode }) => {
   return (
     <Layout.Horizontal spacing="small">
       <Text color={Color.GREY_200}>{label}:</Text>
@@ -45,7 +47,62 @@ const LabeValue = ({ label, value }: { label: string; value: string | undefined 
   )
 }
 
-export const CodeSourceCell: Renderer<CellProps<PMSPipelineSummaryResponse>> = ({ row }) => {
+type CellType = Renderer<CellProps<PMSPipelineSummaryResponse>>
+
+export const PipelineNameCell: CellType = ({ row }) => {
+  const data = row.original
+  const { getString } = useStrings()
+  const { projectIdentifier, orgIdentifier, accountId, module } = useParams<PipelineListPagePathParams>()
+
+  const href = routes.toPipelineStudio({
+    orgIdentifier,
+    projectIdentifier,
+    pipelineIdentifier: data.identifier!,
+    accountId,
+    module
+  })
+  return (
+    <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'space-between' }}>
+      <Layout.Vertical spacing="xsmall" data-testid={data.identifier}>
+        <Layout.Horizontal spacing="medium">
+          <Link to={href}>
+            <Text
+              font={{ size: 'normal' }}
+              color={Color.PRIMARY_7}
+              tooltipProps={{ isDark: true }}
+              tooltip={
+                <Layout.Vertical spacing="medium" padding="medium" style={{ maxWidth: 400 }}>
+                  <LabeValue label={getString('name')} value={data.name} />
+                  <LabeValue label={getString('common.ID')} value={data.identifier} />
+                  {data.description && <LabeValue label={getString('description')} value={data.description} />}
+                </Layout.Vertical>
+              }
+            >
+              {data.name}
+            </Text>
+          </Link>
+          {data.tags && Object.keys(data.tags || {}).length ? <TagsPopover tags={data.tags} /> : null}
+        </Layout.Horizontal>
+        <Text color={Color.GREY_400} font="small">
+          {getString('idLabel', { id: data.identifier })}
+        </Text>
+      </Layout.Vertical>
+      {data?.entityValidityDetails?.valid === false && (
+        <Container margin={{ left: 'large' }}>
+          <Badge
+            text={'common.invalid'}
+            iconName="error-outline"
+            showTooltip={true}
+            entityName={data.name}
+            entityType={'Pipeline'}
+          />
+        </Container>
+      )}
+    </Layout.Horizontal>
+  )
+}
+
+export const CodeSourceCell: CellType = ({ row }) => {
   const { gitDetails } = row.original
   const { getString } = useStrings()
   const data = row.original
@@ -82,25 +139,31 @@ export const CodeSourceCell: Renderer<CellProps<PMSPipelineSummaryResponse>> = (
   )
 }
 
-export const LastExecutionCell: Renderer<CellProps<PMSPipelineSummaryResponse>> = ({ row }) => {
+export const LastExecutionCell: CellType = ({ row }) => {
+  const { getString } = useStrings()
   const data = row.original
-  const lastExecutionTs = data.executionSummaryInfo?.lastExecutionTs
+  const recentExecution: RecentExecutionInfoDTO = data.recentExecutionsInfo?.[0] || {}
+  const { startTs, executorInfo } = recentExecution
+  const executor = executorInfo?.email || executorInfo?.username
+
   return (
     <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>
-      <div className={css.avatar}>OL</div>
+      <div className={cx(css.avatar, !executor && css.hidden)}>{executor?.charAt(0)}</div>
       <Layout.Vertical spacing="small">
-        <Text color={Color.GREY_600} font={{ size: 'small' }}>
-          OliviaLee@gmail.com
-        </Text>
+        {executor && (
+          <Text color={Color.GREY_600} font={{ size: 'small' }}>
+            {executor}
+          </Text>
+        )}
         <Text color={Color.GREY_400} font={{ size: 'small' }}>
-          {lastExecutionTs ? <ReactTimeago date={lastExecutionTs} /> : 'This pipeline never ran'}
+          {startTs ? <ReactTimeago date={startTs} /> : getString('pipeline.neverRan')}
         </Text>
       </Layout.Vertical>
     </Layout.Horizontal>
   )
 }
 
-export const LastModifiedCell: Renderer<CellProps<PMSPipelineSummaryResponse>> = ({ row }) => {
+export const LastModifiedCell: CellType = ({ row }) => {
   const data = row.original
   return (
     <Text color={Color.GREY_600} font={{ size: 'small' }}>
@@ -109,7 +172,7 @@ export const LastModifiedCell: Renderer<CellProps<PMSPipelineSummaryResponse>> =
   )
 }
 
-export const MenuCell: Renderer<CellProps<PMSPipelineSummaryResponse>> = ({ row, column }) => {
+export const MenuCell: CellType = ({ row, column }) => {
   const data = row.original
   const pathParams = useParams<PipelineListPagePathParams>()
   const [menuOpen, setMenuOpen] = React.useState(false)
@@ -223,81 +286,37 @@ export const MenuCell: Renderer<CellProps<PMSPipelineSummaryResponse>> = ({ row,
   )
 }
 
-export const PipelineNameCell: Renderer<CellProps<PMSPipelineSummaryResponse>> = ({ row }) => {
+export const RecentTenExecutionsCell: CellType = ({ row }) => {
+  const { getString } = useStrings()
   const data = row.original
-  const { getString } = useStrings()
-  const pathParams = useParams<PipelineListPagePathParams>()
+  let recentExecutions = data.recentExecutionsInfo || []
+  const { projectIdentifier, orgIdentifier, accountId, module, source } =
+    useParams<PipelineType<PipelineListPagePathParams>>()
 
-  return (
-    <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'space-between' }}>
-      <Layout.Vertical spacing="xsmall" data-testid={data.identifier}>
-        <Layout.Horizontal spacing="medium">
-          <Link to={routes.toPipelines(getRouteProps(pathParams, data))}>
-            <Text
-              font={{ size: 'normal' }}
-              color={Color.PRIMARY_7}
-              tooltipProps={{ isDark: true }}
-              tooltip={
-                <Layout.Vertical spacing="medium" padding="medium" style={{ maxWidth: 400 }}>
-                  <LabeValue label={getString('name')} value={data.name} />
-                  <LabeValue label={getString('common.ID')} value={data.identifier} />
-                  {data.description && <LabeValue label={getString('description')} value={data.description} />}
-                </Layout.Vertical>
-              }
-            >
-              {data.name}
-            </Text>
-          </Link>
-          {data.tags && Object.keys(data.tags || {}).length ? <TagsPopover tags={data.tags} /> : null}
-        </Layout.Horizontal>
-        <Text color={Color.GREY_400} font="small">
-          {getString('idLabel', { id: data.identifier })}
-        </Text>
-      </Layout.Vertical>
-      {data?.entityValidityDetails?.valid === false && (
-        <Container margin={{ left: 'large' }}>
-          <Badge
-            text={'common.invalid'}
-            iconName="error-outline"
-            showTooltip={true}
-            entityName={data.name}
-            entityType={'Pipeline'}
-          />
-        </Container>
-      )}
-    </Layout.Horizontal>
-  )
-}
+  // Fill the size to adopt UX that always displays 10 items
+  if (recentExecutions.length < 10) {
+    const fillExecutions = Array(10 - recentExecutions.length).fill({ status: ExecutionStatusEnum.NotStarted })
+    recentExecutions = [...recentExecutions, ...fillExecutions]
+  }
 
-export const RecentTenExecutionsCell: Renderer<CellProps<PMSPipelineSummaryResponse>> = () => {
-  const { getString } = useStrings()
+  const routeByExecutionId = (executionIdentifier: string) =>
+    routes.toExecutionPipelineView({
+      orgIdentifier,
+      pipelineIdentifier: data.identifier || '',
+      projectIdentifier,
+      executionIdentifier,
+      accountId,
+      module,
+      source: source || 'deployments'
+    })
 
-  // TODO: temp data, replace once BE is ready
-  const statuses: ExecutionStatus[] = [
-    'Skipped',
-    'Queued',
-    'Errored',
-    'Suspended',
-    'Success',
-    'IgnoreFailed',
-    'Running',
-    'ResourceWaiting',
-    'InputWaiting',
-    'Paused'
-  ]
-  const executions = Array(10)
-    .fill({})
-    .map((_, index) => ({
-      executionId: index.toString(),
-      lastExecutedBy: 'OliviaLee@gmail.com',
-      status: index < 6 ? 'Success' : statuses[Math.floor(Math.random() * statuses.length)],
-      triggerName: 'chart trigger'
-    }))
   return (
     <StatusHeatMap
-      data={executions}
-      getId={i => defaultTo(i.executionId, '')}
-      getStatus={i => i.status}
+      className={css.recentExecutions}
+      data={recentExecutions}
+      getId={(i, index) => defaultTo(i.planExecutionId, index)}
+      getStatus={i => i.status as ExecutionStatus}
+      getRouteTo={i => (i.planExecutionId ? routeByExecutionId(i.planExecutionId) : undefined)}
       getPopoverProps={i => ({
         position: Position.TOP,
         interactionKind: PopoverInteractionKind.HOVER,
@@ -306,9 +325,22 @@ export const RecentTenExecutionsCell: Renderer<CellProps<PMSPipelineSummaryRespo
             <div>
               <ExecutionStatusLabel status={i.status as ExecutionStatus} />
             </div>
-            <LabeValue label={getString('pipeline.executionId')} value={i.executionId} />
-            <LabeValue label={getString('pipeline.lastExecutedBy')} value={i.status} />
-            <LabeValue label={getString('common.triggerName')} value={i.triggerName} />
+            {i.startTs && (
+              <>
+                <LabeValue label={getString('pipeline.executionId')} value={i.planExecutionId} />
+                <LabeValue
+                  label={getString('common.executedBy')}
+                  value={
+                    <Layout.Horizontal spacing="small" color={Color.WHITE} font="normal">
+                      <span>{i.executorInfo?.email}</span>
+                      <span>|</span>
+                      <ReactTimeago date={i.startTs} />
+                    </Layout.Horizontal>
+                  }
+                />
+                <LabeValue label={getString('common.triggerName')} value={i.executorInfo?.triggerType} />
+              </>
+            )}
           </Layout.Vertical>
         ),
         className: Classes.DARK

@@ -6,8 +6,8 @@
  */
 
 import React from 'react'
-import { get, pick } from 'lodash-es'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
+import { getSanitizedflatObjectForVariablesView } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalCommons'
 import type {
   AzureSlotDeploymentData,
   AzureSlotDeploymentVariableStepProps
@@ -20,10 +20,9 @@ export function AzureSlotDeploymentVariableStep({
   metadataMap,
   initialValues
 }: AzureSlotDeploymentVariableStepProps): React.ReactElement {
-  const data: Record<any, any> = pick(get(variablesData, 'spec', {}), ['webApp', 'deploymentSlot'])
   return (
     <VariablesListTable
-      data={data}
+      data={getSanitizedflatObjectForVariablesView(variablesData)}
       originalData={initialValues as Record<string, any>}
       metadataMap={metadataMap}
       className={pipelineVariableCss.variablePaddingL3}

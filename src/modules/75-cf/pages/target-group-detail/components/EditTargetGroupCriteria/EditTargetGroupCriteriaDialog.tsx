@@ -71,6 +71,8 @@ const EditTargetGroupCriteriaDialog: FC<EditTargetGroupCriteriaDialogProps> = ({
         ...getRulesInstructions(targetGroup?.rules || [], values.rules)
       ]
 
+      instructions.sort(({ kind: aKind }, { kind: bKind }) => (aKind > bKind ? -1 : 1))
+
       patch.segment.addAllInstructions(instructions)
 
       patch.segment

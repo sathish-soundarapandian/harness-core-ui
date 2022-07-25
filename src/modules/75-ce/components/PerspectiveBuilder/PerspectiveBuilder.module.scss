@@ -10,7 +10,8 @@
   height: 100%;
 
   .formContainer {
-    height: calc(100vh - 124px);
+    --page-header-height: 116px;
+    height: calc(var(--page-min-height) - var(--page-header-height));
     display: flex;
 
     & > div {

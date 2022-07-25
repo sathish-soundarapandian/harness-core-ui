@@ -645,6 +645,7 @@ const PerspectiveListPage: React.FC = () => {
           <HandleError errorMsg={getRBACErrorMessage(perspectiveError as any)} imgSrc={PermissionError} />
         </Container>
       ) : (
+      <Page.Body className={css.pageContainer}>
         <Layout.Horizontal className={css.bodyWrapper}>
           <PerspectiveFoldersSideNav
             setSelectedFolder={setSelectedFolder}
@@ -656,7 +657,7 @@ const PerspectiveListPage: React.FC = () => {
             deleteFolder={deleteFolder}
             updateFolder={updateFolder}
           />
-          <div style={{ flex: 1 }}>
+          <div className={css.listContainer}>
             {pespectiveList.length ? (
               <Layout.Horizontal spacing="large" className={css.header}>
                 <Layout.Horizontal spacing="large" style={{ alignItems: 'center' }}>
@@ -682,12 +683,12 @@ const PerspectiveListPage: React.FC = () => {
                   />
                 </Layout.Horizontal>
                 <FlexExpander />
-
                 <QuickFilters quickFilters={quickFilters} setQuickFilters={setQuickFilters} countInfo={countInfo} />
                 <ExpandingSearchInput
                   placeholder={getString('ce.perspectives.searchPerspectives')}
                   onChange={text => {
                     setSearchParam(text.trim())
+
                   }}
                   ref={searchRef}
                   className={css.search}
@@ -712,10 +713,9 @@ const PerspectiveListPage: React.FC = () => {
                 </Layout.Horizontal>
               </Layout.Horizontal>
             ) : null}
-            <Page.Body>
-              {(fetching || createViewLoading) && <Page.Spinner />}
-              {!pespectiveList.length ? (
-                <EmptyPage
+            {(fetching || createViewLoading) && <Page.Spinner />}
+            {!pespectiveList.length ? (
+              <EmptyPage
                   title={getString('ce.perspectives.emptyStateTitle')}
                   subtitle={getString('ce.perspectives.emptyStateDesc')}
                   buttonText={getString('ce.perspectives.newPerspective')}
@@ -733,32 +733,31 @@ const PerspectiveListPage: React.FC = () => {
                     ) : undefined
                   }
                 />
-              ) : null}
-              <Container
-                padding={{
-                  right: 'xxxlarge',
-                  left: 'xxxlarge',
-                  bottom: 'large',
-                  top: 'large'
-                }}
-              >
-                <PerspectiveListGridView
-                  pespectiveList={pespectiveList}
-                  navigateToPerspectiveDetailsPage={navigateToPerspectiveDetailsPage}
-                  deletePerpsective={deletePerpsective}
-                  createNewPerspective={createNewPerspective}
-                  clonePerspective={clonePerspective}
-                  filteredPerspectiveData={filteredPerspectiveData}
-                  view={view}
-                  setRefetchFolders={setRefetchFolders}
-                  setSelectedFolder={setSelectedFolder}
-                  setRefetchPerspectives={setRefetchPerspectives}
-                />
-              </Container>
-            </Page.Body>
+            ) : null}
+            <Container
+              padding={{
+                right: 'xxxlarge',
+                left: 'xxxlarge',
+                bottom: 'large',
+                top: 'large'
+              }}
+            >
+              <PerspectiveListGridView
+                pespectiveList={pespectiveList}
+                navigateToPerspectiveDetailsPage={navigateToPerspectiveDetailsPage}
+                deletePerpsective={deletePerpsective}
+                createNewPerspective={createNewPerspective}
+                clonePerspective={clonePerspective}
+                filteredPerspectiveData={filteredPerspectiveData}
+                view={view}
+                setRefetchFolders={setRefetchFolders}
+                setSelectedFolder={setSelectedFolder}
+                setRefetchPerspectives={setRefetchPerspectives}
+              />
+            </Container>
           </div>
         </Layout.Horizontal>
-      )}
+      </Page.Body>
     </>
   )
 }

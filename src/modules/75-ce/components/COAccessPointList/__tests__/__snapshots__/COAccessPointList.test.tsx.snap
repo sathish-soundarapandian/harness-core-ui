@@ -4,7 +4,6 @@ exports[`Test Access Point List Renders without errors 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main StyledProps--background-white"
-    style="height: 100vh;"
   >
     <div
       class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard header StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"

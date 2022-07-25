@@ -107,6 +107,7 @@ export default function InfrastructureModal({
             identifier: DefaultNewStageId,
             type: StageType.DEPLOY,
             spec: {
+              deploymentType: type,
               infrastructure: {
                 infrastructureDefinition: {
                   ...(Boolean(type) && { type }),

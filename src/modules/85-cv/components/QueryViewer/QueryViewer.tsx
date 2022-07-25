@@ -7,7 +7,15 @@
 
 import React, { useState, useEffect, useCallback } from 'react'
 import cx from 'classnames'
-import { Button, Container, FormInput, Layout, MultiTypeInputType, Text } from '@wings-software/uicore'
+import {
+  Button,
+  Container,
+  FormInput,
+  getMultiTypeFromValue,
+  Layout,
+  MultiTypeInputType,
+  Text
+} from '@wings-software/uicore'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { MapGCPLogsToServiceFieldNames } from '@cv/pages/health-source/connectors/GCOLogsMonitoringSource/components/MapQueriesToHarnessService/constants'
@@ -128,10 +136,10 @@ export function QueryViewer(props: QueryViewerProps): JSX.Element {
   } = props
   const { getString } = useStrings()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-
+  const isQueryRuntimeOrExpression = getMultiTypeFromValue(query) !== MultiTypeInputType.FIXED
   useEffect(() => {
     // if query exists then always fetch records on did mount
-    if (query && !isConnectorRuntimeOrExpression) {
+    if (query && !isConnectorRuntimeOrExpression && !isQueryRuntimeOrExpression) {
       fetchRecords()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -185,7 +193,7 @@ export function QueryViewer(props: QueryViewerProps): JSX.Element {
         data={records}
         error={error}
         query={query}
-        isQueryExecuted={isConnectorRuntimeOrExpression ? !isConnectorRuntimeOrExpression : isQueryExecuted}
+        isQueryExecuted={isQueryRuntimeOrExpression ? !isQueryRuntimeOrExpression : isQueryExecuted}
         queryNotExecutedMessage={
           isConnectorRuntimeOrExpression
             ? getString('cv.customHealthSource.chartRuntimeWarning')

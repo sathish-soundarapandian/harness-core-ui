@@ -12,7 +12,7 @@ import {
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE
 } from '@wings-software/uicore'
-import { clone, isNumber } from 'lodash-es'
+import { clone, defaultTo, isNumber } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import type { PrometheusFilter, PrometheusHealthSourceSpec, TimeSeriesMetricDefinition } from 'services/cv'
 import type { StringsMap } from 'stringTypes'
@@ -279,7 +279,8 @@ function generateMultiSelectOptionListFromPrometheusFilter(filters?: PrometheusF
 
 export function transformPrometheusHealthSourceToSetupSource(
   sourceData: any,
-  getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
+  getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
+  isTemplate?: boolean
 ): PrometheusSetupSource {
   const healthSource: UpdatedHealthSource = sourceData?.healthSourceList?.find(
     (source: UpdatedHealthSource) => source.name === sourceData.healthSourceName
@@ -331,7 +332,13 @@ export function transformPrometheusHealthSourceToSetupSource(
           metricDefinition?.analysis?.riskProfile?.category && metricDefinition?.analysis?.riskProfile?.metricType
             ? `${metricDefinition?.analysis?.riskProfile?.category}/${metricDefinition?.analysis?.riskProfile?.metricType}`
             : '',
-        serviceInstance: metricDefinition?.analysis?.deploymentVerification?.serviceInstanceFieldName,
+        serviceInstance:
+          isTemplate && !isConnectorRuntimeOrExpression
+            ? {
+                label: defaultTo(metricDefinition?.analysis?.deploymentVerification?.serviceInstanceFieldName, ''),
+                value: defaultTo(metricDefinition?.analysis?.deploymentVerification?.serviceInstanceFieldName, '')
+              }
+            : metricDefinition?.analysis?.deploymentVerification?.serviceInstanceFieldName,
         lowerBaselineDeviation:
           metricDefinition?.analysis?.riskProfile?.thresholdTypes?.includes('ACT_WHEN_LOWER') || false,
         higherBaselineDeviation:
@@ -419,7 +426,10 @@ export function transformPrometheusSetupSourceToHealthSource(setupSource: Promet
           thresholdTypes
         },
         liveMonitoring: { enabled: Boolean(healthScore) },
-        deploymentVerification: { enabled: Boolean(continuousVerification), serviceInstanceFieldName: serviceInstance }
+        deploymentVerification: {
+          enabled: Boolean(continuousVerification),
+          serviceInstanceFieldName: typeof serviceInstance === 'string' ? serviceInstance : serviceInstance?.value
+        }
       }
     })
   }

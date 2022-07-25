@@ -40,6 +40,7 @@ import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { String as LocaleString } from 'framework/strings'
+import AuditTrailFactory from '@audit-trail/factories/AuditTrailFactory'
 
 const STOSideNavProps: SidebarContext = {
   navComponent: STOSideNav,
@@ -90,6 +91,23 @@ RbacFactory.registerResourceTypeHandler(ResourceType.STO_ISSUE, {
   permissionLabels: {
     [PermissionIdentifier.VIEW_STO_ISSUE]: <LocaleString stringID="rbac.permissionLabels.view" />
   }
+})
+
+AuditTrailFactory.registerResourceHandler('STO_TARGET', {
+  moduleIcon: {
+    name: 'sto-grey'
+  },
+  moduleLabel: 'common.module.sto',
+  // Using existing "Target" string to avoid yamlStringsCheck error
+  resourceLabel: 'pipelineSteps.targetLabel'
+})
+
+AuditTrailFactory.registerResourceHandler('STO_EXEMPTION', {
+  moduleIcon: {
+    name: 'sto-grey'
+  },
+  moduleLabel: 'common.module.sto',
+  resourceLabel: 'stoSteps.stoExemption'
 })
 
 executionFactory.registerCardInfo(StageType.SECURITY, {

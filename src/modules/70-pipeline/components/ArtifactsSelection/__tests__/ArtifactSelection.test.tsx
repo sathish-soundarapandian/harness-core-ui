@@ -471,14 +471,14 @@ describe('ArtifactsSelection tests', () => {
     const portal = document.getElementsByClassName('bp3-dialog')[0]
     const artifactLabel = await waitFor(() => findByText(portal as HTMLElement, 'connectors.specifyArtifactRepoType'))
     expect(artifactLabel).toBeDefined()
-    // Artifactory, ECR should be rendered
+    // Artifactory, ECR, AmazonS3 should be rendered
     const artifactory = await portal.querySelector('input[value="ArtifactoryRegistry"]')
     expect(artifactory).not.toBeNull()
     const ecr = await portal.querySelector('input[value="Ecr"]')
     expect(ecr).not.toBeNull()
-    // Nexus, ACR, AmazonS3, Custom should NOT be rendered
     const amazonS3 = await portal.querySelector('input[value="AmazonS3"]')
-    expect(amazonS3).toBeNull()
+    expect(amazonS3).not.toBeNull()
+    // Nexus, ACR, Custom should NOT be rendered
     const nexus = await portal.querySelector('input[value="Nexus3Registry"]')
     expect(nexus).toBeNull()
     const acr = await portal.querySelector('input[value="Acr"]')
@@ -513,14 +513,14 @@ describe('ArtifactsSelection tests', () => {
     const portal = document.getElementsByClassName('bp3-dialog')[0]
     const artifactLabel = await waitFor(() => findByText(portal as HTMLElement, 'connectors.specifyArtifactRepoType'))
     expect(artifactLabel).toBeDefined()
-    // Artifactory, ECR should be rendered
+    // Artifactory, ECR, AmazonS3 should be rendered
     const artifactory = await portal.querySelector('input[value="ArtifactoryRegistry"]')
     expect(artifactory).not.toBeNull()
     const ecr = await portal.querySelector('input[value="Ecr"]')
     expect(ecr).not.toBeNull()
-    // Nexus, ACR, AmazonS3, Custom should NOT be rendered
     const amazonS3 = await portal.querySelector('input[value="AmazonS3"]')
-    expect(amazonS3).toBeNull()
+    expect(amazonS3).not.toBeNull()
+    // Nexus, ACR, Custom should NOT be rendered
     const nexus = await portal.querySelector('input[value="Nexus3Registry"]')
     expect(nexus).toBeNull()
     const acr = await portal.querySelector('input[value="Acr"]')

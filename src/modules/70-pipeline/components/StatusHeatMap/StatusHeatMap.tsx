@@ -8,6 +8,7 @@
 import { Color, Icon, IconName, Popover, PopoverProps } from '@harness/uicore'
 import cx from 'classnames'
 import React from 'react'
+import { Link } from 'react-router-dom'
 import {
   ExecutionStatus,
   isExecutionCompletedWithBadState,
@@ -46,30 +47,51 @@ export const getStatusMapping = (status: ExecutionStatus) => {
 
 export interface StatusHeatMapProps<T> {
   data: T[]
-  getId: (item: T) => string
+  getId: (item: T, index: string) => string
   getStatus: (item: T) => ExecutionStatus
+  getRouteTo?: (item: T) => string | undefined
   className?: string
   getPopoverProps?: (item: T) => PopoverProps
   onClick?: (item: T, event: React.MouseEvent) => void
+  href?: string
+}
+
+export interface StatusCell<T> {
+  row: T
+  id: string
 }
 
 export function StatusHeatMap<T>(props: StatusHeatMapProps<T>): React.ReactElement {
-  const { data, getId, getStatus, className, getPopoverProps, onClick } = props
+  const { data, getId, getStatus, className, getPopoverProps, onClick, getRouteTo } = props
+
+  function StatusCell({ row, id }: StatusCell<T>) {
+    const { iconColor, icon, primaryState } = getStatusMapping(getStatus(row))
+    return (
+      <div
+        data-id={getId(row, id)}
+        data-primary-state={primaryState}
+        className={css.statusHeatMapCell}
+        onClick={e => onClick?.(row, e)}
+      >
+        {icon && <Icon name={icon} size={12} color={iconColor} />}
+      </div>
+    )
+  }
 
   return (
     <div className={cx(css.statusHeatMap, className)}>
-      {data.map(row => {
-        const { iconColor, icon, primaryState } = getStatusMapping(getStatus(row))
+      {data.map((row, index) => {
+        const id = getId(row, index.toString())
+        const href = getRouteTo && getRouteTo(row)
         return (
-          <Popover disabled={!getPopoverProps} key={getId(row)} {...getPopoverProps?.(row)}>
-            <div
-              data-id={getId(row)}
-              data-primary-state={primaryState}
-              className={css.statusHeatMapCell}
-              onClick={e => onClick?.(row, e)}
-            >
-              {icon && <Icon name={icon} size={12} color={iconColor} />}
-            </div>
+          <Popover disabled={!getPopoverProps} key={id} {...getPopoverProps?.(row)}>
+            {href ? (
+              <Link to={href}>
+                <StatusCell row={row} id={id} />
+              </Link>
+            ) : (
+              <StatusCell row={row} id={id} />
+            )}
           </Popover>
         )
       })}

@@ -121,27 +121,28 @@ export function ServicePipelineProvider({
     ): PipelineStageWrapper<T> => {
       return _getStageFromPipeline(stageId, pipeline || state.pipeline)
     },
-    [state.pipeline, state.pipeline?.stages]
+    [state.pipeline]
   )
 
-  const updatePipeline = async (
-    pipelineArg: PipelineInfoConfig | ((p: PipelineInfoConfig) => PipelineInfoConfig)
-  ): Promise<void> => {
-    let pipeline = pipelineArg
-    if (typeof pipelineArg === 'function') {
-      if (state.pipeline) {
-        pipeline = pipelineArg(state.pipeline)
-      } else {
-        pipeline = {} as PipelineInfoConfig
+  const updatePipeline = React.useCallback(
+    async (pipelineArg: PipelineInfoConfig | ((p: PipelineInfoConfig) => PipelineInfoConfig)): Promise<void> => {
+      let pipeline = pipelineArg
+      if (typeof pipelineArg === 'function') {
+        if (state.pipeline) {
+          pipeline = pipelineArg(state.pipeline)
+        } else {
+          pipeline = {} as PipelineInfoConfig
+        }
       }
-    }
-    const isUpdated = !isEqual(state.originalPipeline, pipeline)
-    await dispatch(PipelineContextActions.success({ error: '', pipeline: pipeline as PipelineInfoConfig, isUpdated }))
+      const isUpdated = !isEqual(state.originalPipeline, pipeline)
+      await dispatch(PipelineContextActions.success({ error: '', pipeline: pipeline as PipelineInfoConfig, isUpdated }))
 
-    if (view === SelectedView.VISUAL) {
-      onUpdatePipeline?.(pipeline as ServicePipelineConfig)
-    }
-  }
+      if (view === SelectedView.VISUAL) {
+        onUpdatePipeline?.(pipeline as ServicePipelineConfig)
+      }
+    },
+    [onUpdatePipeline, state.originalPipeline, state.pipeline, view]
+  )
 
   const updateStage = React.useCallback(
     async (newStage: StageElementConfig) => {
@@ -261,6 +262,7 @@ export function ServicePipelineProvider({
   React.useEffect(() => {
     fetchCurrentPipeline()
     setSelection({ stageId: initialValue.stages?.[0]?.stage?.identifier })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialValue])
 
   return (

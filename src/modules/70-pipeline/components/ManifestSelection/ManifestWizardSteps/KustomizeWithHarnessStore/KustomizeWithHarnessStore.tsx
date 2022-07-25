@@ -21,15 +21,15 @@ import {
 } from '@harness/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
-import { FieldArray, Form } from 'formik'
+import { Form } from 'formik'
 import * as Yup from 'yup'
-import { defaultTo, get } from 'lodash-es'
+import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
-import FileStoreSelectField from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
-import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import MultiConfigSelectField from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/MultiConfigSelectField/MultiConfigSelectField'
+import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
 import type { KustomizeWithHarnessStorePropTypeDataType, ManifestTypes } from '../../ManifestInterface'
 import css from '../K8sValuesManifest/ManifestDetails.module.scss'
@@ -115,7 +115,13 @@ function KustomizeWithHarnessStore({
         formName="kustomizeHarnessFileStore"
         validationSchema={Yup.object().shape({
           ...ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName')),
-          manifestScope: Yup.mixed().required(getString('pipeline.manifestType.folderPathRequired'))
+          manifestScope: Yup.mixed().required(getString('pipeline.manifestType.folderPathRequired')),
+          files: Yup.lazy((value): Yup.Schema<unknown> => {
+            if (getMultiTypeFromValue(value as string[]) === MultiTypeInputType.FIXED) {
+              return Yup.array().of(Yup.string().required(getString('pipeline.manifestType.pathRequired')))
+            }
+            return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
+          })
         })}
         onSubmit={formData => {
           submitFormData({
@@ -124,10 +130,7 @@ function KustomizeWithHarnessStore({
           } as unknown as KustomizeWithHarnessStorePropTypeDataType)
         }}
       >
-        {(formik: {
-          setFieldValue: (a: string, b: string) => void
-          values: KustomizeWithHarnessStorePropTypeDataType
-        }) => {
+        {formik => {
           return (
             <Form>
               <Layout.Vertical
@@ -169,85 +172,32 @@ function KustomizeWithHarnessStore({
                     )}
                   </div>
                   <div className={css.halfWidth}>
-                    <MultiTypeFieldSelector
-                      defaultValueToReset={[{ path: '', scope: 'account' }]}
-                      allowedTypes={
-                        (allowableTypes as MultiTypeInputType[]).filter(
-                          allowedType => allowedType !== MultiTypeInputType.EXPRESSION
-                        ) as AllowedTypes
-                      }
+                    <MultiConfigSelectField
                       name="files"
-                      label={getString('resourcePage.fileStore')}
-                    >
-                      <FieldArray
-                        name="files"
-                        render={({ push, remove }) => (
-                          <Layout.Vertical>
-                            {defaultTo(get(formik, 'values.files'), []).map((file: string, index: number) => (
-                              <Layout.Horizontal key={file} margin={{ top: 'medium' }}>
-                                <FileStoreSelectField name={`files[${index}]`} />
-                                {index !== 0 && (
-                                  /* istanbul ignore next */ <Button
-                                    minimal
-                                    icon="main-trash"
-                                    onClick={/* istanbul ignore next */ () => remove(index)}
-                                  />
-                                )}
-                              </Layout.Horizontal>
-                            ))}
-                            <span>
-                              <Button
-                                minimal
-                                text={getString('add')}
-                                variation={ButtonVariation.PRIMARY}
-                                onClick={/* istanbul ignore next */ () => push({})}
-                              />
-                            </span>
-                          </Layout.Vertical>
-                        )}
-                      />
-                    </MultiTypeFieldSelector>
+                      allowableTypes={allowableTypes}
+                      fileType={FILE_TYPE_VALUES.FILE_STORE}
+                      formik={formik}
+                      expressions={expressions}
+                      values={formik.values.files}
+                      multiTypeFieldSelectorProps={{
+                        disableTypeSelection: false,
+                        label: <Text>{getString('fileFolderPathText')}</Text>
+                      }}
+                    />
                   </div>
                   <div className={css.halfWidth}>
-                    <MultiTypeFieldSelector
-                      defaultValueToReset={['']}
-                      allowedTypes={
-                        (allowableTypes as MultiTypeInputType[]).filter(
-                          allowedType => allowedType !== MultiTypeInputType.EXPRESSION
-                        ) as AllowedTypes
-                      }
+                    <MultiConfigSelectField
                       name="patchesPaths"
-                      label={getString('pipeline.manifestTypeLabels.KustomizePatches')}
-                    >
-                      <FieldArray
-                        name="patchesPaths"
-                        render={({ push, remove }) => (
-                          <Layout.Vertical>
-                            {defaultTo(get(formik, 'values.patchesPaths'), []).map((paths: string, index: number) => (
-                              <Layout.Horizontal key={paths} margin={{ top: 'medium' }}>
-                                <FileStoreSelectField name={`patchesPaths[${index}]`} />
-
-                                {index !== 0 && (
-                                  /* istanbul ignore next */ <Button
-                                    minimal
-                                    icon="main-trash"
-                                    onClick={() => remove(index)}
-                                  />
-                                )}
-                              </Layout.Horizontal>
-                            ))}
-                            <span>
-                              <Button
-                                minimal
-                                text={getString('add')}
-                                variation={ButtonVariation.PRIMARY}
-                                onClick={/* istanbul ignore next */ () => push('')}
-                              />
-                            </span>
-                          </Layout.Vertical>
-                        )}
-                      />
-                    </MultiTypeFieldSelector>
+                      allowableTypes={allowableTypes}
+                      fileType={FILE_TYPE_VALUES.FILE_STORE}
+                      formik={formik}
+                      expressions={expressions}
+                      values={formik.values.files}
+                      multiTypeFieldSelectorProps={{
+                        disableTypeSelection: false,
+                        label: <Text>label={getString('pipeline.manifestTypeLabels.KustomizePatches')}</Text>
+                      }}
+                    />
                   </div>
                   <Accordion
                     activeId={get(initialValues, 'spec.skipResourceVersioning') ? getString('advancedTitle') : ''}

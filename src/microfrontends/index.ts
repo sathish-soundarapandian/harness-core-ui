@@ -19,9 +19,11 @@ import type { RbacMenuItemProps } from '@rbac/components/MenuItem/MenuItem'
 import type { Title, UseDocumentTitleReturn } from '@common/hooks/useDocumentTitle'
 import type { ExtendedMonacoEditorProps } from '@common/components/MonacoEditor/MonacoEditor'
 import type { ExtendedMonacoDiffEditorProps } from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
+import type { PageParams, TelemetryReturnType } from '@common/hooks/useTelemetry'
 import type { YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import type { GitOpsCustomMicroFrontendProps } from '@cd/interfaces/GitOps.types'
 import type { STOAppCustomProps } from '@pipeline/interfaces/STOApp'
+import type { CCMUIAppCustomProps } from '@ce/interface/CCMUIApp.types'
 
 export interface Scope {
   accountId?: string
@@ -42,6 +44,7 @@ export interface CommonComponents {
 
 export interface Hooks {
   useDocumentTitle(title: Title, accountLevel?: boolean): UseDocumentTitleReturn
+  useTelemetry?: (pageParams: PageParams) => TelemetryReturnType
 }
 
 /**
@@ -76,5 +79,6 @@ export {
   ResourceType,
   PermissionIdentifier,
   GitOpsCustomMicroFrontendProps,
-  STOAppCustomProps
+  STOAppCustomProps,
+  CCMUIAppCustomProps
 }

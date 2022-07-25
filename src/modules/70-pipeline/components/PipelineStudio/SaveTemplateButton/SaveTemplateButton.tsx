@@ -22,14 +22,18 @@ type TemplateData = StepOrStepGroupOrTemplateStepData | StageElementConfig | Pip
 
 export interface SaveTemplateButtonProps {
   data: TemplateData | (() => Promise<TemplateData>)
-  gitDetails?: EntityGitDetails
   type: 'Step' | 'Stage' | 'Pipeline'
+  gitDetails?: EntityGitDetails
   buttonProps?: ButtonProps
 }
 
-export function SaveTemplateButton({ data, gitDetails, type, buttonProps }: SaveTemplateButtonProps): JSX.Element {
+export function SaveTemplateButton({ data, type, gitDetails, buttonProps }: SaveTemplateButtonProps): JSX.Element {
   const { getString } = useStrings()
-  const { save } = useSaveAsTemplate({ data, gitDetails, type, fireSuccessEvent: true })
+  const { save } = useSaveAsTemplate({
+    data,
+    type,
+    gitDetails
+  })
 
   return (
     <RbacButton

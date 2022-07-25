@@ -237,7 +237,7 @@ export const isServerlessDeploymentType = (deploymentType: string): boolean => {
 }
 
 export const isSSHWinRMDeploymentType = (deploymentType: string): boolean => {
-  return deploymentType === ServiceDeploymentType.winrm || deploymentType === ServiceDeploymentType.ssh
+  return deploymentType === ServiceDeploymentType.WinRm || deploymentType === ServiceDeploymentType.Ssh
 }
 
 export const isAzureWebAppDeploymentType = (deploymentType: string): boolean => {
@@ -250,7 +250,7 @@ export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.AzureWebApp]: 'Web App Infrastructure Details',
   [ServiceDeploymentType.ServerlessGoogleFunctions]: 'GCP Details',
   [ServiceDeploymentType.Pdc]: 'Infrastructure definition',
-  [ServiceDeploymentType.winrm]: 'WinRM'
+  [ServiceDeploymentType.WinRm]: 'WinRM'
 }
 
 export const getSelectedDeploymentType = (
@@ -380,14 +380,14 @@ export const isConfigFilesPresent = (stage: DeploymentStageElementConfig): boole
   return !!stage.spec?.serviceConfig && !!stage.spec?.serviceConfig.serviceDefinition?.spec.configFiles
 }
 
-export const isServiceEntityPresent = (stage: any): boolean => {
+export const isServiceEntityPresent = (stage: DeploymentStageElementConfig): boolean => {
   return !!stage.spec?.service?.serviceRef
 }
 
-export const isEnvironmentGroupPresent = (stage: any): boolean => {
+export const isEnvironmentGroupPresent = (stage: DeploymentStageElementConfig): boolean => {
   return !!stage.spec?.environmentGroup?.envGroupRef
 }
-export const isEnvironmentPresent = (stage: any): boolean => {
+export const isEnvironmentPresent = (stage: DeploymentStageElementConfig): boolean => {
   return !!stage.spec?.environment?.environmentRef
 }
 
@@ -407,7 +407,7 @@ export const doesStageContainOtherData = (stage?: DeploymentStageElementConfig):
   )
 }
 
-export const hasStageData = (stage?: any): boolean => {
+export const hasStageData = (stage?: DeploymentStageElementConfig): boolean => {
   if (!stage) {
     return false
   }
@@ -440,7 +440,7 @@ export const deleteServiceData = (stage?: DeploymentStageElementConfig): void =>
   }
 }
 //This is to delete stage data in case of new service/ env entity
-export const deleteStageInfo = (stage?: any): void => {
+export const deleteStageInfo = (stage?: DeploymentStageElementConfig): void => {
   if (stage) {
     delete stage?.spec?.service
     delete stage?.spec?.environment
@@ -460,7 +460,7 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
   if (isServerlessDeploymentType(deploymentType)) {
     return StepType.ServerlessAwsLambda
   }
-  if (deploymentType === ServiceDeploymentType.Ssh || deploymentType === ServiceDeploymentType.ssh) {
+  if (deploymentType === ServiceDeploymentType.Ssh) {
     return StepType.SshServiceSpec
   }
   if (deploymentType === ServiceDeploymentType.WinRm) {

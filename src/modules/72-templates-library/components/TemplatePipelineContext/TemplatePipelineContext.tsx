@@ -43,10 +43,12 @@ import type {
 } from 'services/pipeline-ng'
 import type { PipelineSelectionState } from '@pipeline/components/PipelineStudio/PipelineQueryParamState/usePipelineQueryParam'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
+import type { EntityGitDetails } from 'services/template-ng'
 
 export interface TemplatePipelineProviderProps {
   queryParams: GetPipelineQueryParams
   initialValue: PipelineInfoConfig
+  gitDetails: EntityGitDetails
   onUpdatePipeline: (pipeline: PipelineInfoConfig) => void
   contextType: PipelineContextType
   isReadOnly: boolean
@@ -56,6 +58,7 @@ export interface TemplatePipelineProviderProps {
 export function TemplatePipelineProvider({
   queryParams,
   initialValue,
+  gitDetails,
   onUpdatePipeline,
   isReadOnly,
   contextType,
@@ -133,7 +136,8 @@ export function TemplatePipelineProvider({
         pipeline: initialValue,
         originalPipeline: cloneDeep(initialValue),
         isBEPipelineUpdated: false,
-        isUpdated: false
+        isUpdated: false,
+        gitDetails
       })
     )
     if (templateRefs.length > 0) {
@@ -143,8 +147,8 @@ export function TemplatePipelineProvider({
           orgIdentifier: queryParams.orgIdentifier,
           projectIdentifier: queryParams.projectIdentifier,
           templateListType: 'Stable',
-          repoIdentifier: queryParams.repoIdentifier,
-          branch: queryParams.branch,
+          repoIdentifier: gitDetails.repoIdentifier,
+          branch: gitDetails.branch,
           getDefaultFromOtherRepo: true
         },
         templateRefs
@@ -208,7 +212,7 @@ export function TemplatePipelineProvider({
 
   React.useEffect(() => {
     fetchPipeline()
-  }, [initialValue])
+  }, [initialValue, gitDetails])
 
   return (
     <PipelineContext.Provider

@@ -6,7 +6,7 @@
  */
 
 .container {
-  height: calc(100vh - 124px);
+  height: calc(var(--page-min-height) - 124px);
   display: flex;
 
   .labelContainer {

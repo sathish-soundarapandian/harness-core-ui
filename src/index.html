@@ -2,7 +2,6 @@
 <html lang="en-us">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="Content-Language" content="en" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;700&display=swap" rel="stylesheet" />
@@ -70,9 +69,9 @@
     <% if (__DEV__) { %>
     <script>
       window.deploymentType = 'SAAS'
-      window.helpPanelAccessToken = '5EHT-ZBWYjweBLS62PNKf-vp3ZbXAylRUlPRPcHwqAg'
-      window.helpPanelSpace = 'jj62blws1bo9'
-      window.helpPanelEnvironment = 'QA'
+      window.helpPanelAccessToken = '<%= HELP_PANEL_ACCESS_TOKEN_DEV %>'
+      window.helpPanelSpace = '<%= HELP_PANEL_SPACE_DEV %>'
+      window.helpPanelEnvironment = '<%= HELP_PANEL_ENVIRONMENT_DEV %>'
     </script>
     <% } %>
     <!-- Enabling ng-auth-ui -->

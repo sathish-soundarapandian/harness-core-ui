@@ -58,7 +58,7 @@ export function ManifestRepoTypes({
         icon: manifestTypeIcons[manifest] as IconName,
         value: manifest
       })),
-    [manifestTypes]
+    [getString, manifestTypes]
   )
 
   return (

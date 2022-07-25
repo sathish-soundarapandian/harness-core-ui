@@ -65,9 +65,8 @@ export interface TemplateContextMetadata {
   fetchTemplate?: (args: FetchTemplateUnboundProps) => Promise<void>
   deleteTemplateCache?: (gitDetails?: EntityGitDetails) => Promise<void>
   view?: string
-  isPipelineStudio?: boolean
+  isTemplateStudio?: boolean
   stableVersion?: string
-  fireSuccessEvent?: boolean
 }
 
 export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata): UseSaveTemplateReturnType {
@@ -77,9 +76,8 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
     fetchTemplate,
     deleteTemplateCache,
     view,
-    isPipelineStudio,
-    stableVersion,
-    fireSuccessEvent
+    isTemplateStudio = true,
+    stableVersion
   } = TemplateContextMetadata
   const { isGitSyncEnabled } = React.useContext(AppStoreContext)
   const { templateIdentifier, templateType, projectIdentifier, orgIdentifier, accountId, module } = useParams<
@@ -206,7 +204,7 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
           setLoading?.(false)
         }
         if (response && response.status === 'SUCCESS') {
-          if (fireSuccessEvent && response.data?.templateResponseDTO) {
+          if (!isTemplateStudio && response.data?.templateResponseDTO) {
             window.dispatchEvent(new CustomEvent('TEMPLATE_SAVED', { detail: response.data.templateResponseDTO }))
           }
           if (!isGitExperienceEnabled) {
@@ -214,7 +212,7 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
             showSuccess(getString('common.template.saveTemplate.publishTemplate'))
           }
           await deleteTemplateCache?.()
-          if (!isPipelineStudio) {
+          if (isTemplateStudio) {
             navigateToLocation(latestTemplate, updatedGitDetails)
           }
           return { status: response.status }

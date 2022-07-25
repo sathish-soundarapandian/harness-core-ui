@@ -37,6 +37,7 @@ export enum PermissionIdentifier {
   VIEW_ENVIRONMENT_GROUP = 'core_environmentgroup_view',
   EDIT_ENVIRONMENT_GROUP = 'core_environmentgroup_edit',
   DELETE_ENVIRONMENT_GROUP = 'core_environmentgroup_delete',
+  RUNTIMEACCESS_ENVIRONMENT_GROUP = 'core_environmentgroup_access',
   VIEW_USERGROUP = 'core_usergroup_view',
   MANAGE_USERGROUP = 'core_usergroup_manage',
   VIEW_USER = 'core_user_view',

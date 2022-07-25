@@ -28,7 +28,7 @@
 }
 
 .perspectiveListWrapper {
-  height: calc(100vh - 650px);
+  height: calc(var(--main-nav-height) - 650px);
   overflow: scroll;
 }
 

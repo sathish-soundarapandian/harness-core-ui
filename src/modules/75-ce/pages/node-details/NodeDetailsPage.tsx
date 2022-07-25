@@ -209,7 +209,7 @@ const NodeDetailsPage: () => JSX.Element = () => {
   return (
     <>
       <Page.Header title={infoData.name || nodeId} breadcrumbs={<NGBreadcrumbs links={breadcrumbsLinks} />} />
-      <Page.Body>
+      <Page.Body className={css.pageCtn}>
         <Container flex background="white" padding="small">
           <FlexExpander />
           <TimeRangePicker timeRange={timeRange} setTimeRange={setTimeRange} />

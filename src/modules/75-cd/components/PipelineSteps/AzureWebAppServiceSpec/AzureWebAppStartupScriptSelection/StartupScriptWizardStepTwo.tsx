@@ -29,6 +29,7 @@ import { Connectors } from '@connectors/constants'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { GitRepoName } from '@pipeline/components/ManifestSelection/Manifesthelper'
+
 import {
   ConnectorTypes,
   gitFetchTypeList,
@@ -36,6 +37,7 @@ import {
   StartupScriptDataType,
   StartupScriptWizardStepTwoProps
 } from './StartupScriptInterface.types'
+import { HarnessOption } from '../HarnessOption'
 import css from './StartupScriptSelection.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -105,8 +107,21 @@ function StartupScriptWizardStepTwo({
         set(startupScript, 'spec.commitId', formData?.commitId)
       }
     }
-
     handleSubmit(startupScript)
+  }
+
+  if (prevStepData?.store === 'Harness') {
+    return (
+      <HarnessOption
+        initialValues={initialValues}
+        stepName={stepName}
+        handleSubmit={handleSubmit}
+        formName="startupScriptDetails"
+        prevStepData={prevStepData}
+        previousStep={previousStep}
+        expressions={expressions}
+      />
+    )
   }
 
   return (

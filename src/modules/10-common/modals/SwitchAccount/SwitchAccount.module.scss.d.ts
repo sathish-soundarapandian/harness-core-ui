@@ -12,5 +12,7 @@ declare const styles: {
   readonly modal: string
   readonly noDataCard: string
   readonly noDataCardContainer: string
+  readonly pagination: string
+  readonly table: string
 }
 export default styles

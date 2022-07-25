@@ -877,7 +877,7 @@ deleteEnvironment:
 90days: 90 Days
 180days: 180 Days
 noexpiration: No Expiration
-subscriptionPlaceholder: 'Select or add Subscription Id'
+subscriptionPlaceholder: 'Select or specify Subscription Id'
 azureConnector: Azure Connector
 environmentList: Environment List
 environmentGroup:
@@ -917,6 +917,7 @@ oAuthLabel: OAuth
 import: Import
 importEntityFromGit: Import {{resourceType}} From Git
 serviceOverrides: Service Overrides
+invalidIdentifiers: 'Identifier must not be one of the following values: {{identifiers}}'
 
 # Chaos Module
 chaosText: Chaos
@@ -931,3 +932,4 @@ cardNumber: Card number
 perDeveloper: per developer
 triggerName: Trigger Name
 versionLabel: Version Label
+executedBy: Executed By

@@ -16,12 +16,13 @@ import {
   ExpressionInput,
   EXPRESSION_INPUT_PLACEHOLDER,
   Layout,
-  Icon
+  Icon,
+  AllowedTypes
 } from '@harness/uicore'
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
 
 import { FieldArray, connect, FormikContextType } from 'formik'
-import { get } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 
 import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -59,6 +60,7 @@ export interface MultiTypeMapProps {
   fileType: string
   expressions: string[]
   values: string | string[]
+  allowableTypes?: AllowedTypes
 }
 
 export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactElement {
@@ -77,6 +79,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
     fileType,
     expressions,
     values,
+    allowableTypes,
     ...restProps
   } = props
 
@@ -120,7 +123,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
               name={name}
               defaultValueToReset={getDefaultResetValue()}
               style={{ flexGrow: 1, marginBottom: 0 }}
-              allowedTypes={[MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED]}
+              allowedTypes={defaultTo(allowableTypes, [MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED])}
               {...multiTypeFieldSelectorProps}
               disableTypeSelection={multiTypeFieldSelectorProps.disableTypeSelection || disabled}
               hasParentValidation={true}
@@ -175,7 +178,10 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                                 [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
                                                 true
                                               )}
-                                              allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
+                                              allowedTypes={defaultTo(allowableTypes, [
+                                                MultiTypeInputType.RUNTIME,
+                                                MultiTypeInputType.FIXED
+                                              ])}
                                               expressionRender={() => {
                                                 return (
                                                   <ExpressionInput
@@ -220,7 +226,10 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                                 [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
                                                 true
                                               )}
-                                              allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
+                                              allowedTypes={defaultTo(allowableTypes, [
+                                                MultiTypeInputType.RUNTIME,
+                                                MultiTypeInputType.FIXED
+                                              ])}
                                               expressionRender={() => {
                                                 return (
                                                   <ExpressionInput

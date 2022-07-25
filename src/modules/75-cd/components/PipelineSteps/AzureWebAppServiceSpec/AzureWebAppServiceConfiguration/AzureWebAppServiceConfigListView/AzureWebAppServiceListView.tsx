@@ -179,9 +179,9 @@ function AzureWebAppListView({
     switch (selectedOption) {
       case ModalViewOption.APPLICATIONSETTING:
         return {
-          wizardName: getString('pipeline.appServiceConfig.applicationSettings.scriptFile'),
-          firstStepName: getString('pipeline.appServiceConfig.applicationSettings.scriptFileSource'),
-          secondStepName: getString('pipeline.appServiceConfig.applicationSettings.scriptFileDetails'),
+          wizardName: getString('pipeline.appServiceConfig.applicationSettings.name'),
+          firstStepName: getString('pipeline.fileSource'),
+          secondStepName: getString('pipeline.fileDetails'),
           firstStepTitle: getString('pipeline.appServiceConfig.applicationSettings.fileSource'),
           firstStepSubtitle: getString('pipeline.appServiceConfig.applicationSettings.subtitle'),
           secondStepTitle: getString('pipeline.appServiceConfig.applicationSettings.fileDetails'),
@@ -189,9 +189,9 @@ function AzureWebAppListView({
         }
       case ModalViewOption.CONNECTIONSTRING:
         return {
-          wizardName: getString('pipeline.appServiceConfig.connectionStrings.scriptFile'),
-          firstStepName: getString('pipeline.appServiceConfig.connectionStrings.scriptFileSource'),
-          secondStepName: getString('pipeline.appServiceConfig.connectionStrings.scriptFileDetails'),
+          wizardName: getString('pipeline.appServiceConfig.connectionStrings.name'),
+          firstStepName: getString('pipeline.fileSource'),
+          secondStepName: getString('pipeline.fileDetails'),
           firstStepTitle: getString('pipeline.appServiceConfig.connectionStrings.fileSource'),
           firstStepSubtitle: getString('pipeline.appServiceConfig.connectionStrings.subtitle'),
           secondStepTitle: getString('pipeline.appServiceConfig.connectionStrings.fileDetails'),
@@ -409,7 +409,9 @@ function AzureWebAppListView({
             </div>
             <div className={css.columnId}>
               <Icon inline name={ConnectorIcons[currentOption?.type as ConnectorTypes]} size={20} />
-              {renderConnectorField(selectedConnectorRef, connectorName, color)}
+              {get(currentOption, 'type') === 'Harness'
+                ? getString('harness')
+                : renderConnectorField(get(currentOption, 'spec.connectorRef'), connectorName, color)}
             </div>
             {!!get(currentOption, 'spec.paths')?.length && (
               <div>
@@ -422,6 +424,21 @@ function AzureWebAppListView({
                 </Text>
               </div>
             )}
+            {get(currentOption, 'spec.files')?.length && (
+              <div className={css.columnId}>
+                <Text lineClamp={1} width={300}>
+                  <span className={css.noWrap}>{get(currentOption, 'spec.files')}</span>
+                </Text>
+              </div>
+            )}
+            {get(currentOption, 'spec.secretFiles')?.length && (
+              <div className={css.columnId}>
+                <Text lineClamp={1} width={300}>
+                  <span className={css.noWrap}>{get(currentOption, 'spec.secretFiles')}</span>
+                </Text>
+              </div>
+            )}
+
             {!isReadonly && (
               <span>
                 <Layout.Horizontal className={css.serviceConfigListButton}>

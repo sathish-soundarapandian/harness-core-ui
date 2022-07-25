@@ -27,6 +27,7 @@ declare const styles: {
   readonly headerLayout: string
   readonly layout: string
   readonly link: string
+  readonly loaderContainer: string
   readonly loadingLabel: string
   readonly modeToggle: string
   readonly notAllowed: string

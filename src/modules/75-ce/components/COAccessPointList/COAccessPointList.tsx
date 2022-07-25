@@ -286,7 +286,7 @@ const COLoadBalancerList: React.FC = () => {
   }
 
   return (
-    <Container background={Color.WHITE} height="100vh">
+    <Container background={Color.WHITE}>
       <Page.Header
         breadcrumbs={<NGBreadcrumbs />}
         title={getString('ce.co.accessPoint.landingPageTitle')}

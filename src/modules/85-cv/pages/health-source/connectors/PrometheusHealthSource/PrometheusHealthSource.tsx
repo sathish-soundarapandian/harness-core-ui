@@ -90,7 +90,8 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
   })
 
   const transformedSourceData = useMemo(
-    () => transformPrometheusHealthSourceToSetupSource(sourceData, getString),
+    () => transformPrometheusHealthSourceToSetupSource(sourceData, getString, isTemplate),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [sourceData]
   )
 

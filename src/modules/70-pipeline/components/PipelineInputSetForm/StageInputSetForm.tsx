@@ -856,7 +856,7 @@ export function StageInputSetFormInternal({
                 initialValues={deploymentStageInputSet?.service?.serviceInputs?.serviceDefinition?.spec || {}}
                 allowableTypes={allowableTypes}
                 template={deploymentStageTemplate?.service?.serviceInputs?.serviceDefinition?.spec || {}}
-                type={getStepTypeByDeploymentType(defaultTo((deploymentStage as any)?.deploymentType, ''))}
+                type={getStepTypeByDeploymentType(defaultTo(deploymentStage?.deploymentType, ''))}
                 stepViewType={viewType}
                 path={`${path}.service.serviceInputs.serviceDefinition.spec`}
                 readonly={readonly}

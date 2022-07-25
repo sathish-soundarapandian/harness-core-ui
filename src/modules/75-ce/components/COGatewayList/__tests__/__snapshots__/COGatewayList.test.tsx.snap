@@ -4,7 +4,6 @@ exports[`Test COGatewayList able to search through the list 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main StyledProps--background-white"
-    style="height: 100vh;"
   >
     <div
       class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
@@ -2157,7 +2156,6 @@ exports[`Test COGatewayList clicking on a row should open info drawer 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main StyledProps--background-white"
-    style="height: 100vh;"
   >
     <div
       class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
@@ -4285,7 +4283,6 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main StyledProps--background-white"
-    style="height: 100vh;"
   >
     <div
       class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
@@ -6413,7 +6410,6 @@ exports[`Test COGatewayList error from services API should show error 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main StyledProps--background-white"
-    style="height: 100vh;"
   >
     <div
       class="Layout--horizontal StyledProps--main Breadcrumbs--breadcrumbs StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
@@ -6581,7 +6577,6 @@ exports[`Test COGatewayList render based on the content render page loader on in
 <div>
   <div
     class="StyledProps--font StyledProps--main StyledProps--background-white"
-    style="height: 100vh;"
   >
     <div
       class="Layout--horizontal StyledProps--main Breadcrumbs--breadcrumbs StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
@@ -6734,7 +6729,6 @@ exports[`Test COGatewayList render based on the content render table loader comp
 <div>
   <div
     class="StyledProps--font StyledProps--main StyledProps--background-white"
-    style="height: 100vh;"
   >
     <div
       class="Layout--horizontal StyledProps--main Breadcrumbs--breadcrumbs StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
@@ -6887,7 +6881,6 @@ exports[`Test COGatewayList render based on the content should show error messag
 <div>
   <div
     class="StyledProps--font StyledProps--main StyledProps--background-white"
-    style="height: 100vh;"
   >
     <div
       class="Layout--horizontal StyledProps--main Breadcrumbs--breadcrumbs StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"

@@ -58,7 +58,7 @@
 }
 
 .noResultsContainer {
-  height: calc(100vh - 400px);
+  height: calc(var(--page-min-height) - 400px);
   display: flex;
   align-items: center;
   justify-content: center;

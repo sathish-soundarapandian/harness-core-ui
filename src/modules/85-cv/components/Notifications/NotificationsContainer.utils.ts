@@ -7,14 +7,22 @@
 
 import type { MultiSelectOption, SelectOption } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
+import { set } from 'lodash-es'
 import type {
+  CVNGNotificationChannel,
   NotificationRuleRefDTO,
   NotificationRuleResponse,
   RestResponseNotificationRuleResponse
 } from 'services/cv'
 import type { NotificationToToggle } from '@cv/pages/slos/components/CVCreateSLO/components/CreateSLOForm/components/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy.types'
+import type { StringKeys } from 'framework/strings'
 import { defaultOption } from './NotificationsContainer.constants'
-import type { NotificationRule, SRMNotification } from './NotificationsContainer.types'
+import type {
+  NotificationConditions,
+  NotificationRule,
+  SRMNotification,
+  SRMNotificationType
+} from './NotificationsContainer.types'
 
 export const createNotificationRule = (): NotificationRule => {
   return {
@@ -120,4 +128,25 @@ export function getUpdatedNotificationsRuleRefs(
 
 export const getInitialNotificationRules = (prevStepData?: SRMNotification): NotificationRule[] => {
   return (prevStepData?.conditions as NotificationRule[]) || [createNotificationRule()]
+}
+
+export function validateNotificationConditions(
+  dataTillCurrentStep: {
+    conditions: NotificationRule[]
+    type: SRMNotificationType
+    identifier?: string | undefined
+    enabled?: boolean | undefined
+    name?: string | undefined
+    notificationMethod?: CVNGNotificationChannel | undefined
+  },
+  values: NotificationConditions,
+  getString: (key: StringKeys) => string
+) {
+  const errors = {}
+  dataTillCurrentStep?.conditions?.forEach((condition, index) => {
+    if (!condition?.condition && !values?.conditions?.[index]?.condition) {
+      set(errors, `conditions.${index}.condition`, `${getString('cv.notifications.validations.conditionIsRequired')}`)
+    }
+  })
+  return errors
 }

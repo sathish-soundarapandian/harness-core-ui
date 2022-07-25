@@ -37,6 +37,7 @@ import {
   GitFetchTypes
 } from '../../AzureWebAppServiceConfig.types'
 
+import { HarnessOption } from '../../../HarnessOption'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../../AzureWebAppServiceConfig.module.scss'
 
@@ -107,6 +108,20 @@ function AzureWebAppServiceStepTwo({
     }
 
     handleSubmit(applicationSettings)
+  }
+
+  if (prevStepData?.store === 'Harness') {
+    return (
+      <HarnessOption
+        initialValues={initialValues}
+        stepName={title as string}
+        handleSubmit={handleSubmit}
+        formName="applicationConfigDetails"
+        prevStepData={prevStepData}
+        previousStep={previousStep}
+        expressions={expressions}
+      />
+    )
   }
 
   return (

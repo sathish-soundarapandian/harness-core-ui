@@ -53,6 +53,12 @@ import { isNewServiceEnvEntity } from '../CommonUtils/DeployStageSetupShellUtils
 import { cvLearnMoreHref } from './ExecutionStrategy.constant'
 import css from './ExecutionStrategy.module.scss'
 
+enum ExecutionType {
+  BASIC = 'Basic',
+  CANARY = 'Canary',
+  ROLLING = 'Rolling'
+}
+
 export interface ExecutionStrategyProps {
   selectedStage: StageElementWrapperConfig
   ref?: ExecutionStrategyForwardRef
@@ -122,9 +128,17 @@ function ExecutionStrategyRef(
     )
   }, [getStageFromPipeline, isSvcEnvEntityEnabled, selectedStage, templateServiceData])
 
-  const [selectedStrategy, setSelectedStrategy] = useState<StrategyType>(
-    serviceDefinitionType() === ServiceDeploymentType.ServerlessAwsLambda ? 'Basic' : 'Rolling'
-  )
+  const [selectedStrategy, setSelectedStrategy] = useState<StrategyType>(ExecutionType.ROLLING)
+  useEffect(() => {
+    switch (serviceDefinitionType()) {
+      case ServiceDeploymentType.ServerlessAwsLambda:
+        setSelectedStrategy(ExecutionType.BASIC)
+        break
+      case ServiceDeploymentType.AzureWebApp:
+        setSelectedStrategy(ExecutionType.CANARY)
+        break
+    }
+  }, [serviceDefinitionType])
 
   const infoByType: { [key: string]: string } = {
     BlueGreen: getString('pipeline.executionStrategy.strategies.blueGreen.description'),

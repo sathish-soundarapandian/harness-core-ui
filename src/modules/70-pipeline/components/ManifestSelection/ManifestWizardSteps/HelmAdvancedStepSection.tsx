@@ -69,6 +69,7 @@ function HelmAdvancedStepSection({
     if (!commandFlagOptions[helmVersion]?.length) {
       refetchCommandFlags()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [helmVersion])
 
   useDeepCompareEffect(() => {

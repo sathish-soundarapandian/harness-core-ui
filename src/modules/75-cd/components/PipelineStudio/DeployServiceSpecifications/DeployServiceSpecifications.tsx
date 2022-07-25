@@ -172,6 +172,7 @@ export default function DeployServiceSpecifications({
     if (errorMap.size > 0) {
       submitFormsForTab(DeployTabs.SERVICE)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [errorMap])
 
   useEffect(() => {
@@ -255,6 +256,7 @@ export default function DeployServiceSpecifications({
         overrideSetCheckbox: !!stageOverrides
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stage?.stage?.spec, previousStageList])
 
   useEffect(() => {
@@ -273,6 +275,7 @@ export default function DeployServiceSpecifications({
       debounceUpdateStage(stageData?.stage)
       setSelectedDeploymentType(serviceDefinitionType(stageData))
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedPropagatedState])
 
   useEffect(() => {
@@ -340,7 +343,7 @@ export default function DeployServiceSpecifications({
       })
       await debounceUpdateStage(stageData?.stage)
     },
-    [debounceUpdateStage, memoizedQueryParam, stage]
+    [debounceUpdateStage, stage]
   )
 
   const handleDeploymentTypeChange = useCallback(
@@ -359,6 +362,7 @@ export default function DeployServiceSpecifications({
         }
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [stage, updateStage]
   )
 

@@ -24,16 +24,9 @@ interface TemplateActionsReturnType {
   save: () => void
 }
 
-interface SaveAsTemplateProps extends Omit<SaveTemplateButtonProps, 'buttonProps'> {
-  fireSuccessEvent?: boolean
-}
+type SaveAsTemplateProps = Omit<SaveTemplateButtonProps, 'buttonProps'>
 
-export function useSaveAsTemplate({
-  data,
-  gitDetails,
-  type,
-  fireSuccessEvent = false
-}: SaveAsTemplateProps): TemplateActionsReturnType {
+export function useSaveAsTemplate({ data, type, gitDetails }: SaveAsTemplateProps): TemplateActionsReturnType {
   const { orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [modalProps, setModalProps] = React.useState<ModalProps>()
   const { getString } = useStrings()
@@ -45,10 +38,7 @@ export function useSaveAsTemplate({
     ),
     [modalProps]
   )
-  const { saveAndPublish } = useSaveTemplate({
-    isPipelineStudio: true,
-    fireSuccessEvent
-  })
+  const { saveAndPublish } = useSaveTemplate({ isTemplateStudio: false })
 
   const onSaveAsTemplate = async () => {
     try {

@@ -219,12 +219,7 @@ const COGatewayAccess: React.FC<COGatewayAccessProps> = props => {
           setDrawerOpen(false)
         }}
         size="392px"
-        style={{
-          // top: '85px',
-          boxShadow: 'rgb(40 41 61 / 4%) 0px 2px 8px, rgb(96 97 112 / 16%) 0px 16px 24px',
-          height: '100vh',
-          overflowY: 'scroll'
-        }}
+        className={css.drawerContainer}
       >
         <Container style={{ textAlign: 'right' }}>
           <Button icon="cross" minimal onClick={_ => setDrawerOpen(false)} />

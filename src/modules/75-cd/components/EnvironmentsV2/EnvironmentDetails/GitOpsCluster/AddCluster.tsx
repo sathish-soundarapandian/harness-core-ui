@@ -161,6 +161,8 @@ const SelectedClustersList = ({
                   style={{ fontSize: '12' }}
                   color={Color.GREY_800}
                   className={css.selectedIdenfitier}
+                  lineClamp={1}
+                  width={200}
                 >
                   {defaultTo(clstr.identifier, '')}
                 </Text>

@@ -26,3 +26,9 @@ export const getServiceEntityServiceRef = (stage: any): boolean => {
 export const isNewServiceEnvEntity = (isSvcEnvEntityEnabled: boolean, stage: DeploymentStageElementConfig): boolean => {
   return isSvcEnvEntityEnabled && isEmptyServiceConfigPath(stage)
 }
+export enum ExecutionType {
+  BASIC = 'Basic',
+  CANARY = 'Canary',
+  ROLLING = 'Rolling',
+  GITOPS = 'GitOps'
+}

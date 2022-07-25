@@ -16,6 +16,7 @@ declare const styles: {
   readonly configInfo: string
   readonly customDomainContainer: string
   readonly dnsLinkContainer: string
+  readonly drawerContainer: string
   readonly fixedDrawer: string
   readonly flexRow: string
   readonly formFieldRow: string

@@ -9,8 +9,8 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import { merge, omit, set } from 'lodash-es'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
-import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useGlobalEventListener, useQueryParams } from '@common/hooks'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useGlobalEventListener } from '@common/hooks'
 import { TemplatePipelineProvider } from '@templates-library/components/TemplatePipelineContext/TemplatePipelineContext'
 import { sanitize } from '@common/utils/JSONUtils'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
@@ -31,14 +31,13 @@ type EventDetailType = PipelineDrawerTypes.PipelineVariables | PipelineDrawerTyp
 
 const PipelineTemplateCanvasWrapper = (): JSX.Element => {
   const {
-    state: { template, templateView, isLoading, isUpdated },
+    state: { template, templateView, isLoading, isUpdated, gitDetails },
     updateTemplate,
     updateTemplateView,
     isReadonly,
     renderPipelineStage
   } = React.useContext(TemplateContext)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-  const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
 
   const createPipelineFromTemplate = (): PipelineInfoConfig =>
     merge({}, template.spec, {
@@ -74,8 +73,9 @@ const PipelineTemplateCanvasWrapper = (): JSX.Element => {
 
   return (
     <TemplatePipelineProvider
-      queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier, repoIdentifier, branch }}
+      queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier }}
       initialValue={pipeline}
+      gitDetails={gitDetails}
       onUpdatePipeline={onUpdatePipeline}
       contextType={PipelineContextType.PipelineTemplate}
       isReadOnly={isReadonly}

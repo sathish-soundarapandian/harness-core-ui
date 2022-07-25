@@ -59,20 +59,20 @@ describe('<LoopingStrategy /> tests', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('can select for', async () => {
+  test('can select repeat', async () => {
     const { findByTestId, container } = render(
       <TestWrapper>
         <LoopingStrategy />
       </TestWrapper>
     )
 
-    const for_ = await findByTestId('for')
+    const for_ = await findByTestId('repeat')
 
     userEvent.click(for_)
 
     const editor = (await findByTestId('editor')) as HTMLTextAreaElement
 
-    expect(editor.value.trim()).toBe('for: {}')
+    expect(editor.value.trim()).toBe('repeat: {}')
     expect(container).toMatchSnapshot()
   })
 

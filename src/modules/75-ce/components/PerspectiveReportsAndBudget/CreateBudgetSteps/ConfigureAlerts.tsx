@@ -29,6 +29,7 @@ import { TagInput } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import formatCost from '@ce/utils/formatCost'
+import { EmailSchemaWithoutRequired, URLValidationSchemaWithoutRequired } from '@common/utils/Validation'
 import { useCreateBudget, Budget, AlertThreshold, useUpdateBudget } from 'services/ce'
 import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
@@ -103,7 +104,8 @@ const ConfigureAlerts: React.FC<StepProps<BudgetStepData> & Props> = props => {
     return {
       alertThresholds: budget?.alertThresholds?.map(alert => ({
         ...alert,
-        notificationChannel: alert.slackWebhooks?.length ? BudgetAlertChannels.SLACK : BudgetAlertChannels.EMAIL
+        notificationChannel: alert.slackWebhooks?.length ? BudgetAlertChannels.SLACK : BudgetAlertChannels.EMAIL,
+        slackWebhooks: alert.slackWebhooks || []
       })) || [makeNewThresold()]
     }
   }
@@ -161,40 +163,30 @@ const ConfigureAlerts: React.FC<StepProps<BudgetStepData> & Props> = props => {
     }
   }
 
+  const validationSchema = Yup.object().shape({
+    alertThresholds: Yup.array(
+      Yup.object({
+        emailAddresses: Yup.array().when('notificationChannel', {
+          is: BudgetAlertChannels.EMAIL,
+          then: Yup.array().of(EmailSchemaWithoutRequired()).required(getString('common.validation.email.required'))
+        }),
+        slackWebhooks: Yup.array().when('notificationChannel', {
+          is: BudgetAlertChannels.SLACK,
+          then: Yup.array()
+            .of(URLValidationSchemaWithoutRequired())
+            .required(getString('common.validation.urlIsRequired'))
+            .nullable()
+        })
+      })
+    )
+  })
+
   return (
     <Container>
       <Formik<ThresholdForm>
         formName="alertThresholds"
         initialValues={getInitialValues()}
-        validationSchema={Yup.object().shape(
-          {
-            alertThresholds: Yup.array(
-              Yup.object({
-                emailAddresses: Yup.lazy(() =>
-                  Yup.array(
-                    Yup.string().when('slackWebhooks', {
-                      is: slackWebhooks => !slackWebhooks || slackWebhooks.length === 0,
-                      then: Yup.string()
-                        .required(getString('common.validation.email.required'))
-                        .email(getString('common.validation.email.format'))
-                    })
-                  )
-                ),
-                slackWebhooks: Yup.lazy(() =>
-                  Yup.array(
-                    Yup.string().when('emailAddresses', {
-                      is: emailAddresses => !emailAddresses || emailAddresses.length === 0,
-                      then: Yup.string()
-                        .required(getString('common.validation.urlIsRequired'))
-                        .url(getString('validation.urlIsNotValid'))
-                    })
-                  )
-                )
-              })
-            )
-          },
-          [['emailAddresses', 'slackWebhooks']]
-        )}
+        validationSchema={validationSchema}
         onSubmit={data => {
           handleSubmit(data)
         }}

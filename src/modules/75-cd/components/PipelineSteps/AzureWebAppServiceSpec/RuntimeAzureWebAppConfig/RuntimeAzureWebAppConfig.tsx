@@ -15,8 +15,10 @@ import type { GitQueryParams, InputSetPathProps, PipelineType } from '@common/in
 import { useQueryParams } from '@common/hooks'
 import type { StoreConfigWrapper } from 'services/cd-ng'
 import { Connectors } from '@connectors/constants'
+import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
 import { isRuntimeMode } from '../../K8sServiceSpec/K8sServiceSpecHelper'
 import { AzureWebAppConfigProps, AzureWebAppConfigType } from '../AzureWebAppServiceSpecInterface.types'
+import { fileTypes } from '../AzureWebAppStartupScriptSelection/StartupScriptInterface.types'
 import css from './RuntimeAzureWebAppConfig.module.scss'
 
 const AzureWebAppConfigInputField = (props: AzureWebAppConfigProps): React.ReactElement | null => {
@@ -24,8 +26,8 @@ const AzureWebAppConfigInputField = (props: AzureWebAppConfigProps): React.React
     PipelineType<InputSetPathProps> & { accountId: string }
   >()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-
   const runtimeMode = isRuntimeMode(props.stepViewType)
+
   const isAzureWebAppConfigRuntime = runtimeMode && !!get(props.template, props.azureWebAppConfigPath as string, false)
 
   const azureWebAppConfigSource = azureWebAppConfigBaseFactory.getAzureWebAppConfig(Connectors.GIT)
@@ -37,6 +39,27 @@ const AzureWebAppConfigInputField = (props: AzureWebAppConfigProps): React.React
   /* istanbul ignore next */
   if (!azureWebAppConfigSource) {
     return null
+  }
+
+  if (props.azureWebAppConfig?.type === 'Harness') {
+    if (props.azureWebAppConfig.spec.secretFiles) {
+      return (
+        <FileStoreList
+          name={`${props.path}.${props.type}.spec.secretFiles`}
+          type={fileTypes.ENCRYPTED}
+          allowOnlyOne={true}
+          formik={props.formik}
+        />
+      )
+    }
+    return (
+      <FileStoreList
+        name={`${props.path}.${props.type}.spec.files`}
+        type={fileTypes.FILE_STORE}
+        allowOnlyOne={true}
+        formik={props.formik}
+      />
+    )
   }
   return (
     <div>

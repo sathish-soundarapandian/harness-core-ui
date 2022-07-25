@@ -218,9 +218,9 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
                   }
                 }}
               >
-                <Layout.Vertical flex spacing="small">
+                <Layout.Vertical flex spacing="large" style={{ textAlign: 'center' }}>
                   <Icon name={gitOpsEntity.icon} size={70} />
-                  <Text color={Color.BLACK} font={{ weight: 'semi-bold' }}>
+                  <Text color={Color.BLACK} font={{ weight: 'semi-bold' }} lineClamp={2} width={85}>
                     {gitOpsEntity.label}
                   </Text>
                   {gitOpsEntity.subLabel}

@@ -12,8 +12,17 @@
     width: 350px !important;
   }
 }
+
+.loaderContainer {
+  --page-header-height: 128px;
+  position: relative;
+  height: calc(var(--page-min-height) - var(--page-header-height));
+}
+
 .pageContainer {
-  height: calc(100vh - 144px) !important;
+  --page-header-height: 144px;
+  height: calc(var(--page-min-height) - var(--page-header-height)) !important;
+  overflow: auto !important;
   background-color: var(--primary-bg) !important;
 }
 .pageSubHeader {

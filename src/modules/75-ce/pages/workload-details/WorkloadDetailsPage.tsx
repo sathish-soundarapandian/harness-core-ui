@@ -217,7 +217,7 @@ const WorkloadDetailsPage: () => JSX.Element = () => {
           />
         }
       />
-      <Page.Body>
+      <Page.Body className={css.pageCtn}>
         <Container flex background="white" padding="small">
           <FlexExpander />
           <TimeRangePicker timeRange={timeRange} setTimeRange={setTimeRange} />

@@ -55,16 +55,18 @@ import type { AzureWebAppInfrastructureSpec } from '@cd/components/PipelineSteps
 import {
   detailsHeaderName,
   getCustomStepProps,
-  getSelectedDeploymentType,
   isServerlessDeploymentType,
   isAzureWebAppDeploymentType,
   ServerlessInfraTypes,
-  StageType
+  StageType,
+  getServiceDefinitionType
 } from '@pipeline/utils/stageHelpers'
 import type { ServerlessAwsLambdaSpec } from '@cd/components/PipelineSteps/ServerlessAWSLambda/ServerlessAwsLambdaSpec'
 import type { ServerlessGCPSpec } from '@cd/components/PipelineSteps/ServerlessGCP/ServerlessGCPSpec'
 import type { ServerlessAzureSpec } from '@cd/components/PipelineSteps/ServerlessAzure/ServerlessAzureSpec'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import { isNewServiceEnvEntity } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { cleanUpEmptyProvisioner, getInfraGroups, getInfrastructureDefaultValue } from '../deployInfraHelper'
 import stageCss from '../../DeployStageSetupShell/DeployStage.module.scss'
 
@@ -181,12 +183,14 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
     debounceUpdateStage(stageData?.stage)
     setProvisionerEnabled(false)
   }
+  const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
 
   const selectedDeploymentType = React.useMemo(() => {
-    return getSelectedDeploymentType(
+    return getServiceDefinitionType(
       stage,
       getStageFromPipeline,
-      !!stage?.stage?.spec?.serviceConfig?.useFromStage?.stage,
+      isNewServiceEnvEntity,
+      isSvcEnvEnabled,
       templateServiceData
     )
   }, [stage, getStageFromPipeline])
@@ -659,7 +663,9 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
       {selectedInfrastructureType && (
         <>
           <div className={stageCss.tabHeading} id="clusterDetails">
-            {defaultTo(detailsHeaderName[selectedInfrastructureType], getString('cd.steps.common.clusterDetails'))}
+            {isAzureWebAppDeploymentType(selectedInfrastructureType) && isSvcEnvEnabled
+              ? ''
+              : defaultTo(detailsHeaderName[selectedInfrastructureType], getString('cd.steps.common.clusterDetails'))}
           </div>
           <Card className={stageCss.sectionCard}>{getClusterConfigurationStep(selectedInfrastructureType)}</Card>
         </>

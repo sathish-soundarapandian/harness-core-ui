@@ -28,7 +28,7 @@ export interface DatadogMetricInfo {
   groupingQuery?: string
   metricTags?: SelectOption[]
   groupingTags?: string[]
-  serviceInstanceIdentifierTag?: string
+  serviceInstanceIdentifierTag?: string | SelectOption
   riskCategory?: string
   higherBaselineDeviation?: boolean
   lowerBaselineDeviation?: boolean
@@ -39,7 +39,7 @@ export interface DatadogMetricInfo {
   continuousVerification?: boolean
   healthScore?: boolean
   isNew?: boolean
-  serviceInstance?: string
+  serviceInstance?: string | SelectOption
   isConnectorRuntimeOrExpression?: boolean
 }
 

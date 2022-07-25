@@ -130,7 +130,11 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
             name: serviceResponse?.name as string
           })
         } else {
-          showSuccess(getString('common.serviceCreated'))
+          showSuccess(
+            isServiceEntityModalView && isServiceCreateModalView
+              ? getString('common.serviceCreated')
+              : getString('common.serviceUpdated')
+          )
           fetchPipeline({ forceFetch: true, forceUpdate: true })
         }
       } else {

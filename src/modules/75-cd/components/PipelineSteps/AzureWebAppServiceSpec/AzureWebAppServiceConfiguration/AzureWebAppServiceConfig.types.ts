@@ -21,14 +21,15 @@ import type {
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 
-export const AllowedTypes = ['Git', 'Github', 'GitLab', 'Bitbucket']
-export type ConnectorTypes = 'Git' | 'Github' | 'GitLab' | 'Bitbucket'
+export const AllowedTypes = ['Git', 'Github', 'GitLab', 'Bitbucket', 'Harness']
+export type ConnectorTypes = 'Git' | 'Github' | 'GitLab' | 'Bitbucket' | 'Harness'
 
 export const ConnectorIcons: Record<string, IconName> = {
   Git: 'service-github',
   Github: 'github',
   GitLab: 'service-gotlab',
-  Bitbucket: 'bitbucket'
+  Bitbucket: 'bitbucket',
+  Harness: 'harness'
 }
 
 export const ConnectorMap: Record<string, ConnectorInfoDTO['type']> = {
@@ -42,7 +43,8 @@ export const ConnectorLabelMap: Record<ConnectorTypes, StringKeys> = {
   Git: 'pipeline.manifestType.gitConnectorLabel',
   Github: 'common.repo_provider.githubLabel',
   GitLab: 'common.repo_provider.gitlabLabel',
-  Bitbucket: 'pipeline.manifestType.bitBucketLabel'
+  Bitbucket: 'pipeline.manifestType.bitBucketLabel',
+  Harness: 'pipeline.manifestType.bitBucketLabel'
 }
 
 export interface StartupScriptSelectionProps {

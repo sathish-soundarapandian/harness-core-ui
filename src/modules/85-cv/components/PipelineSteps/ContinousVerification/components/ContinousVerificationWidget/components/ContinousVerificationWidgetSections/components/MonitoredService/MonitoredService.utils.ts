@@ -55,3 +55,14 @@ export function getEnvironmentIdentifierFromStage(
     ''
   )
 }
+
+export function isFirstTimeOpenForDefaultMonitoredSvc(
+  formValues: ContinousVerificationData,
+  monitoredServiceData: MonitoredServiceDTO | undefined
+): boolean {
+  return !!(
+    !formValues?.spec?.monitoredServiceRef &&
+    !formValues?.spec?.monitoredService?.spec?.monitoredServiceRef &&
+    monitoredServiceData?.identifier
+  )
+}

@@ -13,6 +13,8 @@ declare const styles: {
   readonly excludeSideNavOverlay: string
   readonly header: string
   readonly limitWarningTooltipCtn: string
+  readonly listContainer: string
+  readonly pageContainer: string
   readonly quickFilter: string
   readonly search: string
   readonly selected: string

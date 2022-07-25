@@ -5,8 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { DelegateGroupDetails, DelegateInsightsDetails } from 'services/portal'
-
 const insightsMock = {
   insights: [
     {
@@ -31,9 +29,9 @@ const insightsMock = {
       timeStamp: 43322342
     }
   ]
-} as DelegateInsightsDetails
+} as any
 
-export const delegateGroupsMock: DelegateGroupDetails[] = [
+export const delegateGroupsMock: any[] = [
   {
     activelyConnected: true,
     delegateConfigurationId: 'configId1',

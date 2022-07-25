@@ -6,7 +6,7 @@
  */
 
 import { isEmpty } from 'lodash-es'
-import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import type {
   DatadogAggregationType,
   DatadogMetricInfo,
@@ -120,6 +120,14 @@ export function mapDatadogMetricHealthSourceToDatadogMetricSetupSource(sourceDat
   return setupSource
 }
 
+export const getServiceInstanceByValueType = (metricInfo: {
+  serviceInstanceIdentifierTag?: string | SelectOption
+}): string => {
+  return typeof metricInfo.serviceInstanceIdentifierTag === 'string'
+    ? metricInfo.serviceInstanceIdentifierTag || ''
+    : (metricInfo.serviceInstanceIdentifierTag?.value as string) || ''
+}
+
 export function mapDatadogMetricSetupSourceToDatadogHealthSource(
   setupSource: DatadogMetricSetupSource
 ): UpdatedHealthSource {
@@ -168,7 +176,7 @@ export function mapDatadogMetricSetupSourceToDatadogHealthSource(
       aggregation: metricInfo.aggregator,
       isManualQuery: metricInfo.isManualQuery,
       isCustomCreatedMetric: metricInfo.isCustomCreatedMetric,
-      serviceInstanceIdentifierTag: metricInfo.serviceInstanceIdentifierTag,
+      serviceInstanceIdentifierTag: getServiceInstanceByValueType(metricInfo),
       groupingQuery: metricInfo.groupingQuery,
       query: metricInfo.query,
       sli: { enabled: Boolean(metricInfo.sli) },
@@ -177,7 +185,7 @@ export function mapDatadogMetricSetupSourceToDatadogHealthSource(
         liveMonitoring: { enabled: metricInfo?.healthScore || false },
         deploymentVerification: {
           enabled: metricInfo?.continuousVerification || false,
-          serviceInstanceFieldName: metricInfo?.serviceInstanceIdentifierTag || ''
+          serviceInstanceFieldName: getServiceInstanceByValueType(metricInfo)
         }
       }
     } as DatadogMetricHealthDefinition)
