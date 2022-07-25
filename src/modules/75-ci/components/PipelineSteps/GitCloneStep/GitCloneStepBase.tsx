@@ -62,7 +62,7 @@ export const GitCloneStepBase = (
   const [connectorUrl, setConnectorUrl] = React.useState('')
   const codebaseConnector = initialValues?.spec?.connectorRef
   const [codebaseRuntimeInputs, setCodebaseRuntimeInputs] = React.useState<CodebaseRuntimeInputsInterface>({
-    ...(isRuntimeInput(codebaseConnector) && { connectorRef: true, repoName: true })
+    ...(isRuntimeInput(codebaseConnector) ? { connectorRef: true, repoName: true } : {})
   })
   const { accountId, projectIdentifier, orgIdentifier } = useParams<
     PipelineType<{

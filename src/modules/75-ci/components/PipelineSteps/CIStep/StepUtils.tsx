@@ -30,7 +30,6 @@ import { isRuntimeInput, CodebaseTypes } from '@pipeline/utils/CIUtils'
 import {
   getBuildTypeLabels,
   getBuildTypeInputLabels,
-  CodeBaseType,
   ConnectionType
 } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
@@ -113,7 +112,7 @@ export const renderBuildTypeInputField = ({
   allowableTypes,
   prefix
 }: {
-  type: CodeBaseType
+  type: CodebaseTypes
   getString: UseStringsReturn['getString']
   allowableTypes: AllowedTypes
   readonly?: boolean
@@ -166,7 +165,7 @@ export const renderBuild = ({
   const isBuildTypeRuntimeInput = isRuntimeInput(buildTypeValue)
   const buildTypeError = get(formik?.errors, `${prefix}spec.build`)
   const shouldShowError = formik?.submitCount > 0 || triggerIdentifier // do not prematurely show error but should display on Triggers form
-  const handleTypeChange = (newType: any = CodebaseTypes.branch): void => {
+  const handleTypeChange = (newType: any = CodebaseTypes.BRANCH): void => {
     const newValuesSpec = get(formik.values, `${prefix}spec`)
     if (isRuntimeInput(newType)) {
       newValuesSpec.build = newType
@@ -205,8 +204,8 @@ export const renderBuild = ({
             name={`${prefix}spec.build.type`}
             label={getString('filters.executions.buildType')}
             options={[
-              { label: radioLabels['branch'], value: CodebaseTypes.branch },
-              { label: radioLabels['tag'], value: CodebaseTypes.tag }
+              { label: radioLabels['branch'], value: CodebaseTypes.BRANCH },
+              { label: radioLabels['tag'], value: CodebaseTypes.TAG }
             ]}
             onChange={handleTypeChange}
             className={cx(
@@ -226,7 +225,7 @@ export const renderBuild = ({
             }}
           />
           {shouldShowError && buildTypeError && <FormError errorMessage={buildTypeError} name="build.type" />}
-          {buildTypeValue === CodebaseTypes.branch
+          {buildTypeValue === CodebaseTypes.BRANCH
             ? renderBuildTypeInputField({
                 getString,
                 expressions,
@@ -236,7 +235,7 @@ export const renderBuild = ({
                 prefix
               })
             : null}
-          {buildTypeValue === CodebaseTypes.tag
+          {buildTypeValue === CodebaseTypes.TAG
             ? renderBuildTypeInputField({
                 getString,
                 expressions,

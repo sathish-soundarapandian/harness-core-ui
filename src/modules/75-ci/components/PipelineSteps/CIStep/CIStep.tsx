@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { isEmpty } from 'lodash-es'
+import { isEmpty, get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
@@ -171,7 +171,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
 
   return (
     <>
-      {stepViewType !== StepViewType.Template && Object.prototype.hasOwnProperty.call(enableFields, 'name') ? (
+      {stepViewType !== StepViewType.Template && get(enableFields, 'name') ? (
         <Container className={cx(css.formGroup, stepCss, css.nameIdLabel)}>
           <FormInput.InputWithIdentifier
             inputName="name"
@@ -183,7 +183,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
         </Container>
       ) : null}
       <Container className={cx(css.formGroup, stepCss)}>
-        {Object.prototype.hasOwnProperty.call(enableFields, 'description') ? (
+        {get(enableFields, 'description') ? (
           isInputSetView && shouldRenderRunTimeInputViewWithAllowedValues('description', template) ? (
             renderMultiTypeInputWithAllowedValues({
               name: `${prefix}description`,
@@ -211,8 +211,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
           )
         ) : null}
       </Container>
-      {!enableFields['spec.connectorRef']?.shouldHide &&
-      Object.prototype.hasOwnProperty.call(enableFields, 'spec.connectorRef') ? (
+      {!enableFields['spec.connectorRef']?.shouldHide && get(enableFields, 'spec.connectorRef') ? (
         isInputSetView && shouldRenderRunTimeInputViewWithAllowedValues('spec.connectorRef', template) ? (
           <Container className={cx(css.formGroup, stepCss, css.bottomMargin3)}>
             {renderMultiTypeInputWithAllowedValues({
@@ -249,7 +248,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
           </Container>
         )
       ) : null}
-      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.connectorAndRepo') && formik && (
+      {get(enableFields, 'spec.connectorAndRepo') && formik && (
         <Container className={(css.formGroup, stepCss, css.bottomMargin5)}>
           {renderConnectorAndRepoName({
             values: formik.values,
@@ -278,7 +277,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
           })}
         </Container>
       )}
-      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.repoName') && (
+      {get(enableFields, 'spec.repoName') && (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {renderMultiTypeTextField({
             name: `${prefix}spec.repoName`,
@@ -295,8 +294,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
           })}
         </Container>
       )}
-      {!enableFields['spec.connectorRef']?.shouldHide &&
-      Object.prototype.hasOwnProperty.call(enableFields, 'spec.image') ? (
+      {!enableFields['spec.connectorRef']?.shouldHide && get(enableFields, 'spec.image') ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {renderMultiTypeTextField({
             name: `${prefix}spec.image`,
@@ -308,7 +306,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
         </Container>
       ) : null}
 
-      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.build') && formik && (
+      {get(enableFields, 'spec.build') && formik && (
         <Container
           className={cx(
             css.formGroup,
@@ -331,7 +329,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
           })}
         </Container>
       )}
-      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.build.spec.branch') && formik && (
+      {get(enableFields, 'spec.build.spec.branch') && formik && (
         <Container
           className={cx(
             css.formGroup,
@@ -343,14 +341,14 @@ export const CIStep: React.FC<CIStepProps> = props => {
         >
           {renderBuildTypeInputField({
             getString,
-            type: CodebaseTypes.branch,
+            type: CodebaseTypes.BRANCH,
             readonly,
             allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep,
             prefix
           })}
         </Container>
       )}
-      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.build.spec.tag') && formik && (
+      {get(enableFields, 'spec.build.spec.tag') && formik && (
         <Container
           className={cx(
             css.formGroup,
@@ -362,7 +360,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
         >
           {renderBuildTypeInputField({
             getString,
-            type: CodebaseTypes.tag,
+            type: CodebaseTypes.TAG,
             readonly,
             allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep,
             prefix
@@ -370,7 +368,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
         </Container>
       )}
 
-      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.cloneDirectory') ? (
+      {get(enableFields, 'spec.cloneDirectory') ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {renderMultiTypeTextField({
             name: `${prefix}spec.cloneDirectory`,
@@ -388,7 +386,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
           })}
         </Container>
       ) : null}
-      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.target') ? (
+      {get(enableFields, 'spec.target') ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {renderMultiTypeTextField({
             name: `${prefix}spec.target`,
@@ -405,7 +403,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
           })}
         </Container>
       ) : null}
-      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.repo') ? (
+      {get(enableFields, 'spec.repo') ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {renderMultiTypeTextField({
             name: `${prefix}spec.repo`,
@@ -422,7 +420,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
           })}
         </Container>
       ) : null}
-      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.host') ? (
+      {get(enableFields, 'spec.host') ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {renderMultiTypeTextField({
             name: `${prefix}spec.host`,
@@ -440,7 +438,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
           })}
         </Container>
       ) : null}
-      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.projectID') ? (
+      {get(enableFields, 'spec.projectID') ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {renderMultiTypeTextField({
             name: `${prefix}spec.projectID`,
@@ -457,7 +455,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
           })}
         </Container>
       ) : null}
-      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.region') ? (
+      {get(enableFields, 'spec.region') ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {renderMultiTypeTextField({
             name: `${prefix}spec.region`,
@@ -475,7 +473,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
           })}
         </Container>
       ) : null}
-      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.bucket') ? (
+      {get(enableFields, 'spec.bucket') ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {renderMultiTypeTextField({
             name: `${prefix}spec.bucket`,
@@ -492,7 +490,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
           })}
         </Container>
       ) : null}
-      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.key') ? (
+      {get(enableFields, 'spec.key') ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {renderMultiTypeTextField({
             name: `${prefix}spec.key`,
@@ -509,7 +507,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
           })}
         </Container>
       ) : null}
-      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.sourcePaths') ? (
+      {get(enableFields, 'spec.sourcePaths') ? (
         isInputSetView ? (
           <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
             {renderMultiTypeListInputSet({
@@ -535,7 +533,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
           </Container>
         )
       ) : null}
-      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.sourcePath') ? (
+      {get(enableFields, 'spec.sourcePath') ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {renderMultiTypeTextField({
             name: `${prefix}spec.sourcePath`,
@@ -552,7 +550,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
           })}
         </Container>
       ) : null}
-      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.account') ? (
+      {get(enableFields, 'spec.account') ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {renderMultiTypeTextField({
             name: `${prefix}spec.account`,
@@ -569,7 +567,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
           })}
         </Container>
       ) : null}
-      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.imageName') ? (
+      {get(enableFields, 'spec.imageName') ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {renderMultiTypeTextField({
             name: `${prefix}spec.imageName`,
@@ -586,7 +584,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
           })}
         </Container>
       ) : null}
-      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.repository') ? (
+      {get(enableFields, 'spec.repository') ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {renderMultiTypeTextField({
             name: `${prefix}spec.repository`,
@@ -604,7 +602,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
           })}
         </Container>
       ) : null}
-      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.tags') ? (
+      {get(enableFields, 'spec.tags') ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {/* Corresponding input set view is handled in ArtifactStepCommon.tsx */}
           {!isInputSetView
@@ -617,7 +615,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
             : null}
         </Container>
       ) : null}
-      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.depth') ? (
+      {get(enableFields, 'spec.depth') ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {!isInputSetView
             ? renderMultiTypeList({

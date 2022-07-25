@@ -27,8 +27,8 @@ export function getShortCommitId(commitId: string): string {
 const cloneCodebaseKeyRef = 'stage.spec.cloneCodebase'
 
 export enum CodebaseTypes {
-  branch = 'branch',
-  tag = 'tag',
+  BRANCH = 'branch',
+  TAG = 'tag',
   PR = 'PR'
 }
 

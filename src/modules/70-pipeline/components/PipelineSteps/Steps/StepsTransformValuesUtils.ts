@@ -319,15 +319,17 @@ export function getFormValuesInCorrectFormat<T, U>(formValues: T, fields: Field[
     }
     // Set Select field values
     if (
-      type === Types.ArchiveFormat ||
-      type === Types.Pull ||
-      type === Types.BuildTool ||
-      type === Types.Language ||
-      type === Types.Shell ||
-      type === Types.ImagePullPolicy ||
-      type === Types.BuildEnvironment ||
-      type === Types.FrameworkVersion ||
-      type === Types.BuildType
+      [
+        Types.ArchiveFormat,
+        Types.Pull,
+        Types.BuildTool,
+        Types.Language,
+        Types.Shell,
+        Types.ImagePullPolicy,
+        Types.BuildEnvironment,
+        Types.FrameworkVersion,
+        Types.BuildType
+      ].includes(type)
     ) {
       const value = get(formValues, name) as MultiTypeSelectOption
 

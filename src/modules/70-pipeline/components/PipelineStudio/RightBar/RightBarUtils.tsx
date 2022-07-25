@@ -144,8 +144,6 @@ export const renderConnectorAndRepoName = ({
           tooltipProps={{ dataTooltipId: 'rightBarForm_connectorRef' }}
           setRefValue
           onChange={(value, _valueType, connectorRefType) => {
-            // add coverage once connector select available in jest tests
-            /* istanbul ignore next */
             handleCIConnectorRefOnChange({
               value: value as ConnectorRefInterface,
               connectorRefType,
@@ -154,7 +152,6 @@ export const renderConnectorAndRepoName = ({
               setFieldValue,
               codeBaseInputFieldFormName
             })
-            /* istanbul ignore next */
             setCodebaseRuntimeInputs({
               ...codebaseRuntimeInputs,
               connectorRef: isRuntimeInput(value),
