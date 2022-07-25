@@ -20,9 +20,15 @@ import {
   getMonitoredServiceOptions
 } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.utils'
 import { getSLIMetricOptions, getSLITypeOptions } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.constants'
-import type { MonitoredServiceDTO } from 'services/cv'
+import type { MonitoredServiceDTO, ResponseListMonitoredServiceWithHealthSources } from 'services/cv'
 import SLI from '../SLI'
-import { expectedMonitoredServiceOptions, mockedMonitoredService, mockedMonitoredServiceData } from './SLI.mock'
+import {
+  expectedMonitoredServiceOptions,
+  mockedMonitoredService,
+  mockedMonitoredServiceData,
+  mockedMonitoredServiceDataWithNullData
+} from './SLI.mock'
+import { getMonitoredServicesOptions } from '../SLI.utils'
 
 jest.mock('@cv/pages/slos/components/SLOTargetChart/SLOTargetChart', () => ({
   __esModule: true,
@@ -86,6 +92,16 @@ describe('Test SLI component', () => {
   test('verify healthSourcesOptions method', async () => {
     const actualHealthSources = getHealthSourceOptions(mockedMonitoredService as MonitoredServiceDTO)
     expect(actualHealthSources).toEqual([{ label: 'NR-1', value: 'NR1' }])
+  })
+
+  test('verify getMonitoredServicesOptions method when null monitored service is passed', async () => {
+    const actualMonitoredServiceOptions = getMonitoredServicesOptions(
+      mockedMonitoredServiceDataWithNullData as ResponseListMonitoredServiceWithHealthSources | null
+    )
+    expect(actualMonitoredServiceOptions).toEqual([
+      { label: 'Service_101_QA', value: 'Service_101_QA' },
+      { label: 'Service_102_QA', value: 'Service_102_QA' }
+    ])
   })
 
   test('verify getSliTypeOptions method', async () => {

@@ -29,10 +29,17 @@ export function updateMonitoredServiceForUserJourney(
 export function getMonitoredServicesOptions(
   monitoredServicesData: ResponseListMonitoredServiceWithHealthSources | null
 ): SelectOption[] {
-  return (monitoredServicesData?.data?.map(monitoredService => ({
-    label: monitoredService?.name,
-    value: monitoredService?.identifier
-  })) || []) as SelectOption[]
+  const monitoredServicesOptions: SelectOption[] = []
+  monitoredServicesData?.data?.forEach(monitoredService => {
+    const { identifier = '', name = '' } = monitoredService
+    if (identifier && name) {
+      monitoredServicesOptions.push({
+        label: name,
+        value: identifier
+      })
+    }
+  })
+  return monitoredServicesOptions
 }
 
 export function getHealthSourcesOptions(
