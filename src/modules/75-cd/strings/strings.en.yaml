@@ -36,7 +36,7 @@ steps:
     stepName: Specify your GCP Connector
   pdcStep:
     no: No.
-    hostsPlaceholder: Specify list of host names here (comma or new line separated)
+    hostsPlaceholder: Specify list of host names here (comma separated)
     specificHostsPlaceholder: Specify list of comma separated hosts here
     attributesPlaceholder: Specify list of comma separated attributes and values. E.g. hostType:DB, region:west
     hostNameOption: Host names

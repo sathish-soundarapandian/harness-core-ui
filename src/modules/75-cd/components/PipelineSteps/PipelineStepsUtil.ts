@@ -99,7 +99,9 @@ export function getConnectorSchema(getString: UseStringsReturn['getString']): Yu
   return Yup.string().required(getString('fieldRequired', { field: getString('connector') }))
 }
 
-export function getSshKeyRefSchema(getString: UseStringsReturn['getString']): Yup.StringSchema<string | undefined> {
+export function getCredentialsRefSchema(
+  getString: UseStringsReturn['getString']
+): Yup.StringSchema<string | undefined> {
   return Yup.string().required(getString('fieldRequired', { field: getString('connector') }))
 }
 
@@ -189,16 +191,16 @@ export const getInfrastructureDefinitionValidationSchema = (
     if (deploymentType === ServiceDeploymentType.ServerlessAwsLambda) {
       return getValidationSchemaWithRegion(getString)
     }
+    return getValidationSchema(getString)
+  } else {
     if (deploymentType === ServiceDeploymentType.Ssh) {
       return Yup.object().shape({
-        credentialsRef: getSshKeyRefSchema(getString)
+        credentialsRef: getCredentialsRefSchema(getString)
       })
     }
     if (deploymentType === ServiceDeploymentType.WinRm) {
       return Yup.object().shape({})
     }
-    return getValidationSchema(getString)
-  } else {
     return Yup.object().shape({
       connectorRef: getConnectorSchema(getString),
       namespace: getNameSpaceSchema(getString),

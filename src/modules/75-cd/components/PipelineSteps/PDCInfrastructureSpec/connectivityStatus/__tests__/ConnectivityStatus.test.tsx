@@ -21,12 +21,15 @@ jest.mock('services/cd-ng', () => ({
     return {
       cancel: jest.fn(),
       loading: false,
-      mutate: jest.fn().mockImplementation(() => {
-        return {
-          status: 'SUCCESS',
-          data: {}
-        }
-      })
+      mutate: jest.fn().mockImplementation(
+        () =>
+          new Promise(resolve => {
+            resolve({
+              status: 'SUCCESS',
+              data: [{ status: 'SUCCESS' }]
+            })
+          })
+      )
     }
   }),
   useGetTestConnectionResult: jest.fn().mockImplementation(() => {
@@ -55,19 +58,6 @@ describe('connectivity status', () => {
     const { getByText } = setup(failure)
 
     expect(getByText('failed')).toBeDefined()
-
-    useValidateHostsMock.mockImplementation(() => {
-      return {
-        cancel: jest.fn(),
-        loading: false,
-        mutate: jest.fn().mockImplementation(() => {
-          return {
-            status: 'SUCCESS',
-            data: {}
-          }
-        })
-      }
-    })
 
     const testBtn = getByText('test')
 
