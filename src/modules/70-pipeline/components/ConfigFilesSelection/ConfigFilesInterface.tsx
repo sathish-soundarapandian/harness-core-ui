@@ -13,6 +13,7 @@ import type { ServiceDefinition, StageElementConfig } from 'services/cd-ng'
 export interface ConfigFilesSelectionProps {
   isPropagating?: boolean
   deploymentType: ServiceDefinition['type']
+  readonly?: boolean
 }
 
 export interface ConfigFilesListViewProps {

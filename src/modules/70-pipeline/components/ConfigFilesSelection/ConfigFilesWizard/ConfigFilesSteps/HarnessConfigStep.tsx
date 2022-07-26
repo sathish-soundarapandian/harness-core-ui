@@ -27,6 +27,7 @@ interface ConfigFilesPropType {
   listOfConfigFiles: any[]
   configFileIndex?: number
 }
+
 export function HarnessConfigStep({
   stepName = 'step name',
   prevStepData,

@@ -1,0 +1,186 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "totalPages": 1,
+    "totalItems": 6,
+    "pageItemCount": 6,
+    "pageSize": 10,
+    "content": [
+      {
+        "connector": {
+          "name": "AWS",
+          "identifier": "AWSX",
+          "description": "",
+          "orgIdentifier": "undefined",
+          "projectIdentifier": "undefined",
+          "tags": {},
+          "type": "Aws",
+          "spec": {
+            "credential": {
+              "crossAccountAccess": null,
+              "type": "InheritFromDelegate",
+              "spec": { "delegateSelector": "vardan-bansal-mbp" }
+            }
+          }
+        },
+        "createdAt": 1608697269523,
+        "lastModifiedAt": 1608697269523,
+        "status": null,
+        "harnessManaged": false
+      },
+      {
+        "connector": {
+          "name": "Git CTR",
+          "identifier": "Git_CTR",
+          "description": "To connect to Git",
+          "orgIdentifier": "undefined",
+          "projectIdentifier": "undefined",
+          "tags": { "git": "" },
+          "type": "Git",
+          "spec": {
+            "url": "https://github.com/vardanbansal-harness/vscode-yaml.git",
+            "branchName": "",
+            "type": "Http",
+            "connectionType": "Repo",
+            "spec": { "username": "admin", "passwordRef": "account.sec1" },
+            "gitSync": { "enabled": false, "customCommitAttributes": null, "syncEnabled": false }
+          }
+        },
+        "createdAt": 1608679004757,
+        "lastModifiedAt": 1608679004757,
+        "status": null,
+        "harnessManaged": false
+      },
+      {
+        "connector": {
+          "name": "Sample",
+          "identifier": "SampleX",
+          "description": "",
+          "orgIdentifier": "undefined",
+          "projectIdentifier": "undefined",
+          "tags": {},
+          "type": "Git",
+          "spec": {
+            "url": "https://github.com/vardanbansal-harness/vscode-yaml.git",
+            "branchName": "",
+            "type": "Http",
+            "connectionType": "Repo",
+            "spec": { "username": "admin", "passwordRef": "account.sec1" },
+            "gitSync": { "enabled": false, "customCommitAttributes": null, "syncEnabled": false }
+          }
+        },
+        "createdAt": 1608678936902,
+        "lastModifiedAt": 1608679013406,
+        "status": null,
+        "harnessManaged": false
+      },
+      {
+        "connector": {
+          "name": "XYZDocker",
+          "identifier": "XYZDockerX",
+          "description": "",
+          "orgIdentifier": "undefined",
+          "projectIdentifier": "undefined",
+          "tags": {},
+          "type": "DockerRegistry",
+          "spec": {
+            "dockerRegistryUrl": "www.google.com",
+            "providerType": null,
+            "auth": {
+              "type": "UsernamePassword",
+              "spec": { "username": "admin", "passwordRef": "account.dockerconnpass" }
+            }
+          }
+        },
+        "createdAt": 1608040997054,
+        "lastModifiedAt": 1608040997054,
+        "status": { "status": "FAILURE", "errorMessage": null, "lastTestedAt": 0, "lastConnectedAt": 0 },
+        "harnessManaged": false
+      },
+      {
+        "connector": {
+          "name": "Docker CTR",
+          "identifier": "DockerCTRX",
+          "description": "",
+          "orgIdentifier": "undefined",
+          "projectIdentifier": "undefined",
+          "tags": {},
+          "type": "DockerRegistry",
+          "spec": {
+            "dockerRegistryUrl": "www.docker.com",
+            "providerType": null,
+            "auth": {
+              "type": "UsernamePassword",
+              "spec": { "username": "admin", "passwordRef": "account.dockerconnpass" }
+            }
+          }
+        },
+        "createdAt": 1607924647071,
+        "lastModifiedAt": 1607924647071,
+        "status": { "status": "SUCCESS", "errorMessage": null, "lastTestedAt": 0, "lastConnectedAt": 0 },
+        "harnessManaged": false
+      },
+      {
+        "connector": {
+          "description": "",
+          "identifier": "Nexus_Connector",
+          "name": "NexusConnector",
+          "orgIdentifier": "org",
+          "projectIdentifier": "",
+          "spec": {
+            "auth": {
+              "type": "UsernamePassword",
+              "spec": { "username": "hgj", "passwordRef": "account.appdcorrectsecret" }
+            },
+            "nexusServerUrl": "dbhgj",
+            "version": "2.x"
+          },
+          "tags": {},
+          "type": "Nexus",
+          "createdAt": 1610106601445,
+          "harnessManaged": false,
+          "lastModifiedAt": 1610198427730,
+          "status": {
+            "errorSummary": null,
+            "errors": null,
+            "lastConnectedAt": 1610198427714,
+            "lastTestedAt": 1610198427714,
+            "status": "SUCCESS",
+            "testedAt": 161019842771
+          }
+        }
+      },
+      {
+        "connector": {
+          "name": "KubernetesCTR",
+          "identifier": "Kubernetes CTRX",
+          "description": "",
+          "orgIdentifier": "undefined",
+          "projectIdentifier": "undefined",
+          "tags": { "qa": "", "test": "" },
+          "type": "K8sCluster",
+          "spec": {
+            "credential": {
+              "type": "ManualConfig",
+              "spec": {
+                "masterUrl": "sample.google.com",
+                "auth": {
+                  "type": "UsernamePassword",
+                  "spec": { "username": "admin", "passwordRef": "account.kubconnpass" }
+                }
+              }
+            }
+          }
+        },
+        "createdAt": 1607924578377,
+        "lastModifiedAt": 1608040385164,
+        "status": { "status": "SUCCESS", "errorMessage": null, "lastTestedAt": 0, "lastConnectedAt": 0 },
+        "harnessManaged": false
+      }
+    ],
+    "pageIndex": 0,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "1b5c9329-b315-4e3c-b318-e4ee881282ce"
+}
