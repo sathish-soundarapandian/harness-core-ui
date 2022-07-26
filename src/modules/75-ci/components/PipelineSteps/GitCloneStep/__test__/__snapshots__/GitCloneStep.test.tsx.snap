@@ -2795,7 +2795,7 @@ exports[`Git Clone Step Step Render should render onEdit runtime input values pr
           </div>
         </div>
         <div
-          class="StyledProps--font StyledProps--main bottomMargin5"
+          class="StyledProps--font StyledProps--main bottomMargin2"
         >
           <div
             class="StyledProps--font StyledProps--main bottomMargin3"
