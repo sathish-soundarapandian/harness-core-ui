@@ -236,12 +236,12 @@ exports[`Run Step Edit View edit mode works 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 373px;"
+                    style="width: 385px;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-spec.connectorRef"
-                      style="width: 373px;"
+                      style="width: 385px;"
                       type="button"
                     >
                       <span
@@ -968,7 +968,7 @@ exports[`Run Step Edit View renders runtime inputs 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                    style="width: 373px;"
+                    style="width: 385px;"
                   >
                     <div
                       class="TextInput--main MultiTypeInput--input"
@@ -1679,12 +1679,12 @@ exports[`Run Step Edit View should render properly 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 373px;"
+                    style="width: 385px;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-spec.connectorRef"
-                      style="width: 373px;"
+                      style="width: 385px;"
                       type="button"
                     >
                       <span
