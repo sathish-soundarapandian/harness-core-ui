@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState, useRef, useContext } from 'react'
-import { Layout, FormInput, SelectOption, Formik, FormikForm } from '@wings-software/uicore'
+import { Layout, FormInput, SelectOption, Formik, FormikForm, MultiTypeInputType } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import { debounce, noop, get } from 'lodash-es'
@@ -307,25 +307,14 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                   }}
                   gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                 />
-                <FormInput.MultiSelectTypeInput
-                  label={getString(subscriptionLabel)}
-                  name="subscriptionId"
-                  selectItems={subscriptions}
-                  placeholder={
-                    isSubsLoading ? getString('loading') : getString('cd.steps.azureInfraStep.subscriptionPlaceholder')
-                  }
-                  multiSelectTypeInputProps={{
-                    allowableTypes
-                  }}
-                />
                 <FormInput.Select
+                  label={getString(subscriptionLabel)}
                   name="subscriptionId"
                   className={`subscriptionId-select ${css.inputWidth}`}
                   items={subscriptions}
                   placeholder={
                     isSubsLoading ? getString('loading') : getString('cd.steps.azureInfraStep.subscriptionPlaceholder')
                   }
-                  label={getString(subscriptionLabel)}
                   onChange={
                     /* istanbul ignore next */ value => {
                       if (value) {
