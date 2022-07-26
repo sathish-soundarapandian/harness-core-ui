@@ -416,8 +416,8 @@ describe('BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build I
         throw Error('no advanced summary')
       }
       fireEvent.click(advancedSummary)
+      await waitFor(() => expect(getByText('pipeline.infraSpecifications.serviceAccountName')).toBeDefined())
     })
-    await waitFor(() => expect(getByText('pipeline.infraSpecifications.serviceAccountName')).toBeDefined())
   })
 })
 
