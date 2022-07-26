@@ -50,8 +50,8 @@ export interface SelectArtifactRef {
 export interface SelectArtifactInterface {
   artifactType?: ArtifactType
   identifier?: string
-  branch?: string | undefined
-  commitId?: string | undefined
+  branch?: string
+  commitId?: string
   gitFetchType?: 'Branch' | 'Commit'
   paths?: string[] | any
   valuesPaths?: string[] | any
@@ -259,7 +259,7 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
           typeof initialValues?.spec?.valuesPaths === 'string'
             ? initialValues?.spec?.valuesPaths
             : initialValues?.spec?.valuesPaths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) })),
-        artifactType: get(serviceData, 'data.artifactType') || undefined,
+        artifactType: defaultTo(get(serviceData, 'data.artifactType'), undefined),
         repository: initialRepoValue
       }
     }
@@ -270,7 +270,7 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
       commitId: undefined,
       paths: [{ path: '', uuid: uuid('', nameSpace()) }],
       valuesPaths: [],
-      artifactType: get(serviceData, 'data.artifactType') || undefined,
+      artifactType: defaultTo(get(serviceData, 'data.artifactType'), undefined),
       repository: initialRepoValue
     }
   }, [get(serviceData, 'serviceDefinition.spec.manifests[0].manifest', {})])
@@ -310,14 +310,14 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
       const updatedContextService = produce(serviceData as ServiceDataType, draft => {
         set(draft, 'data.repoValues', repository)
       })
-      await saveServiceData(updatedContextService)
+      saveServiceData(updatedContextService)
     }
   }
   return (
     <Layout.Vertical width="80%">
       <Text font={{ variation: FontVariation.H4 }}>{getString('cd.getStartedWithCD.artifactLocation')}</Text>
       <Formik<SelectArtifactInterface>
-        formName="cdRepo"
+        formName="cdArtifactDetails"
         initialValues={getInitialValues()}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}

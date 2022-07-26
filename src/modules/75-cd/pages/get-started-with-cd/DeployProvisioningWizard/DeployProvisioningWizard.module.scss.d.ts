@@ -18,6 +18,7 @@ declare const styles: {
   readonly authMethodBtn: string
   readonly authTitle: string
   readonly borderBottom: string
+  readonly containerPadding: string
   readonly credentialsButton: string
   readonly footer: string
   readonly formInput: string

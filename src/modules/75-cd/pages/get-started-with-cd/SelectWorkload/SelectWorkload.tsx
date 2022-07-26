@@ -23,7 +23,7 @@ import {
   FormError
 } from '@harness/uicore'
 import type { FormikContextType, FormikProps } from 'formik'
-import { get, isEmpty, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, set } from 'lodash-es'
 import produce from 'immer'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
@@ -129,7 +129,7 @@ const SelectWorkloadRef = (props: SelectWorkloadProps, forwardRef: SelectWorkloa
         set(
           draft,
           'identifier',
-          isServiceNameUpdated ? getUniqueEntityIdentifier(serviceRef as string) : get(serviceData, 'identifier')
+          isServiceNameUpdated ? getUniqueEntityIdentifier(serviceRef) : get(serviceData, 'identifier')
         )
         set(draft, 'serviceDefinition.type', serviceDeploymentType?.value)
         set(draft, 'data.workloadType', workloadType?.value)
@@ -171,9 +171,9 @@ const SelectWorkloadRef = (props: SelectWorkloadProps, forwardRef: SelectWorkloa
       <Text font={{ variation: FontVariation.H4 }}>{getString('cd.getStartedWithCD.workloadDeploy')}</Text>
       <Formik<SelectWorkloadInterface>
         initialValues={{
-          workloadType: get(serviceData, 'data.workloadType') || undefined,
-          serviceDeploymentType: get(serviceData, 'serviceDefinition.type') || undefined,
-          serviceRef: get(serviceData, 'name') || ''
+          workloadType: defaultTo(get(serviceData, 'data.workloadType'), undefined),
+          serviceDeploymentType: defaultTo(get(serviceData, 'serviceDefinition.type'), undefined),
+          serviceRef: defaultTo(get(serviceData, 'name'), '')
         }}
         formName="cdWorkload-provider"
         onSubmit={handleSubmit}
@@ -183,7 +183,7 @@ const SelectWorkloadRef = (props: SelectWorkloadProps, forwardRef: SelectWorkloa
           formikRef.current = formikProps
           return (
             <Form>
-              <Container padding={{ top: 'xxlarge', bottom: 'xxxlarge' }}>
+              <Container className={css.containerPadding}>
                 <CardSelect
                   data={WorkloadProviders}
                   cornerSelected={true}

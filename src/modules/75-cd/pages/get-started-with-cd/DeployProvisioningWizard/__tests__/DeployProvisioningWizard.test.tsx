@@ -10,75 +10,22 @@ import { fireEvent, render, act, waitFor, findByText } from '@testing-library/re
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
-import { environments, mockData, mockedDelegates, mockSecretList, repos, services } from './mocks'
+import {
+  connectionTestResult,
+  contextValues,
+  createConnector,
+  environments,
+  mockData,
+  mockedDelegates,
+  mockSecretList,
+  repos,
+  services,
+  updateConnector,
+  updatedInfra,
+  updateService
+} from './mocks'
 import { DeployProvisioningWizard } from '../DeployProvisioningWizard'
-
-const updateConnector = jest.fn()
-const createConnector = jest.fn(() =>
-  Promise.resolve({
-    status: 'SUCCESS',
-    data: {
-      connector: {
-        name: 'test git connector',
-        identifier: 'test_git_connector',
-        type: 'Github',
-        spec: {
-          dockerRegistryUrl: 'https;//github.com',
-          auth: {
-            type: 'UsernamePassword',
-            spec: { username: 'testpass', passwordRef: 'account.testpass' }
-          }
-        }
-      },
-      createdAt: 1607289652713,
-      lastModifiedAt: 1607289652713
-    }
-  })
-)
-
-const updateService = jest.fn(() =>
-  Promise.resolve({
-    status: 'SUCCESS',
-    data: {
-      service: {
-        accountId: 'AQ8xhfNCRtGIUjq5bSM8Fg',
-        identifier: 'sample_service_1658515110913',
-        orgIdentifier: 'default',
-        projectIdentifier: 'Jira',
-        name: 'sample_service',
-        description: '',
-        deleted: false,
-        tags: {},
-        yaml: 'service:\n    name: sample_service\n    identifier: sample_service_1658515110913\n    description: ""\n    tags: {}\n    gitOpsEnabled: false\n    serviceDefinition:\n        type: Kubernetes\n        spec:\n            manifests:\n                - manifest:\n                      identifier: manifestName\n                      type: K8sManifest\n                      spec:\n                          store:\n                              spec:\n                                  gitFetchType: Branch\n                                  paths:\n                                      - test-path\n                                  branch: CDS-1234\n                                  repoName: wings-software/wingsui\n                                  connectorRef: account.Github\n                              type: Github\n                          valuesPaths: []\n                          skipResourceVersioning: false\n'
-      },
-      createdAt: 1658515110913,
-      lastModifiedAt: 1624079631940
-    }
-  })
-)
-
-const updatedInfra = jest.fn(() =>
-  Promise.resolve({
-    status: 'SUCCESS',
-    data: {
-      infrastructure: {
-        accountId: 'px7xd_BFRCi-pfWPYXVjvw',
-        identifier: 'sample_infrastructure_1658642798969',
-        orgIdentifier: 'default',
-        projectIdentifier: 'Jira',
-        environmentRef: 'sample_environment_1658642798969',
-        name: 'sample_infrastructure',
-        description: '',
-        tags: {},
-        type: 'KubernetesDirect',
-        yaml: 'infrastructureDefinition:\n  name: "sample_infrastructure"\n  identifier: "sample_infrastructure_1658642798969"\n  orgIdentifier: "default"\n  projectIdentifier: "Jira"\n  environmentRef: "sample_environment_1658642798969"\n  description: ""\n  tags: {}\n  allowSimultaneousDeployments: false\n  type: "KubernetesDirect"\n  spec:\n    connectorRef: "dfg_1658642333088"\n    namespace: "sample_namespace"\n    releaseName: "release-<+INFRA_KEY>"\n'
-      },
-      createdAt: 1658642799889,
-      lastModifiedAt: 1658642799889
-    },
-    metaData: null
-  })
-)
+import { CDOnboardingContext } from '../../CDOnboardingStore'
 
 jest.mock('services/cd-ng', () => ({
   useCreateServiceV2: jest.fn().mockImplementation(() => ({
@@ -122,7 +69,6 @@ jest.mock('services/cd-ng', () => ({
     return { data: { data: repos, status: 'SUCCESS' }, refetch: jest.fn(), error: null, loading: false }
   }),
   useUpdateServiceV2: jest.fn().mockImplementation(() => ({ mutate: updateService })),
-
   useCreateEnvironmentV2: jest.fn().mockImplementation(() => ({
     mutate: jest.fn().mockImplementation(obj => {
       environments.data.content.push({
@@ -158,7 +104,9 @@ jest.mock('services/cd-ng', () => ({
   useGetFileContent: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
   useCreatePR: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   useCreatePRV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
-  useGetTestConnectionResult: jest.fn().mockImplementation(() => jest.fn())
+  useGetTestConnectionResult: jest.fn().mockImplementation(() => ({
+    mutate: connectionTestResult
+  }))
 }))
 
 jest.mock('services/portal', () => ({
@@ -192,11 +140,15 @@ jest.mock('services/pipeline-ng', () => ({
 
 const pathParams = { accountId: 'accountId', orgIdentifier: 'orgId', projectIdentifier: 'projectId' }
 
+const routesToPipelineStudio = jest.spyOn(routes, 'toPipelineStudio')
+
 describe('Render and test DeployProvisioningWizard', () => {
   test('Test Wizard Navigation ', async () => {
-    const { container, getByText } = render(
+    const { container, getByText, getByTestId } = render(
       <TestWrapper path={routes.toGetStartedWithCD({ ...pathParams, module: 'cd' })} pathParams={pathParams}>
-        <DeployProvisioningWizard />
+        <CDOnboardingContext.Provider value={{ ...contextValues }}>
+          <DeployProvisioningWizard />
+        </CDOnboardingContext.Provider>
       </TestWrapper>
     )
 
@@ -212,7 +164,7 @@ describe('Render and test DeployProvisioningWizard', () => {
       )
     })
 
-    expect(container.querySelector('input[name="serviceRef"]')).toBeDefined()
+    expect(container.querySelector('input[name="serviceRef"]')!).toHaveValue('sample_service')
 
     //click on Configure repo for creating service
     await act(async () => {
@@ -229,7 +181,7 @@ describe('Render and test DeployProvisioningWizard', () => {
     })
 
     //Expecting Accordion 1: ' Where is your code repository?' to open on choosing artifact type
-    expect(container.querySelector("div[data-testid='codeRepo-summary']")).toBeDefined()
+    expect(getByTestId('codeRepo-summary')).toBeDefined()
 
     //Choosing Github as gitprovider for creating connector
     await act(async () => {
@@ -261,12 +213,12 @@ describe('Render and test DeployProvisioningWizard', () => {
     })
 
     //Connector creation message
-    expect(getByText('common.test.connectionSuccessful'))
+    expect(getByText('common.test.connectionSuccessful')).toBeDefined()
 
     // See success-tick after completing accordion 1
     expect(container.querySelector('span[data-icon="success-tick"]')).toBeDefined()
 
-    expect(container.querySelector("div[data-testid='selectYourRepo-summary']")).toBeDefined()
+    expect(getByTestId('selectYourRepo-summary')).toBeDefined()
 
     //Opening Accordion 2: Select your Repository
     fireEvent.click(getByText('common.selectYourRepo'))
@@ -279,7 +231,7 @@ describe('Render and test DeployProvisioningWizard', () => {
     // See success-tick after completing accordion 2
     expect(container.querySelector('span[data-icon="success-tick"]')).toBeDefined()
 
-    expect(container.querySelector("div[data-testid='provideManifest-summary']")).toBeDefined()
+    expect(getByTestId('provideManifest-summary')).toBeDefined()
 
     //Opening Accordion 3: Provide Manifest Details
     fireEvent.click(getByText('cd.getStartedWithCD.provideManifest'))
@@ -308,7 +260,7 @@ describe('Render and test DeployProvisioningWizard', () => {
       ])
     )
 
-    // See success-tick after completing accordion 3
+    //See success-tick after completing accordion 3
     expect(container.querySelector('span[data-icon="success-tick"]')).toBeDefined()
 
     //click on configure infra for creating infrastructure
@@ -333,10 +285,17 @@ describe('Render and test DeployProvisioningWizard', () => {
     //Expecting accordion: 'Connect to your Kubernetes cluster' to open on filling namespace and choosing infra type
     expect(container.querySelector("div[class*='Accordion--accordion']")).toBeDefined()
 
-    //Enter connectorName
-    fireEvent.change(container.querySelector('input[name="connectorName"]')!, {
-      target: { value: 'connector2' }
-    })
+    // Enter connectorName
+    await waitFor(() =>
+      fillAtForm([
+        {
+          container,
+          type: InputTypes.TEXTFIELD,
+          fieldId: 'connectorName',
+          value: 'Connector2'
+        }
+      ])
+    )
 
     //choose delegate type to be specific
     await act(async () => {
@@ -384,5 +343,26 @@ describe('Render and test DeployProvisioningWizard', () => {
 
     //choose delegate options to be any
     expect(container.querySelector('input[value="DelegateOptions.DelegateOptionsAny"]')).toBeTruthy()
+
+    //Click to create connector and test it
+    fireEvent.click(getByText('common.smtp.testConnection'))
+
+    //creation of connector message
+    await waitFor(() => {
+      expect(getByText('connectors.createdSuccessfully')).toBeDefined()
+      findByText(container, 'common.test.connectionSuccessful')
+    })
+
+    //Click create pipeline
+    fireEvent.click(getByText('next: common.createPipeline'))
+
+    //toaster message for env and infra creation
+    findByText(container, 'cd.environmentCreated')
+    findByText(container, 'cd.infrastructure.created')
+
+    //Directing to pipeline studio
+    await waitFor(() => {
+      expect(routesToPipelineStudio).toHaveBeenCalled()
+    })
   })
 })

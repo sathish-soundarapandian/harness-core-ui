@@ -42,7 +42,6 @@ export enum DeployProvisiongWizardStepId {
   CreatePipeline = 'CREATE_PIPELINE'
 }
 
-// TODO Need to use exported StepStatus from uicore -> MultiStepProgressIndicator component
 export enum StepStatus {
   ToDo = 'TODO',
   InProgress = 'INPROGRESS',

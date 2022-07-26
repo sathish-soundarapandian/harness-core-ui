@@ -26,12 +26,12 @@ export interface CDOnboardingReducerState {
   service?: ServiceDataType
   environment?: EnvironmentRequestDTO
   infrastructure?: InfrastructureDataType
-  pipelineIdentifier: string
+  pipelineIdentifier?: string
   error?: string
-  schemaErrors: boolean
-  isLoading: boolean
-  isInitialized: boolean
-  isUpdated: boolean
+  schemaErrors?: boolean
+  isLoading?: boolean
+  isInitialized?: boolean
+  isUpdated?: boolean
 }
 
 export enum CDOnboardingActions {

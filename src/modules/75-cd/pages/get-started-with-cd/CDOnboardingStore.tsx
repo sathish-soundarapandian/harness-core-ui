@@ -5,37 +5,21 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo, merge } from 'lodash-es'
+import { merge } from 'lodash-es'
 import React from 'react'
-import { EnvironmentRequestDTO, getServiceV2Promise, GetServiceV2QueryParams, ServiceResponseDTO } from 'services/cd-ng'
+import type { EnvironmentRequestDTO } from 'services/cd-ng'
 import type { GetPipelineQueryParams } from 'services/pipeline-ng'
-import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import { useQueryParams } from '@common/hooks'
-import { yamlParse } from '@common/utils/YamlHelperMethods'
+
 import {
-  ActionReturnType,
   CDOnboardingContextActions,
   CDOnboardingReducer,
   CDOnboardingReducerState,
   initialState
 } from './CDOnboardingActions'
-import { InfrastructureDataType, newServiceState as initialServiceState, ServiceDataType } from './cdOnboardingUtils'
-
-interface FetchServiceBoundProps {
-  dispatch: React.Dispatch<ActionReturnType>
-  queryParams: GetServiceV2QueryParams
-  serviceIdentifier: string
-}
-
-interface FetchServiceUnboundProps {
-  forceFetch?: boolean
-  forceUpdate?: boolean
-  signal?: AbortSignal
-}
+import type { InfrastructureDataType, ServiceDataType } from './cdOnboardingUtils'
 
 export interface CDOnboardingContextInterface {
   state: CDOnboardingReducerState
-  fetchService: (args: FetchServiceUnboundProps) => Promise<void>
   saveServiceData: (data: ServiceDataType) => void
   saveEnvironmentData: (data: EnvironmentRequestDTO) => void
   saveInfrastructureData: (data: InfrastructureDataType) => void
@@ -43,7 +27,6 @@ export interface CDOnboardingContextInterface {
 
 export const CDOnboardingContext = React.createContext<CDOnboardingContextInterface>({
   state: initialState,
-  fetchService: () => new Promise<void>(() => undefined),
   saveServiceData: () => new Promise<void>(() => undefined),
   saveEnvironmentData: () => new Promise<void>(() => undefined),
   saveInfrastructureData: () => new Promise<void>(() => undefined)
@@ -55,36 +38,11 @@ export interface CDOnboardingProviderProps {
   serviceIdentifier: string
 }
 
-const getServiceByIdentifier = (
-  queryParams: GetServiceV2QueryParams,
-  identifier: string,
-  signal?: AbortSignal
-): Promise<ServiceResponseDTO> => {
-  return getServiceV2Promise(
-    {
-      queryParams,
-      serviceIdentifier: identifier
-    },
-    signal
-  )
-    .then(response => {
-      if (response.status === 'SUCCESS' && response.data?.service) {
-        return response.data?.service
-      }
-      throw new Error()
-    })
-    .catch(error => {
-      throw new Error(error)
-    })
-}
-
 export function CDOnboardingProvider({
   queryParams,
   pipelineIdentifier,
-  serviceIdentifier,
   children
 }: React.PropsWithChildren<CDOnboardingProviderProps>): React.ReactElement {
-  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [state, dispatch] = React.useReducer(
     CDOnboardingReducer,
     merge(
@@ -97,39 +55,9 @@ export function CDOnboardingProvider({
       initialState
     )
   )
+
   state.pipelineIdentifier = pipelineIdentifier
 
-  const _fetchService = async (props: FetchServiceBoundProps, params: FetchServiceUnboundProps): Promise<void> => {
-    const { serviceIdentifier: identifier } = props
-    const { forceFetch = false, forceUpdate = false, signal } = params
-
-    dispatch(CDOnboardingContextActions.fetching())
-    if (forceFetch && forceUpdate) {
-      const serviceDetails: ServiceResponseDTO = await getServiceByIdentifier(
-        { ...queryParams, ...(repoIdentifier && branch ? { repoIdentifier, branch } : {}) },
-        identifier,
-        signal
-      )
-      const serviceYaml = yamlParse(defaultTo(serviceDetails.yaml, ''))
-      const serviceData = merge(serviceYaml, initialServiceState)
-
-      dispatch(
-        CDOnboardingContextActions.updateService({
-          service: serviceData,
-          isUpdated: false,
-          environment: undefined
-        })
-      )
-      dispatch(
-        CDOnboardingContextActions.success({
-          error: '',
-          service: serviceData,
-          isUpdated: false,
-          environment: undefined
-        })
-      )
-    }
-  }
   const saveServiceData = React.useCallback((data: ServiceDataType) => {
     dispatch(CDOnboardingContextActions.updateService({ service: data }))
   }, [])
@@ -142,17 +70,10 @@ export function CDOnboardingProvider({
     dispatch(CDOnboardingContextActions.updateInfrastructure({ infrastructure: data }))
   }, [])
 
-  const fetchService = _fetchService.bind(null, {
-    dispatch,
-    queryParams,
-    serviceIdentifier
-  })
-
   return (
     <CDOnboardingContext.Provider
       value={{
         state,
-        fetchService,
         saveServiceData,
         saveEnvironmentData,
         saveInfrastructureData

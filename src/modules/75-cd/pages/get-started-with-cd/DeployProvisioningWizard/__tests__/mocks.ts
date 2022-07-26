@@ -5,6 +5,40 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { TestStatus } from '@common/components/TestConnectionWidget/TestConnectionWidget'
+
+export const contextValues = {
+  state: {
+    service: {
+      name: 'sample_service',
+      identifier: 'sample_service',
+      data: {
+        repoValues: {
+          name: 'adithyaTestRepo',
+          namespace: 'harness'
+        },
+        artifactType: '',
+        workloadType: '',
+        gitValues: {},
+        gitConnectionStatus: TestStatus.SUCCESS
+      }
+    },
+    environment: {
+      name: 'sample_environment',
+      identifier: 'sample_environment',
+      type: 'PreProduction' as 'PreProduction' | 'Production'
+    },
+    infrastructure: {
+      name: 'sample_infrastructure',
+      identifier: 'sample_infrastructure',
+      infrastructureDefinition: {}
+    }
+  },
+  saveServiceData: jest.fn(),
+  saveEnvironmentData: jest.fn(),
+  saveInfrastructureData: jest.fn()
+}
+
 export const services = {
   status: 'SUCCESS',
   data: {
@@ -172,29 +206,84 @@ export const mockedDelegates = {
   responseMessages: []
 }
 
-// export const usernamePassword: ConnectorInfoDTO = {
-//   name: 'connector2',
-//   identifier: 'connector2',
-//   description: 'k8 description',
-//   orgIdentifier: undefined,
-//   projectIdentifier: undefined,
-//   tags: { k8: '' },
-//   type: 'K8sCluster',
-//   spec: {
-//     delegateSelectors: ['dummyDelegateSelector'],
-//     credential: {
-//       type: 'ManualConfig',
-//       spec: {
-//         masterUrl: 'dummyMasterUrl',
-//         auth: {
-//           type: 'UsernamePassword',
-//           spec: {
-//             username: 'dummyusername',
-//             usernameRef: undefined,
-//             passwordRef: 'account.k8serviceToken'
-//           }
-//         }
-//       }
-//     }
-//   }
-// }
+export const updateConnector = jest.fn()
+export const createConnector = jest.fn(() =>
+  Promise.resolve({
+    status: 'SUCCESS',
+    data: {
+      connector: {
+        name: 'test git connector',
+        identifier: 'test_git_connector',
+        type: 'Github',
+        spec: {
+          dockerRegistryUrl: 'https;//github.com',
+          auth: {
+            type: 'UsernamePassword',
+            spec: { username: 'testpass', passwordRef: 'account.testpass' }
+          }
+        }
+      },
+      createdAt: 1607289652713,
+      lastModifiedAt: 1607289652713
+    }
+  })
+)
+
+export const updateService = jest.fn(() =>
+  Promise.resolve({
+    status: 'SUCCESS',
+    data: {
+      service: {
+        accountId: 'AQ8xhfNCRtGIUjq5bSM8Fg',
+        identifier: 'sample_service_1658515110913',
+        orgIdentifier: 'default',
+        projectIdentifier: 'Jira',
+        name: 'sample_service',
+        description: '',
+        deleted: false,
+        tags: {},
+        yaml: 'service:\n    name: sample_service\n    identifier: sample_service_1658515110913\n    description: ""\n    tags: {}\n    gitOpsEnabled: false\n    serviceDefinition:\n        type: Kubernetes\n        spec:\n            manifests:\n                - manifest:\n                      identifier: manifestName\n                      type: K8sManifest\n                      spec:\n                          store:\n                              spec:\n                                  gitFetchType: Branch\n                                  paths:\n                                      - test-path\n                                  branch: CDS-1234\n                                  repoName: wings-software/wingsui\n                                  connectorRef: account.Github\n                              type: Github\n                          valuesPaths: []\n                          skipResourceVersioning: false\n'
+      },
+      createdAt: 1658515110913,
+      lastModifiedAt: 1624079631940
+    }
+  })
+)
+
+export const updatedInfra = jest.fn(() =>
+  Promise.resolve({
+    status: 'SUCCESS',
+    data: {
+      infrastructure: {
+        accountId: 'px7xd_BFRCi-pfWPYXVjvw',
+        identifier: 'sample_infrastructure_1658642798969',
+        orgIdentifier: 'default',
+        projectIdentifier: 'Jira',
+        environmentRef: 'sample_environment_1658642798969',
+        name: 'sample_infrastructure',
+        description: '',
+        tags: {},
+        type: 'KubernetesDirect',
+        yaml: 'infrastructureDefinition:\n  name: "sample_infrastructure"\n  identifier: "sample_infrastructure_1658642798969"\n  orgIdentifier: "default"\n  projectIdentifier: "Jira"\n  environmentRef: "sample_environment_1658642798969"\n  description: ""\n  tags: {}\n  allowSimultaneousDeployments: false\n  type: "KubernetesDirect"\n  spec:\n    connectorRef: "dfg_1658642333088"\n    namespace: "sample_namespace"\n    releaseName: "release-<+INFRA_KEY>"\n'
+      },
+      createdAt: 1658642799889,
+      lastModifiedAt: 1658642799889
+    },
+    metaData: null
+  })
+)
+
+export const connectionTestResult = jest.fn(() => {
+  Promise.resolve({
+    status: 'SUCCESS',
+    data: {
+      status: 'SUCCESS',
+      errors: null,
+      errorSummary: null,
+      testedAt: 0,
+      delegateId: 'i8hFE4vzRACt_xgXEvPJwg'
+    },
+    metaData: null,
+    correlationId: '27c02970-0353-417d-87b3-e0c235f22591'
+  })
+})

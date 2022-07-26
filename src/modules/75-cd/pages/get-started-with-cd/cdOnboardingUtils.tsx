@@ -239,13 +239,17 @@ export const getOAuthConnectorPayload = ({
   refreshTokenRef?: string
   gitProviderType?: ConnectorInfoDTO['type']
 }): ConnectorRequestBody => {
+  /*istanbul ignore next */
   let updatedConnectorPayload: ConnectorRequestBody = {}
+  /*istanbul ignore next */
   updatedConnectorPayload = set(OAuthConnectorPayload, 'connector.name', `${gitProviderType} OAuth`)
+  /*istanbul ignore next */
   updatedConnectorPayload = set(
     OAuthConnectorPayload,
     'connector.identifier',
     `${gitProviderType}_OAuth_${new Date().getTime()}`
   )
+  /*istanbul ignore next */
   updatedConnectorPayload = set(OAuthConnectorPayload, 'connector.type', gitProviderType)
   switch (gitProviderType) {
     case Connectors.GITHUB:
