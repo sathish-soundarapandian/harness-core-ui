@@ -30,6 +30,23 @@ jest.mock('services/cd-ng', () => ({
   })
 }))
 
+const mockGetCallFunction = jest.fn()
+jest.mock('services/portal', () => ({
+  useGetDelegateGroupByIdentifier: jest.fn().mockImplementation(args => {
+    mockGetCallFunction(args)
+    return {
+      data: {
+        resource: {
+          activelyConnected: false
+        }
+      },
+      refetch: jest.fn(),
+      error: null,
+      loading: false
+    }
+  })
+}))
+
 describe('Test useProvisionDelegateForHostedBuilds', () => {
   test('Should update status properly when delegate provisioning is in progress', async () => {
     // eslint-disable-next-line
