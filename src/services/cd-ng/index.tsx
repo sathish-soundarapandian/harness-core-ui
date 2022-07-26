@@ -885,7 +885,7 @@ export type AuditFilterProperties = FilterProperties & {
   )[]
   endTime?: number
   environments?: Environment[]
-  modules?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS')[]
+  modules?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE')[]
   principals?: Principal[]
   resources?: ResourceDTO[]
   scopes?: ResourceScopeDTO[]
@@ -1286,7 +1286,7 @@ export type AzureWebAppRollbackStepInfo = StepSpecType & {
 export type AzureWebAppServiceSpec = ServiceSpec & {
   applicationSettings?: StoreConfigWrapper
   connectionStrings?: StoreConfigWrapper
-  startupCommand?: StoreConfigWrapper
+  startupScript?: StoreConfigWrapper
 }
 
 export type AzureWebAppSlotDeploymentStepInfo = StepSpecType & {
@@ -1518,12 +1518,7 @@ export interface CcmConnectorFilter {
   azureTenantId?: string
   featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
   gcpProjectId?: string
-  k8sConnectorRef?: string[]
-}
-
-export interface CcmK8sConnectorResponse {
-  ccmk8sConnector?: ConnectorResponse[]
-  k8sConnector?: ConnectorResponse
+  k8sConnectorRef?: string
 }
 
 export interface CeLicenseInfo {
@@ -3861,7 +3856,7 @@ export interface FeatureRestrictionDetailRequestDTO {
 export interface FeatureRestrictionDetailsDTO {
   allowed?: boolean
   description?: string
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   name?:
     | 'TEST1'
     | 'TEST2'
@@ -3937,7 +3932,7 @@ export interface FeatureRestrictionDetailsDTO {
 
 export interface FeatureRestrictionMetadataDTO {
   edition?: 'COMMUNITY' | 'FREE' | 'TEAM' | 'ENTERPRISE'
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   name?:
     | 'TEST1'
     | 'TEST2'
@@ -4008,7 +4003,7 @@ export interface FeatureRestrictionMetadataDTO {
 export interface FeedbackFormDTO {
   accountId?: string
   email?: string
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   score?: number
   suggestion?: string
 }
@@ -4366,7 +4361,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
   )[]
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   searchTerm?: string
 }
 
@@ -4465,7 +4460,7 @@ export interface GitEntityFilterProperties {
     | 'JenkinsBuild'
   )[]
   gitSyncConfigIdentifiers?: string[]
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   searchTerm?: string
 }
 
@@ -5150,7 +5145,7 @@ export interface GitSyncRepoFiles {
 
 export interface GitSyncRepoFilesList {
   gitSyncRepoFilesList?: GitSyncRepoFiles[]
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
 }
 
 export interface GitSyncSettingsDTO {
@@ -5419,7 +5414,7 @@ export interface HostValidationDTO {
 }
 
 export interface HostValidationParams {
-  hosts: string[]
+  hosts?: string[]
   tags?: string[]
 }
 
@@ -6394,7 +6389,7 @@ export interface LicensesWithSummaryDTO {
   edition?: 'COMMUNITY' | 'FREE' | 'TEAM' | 'ENTERPRISE'
   licenseType?: 'TRIAL' | 'PAID'
   maxExpiryTime?: number
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
 }
 
 export type LocalConnectorDTO = ConnectorConfigDTO & {
@@ -6504,7 +6499,7 @@ export interface ModuleLicenseDTO {
   id?: string
   lastModifiedAt?: number
   licenseType?: 'TRIAL' | 'PAID'
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   premiumSupport?: boolean
   selfService?: boolean
   startTime?: number
@@ -6764,7 +6759,7 @@ export interface OAuthSettings {
 export interface OAuthSignupDTO {
   edition?: 'COMMUNITY' | 'FREE' | 'TEAM' | 'ENTERPRISE'
   email?: string
-  intent?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  intent?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   name?: string
   signupAction?: 'REGULAR' | 'TRIAL' | 'SUBSCRIBE'
   utmInfo?: UtmInfo
@@ -6956,16 +6951,6 @@ export interface PageActivitySummary {
 
 export interface PageApiKeyAggregateDTO {
   content?: ApiKeyAggregateDTO[]
-  empty?: boolean
-  pageIndex?: number
-  pageItemCount?: number
-  pageSize?: number
-  totalItems?: number
-  totalPages?: number
-}
-
-export interface PageCcmK8sConnectorResponse {
-  content?: CcmK8sConnectorResponse[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -7421,7 +7406,7 @@ export interface ParameterFieldString {
 }
 
 export interface PartialSchemaDTO {
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   namespace?: string
   nodeName?: string
   nodeType?: string
@@ -7590,7 +7575,7 @@ export interface Project {
   color?: string
   description?: string
   identifier: string
-  modules?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS')[]
+  modules?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE')[]
   name: string
   orgIdentifier?: string
   tags?: {
@@ -9344,13 +9329,6 @@ export interface ResponsePageActivitySummary {
 export interface ResponsePageApiKeyAggregateDTO {
   correlationId?: string
   data?: PageApiKeyAggregateDTO
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponsePageCcmK8sConnectorResponse {
-  correlationId?: string
-  data?: PageCcmK8sConnectorResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -11280,7 +11258,7 @@ export interface StageWhenCondition {
 
 export interface StartTrialDTO {
   edition: 'COMMUNITY' | 'FREE' | 'TEAM' | 'ENTERPRISE'
-  moduleType: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
 }
 
 export type StaticLimitRestrictionDTO = RestrictionDTO & {
@@ -11439,7 +11417,7 @@ export interface StripeBillingDTO {
 export interface SubscriptionDTO {
   customerId?: string
   items?: ItemParams[]
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   paymentMethodId?: string
 }
 
@@ -11451,7 +11429,7 @@ export interface SubscriptionDetailDTO {
   customerId?: string
   latestInvoice?: string
   latestInvoiceDetail?: InvoiceDetailDTO
-  moduletype?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduletype?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   pendingUpdate?: PendingUpdateDetailDTO
   status?: string
   subscriptionId?: string
@@ -12156,19 +12134,7 @@ export type YamlSchemaErrorWrapperDTO = ErrorMetadataDTO & {
 export interface YamlSchemaMetadata {
   featureFlags?: string[]
   featureRestrictions?: string[]
-  modulesSupported?: (
-    | 'CD'
-    | 'CI'
-    | 'CV'
-    | 'CF'
-    | 'CE'
-    | 'STO'
-    | 'CORE'
-    | 'PMS'
-    | 'TEMPLATESERVICE'
-    | 'GOVERNANCE'
-    | 'CHAOS'
-  )[]
+  modulesSupported?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE')[]
   namespace?: string
   yamlGroup: YamlGroup
 }
@@ -12177,7 +12143,7 @@ export interface YamlSchemaWithDetails {
   availableAtAccountLevel?: boolean
   availableAtOrgLevel?: boolean
   availableAtProjectLevel?: boolean
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   schema?: JsonNode
   schemaClassName?: string
   yamlSchemaMetadata?: YamlSchemaMetadata
@@ -12205,8 +12171,6 @@ export type ApiKeyDTORequestBody = ApiKeyDTO
 export type CFParametersForAwsBodyRequestBody = string
 
 export type ConnectorRequestBody = Connector
-
-export type ConnectorFilterPropertiesRequestBody = ConnectorFilterProperties
 
 export type CustomerDTORequestBody = CustomerDTO
 
@@ -12240,8 +12204,6 @@ export type GitSyncConfigRequestBody = GitSyncConfig
 
 export type GitSyncSettingsDTORequestBody = GitSyncSettingsDTO
 
-export type HostValidationParamsRequestBody = HostValidationParams
-
 export type InfrastructureRequestDTORequestBody = InfrastructureRequestDTO
 
 export type LDAPSettingsRequestBody = LDAPSettings
@@ -12266,9 +12228,9 @@ export type ScimUserRequestBody = ScimUser
 
 export type ScopingRuleDetailsNgArrayRequestBody = ScopingRuleDetailsNg[]
 
-export type SecretRequestWrapperRequestBody = void
+export type SecretRequestWrapperRequestBody = SecretRequestWrapper
 
-export type SecretRequestWrapper2RequestBody = SecretRequestWrapper
+export type SecretRequestWrapper2RequestBody = void
 
 export type ServiceAccountDTORequestBody = ServiceAccountDTO
 
@@ -12298,7 +12260,7 @@ export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody = string
 
-export type ProcessPollingResultNgBodyRequestBody = string[]
+export type UnsubscribeBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -14050,7 +14012,7 @@ export interface GetProjectAggregateDTOListQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   hasModule?: boolean
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   searchTerm?: string
   pageIndex?: number
   pageSize?: number
@@ -19510,94 +19472,6 @@ export const getConnectorCataloguePromise = (
     signal
   )
 
-export interface GetCCMK8SConnectorListQueryParams {
-  pageIndex?: number
-  pageSize?: number
-  accountIdentifier?: string
-  searchTerm?: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  filterIdentifier?: string
-  includeAllConnectorsAvailableAtScope?: boolean
-  branch?: string
-  repoIdentifier?: string
-  getDefaultFromOtherRepo?: boolean
-  getDistinctFromBranches?: boolean
-}
-
-export type GetCCMK8SConnectorListProps = Omit<
-  MutateProps<
-    ResponsePageCcmK8sConnectorResponse,
-    Failure | Error,
-    GetCCMK8SConnectorListQueryParams,
-    ConnectorFilterPropertiesRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Gets CCMK8S Connector list
- */
-export const GetCCMK8SConnectorList = (props: GetCCMK8SConnectorListProps) => (
-  <Mutate<
-    ResponsePageCcmK8sConnectorResponse,
-    Failure | Error,
-    GetCCMK8SConnectorListQueryParams,
-    ConnectorFilterPropertiesRequestBody,
-    void
-  >
-    verb="POST"
-    path={`/connectors/ccmK8sList`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetCCMK8SConnectorListProps = Omit<
-  UseMutateProps<
-    ResponsePageCcmK8sConnectorResponse,
-    Failure | Error,
-    GetCCMK8SConnectorListQueryParams,
-    ConnectorFilterPropertiesRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Gets CCMK8S Connector list
- */
-export const useGetCCMK8SConnectorList = (props: UseGetCCMK8SConnectorListProps) =>
-  useMutate<
-    ResponsePageCcmK8sConnectorResponse,
-    Failure | Error,
-    GetCCMK8SConnectorListQueryParams,
-    ConnectorFilterPropertiesRequestBody,
-    void
-  >('POST', `/connectors/ccmK8sList`, { base: getConfig('ng/api'), ...props })
-
-/**
- * Gets CCMK8S Connector list
- */
-export const getCCMK8SConnectorListPromise = (
-  props: MutateUsingFetchProps<
-    ResponsePageCcmK8sConnectorResponse,
-    Failure | Error,
-    GetCCMK8SConnectorListQueryParams,
-    ConnectorFilterPropertiesRequestBody,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponsePageCcmK8sConnectorResponse,
-    Failure | Error,
-    GetCCMK8SConnectorListQueryParams,
-    ConnectorFilterPropertiesRequestBody,
-    void
-  >('POST', getConfig('ng/api'), `/connectors/ccmK8sList`, props, signal)
-
 export interface GetAllAllowedFieldValuesQueryParams {
   accountIdentifier?: string
   connectorType:
@@ -19759,7 +19633,7 @@ export type GetConnectorListV2Props = Omit<
     ResponsePageConnectorResponse,
     Failure | Error,
     GetConnectorListV2QueryParams,
-    ConnectorFilterPropertiesRequestBody,
+    ConnectorFilterProperties,
     void
   >,
   'path' | 'verb'
@@ -19773,7 +19647,7 @@ export const GetConnectorListV2 = (props: GetConnectorListV2Props) => (
     ResponsePageConnectorResponse,
     Failure | Error,
     GetConnectorListV2QueryParams,
-    ConnectorFilterPropertiesRequestBody,
+    ConnectorFilterProperties,
     void
   >
     verb="POST"
@@ -19788,7 +19662,7 @@ export type UseGetConnectorListV2Props = Omit<
     ResponsePageConnectorResponse,
     Failure | Error,
     GetConnectorListV2QueryParams,
-    ConnectorFilterPropertiesRequestBody,
+    ConnectorFilterProperties,
     void
   >,
   'path' | 'verb'
@@ -19802,7 +19676,7 @@ export const useGetConnectorListV2 = (props: UseGetConnectorListV2Props) =>
     ResponsePageConnectorResponse,
     Failure | Error,
     GetConnectorListV2QueryParams,
-    ConnectorFilterPropertiesRequestBody,
+    ConnectorFilterProperties,
     void
   >('POST', `/connectors/listV2`, { base: getConfig('ng/api'), ...props })
 
@@ -19814,7 +19688,7 @@ export const getConnectorListV2Promise = (
     ResponsePageConnectorResponse,
     Failure | Error,
     GetConnectorListV2QueryParams,
-    ConnectorFilterPropertiesRequestBody,
+    ConnectorFilterProperties,
     void
   >,
   signal?: RequestInit['signal']
@@ -19823,7 +19697,7 @@ export const getConnectorListV2Promise = (
     ResponsePageConnectorResponse,
     Failure | Error,
     GetConnectorListV2QueryParams,
-    ConnectorFilterPropertiesRequestBody,
+    ConnectorFilterProperties,
     void
   >('POST', getConfig('ng/api'), `/connectors/listV2`, props, signal)
 
@@ -21427,7 +21301,6 @@ export interface GetServiceDetailsQueryParams {
   projectIdentifier: string
   startTime: number
   endTime: number
-  sort?: string[]
 }
 
 export type GetServiceDetailsProps = Omit<
@@ -29418,35 +29291,23 @@ export const getNGManagerHealthStatusPromise = (
   signal?: RequestInit['signal']
 ) => getUsingFetch<ResponseString, unknown, void, void>(getConfig('ng/api'), `/health`, props, signal)
 
-export interface ValidateHostsConnectivityQueryParams {
+export interface ValidateHostsQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
   identifier: string
 }
 
-export type ValidateHostsConnectivityProps = Omit<
-  MutateProps<
-    ResponseListHostValidationDTO,
-    Failure | Error,
-    ValidateHostsConnectivityQueryParams,
-    HostValidationParamsRequestBody,
-    void
-  >,
+export type ValidateHostsProps = Omit<
+  MutateProps<ResponseListHostValidationDTO, Failure | Error, ValidateHostsQueryParams, HostValidationParams, void>,
   'path' | 'verb'
 >
 
 /**
  * Validate hosts connectivity
  */
-export const ValidateHostsConnectivity = (props: ValidateHostsConnectivityProps) => (
-  <Mutate<
-    ResponseListHostValidationDTO,
-    Failure | Error,
-    ValidateHostsConnectivityQueryParams,
-    HostValidationParamsRequestBody,
-    void
-  >
+export const ValidateHosts = (props: ValidateHostsProps) => (
+  <Mutate<ResponseListHostValidationDTO, Failure | Error, ValidateHostsQueryParams, HostValidationParams, void>
     verb="POST"
     path={`/host-validation`}
     base={getConfig('ng/api')}
@@ -29454,38 +29315,30 @@ export const ValidateHostsConnectivity = (props: ValidateHostsConnectivityProps)
   />
 )
 
-export type UseValidateHostsConnectivityProps = Omit<
-  UseMutateProps<
-    ResponseListHostValidationDTO,
-    Failure | Error,
-    ValidateHostsConnectivityQueryParams,
-    HostValidationParamsRequestBody,
-    void
-  >,
+export type UseValidateHostsProps = Omit<
+  UseMutateProps<ResponseListHostValidationDTO, Failure | Error, ValidateHostsQueryParams, HostValidationParams, void>,
   'path' | 'verb'
 >
 
 /**
  * Validate hosts connectivity
  */
-export const useValidateHostsConnectivity = (props: UseValidateHostsConnectivityProps) =>
-  useMutate<
-    ResponseListHostValidationDTO,
-    Failure | Error,
-    ValidateHostsConnectivityQueryParams,
-    HostValidationParamsRequestBody,
-    void
-  >('POST', `/host-validation`, { base: getConfig('ng/api'), ...props })
+export const useValidateHosts = (props: UseValidateHostsProps) =>
+  useMutate<ResponseListHostValidationDTO, Failure | Error, ValidateHostsQueryParams, HostValidationParams, void>(
+    'POST',
+    `/host-validation`,
+    { base: getConfig('ng/api'), ...props }
+  )
 
 /**
  * Validate hosts connectivity
  */
-export const validateHostsConnectivityPromise = (
+export const validateHostsPromise = (
   props: MutateUsingFetchProps<
     ResponseListHostValidationDTO,
     Failure | Error,
-    ValidateHostsConnectivityQueryParams,
-    HostValidationParamsRequestBody,
+    ValidateHostsQueryParams,
+    HostValidationParams,
     void
   >,
   signal?: RequestInit['signal']
@@ -29493,8 +29346,8 @@ export const validateHostsConnectivityPromise = (
   mutateUsingFetch<
     ResponseListHostValidationDTO,
     Failure | Error,
-    ValidateHostsConnectivityQueryParams,
-    HostValidationParamsRequestBody,
+    ValidateHostsQueryParams,
+    HostValidationParams,
     void
   >('POST', getConfig('ng/api'), `/host-validation`, props, signal)
 
@@ -29560,86 +29413,6 @@ export const filterHostsByConnectorPromise = (
     props,
     signal
   )
-
-export interface ValidateHostsQueryParams {
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  identifier: string
-}
-
-export type ValidateHostsProps = Omit<
-  MutateProps<
-    ResponseListHostValidationDTO,
-    Failure | Error,
-    ValidateHostsQueryParams,
-    HostValidationParamsRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Validate hosts connectivity
- */
-export const ValidateHosts = (props: ValidateHostsProps) => (
-  <Mutate<
-    ResponseListHostValidationDTO,
-    Failure | Error,
-    ValidateHostsQueryParams,
-    HostValidationParamsRequestBody,
-    void
-  >
-    verb="POST"
-    path={`/hosts/validate`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseValidateHostsProps = Omit<
-  UseMutateProps<
-    ResponseListHostValidationDTO,
-    Failure | Error,
-    ValidateHostsQueryParams,
-    HostValidationParamsRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Validate hosts connectivity
- */
-export const useValidateHosts = (props: UseValidateHostsProps) =>
-  useMutate<
-    ResponseListHostValidationDTO,
-    Failure | Error,
-    ValidateHostsQueryParams,
-    HostValidationParamsRequestBody,
-    void
-  >('POST', `/hosts/validate`, { base: getConfig('ng/api'), ...props })
-
-/**
- * Validate hosts connectivity
- */
-export const validateHostsPromise = (
-  props: MutateUsingFetchProps<
-    ResponseListHostValidationDTO,
-    Failure | Error,
-    ValidateHostsQueryParams,
-    HostValidationParamsRequestBody,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponseListHostValidationDTO,
-    Failure | Error,
-    ValidateHostsQueryParams,
-    HostValidationParamsRequestBody,
-    void
-  >('POST', getConfig('ng/api'), `/hosts/validate`, props, signal)
 
 export interface GetInfrastructureListQueryParams {
   page?: number
@@ -31950,7 +31723,7 @@ export const getAccountLicensesPromise = (
 
 export interface GetEditionActionsQueryParams {
   accountIdentifier: string
-  moduleType: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
 }
 
 export type GetEditionActionsProps = Omit<
@@ -31999,7 +31772,7 @@ export const getEditionActionsPromise = (
 
 export interface StartCommunityLicenseQueryParams {
   accountIdentifier: string
-  moduleType: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
 }
 
 export type StartCommunityLicenseProps = Omit<
@@ -32114,7 +31887,7 @@ export const extendTrialLicensePromise = (
 
 export interface StartFreeLicenseQueryParams {
   accountIdentifier: string
-  moduleType: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
 }
 
 export type StartFreeLicenseProps = Omit<
@@ -32165,7 +31938,7 @@ export const startFreeLicensePromise = (
   )
 
 export interface GetModuleLicensesByAccountAndModuleTypeQueryParams {
-  moduleType: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
 }
 
 export interface GetModuleLicensesByAccountAndModuleTypePathParams {
@@ -32380,7 +32153,7 @@ export const getLastModifiedTimeForAllModuleTypesPromise = (
   >('POST', getConfig('ng/api'), `/licenses/versions`, props, signal)
 
 export interface GetLicensesAndSummaryQueryParams {
-  moduleType: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
 }
 
 export interface GetLicensesAndSummaryPathParams {
@@ -33753,7 +33526,7 @@ export type ProcessPollingResultNgProps = Omit<
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    ProcessPollingResultNgBodyRequestBody,
+    UnsubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >,
   'path' | 'verb'
@@ -33765,7 +33538,7 @@ export const ProcessPollingResultNg = ({ perpetualTaskId, ...props }: ProcessPol
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    ProcessPollingResultNgBodyRequestBody,
+    UnsubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >
     verb="POST"
@@ -33780,7 +33553,7 @@ export type UseProcessPollingResultNgProps = Omit<
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    ProcessPollingResultNgBodyRequestBody,
+    UnsubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >,
   'path' | 'verb'
@@ -33792,7 +33565,7 @@ export const useProcessPollingResultNg = ({ perpetualTaskId, ...props }: UseProc
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    ProcessPollingResultNgBodyRequestBody,
+    UnsubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >(
     'POST',
@@ -33808,7 +33581,7 @@ export const processPollingResultNgPromise = (
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    ProcessPollingResultNgBodyRequestBody,
+    UnsubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   > & { perpetualTaskId: string },
   signal?: RequestInit['signal']
@@ -33817,17 +33590,17 @@ export const processPollingResultNgPromise = (
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    ProcessPollingResultNgBodyRequestBody,
+    UnsubscribeBodyRequestBody,
     ProcessPollingResultNgPathParams
   >('POST', getConfig('ng/api'), `/polling/delegate-response/${perpetualTaskId}`, props, signal)
 
 export type SubscribeProps = Omit<
-  MutateProps<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
+  MutateProps<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const Subscribe = (props: SubscribeProps) => (
-  <Mutate<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>
+  <Mutate<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>
     verb="POST"
     path={`/polling/subscribe`}
     base={getConfig('ng/api')}
@@ -33836,28 +33609,22 @@ export const Subscribe = (props: SubscribeProps) => (
 )
 
 export type UseSubscribeProps = Omit<
-  UseMutateProps<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
+  UseMutateProps<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const useSubscribe = (props: UseSubscribeProps) =>
-  useMutate<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
+  useMutate<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>(
     'POST',
     `/polling/subscribe`,
     { base: getConfig('ng/api'), ...props }
   )
 
 export const subscribePromise = (
-  props: MutateUsingFetchProps<
-    ResponsePollingResponseDTO,
-    Failure | Error,
-    void,
-    ProcessPollingResultNgBodyRequestBody,
-    void
-  >,
+  props: MutateUsingFetchProps<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
+  mutateUsingFetch<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/polling/subscribe`,
@@ -33866,12 +33633,12 @@ export const subscribePromise = (
   )
 
 export type UnsubscribeProps = Omit<
-  MutateProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
+  MutateProps<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const Unsubscribe = (props: UnsubscribeProps) => (
-  <Mutate<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>
+  <Mutate<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>
     verb="POST"
     path={`/polling/unsubscribe`}
     base={getConfig('ng/api')}
@@ -33880,22 +33647,21 @@ export const Unsubscribe = (props: UnsubscribeProps) => (
 )
 
 export type UseUnsubscribeProps = Omit<
-  UseMutateProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
+  UseMutateProps<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const useUnsubscribe = (props: UseUnsubscribeProps) =>
-  useMutate<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
-    'POST',
-    `/polling/unsubscribe`,
-    { base: getConfig('ng/api'), ...props }
-  )
+  useMutate<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>('POST', `/polling/unsubscribe`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
 
 export const unsubscribePromise = (
-  props: MutateUsingFetchProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
+  props: MutateUsingFetchProps<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
+  mutateUsingFetch<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/polling/unsubscribe`,
@@ -33908,7 +33674,7 @@ export interface GetProjectListQueryParams {
   orgIdentifier?: string
   hasModule?: boolean
   identifiers?: string[]
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   searchTerm?: string
   pageIndex?: number
   pageSize?: number
@@ -34022,7 +33788,7 @@ export interface GetProjectListWithMultiOrgFilterQueryParams {
   orgIdentifiers?: string[]
   hasModule?: boolean
   identifiers?: string[]
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   searchTerm?: string
   pageIndex?: number
   pageSize?: number
@@ -38750,7 +38516,7 @@ export const updateSourceCodeManagersPromise = (
 
 export interface ListSubscriptionsQueryParams {
   accountIdentifier: string
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
 }
 
 export type ListSubscriptionsProps = Omit<
@@ -39329,7 +39095,7 @@ export const listPaymentMethodsPromise = (
 
 export interface RetrieveProductPricesQueryParams {
   accountIdentifier: string
-  moduleType: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
 }
 
 export type RetrieveProductPricesProps = Omit<
@@ -43446,7 +43212,7 @@ export type PostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -43456,7 +43222,7 @@ export type PostSecretProps = Omit<
  * Create a secret
  */
 export const PostSecret = (props: PostSecretProps) => (
-  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapper2RequestBody, void>
+  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapperRequestBody, void>
     verb="POST"
     path={`/v2/secrets`}
     base={getConfig('ng/api')}
@@ -43469,7 +43235,7 @@ export type UsePostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -43483,7 +43249,7 @@ export const usePostSecret = (props: UsePostSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', `/v2/secrets`, { base: getConfig('ng/api'), ...props })
 
@@ -43495,7 +43261,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -43504,7 +43270,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets`, props, signal)
 
@@ -43897,7 +43663,7 @@ export type PostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -43911,7 +43677,7 @@ export const PostSecretViaYaml = (props: PostSecretViaYamlProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >
     verb="POST"
@@ -43926,7 +43692,7 @@ export type UsePostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -43940,7 +43706,7 @@ export const usePostSecretViaYaml = (props: UsePostSecretViaYamlProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', `/v2/secrets/yaml`, { base: getConfig('ng/api'), ...props })
 
@@ -43952,7 +43718,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -43961,7 +43727,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets/yaml`, props, signal)
 
@@ -44096,7 +43862,7 @@ export type PutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -44111,7 +43877,7 @@ export const PutSecret = ({ identifier, ...props }: PutSecretProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >
     verb="PUT"
@@ -44126,7 +43892,7 @@ export type UsePutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -44141,7 +43907,7 @@ export const usePutSecret = ({ identifier, ...props }: UsePutSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >('PUT', (paramsInPath: PutSecretPathParams) => `/v2/secrets/${paramsInPath.identifier}`, {
     base: getConfig('ng/api'),
@@ -44160,7 +43926,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -44169,7 +43935,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}`, props, signal)
 
@@ -44188,7 +43954,7 @@ export type PutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -44203,7 +43969,7 @@ export const PutSecretViaYaml = ({ identifier, ...props }: PutSecretViaYamlProps
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >
     verb="PUT"
@@ -44218,7 +43984,7 @@ export type UsePutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -44233,7 +43999,7 @@ export const usePutSecretViaYaml = ({ identifier, ...props }: UsePutSecretViaYam
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >('PUT', (paramsInPath: PutSecretViaYamlPathParams) => `/v2/secrets/${paramsInPath.identifier}/yaml`, {
     base: getConfig('ng/api'),
@@ -44252,7 +44018,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -44261,7 +44027,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
 
