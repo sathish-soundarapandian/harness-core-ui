@@ -188,5 +188,5 @@ pricePreview:
 billingInfo:
   billingContact: Billing Contact
   paymentMethod: Payment Method
-  saveCardWarning: By providing your card information, you allow Harness Inc. charge your card for future payment in accordance with their terms.
+  saveCardWarning: By providing your card information, you allow Harness Inc. to charge your card for future payments in accordance with our Terms of Use.
   emailWarning: This email address will receive billing notifications

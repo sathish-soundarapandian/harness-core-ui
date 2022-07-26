@@ -9,7 +9,9 @@
   width: auto;
   height: auto;
   display: flex;
-  padding: var(--spacing-xlarge) var(--spacing-xxxlarge);
+  padding: var(--spacing-9) var(--spacing-11) var(--spacing-11) var(--spacing-8);
+
+  background: var(--primary-bg) !important;
   :global(.bp3-dialog-header) {
     margin-bottom: reset !important;
   }

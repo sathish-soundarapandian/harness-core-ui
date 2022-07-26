@@ -53,6 +53,7 @@ const PremiumSupportLine: React.FC<{ premiumSupportAmount: number }> = ({ premiu
     </Layout.Horizontal>
   )
 }
+
 const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
   taxAmount,
   subscriptionDetails,
@@ -61,6 +62,7 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
 }) => {
   const { getString } = useStrings()
   const { premiumSupport } = subscriptionDetails
+  const unit = subscriptionDetails?.sampleDetails?.sampleUnit
   return (
     <Layout.Vertical padding={{ bottom: 'large' }} spacing="large">
       <Text>{getString('common.subscriptions.overview.details')}</Text>
@@ -68,7 +70,7 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
         'common.subscriptions.overview.plan'
       )}`}</Text>
       {products.map(product => {
-        return <PricePreviewLine {...product} key={product.description} />
+        return <PricePreviewLine {...product} key={product.description} unit={unit} />
       })}
       {premiumSupport && <PremiumSupportLine premiumSupportAmount={premiumSupportAmount} />}
       <TaxLine taxAmount={taxAmount} />

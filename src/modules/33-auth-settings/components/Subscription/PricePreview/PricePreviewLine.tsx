@@ -20,6 +20,8 @@ export interface LineProps {
   quantity?: number
   paymentFrequency: TimeType
   underComment?: string
+  unit?: string
+  isMau?: boolean
 }
 
 export const PricePreviewLine: React.FC<LineProps> = ({
@@ -28,15 +30,17 @@ export const PricePreviewLine: React.FC<LineProps> = ({
   unitDescription,
   underComment,
   quantity = 0,
-  paymentFrequency
+  paymentFrequency,
+  unit = ''
 }) => {
   const { getString } = useStrings()
-
-  const breakdownDescr = `${quantity} x ${getAmountInCurrency(CurrencyType.USD, unitPrice)} ${getString(
-    unitDescription as keyof StringsMap
-  )}`
-  const monthlyAmount = quantity * unitPrice
-  const yearlyAmount = paymentFrequency === TimeType.YEARLY ? monthlyAmount * 12 : undefined
+  const isDevPreview = description?.includes('developers')
+  const breakdownDescr = isDevPreview
+    ? `${quantity}${isDevPreview ? '' : unit} x ${getAmountInCurrency(CurrencyType.USD, unitPrice)} ${getString(
+        unitDescription as keyof StringsMap
+      )}`
+    : `${quantity}${isDevPreview ? '' : unit} ${getString(description as keyof StringsMap)}`
+  const amount = isDevPreview ? quantity * unitPrice : unitPrice
 
   let unitDescr
   if (unitDescription && underComment) {
@@ -54,17 +58,19 @@ export const PricePreviewLine: React.FC<LineProps> = ({
     <Layout.Vertical className={css.line} padding={{ top: 'small', bottom: 'small' }}>
       <Layout.Horizontal flex={{ justifyContent: 'space-between' }} padding={{ bottom: 'small' }}>
         <Text font={{ weight: 'semi-bold' }}>{getString(description as keyof StringsMap)}</Text>
-        <Text font={{ weight: 'semi-bold' }}>
-          {getAmountInCurrency(CurrencyType.USD, monthlyAmount)}
-          {getString('common.perMonth')}
-        </Text>
+        {paymentFrequency === TimeType.YEARLY && (
+          <Text font={{ weight: 'semi-bold' }}>
+            {getAmountInCurrency(CurrencyType.USD, paymentFrequency === TimeType.YEARLY ? amount / 12 : amount)}
+            {getString('common.perMonth')}
+          </Text>
+        )}
       </Layout.Horizontal>
       <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'start' }}>
         {unitDescr}
-        {yearlyAmount && (
+        {amount && (
           <Text>
-            {getAmountInCurrency(CurrencyType.USD, yearlyAmount)}
-            {getString('common.perYear')}
+            {getAmountInCurrency(CurrencyType.USD, amount)}
+            {paymentFrequency === TimeType.YEARLY && getString('common.perYear')}
           </Text>
         )}
       </Layout.Horizontal>

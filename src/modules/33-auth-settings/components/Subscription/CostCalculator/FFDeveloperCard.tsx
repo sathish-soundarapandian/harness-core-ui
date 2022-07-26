@@ -108,7 +108,7 @@ const FFDeveloperCard: React.FC<FFDeveloperCardProps> = ({
     max: number
     stepSize: number
     labelStepSize: number
-  }>({ min: 0, max: 0, stepSize: 1, labelStepSize: 1 })
+  }>({ min: 1, max: 0, stepSize: 1, labelStepSize: 1 })
 
   useEffect(() => {
     // TODO: get tier from prices api call
@@ -139,7 +139,7 @@ const FFDeveloperCard: React.FC<FFDeveloperCardProps> = ({
           max={licenseRange.max}
           stepSize={licenseRange.stepSize}
           labelStepSize={licenseRange.labelStepSize}
-          value={numberOfDevelopers}
+          value={numberOfDevelopers === 0 ? 1 : numberOfDevelopers}
           setValue={setNumberOfDevelopers}
         />
       </Layout.Vertical>

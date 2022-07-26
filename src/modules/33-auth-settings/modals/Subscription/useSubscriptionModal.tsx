@@ -86,7 +86,8 @@ const View: React.FC<UseSubscribeModalProps> = ({ module, plan, time, onClose })
       last4digits: '',
       nameOnCard: ''
     },
-    productPrices: { monthly: [], yearly: [] }
+    productPrices: { monthly: [], yearly: [] },
+    sampleDetails: { sampleUnit: '', sampleMultiplier: 0, minValue: 0 }
   })
 
   const [invoiceData, setInvoiceData] = useState<InvoiceDetailDTO>()

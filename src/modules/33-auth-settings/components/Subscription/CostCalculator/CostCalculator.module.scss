@@ -11,7 +11,7 @@
     background-color: var(--primary-7) !important;
     height: var(--spacing-large);
   }
-
+  margin-top: 0 !important;
   :global(.TextInput--main) {
     display: flex;
     width: 60px;

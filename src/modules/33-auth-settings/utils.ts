@@ -20,6 +20,7 @@ export function getAmountInCurrency(currency: CurrencyType, amount: number): str
   return ''
 }
 
+// dividing the actual amount by 100 as amount numbers are in cents
 export function getDollarAmount(amount?: number, isYearly?: boolean): number {
   if (isYearly) {
     return (amount || 0) / 1200

@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { capitalize } from 'lodash-es'
+import { capitalize, defaultTo } from 'lodash-es'
 import { Card, Layout, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -88,6 +88,8 @@ interface FFMAUCardProps {
   selectedNumberOfMAUs?: number
   paymentFreq: TimeType
   setNumberOfMAUs: (value: number) => void
+  unit?: string
+  minValue: number
 }
 
 const FFMAUCard: React.FC<FFMAUCardProps> = ({
@@ -98,7 +100,9 @@ const FFMAUCard: React.FC<FFMAUCardProps> = ({
   newPlan,
   selectedNumberOfMAUs,
   setNumberOfMAUs,
-  paymentFreq
+  paymentFreq,
+  minValue,
+  unit
 }) => {
   const numberOfMAUs = selectedNumberOfMAUs || usage
   const [mausRange, setMausRange] = useState<{
@@ -109,33 +113,40 @@ const FFMAUCard: React.FC<FFMAUCardProps> = ({
     list: number[]
     unit: string
   }>({
-    min: 0,
+    min: defaultTo(minValue, 0),
     max: 0,
     stepSize: 1,
     labelStepSize: 1,
     list: [],
-    unit: ''
+    unit: defaultTo(unit, '')
   })
+
+  useEffect(() => {
+    if (Number.isInteger(minValue)) {
+      setNumberOfMAUs(minValue)
+      setMausRange({ ...mausRange, min: minValue })
+    }
+  }, [minValue])
 
   useEffect(() => {
     // TODO: get tier from prices api call
     if (newPlan === Editions.TEAM) {
       setMausRange({
-        min: 0,
+        min: defaultTo(minValue, 0),
         max: 500,
         stepSize: 100,
         labelStepSize: 100,
         list: [100, 200, 300, 400, 500],
-        unit: 'K'
+        unit: defaultTo(unit, '')
       })
     } else {
       setMausRange({
-        min: 0,
+        min: defaultTo(minValue, 0),
         max: 25,
         stepSize: 5,
         labelStepSize: 5,
         list: [0, 5, 10, 15, 20, 25],
-        unit: 'M'
+        unit: defaultTo(unit, '')
       })
     }
   }, [newPlan])
@@ -151,7 +162,7 @@ const FFMAUCard: React.FC<FFMAUCardProps> = ({
           stepSize={mausRange.stepSize}
           labelStepSize={mausRange.labelStepSize}
           list={mausRange.list}
-          value={numberOfMAUs}
+          value={numberOfMAUs === 0 ? minValue : numberOfMAUs}
           setValue={setNumberOfMAUs}
           unit={mausRange.unit}
         />

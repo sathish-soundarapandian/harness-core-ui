@@ -75,6 +75,11 @@ export interface PaymentMethodProps {
   nameOnCard: string
 }
 
+export interface SampleData {
+  sampleUnit: string
+  sampleMultiplier: number
+  minValue: number
+}
 export interface SubscriptionProps {
   edition: Editions
   premiumSupport: boolean
@@ -89,6 +94,7 @@ export interface SubscriptionProps {
       numberOfMau: number
     }
   }
+  sampleDetails?: SampleData
 }
 
 export interface Product {
@@ -103,12 +109,6 @@ export interface Product {
 export enum CurrencyType {
   USD = 'USD',
   EUR = 'EUR'
-}
-
-export enum LookUpKeyType {
-  DEVELOPERS = 'DEVELOPERS',
-  MAU = 'MAU',
-  PREMIUM_SUPPORT = 'PREMIUM_SUPPORT'
 }
 
 export enum LookUpKeyFrequencyType {

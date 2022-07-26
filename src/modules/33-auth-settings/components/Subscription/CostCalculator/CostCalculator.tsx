@@ -23,14 +23,13 @@ import {
   SubscriptionProps,
   ProductPricesProp,
   TimeType,
-  LookUpKeyType,
   LookUpKeyFrequencyType
 } from '@common/constants/SubscriptionTypes'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
-import { getCostCalculatorBodyByModule } from '@auth-settings/components/Subscription/subscriptionUtils'
+import { getCostCalculatorBodyByModule, PLAN_TYPES } from '@auth-settings/components/Subscription/subscriptionUtils'
 import ChoosePlan from './ChoosePlan'
 import { Footer } from './Footer'
 import { PremiumSupport } from './PremiumSupport'
@@ -88,7 +87,7 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
         if (price.metaData?.billed?.includes(LookUpKeyFrequencyType.YEARLY)) {
           newProductPrices.yearly.push(price)
         }
-        if (price.lookupKey === LookUpKeyType.PREMIUM_SUPPORT) {
+        if (price.lookupKey === PLAN_TYPES.PREMIUM_SUPPORT) {
           newProductPrices.yearly.push(price)
         }
       })
@@ -147,14 +146,15 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
   return (
     <Layout.Vertical className={className}>
       <Header step={1} />
-      <Layout.Vertical padding={{ top: 'large', bottom: 'large' }} spacing={'large'} className={css.body}>
+      <Layout.Vertical padding={{ top: 'large', bottom: 'large' }} className={css.body}>
         <ChoosePlan
           plan={subscriptionProps.edition}
           module={module}
           setPlan={(value: Editions) => {
             setSubscriptionProps({
               ...subscriptionProps,
-              edition: value
+              edition: value,
+              sampleDetails: { sampleMultiplier: 0, sampleUnit: '', minValue: 0 }
             })
           }}
         />

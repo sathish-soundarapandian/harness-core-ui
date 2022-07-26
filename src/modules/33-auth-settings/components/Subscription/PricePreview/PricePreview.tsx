@@ -7,14 +7,21 @@
 
 import React, { useMemo } from 'react'
 import cx from 'classnames'
+import { defaultTo, toInteger } from 'lodash-es'
 import { Text, Layout, Toggle } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { TimeType, SubscriptionProps, CurrencyType, LookUpKeyType } from '@common/constants/SubscriptionTypes'
+import { TimeType, SubscriptionProps, CurrencyType } from '@common/constants/SubscriptionTypes'
 import type { Module } from 'framework/types/ModuleName'
 import { getAmountInCurrency, getDollarAmount } from '@auth-settings/utils'
 import SubcriptionDetails from './SubscriptionDetails'
-import { getRenewDate, getSubscriptionBreakdownsByModuleAndFrequency } from '../subscriptionUtils'
+import {
+  getRenewDate,
+  getSubscriptionBreakdownsByModuleAndFrequency,
+  isSelectedPlan,
+  PLAN_TYPES,
+  strToNumber
+} from '../subscriptionUtils'
 import css from './PricePreview.module.scss'
 
 interface PricePreviewProps {
@@ -80,21 +87,57 @@ function getColorByModule(module: Module): string | undefined {
 
 const PricePreview: React.FC<PricePreviewProps> = ({ module, subscriptionDetails, setSubscriptionDetails }) => {
   const { getString } = useStrings()
-  const { paymentFreq, productPrices, premiumSupport } = subscriptionDetails
+  const { paymentFreq, productPrices, premiumSupport, quantities } = subscriptionDetails
   const products = useMemo(() => {
     return getSubscriptionBreakdownsByModuleAndFrequency({ module, subscriptionDetails })
   }, [module, subscriptionDetails])
-  const premiumSupportUnitPrice = getDollarAmount(
-    productPrices.yearly.find(price => price.lookupKey === LookUpKeyType.PREMIUM_SUPPORT)?.unitAmount
+
+  const numberOfMau = defaultTo(quantities?.featureFlag?.numberOfMau, 0)
+  const premiumSupportUnitPriceForDevs = getDollarAmount(
+    productPrices.yearly.find(price => {
+      const isSamePlan = isSelectedPlan(price, premiumSupport, subscriptionDetails.edition, PLAN_TYPES.DEVELOPERS)
+      if (isSamePlan) {
+        return price
+      }
+    })?.unitAmount
+  )
+
+  const premiumSupportUnitPriceForMau = getDollarAmount(
+    productPrices.yearly.find(price => {
+      const isSamePlan = isSelectedPlan(price, premiumSupport, subscriptionDetails.edition, PLAN_TYPES.MAU)
+      if (isSamePlan) {
+        const numMausFromMap = numberOfMau * toInteger(price.metaData?.sampleMultiplier)
+        const priceMin = strToNumber(price.metaData?.min || '')
+        const priceMax = strToNumber(price.metaData?.max || '')
+        const isValidRange = numMausFromMap >= priceMin && numMausFromMap <= priceMax
+        if (isValidRange) {
+          return price
+        }
+        return price
+      }
+    })?.unitAmount
   )
   const colorBorder = getColorByModule(module)
-  const monthlyTotalAmount = products.reduce((total, curr) => {
-    total += curr.quantity * curr.unitPrice
-    return total
-  }, 0)
-  let totalAmount = monthlyTotalAmount
+  const premiumSupportUnitPrice = premiumSupportUnitPriceForMau + premiumSupportUnitPriceForDevs
+  const devAmount = products[0].quantity * products[0].unitPrice
+  let totalAmount = devAmount
   if (paymentFreq === TimeType.YEARLY) {
-    totalAmount = premiumSupport ? monthlyTotalAmount * 12 + premiumSupportUnitPrice : monthlyTotalAmount * 12
+    const mauUnitAmount = getDollarAmount(
+      productPrices.yearly.find(price => {
+        const isSamePlan = isSelectedPlan(price, premiumSupport, subscriptionDetails.edition, PLAN_TYPES.MAU)
+        if (isSamePlan) {
+          const numMausFromMap = numberOfMau * toInteger(price.metaData?.sampleMultiplier)
+          const priceMin = strToNumber(price.metaData?.min || '')
+          const priceMax = strToNumber(price.metaData?.max || '')
+          const isValidRange = numMausFromMap >= priceMin && numMausFromMap <= priceMax
+          if (isValidRange) {
+            return price
+          }
+        }
+      })?.unitAmount
+    )
+
+    totalAmount = premiumSupport ? totalAmount + mauUnitAmount + premiumSupportUnitPrice : totalAmount + mauUnitAmount
   }
 
   return (

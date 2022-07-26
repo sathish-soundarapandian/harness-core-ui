@@ -118,7 +118,7 @@ const SubscriptionsPage: React.FC = () => {
   } = useGetAccountNG({ accountIdentifier: accountId, queryParams: { accountIdentifier: accountId } })
 
   const getModuleLicenseQueryParams: GetModuleLicensesByAccountAndModuleTypeQueryParams = {
-    moduleType: selectedModuleCard.module as GetModuleLicensesByAccountAndModuleTypeQueryParams['moduleType']
+    moduleType: selectedModuleCard?.module as GetModuleLicensesByAccountAndModuleTypeQueryParams['moduleType']
   }
 
   const {
@@ -139,7 +139,7 @@ const SubscriptionsPage: React.FC = () => {
     handleUpdateLicenseStore(
       { ...licenseInformation },
       updateLicenseStore,
-      selectedModuleCard.module.toString() as Module,
+      selectedModuleCard?.module?.toString() as Module,
       latestModuleLicense
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
