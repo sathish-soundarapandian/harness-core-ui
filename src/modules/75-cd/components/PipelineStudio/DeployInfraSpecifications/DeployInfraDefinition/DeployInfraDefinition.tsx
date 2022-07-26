@@ -39,6 +39,7 @@ import type {
 } from '@cd/components/PipelineSteps/InfraProvisioning/InfraProvisioning'
 import type { GcpInfrastructureSpec } from '@cd/components/PipelineSteps/GcpInfrastructureSpec/GcpInfrastructureSpec'
 import type { PDCInfrastructureSpec } from '@cd/components/PipelineSteps/PDCInfrastructureSpec/PDCInfrastructureSpec'
+import type { SshWinRmAwsInfrastructureSpec } from '@cd/components/PipelineSteps/SshWinRmAwsInfrastructureSpec/SshWinRmAwsInfrastructureSpec'
 import type { SshWinRmAzureInfrastructureSpec } from '@cd/components/PipelineSteps/SshWinRmAzureInfrastructureSpec/SshWinRmAzureInfrastructureSpec'
 import { useStrings } from 'framework/strings'
 import {
@@ -506,6 +507,22 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                 },
                 InfraDeploymentType.PDC
               )
+            }}
+          />
+        )
+      }
+      case InfraDeploymentType.SshWinRmAws: {
+        return (
+          <StepWidget<SshWinRmAwsInfrastructureSpec>
+            factory={factory}
+            key={stage?.stage?.identifier}
+            readonly={isReadonly}
+            initialValues={initialInfrastructureDefinitionValues as SshWinRmAwsInfrastructureSpec}
+            type={StepType.SshWinRmAws}
+            stepViewType={StepViewType.Edit}
+            allowableTypes={allowableTypes}
+            onUpdate={value => {
+              onUpdateInfrastructureDefinition(value, InfraDeploymentType.SshWinRmAws)
             }}
           />
         )

@@ -34,6 +34,7 @@ import { TerraformApply } from './TerraformApply/TerraformApply'
 import { InfraProvisioning } from './InfraProvisioning/InfraProvisioning'
 import { GcpInfrastructureSpec } from './GcpInfrastructureSpec/GcpInfrastructureSpec'
 import { PDCInfrastructureSpec } from './PDCInfrastructureSpec/PDCInfrastructureSpec'
+import { SshWinRmAwsInfrastructureSpec } from './SshWinRmAwsInfrastructureSpec/SshWinRmAwsInfrastructureSpec'
 import { SshWinRmAzureInfrastructureSpec } from './SshWinRmAzureInfrastructureSpec/SshWinRmAzureInfrastructureSpec'
 import { PolicyStep } from './PolicyStep/PolicyStep'
 import { ServerlessLambdaDeployStep } from './ServerlessLambdaDeploy/ServerlessLambdaDeploy'
@@ -71,6 +72,7 @@ factory.registerStep(new ShellScriptStep())
 factory.registerStep(new KubernetesInfraSpec())
 factory.registerStep(new GcpInfrastructureSpec())
 factory.registerStep(new PDCInfrastructureSpec())
+factory.registerStep(new SshWinRmAwsInfrastructureSpec())
 factory.registerStep(new SshWinRmAzureInfrastructureSpec())
 factory.registerStep(new ServerlessAwsLambdaSpec())
 factory.registerStep(new ServerlessAzureSpec())

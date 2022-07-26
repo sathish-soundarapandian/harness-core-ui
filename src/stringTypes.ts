@@ -4175,6 +4175,18 @@ export interface StringsMap {
   'cd.specifyTargetHost': string
   'cd.specifyTfVarStore': string
   'cd.stepName': string
+  'cd.steps.awsInfraStep.labels.autoScallingGroup': string
+  'cd.steps.awsInfraStep.labels.connectionAttribute': string
+  'cd.steps.awsInfraStep.labels.hostName': string
+  'cd.steps.awsInfraStep.labels.loadBalancer': string
+  'cd.steps.awsInfraStep.labels.useAutoScallingGroup': string
+  'cd.steps.awsInfraStep.labels.useAwsInstanceFilter': string
+  'cd.steps.awsInfraStep.labels.vpcs': string
+  'cd.steps.awsInfraStep.placeholders.autoScallingGroup': string
+  'cd.steps.awsInfraStep.placeholders.connectionAttribute': string
+  'cd.steps.awsInfraStep.placeholders.hostName': string
+  'cd.steps.awsInfraStep.placeholders.loadBalancer': string
+  'cd.steps.awsInfraStep.placeholders.vpcs': string
   'cd.steps.azureInfraStep.azure': string
   'cd.steps.azureInfraStep.clusterError': string
   'cd.steps.azureInfraStep.resourceGroupError': string
