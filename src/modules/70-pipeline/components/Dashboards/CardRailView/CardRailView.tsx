@@ -17,6 +17,7 @@ import EmptyActiveBuilds from './EmptyActiveBuilds.svg'
 import RepoIconUrl from './RepoIcon.svg'
 import NoServices from '../images/NoServices.svg'
 import NoDeployments from '../images/NoDeployments.svg'
+import BaselineTarget from '../images/BaselineTarget.svg'
 import Active from './Active.svg'
 import styles from './CardRailView.module.scss'
 
@@ -29,6 +30,7 @@ export interface CardRailViewProps {
     | 'FAILED_DEPLOYMENT'
     | 'ACTIVE_DEPLOYMENT'
     | 'PENDING_DEPLOYMENT'
+    | 'BASELINE_TARGET'
   isLoading?: boolean
   onShowAll?(): void
   isCIPage?: boolean
@@ -48,7 +50,8 @@ export default function CardRailView({ contentType, isLoading, onShowAll, childr
     WORKLOAD: getString('services'),
     FAILED_DEPLOYMENT: getString('pipeline.dashboards.failedDeployments'),
     ACTIVE_DEPLOYMENT: getString('pipeline.dashboards.activeDeployments'),
-    PENDING_DEPLOYMENT: getString('pipeline.dashboards.pendingDeployments')
+    PENDING_DEPLOYMENT: getString('pipeline.dashboards.pendingDeployments'),
+    BASELINE_TARGET: getString('pipeline.dashboards.baselineTargets')
   }
 
   const icons = {
@@ -58,7 +61,8 @@ export default function CardRailView({ contentType, isLoading, onShowAll, childr
     WORKLOAD: <img height={15} width={16} src={RepoIconUrl} />,
     FAILED_DEPLOYMENT: <Icon name="execution-warning" size={20} color={Color.RED_500} />,
     ACTIVE_DEPLOYMENT: <img src={Active} className={styles.activeDepIcon} />,
-    PENDING_DEPLOYMENT: <Icon name="play" size={20} color={Color.GREEN_500} />
+    PENDING_DEPLOYMENT: <Icon name="play" size={20} color={Color.GREEN_500} />,
+    BASELINE_TARGET: <Icon color={Color.PRIMARY_7} name="repository" />
   }
 
   const emptyIcons = {
@@ -68,7 +72,8 @@ export default function CardRailView({ contentType, isLoading, onShowAll, childr
     WORKLOAD: NoServices,
     FAILED_DEPLOYMENT: NoDeployments,
     ACTIVE_DEPLOYMENT: NoDeployments,
-    PENDING_DEPLOYMENT: NoDeployments
+    PENDING_DEPLOYMENT: NoDeployments,
+    BASELINE_TARGET: BaselineTarget
   }
 
   const emptyMsg = {
@@ -78,7 +83,8 @@ export default function CardRailView({ contentType, isLoading, onShowAll, childr
     WORKLOAD: getString('pipeline.dashboards.noWorkloads'),
     FAILED_DEPLOYMENT: getString('pipeline.dashboards.noFailedDeployments'),
     ACTIVE_DEPLOYMENT: getString('pipeline.dashboards.noActiveDeployments'),
-    PENDING_DEPLOYMENT: getString('pipeline.dashboards.noPendingDeployments')
+    PENDING_DEPLOYMENT: getString('pipeline.dashboards.noPendingDeployments'),
+    BASELINE_TARGET: getString('pipeline.dashboards.baselineActivityComingSoon')
   }
 
   const onResize = () => {

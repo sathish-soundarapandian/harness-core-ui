@@ -596,6 +596,8 @@ dashboards:
   failedDeployments: Failed Deployments
   activeDeployments: Active Deployments
   pendingDeployments: Pending Approval/Manual Intervention
+  baselineTargets: Targets Baselines
+  baselineActivityComingSoon: Baseline target activity coming soon!
   noRepositories: No Repositories found
   noFailedBuilds: No Failed Builds found
   noActiveBuilds: No Active Builds found
