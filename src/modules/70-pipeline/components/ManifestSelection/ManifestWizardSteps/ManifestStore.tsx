@@ -19,7 +19,8 @@ import {
   IconName,
   ButtonVariation,
   FormikForm,
-  ButtonSize
+  ButtonSize,
+  AllowedTypes
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
@@ -51,7 +52,7 @@ import css from './ManifestWizardSteps.module.scss'
 interface ManifestStorePropType {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   isReadonly: boolean
   manifestStoreTypes: Array<ManifestStores>
   initialValues: ManifestStepInitData
@@ -112,7 +113,10 @@ function ManifestStore({
         !isEmpty(connectorRefValue))
     )
   }
-  const handleOptionSelection = (formikData: any, storeSelected: ManifestStoreWithoutConnector): void => {
+  const handleOptionSelection = (
+    formikData: ManifestStepInitData,
+    storeSelected: ManifestStoreWithoutConnector
+  ): void => {
     if (
       getMultiTypeFromValue(formikData.connectorRef) !== MultiTypeInputType.FIXED &&
       formikData.store !== storeSelected
@@ -127,16 +131,17 @@ function ManifestStore({
 
   const getInitialValues = useCallback((): ManifestStepInitData => {
     const initValues = { ...initialValues }
-
-    if (prevStepData?.connectorRef) {
-      initValues.connectorRef = prevStepData?.connectorRef
+    if (prevStepData) {
+      if (prevStepData?.connectorRef) {
+        initValues.connectorRef = prevStepData?.connectorRef
+      }
       handleStoreChange(selectedStore)
     }
     if (selectedStore !== initValues.store) {
       initValues.connectorRef = ''
     }
     return { ...initValues, store: selectedStore }
-  }, [selectedStore])
+  }, [handleStoreChange, initialValues, prevStepData, selectedStore])
 
   const supportedManifestStores = useMemo(
     () =>
@@ -147,7 +152,7 @@ function ManifestStore({
           icon: ManifestIconByType[store] as IconName,
           value: store
         })),
-    [manifestStoreTypes]
+    [getString, isOciHelmEnabled, manifestStoreTypes]
   )
 
   return (

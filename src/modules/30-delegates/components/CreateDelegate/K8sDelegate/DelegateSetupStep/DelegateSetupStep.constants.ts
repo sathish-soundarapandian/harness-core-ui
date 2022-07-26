@@ -19,3 +19,6 @@ export const delegateInstaller: DelegateInstallerDetails[] = [
     icon: 'service-kubernetes'
   }
 ]
+
+//this regex is retrieved from kubernetes
+export const delegateNameRegex = /^[a-z]([-a-z0-9]*[a-z])?(\.[a-z0-9]([-a-z0-9]*[a-z])?)*$/g

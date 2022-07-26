@@ -15,7 +15,8 @@ import {
   StepWizard,
   MultiTypeInputType,
   SelectOption,
-  getMultiTypeFromValue
+  getMultiTypeFromValue,
+  AllowedTypes
 } from '@harness/uicore'
 import { Classes, Dialog, IDialogProps } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
@@ -60,7 +61,7 @@ interface StepChangeData<SharedObject> {
 
 interface CFRemoteWizardProps {
   readonly: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   showModal: boolean
   onClose: () => void
   initialValues: any

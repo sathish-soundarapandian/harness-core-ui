@@ -16,15 +16,13 @@ import {
   SshWinRmAzureInfrastructureSpec,
   AzureConnectorRegex,
   AzureSubscriptionRegex,
-  AzureResourceGroupRegex,
-  AzureClusterRegex
+  AzureResourceGroupRegex
 } from '../SshWinRmAzureInfrastructureSpec'
 import {
   connectorsResponse,
   connectorResponse,
   subscriptionsResponse,
   resourceGroupsResponse,
-  clustersResponse,
   tagsResponse,
   mockSecret,
   mockListSecrets
@@ -37,7 +35,6 @@ jest.mock('services/cd-ng', () => ({
   getConnectorListV2Promise: jest.fn(() => Promise.resolve(connectorsResponse.data)),
   getAzureSubscriptionsPromise: jest.fn(() => Promise.resolve(subscriptionsResponse.data)),
   getAzureResourceGroupsBySubscriptionPromise: jest.fn(() => Promise.resolve(resourceGroupsResponse.data)),
-  getAzureClustersPromise: jest.fn(() => Promise.resolve(clustersResponse.data)),
   getSubscriptionTagsPromise: jest.fn(() => Promise.resolve(tagsResponse.data)),
 
   getSecretV2Promise: jest.fn().mockImplementation(() => Promise.resolve(mockSecret)),
@@ -201,8 +198,6 @@ describe('invocation map test', () => {
     expect(CDNG.getAzureSubscriptionsPromise).toBeCalled()
     invocationMap?.get(AzureResourceGroupRegex)?.(infraDefPath, yaml, accountIdParams)
     expect(CDNG.getAzureResourceGroupsBySubscriptionPromise).toBeCalled()
-    invocationMap?.get(AzureClusterRegex)?.(infraDefPath, yaml, accountIdParams)
-    expect(CDNG.getAzureClustersPromise).toBeCalled()
   })
 
   test('invocation map, wrong yaml', () => {
@@ -214,8 +209,6 @@ describe('invocation map test', () => {
     expect(CDNG.getAzureSubscriptionsPromise).toBeCalled()
     invocationMap?.get(AzureResourceGroupRegex)?.(infraDefPath, yaml, accountIdParams)
     expect(CDNG.getAzureResourceGroupsBySubscriptionPromise).toBeCalled()
-    invocationMap?.get(AzureClusterRegex)?.(infraDefPath, yaml, accountIdParams)
-    expect(CDNG.getAzureClustersPromise).toBeCalled()
   })
 
   test('invocation map should call template list', () => {
@@ -233,7 +226,5 @@ describe('invocation map test', () => {
     expect(CDNG.getAzureSubscriptionsPromise).toBeCalled()
     invocationMap?.get(AzureResourceGroupRegex)?.(infraDefPath, yaml, accountIdParams)
     expect(CDNG.getAzureResourceGroupsBySubscriptionPromise).toBeCalled()
-    invocationMap?.get(AzureClusterRegex)?.(infraDefPath, yaml, accountIdParams)
-    expect(CDNG.getAzureClustersPromise).toBeCalled()
   })
 })

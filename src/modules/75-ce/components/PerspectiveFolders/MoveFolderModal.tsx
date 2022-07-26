@@ -28,7 +28,6 @@ import { useStrings } from 'framework/strings'
 import { useCreatePerspectiveFolder, useGetFolders, useMovePerspectives } from 'services/ce'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { folderViewType, moveFolderType } from '@ce/constants'
-import { useQueryParams } from '@common/hooks'
 
 const modalPropsLight: IDialogProps = {
   isOpen: true,
@@ -52,6 +51,7 @@ interface FormValues {
 
 interface ModalProps {
   perspectiveId: string
+  folderName: string
   setRefetchFolders: React.Dispatch<React.SetStateAction<boolean>>
   setSelectedFolder: (newState: string) => void
   setRefetchPerspectives: React.Dispatch<React.SetStateAction<boolean>>
@@ -60,6 +60,7 @@ interface ModalProps {
 export const MovePerspectivesModal: React.FC<MoveModalProps> = ({
   hideModal,
   perspectiveId,
+  folderName,
   setRefetchFolders,
   setSelectedFolder,
   setRefetchPerspectives
@@ -67,8 +68,6 @@ export const MovePerspectivesModal: React.FC<MoveModalProps> = ({
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const { showError, showSuccess } = useToaster()
-  let { folderId } = useQueryParams<{ folderId: string }>()
-  folderId = folderId && JSON.parse(folderId)
   const folderOptions: SelectOption[] = []
 
   const { data: foldersListResullt } = useGetFolders({
@@ -78,9 +77,6 @@ export const MovePerspectivesModal: React.FC<MoveModalProps> = ({
   })
 
   const foldersList = foldersListResullt?.data || /* istanbul ignore next */ []
-  const currentFolder = foldersList.find(item =>
-    folderId ? /* istanbul ignore next */ item.uuid === folderId : item.viewType === folderViewType.DEFAULT
-  )
 
   const { mutate: createFolder } = useCreatePerspectiveFolder({
     queryParams: {
@@ -171,7 +167,7 @@ export const MovePerspectivesModal: React.FC<MoveModalProps> = ({
                     padding={{ bottom: 'xlarge' }}
                     color={Color.GREY_700}
                   >
-                    {currentFolder?.name || /* istanbul ignore next */ ''}
+                    {folderName}
                   </Text>
                   <FormInput.RadioGroup
                     name="folderType"
@@ -225,6 +221,7 @@ const useMoveFolderModal = (props: ModalProps) => {
       <MovePerspectivesModal
         hideModal={hideModal}
         perspectiveId={props.perspectiveId}
+        folderName={props.folderName}
         setRefetchFolders={props.setRefetchFolders}
         setSelectedFolder={props.setSelectedFolder}
         setRefetchPerspectives={props.setRefetchPerspectives}

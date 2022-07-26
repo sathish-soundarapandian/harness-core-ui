@@ -5,12 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Card, Color, FormInput, Layout, MultiTypeInputType, Text } from '@harness/uicore'
+import { AllowedTypes, Card, Color, FormInput, Layout, Text } from '@harness/uicore'
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import {
-  getLabelByName,
+  getFieldLabelForVerifyTemplate,
   getNestedFields
 } from '@cv/pages/monitored-service/CVMonitoredService/MonitoredServiceInputSetsTemplate.utils'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
@@ -23,7 +23,7 @@ import { spacingMedium } from './MonitoredServiceInputTemplatesHealthSources.con
 interface MonitoredServiceInputTemplatesHealthSourcesProps {
   templateIdentifier: string
   versionLabel: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   healthSources: TemplateInputs['sources']['healthSources']
 }
 
@@ -76,7 +76,7 @@ export default function MonitoredServiceInputTemplatesHealthSources(
                     <FormInput.MultiTextInput
                       key={input.name}
                       name={`spec.monitoredService.spec.templateInputs.${input.path}`}
-                      label={getLabelByName(input.name, getString)}
+                      label={getFieldLabelForVerifyTemplate(input.name, getString)}
                       multiTextInputProps={{
                         expressions,
                         allowableTypes
@@ -102,7 +102,7 @@ export default function MonitoredServiceInputTemplatesHealthSources(
                           <FormInput.MultiTextInput
                             key={input.name}
                             name={`spec.monitoredService.spec.templateInputs.${input.path}`}
-                            label={getLabelByName(input.name, getString)}
+                            label={getFieldLabelForVerifyTemplate(input.name, getString)}
                             multiTextInputProps={{
                               expressions,
                               allowableTypes

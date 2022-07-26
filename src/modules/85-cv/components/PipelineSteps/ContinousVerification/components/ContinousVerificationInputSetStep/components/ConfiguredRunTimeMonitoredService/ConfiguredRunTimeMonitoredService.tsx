@@ -7,7 +7,7 @@
 
 import { Card } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
-import { Container, FormInput, MultiTypeInputType, useToaster } from '@harness/uicore'
+import { AllowedTypes, Container, FormInput, useToaster } from '@harness/uicore'
 import React, { useEffect, useMemo } from 'react'
 import type { InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getMonitoredServiceOptions } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.utils'
@@ -24,7 +24,7 @@ interface ConfiguredRunTimeMonitoredServiceProps {
   prefix: string
   monitoredService?: VerifyStepMonitoredService
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export default function ConfiguredRunTimeMonitoredService(props: ConfiguredRunTimeMonitoredServiceProps): JSX.Element {

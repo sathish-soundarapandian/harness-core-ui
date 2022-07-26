@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { IconName, MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@wings-software/uicore'
 import { parse } from 'yaml'
 import get from 'lodash-es/get'
 import type { FormikErrors } from 'formik'
@@ -72,7 +72,7 @@ export interface JFrogArtifactoryStepProps {
   stepViewType: StepViewType
   onUpdate?: (data: JFrogArtifactoryStepData) => void
   onChange?: (data: JFrogArtifactoryStepData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export class JFrogArtifactoryStep extends PipelineStep<JFrogArtifactoryStepData> {

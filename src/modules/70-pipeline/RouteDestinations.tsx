@@ -37,7 +37,7 @@ import FullPageLogView from '@pipeline/pages/full-page-log-view/FullPageLogView'
 import InputSetList from '@pipeline/pages/inputSet-list/InputSetList'
 import PipelineDetails from '@pipeline/pages/pipeline-details/PipelineDetails'
 import PipelinesPage from '@pipeline/pages/pipelines/PipelinesPage'
-import DeploymentsList from '@pipeline/pages/deployments-list/DeploymentsList'
+import { PipelineListPage } from '@pipeline/pages/pipeline-list/PipelineListPage'
 import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import '@pipeline/components/CommonPipelineStages/ApprovalStage'
 import '@pipeline/components/CommonPipelineStages/CustomStage'
@@ -56,6 +56,7 @@ import ServiceResourceModal from '@pipeline/components/RbacResourceModals/Servic
 import EnvironmentResourceModal from '@pipeline/components/RbacResourceModals/EnvironmentResourceModal/EnvironmentResourceModal'
 import EnvironmentGroupsResourceModal from '@pipeline/components/RbacResourceModals/EnvironmentGroupsResourceModal/EnvironmentGroupsResourceModal'
 import { HarnessApprovalView } from '@pipeline/components/execution/StepDetails/views/HarnessApprovalView/HarnessApprovalView'
+import { HarnessApprovalLogsView } from '@pipeline/components/execution/StepDetails/views/HarnessApprovalView/HarnessApprovalLogsView'
 import { JiraApprovalView } from '@pipeline/components/execution/StepDetails/views/JiraApprovalView/JiraApprovalView'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { ServiceNowApprovalView } from '@pipeline/components/execution/StepDetails/views/ServiceNowApprovalView/ServiceNowApprovalView'
@@ -70,6 +71,7 @@ import { ModuleName } from 'framework/types/ModuleName'
 import PipelineResourceRenderer from './components/RbacResourceModals/PipelineResourceRenderer/PipelineResourceRenderer'
 import { JiraCreateUpdateView } from './components/execution/StepDetails/views/JiraCreateUpdateView/JiraCreateUpdateView'
 import ExecutionErrorTrackingView from './pages/execution/ExecutionErrorTrackingView/ExecutionErrorTrackingView'
+import { ExecutionListPage } from './pages/execution-list-page/ExecutionListPage'
 /**
  * Register RBAC resources
  */
@@ -120,7 +122,8 @@ RbacFactory.registerResourceTypeHandler(ResourceType.ENVIRONMENT_GROUP, {
   permissionLabels: {
     [PermissionIdentifier.VIEW_ENVIRONMENT_GROUP]: <String stringID="rbac.permissionLabels.view" />,
     [PermissionIdentifier.EDIT_ENVIRONMENT_GROUP]: <String stringID="rbac.permissionLabels.createEdit" />,
-    [PermissionIdentifier.DELETE_ENVIRONMENT_GROUP]: <String stringID="rbac.permissionLabels.delete" />
+    [PermissionIdentifier.DELETE_ENVIRONMENT_GROUP]: <String stringID="rbac.permissionLabels.delete" />,
+    [PermissionIdentifier.RUNTIMEACCESS_ENVIRONMENT_GROUP]: <String stringID="rbac.permissionLabels.access" />
   },
   addResourceModalBody: props => <EnvironmentGroupsResourceModal {...props} />
 })
@@ -130,6 +133,10 @@ RbacFactory.registerResourceTypeHandler(ResourceType.ENVIRONMENT_GROUP, {
  */
 ExecFactory.registerStepDetails(StepType.HarnessApproval, {
   component: HarnessApprovalView
+})
+
+ExecFactory.registerConsoleViewStepDetails(StepType.HarnessApproval, {
+  component: HarnessApprovalLogsView
 })
 
 ExecFactory.registerStepDetails(StepType.JiraCreate, {
@@ -294,6 +301,15 @@ export function PipelineRouteDestinations({
         exact
         licenseRedirectData={licenseRedirectData}
         sidebarProps={sidebarProps}
+        path={routes.toPipelineList({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
+        pageName={PAGE_NAME.PipelineListPage}
+      >
+        <PipelineListPage />
+      </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={sidebarProps}
         path={routes.toPipelines({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
         pageName={PAGE_NAME.PipelinesPage}
       >
@@ -305,7 +321,7 @@ export function PipelineRouteDestinations({
         sidebarProps={sidebarProps}
         path={routes.toDeployments({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
       >
-        <DeploymentsList />
+        <ExecutionListPage />
       </RouteWithLayout>
       <RouteWithLayout
         exact

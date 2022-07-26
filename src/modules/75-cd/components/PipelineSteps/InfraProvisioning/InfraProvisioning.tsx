@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { IconName, MultiTypeInputType } from '@wings-software/uicore'
+import type { IconName, AllowedTypes } from '@wings-software/uicore'
 import type { FormikErrors } from 'formik'
 import type { StepViewType, StepProps } from '@pipeline/components/AbstractSteps/Step'
 import type { ExecutionElementConfig } from 'services/cd-ng'
@@ -42,7 +42,7 @@ export interface InfraProvisioningProps {
   stepViewType?: StepViewType
   onUpdate?: (data: InfraProvisioningData) => void
   onChange?: (data: InfraProvisioningData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export class InfraProvisioning extends PipelineStep<any> {

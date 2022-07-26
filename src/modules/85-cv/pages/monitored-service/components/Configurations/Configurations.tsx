@@ -376,20 +376,22 @@ export default function Configurations(
             />
           }
         />
-        <Tab
-          id={getString('pipelines-studio.dependenciesGroupTitle')}
-          title={getString('pipelines-studio.dependenciesGroupTitle')}
-          panel={
-            <Dependency
-              value={initialValues}
-              dependencyTabformRef={dependencyTabformRef}
-              onSuccess={async payload => onSuccess(payload, getString('pipelines-studio.dependenciesGroupTitle'))}
-              cachedInitialValues={cachedInitialValues}
-              setDBData={setDBData}
-              onDiscard={onDiscard}
-            />
-          }
-        />
+        {!isTemplate && (
+          <Tab
+            id={getString('pipelines-studio.dependenciesGroupTitle')}
+            title={getString('pipelines-studio.dependenciesGroupTitle')}
+            panel={
+              <Dependency
+                value={initialValues}
+                dependencyTabformRef={dependencyTabformRef}
+                onSuccess={async payload => onSuccess(payload, getString('pipelines-studio.dependenciesGroupTitle'))}
+                cachedInitialValues={cachedInitialValues}
+                setDBData={setDBData}
+                onDiscard={onDiscard}
+              />
+            }
+          />
+        )}
       </Tabs>
       {!isTemplate && (
         <NavigationCheck

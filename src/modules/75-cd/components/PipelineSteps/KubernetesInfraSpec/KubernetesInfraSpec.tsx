@@ -24,7 +24,8 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Icon,
-  Accordion
+  Accordion,
+  AllowedTypes
 } from '@wings-software/uicore'
 
 import { useStrings } from 'framework/strings'
@@ -66,7 +67,7 @@ interface KubernetesInfraSpecEditableProps {
   template?: K8SDirectInfrastructureTemplate
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: K8SDirectInfrastructure
-  allowableTypes?: MultiTypeInputType[]
+  allowableTypes?: AllowedTypes
 }
 
 const KubernetesInfraSpecEditable: React.FC<KubernetesInfraSpecEditableProps> = ({

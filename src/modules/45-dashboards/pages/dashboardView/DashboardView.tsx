@@ -13,6 +13,7 @@ import { Page } from '@common/exports'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { useDashboardsContext } from '@dashboards/pages/DashboardsContext'
+import { SHARED_FOLDER_ID } from '@dashboards/constants'
 import {
   ErrorResponse,
   useCreateSignedUrl,
@@ -27,7 +28,7 @@ const DashboardViewPage: React.FC = () => {
   const { includeBreadcrumbs } = useDashboardsContext()
 
   const { accountId, viewId, folderId } = useParams<AccountPathProps & { viewId: string; folderId: string }>()
-  const [embedUrl, setEmbedUrl] = React.useState('')
+  const [embedUrl, setEmbedUrl] = React.useState<string>()
   const [iframeState] = React.useState(0)
   const history = useHistory()
   const query = location.href.split('?')[1]
@@ -43,27 +44,44 @@ const DashboardViewPage: React.FC = () => {
     error
   } = useCreateSignedUrl({ queryParams: { accountId, dashboardId: viewId, src: signedQueryUrl } })
 
-  const generateSignedUrl = async (): Promise<void> => {
-    const { resource } = await createSignedUrl()
-    setEmbedUrl(resource)
-  }
+  const responseMessages = useMemo(() => (error?.data as ErrorResponse)?.responseMessages, [error])
 
   React.useEffect(() => {
+    const generateSignedUrl = async (): Promise<void> => {
+      const { resource } = (await createSignedUrl()) || {}
+      setEmbedUrl(resource)
+    }
+
     generateSignedUrl()
-  }, [viewId])
+  }, [createSignedUrl, viewId])
 
   React.useEffect(() => {
-    window.addEventListener('message', function (event) {
+    const lookerEventHandler = (event: MessageEvent<string>): void => {
       if (event.origin === DASHBOARDS_ORIGIN) {
         const onChangeData = JSON.parse(event.data)
         if (onChangeData && onChangeData.type === 'page:changed' && onChangeData.page?.url?.includes('embed/explore')) {
           history.go(0)
         }
       }
-    })
-  }, [])
+    }
 
-  const { data: folderDetail } = useGetFolderDetail({ queryParams: { accountId, folderId } })
+    window.addEventListener('message', lookerEventHandler)
+
+    return () => {
+      window.removeEventListener('message', lookerEventHandler)
+    }
+  }, [history, viewId])
+
+  const { data: folderDetail, refetch: fetchFolderDetail } = useGetFolderDetail({
+    lazy: true,
+    queryParams: { accountId, folderId }
+  })
+
+  React.useEffect(() => {
+    if (folderId !== SHARED_FOLDER_ID) {
+      fetchFolderDetail()
+    }
+  }, [accountId, fetchFolderDetail, folderId])
 
   const { data: dashboardDetail } = useGetDashboardDetail({ dashboard_id: viewId, queryParams: { accountId } })
 
@@ -79,27 +97,37 @@ const DashboardViewPage: React.FC = () => {
         label: folderDetail.resource
       })
     }
-    dashboardDetail &&
+    embedUrl &&
+      dashboardDetail &&
       links.push({
         url: routes.toViewCustomDashboard({ viewId, folderId, accountId }),
         label: dashboardDetail.title
       })
     includeBreadcrumbs(links)
-  }, [folderDetail, dashboardDetail, accountId, viewId])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [folderDetail?.resource, dashboardDetail, accountId, viewId, embedUrl])
 
   return (
     <Page.Body
       className={css.pageContainer}
       loading={loading}
-      error={(error?.data as ErrorResponse)?.responseMessages}
+      error={responseMessages}
       noData={{
-        when: () => embedUrl === '',
+        when: () => embedUrl === undefined,
         icon: 'dashboard',
         message: 'Dashboard not available'
       }}
     >
       <Layout.Vertical className={css.frame}>
-        <iframe src={embedUrl} key={iframeState} height="100%" width="100%" frameBorder="0" id="dashboard-render" />
+        <iframe
+          src={embedUrl}
+          key={iframeState}
+          height="100%"
+          width="100%"
+          frameBorder="0"
+          id="dashboard-render"
+          data-testid="dashboard-iframe"
+        />
       </Layout.Vertical>
     </Page.Body>
   )

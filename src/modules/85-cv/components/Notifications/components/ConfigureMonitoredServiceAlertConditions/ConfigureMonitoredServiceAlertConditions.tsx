@@ -28,7 +28,8 @@ import NotificationRuleRow from '../NotificationRuleRow/NotificationRuleRow'
 import {
   createNotificationRule,
   getInitialNotificationRules,
-  getUpdatedNotificationRules
+  getUpdatedNotificationRules,
+  validateNotificationConditions
 } from '../../NotificationsContainer.utils'
 import {
   ConfigureMonitoredServiceAlertConditionsProps,
@@ -99,9 +100,10 @@ export default function ConfigureMonitoredServiceAlertConditions({
     return (
       <Container padding={{ top: 'medium' }} className={css.notificationRulesContainer}>
         {conditions.length
-          ? conditions.map(notificationRule => {
+          ? conditions.map((notificationRule, index) => {
               return (
                 <NotificationRuleRow
+                  index={index}
                   key={notificationRule?.id}
                   showDeleteNotificationsIcon={showDeleteNotificationsIcon}
                   notificationRule={notificationRule}
@@ -145,6 +147,9 @@ export default function ConfigureMonitoredServiceAlertConditions({
       <Formik<NotificationConditions>
         initialValues={{ ...prevStepData, conditions: [createNotificationRule()] }}
         formName="notificationsOverview"
+        validate={values => {
+          return validateNotificationConditions(dataTillCurrentStep, values, getString)
+        }}
         onSubmit={() => {
           nextStep?.(dataTillCurrentStep)
         }}

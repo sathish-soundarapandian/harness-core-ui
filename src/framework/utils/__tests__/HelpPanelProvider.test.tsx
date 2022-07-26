@@ -31,7 +31,7 @@ describe('help panel provider test', () => {
   test('test with feature flag enabled', () => {
     window.helpPanelAccessToken = 'dummy_token'
     const { container } = render(
-      <TestWrapper defaultAppStoreValues={{ featureFlags: { HELP_PANEL: true } }}>
+      <TestWrapper>
         <HelpPanelProvider>child</HelpPanelProvider>
       </TestWrapper>
     )

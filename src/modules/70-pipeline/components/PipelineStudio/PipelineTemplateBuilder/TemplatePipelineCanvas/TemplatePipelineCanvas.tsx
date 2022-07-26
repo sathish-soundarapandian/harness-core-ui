@@ -31,9 +31,10 @@ import css from './TemplatePipelineCanvas.module.scss'
 
 export function TemplatePipelineCanvas(): React.ReactElement {
   const {
-    state: { pipeline, templateTypes, gitDetails },
+    state: { pipeline, templateTypes, templateServiceData, gitDetails },
     stagesMap,
-    setTemplateTypes
+    setTemplateTypes,
+    setTemplateServiceData
   } = usePipelineContext()
   const canvasRef = React.useRef<HTMLDivElement | null>(null)
   const { getString } = useStrings()
@@ -98,7 +99,8 @@ export function TemplatePipelineCanvas(): React.ReactElement {
       },
       templateRefs
     ).then(resp => {
-      setTemplateTypes(merge(templateTypes, resp))
+      setTemplateTypes(merge(templateTypes, resp.templateTypes))
+      setTemplateServiceData(merge(templateServiceData, resp.templateServiceData))
     })
   }, [JSON.stringify(resolvedPipeline)])
 

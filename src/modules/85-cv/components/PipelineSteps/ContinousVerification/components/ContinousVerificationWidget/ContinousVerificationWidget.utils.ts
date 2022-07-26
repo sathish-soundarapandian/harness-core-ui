@@ -6,10 +6,10 @@
  */
 
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
-import type { FormikErrors } from 'formik'
+import type { FormikErrors, FormikProps } from 'formik'
 import { set } from 'lodash-es'
 import {
-  getLabelByNameForTemplateInputs,
+  getValidationLabelByNameForTemplateInputs,
   getNestedFields
 } from '@cv/pages/monitored-service/CVMonitoredService/MonitoredServiceInputSetsTemplate.utils'
 import type { StringKeys } from 'framework/strings'
@@ -17,6 +17,7 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type {
   ContinousVerificationData,
   MonitoredServiceTemplateVariable,
+  spec,
   VerifyStepMonitoredService
 } from '../../types'
 import { isAnExpression } from './components/ContinousVerificationWidgetSections/components/MonitoredService/MonitoredService.utils'
@@ -144,7 +145,7 @@ export function validateTemplateInputs(
       set(
         errors,
         `spec.monitoredService.spec.templateInputs.${key}`,
-        `${getLabelByNameForTemplateInputs(key, getString)}`
+        `${getValidationLabelByNameForTemplateInputs(key, getString)}`
       )
     } else if (shouldValidateVariables(templateInputsToValidate, key)) {
       validateHealthSourceVariables(templateInputsToValidate, key, templateInputs, errors)
@@ -211,7 +212,7 @@ export function validateTemplateInputsHealthSources(
         set(
           errors,
           `spec.monitoredService.spec.templateInputs.${path}.${healthSourceKey}`,
-          `${getLabelByNameForTemplateInputs(healthSourceKey, getString)}`
+          `${getValidationLabelByNameForTemplateInputs(healthSourceKey, getString)}`
         )
       }
     })
@@ -239,7 +240,7 @@ export function validateMetricDefinitions(
         set(
           errors,
           `spec.monitoredService.spec.templateInputs.${metricDefinitionField?.path}`,
-          `${getLabelByNameForTemplateInputs(metricDefinitionField?.name, getString)}`
+          `${getValidationLabelByNameForTemplateInputs(metricDefinitionField?.name, getString)}`
         )
       }
     }
@@ -248,4 +249,21 @@ export function validateMetricDefinitions(
 
 export function shouldValidateTemplateInputs(templateInputsToValidate: any, key: string, templateInputs: any): boolean {
   return templateInputsToValidate[key] !== 'object' && !templateInputs[key]
+}
+
+export function resetFormik(
+  formValues: ContinousVerificationData,
+  newSpecs: {
+    monitoredServiceRef?: string | undefined
+    monitoredServiceName?: string | undefined
+    type?: string | undefined
+    healthSources?: { identifier: string }[] | undefined
+    spec?: spec | undefined
+    monitoredService: VerifyStepMonitoredService
+    initialMonitoredService?: VerifyStepMonitoredService | undefined
+  },
+  formik: FormikProps<ContinousVerificationData>
+): void {
+  const formNewValues = { ...formValues, spec: newSpecs }
+  formik.resetForm({ values: formNewValues })
 }

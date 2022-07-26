@@ -9,7 +9,7 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty, startCase } from 'lodash-es'
 import cx from 'classnames'
-import { Container, Layout, MultiTypeInputType, Text, FormInput } from '@wings-software/uicore'
+import { Container, Layout, MultiTypeInputType, Text, FormInput, AllowedTypes } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
@@ -53,7 +53,7 @@ export interface CIStepOptionalConfigProps {
   path?: string
   formik?: any
   isInputSetView?: boolean
-  allowableTypes?: MultiTypeInputType[]
+  allowableTypes?: AllowedTypes
   template?: Record<string, any>
   stepType?: StepType // See RunAndRunTestStepInputCommonFields
 }
@@ -61,7 +61,7 @@ export interface CIStepOptionalConfigProps {
 export const getOptionalSubLabel = (
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
   tooltip?: string
-) => (
+): React.ReactElement => (
   <Text
     tooltipProps={tooltip ? { dataTooltipId: tooltip } : {}}
     className={css.inpLabel}
@@ -97,14 +97,14 @@ export const renderMultiTypeListInputSet = ({
   placeholderKey?: keyof StringsMap
   withObjectStructure?: boolean
   keyName?: string
-  allowedTypes: MultiTypeInputType[]
-  allowedTypesForEntries: MultiTypeInputType[]
+  allowedTypes: AllowedTypes
+  allowedTypesForEntries: AllowedTypes
   expressions: string[]
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
   readonly?: boolean
   formik?: any
   restrictToSingleEntry?: boolean
-} & ConnectorReferenceProps) => (
+} & ConnectorReferenceProps): React.ReactElement => (
   <MultiTypeListInputSet
     name={name}
     multiTextInputProps={{
@@ -211,7 +211,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
       fieldName: string
       stringKey: keyof StringsMap
       tooltipId?: string
-      allowableTypes: MultiTypeInputType[]
+      allowableTypes: AllowedTypes
       keyLabel?: keyof StringsMap
       valueLabel?: keyof StringsMap
       restrictToSingleEntry?: boolean
@@ -352,7 +352,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
       name: string
       tooltipId: string
       labelKey: keyof StringsMap
-      allowableTypes: MultiTypeInputType[]
+      allowableTypes: AllowedTypes
     }) => (
       <FormMultiTypeCheckboxField
         name={name}
@@ -386,8 +386,8 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
       tooltipId?: string
       labelKey: keyof StringsMap
       placeholderKey?: keyof StringsMap
-      allowedTypes: MultiTypeInputType[]
-      allowedTypesForEntries: MultiTypeInputType[]
+      allowedTypes: AllowedTypes
+      allowedTypesForEntries: AllowedTypes
       restrictToSingleEntry?: boolean
     } & ConnectorReferenceProps) => (
       <MultiTypeList

@@ -7,13 +7,13 @@
 
 import React from 'react'
 import { findAllByText, findByText, fireEvent, render } from '@testing-library/react'
-import { MultiTypeInputType } from '@harness/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { renderHook } from '@testing-library/react-hooks'
 
 import { TestWrapper } from '@common/utils/testUtils'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
-import { ManifestDataType, manifestStoreTypes } from '../../../Manifesthelper'
+import { ManifestDataType, gitStoreTypes } from '../../../Manifesthelper'
 import ReleaseRepoWizard from '../ReleaseRepoWizard'
 
 jest.mock('services/cd-ng', () => ({
@@ -26,7 +26,11 @@ const submitFn = jest.fn()
 
 const props = {
   expressions: [],
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   lastSteps: [],
   nextStep: submitFn,
   types: [
@@ -38,7 +42,7 @@ const props = {
     ManifestDataType.Kustomize,
     ManifestDataType.KustomizePatches
   ],
-  manifestStoreTypes: manifestStoreTypes,
+  manifestStoreTypes: gitStoreTypes,
   labels: {
     firstStepName: 'test1',
     secondStepName: 'test2'

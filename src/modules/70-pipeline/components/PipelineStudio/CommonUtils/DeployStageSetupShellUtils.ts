@@ -19,10 +19,23 @@ export enum DeployTabs {
 export const isEmptyServiceConfigPath = (stage: DeploymentStageElementConfig): boolean => {
   return isEmpty(stage?.spec?.serviceConfig?.serviceDefinition?.type)
 }
+export const isEmptyInfraPath = (stage: DeploymentStageElementConfig): boolean => {
+  return isEmpty(stage?.spec?.infrastructure)
+}
 export const getServiceEntityServiceRef = (stage: any): boolean => {
   return !isEmpty((stage?.spec as any)?.service?.serviceRef)
 }
 
 export const isNewServiceEnvEntity = (isSvcEnvEntityEnabled: boolean, stage: DeploymentStageElementConfig): boolean => {
   return isSvcEnvEntityEnabled && isEmptyServiceConfigPath(stage)
+}
+export enum ExecutionType {
+  BASIC = 'Basic',
+  CANARY = 'Canary',
+  ROLLING = 'Rolling',
+  GITOPS = 'GitOps'
+}
+
+export const isNewEnvInfraDef = (isSvcEnvEntityEnabled: boolean, stage: DeploymentStageElementConfig): boolean => {
+  return isSvcEnvEntityEnabled && isEmptyInfraPath(stage)
 }

@@ -21,7 +21,21 @@ export const getCustomApprovalEditModeProps = (): CustomApprovalInputSetStepProp
       scriptTimeout: '2m',
       retryInterval: '20s',
       approvalCriteria: getDefaultCriterias(),
-      rejectionCriteria: getDefaultCriterias()
+      rejectionCriteria: getDefaultCriterias(),
+      outputVariables: [
+        {
+          name: 'testOutput1',
+          type: 'String',
+          value: 'someVal1',
+          id: 'id1'
+        },
+        {
+          name: 'testOutput2',
+          type: 'String',
+          value: 'someVal2',
+          id: 'id2'
+        }
+      ]
     }
   },
   onUpdate: jest.fn(),
@@ -41,7 +55,21 @@ export const getCustomApprovalDeploymentModeProps = (): CustomApprovalInputSetSt
       onDelegate: true,
       shell: 'Bash',
       scriptTimeout: '2m',
-      retryInterval: '20s'
+      retryInterval: '20s',
+      outputVariables: [
+        {
+          name: 'testOutput1',
+          type: 'String',
+          value: 'someVal1',
+          id: 'id1'
+        },
+        {
+          name: 'testOutput2',
+          type: 'String',
+          value: 'someVal2',
+          id: 'id2'
+        }
+      ]
     }
   },
   onUpdate: jest.fn(),
@@ -76,7 +104,26 @@ export const getCustomApprovalInputVariableModeProps = () => ({
       timeout: 'step-timeout',
       spec: {
         scriptTimeout: '2m',
-        retryInterval: '20s'
+        retryInterval: '20s',
+        source: {
+          spec: {
+            script: 'hello'
+          }
+        },
+        outputVariables: [
+          {
+            name: 'testOutput1',
+            type: 'String',
+            value: 'someVal1'
+          }
+        ],
+        environmentVariables: [
+          {
+            name: 'testInput1',
+            type: 'String',
+            value: 'someVal3'
+          }
+        ]
       }
     }
   },

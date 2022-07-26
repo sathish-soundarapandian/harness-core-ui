@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { IconName, SelectOption, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { IconName, SelectOption, getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { connect, FormikErrors, yupToFormErrors } from 'formik'
 import { isArray, isEmpty } from 'lodash-es'
@@ -50,7 +50,7 @@ export interface JenkinsStepProps {
   stepViewType: StepViewType
   onUpdate?: (data: JenkinsStepData) => void
   onChange?: (data: JenkinsStepData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   formik?: any
 }
 

@@ -46,13 +46,15 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
 
   const {
     state: {
+      templateServiceData,
       selectionState: { selectedStageId }
     },
     getStageFromPipeline
   } = usePipelineContext()
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
-  const selectedDeploymentType = deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating)
+  const selectedDeploymentType =
+    deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating, templateServiceData)
 
   return (
     <div className={css.serviceDefinition}>
@@ -77,7 +79,6 @@ const KubernetesServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> =
               readonly={!!readonly}
             />
           </Card>
-
           <Card
             className={css.sectionCard}
             id={getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}

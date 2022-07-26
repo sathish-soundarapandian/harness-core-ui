@@ -4,7 +4,6 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
 import React, { useEffect, useState, useMemo, useReducer } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import {
@@ -19,9 +18,11 @@ import {
   FlexExpander,
   Container,
   Heading,
-  HarnessDocTooltip
+  HarnessDocTooltip,
+  SelectOption
 } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
+import { filter, isEmpty, compact, values } from 'lodash-es'
 import slosEmptyState from '@cv/assets/slosEmptyState.svg'
 import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
@@ -59,7 +60,9 @@ import {
   getUserJourneyParams,
   getMonitoredServicesInitialState,
   getInitialFilterState,
-  getClassNameForMonitoredServicePage
+  getClassNameForMonitoredServicePage,
+  isSLOFilterApplied,
+  getServiceTitle
 } from './CVSLOListingPage.utils'
 import SLODashbordFilters from './components/SLODashbordFilters/SLODashbordFilters'
 import SLOCardHeader from './SLOCard/SLOCardHeader'
@@ -70,10 +73,9 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
   const history = useHistory()
   const { getString } = useStrings()
 
-  useDocumentTitle([
-    getString('cv.srmTitle'),
-    monitoredService?.identifier ? getString('cv.monitoredServices.title') : getString('cv.slos.title')
-  ])
+  const monitoredServiceIdentifier = useMemo(() => monitoredService?.identifier, [monitoredService?.identifier])
+
+  useDocumentTitle([getString('cv.srmTitle'), getServiceTitle(getString, monitoredServiceIdentifier)])
 
   const { showError, showSuccess } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -83,7 +85,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
   )
 
   useEffect(() => {
-    if (monitoredService?.identifier) {
+    if (monitoredService && monitoredServiceIdentifier) {
       dispatch(SLODashboardFilterActions.updateMonitoredServices(getMonitoredServicesInitialState(monitoredService)))
     }
   }, [monitoredService])
@@ -185,10 +187,10 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
       onClick={() => {
         history.push({
           pathname: routes.toCVCreateSLOs({ accountId, orgIdentifier, projectIdentifier, module: 'cv' }),
-          search: monitoredService?.identifier ? `?monitoredServiceIdentifier=${monitoredService.identifier}` : ''
+          search: monitoredServiceIdentifier ? `?monitoredServiceIdentifier=${monitoredServiceIdentifier}` : ''
         })
       }}
-      className={getClassNameForMonitoredServicePage(css.createSloInMonitoredService, monitoredService?.identifier)}
+      className={getClassNameForMonitoredServicePage(css.createSloInMonitoredService, monitoredServiceIdentifier)}
       permission={{
         permission: PermissionIdentifier.EDIT_SLO_SERVICE,
         resource: {
@@ -214,9 +216,13 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     [userJourneysData, monitoredServicesData]
   )
 
+  const hasSloFilterApplied = useMemo(
+    () => isSLOFilterApplied(getString, filterState) || !!riskCountResponse?.data?.totalCount,
+    [isSLOFilterApplied(getString, filterState), riskCountResponse?.data?.totalCount]
+  )
   return (
     <>
-      {!monitoredService?.identifier && (
+      {!monitoredServiceIdentifier && hasSloFilterApplied && (
         <>
           <Page.Header
             breadcrumbs={<NGBreadcrumbs />}
@@ -258,35 +264,48 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
             refetchRiskCount()
           }
         }}
+        noData={{
+          when: () => !isSLOFilterApplied(getString, filterState) && !riskCountResponse?.data?.totalCount,
+          messageTitle: getString('cv.slos.noData'),
+          message: getString('cv.slos.noSLOsStateMessage'),
+          button: getAddSLOButton(),
+          image: slosEmptyState
+        }}
         className={css.pageBody}
       >
         <Layout.Vertical height="100%" padding={{ top: 'medium', left: 'xlarge', right: 'xlarge', bottom: 'xlarge' }}>
           <Layout.Horizontal className={css.sloFiltersRow1}>
-            {monitoredService?.identifier && getAddSLOButton()}
-            <Container
-              className={getClassNameForMonitoredServicePage(css.sloDropdownFilters, monitoredService?.identifier)}
-            >
-              <SLODashbordFilters
-                filterState={filterState}
-                dispatch={dispatch}
-                filterItemsData={filterItemsData}
-                hideMonitoresServicesFilter={Boolean(monitoredService)}
-              />
-            </Container>
-          </Layout.Horizontal>
-          <CardSelect<SLORiskFilter>
-            type={CardSelectType.CardView}
-            data={getSLORiskTypeFilter(
-              getString,
-              riskCountResponse?.data?.riskCounts as RiskCount[] | undefined,
-              riskCountResponse?.data?.totalCount
+            {monitoredServiceIdentifier && getAddSLOButton()}
+            {hasSloFilterApplied && (
+              <Container
+                className={getClassNameForMonitoredServicePage(css.sloDropdownFilters, monitoredServiceIdentifier)}
+              >
+                <SLODashbordFilters
+                  filterState={filterState}
+                  dispatch={dispatch}
+                  filterItemsData={filterItemsData}
+                  hideMonitoresServicesFilter={Boolean(monitoredService)}
+                />
+              </Container>
             )}
-            cardClassName={css.sloRiskFilterCard}
-            renderItem={({ ...props }) => <SLOCardSelect key={props.identifier} {...props} />}
-            selected={filterState.sloRiskFilter as SLORiskFilter}
-            onChange={onFilter}
-          />
-          <hr />
+          </Layout.Horizontal>
+          {hasSloFilterApplied && (
+            <>
+              <CardSelect<SLORiskFilter>
+                type={CardSelectType.CardView}
+                data={getSLORiskTypeFilter(
+                  getString,
+                  riskCountResponse?.data?.riskCounts as RiskCount[] | undefined,
+                  riskCountResponse?.data?.totalCount
+                )}
+                cardClassName={css.sloRiskFilterCard}
+                renderItem={({ ...props }) => <SLOCardSelect key={props.identifier} {...props} />}
+                selected={filterState.sloRiskFilter as SLORiskFilter}
+                onChange={onFilter}
+              />
+              <hr />
+            </>
+          )}
           {!!content?.length && (
             <>
               <div className={css.sloCardContainer} data-testid="slo-card-container">
@@ -296,7 +315,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
                       onDelete={onDelete}
                       onResetErrorBudget={onResetErrorBudget}
                       serviceLevelObjective={serviceLevelObjective}
-                      monitoredServiceIdentifier={monitoredService?.identifier}
+                      monitoredServiceIdentifier={monitoredServiceIdentifier}
                     />
                     <SLOCardContent serviceLevelObjective={serviceLevelObjective} />
                   </Card>
@@ -314,7 +333,19 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
           )}
 
           {getIsWidgetDataEmpty(content?.length, dashboardWidgetsLoading) && (
-            <NoDataCard image={slosEmptyState} message={getString('cv.slos.noMatchingData')} />
+            <NoDataCard
+              image={slosEmptyState}
+              messageTitle={
+                monitoredServiceIdentifier
+                  ? getString('cv.slos.noDataMS')
+                  : !riskCountResponse?.data?.riskCounts ||
+                    isEmpty(filter(compact(values(filterState)), ({ label }: SelectOption) => label !== 'All'))
+                  ? getString('cv.slos.noData')
+                  : getString('cv.slos.noMatchingData')
+              }
+              message={getString('cv.slos.noSLOsStateMessage')}
+              className={css.noSloData}
+            />
           )}
         </Layout.Vertical>
       </Page.Body>

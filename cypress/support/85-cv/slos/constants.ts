@@ -243,7 +243,7 @@ export const getTwoSLODashboardWidgets = {
 export const getSLORiskCountResponse = {
   status: 'SUCCESS',
   data: {
-    totalCount: 1,
+    totalCount: 0,
     riskCounts: [
       {
         count: 1,

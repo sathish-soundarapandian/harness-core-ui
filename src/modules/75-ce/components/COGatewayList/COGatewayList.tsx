@@ -206,13 +206,14 @@ function NameCell(tableProps: CellProps<Service>): JSX.Element {
   )
 }
 
-function SavingsCell(tableProps: CellProps<Service>): JSX.Element {
+function SavingsCell(tableProps: CellProps<Service>, mode: RulesMode): JSX.Element {
   const { accountId } = useParams<AccountPathProps>()
   const { data, loading: savingsLoading } = useSavingsOfService({
     account_id: accountId,
     rule_id: tableProps.row.original.id as number,
     queryParams: {
-      accountIdentifier: accountId
+      accountIdentifier: accountId,
+      dry_run: mode === RulesMode.DRY
     }
   })
   return (
@@ -561,7 +562,7 @@ const EmptyListPage: React.FC<EmptyListPageProps> = () => {
   const history = useHistory()
   const { trackEvent } = useTelemetry()
   return (
-    <Container background={Color.WHITE} height="100vh">
+    <Container background={Color.WHITE}>
       <NGBreadcrumbs
         links={[
           {
@@ -734,7 +735,7 @@ const RulesTableContainer: React.FC<RulesTableContainerProps> = ({
     rules,
     onRuleUpdate: ({ updatedService, index }) => {
       const updatedRules = [...rules]
-      const updatedIndex = pageProps.pageIndex * TOTAL_ITEMS_PER_PAGE + index
+      const updatedIndex = (pageProps.pageIndex - 1) * TOTAL_ITEMS_PER_PAGE + index
       updatedRules.splice(updatedIndex, 1, updatedService)
       setRules(updatedRules)
     }
@@ -793,7 +794,7 @@ const RulesTableContainer: React.FC<RulesTableContainerProps> = ({
           </Text>
         ),
         width: '20%',
-        Cell: SavingsCell,
+        Cell: tableData => SavingsCell(tableData, mode),
         serverSortProps: getServerSortProps({
           enableServerSort: true,
           accessor: 'savings',
@@ -1139,7 +1140,7 @@ const COGatewayList: React.FC = () => {
   // Render page loader for initial loading of the page
   if (isLoadingPage) {
     return (
-      <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
+      <div className={css.loaderContainer}>
         <PageSpinner />
       </div>
     )
@@ -1157,7 +1158,7 @@ const COGatewayList: React.FC = () => {
   // without search - data is available
   // with search - data is available or unavailable
   return (
-    <Container background={Color.WHITE} height="100vh">
+    <Container background={Color.WHITE}>
       <PageHeader
         title={
           <Layout.Horizontal flex={{ alignItems: 'center' }}>
@@ -1194,6 +1195,7 @@ const COGatewayList: React.FC = () => {
           handleServiceToggle={onServiceStateToggle}
           handleServiceDeletion={onServiceDeletion}
           handleServiceEdit={handleServiceEdit}
+          mode={mode.value}
         />
       </Drawer>
       <>

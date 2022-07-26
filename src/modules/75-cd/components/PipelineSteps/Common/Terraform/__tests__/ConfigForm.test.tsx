@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import TFPlanConfigForm from '../Editview/ConfigForm'
 
@@ -15,7 +15,11 @@ const props = {
   onClick: jest.fn(),
   data: {},
   onHide: jest.fn(),
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.EXPRESSION,
+    MultiTypeInputType.RUNTIME
+  ] as AllowedTypesWithRunTime[]
 }
 
 const connectorMock = {
@@ -90,7 +94,11 @@ describe('TF Config Form tests', () => {
         }
       },
       onHide: () => jest.fn(),
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.EXPRESSION,
+        MultiTypeInputType.RUNTIME
+      ] as AllowedTypesWithRunTime[]
     }
 
     const { container } = render(
@@ -130,7 +138,11 @@ describe('TF Config Form tests', () => {
         }
       },
       onHide: () => jest.fn(),
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.EXPRESSION,
+        MultiTypeInputType.RUNTIME
+      ] as AllowedTypesWithRunTime[]
     }
 
     const { container } = render(

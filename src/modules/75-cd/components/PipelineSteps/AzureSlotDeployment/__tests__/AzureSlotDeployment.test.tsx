@@ -50,6 +50,14 @@ describe('Azure Slot Deployment step', () => {
     act(() => userEvent.type(timeout!, '10s'))
     expect(timeout).toHaveDisplayValue('10s')
 
+    const webApp = getByPlaceholderText('Specify web app name')
+    act(() => userEvent.type(webApp!, 'New azure web App Name'))
+    expect(webApp).toHaveDisplayValue('New azure web App Name')
+
+    const deploymentSlot = getByPlaceholderText('Specify deployment slot')
+    act(() => userEvent.type(deploymentSlot!, 'New azure deployment Slot'))
+    expect(deploymentSlot).toHaveDisplayValue('New azure deployment Slot')
+
     await act(() => ref.current?.submitForm()!)
 
     expect(onUpdate).toHaveBeenCalled()
@@ -62,7 +70,11 @@ describe('Azure Slot Deployment step', () => {
           type: 'AzureSlotDeployment',
           name: 'AzureSlot test',
           identifier: 'Test_A',
-          timeout: '10m'
+          timeout: '10m',
+          spec: {
+            webApp: 'WebApp_test',
+            deploymentSlot: 'DeplpymentSlot_test'
+          }
         }}
         type={StepType.AzureSlotDeployment}
         stepViewType={StepViewType.Edit}
@@ -79,7 +91,11 @@ describe('Azure Slot Deployment step', () => {
           type: 'AzureSlotDeployment',
           name: 'AzureSlot test',
           identifier: 'Test_A',
-          timeout: '<+input>'
+          timeout: '<+input>',
+          spec: {
+            webApp: '<+input>',
+            deploymentSlot: '<+input>'
+          }
         }}
         type={StepType.AzureSlotDeployment}
         stepViewType={StepViewType.Edit}
@@ -97,13 +113,21 @@ describe('Azure Slot Deployment step', () => {
         template={{
           identifier: 'AzureSlot_test',
           type: 'AzureSlotDeployment',
-          timeout: RUNTIME_INPUT_VALUE
+          timeout: RUNTIME_INPUT_VALUE,
+          spec: {
+            webApp: RUNTIME_INPUT_VALUE,
+            deploymentSlot: RUNTIME_INPUT_VALUE
+          }
         }}
         allValues={{
           type: 'AzureSlotDeployment',
           name: 'AzureSlot test',
           identifier: 'AzureSlot_test',
-          timeout: '<+input>'
+          timeout: '<+input>',
+          spec: {
+            webApp: '<+input>',
+            deploymentSlot: '<+input>'
+          }
         }}
         type={StepType.AzureSlotDeployment}
         stepViewType={StepViewType.InputSet}

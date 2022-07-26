@@ -45,6 +45,8 @@ describe('<HarnessApprovalTab /> tests', () => {
       approvalInstanceId: 'TEST_ID',
       approvalData: approvalData as any,
       updateState: jest.fn(),
+      startTs: 1655277571886,
+      endTs: 1655277693176,
       authData: null
     }
 

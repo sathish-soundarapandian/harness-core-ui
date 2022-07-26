@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, queryByAttribute, fireEvent, act } from '@testing-library/react'
+import { render, queryByAttribute, fireEvent, act, waitFor } from '@testing-library/react'
 import { Provider } from 'urql'
 import { fromValue } from 'wonka'
 import type { DocumentNode } from 'graphql'
@@ -15,6 +15,7 @@ import { FetchAllPerspectivesDocument } from 'services/ce/services'
 import PerspectiveListPage from '../PerspectiveListPage'
 import FoldersData from './FoldersData.json'
 import ResponseData from './ResponseData.json'
+import CreatePerspectiveResponse from './CreatePerspectiveResponse.json'
 
 const params = {
   accountId: 'TEST_ACC'
@@ -33,7 +34,7 @@ jest.mock('services/ce', () => ({
     mutate: async () => {
       return {
         status: 'SUCCESS',
-        data: {}
+        data: CreatePerspectiveResponse
       }
     }
   })),
@@ -109,5 +110,27 @@ describe('test cases for Perspective details Page', () => {
       fireEvent.click(listIcon!)
     })
     expect(container).toMatchSnapshot()
+  })
+
+  test('should be able navigate to create perspective page', async () => {
+    const responseState = {
+      executeQuery: ({ query }: { query: DocumentNode }) => {
+        if (query === FetchAllPerspectivesDocument) {
+          return fromValue(ResponseData)
+        }
+      }
+    }
+    const { getByText, getByTestId } = render(
+      <TestWrapper path="account/:accountId/ce/perspectives" pathParams={params}>
+        <Provider value={responseState as any}>
+          <PerspectiveListPage />
+        </Provider>
+      </TestWrapper>
+    )
+
+    fireEvent.click(getByText('ce.perspectives.newPerspective'))
+
+    await waitFor(() => getByTestId('location'))
+    expect(getByTestId('location')).toHaveTextContent('/account/TEST_ACC/ce/perspectives/mock_id/create')
   })
 })

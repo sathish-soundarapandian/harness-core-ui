@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { PipelineContextInterface } from '../../PipelineContext/PipelineContext'
 
@@ -176,13 +176,18 @@ const stateMock = {
     selectedStepId: 'step1'
   },
   templateTypes: {},
+  templateServiceData: {},
   error: ''
 }
 
 const pipelineContextMock: PipelineContextInterface = {
   state: stateMock as any,
   contextType: 'Pipeline',
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   stepsFactory: {
     getStep: (type: string) => {
       switch (type) {
@@ -239,7 +244,8 @@ const pipelineContextMock: PipelineContextInterface = {
   setSelectedSectionId: (_selectedSectionId: string | undefined) => undefined,
   setSelection: jest.fn(),
   getStagePathFromPipeline: () => '',
-  setTemplateTypes: jest.fn()
+  setTemplateTypes: jest.fn(),
+  setTemplateServiceData: jest.fn()
 }
 
 export const updateStageFnArg1 = {

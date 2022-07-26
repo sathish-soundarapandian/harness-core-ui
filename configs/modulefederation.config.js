@@ -42,6 +42,7 @@ module.exports = ({ enableGitOpsUI, enableSTO, enableChaosUI, enableCCMUI }) => 
 
   if (enableSTO) {
     remotes.sto = "sto@[window.getApiBaseUrl('sto/remoteEntry.js')]"
+    remotes.stoV2 = "stoV2@[window.getApiBaseUrl('sto/v2/remoteEntry.js')]"
   }
 
   if (enableChaosUI) {
@@ -55,17 +56,10 @@ module.exports = ({ enableGitOpsUI, enableSTO, enableChaosUI, enableCCMUI }) => 
   }
 
   const shared = {
-    '@harness/uicore': packageJSON.dependencies['@harness/uicore'],
     ...mapValues(pick(packageJSON.dependencies, ExactSharedPackages), version => ({
       singleton: true,
       requiredVersion: version
     }))
-  }
-
-  if (process.env.NODE_ENV === 'development' && packageJSON.dependencies['@harness/uicore']?.includes('yalc')) {
-    shared['@harness/uicore'] = {
-      requiredVersion: packageJSON.dependencies['@harness/uicore']
-    }
   }
 
   return {

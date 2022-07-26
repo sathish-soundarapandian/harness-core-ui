@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { IconName, MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@wings-software/uicore'
 import type { FormikErrors } from 'formik'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -82,7 +82,7 @@ export interface GCRStepProps {
   stepViewType: StepViewType
   onUpdate?: (data: GCRStepData) => void
   onChange?: (data: GCRStepData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   formik?: any
 }
 

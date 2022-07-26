@@ -6,6 +6,7 @@
  */
 
 import { isEmpty } from 'lodash-es'
+import { getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import type {
   DatadogAggregationType,
   DatadogMetricInfo,
@@ -54,7 +55,7 @@ export function mapDatadogMetricHealthSourceToDatadogMetricSetupSource(sourceDat
     isEdit: sourceData.isEdit,
     healthSourceName: sourceData.healthSourceName,
     healthSourceIdentifier: sourceData.healthSourceIdentifier,
-    connectorRef: sourceData.connectorRef,
+    connectorRef: sourceData.connectorRef?.value || sourceData.connectorRef,
     product: sourceData.product
   }
 
@@ -119,6 +120,14 @@ export function mapDatadogMetricHealthSourceToDatadogMetricSetupSource(sourceDat
   return setupSource
 }
 
+export const getServiceInstanceByValueType = (metricInfo: {
+  serviceInstanceIdentifierTag?: string | SelectOption
+}): string => {
+  return typeof metricInfo.serviceInstanceIdentifierTag === 'string'
+    ? metricInfo.serviceInstanceIdentifierTag || ''
+    : (metricInfo.serviceInstanceIdentifierTag?.value as string) || ''
+}
+
 export function mapDatadogMetricSetupSourceToDatadogHealthSource(
   setupSource: DatadogMetricSetupSource
 ): UpdatedHealthSource {
@@ -127,7 +136,8 @@ export function mapDatadogMetricSetupSourceToDatadogHealthSource(
     identifier: setupSource.healthSourceIdentifier,
     name: setupSource.healthSourceName,
     spec: {
-      connectorRef: setupSource.connectorRef,
+      connectorRef:
+        typeof setupSource.connectorRef === 'string' ? setupSource.connectorRef : setupSource.connectorRef?.value,
       feature: DatadogProduct.CLOUD_METRICS,
       metricDefinitions: []
     }
@@ -166,7 +176,7 @@ export function mapDatadogMetricSetupSourceToDatadogHealthSource(
       aggregation: metricInfo.aggregator,
       isManualQuery: metricInfo.isManualQuery,
       isCustomCreatedMetric: metricInfo.isCustomCreatedMetric,
-      serviceInstanceIdentifierTag: metricInfo.serviceInstanceIdentifierTag,
+      serviceInstanceIdentifierTag: getServiceInstanceByValueType(metricInfo),
       groupingQuery: metricInfo.groupingQuery,
       query: metricInfo.query,
       sli: { enabled: Boolean(metricInfo.sli) },
@@ -175,7 +185,7 @@ export function mapDatadogMetricSetupSourceToDatadogHealthSource(
         liveMonitoring: { enabled: metricInfo?.healthScore || false },
         deploymentVerification: {
           enabled: metricInfo?.continuousVerification || false,
-          serviceInstanceFieldName: metricInfo?.serviceInstanceIdentifierTag || ''
+          serviceInstanceFieldName: getServiceInstanceByValueType(metricInfo)
         }
       }
     } as DatadogMetricHealthDefinition)
@@ -209,7 +219,10 @@ export function validateFormMappings(
 
   if (!values?.query?.length) {
     errors.query = getString('cv.monitoringSources.gco.manualInputQueryModal.validation.query')
-  } else if (!values?.query?.includes(QUERY_CONTAINS_VALIDATION_PARAM)) {
+  } else if (
+    getMultiTypeFromValue(values?.query) === MultiTypeInputType.FIXED &&
+    !values?.query?.includes(QUERY_CONTAINS_VALIDATION_PARAM)
+  ) {
     errors.query = `${getString(
       'cv.monitoringSources.datadog.validation.queryContains'
     )}${QUERY_CONTAINS_VALIDATION_PARAM}`
@@ -257,7 +270,7 @@ export function validateFormMappings(
   if (!values.metricName?.length) {
     errors[DatadogMetricsHealthSourceFieldNames.METRIC_NAME] = getString('cv.monitoringSources.metricNameValidation')
   }
-  if (!values.metric?.length) {
+  if (!values.metric?.length && getMultiTypeFromValue(values.query) === MultiTypeInputType.FIXED) {
     errors[DatadogMetricsHealthSourceFieldNames.METRIC] = getString('cv.monitoringSources.metricValidation')
   }
   if (!values.groupName?.label?.length) {
@@ -343,7 +356,8 @@ function generateMetricPath(dashboardId: string, dashboardDetail: DatadogDashboa
 export function mapSelectedWidgetDataToDatadogMetricInfo(
   selectedWidgetMetricData: SelectedWidgetMetricData,
   query: string,
-  activeMetrics: string[]
+  activeMetrics: string[],
+  isTemplate = false
 ): DatadogMetricInfo {
   const queryExtractor = DatadogMetricsQueryExtractor(query, activeMetrics || [])
   const queryBuilder = DatadogMetricsQueryBuilder(
@@ -360,6 +374,7 @@ export function mapSelectedWidgetDataToDatadogMetricInfo(
     aggregator: queryExtractor.aggregation,
     metricTags: queryExtractor.metricTags,
     query: queryBuilder.query || query,
+    isManualQuery: isTemplate,
     isCustomCreatedMetric: selectedWidgetMetricData.query === MANUAL_INPUT_QUERY,
     groupName: selectedWidgetMetricData?.dashboardTitle
       ? {

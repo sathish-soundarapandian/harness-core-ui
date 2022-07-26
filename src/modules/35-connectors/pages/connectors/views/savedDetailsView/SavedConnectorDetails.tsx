@@ -426,6 +426,10 @@ const getVaultSchema = (
       value: data.readOnly
     },
     {
+      label: 'connectors.hashiCorpVault.k8sAuthEndpoint',
+      value: data.k8sAuthEndpoint
+    },
+    {
       label: 'connectors.hashiCorpVault.serviceAccountTokenPath',
       value: data.serviceAccountTokenPath
     },

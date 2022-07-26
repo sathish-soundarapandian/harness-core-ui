@@ -20,6 +20,7 @@ import {
   Formik,
   MultiTypeInputType,
   getMultiTypeFromValue,
+  AllowedTypes as MultiTypeAllowedTypes,
   FormInput,
   Icon
 } from '@harness/uicore'
@@ -33,7 +34,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../../CloudFormation.module.scss'
 
 interface StepTwoProps {
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: MultiTypeAllowedTypes
   initialValues: any
   onSubmit: (values: any, prevStepData: any) => void
   index?: number
@@ -156,7 +157,11 @@ const StepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
                   <MultiTypeFieldSelector
                     name={name}
                     style={{ width: 370 }}
-                    allowedTypes={allowableTypes.filter(item => item !== MultiTypeInputType.EXPRESSION)}
+                    allowedTypes={
+                      (allowableTypes as MultiTypeInputType[]).filter(
+                        item => item !== MultiTypeInputType.EXPRESSION
+                      ) as MultiTypeAllowedTypes
+                    }
                     label={<Text flex={{ inline: true }}>{templateTitle}</Text>}
                   >
                     {!isNumber(index) ? (
@@ -165,7 +170,9 @@ const StepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
                         label=""
                         multiTextInputProps={{
                           expressions,
-                          allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME)
+                          allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                            item => item !== MultiTypeInputType.RUNTIME
+                          ) as MultiTypeAllowedTypes
                         }}
                       />
                     ) : (
@@ -204,7 +211,9 @@ const StepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
                                     label=""
                                     multiTextInputProps={{
                                       expressions,
-                                      allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME)
+                                      allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                        item => item !== MultiTypeInputType.RUNTIME
+                                      ) as MultiTypeAllowedTypes
                                     }}
                                     style={{ width: 320 }}
                                   />

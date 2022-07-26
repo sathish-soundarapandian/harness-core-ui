@@ -20,6 +20,7 @@ declare const styles: {
   readonly configTab: string
   readonly dependencyTable: string
   readonly displayCard: string
+  readonly drawerContainer: string
   readonly formElement: string
   readonly gatewayConfigForm: string
   readonly heading: string

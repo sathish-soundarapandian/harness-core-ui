@@ -545,6 +545,7 @@ export interface RoutingData {
     RuleJson?: string
   }
   lb?: string
+  override_dns_record?: boolean
   ports?: PortConfig[]
 }
 
@@ -870,6 +871,22 @@ export interface UpdateRuleFilterBody {
   type?: FilterType
 }
 
+export interface ValidateCustomDomainsBody {
+  access_point_id?: string
+  cloud_account_id?: string
+  custom_domain_providers?: {
+    route53?: {
+      hosted_zone_id?: string
+    }
+  }
+  custom_domains?: string[]
+  exclude_list?: string[]
+}
+
+export interface ValidateCustomDomainsResponse {
+  response?: { [key: string]: any }
+}
+
 export interface ValidateSchedulesBody {
   /**
    * List of static schedules
@@ -931,6 +948,7 @@ export interface ListAccessPointsQueryParams {
   region?: string
   cloud_account_id: string
   accountIdentifier: string
+  subnet?: string
 }
 
 export interface ListAccessPointsPathParams {
@@ -1164,6 +1182,7 @@ export interface AccessPointResourcesQueryParams {
   accountIdentifier: string
   service?: string
   cluster?: string
+  subnet?: string
 }
 
 export interface AccessPointResourcesPathParams {
@@ -1644,6 +1663,77 @@ export const useCumulativeServiceSavingsV2 = ({ account_id, ...props }: UseCumul
     { base: getConfig('lw/api'), pathParams: { account_id }, ...props }
   )
 
+export interface ValidateCustomDomainsQueryParams {
+  accountIdentifier: string
+}
+
+export interface ValidateCustomDomainsPathParams {
+  account_id: string
+}
+
+export type ValidateCustomDomainsProps = Omit<
+  MutateProps<
+    RulesMetadataResponse,
+    unknown,
+    ValidateCustomDomainsQueryParams,
+    ValidateCustomDomainsBody,
+    ValidateCustomDomainsPathParams
+  >,
+  'path' | 'verb'
+> &
+  ValidateCustomDomainsPathParams
+
+/**
+ * Validates custom domains against route53 entries
+ *
+ * Validates custom domains against route53 entries
+ */
+export const ValidateCustomDomains = ({ account_id, ...props }: ValidateCustomDomainsProps) => (
+  <Mutate<
+    RulesMetadataResponse,
+    unknown,
+    ValidateCustomDomainsQueryParams,
+    ValidateCustomDomainsBody,
+    ValidateCustomDomainsPathParams
+  >
+    verb="POST"
+    path={`/accounts/${account_id}/autostopping/rules/validate_custom_domain`}
+    base={getConfig('lw/api')}
+    {...props}
+  />
+)
+
+export type UseValidateCustomDomainsProps = Omit<
+  UseMutateProps<
+    RulesMetadataResponse,
+    unknown,
+    ValidateCustomDomainsQueryParams,
+    ValidateCustomDomainsBody,
+    ValidateCustomDomainsPathParams
+  >,
+  'path' | 'verb'
+> &
+  ValidateCustomDomainsPathParams
+
+/**
+ * Validates custom domains against route53 entries
+ *
+ * Validates custom domains against route53 entries
+ */
+export const useValidateCustomDomains = ({ account_id, ...props }: UseValidateCustomDomainsProps) =>
+  useMutate<
+    RulesMetadataResponse,
+    unknown,
+    ValidateCustomDomainsQueryParams,
+    ValidateCustomDomainsBody,
+    ValidateCustomDomainsPathParams
+  >(
+    'POST',
+    (paramsInPath: ValidateCustomDomainsPathParams) =>
+      `/accounts/${paramsInPath.account_id}/autostopping/rules/validate_custom_domain`,
+    { base: getConfig('lw/api'), pathParams: { account_id }, ...props }
+  )
+
 export interface DeleteServiceQueryParams {
   accountIdentifier: string
 }
@@ -1977,6 +2067,7 @@ export interface SavingsOfServiceQueryParams {
   from?: string
   to?: string
   group_by?: string
+  dry_run?: boolean
 }
 
 export interface SavingsOfServicePathParams {

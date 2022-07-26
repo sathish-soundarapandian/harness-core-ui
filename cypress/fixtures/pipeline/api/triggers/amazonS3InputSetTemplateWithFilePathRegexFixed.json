@@ -1,0 +1,10 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "inputSetTemplateYaml": "pipeline:\n  identifier: \"testPipeline_Cypress\"\n  stages:\n  - stage:\n      identifier: \"amazons3Test\"\n      type: \"Deployment\"\n      spec:\n        serviceConfig:\n          serviceDefinition:\n            type: \"ServerlessAwsLambda\"\n            spec:\n              artifacts:\n                primary:\n                  type: \"AmazonS3\"\n                  spec:\n                    bucketName: \"<+input>\"\n",
+    "modules": ["cd", "pms"],
+    "hasInputSets": false
+  },
+  "metaData": null,
+  "correlationId": "4037a7bc-cdef-4829-865a-c71640a48373"
+}

@@ -92,7 +92,6 @@ const ServiceHealthAndConfiguration: React.FC = () => {
       noData={{
         when: () => !monitoredService
       }}
-      className={css.pageBody}
     >
       <ServiceHealth
         hasChangeSource={!!monitoredService?.sources?.changeSources?.length}
@@ -109,7 +108,6 @@ const ServiceHealthAndConfiguration: React.FC = () => {
       noData={{
         when: () => !monitoredService
       }}
-      className={css.pageBody}
     >
       <CVSLOsListingPage monitoredService={monitoredService} />
     </Page.Body>
@@ -121,7 +119,6 @@ const ServiceHealthAndConfiguration: React.FC = () => {
       noData={{
         when: () => !monitoredService
       }}
-      className={css.pageBody}
     >
       <Configurations />
     </Page.Body>

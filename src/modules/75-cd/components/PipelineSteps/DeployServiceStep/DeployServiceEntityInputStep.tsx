@@ -14,6 +14,7 @@ import {
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
+  RUNTIME_INPUT_VALUE,
   useToaster
 } from '@harness/uicore'
 import { defaultTo, get, isEmpty } from 'lodash-es'
@@ -57,7 +58,8 @@ function DeployServiceEntityInputStep({
   const { expressions } = useVariablesExpression()
   const { showError, clear } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const { template, updateTemplate } = useRunPipelineFormContext()
+  const { template: getTemplate, updateTemplate } = useRunPipelineFormContext()
+  const isStageTemplateInputSetForm = inputSetData?.path?.startsWith('template.templateInputs')
   const { accountId, projectIdentifier, orgIdentifier } = useParams<
     PipelineType<{
       orgIdentifier: string
@@ -110,10 +112,11 @@ function DeployServiceEntityInputStep({
   }))
 
   useEffect(() => {
-    if (initialValues.serviceRef) {
-      const serviceInputsTemplate = get(template, `${inputSetData?.path}.serviceInputs`)
+    if (initialValues.serviceRef && inputSetData?.path) {
+      const serviceInputsTemplate = getTemplate(`${inputSetData?.path}.serviceInputs`)
       const serviceInputsFormikValue = get(formik?.values, `${inputSetData?.path}.serviceInputs`)
       if (
+        typeof serviceInputsTemplate === 'string' &&
         getMultiTypeFromValue(serviceInputsTemplate) === MultiTypeInputType.RUNTIME &&
         !isEmpty(serviceInputsFormikValue)
       ) {
@@ -129,23 +132,30 @@ function DeployServiceEntityInputStep({
   }, [])
 
   useEffect(() => {
-    const serviceInputsData = serviceInputsResponse?.data?.inputSetTemplateYaml
-    if (serviceInputsData) {
-      const serviceInputSetResponse = yamlParse<ServiceInputsConfig>(defaultTo(serviceInputsData, ''))
-      if (serviceInputSetResponse) {
-        updateTemplate(serviceInputSetResponse?.serviceInputs, `${inputSetData?.path}.serviceInputs`)
+    if (serviceInputsResponse?.data) {
+      const serviceInputsData = serviceInputsResponse?.data?.inputSetTemplateYaml
+      if (serviceInputsData) {
+        const serviceInputSetResponse = yamlParse<ServiceInputsConfig>(defaultTo(serviceInputsData, ''))
+        if (serviceInputSetResponse) {
+          updateTemplate(serviceInputSetResponse?.serviceInputs, `${inputSetData?.path}.serviceInputs`)
 
-        const serviceInputsFormikValue = get(formik?.values, `${inputSetData?.path}.serviceInputs`)
-        if (isEmpty(serviceInputsFormikValue)) {
-          formik?.setFieldValue(
-            `${inputSetData?.path}.serviceInputs`,
-            clearRuntimeInput(serviceInputSetResponse?.serviceInputs)
-          )
+          const serviceInputsFormikValue = get(formik?.values, `${inputSetData?.path}.serviceInputs`)
+          if (isEmpty(serviceInputsFormikValue)) {
+            formik?.setFieldValue(
+              `${inputSetData?.path}.serviceInputs`,
+              isStageTemplateInputSetForm
+                ? serviceInputSetResponse?.serviceInputs
+                : clearRuntimeInput(serviceInputSetResponse?.serviceInputs)
+            )
+          }
         }
+      } else {
+        updateTemplate({}, `${inputSetData?.path}.serviceInputs`)
+        formik?.setFieldValue(`${inputSetData?.path}`, { serviceRef: initialValues.serviceRef })
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [serviceInputsResponse])
+  }, [serviceInputsResponse?.data])
 
   const onServiceEntityUpdate = (newServiceInfo: ServiceYaml): void => {
     refetchServiceList()
@@ -203,6 +213,31 @@ function DeployServiceEntityInputStep({
     showError(getRBACErrorMessage(error), undefined, 'cd.svc.list.error')
   }
 
+  const onServiceRefChange = (value: any): void => {
+    if (
+      isStageTemplateInputSetForm &&
+      getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME &&
+      inputSetData?.path
+    ) {
+      formik?.setFieldValue(inputSetData.path, {
+        serviceRef: RUNTIME_INPUT_VALUE,
+        serviceInputs: RUNTIME_INPUT_VALUE
+      })
+      return
+    }
+    if (isEmpty(value?.value)) {
+      formik?.setFieldValue(`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}serviceInputs`, {})
+      updateTemplate({}, `${inputSetData?.path}.serviceInputs`)
+    } else {
+      refetchServiceInputs({
+        pathParams: {
+          serviceIdentifier: value.value
+        },
+        queryParams
+      })
+    }
+  }
+
   return (
     <>
       {getMultiTypeFromValue(inputSetData?.template?.serviceRef) === MultiTypeInputType.RUNTIME && (
@@ -221,22 +256,7 @@ function DeployServiceEntityInputStep({
                 addClearBtn: true && !inputSetData?.readonly,
                 items: services
               },
-              onChange: (value: any) => {
-                if (isEmpty(value.value)) {
-                  formik?.setFieldValue(
-                    `${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}serviceInputs`,
-                    {}
-                  )
-                  updateTemplate({}, `${inputSetData?.path}.serviceInputs`)
-                } else {
-                  refetchServiceInputs({
-                    pathParams: {
-                      serviceIdentifier: value.value
-                    },
-                    queryParams
-                  })
-                }
-              }
+              onChange: onServiceRefChange
             }}
             disabled={inputSetData?.readonly}
             className={css.inputWidth}

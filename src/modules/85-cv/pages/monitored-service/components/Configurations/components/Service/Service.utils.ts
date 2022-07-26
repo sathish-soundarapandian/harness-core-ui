@@ -8,6 +8,7 @@
 import type { FormikContextType } from 'formik'
 import { isEqual, omit } from 'lodash-es'
 import type { MonitoredServiceDTO } from 'services/cv'
+import type { NGMonitoredServiceTemplateInfoConfig } from '@cv/components/MonitoredServiceTemplate/components/MonitoredServiceTemplateCanvas.types'
 import { MonitoredServiceType } from './components/MonitoredServiceOverview/MonitoredServiceOverview.constants'
 import type { MonitoredServiceForm } from './Service.types'
 
@@ -16,17 +17,17 @@ export const getInitFormData = (
   defaultMonitoredService: MonitoredServiceDTO | undefined,
   isEdit: boolean,
   isTemplate = false,
-  templateValue?: any
+  templateValue?: NGMonitoredServiceTemplateInfoConfig
 ): MonitoredServiceForm => {
   const monitoredServiceData = isEdit ? data : defaultMonitoredService
 
   if (isTemplate) {
     return {
       isEdit: false,
-      name: templateValue?.name,
-      identifier: templateValue?.identifier,
+      name: templateValue?.name || '',
+      identifier: templateValue?.identifier || '',
       description: '',
-      tags: templateValue?.tags,
+      tags: templateValue?.tags || {},
       serviceRef: templateValue?.spec?.serviceRef,
       type: MonitoredServiceType.APPLICATION as MonitoredServiceForm['type'],
       environmentRef: templateValue?.spec?.environmentRef,
@@ -35,8 +36,8 @@ export const getInitFormData = (
         ? templateValue?.spec?.sources
         : { changeSources: defaultMonitoredService?.sources?.changeSources, ...templateValue?.spec?.sources },
       dependencies: [],
-      ...(templateValue?.spec?.notificationRuleRefs && {
-        notificationRuleRefs: templateValue?.spec?.notificationRuleRefs
+      ...(templateValue?.notificationRuleRefs && {
+        notificationRuleRefs: templateValue?.notificationRuleRefs
       })
     }
   }

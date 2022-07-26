@@ -160,6 +160,10 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   useEffect(() => {
     bind?.(handler)
+
+    return () => {
+      bind?.(undefined)
+    }
   }, [bind, handler])
 
   useEffect(() => {

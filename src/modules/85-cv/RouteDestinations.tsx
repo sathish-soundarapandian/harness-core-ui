@@ -8,7 +8,6 @@
 import React from 'react'
 import { Route, useParams, Redirect } from 'react-router-dom'
 
-import { parse } from 'yaml'
 import CVHomePage from '@cv/pages/home/CVHomePage'
 import { RouteWithLayout } from '@common/router'
 import routes from '@common/RouteDefinitions'
@@ -30,48 +29,50 @@ import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
 import { VariableRouteDestinations } from '@variables/RouteDestinations'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { PubSubPipelineActions } from '@pipeline/factories/PubSubPipelineAction'
-import { PipelineActions } from '@pipeline/factories/PubSubPipelineAction/types'
 import TemplatesPage from '@templates-library/pages/TemplatesPage/TemplatesPage'
 import { TemplateStudioWrapper } from '@templates-library/components/TemplateStudio/TemplateStudioWrapper'
-import { inputSetTemplatePromise } from 'services/cv'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { CVChanges } from '@cv/pages/changes/CVChanges'
 import ConnectorsPage from '@connectors/pages/connectors/ConnectorsPage'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { ResourceType, ResourceCategory } from '@rbac/interfaces/ResourceType'
 import type { ResourceDTO } from 'services/audit'
 import type { ResourceScope } from 'services/cd-ng'
 import AuditTrailFactory from '@audit-trail/factories/AuditTrailFactory'
 import { ErrorTracking } from '@et/ErrorTrackingApp'
+import { String } from 'framework/strings'
+import RbacFactory from '@rbac/factories/RbacFactory'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import ChildAppMounter from '../../microfrontends/ChildAppMounter'
 import CVTrialHomePage from './pages/home/CVTrialHomePage'
-import { editParams, isVerifyStepPresent } from './utils/routeUtils'
+import { editParams } from './utils/routeUtils'
 import CVSLOsListingPage from './pages/slos/CVSLOsListingPage'
 import CVSLODetailsPage from './pages/slos/CVSLODetailsPage/CVSLODetailsPage'
 import CVCreateSLO from './pages/slos/components/CVCreateSLO/CVCreateSLO'
 import { MonitoredServiceProvider } from './pages/monitored-service/MonitoredServiceContext'
 import MonitoredServiceInputSetsTemplate from './pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate'
 
-PubSubPipelineActions.subscribe(
-  PipelineActions.RunPipeline,
-  async ({ template, accountPathProps: accountPathParams, pipeline }) => {
-    let response = { ...template }
-    const payload = { pipelineYaml: yamlStringify({ pipeline }), templateYaml: yamlStringify(template) }
+// PubSubPipelineActions.subscribe(
+//   PipelineActions.RunPipeline,
+//   async ({ template, accountPathProps: accountPathParams, pipeline }) => {
+//     let response = { ...template }
+//     const payload = { pipelineYaml: yamlStringify({ pipeline }), templateYaml: yamlStringify(template) }
 
-    // Making the BE call to get the updated template, only if the stage contains verify step then
-    if (isVerifyStepPresent(pipeline)) {
-      const updatedResponse = await inputSetTemplatePromise({
-        queryParams: { accountId: accountPathParams?.accountId },
-        body: payload
-      })
-      if (updatedResponse?.data?.inputSetTemplateYaml) {
-        response = { ...parse(updatedResponse.data.inputSetTemplateYaml)?.pipeline }
-      }
-    }
-    return Promise.resolve(response)
-  }
-)
+//     // Making the BE call to get the updated template, only if the stage contains verify step then
+//     if (isVerifyStepPresent(pipeline)) {
+//       const updatedResponse = await inputSetTemplatePromise({
+//         queryParams: { accountId: accountPathParams?.accountId },
+//         body: payload
+//       })
+//       if (updatedResponse?.data?.inputSetTemplateYaml) {
+//         response = { ...parse(updatedResponse.data.inputSetTemplateYaml)?.pipeline }
+//       }
+//     }
+//     return Promise.resolve(response)
+//   }
+// )
 
+export const cvModuleParams: ModulePathParams = {
+  module: ':module(cv)'
+}
 const RedirectToCVProject = (): React.ReactElement => {
   const params = useParams<ProjectPathProps>()
   const { selectedProject } = useAppStore()
@@ -79,7 +80,7 @@ const RedirectToCVProject = (): React.ReactElement => {
   if (selectedProject?.modules?.includes(ModuleName.CV)) {
     return (
       <Redirect
-        to={routes.toCVMonitoringServices({
+        to={routes.toCVSLOs({
           accountId: params.accountId,
           orgIdentifier: selectedProject.orgIdentifier || '',
           projectIdentifier: selectedProject.identifier
@@ -89,10 +90,6 @@ const RedirectToCVProject = (): React.ReactElement => {
   } else {
     return <Redirect to={routes.toCVHome(params)} />
   }
-}
-
-export const cvModuleParams: ModulePathParams = {
-  module: ':module(cv)'
 }
 
 const cvLabel = 'common.purpose.cv.serviceReliability'
@@ -135,6 +132,34 @@ AuditTrailFactory.registerResourceHandler(ResourceType.SERVICE_LEVEL_OBJECTIVE, 
       })
     }
     return undefined
+  }
+})
+
+RbacFactory.registerResourceCategory(ResourceCategory.CHANGEINTELLIGENCE_FUNCTION, {
+  icon: 'cv-main',
+  label: 'common.purpose.cv.serviceReliability'
+})
+
+RbacFactory.registerResourceTypeHandler(ResourceType.MONITOREDSERVICE, {
+  icon: 'cv-main',
+  label: 'cv.monitoredServices.title',
+  category: ResourceCategory.CHANGEINTELLIGENCE_FUNCTION,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_MONITORED_SERVICE]: <String stringID="rbac.permissionLabels.view" />,
+    [PermissionIdentifier.EDIT_MONITORED_SERVICE]: <String stringID="rbac.permissionLabels.createEdit" />,
+    [PermissionIdentifier.DELETE_MONITORED_SERVICE]: <String stringID="delete" />,
+    [PermissionIdentifier.TOGGLE_MONITORED_SERVICE]: <String stringID="cf.rbac.featureflag.toggle" />
+  }
+})
+
+RbacFactory.registerResourceTypeHandler(ResourceType.SLO, {
+  icon: 'cv-main',
+  label: 'cv.SLO',
+  category: ResourceCategory.CHANGEINTELLIGENCE_FUNCTION,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_SLO_SERVICE]: <String stringID="rbac.permissionLabels.view" />,
+    [PermissionIdentifier.EDIT_SLO_SERVICE]: <String stringID="rbac.permissionLabels.createEdit" />,
+    [PermissionIdentifier.DELETE_SLO_SERVICE]: <String stringID="delete" />
   }
 })
 

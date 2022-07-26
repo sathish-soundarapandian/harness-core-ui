@@ -111,7 +111,7 @@ function CloudAccountCell(tableProps: CellProps<AccessPoint>): JSX.Element {
 const TableCell: React.FC<CellProps<AccessPoint>> = tableProps => {
   return (
     <div style={{ overflowWrap: 'anywhere', paddingRight: 10 }}>
-      <Text lineClamp={2}>{tableProps.value}</Text>
+      <Text lineClamp={1}>{tableProps.value}</Text>
     </div>
   )
 }
@@ -249,7 +249,7 @@ const COLoadBalancerList: React.FC = () => {
     setSelectedAccessPoints([])
   }
   return (
-    <Container background={Color.WHITE} height="100vh">
+    <Container background={Color.WHITE}>
       <Page.Header
         breadcrumbs={<NGBreadcrumbs />}
         title={getString('ce.co.accessPoint.landingPageTitle')}
@@ -277,7 +277,7 @@ const COLoadBalancerList: React.FC = () => {
             />
           )
         ) : (
-          <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
+          <div className={css.loaderContainer}>
             <PageSpinner />
           </div>
         )}

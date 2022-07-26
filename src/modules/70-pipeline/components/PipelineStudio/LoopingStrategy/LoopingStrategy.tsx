@@ -14,11 +14,10 @@ import {
   Container,
   Formik,
   Layout,
-  Link,
   Text,
   useToggleOpen
 } from '@harness/uicore'
-import { clone, defaultTo, noop } from 'lodash-es'
+import { clone, defaultTo, isEqual, noop } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
@@ -42,8 +41,15 @@ export interface LoopingStrategyProps {
   onUpdateStrategy?: (strategy: StrategyConfig) => void
 }
 
-const DOCUMENT_URL = 'https://ngdocs.harness.io/article/i36ibenkq2-step-skip-condition-settings'
+const DOCUMENT_URL = 'https://docs.harness.io/article/i36ibenkq2-step-skip-condition-settings'
 const strategyEntries = Object.entries(AvailableStrategies) as [LoopingStrategyEnum, Strategy][]
+
+const yamlSanityConfig = {
+  removeEmptyObject: false,
+  removeEmptyString: false,
+  removeEmptyArray: false
+}
+const renderCustomHeader = (): null => null
 
 export function LoopingStrategy({
   strategy = {},
@@ -64,18 +70,38 @@ export function LoopingStrategy({
     open: openToggleTypeConfirmation,
     close: closeToggleTypeConfirmation
   } = useToggleOpen()
-
+  const timerRef = React.useRef<null | number>(null)
+  const onUpdateStrategyRef = React.useRef(onUpdateStrategy)
   const initialSelectedStrategy = Object.keys(defaultTo(strategy, {}))[0] as LoopingStrategyEnum
 
-  const onTextChange = (_formikProps: FormikProps<StrategyConfig>): void => {
-    try {
-      const newValues: StrategyConfig = parse(defaultTo(/* istanbul ignore next */ yamlHandler?.getLatestYaml(), ''))
-      // formikProps.setValues(newValues)
-      onUpdateStrategy(newValues)
-    } catch {
-      // this catch intentionally left empty
+  React.useEffect(() => {
+    onUpdateStrategyRef.current = onUpdateStrategy
+  }, [onUpdateStrategy])
+
+  React.useEffect(() => {
+    if (yamlHandler) {
+      timerRef.current = window.setInterval(() => {
+        try {
+          const newValues: StrategyConfig = parse(
+            defaultTo(/* istanbul ignore next */ yamlHandler?.getLatestYaml(), '')
+          )
+          // only update when not equal to avoid frequent re-renders
+          if (!isEqual(newValues, strategy)) {
+            onUpdateStrategyRef.current(newValues)
+          }
+        } catch (_e) {
+          // this catch intentionally left empty
+        }
+      }, 1000)
     }
-  }
+
+    return () => {
+      if (timerRef.current !== null) {
+        window.clearInterval(timerRef.current)
+        timerRef.current = null
+      }
+    }
+  }, [yamlHandler, strategy])
 
   const onChangeStrategy = (newStrategy: LoopingStrategyEnum, formikProps: FormikProps<StrategyConfig>): void => {
     const callback = (): void => {
@@ -122,8 +148,6 @@ export function LoopingStrategy({
     closeToggleTypeConfirmation()
   }
 
-  const renderCustomHeader = (): null => null
-
   return (
     <React.Fragment>
       <Formik initialValues={strategy} formName="loopingStrategy" onSubmit={noop}>
@@ -137,15 +161,9 @@ export function LoopingStrategy({
               <Layout.Vertical spacing={'medium'}>
                 <Text color={Color.GREY_700} font={{ size: 'small' }}>
                   {getString('pipeline.loopingStrategy.subTitle', { maxCount: strategyEntries.length })}{' '}
-                  <Link
-                    rel="noreferrer"
-                    color={Color.BLUE_400}
-                    target="_blank"
-                    href={DOCUMENT_URL}
-                    font={{ size: 'small' }}
-                  >
+                  <a rel="noreferrer" target="_blank" href={DOCUMENT_URL}>
                     {getString('pipeline.loopingStrategy.learnMore')}
-                  </Link>
+                  </a>
                 </Text>
                 <Container>
                   <Layout.Horizontal
@@ -167,7 +185,7 @@ export function LoopingStrategy({
                         data-testid={key}
                       >
                         <Text font={{ variation: FontVariation.BODY }} color={Color.PRIMARY_7}>
-                          {item.label}
+                          {getString(item.label)}
                         </Text>
                       </Card>
                     ))}
@@ -181,19 +199,13 @@ export function LoopingStrategy({
                           <Container style={{ flexGrow: 1 }}>
                             <Layout.Vertical>
                               <Text font={{ variation: FontVariation.BODY, weight: 'semi-bold' }}>
-                                {selectedStrategyMetaData.label}
+                                {getString(selectedStrategyMetaData.label)}
                               </Text>
                               <Text color={Color.GREY_700} font={{ size: 'small' }}>
                                 {getString(selectedStrategyMetaData.helperText)}{' '}
-                                <Link
-                                  rel="noreferrer"
-                                  color={Color.BLUE_400}
-                                  target="_blank"
-                                  href={selectedStrategyMetaData.helperLink}
-                                  font={{ size: 'small' }}
-                                >
+                                <a rel="noreferrer" target="_blank" href={selectedStrategyMetaData.helperLink}>
                                   {getString('learnMore')}
-                                </Link>
+                                </a>
                               </Text>
                             </Layout.Vertical>
                           </Container>
@@ -219,12 +231,7 @@ export function LoopingStrategy({
                           schema={/* istanbul ignore next */ loopingStrategySchema?.data?.schema}
                           existingJSON={formikProps.values}
                           renderCustomHeader={renderCustomHeader}
-                          yamlSanityConfig={{
-                            removeEmptyObject: false,
-                            removeEmptyString: false,
-                            removeEmptyArray: false
-                          }}
-                          onChange={() => onTextChange(formikProps)}
+                          yamlSanityConfig={yamlSanityConfig}
                         />
                       </Container>
                     </Layout.Vertical>

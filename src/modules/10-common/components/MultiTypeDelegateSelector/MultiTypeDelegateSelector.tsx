@@ -12,7 +12,8 @@ import {
   DataTooltipInterface,
   MultiTypeInputType,
   HarnessDocTooltip,
-  Container
+  Container,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { get, compact } from 'lodash-es'
 import { FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
@@ -28,8 +29,7 @@ export interface MultiTypeDelegateSelectorProps extends IFormGroupProps {
   name: string
   label?: string
   expressions?: string[]
-  allowableTypes?: MultiTypeInputType[]
-  useExecutionTimeInput?: boolean
+  allowableTypes?: AllowedTypes
   tooltipProps?: DataTooltipInterface
   inputProps: Omit<DelegateSelectorsProps, 'onChange'>
 }
@@ -47,7 +47,6 @@ export function MultiTypeDelegateSelector(props: ConnectedMultiTypeDelegateSelec
     name,
     expressions = [],
     inputProps,
-    useExecutionTimeInput,
     ...restProps
   } = props
 
@@ -86,7 +85,6 @@ export function MultiTypeDelegateSelector(props: ConnectedMultiTypeDelegateSelec
           defaultValueToReset={['']}
           skipRenderValueInExpressionLabel
           allowedTypes={allowableTypes}
-          useExecutionTimeInput={useExecutionTimeInput}
           supportListOfExpressions={true}
           disableMultiSelectBtn={disabled}
           expressionRender={() => (

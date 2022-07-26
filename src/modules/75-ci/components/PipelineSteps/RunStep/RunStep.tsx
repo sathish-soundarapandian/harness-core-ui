@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { IconName, MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@wings-software/uicore'
 import { parse } from 'yaml'
 import get from 'lodash-es/get'
 import type { FormikErrors } from 'formik'
@@ -96,7 +96,7 @@ export interface RunStepProps {
   isNewStep?: boolean
   onUpdate?: (data: RunStepData) => void
   onChange?: (data: RunStepData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   formik?: any
 }
 

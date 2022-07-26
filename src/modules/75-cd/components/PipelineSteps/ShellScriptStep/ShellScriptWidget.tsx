@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Accordion, Formik, MultiTypeInputType } from '@wings-software/uicore'
+import { Accordion, AllowedTypes, Formik } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 
@@ -30,7 +30,7 @@ interface ShellScriptWidgetProps {
   initialValues: ShellScriptFormData
   onUpdate?: (data: ShellScriptFormData) => void
   onChange?: (data: ShellScriptFormData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   readonly?: boolean
   stepViewType?: StepViewType
   isNewStep?: boolean

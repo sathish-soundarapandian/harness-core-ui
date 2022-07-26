@@ -40,6 +40,12 @@ import {
   environmentsCall,
   environmentResponse
 } from './85-cv/monitoredService/constants'
+import {
+  listMonitoredServices,
+  listMonitoredServicesCallResponse,
+  listSLOsCall,
+  listSLOsCallResponse
+} from './85-cv/slos/constants'
 
 import {
   applyTemplatesCall,
@@ -73,6 +79,7 @@ declare global {
       visitPipelinesList(): void
       visitExecutionsList(): void
       visitChangeIntelligence(): void
+      visitSRMMonitoredServicePage(): void
       fillName(name: string): void
       initializeRoute(): void
       clickSubmit(): void
@@ -176,10 +183,17 @@ Cypress.Commands.add('visitVerifyStepInPipeline', () => {
 
 // Change Intelligence commands
 Cypress.Commands.add('visitChangeIntelligence', () => {
+  cy.intercept('GET', listSLOsCall, listSLOsCallResponse).as('listSLOsCall')
+  cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)
+
   cy.visitPageAssertion('[class^=SideNav-module_main]')
   cy.contains('span', 'Service Reliability').click()
   cy.contains('p', 'Select a Project').click()
   cy.contains('p', 'Project 1').click()
+})
+
+Cypress.Commands.add('visitSRMMonitoredServicePage', () => {
+  cy.contains('p', 'Monitored Services').click()
 })
 
 Cypress.Commands.add('addNewMonitoredServiceWithServiceAndEnv', () => {

@@ -6,15 +6,16 @@
  */
 
 import React, { useRef } from 'react'
-import { get, merge } from 'lodash-es'
+import { defaultTo, get, identity, merge } from 'lodash-es'
 import { Spinner, Tabs } from '@blueprintjs/core'
 import { Layout, Button, PageError } from '@wings-software/uicore'
 
 import { useStrings } from 'framework/strings'
 import type { ApprovalInstanceResponse, ExecutionNode } from 'services/pipeline-ng'
 import { useGetApprovalInstance, ResponseApprovalInstanceResponse } from 'services/pipeline-ng'
-import { isExecutionWaiting } from '@pipeline/utils/statusHelpers'
+import { isExecutionWaiting, isExecutionFailed } from '@pipeline/utils/statusHelpers'
 import type { StepDetailProps } from '@pipeline/factories/ExecutionFactory/types'
+import { extractInfo } from '@common/components/ErrorHandler/ErrorHandler'
 import { PipelineDetailsTab } from '@pipeline/components/execution/StepDetails/tabs/PipelineDetailsTab/PipelineDetailsTab'
 import { InputOutputTab } from '@pipeline/components/execution/StepDetails/tabs/InputOutputTab/InputOutputTab'
 
@@ -40,6 +41,18 @@ export function BaseApprovalView(props: BaseApprovalViewProps): React.ReactEleme
   const { step, mock, approvalTabComponent: ApprovalTabComponent } = props
   const approvalInstanceId = get(step, 'executableResponses[0].async.callbackIds[0]') || ''
   const isWaiting = isExecutionWaiting(step.status)
+  const isStepExecutionFailed = isExecutionFailed(step.status)
+  const { message, responseMessages } = step.failureInfo || {}
+
+  const failureErrorMessage = React.useMemo(() => {
+    return responseMessages && responseMessages.length > 0
+      ? extractInfo(responseMessages)
+          .map(err => err.error?.message)
+          .filter(identity)
+          .join(', ')
+      : defaultTo(message, '')
+  }, [responseMessages, message])
+
   const shouldFetchData = !!approvalInstanceId
   const mounted = useRef(false)
   const { getString } = useStrings()
@@ -69,10 +82,12 @@ export function BaseApprovalView(props: BaseApprovalViewProps): React.ReactEleme
     }
   }, [shouldFetchData, step.status])
 
-  if (error) {
+  if (error || (isStepExecutionFailed && failureErrorMessage)) {
     return (
-      <Layout.Vertical height="100%">
-        <PageError message={(error.data as Error)?.message || error.message} />
+      <Layout.Vertical height="100%" margin={{ top: 'huge' }}>
+        <PageError
+          message={failureErrorMessage ? failureErrorMessage : (error!.data as Error)?.message || error!.message}
+        />
       </Layout.Vertical>
     )
   }

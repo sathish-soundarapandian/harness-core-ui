@@ -8,7 +8,7 @@
 import React from 'react'
 import { render, fireEvent, act, findByText, waitFor } from '@testing-library/react'
 
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   PipelineContext,
@@ -64,10 +64,15 @@ const getPipelineContext = (): PipelineContextInterface => ({
     gitDetails: {},
     entityValidityDetails: {},
     isUpdated: true,
-    templateTypes: {}
+    templateTypes: {},
+    templateServiceData: {}
   },
   contextType: PipelineContextType.Pipeline,
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   setSchemaErrorView: jest.fn(),
   stagesMap: {},
   updatePipelineStoreMetadata: jest.fn(),
@@ -93,7 +98,8 @@ const getPipelineContext = (): PipelineContextInterface => ({
   setSelectedStepId: jest.fn(),
   setSelection: jest.fn(),
   getStagePathFromPipeline: jest.fn(),
-  setTemplateTypes: jest.fn()
+  setTemplateTypes: jest.fn(),
+  setTemplateServiceData: jest.fn()
 })
 
 jest.mock('../../DeployStage/EditStageView/EditStageView', () => ({

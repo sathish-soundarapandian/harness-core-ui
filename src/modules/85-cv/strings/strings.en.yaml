@@ -212,6 +212,11 @@ monitoringSources:
   totalMappedQueries: '{{total}} {{query}} mapped'
   appD:
     appdPathTitle: AppDynamics Path
+    applicationName: Application Name
+    tierName: Tier Name
+    completeMetricPath: Complete Metric Path
+    serviceInstanceMetricPath: Service Instance Label Path
+    serviceInstanceFieldName: Service Instance Field Name
     appdChartTitle: Chart & Record
     appdPathDetail: Select base path for AppD Metric
     appdMetricDetail: Select metric path for AppD Metric
@@ -476,7 +481,6 @@ monitoredServices:
   changeMonitoredServiceType: Change Monitored Service Type
   changeMonitoredServiceTypeMessage: Changing monitored service type will reset change sources
   sloErrorBudget: SLO / Error Budget
-  executedBy: Executed By
   serviceHealth:
     last4Hrs: Last 4 hours
     last24Hrs: Last 24 hours
@@ -520,7 +524,7 @@ notifications:
   newNotificationRule: New Notification Rule
   notificationName: Notification Name
   deleteNotification: Delete notfication {{ name }}
-  configureAlertConditions: Configure the alert conditions for which you want to be notified.
+  configureAlertConditions: Configure the conditions for which you want to be notified
   serviceHealth: Changes and Service Health
   serviceHealthDescription: Focuses on changes to a service's code, configuration, behaviour, deployment and infrastructure.
   sloDescription: Focuses on SLO target and error budget changes on a given SLO.
@@ -528,6 +532,8 @@ notifications:
   changeType: Change Type
   healthScoreBelow: Health score is below
   thresholdBelow: Threshold is below
+  validations:
+    conditionIsRequired: Condition is required
 changeSource:
   alertText: Alert
   incident: Incident
@@ -631,7 +637,7 @@ healthSource:
       trierLabel: Find an AppDynamics tier
       tierPlaceholder: Type an tier name
       metricPackLabel: Select Metric Packs to be monitored
-      serviceInstance: Specify a service instance path
+      serviceInstance: Specify a service instance label path
       validation:
         application: Please select applications
         tier: Please select tier
@@ -668,7 +674,8 @@ slos:
   sloCreated: SLO created successfully
   sloUpdated: SLO updated successfully
   noData: You don’t have any SLO created yet
-  noMatchingData: No matching data for applied filters
+  noDataMS: There are no SLOs available for this service
+  noMatchingData: No matching data for the applied filters.
   monitoredServiceText: A Monitored Service is automatically created by Harness by concatenating the names of the Service and Environment.
   createMonitoredService: Create a Monitored Service
   confirmDeleteSLO: 'Are you sure you want to delete SLO: {{ name }}?'
@@ -693,7 +700,7 @@ slos:
   sloDefinition: Define SLO identification
   reviewChanges: Review changes
   sloEditWarningMessage: It may take a few minutes to recalculate the Error Budget. Are you sure you want to proceed?
-  noSLOsStateMessage: A service level objective (SLO) is the sum of a collection of performance metrics (Service Level Indicator or SLI) such as uptime, response time, and error rate that are used to measure the services performance. At least one SLO is required to monitor a service
+  noSLOsStateMessage: Service level objectives (SLOs) are used to describe and measure service level performance and reliability for any service/microservice applications.
   validations:
     nameValidation: SLO name is required
     userJourneyRequired: User journey is required
@@ -722,11 +729,11 @@ slos:
       selectMetric2: Select metric 2
   contextualHelp:
     sli:
-      intro: To evaluate the performance of the monitored service, a collection of performance metrics such as duration, error rate, and so on will be applied.
-      healthSource: A Health Source is a combination of a Harness Service and associated Environment that monitors changes in health trends of the service using logs or metrics collected from an Application Performance Management or logging tool.
+      intro: Metrics such as response time, error rate etc. are used to evaluate the performance of the monitored service.
+      healthSource: A Health Source is a combination of a Harness Service and associated Environment that monitors changes in health trends of the service using logs or metrics collected from an Application Performance Management(APM) or logging provider.
       whatIsSli: What is an SLI?
-      sliDefinition: An SLI (service level indicator), which measures the performance of the service. Also, an SLI measures compliance with an SLO (service level objective).
-      sliDefinition2: So, if your SLA (Service Level Agreement) specifies that your systems will be available 99.9% of the time, your SLO is likely 99.95% uptime and your SLI is the actual measurement of your uptime.
+      sliDefinition: An SLI (service level indicator) measures the performance of a service and compliance with an SLO (service level objective).
+      sliDefinition2: So, if your SLA (Service Level Agreement) specifies that your systems will be available 99.9% of the time, your SLO should be set higher than 99.9%
       availabilityDescription: Measures how available your service was to users or valid requests served successfully.
       latencyDescription: Measures how fast your service responded to users or how many valid request served faster than a defined thresholds.
       thresholdDescription: The number of valid requests is compared to the length of time.

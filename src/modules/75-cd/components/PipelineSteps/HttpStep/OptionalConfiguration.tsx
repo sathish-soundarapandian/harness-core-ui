@@ -7,7 +7,14 @@
 
 import React from 'react'
 import { FieldArray, FormikProps } from 'formik'
-import { Button, ButtonVariation, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import {
+  AllowedTypes,
+  Button,
+  ButtonVariation,
+  FormInput,
+  getMultiTypeFromValue,
+  MultiTypeInputType
+} from '@wings-software/uicore'
 import { v4 as uuid } from 'uuid'
 
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
@@ -22,7 +29,7 @@ import css from './HttpStep.module.scss'
 export default function OptionalConfiguration(props: {
   formik: FormikProps<HttpStepFormData>
   readonly?: boolean
-  allowableTypes?: MultiTypeInputType[]
+  allowableTypes?: AllowedTypes
 }): React.ReactElement {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()

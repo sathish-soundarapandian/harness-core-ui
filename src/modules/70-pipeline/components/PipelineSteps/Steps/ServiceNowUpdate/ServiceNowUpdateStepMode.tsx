@@ -20,7 +20,8 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Text,
-  PageSpinner
+  PageSpinner,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -53,8 +54,7 @@ import {
   FieldType,
   ServiceNowCreateFieldType,
   ServiceNowFieldNGWithValue,
-  ServiceNowStaticFields,
-  TICKET_TYPE_CHANGE_TASK
+  ServiceNowStaticFields
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/types'
 import {
   convertTemplateFieldsForDisplay,
@@ -148,13 +148,6 @@ function FormContent({
   }, [serviceNowTicketTypesResponse?.data])
   useEffect(() => {
     if (
-      ticketValueType === MultiTypeInputType.FIXED &&
-      ticketTypeKeyFixedValue?.toString() === TICKET_TYPE_CHANGE_TASK
-    ) {
-      formik.setFieldValue('spec.fieldType', FieldType.ConfigureFields)
-      formik.setFieldValue('spec.useServiceNowTemplate', false)
-      setIsTemplateSectionAvailable(false)
-    } else if (
       connectorRefFixedValue &&
       connectorValueType === MultiTypeInputType.FIXED &&
       ticketTypeKeyFixedValue &&
@@ -574,7 +567,9 @@ function FormContent({
                                 placeholder={getString('common.valuePlaceholder')}
                                 disabled={isApprovalStepFieldDisabled(readonly)}
                                 multiTextInputProps={{
-                                  allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME),
+                                  allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                    item => item !== MultiTypeInputType.RUNTIME
+                                  ) as AllowedTypes,
                                   expressions
                                 }}
                               />

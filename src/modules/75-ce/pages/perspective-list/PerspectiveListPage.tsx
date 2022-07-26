@@ -322,7 +322,7 @@ const PerspectiveListPage: React.FC = () => {
   const { trackPage, trackEvent } = useTelemetry()
   const [defaultFolderId, setDefaultFolderId] = useState('')
   const [sampleFolderId, setSampleFolderId] = useState('')
-  const [selectedFolderId, setSelectedFolder] = useQueryParamsState<string | undefined>('folderId', defaultFolderId)
+  const [selectedFolderId, setSelectedFolder] = useQueryParamsState<string | undefined>('folderId', '')
   const [isRefetchFolders, setRefetchFolders] = useState(false)
   const [refetchPerspectives, setRefetchPerspectives] = useState(false)
   const searchRef = React.useRef<ExpandingSearchInputHandle>()
@@ -331,7 +331,7 @@ const PerspectiveListPage: React.FC = () => {
 
   const [result, executeQuery] = useFetchAllPerspectivesQuery({
     variables: {
-      folderId: selectedFolderId || defaultFolderId
+      folderId: selectedFolderId || ''
     }
   })
   const { data, fetching } = result
@@ -379,9 +379,6 @@ const PerspectiveListPage: React.FC = () => {
       const sampleFolder = foldersList.filter(folders => folders.viewType === folderViewType.SAMPLE)
       setDefaultFolderId(defaultFolder[0]?.uuid || '')
       setSampleFolderId(sampleFolder[0]?.uuid || '')
-      if (!selectedFolderId) {
-        setSelectedFolder(defaultFolderId)
-      }
     }
   }, [foldersList])
 
@@ -627,68 +624,68 @@ const PerspectiveListPage: React.FC = () => {
         }
         breadcrumbs={<NGBreadcrumbs />}
       />
-      <Layout.Horizontal className={css.bodyWrapper}>
-        <PerspectiveFoldersSideNav
-          setSelectedFolder={setSelectedFolder}
-          selectedFolderId={selectedFolderId || ''}
-          foldersList={foldersList}
-          setRefetchFolders={setRefetchFolders}
-          foldersLoading={foldersLoading}
-          defaultFolderId={defaultFolderId}
-          deleteFolder={deleteFolder}
-          updateFolder={updateFolder}
-        />
-        <div style={{ flex: 1 }}>
-          {pespectiveList.length ? (
-            <Layout.Horizontal spacing="large" className={css.header}>
-              <Layout.Horizontal spacing="large" style={{ alignItems: 'center' }}>
-                <RbacButton
-                  intent="primary"
-                  text={getString('ce.perspectives.newPerspective')}
-                  icon="plus"
-                  featuresProps={{
-                    featuresRequest: {
-                      featureNames: [FeatureIdentifier.PERSPECTIVES]
-                    }
-                  }}
-                  onClick={() => {
-                    trackEvent(USER_JOURNEY_EVENTS.CREATE_NEW_PERSPECTIVE, {})
-                    createNewPerspective({})
-                  }}
-                />
-              </Layout.Horizontal>
-              <FlexExpander />
+      <Page.Body className={css.pageContainer}>
+        <Layout.Horizontal className={css.bodyWrapper}>
+          <PerspectiveFoldersSideNav
+            setSelectedFolder={setSelectedFolder}
+            selectedFolderId={selectedFolderId || ''}
+            foldersList={foldersList}
+            setRefetchFolders={setRefetchFolders}
+            foldersLoading={foldersLoading}
+            defaultFolderId={defaultFolderId}
+            deleteFolder={deleteFolder}
+            updateFolder={updateFolder}
+          />
+          <div className={css.listContainer}>
+            {pespectiveList.length ? (
+              <Layout.Horizontal spacing="large" className={css.header}>
+                <Layout.Horizontal spacing="large" style={{ alignItems: 'center' }}>
+                  <RbacButton
+                    intent="primary"
+                    text={getString('ce.perspectives.newPerspective')}
+                    icon="plus"
+                    featuresProps={{
+                      featuresRequest: {
+                        featureNames: [FeatureIdentifier.PERSPECTIVES]
+                      }
+                    }}
+                    onClick={() => {
+                      trackEvent(USER_JOURNEY_EVENTS.CREATE_NEW_PERSPECTIVE, {})
+                      createNewPerspective({})
+                    }}
+                  />
+                </Layout.Horizontal>
+                <FlexExpander />
 
-              <QuickFilters quickFilters={quickFilters} setQuickFilters={setQuickFilters} countInfo={countInfo} />
-              <ExpandingSearchInput
-                placeholder={getString('ce.perspectives.searchPerspectives')}
-                onChange={text => {
-                  setSearchParam(text.trim())
-                }}
-                ref={searchRef}
-                className={css.search}
-              />
-              <Layout.Horizontal>
-                <Button
-                  minimal
-                  icon="grid-view"
-                  intent={view === Views.GRID ? 'primary' : undefined}
-                  onClick={() => {
-                    setView(Views.GRID)
+                <QuickFilters quickFilters={quickFilters} setQuickFilters={setQuickFilters} countInfo={countInfo} />
+                <ExpandingSearchInput
+                  placeholder={getString('ce.perspectives.searchPerspectives')}
+                  onChange={text => {
+                    setSearchParam(text.trim())
                   }}
+                  ref={searchRef}
+                  className={css.search}
                 />
-                <Button
-                  minimal
-                  icon="list"
-                  intent={view === Views.LIST ? 'primary' : undefined}
-                  onClick={() => {
-                    setView(Views.LIST)
-                  }}
-                />
+                <Layout.Horizontal>
+                  <Button
+                    minimal
+                    icon="grid-view"
+                    intent={view === Views.GRID ? 'primary' : undefined}
+                    onClick={() => {
+                      setView(Views.GRID)
+                    }}
+                  />
+                  <Button
+                    minimal
+                    icon="list"
+                    intent={view === Views.LIST ? 'primary' : undefined}
+                    onClick={() => {
+                      setView(Views.LIST)
+                    }}
+                  />
+                </Layout.Horizontal>
               </Layout.Horizontal>
-            </Layout.Horizontal>
-          ) : null}
-          <Page.Body>
+            ) : null}
             {(fetching || createViewLoading) && <Page.Spinner />}
             {!pespectiveList.length ? (
               <EmptyPage
@@ -722,9 +719,9 @@ const PerspectiveListPage: React.FC = () => {
                 setRefetchPerspectives={setRefetchPerspectives}
               />
             </Container>
-          </Page.Body>
-        </div>
-      </Layout.Horizontal>
+          </div>
+        </Layout.Horizontal>
+      </Page.Body>
     </>
   )
 }

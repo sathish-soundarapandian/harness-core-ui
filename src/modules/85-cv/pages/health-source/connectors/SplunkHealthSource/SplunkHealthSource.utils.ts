@@ -17,7 +17,9 @@ export function createSplunkHealthSourcePayload(setupSource: SplunkHealthSourceI
     identifier: setupSource?.identifier as string,
     name: setupSource?.name as string,
     spec: {
-      connectorRef: setupSource.connectorRef as string,
+      connectorRef: (typeof setupSource.connectorRef === 'string'
+        ? setupSource.connectorRef
+        : setupSource.connectorRef?.value) as string,
       feature: 'Splunk Cloud Logs',
       queries: []
     }
@@ -27,6 +29,7 @@ export function createSplunkHealthSourcePayload(setupSource: SplunkHealthSourceI
     const { metricName, query, serviceInstance }: MapSplunkQueryToService = entry[1]
     splunkHealthSourcePayload.spec.queries.push({
       name: metricName,
+      identifier: metricName.split(' ').join('_'),
       query,
       serviceInstanceIdentifier: serviceInstance
     })

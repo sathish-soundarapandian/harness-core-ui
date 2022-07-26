@@ -44,9 +44,11 @@ import type {
   VmPoolYaml
 } from 'services/ci'
 import { FeatureFlag } from '@common/featureFlags'
+import { useQueryParams } from '@common/hooks'
 import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
 import { useAddStepTemplate } from '@pipeline/hooks/useAddStepTemplate'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
+import { isCloneCodebaseEnabledAtLeastOneStage } from '@pipeline/utils/CIUtils'
 import BuildInfraSpecifications from '../BuildInfraSpecifications/BuildInfraSpecifications'
 import BuildStageSpecifications from '../BuildStageSpecifications/BuildStageSpecifications'
 import BuildAdvancedSpecifications from '../BuildAdvancedSpecifications/BuildAdvancedSpecifications'
@@ -72,6 +74,8 @@ interface BuildStageSetupShellProps {
   moduleIcon?: IconName
 }
 
+const TabsOrder = [BuildTabs.OVERVIEW, BuildTabs.INFRASTRUCTURE, BuildTabs.EXECUTION, BuildTabs.ADVANCED]
+
 const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon }) => {
   const icon = moduleIcon ? moduleIcon : 'ci-main'
   const { getString } = useStrings()
@@ -91,7 +95,8 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
       originalPipeline,
       pipelineView: { isSplitViewOpen },
       pipelineView,
-      selectionState: { selectedStageId = '', selectedStepId },
+      selectionState: { selectedStageId = '', selectedStepId, selectedSectionId },
+      gitDetails,
       templateTypes
     },
     contextType,
@@ -101,9 +106,12 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
     isReadonly,
     updateStage,
     setSelectedStepId,
-    getStagePathFromPipeline
+    getStagePathFromPipeline,
+    updatePipeline,
+    setSelectedSectionId
   } = pipelineContext
 
+  const query = useQueryParams()
   const stagePath = getStagePathFromPipeline(selectedStageId || '', 'pipeline.stages')
   const [stageData, setStageData] = React.useState<BuildStageElementConfig | undefined>()
   const poolName =
@@ -170,11 +178,21 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
     }
   }, [selectedStageId, pipeline, isSplitViewOpen])
 
+  React.useEffect(() => {
+    // if clone codebase is not enabled at least one stage, then remove properties from pipeline
+    if (!isCloneCodebaseEnabledAtLeastOneStage(pipeline)) {
+      const newPipeline = pipeline
+      delete newPipeline.properties
+      updatePipeline(newPipeline)
+    }
+  }, [stageData?.spec?.cloneCodebase])
+
   const { checkErrorsForTab } = React.useContext(StageErrorContext)
 
   const handleTabChange = (data: BuildTabs) => {
     checkErrorsForTab(selectedTabId).then(_ => {
       setSelectedTabId(data)
+      setSelectedSectionId(data)
     })
   }
 
@@ -193,6 +211,15 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
   const originalStage = getStageFromPipeline<BuildStageElementConfig>(selectedStageId, originalPipeline).stage
   const infraHasWarning = !filledUpStages.infra
   const executionHasWarning = !filledUpStages.execution
+
+  React.useEffect(() => {
+    const sectionId = (query as any).sectionId || ''
+    if (sectionId && TabsOrder.includes(sectionId)) {
+      setSelectedTabId(sectionId)
+    } else {
+      setSelectedSectionId(BuildTabs.OVERVIEW)
+    }
+  }, [selectedSectionId])
 
   // NOTE: set empty arrays, required by ExecutionGraph
   const selectedStageClone = cloneDeep(selectedStage)
@@ -444,7 +471,7 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
         {isTemplatesEnabled && isContextTypeNotStageTemplate(contextType) && selectedStage?.stage && (
           <>
             <Expander />
-            <SaveTemplateButton data={selectedStage?.stage} type={'Stage'} />
+            <SaveTemplateButton data={selectedStage?.stage} type={'Stage'} gitDetails={gitDetails} />
           </>
         )}
       </Tabs>

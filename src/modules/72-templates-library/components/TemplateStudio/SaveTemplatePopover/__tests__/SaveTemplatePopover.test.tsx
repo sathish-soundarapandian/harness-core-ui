@@ -81,10 +81,42 @@ describe('<SaveTemplatePopover /> tests', () => {
       fireEvent.click(saveButton)
     })
 
-    expect(
-      useSaveTemplate({ template: { name: 'name', identifier: 'identifier', type: 'Step', versionLabel: 'v1' } })
-        .saveAndPublish
-    ).toBeCalledWith(stepTemplateContextMock.state.template, { comment: 'Some Comment', isEdit: false })
+    expect(useSaveTemplate({}).saveAndPublish).toBeCalledWith(stepTemplateContextMock.state.template, {
+      comment: 'Some Comment',
+      isEdit: false,
+      updatedGitDetails: {}
+    })
+  })
+
+  test('should not call saveAndPublish if yaml is empty or yaml has schema validation errors', async () => {
+    const updatedTemplateContextMock = {
+      ...stepTemplateContextMock,
+      state: {
+        ...stepTemplateContextMock.state,
+        yamlHandler: {
+          getLatestYaml: () => '',
+          getYAMLValidationErrorMap: () => {
+            const errorMap = new Map()
+            errorMap.set(4, 'Expected type string')
+            return errorMap
+          }
+        }
+      }
+    }
+    const { container } = render(
+      <TestWrapper path={PATH} pathParams={{ ...PATH_PARAMS, templateIdentifier: DefaultNewTemplateId }}>
+        <TemplateContext.Provider value={updatedTemplateContextMock}>
+          <SaveTemplatePopover {...baseProps} />
+        </TemplateContext.Provider>
+      </TestWrapper>
+    )
+
+    const saveButton = getByText(container, 'save')
+    await act(async () => {
+      fireEvent.click(saveButton)
+    })
+
+    expect(useSaveTemplate({}).saveAndPublish).not.toBeCalled()
   })
 
   test('should call saveAndPublish with correct params when updating a template', async () => {
@@ -113,10 +145,11 @@ describe('<SaveTemplatePopover /> tests', () => {
       fireEvent.click(updateButton)
     })
 
-    expect(
-      useSaveTemplate({ template: { name: 'name', identifier: 'identifier', type: 'Step', versionLabel: 'v1' } })
-        .saveAndPublish
-    ).toBeCalledWith(updatedStepTemplateContextMock.state.template, { comment: 'Some Comment', isEdit: true })
+    expect(useSaveTemplate({}).saveAndPublish).toBeCalledWith(updatedStepTemplateContextMock.state.template, {
+      comment: 'Some Comment',
+      isEdit: true,
+      updatedGitDetails: {}
+    })
   })
 
   test('should call saveAndPublish with correct params when updating a template when git sync is enabled', async () => {
@@ -145,10 +178,11 @@ describe('<SaveTemplatePopover /> tests', () => {
       fireEvent.click(updateButton)
     })
 
-    expect(
-      useSaveTemplate({ template: { name: 'name', identifier: 'identifier', type: 'Step', versionLabel: 'v1' } })
-        .saveAndPublish
-    ).toBeCalledWith(updatedStepTemplateContextMock.state.template, { comment: '', isEdit: true })
+    expect(useSaveTemplate({}).saveAndPublish).toBeCalledWith(updatedStepTemplateContextMock.state.template, {
+      comment: '',
+      isEdit: true,
+      updatedGitDetails: {}
+    })
   })
 
   test('should show dialog when saving as new version', async () => {

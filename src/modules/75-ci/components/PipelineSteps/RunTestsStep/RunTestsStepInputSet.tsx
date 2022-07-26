@@ -7,7 +7,15 @@
 
 import React from 'react'
 import { connect } from 'formik'
-import { Text, getMultiTypeFromValue, MultiTypeInputType, FormikForm, Container, Layout } from '@wings-software/uicore'
+import {
+  Text,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  FormikForm,
+  Container,
+  Layout,
+  AllowedTypes
+} from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { isEmpty, startCase } from 'lodash-es'
 import cx from 'classnames'
@@ -110,8 +118,8 @@ export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = props => {
       placeholderKey?: keyof StringsMap
       withObjectStructure?: boolean
       keyName?: string
-      allowedTypes: MultiTypeInputType[]
-      allowedTypesForEntries: MultiTypeInputType[]
+      allowedTypes: AllowedTypes
+      allowedTypesForEntries: AllowedTypes
       restrictToSingleEntry?: boolean
     } & ConnectorReferenceProps) => (
       <MultiTypeListInputSet

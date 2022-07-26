@@ -37,6 +37,7 @@ export enum PermissionIdentifier {
   VIEW_ENVIRONMENT_GROUP = 'core_environmentgroup_view',
   EDIT_ENVIRONMENT_GROUP = 'core_environmentgroup_edit',
   DELETE_ENVIRONMENT_GROUP = 'core_environmentgroup_delete',
+  RUNTIMEACCESS_ENVIRONMENT_GROUP = 'core_environmentgroup_access',
   VIEW_USERGROUP = 'core_usergroup_view',
   MANAGE_USERGROUP = 'core_usergroup_manage',
   VIEW_USER = 'core_user_view',
@@ -142,7 +143,7 @@ export enum PermissionIdentifier {
   VIEW_STO_SCAN = 'sto_scan_view',
   VIEW_STO_TESTTARGET = 'sto_testtarget_view',
   EDIT_STO_TESTTARGET = 'sto_testtarget_edit',
-  VIEW_STO_EXCEPTION = 'sto_exception_view',
-  CREATE_STO_EXCEPTION = 'sto_exception_create',
-  APPROVE_STO_EXCEPTION = 'sto_exception_approve'
+  VIEW_STO_EXEMPTION = 'sto_exemption_view',
+  CREATE_STO_EXEMPTION = 'sto_exemption_create',
+  APPROVE_STO_EXEMPTION = 'sto_exemption_approve'
 }

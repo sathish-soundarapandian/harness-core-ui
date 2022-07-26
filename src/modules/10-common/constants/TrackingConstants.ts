@@ -171,6 +171,15 @@ export enum ManifestActions {
   UpdateManifestOnPipelinePage = 'Update Manifest on Pipeline Page'
 }
 
+export enum ServiceConfigActions {
+  SaveConnectionStringOnPipelinePage = 'Save Connection String on Pipeline Page',
+  SaveApplicationSettingOnPipelinePage = 'Save Application Setting on Pipeline Page'
+}
+
+export enum StartupScriptActions {
+  SaveStartupScriptOnPipelinePage = 'Save Startup Script on Pipeline Page'
+}
+
 export enum ArtifactActions {
   SavePrimaryArtifactOnPipelinePage = 'Save Primary Artifact on Pipeline Page',
   UpdatePrimaryArtifactOnPipelinePage = 'Update Primary Artifact on Pipeline Page',

@@ -7,10 +7,12 @@
 
 import React from 'react'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
+import { getSanitizedflatObjectForVariablesView } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalCommons'
 import type {
   AzureSlotDeploymentData,
   AzureSlotDeploymentVariableStepProps
 } from './AzureSlotDeploymentInterface.types'
+
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 export function AzureSlotDeploymentVariableStep({
@@ -20,8 +22,8 @@ export function AzureSlotDeploymentVariableStep({
 }: AzureSlotDeploymentVariableStepProps): React.ReactElement {
   return (
     <VariablesListTable
-      data={variablesData}
-      originalData={initialValues}
+      data={getSanitizedflatObjectForVariablesView(variablesData)}
+      originalData={initialValues as Record<string, any>}
       metadataMap={metadataMap}
       className={pipelineVariableCss.variablePaddingL3}
     />

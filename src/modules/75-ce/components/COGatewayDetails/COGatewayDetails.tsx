@@ -250,7 +250,7 @@ const COGatewayDetails: React.FC<COGatewayDetailsProps> = props => {
   }
 
   return (
-    <Container style={{ overflow: 'scroll', maxHeight: '100vh', backgroundColor: 'var(--white)' }}>
+    <Container className={css.gatewayDetailsContainer}>
       <Breadcrumbs
         className={css.breadCrumb}
         links={[

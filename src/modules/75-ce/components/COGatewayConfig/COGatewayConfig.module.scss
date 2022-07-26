@@ -5,9 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+.drawerContainer {
+  box-shadow: rgb(40 41 61 / 4%) 0px 2px 8px, rgb(96 97 112 / 16%) 0px 16px 24px;
+  height: var(--min-page-height);
+  overflow-y: scroll;
+}
+
 .rowItem {
   padding: var(--spacing-large) !important;
-  background: white !important;
+  background: var(--white) !important;
   box-shadow: 0px 1px 5px 1px var(--grey-250);
   border-radius: 8px;
   // margin-bottom: var(--spacing-large);
@@ -55,7 +61,7 @@
     font-size: 11px;
   }
   tbody {
-    background: #ffffff;
+    background: var(--white);
     border-radius: 4px;
 
     font-style: normal;
@@ -65,7 +71,7 @@
   }
   tr {
     height: 63.33px;
-    box-shadow: 0 -1px 0 0 #d9dae6;
+    box-shadow: 0 -1px 0 0 rgb(217, 218, 230);
     td,
     th {
       vertical-align: middle !important;
@@ -92,8 +98,9 @@
 }
 
 .page {
+  --page-header-height: 86px;
   overflow: scroll;
-  height: calc(100vh - 86px);
+  height: calc(var(--page-min-height) - var(--page-header-height));
   // margin-left: var(--spacing-xlarge) !important;
   padding-bottom: 72px !important;
 }
@@ -120,7 +127,7 @@
     font-size: 13px;
     font-weight: normal;
     line-height: 14px;
-    background-color: #ffffff;
+    background-color: var(--white);
     box-shadow: 0px 0px 8px 1px rgba(26, 19, 106, 0.05);
     border: none !important;
     border-radius: 4px !important;
@@ -145,7 +152,7 @@
     font-size: 13px;
     font-weight: normal;
     line-height: 14px;
-    background-color: #ffffff;
+    background-color: var(--white);
     box-shadow: 0px 0px 8px 1px rgba(26, 19, 106, 0.05);
     border: none !important;
     border-radius: 4px !important;
@@ -173,7 +180,7 @@
     }
     .bp3-tab[aria-selected='true'] {
       // font-weight: 900;
-      color: black !important;
+      color: var(--grey-1000) !important;
     }
     .bp3-tab[aria-selected='false'] {
       color: var(--grey-800);
@@ -183,7 +190,7 @@
       border-bottom: 0;
       position: relative !important;
       top: auto;
-      background: white !important;
+      background: var(--white) !important;
       border-bottom: none !important;
       margin-bottom: var(--spacing-small);
     }
@@ -239,7 +246,7 @@
   .title {
     font-weight: 500 !important;
     font-size: 18px !important;
-    color: #22222a !important;
+    color: var(--grey-800) !important;
     span[data-icon='info'] {
       cursor: pointer;
       margin-left: 5px;
@@ -251,7 +258,7 @@
   }
   .childrenContainer {
     padding-top: var(--spacing-xlarge);
-    border-top: 1px solid #d9dae5;
+    border-top: 1px solid rgb(217, 218, 229);
   }
   :global {
     .OverlaySpinner--overlaySpinner {
@@ -305,7 +312,7 @@
 
 .step2Container {
   .radioGroupTitle {
-    color: #0b0b0d !important;
+    color: var(--grey-900) !important;
     font-size: 14px !important;
     margin-bottom: 10px !important;
   }

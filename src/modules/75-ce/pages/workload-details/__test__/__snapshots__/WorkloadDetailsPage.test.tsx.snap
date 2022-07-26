@@ -126,7 +126,7 @@ exports[`test cases for Workload details Page should be able to render the detai
     </div>
   </div>
   <div
-    class="StyledProps--font StyledProps--main PageBody--pageBody"
+    class="StyledProps--font StyledProps--main PageBody--pageBody pageCtn"
     data-name="page-body"
   >
     <div

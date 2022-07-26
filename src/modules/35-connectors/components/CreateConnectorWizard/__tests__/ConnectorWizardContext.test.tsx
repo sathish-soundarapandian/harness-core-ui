@@ -7,7 +7,6 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import { TestWrapper } from '@common/utils/testUtils'
 import { ConnectorWizardContextProvider, useConnectorWizard } from '../ConnectorWizardContext'
 
 jest.mock('@harness/help-panel', () => ({
@@ -39,23 +38,6 @@ describe('connector wizard context test', () => {
       </ConnectorWizardContextProvider>
     )
 
-    expect(container.querySelector('[class*="helpPanelContainer"]')).toBeNull()
-  })
-
-  test('connector wizard context provider with help panel when feature flag is on', () => {
-    const { container } = render(
-      <TestWrapper
-        defaultAppStoreValues={{
-          featureFlags: {
-            HELP_PANEL: true
-          }
-        }}
-      >
-        <ConnectorWizardContextProvider>
-          <TestComponent />
-        </ConnectorWizardContextProvider>
-      </TestWrapper>
-    )
     expect(container.querySelector('[class*="helpPanelContainer"]')).not.toBeNull()
   })
 })

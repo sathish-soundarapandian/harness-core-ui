@@ -7,7 +7,7 @@
 
 import { isEmpty } from 'lodash-es'
 import type { FormikErrors } from 'formik'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithExecutionTime, AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
 import type { UseFromStageInfraYaml } from 'services/ci'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { StringsMap } from 'stringTypes'
@@ -47,25 +47,36 @@ export const validateConnectorRefAndImageDepdendency = (
   return errors
 }
 
-export const AllMultiTypeInputTypesForStep = [
+export const AllMultiTypeInputTypesForStep: AllowedTypesWithRunTime[] = [
   MultiTypeInputType.FIXED,
   MultiTypeInputType.EXPRESSION,
   MultiTypeInputType.RUNTIME
 ]
 
-export const AllMultiTypeInputTypesForInputSet = [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+export const AllMultiTypeInputTypesForInputSet: AllowedTypesWithExecutionTime[] = [
+  MultiTypeInputType.FIXED,
+  MultiTypeInputType.EXPRESSION
+]
 
 /* Field of type lists have some limitations to support all three input types */
 
 /* a field of type list cannot assume expression as supported a value */
-export const SupportedInputTypesForListTypeField = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+export const SupportedInputTypesForListTypeField: AllowedTypesWithRunTime[] = [
+  MultiTypeInputType.FIXED,
+  MultiTypeInputType.RUNTIME
+]
 
 /* Note:  list items do not support runtime inputs by design, captured in https://harness.atlassian.net/browse/PIE-2617 */
 
 /* for few fields, list items cannot support be expressions due to a limitation, captured in https://harness.atlassian.net/browse/CI-3950 */
-export const SupportedInputTypesForOPVarsListItems = [MultiTypeInputType.FIXED]
+export const SupportedInputTypesForOPVarsListItems: AllowedTypesWithRunTime[] = [MultiTypeInputType.FIXED]
 
 /* few fields are able to support expressions for list items */
-export const SupportedInputTypesForListItems = [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+export const SupportedInputTypesForListItems: AllowedTypesWithRunTime[] = [
+  MultiTypeInputType.FIXED,
+  MultiTypeInputType.EXPRESSION
+]
 
-export const SupportedInputTypesForListTypeFieldInInputSetView = [MultiTypeInputType.FIXED]
+export const SupportedInputTypesForListTypeFieldInInputSetView: AllowedTypesWithExecutionTime[] = [
+  MultiTypeInputType.FIXED
+]

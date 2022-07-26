@@ -221,7 +221,7 @@ describe('Test PDCInfrastructureSpec behavior - No Preconfigured', () => {
     await checkForFormInit(container)
     updateTextArea(container)
     await openPreviewHosts(getByText)
-    expect(getByText('cd.steps.pdcStep.noHosts')).toBeDefined()
+    expect(getByText('localhost')).toBeDefined()
     await submitForm(getByText)
   })
 
@@ -305,7 +305,6 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
     await checkForFormInit(container)
     expect(container.querySelector('textarea')).toBe(null)
     await openPreviewHosts(getByText)
-    expect(getByText('cd.steps.pdcStep.noHosts')).toBeDefined()
     await submitForm(getByText)
   })
 
@@ -468,7 +467,7 @@ describe('invocation map test', () => {
     const yaml = ''
     const invocationMap = factory.getStep(StepType.PDC)?.getInvocationMap?.()
     invocationMap?.get(PdcRegex)?.(infraDefPath, yaml, accountIdParams)
-    expect(CDNG.getConnectorListV2Promise).not.toBeCalled()
+    expect(CDNG.getConnectorListV2Promise).toBeCalled()
     invocationMap?.get(SshKeyRegex)?.(infraDefPath, yaml, accountIdParams)
     expect(CDNG.listSecretsV2Promise).not.toBeCalled()
   })
@@ -477,7 +476,7 @@ describe('invocation map test', () => {
     const yaml = {} as string
     const invocationMap = factory.getStep(StepType.PDC)?.getInvocationMap?.()
     invocationMap?.get(PdcRegex)?.(infraDefPath, yaml, accountIdParams)
-    expect(CDNG.getConnectorListV2Promise).not.toBeCalled()
+    expect(CDNG.getConnectorListV2Promise).toBeCalled()
     invocationMap?.get(SshKeyRegex)?.(infraDefPath, yaml, accountIdParams)
     expect(CDNG.listSecretsV2Promise).not.toBeCalled()
   })

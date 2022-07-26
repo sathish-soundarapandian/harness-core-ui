@@ -7,7 +7,16 @@
 
 import * as Yup from 'yup'
 import { useStrings, UseStringsReturn } from 'framework/strings'
-import { illegalIdentifiers, regexEmail, regexIdentifier, regexName } from '@common/utils/StringUtils'
+import {
+  illegalIdentifiers,
+  regexEmail,
+  regexIdentifier,
+  regexName,
+  regexVersionLabel
+} from '@common/utils/StringUtils'
+
+const MAX_VERSION_LABEL_LENGTH = 63
+
 interface EmailProps {
   allowMultiple?: boolean
   emailSeparator?: string
@@ -45,7 +54,10 @@ export function IdentifierSchemaWithOutName(
     .trim()
     .matches(regexIdentifier, config?.regexErrorMsg ? config?.regexErrorMsg : getString('validation.validIdRegex'))
     .required(config?.requiredErrorMsg ? config?.requiredErrorMsg : getString('validation.identifierRequired'))
-    .notOneOf(illegalIdentifiers)
+    .notOneOf(
+      illegalIdentifiers,
+      getString('common.invalidIdentifiers', { identifiers: illegalIdentifiers.join(', ') })
+    )
 }
 
 export function IdentifierSchemaWithoutHook(
@@ -89,6 +101,23 @@ export function EmailSchema(emailProps: EmailProps = {}): Yup.Schema<string> {
     .required(getString('common.validation.email.required'))
     .email(getString('common.validation.email.format'))
 }
+export function EmailSchemaWithoutRequired(emailProps: EmailProps = {}): Yup.Schema<string | undefined> {
+  const { getString } = useStrings()
+
+  if (emailProps.allowMultiple)
+    return Yup.string()
+      .trim()
+      .test('email', getString('common.validation.email.format'), value =>
+        value
+          ? value.split(emailProps.emailSeparator).every((emailString: string) => {
+              const emailStringTrim = emailString.trim()
+              return emailStringTrim ? Yup.string().email().isValidSync(emailStringTrim) : false
+            })
+          : true
+      )
+
+  return Yup.string().trim().email(getString('common.validation.email.format'))
+}
 
 export function URLValidationSchema(): Yup.Schema<string | undefined> {
   const { getString } = useStrings()
@@ -111,4 +140,29 @@ export const ConnectorRefSchema = (config?: { requiredErrorMsg?: string }): Yup.
   return Yup.mixed().required(
     config?.requiredErrorMsg ? config?.requiredErrorMsg : getString('pipelineSteps.build.create.connectorRequiredError')
   )
+}
+
+export function TemplateVersionLabelSchema() {
+  const { getString } = useStrings()
+  const versionLabelText = getString('common.versionLabel')
+  return Yup.string()
+    .trim()
+    .required(
+      getString('common.validation.fieldIsRequired', {
+        name: versionLabelText
+      })
+    )
+    .matches(
+      regexVersionLabel,
+      getString('common.validation.fieldMustStartWithAlphanumericAndCanNotHaveSpace', {
+        name: versionLabelText
+      })
+    )
+    .max(
+      MAX_VERSION_LABEL_LENGTH,
+      getString('common.validation.fieldCannotbeLongerThanN', {
+        name: versionLabelText,
+        n: MAX_VERSION_LABEL_LENGTH
+      })
+    )
 }

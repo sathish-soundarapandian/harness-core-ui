@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Accordion, Formik, MultiTypeInputType } from '@wings-software/uicore'
+import { Accordion, Formik, AllowedTypes } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 
@@ -31,7 +31,7 @@ interface CustomApprovalWidgetProps {
   initialValues: CustomApprovalFormData
   onUpdate?: (data: CustomApprovalFormData) => void
   onChange?: (data: CustomApprovalFormData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   readonly?: boolean
   stepViewType?: StepViewType
   isNewStep?: boolean
@@ -43,7 +43,7 @@ export function CustomApprovalWidget(
     onUpdate,
     onChange,
     allowableTypes,
-    isNewStep = true,
+    isNewStep = /* istanbul ignore next */ true,
     readonly,
     stepViewType
   }: CustomApprovalWidgetProps,
@@ -55,11 +55,11 @@ export function CustomApprovalWidget(
     ...getNameAndIdentifierSchema(getString, stepViewType),
     timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
     spec: Yup.object().shape({
-      retryInterval: getDurationValidationSchema().required(
-        getString('pipeline.customApprovalStep.validation.retryIntervalIsRequired')
+      retryInterval: getDurationValidationSchema({ minimum: '10s' }).required(
+        getString('pipeline.customApprovalStep.validation.minimumRetryIntervalIs10Secs')
       ),
-      scriptTimeout: getDurationValidationSchema().required(
-        getString('pipeline.customApprovalStep.validation.scriptTimeoutIsRequired')
+      scriptTimeout: getDurationValidationSchema({ minimum: '10s' }).required(
+        getString('pipeline.customApprovalStep.validation.minimumScriptTimeoutIs10Secs')
       ),
       source: Yup.object().shape({
         spec: Yup.object().shape({
@@ -80,9 +80,14 @@ export function CustomApprovalWidget(
         spec: Yup.object().when('type', {
           is: ApprovalRejectionCriteriaType.KeyValues,
           then: Yup.object().shape({
-            conditions: Yup.array().required(
-              getString('pipeline.approvalCriteria.validations.approvalCriteriaCondition')
-            )
+            conditions: Yup.array()
+              .min(1, getString('pipeline.approvalCriteria.validations.approvalCriteriaCondition'))
+              .of(
+                Yup.object().shape({
+                  key: Yup.string().required(getString('common.validation.fieldIsRequired', { name: 'Field' })),
+                  value: Yup.string().trim().required(getString('common.validation.valueIsRequired'))
+                })
+              )
           }),
           otherwise: Yup.object().shape({
             expression: Yup.string().trim().required(getString('pipeline.approvalCriteria.validations.expression'))
@@ -94,9 +99,12 @@ export function CustomApprovalWidget(
 
   return (
     <Formik<CustomApprovalFormData>
-      onSubmit={submit => {
-        onUpdate?.(submit)
-      }}
+      onSubmit={
+        /* istanbul ignore next */ submit => {
+          /* istanbul ignore next */
+          onUpdate?.(submit)
+        }
+      }
       validate={formValues => {
         onChange?.(formValues)
       }}

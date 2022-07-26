@@ -546,3 +546,17 @@ export const getTimeFormatForAnomaliesCard = (
 
   return diff < 2 ? HOURS : DAYS
 }
+
+export const getServiceTitle = (
+  getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
+  monitoredServiceIdentifier = ''
+) => (monitoredServiceIdentifier ? getString('cv.monitoredServices.title') : getString('cv.slos.title'))
+
+export const isSLOFilterApplied = (
+  getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
+  filterState: SLOFilterState
+) =>
+  getMonitoredServiceSLODashboardParams(getString, filterState.monitoredService) ||
+  getFilterValueForSLODashboardParams(getString, filterState.userJourney) ||
+  getFilterValueForSLODashboardParams(getString, filterState.targetTypes) ||
+  getFilterValueForSLODashboardParams(getString, filterState.sliTypes)

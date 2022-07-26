@@ -61,6 +61,7 @@ export const FetchAllPerspectivesDocument = gql`
         reportScheduledConfigured
         dataSources
         folderId
+        folderName
         groupBy {
           fieldId
           fieldName
@@ -178,6 +179,7 @@ export const FetchBudgetDocument = gql`
         percentage
         emailAddresses
         userGroupIds
+        slackWebhooks
       }
     }
   }
@@ -723,12 +725,13 @@ export const FetchPerspectiveTimeSeriesDocument = gql`
     $filters: [QLCEViewFilterWrapperInput]
     $groupBy: [QLCEViewGroupByInput]
     $limit: Int
+    $preferences: QLCEViewPreferencesInput
   ) {
     perspectiveTimeSeriesStats(
       filters: $filters
       groupBy: $groupBy
       limit: $limit
-      preferences: { includeOthers: false, includeUnallocatedCost: false }
+      preferences: $preferences
       aggregateFunction: [{ operationType: SUM, columnName: "cost" }]
       sortCriteria: [{ sortType: COST, sortOrder: DESCENDING }]
     ) {
@@ -1242,6 +1245,7 @@ export type FetchAllPerspectivesQuery = {
       reportScheduledConfigured: boolean
       dataSources: Array<ViewFieldIdentifier | null> | null
       folderId: string | null
+      folderName: string | null
       groupBy: {
         __typename?: 'QLCEViewField'
         fieldId: string
@@ -1360,6 +1364,7 @@ export type FetchBudgetQuery = {
       percentage: number
       emailAddresses: Array<string | null> | null
       userGroupIds: Array<string | null> | null
+      slackWebhooks: Array<string | null> | null
     } | null> | null
   } | null> | null
 }
@@ -1816,6 +1821,7 @@ export type FetchPerspectiveTimeSeriesQueryVariables = Exact<{
   filters: InputMaybe<Array<InputMaybe<QlceViewFilterWrapperInput>> | InputMaybe<QlceViewFilterWrapperInput>>
   groupBy: InputMaybe<Array<InputMaybe<QlceViewGroupByInput>> | InputMaybe<QlceViewGroupByInput>>
   limit: InputMaybe<Scalars['Int']>
+  preferences: InputMaybe<QlceViewPreferencesInput>
 }>
 
 export type FetchPerspectiveTimeSeriesQuery = {
@@ -2743,6 +2749,7 @@ export type QlceView = {
   createdBy: Maybe<Scalars['String']>
   dataSources: Maybe<Array<Maybe<ViewFieldIdentifier>>>
   folderId: Maybe<Scalars['String']>
+  folderName: Maybe<Scalars['String']>
   groupBy: Maybe<QlceViewField>
   id: Maybe<Scalars['String']>
   lastUpdatedAt: Maybe<Scalars['Long']>

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { cloneDeep, defaultTo, set } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isEmpty, set } from 'lodash-es'
 import type { SelectOption } from '@wings-software/uicore'
 
 import { getStageFromPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
@@ -46,18 +46,57 @@ function mergeStage(props: MergeStageProps): StageElementWrapperConfig {
   const { stage, inputSetPortion, allValues, shouldUseDefaultValues } = props
   const stageIdToBeMatched = defaultTo(stage.stage?.identifier, '')
   const matchedStageInInputSet = getStageFromPipeline(stageIdToBeMatched, inputSetPortion.pipeline)
-  const matchedStageInAllValues = getStageFromPipeline(stageIdToBeMatched, allValues.pipeline)
 
   if (matchedStageInInputSet.stage) {
-    let updatedStageVars = []
-    if (stage?.stage?.variables && matchedStageInInputSet?.stage?.stage?.variables) {
-      updatedStageVars = getMergedVariables({
-        variables: defaultTo(stage?.stage?.variables, []) as AllNGVariables[],
-        inputSetVariables: defaultTo(matchedStageInInputSet.stage.stage?.variables, []) as AllNGVariables[],
+    const matchedStageInAllValues = getStageFromPipeline(stageIdToBeMatched, allValues.pipeline)
+    const isStageTemplate = !isEmpty(stage.stage?.template)
+    const templateStageDefaultPath = `stage.template.templateInputs`
+    const serviceVariablePath = `spec.serviceConfig.serviceDefinition.spec.variables`
+
+    const stageVariables = isStageTemplate
+      ? get(stage, `${templateStageDefaultPath}.variables`)
+      : get(stage, `stage.variables`)
+    const stageInputSetVariables = matchedStageInInputSet.stage?.stage?.template
+      ? get(matchedStageInInputSet.stage, `${templateStageDefaultPath}.variables`)
+      : get(matchedStageInInputSet.stage, `stage.variables`)
+
+    if (stageVariables && stageInputSetVariables) {
+      const updatedStageVars = getMergedVariables({
+        variables: defaultTo(stageVariables, []) as AllNGVariables[],
+        inputSetVariables: defaultTo(stageInputSetVariables, []) as AllNGVariables[],
         allVariables: defaultTo(matchedStageInAllValues.stage?.stage?.variables, []) as AllNGVariables[],
         shouldUseDefaultValues
       })
-      matchedStageInInputSet.stage.stage.variables = updatedStageVars
+      set(
+        matchedStageInInputSet,
+        matchedStageInInputSet.stage.stage?.template
+          ? `stage.${templateStageDefaultPath}.variables`
+          : 'stage.stage.variables',
+        updatedStageVars
+      )
+    }
+    //This is to set default value for Service variables in formik
+    const serviceVariables = isStageTemplate
+      ? get(stage, `${templateStageDefaultPath}.${serviceVariablePath}`)
+      : get(stage, `stage.${serviceVariablePath}`)
+    const inputSetServiceVariables = matchedStageInInputSet.stage?.stage?.template
+      ? get(matchedStageInInputSet.stage, `${templateStageDefaultPath}.${serviceVariablePath}`)
+      : get(matchedStageInInputSet.stage, `stage.${serviceVariablePath}`)
+
+    if (serviceVariables && inputSetServiceVariables) {
+      const updatedStageServiceVars = getMergedVariables({
+        variables: defaultTo(serviceVariables, []) as AllNGVariables[],
+        inputSetVariables: defaultTo(inputSetServiceVariables, []) as AllNGVariables[],
+        allVariables: defaultTo(get(matchedStageInAllValues.stage?.stage, serviceVariablePath), []) as AllNGVariables[],
+        shouldUseDefaultValues
+      })
+      set(
+        matchedStageInInputSet,
+        matchedStageInInputSet.stage.stage?.template
+          ? `stage.${templateStageDefaultPath}.${serviceVariablePath}`
+          : `stage.stage.${serviceVariablePath}`,
+        updatedStageServiceVars
+      )
     }
     return matchedStageInInputSet.stage
   }
@@ -130,10 +169,7 @@ export const mergeTemplateWithInputSetData = (props: MergeTemplateWithInputSetDa
             (inputSetPortion.pipeline?.template?.templateInputs as PipelineInfoConfig)?.variables,
             []
           ) as AllNGVariables[],
-          allVariables: defaultTo(
-            (allValues.pipeline?.template?.templateInputs as PipelineInfoConfig)?.variables,
-            []
-          ) as AllNGVariables[],
+          allVariables: defaultTo(allValues.pipeline?.variables, []) as AllNGVariables[],
           shouldUseDefaultValues
         })
       )

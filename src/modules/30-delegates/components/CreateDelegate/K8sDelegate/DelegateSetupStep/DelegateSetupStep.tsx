@@ -21,7 +21,6 @@ import {
   SelectOption,
   Tag
 } from '@wings-software/uicore'
-import * as Yup from 'yup'
 import type { FormikProps, FormikHelpers } from 'formik'
 import {
   DelegateSizeDetails,
@@ -48,8 +47,9 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, DelegateActions } from '@common/constants/TrackingConstants'
 import SelectDelegateType, { FormikForSelectDelegateType } from './components/SelectDelegateType'
 import DelegateSizes from '../../components/DelegateSizes/DelegateSizes'
-import { DelegateType } from './DelegateSetupStep.types'
+import { DelegateType, k8sPermissionType } from './DelegateSetupStep.types'
 
+import { validateDelegateSetupDetails } from './DelegateSetupStep.utils'
 import css from './DelegateSetupStep.module.scss'
 
 interface DelegateSetupStepProps {
@@ -62,15 +62,6 @@ export interface K8sDelegateWizardData {
   name: string
   replicas?: number
 }
-
-enum k8sPermissionType {
-  CLUSTER_ADMIN = 'CLUSTER_ADMIN',
-  CLUSTER_VIEWER = 'CLUSTER_VIEWER',
-  NAMESPACE_ADMIN = 'NAMESPACE_ADMIN'
-}
-
-//this regex is retrieved from kubernetes
-const delegateNameRegex = /^[a-z]([-a-z0-9]*[a-z])?(\.[a-z0-9]([-a-z0-9]*[a-z])?)*$/g
 
 const formatProfileList = (data: any): Array<SelectOption> => {
   const profiles: Array<DelegateProfile> = data?.resource?.response
@@ -183,8 +174,14 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
   )
   const { trackEvent } = useTelemetry()
 
+  const validateDelegateSetupSchema = validateDelegateSetupDetails(
+    getString,
+    selectedPermission,
+    IS_HELM_DELEGATE_ENABLED
+  )
+
   const onSubmit = async (values: DelegateSetupDetails, formikActions: FormikHelpers<DelegateSetupDetails>) => {
-    const createParams = { ...values }
+    const createParams = validateDelegateSetupSchema.cast(values) as DelegateSetupDetails
     if (createParams.tags) {
       const tagsArray = Object.keys(values.tags || {})
       set(createParams, 'tags', tagsArray)
@@ -251,25 +248,7 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
             onSubmit(values, formikActions)
           }}
           formName="delegateSetupStepForm"
-          validationSchema={Yup.object().shape({
-            name: Yup.string()
-              .trim()
-              .required(getString('delegate.delegateNameRequired'))
-              .max(63)
-              .matches(delegateNameRegex, getString('delegates.delegateNameRegexIssue')),
-            size: Yup.string().trim().required(getString('delegate.delegateSizeRequired')),
-            k8sConfigDetails: Yup.object().shape({
-              k8sPermissionType: Yup.string().trim().required(getString('delegates.permissionRequired')),
-              namespace:
-                selectedPermission === k8sPermissionType.NAMESPACE_ADMIN
-                  ? Yup.string().trim().required(getString('delegates.delegateNamespaceRequired'))
-                  : Yup.string().trim()
-            }),
-            tokenName: Yup.string().trim().required(),
-            delegateType: IS_HELM_DELEGATE_ENABLED
-              ? Yup.string().required(getString('delegates.delegateCreation.installerSelectionRequired'))
-              : Yup.string().trim()
-          })}
+          validationSchema={validateDelegateSetupSchema}
         >
           {(formikProps: FormikProps<DelegateSetupDetails>) => {
             const selectors: any = getProfile(data, formikProps.values.delegateConfigurationId)

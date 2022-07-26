@@ -11,6 +11,7 @@ import type { PipelineInfrastructure } from 'services/cd-ng'
 export enum StepType {
   HTTP = 'Http',
   SHELLSCRIPT = 'ShellScript',
+  Command = 'Command',
   CustomApproval = 'CustomApproval',
   Barrier = 'Barrier',
   Queue = 'Queue',
@@ -72,18 +73,23 @@ export enum StepType {
   ZeroNorth = 'Security',
   KubernetesAzure = 'KubernetesAzure',
   SshWinRmAzure = 'SshWinRmAzure',
+  AzureWebApp = 'AzureWebApp',
+  AzureWebAppServiceSpec = 'AzureWebAppServiceSpec',
   ServerlessAwsLambdaDeploy = 'ServerlessAwsLambdaDeploy',
   ServerlessAwsLambdaRollback = 'ServerlessAwsLambdaRollback',
   ServerlessAwsInfra = 'ServerlessAwsInfra',
   CloudFormationRollbackStack = 'RollbackStack',
   CloudFormationDeleteStack = 'DeleteStack',
   CloudFormationCreateStack = 'CreateStack',
+  SshServiceSpec = 'SshServiceSpec',
+  WinRmServiceSpec = 'WinRmServiceSpec',
   CreatePR = 'CreatePR',
   MergePR = 'MergePR',
   AzureWebAppsRollback = 'AzureWebAppRollback',
   AzureSlotDeployment = 'AzureSlotDeployment',
   JenkinsBuild = 'JenkinsBuild',
-  AzureTrafficShift = 'AzureTrafficShift'
+  AzureTrafficShift = 'AzureTrafficShift',
+  AzureSwapSlot = 'AzureSwapSlot'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

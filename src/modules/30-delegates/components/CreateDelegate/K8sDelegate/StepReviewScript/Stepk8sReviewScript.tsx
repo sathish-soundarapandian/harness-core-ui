@@ -23,9 +23,9 @@ import {
 
 import type { K8sDelegateWizardData } from '../DelegateSetupStep/DelegateSetupStep'
 
+import { DelegateType } from '../DelegateSetupStep/DelegateSetupStep.types'
+import { DelegateFileName } from '../K8sDelegate.constants'
 import css from '../CreateK8sDelegate.module.scss'
-
-const k8sFileName = 'harness-delegate.yml'
 
 const Stepk8ReviewScript: React.FC<StepProps<K8sDelegateWizardData>> = props => {
   const { prevStepData } = props
@@ -48,13 +48,15 @@ const Stepk8ReviewScript: React.FC<StepProps<K8sDelegateWizardData>> = props => 
   })
   const linkRef = React.useRef<HTMLAnchorElement>(null)
   const [generatedYaml, setGeneratedYaml] = React.useState<string>()
+  const delegateType = prevStepData?.delegateYaml?.delegateType || DelegateType.KUBERNETES
+  const isDelegateTypeHelm = delegateType === DelegateType.HELM_CHART
+  const delegateFileName = isDelegateTypeHelm ? DelegateFileName.helmFileName : DelegateFileName.k8sFileName
 
   const onGenYaml = async (): Promise<void> => {
-    const delegateType = prevStepData?.delegateYaml?.delegateType || 'KUBERNETES'
     const data = prevStepData?.delegateYaml || {}
     set(data, 'delegateType', delegateType)
     let response
-    if (delegateType !== 'KUBERNETES') {
+    if (isDelegateTypeHelm) {
       response = await downloadNgHelmValuesYaml(data as HelmDelegateSetupDetails)
     } else {
       response = await downloadKubernetesYaml(data as DelegateSetupDetails)
@@ -76,7 +78,7 @@ const Stepk8ReviewScript: React.FC<StepProps<K8sDelegateWizardData>> = props => 
     if (linkRef?.current) {
       const content = new Blob([generatedYaml as BlobPart], { type: 'data:text/plain;charset=utf-8' })
       linkRef.current.href = window.URL.createObjectURL(content)
-      linkRef.current.download = k8sFileName
+      linkRef.current.download = delegateFileName
       linkRef.current.click()
     }
   }
@@ -87,7 +89,7 @@ const Stepk8ReviewScript: React.FC<StepProps<K8sDelegateWizardData>> = props => 
           <div className={css.collapseDiv}>
             <YamlBuilder
               entityType="Delegates"
-              fileName={k8sFileName}
+              fileName={delegateFileName}
               isReadOnlyMode={true}
               isEditModeSupported={false}
               hideErrorMesageOnReadOnlyMode={true}
@@ -152,13 +154,19 @@ const Stepk8ReviewScript: React.FC<StepProps<K8sDelegateWizardData>> = props => 
           </Layout.Horizontal>
           <Layout.Vertical padding="small">
             <Text lineClamp={3} width={514} font="small">
-              {getString('delegate.reviewScript.descriptionProxySettings')}
+              {isDelegateTypeHelm
+                ? getString('delegates.reviewScript.descriptionHelmProxySettings')
+                : getString('delegate.reviewScript.descriptionProxySettings')}
             </Text>
             <Text lineClamp={3} width={514} font="small">
               {getString('delegates.reviewScript.docLinkBefore')}
               <a
                 rel="noreferrer"
-                href="https://ngdocs.harness.io/article/5ww21ewdt8-configure-delegate-proxy-settings"
+                href={
+                  isDelegateTypeHelm
+                    ? 'https://docs.harness.io/article/5ww21ewdt8-configure-delegate-proxy-settings#kubernetes_proxy_settings'
+                    : 'https://docs.harness.io/article/5ww21ewdt8-configure-delegate-proxy-settings'
+                }
                 target="_blank"
               >
                 {getString('delegates.reviewScript.docLink')}

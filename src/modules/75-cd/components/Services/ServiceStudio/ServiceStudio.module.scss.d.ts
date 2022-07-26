@@ -10,6 +10,7 @@ declare const styles: {
   readonly btnContainer: string
   readonly discardBtn: string
   readonly saveButton: string
+  readonly stickyBtnContainer: string
   readonly tabsContainer: string
   readonly tagRender: string
 }

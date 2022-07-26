@@ -37,10 +37,7 @@ export const processFormData = (values: JiraUpdateData): JiraUpdateData => {
   return {
     ...values,
     spec: {
-      connectorRef:
-        getMultiTypeFromValue(values.spec.connectorRef as SelectOption) === MultiTypeInputType.FIXED
-          ? (values.spec.connectorRef as SelectOption)?.value?.toString()
-          : values.spec.connectorRef,
+      connectorRef: values.spec.connectorRef,
       issueKey: values.spec.issueKey,
       transitionTo:
         values.spec.transitionTo?.transitionName || values.spec.transitionTo?.status

@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { ButtonVariation, Container, FormInput, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
+import { ButtonVariation, Container, FormInput, AllowedTypes, SelectOption } from '@wings-software/uicore'
 import cx from 'classnames'
 
 import type { FormikProps } from 'formik'
@@ -29,14 +29,16 @@ import VerifyStepMonitoredServiceInputTemplates from './components/VerifyStepMon
 import {
   getInitialHealthSources,
   getInitialHealthSourceVariables,
+  getInitialServiceAndEnv,
   getUpdatedSpecs
 } from './SelectMonitoredServiceType.utils'
+import type { ServiceAndEnv } from './SelectMonitoredServiceType.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './SelectMonitoredServiceType.module.scss'
 
-interface SelectMonitoredServiceTypeProps {
+export interface SelectMonitoredServiceTypeProps {
   formik: FormikProps<ContinousVerificationData>
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export default function SelectMonitoredServiceType(props: SelectMonitoredServiceTypeProps): React.ReactElement {
@@ -60,6 +62,7 @@ export default function SelectMonitoredServiceType(props: SelectMonitoredService
   const [healthSourcesVariables, setHealthSourcesVariables] = useState<TemplateInputs['variables']>(
     getInitialHealthSourceVariables(formValues)
   )
+  const [serviceAndEnv, setServiceAndEnv] = useState<ServiceAndEnv>(getInitialServiceAndEnv(formValues))
   const [templateData, setTemplate] = useState<TemplateSummaryResponse | null>()
 
   const queryParams = {
@@ -85,7 +88,7 @@ export default function SelectMonitoredServiceType(props: SelectMonitoredService
     const { versionLabel: latestVersionLabel = '', identifier = '' } = template || {}
     if (latestVersionLabel && identifier) {
       await fetchTemplateInputSet({
-        queryParams: { ...queryParams, versionLabel },
+        queryParams: { ...queryParams, versionLabel: latestVersionLabel },
         pathParams: { templateIdentifier: identifier }
       })
     }
@@ -95,9 +98,20 @@ export default function SelectMonitoredServiceType(props: SelectMonitoredService
   useEffect(() => {
     if (templateInputYaml && templateData) {
       const newSpecs = getUpdatedSpecs(formValues, templateInputYaml, templateData)
+
+      const {
+        serviceRef: newServiceRef = '',
+        environmentRef: newEnvRef = '',
+        variables = []
+      } = newSpecs?.monitoredService?.spec?.templateInputs || {}
+
       setFieldValue('spec', newSpecs)
+      setServiceAndEnv({
+        serviceRef: newServiceRef,
+        environmentRef: newEnvRef
+      })
       setHealthSources(newSpecs?.monitoredService?.spec?.templateInputs?.sources?.healthSources || [])
-      setHealthSourcesVariables(newSpecs?.monitoredService?.spec?.templateInputs?.variables || [])
+      setHealthSourcesVariables(variables)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [templateData, templateInputYaml])
@@ -122,6 +136,7 @@ export default function SelectMonitoredServiceType(props: SelectMonitoredService
           allowableTypes={allowableTypes}
           healthSources={healthSources}
           healthSourcesVariables={healthSourcesVariables}
+          serviceAndEnv={serviceAndEnv}
         />
       )
     } else {

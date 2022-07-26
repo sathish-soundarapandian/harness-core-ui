@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, AllowedTypes } from '@wings-software/uicore'
 import { get, defaultTo } from 'lodash-es'
 import cx from 'classnames'
 
@@ -23,7 +23,7 @@ export interface MergePrInputStepProps {
   initialValues: StepElementConfig
   onUpdate?: (data: StepElementConfig) => void
   onChange?: (data: StepElementConfig) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   readonly?: boolean
   template?: StepElementConfig

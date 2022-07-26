@@ -5,14 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Card, Color, FormInput, Layout, MultiTypeInputType, Text } from '@harness/uicore'
+import { AllowedTypes, Card, Color, FormInput, Layout, Text } from '@harness/uicore'
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import type { VerifyStepMonitoredService } from '@cv/components/PipelineSteps/ContinousVerification/types'
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import {
-  getLabelByName,
+  getFieldLabelForVerifyTemplate,
   getNestedRuntimeInputs
 } from '@cv/pages/monitored-service/CVMonitoredService/MonitoredServiceInputSetsTemplate.utils'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -26,15 +26,15 @@ import { getMultiTypeInputProps } from '../../../ContinousVerificationWidget/com
 import { getRunTimeInputsFromHealthSource } from './TemplatisedRunTimeMonitoredService.utils'
 import css from './TemplatisedRunTimeMonitoredService.module.scss'
 
-interface TemplatisedRunTimeMonitoredServiceServiceProps {
+export interface TemplatisedRunTimeMonitoredServiceProps {
   prefix: string
   monitoredService?: VerifyStepMonitoredService
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export default function TemplatisedRunTimeMonitoredService(
-  props: TemplatisedRunTimeMonitoredServiceServiceProps
+  props: TemplatisedRunTimeMonitoredServiceProps
 ): JSX.Element {
   const { prefix, monitoredService, expressions, allowableTypes } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelineType<ProjectPathProps>>()
@@ -52,7 +52,7 @@ export default function TemplatisedRunTimeMonitoredService(
         {checkIfRunTimeInput(serviceRef) ? (
           <FormInput.MultiTypeInput
             name={`${prefix}spec.monitoredService.spec.templateInputs.serviceRef`}
-            label={getString('cv.healthSource.serviceLabel')}
+            label={getString('service')}
             selectItems={serviceOptions}
             multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
             useValue
@@ -61,7 +61,7 @@ export default function TemplatisedRunTimeMonitoredService(
         {checkIfRunTimeInput(environmentRef) ? (
           <FormInput.MultiTypeInput
             name={`${prefix}spec.monitoredService.spec.templateInputs.environmentRef`}
-            label={getString('cv.healthSource.environmentLabel')}
+            label={getString('environment')}
             selectItems={environmentOptions}
             multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
             useValue
@@ -87,7 +87,7 @@ export default function TemplatisedRunTimeMonitoredService(
                       accountIdentifier={accountId}
                       projectIdentifier={projectIdentifier}
                       orgIdentifier={orgIdentifier}
-                      width={391}
+                      width={370}
                       name={`${prefix}spec.monitoredService.spec.templateInputs.${input.path}`}
                       label={getString('connector')}
                       placeholder={getString('cv.healthSource.connectors.selectConnector', {
@@ -97,6 +97,7 @@ export default function TemplatisedRunTimeMonitoredService(
                       setRefValue
                       multiTypeProps={{ allowableTypes, expressions }}
                       type={healthSource?.type}
+                      enableConfigureOptions={false}
                     />
                   )
                 } else {
@@ -105,7 +106,7 @@ export default function TemplatisedRunTimeMonitoredService(
                       <FormInput.MultiTextInput
                         key={input.name}
                         name={`${prefix}spec.monitoredService.spec.templateInputs.${input.path}`}
-                        label={getLabelByName(input.name, getString)}
+                        label={getFieldLabelForVerifyTemplate(input.name, getString)}
                         multiTextInputProps={{
                           expressions,
                           allowableTypes
@@ -131,7 +132,7 @@ export default function TemplatisedRunTimeMonitoredService(
                         <FormInput.MultiTextInput
                           key={input.name}
                           name={`${prefix}spec.monitoredService.spec.templateInputs.${input.path}`}
-                          label={getLabelByName(input.name, getString)}
+                          label={getFieldLabelForVerifyTemplate(input.name, getString)}
                           multiTextInputProps={{
                             expressions,
                             allowableTypes

@@ -6,7 +6,14 @@
  */
 
 import React from 'react'
-import { IconName, Formik, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import {
+  IconName,
+  Formik,
+  FormInput,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  AllowedTypes
+} from '@wings-software/uicore'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
@@ -54,7 +61,7 @@ interface K8sCanaryDeployProps {
   initialValues: K8sCanaryDeployData
   onUpdate?: (data: K8sCanaryDeployData) => void
   onChange?: (data: K8sCanaryDeployData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   isNewStep?: boolean
   template?: K8sCanaryDeployData

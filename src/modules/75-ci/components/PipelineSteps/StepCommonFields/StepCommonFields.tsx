@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, SelectOption, Container, Layout, MultiTypeInputType } from '@wings-software/uicore'
+import { Text, SelectOption, Container, Layout, MultiTypeInputType, AllowedTypes } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { connect } from 'formik'
@@ -52,7 +52,7 @@ interface StepCommonFieldsProps {
   disabled?: boolean
   enableFields?: string[]
   buildInfrastructureType: K8sDirectInfraYaml['type']
-  allowableTypes?: MultiTypeInputType[]
+  allowableTypes?: AllowedTypes
 }
 
 const StepCommonFields = ({

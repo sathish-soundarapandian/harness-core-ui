@@ -6,8 +6,8 @@
  */
 
 .card {
-  width: 116px;
-  height: 116px;
+  height: 115px;
+  min-width: 160px;
   padding: var(--spacing-large) var(--spacing-medium) !important;
 
   .icon {
@@ -35,11 +35,13 @@
     font-size: var(--font-size-xsmall);
     font-weight: 600;
     letter-spacing: 0.2px;
+    border-color: var(--green-50) !important;
   }
 
   .redTag {
     background-color: var(--red-50) !important;
     color: var(--red-700);
+    border-color: var(--red-50) !important;
   }
 }
 
@@ -53,6 +55,6 @@
   }
 
   .whiteTag {
-    background-color: white !important;
+    background-color: var(--white) !important;
   }
 }

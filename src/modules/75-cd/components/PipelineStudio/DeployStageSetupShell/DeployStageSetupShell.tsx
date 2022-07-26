@@ -8,7 +8,6 @@
 import React, { useCallback } from 'react'
 import { Layout, Tabs, Tab, Button, Icon, ButtonVariation, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import cx from 'classnames'
-import type { HarnessIconName } from '@harness/icons'
 import { Expander, IconName } from '@blueprintjs/core'
 import { defaultTo, get, isEmpty, set, debounce } from 'lodash-es'
 import type { ValidationError } from 'yup'
@@ -33,14 +32,15 @@ import { useStrings } from 'framework/strings'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import {
   DeployTabs,
-  isNewServiceEnvEntity
+  ExecutionType,
+  isNewServiceEnvEntity,
+  isNewEnvInfraDef
 } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { useQueryParams } from '@common/hooks'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
 import { useAddStepTemplate } from '@pipeline/hooks/useAddStepTemplate'
 import {
-  getSelectedDeploymentType,
   getServiceDefinitionType,
   isServerlessDeploymentType,
   ServiceDeploymentType,
@@ -57,14 +57,6 @@ import DeployEnvSpecifications from '../DeployEnvSpecifications/DeployEnvSpecifi
 import DeployServiceEntitySpecifications from '../DeployServiceSpecifications/DeployServiceEntitySpecifications'
 import css from './DeployStageSetupShell.module.scss'
 
-export const MapStepTypeToIcon: { [key: string]: HarnessIconName } = {
-  Deployment: 'pipeline-deploy',
-  CI: 'pipeline-build-select',
-  Approval: 'approval-stage-icon',
-  Pipeline: 'pipeline',
-  Custom: 'custom-stage-icon'
-}
-
 const TabsOrder = [
   DeployTabs.OVERVIEW,
   DeployTabs.SERVICE,
@@ -72,7 +64,6 @@ const TabsOrder = [
   DeployTabs.EXECUTION,
   DeployTabs.ADVANCED
 ]
-
 const iconNames = { tick: 'tick' as IconName }
 
 export default function DeployStageSetupShell(): JSX.Element {
@@ -85,7 +76,9 @@ export default function DeployStageSetupShell(): JSX.Element {
       originalPipeline,
       pipelineView,
       selectionState: { selectedStageId, selectedStepId, selectedSectionId },
-      templateTypes
+      gitDetails,
+      templateTypes,
+      templateServiceData
     },
     contextType,
     stagesMap,
@@ -105,10 +98,13 @@ export default function DeployStageSetupShell(): JSX.Element {
   const [selectedTabId, setSelectedTabId] = React.useState<DeployTabs>(
     selectedStepId ? DeployTabs.EXECUTION : DeployTabs.SERVICE
   )
-
   const { stage: selectedStage } = getStageFromPipeline<DeploymentStageElementConfig>(defaultTo(selectedStageId, ''))
+  const { checkErrorsForTab } = React.useContext(StageErrorContext)
+  const gitOpsEnabled = selectedStage?.stage?.spec?.gitOpsEnabled
+  // eslint-disable-next-line react-hooks/exhaustive-deps
 
-  const selectedStrategy = selectedStage === ServiceDeploymentType.ServerlessAwsLambda ? 'Basic' : 'Rolling'
+  const isNewService = isNewServiceEnvEntity(NG_SVC_ENV_REDESIGN, selectedStage?.stage as DeploymentStageElementConfig)
+  const isNewEnvDef = isNewEnvInfraDef(NG_SVC_ENV_REDESIGN, selectedStage?.stage as DeploymentStageElementConfig)
 
   const debounceUpdateStage = useCallback(
     debounce(
@@ -118,6 +114,16 @@ export default function DeployStageSetupShell(): JSX.Element {
     ),
     [updateStage]
   )
+
+  const serviceDefinitionType = useCallback((): GetExecutionStrategyYamlQueryParams['serviceDefinitionType'] => {
+    return getServiceDefinitionType(
+      selectedStage,
+      getStageFromPipeline,
+      isNewServiceEnvEntity,
+      NG_SVC_ENV_REDESIGN,
+      templateServiceData
+    )
+  }, [getStageFromPipeline, NG_SVC_ENV_REDESIGN, selectedStage, templateServiceData])
 
   const setDefaultServiceSchema = useCallback((): Promise<void> => {
     const stageData = produce(selectedStage, draft => {
@@ -139,10 +145,6 @@ export default function DeployStageSetupShell(): JSX.Element {
     return debounceUpdateStage(stageData?.stage)
   }, [debounceUpdateStage, scope, selectedStage])
 
-  const serviceDefinitionType = useCallback((): GetExecutionStrategyYamlQueryParams['serviceDefinitionType'] => {
-    return getServiceDefinitionType(selectedStage, getStageFromPipeline, isNewServiceEnvEntity, NG_SVC_ENV_REDESIGN)
-  }, [getStageFromPipeline, NG_SVC_ENV_REDESIGN, selectedStage])
-
   React.useEffect(() => {
     const sectionId = (query as any).sectionId || ''
     if (sectionId?.length && (TabsOrder.includes(sectionId) || sectionId === DeployTabs.ENVIRONMENT)) {
@@ -150,6 +152,7 @@ export default function DeployStageSetupShell(): JSX.Element {
     } else {
       setSelectedSectionId(DeployTabs.SERVICE)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedSectionId])
 
   React.useEffect(() => {
@@ -158,14 +161,15 @@ export default function DeployStageSetupShell(): JSX.Element {
     }
   }, [selectedStepId])
 
-  const { checkErrorsForTab } = React.useContext(StageErrorContext)
+  React.useEffect(() => {
+    /* istanbul ignore else */
+    if (layoutRef.current) {
+      layoutRef.current.scrollTo(0, 0)
+    }
+  }, [selectedTabId])
 
   const handleTabChange = (nextTab: DeployTabs): void => {
-    if (
-      NG_SVC_ENV_REDESIGN &&
-      isEmpty(selectedStage?.stage?.spec?.infrastructure) &&
-      nextTab === DeployTabs.INFRASTRUCTURE
-    ) {
+    if (isNewEnvDef && nextTab === DeployTabs.INFRASTRUCTURE) {
       nextTab = DeployTabs.ENVIRONMENT
     }
     checkErrorsForTab(selectedTabId).then(_ => {
@@ -174,29 +178,17 @@ export default function DeployStageSetupShell(): JSX.Element {
     })
   }
 
-  React.useEffect(() => {
-    /* istanbul ignore else */
-    if (layoutRef.current) {
-      layoutRef.current.scrollTo(0, 0)
+  const selectedDeploymentType = serviceDefinitionType()
+
+  const getStrategyType = (): GetExecutionStrategyYamlQueryParams['strategyType'] => {
+    if (isNewService && gitOpsEnabled) {
+      return ExecutionType.GITOPS
+    } else if (selectedDeploymentType === ServiceDeploymentType.ServerlessAwsLambda) {
+      return ExecutionType.BASIC
     }
-  }, [selectedTabId])
-
-  const selectedDeploymentType = isNewServiceEnvEntity(
-    NG_SVC_ENV_REDESIGN,
-    selectedStage as DeploymentStageElementConfig
-  )
-    ? selectedStage?.stage?.spec?.deploymentType
-    : getSelectedDeploymentType(
-        selectedStage,
-        getStageFromPipeline,
-        !!selectedStage?.stage?.spec?.serviceConfig?.useFromStage?.stage
-      )
-
-  const strategyType = isNewServiceEnvEntity(NG_SVC_ENV_REDESIGN, selectedStage as DeploymentStageElementConfig)
-    ? 'GitOps'
-    : selectedDeploymentType === ServiceDeploymentType.ServerlessAwsLambda
-    ? 'Basic'
-    : 'Rolling'
+    return ExecutionType.ROLLING
+  }
+  const strategyType = getStrategyType()
 
   const { data: stageYamlSnippet, loading, refetch } = useGetFailureStrategiesYaml({ lazy: true })
 
@@ -232,7 +224,7 @@ export default function DeployStageSetupShell(): JSX.Element {
         }).stage as StageElementConfig
       )
     }
-  }, [yamlSnippet?.data, selectedStrategy, selectedDeploymentType, selectedStage])
+  }, [yamlSnippet?.data, selectedStage, selectedDeploymentType, updateStage])
 
   React.useEffect(() => {
     // do the following one if it is a new stage
@@ -252,6 +244,7 @@ export default function DeployStageSetupShell(): JSX.Element {
         )
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stageYamlSnippet])
 
   const validate = React.useCallback(() => {
@@ -259,7 +252,8 @@ export default function DeployStageSetupShell(): JSX.Element {
       getCDStageValidationSchema(
         getString,
         selectedDeploymentType as GetExecutionStrategyYamlQueryParams['serviceDefinitionType'],
-        NG_SVC_ENV_REDESIGN,
+        isNewService,
+        isNewEnvDef,
         contextType
       ).validateSync(selectedStage?.stage, {
         abortEarly: false,
@@ -278,7 +272,7 @@ export default function DeployStageSetupShell(): JSX.Element {
       if (!isEmpty(response.name) || !isEmpty(response.identifier) || !isEmpty(response.variables)) {
         newIncompleteTabs[DeployTabs.OVERVIEW] = true
       }
-      if (!isEmpty(get(response.spec, 'serviceConfig'))) {
+      if ((isNewService && !isEmpty(get(response.spec, 'service'))) || !isEmpty(get(response.spec, 'serviceConfig'))) {
         newIncompleteTabs[DeployTabs.SERVICE] = true
       }
       if (!isEmpty(get(response.spec, 'environment'))) {
@@ -295,11 +289,12 @@ export default function DeployStageSetupShell(): JSX.Element {
       }
       setIncompleteTabs(newIncompleteTabs)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setIncompleteTabs, selectedStage?.stage])
 
   React.useEffect(() => {
     // if serviceDefinition not selected, redirect to SERVICE - preventing strategies drawer to be opened
-    if (!serviceDefinitionType()) {
+    if (!selectedDeploymentType) {
       setSelectedTabId(DeployTabs.SERVICE)
       return
     }
@@ -310,15 +305,10 @@ export default function DeployStageSetupShell(): JSX.Element {
           const stageType = selectedStage?.stage?.type
           const openExecutionStrategy = stageType ? stagesMap[stageType].openExecutionStrategy : true
           const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(selectedDeploymentType || '')
-          const gitOpsEnabled = selectedStage?.stage?.spec?.gitOpsEnabled
+
           // Show executiomn strategies when openExecutionStrategy is true and deployment type is not serverless and
-          // when gitOpsEnabled to true
-          if (
-            openExecutionStrategy &&
-            !isServerlessDeploymentTypeSelected &&
-            selectedSectionId === DeployTabs.EXECUTION &&
-            !gitOpsEnabled
-          ) {
+          // when gitOpsEnabled to false
+          if (openExecutionStrategy && !isServerlessDeploymentTypeSelected && !gitOpsEnabled) {
             updatePipelineView({
               ...pipelineView,
               isDrawerOpened: true,
@@ -344,14 +334,15 @@ export default function DeployStageSetupShell(): JSX.Element {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedStage, selectedTabId, selectedStageId, selectedDeploymentType, selectedSectionId])
+  }, [selectedStage, selectedTabId, selectedStageId, selectedDeploymentType])
 
   React.useEffect(() => {
-    if (!serviceDefinitionType()) {
+    if (!selectedDeploymentType) {
       setSelectedTabId(DeployTabs.SERVICE)
       return
     }
     validate()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(selectedStage)])
 
   const originalStage = selectedStageId ? getStageFromPipeline(selectedStageId, originalPipeline).stage : undefined
@@ -415,7 +406,7 @@ export default function DeployStageSetupShell(): JSX.Element {
             </span>
           }
           panel={
-            isNewServiceEnvEntity(NG_SVC_ENV_REDESIGN, selectedStage?.stage as DeploymentStageElementConfig) ? (
+            isNewService ? (
               <DeployServiceEntitySpecifications>{navBtns}</DeployServiceEntitySpecifications>
             ) : (
               <DeployServiceSpecifications setDefaultServiceSchema={setDefaultServiceSchema}>
@@ -425,12 +416,15 @@ export default function DeployStageSetupShell(): JSX.Element {
           }
           data-testid="service"
         />
-        {NG_SVC_ENV_REDESIGN && isEmpty(selectedStage?.stage?.spec?.infrastructure) && (
+        {isNewEnvDef && (
           <Tab
             id={DeployTabs.ENVIRONMENT}
             title={
               <span className={css.title} data-completed={!incompleteTabs[DeployTabs.ENVIRONMENT]}>
-                <Icon name={incompleteTabs[DeployTabs.ENVIRONMENT] ? 'environment' : iconNames.tick} size={16} />
+                <Icon
+                  name={incompleteTabs[DeployTabs.ENVIRONMENT] ? 'environments-outline' : iconNames.tick}
+                  size={16}
+                />
                 {getString('environment')}
               </span>
             }
@@ -546,6 +540,7 @@ export default function DeployStageSetupShell(): JSX.Element {
             <SaveTemplateButton
               data={selectedStage.stage}
               type={'Stage'}
+              gitDetails={gitDetails}
               buttonProps={{
                 margin: { right: 'medium' },
                 disabled: !!selectedStage.stage.spec?.serviceConfig?.useFromStage

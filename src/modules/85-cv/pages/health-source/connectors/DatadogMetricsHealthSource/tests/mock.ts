@@ -63,6 +63,7 @@ export const DatadogMetricsHealthSourceMock = {
         metricName: 'mock_metric_name',
         metricTags: [],
         query: 'mock_query',
+        serviceInstanceIdentifierTag: '',
         sli: { enabled: false },
         analysis: {
           deploymentVerification: {
@@ -116,7 +117,8 @@ const mockMetricDefinitionsMap: Map<string, DatadogMetricInfo> = new Map([
       metricTags: [],
       query: 'mock_query',
       riskCategory: 'Performance/INFRA',
-      serviceInstanceIdentifierTag: undefined,
+      serviceInstance: '',
+      serviceInstanceIdentifierTag: '',
       continuousVerification: false,
       healthScore: false,
       sli: false
@@ -169,6 +171,7 @@ export const EXPECTED_DATADOG_METRIC_INFO = {
   dashboardId: 'mock_dashboard_id',
   isNew: true,
   isCustomCreatedMetric: false,
+  isManualQuery: false,
   metricName: 'mock_metric_name',
   identifier: 'mock_metric_name',
   metric: 'datadog.agent.running',

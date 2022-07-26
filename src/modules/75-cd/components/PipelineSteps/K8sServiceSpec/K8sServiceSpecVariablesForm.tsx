@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { MultiTypeInputType, NestedAccordionPanel, Text } from '@harness/uicore'
+import { AllowedTypes, NestedAccordionPanel, Text } from '@harness/uicore'
 import cx from 'classnames'
 import { FontVariation, Color } from '@harness/design-system'
 import { isEmpty, omit } from 'lodash-es'
@@ -38,7 +38,7 @@ export interface K8sServiceSpecVariablesFormProps {
   variablesData: ServiceSpec
   readonly?: boolean
   path?: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export interface VariableRowProps {
@@ -70,7 +70,7 @@ export function K8sServiceSpecVariablesForm(props: K8sServiceSpecVariablesFormPr
               </Text>
             </VariableAccordionSummary>
           }
-          summaryClassName={cx(css.variableBorderBottom, pipelineVariableCss.accordianSummaryL3)}
+          summaryClassName={pipelineVariableCss.accordianSummaryL2}
           details={
             variablesData?.artifacts && (
               <>
@@ -87,7 +87,7 @@ export function K8sServiceSpecVariablesForm(props: K8sServiceSpecVariablesFormPr
                       </Text>
                     </VariableAccordionSummary>
                   }
-                  summaryClassName={cx(css.variableBorderBottom, pipelineVariableCss.accordianSummaryL3)}
+                  summaryClassName={pipelineVariableCss.accordianSummaryL2}
                   details={
                     <VariablesListTable
                       className={pipelineVariableCss.variablePaddingL3}
@@ -112,7 +112,7 @@ export function K8sServiceSpecVariablesForm(props: K8sServiceSpecVariablesFormPr
                           </Text>
                         </VariableAccordionSummary>
                       }
-                      summaryClassName={cx(css.variableBorderBottom, pipelineVariableCss.accordianSummaryL3)}
+                      summaryClassName={pipelineVariableCss.accordianSummaryL2}
                       details={
                         Array.isArray(sidecarArtifactVariables) &&
                         sidecarArtifactVariables.map(({ sidecar }, index) => {
@@ -148,7 +148,7 @@ export function K8sServiceSpecVariablesForm(props: K8sServiceSpecVariablesFormPr
               </Text>
             </VariableAccordionSummary>
           }
-          summaryClassName={cx(css.variableBorderBottom, pipelineVariableCss.accordianSummaryL3)}
+          summaryClassName={pipelineVariableCss.accordianSummaryL2}
           details={
             !!manifestsVariables?.length && (
               <>
@@ -178,7 +178,7 @@ export function K8sServiceSpecVariablesForm(props: K8sServiceSpecVariablesFormPr
             </Text>
           </VariableAccordionSummary>
         }
-        summaryClassName={cx(css.variableBorderBottom, pipelineVariableCss.accordianSummaryL2)}
+        summaryClassName={pipelineVariableCss.accordianSummaryL1}
         details={
           <StepWidget<CustomVariablesData, CustomVariableEditableExtraProps>
             factory={stepsFactory}

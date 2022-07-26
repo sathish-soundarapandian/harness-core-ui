@@ -6,7 +6,7 @@
  */
 
 import { unset } from 'lodash-es'
-import { getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypes, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -37,7 +37,7 @@ export interface TerraformProps<T = TerraformData> {
   initialValues: T
   onUpdate?: (data: T) => void
   onChange?: (data: T) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   configTypes?: SelectOption[]
   isNewStep?: boolean
@@ -56,7 +56,7 @@ export interface TerraformPlanProps {
   initialValues: TFPlanFormData
   onUpdate?: (data: TFPlanFormData) => void
   onChange?: (data: TFPlanFormData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   configTypes?: SelectOption[]
   isNewStep?: boolean

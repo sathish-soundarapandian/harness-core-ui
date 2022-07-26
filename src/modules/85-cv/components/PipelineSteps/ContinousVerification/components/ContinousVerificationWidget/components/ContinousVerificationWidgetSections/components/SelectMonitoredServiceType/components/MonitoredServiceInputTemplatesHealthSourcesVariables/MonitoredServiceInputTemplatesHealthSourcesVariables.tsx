@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Card, FormInput, MultiTypeInputType, Text } from '@harness/uicore'
+import { Card, FormInput, AllowedTypes, Text } from '@harness/uicore'
 import React from 'react'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -15,7 +15,7 @@ import css from './MonitoredServiceInputTemplatesHealthSourcesVariables.module.s
 interface MonitoredServiceInputTemplatesHealthSourcesVariablesProps {
   templateIdentifier: string
   versionLabel: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   healthSourcesVariables: MonitoredServiceTemplateVariable[]
 }
 

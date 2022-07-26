@@ -159,6 +159,9 @@
   }
 
   .stepGroupBody {
+    &.hasMoreChild {
+      margin-bottom: 20px;
+    }
     padding: 0 var(--spacing-xlarge) 0 var(--spacing-xxlarge);
     padding-bottom: 0 !important;
 
@@ -243,22 +246,6 @@
   }
 }
 
-.matrixLabel {
-  position: absolute;
-  top: -70px;
-  background: #c19eff !important;
-  height: 120px;
-  z-index: 0;
-  left: -3px;
-  width: 66px;
-  color: var(--white);
-  padding: 5px !important;
-  border-radius: 5px;
-  &.marginTop {
-    top: -25px !important;
-  }
-}
-
 .matrixFooter {
   position: absolute;
   bottom: 0;
@@ -281,7 +268,7 @@
   }
 }
 .matrixBorderWrapper {
-  padding-top: 20px !important;
+  padding-top: 10px !important;
   border-top: 1px solid var(--grey-200);
   width: 100% !important;
   justify-content: space-between;

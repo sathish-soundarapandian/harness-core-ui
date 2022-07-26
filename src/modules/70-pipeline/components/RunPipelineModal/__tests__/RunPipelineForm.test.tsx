@@ -61,8 +61,44 @@ jest.mock('services/cd-ng', () => ({
     data: [],
     mutate: jest.fn(),
     refetch: jest.fn()
+  }),
+  useGetConnector: () => ({
+    loading: false,
+    data: connectorMock,
+    refetch: jest.fn()
   })
 }))
+
+const connectorMock = {
+  status: 'SUCCESS',
+  data: {
+    connector: {
+      name: 'test-connector',
+      identifier: 'test_connector',
+      description: '',
+      orgIdentifier: 'default',
+      projectIdentifier: 'projectIdentifier',
+      tags: {},
+      type: 'Github',
+      spec: {
+        url: 'https://github.com',
+        validationRepo: 'devrepo',
+        authentication: {
+          type: 'Http',
+          spec: {
+            type: 'UsernameToken',
+            spec: {
+              username: 'username',
+              usernameRef: null,
+              tokenRef: 'tokenRef'
+            }
+          }
+        },
+        type: 'Account'
+      }
+    }
+  }
+}
 
 const mockRePostPipelineExecuteYaml = jest.fn()
 const mockMergeInputSet = jest.fn()

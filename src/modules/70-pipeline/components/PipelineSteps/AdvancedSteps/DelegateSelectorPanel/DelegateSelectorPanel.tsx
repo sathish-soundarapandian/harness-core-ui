@@ -8,7 +8,7 @@
 import React from 'react'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
-import type { MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes } from '@wings-software/uicore'
 import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -18,7 +18,7 @@ export interface DelegatePanelProps {
     delegateSelectors?: string[]
   }>
   isReadonly: boolean
-  allowableTypes?: MultiTypeInputType[]
+  allowableTypes?: AllowedTypes
   inputProps?: { onTagInputChange: (tags: string[]) => void }
   name?: string
 }

@@ -32,7 +32,8 @@ describe('Unit tests for NotificationRuleRow', () => {
     },
     showDeleteNotificationsIcon: false,
     handleChangeField: jest.fn(),
-    handleDeleteNotificationRule: jest.fn()
+    handleDeleteNotificationRule: jest.fn(),
+    index: 0
   }
 
   test('Verify if NotificationRuleRow renders', async () => {

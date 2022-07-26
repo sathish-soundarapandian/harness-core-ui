@@ -17,7 +17,8 @@ import {
   MultiTypeInputType,
   Text,
   ButtonVariation,
-  getErrorInfoFromErrorObject
+  getErrorInfoFromErrorObject,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { FontVariation } from '@harness/design-system'
@@ -44,7 +45,7 @@ import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
 interface HelmWithGcsPropType {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>

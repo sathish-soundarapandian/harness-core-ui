@@ -15,7 +15,8 @@ import {
   Radio,
   useToaster,
   MultiTypeInputType,
-  getMultiTypeFromValue
+  getMultiTypeFromValue,
+  RUNTIME_INPUT_VALUE
 } from '@wings-software/uicore'
 import { defaultTo } from 'lodash-es'
 import { FontVariation, Color } from '@harness/design-system'
@@ -54,7 +55,8 @@ import css from '../../AppDHealthSource.module.scss'
 import basePathStyle from '../BasePath/BasePath.module.scss'
 
 export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterface) {
-  const { formikValues, formikSetField, mappedMetrics, selectedMetric, connectorIdentifier, isTemplate } = props
+  const { formikValues, formikSetField, mappedMetrics, selectedMetric, connectorIdentifier, isTemplate, expressions } =
+    props
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -114,6 +116,10 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
           completeMetricPath: formikValues.completeMetricPath
         }
       })
+    }
+
+    if (getMultiTypeFromValue(formikValues.serviceInstanceMetricPath) === MultiTypeInputType.FIXED) {
+      formikSetField('serviceInstanceMetricPath', RUNTIME_INPUT_VALUE)
     }
   }, [
     formikValues?.continuousVerification,
@@ -202,9 +208,13 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
                   />
                 ) : (
                   <FormInput.MultiTextInput
+                    key={formikValues.metricIdentifier}
                     className={css.fullPath}
                     name={PATHTYPE.CompleteMetricPath}
                     label={''}
+                    multiTextInputProps={{
+                      expressions
+                    }}
                     onChange={(_v, _type, multiType) => {
                       if (completeMetricPathType !== multiType) {
                         setCompleteMetricPathType(multiType)
@@ -296,13 +306,16 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
             details={
               <>
                 <SelectHealthSourceServices
+                  key={formikValues.metricIdentifier}
                   values={{
                     sli: !!formikValues?.sli,
                     healthScore: !!formikValues?.healthScore,
                     continuousVerification: !!formikValues?.continuousVerification,
-                    riskCategory: formikValues?.riskCategory
+                    riskCategory: formikValues?.riskCategory,
+                    serviceInstanceMetricPath: formikValues?.serviceInstanceMetricPath
                   }}
                   isTemplate={isTemplate}
+                  expressions={expressions}
                   metricPackResponse={metricPackResponse}
                   hideServiceIdentifier
                 />

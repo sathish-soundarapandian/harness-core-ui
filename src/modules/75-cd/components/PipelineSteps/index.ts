@@ -8,6 +8,7 @@
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 
 import { AzureInfrastructureSpec } from './AzureInfrastructureStep/AzureInfrastructureStep'
+import { AzureWebAppInfrastructureSpec } from './AzureWebAppInfrastructureStep/AzureWebAppInfrastructureStep'
 import { HttpStep } from './HttpStep/HttpStep'
 import { K8RolloutDeployStep } from './K8sRolloutDeployStep/K8sRolloutDeployStep'
 import { ShellScriptStep } from './ShellScriptStep/ShellScriptStep'
@@ -45,12 +46,18 @@ import { ServerlessAwsLambdaServiceSpec } from './ServerlessAwsLambdaServiceSpec
 import { CFRollbackStack } from './CloudFormation/RollbackStack/RollbackStack'
 import { CFDeleteStack } from './CloudFormation/DeleteStack/DeleteStack'
 import { CFCreateStack } from './CloudFormation/CreateStack/CreateStack'
+import { SshServiceSpec } from './SshServiceSpec/SshServiceSpec'
+import { WinRmServiceSpec } from './WinRmServiceSpec/WinRmServiceSpec'
 import { CreatePr } from './CreatePrStep/CreatePrStep'
 import { MergePR } from './MergePrStep/MergePrStep'
 import { AzureWebAppRollback } from './AzureWebAppRollback/AzureWebAppRollback'
+import { CommandScriptsStep } from './CommandScripts/CommandScriptsStep'
 import { AzureSlotDeployment } from './AzureSlotDeployment/AzureSlotDeployment'
 import { AzureTrafficShift } from './AzureTrafficShift/AzureTrafficShift'
+import { AzureSwapSlot } from './AzureWebAppSwapSlot/AzureWebAppSwapSlot'
+import { AzureWebAppServiceSpec } from './AzureWebAppServiceSpec/AzureWebAppServiceSpec'
 
+factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new HttpStep())
 factory.registerStep(new K8RolloutDeployStep())
 factory.registerStep(new K8sRollingRollbackStep())
@@ -75,6 +82,7 @@ factory.registerStep(new DeployInfrastructureStep())
 factory.registerStep(new DeployServiceStep())
 factory.registerStep(new KubernetesServiceSpec())
 factory.registerStep(new ServerlessAwsLambdaServiceSpec())
+factory.registerStep(new AzureWebAppServiceSpec())
 factory.registerStep(new HelmDeploy())
 factory.registerStep(new HelmRollback())
 factory.registerStep(new TerraformRollback())
@@ -86,11 +94,15 @@ factory.registerStep(new PolicyStep())
 factory.registerStep(new ServerlessLambdaDeployStep())
 factory.registerStep(new ServerlessLambdaRollbackStep())
 factory.registerStep(new AzureInfrastructureSpec())
+factory.registerStep(new AzureWebAppInfrastructureSpec())
 factory.registerStep(new CFRollbackStack())
 factory.registerStep(new CFDeleteStack())
 factory.registerStep(new CFCreateStack())
+factory.registerStep(new SshServiceSpec())
+factory.registerStep(new WinRmServiceSpec())
 factory.registerStep(new CreatePr())
 factory.registerStep(new MergePR())
 factory.registerStep(new AzureWebAppRollback())
 factory.registerStep(new AzureSlotDeployment())
 factory.registerStep(new AzureTrafficShift())
+factory.registerStep(new AzureSwapSlot())

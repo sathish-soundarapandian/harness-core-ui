@@ -26,15 +26,20 @@ const DashboardsHeader: React.FC = () => {
   const { accountId, folderId } = useParams<{ accountId: string; folderId: string }>()
   const [isOpen, setDrawerOpen] = useState(false)
 
-  const title = breadcrumbs.length ? breadcrumbs[breadcrumbs.length - 1].label : getString('common.dashboards')
+  const title = React.useMemo(
+    () => (breadcrumbs.length ? breadcrumbs[breadcrumbs.length - 1].label : getString('common.dashboards')),
+    [breadcrumbs, getString]
+  )
 
   React.useEffect(() => {
     const titleArray: string[] = [getString('common.dashboards')]
 
-    if (breadcrumbs) breadcrumbs.map(breadcrumb => titleArray.push(breadcrumb.label))
+    if (breadcrumbs) {
+      breadcrumbs.forEach(breadcrumb => titleArray.push(breadcrumb.label))
+    }
 
     updateTitle(titleArray)
-  }, [breadcrumbs])
+  }, [breadcrumbs, getString, updateTitle])
 
   return (
     <Page.Header

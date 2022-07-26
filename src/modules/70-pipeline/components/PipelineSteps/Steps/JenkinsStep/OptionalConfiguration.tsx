@@ -6,14 +6,14 @@
  */
 
 import React from 'react'
-import type { MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-function OptionalConfiguration(props: { readonly?: boolean; allowableTypes: MultiTypeInputType[] }) {
+function OptionalConfiguration(props: { readonly?: boolean; allowableTypes: AllowedTypes }): React.ReactElement {
   const { readonly, allowableTypes } = props
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()

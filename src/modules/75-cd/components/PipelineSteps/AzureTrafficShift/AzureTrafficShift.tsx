@@ -33,10 +33,10 @@ export class AzureTrafficShift extends PipelineStep<AzureTrafficShiftStepInfo> {
   }
 
   protected type = StepType.AzureTrafficShift
-  protected stepIcon: IconName = 'microsoft-azure'
+  protected stepIcon: IconName = 'canary-grey'
   protected stepName = 'Azure Traffic Shift'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.AzureTrafficShift'
-  protected stepIconSize = 32
+  protected stepIconSize = 25
 
   protected defaultValues = {
     type: StepType.AzureTrafficShift,
@@ -137,6 +137,7 @@ export class AzureTrafficShift extends PipelineStep<AzureTrafficShiftStepInfo> {
         isNewStep={isNewStep}
         ref={formikRef}
         readonly={readonly}
+        stepViewType={stepViewType}
       />
     )
   }

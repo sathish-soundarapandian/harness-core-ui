@@ -728,6 +728,10 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines`
   ),
+  toPipelineList: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipeline-list`
+  ),
   toGitOps: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/gitops`
@@ -1571,6 +1575,11 @@ const routes = {
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
       `/sto/orgs/${orgIdentifier}/projects/${projectIdentifier}/targets`
   ),
+  toSTOSecurityReview: withAccountId(() => '/sto/security-review'),
+  toSTOProjectSecurityReview: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
+      `/sto/orgs/${orgIdentifier}/projects/${projectIdentifier}/security-review`
+  ),
   /********************************************************************************************************************/
   toOldCustomDashboard: withAccountId(() => '/home/dashboards*'),
   toCustomDashboard: withAccountId(() => '/dashboards'),
@@ -1594,17 +1603,17 @@ const routes = {
   ),
 
   // These RoutesDestinations are defined in the MicroFrontend
-  toChaosWorkflows: withAccountId(
+  toChaosScenarios: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
-      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/workflows`
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/scenarios`
   ),
   toChaosHubs: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
       `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-hubs`
   ),
-  toChaosAgents: withAccountId(
+  toChaosDelegate: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
-      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/agents`
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-delegates`
   )
 }
 

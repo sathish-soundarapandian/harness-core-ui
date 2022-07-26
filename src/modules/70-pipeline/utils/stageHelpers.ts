@@ -23,14 +23,13 @@ import type {
   ServiceDefinition
 } from 'services/cd-ng'
 import { connectorTypes } from '@pipeline/utils/constants'
-import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { getStageFromPipeline as getStageByPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
 import type { DependencyElement } from 'services/ci'
 import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/types'
 import type { InputSetDTO } from './types'
 import type { DeploymentStageElementConfig, PipelineStageWrapper, StageElementWrapper } from './pipelineTypes'
+import type { TemplateServiceDataType } from './templateUtils'
 
 export enum StageType {
   DEPLOY = 'Deployment',
@@ -42,7 +41,7 @@ export enum StageType {
   Template = 'Template',
   SECURITY = 'SecurityTests',
   MATRIX = 'MATRIX',
-  FOR = 'FOR',
+  LOOP = 'LOOP',
   PARALLELISM = 'PARALLELISM'
 }
 
@@ -52,11 +51,13 @@ export enum ServiceDeploymentType {
   amazonEcs = 'amazonEcs',
   amazonAmi = 'amazonAmi',
   awsCodeDeploy = 'awsCodeDeploy',
-  winrm = 'WinRm',
+  WinRm = 'WinRm',
+  winrm = 'winrm',
   awsLambda = 'awsLambda',
   pcf = 'pcf',
-  ssh = 'Ssh',
   Pdc = 'Pdc',
+  ssh = 'ssh',
+  Ssh = 'Ssh',
   ServerlessAwsLambda = 'ServerlessAwsLambda',
   ServerlessAzureFunctions = 'ServerlessAzureFunctions',
   ServerlessGoogleFunctions = 'ServerlessGoogleFunctions',
@@ -104,6 +105,14 @@ export function isCIStage(node?: GraphLayoutNode): boolean {
 
 export function hasCDStage(pipelineExecution?: PipelineExecutionSummary): boolean {
   return pipelineExecution?.modules?.includes('cd') || !isEmpty(pipelineExecution?.moduleInfo?.cd)
+}
+
+export function hasServiceDetail(pipelineExecution?: PipelineExecutionSummary): boolean {
+  return pipelineExecution?.modules?.includes('serviceDetail') || false
+}
+
+export function hasOverviewDetail(pipelineExecution?: PipelineExecutionSummary): boolean {
+  return pipelineExecution?.modules?.includes('overviewPage') || false
 }
 
 export function hasCIStage(pipelineExecution?: PipelineExecutionSummary): boolean {
@@ -228,19 +237,20 @@ export const isServerlessDeploymentType = (deploymentType: string): boolean => {
 }
 
 export const isSSHWinRMDeploymentType = (deploymentType: string): boolean => {
-  return deploymentType === ServiceDeploymentType.winrm || deploymentType === ServiceDeploymentType.ssh
+  return deploymentType === ServiceDeploymentType.WinRm || deploymentType === ServiceDeploymentType.Ssh
+}
+
+export const isAzureWebAppDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.AzureWebApp
 }
 
 export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessAwsLambda]: 'Amazon Web Services Details',
   [ServiceDeploymentType.ServerlessAzureFunctions]: 'Azure Details',
+  [ServiceDeploymentType.AzureWebApp]: 'Web App Infrastructure Details',
   [ServiceDeploymentType.ServerlessGoogleFunctions]: 'GCP Details',
   [ServiceDeploymentType.Pdc]: 'Infrastructure definition',
-  [ServiceDeploymentType.winrm]: 'WinRM'
-}
-
-export const isServerlessManifestType = (selectedManifest: ManifestTypes | null): boolean => {
-  return selectedManifest === ManifestDataType.ServerlessAwsLambda
+  [ServiceDeploymentType.WinRm]: 'WinRM'
 }
 
 export const getSelectedDeploymentType = (
@@ -249,11 +259,16 @@ export const getSelectedDeploymentType = (
     stageId: string,
     pipeline?: PipelineInfoConfig
   ) => PipelineStageWrapper<T>,
-  isPropagating = false
+  isPropagating = false,
+  templateServiceData?: TemplateServiceDataType
 ): ServiceDefinition['type'] => {
   if (isPropagating) {
     const parentStageId = get(stage, 'stage.spec.serviceConfig.useFromStage.stage', null)
     const parentStage = getStageFromPipeline<DeploymentStageElementConfig>(defaultTo(parentStageId, ''))
+    const parentStageTemplateRef = get(parentStage, 'stage.stage.template.templateRef')
+    if (parentStageTemplateRef && templateServiceData) {
+      return get(templateServiceData, parentStageTemplateRef)
+    }
     return get(parentStage, 'stage.stage.spec.serviceConfig.serviceDefinition.type', null)
   }
   return get(stage, 'stage.spec.serviceConfig.serviceDefinition.type', null)
@@ -272,7 +287,8 @@ export const getServiceDefinitionType = (
     pipeline?: PipelineInfoConfig
   ) => PipelineStageWrapper<T>,
   isNewServiceEnvEntity: (isSvcEnvEntityEnabled: boolean, stage: DeploymentStageElementConfig) => boolean,
-  isSvcEnvEntityEnabled: boolean
+  isSvcEnvEntityEnabled: boolean,
+  templateServiceData: TemplateServiceDataType
 ): GetExecutionStrategyYamlQueryParams['serviceDefinitionType'] => {
   const isPropagating = get(selectedStage, 'stage.spec.serviceConfig.useFromStage', null)
   if (isNewServiceEnvEntity(isSvcEnvEntityEnabled, selectedStage?.stage as DeploymentStageElementConfig)) {
@@ -281,7 +297,8 @@ export const getServiceDefinitionType = (
   return getSelectedDeploymentType(
     selectedStage as StageElementWrapper<DeploymentStageElementConfig>,
     getStageFromPipeline,
-    isPropagating
+    isPropagating,
+    templateServiceData
   )
 }
 
@@ -359,14 +376,18 @@ export const isInfraDefinitionPresent = (stage: DeploymentStageElementConfig): b
   return !!stage.spec?.infrastructure?.infrastructureDefinition
 }
 
-export const isServiceEntityPresent = (stage: any): boolean => {
+export const isConfigFilesPresent = (stage: DeploymentStageElementConfig): boolean => {
+  return !!stage.spec?.serviceConfig && !!stage.spec?.serviceConfig.serviceDefinition?.spec.configFiles
+}
+
+export const isServiceEntityPresent = (stage: DeploymentStageElementConfig): boolean => {
   return !!stage.spec?.service?.serviceRef
 }
 
-export const isEnvironmentGroupPresent = (stage: any): boolean => {
+export const isEnvironmentGroupPresent = (stage: DeploymentStageElementConfig): boolean => {
   return !!stage.spec?.environmentGroup?.envGroupRef
 }
-export const isEnvironmentPresent = (stage: any): boolean => {
+export const isEnvironmentPresent = (stage: DeploymentStageElementConfig): boolean => {
   return !!stage.spec?.environment?.environmentRef
 }
 
@@ -378,10 +399,15 @@ export const doesStageContainOtherData = (stage?: DeploymentStageElementConfig):
   if (!stage) {
     return false
   }
-  return isArtifactManifestPresent(stage) || isInfraDefinitionPresent(stage) || isExecutionFieldPresent(stage)
+  return (
+    isArtifactManifestPresent(stage) ||
+    isInfraDefinitionPresent(stage) ||
+    isExecutionFieldPresent(stage) ||
+    isConfigFilesPresent(stage)
+  )
 }
 
-export const hasStageData = (stage?: any): boolean => {
+export const hasStageData = (stage?: DeploymentStageElementConfig): boolean => {
   if (!stage) {
     return false
   }
@@ -397,6 +423,7 @@ export const deleteStageData = (stage?: DeploymentStageElementConfig): void => {
   if (stage) {
     delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.artifacts
     delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.manifests
+    delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.configFiles
     delete stage?.spec?.infrastructure?.allowSimultaneousDeployments
     delete stage?.spec?.infrastructure?.infrastructureDefinition
     if (stage?.spec?.execution?.steps) {
@@ -409,10 +436,11 @@ export const deleteServiceData = (stage?: DeploymentStageElementConfig): void =>
   if (stage) {
     delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.artifacts
     delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.manifests
+    delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.configFiles
   }
 }
 //This is to delete stage data in case of new service/ env entity
-export const deleteStageInfo = (stage?: any): void => {
+export const deleteStageInfo = (stage?: DeploymentStageElementConfig): void => {
   if (stage) {
     delete stage?.spec?.service
     delete stage?.spec?.environment
@@ -432,6 +460,15 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
   if (isServerlessDeploymentType(deploymentType)) {
     return StepType.ServerlessAwsLambda
   }
+  if (deploymentType === ServiceDeploymentType.Ssh) {
+    return StepType.SshServiceSpec
+  }
+  if (deploymentType === ServiceDeploymentType.WinRm) {
+    return StepType.WinRmServiceSpec
+  }
+  if (deploymentType === ServiceDeploymentType.AzureWebApp) {
+    return StepType.AzureWebAppServiceSpec
+  }
   return StepType.K8sServiceSpec
 }
 export const STATIC_SERVICE_GROUP_NAME = 'static_service_group'
@@ -450,3 +487,11 @@ export const getDefaultBuildDependencies = (serviceDependencies: DependencyEleme
     steps: serviceDependencies.length ? [{ parallel: serviceDependencies.map(d => ({ step: d })) }] : []
   }
 })
+
+export const isSshOrWinrmDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.Ssh || deploymentType === ServiceDeploymentType.WinRm
+}
+
+export const withoutSideCar = (deploymentType: string): boolean => {
+  return isSshOrWinrmDeploymentType(deploymentType)
+}

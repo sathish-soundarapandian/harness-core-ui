@@ -85,5 +85,5 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: calc(100vh - 303px);
+  height: calc(var(--page-min-height) - 303px);
 }

@@ -16,6 +16,7 @@ declare const styles: {
   readonly headerLayout: string
   readonly ipBtn: string
   readonly layout: string
+  readonly loaderContainer: string
   readonly pageContainer: string
   readonly savingsAmount: string
   readonly search: string

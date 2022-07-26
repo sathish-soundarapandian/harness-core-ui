@@ -7,7 +7,6 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import PipelineDeploymentList from '@pipeline/pages/pipeline-deployment-list/PipelineDeploymentList'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { useGetPipelineSummary } from 'services/pipeline-ng'
@@ -15,6 +14,7 @@ import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useQueryParams } from '@common/hooks'
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { ExecutionList } from '@pipeline/pages/execution-list/ExecutionList'
 
 export default function CDPipelineDeploymentList(): React.ReactElement {
   const { pipelineIdentifier, orgIdentifier, projectIdentifier, accountId } =
@@ -51,11 +51,5 @@ export default function CDPipelineDeploymentList(): React.ReactElement {
 
   useDocumentTitle([pipeline?.data?.name || getString('pipelines'), getString('executionsText')])
 
-  return (
-    <PipelineDeploymentList
-      showHealthAndExecution
-      onRunPipeline={onRunPipeline}
-      isPipelineInvalid={isPipelineInvalid}
-    />
-  )
+  return <ExecutionList showHealthAndExecution onRunPipeline={onRunPipeline} isPipelineInvalid={isPipelineInvalid} />
 }

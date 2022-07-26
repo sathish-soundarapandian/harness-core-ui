@@ -8,7 +8,6 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly borderSpacing: string
-  readonly configDetails: string
   readonly editCta: string
   readonly equalSpacing: string
   readonly fulFilmentIcon: string

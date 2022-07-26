@@ -6,16 +6,15 @@
  */
 
 import React from 'react'
-import { Text, Icon, StepWizard, StepProps, MultiTypeInputType } from '@wings-software/uicore'
+import { Text, Icon, StepWizard, StepProps, AllowedTypes } from '@wings-software/uicore'
 import type { IconProps } from '@harness/icons'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import type { ConnectorRefLabelType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
-import { isServerlessManifestType } from '@pipeline/utils/stageHelpers'
 import { ManifestRepoTypes } from '../ManifestWizardSteps/ManifestRepoTypes'
 import ManifestStore from '../ManifestWizardSteps/ManifestStore'
-import { manifestTypeLabels } from '../Manifesthelper'
+import { isServerlessManifestType, manifestTypeLabels } from '../Manifesthelper'
 import type { ManifestStepInitData, ManifestStores, ManifestTypes } from '../ManifestInterface'
 import css from './ManifestWizard.module.scss'
 
@@ -32,7 +31,7 @@ interface ManifestWizardStepsProps<T, U> {
   labels: ConnectorRefLabelType
   newConnectorView: boolean
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   newConnectorSteps?: any
   lastSteps: Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> | null
   iconsProps: IconProps

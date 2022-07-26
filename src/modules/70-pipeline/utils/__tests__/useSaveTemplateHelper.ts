@@ -32,8 +32,8 @@ export const createTemplatePromiseArg = {
     createPr: false,
     filePath: 'Test_Http_Template_v1.yaml',
     isNewBranch: false,
-    orgIdentifier: undefined,
-    projectIdentifier: undefined,
+    orgIdentifier: 'default',
+    projectIdentifier: 'Yogesh_Test',
     repoIdentifier: 'gitSyncRepo',
     rootFolder: '/rootFolderTest/.harness/',
     targetBranch: ''

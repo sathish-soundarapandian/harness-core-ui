@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import { MultiTypeInputType } from '@harness/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { ManifestConfig, ManifestConfigWrapper, ServiceSpec } from 'services/cd-ng'
@@ -24,7 +24,7 @@ const getProps = () => {
     formik: {},
     path: 'pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition.spec',
     readonly: false,
-    allowableTypes: ['FIXED', 'EXPRESSION'] as MultiTypeInputType[],
+    allowableTypes: ['FIXED', 'EXPRESSION'] as AllowedTypesWithRunTime[],
     manifestPath: 'manifests[0].manifest',
     projectIdentifier: 'Chetan_Non_Git_Sync',
     orgIdentifier: 'default',

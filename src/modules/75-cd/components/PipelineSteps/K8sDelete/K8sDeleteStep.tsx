@@ -17,7 +17,8 @@ import {
   Layout,
   MultiTypeInputType,
   Text,
-  Icon
+  Icon,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { Intent, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
@@ -110,7 +111,7 @@ interface K8sDeleteProps {
   initialValues: K8sDeleteData
   onUpdate?: (data: K8sDeleteData) => void
   onChange?: (data: K8sDeleteData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   isDisabled?: boolean
   stepViewType?: StepViewType
   isNewStep?: boolean
@@ -339,7 +340,9 @@ function K8sDeleteDeployWidget(props: K8sDeleteProps, formikRef: StepFormikFowar
                                 multiTextInputProps={{
                                   expressions,
                                   textProps: { disabled: isDisabled },
-                                  allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME)
+                                  allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                    item => item !== MultiTypeInputType.RUNTIME
+                                  ) as AllowedTypes
                                 }}
                               />
                               {/* istanbul ignore next */}
@@ -413,7 +416,9 @@ function K8sDeleteDeployWidget(props: K8sDeleteProps, formikRef: StepFormikFowar
                                 disabled={isDisabled}
                                 multiTextInputProps={{
                                   expressions,
-                                  allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME),
+                                  allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                    item => item !== MultiTypeInputType.RUNTIME
+                                  ) as AllowedTypes,
                                   disabled: isDisabled
                                 }}
                               />

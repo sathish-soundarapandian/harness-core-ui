@@ -8,7 +8,7 @@
 import React from 'react'
 import * as uuid from 'uuid'
 import { act, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
-import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -21,7 +21,11 @@ jest.mock('uuid')
 const props = {
   stepName: 'Manifest details',
   expressions: [],
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   handleSubmit: jest.fn(),
   selectedManifest: 'Values' as ManifestTypes,
   manifestIdsList: []
@@ -136,7 +140,11 @@ describe('Manifest Details tests', () => {
       stepName: 'Manifest details',
       manifestIdsList: [],
       expressions: [],
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.RUNTIME,
+        MultiTypeInputType.EXPRESSION
+      ] as AllowedTypesWithRunTime[],
       initialValues: {
         identifier: 'testidentifier',
         type: ManifestDataType.K8sManifest,
@@ -174,7 +182,11 @@ describe('Manifest Details tests', () => {
       stepName: 'Manifest details',
       manifestIdsList: [],
       expressions: [],
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.RUNTIME,
+        MultiTypeInputType.EXPRESSION
+      ] as AllowedTypesWithRunTime[],
       initialValues: {
         identifier: 'testidentifier',
         type: ManifestDataType.K8sManifest,
@@ -210,7 +222,11 @@ describe('Manifest Details tests', () => {
     const defaultProps = {
       stepName: 'Manifest details',
       expressions: [],
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.RUNTIME,
+        MultiTypeInputType.EXPRESSION
+      ] as AllowedTypesWithRunTime[],
       manifestIdsList: [],
       initialValues: {
         identifier: 'testidentifier',
@@ -249,7 +265,11 @@ describe('Manifest Details tests', () => {
       manifestIdsList: [],
       stepName: 'Manifest details',
       expressions: [],
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.RUNTIME,
+        MultiTypeInputType.EXPRESSION
+      ] as AllowedTypesWithRunTime[],
       initialValues: {
         identifier: 'testidentifier',
         type: ManifestDataType.K8sManifest,
@@ -304,7 +324,11 @@ describe('Manifest Details tests', () => {
     const defaultProps = {
       stepName: 'Manifest details',
       expressions: [],
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.RUNTIME,
+        MultiTypeInputType.EXPRESSION
+      ] as AllowedTypesWithRunTime[],
       manifestIdsList: [],
       initialValues: {
         identifier: 'testidentifier',

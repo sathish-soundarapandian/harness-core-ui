@@ -9,18 +9,18 @@ import React from 'react'
 import { getByTestId, render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
-import mockImport from 'framework/utils/mockImport'
-import mockEnvironments from '@cf/pages/environments/__tests__/mockEnvironments'
 import mockFeatureFlags from '../../__tests__/mockFeatureFlags'
 import { FlagTableFilters, FlagTableFiltersProps } from '../FlagTableFilters'
 
 const updateTableFilter = jest.fn()
+let flagEnabled = true
 
 const renderComponent = (props?: Partial<FlagTableFiltersProps>): RenderResult =>
   render(
     <TestWrapper
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      defaultFeatureFlagValues={{ FFM_3938_STALE_FLAGS_ACTIVE_CARD_HIDE_SHOW: flagEnabled }}
     >
       <FlagTableFilters
         features={mockFeatureFlags as any}
@@ -39,23 +39,8 @@ const permanentFlagsFilter = {
 }
 
 describe('FlagTableFilters', () => {
-  beforeAll(() => {
-    mockImport('services/cf', {
-      useGetAllFeatures: () => ({ data: mockFeatureFlags, loading: false, refetch: jest.fn() })
-    })
-
-    mockImport('services/cd-ng', {
-      useGetEnvironmentListForProject: () => ({
-        data: mockEnvironments,
-        loading: false,
-        error: undefined,
-        refetch: jest.fn()
-      })
-    })
-  })
-
-  afterAll(() => {
-    jest.resetAllMocks()
+  beforeEach(() => {
+    flagEnabled = true
   })
 
   test('FlagTableFilters should render correctly the filters for feature flags', async () => {
@@ -139,5 +124,23 @@ describe('FlagTableFilters', () => {
     expect(getByTestId(filterCards[3], 'filter-total')).toHaveTextContent('0')
     expect(getByTestId(filterCards[4], 'filter-total')).toHaveTextContent('0')
     expect(getByTestId(filterCards[5], 'filter-total')).toHaveTextContent('0')
+  })
+
+  test('It should not show Active Flags card if feature flag is disabled', async () => {
+    flagEnabled = false
+    renderComponent()
+
+    const filterCards = screen.getAllByTestId('filter-card')
+    expect(filterCards).toHaveLength(5)
+
+    // All Flags
+    expect(getByTestId(filterCards[0], 'filter-label')).toHaveTextContent('cf.flagFilters.allFlags')
+    expect(getByTestId(filterCards[1], 'filter-label')).toHaveTextContent('cf.flagFilters.enabled')
+    expect(getByTestId(filterCards[2], 'filter-label')).toHaveTextContent('cf.flagFilters.permanent')
+    expect(getByTestId(filterCards[3], 'filter-label')).toHaveTextContent('cf.flagFilters.recentlyAccessed')
+    expect(getByTestId(filterCards[4], 'filter-label')).toHaveTextContent('cf.flagFilters.potentiallyStale')
+
+    // Check 'Active Flags' filter does not exist
+    expect(screen.queryByText('cf.flagFilters.active')).not.toBeInTheDocument()
   })
 })

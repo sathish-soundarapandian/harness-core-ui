@@ -8,6 +8,7 @@
 import React from 'react'
 import { render, fireEvent, waitFor, RenderResult, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { cloneDeep } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockImport from 'framework/utils/mockImport'
 import mockEnvironments from '@cf/pages/environments/__tests__/mockEnvironments'
@@ -30,90 +31,78 @@ jest.mock('@cf/hooks/useGitSync', () => ({
   }))
 }))
 
+const renderComponent = (): RenderResult =>
+  render(
+    <TestWrapper
+      path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
+      pathParams={{
+        accountId: 'dummy',
+        orgIdentifier: 'dummy',
+        projectIdentifier: 'dummy'
+      }}
+      defaultFeatureFlagValues={{ STALE_FLAGS_FFM_1510: true, FFM_3938_STALE_FLAGS_ACTIVE_CARD_HIDE_SHOW: true }}
+    >
+      <FeatureFlagsPage />
+    </TestWrapper>
+  )
+
+const mockEnvs = (includeEnvs = true): void => {
+  const data = cloneDeep(mockEnvironments)
+  let newLocation = `path?activeEnvironment=${data.data.content[0].identifier}`
+
+  if (!includeEnvs) {
+    data.data.content = []
+    newLocation = 'path'
+  }
+
+  mockImport('services/cd-ng', {
+    useGetEnvironmentListForProject: () => ({
+      data,
+      loading: false,
+      error: undefined,
+      refetch: jest.fn()
+    })
+  })
+
+  window.location.hash = newLocation
+}
+
 describe('FeatureFlagsPage', () => {
-  test('FeatureFlagsPage should render data correctly', async () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+
     mockImport('services/cf', {
       useGetAllFeatures: () => ({ data: mockFeatureFlags, refetch: jest.fn() })
     })
 
-    mockImport('services/cd-ng', {
-      useGetEnvironmentListForProject: () => ({
-        data: mockEnvironments,
-        loading: false,
-        error: undefined,
-        refetch: jest.fn()
-      })
-    })
+    mockEnvs()
+  })
 
-    const { getAllByText } = render(
-      <TestWrapper
-        path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
-        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
-      >
-        <FeatureFlagsPage />
-      </TestWrapper>
-    )
+  test('FeatureFlagsPage should render data correctly', async () => {
+    renderComponent()
 
-    expect(getAllByText(mockFeatureFlags.features[0].name)).toBeDefined()
-    expect(getAllByText(mockFeatureFlags.features[1].name)).toBeDefined()
+    expect(screen.getAllByText(mockFeatureFlags.features[0].name)).toBeDefined()
+    expect(screen.getAllByText(mockFeatureFlags.features[1].name)).toBeDefined()
   })
 
   test('Should go to edit page by clicking a row', async () => {
-    mockImport('services/cf', {
-      useGetAllFeatures: () => ({ data: mockFeatureFlags, refetch: jest.fn() })
-    })
+    renderComponent()
 
-    mockImport('services/cd-ng', {
-      useGetEnvironmentListForProject: () => ({
-        data: mockEnvironments,
-        loading: false,
-        error: undefined,
-        refetch: jest.fn()
-      })
-    })
+    fireEvent.click(document.getElementsByClassName('TableV2--row TableV2--card TableV2--clickable')[0] as HTMLElement)
 
-    const { container, getByText } = render(
-      <TestWrapper
-        path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
-        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
-      >
-        <FeatureFlagsPage />
-      </TestWrapper>
-    )
-
-    fireEvent.click(container.getElementsByClassName('TableV2--row TableV2--card TableV2--clickable')[0] as HTMLElement)
-
-    expect(getByText('/account/dummy/cf/orgs/dummy/projects/dummy/feature-flags/hello_world')).toBeDefined()
+    expect(
+      screen.getByText('/account/dummy/cf/orgs/dummy/projects/dummy/feature-flags/hello_world?activeEnvironment=foobar')
+    ).toBeDefined()
   })
 
   test('Should go to edit page by clicking edit', async () => {
-    mockImport('services/cf', {
-      useGetAllFeatures: () => ({ data: mockFeatureFlags, refetch: jest.fn() })
-    })
+    renderComponent()
 
-    mockImport('services/cd-ng', {
-      useGetEnvironmentListForProject: () => ({
-        data: mockEnvironments,
-        loading: false,
-        error: undefined,
-        refetch: jest.fn()
-      })
-    })
-
-    const { container, getByText } = render(
-      <TestWrapper
-        path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
-        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
-      >
-        <FeatureFlagsPage />
-      </TestWrapper>
-    )
-
-    fireEvent.click(container.querySelector('[data-icon="Options"]') as HTMLElement)
+    fireEvent.click(document.querySelector('[data-icon="Options"]') as HTMLElement)
     fireEvent.click(document.querySelector('[icon="edit"]') as HTMLElement)
 
     expect(
-      getByText('/account/dummy/cf/orgs/dummy/projects/dummy/feature-flags/hello_world?activeEnvironment=sfgsd')
+      screen.getByText('/account/dummy/cf/orgs/dummy/projects/dummy/feature-flags/hello_world?activeEnvironment=sfgsd')
     ).toBeDefined()
   })
 
@@ -127,29 +116,40 @@ describe('FeatureFlagsPage', () => {
       useDeleteFeatureFlag: () => ({ mutate })
     })
 
-    mockImport('services/cd-ng', {
-      useGetEnvironmentListForProject: () => ({
-        data: mockEnvironments,
-        loading: false,
-        error: undefined,
-        refetch: jest.fn()
-      })
-    })
+    renderComponent()
 
-    const { container } = render(
-      <TestWrapper
-        path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
-        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
-      >
-        <FeatureFlagsPage />
-      </TestWrapper>
-    )
-
-    fireEvent.click(container.querySelector('[role="row"]:not(:first-of-type) [data-icon="Options"]') as HTMLElement)
+    fireEvent.click(document.querySelector('[role="row"]:not(:first-of-type) [data-icon="Options"]') as HTMLElement)
     fireEvent.click(document.querySelector('[icon="trash"]') as HTMLElement)
 
     fireEvent.click(document.querySelector('button[class*=intent-danger]') as HTMLButtonElement)
     await waitFor(() => expect(mutate).toBeCalledTimes(1))
+  })
+
+  describe('FilterCards', () => {
+    test('should not render if there is no active Environment', async () => {
+      mockEnvs(false)
+      renderComponent()
+
+      expect(screen.queryAllByTestId('filter-card')).toHaveLength(0)
+    })
+
+    test('should render when Feature Flags exist and there is an active Environment', async () => {
+      mockEnvs(true)
+      renderComponent()
+
+      expect(screen.queryAllByTestId('filter-card')).toHaveLength(6)
+    })
+
+    test('should not render if there is an active Environment but no flags', async () => {
+      mockEnvs(true)
+      mockImport('services/cf', {
+        useGetAllFeatures: () => ({ data: undefined, refetch: jest.fn() })
+      })
+      renderComponent()
+
+      expect(screen.queryAllByTestId('filter-card')).toHaveLength(0)
+      expect(screen.getByText('cf.noFlag')).toBeVisible()
+    })
   })
 
   describe('RenderColumnFlag', () => {
@@ -162,7 +162,7 @@ describe('FeatureFlagsPage', () => {
 
     const refetchFlags = jest.fn()
 
-    const renderComponent = (props: Partial<RenderColumnFlagProps> = {}): RenderResult =>
+    const renderFlagComponent = (props: Partial<RenderColumnFlagProps> = {}): RenderResult =>
       render(
         <TestWrapper
           path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
@@ -181,7 +181,7 @@ describe('FeatureFlagsPage', () => {
       )
 
     test('disables FF switch tooltip when there are no environments', async () => {
-      renderComponent({ numberOfEnvs: 0 })
+      renderFlagComponent({ numberOfEnvs: 0 })
       const switchToggle = screen.getByRole('checkbox')
 
       fireEvent.mouseOver(switchToggle)
@@ -193,7 +193,7 @@ describe('FeatureFlagsPage', () => {
     })
 
     test('switch tooltip appear when there are environments', async () => {
-      renderComponent({ numberOfEnvs: 2 })
+      renderFlagComponent({ numberOfEnvs: 2 })
       const switchToggle = screen.getByRole('checkbox')
       userEvent.click(switchToggle)
 

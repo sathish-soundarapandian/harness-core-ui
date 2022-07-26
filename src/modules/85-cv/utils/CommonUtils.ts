@@ -256,7 +256,7 @@ export const getDetailsLabel = (key: string, getString: UseStringsReturn['getStr
     case 'artifactTag':
       return getString('connectors.cdng.artifactTag')
     case 'executedBy':
-      return getString('cv.monitoredServices.executedBy')
+      return getString('common.executedBy')
     case 'eventType':
       return getString('pipeline.verification.logs.eventType')
     default:

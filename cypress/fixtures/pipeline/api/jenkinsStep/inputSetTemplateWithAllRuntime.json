@@ -1,0 +1,10 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "inputSetTemplateYaml": "pipeline:\n  identifier: \"Pipeline\"\n  stages:\n  - stage:\n      identifier: \"Deploy\"\n      type: \"Deployment\"\n      spec:\n        execution:\n          steps:\n          - step:\n              identifier: \"ssa\"\n              type: \"JenkinsBuild\"\n              spec:\n                connectorRef: \"<+input>\"\n                jobName: \"<+input>\"\n",
+    "modules": ["cd", "pms"],
+    "hasInputSets": false
+  },
+  "metaData": null,
+  "correlationId": "2ebe9cd9-3834-4768-b67f-84734ec3dfd1"
+}

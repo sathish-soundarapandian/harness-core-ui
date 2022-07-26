@@ -40,7 +40,10 @@ import { NameId, NameIdDescriptionTags } from '@common/components/NameIdDescript
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
-import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
+import {
+  DeployTabs,
+  isNewServiceEnvEntity
+} from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import DeployServiceErrors from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
@@ -206,9 +209,16 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
 
   const shouldRenderDeploymentType = (): boolean => {
     if (context) {
-      return !!isSvcEnvEntityEnabled && !isEmpty(selectedDeploymentType)
+      return !!(
+        isNewServiceEnvEntity(isSvcEnvEntityEnabled, data?.stage as DeploymentStageElementConfig) &&
+        !isEmpty(selectedDeploymentType)
+      )
     }
-    return !!isSvcEnvEntityEnabled
+    return !!isNewServiceEnvEntity(isSvcEnvEntityEnabled, data?.stage as DeploymentStageElementConfig)
+  }
+
+  const isStageCreationDisabled = (): boolean => {
+    return !template && shouldRenderDeploymentType() && isEmpty(selectedDeploymentType)
   }
 
   return (
@@ -312,7 +322,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                     <Card className={stageCss.sectionCard}>{whatToDeploy}</Card>
                   )}
 
-                  {shouldRenderDeploymentType() && (
+                  {shouldRenderDeploymentType() && !template && (
                     <>
                       <div className={cx({ [css.deploymentType]: !isEmpty(context) })}>
                         <SelectDeploymentType
@@ -337,7 +347,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                     <Button
                       margin={{ top: 'medium' }}
                       type="submit"
-                      disabled={shouldRenderDeploymentType() && isEmpty(selectedDeploymentType)}
+                      disabled={isStageCreationDisabled()}
                       variation={ButtonVariation.PRIMARY}
                       text={getString('pipelineSteps.build.create.setupStage')}
                     />

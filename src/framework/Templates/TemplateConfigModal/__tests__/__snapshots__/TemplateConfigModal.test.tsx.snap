@@ -230,7 +230,7 @@ exports[`CREATE MODE if form changesupdate the preview card: changed value shoul
                             class="Tooltip--acenter"
                             data-tooltip-id="createStepTemplate_versionLabel"
                           >
-                            templatesLibrary.createNewModal.versionLabel
+                            common.versionLabel
                           </span>
                            
                           <span
@@ -271,7 +271,7 @@ exports[`CREATE MODE if form changesupdate the preview card: changed value shoul
                     <span
                       class="bp3-button-text"
                     >
-                      save
+                      start
                     </span>
                   </button>
                   <button
@@ -324,6 +324,23 @@ exports[`CREATE MODE if form changesupdate the preview card: changed value shoul
             >
               idLabel
             </p>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main"
+          >
+            <span
+              class="Tag--main"
+            >
+              <span
+                class="bp3-tag scopeLabel account"
+              >
+                <span
+                  class="bp3-text-overflow-ellipsis bp3-fill"
+                >
+                  SCOPE: ACCOUNT
+                </span>
+              </span>
+            </span>
           </div>
           <div
             class="StyledProps--font StyledProps--main StyledProps--background-grey100"

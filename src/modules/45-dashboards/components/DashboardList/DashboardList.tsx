@@ -37,6 +37,7 @@ const DashboardList: React.FC<DashboardListProps> = ({
   const { getString } = useStrings()
   const { accountId, folderId } = useParams<{ accountId: string; folderId: string }>()
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   type CustomColumn<T extends Record<string, any>> = Column<T>
 
   const RenderDashboardName: Renderer<CellProps<DashboardModel>> = ({ row }) => {

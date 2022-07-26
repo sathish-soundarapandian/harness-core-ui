@@ -59,11 +59,12 @@ import TriggerFactory from '@pipeline/factories/ArtifactTriggerInputFactory/inde
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { LicenseRedirectProps, LICENSE_STATE_NAMES } from 'framework/LicenseStore/LicenseStoreContext'
-import { isCommunityPlan } from '@common/utils/utils'
+import { useGetCommunity } from '@common/utils/utils'
 import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import type { ModuleListCardProps } from '@projects-orgs/components/ModuleListCard/ModuleListCard'
 import { FeatureFlag } from '@common/featureFlags'
+import { CDTemplateStudioWrapper } from '@cd/components/TemplateStudio/CDTemplateStudioWrapper/CDTemplateStudioWrapper'
 import { Environments } from './components/Environments/Environments'
 import { Environments as EnvironmentsV2 } from './components/EnvironmentsV2/Environments'
 import EnvironmentDetails from './components/EnvironmentsV2/EnvironmentDetails/EnvironmentDetails'
@@ -197,7 +198,7 @@ const CDDashboardPageOrRedirect = (): React.ReactElement => {
   const params = useParams<ProjectPathProps & ModuleListCardProps>()
   const { module } = params
   const { selectedProject } = useAppStore()
-  const isCommunity = isCommunityPlan()
+  const isCommunity = useGetCommunity()
 
   if (!isCommunity) {
     return <CDDashboardPage />
@@ -249,7 +250,12 @@ TriggerFactory.registerTriggerForm(TriggerFormType.Artifact, {
   component: KubernetesArtifacts,
   baseFactory: artifactSourceBaseFactory
 })
-const isCommunity = isCommunityPlan()
+
+const ServiceComponent = (): React.ReactElement => {
+  const isCommunity = useGetCommunity()
+
+  return !isCommunity ? <ServiceStudio /> : <Services />
+}
 
 export default (
   <>
@@ -302,7 +308,7 @@ export default (
       })}
       pageName={PAGE_NAME.ServiceStudio}
     >
-      {!isCommunity ? <ServiceStudio /> : <Services />}
+      <ServiceComponent />
     </RouteWithLayout>
     <RouteWithLayout
       exact
@@ -422,6 +428,8 @@ export default (
 
     {
       TemplateRouteDestinations({
+        templateStudioComponent: CDTemplateStudioWrapper,
+        templateStudioPageName: PAGE_NAME.CDTemplateStudioWrapper,
         moduleParams,
         licenseRedirectData,
         sidebarProps: CDSideNavProps

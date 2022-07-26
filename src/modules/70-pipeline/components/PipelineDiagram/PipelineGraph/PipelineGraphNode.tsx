@@ -6,9 +6,9 @@
  */
 
 import React, { useRef, useState, useLayoutEffect, ForwardedRef } from 'react'
-import { defaultTo, throttle } from 'lodash-es'
+import { defaultTo, get, throttle } from 'lodash-es'
 import classNames from 'classnames'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isNodeTypeMatrixOrFor } from '@pipeline/utils/executionUtils'
 import GroupNode from '../Nodes/GroupNode/GroupNode'
 import type {
   NodeCollapsibleProps,
@@ -25,7 +25,7 @@ import { getRelativeBounds } from './PipelineGraphUtils'
 import { isFirstNodeAGroupNode, isNodeParallel, shouldAttachRef, shouldRenderGroupNode, showChildNode } from './utils'
 import css from './PipelineGraph.module.scss'
 
-let IS_RENDER_OPTIMIZATION_ENABLED = false
+let IS_RENDER_OPTIMIZATION_ENABLED = true
 export interface PipelineGraphRecursiveProps {
   nodes?: PipelineGraphState[]
   getNode: GetNodeMethod
@@ -363,8 +363,11 @@ function PipelineGraphNodeObserved(
   const [visible, setVisible] = useState(true)
   const updateVisibleState = React.useCallback(throttle(setVisible, 200), [])
   const [elementRect, setElementRect] = useState<DOMRect | null>(null)
-  const { PIPELINE_MATRIX } = useFeatureFlags()
-  IS_RENDER_OPTIMIZATION_ENABLED = !PIPELINE_MATRIX
+  // execution view)
+  if (get(props?.data?.data, 'loopingStrategyEnabled') || isNodeTypeMatrixOrFor(get(props?.data, 'type'))) {
+    IS_RENDER_OPTIMIZATION_ENABLED = false
+  }
+
   React.useEffect(() => {
     let observer: IntersectionObserver
     if (ref && props?.parentSelector && IS_RENDER_OPTIMIZATION_ENABLED) {

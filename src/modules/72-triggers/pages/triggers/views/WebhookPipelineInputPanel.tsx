@@ -457,14 +457,7 @@ function WebhookPipelineInputPanelForm({
   ])
   const pipelineReferenceBranchPlaceHolder = useMemo(() => {
     if (formikProps?.values?.triggerType === TriggerTypes.WEBHOOK) {
-      switch (formikProps?.values?.event) {
-        case TriggerGitEvent.ISSUE_COMMENT:
-          return ciCodebaseBuildIssueComment.spec.tag
-        case TriggerGitEvent.PULL_REQUEST:
-          return ciCodebaseBuildPullRequest.spec.number
-        default:
-          return ciCodebaseBuild.spec.branch
-      }
+      return ciCodebaseBuild.spec.branch
     }
     return getString('common.branchName')
   }, [formikProps?.values?.triggerType, formikProps?.values?.event, getString])

@@ -13,6 +13,7 @@ declare const styles: {
   readonly listItemName: string
   readonly listItemState: string
   readonly listItemTime: string
+  readonly noDataContainer: string
   readonly queuedExecutionsCurrentListItem: string
   readonly queuedExecutionsList: string
   readonly queuedExecutionsListItem: string

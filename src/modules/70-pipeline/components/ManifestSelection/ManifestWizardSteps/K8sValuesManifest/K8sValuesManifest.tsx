@@ -16,7 +16,8 @@ import {
   MultiTypeInputType,
   Text,
   StepProps,
-  ButtonVariation
+  ButtonVariation,
+  AllowedTypes
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
@@ -26,7 +27,6 @@ import * as Yup from 'yup'
 
 import { get, set, isEmpty } from 'lodash-es'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-
 import { FormMultiTypeCheckboxField } from '@common/components'
 
 import { useStrings } from 'framework/strings'
@@ -49,7 +49,7 @@ import css from './ManifestDetails.module.scss'
 interface K8sValuesManifestPropType {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   selectedManifest: ManifestTypes | null
   handleSubmit: (data: ManifestConfigWrapper) => void

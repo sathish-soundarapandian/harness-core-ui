@@ -3,7 +3,7 @@
 exports[`Subscriptions Page it renders a page error when the account call fails 1`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-align-center-center"
+    class="StyledProps--font StyledProps--main PageError--pageError StyledProps--flex StyledProps--flex-align-center-center"
     style="width: 100%; height: 100%;"
   >
     <div
@@ -52,7 +52,7 @@ exports[`Subscriptions Page it renders a page error when the account call fails 
 exports[`Subscriptions Page it renders a page error when the license call fails 1`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-align-center-center"
+    class="StyledProps--font StyledProps--main PageError--pageError StyledProps--flex StyledProps--flex-align-center-center"
     style="width: 100%; height: 100%;"
   >
     <div

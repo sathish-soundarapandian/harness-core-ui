@@ -10,9 +10,10 @@ interface GetLoginPageURL {
 }
 
 export const getLoginPageURL = ({ returnUrl }: GetLoginPageURL): string => {
+  // for basepath, pick current path, but remove `/ng/` or `/ng`, to respect PR env namespaces
   const basePath = window.HARNESS_ENABLE_NG_AUTH_UI
-    ? '/auth/#/signin'
-    : `${window.location.pathname.replace(/\/ng\//, '/')}#/login` // pick current path, but remove `/ng/`
+    ? `${window.location.pathname.replace(/\/ng\/?/, '/')}auth/#/signin`
+    : `${window.location.pathname.replace(/\/ng\/?/, '/')}#/login`
 
   return returnUrl
     ? `${basePath}?action=signout&returnUrl=${encodeURIComponent(returnUrl)}`
@@ -20,7 +21,8 @@ export const getLoginPageURL = ({ returnUrl }: GetLoginPageURL): string => {
 }
 
 export const getForgotPasswordURL = (): string => {
+  // for basepath, pick current path, but remove `/ng/` or `/ng`, to respect PR env namespaces
   return window.HARNESS_ENABLE_NG_AUTH_UI
-    ? '/auth/#/forgot-password'
+    ? `${window.location.pathname.replace(/\/ng\/?/, '/')}auth/#/forgot-password`
     : `${window.location.pathname.replace(/\/ng\//, '/')}#/forgot-password`
 }

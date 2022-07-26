@@ -13,7 +13,6 @@ import { debounce, noop, get } from 'lodash-es'
 import { useToaster } from '@common/exports'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import {
-  getAzureClustersPromise,
   getAzureResourceGroupsBySubscriptionPromise,
   getAzureSubscriptionsPromise,
   SshWinRmAzureInfrastructure,
@@ -35,22 +34,20 @@ import {
   getValue,
   getValidationSchema,
   subscriptionLabel,
-  clusterLabel,
   resourceGroupLabel
 } from './SshWinRmAzureInfrastructureInterface'
 import css from './SshWinRmAzureInfrastructureSpec.module.scss'
 
-interface AzureInfrastructureUI
-  extends Omit<SshWinRmAzureInfrastructure, 'subscriptionId' | 'cluster' | 'resourceGroup'> {
+interface AzureInfrastructureUI extends Omit<SshWinRmAzureInfrastructure, 'subscriptionId' | 'resourceGroup'> {
   subscriptionId?: any
-  cluster?: any
   resourceGroup?: any
 }
 
 export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditableProps> = ({
   initialValues,
   onUpdate,
-  readonly
+  readonly,
+  allowableTypes
 }): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -64,13 +61,8 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
   const [isSubsLoading, setIsSubsLoading] = useState(false)
 
   const [resourceGroups, setResourceGroups] = useState<SelectOption[]>([])
-  const [isResGroupLoading, setIsResGroupLoading] = useState(false)
-
-  const [clusters, setClusters] = useState<SelectOption[]>([])
-  const [isClustersLoading, setIsClustersLoading] = useState(false)
 
   const [azureTags, setAzureTags] = useState([])
-  const [isTagsLoading, setIsTagsLoading] = useState(false)
 
   const delayedOnUpdate = useRef(debounce(onUpdate || noop, 300)).current
   const { getString } = useStrings()
@@ -165,37 +157,6 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
     }
   }
 
-  const fetchAzureClusters = async (connectorRef: string, subscriptionId: string, resourceGroup: string) => {
-    setIsClustersLoading(true)
-    try {
-      const response = await getAzureClustersPromise({
-        queryParams: {
-          connectorRef: connectorRef,
-          accountIdentifier: accountId,
-          orgIdentifier,
-          projectIdentifier
-        },
-        subscriptionId: subscriptionId,
-        resourceGroup: resourceGroup
-      })
-      if (response.status === 'SUCCESS') {
-        const clusterOptions = get(response, 'data.clusters', []).map((cl: { cluster: string }) => ({
-          label: cl.cluster,
-          value: cl.cluster
-        }))
-        setClusters(clusterOptions)
-      } else {
-        /* istanbul ignore next */
-        showError(get(response, 'message', response))
-      }
-    } catch (e) {
-      /* istanbul ignore next */
-      showError(e.message || e.responseMessage[0])
-    } finally {
-      setIsClustersLoading(false)
-    }
-  }
-
   useEffect(() => {
     if (initialValues.connectorRef) {
       const { connectorRef } = initialValues
@@ -204,10 +165,6 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
         const { subscriptionId } = initialValues
         fetchResourceGroups(connectorRef, subscriptionId)
         fetchSubscriptionTags(connectorRef, subscriptionId)
-        if (initialValues.resourceGroup) {
-          const { resourceGroup } = initialValues
-          fetchAzureClusters(connectorRef, subscriptionId, resourceGroup)
-        }
       }
     }
     if (initialValues.credentialsRef) {
@@ -236,7 +193,6 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
     currentValues.subscriptionId = initialValues.subscriptionId
       ? { label: initialValues.subscriptionId, value: initialValues.subscriptionId }
       : ''
-    currentValues.cluster = initialValues.cluster ? { label: initialValues.cluster, value: initialValues.cluster } : ''
     currentValues.resourceGroup = initialValues.resourceGroup
       ? { label: initialValues.resourceGroup, value: initialValues.resourceGroup }
       : ''
@@ -258,12 +214,6 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const clearClusters = () => {
-    /* istanbul ignore next */
-    formikRef.current?.setFieldValue('cluster', '')
-    setClusters([])
-  }
-
   const clearTags = () => {
     /* istanbul ignore next */
     formikRef.current?.setFieldValue('tags', [])
@@ -274,7 +224,6 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
     /* istanbul ignore next */
     formikRef.current?.setFieldValue('resourceGroup', '')
     setResourceGroups([])
-    clearClusters()
     clearTags()
   }
 
@@ -303,7 +252,6 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
               getValue(value.resourceGroup) === ''
                 ? /* istanbul ignore next */ undefined
                 : getValue(value.resourceGroup),
-            cluster: getValue(value.cluster),
             tags: /* istanbul ignore next */ value.tags.reduce(
               (obj: object, tag: AzureTagDTO) => ({
                 ...obj,
@@ -359,11 +307,21 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                   }}
                   gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                 />
+                <FormInput.MultiSelectTypeInput
+                  label={getString(subscriptionLabel)}
+                  name="subscriptionId"
+                  selectItems={subscriptions}
+                  placeholder={
+                    isSubsLoading ? getString('loading') : getString('cd.steps.azureInfraStep.subscriptionPlaceholder')
+                  }
+                  multiSelectTypeInputProps={{
+                    allowableTypes
+                  }}
+                />
                 <FormInput.Select
                   name="subscriptionId"
                   className={`subscriptionId-select ${css.inputWidth}`}
                   items={subscriptions}
-                  disabled={isSubsLoading || !formik.values.connectorRef || readonly}
                   placeholder={
                     isSubsLoading ? getString('loading') : getString('cd.steps.azureInfraStep.subscriptionPlaceholder')
                   }
@@ -384,40 +342,16 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                   name="resourceGroup"
                   className={`resourceGroup-select ${css.inputWidth}`}
                   items={resourceGroups}
-                  disabled={isResGroupLoading || !formik.values.subscriptionId || readonly}
                   placeholder={getString('cd.steps.azureInfraStep.resourceGroupPlaceholder')}
                   onChange={value => {
-                    if (value) {
-                      clearClusters()
-                      fetchAzureClusters(
-                        getValue(get(formik, 'values.connectorRef', '')),
-                        getValue(get(formik, 'values.subscriptionId', '')),
-                        getValue(value)
-                      )
-                    }
+                    formik.setFieldValue('resourceGroup', value)
                   }}
                   label={getString(resourceGroupLabel)}
-                />
-                <FormInput.Select
-                  name="cluster"
-                  className={`cluster-select ${css.inputWidth}`}
-                  items={clusters}
-                  disabled={isClustersLoading || !formik.values.resourceGroup || readonly}
-                  label={getString(clusterLabel)}
-                  placeholder={
-                    isClustersLoading
-                      ? getString('loading')
-                      : getString('cd.steps.common.selectOrEnterClusterPlaceholder')
-                  }
-                  onChange={value => {
-                    formik.setFieldValue('cluster', value)
-                  }}
                 />
                 <FormInput.MultiSelect
                   name="tags"
                   label={getString('tagLabel')}
                   items={azureTags}
-                  disabled={isTagsLoading || !formik.values.subscriptionId || readonly}
                   className={css.inputWidth}
                 />
                 <FormInput.CheckBox

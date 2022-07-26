@@ -25,7 +25,7 @@ import css from '../../K8sServiceSpec.module.scss'
 export const resetBuckets = (formik: FormikValues, bucketPath: string): void => {
   const bucketValue = get(formik.values, bucketPath, '')
   if (getMultiTypeFromValue(bucketValue) === MultiTypeInputType.FIXED && bucketValue?.length) {
-    formik.setFieldValue(bucketValue, '')
+    formik.setFieldValue(bucketPath, '')
   }
 }
 
@@ -62,6 +62,11 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
   const fixedConnectorValue = getDefaultQueryParam(
     artifact?.spec?.connectorRef,
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
+  )
+
+  const fixedFilePathRegexValue = getDefaultQueryParam(
+    artifact?.spec?.filePathRegex,
+    get(initialValues?.artifacts, `${artifactPath}.spec.filePathRegex`, '')
   )
 
   const {
@@ -157,7 +162,17 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
                 allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
                 expressions
               }}
-              onChange={() => resetBuckets(formik, `${path}.artifacts.${artifactPath}.spec.bucketName`)}
+              onChange={selected => {
+                refetchBuckets({
+                  queryParams: {
+                    accountIdentifier: accountId,
+                    orgIdentifier,
+                    projectIdentifier,
+                    connectorRef: defaultTo((selected as any)?.record?.identifier, fixedConnectorValue)
+                  }
+                })
+                resetBuckets(formik, `${path}.artifacts.${artifactPath}.spec.bucketName`)
+              }}
               className={css.connectorMargin}
               type={ArtifactToConnectorMap[defaultTo(artifact?.type, '')]}
               gitScope={{
@@ -174,14 +189,19 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
               label={getString('pipeline.manifestType.bucketName')}
               placeholder={getString('pipeline.manifestType.bucketPlaceHolder')}
               name={`${path}.artifacts.${artifactPath}.spec.bucketName`}
-              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.bucketName`, true)}
+              disabled={!fromTrigger && isFieldDisabled(`artifacts.${artifactPath}.spec.bucketName`, true)}
+              helperText={
+                !get(formik, `values.${path}.artifacts.${artifactPath}.spec.connectorRef`)?.length &&
+                getMultiTypeFromValue(artifact?.spec?.connectorRef) === MultiTypeInputType.RUNTIME &&
+                getString('pipeline.dependencyRequired')
+              }
               useValue
               multiTypeInputProps={{
                 expressions,
                 allowableTypes,
                 selectProps: {
                   noResults: (
-                    <Text lineClamp={1}>
+                    <Text lineClamp={1} width={500} height={100}>
                       {getRBACErrorMessage(error as RBACError) || getString('pipeline.noBuckets')}
                     </Text>
                   ),
@@ -211,7 +231,7 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
             />
           )}
 
-          {isFieldRuntime(`artifacts.${artifactPath}.spec.filePathRegex`, template) && (
+          {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.filePathRegex`, template) && (
             <FormInput.MultiTextInput
               label={getString('pipeline.artifactsSelection.filePathRegexLabel')}
               name={`${path}.artifacts.${artifactPath}.spec.filePathRegex`}
@@ -221,6 +241,30 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
                 expressions,
                 allowableTypes
               }}
+            />
+          )}
+
+          {!!fromTrigger && !isFieldRuntime(`artifacts.${artifactPath}.spec.filePathRegex`, template) && (
+            <FormInput.MultiTextInput
+              label={getString('pipeline.artifactsSelection.filePathRegexLabel')}
+              multiTextInputProps={{
+                expressions,
+                value: fixedFilePathRegexValue,
+                allowableTypes
+              }}
+              disabled={true}
+              name={`${path}.artifacts.${artifactPath}.spec.filePathRegex`}
+            />
+          )}
+
+          {!!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.filePathRegex`, template) && (
+            <FormInput.MultiTextInput
+              label={getString('pipeline.artifactsSelection.filePathRegexLabel')}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              name={`${path}.artifacts.${artifactPath}.spec.filePathRegex`}
             />
           )}
         </Layout.Vertical>

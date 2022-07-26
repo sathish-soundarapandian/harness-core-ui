@@ -7,7 +7,15 @@
 
 import React, { useEffect, useState } from 'react'
 import YAML from 'yaml'
-import { Accordion, Card, Container, MultiTypeInputType, RUNTIME_INPUT_VALUE, Text } from '@wings-software/uicore'
+import {
+  Accordion,
+  AllowedTypes,
+  Card,
+  Container,
+  MultiTypeInputType,
+  RUNTIME_INPUT_VALUE,
+  Text
+} from '@wings-software/uicore'
 import { debounce, defaultTo, get, isEmpty, isNil, omit, set } from 'lodash-es'
 import produce from 'immer'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -15,6 +23,7 @@ import {
   getProvisionerExecutionStrategyYamlPromise,
   Infrastructure,
   K8sAzureInfrastructure,
+  AzureWebAppInfrastructure,
   K8SDirectInfrastructure,
   K8sGcpInfrastructure,
   PdcInfrastructure,
@@ -43,18 +52,22 @@ import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipelin
 import SelectInfrastructureType from '@cd/components/PipelineStudio/DeployInfraSpecifications/SelectInfrastructureType/SelectInfrastructureType'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { AzureInfrastructureSpec } from '@cd/components/PipelineSteps/AzureInfrastructureStep/AzureInfrastructureStep'
+import type { AzureWebAppInfrastructureSpec } from '@cd/components/PipelineSteps/AzureWebAppInfrastructureStep/AzureWebAppInfrastructureStep'
 import {
   detailsHeaderName,
   getCustomStepProps,
-  getSelectedDeploymentType,
   isServerlessDeploymentType,
+  isAzureWebAppDeploymentType,
   ServerlessInfraTypes,
-  StageType
+  StageType,
+  getServiceDefinitionType
 } from '@pipeline/utils/stageHelpers'
 import type { ServerlessAwsLambdaSpec } from '@cd/components/PipelineSteps/ServerlessAWSLambda/ServerlessAwsLambdaSpec'
 import type { ServerlessGCPSpec } from '@cd/components/PipelineSteps/ServerlessGCP/ServerlessGCPSpec'
 import type { ServerlessAzureSpec } from '@cd/components/PipelineSteps/ServerlessAzure/ServerlessAzureSpec'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import { isNewServiceEnvEntity } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { cleanUpEmptyProvisioner, getInfraGroups, getInfrastructureDefaultValue } from '../deployInfraHelper'
 import stageCss from '../../DeployStageSetupShell/DeployStage.module.scss'
 
@@ -73,7 +86,7 @@ export const deploymentTypeInfraTypeMap = {
   ServerlessGoogleFunctions: InfraDeploymentType.ServerlessGoogleFunctions,
   AmazonSAM: InfraDeploymentType.AmazonSAM,
   AzureFunctions: InfraDeploymentType.AzureFunctions,
-  AzureWebApps: InfraDeploymentType.AzureWebApps
+  AzureWebApp: InfraDeploymentType.AzureWebApp
 }
 
 type InfraTypes =
@@ -82,6 +95,7 @@ type InfraTypes =
   | ServerlessInfraTypes
   | K8sAzureInfrastructure
   | PdcInfrastructure
+  | AzureWebAppInfrastructure
 
 export default function DeployInfraDefinition(props: React.PropsWithChildren<unknown>): JSX.Element {
   const [initialInfrastructureDefinitionValues, setInitialInfrastructureDefinitionValues] =
@@ -93,7 +107,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
   const {
     state: {
       originalPipeline,
-      selectionState: { selectedStageId }
+      selectionState: { selectedStageId },
+      templateServiceData
     },
     allowableTypes,
     isReadonly,
@@ -169,12 +184,15 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
     debounceUpdateStage(stageData?.stage)
     setProvisionerEnabled(false)
   }
+  const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
 
   const selectedDeploymentType = React.useMemo(() => {
-    return getSelectedDeploymentType(
+    return getServiceDefinitionType(
       stage,
       getStageFromPipeline,
-      !!stage?.stage?.spec?.serviceConfig?.useFromStage?.stage
+      isNewServiceEnvEntity,
+      isSvcEnvEnabled,
+      templateServiceData
     )
   }, [stage, getStageFromPipeline])
 
@@ -369,6 +387,30 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
           />
         )
       }
+      case InfraDeploymentType.AzureWebApp: {
+        return (
+          <StepWidget<AzureWebAppInfrastructureSpec>
+            factory={factory}
+            key={stage?.stage?.identifier}
+            readonly={isReadonly}
+            initialValues={initialInfrastructureDefinitionValues as AzureWebAppInfrastructureSpec}
+            type={StepType.AzureWebApp}
+            stepViewType={StepViewType.Edit}
+            allowableTypes={allowableTypes}
+            onUpdate={value =>
+              onUpdateInfrastructureDefinition(
+                {
+                  connectorRef: value.connectorRef,
+                  subscriptionId: value.subscriptionId,
+                  resourceGroup: value.resourceGroup,
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                },
+                InfraDeploymentType.AzureWebApp
+              )
+            }
+          />
+        )
+      }
       case 'ServerlessAwsLambda': {
         return (
           <StepWidget<ServerlessAwsLambdaSpec>
@@ -456,7 +498,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
               onUpdateInfrastructureDefinition(
                 {
                   connectorRef: value.connectorRef?.connector?.identifier,
-                  credentialsRef: value.sshKey?.identifier,
+                  credentialsRef: value.sshKey?.referenceString,
                   attributeFilters: value.attributeFilters,
                   hostFilters: value.hostFilters,
                   hosts: value.hosts,
@@ -556,7 +598,9 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
               allowableTypes={
                 scope === Scope.PROJECT
                   ? allowableTypes
-                  : allowableTypes.filter(item => item !== MultiTypeInputType.FIXED)
+                  : ((allowableTypes as MultiTypeInputType[]).filter(
+                      item => item !== MultiTypeInputType.FIXED
+                    ) as AllowedTypes)
               }
               onUpdate={val => updateEnvStep(val)}
               factory={factory}
@@ -571,25 +615,27 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
           </div>
         </>
       )}
-      <Card className={stageCss.sectionCard}>
-        {!isServerlessDeploymentType(selectedDeploymentType) && (
-          <Text margin={{ bottom: 'medium' }} className={stageCss.info}>
-            <StringWithTooltip
-              tooltipId="pipelineStep.infrastructureDefinitionMethod"
-              stringId="pipelineSteps.deploy.infrastructure.selectMethod"
-            />
-          </Text>
-        )}
-        <SelectInfrastructureType
-          infraGroups={infraGroups}
-          isReadonly={isReadonly}
-          selectedInfrastructureType={selectedInfrastructureType}
-          onChange={deploymentType => {
-            setSelectedInfrastructureType(deploymentType)
-            resetInfrastructureDefinition(deploymentType)
-          }}
-        />
-      </Card>
+      {!isAzureWebAppDeploymentType(selectedDeploymentType) && (
+        <Card className={stageCss.sectionCard}>
+          {!isServerlessDeploymentType(selectedDeploymentType) && (
+            <Text margin={{ bottom: 'medium' }} className={stageCss.info}>
+              <StringWithTooltip
+                tooltipId="pipelineStep.infrastructureDefinitionMethod"
+                stringId="pipelineSteps.deploy.infrastructure.selectMethod"
+              />
+            </Text>
+          )}
+          <SelectInfrastructureType
+            infraGroups={infraGroups}
+            isReadonly={isReadonly}
+            selectedInfrastructureType={selectedInfrastructureType}
+            onChange={deploymentType => {
+              setSelectedInfrastructureType(deploymentType)
+              resetInfrastructureDefinition(deploymentType)
+            }}
+          />
+        </Card>
+      )}
       {contextType !== PipelineContextType.Standalone &&
       selectedInfrastructureType &&
       !isServerlessDeploymentType(selectedDeploymentType) ? (
@@ -634,7 +680,9 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
       {selectedInfrastructureType && (
         <>
           <div className={stageCss.tabHeading} id="clusterDetails">
-            {defaultTo(detailsHeaderName[selectedInfrastructureType], getString('cd.steps.common.clusterDetails'))}
+            {isAzureWebAppDeploymentType(selectedInfrastructureType) && isSvcEnvEnabled
+              ? ''
+              : defaultTo(detailsHeaderName[selectedInfrastructureType], getString('cd.steps.common.clusterDetails'))}
           </div>
           <Card className={stageCss.sectionCard}>{getClusterConfigurationStep(selectedInfrastructureType)}</Card>
         </>

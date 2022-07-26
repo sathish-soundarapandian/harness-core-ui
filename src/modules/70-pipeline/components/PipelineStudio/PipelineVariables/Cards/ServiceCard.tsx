@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { MultiTypeInputType, NestedAccordionPanel, Text } from '@wings-software/uicore'
+import { AllowedTypes, NestedAccordionPanel, Text } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo, isEmpty, lowerCase } from 'lodash-es'
 import type { ServiceConfig, ServiceSpec, StageElementConfig } from 'services/cd-ng'
@@ -26,7 +26,8 @@ import css from '../PipelineVariables.module.scss'
 
 const StepsMap: Record<string, StepType> = {
   Kubernetes: StepType.K8sServiceSpec,
-  ServerlessAwsLambda: StepType.ServerlessAwsLambda
+  ServerlessAwsLambda: StepType.ServerlessAwsLambda,
+  AzureWebApp: StepType.AzureWebAppServiceSpec
 }
 
 export interface ServiceCardProps {
@@ -37,7 +38,7 @@ export interface ServiceCardProps {
   onUpdateServiceConfig(data: ServiceSpec): void
   readonly?: boolean
   path?: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepsFactory: AbstractStepFactory
 }
 
@@ -57,13 +58,18 @@ export function ServiceCard(props: ServiceCardProps): React.ReactElement {
     stepsFactory
   } = props
 
-  const { getStageFromPipeline } = usePipelineContext()
+  const {
+    state: { templateServiceData },
+    getStageFromPipeline
+  } = usePipelineContext()
 
   const { getString } = useStrings()
   const stage = getStageFromPipeline(stageIdentifier)
   const selectedDeploymentType = getSelectedDeploymentType(
     stage as StageElementWrapper<DeploymentStageElementConfig> | undefined,
-    getStageFromPipeline
+    getStageFromPipeline,
+    false,
+    templateServiceData
   )
   return (
     <React.Fragment>
@@ -122,7 +128,6 @@ export function ServiceCardPanel(props: ServiceCardPanelProps): React.ReactEleme
         </VariableAccordionSummary>
       }
       panelClassName={css.panel}
-      summaryClassName={css.accordianSummaryL1}
       details={<ServiceCard {...rest} onUpdateServiceConfig={onUpdateServiceConfig} path={`${props.path}.Service`} />}
       collapseProps={{
         keepChildrenMounted: true

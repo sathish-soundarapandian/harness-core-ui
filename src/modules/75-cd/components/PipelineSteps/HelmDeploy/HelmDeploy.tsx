@@ -6,7 +6,15 @@
  */
 
 import React from 'react'
-import { IconName, Formik, Layout, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import {
+  IconName,
+  Formik,
+  Layout,
+  FormInput,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  AllowedTypes
+} from '@wings-software/uicore'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
@@ -42,7 +50,7 @@ interface HelmDeployProps {
   initialValues: StepElementConfig
   onUpdate?: (data: StepElementConfig) => void
   onChange?: (data: StepElementConfig) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   isNewStep?: boolean
   inputSetData?: {

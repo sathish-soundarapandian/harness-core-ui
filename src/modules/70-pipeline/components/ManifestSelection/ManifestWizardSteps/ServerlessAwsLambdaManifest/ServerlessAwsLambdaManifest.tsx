@@ -16,7 +16,8 @@ import {
   MultiTypeInputType,
   Text,
   StepProps,
-  ButtonVariation
+  ButtonVariation,
+  AllowedTypes
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
@@ -46,7 +47,7 @@ import css from '../K8sValuesManifest/ManifestDetails.module.scss'
 interface ServerlessAwsLambdaManifestPropType {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   selectedManifest: ManifestTypes | null
   handleSubmit: (data: ManifestConfigWrapper) => void

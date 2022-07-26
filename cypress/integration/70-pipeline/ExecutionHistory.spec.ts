@@ -164,7 +164,7 @@ describe('Pipeline Execution History', () => {
     }).as('pipelineHealth')
 
     cy.visitPageAssertion()
-    cy.get('[class*=PipelineDeploymentList-module_healthAndExecutions] > :nth-child(1)').within(() => {
+    cy.findByTestId('health-and-executions').within(() => {
       cy.findByText('Pipeline health').should('exist')
       cy.findByText('Last 30 days').click()
       cy.findByText('Last 60 days').click({ force: true })
@@ -201,7 +201,7 @@ describe('Pipeline Execution History', () => {
     }).as('pipelineExecution')
 
     cy.visitPageAssertion()
-    cy.get('[class*=PipelineDeploymentList-module_healthAndExecutions] > :nth-child(2)').within(() => {
+    cy.findByTestId('health-and-executions').within(() => {
       cy.findByText('Executions').should('exist')
       cy.findByText('# of executions').should('exist')
       cy.findByText('Date').should('exist')
@@ -219,7 +219,7 @@ describe('Pipeline Execution History', () => {
   })
 
   // Execution List
-  it('loads successful, aborted and failed pipelines', () => {
+  it.skip('loads successful, aborted and failed pipelines', () => {
     // Fixtures
     cy.intercept('GET', pipelineSummaryCallAPI, {
       fixture: 'pipeline/api/executionHistory/executionSummary.json'
@@ -238,7 +238,7 @@ describe('Pipeline Execution History', () => {
       cy.findByText('Duration: 11s').should('exist')
       cy.findByText('John Doe').should('exist')
 
-      cy.get('[class^=ExecutionActions]').click()
+      cy.get('[class^=ExecutionActions]').click({ force: true })
     })
     cy.findByText('Retry Failed Pipeline').should('not.exist')
     cy.get('body').type('{esc}')
@@ -255,7 +255,7 @@ describe('Pipeline Execution History', () => {
       cy.findByText('Duration: 8s').should('exist')
       cy.findByText('John Doe').should('exist')
 
-      cy.get('[class^=ExecutionActions]').click()
+      cy.get('[class^=ExecutionActions]').click({ force: true })
     })
     cy.findByText('Retry Failed Pipeline').should('exist')
     cy.get('body').type('{esc}')
@@ -274,7 +274,7 @@ describe('Pipeline Execution History', () => {
       cy.findByText('Services deployed (1)').should('exist')
       cy.findByText('Environments (1)').should('exist')
 
-      cy.get('[class^=ExecutionActions]').click()
+      cy.get('[class^=ExecutionActions]').click({ force: true })
     })
     cy.findByText('Retry Failed Pipeline').should('exist')
     cy.get('body').type('{esc}')
@@ -304,7 +304,7 @@ describe('Pipeline Execution History', () => {
     })
       .first()
       .click()
-    cy.findByText('Compare YAML').click()
+    cy.findByText('Compare Executions').click()
     cy.findByRole('button', {
       name: /compare/i
     }).should('be.disabled')

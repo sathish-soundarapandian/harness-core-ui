@@ -14,6 +14,12 @@ import { useStrings } from 'framework/strings'
 
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, triggerPathProps } from '@common/utils/routeUtils'
+import {
+  iValues,
+  errorInitialValuesWithoutRuntime,
+  errorIntitialValuesWithoutAnyArtifact,
+  errorIntitialValuesWithoutSelectedArtifact
+} from './ArtifactConfigPanelMocks'
 import ArtifactTriggerConfigPanel from '../views/ArtifactTriggerConfigPanel'
 
 const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
@@ -35,449 +41,6 @@ const params = {
 }
 
 const TEST_PATH = routes.toTriggersWizardPage({ ...accountPathProps, ...triggerPathProps, ...pipelineModuleParams })
-
-const iValues = {
-  manifestType: 'HelmChart',
-  resolvedPipeline: {
-    name: 'test-manifest',
-    identifier: 'testmanifest',
-    projectIdentifier: 'mtran',
-    orgIdentifier: 'harness',
-    tags: {},
-    stages: [
-      {
-        stage: {
-          name: 'stage',
-          identifier: 'stage',
-          description: '',
-          type: 'Deployment',
-          spec: {
-            serviceConfig: {
-              serviceDefinition: {
-                type: 'Kubernetes',
-                spec: {
-                  artifacts: {
-                    sidecars: []
-                  },
-                  variables: [],
-                  manifestOverrideSets: [],
-                  manifests: [
-                    {
-                      manifest: {
-                        identifier: 's3manifestid',
-                        type: 'HelmChart',
-                        spec: {
-                          store: {
-                            type: 'S3',
-                            spec: {
-                              connectorRef: '<+input>',
-                              bucketName: '<+input>',
-                              folderPath: 'chartPath',
-                              region: '<+input>'
-                            }
-                          },
-                          chartName: '<+input>',
-                          chartVersion: '<+input>',
-                          helmVersion: 'V2',
-                          skipResourceVersioning: false
-                        }
-                      }
-                    }
-                  ]
-                }
-              },
-              serviceRef: '<+input>'
-            },
-            infrastructure: {
-              environmentRef: '<+input>',
-              infrastructureDefinition: {
-                type: 'KubernetesDirect',
-                spec: {
-                  connectorRef: '<+input>',
-                  namespace: '<+input>',
-                  releaseName: '<+input>'
-                }
-              },
-              allowSimultaneousDeployments: false,
-              infrastructureKey: '<+input>'
-            },
-            execution: {
-              steps: [
-                {
-                  step: {
-                    name: 'Rollout Deployment',
-                    identifier: 'rolloutDeployment',
-                    type: 'K8sRollingDeploy',
-                    timeout: '10m',
-                    spec: {
-                      skipDryRun: false
-                    }
-                  }
-                }
-              ],
-              rollbackSteps: [
-                {
-                  step: {
-                    name: 'Rollback Rollout Deployment',
-                    identifier: 'rollbackRolloutDeployment',
-                    type: 'K8sRollingRollback',
-                    timeout: '10m',
-                    spec: {}
-                  }
-                }
-              ]
-            }
-          },
-          tags: {},
-          failureStrategies: [
-            {
-              onFailure: {
-                errors: ['AllErrors'],
-                action: {
-                  type: 'StageRollback'
-                }
-              }
-            }
-          ]
-        }
-      },
-      {
-        stage: {
-          name: 'stage2',
-          identifier: 'stage2',
-          description: '',
-          type: 'Deployment',
-          spec: {
-            serviceConfig: {
-              serviceDefinition: {
-                type: 'Kubernetes',
-                spec: {
-                  artifacts: {
-                    sidecars: [],
-                    primary: {
-                      type: 'DockerRegistry',
-                      spec: {
-                        connectorRef: 'configurableartifact',
-                        imagePath: 'imagePath',
-                        tag: '<+input>'
-                      }
-                    }
-                  },
-                  manifestOverrideSets: [],
-                  manifests: [
-                    {
-                      manifest: {
-                        identifier: 'manifestId',
-                        type: 'HelmChart',
-                        spec: {
-                          store: {
-                            type: 'S3',
-                            spec: {
-                              connectorRef: 'account.sdhgjhgdj',
-                              bucketName: '<+input>',
-                              folderPath: '<+input>',
-                              region: 'us-gov-west-1'
-                            }
-                          },
-                          chartName: 'chartName',
-                          chartVersion: 'chartVersion',
-                          helmVersion: 'V2',
-                          skipResourceVersioning: false
-                        }
-                      }
-                    }
-                  ],
-                  variables: []
-                }
-              },
-              serviceRef: '<+input>'
-            },
-            infrastructure: {
-              environmentRef: '<+input>',
-              infrastructureDefinition: {
-                type: 'KubernetesDirect',
-                spec: {
-                  connectorRef: 'account.builfarm',
-                  namespace: 'a',
-                  releaseName: 'a'
-                }
-              },
-              allowSimultaneousDeployments: false,
-              infrastructureKey: 'a'
-            },
-            execution: {
-              steps: [
-                {
-                  step: {
-                    name: 'Rollout Deployment',
-                    identifier: 'rolloutDeployment',
-                    type: 'K8sRollingDeploy',
-                    timeout: '10m',
-                    spec: {
-                      skipDryRun: false
-                    }
-                  }
-                }
-              ],
-              rollbackSteps: [
-                {
-                  step: {
-                    name: 'Rollback Rollout Deployment',
-                    identifier: 'rollbackRolloutDeployment',
-                    type: 'K8sRollingRollback',
-                    timeout: '10m',
-                    spec: {}
-                  }
-                }
-              ]
-            }
-          },
-          tags: {},
-          failureStrategies: [
-            {
-              onFailure: {
-                errors: ['AllErrors'],
-                action: {
-                  type: 'StageRollback'
-                }
-              }
-            }
-          ]
-        }
-      },
-      {
-        stage: {
-          name: 'manifest-stage',
-          identifier: 'manifeststage',
-          description: '',
-          type: 'Deployment',
-          spec: {
-            serviceConfig: {
-              serviceDefinition: {
-                type: 'Kubernetes',
-                spec: {
-                  artifacts: {
-                    sidecars: []
-                  },
-                  manifestOverrideSets: [],
-                  manifests: [
-                    {
-                      manifest: {
-                        identifier: 'manifest',
-                        type: 'K8sManifest',
-                        spec: {
-                          store: {
-                            type: 'Github',
-                            spec: {
-                              connectorRef: 'configurablemanifest',
-                              gitFetchType: 'Branch',
-                              paths: ['abc'],
-                              repoName: 'reponame',
-                              branch: '<+input>'
-                            }
-                          },
-                          skipResourceVersioning: false
-                        }
-                      }
-                    }
-                  ],
-                  variables: []
-                }
-              },
-              serviceRef: '<+input>'
-            },
-            infrastructure: {
-              environmentRef: '<+input>',
-              infrastructureDefinition: {
-                type: 'KubernetesDirect',
-                spec: {
-                  connectorRef: 'account.builfarm',
-                  namespace: 'a',
-                  releaseName: 'a'
-                }
-              },
-              allowSimultaneousDeployments: false,
-              infrastructureKey: 'a'
-            },
-            execution: {
-              steps: [
-                {
-                  step: {
-                    name: 'Rollout Deployment',
-                    identifier: 'rolloutDeployment',
-                    type: 'K8sRollingDeploy',
-                    timeout: '10m',
-                    spec: {
-                      skipDryRun: false
-                    }
-                  }
-                }
-              ],
-              rollbackSteps: [
-                {
-                  step: {
-                    name: 'Rollback Rollout Deployment',
-                    identifier: 'rollbackRolloutDeployment',
-                    type: 'K8sRollingRollback',
-                    timeout: '10m',
-                    spec: {}
-                  }
-                }
-              ]
-            }
-          },
-          tags: {},
-          failureStrategies: [
-            {
-              onFailure: {
-                errors: ['AllErrors'],
-                action: {
-                  type: 'StageRollback'
-                }
-              }
-            }
-          ]
-        }
-      }
-    ]
-  },
-  inputSetTemplateYamlObj: {
-    pipeline: {
-      identifier: 'testmanifest',
-      stages: [
-        {
-          stage: {
-            identifier: 'stage',
-            type: 'Deployment',
-            spec: {
-              serviceConfig: {
-                serviceDefinition: {
-                  type: 'Kubernetes',
-                  spec: {
-                    manifests: [
-                      {
-                        manifest: {
-                          identifier: 's3manifestid',
-                          type: 'HelmChart',
-                          spec: {
-                            store: {
-                              type: 'S3',
-                              spec: {
-                                connectorRef: '<+input>',
-                                bucketName: '<+input>',
-                                region: '<+input>'
-                              }
-                            },
-                            chartName: '<+input>',
-                            chartVersion: '<+input>'
-                          }
-                        }
-                      }
-                    ]
-                  }
-                },
-                serviceRef: '<+input>'
-              },
-              infrastructure: {
-                environmentRef: '<+input>',
-                infrastructureDefinition: {
-                  type: 'KubernetesDirect',
-                  spec: {
-                    connectorRef: '<+input>',
-                    namespace: '<+input>',
-                    releaseName: '<+input>'
-                  }
-                },
-                infrastructureKey: '<+input>'
-              }
-            }
-          }
-        },
-        {
-          stage: {
-            identifier: 'stage2',
-            type: 'Deployment',
-            spec: {
-              serviceConfig: {
-                serviceDefinition: {
-                  type: 'Kubernetes',
-                  spec: {
-                    artifacts: {
-                      primary: {
-                        type: 'DockerRegistry',
-                        spec: {
-                          tag: '<+input>'
-                        }
-                      }
-                    },
-                    manifests: [
-                      {
-                        manifest: {
-                          identifier: 'manifestId',
-                          type: 'HelmChart',
-                          spec: {
-                            store: {
-                              type: 'S3',
-                              spec: {
-                                bucketName: '<+input>',
-                                folderPath: '<+input>'
-                              }
-                            }
-                          }
-                        }
-                      }
-                    ]
-                  }
-                },
-                serviceRef: '<+input>'
-              },
-              infrastructure: {
-                environmentRef: '<+input>'
-              }
-            }
-          }
-        },
-        {
-          stage: {
-            identifier: 'manifeststage',
-            type: 'Deployment',
-            spec: {
-              serviceConfig: {
-                serviceDefinition: {
-                  type: 'Kubernetes',
-                  spec: {
-                    manifests: [
-                      {
-                        manifest: {
-                          identifier: 'manifest',
-                          type: 'K8sManifest',
-                          spec: {
-                            store: {
-                              type: 'Github',
-                              spec: {
-                                branch: '<+input>'
-                              }
-                            }
-                          }
-                        }
-                      }
-                    ]
-                  }
-                },
-                serviceRef: '<+input>'
-              },
-              infrastructure: {
-                environmentRef: '<+input>'
-              }
-            }
-          }
-        }
-      ]
-    }
-  },
-  tags: {},
-  triggerType: 'Manifest'
-}
 
 jest.mock('@pipeline/factories/ArtifactTriggerInputFactory', () => ({
   getTriggerFormDetails: jest.fn().mockImplementation(() => () => {
@@ -512,6 +75,34 @@ describe('Artifact Trigger Config Panel  tests', () => {
       //     ).not.toBeNull()
       //   )
       expect(container).toMatchSnapshot()
+    })
+
+    test('No Runtime Tags selected but artifact present', async () => {
+      const { container } = render(<WrapperComponent initialValues={errorInitialValuesWithoutRuntime} isEdit={false} />)
+      expect(container).toMatchSnapshot()
+      await waitFor(() =>
+        expect(
+          queryByText(container, 'pipeline.artifactTriggerConfigPanel.noSelectableRuntimeArtifactsFound')
+        ).not.toBeNull()
+      )
+    })
+    test('No Artifact Present Error String', async () => {
+      const { container } = render(
+        <WrapperComponent initialValues={errorIntitialValuesWithoutAnyArtifact} isEdit={false} />
+      )
+      expect(container).toMatchSnapshot()
+      await waitFor(() =>
+        expect(queryByText(container, 'pipeline.artifactTriggerConfigPanel.noSelectableArtifactsFound')).not.toBeNull()
+      )
+    })
+    test('Artifact of selected type not present', async () => {
+      const { container } = render(
+        <WrapperComponent initialValues={errorIntitialValuesWithoutSelectedArtifact} isEdit={false} />
+      )
+      expect(container).toMatchSnapshot()
+      await waitFor(() =>
+        expect(queryByText(container, 'pipeline.artifactTriggerConfigPanel.noSelectableArtifactsFound')).not.toBeNull()
+      )
     })
 
     test('edit render', async () => {

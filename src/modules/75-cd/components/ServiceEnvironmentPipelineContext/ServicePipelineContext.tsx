@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { cloneDeep, defaultTo, isEmpty, isEqual, merge, noop, set } from 'lodash-es'
-import { MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import produce from 'immer'
 import {
   PipelineContext,
@@ -100,7 +100,11 @@ export function ServicePipelineProvider({
   contextType,
   children
 }: React.PropsWithChildren<ServicePipelineProviderProps>): React.ReactElement {
-  const allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+  const allowableTypes: AllowedTypesWithRunTime[] = [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ]
 
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
@@ -117,27 +121,28 @@ export function ServicePipelineProvider({
     ): PipelineStageWrapper<T> => {
       return _getStageFromPipeline(stageId, pipeline || state.pipeline)
     },
-    [state.pipeline, state.pipeline?.stages]
+    [state.pipeline]
   )
 
-  const updatePipeline = async (
-    pipelineArg: PipelineInfoConfig | ((p: PipelineInfoConfig) => PipelineInfoConfig)
-  ): Promise<void> => {
-    let pipeline = pipelineArg
-    if (typeof pipelineArg === 'function') {
-      if (state.pipeline) {
-        pipeline = pipelineArg(state.pipeline)
-      } else {
-        pipeline = {} as PipelineInfoConfig
+  const updatePipeline = React.useCallback(
+    async (pipelineArg: PipelineInfoConfig | ((p: PipelineInfoConfig) => PipelineInfoConfig)): Promise<void> => {
+      let pipeline = pipelineArg
+      if (typeof pipelineArg === 'function') {
+        if (state.pipeline) {
+          pipeline = pipelineArg(state.pipeline)
+        } else {
+          pipeline = {} as PipelineInfoConfig
+        }
       }
-    }
-    const isUpdated = !isEqual(state.originalPipeline, pipeline)
-    await dispatch(PipelineContextActions.success({ error: '', pipeline: pipeline as PipelineInfoConfig, isUpdated }))
+      const isUpdated = !isEqual(state.originalPipeline, pipeline)
+      await dispatch(PipelineContextActions.success({ error: '', pipeline: pipeline as PipelineInfoConfig, isUpdated }))
 
-    if (view === SelectedView.VISUAL) {
-      onUpdatePipeline?.(pipeline as ServicePipelineConfig)
-    }
-  }
+      if (view === SelectedView.VISUAL) {
+        onUpdatePipeline?.(pipeline as ServicePipelineConfig)
+      }
+    },
+    [onUpdatePipeline, state.originalPipeline, state.pipeline, view]
+  )
 
   const updateStage = React.useCallback(
     async (newStage: StageElementConfig) => {
@@ -257,6 +262,7 @@ export function ServicePipelineProvider({
   React.useEffect(() => {
     fetchCurrentPipeline()
     setSelection({ stageId: initialValue.stages?.[0]?.stage?.identifier })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialValue])
 
   return (
@@ -291,7 +297,8 @@ export function ServicePipelineProvider({
         setSelectedSectionId: noop,
         setSelection,
         getStagePathFromPipeline,
-        setTemplateTypes: noop
+        setTemplateTypes: noop,
+        setTemplateServiceData: noop
       }}
     >
       {children}

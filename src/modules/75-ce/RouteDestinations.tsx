@@ -33,6 +33,8 @@ import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTrailFactory'
 import type { ResourceDTO } from 'services/audit'
+import RecommendationFilters from '@ce/components/RecommendationFilters'
+import type { CCMUIAppCustomProps } from '@ce/interface/CCMUIApp.types'
 import CEHomePage from './pages/home/CEHomePage'
 import CECODashboardPage from './pages/co-dashboard/CECODashboardPage'
 import CECOCreateGatewayPage from './pages/co-create-gateway/CECOCreateGatewayPage'
@@ -55,6 +57,7 @@ import AnomaliesOverviewPage from './pages/anomalies-overview/AnomaliesOverviewP
 import formatCost from './utils/formatCost'
 import BusinessMapping from './pages/business-mapping/BusinessMapping'
 import ECSRecommendationDetailsPage from './pages/ecs-recommendation-details/ECSRecommendationDetailsPage'
+import OverviewAddCluster from './components/OverviewPage/OverviewAddCluster'
 
 featureFactory.registerFeaturesByModule('ce', {
   features: [FeatureIdentifier.PERSPECTIVES],
@@ -343,7 +346,6 @@ const CERoutes: React.FC = () => {
         >
           <CECOLoadBalancersPage />
         </RouteWithLayout>
-
         {!enableMicroFrontend ? (
           <RouteWithLayout
             licenseRedirectData={licenseRedirectData}
@@ -355,7 +357,6 @@ const CERoutes: React.FC = () => {
             <Budgets />
           </RouteWithLayout>
         ) : null}
-
         <RouteWithLayout
           licenseRedirectData={licenseRedirectData}
           sidebarProps={CESideNavProps}
@@ -368,7 +369,6 @@ const CERoutes: React.FC = () => {
         >
           <RedirectToBudgetDetails />
         </RouteWithLayout>
-
         {!enableMicroFrontend ? (
           <RouteWithLayout
             licenseRedirectData={licenseRedirectData}
@@ -383,16 +383,18 @@ const CERoutes: React.FC = () => {
             <BudgetDetails />
           </RouteWithLayout>
         ) : null}
+        {!enableMicroFrontend ? (
+          <RouteWithLayout
+            licenseRedirectData={licenseRedirectData}
+            sidebarProps={CESideNavProps}
+            path={routes.toCERecommendations({ ...accountPathProps, ...projectPathProps })}
+            exact
+            pageName={PAGE_NAME.CERecommendationList}
+          >
+            <RecommendationList />
+          </RouteWithLayout>
+        ) : null}
 
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCERecommendations({ ...accountPathProps, ...projectPathProps })}
-          exact
-          pageName={PAGE_NAME.CERecommendationList}
-        >
-          <RecommendationList />
-        </RouteWithLayout>
         <RouteWithLayout
           licenseRedirectData={licenseRedirectData}
           sidebarProps={CESideNavProps}
@@ -460,7 +462,6 @@ const CERoutes: React.FC = () => {
         >
           <PerspectiveDetailsPage />
         </RouteWithLayout>
-
         <RouteWithLayout
           licenseRedirectData={licenseRedirectData}
           sidebarProps={CESideNavProps}
@@ -542,7 +543,6 @@ const CERoutes: React.FC = () => {
         >
           <AnomaliesOverviewPage />
         </RouteWithLayout>
-
         <RouteWithLayout
           licenseRedirectData={licenseRedirectData}
           sidebarProps={CESideNavProps}
@@ -552,7 +552,6 @@ const CERoutes: React.FC = () => {
         >
           <BusinessMapping />
         </RouteWithLayout>
-
         <RouteWithLayout
           licenseRedirectData={licenseRedirectData}
           sidebarProps={CESideNavProps}
@@ -562,19 +561,24 @@ const CERoutes: React.FC = () => {
         >
           <OverviewPage />
         </RouteWithLayout>
-
         {enableMicroFrontend ? (
           <RouteWithLayout
             path={[
               routes.toCEBudgets({ ...accountPathProps }),
-              routes.toCEBudgetDetails({ ...accountPathProps, budgetId: ':budgetId', budgetName: ':budgetName' })
+              routes.toCEBudgetDetails({ ...accountPathProps, budgetId: ':budgetId', budgetName: ':budgetName' }),
+              routes.toCERecommendations({ ...accountPathProps, ...projectPathProps })
             ]}
             sidebarProps={CESideNavProps}
           >
-            <ChildAppMounter ChildApp={CcmMicroFrontendPath} />
+            <ChildAppMounter<CCMUIAppCustomProps>
+              customComponents={{
+                OverviewAddCluster,
+                RecommendationFilters
+              }}
+              ChildApp={CcmMicroFrontendPath}
+            />
           </RouteWithLayout>
         ) : null}
-
         <Route path="*">
           <NotFoundPage />
         </Route>

@@ -10,7 +10,7 @@ import { isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
-import { FormInput, Text, Container, MultiTypeInputType } from '@wings-software/uicore'
+import { FormInput, Text, Container, AllowedTypes } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { MultiTypeTextField, MultiTypeTextProps } from '@common/components/MultiTypeText/MultiTypeText'
 import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
@@ -46,7 +46,7 @@ interface CIStepProps {
   stepViewType: StepViewType
   path?: string
   isInputSetView?: boolean
-  allowableTypes?: MultiTypeInputType[]
+  allowableTypes?: AllowedTypes
   template?: Record<string, any>
 }
 
@@ -121,8 +121,8 @@ export const CIStep: React.FC<CIStepProps> = props => {
     }: {
       name: string
       labelKey: keyof StringsMap
-      allowedTypes: MultiTypeInputType[]
-      allowedTypesForEntries: MultiTypeInputType[]
+      allowedTypes: AllowedTypes
+      allowedTypesForEntries: AllowedTypes
     }) => (
       <MultiTypeList
         name={name}

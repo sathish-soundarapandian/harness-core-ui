@@ -76,7 +76,7 @@ export function PipelineStages<T = Record<string, unknown>>({
   const selected = stages.get(type || '')
 
   const childTypes = React.useMemo(() => {
-    return [...stages.values()].filter(item => !item.isDisabled && !!item.isTemplateSupported).map(item => item.type)
+    return [...stages.values()].filter(item => !item.isDisabled).map(item => item.type)
   }, [stages])
 
   const onUseTemplate = async () => {

@@ -12,7 +12,7 @@ import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
-import type { PipelineInfoConfig, StageElementConfig } from 'services/pipeline-ng'
+import type { EntityGitDetails, PipelineInfoConfig, StageElementConfig } from 'services/pipeline-ng'
 import type { StepOrStepGroupOrTemplateStepData } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { useSaveAsTemplate } from '@pipeline/components/PipelineStudio/SaveTemplateButton/useSaveAsTemplate'
@@ -23,12 +23,17 @@ type TemplateData = StepOrStepGroupOrTemplateStepData | StageElementConfig | Pip
 export interface SaveTemplateButtonProps {
   data: TemplateData | (() => Promise<TemplateData>)
   type: 'Step' | 'Stage' | 'Pipeline'
+  gitDetails?: EntityGitDetails
   buttonProps?: ButtonProps
 }
 
-export function SaveTemplateButton({ data, buttonProps, type }: SaveTemplateButtonProps): JSX.Element {
+export function SaveTemplateButton({ data, type, gitDetails, buttonProps }: SaveTemplateButtonProps): JSX.Element {
   const { getString } = useStrings()
-  const { save } = useSaveAsTemplate({ data, type, fireSuccessEvent: true })
+  const { save } = useSaveAsTemplate({
+    data,
+    type,
+    gitDetails
+  })
 
   return (
     <RbacButton

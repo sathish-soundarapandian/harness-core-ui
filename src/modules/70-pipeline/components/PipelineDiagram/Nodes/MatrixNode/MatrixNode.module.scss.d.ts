@@ -19,15 +19,14 @@ declare const styles: {
   readonly cursor: string
   readonly firstnode: string
   readonly graphNode: string
+  readonly hasMoreChild: string
   readonly horizontalBar: string
   readonly isNodeCollapsed: string
   readonly marginBottom: string
-  readonly marginTop: string
   readonly markerEnd: string
   readonly markerStart: string
   readonly matrixBorderWrapper: string
   readonly matrixFooter: string
-  readonly matrixLabel: string
   readonly nestedGroup: string
   readonly nodeNameText: string
   readonly readonly: string

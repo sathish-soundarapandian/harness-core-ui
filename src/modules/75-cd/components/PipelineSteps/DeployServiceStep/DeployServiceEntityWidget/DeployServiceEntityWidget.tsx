@@ -81,7 +81,6 @@ function DeployServiceEntityWidget({
   const serviceRef = initialValues?.service?.identifier || initialValues?.serviceRef
 
   const [services, setService] = useState<ServiceYaml[]>()
-  const [selectOptions, setSelectOptions] = useState<SelectOption[]>()
   const [state, setState] = useState<DeployServiceState>({ isEdit: false, isService: false })
   const [type, setType] = useState<MultiTypeInputType>(getMultiTypeFromValue(serviceRef))
 
@@ -99,7 +98,6 @@ function DeployServiceEntityWidget({
       gitOpsEnabled: initialValues.gitOpsEnabled
     }
   })
-
   const {
     data: selectedServiceResponse,
     refetch: refetchServiceData,
@@ -111,32 +109,14 @@ function DeployServiceEntityWidget({
   })
 
   useEffect(() => {
-    if (!isNil(selectOptions) && initialValues.serviceRef) {
-      if (getMultiTypeFromValue(initialValues.serviceRef) === MultiTypeInputType.FIXED) {
-        const doesExist = selectOptions.filter(service => service.value === initialValues.serviceRef).length > 0
-        if (!doesExist) {
-          if (!readonly) {
-            formikRef.current?.setFieldValue('serviceRef', '')
-          } else {
-            const options = [...selectOptions]
-            options.push({
-              label: initialValues.serviceRef,
-              value: initialValues.serviceRef
-            })
-            setSelectOptions(options)
-          }
-        }
-      }
-    }
-  }, [selectOptions])
+    subscribeForm({ tab: DeployTabs.SERVICE, form: formikRef })
+    return () => unSubscribeForm({ tab: DeployTabs.SERVICE, form: formikRef })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-  useEffect(() => {
+  const selectOptions = useMemo(() => {
     if (!isNil(services)) {
-      setSelectOptions(
-        services.map(service => {
-          return { label: service.name, value: service.identifier }
-        })
-      )
+      return services.map(service => ({ label: service.name, value: service.identifier }))
     }
   }, [services])
 
@@ -165,13 +145,8 @@ function DeployServiceEntityWidget({
       }
       setService(serviceList)
     }
-  }, [loading, serviceResponse?.data?.content?.length])
-
-  useEffect(() => {
-    subscribeForm({ tab: DeployTabs.SERVICE, form: formikRef })
-    return () => unSubscribeForm({ tab: DeployTabs.SERVICE, form: formikRef })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [loading, serviceResponse?.data?.content?.length])
 
   if (error?.message) {
     if (shouldShowError(error)) {

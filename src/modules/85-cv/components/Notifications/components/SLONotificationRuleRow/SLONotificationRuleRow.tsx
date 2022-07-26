@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Button, Container, Layout, Select, Text, TextInput } from '@harness/uicore'
+import { Button, Container, FormInput, Layout, Text, TextInput } from '@harness/uicore'
 import React, { useCallback } from 'react'
 import HorizontalLineWithText from '@cv/components/HorizontalLineWithText/HorizontalLineWithText'
 import { useStrings } from 'framework/strings'
@@ -18,7 +18,8 @@ export default function SLONotificationRuleRow({
   notificationRule,
   showDeleteNotificationsIcon,
   handleDeleteNotificationRule,
-  handleChangeField
+  handleChangeField,
+  index
 }: NotificationRuleRowProps): JSX.Element {
   const { getString } = useStrings()
   const { threshold, lookBackDuration, id, condition } = notificationRule || {}
@@ -92,8 +93,9 @@ export default function SLONotificationRuleRow({
       <Layout.Horizontal padding={{ top: 'large' }} key={id} spacing="medium">
         <Layout.Vertical spacing="xsmall" padding={{ right: 'small' }}>
           <Text>{getString('cv.notifications.condition')}</Text>
-          <Select
-            name="condition"
+
+          <FormInput.Select
+            name={`conditions.${index}.condition`}
             className={css.sloConditionField}
             value={condition}
             items={sloConditionOptions}

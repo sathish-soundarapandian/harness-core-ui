@@ -39,6 +39,21 @@ export const mockAuthDataLoading: UseGetMockDataWithMutateAndRefetch<ResponseHar
   }
 }
 
+export const mockAuthDataAuthFalse: UseGetMockDataWithMutateAndRefetch<ResponseHarnessApprovalInstanceAuthorization> = {
+  refetch: jest.fn(),
+  mutate: jest.fn(),
+  loading: false,
+  data: {
+    correlationId: '',
+    status: 'SUCCESS',
+    metaData: null as unknown as undefined,
+    data: {
+      authorized: false,
+      reason: 'User is not authorised'
+    }
+  }
+}
+
 export const mockApprovalData: UseGetMockDataWithMutateAndRefetch<ResponseApprovalInstanceResponse> = {
   refetch: jest.fn(),
   mutate: jest.fn(),

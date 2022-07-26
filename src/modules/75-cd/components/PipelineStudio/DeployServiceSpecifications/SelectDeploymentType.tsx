@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Formik, FormikProps } from 'formik'
-import { noop } from 'lodash-es'
+import { get, noop } from 'lodash-es'
 import { Classes, PopoverInteractionKind } from '@blueprintjs/core'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
@@ -15,6 +15,7 @@ import {
   Card,
   Checkbox,
   Dialog,
+  FormError,
   HarnessDocTooltip,
   Icon,
   Layout,
@@ -27,7 +28,8 @@ import { useModalHook } from '@harness/use-modal'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { useStrings, UseStringsReturn } from 'framework/strings'
-import { isCommunityPlan } from '@common/utils/utils'
+import { useGetCommunity } from '@common/utils/utils'
+import { errorCheck } from '@common/utils/formikHelpers'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
@@ -63,6 +65,8 @@ interface CardListProps {
   onChange: (deploymentType: ServiceDeploymentType) => void
   allowDisabledItemClick?: boolean
 }
+
+const DEPLOYMENT_TYPE_KEY = 'deploymentType'
 
 const CardList = ({
   items,
@@ -181,7 +185,12 @@ export default function SelectDeploymentType({
       baseTypes.push({
         label: getString('pipeline.serviceDeploymentTypes.ssh'),
         icon: 'secret-ssh',
-        value: ServiceDeploymentType.ssh
+        value: ServiceDeploymentType.Ssh
+      })
+      baseTypes.push({
+        label: getString('pipeline.serviceDeploymentTypes.winrm'),
+        icon: 'command-winrm',
+        value: ServiceDeploymentType.WinRm
       })
     }
     if (AZURE_WEBAPP_NG) {
@@ -232,12 +241,12 @@ export default function SelectDeploymentType({
       types.splice(3, 0, {
         label: getString('pipeline.serviceDeploymentTypes.ssh'),
         icon: 'secret-ssh',
-        value: ServiceDeploymentType.ssh
+        value: ServiceDeploymentType.Ssh
       })
       types.splice(4, 0, {
         label: getString('pipeline.serviceDeploymentTypes.winrm'),
         icon: 'command-winrm',
-        value: ServiceDeploymentType.winrm
+        value: ServiceDeploymentType.WinRm
       })
     }
     return types as DeploymentTypeItem[]
@@ -245,7 +254,8 @@ export default function SelectDeploymentType({
 
   const [cgDeploymentTypes, setCgDeploymentTypes] = React.useState(cgSupportedDeploymentTypes)
   const [ngDeploymentTypes, setNgDeploymentTypes] = React.useState(ngSupportedDeploymentTypes)
-  const isCommunity = isCommunityPlan()
+  const isCommunity = useGetCommunity()
+  const hasError = errorCheck(DEPLOYMENT_TYPE_KEY, formikRef?.current)
 
   const [showCurrentGenSwitcherModal, hideCurrentGenSwitcherModal] = useModalHook(() => {
     return (
@@ -329,7 +339,7 @@ export default function SelectDeploymentType({
             </Text>
             <a
               className={deployServiceCsss.learnMore}
-              href="https://ngdocs.harness.io/article/1fjmm4by22"
+              href="https://docs.harness.io/article/1fjmm4by22"
               rel="noreferrer"
               target="_blank"
             >
@@ -339,8 +349,8 @@ export default function SelectDeploymentType({
         </article>
       )
       return (
-        <Layout.Horizontal margin={{ top: 'medium' }}>
-          <Layout.Vertical padding={viewContext ? { right: 'huge' } : { right: 'small' }}>
+        <Layout.Vertical margin={{ top: 'medium' }}>
+          <Layout.Vertical padding={viewContext ? { right: 'huge' } : { right: 'small' }} margin={{ bottom: 'large' }}>
             <div className={cx(stageCss.tabSubHeading, 'ng-tooltip-native')}>
               {getString('common.currentlyAvailable')}
             </div>
@@ -350,9 +360,19 @@ export default function SelectDeploymentType({
               onChange={handleDeploymentTypeChange}
               selectedValue={selectedDeploymentType}
             />
+            {hasError ? (
+              <FormError
+                name={DEPLOYMENT_TYPE_KEY}
+                errorMessage={get(formikRef?.current?.errors, DEPLOYMENT_TYPE_KEY)}
+              />
+            ) : null}
           </Layout.Vertical>
           {!!viewContext && (
-            <Layout.Vertical border={{ left: true }} padding={{ left: 'huge' }}>
+            <Layout.Vertical
+              padding={{ left: 'huge', bottom: 'large', top: 'large' }}
+              border={{ radius: 2 }}
+              className={deployServiceCsss.comingSoonLayout}
+            >
               <Layout.Horizontal>
                 <div className={deployServiceCsss.comingSoonBanner}>{getString('common.comingSoon')}</div>
                 <div
@@ -396,7 +416,7 @@ export default function SelectDeploymentType({
               />
             </Layout.Vertical>
           )}
-        </Layout.Horizontal>
+        </Layout.Vertical>
       )
     }
     return (

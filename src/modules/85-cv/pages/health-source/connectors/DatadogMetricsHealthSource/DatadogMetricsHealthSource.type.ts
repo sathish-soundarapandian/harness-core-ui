@@ -28,7 +28,7 @@ export interface DatadogMetricInfo {
   groupingQuery?: string
   metricTags?: SelectOption[]
   groupingTags?: string[]
-  serviceInstanceIdentifierTag?: string
+  serviceInstanceIdentifierTag?: string | SelectOption
   riskCategory?: string
   higherBaselineDeviation?: boolean
   lowerBaselineDeviation?: boolean
@@ -39,7 +39,8 @@ export interface DatadogMetricInfo {
   continuousVerification?: boolean
   healthScore?: boolean
   isNew?: boolean
-  serviceInstance?: string
+  serviceInstance?: string | SelectOption
+  isConnectorRuntimeOrExpression?: boolean
 }
 
 export interface DatadogMetricSetupSource {
@@ -49,10 +50,12 @@ export interface DatadogMetricSetupSource {
   healthSourceIdentifier: string
   healthSourceName: string
   product: SelectOption
-  connectorRef?: string
+  connectorRef?: string | { value: string }
 }
 
 export interface DatadogMetricsHealthSourceProps {
   data: any
   onSubmit: (formdata: DatadogMetricSetupSource, UpdatedHealthSource: UpdatedHealthSource) => Promise<void>
+  isTemplate?: boolean
+  expressions?: string[]
 }

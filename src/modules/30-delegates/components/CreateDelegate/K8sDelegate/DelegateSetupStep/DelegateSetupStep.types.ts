@@ -17,3 +17,9 @@ export interface DelegateInstallerDetails {
   value: string
   icon: string
 }
+
+export enum k8sPermissionType {
+  CLUSTER_ADMIN = 'CLUSTER_ADMIN',
+  CLUSTER_VIEWER = 'CLUSTER_VIEWER',
+  NAMESPACE_ADMIN = 'NAMESPACE_ADMIN'
+}

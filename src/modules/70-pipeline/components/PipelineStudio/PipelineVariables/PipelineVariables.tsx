@@ -182,11 +182,7 @@ export function PipelineVariablesWithRef(
   )
 }
 
-export interface PipelineCardPanelProps extends PipelineCardProps {
-  originalPipeline: PipelineInfoConfig
-}
-
-export function PipelineCardPanel(props: PipelineCardPanelProps): React.ReactElement {
+export function PipelineCardPanel(props: PipelineCardProps): React.ReactElement {
   const {
     variablePipeline,
     pipeline,
@@ -276,6 +272,7 @@ export function PipelineCardPanel(props: PipelineCardPanelProps): React.ReactEle
     <>
       <PipelineCard
         variablePipeline={variablePipeline}
+        originalPipeline={originalPipeline}
         pipeline={pipeline}
         stepsFactory={stepsFactory}
         updatePipeline={updatePipeline}

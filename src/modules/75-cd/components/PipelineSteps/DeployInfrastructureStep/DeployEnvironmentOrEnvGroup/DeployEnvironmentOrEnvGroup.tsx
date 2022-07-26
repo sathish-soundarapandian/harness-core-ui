@@ -22,7 +22,8 @@ import {
   ButtonSize,
   ButtonVariation,
   SplitButtonOption,
-  Text
+  Text,
+  AllowedTypes
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 
@@ -64,7 +65,7 @@ function DeployEnvironmentOrEnvGroup({
   initialValues: DeployStageConfig
   readonly: boolean
   formik?: FormikProps<DeployStageConfig>
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }): JSX.Element {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
@@ -83,7 +84,8 @@ function DeployEnvironmentOrEnvGroup({
     },
     body: {
       filterType: 'Environment'
-    }
+    },
+    lazy: !orgIdentifier
   })
 
   const [environments, setEnvironments] = useState<EnvironmentResponseDTO[]>()
@@ -165,7 +167,11 @@ function DeployEnvironmentOrEnvGroup({
     }
     setEnvironments(newEnvironmentsList)
     setSelectedEnvironment(newEnvironmentsList?.find(environment => environment.identifier === values?.identifier))
-    formik?.setFieldValue('environmentOrEnvGroupRef', { label: values.name, value: values.identifier })
+    formik?.setValues({
+      ...formik?.values,
+      isEnvGroup: false,
+      environmentOrEnvGroupRef: { label: defaultTo(values.name, ''), value: defaultTo(values.identifier, '') }
+    })
     hideEnvironmentModal()
   }
 
@@ -205,7 +211,8 @@ function DeployEnvironmentOrEnvGroup({
     },
     body: {
       filterType: 'EnvironmentGroup'
-    }
+    },
+    lazy: !orgIdentifier
   })
 
   const [environmentGroups, setEnvironmentGroups] = useState<EnvironmentGroupResponseDTO[]>()

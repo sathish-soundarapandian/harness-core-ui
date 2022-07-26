@@ -31,8 +31,13 @@ import {
   GetTemplateListQueryParams,
   ResponsePageTemplateSummaryResponse
 } from 'services/template-ng'
+import { Category } from '@common/constants/TrackingConstants'
+import type { ServiceDefinition } from 'services/cd-ng'
 
 export const TEMPLATE_INPUT_PATH = 'template.templateInputs'
+export interface TemplateServiceDataType {
+  [key: string]: ServiceDefinition['type']
+}
 
 export const getTemplateNameWithLabel = (template?: TemplateSummaryResponse): string => {
   return `${template?.name} (${defaultTo(template?.versionLabel, 'Stable')})`
@@ -104,7 +109,10 @@ export const createStepNodeFromTemplate = (template: TemplateSummaryResponse, is
 export const getTemplateTypesByRef = (
   params: GetTemplateListQueryParams,
   templateRefs: string[]
-): Promise<{ [key: string]: string }> => {
+): Promise<{
+  templateTypes: { [key: string]: string }
+  templateServiceData: TemplateServiceDataType
+}> => {
   const scopedTemplates = templateRefs.reduce((a: { [key: string]: string[] }, b) => {
     const identifier = getIdentifierFromValue(b)
     const scope = getScopeFromValue(b)
@@ -136,16 +144,27 @@ export const getTemplateTypesByRef = (
   })
   return Promise.all(promises)
     .then(responses => {
+      const templateServiceData = {}
       const templateTypes = {}
       responses.forEach(response => {
         response.data?.content?.forEach(item => {
-          set(templateTypes, getScopeBasedTemplateRef(item), parse(item.yaml || '').template.spec.type)
+          const templateData = parse(item.yaml || '').template
+          const scopeBasedTemplateRef = getScopeBasedTemplateRef(item)
+          set(templateTypes, scopeBasedTemplateRef, templateData.spec.type)
+
+          const serviceData = defaultTo(
+            templateData.spec.spec?.serviceConfig?.serviceDefinition?.type,
+            templateData.spec.spec?.deploymentType
+          )
+          if (templateData.type === Category.STAGE && serviceData) {
+            set(templateServiceData, scopeBasedTemplateRef, serviceData)
+          }
         })
       })
-      return templateTypes
+      return { templateTypes, templateServiceData }
     })
     .catch(_ => {
-      return {}
+      return { templateTypes: {}, templateServiceData: {} }
     })
 }
 

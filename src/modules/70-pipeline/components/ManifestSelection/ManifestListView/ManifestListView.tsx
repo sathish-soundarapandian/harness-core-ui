@@ -12,24 +12,15 @@ import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
-import { get, set } from 'lodash-es'
-
+import { get, isEmpty, noop } from 'lodash-es'
 import type { IconProps } from '@harness/icons'
-import produce from 'immer'
 import { useStrings } from 'framework/strings'
-
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
 import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
 import StepHelmAuth from '@connectors/components/CreateConnector/HelmRepoConnector/StepHelmRepoAuth'
-import type {
-  ConnectorConfigDTO,
-  ConnectorInfoDTO,
-  ManifestConfig,
-  ManifestConfigWrapper,
-  StageElementConfig
-} from 'services/cd-ng'
+import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import StepAWSAuthentication from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
 import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
 import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
@@ -37,22 +28,16 @@ import StepGitlabAuthentication from '@connectors/components/CreateConnector/Git
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 import {
   buildAWSPayload,
-  buildBitbucketPayload,
   buildGcpPayload,
-  buildGithubPayload,
-  buildGitlabPayload,
-  buildGitPayload,
   buildHelmPayload,
   buildOCIHelmPayload
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import GcpAuthentication from '@connectors/components/CreateConnector/GcpConnector/StepAuth/GcpAuthentication'
-
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { ManifestActions } from '@common/constants/TrackingConstants'
-
 import { ManifestWizard } from '../ManifestWizard/ManifestWizard'
 import { getStatus, getConnectorNameFromValue } from '../../PipelineStudio/StageBuilder/StageBuilderUtil'
 import { useVariablesExpression } from '../../PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -65,8 +50,10 @@ import {
   allowedManifestTypes,
   ManifestTypetoStoreMap,
   ManifestToPathKeyMap,
+  getManifestLocation,
   showAddManifestBtn,
-  getManifestLocation
+  getBuildPayload,
+  isGitTypeManifestStore
 } from '../Manifesthelper'
 import type { ConnectorRefLabelType } from '../../ArtifactsSelection/ArtifactInterface'
 import type {
@@ -87,24 +74,37 @@ import KustomizeWithGIT from '../ManifestWizardSteps/KustomizeWithGIT/KustomizeW
 import OpenShiftParamWithGit from '../ManifestWizardSteps/OpenShiftParam/OSWithGit'
 import KustomizePatchDetails from '../ManifestWizardSteps/KustomizePatchesDetails/KustomizePatchesDetails'
 import ServerlessAwsLambdaManifest from '../ManifestWizardSteps/ServerlessAwsLambdaManifest/ServerlessAwsLambdaManifest'
+import CustomRemoteManifest from '../ManifestWizardSteps/CustomRemoteManifest/CustomRemoteManifest'
 import AttachPathYamlFlow from './AttachPathYamlFlow'
 import InheritFromManifest from '../ManifestWizardSteps/InheritFromManifest/InheritFromManifest'
 import ConnectorField from './ConnectorField'
 import HelmWithOCI from '../ManifestWizardSteps/HelmWithOCI/HelmWithOCI'
 import { getConnectorPath } from '../ManifestWizardSteps/ManifestUtils'
 import HarnessFileStore from '../ManifestWizardSteps/HarnessFileStore/HarnessFileStore'
+import KustomizeWithHarnessStore from '../ManifestWizardSteps/KustomizeWithHarnessStore/KustomizeWithHarnessStore'
+import HelmWithHarnessStore from '../ManifestWizardSteps/HelmWithHarnessStore/HelmWithHarnessStore'
 import css from '../ManifestSelection.module.scss'
 
+const DIALOG_PROPS: IDialogProps = {
+  isOpen: true,
+  usePortal: true,
+  autoFocus: true,
+  canEscapeKeyClose: false,
+  canOutsideClickClose: false,
+  enforceFocus: false,
+  style: { width: 1175, minHeight: 640, borderLeft: 0, paddingBottom: 0, position: 'relative', overflow: 'hidden' }
+}
+
 function ManifestListView({
-  updateStage,
-  stage,
-  isPropagating,
   connectors,
-  refetchConnectors,
   listOfManifests,
   deploymentType,
   isReadonly,
   allowableTypes,
+  updateManifestList,
+  removeManifestConfig,
+  attachPathYaml,
+  removeValuesYaml,
   allowOnlyOne = false
 }: ManifestListViewProps): JSX.Element {
   const [selectedManifest, setSelectedManifest] = useState<ManifestTypes | null>(null)
@@ -113,35 +113,10 @@ function ManifestListView({
   const [isEditMode, setIsEditMode] = useState(false)
   const [manifestIndex, setEditIndex] = useState(0)
   const { trackEvent } = useTelemetry()
-
-  const DIALOG_PROPS: IDialogProps = {
-    isOpen: true,
-    usePortal: true,
-    autoFocus: true,
-    canEscapeKeyClose: false,
-    canOutsideClickClose: false,
-    enforceFocus: false,
-    style: { width: 1175, minHeight: 640, borderLeft: 0, paddingBottom: 0, position: 'relative', overflow: 'hidden' }
-  }
-
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-
-  const removeManifestConfig = (index: number): void => {
-    listOfManifests.splice(index, 1)
-
-    if (stage) {
-      const newStage = produce(stage, draft => {
-        set(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests', listOfManifests)
-      }).stage
-
-      if (newStage) {
-        updateStage(newStage)
-      }
-    }
-  }
 
   const addNewManifest = (): void => {
     setEditIndex(listOfManifests.length)
@@ -164,7 +139,7 @@ function ManifestListView({
     if (initValues?.type && initValues?.type !== selectedManifest) {
       return null as unknown as ManifestConfig
     }
-    return initValues
+    return initValues as ManifestConfig
   }
 
   const getInitialValues = (): ManifestStepInitData => {
@@ -173,9 +148,9 @@ function ManifestListView({
     if (initValues) {
       const values = {
         ...initValues,
-        store: listOfManifests[manifestIndex]?.manifest.spec?.store?.type,
+        store: listOfManifests[manifestIndex]?.manifest?.spec?.store?.type,
         connectorRef: getConnectorPath(
-          listOfManifests[manifestIndex]?.manifest.spec?.store?.type,
+          listOfManifests[manifestIndex]?.manifest?.spec?.store?.type,
           listOfManifests[manifestIndex].manifest
         ),
         selectedManifest: get(listOfManifests[manifestIndex], 'manifest.type', null)
@@ -189,37 +164,9 @@ function ManifestListView({
     }
   }
 
-  const updateStageData = (): void => {
-    const path = isPropagating
-      ? 'stage.spec.serviceConfig.stageOverrides.manifests'
-      : 'stage.spec.serviceConfig.serviceDefinition.spec.manifests'
-
-    if (stage) {
-      updateStage(
-        produce(stage, draft => {
-          set(draft, path, listOfManifests)
-        }).stage as StageElementConfig
-      )
-    }
-  }
-
   const handleSubmit = (manifestObj: ManifestConfigWrapper): void => {
     const isNewManifest = manifestIndex === listOfManifests.length
-    if (isPropagating) {
-      if (listOfManifests?.length > 0) {
-        listOfManifests.splice(manifestIndex, 1, manifestObj)
-      } else {
-        listOfManifests.push(manifestObj)
-      }
-    } else {
-      if (listOfManifests?.length > 0) {
-        listOfManifests.splice(manifestIndex, 1, manifestObj)
-      } else {
-        listOfManifests.push(manifestObj)
-      }
-    }
-
-    updateStageData()
+    updateManifestList(manifestObj, manifestIndex)
     trackEvent(
       isNewManifest ? ManifestActions.SaveManifestOnPipelinePage : ManifestActions.UpdateManifestOnPipelinePage,
       {
@@ -227,31 +174,11 @@ function ManifestListView({
         storeType: manifestObj?.manifest?.spec?.store?.type || ''
       }
     )
-
     hideConnectorModal()
     setConnectorView(false)
     setSelectedManifest(null)
     setManifestStore('')
-    refetchConnectors()
   }
-
-  const attachPathYaml = useCallback(
-    (manifestPathData: any, manifestId: string, manifestType: PrimaryManifestType): void => {
-      const manifestData = listOfManifests?.find(manifestObj => manifestObj.manifest.identifier === manifestId)
-      set(manifestData, `manifest.spec.${ManifestToPathKeyMap[manifestType]}`, manifestPathData)
-      updateStageData()
-    },
-    []
-  )
-
-  const removeValuesYaml = useCallback(
-    (valuesYamlIndex: number, manifestId: string, manifestType: PrimaryManifestType): void => {
-      const manifestData = listOfManifests?.find(manifestObj => manifestObj.manifest.identifier === manifestId)
-      manifestData?.manifest.spec[ManifestToPathKeyMap[manifestType]].splice(valuesYamlIndex, 1)
-      updateStageData()
-    },
-    []
-  )
 
   const changeManifestType = (selected: ManifestTypes | null): void => {
     setSelectedManifest(selected)
@@ -281,6 +208,7 @@ function ManifestListView({
       manifestDetailsProps.deploymentType = deploymentType
     }
     return manifestDetailsProps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedManifest, manifestStore, getLastStepInitialData])
 
   const getLabels = (): ConnectorRefLabelType => {
@@ -296,38 +224,19 @@ function ManifestListView({
     const iconProps: IconProps = {
       name: manifestTypeIcons[selectedManifest as ManifestTypes]
     }
-
     if (selectedManifest === ManifestDataType.HelmChart) {
       iconProps.color = Color.WHITE
     }
     return iconProps
   }
 
-  const getBuildPayload = (type: ConnectorInfoDTO['type']) => {
-    if (type === Connectors.GIT) {
-      return buildGitPayload
-    }
-    if (type === Connectors.GITHUB) {
-      return buildGithubPayload
-    }
-    if (type === Connectors.BITBUCKET) {
-      return buildBitbucketPayload
-    }
-    if (type === Connectors.GITLAB) {
-      return buildGitlabPayload
-    }
-    return () => ({})
-  }
-
   const getLastSteps = useCallback((): Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> => {
     const arr: Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> = []
     let manifestDetailStep = null
+    const isGitTypeStores = isGitTypeManifestStore(manifestStore as ManifestStores)
 
     switch (true) {
-      case selectedManifest === ManifestDataType.HelmChart &&
-        [ManifestStoreMap.Git, ManifestStoreMap.Github, ManifestStoreMap.GitLab, ManifestStoreMap.Bitbucket].includes(
-          manifestStore as ManifestStores
-        ):
+      case selectedManifest === ManifestDataType.HelmChart && isGitTypeStores:
         manifestDetailStep = <HelmWithGIT {...lastStepProps()} />
         break
       case selectedManifest === ManifestDataType.HelmChart && manifestStore === ManifestStoreMap.Http:
@@ -342,46 +251,93 @@ function ManifestListView({
       case selectedManifest === ManifestDataType.HelmChart && manifestStore === ManifestStoreMap.Gcs:
         manifestDetailStep = <HelmWithGcs {...lastStepProps()} />
         break
-      case selectedManifest === ManifestDataType.OpenshiftTemplate:
+      case selectedManifest === ManifestDataType.HelmChart && manifestStore === ManifestStoreMap.Harness:
+        manifestDetailStep = <HelmWithHarnessStore {...lastStepProps()} />
+        break
+      case selectedManifest === ManifestDataType.OpenshiftTemplate && isGitTypeStores:
         manifestDetailStep = <OpenShiftTemplateWithGit {...lastStepProps()} />
         break
-      case selectedManifest === ManifestDataType.Kustomize:
+      case selectedManifest === ManifestDataType.Kustomize && isGitTypeStores:
         manifestDetailStep = <KustomizeWithGIT {...lastStepProps()} />
         break
-      case selectedManifest === ManifestDataType.OpenshiftParam:
+      case selectedManifest === ManifestDataType.Kustomize && manifestStore === ManifestStoreMap.Harness:
+        manifestDetailStep = <KustomizeWithHarnessStore {...lastStepProps()} />
+        break
+      case selectedManifest === ManifestDataType.OpenshiftParam && isGitTypeStores:
         manifestDetailStep = <OpenShiftParamWithGit {...lastStepProps()} />
         break
-
-      case selectedManifest === ManifestDataType.KustomizePatches:
+      case selectedManifest === ManifestDataType.KustomizePatches && isGitTypeStores:
         manifestDetailStep = <KustomizePatchDetails {...lastStepProps()} />
         break
       case selectedManifest === ManifestDataType.ServerlessAwsLambda:
         manifestDetailStep = <ServerlessAwsLambdaManifest {...lastStepProps()} />
-        break
-      case selectedManifest === ManifestDataType.Values && manifestStore === ManifestStoreMap.InheritFromManifest:
-        manifestDetailStep = <InheritFromManifest {...lastStepProps()} />
         break
       case [ManifestDataType.Values, ManifestDataType.OpenshiftParam, ManifestDataType.KustomizePatches].includes(
         selectedManifest as ManifestTypes
       ) && manifestStore === ManifestStoreMap.InheritFromManifest:
         manifestDetailStep = <InheritFromManifest {...lastStepProps()} />
         break
-      case manifestStore === ManifestStoreMap.Harness:
+      case [
+        ManifestDataType.K8sManifest,
+        ManifestDataType.Values,
+        ManifestDataType.OpenshiftTemplate,
+        ManifestDataType.OpenshiftParam,
+        ManifestDataType.KustomizePatches
+      ].includes(selectedManifest as ManifestTypes) && manifestStore === ManifestStoreMap.Harness:
         manifestDetailStep = <HarnessFileStore {...lastStepProps()} />
         break
+      case [
+        ManifestDataType.K8sManifest,
+        ManifestDataType.Values,
+        ManifestDataType.HelmChart,
+        ManifestDataType.OpenshiftTemplate,
+        ManifestDataType.OpenshiftParam
+      ].includes(selectedManifest as ManifestTypes) && manifestStore === ManifestStoreMap.CustomRemote:
+        manifestDetailStep = <CustomRemoteManifest {...lastStepProps()} />
+        break
       case [ManifestDataType.K8sManifest, ManifestDataType.Values].includes(selectedManifest as ManifestTypes) &&
-        [ManifestStoreMap.Git, ManifestStoreMap.Github, ManifestStoreMap.GitLab, ManifestStoreMap.Bitbucket].includes(
-          manifestStore as ManifestStores
-        ):
+        isGitTypeStores:
       default:
         manifestDetailStep = <K8sValuesManifest {...lastStepProps()} />
         break
     }
-
     arr.push(manifestDetailStep)
     return arr
   }, [manifestStore, selectedManifest, lastStepProps])
 
+  const connectorDetailStepProps = {
+    type: ManifestToConnectorMap[manifestStore],
+    name: getString('overview'),
+    isEditMode,
+    gitDetails: { repoIdentifier, branch, getDefaultFromOtherRepo: true }
+  }
+  const delegateSelectorStepProps = {
+    name: getString('delegate.DelegateselectionLabel'),
+    isEditMode,
+    setIsEditMode,
+    connectorInfo: undefined
+  }
+  const verifyOutOfClusterDelegateProps = {
+    name: getString('connectors.stepThreeName'),
+    connectorInfo: undefined,
+    isStep: true,
+    isLastStep: false,
+    type: ManifestToConnectorMap[manifestStore]
+  }
+  const gitTypeStoreAuthenticationProps = {
+    name: getString('credentials'),
+    isEditMode,
+    setIsEditMode,
+    accountId,
+    orgIdentifier,
+    projectIdentifier,
+    connectorInfo: undefined,
+    onConnectorCreated: noop
+  }
+  const authenticationStepProps = {
+    ...gitTypeStoreAuthenticationProps,
+    identifier: CONNECTOR_CREDENTIALS_STEP_IDENTIFIER
+  }
   const getNewConnectorSteps = useCallback((): JSX.Element => {
     const buildPayload = getBuildPayload(ManifestToConnectorMap[manifestStore])
     switch (manifestStore) {
@@ -389,130 +345,37 @@ function ManifestListView({
       case ManifestStoreMap.OciHelmChart:
         return (
           <StepWizard title={getString('connectors.createNewConnector')}>
-            <ConnectorDetailsStep
-              type={ManifestToConnectorMap[manifestStore]}
-              name={getString('overview')}
-              isEditMode={isEditMode}
-              gitDetails={{ repoIdentifier, branch, getDefaultFromOtherRepo: true }}
-            />
-            <StepHelmAuth
-              name={getString('details')}
-              identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
-              accountId={accountId}
-              orgIdentifier={orgIdentifier}
-              projectIdentifier={projectIdentifier}
-              isEditMode={isEditMode}
-              connectorInfo={undefined}
-              setIsEditMode={setIsEditMode}
-              isOCIHelm={manifestStore === ManifestStoreMap.OciHelmChart}
-            />
+            <ConnectorDetailsStep {...connectorDetailStepProps} />
+            <StepHelmAuth {...authenticationStepProps} isOCIHelm={manifestStore === ManifestStoreMap.OciHelmChart} />
             <DelegateSelectorStep
-              name={getString('delegate.DelegateselectionLabel')}
-              isEditMode={isEditMode}
-              setIsEditMode={setIsEditMode}
-              connectorInfo={undefined}
+              {...delegateSelectorStepProps}
               buildPayload={manifestStore === ManifestStoreMap.Http ? buildHelmPayload : buildOCIHelmPayload}
             />
-
-            <VerifyOutOfClusterDelegate
-              name={getString('connectors.stepThreeName')}
-              connectorInfo={undefined}
-              isStep={true}
-              isLastStep={false}
-              type={ManifestToConnectorMap[manifestStore]}
-            />
+            <VerifyOutOfClusterDelegate {...verifyOutOfClusterDelegateProps} />
           </StepWizard>
         )
       case ManifestStoreMap.S3:
         return (
           <StepWizard iconProps={{ size: 37 }} title={getString('connectors.createNewConnector')}>
-            <ConnectorDetailsStep
-              type={ManifestToConnectorMap[manifestStore]}
-              name={getString('overview')}
-              isEditMode={isEditMode}
-              gitDetails={{ repoIdentifier, branch, getDefaultFromOtherRepo: true }}
-            />
-            <StepAWSAuthentication
-              name={getString('credentials')}
-              identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
-              isEditMode={isEditMode}
-              setIsEditMode={setIsEditMode}
-              accountId={accountId}
-              orgIdentifier={orgIdentifier}
-              projectIdentifier={projectIdentifier}
-              connectorInfo={undefined}
-              onConnectorCreated={() => {
-                //TO BE Removed
-              }}
-            />
-            <DelegateSelectorStep
-              name={getString('delegate.DelegateselectionLabel')}
-              isEditMode={isEditMode}
-              setIsEditMode={setIsEditMode}
-              buildPayload={buildAWSPayload}
-              connectorInfo={undefined}
-            />
-            <VerifyOutOfClusterDelegate
-              name={getString('connectors.stepThreeName')}
-              connectorInfo={undefined}
-              isStep={true}
-              isLastStep={false}
-              type={ManifestToConnectorMap[manifestStore]}
-            />
+            <ConnectorDetailsStep {...connectorDetailStepProps} />
+            <StepAWSAuthentication {...authenticationStepProps} />
+            <DelegateSelectorStep {...delegateSelectorStepProps} buildPayload={buildAWSPayload} />
+            <VerifyOutOfClusterDelegate {...verifyOutOfClusterDelegateProps} />
           </StepWizard>
         )
       case ManifestStoreMap.Gcs:
         return (
           <StepWizard iconProps={{ size: 37 }} title={getString('connectors.createNewConnector')}>
-            <ConnectorDetailsStep
-              type={Connectors.GCP}
-              name={getString('overview')}
-              isEditMode={isEditMode}
-              connectorInfo={undefined}
-              gitDetails={{ repoIdentifier, branch, getDefaultFromOtherRepo: true }}
-            />
-            <GcpAuthentication
-              name={getString('details')}
-              identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
-              isEditMode={isEditMode}
-              setIsEditMode={setIsEditMode}
-              accountId={accountId}
-              orgIdentifier={orgIdentifier}
-              projectIdentifier={projectIdentifier}
-              onConnectorCreated={() => {
-                //TO BE Removed
-              }}
-              connectorInfo={undefined}
-            />
-            <DelegateSelectorStep
-              name={getString('delegate.DelegateselectionLabel')}
-              isEditMode={isEditMode}
-              setIsEditMode={setIsEditMode}
-              buildPayload={buildGcpPayload}
-              onConnectorCreated={() => {
-                //TO BE Removed
-              }}
-              connectorInfo={undefined}
-            />
-            <VerifyOutOfClusterDelegate
-              name={getString('connectors.stepThreeName')}
-              connectorInfo={undefined}
-              isStep={true}
-              isLastStep={false}
-              type={Connectors.GCP}
-            />
+            <ConnectorDetailsStep {...connectorDetailStepProps} />
+            <GcpAuthentication {...authenticationStepProps} />
+            <DelegateSelectorStep {...delegateSelectorStepProps} buildPayload={buildGcpPayload} />
+            <VerifyOutOfClusterDelegate {...verifyOutOfClusterDelegateProps} />
           </StepWizard>
         )
-
       default:
         return (
           <StepWizard title={getString('connectors.createNewConnector')}>
-            <ConnectorDetailsStep
-              type={ManifestToConnectorMap[manifestStore]}
-              name={getString('overview')}
-              isEditMode={isEditMode}
-              gitDetails={{ repoIdentifier, branch, getDefaultFromOtherRepo: true }}
-            />
+            <ConnectorDetailsStep {...connectorDetailStepProps} />
             <GitDetailsStep
               type={ManifestToConnectorMap[manifestStore]}
               name={getString('details')}
@@ -520,79 +383,23 @@ function ManifestListView({
               connectorInfo={undefined}
             />
             {ManifestToConnectorMap[manifestStore] === Connectors.GIT ? (
-              <StepGitAuthentication
-                name={getString('credentials')}
-                onConnectorCreated={() => {
-                  // Handle on success
-                }}
-                isEditMode={isEditMode}
-                setIsEditMode={setIsEditMode}
-                connectorInfo={undefined}
-                accountId={accountId}
-                orgIdentifier={orgIdentifier}
-                projectIdentifier={projectIdentifier}
-              />
+              <StepGitAuthentication {...gitTypeStoreAuthenticationProps} />
             ) : null}
             {ManifestToConnectorMap[manifestStore] === Connectors.GITHUB ? (
-              <StepGithubAuthentication
-                name={getString('credentials')}
-                onConnectorCreated={() => {
-                  // Handle on success
-                }}
-                isEditMode={isEditMode}
-                setIsEditMode={setIsEditMode}
-                connectorInfo={undefined}
-                accountId={accountId}
-                orgIdentifier={orgIdentifier}
-                projectIdentifier={projectIdentifier}
-              />
+              <StepGithubAuthentication {...gitTypeStoreAuthenticationProps} />
             ) : null}
             {ManifestToConnectorMap[manifestStore] === Connectors.BITBUCKET ? (
-              <StepBitbucketAuthentication
-                name={getString('credentials')}
-                onConnectorCreated={() => {
-                  // Handle on success
-                }}
-                isEditMode={isEditMode}
-                setIsEditMode={setIsEditMode}
-                connectorInfo={undefined}
-                accountId={accountId}
-                orgIdentifier={orgIdentifier}
-                projectIdentifier={projectIdentifier}
-              />
+              <StepBitbucketAuthentication {...gitTypeStoreAuthenticationProps} />
             ) : null}
             {ManifestToConnectorMap[manifestStore] === Connectors.GITLAB ? (
-              <StepGitlabAuthentication
-                name={getString('credentials')}
-                identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
-                onConnectorCreated={() => {
-                  // Handle on success
-                }}
-                isEditMode={isEditMode}
-                setIsEditMode={setIsEditMode}
-                connectorInfo={undefined}
-                accountId={accountId}
-                orgIdentifier={orgIdentifier}
-                projectIdentifier={projectIdentifier}
-              />
+              <StepGitlabAuthentication {...authenticationStepProps} />
             ) : null}
-            <DelegateSelectorStep
-              name={getString('delegate.DelegateselectionLabel')}
-              isEditMode={isEditMode}
-              setIsEditMode={setIsEditMode}
-              buildPayload={buildPayload}
-              connectorInfo={undefined}
-            />
-            <VerifyOutOfClusterDelegate
-              name={getString('connectors.stepThreeName')}
-              connectorInfo={undefined}
-              isStep={true}
-              isLastStep={false}
-              type={ManifestToConnectorMap[manifestStore]}
-            />
+            <DelegateSelectorStep {...delegateSelectorStepProps} buildPayload={buildPayload} />
+            <VerifyOutOfClusterDelegate {...verifyOutOfClusterDelegateProps} />
           </StepWizard>
         )
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connectorView, manifestStore, isEditMode])
 
   const [showConnectorModal, hideConnectorModal] = useModalHook(() => {
@@ -603,7 +410,6 @@ function ManifestListView({
       setIsEditMode(false)
       setSelectedManifest(null)
     }
-
     return (
       <Dialog onClose={onClose} {...DIALOG_PROPS} className={cx(css.modal, Classes.DIALOG)}>
         <div className={css.createConnectorWizard}>
@@ -679,7 +485,6 @@ function ManifestListView({
             {listOfManifests &&
               listOfManifests.map((data: ManifestConfigWrapper, index: number) => {
                 const manifest = data['manifest']
-
                 const { color } = getStatus(
                   getConnectorPath(manifest?.spec?.store?.type, manifest),
                   connectors,
@@ -688,6 +493,10 @@ function ManifestListView({
                 const connectorName = getConnectorNameFromValue(
                   getConnectorPath(manifest?.spec?.store?.type, manifest),
                   connectors
+                )
+                const manifestLocation = get(
+                  manifest?.spec,
+                  getManifestLocation(manifest?.type as ManifestTypes, manifest?.spec?.store?.type)
                 )
 
                 return (
@@ -707,26 +516,10 @@ function ManifestListView({
                         color
                       )}
 
-                      {!!get(
-                        manifest?.spec,
-                        getManifestLocation(manifest?.type as ManifestTypes, manifest?.spec?.store?.type)
-                      )?.length && (
+                      {!isEmpty(manifestLocation) && (
                         <span>
                           <Text lineClamp={1} width={200}>
-                            <span className={css.noWrap}>
-                              {typeof get(
-                                manifest?.spec,
-                                getManifestLocation(manifest?.type as ManifestTypes, manifest?.spec?.store?.type)
-                              ) === 'string'
-                                ? get(
-                                    manifest?.spec,
-                                    getManifestLocation(manifest?.type as ManifestTypes, manifest?.spec?.store?.type)
-                                  )
-                                : get(
-                                    manifest?.spec,
-                                    getManifestLocation(manifest?.type as ManifestTypes, manifest?.spec?.store?.type)
-                                  ).join(', ')}
-                            </span>
+                            {typeof manifestLocation === 'string' ? manifestLocation : manifestLocation.join(', ')}
                           </Text>
                         </span>
                       )}
@@ -745,7 +538,6 @@ function ManifestListView({
                               }
                               minimal
                             />
-
                             <Button
                               iconProps={{ size: 18 }}
                               icon="main-trash"
@@ -787,7 +579,7 @@ function ManifestListView({
         </Layout.Vertical>
       </Layout.Vertical>
       <Layout.Vertical spacing={'medium'} flex={{ alignItems: 'flex-start' }}>
-        {showAddManifestBtn(isReadonly, allowOnlyOne, listOfManifests) && (
+        {showAddManifestBtn(isReadonly, allowOnlyOne, listOfManifests, deploymentType) && (
           <Button
             className={css.addManifest}
             id="add-manifest"
@@ -802,5 +594,4 @@ function ManifestListView({
     </Layout.Vertical>
   )
 }
-
 export default ManifestListView

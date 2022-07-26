@@ -70,7 +70,8 @@ export function StepCommands(
     stepViewType,
     className = '',
     viewType,
-    allowableTypes
+    allowableTypes,
+    gitDetails
   } = props
   const { getString } = useStrings()
   const templatesEnabled = useFeatureFlag(FeatureFlag.NG_TEMPLATES)
@@ -260,7 +261,7 @@ export function StepCommands(
             (step as StepElementConfig).type !== StepType.FlagConfiguration ? (
               <>
                 <Expander />
-                <SaveTemplateButton data={getStepDataForTemplate} type={'Step'} />
+                <SaveTemplateButton data={getStepDataForTemplate} type={'Step'} gitDetails={gitDetails} />
               </>
             ) : null}
           </Tabs>

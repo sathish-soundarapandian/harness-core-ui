@@ -1,0 +1,48 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "totalPages": 1,
+    "totalItems": 1,
+    "pageItemCount": 1,
+    "pageSize": 100,
+    "content": [
+      {
+        "infrastructure": {
+          "accountId": "dummy",
+          "identifier": "infra1",
+          "orgIdentifier": "dummy",
+          "projectIdentifier": "dummy",
+          "environmentRef": "dummy",
+          "name": "infra1",
+          "description": "",
+          "tags": {},
+          "type": "KubernetesDirect",
+          "yaml": "infrastructureDefinition:\n  name: \"infra1\"\n  identifier: \"infra1\"\n  orgIdentifier: \"dummy\"\n  projectIdentifier: \"dummy\"\n  environmentRef: \"dummy\"\n  description: \"\"\n  tags: {}\n  allowSimultaneousDeployments: false\n  type: \"KubernetesDirect\"\n  spec:\n    connectorRef: \"test\"\n    namespace: \"<+input>\"\n    releaseName: \"release-<+INFRA_KEY>\"\n"
+        },
+        "createdAt": 1658311748118,
+        "lastModifiedAt": 1658311748118
+      },
+      {
+        "infrastructure": {
+          "accountId": "dummy",
+          "identifier": "infra2",
+          "orgIdentifier": "dummy",
+          "projectIdentifier": "dummy",
+          "environmentRef": "dummy",
+          "name": "infra2",
+          "description": "",
+          "tags": {},
+          "type": "KubernetesDirect",
+          "yaml": "infrastructureDefinition:\n  name: \"infra2\"\n  identifier: \"infra2\"\n  orgIdentifier: \"dummy\"\n  projectIdentifier: \"dummy\"\n  environmentRef: \"dummy\"\n  description: \"\"\n  tags: {}\n  allowSimultaneousDeployments: false\n  type: \"KubernetesDirect\"\n  spec:\n    connectorRef: \"test\"\n    namespace: \"<+input>\"\n    releaseName: \"release-<+INFRA_KEY>\"\n"
+        },
+        "createdAt": 1658311748118,
+        "lastModifiedAt": 1658311748118
+      }
+    ],
+
+    "pageIndex": 0,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "8268c0bc-54da-40a1-b05b-e823d60f2519"
+}

@@ -13,7 +13,7 @@ import { Intent } from '@harness/design-system'
 import type * as History from 'history'
 import { useStrings } from 'framework/strings'
 
-interface Props {
+export interface NavigationCheckProps {
   when?: boolean
   textProps?: {
     contentText?: string
@@ -24,7 +24,12 @@ interface Props {
   navigate: (path: string) => void
   shouldBlockNavigation?: (location: History.Location) => boolean
 }
-export const NavigationCheck = ({ when, navigate, shouldBlockNavigation, textProps }: Props): JSX.Element => {
+export const NavigationCheck = ({
+  when,
+  navigate,
+  shouldBlockNavigation,
+  textProps
+}: NavigationCheckProps): JSX.Element => {
   const [lastLocation, setLastLocation] = useState<History.Location | null>(null)
   const [confirmedNavigation, setConfirmedNavigation] = useState(false)
   const { getString } = useStrings()

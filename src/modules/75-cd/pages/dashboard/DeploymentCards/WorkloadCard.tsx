@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import type { WorkloadDateCountInfo, LastWorkloadInfo } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -33,8 +33,6 @@ export default function WorkloadCard({
   workload,
   serviceId = ''
 }: WorkloadCardProps): React.ReactElement {
-  const history = useHistory()
-
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const countList = useMemo(() => {
     if (workload) {
@@ -47,7 +45,8 @@ export default function WorkloadCard({
     }
   }, [workload])
   const gotoServices = (): void => {
-    history.push(routes.toServiceStudio({ accountId, orgIdentifier, projectIdentifier, serviceId, module }))
+    const route = routes.toServiceStudio({ accountId, orgIdentifier, projectIdentifier, serviceId, module })
+    window.open(`#${route}`)
   }
   return (
     <ServiceCardWithChart

@@ -6,8 +6,7 @@
  */
 
 import React from 'react'
-import { Color } from '@harness/design-system'
-import type { IconName, MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@wings-software/uicore'
 import type { FormikErrors } from 'formik'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -73,7 +72,7 @@ export interface ZeroNorthStepProps {
   stepViewType: StepViewType
   onUpdate?: (data: ZeroNorthStepData) => void
   onChange?: (data: ZeroNorthStepData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export class ZeroNorthStep extends PipelineStep<ZeroNorthStepData> {
@@ -84,8 +83,7 @@ export class ZeroNorthStep extends PipelineStep<ZeroNorthStepData> {
 
   protected type = StepType.ZeroNorth
   protected stepName = 'Configure Security Scan Step'
-  protected stepIcon: IconName = 'shield-gears'
-  protected stepIconColor = Color.GREY_600
+  protected stepIcon: IconName = 'sto-color-filled'
   protected stepDescription: keyof StringsMap = 'stoSteps.stepDescription.ZeroNorth'
 
   protected stepPaletteVisible = false

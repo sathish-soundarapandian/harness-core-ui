@@ -74,7 +74,6 @@ const CIPipelineStudio: React.FC = (): JSX.Element => {
   const isCFEnabled = useFeatureFlag(FeatureFlag.CFNG_ENABLED)
   const isCIEnabled = useFeatureFlag(FeatureFlag.CING_ENABLED)
   const isSTOEnabled = useFeatureFlag(FeatureFlag.SECURITY_STAGE)
-  const isCustomStageEnabled = useFeatureFlag(FeatureFlag.NG_CUSTOM_STAGE)
   const { licenseInformation } = useLicenseStore()
   return (
     <PipelineProvider
@@ -82,16 +81,15 @@ const CIPipelineStudio: React.FC = (): JSX.Element => {
       queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier, repoIdentifier, branch }}
       pipelineIdentifier={pipelineIdentifier}
       renderPipelineStage={args =>
-        getCIPipelineStages(
+        getCIPipelineStages({
           args,
           getString,
-          licenseInformation['CI'] && isCIEnabled,
-          licenseInformation['CD'] && isCDEnabled,
-          licenseInformation['CF'] && isCFEnabled,
+          isCIEnabled: licenseInformation['CI'] && isCIEnabled,
+          isCDEnabled: licenseInformation['CD'] && isCDEnabled,
+          isCFEnabled: licenseInformation['CF'] && isCFEnabled,
           isSTOEnabled,
-          true,
-          isCustomStageEnabled
-        )
+          isApprovalStageEnabled: true
+        })
       }
       stepsFactory={factory}
       runPipeline={handleRunPipeline}

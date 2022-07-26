@@ -15,11 +15,10 @@ import notifications from '@notifications/strings/strings.en.yaml'
 import auditTrail from '@audit-trail/strings/strings.en.yaml'
 import rbac from '@rbac/strings/strings.en.yaml'
 import governance from '@governance/strings/strings.en.yaml'
-import sto from '@sto/strings/strings.en.yaml'
 import et from '@et/strings/strings.en.yaml'
-import filestore from '@filestore/strings/strings.en.yaml'
 import delegates from '@delegates/strings/strings.en.yaml'
 import secrets from '@secrets/strings/strings.en.yaml'
+import filestore from '@filestore/strings/strings.en.yaml'
 import variables from '@variables/strings/strings.en.yaml'
 import authSettings from '@auth-settings/strings/strings.en.yaml'
 import connectors from '@connectors/strings/strings.en.yaml'
@@ -46,11 +45,10 @@ export default function languageLoader() {
     auditTrail,
     rbac,
     governance,
-    sto,
     et,
-    filestore,
     delegates,
     secrets,
+    filestore,
     variables,
     authSettings,
     connectors,

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType, FormInput, FormikForm } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormInput, FormikForm, AllowedTypes } from '@wings-software/uicore'
 import { isEmpty, get, isArray } from 'lodash-es'
 import cx from 'classnames'
 
@@ -28,7 +28,7 @@ export interface CustomApprovalInputSetStepProps {
   initialValues: CustomApprovalFormData
   onUpdate?: (data: CustomApprovalFormData) => void
   onChange?: (data: CustomApprovalFormData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   readonly?: boolean
   template?: CustomApprovalData
@@ -70,16 +70,19 @@ export default function CustomApprovalInputSetStep(props: CustomApprovalInputSet
             allowedTypes={allowableTypes}
             disableTypeSelection={readonly}
             skipRenderValueInExpressionLabel
-            expressionRender={() => {
-              return (
-                <ShellScriptMonacoField
-                  name={`${prefix}spec.source.spec.script`}
-                  scriptType={scriptType}
-                  disabled={readonly}
-                  expressions={expressions}
-                />
-              )
-            }}
+            expressionRender={
+              /* istanbul ignore next */ () => {
+                /* istanbul ignore next */
+                return (
+                  <ShellScriptMonacoField
+                    name={`${prefix}spec.source.spec.script`}
+                    scriptType={scriptType}
+                    disabled={readonly}
+                    expressions={expressions}
+                  />
+                )
+              }
+            }
           >
             <ShellScriptMonacoField
               name={`${prefix}spec.source.spec.script`}

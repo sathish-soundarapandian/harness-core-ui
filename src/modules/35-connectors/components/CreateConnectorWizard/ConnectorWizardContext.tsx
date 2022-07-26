@@ -8,7 +8,6 @@
 import React, { useState, useEffect } from 'react'
 import { HelpPanel } from '@harness/help-panel'
 import { CONNECTOR_MODAL_MIN_WIDTH } from '@connectors/constants'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './CreateConnectorWizard.module.scss'
 
 interface HelpPanelOptions {
@@ -30,12 +29,11 @@ const ConnectorWizardContext = React.createContext<ConnectorWizardContextProps>(
 
 export const ConnectorWizardContextProvider: React.FC = props => {
   const [wizardOptions, setWizardOptions] = useState<ConnectorWizardOptions>({})
-  const { HELP_PANEL } = useFeatureFlags()
 
   const setOptions = (options: ConnectorWizardOptions) => {
     setWizardOptions({
       ...options,
-      helpPanel: HELP_PANEL ? options.helpPanel : undefined
+      helpPanel: options.helpPanel
     })
   }
 

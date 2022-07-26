@@ -54,12 +54,12 @@ const SLODashbordFilters: React.FC<SLODashbordFiltersProps> = ({
         <Select
           value={{
             label: `${getString('cv.slos.userJourney')}: ${defaultTo(
-              filterState.userJourney?.label,
+              filterState?.userJourney?.label,
               getString('all')
             )}`,
-            value: defaultTo(filterState.userJourney?.value, getString('all'))
+            value: defaultTo(filterState?.userJourney?.value, getString('all'))
           }}
-          items={getUserJourneyOptionsForFilter(filterItemsData.userJourney?.data?.content, getString)}
+          items={getUserJourneyOptionsForFilter(filterItemsData?.userJourney?.data?.content, getString)}
           onChange={item => {
             dispatch(updateUserJourney({ userJourney: item }))
           }}
@@ -70,12 +70,12 @@ const SLODashbordFilters: React.FC<SLODashbordFiltersProps> = ({
           <Select
             value={{
               label: `${getString('cv.monitoredServices.title')}: ${defaultTo(
-                filterState.monitoredService?.label,
+                filterState?.monitoredService?.label,
                 getString('all')
               )}`,
-              value: defaultTo(filterState.monitoredService?.value, getString('all'))
+              value: defaultTo(filterState?.monitoredService?.value, getString('all'))
             }}
-            items={getMonitoredServicesOptionsForFilter(filterItemsData.monitoredServices, getString)}
+            items={getMonitoredServicesOptionsForFilter(filterItemsData?.monitoredServices, getString)}
             onChange={item => {
               dispatch(updateMonitoredServices({ monitoredService: item }))
             }}
@@ -86,10 +86,10 @@ const SLODashbordFilters: React.FC<SLODashbordFiltersProps> = ({
         <Select
           value={{
             label: `${getString('cv.slos.sloTargetAndBudget.periodType')}: ${defaultTo(
-              filterState.targetTypes?.label,
+              filterState?.targetTypes?.label,
               getString('all')
             )}`,
-            value: defaultTo(filterState.targetTypes?.value, getString('all'))
+            value: defaultTo(filterState?.targetTypes?.value, getString('all'))
           }}
           items={getPeriodTypeOptionsForFilter(getString)}
           onChange={item => {
@@ -100,8 +100,8 @@ const SLODashbordFilters: React.FC<SLODashbordFiltersProps> = ({
       <Layout.Vertical width="240px" margin={{ right: 'small' }} data-testid="sliType-filter">
         <Select
           value={{
-            label: `${getString('cv.slos.sliType')}: ${defaultTo(filterState.sliTypes?.label, getString('all'))}`,
-            value: defaultTo(filterState.sliTypes?.value, getString('all'))
+            label: `${getString('cv.slos.sliType')}: ${defaultTo(filterState?.sliTypes?.label, getString('all'))}`,
+            value: defaultTo(filterState?.sliTypes?.value, getString('all'))
           }}
           items={getSliTypeOptionsForFilter(getString)}
           onChange={item => {

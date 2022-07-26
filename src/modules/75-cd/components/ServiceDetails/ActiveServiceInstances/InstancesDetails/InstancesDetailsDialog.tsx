@@ -5,48 +5,87 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction } from 'react'
+import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
 import cx from 'classnames'
-import { Collapse, Container, Dialog, Layout, Text } from '@wings-software/uicore'
-import { FontVariation } from '@harness/design-system'
+import { Collapse, Container, Dialog, ExpandingSearchInput, Layout, Text } from '@wings-software/uicore'
+import { Color, FontVariation } from '@harness/design-system'
+import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import type { EnvBuildIdAndInstanceCountInfo } from 'services/cd-ng'
-import { ActiveServiceInstancesContent } from '../ActiveServiceInstancesContent'
+import type { InstanceGroupedByArtifact } from 'services/cd-ng'
+import { DeploymentsV2 } from '../../DeploymentView/DeploymentViewV2'
+import { ActiveServiceInstancesContentV2, TableType } from '../ActiveServiceInstancesContentV2'
 import css from './InstancesDetailsDialog.module.scss'
 
 export interface InstancesDetailsDialogProps {
   isOpen: boolean
   setIsOpen: Dispatch<SetStateAction<boolean>>
-  data?: EnvBuildIdAndInstanceCountInfo[]
+  data?: InstanceGroupedByArtifact[]
+  isActiveInstance?: boolean
 }
 
 export default function InstancesDetailsDialog(props: InstancesDetailsDialogProps): React.ReactElement {
-  const { isOpen, setIsOpen, data } = props
+  const { isOpen, setIsOpen, data, isActiveInstance } = props
   const { getString } = useStrings()
+  const [searchTerm, setSearchTerm] = useState('')
+
+  const deployments = defaultTo(data, [])
+
+  //filter by artifactVersion envName and infraName
+  const filteredDeployments = useMemo(() => {
+    if (!searchTerm) {
+      return deployments
+    }
+    return deployments.filter(
+      deployment =>
+        (deployment.artifactVersion || '').toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1 ||
+        deployment.instanceGroupedByEnvironmentList?.filter(
+          i =>
+            i.envName?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1 ||
+            i.instanceGroupedByInfraList?.filter(
+              infra =>
+                infra.infraName?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1 ||
+                infra.lastPipelineExecutionName?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1
+            ).length
+        ).length
+    )
+  }, [searchTerm, deployments])
+
+  const onSearch = useCallback((val: string) => {
+    setSearchTerm(val.trim())
+  }, [])
 
   const headers = React.useMemo(() => {
     const headersArray = [
       {
         label: ' ',
-        flexGrow: 5
+        flexGrow: 4
       },
       {
-        label: getString('environment'),
-        flexGrow: 25
+        label: getString('cd.serviceDashboard.headers.artifactVersion'),
+        flexGrow: 18
       },
       {
-        label: getString('cd.artifactVersion'),
-        flexGrow: 25
+        label: getString('cd.serviceDashboard.headers.environment'),
+        flexGrow: 16
       },
       {
-        label: getString('common.instanceLabel'),
-        flexGrow: 55
+        label: getString('cd.serviceDashboard.headers.infrastructures'),
+        flexGrow: 16
+      },
+      {
+        label: getString('cd.serviceDashboard.headers.instances'),
+        flexGrow: 32
+      },
+      {
+        label: getString('cd.serviceDashboard.headers.pipelineExecution'),
+        flexGrow: 24
       }
     ]
 
     return (
       <Layout.Horizontal flex padding={{ top: 'medium', bottom: 'medium' }}>
         {headersArray.map((header, index) => {
+          if (!isActiveInstance && header.label === getString('common.instanceLabel')) return <></>
           return (
             <Text
               key={index}
@@ -65,40 +104,57 @@ export default function InstancesDetailsDialog(props: InstancesDetailsDialogProp
   const list = React.useMemo(() => {
     return (
       <Container style={{ overflowY: 'auto' }}>
-        {data?.map((dataItem, index) => {
+        {filteredDeployments?.map((dataItem, index) => {
           return (
             <Collapse
               key={index}
               collapseClassName={css.collapse}
               collapseHeaderClassName={css.collapseHeader}
               heading={
-                <ActiveServiceInstancesContent
-                  data={[dataItem]}
-                  columnsWidth={['25%', '25%', '5%', '45%']}
-                  hideHeaders={true}
-                  shortTable={true}
-                />
+                isActiveInstance ? (
+                  <ActiveServiceInstancesContentV2 tableType={TableType.SUMMARY} data={[dataItem]} />
+                ) : (
+                  <DeploymentsV2 tableType={TableType.SUMMARY} data={[dataItem]} />
+                )
               }
               expandedHeading={<>{/* empty element on purpose */}</>}
               collapsedIcon={'main-chevron-right'}
               expandedIcon={'main-chevron-down'}
             >
-              <ActiveServiceInstancesContent
-                data={[dataItem]}
-                columnsWidth={['25%', '25%', '5%', '45%']}
-                hideHeaders={true}
-              />
+              {isActiveInstance ? (
+                <ActiveServiceInstancesContentV2 tableType={TableType.FULL} data={[dataItem]} />
+              ) : (
+                <DeploymentsV2 tableType={TableType.FULL} data={[dataItem]} />
+              )}
             </Collapse>
           )
         })}
       </Container>
     )
-  }, [data])
+  }, [filteredDeployments])
 
   return (
     <Dialog
       className={cx('padded-dialog', css.dialogBase)}
-      title={getString('cd.serviceDashboard.instancesDetails')}
+      title={
+        <Layout.Horizontal
+          padding={{ bottom: 'large' }}
+          flex={{ alignItems: 'center', justifyContent: 'space-between' }}
+        >
+          <Text color={Color.GREY_900} font={{ variation: FontVariation.H4, weight: 'semi-bold' }}>
+            {isActiveInstance
+              ? getString('cd.serviceDashboard.instancesDetails')
+              : getString('cd.serviceDashboard.deploymentDetails')}
+          </Text>
+          <ExpandingSearchInput
+            placeholder={getString('search')}
+            throttle={200}
+            onChange={onSearch}
+            className={css.searchIconStyle}
+            alwaysExpanded
+          />
+        </Layout.Horizontal>
+      }
       isOpen={isOpen}
       onClose={() => setIsOpen(false)}
       enforceFocus={false}

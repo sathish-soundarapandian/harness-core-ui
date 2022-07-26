@@ -5,12 +5,20 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { Container, Text, FormInput, MultiTypeInputType } from '@wings-software/uicore'
+import React, { useState, useEffect } from 'react'
+import {
+  Container,
+  Text,
+  FormInput,
+  MultiTypeInputType,
+  getMultiTypeFromValue,
+  RUNTIME_INPUT_VALUE
+} from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import { HealthSourceServices } from './SelectHealthSourceServices.constant'
 import { RiskProfile } from './components/RiskProfile/RiskProfile'
 import type { SelectHealthSourceServicesProps } from './SelectHealthSourceServices.types'
+import { getTypeOfInput } from '../../connectors/AppDynamics/AppDHealthSource.utils'
 import css from './SelectHealthSourceServices.module.scss'
 
 export default function SelectHealthSourceServices({
@@ -22,9 +30,21 @@ export default function SelectHealthSourceServices({
   hideSLIAndHealthScore,
   isTemplate,
   expressions,
-  showOnlySLI = false
+  showOnlySLI = false,
+  isConnectorRuntimeOrExpression
 }: SelectHealthSourceServicesProps): JSX.Element {
   const { getString } = useStrings()
+
+  const [metricPathMultiType, setMetricPathMultiType] = useState<MultiTypeInputType>(() =>
+    getMultiTypeFromValue(values.serviceInstanceMetricPath)
+  )
+
+  useEffect(() => {
+    if (values.serviceInstanceMetricPath) {
+      setMetricPathMultiType(getTypeOfInput(values.serviceInstanceMetricPath))
+    }
+  }, [values.serviceInstanceMetricPath])
+
   const { continuousVerification, healthScore, serviceInstance, riskCategory } = values
   return (
     <Container className={css.main}>
@@ -50,9 +70,19 @@ export default function SelectHealthSourceServices({
         ) : null}
         {isTemplate && values.continuousVerification && Boolean(labelNamesResponse) === false && (
           <FormInput.MultiTextInput
+            key={metricPathMultiType}
             name={'serviceInstanceMetricPath'}
-            label="ServiceInstanceLabel"
+            label={getString('cv.monitoringSources.appD.serviceInstanceMetricPath')}
+            onChange={(_value, _valueType, multiType) => {
+              if (multiType !== metricPathMultiType) {
+                setMetricPathMultiType(multiType)
+              }
+            }}
             multiTextInputProps={{
+              expressions,
+              value: values.serviceInstanceMetricPath,
+              multitypeInputValue: metricPathMultiType,
+              defaultValue: RUNTIME_INPUT_VALUE,
               allowableTypes: [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
             }}
           />
@@ -65,8 +95,9 @@ export default function SelectHealthSourceServices({
           metricPackResponse={metricPackResponse}
           labelNamesResponse={labelNamesResponse}
           continuousVerificationEnabled={continuousVerification && !hideServiceIdentifier}
-          serviceInstance={serviceInstance}
+          serviceInstance={typeof serviceInstance === 'string' ? serviceInstance : (serviceInstance?.value as string)}
           riskCategory={riskCategory}
+          isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
         />
       )}
     </Container>

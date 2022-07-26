@@ -35,6 +35,8 @@ import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/G
 import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
 import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
 import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
+import StepAzureRepoAuthentication from '@connectors/components/CreateConnector/AzureRepoConnector/StepAuth/StepAzureRepoAuthentication'
+
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 import {
   buildGitPayload,
@@ -43,12 +45,7 @@ import {
   buildGitlabPayload
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useQueryParams } from '@common/hooks/useQueryParams'
-import {
-  allowedManifestTypes,
-  manifestStoreTypes,
-  ManifestToConnectorMap,
-  showAddManifestBtn
-} from '../../Manifesthelper'
+import { allowedManifestTypes, gitStoreTypes, showAddManifestBtn } from '../../Manifesthelper'
 
 import type { ManifestStores } from '../../ManifestInterface'
 
@@ -57,7 +54,7 @@ import { getConnectorPath } from '../../ManifestWizardSteps/ManifestUtils'
 import ConnectorField from '../../ManifestListView/ConnectorField'
 
 import ReleaseRepoWizard from '../ReleaseRepoWizard/ReleaseRepoWizard'
-import type { ReleaseRepoListViewProps } from '../ReleaseRepoInterface'
+import { ReleaseRepoListViewProps, ReleaseRepoManifestToConnectorMap } from '../ReleaseRepoInterface'
 
 import css from '../../ManifestSelection.module.scss'
 
@@ -73,7 +70,6 @@ interface ReleaseRepoStepInitData {
 function ReleaseRepoListView({
   updateStage,
   stage,
-  isPropagating,
   connectors,
   refetchConnectors,
   listOfManifests,
@@ -111,9 +107,7 @@ function ReleaseRepoListView({
   }
 
   const updateStageData = (): void => {
-    const path = isPropagating
-      ? 'stage.spec.serviceConfig.stageOverrides.manifests'
-      : 'stage.spec.serviceConfig.serviceDefinition.spec.manifests'
+    const path = 'stage.spec.serviceConfig.serviceDefinition.spec.manifests'
 
     /* istanbul ignore next */
     /* istanbul ignore else */
@@ -164,23 +158,23 @@ function ReleaseRepoListView({
   }
 
   const getNewConnectorSteps = useCallback((): JSX.Element => {
-    const buildPayload = getBuildPayload(ManifestToConnectorMap[manifestStore])
+    const buildPayload = getBuildPayload(ReleaseRepoManifestToConnectorMap[manifestStore])
 
     return (
       <StepWizard title={getString('connectors.createNewConnector')}>
         <ConnectorDetailsStep
-          type={ManifestToConnectorMap[manifestStore]}
+          type={ReleaseRepoManifestToConnectorMap[manifestStore]}
           name={getString('overview')}
           isEditMode={isEditMode}
           gitDetails={{ repoIdentifier, branch, getDefaultFromOtherRepo: true }}
         />
         <GitDetailsStep
-          type={ManifestToConnectorMap[manifestStore]}
+          type={ReleaseRepoManifestToConnectorMap[manifestStore]}
           name={getString('details')}
           isEditMode={isEditMode}
           connectorInfo={undefined}
         />
-        {ManifestToConnectorMap[manifestStore] === Connectors.GIT ? (
+        {ReleaseRepoManifestToConnectorMap[manifestStore] === Connectors.GIT ? (
           <StepGitAuthentication
             name={getString('credentials')}
             onConnectorCreated={
@@ -199,7 +193,7 @@ function ReleaseRepoListView({
           />
         ) : null}
         {/* istanbul ignore next */}
-        {ManifestToConnectorMap[manifestStore] === Connectors.GITHUB ? (
+        {ReleaseRepoManifestToConnectorMap[manifestStore] === Connectors.GITHUB ? (
           <StepGithubAuthentication
             name={getString('credentials')}
             onConnectorCreated={
@@ -218,7 +212,7 @@ function ReleaseRepoListView({
           />
         ) : null}
         {/* istanbul ignore next */}
-        {ManifestToConnectorMap[manifestStore] === Connectors.BITBUCKET ? (
+        {ReleaseRepoManifestToConnectorMap[manifestStore] === Connectors.BITBUCKET ? (
           <StepBitbucketAuthentication
             name={getString('credentials')}
             onConnectorCreated={
@@ -237,8 +231,28 @@ function ReleaseRepoListView({
           />
         ) : null}
         {/* istanbul ignore next */}
-        {ManifestToConnectorMap[manifestStore] === Connectors.GITLAB ? (
+        {ReleaseRepoManifestToConnectorMap[manifestStore] === Connectors.GITLAB ? (
           <StepGitlabAuthentication
+            name={getString('credentials')}
+            identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
+            onConnectorCreated={
+              /* istanbul ignore next */
+              () => {
+                /* istanbul ignore next */
+                // Handle on success
+              }
+            }
+            isEditMode={isEditMode}
+            setIsEditMode={setIsEditMode}
+            connectorInfo={undefined}
+            accountId={accountId}
+            orgIdentifier={orgIdentifier}
+            projectIdentifier={projectIdentifier}
+          />
+        ) : null}
+
+        {ReleaseRepoManifestToConnectorMap[manifestStore] === Connectors.AZURE_REPO ? (
+          <StepAzureRepoAuthentication
             name={getString('credentials')}
             identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
             onConnectorCreated={
@@ -268,7 +282,7 @@ function ReleaseRepoListView({
           connectorInfo={undefined}
           isStep={true}
           isLastStep={false}
-          type={ManifestToConnectorMap[manifestStore]}
+          type={ReleaseRepoManifestToConnectorMap[manifestStore]}
         />
       </StepWizard>
     )
@@ -340,7 +354,7 @@ function ReleaseRepoListView({
         <div className={css.createConnectorWizard}>
           <ReleaseRepoWizard
             types={allowedManifestTypes[deploymentType]}
-            manifestStoreTypes={manifestStoreTypes}
+            manifestStoreTypes={gitStoreTypes}
             labels={getLabels()}
             newConnectorView={connectorView}
             expressions={expressions}

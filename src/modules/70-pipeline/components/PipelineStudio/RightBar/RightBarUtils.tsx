@@ -8,7 +8,7 @@ import React, { SetStateAction, Dispatch } from 'react'
 import * as Yup from 'yup'
 
 import { TextInput, Text, MultiTypeInputType, Container, getMultiTypeFromValue } from '@wings-software/uicore'
-import { set } from 'lodash-es'
+import { get, set } from 'lodash-es'
 import { FontVariation } from '@harness/design-system'
 import type { UseStringsReturn } from 'framework/strings'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
@@ -25,6 +25,7 @@ import {
 } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
 import { isRuntimeInput } from '@pipeline/utils/CIUtils'
 import { Connectors } from '@connectors/constants'
+import { getCompleteConnectorUrl } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import css from './RightBar.module.scss'
 
 const onlyPositiveIntegerKeyRef = 'pipeline.onlyPositiveInteger'
@@ -91,7 +92,14 @@ export const renderConnectorAndRepoName = ({
     <Container className={css.bottomMargin3}>
       <FormMultiTypeConnectorField
         name="connectorRef"
-        type={[Connectors.GIT, Connectors.GITHUB, Connectors.GITLAB, Connectors.BITBUCKET, Connectors.AWS_CODECOMMIT]}
+        type={[
+          Connectors.GIT,
+          Connectors.GITHUB,
+          Connectors.GITLAB,
+          Connectors.BITBUCKET,
+          Connectors.AWS_CODECOMMIT,
+          Connectors.AZURE_REPO
+        ]}
         label={getString('connector')}
         width={getConnectorWidth({ connectorWidth, connectorRef: values.connectorRef })}
         error={errors?.connectorRef}
@@ -158,9 +166,13 @@ export const renderConnectorAndRepoName = ({
         </Container>
         {!isRuntimeInput(values.connectorRef) && !isRuntimeInput(values.repoName) && connectorUrl?.length > 0 ? (
           <div className={css.predefinedValue}>
-            <Text lineClamp={1} width={connectorWidth ? connectorWidth : '460px'}>
-              {(connectorUrl[connectorUrl.length - 1] === '/' ? connectorUrl : connectorUrl + '/') +
-                (values.repoName ? values.repoName : '')}
+            <Text lineClamp={1}>
+              {getCompleteConnectorUrl({
+                partialUrl: connectorUrl,
+                repoName: values.repoName,
+                connectorType: get(values, 'connectorRef.connector.type'),
+                gitAuthProtocol: get(values, 'connectorRef.connector.spec.authentication.type')
+              })}
             </Text>
           </div>
         ) : null}

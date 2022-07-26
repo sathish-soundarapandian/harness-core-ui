@@ -36,12 +36,13 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { PAGE_SIZE } from '@dashboards/pages/home/HomePage'
 import FolderCard from '@dashboards/components/FolderCard/FolderCard'
 import { useStrings } from 'framework/strings'
-import { FolderModel, useGetFolders } from 'services/custom-dashboards'
+import { ErrorResponse, FolderModel, useGetFolders } from 'services/custom-dashboards'
 import CreateFolder from './form/CreateFolder'
 import { useDashboardsContext } from '../DashboardsContext'
 
 import css from '../home/HomePage.module.scss'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type CustomColumn<T extends Record<string, any>> = Column<T>
 
 const CustomSelect = Select.ofType<SelectOption>()
@@ -122,6 +123,14 @@ const FoldersPage: React.FC = () => {
     script.async = true
 
     document.body.appendChild(script)
+
+    includeBreadcrumbs([
+      {
+        url: routes.toCustomFolderHome({ accountId }),
+        label: getString(strRefFolders)
+      }
+    ])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   React.useEffect(() => {
@@ -129,15 +138,6 @@ const FoldersPage: React.FC = () => {
       setPage(0)
     }
   }, [searchTerm, sortBy?.value])
-
-  React.useEffect(() => {
-    includeBreadcrumbs([
-      {
-        url: routes.toCustomFolderHome({ accountId }),
-        label: getString(strRefFolders)
-      }
-    ])
-  }, [])
 
   const {
     data: foldersList,
@@ -190,7 +190,11 @@ const FoldersPage: React.FC = () => {
   )
 
   return (
-    <Page.Body loading={loading} error={error?.message}>
+    <Page.Body
+      loading={loading}
+      error={(error?.data as ErrorResponse)?.responseMessages}
+      retryOnError={() => reloadFolders()}
+    >
       <Layout.Horizontal
         spacing="medium"
         background={Color.GREY_0}

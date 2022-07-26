@@ -6,8 +6,17 @@
  */
 
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import type { ContinousVerificationData } from '@cv/components/PipelineSteps/ContinousVerification/types'
+import type { ResponseMonitoredServiceResponse } from 'services/cv'
 import { isAnExpression } from '../MonitoredService/MonitoredService.utils'
 
 export function isMonitoredServiceFixedInput(monitoredServiceRef: string): boolean {
   return !!(monitoredServiceRef !== RUNTIME_INPUT_VALUE && monitoredServiceRef && !isAnExpression(monitoredServiceRef))
+}
+
+export function isFirstTimeOpenForConfiguredMonitoredSvc(
+  formValues: ContinousVerificationData,
+  monitoredServiceData: ResponseMonitoredServiceResponse | null
+): boolean {
+  return !!(!formValues?.spec?.monitoredServiceRef && monitoredServiceData?.data?.monitoredService?.identifier)
 }

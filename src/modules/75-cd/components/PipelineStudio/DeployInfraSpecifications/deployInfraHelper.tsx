@@ -11,7 +11,11 @@ import { InfraDeploymentType } from '@cd/components/PipelineSteps/PipelineStepsU
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { Infrastructure, ServiceDefinition } from 'services/cd-ng'
 import type { StringsMap } from 'stringTypes'
-import { isServerlessDeploymentType, isSSHWinRMDeploymentType } from '@pipeline/utils/stageHelpers'
+import {
+  isAzureWebAppDeploymentType,
+  isServerlessDeploymentType,
+  isSSHWinRMDeploymentType
+} from '@pipeline/utils/stageHelpers'
 
 const DEFAULT_RELEASE_NAME = 'release-<+INFRA_KEY>'
 
@@ -118,6 +122,18 @@ export const getInfrastructureDefaultValue = (
         allowSimultaneousDeployments
       }
     }
+    case InfraDeploymentType.AzureWebApp: {
+      const connectorRef = infrastructure?.spec?.connectorRef
+      const subscriptionId = infrastructure?.spec?.subscriptionId
+      const resourceGroup = infrastructure?.spec?.resourceGroup
+
+      return {
+        connectorRef,
+        subscriptionId,
+        resourceGroup,
+        allowSimultaneousDeployments
+      }
+    }
     case InfraDeploymentType.PDC: {
       const { connectorRef, credentialsRef, delegateSelectors, hostFilters, hosts, attributeFilters } =
         infrastructure?.spec || {}
@@ -168,6 +184,7 @@ export const getInfraGroups = (
   featureFlags: Record<string, boolean>
 ): InfrastructureGroup[] => {
   const { NG_AZURE } = featureFlags
+
   return isServerlessDeploymentType(deploymentType)
     ? [
         {
@@ -191,6 +208,21 @@ export const getInfraGroups = (
               disabled: true
             }
           ]
+        }
+      ]
+    : isAzureWebAppDeploymentType(deploymentType)
+    ? [
+        {
+          groupLabel: '',
+          items: NG_AZURE
+            ? [
+                {
+                  label: 'Azure Web App',
+                  icon: 'azurewebapp',
+                  value: InfraDeploymentType.AzureWebApp
+                }
+              ]
+            : []
         }
       ]
     : isSSHWinRMDeploymentType(deploymentType)

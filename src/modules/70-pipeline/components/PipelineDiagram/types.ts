@@ -91,7 +91,7 @@ export enum NodeType {
   EndNode = 'end-node',
   StepGroupNode = 'StepGroup',
   MatrixNode = 'MATRIX',
-  ForNode = 'FOR',
+  LoopNode = 'LOOP',
   PARALLELISM = 'PARALLELISM'
 }
 

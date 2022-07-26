@@ -38,6 +38,7 @@ import { CustomApprovalVariablesView, CustomApprovalVariablesViewProps } from '.
 const logger = loggerFor(ModuleName.CD)
 const ConnectorRefRegex = /^.+step\.spec\.executionTarget\.connectorRef$/
 
+/* istanbul ignore next */
 const getConnectorValue = (connector?: SecretResponseWrapper): string =>
   `${
     connector?.secret?.orgIdentifier && connector?.secret?.projectIdentifier
@@ -47,6 +48,7 @@ const getConnectorValue = (connector?: SecretResponseWrapper): string =>
       : `${Scope.ACCOUNT}.${connector?.secret?.identifier}`
   }` || ''
 
+/* istanbul ignore next */
 const getConnectorName = (connector?: SecretResponseWrapper): string =>
   `${
     connector?.secret?.orgIdentifier && connector?.secret?.projectIdentifier
@@ -188,11 +190,11 @@ export class CustomApproval extends PipelineStep<CustomApprovalData> {
     ) {
       const retryAndScriptTimeoutSchema = Yup.object().shape({
         spec: Yup.object().shape({
-          scriptTimeout: getDurationValidationSchema().required(
-            getString?.('pipeline.customApprovalStep.validation.scriptTimeoutIsRequired')
+          scriptTimeout: getDurationValidationSchema({ minimum: '10s' }).required(
+            getString?.('pipeline.customApprovalStep.validation.minimumScriptTimeoutIs10Secs')
           ),
-          retryInterval: getDurationValidationSchema().required(
-            getString?.('pipeline.customApprovalStep.validation.retryIntervalIsRequired')
+          retryInterval: getDurationValidationSchema({ minimum: '10s' }).required(
+            getString?.('pipeline.customApprovalStep.validation.minimumRetryIntervalIs10Secs')
           )
         })
       })
@@ -215,7 +217,7 @@ export class CustomApproval extends PipelineStep<CustomApprovalData> {
 
   protected type = StepType.CustomApproval
   protected stepName = 'Custom Approval'
-  protected stepIcon: IconName = 'other-workload'
+  protected stepIcon: IconName = 'custom-approval'
   protected stepIconColor = Color.GREY_700
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.CustomApproval'
   protected isHarnessSpecific = true
@@ -244,7 +246,7 @@ export class CustomApproval extends PipelineStep<CustomApprovalData> {
     },
     type: StepType.CustomApproval
   }
-
+  /* istanbul ignore next */
   protected async getSecretsListForYaml(
     path: string,
     yaml: string,

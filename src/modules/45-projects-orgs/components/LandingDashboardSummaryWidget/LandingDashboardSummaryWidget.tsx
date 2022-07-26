@@ -123,6 +123,8 @@ const renderModuleSummary = (
           responseData?.[dataKey]?.response as TopProjectsDashboardInfoCountWithSuccessFailureDetails[],
           accountId
         )}
+        columnWidth={[200, 640]}
+        barLength={540}
       ></StackedSummaryTable>
     ) : (
       <DashboardNoDataWidget
@@ -243,17 +245,6 @@ const LandingDashboardSummaryWidget: React.FC<LandingDashboardSummaryWidgetProps
                   iconName,
                   refetch
                 )}
-
-                {/* This is temporary handling till support for CI, CF modules are added */}
-                <Layout.Vertical flex={{ justifyContent: 'center' }}>
-                  <Icon name="ci-main" size={40} margin="small" />
-                  <Text>{getString('common.comingSoon')}</Text>
-                </Layout.Vertical>
-
-                <Layout.Vertical flex={{ justifyContent: 'center' }}>
-                  <Icon name="cf-main" size={40} margin="small" />
-                  <Text>{getString('common.comingSoon')}</Text>
-                </Layout.Vertical>
               </Layout.Horizontal>
             ) : (
               <DashboardAPIErrorWidget

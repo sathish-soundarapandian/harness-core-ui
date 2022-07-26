@@ -26,12 +26,16 @@ export default function MetricDefinitionInptsetForm({
 }: MetricDefinitionInptsetFormInterface): JSX.Element {
   const { getString } = useStrings()
   const { setFieldValue: onChange } = useFormikContext()
-  return metricDefinitions?.map((item: any, idx: number) => {
-    const runtimeItems = getNestedRuntimeInputs(item, [], `${path}.metricDefinitions.${idx}`)
+  const runtimeMetricDefinitions = metricDefinitions.filter(
+    (metricDefinition: any, index: number) => getNestedRuntimeInputs(metricDefinition, [], `${path}.${index}`)?.length
+  )
+
+  return runtimeMetricDefinitions?.map((item: any, idx: number) => {
+    const runtimeItems = getNestedRuntimeInputs(item, [], `${path}.${idx}`)
     return (
       <div key={item?.metricName}>
         <Text font={'normal'} color={Color.BLACK} style={{ paddingBottom: spacingMedium }}>
-          {getString('cv.monitoringSources.metricLabel')}: {item?.metricName}
+          {getString('cv.monitoringSources.metricLabel')}: {item?.metricName || item?.name}
         </Text>
         {runtimeItems.map(input => {
           if (input.name === 'indexes') {

@@ -35,6 +35,8 @@ import '@ci/components/PipelineSteps'
 // eslint-disable-next-line no-restricted-imports
 import '@sto-steps/components/PipelineSteps'
 import { StepViewType } from '../AbstractSteps/Step'
+import type { StageSelectionData } from '../../utils/runPipelineUtils'
+import { getSelectedStagesFromPipeline } from './CommonUtils/CommonUtils'
 
 export function getStepFromStage(stepId: string, steps?: ExecutionWrapperConfig[]): ExecutionWrapperConfig | undefined {
   let responseStep: ExecutionWrapperConfig | undefined = undefined
@@ -408,6 +410,7 @@ interface ValidatePipelineProps {
   getString?: UseStringsReturn['getString']
   path?: string
   viewTypeMetadata?: { [key: string]: boolean }
+  selectedStageData?: StageSelectionData
 }
 
 /**
@@ -419,13 +422,24 @@ export const validateCICodebase = ({
   originalPipeline,
   resolvedPipeline, // used when originalPipeline is a template and we need to check clone codebase
   getString,
-  viewTypeMetadata
+  viewTypeMetadata,
+  selectedStageData
 }: ValidatePipelineProps): FormikErrors<PipelineInfoConfig> => {
   const errors = {}
   const requiresConnectorRuntimeInputValue =
     template?.properties?.ci?.codebase?.connectorRef && !pipeline?.properties?.ci?.codebase?.connectorRef
 
-  const pipelineHasCloneCodebase = isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline || originalPipeline)
+  let pipelineHasCloneCodebase = isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline || originalPipeline)
+  if (selectedStageData && !selectedStageData.allStagesSelected) {
+    pipelineHasCloneCodebase = getSelectedStagesFromPipeline(
+      resolvedPipeline || originalPipeline,
+      selectedStageData
+    )?.some(
+      stage =>
+        get(stage, 'stage.spec.cloneCodebase') ||
+        stage?.parallel?.some(parallelStage => get(parallelStage, 'stage.spec.cloneCodebase'))
+    )
+  }
   const shouldValidateCICodebase =
     pipelineHasCloneCodebase &&
     (!requiresConnectorRuntimeInputValue ||
@@ -484,16 +498,25 @@ export const validateCICodebase = ({
       set(errors, 'properties.ci.codebase.build.spec.tag', getString?.('fieldRequired', { field: getString('gitTag') }))
     }
 
-    if (
-      pipeline?.properties?.ci?.codebase?.build?.type === CodebaseTypes.PR &&
-      isEmpty(pipeline?.properties?.ci?.codebase?.build?.spec?.number) &&
-      !isInputSetForm
-    ) {
-      set(
-        errors,
-        'properties.ci.codebase.build.spec.number',
-        getString?.('fieldRequired', { field: getString?.('pipeline.gitPullRequestNumber') })
-      )
+    if (pipeline?.properties?.ci?.codebase?.build?.type === CodebaseTypes.PR && !isInputSetForm) {
+      if (
+        isNaN(pipeline?.properties?.ci?.codebase?.build?.spec?.number) ||
+        !Number.isInteger(parseFloat(pipeline?.properties?.ci?.codebase?.build?.spec?.number)) ||
+        parseFloat(pipeline?.properties?.ci?.codebase?.build?.spec?.number) < 1
+      ) {
+        set(
+          errors,
+          'properties.ci.codebase.build.spec.number',
+          getString?.('pipeline.ciCodebase.validation.pullRequestNumber')
+        )
+      }
+      if (isEmpty(pipeline?.properties?.ci?.codebase?.build?.spec?.number)) {
+        set(
+          errors,
+          'properties.ci.codebase.build.spec.number',
+          getString?.('fieldRequired', { field: getString?.('pipeline.gitPullRequestNumber') })
+        )
+      }
     }
   }
 
@@ -595,7 +618,8 @@ export const validatePipeline = ({
   viewType,
   getString,
   path,
-  viewTypeMetadata
+  viewTypeMetadata,
+  selectedStageData
 }: ValidatePipelineProps): FormikErrors<PipelineInfoConfig> => {
   if (template?.template) {
     const errors = validatePipeline({
@@ -621,7 +645,8 @@ export const validatePipeline = ({
       viewType,
       getString,
       path,
-      viewTypeMetadata
+      viewTypeMetadata,
+      selectedStageData
     })
 
     if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
@@ -706,4 +731,10 @@ export const validateCICodebaseConfiguration = ({ pipeline, getString }: Partial
     return getString?.('pipeline.runPipeline.ciCodebaseConfig')
   }
   return ''
+}
+export const getTemplatePath = (path: string, parentPath: string): string => {
+  if (!isEmpty(parentPath)) {
+    return path.replace(`${parentPath}.`, '')
+  }
+  return path
 }

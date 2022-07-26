@@ -9,7 +9,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from 're
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import {
-  Card,
+  AllowedTypes,
   Container,
   getMultiTypeFromValue,
   Layout,
@@ -18,6 +18,7 @@ import {
 } from '@harness/uicore'
 import produce from 'immer'
 import { debounce, defaultTo, get, isEmpty, noop, set, unset } from 'lodash-es'
+import { Divider } from '@blueprintjs/core'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 
@@ -205,6 +206,7 @@ export default function DeployServiceEntitySpecifications({
     if (errorMap.size > 0) {
       submitFormsForTab(DeployTabs.SERVICE)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [errorMap])
 
   const updateService = useCallback(
@@ -246,7 +248,7 @@ export default function DeployServiceEntitySpecifications({
         setIsReadOnlyView(false)
       }
     },
-    [debounceUpdateStage, memoizedQueryParam, refetchServiceData, stage]
+    [debounceUpdateStage, memoizedQueryParam, refetchServiceData, refetchServiceInputs, stage]
   )
 
   const getServiceEntityBasedServiceRef = React.useCallback(() => {
@@ -284,26 +286,24 @@ export default function DeployServiceEntitySpecifications({
     <div className={stageCss.deployStage} ref={scrollRef}>
       <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
       <div className={cx(stageCss.contentSection, stageCss.paddedSection)}>
-        <>
-          <div className={stageCss.tabHeading}>{getString('cd.pipelineSteps.serviceTab.aboutYourService')}</div>
-          <Card className={stageCss.sectionCard} id="aboutService">
-            <StepWidget
-              type={StepType.DeployService}
-              readonly={isReadonly}
-              initialValues={getDeployServiceWidgetInitValues()}
-              allowableTypes={
-                scope === Scope.PROJECT
-                  ? allowableTypes
-                  : allowableTypes.filter(item => item !== MultiTypeInputType.FIXED)
-              }
-              onUpdate={data => updateService(data)}
-              factory={factory}
-              stepViewType={StepViewType.Edit}
-            />
-          </Card>
-        </>
+        <StepWidget
+          type={StepType.DeployService}
+          readonly={isReadonly}
+          initialValues={getDeployServiceWidgetInitValues()}
+          allowableTypes={
+            scope === Scope.PROJECT
+              ? allowableTypes
+              : ((allowableTypes as MultiTypeInputType[]).filter(
+                  item => item !== MultiTypeInputType.FIXED
+                ) as AllowedTypes)
+          }
+          onUpdate={data => updateService(data)}
+          factory={factory}
+          stepViewType={StepViewType.Edit}
+        />
         {isReadonlyView && (
           <>
+            <Divider className={stageCss.divider} />
             <div className={stageCss.tabHeading} id="serviceDefinition">
               {getString('pipelineSteps.deploy.serviceSpecifications.serviceDefinition')}
             </div>

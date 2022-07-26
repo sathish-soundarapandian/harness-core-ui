@@ -6,25 +6,25 @@
  */
 
 import React from 'react'
-import { render, act, fireEvent, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import { ConfigModalProps, TemplateConfigModal } from '../TemplateConfigModal'
+import { ConfigModalProps, TemplateConfigModal, Intent } from '../TemplateConfigModal'
 
 const getProps = (): ConfigModalProps => ({
   onClose: jest.fn(),
   initialValues: {
     name: '',
     type: 'Step',
-    identifier: 'My_Step_Template',
-    versionLabel: 'v1',
-    repo: 'test_repo',
+    identifier: '-1',
+    versionLabel: 'v1'
+  },
+  promise: Promise.resolve,
+  gitDetails: {
+    repoIdentifier: 'test_repo',
     branch: 'test_branch'
   },
-  modalProps: {
-    title: 'Some Title',
-    promise: Promise.resolve
-  },
-  showGitFields: false
+  title: 'Some Title',
+  intent: Intent.START
 })
 
 describe('CREATE MODE', () => {
@@ -39,7 +39,7 @@ describe('CREATE MODE', () => {
       fireEvent.change(container.querySelector('input[name="name"]')!, { target: { value: '' } })
     })
     act(() => {
-      fireEvent.click(getByText('save'))
+      fireEvent.click(getByText('start'))
     })
     await waitFor(() => expect(queryByText('common.validation.fieldIsRequired')).toBeTruthy())
   })

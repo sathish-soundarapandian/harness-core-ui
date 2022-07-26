@@ -62,14 +62,23 @@ export const LoadSourceByType = ({
       return <GCOMetricsHealthSource data={data} onSubmit={onSubmit} />
     case Connectors.DATADOG:
       if (data?.product?.value === DatadogProduct.CLOUD_METRICS) {
-        return <DatadogMetricsHealthSource data={data} onSubmit={onSubmit} />
+        return (
+          <DatadogMetricsHealthSource
+            data={data}
+            isTemplate={isTemplate}
+            expressions={expressions}
+            onSubmit={onSubmit}
+          />
+        )
       } else {
         return (
           <DatadogLogsHealthSource data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
         )
       }
     case HealthSourceTypes.DatadogMetrics:
-      return <DatadogMetricsHealthSource data={data} onSubmit={onSubmit} />
+      return (
+        <DatadogMetricsHealthSource data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
+      )
     case HealthSourceTypes.DatadogLog:
       return (
         <DatadogLogsHealthSource data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
@@ -89,7 +98,7 @@ export const LoadSourceByType = ({
         }
         return <SplunkMetricsHealthSource data={data} onSubmit={onSubmit} />
       } else {
-        return <SplunkHealthSource data={data} onSubmit={onSubmit} />
+        return <SplunkHealthSource data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
       }
     case HealthSourceTypes.SplunkMetric:
       if (!isSplunkMetricEnabled) {

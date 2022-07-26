@@ -16,11 +16,14 @@ import {
   getServiceLevelObjectiveForNewerProject,
   getServiceLevelObjectiveResponseForNewerProject,
   getSLODetails,
-  responseSLODashboardDetail
+  responseSLODashboardDetail,
+  getSLORiskCountResponse
 } from '../../../support/85-cv/slos/constants'
 
 describe('Changing Project Page', () => {
   beforeEach(() => {
+    cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse).as('updatedListSLOsCallResponse')
+    cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
       // failing the test
@@ -28,14 +31,15 @@ describe('Changing Project Page', () => {
     })
     cy.login('test', 'test')
 
-    cy.visitChangeIntelligence()
+    cy.visitPageAssertion('[class^=SideNav-module_main]')
+    cy.contains('span', 'Service Reliability').click()
+    cy.contains('p', 'Select a Project').click()
+    cy.contains('p', 'Project 1').click()
   })
 
-  it('should be able to switch project without any errors while editing the SLOs', () => {
-    cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)
-    cy.intercept('GET', getSLORiskCount, listRiskCountDataEmptyResponse)
+  it.skip('should be able to switch project without any errors while editing the SLOs', () => {
+    cy.intercept('GET', getSLORiskCount, getSLORiskCountResponse)
     cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
-    cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse).as('updatedListSLOsCallResponse')
     cy.intercept('GET', getSLODetails, responseSLODashboardDetail)
     cy.intercept('GET', getServiceLevelObjective, getServiceLevelObjectiveResponse).as('getSLO')
 
@@ -45,7 +49,6 @@ describe('Changing Project Page', () => {
     cy.intercept('GET', listSLOsCallForNewerProject, updatedListSLOsCallResponse)
     cy.intercept('GET', getServiceLevelObjectiveForNewerProject, getServiceLevelObjectiveResponseForNewerProject)
 
-    cy.contains('p', 'SLOs').click()
     cy.wait('@updatedListSLOsCallResponse')
 
     // Editing a SLO

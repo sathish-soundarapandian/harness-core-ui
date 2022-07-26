@@ -59,6 +59,7 @@ function CreateAzureConnector(props: React.PropsWithChildren<CreateConnectorModa
         hideModal={props.onClose}
         onConnectorCreated={props.onSuccess}
         connectorInfo={props.connectorInfo}
+        gitDetails={props.gitDetails}
       />
       <VerifyOutOfClusterDelegate
         name={getString('connectors.stepThreeName')}

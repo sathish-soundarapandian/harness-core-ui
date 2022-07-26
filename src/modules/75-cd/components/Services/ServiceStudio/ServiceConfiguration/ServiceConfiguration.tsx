@@ -98,7 +98,7 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
         }
       }
     },
-    [getUpdatedPipelineYaml, updatePipeline]
+    [getUpdatedPipelineYaml, updatePipeline, yamlHandler]
   )
 
   const handleModeSwitch = useCallback(
@@ -110,7 +110,7 @@ function ServiceConfiguration({ serviceData }: ServiceConfigurationProps): React
       setView(view)
       setSelectedView(view)
     },
-    [yamlHandler?.getLatestYaml, serviceSchema]
+    [setView, getUpdatedPipelineYaml, updatePipeline]
   )
 
   if (service.identifier === DefaultNewPipelineId && !isServiceCreateModalView) {

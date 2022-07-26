@@ -110,9 +110,9 @@ export function TemplateVariablesContextProvider(
 
   React.useEffect(() => {
     const templateType =
-      resolvedTemplate.type.toLowerCase() === monitoredServiceYamlKey.toLowerCase()
+      resolvedTemplate.type?.toLowerCase() === monitoredServiceYamlKey.toLowerCase()
         ? monitoredServiceYamlKey
-        : resolvedTemplate.type.toLowerCase()
+        : resolvedTemplate.type?.toLowerCase()
     setTemplateVariablesData({
       metadataMap: defaultTo(data?.data?.metadataMap, {}),
       variablesTemplate: get(parse(defaultTo(data?.data?.yaml, '')), templateType)

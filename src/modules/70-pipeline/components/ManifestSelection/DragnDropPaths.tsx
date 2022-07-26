@@ -15,24 +15,25 @@ import {
   Text,
   Button,
   Icon,
-  ButtonSize
-} from '@wings-software/uicore'
-
+  ButtonSize,
+  AllowedTypes
+} from '@harness/uicore'
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
+import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-
 import css from './ManifestWizardSteps/K8sValuesManifest/ManifestDetails.module.scss'
 
 export interface DragnDropPathsProps<T = unknown> {
   formik: FormikValues
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   pathLabel: string
   fieldPath: string
   placeholder: string
   defaultValue: T
   allowOnlyOneFilePath?: boolean
+  dialogWidth?: number
 }
 
 function DragnDropPaths({
@@ -43,7 +44,8 @@ function DragnDropPaths({
   fieldPath,
   placeholder,
   defaultValue,
-  allowOnlyOneFilePath
+  allowOnlyOneFilePath,
+  dialogWidth
 }: DragnDropPathsProps): React.ReactElement {
   const { getString } = useStrings()
 
@@ -64,7 +66,11 @@ function DragnDropPaths({
           <div {...provided.droppableProps} ref={provided.innerRef}>
             <MultiTypeFieldSelector
               defaultValueToReset={[defaultValue]}
-              allowedTypes={allowableTypes.filter(allowedType => allowedType !== MultiTypeInputType.EXPRESSION)}
+              allowedTypes={
+                (allowableTypes as MultiTypeInputType[]).filter(
+                  allowedType => allowedType !== MultiTypeInputType.EXPRESSION
+                ) as AllowedTypes
+              }
               name={fieldPath}
               label={<Text>{pathLabel}</Text>}
             >
@@ -93,12 +99,12 @@ function DragnDropPaths({
                                 label={''}
                                 placeholder={placeholder}
                                 name={`${fieldPath}[${index}].path`}
-                                style={{ width: 275 }}
+                                style={{ width: defaultTo(dialogWidth, 275) }}
                                 multiTextInputProps={{
                                   expressions,
-                                  allowableTypes: allowableTypes.filter(
+                                  allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
                                     allowedType => allowedType !== MultiTypeInputType.RUNTIME
-                                  )
+                                  ) as AllowedTypes
                                 }}
                               />
 

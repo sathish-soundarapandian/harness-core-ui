@@ -156,7 +156,12 @@ describe('CVSLOsListingPage', () => {
   })
 
   test('it should show the loader while deleting a widget', () => {
-    useGetAllJourneys.mockReturnValue({ data: userJourneyResponse, loading: false, error: null, refetch: jest.fn() })
+    useGetAllJourneys.mockReturnValue({
+      data: userJourneyResponse,
+      loading: false,
+      error: null,
+      refetch: jest.fn()
+    })
     useDeleteSLOData.mockReturnValue({ mutate: jest.fn(), loading: true, error: null })
     useGetSLODashboardWidgets.mockReturnValue({
       data: dashboardWidgetsResponse,
@@ -263,8 +268,19 @@ describe('CVSLOsListingPage', () => {
     expect(screen.getByTestId('slo-card-container')).toBeInTheDocument()
   })
 
+  test('it should render page body no data state only if dashboard widgets and selected user journey are empty', () => {
+    render(<ComponentWrapper />)
+
+    expect(screen.getByText('cv.slos.noMatchingData')).toBeInTheDocument()
+  })
+
   test('Risk filter select and deselect', async () => {
-    useGetAllJourneys.mockReturnValue({ data: userJourneyResponse, loading: false, error: null, refetch: jest.fn() })
+    useGetAllJourneys.mockReturnValue({
+      data: userJourneyResponse,
+      loading: false,
+      error: null,
+      refetch: jest.fn()
+    })
     useGetSLODashboardWidgets.mockReturnValue({
       data: dashboardWidgetsResponse,
       loading: false,
@@ -299,7 +315,12 @@ describe('CVSLOsListingPage', () => {
     const deleteMutate = jest.fn()
     const refetch = jest.fn()
 
-    useGetAllJourneys.mockReturnValue({ data: userJourneyResponse, loading: false, error: null, refetch: jest.fn() })
+    useGetAllJourneys.mockReturnValue({
+      data: userJourneyResponse,
+      loading: false,
+      error: null,
+      refetch: jest.fn()
+    })
     useDeleteSLOData.mockReturnValue({ mutate: deleteMutate, loading: false, error: null })
     useGetSLODashboardWidgets.mockReturnValue({
       data: dashboardWidgetsResponse,

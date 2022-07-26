@@ -8,7 +8,9 @@
 import { render, fireEvent, waitFor } from '@testing-library/react'
 import React from 'react'
 import { TestWrapper } from '@common/utils/testUtils'
+import { communityLicenseStoreValues } from '@common/utils/DefaultAppStoreData'
 import { ResourceCenter } from '../ResourceCenter'
+import { ON_PREM_RELEASE_NODE_LINK, SAAS_RELEASE_NODE_LINK } from '../utils'
 
 jest.mock('refiner-js', () => {
   return jest.fn().mockImplementation((param, callback) => {
@@ -67,9 +69,8 @@ describe('ResourceCenter', () => {
   })
 
   test('should render community', async () => {
-    window.deploymentType = 'COMMUNITY'
     const { getByTestId, getByText, queryByText } = render(
-      <TestWrapper>
+      <TestWrapper defaultLicenseStoreValues={communityLicenseStoreValues}>
         <ResourceCenter />
       </TestWrapper>
     )
@@ -90,27 +91,20 @@ describe('ResourceCenter', () => {
       fireEvent.click(getByTestId('question'))
       const releaseNote = getByText('common.resourceCenter.bottomlayout.releaseNote').closest('a')
       await waitFor(() => {
-        expect(releaseNote).toHaveAttribute(
-          'href',
-          'https://ngdocs.harness.io/article/7zkchy5lhj-harness-saa-s-release-notes-2022'
-        )
+        expect(releaseNote).toHaveAttribute('href', SAAS_RELEASE_NODE_LINK)
       })
     })
 
     test('release note for community', async () => {
-      window.deploymentType = 'COMMUNITY'
       const { getByTestId, getByText } = render(
-        <TestWrapper>
+        <TestWrapper defaultLicenseStoreValues={communityLicenseStoreValues}>
           <ResourceCenter />
         </TestWrapper>
       )
       fireEvent.click(getByTestId('question'))
       const releaseNote = getByText('common.resourceCenter.bottomlayout.releaseNote').closest('a')
       await waitFor(() => {
-        expect(releaseNote).toHaveAttribute(
-          'href',
-          'https://ngdocs.harness.io/article/556wy85kbo-harness-on-prem-release-notes'
-        )
+        expect(releaseNote).toHaveAttribute('href', SAAS_RELEASE_NODE_LINK)
       })
     })
 
@@ -124,11 +118,30 @@ describe('ResourceCenter', () => {
       fireEvent.click(getByTestId('question'))
       const releaseNote = getByText('common.resourceCenter.bottomlayout.releaseNote').closest('a')
       await waitFor(() => {
-        expect(releaseNote).toHaveAttribute(
-          'href',
-          'https://ngdocs.harness.io/article/556wy85kbo-harness-on-prem-release-notes'
-        )
+        expect(releaseNote).toHaveAttribute('href', ON_PREM_RELEASE_NODE_LINK)
       })
     })
   })
+})
+
+test('should render early access tabs', async () => {
+  const featureFlags = {
+    EARLY_ACCESS_ENABLED: true
+  }
+
+  const defaultAppStoreValues = {
+    featureFlags
+  }
+
+  const { getByTestId } = render(
+    <TestWrapper defaultAppStoreValues={defaultAppStoreValues}>
+      <ResourceCenter />
+    </TestWrapper>
+  )
+
+  fireEvent.click(getByTestId('question'))
+  const whatsNew = getByTestId('whatsnew')
+  const earlyAccess = getByTestId('early-access')
+  expect(whatsNew).toBeDefined()
+  expect(earlyAccess).toBeDefined()
 })

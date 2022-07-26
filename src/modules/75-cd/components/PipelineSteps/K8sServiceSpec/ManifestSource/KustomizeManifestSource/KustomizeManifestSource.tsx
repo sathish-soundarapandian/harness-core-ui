@@ -17,6 +17,7 @@ import List from '@common/components/List/List'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 import ManifestGitStoreRuntimeFields from '../ManifestSourceRuntimeFields/ManifestGitStoreRuntimeFields'
+import ManifestCommonRuntimeFields from '../ManifestSourceRuntimeFields/ManifestCommonRuntimeFields'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
 const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
@@ -46,6 +47,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       className={cx(css.inputWidth, css.layoutVerticalSpacing)}
     >
       <ManifestGitStoreRuntimeFields {...props} />
+      <ManifestCommonRuntimeFields {...props} />
       {isFieldRuntime(`${manifestPath}.spec.store.spec.folderPath`, template) && (
         <div className={css.verticalSpacingInput}>
           <FormInput.MultiTextInput
@@ -69,6 +71,19 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               allowableTypes
             }}
             label={getString('pluginPath')}
+          />
+        </div>
+      )}
+      {isFieldRuntime(`${manifestPath}.spec.manifestScope`, template) && (
+        <div className={css.verticalSpacingInput}>
+          <FormInput.MultiTextInput
+            disabled={isFieldDisabled(`${manifestPath}.spec.manifestScope`)}
+            name={`${path}.${manifestPath}.spec.manifestScope`}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+            label={getString('pipeline.manifestType.manifestScope')}
           />
         </div>
       )}

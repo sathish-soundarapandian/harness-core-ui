@@ -17,7 +17,8 @@ import StepGroupGraph from '../StepGroupGraph/StepGroupGraph'
 import { NodeType } from '../../types'
 import SVGMarker from '../SVGMarker'
 import { getPositionOfAddIcon } from '../utils'
-import { NodeDimensionProvider } from '../NodeDimensionStore'
+import { useNodeDimensionContext } from '../NodeDimensionStore'
+import MatrixNodeLabelWrapper from '../MatrixNodeLabelWrapper'
 import css from './StepGroupNode.module.scss'
 import defaultCss from '../DefaultNode/DefaultNode.module.scss'
 
@@ -36,12 +37,24 @@ export function StepGroupNode(props: any): JSX.Element {
     return stepType === 'STEP_GROUP'
   })
 
+  const isExecutionView = Boolean(props?.data?.status)
+
+  const { updateDimensions } = useNodeDimensionContext()
   const isNestedStepGroup = Boolean(get(props, 'data.step.data.isNestedGroup'))
 
   React.useEffect(() => {
     props?.updateGraphLinks?.()
+    updateDimensions?.({ [(props?.data?.id || props?.id) as string]: { height: 100, width: 115 } })
   }, [isNodeCollapsed])
 
+  React.useEffect(() => {
+    // collapse stepGroup in execution view till data loads
+    if (stepsData?.length === 0 && isExecutionView) {
+      setNodeCollapsed(true)
+    }
+  }, [stepsData])
+
+  const nodeType = Object.keys(props?.data?.stepGroup?.strategy || {})[0]
   return (
     <>
       {isNodeCollapsed && DefaultNode ? (
@@ -54,6 +67,9 @@ export function StepGroupNode(props: any): JSX.Element {
         />
       ) : (
         <div style={{ position: 'relative' }}>
+          {props.data?.loopingStrategyEnabled && (
+            <MatrixNodeLabelWrapper isParallelNode={props?.isParallelNode} nodeType={nodeType} />
+          )}
           <div
             onMouseOver={e => {
               e.stopPropagation()
@@ -173,15 +189,13 @@ export function StepGroupNode(props: any): JSX.Element {
               </Layout.Horizontal>
             </div>
             <div className={css.stepGroupBody}>
-              <NodeDimensionProvider>
-                <StepGroupGraph
-                  {...props}
-                  data={stepsData}
-                  isNodeCollapsed={isNodeCollapsed}
-                  parentIdentifier={props?.identifier}
-                  hideLinks={props?.identifier === STATIC_SERVICE_GROUP_NAME}
-                />
-              </NodeDimensionProvider>
+              <StepGroupGraph
+                {...props}
+                data={stepsData}
+                isNodeCollapsed={isNodeCollapsed}
+                parentIdentifier={props?.identifier}
+                hideLinks={props?.identifier === STATIC_SERVICE_GROUP_NAME}
+              />
             </div>
             {!props.readonly && props?.identifier !== STATIC_SERVICE_GROUP_NAME && (
               <Button

@@ -209,7 +209,7 @@ enum NodeTypes {
   Parallel = 'parallel',
   Stage = 'stage',
   Matrix = 'MATRIX',
-  For = 'FOR',
+  Loop = 'LOOP',
   Parallelism = 'PARALLELISM'
 }
 export interface ProcessLayoutNodeMapResponse {
@@ -870,7 +870,7 @@ export const getChildNodeDataForMatrix = (
 }
 
 export const isNodeTypeMatrixOrFor = (nodeType?: string): boolean => {
-  return [NodeTypes.Matrix, NodeTypes.For, NodeTypes.Parallelism].includes(nodeType as NodeTypes)
+  return [NodeTypes.Matrix, NodeTypes.Loop, NodeTypes.Parallelism].includes(nodeType as NodeTypes)
 }
 export const processLayoutNodeMapV1 = (executionSummary?: PipelineExecutionSummary): PipelineGraphState[] => {
   const response: PipelineGraphState[] = []
@@ -1022,7 +1022,7 @@ export const processExecutionDataForGraph = (stages?: PipelineGraphState[]): Pip
         ...currentStage,
         icon: getIconFromStageModule(currentStageData?.module, currentStageData?.nodeType),
         status: currentStageData?.status as any,
-        type: [StageType.FOR, StageType.PARALLELISM].includes(currentStage?.type as StageType)
+        type: [StageType.LOOP, StageType.PARALLELISM].includes(currentStage?.type as StageType)
           ? ExecutionPipelineNodeType.MATRIX
           : currentStage?.type,
         data: {
@@ -1082,7 +1082,7 @@ export const processExecutionDataForGraph = (stages?: PipelineGraphState[]): Pip
         ...currentStage,
         icon: getIconFromStageModule(stage?.module, stage?.nodeType),
         status: stage?.status as any,
-        type: [StageType.FOR, StageType.PARALLELISM].includes(currentStage?.type as StageType)
+        type: [StageType.LOOP, StageType.PARALLELISM].includes(currentStage?.type as StageType)
           ? ExecutionPipelineNodeType.MATRIX
           : currentStage?.type,
         data: {

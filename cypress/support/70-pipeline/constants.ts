@@ -22,6 +22,7 @@ const artifactPath = '/'
 const repository = 'lambda'
 const serverlessLambdaServiceDefinitionType = 'ServerlessAwsLambda'
 const strategyType = 'Basic'
+const parentJob = 'alex-pipeline-test'
 
 // APIs
 export const pipelineListAPI = `/pipeline/api/pipelines/list?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&page=0&sort=lastUpdatedAt%2CDESC&size=20`
@@ -41,8 +42,8 @@ export const gitSyncEnabledCall = `/ng/api/git-sync/git-sync-enabled?accountIden
 export const pipelineSaveCall = `/pipeline/api/pipelines?accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}`
 export const gitSyncMetaCall = `/ng/api/git-sync?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
 export const gitSyncBranchCall = `/ng/api/git-sync-branch/listBranchesWithStatus?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&yamlGitConfigIdentifier=&page=0&size=20&searchTerm=`
-export const executionStratergies = `ng/api/pipelines/configuration/strategies?routingId=${accountId}`
-export const yamlSnippet = `ng/api/pipelines/configuration/strategies/yaml-snippets?routingId=${accountId}&serviceDefinitionType=Kubernetes&strategyType=Rolling`
+export const executionStrategies = `ng/api/pipelines/configuration/strategies?routingId=${accountId}`
+export const strategiesYamlSnippets = 'ng/api/pipelines/configuration/strategies/yaml-snippets*'
 export const approvalStageYamlSnippet = `/pipeline/api/approvals/stage-yaml-snippet?routingId=${accountId}&approvalType=HarnessApproval`
 export const jiraApprovalStageYamlSnippet = `/pipeline/api/approvals/stage-yaml-snippet?routingId=${accountId}&approvalType=JiraApproval`
 export const snowApprovalStageYamlSnippet = `/pipeline/api/approvals/stage-yaml-snippet?routingId=${accountId}&approvalType=SERVICENOW_APPROVAL`
@@ -77,10 +78,21 @@ export const serverlessLambdaYamlSnippet = `/ng/api/pipelines/configuration/stra
 export const servicesV2 = `/ng/api/servicesV2?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
 export const jobDetailsCall = `/ng/api/artifacts/jenkins/jobs?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorName}`
 export const jobDetailsCallAfterConnectorChange = `/ng/api/artifacts/jenkins/jobs?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${anotherConnectorName}`
-export const jobParametersList = `/ng/api/artifacts/jenkins/job/AutomationQA/details?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorName}`
+export const jobDetailsForParentJob = `/ng/api/artifacts/jenkins/jobs?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${anotherConnectorName}&parentJobName=${parentJob}`
+export const jobParametersList = `/ng/api/artifacts/jenkins/job/AutomationQA/details?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${anotherConnectorName}`
 export const pipelineDetailsAPIRoute = `/pipeline/api/pipelines/PipelineTest?accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
-
+export const templatesListCall = `/template/api/templates/list?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&templateListType=LastUpdated&searchTerm=&page=0&sort=lastUpdatedAt%2CDESC&size=20`
+export const templateReferencesCall = `/ng/api/entitySetupUsage/v2?routingId=${accountId}&accountIdentifier=${accountId}&referredEntityFQN=accountId%2Fdefault%2Fproject1%2FCypress_Template_Example_1%2FVersion1%2F&referredEntityType=Template&pageIndex=0&pageSize=4`
+export const templatesListCallWithListType = `/template/api/templates/list?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&templateListType=All&module=cd`
+export const inputSetsTemplateCallWithCypressProject = `/pipeline/api/inputSets/template?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&pipelineIdentifier=${pipelineIdentifier}&projectIdentifier=${projectId}`
+export const inputSetTemplate = `/pipeline/api/pipelines/${pipelineIdentifier}?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&getTemplatesResolvedPipeline=true`
+export const runPipelineTemplateCall = `/pipeline/api/inputSets/template?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&pipelineIdentifier=${pipelineIdentifier}`
+export const s3bucketData = `/ng/api/buckets/s3/getBucketsV2?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&connectorRef=${connectorName}`
+export const triggersList = `/pipeline/api/triggers?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&targetIdentifier=${pipelineIdentifier}&searchTerm=`
+export const getArtifactPaths = `/ng/api/artifacts/jenkins/job/AutomationQA/paths?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorName}`
+export const getJenkinsBuild = `/ng/api/artifacts/jenkins/job/AutomationQA/builds?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorName}&artifactPath=sa`
 // Routes
+
 export const executionListRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/deployments`
 export const pipelinesExecutionDelegateRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/executions/${delegateExecutionId}/pipeline`
 export const executionHistoryRoute = `#/account/accountId/cd/orgs/default/projects/${projectId}/pipelines/${pipelineIdentifier}/executions`
@@ -90,6 +102,7 @@ export const environmentRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}
 export const servicesRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/services`
 export const pipelinesRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines`
 export const triggersRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/triggers`
+export const templatesListRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/setup/resources/templates`
 
 export interface ValidObject {
   resourceName: StepResourceObject[]

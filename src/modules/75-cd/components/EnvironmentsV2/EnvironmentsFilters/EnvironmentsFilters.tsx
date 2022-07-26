@@ -17,8 +17,7 @@ import {
   useUpdateFilter,
   useDeleteFilter,
   FilterDTO,
-  useGetEnvironmentListForProject,
-  NGTag
+  useGetEnvironmentListForProject
 } from 'services/cd-ng'
 
 import { StringUtils } from '@common/exports'
@@ -93,13 +92,13 @@ export default function EnvironmentsFilters(): React.ReactElement {
         }
       : null
 
-  const { environmentName, description, environmentTags, environmentTypes, environmentIdentifiers } =
+  const { environmentNames, description, tags, environmentTypes, environmentIdentifiers } =
     (appliedFilter?.filterProperties as EnvironmentsFilterFormType) || {}
   const { name = '', filterVisibility, identifier = '' } = appliedFilter || {}
   const fieldToLabelMapping = React.useMemo(
     () =>
       new Map<string, string>([
-        ['environmentName', getString('cd.environment.filters.environmentNamePlaceholder')],
+        ['environmentNames', getString('cd.environment.filters.environmentNamePlaceholder')],
         ['description', getString('description')],
         ['environmentTags', getString('tagsLabel')],
         ['environmentTypes', getString('envType')],
@@ -224,13 +223,10 @@ export default function EnvironmentsFilters(): React.ReactElement {
         }
         initialFilter={{
           formValues: {
-            environmentName,
+            environmentName: environmentNames?.[0],
             description,
-            environmentTags: environmentTags?.reduce(
-              (obj: Record<string, any>, item: NGTag) => Object.assign(obj, { [item.key]: item.value }),
-              {}
-            ),
-            environmentTypes,
+            environmentTags: tags,
+            environmentTypes: getMultiSelectFromOptions(environmentTypes),
             environments: getMultiSelectFromOptions(environmentIdentifiers)
           },
           metadata: { name, filterVisibility, identifier, filterProperties: {} }

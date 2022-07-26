@@ -345,33 +345,4 @@ describe('ServiceNow Create tests', () => {
 
     expect(container).toMatchSnapshot('serviceNow-create-deploymentform-customfields')
   })
-
-  test('Template section is disabled for - CHANGE TASK ticket type', async () => {
-    const ref = React.createRef<StepFormikRef<unknown>>()
-    const props = { ...getServiceNowCreateEditModePropsWithValues() }
-    props.initialValues.spec = {
-      useServiceNowTemplate: false,
-      connectorRef: 'cid1',
-      ticketType: 'CHANGE_TASK',
-      fieldType: FieldType.ConfigureFields,
-      templateName: undefined,
-      fields: [
-        { name: 'short_description', value: 'short description' },
-        { name: 'description', value: 'descriptionval' }
-      ]
-    }
-
-    const { container } = render(
-      <TestStepWidget
-        initialValues={props.initialValues}
-        type={StepType.ServiceNowCreate}
-        stepViewType={StepViewType.Edit}
-        ref={ref}
-        onUpdate={props.onUpdate}
-      />
-    )
-    const createFromTemplate = queryByAttribute('value', container, 'CreateFromTemplate')
-
-    expect(createFromTemplate).toHaveProperty('disabled')
-  })
 })

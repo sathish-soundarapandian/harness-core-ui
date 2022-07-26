@@ -218,11 +218,13 @@ function Service(
                   isTemplate={isTemplate}
                   expressions={expressions}
                 />
-                <MonitoredServiceNotificationsContainer
-                  setFieldValue={formik?.setFieldValue}
-                  notificationRuleRefs={formik?.values?.notificationRuleRefs}
-                  identifier={identifier}
-                />
+                {!isTemplate && (
+                  <MonitoredServiceNotificationsContainer
+                    setFieldValue={formik?.setFieldValue}
+                    notificationRuleRefs={formik?.values?.notificationRuleRefs}
+                    identifier={identifier}
+                  />
+                )}
               </>
             )}
           </div>

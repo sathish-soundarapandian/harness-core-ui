@@ -14,18 +14,27 @@ import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { IdentifierSchemaWithOutName, NameSchema } from '@common/utils/Validation'
+import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useQueryParams } from '@common/hooks'
-import { setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import type { RollbackStackProps } from '../CloudFormationInterfaces.types'
 import { isRuntime } from '../CloudFormationHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../CloudFormation.module.scss'
 
 export const RollbackStack = (
-  { allowableTypes, isNewStep = true, readonly = false, initialValues, onUpdate, onChange }: RollbackStackProps,
+  {
+    allowableTypes,
+    isNewStep = true,
+    readonly = false,
+    initialValues,
+    onUpdate,
+    onChange,
+    stepViewType
+  }: RollbackStackProps,
   formikRef: StepFormikFowardRef
 ): JSX.Element => {
   const { getString } = useStrings()
@@ -52,7 +61,7 @@ export const RollbackStack = (
         onUpdate?.(payload)
       }}
       validationSchema={Yup.object().shape({
-        name: NameSchema({ requiredErrorMsg: getString('pipelineSteps.stepNameRequired') }),
+        ...getNameAndIdentifierSchema(getString, stepViewType),
         timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
         spec: Yup.object().shape({
           configuration: Yup.object().shape({
@@ -79,15 +88,17 @@ export const RollbackStack = (
         const provisionerIdentifier = config?.provisionerIdentifier
         return (
           <>
-            <div className={cx(stepCss.formGroup, stepCss.lg)}>
-              <FormInput.InputWithIdentifier
-                inputLabel={getString('name')}
-                isIdentifierEditable={isNewStep}
-                inputGroupProps={{
-                  disabled: readonly
-                }}
-              />
-            </div>
+            {stepViewType !== StepViewType.Template && (
+              <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                <FormInput.InputWithIdentifier
+                  inputLabel={getString('name')}
+                  isIdentifierEditable={isNewStep}
+                  inputGroupProps={{
+                    disabled: readonly
+                  }}
+                />
+              </div>
+            )}
             <div className={cx(stepCss.formGroup, stepCss.sm)}>
               <FormMultiTypeDurationField
                 name="timeout"

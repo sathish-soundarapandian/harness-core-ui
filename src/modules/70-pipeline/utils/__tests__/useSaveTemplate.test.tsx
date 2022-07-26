@@ -11,7 +11,7 @@ import userEvent from '@testing-library/user-event'
 import { noop } from 'lodash-es'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { TemplateContextMetadata, useSaveTemplate } from '@pipeline/utils/useSaveTemplate'
-import type { NGTemplateInfoConfig } from 'services/template-ng'
+import type { EntityGitDetails, NGTemplateInfoConfig } from 'services/template-ng'
 import * as templateNg from 'services/template-ng'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import gitSyncListResponse from '@common/utils/__tests__/mocks/gitSyncRepoListMock.json'
@@ -55,12 +55,41 @@ jest.mock('services/cd-ng', () => ({
     return { data: sourceCodeManagers, refetch: jest.fn() }
   })
 }))
-function Wrapped(props: TemplateContextMetadata): React.ReactElement {
-  const { saveAndPublish } = useSaveTemplate(props)
+
+interface WrappedComponentProps extends TemplateContextMetadata {
+  updatedGitDetails?: EntityGitDetails
+}
+
+function Wrapped({ updatedGitDetails, ...rest }: WrappedComponentProps): React.ReactElement {
+  const { saveAndPublish } = useSaveTemplate(rest)
   return (
     <>
-      <button onClick={() => saveAndPublish(props.template as NGTemplateInfoConfig, {})}>Save</button>
-      <button onClick={() => saveAndPublish(props.template as NGTemplateInfoConfig, { isEdit: true })}>Edit</button>
+      <button onClick={() => saveAndPublish(stepTemplateMock as NGTemplateInfoConfig, { updatedGitDetails })}>
+        Save
+      </button>
+      <button
+        onClick={() => saveAndPublish(stepTemplateMock as NGTemplateInfoConfig, { isEdit: true, updatedGitDetails })}
+      >
+        Edit
+      </button>
+      <button
+        onClick={() =>
+          saveAndPublish({ ...stepTemplateMock, versionLabel: 'v1.0.0' } as NGTemplateInfoConfig, {
+            updatedGitDetails
+          })
+        }
+      >
+        Save with versionLabel
+      </button>
+      <button
+        onClick={() =>
+          saveAndPublish({ ...stepTemplateMock, versionLabel: 'v1.0.0-0_0' } as NGTemplateInfoConfig, {
+            updatedGitDetails
+          })
+        }
+      >
+        Save with complex versionLabel
+      </button>
     </>
   )
 }
@@ -68,7 +97,6 @@ function Wrapped(props: TemplateContextMetadata): React.ReactElement {
 describe('useSaveTemplate Test', () => {
   test('create should work as expected', async () => {
     const props: TemplateContextMetadata = {
-      template: stepTemplateMock as NGTemplateInfoConfig,
       deleteTemplateCache: jest.fn()
     }
     const { getByText } = render(
@@ -86,7 +114,6 @@ describe('useSaveTemplate Test', () => {
   })
   test('edit should work as expected', async () => {
     const props: TemplateContextMetadata = {
-      template: stepTemplateMock as NGTemplateInfoConfig,
       fetchTemplate: jest.fn()
     }
     const { getByText } = render(
@@ -104,22 +131,20 @@ describe('useSaveTemplate Test', () => {
   })
 
   test('filePath should be expected', async () => {
-    const props: TemplateContextMetadata = {
-      template: stepTemplateMock as NGTemplateInfoConfig,
+    const props: WrappedComponentProps = {
       deleteTemplateCache: jest.fn(),
-      gitDetails: {
+      updatedGitDetails: {
         repoIdentifier: 'testRepo',
         branch: 'testBranch'
       }
     }
-    props.template.versionLabel = 'v1.0.0'
     const { getByText } = render(
       <TestWrapper defaultAppStoreValues={{ isGitSyncEnabled: true }}>
         <Wrapped {...props} />
       </TestWrapper>
     )
 
-    const saveBtn = getByText('Save')
+    const saveBtn = getByText('Save with versionLabel')
     await act(async () => {
       fireEvent.click(saveBtn)
     })
@@ -130,23 +155,22 @@ describe('useSaveTemplate Test', () => {
     expect(filePath).toBeDefined()
     expect(filePath?.getAttribute('value')).toBe('Test_Http_Template_v100.yaml')
   })
+
   test('filePath should be expected for underscore and hyphen', async () => {
-    const props: TemplateContextMetadata = {
-      template: stepTemplateMock as NGTemplateInfoConfig,
+    const props: WrappedComponentProps = {
       deleteTemplateCache: jest.fn(),
-      gitDetails: {
+      updatedGitDetails: {
         repoIdentifier: 'testRepo',
         branch: 'testBranch'
       }
     }
-    props.template.versionLabel = 'v1.0.0-0_0'
     const { getByText } = render(
       <TestWrapper defaultAppStoreValues={{ isGitSyncEnabled: true }}>
         <Wrapped {...props} />
       </TestWrapper>
     )
 
-    const saveBtn = getByText('Save')
+    const saveBtn = getByText('Save with complex versionLabel')
     await act(async () => {
       fireEvent.click(saveBtn)
     })
@@ -156,14 +180,12 @@ describe('useSaveTemplate Test', () => {
     const filePath = commentsDialog!.querySelector('input[name="filePath"]')!
     expect(filePath).toBeDefined()
     expect(filePath?.getAttribute('value')).toBe('Test_Http_Template_v100-0_0.yaml')
-    props.template.versionLabel = 'v1'
   })
 
   describe('When GitSync is enabled', () => {
     test('edit should work as expected', async () => {
-      const props: TemplateContextMetadata = {
-        template: stepTemplateMock as NGTemplateInfoConfig,
-        gitDetails: {
+      const props: WrappedComponentProps = {
+        updatedGitDetails: {
           branch: 'feature',
           filePath: 'test_pipeline.yaml',
           objectId: '4471ec3aa40c26377353974c29a6670d998db06f',
@@ -206,9 +228,8 @@ describe('useSaveTemplate Test', () => {
         .spyOn(templateNg, 'updateExistingTemplateLabelPromise')
         .mockImplementation(() => Promise.reject({ status: 'ERROR', message: 'There was error' }))
 
-      const props: TemplateContextMetadata = {
-        template: stepTemplateMock as NGTemplateInfoConfig,
-        gitDetails: {
+      const props: WrappedComponentProps = {
+        updatedGitDetails: {
           branch: 'feature',
           filePath: 'test_pipeline.yaml',
           objectId: '4471ec3aa40c26377353974c29a6670d998db06f',
@@ -248,10 +269,9 @@ describe('useSaveTemplate Test', () => {
     })
 
     test('create should work as expected', async () => {
-      const props: TemplateContextMetadata = {
-        template: stepTemplateMock as NGTemplateInfoConfig,
+      const props: WrappedComponentProps = {
         deleteTemplateCache: jest.fn(),
-        gitDetails: {
+        updatedGitDetails: {
           branch: 'feature',
           filePath: 'test_pipeline.yaml',
           repoIdentifier: 'gitSyncRepo',
@@ -292,10 +312,9 @@ describe('useSaveTemplate Test', () => {
         .spyOn(templateNg, 'createTemplatePromise')
         .mockImplementation(() => Promise.reject({ status: 'ERROR', message: 'There was error' }))
 
-      const props: TemplateContextMetadata = {
-        template: stepTemplateMock as NGTemplateInfoConfig,
+      const props: WrappedComponentProps = {
         deleteTemplateCache: jest.fn(),
-        gitDetails: {
+        updatedGitDetails: {
           branch: 'feature',
           filePath: 'test_pipeline.yaml',
           repoIdentifier: 'gitSyncRepo',

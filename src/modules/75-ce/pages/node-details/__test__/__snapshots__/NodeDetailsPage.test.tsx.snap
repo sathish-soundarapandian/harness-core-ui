@@ -132,7 +132,7 @@ exports[`test cases for Node details Page should be able to render the details p
     </div>
   </div>
   <div
-    class="StyledProps--font StyledProps--main PageBody--pageBody"
+    class="StyledProps--font StyledProps--main PageBody--pageBody pageCtn"
     data-name="page-body"
   >
     <div

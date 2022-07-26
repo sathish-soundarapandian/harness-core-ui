@@ -27,7 +27,6 @@ commentModal:
 createNewModal:
   heading: 'Create New {{ entity }} Template'
   editHeading: 'Edit {{ entity }} Template'
-  versionLabel: Version Label
   label: Label
   nameError: 'Template Name'
   namePlaceholder: 'New {{entity}} Template Name'

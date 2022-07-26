@@ -85,6 +85,7 @@ import { OsTypes } from '@pipeline/utils/constants'
 import { BuildTabs } from '../CIPipelineStagesUtils'
 import {
   KUBERNETES_HOSTED_INFRA_ID,
+  ProvisionedByHarnessDelegateGroupIdentifier,
   ProvisioningStatus
 } from '../../../pages/get-started-with-ci/InfraProvisioningWizard/Constants'
 import { InfraProvisioningCarousel } from '../../../pages/get-started-with-ci/InfraProvisioningCarousel/InfraProvisioningCarousel'
@@ -99,7 +100,6 @@ const logger = loggerFor(ModuleName.CD)
 const k8sClusterKeyRef = 'connectors.title.k8sCluster'
 const namespaceKeyRef = 'pipelineSteps.build.infraSpecifications.namespace'
 const poolNameKeyRef = 'pipeline.buildInfra.poolName'
-const provisionedByHarnessDelegateIdentifier = '_harness_kubernetes_delegate' // unique identifier of delegate installed and managed by Harness for Hosted by Harness infra offering
 
 interface KubernetesBuildInfraFormValues {
   connectorRef?: string
@@ -335,7 +335,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
     refetch: fetchDelegateDetails,
     loading: fetchingDelegateDetails
   } = useGetDelegateGroupByIdentifier({
-    identifier: provisionedByHarnessDelegateIdentifier,
+    identifier: ProvisionedByHarnessDelegateGroupIdentifier,
     queryParams: { accountId },
     lazy: true
   })
