@@ -11,7 +11,7 @@ scans: Scans
 exemptions: Exemptions
 noScansText: There are no Security Test runs in your project
 noScansRunPipelineText: No Security Test pipelines have run yet. Click the button below to run a pipeline.
-noSecurityTests: No Security Tests executed
+noSecurityResults: No Security Results Processed
 failedToGetIssueCounts: Failed to get issue counts
 noSecurityIssues: No Security Issues
 Critical: Critical

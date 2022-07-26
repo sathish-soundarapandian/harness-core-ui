@@ -6702,7 +6702,7 @@ export interface StringsMap {
   'stoSteps.noScansRunPipelineText': string
   'stoSteps.noScansText': string
   'stoSteps.noSecurityIssues': string
-  'stoSteps.noSecurityTests': string
+  'stoSteps.noSecurityResults': string
   'stoSteps.scans': string
   'stoSteps.securityReview': string
   'stoSteps.securityStage.description': string
