@@ -161,6 +161,7 @@ export const renderBuild = ({
   const prefix = isEmpty(path) ? '' : `${path}.`
   const buildValue = get(formik?.values, `${prefix}spec.build`)
   const buildTypeValue = get(formik?.values, `${prefix}spec.build.type`)
+  // build.type is the fieldName but as runtime input, requires special handling as build: <+input>
   const isBuildRuntimeInput = isRuntimeInput(buildValue) && stepViewType === StepViewType.InputSet
   const isBuildTypeRuntimeInput = isRuntimeInput(buildTypeValue)
   const buildTypeError = get(formik?.errors, `${prefix}spec.build`)

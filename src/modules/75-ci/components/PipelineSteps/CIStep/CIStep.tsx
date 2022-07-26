@@ -69,6 +69,16 @@ export const CIStep: React.FC<CIStepProps> = props => {
   const prefix = isEmpty(path) ? '' : `${path}.`
 
   const stepCss = stepViewType === StepViewType.DeploymentForm ? css.sm : css.lg
+  // connectorAndRepoName inherently has margin
+  const connectorAndRepoNameCss =
+    isRuntimeInput(formik?.values?.spec?.connectorRef) || isRuntimeInput(formik?.values?.spec?.repoName)
+      ? css.bottomMargin2
+      : css.bottomMargin5
+  // build or build.type as runtime inherently has margin
+  const buildCss =
+    isRuntimeInput(formik?.values?.spec?.build) || isRuntimeInput(formik?.values?.spec?.build?.type)
+      ? css.bottomMargin2
+      : css.bottomMargin5
 
   const renderMultiTypeTextField = React.useCallback(
     ({
@@ -249,7 +259,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
         )
       ) : null}
       {get(enableFields, 'spec.connectorAndRepo') && formik && (
-        <Container className={(css.formGroup, stepCss, css.bottomMargin5)}>
+        <Container className={(css.formGroup, stepCss, connectorAndRepoNameCss)}>
           {renderConnectorAndRepoName({
             values: formik.values,
             setFieldValue: formik.setFieldValue,
@@ -307,15 +317,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
       ) : null}
 
       {get(enableFields, 'spec.build') && formik && (
-        <Container
-          className={cx(
-            css.formGroup,
-            stepCss,
-            !isRuntimeInput(formik?.values?.spec?.build) && !isRuntimeInput(formik?.values?.spec?.build?.type)
-              ? css.bottomMargin5
-              : css.bottomMargin2
-          )}
-        >
+        <Container className={cx(css.formGroup, stepCss, buildCss)}>
           {renderBuild({
             expressions,
             readonly,
@@ -330,15 +332,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
         </Container>
       )}
       {get(enableFields, 'spec.build.spec.branch') && formik && (
-        <Container
-          className={cx(
-            css.formGroup,
-            stepCss,
-            !isRuntimeInput(formik?.values?.spec?.build) && !isRuntimeInput(formik?.values?.spec?.build?.type)
-              ? css.bottomMargin5
-              : css.bottomMargin2
-          )}
-        >
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {renderBuildTypeInputField({
             getString,
             type: CodebaseTypes.BRANCH,
@@ -349,15 +343,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
         </Container>
       )}
       {get(enableFields, 'spec.build.spec.tag') && formik && (
-        <Container
-          className={cx(
-            css.formGroup,
-            stepCss,
-            !isRuntimeInput(formik?.values?.spec?.build) && !isRuntimeInput(formik?.values?.spec?.build?.type)
-              ? css.bottomMargin5
-              : css.bottomMargin2
-          )}
-        >
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {renderBuildTypeInputField({
             getString,
             type: CodebaseTypes.TAG,
