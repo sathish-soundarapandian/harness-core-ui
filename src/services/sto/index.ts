@@ -10,6 +10,7 @@ import { useGet } from 'restful-react'
 import type { GetState } from 'restful-react/dist/Get'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { getConfig } from 'services/config'
 
 export interface ErrorResponse {
   message: string
@@ -33,7 +34,8 @@ export function useIssueCounts(pipelineId: string, executionId: string): GetStat
   const { STO_API_V2 } = useFeatureFlags()
 
   let { data, ...rest } = useGet<IssueCounts | Record<string, IssueCounts>, ErrorResponse>({
-    path: `/sto/api/${STO_API_V2 ? 'v2/frontend' : 'v1'}/issue-counts`,
+    base: getConfig('sto/api'),
+    path: `/${STO_API_V2 ? 'v2/frontend' : 'v1'}/issue-counts`,
     queryParams: {
       accountId,
       orgId,
