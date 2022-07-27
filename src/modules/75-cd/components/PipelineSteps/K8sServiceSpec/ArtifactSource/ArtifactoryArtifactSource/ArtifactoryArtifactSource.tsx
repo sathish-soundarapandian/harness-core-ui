@@ -271,7 +271,9 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     refetch: refetchTags,
     error: fetchTagsError
   } = useMutateAsGet(useGetBuildDetailsForArtifactoryArtifactWithYaml, {
-    body: yamlStringify(formik?.values),
+    body: yamlStringify({
+      pipeline: formik?.values
+    }),
     requestOptions: {
       headers: {
         'content-type': 'application/json'

@@ -183,7 +183,9 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
             pipelineIdentifier: pipelineObj.identifier,
             fqnPath: path
           },
-          body: yamlStringify(pipelineObj)
+          body: yamlStringify({
+            pipeline: pipelineObj
+          })
         }).then(response => {
           return (
             response?.data?.buildDetailsList?.map(buildDetails => ({
