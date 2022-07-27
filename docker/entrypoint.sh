@@ -11,6 +11,22 @@ then
   NGINX_CONFIG_FILE="/etc/nginx/nginx-ipv6-only.conf"
 fi
 
+echo "whoami"
+whoami
+
+echo "pwd"
+pwd
+
+echo "ls pwd"
+ls -l 
+
+echo "ls etc"
+ls -l /etc
+
+echo "ls opt"
+ls -l /opt
+ls -l /opt/nextgenui
+
 sed -i "s|<\!-- apiurl -->|<script>window.apiUrl = '$API_URL'</script>|" index.html
 sed -i "s|HARNESS_ENABLE_NG_AUTH_UI_PLACEHOLDER|$HARNESS_ENABLE_NG_AUTH_UI_PLACEHOLDER|" index.html
 sed -i "s|HARNESS_ENABLE_FULL_STORY_PLACEHOLDER|$HARNESS_ENABLE_FULL_STORY_PLACEHOLDER|" index.html
