@@ -565,6 +565,32 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
               })}
         </Container>
       )}
+      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.entryPoint') ? (
+        isInputSetView ? (
+          <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+            {renderMultiTypeListInputSet({
+              name: `${prefix}spec.entryPoint`,
+              tooltipId: 'entryPoint',
+              labelKey: 'entryPointLabel',
+              allowedTypes: SupportedInputTypesForListTypeFieldInInputSetView,
+              allowedTypesForEntries: SupportedInputTypesForListItems,
+              expressions,
+              getString,
+              readonly,
+              formik
+            })}
+          </Container>
+        ) : (
+          <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+            {renderMultiTypeList({
+              name: `${prefix}spec.entryPoint`,
+              labelKey: 'entryPointLabel',
+              allowedTypes: SupportedInputTypesForListTypeField,
+              allowedTypesForEntries: SupportedInputTypesForListItems
+            })}
+          </Container>
+        )
+      ) : null}
       {Object.prototype.hasOwnProperty.call(enableFields, 'spec.outputVariables') && (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {isInputSetView

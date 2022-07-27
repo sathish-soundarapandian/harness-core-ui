@@ -127,7 +127,8 @@ export const PluginStepBase = (
                           ].includes(buildInfrastructureType)
                         },
                         'spec.settings': {},
-                        'spec.reportPaths': {}
+                        'spec.reportPaths': {},
+                        'spec.entryPoint': {}
                       }}
                     />
                     <StepCommonFields
