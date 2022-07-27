@@ -9,8 +9,9 @@ COPY docker/nginx-ipv6-only.conf /etc/nginx/
 
 WORKDIR /opt/nextgenui
 
-RUN chown 65534:65534 -R /opt/nextgenui
+RUN chown 65534:65534 -R /etc/nginx
 RUN chown 65534:65534 -R /var/log/nginx
+RUN chown 65534:65534 -R /opt/nextgenui
 RUN chown 65534:65534 -R /tmp
 USER 65534
 
