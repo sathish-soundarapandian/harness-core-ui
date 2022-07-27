@@ -23,7 +23,7 @@ import copy from 'copy-to-clipboard'
 import { useParams } from 'react-router-dom'
 import type { IconName } from '@blueprintjs/icons'
 import { defaultTo, get } from 'lodash-es'
-import { Classes, Menu, Popover, Position } from '@blueprintjs/core'
+import { Menu, Popover, Position } from '@blueprintjs/core'
 // import { Dialog, IconName, IDialogProps } from '@blueprintjs/core'
 import { AccessPoint, useAccessPointActivity, useAccessPointRules, useAllAccessPoints } from 'services/lw'
 import { useToaster } from '@common/exports'
@@ -188,7 +188,6 @@ const RenderColumnMenu = (
         onInteraction={nextOpenState => {
           setMenuOpen(nextOpenState)
         }}
-        className={Classes.DARK}
         position={Position.BOTTOM_RIGHT}
       >
         <RbacButton
