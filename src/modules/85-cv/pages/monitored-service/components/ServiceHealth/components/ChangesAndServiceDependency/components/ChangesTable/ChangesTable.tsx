@@ -21,11 +21,12 @@ import routes from '@common/RouteDefinitions'
 import noDataImage from '@cv/assets/noChangesData.svg'
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
 import type { ChangesTableContentWrapper, ChangesTableInterface } from './ChangesTable.types'
-import { renderTime, renderName, renderImpact, renderType, renderChangeType } from './ChangesTable.utils'
+import { renderTime, renderImpact, renderType, renderChangeType } from './ChangesTable.utils'
 import { PAGE_SIZE } from './ChangesTable.constants'
 import ChangeEventCard from './components/ChangeEventCard/ChangeEventCard'
 import ChangesTableWrapper from './ChangesTableWrapper'
 import css from './ChangeTable.module.scss'
+import { ChangeTableName } from './ChangeTableName'
 
 export default function ChangesTable({
   isCardView = true,
@@ -39,7 +40,7 @@ export default function ChangesTable({
   changeCategories,
   changeSourceTypes,
   recordsPerPage,
-  dataTooltipId
+  dataTooltipId,
 }: ChangesTableInterface): JSX.Element {
   const [page, setPage] = useState(0)
   const { getString } = useStrings()
@@ -60,6 +61,9 @@ export default function ChangesTable({
   useEffect(() => {
     setPage(0)
   }, [startTime, endTime])
+
+  
+
 
   const changeEventListQueryParams = useMemo(() => {
     return {
@@ -129,7 +133,7 @@ export default function ChangesTable({
         },
         {
           Header: getString('name'),
-          Cell: renderName,
+          Cell: ChangeTableName,
           accessor: 'name',
           width: '30%'
         },
