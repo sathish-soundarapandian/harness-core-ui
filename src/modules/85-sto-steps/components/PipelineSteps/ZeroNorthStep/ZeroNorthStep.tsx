@@ -18,7 +18,6 @@ import type {
   MultiTypeSelectOption,
   MultiTypeMapType,
   MultiTypeMapUIType,
-  MultiTypeConnectorRef,
   Resources,
   MultiTypeListUIType
 } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
@@ -29,7 +28,6 @@ import { ZeroNorthStepVariables, ZeroNorthStepVariablesProps } from './ZeroNorth
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './ZeroNorthStepFunctionConfigs'
 
 export interface ZeroNorthStepSpec {
-  connectorRef: string
   privileged?: boolean
   settings?: MultiTypeMapType
   imagePullPolicy?: MultiTypeSelectOption
@@ -46,9 +44,7 @@ export interface ZeroNorthStepData {
   spec: ZeroNorthStepSpec
 }
 
-export interface ZeroNorthStepSpecUI
-  extends Omit<ZeroNorthStepSpec, 'connectorRef' | 'reports' | 'settings' | 'pull' | 'resources'> {
-  connectorRef: MultiTypeConnectorRef
+export interface ZeroNorthStepSpecUI extends Omit<ZeroNorthStepSpec, 'reports' | 'settings' | 'pull' | 'resources'> {
   reportPaths?: MultiTypeListUIType
   settings?: MultiTypeMapUIType
   // Right now we do not support Image Pull Policy but will do in the future
@@ -92,7 +88,6 @@ export class ZeroNorthStep extends PipelineStep<ZeroNorthStepData> {
     identifier: '',
     type: StepType.ZeroNorth as string,
     spec: {
-      connectorRef: 'account.harnessImage',
       privileged: true,
       settings: {
         policy_type: 'orchestratedScan',
@@ -114,9 +109,8 @@ export class ZeroNorthStep extends PipelineStep<ZeroNorthStepData> {
     getString,
     viewType
   }: ValidateInputSetProps<ZeroNorthStepData>): FormikErrors<ZeroNorthStepData> {
-    const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (getString) {
-      return validateInputSet(data, template, getInputSetViewValidateFieldsConfig(isRequired), { getString }, viewType)
+      return validateInputSet(data, template, getInputSetViewValidateFieldsConfig(), { getString }, viewType)
     }
 
     return {}
