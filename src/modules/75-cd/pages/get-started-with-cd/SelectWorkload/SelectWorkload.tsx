@@ -43,7 +43,7 @@ import { useCDOnboardingContext } from '../CDOnboardingStore'
 import { cleanServiceDataUtil, getUniqueEntityIdentifier, newServiceState } from '../cdOnboardingUtils'
 import css from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
-export interface SelectWorkloadRef {
+export interface SelectWorkloadRefInstance {
   submitForm?: FormikProps<SelectWorkloadInterface>['submitForm']
 }
 export interface SelectWorkloadInterface {
@@ -58,8 +58,8 @@ interface SelectWorkloadProps {
 }
 
 export type SelectWorkloadForwardRef =
-  | ((instance: SelectWorkloadRef | null) => void)
-  | React.MutableRefObject<SelectWorkloadRef | null>
+  | ((instance: SelectWorkloadRefInstance | null) => void)
+  | React.MutableRefObject<SelectWorkloadRefInstance | null>
   | null
 
 const SelectWorkloadRef = (props: SelectWorkloadProps, forwardRef: SelectWorkloadForwardRef): React.ReactElement => {

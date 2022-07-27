@@ -27,9 +27,9 @@ import routes from '@common/RouteDefinitions'
 import type { UserRepoResponse } from 'services/cd-ng'
 import { StringUtils } from '@common/exports'
 import { WizardStep, StepStatus, DeployProvisiongWizardStepId, DeployProvisioningWizardProps } from './Constants'
-import { SelectWorkload, SelectWorkloadRef } from '../SelectWorkload/SelectWorkload'
-import { SelectInfrastructure, SelectInfrastructureRef } from '../SelectInfrastructure/SelectInfrastructure'
-import { SelectArtifact, SelectArtifactRef } from '../SelectArtifact/SelectArtifact'
+import { SelectWorkload, SelectWorkloadRefInstance } from '../SelectWorkload/SelectWorkload'
+import { SelectInfrastructure, SelectInfrastructureRefInstance } from '../SelectInfrastructure/SelectInfrastructure'
+import { SelectArtifact, SelectArtifactRefInstance } from '../SelectArtifact/SelectArtifact'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import { DEFAULT_PIPELINE_PAYLOAD, getUniqueEntityIdentifier, PipelineRefPayload } from '../cdOnboardingUtils'
 import css from './DeployProvisioningWizard.module.scss'
@@ -42,9 +42,9 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
   const [currentWizardStepId, setCurrentWizardStepId] =
     useState<DeployProvisiongWizardStepId>(lastConfiguredWizardStepId)
 
-  const selectWorkloadRef = React.useRef<SelectWorkloadRef | null>(null)
-  const selectArtifactRef = React.useRef<SelectArtifactRef | null>(null)
-  const selectInfrastructureRef = React.useRef<SelectInfrastructureRef | null>(null)
+  const selectWorkloadRef = React.useRef<SelectWorkloadRefInstance | null>(null)
+  const selectArtifactRef = React.useRef<SelectArtifactRefInstance | null>(null)
+  const selectInfrastructureRef = React.useRef<SelectInfrastructureRefInstance | null>(null)
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
@@ -63,12 +63,12 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
   } = useCDOnboardingContext()
 
   const constructPipelinePayload = React.useCallback(
-    (repository: UserRepoResponse, data: PipelineRefPayload): string | undefined => {
+    (repository: UserRepoResponse, data: PipelineRefPayload): string => {
       const { name: repoName, namespace } = repository
       const { serviceRef, environmentRef, infraStructureRef, deploymentType } = data
 
       if (!repoName || !namespace || !serviceRef || !environmentRef || !infraStructureRef) {
-        return
+        return ''
       }
       const uniquePipelineId = getUniqueEntityIdentifier(repoName)
       const payload = DEFAULT_PIPELINE_PAYLOAD
@@ -87,15 +87,16 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
         return yamlStringify(payload)
       } catch (e) {
         // Ignore error
+        return ''
       }
     },
-    [projectIdentifier, orgIdentifier]
+    [getString, projectIdentifier, orgIdentifier]
   )
 
   const setupPipeline = (data: PipelineRefPayload): void => {
     try {
       createPipelineV2Promise({
-        body: constructPipelinePayload(get(serviceData, 'data.repoValues'), data) || '',
+        body: constructPipelinePayload(get(serviceData, 'data.repoValues'), data),
         queryParams: {
           accountIdentifier: accountId,
           orgIdentifier,

@@ -44,7 +44,7 @@ import { InfrastructureTypes, InfrastructureType } from '../DeployProvisioningWi
 import {
   SelectAuthenticationMethod,
   SelectAuthenticationMethodInterface,
-  SelectAuthenticationMethodRef
+  SelectAuthenticationMethodRefInstance
 } from './SelectAuthenticationMethod'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import {
@@ -56,7 +56,7 @@ import {
 import defaultCss from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 import css from './SelectInfrastructure.module.scss'
 
-export interface SelectInfrastructureRef {
+export interface SelectInfrastructureRefInstance {
   submitForm?: FormikProps<SelectInfrastructureInterface>['submitForm']
 }
 export interface SelectInfrastructureInterface extends SelectAuthenticationMethodInterface {
@@ -73,8 +73,8 @@ interface SelectInfrastructureProps {
 }
 
 export type SelectInfrastructureForwardRef =
-  | ((instance: SelectInfrastructureRef | null) => void)
-  | React.MutableRefObject<SelectInfrastructureRef | null>
+  | ((instance: SelectInfrastructureRefInstance | null) => void)
+  | React.MutableRefObject<SelectInfrastructureRefInstance | null>
   | null
 
 const SelectInfrastructureRef = (
@@ -92,7 +92,7 @@ const SelectInfrastructureRef = (
     InfrastructureTypes.find((item: InfrastructureType) => item.value === infrastructureData?.type)
   )
   const formikRef = useRef<FormikContextType<SelectInfrastructureInterface>>()
-  const selectAuthenticationMethodRef = React.useRef<SelectAuthenticationMethodRef | null>(null)
+  const selectAuthenticationMethodRef = React.useRef<SelectAuthenticationMethodRefInstance | null>(null)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getRBACErrorMessage } = useRBACError()
   const [showPageLoader, setShowPageLoader] = useState<boolean>(false)

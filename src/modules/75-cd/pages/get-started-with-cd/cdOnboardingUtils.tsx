@@ -251,6 +251,7 @@ export const getOAuthConnectorPayload = ({
   )
   /*istanbul ignore next */
   updatedConnectorPayload = set(OAuthConnectorPayload, 'connector.type', gitProviderType)
+  /*istanbul ignore next */
   switch (gitProviderType) {
     case Connectors.GITHUB:
       updatedConnectorPayload = set(OAuthConnectorPayload, 'connector.spec.authentication.spec.spec', { tokenRef })

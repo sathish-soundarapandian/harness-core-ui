@@ -33,7 +33,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { TestStatus } from '@common/components/TestConnectionWidget/TestConnectionWidget'
-import type { SelectGitProviderRef } from './SelectGitProvider'
+import type { SelectGitProviderRefInstance } from './SelectGitProvider'
 import { ACCOUNT_SCOPE_PREFIX, ArtifactProviders, ArtifactType, Hosting } from '../DeployProvisioningWizard/Constants'
 
 import { SelectGitProvider } from './SelectGitProvider'
@@ -43,7 +43,7 @@ import { useCDOnboardingContext } from '../CDOnboardingStore'
 import { getStoreType, ServiceDataType } from '../cdOnboardingUtils'
 import css from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
-export interface SelectArtifactRef {
+export interface SelectArtifactRefInstance {
   submitForm?: FormikProps<SelectArtifactInterface>['submitForm']
   resetForm?: FormikProps<SelectArtifactInterface>['resetForm']
 }
@@ -65,8 +65,8 @@ interface SelectArtifactProps {
 }
 
 export type SelectArtifactForwardRef =
-  | ((instance: SelectArtifactRef | null) => void)
-  | React.MutableRefObject<SelectArtifactRef | null>
+  | ((instance: SelectArtifactRefInstance | null) => void)
+  | React.MutableRefObject<SelectArtifactRefInstance | null>
   | null
 
 const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifactForwardRef): React.ReactElement => {
@@ -81,7 +81,7 @@ const SelectArtifactRef = (props: SelectArtifactProps, forwardRef: SelectArtifac
     ArtifactProviders.find((item: ArtifactType) => item.value === serviceData?.data?.artifactType)
   )
   const formikRef = useRef<FormikContextType<SelectArtifactInterface>>()
-  const selectGitProviderRef = React.useRef<SelectGitProviderRef | null>(null)
+  const selectGitProviderRef = React.useRef<SelectGitProviderRefInstance | null>(null)
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 

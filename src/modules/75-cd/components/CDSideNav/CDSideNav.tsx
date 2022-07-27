@@ -66,7 +66,6 @@ export default function CDSideNav(): React.ReactElement {
   const module = 'cd'
   const { updateAppStore, selectedProject } = useAppStore()
   const { ARGO_PHASE1, ARGO_PHASE2_MANAGED, CD_ONBOARDING_ENABLED } = useFeatureFlags()
-  // const CIE_HOSTED_BUILDS = true
   const CI_OVERVIEW_PAGE = true
   const { getString } = useStrings()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()

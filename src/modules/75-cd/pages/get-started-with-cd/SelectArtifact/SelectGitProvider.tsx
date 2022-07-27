@@ -74,7 +74,7 @@ import {
 import { getOAuthConnectorPayload } from '../cdOnboardingUtils'
 import css from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
-export interface SelectGitProviderRef {
+export interface SelectGitProviderRefInstance {
   testConnectionStatus?: TestStatus // added
   values: SelectGitProviderInterface
   setFieldTouched(field: keyof SelectGitProviderInterface & string, isTouched?: boolean, shouldValidate?: boolean): void
@@ -85,8 +85,8 @@ export interface SelectGitProviderRef {
 }
 
 export type SelectGitProviderForwardRef =
-  | ((instance: SelectGitProviderRef | null) => void)
-  | React.MutableRefObject<SelectGitProviderRef | null>
+  | ((instance: SelectGitProviderRefInstance | null) => void)
+  | React.MutableRefObject<SelectGitProviderRefInstance | null>
   | null
 
 interface SelectGitProviderProps {
@@ -268,7 +268,7 @@ const SelectGitProviderRef = (
     setFieldTouched,
     validatedConnector,
     validatedSecret
-  }: Omit<SelectGitProviderRef, 'validate' | 'showValidationErrors'>): void => {
+  }: Omit<SelectGitProviderRefInstance, 'validate' | 'showValidationErrors'>): void => {
     if (!forwardRef) {
       return
     }

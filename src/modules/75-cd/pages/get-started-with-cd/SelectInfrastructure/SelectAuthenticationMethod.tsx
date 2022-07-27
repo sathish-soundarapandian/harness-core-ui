@@ -46,14 +46,14 @@ interface DelegateSelectorStepData extends BuildPayloadProps {
   delegateSelectors: Array<string>
 }
 
-export interface SelectAuthenticationMethodRef {
+export interface SelectAuthenticationMethodRefInstance {
   validate: () => boolean
   submitForm?: FormikProps<SelectAuthenticationMethodInterface>['submitForm']
 }
 
 export type SelectAuthMethodForwardRef =
-  | ((instance: SelectAuthenticationMethodRef | null) => void)
-  | React.MutableRefObject<SelectAuthenticationMethodRef | null>
+  | ((instance: SelectAuthenticationMethodRefInstance | null) => void)
+  | React.MutableRefObject<SelectAuthenticationMethodRefInstance | null>
   | null
 
 export interface SelectAuthenticationMethodInterface {

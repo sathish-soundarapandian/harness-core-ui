@@ -29,13 +29,13 @@ import { ACCOUNT_SCOPE_PREFIX, getFullRepoName } from '../DeployProvisioningWiza
 
 import css from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
-export interface SelectRepositoryRef {
+export interface SelectRepositoryRefInstance {
   repository: UserRepoResponse
 }
 
 export type SelectRepositoryForwardRef =
-  | ((instance: SelectRepositoryRef | null) => void)
-  | React.MutableRefObject<SelectRepositoryRef | null>
+  | ((instance: SelectRepositoryRefInstance | null) => void)
+  | React.MutableRefObject<SelectRepositoryRefInstance | null>
   | null
 
 interface SelectRepositoryProps {
