@@ -62,7 +62,8 @@ export const ArtifactIconByType: Record<ArtifactType, IconName> = {
   CustomArtifact: 'custom-artifact',
   Acr: 'service-azure',
   Jenkins: 'service-jenkins',
-  AmazonS3: 'service-service-s3'
+  AmazonS3: 'service-service-s3',
+  GithubPackageRegistry: 'service-github'
 }
 
 export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
@@ -74,7 +75,8 @@ export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
   CustomArtifact: 'common.repo_provider.customLabel',
   Acr: 'pipeline.ACR.name',
   Jenkins: 'connectors.jenkins.jenkins',
-  AmazonS3: 'pipeline.artifactsSelection.amazonS3Title'
+  AmazonS3: 'pipeline.artifactsSelection.amazonS3Title',
+  GithubPackageRegistry: 'pipeline.artifactsSelection.githubPackageRegistryTitle'
 }
 
 export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
@@ -86,7 +88,8 @@ export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
   CustomArtifact: 'CustomArtifact',
   Acr: 'Acr',
   Jenkins: 'Jenkins',
-  AmazonS3: 'AmazonS3'
+  AmazonS3: 'AmazonS3',
+  GithubPackageRegistry: 'GithubPackageRegistry'
 }
 
 export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = {

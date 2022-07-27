@@ -54,6 +54,7 @@ export type ArtifactType =
   | 'Acr'
   | 'Jenkins'
   | 'AmazonS3'
+  | 'GithubPackageRegistry'
 export interface OrganizationCreationType {
   type: ArtifactType
 }

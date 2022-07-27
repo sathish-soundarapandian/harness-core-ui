@@ -765,6 +765,7 @@ artifactsSelection:
   filePathRegexLabel: File Path Regex
   filePathRegexPlaceholder: Enter File Path Regex
   amazonS3Title: Amazon S3
+  githubPackageRegistryTitle: Github Packages
   existingDocker:
     sidecarId: Sidecar Identifier
     sidecarIdPlaceholder: Enter Artifact Identifier
