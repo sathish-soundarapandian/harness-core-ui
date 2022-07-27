@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useLocation } from 'react-router-dom'
 import { isEmpty, startCase } from 'lodash-es'
 import cx from 'classnames'
 import { Container, Layout, MultiTypeInputType, Text, FormInput, AllowedTypes } from '@wings-software/uicore'
@@ -58,6 +58,10 @@ export interface CIStepOptionalConfigProps {
   stepType?: StepType // See RunAndRunTestStepInputCommonFields
 }
 
+const PathnameParams = {
+  PIPELINE_STUDIO: 'pipeline-studio',
+  TEMPLATE_STUDIO: 'template-studio'
+}
 export const getOptionalSubLabel = (
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
   tooltip?: string
@@ -195,9 +199,12 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
     orgIdentifier: string
     accountId: string
   }>()
-
+  const pathnameParams = useLocation()?.pathname?.split('/') || []
+  // applying template should allow editing and all runtime inputs
+  const isApplyingTemplate =
+    isInputSetView &&
+    (pathnameParams.includes(PathnameParams.PIPELINE_STUDIO) || pathnameParams.includes(PathnameParams.TEMPLATE_STUDIO))
   const stepCss = stepViewType === StepViewType.DeploymentForm ? css.sm : css.lg
-
   const renderMultiTypeMap = React.useCallback(
     ({
       fieldName,
@@ -572,7 +579,9 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
               name: `${prefix}spec.entryPoint`,
               tooltipId: 'entryPoint',
               labelKey: 'entryPointLabel',
-              allowedTypes: SupportedInputTypesForListTypeFieldInInputSetView,
+              allowedTypes: isApplyingTemplate
+                ? SupportedInputTypesForListTypeField
+                : SupportedInputTypesForListTypeFieldInInputSetView,
               allowedTypesForEntries: SupportedInputTypesForListItems,
               expressions,
               getString,
