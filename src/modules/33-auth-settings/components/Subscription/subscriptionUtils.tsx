@@ -254,12 +254,7 @@ export function getSubscriptionBreakdownsByModuleAndFrequency({
       if (paymentFreq === TimeType.YEARLY) {
         const developerUnitPrice = getDollarAmount(
           productPrices.yearly?.find(product => {
-            return isSelectedPlan(
-              product,
-              subscriptionDetails.premiumSupport,
-              subscriptionDetails.edition,
-              PLAN_TYPES.DEVELOPERS
-            )
+            return isSelectedPlan(product, false, subscriptionDetails.edition, PLAN_TYPES.DEVELOPERS)
           })?.unitAmount
         )
 
@@ -274,12 +269,15 @@ export function getSubscriptionBreakdownsByModuleAndFrequency({
 
         const mauUnitPrice = getDollarAmount(
           productPrices.yearly?.find(productPrice => {
-            const numMausFromMap = numberOfMauYearly * 1000
-            const priceMin = strToNumber(productPrice.metaData?.min || '')
-            const priceMax = strToNumber(productPrice.metaData?.max || '')
-            const isValidRange = numMausFromMap >= priceMin && numMausFromMap <= priceMax
-            if (productPrice.metaData?.type === getPlanType(PLAN_TYPES.MAU) && isValidRange) {
-              return productPrice
+            const isSamePlan = isSelectedPlan(productPrice, false, subscriptionDetails.edition, PLAN_TYPES.MAU)
+            if (isSamePlan) {
+              const numMausFromMap = numberOfMauYearly * 1000
+              const priceMin = strToNumber(productPrice.metaData?.min || '')
+              const priceMax = strToNumber(productPrice.metaData?.max || '')
+              const isValidRange = numMausFromMap >= priceMin && numMausFromMap <= priceMax
+              if (isValidRange) {
+                return productPrice
+              }
             }
           })?.unitAmount
         )

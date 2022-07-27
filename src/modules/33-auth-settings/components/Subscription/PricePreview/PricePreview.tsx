@@ -113,18 +113,18 @@ const PricePreview: React.FC<PricePreviewProps> = ({ module, subscriptionDetails
         if (isValidRange) {
           return price
         }
-        return price
       }
     })?.unitAmount
   )
   const colorBorder = getColorByModule(module)
+  console.log({ premiumSupportUnitPriceForMau, premiumSupportUnitPriceForDevs })
   const premiumSupportUnitPrice = premiumSupportUnitPriceForMau + premiumSupportUnitPriceForDevs
   const devAmount = products[0].quantity * products[0].unitPrice
   let totalAmount = devAmount
   if (paymentFreq === TimeType.YEARLY) {
     const mauUnitAmount = getDollarAmount(
       productPrices.yearly.find(price => {
-        const isSamePlan = isSelectedPlan(price, premiumSupport, subscriptionDetails.edition, PLAN_TYPES.MAU)
+        const isSamePlan = isSelectedPlan(price, false, subscriptionDetails.edition, PLAN_TYPES.MAU)
         if (isSamePlan) {
           const numMausFromMap = numberOfMau * toInteger(price.metaData?.sampleMultiplier)
           const priceMin = strToNumber(price.metaData?.min || '')
