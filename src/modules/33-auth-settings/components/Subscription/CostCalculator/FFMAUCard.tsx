@@ -141,11 +141,11 @@ const FFMAUCard: React.FC<FFMAUCardProps> = ({
       })
     } else {
       setMausRange({
-        min: defaultTo(minValue, 0),
-        max: 25,
+        min: 0,
+        max: 20,
         stepSize: 5,
         labelStepSize: 5,
-        list: [0, 5, 10, 15, 20, 25],
+        list: [0, 1, 5, 10, 15, 20],
         unit: defaultTo(unit, '')
       })
     }
@@ -165,6 +165,9 @@ const FFMAUCard: React.FC<FFMAUCardProps> = ({
           value={numberOfMAUs === 0 ? minValue : numberOfMAUs}
           setValue={setNumberOfMAUs}
           unit={mausRange.unit}
+          labelRenderer={(value: number) => {
+            return `${value === 0 ? mausRange.min : value}`
+          }}
         />
       </Layout.Vertical>
     </Card>

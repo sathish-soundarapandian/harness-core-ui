@@ -117,7 +117,6 @@ const PricePreview: React.FC<PricePreviewProps> = ({ module, subscriptionDetails
     })?.unitAmount
   )
   const colorBorder = getColorByModule(module)
-  console.log({ premiumSupportUnitPriceForMau, premiumSupportUnitPriceForDevs })
   const premiumSupportUnitPrice = premiumSupportUnitPriceForMau + premiumSupportUnitPriceForDevs
   const devAmount = products[0].quantity * products[0].unitPrice
   let totalAmount = devAmount

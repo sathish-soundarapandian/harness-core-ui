@@ -17,8 +17,17 @@ interface SliderWrapperProps {
   labelStepSize: number
   value: number
   onChange: (value: number) => void
+  labelRenderer?: (value: number) => string | JSX.Element
 }
-const SliderWrapper: React.FC<SliderWrapperProps> = ({ min, max, stepSize, labelStepSize, value, onChange }) => {
+const SliderWrapper: React.FC<SliderWrapperProps> = ({
+  min,
+  max,
+  stepSize,
+  labelStepSize,
+  value,
+  onChange,
+  labelRenderer
+}) => {
   return (
     <Slider
       className={css.slider}
@@ -28,6 +37,7 @@ const SliderWrapper: React.FC<SliderWrapperProps> = ({ min, max, stepSize, label
       value={value}
       onChange={onChange}
       labelStepSize={labelStepSize}
+      labelRenderer={labelRenderer}
     />
   )
 }
@@ -41,9 +51,20 @@ interface SliderBarProps {
   value: number
   setValue: (value: number) => void
   unit?: string
+  labelRenderer?: (value: number) => string | JSX.Element
 }
 
-const SliderBar: React.FC<SliderBarProps> = ({ min, max, stepSize, labelStepSize, list, value, setValue, unit }) => {
+const SliderBar: React.FC<SliderBarProps> = ({
+  min,
+  max,
+  stepSize,
+  labelStepSize,
+  list,
+  value,
+  setValue,
+  unit,
+  labelRenderer
+}) => {
   const dropdownList = React.useMemo(() => {
     return (
       list?.reduce((accumulator: SelectOption[], current) => {
@@ -59,6 +80,7 @@ const SliderBar: React.FC<SliderBarProps> = ({ min, max, stepSize, labelStepSize
   return (
     <Layout.Horizontal spacing={'large'}>
       <SliderWrapper
+        labelRenderer={labelRenderer}
         min={min}
         max={max}
         stepSize={stepSize}
@@ -82,7 +104,11 @@ const SliderBar: React.FC<SliderBarProps> = ({ min, max, stepSize, labelStepSize
       ) : (
         <TextInput
           data-testid="slider-input"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setValue(Number(e.target.value))}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            const val = Math.abs(Number(e.target.value))
+            const maxValue = Math.abs(Number(max))
+            return setValue(val > maxValue ? maxValue : val)
+          }}
           value={value.toString()}
           className={css.textInput}
         />

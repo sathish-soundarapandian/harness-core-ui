@@ -22,6 +22,7 @@ export interface LineProps {
   underComment?: string
   unit?: string
   isMau?: boolean
+  minValue?: number
 }
 
 export const PricePreviewLine: React.FC<LineProps> = ({
@@ -31,7 +32,8 @@ export const PricePreviewLine: React.FC<LineProps> = ({
   underComment,
   quantity = 0,
   paymentFrequency,
-  unit = ''
+  unit = '',
+  minValue
 }) => {
   const { getString } = useStrings()
   const isDevPreview = description?.includes('developers')
@@ -47,13 +49,14 @@ export const PricePreviewLine: React.FC<LineProps> = ({
     unitDescr = (
       <Layout.Vertical>
         <Text>{breakdownDescr}</Text>
-        <Text font={{ size: 'xsmall' }}>{getString(underComment as keyof StringsMap)}</Text>
+        <Text font={{ size: 'xsmall' }}>
+          {minValue ? getString(underComment as keyof StringsMap, { minValue: `${minValue}${unit}` }) : null}
+        </Text>
       </Layout.Vertical>
     )
   } else if (unitDescription) {
     unitDescr = <Text>{breakdownDescr}</Text>
   }
-
   return (
     <Layout.Vertical className={css.line} padding={{ top: 'small', bottom: 'small' }}>
       <Layout.Horizontal flex={{ justifyContent: 'space-between' }} padding={{ bottom: 'small' }}>

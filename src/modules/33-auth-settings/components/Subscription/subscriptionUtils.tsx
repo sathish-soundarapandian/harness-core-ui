@@ -132,6 +132,7 @@ export function getCostCalculatorBodyByModule({
             }}
           />
           <FFMAUCard
+            key={sampleData.minValue}
             minValue={sampleData.minValue}
             unit={sampleData.sampleUnit}
             currentPlan={currentPlan}
@@ -217,9 +218,7 @@ export function getSubscriptionBreakdownsByModuleAndFrequency({
       if (paymentFreq === TimeType.MONTHLY) {
         const developerUnitPrice = getDollarAmount(
           productPrices.monthly?.find(product => {
-            if (product.metaData?.type === getPlanType(PLAN_TYPES.DEVELOPERS)) {
-              return product.metaData?.type === getPlanType(PLAN_TYPES.DEVELOPERS)
-            }
+            return isSelectedPlan(product, false, subscriptionDetails.edition, PLAN_TYPES.DEVELOPERS)
           })?.unitAmount
         )
         products.push({
@@ -233,7 +232,7 @@ export function getSubscriptionBreakdownsByModuleAndFrequency({
         const numberOfMauMonthly = quantities?.featureFlag?.numberOfMau || 0
         const mauUnitPrice = getDollarAmount(
           productPrices.monthly?.find(productPrice => {
-            const numMausFromMap = numberOfMauMonthly * 1000
+            const numMausFromMap = numberOfMauMonthly * toInteger(productPrice.metaData?.sampleMultiplier)
             const priceMin = strToNumber(productPrice.metaData?.min || '')
             const priceMax = strToNumber(productPrice.metaData?.max || '')
             const isValidRange = numMausFromMap >= priceMin && numMausFromMap <= priceMax
@@ -271,7 +270,7 @@ export function getSubscriptionBreakdownsByModuleAndFrequency({
           productPrices.yearly?.find(productPrice => {
             const isSamePlan = isSelectedPlan(productPrice, false, subscriptionDetails.edition, PLAN_TYPES.MAU)
             if (isSamePlan) {
-              const numMausFromMap = numberOfMauYearly * 1000
+              const numMausFromMap = numberOfMauYearly * toInteger(productPrice.metaData?.sampleMultiplier)
               const priceMin = strToNumber(productPrice.metaData?.min || '')
               const priceMax = strToNumber(productPrice.metaData?.max || '')
               const isValidRange = numMausFromMap >= priceMin && numMausFromMap <= priceMax

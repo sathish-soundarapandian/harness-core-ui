@@ -167,7 +167,7 @@ costCalculator:
     perkMau: per 100k / month
     kMauFree: (first 100k included free)
     permMau: per 1M / month
-    mMauFree: (first 1M included free)
+    mMauFree: '(first {{minValue}} included free)'
 billing:
   totalDuetoday: 'Total due today: '
   next: 'Next: Final review'

@@ -122,7 +122,7 @@ const FFDeveloperCard: React.FC<FFDeveloperCardProps> = ({
     } else {
       setLicensesRange({
         min: 25,
-        max: 100,
+        max: 50,
         stepSize: 1,
         labelStepSize: 25
       })
@@ -141,6 +141,9 @@ const FFDeveloperCard: React.FC<FFDeveloperCardProps> = ({
           labelStepSize={licenseRange.labelStepSize}
           value={numberOfDevelopers === 0 ? 1 : numberOfDevelopers}
           setValue={setNumberOfDevelopers}
+          labelRenderer={(value: number) => {
+            return `${value === 0 ? licenseRange.min : value}`
+          }}
         />
       </Layout.Vertical>
     </Card>

@@ -63,6 +63,8 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
   const { getString } = useStrings()
   const { premiumSupport } = subscriptionDetails
   const unit = subscriptionDetails?.sampleDetails?.sampleUnit
+  const minValue = subscriptionDetails?.sampleDetails?.minValue
+
   return (
     <Layout.Vertical padding={{ bottom: 'large' }} spacing="large">
       <Text>{getString('common.subscriptions.overview.details')}</Text>
@@ -70,7 +72,7 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
         'common.subscriptions.overview.plan'
       )}`}</Text>
       {products.map(product => {
-        return <PricePreviewLine {...product} key={product.description} unit={unit} />
+        return <PricePreviewLine {...product} key={product.description} unit={unit} minValue={minValue} />
       })}
       {premiumSupport && <PremiumSupportLine premiumSupportAmount={premiumSupportAmount} />}
       <TaxLine taxAmount={taxAmount} />
