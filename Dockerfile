@@ -12,7 +12,7 @@ WORKDIR /opt/nextgenui
 RUN chown 65534:65534 -R /opt/nextgenui
 RUN chown 65534:65534 -R /var/log/nginx
 
-USER 65534
+#USER 65534
 
 EXPOSE 8080
 ENTRYPOINT ["sh", "/opt/entrypoint.sh"]
