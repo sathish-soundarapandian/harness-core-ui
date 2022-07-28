@@ -31,7 +31,7 @@ const ServiceDependencyGraph: React.FC<ServiceDependencyGraphProps> = ({
   serviceCountLoading,
   serviceCountErrorMessage,
   refetchServiceCountData,
-  //search
+  search
 }) => {
   const history = useHistory()
   const { getString } = useStrings()
@@ -57,7 +57,7 @@ const ServiceDependencyGraph: React.FC<ServiceDependencyGraphProps> = ({
   } = useGetServiceDependencyGraph({
     queryParams: {
       ...pathParams,
-      //filter: search,
+      filter: search,
       environmentIdentifier,
       monitoredServiceIdentifier,
       servicesAtRiskFilter: selectedFilter === FilterTypes.RISK
