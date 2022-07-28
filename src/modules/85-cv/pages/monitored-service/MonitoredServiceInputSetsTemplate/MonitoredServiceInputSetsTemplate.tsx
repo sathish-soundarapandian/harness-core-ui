@@ -223,7 +223,6 @@ export default function MonitoredServiceInputSetsTemplate({
                     versionLabel: templateRefData.versionLabel
                   }}
                   onOpenTemplateSelector={onUseTemplate}
-                  onRemoveTemplate={null as any}
                 />
                 <ServiceEnvironmentInputSet
                   serviceValue={formik.values.serviceRef}
