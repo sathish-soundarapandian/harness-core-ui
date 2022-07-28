@@ -32,6 +32,8 @@ const enableChaosUI = process.env.ENABLE_CHAOS === 'true'
 const enableCCMUI = process.env.ENABLE_CCM_UI === 'true'
 const enableSTO = process.env.ENABLE_STO !== 'false'
 
+console.log({ enableCCM: process.env.ENABLE_CCM_UI })
+
 console.log('Common build flags')
 console.table({ enableGovernance, enableGitOpsUI, enableChaosUI, enableCCMUI, enableSTO })
 
