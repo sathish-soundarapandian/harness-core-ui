@@ -23,7 +23,7 @@
                   "type": "Kubernetes",
                   "spec": {
                     "artifacts": { "sidecars": [], "primary": null },
-                    "startupScript": {
+                    "startupCommand": {
                       "type": "Git",
                       "spec": {
                         "connectorRef": "GIT2",

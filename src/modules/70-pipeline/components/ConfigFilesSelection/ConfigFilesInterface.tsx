@@ -13,6 +13,8 @@ import type { ServiceDefinition, StageElementConfig } from 'services/cd-ng'
 export interface ConfigFilesSelectionProps {
   isPropagating?: boolean
   deploymentType: ServiceDefinition['type']
+  readonly?: boolean
+  isReadonlyServiceMode: boolean
 }
 
 export interface ConfigFilesListViewProps {
@@ -25,6 +27,8 @@ export interface ConfigFilesListViewProps {
   selectedConfig: ConfigFileType
   setSelectedConfig: (config: ConfigFileType) => void
   selectedServiceResponse: any
+  isReadonlyServiceMode: boolean
+  serviceCacheId: string
 }
 
 export type ConfigFileType = 'Harness' | 'Git' | 'Gitlab' | 'Github' | 'Bitbucket'

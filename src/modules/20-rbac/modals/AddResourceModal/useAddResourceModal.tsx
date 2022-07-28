@@ -7,10 +7,11 @@
 
 import React, { useState } from 'react'
 import cx from 'classnames'
-import { Button } from '@wings-software/uicore'
+import { Dialog } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { Classes, Dialog } from '@blueprintjs/core'
 import type { ResourceType } from '@rbac/interfaces/ResourceType'
+import { useStrings } from 'framework/strings'
+import RbacFactory from '@rbac/factories/RbacFactory'
 import AddResourceModal from './views/AddResourceModal'
 import css from './useAddResourceModal.module.scss'
 
@@ -19,14 +20,18 @@ export interface UseAddResourceModalProps {
 }
 
 export interface UseAddResourceModalReturn {
-  openAddResourceModal: (resource: ResourceType, selectedItems: string[]) => void
+  openAddResourceModal: (resource: ResourceType, selectedItems: string[], isAttributeFilter: boolean) => void
   closeAddResourceModal: () => void
 }
 
 const useAddResourceModal = (props: UseAddResourceModalProps): UseAddResourceModalReturn => {
   const [resource, setResource] = useState<ResourceType>()
   const [selectedItems, setSelectedItems] = useState<string[]>([])
+  const [isAttributeFilter, setIsAttributeFilter] = useState<boolean>(false)
+  const { getString } = useStrings()
   const { onSuccess } = props
+  const resourceHandler = resource ? RbacFactory.getResourceTypeHandler(resource) : null
+  const resourceLabel = resourceHandler ? getString(resourceHandler.label) : ''
   const [showModal, hideModal] = useModalHook(
     () => (
       <Dialog
@@ -35,11 +40,17 @@ const useAddResourceModal = (props: UseAddResourceModalProps): UseAddResourceMod
           hideModal()
         }}
         enforceFocus={false}
-        className={cx(css.dialog, Classes.DIALOG)}
+        className={cx(css.dialog)}
+        title={
+          isAttributeFilter
+            ? `${getString('add')} ${resourceLabel} ${getString('common.types')}`
+            : `${getString('add')} ${resourceLabel}`
+        }
       >
         {resource && (
           <AddResourceModal
             resource={resource}
+            isAttributeFilter={isAttributeFilter}
             onSuccess={resources => {
               onSuccess(resources)
               hideModal()
@@ -48,16 +59,16 @@ const useAddResourceModal = (props: UseAddResourceModalProps): UseAddResourceMod
             onClose={hideModal}
           />
         )}
-        <Button minimal icon="cross" iconProps={{ size: 18 }} onClick={hideModal} className={css.crossIcon} />
       </Dialog>
     ),
-    [resource, selectedItems]
+    [resource, selectedItems, isAttributeFilter]
   )
 
   return {
-    openAddResourceModal: (_resource: ResourceType, _selectedItems: string[]) => {
+    openAddResourceModal: (_resource: ResourceType, _selectedItems: string[], _isAttributeFilter: boolean) => {
       setResource(_resource)
       setSelectedItems(_selectedItems)
+      setIsAttributeFilter(_isAttributeFilter)
       showModal()
     },
     closeAddResourceModal: hideModal

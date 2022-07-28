@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-export const startupScript = {
+export const startupCommand = {
   type: 'Git',
   spec: {
     connectorRef: '<+input>',
@@ -39,7 +39,7 @@ export const connectionStrings = {
 }
 
 export const template = {
-  startupScript: {
+  startupCommand: {
     type: 'Git',
     spec: {
       connectorRef: '<+input>',

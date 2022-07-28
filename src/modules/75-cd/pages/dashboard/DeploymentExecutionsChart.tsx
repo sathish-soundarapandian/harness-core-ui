@@ -71,10 +71,10 @@ export default function DeploymentExecutionsChart(props: any) {
   }, [data])
   const { getString } = useStrings()
 
-  const failedData = chartData?.find(item => item.name === 'Failed') as any
+  const failedData = chartData?.find(item => item.name.includes('Failed')) as any
   const allFailedCount = failedData?.data?.every((item: any) => item === 0)
 
-  const chartSuccessData = chartData?.find(item => item.name === 'Success') as any
+  const chartSuccessData = chartData?.find(item => item.name.includes('Success')) as any
   const allSuccessCount = chartSuccessData?.data?.every((item: any) => item === 0)
   return (
     <>

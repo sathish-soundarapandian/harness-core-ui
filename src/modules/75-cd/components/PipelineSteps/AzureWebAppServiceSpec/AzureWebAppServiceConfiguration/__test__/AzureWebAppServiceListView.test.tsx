@@ -51,7 +51,7 @@ describe('AzureWebAppListView', () => {
   })
 
   test(`should delete correctly`, async () => {
-    propListView.isPropagating = true
+    propListView.isPropagating = false
     const { container } = render(
       <TestWrapper>
         <AzureWebAppListView {...propListView} />

@@ -66,21 +66,71 @@ export class CFCreateStack extends PipelineStep<CreateStackStepInfo> {
     const errors = {} as any
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
 
-    if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
-      let timeoutSchema = getDurationValidationSchema({ minimum: '10s' })
-
-      if (isRequired) {
-        timeoutSchema = timeoutSchema.required(getString?.('validation.timeout10SecMinimum'))
+    if (
+      getMultiTypeFromValue(template?.spec?.provisionerIdentifier) === MultiTypeInputType.RUNTIME &&
+      isRequired &&
+      isEmpty(data?.spec?.provisionerIdentifier?.trim())
+    ) {
+      errors.spec = {
+        ...errors.spec,
+        provisionerIdentifier: getString?.('common.validation.provisionerIdentifierIsRequired')
       }
+    }
+
+    if (
+      getMultiTypeFromValue(template?.spec?.configuration?.connectorRef) === MultiTypeInputType.RUNTIME &&
+      isRequired &&
+      isEmpty(data?.spec?.configuration?.connectorRef)
+    ) {
+      errors.spec = {
+        ...errors.spec,
+        configuration: {
+          ...errors.spec?.configuration,
+          connectorRef: getString?.('pipelineSteps.build.create.connectorRequiredError')
+        }
+      }
+    }
+
+    if (
+      getMultiTypeFromValue(template?.spec?.configuration?.region) === MultiTypeInputType.RUNTIME &&
+      isRequired &&
+      isEmpty(data?.spec?.configuration?.region)
+    ) {
+      errors.spec = {
+        ...errors.spec,
+        configuration: {
+          ...errors.spec?.configuration,
+          region: getString?.('cd.cloudFormation.errors.region')
+        }
+      }
+    }
+
+    if (
+      getMultiTypeFromValue(template?.spec?.configuration?.stackName) === MultiTypeInputType.RUNTIME &&
+      isRequired &&
+      isEmpty(data?.spec?.configuration?.stackName)
+    ) {
+      errors.spec = {
+        ...errors.spec,
+        configuration: {
+          ...errors.spec?.configuration,
+          stackName: getString?.('cd.cloudFormation.errors.stackName')
+        }
+      }
+    }
+
+    if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME && isRequired) {
       const timeout = Yup.object().shape({
-        timeout: timeoutSchema
+        timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString?.('validation.timeout10SecMinimum'))
       })
 
       try {
         timeout.validateSync(data)
       } catch (e) {
+        /* istanbul ignore else */
         if (e instanceof Yup.ValidationError) {
           const err = yupToFormErrors(e)
+
           Object.assign(errors, err)
         }
       }

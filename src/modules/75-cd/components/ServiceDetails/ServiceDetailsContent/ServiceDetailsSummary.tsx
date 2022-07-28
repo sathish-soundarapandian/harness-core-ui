@@ -9,7 +9,6 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import moment from 'moment'
 import { Card, Container, Layout } from '@wings-software/uicore'
-import { Page } from '@common/exports'
 import { ActiveServiceInstances } from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstances'
 import { ActiveServiceInstancesV2 } from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstancesV2'
 import {
@@ -46,7 +45,7 @@ const ServiceDetailsSummary: React.FC = () => {
   serviceTimeRange.range[0] = timeServiceDetail.range[0]
   serviceTimeRange.range[1] = timeServiceDetail.range[1]
   return (
-    <Page.Body>
+    <div>
       <Container flex className={css.timeRangeContainer}>
         <TimeRangeSelector timeRange={serviceTimeRange?.range} setTimeRange={setServiceTimeRange} />
       </Container>
@@ -72,7 +71,7 @@ const ServiceDetailsSummary: React.FC = () => {
           </Layout.Vertical>
         </DeploymentsTimeRangeContext.Provider>
       </Layout.Horizontal>
-    </Page.Body>
+    </div>
   )
 }
 

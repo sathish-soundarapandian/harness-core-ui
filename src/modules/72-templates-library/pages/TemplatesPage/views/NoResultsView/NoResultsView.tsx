@@ -7,12 +7,13 @@
 
 import React from 'react'
 import { defaultTo } from 'lodash-es'
-import { Button, ButtonSize, ButtonVariation, Container, Layout, Text } from '@wings-software/uicore'
+import { Button, ButtonSize, ButtonVariation, Layout, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import templateIllustration from '@templates-library/pages/TemplatesPage/images/templates-illustration.svg'
 import noTemplatesFoundIllustration from '@templates-library/pages/TemplatesPage/images/no-templates-found.svg'
 import { useStrings } from 'framework/strings'
 import { NewTemplatePopover } from '../NewTemplatePopover/NewTemplatePopover'
+import css from './NoResultsView.module.scss'
 
 export interface NoResultsViewProps {
   hasSearchParam?: boolean
@@ -31,30 +32,30 @@ export default function NoResultsView({
 }: NoResultsViewProps): React.ReactElement {
   const { getString } = useStrings()
   const imgSrc = defaultTo(customImgSrc, templateIllustration)
-  return (
-    <Container height={'100%'}>
-      {hasSearchParam ? (
-        <Layout.Vertical height={'100%'} spacing={'large'} flex={{ align: 'center-center' }}>
-          <img src={noTemplatesFoundIllustration} width={'275px'} />
-          <Text font={{ size: 'normal' }} color={Color.GREY_400}>
-            {getString('common.filters.noResultsFound')}
-          </Text>
-          <Button
-            variation={ButtonVariation.LINK}
-            size={ButtonSize.LARGE}
-            onClick={onReset}
-            text={getString('common.filters.clearFilters')}
-          />
-        </Layout.Vertical>
-      ) : (
-        <Layout.Vertical spacing={minimal ? 'large' : 'xxxlarge'} height={'100%'} flex={{ align: 'center-center' }}>
-          <img src={imgSrc} width={minimal ? '117px' : '220px'} />
-          <Text font={{ size: minimal ? 'small' : 'normal' }} color={Color.GREY_700}>
-            {text}
-          </Text>
-          {!minimal && <NewTemplatePopover />}
-        </Layout.Vertical>
-      )}
-    </Container>
+  return hasSearchParam ? (
+    <Layout.Vertical className={css.mainContainer} spacing={'large'} flex={{ align: 'center-center' }}>
+      <img src={noTemplatesFoundIllustration} width={'275px'} />
+      <Text font={{ size: 'normal' }} color={Color.GREY_400}>
+        {getString('common.filters.noResultsFound')}
+      </Text>
+      <Button
+        variation={ButtonVariation.LINK}
+        size={ButtonSize.LARGE}
+        onClick={onReset}
+        text={getString('common.filters.clearFilters')}
+      />
+    </Layout.Vertical>
+  ) : (
+    <Layout.Vertical
+      className={css.mainContainer}
+      spacing={minimal ? 'large' : 'xxxlarge'}
+      flex={{ align: 'center-center' }}
+    >
+      <img src={imgSrc} width={minimal ? '117px' : '220px'} />
+      <Text font={{ size: minimal ? 'small' : 'normal' }} color={Color.GREY_700}>
+        {text}
+      </Text>
+      {!minimal && <NewTemplatePopover />}
+    </Layout.Vertical>
   )
 }

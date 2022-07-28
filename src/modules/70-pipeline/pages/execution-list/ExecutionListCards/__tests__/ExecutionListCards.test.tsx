@@ -14,7 +14,7 @@ import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import type { PagePipelineExecutionSummary } from 'services/pipeline-ng'
 import filters from '@pipeline/pages/execution-list/__mocks__/filters.json'
 import executionList from '@pipeline/pages/execution-list/__mocks__/execution-list.json'
-import { ExecutionListTable } from '../ExecutionListTable'
+import { ExecutionListCards } from '../ExecutionListCards'
 
 jest.mock('@common/utils/YamlUtils', () => ({}))
 jest.mock('services/pipeline-ng', () => ({
@@ -27,7 +27,7 @@ jest.mock('services/pipeline-ng', () => ({
   useGetInputsetYaml: jest.fn(() => ({ data: null }))
 }))
 
-describe('ExecutionListTable', () => {
+describe('ExecutionListCards', () => {
   test('snapshot testing', () => {
     const { container } = render(
       <TestWrapper
@@ -41,7 +41,7 @@ describe('ExecutionListTable', () => {
         }}
         defaultAppStoreValues={defaultAppStoreValues}
       >
-        <ExecutionListTable
+        <ExecutionListCards
           executionList={executionList.data as PagePipelineExecutionSummary}
           onViewCompiledYaml={jest.fn()}
         />
@@ -62,7 +62,7 @@ describe('ExecutionListTable', () => {
         }}
         defaultAppStoreValues={defaultAppStoreValues}
       >
-        <ExecutionListTable
+        <ExecutionListCards
           executionList={executionList.data as PagePipelineExecutionSummary}
           onViewCompiledYaml={jest.fn()}
         />

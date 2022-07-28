@@ -43,7 +43,7 @@ import {
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
 import DragnDropPaths from '../../DragnDropPaths'
 
-import { getRepositoryName } from '../ManifestUtils'
+import { filePathWidth, getRepositoryName } from '../ManifestUtils'
 import css from './ManifestDetails.module.scss'
 
 interface K8sValuesManifestPropType {
@@ -318,28 +318,67 @@ function K8sValuesManifest({
                       </div>
                     )}
                   </Layout.Horizontal>
-                  <div className={css.halfWidth}>
-                    <DragnDropPaths
-                      formik={formik}
-                      expressions={expressions}
-                      allowableTypes={allowableTypes}
-                      fieldPath="paths"
-                      pathLabel={getString('fileFolderPathText')}
-                      placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
-                      defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
-                    />
-                    {selectedManifest === ManifestDataType.K8sManifest && (
+                  <>
+                    <div
+                      className={cx({
+                        [css.runtimeInput]: getMultiTypeFromValue(formik.values?.paths) === MultiTypeInputType.RUNTIME
+                      })}
+                    >
                       <DragnDropPaths
                         formik={formik}
                         expressions={expressions}
                         allowableTypes={allowableTypes}
-                        fieldPath="valuesPaths"
-                        pathLabel={getString('pipeline.manifestType.valuesYamlPath')}
+                        fieldPath="paths"
+                        pathLabel={getString('fileFolderPathText')}
                         placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
                         defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+                        dragDropFieldWidth={filePathWidth}
                       />
+                      {getMultiTypeFromValue(formik.values.paths) === MultiTypeInputType.RUNTIME && (
+                        <ConfigureOptions
+                          value={formik.values.paths}
+                          type={getString('string')}
+                          variableName={'paths'}
+                          showRequiredField={false}
+                          showDefaultField={false}
+                          showAdvanced={true}
+                          onChange={val => formik?.setFieldValue('paths', val)}
+                          isReadonly={isReadonly}
+                        />
+                      )}
+                    </div>
+                    {selectedManifest === ManifestDataType.K8sManifest && (
+                      <div
+                        className={cx({
+                          [css.runtimeInput]:
+                            getMultiTypeFromValue(formik.values?.valuesPaths) === MultiTypeInputType.RUNTIME
+                        })}
+                      >
+                        <DragnDropPaths
+                          formik={formik}
+                          expressions={expressions}
+                          allowableTypes={allowableTypes}
+                          fieldPath="valuesPaths"
+                          pathLabel={getString('pipeline.manifestType.valuesYamlPath')}
+                          placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                          defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+                          dragDropFieldWidth={filePathWidth}
+                        />
+                        {getMultiTypeFromValue(formik.values.valuesPaths) === MultiTypeInputType.RUNTIME && (
+                          <ConfigureOptions
+                            value={formik.values.valuesPaths}
+                            type={getString('string')}
+                            variableName={'valuesPaths'}
+                            showRequiredField={false}
+                            showDefaultField={false}
+                            showAdvanced={true}
+                            onChange={val => formik?.setFieldValue('valuesPaths', val)}
+                            isReadonly={isReadonly}
+                          />
+                        )}
+                      </div>
                     )}
-                  </div>
+                  </>
 
                   {showAdvancedSection(selectedManifest) && (
                     <Accordion

@@ -3,7 +3,7 @@
 exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer renders 1`] = `
 <div>
   <div
-    class="Layout--vertical StyledProps--main tooltipStyle notificationsContainer StyledProps--margin-xxlarge"
+    class="Layout--vertical StyledProps--main tooltipStyle notificationsContainer StyledProps--margin-medium"
   >
     <div
       class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
@@ -76,7 +76,7 @@ exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer 
 exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer renders for notification type MONITORED_SERVICE 1`] = `
 <div>
   <div
-    class="Layout--vertical StyledProps--main tooltipStyle notificationsContainer StyledProps--margin-xxlarge"
+    class="Layout--vertical StyledProps--main tooltipStyle notificationsContainer StyledProps--margin-medium"
   >
     <div
       class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
@@ -149,7 +149,7 @@ exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer 
 exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer renders for notification type SERVICE_LEVEL_OBJECTIVE 1`] = `
 <div>
   <div
-    class="Layout--vertical StyledProps--main tooltipStyle notificationsContainer StyledProps--margin-xxlarge"
+    class="Layout--vertical StyledProps--main tooltipStyle notificationsContainer StyledProps--margin-medium"
   >
     <div
       class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
@@ -222,7 +222,7 @@ exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer 
 exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer renders no notifications screen when there are no notificatons 1`] = `
 <div>
   <div
-    class="Layout--vertical StyledProps--main tooltipStyle notificationsContainer StyledProps--margin-xxlarge"
+    class="Layout--vertical StyledProps--main tooltipStyle notificationsContainer StyledProps--margin-medium"
   >
     <div
       class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
@@ -295,7 +295,7 @@ exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer 
 exports[`Unit tests for NotificationsContainer Verify if NotificationsContainer renders notificationsTable with data when there are notofications present 1`] = `
 <div>
   <div
-    class="Layout--vertical StyledProps--main tooltipStyle notificationsContainer StyledProps--margin-xxlarge"
+    class="Layout--vertical StyledProps--main tooltipStyle notificationsContainer StyledProps--margin-medium"
   >
     <div
       class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"

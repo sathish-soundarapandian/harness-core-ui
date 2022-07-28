@@ -150,7 +150,7 @@ const RenderServiceName: Renderer<CellProps<ServiceListItem>> = ({ row }) => {
 
 const RenderType: Renderer<CellProps<ServiceListItem>> = ({ row }) => {
   const { deploymentTypeList } = row.original
-  return <DeploymentTypeIcons deploymentTypes={deploymentTypeList} />
+  return <DeploymentTypeIcons deploymentTypes={deploymentTypeList} size={20} />
 }
 
 const TickerCard: React.FC<{ item: ChangeValue & { name: string } }> = props => {
@@ -320,6 +320,7 @@ const RenderLastDeployment: Renderer<CellProps<ServiceListItem>> = ({ row }) => 
           color={Color.WHITE}
           font={{ weight: 'semi-bold', size: 'xsmall' }}
           className={css.statusText}
+          lineClamp={1}
         >
           {statusText?.toLocaleUpperCase()}
         </Text>

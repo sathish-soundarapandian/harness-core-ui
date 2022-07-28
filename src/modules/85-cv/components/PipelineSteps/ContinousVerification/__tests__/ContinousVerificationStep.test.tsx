@@ -42,11 +42,6 @@ jest.mock('services/cv', () => ({
       }
     })
   })),
-  useListBaselineExecutions: jest.fn().mockImplementation(() => ({
-    metaData: {},
-    resource: [],
-    responseMessages: []
-  })),
   useUpdateMonitoredService: () =>
     jest.fn().mockImplementation(() => ({ loading: false, error: null, data: {}, refetch: jest.fn() }))
 }))

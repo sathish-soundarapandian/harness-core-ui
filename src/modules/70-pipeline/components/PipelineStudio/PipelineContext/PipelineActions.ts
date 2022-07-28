@@ -112,12 +112,13 @@ export interface PipelineViewData {
   }
   isDrawerOpened: boolean
   drawerData: DrawerData
+  isRollbackToggled?: boolean
 }
 
 export interface SelectionState {
-  selectedStageId?: string | undefined
-  selectedStepId?: string | undefined
-  selectedSectionId?: string | undefined
+  selectedStageId?: string
+  selectedStepId?: string
+  selectedSectionId?: string
 }
 
 export interface PipelineReducerState {

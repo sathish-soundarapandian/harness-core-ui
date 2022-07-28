@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Icon, Layout, Text } from '@wings-software/uicore'
-import { deploymentTypeIcon } from '@pipeline/utils/DeploymentTypeUtils'
+import { deploymentTypeIcon, ServiceTypes } from '@pipeline/utils/DeploymentTypeUtils'
 
 export interface DeploymentTypeIconsProps {
   deploymentTypes: string[]
@@ -23,7 +23,7 @@ export const DeploymentTypeIcons: React.FC<DeploymentTypeIconsProps> = props => 
         return (
           <Icon
             key={deploymentType}
-            name={deploymentTypeIcon[deploymentType]}
+            name={deploymentTypeIcon[deploymentType as ServiceTypes]}
             size={size}
             padding={{ left: 'xsmall', right: 'xsmall' }}
           />

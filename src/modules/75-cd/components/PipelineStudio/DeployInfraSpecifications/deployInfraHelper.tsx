@@ -183,7 +183,7 @@ export const getInfraGroups = (
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
   featureFlags: Record<string, boolean>
 ): InfrastructureGroup[] => {
-  const { NG_AZURE } = featureFlags
+  const { NG_AZURE, AZURE_WEBAPP_NG } = featureFlags
 
   return isServerlessDeploymentType(deploymentType)
     ? [
@@ -214,7 +214,7 @@ export const getInfraGroups = (
     ? [
         {
           groupLabel: '',
-          items: NG_AZURE
+          items: AZURE_WEBAPP_NG
             ? [
                 {
                   label: 'Azure Web App',

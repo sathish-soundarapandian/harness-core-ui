@@ -347,7 +347,7 @@ exports[`helm with GIT tests expand advanced section 1`] = `
             </div>
           </div>
           <div
-            class="halfWidth"
+            class=""
           >
             <div
               data-rbd-droppable-context-id="2"
@@ -1191,7 +1191,7 @@ exports[`helm with GIT tests renders correctly in edit case 1`] = `
             </div>
           </div>
           <div
-            class="halfWidth"
+            class=""
           >
             <div
               data-rbd-droppable-context-id="3"
@@ -1747,7 +1747,7 @@ exports[`helm with GIT tests renders while adding step first time 1`] = `
             </div>
           </div>
           <div
-            class="halfWidth"
+            class=""
           >
             <div
               data-rbd-droppable-context-id="1"
@@ -2303,7 +2303,7 @@ exports[`helm with GIT tests renders without crashing 1`] = `
             </div>
           </div>
           <div
-            class="halfWidth"
+            class=""
           >
             <div
               data-rbd-droppable-context-id="0"

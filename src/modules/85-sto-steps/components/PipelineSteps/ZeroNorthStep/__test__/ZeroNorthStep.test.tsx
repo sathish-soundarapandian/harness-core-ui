@@ -11,46 +11,10 @@ import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import type { StringKeys } from 'framework/strings'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import type { UseGetReturnData } from '@common/utils/testUtils'
-import type { ResponseConnectorResponse } from 'services/cd-ng'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { ZeroNorthStep, ZeroNorthStepData } from '../ZeroNorthStep'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
-
-export const ConnectorResponse: UseGetReturnData<ResponseConnectorResponse> = {
-  loading: false,
-  refetch: jest.fn(),
-  error: null,
-  data: {
-    status: 'SUCCESS',
-    data: {
-      connector: {
-        name: 'connectorRef',
-        identifier: 'connectorRef',
-        description: '',
-        tags: {},
-        type: 'K8sCluster',
-        spec: {
-          credential: {
-            type: 'ManualConfig',
-            spec: {
-              masterUrl: 'asd',
-              auth: { type: 'UsernamePassword', spec: { username: 'asd', passwordRef: 'account.test1111' } }
-            }
-          }
-        }
-      },
-      createdAt: 1602062958274,
-      lastModifiedAt: 1602062958274
-    },
-    correlationId: 'e1841cfc-9ed5-4f7c-a87b-c9be1eeaae34'
-  }
-}
-
-jest.mock('services/cd-ng', () => ({
-  useGetConnector: jest.fn(() => ConnectorResponse)
-}))
 
 describe('ZeroNorth Step', () => {
   beforeAll(() => {
@@ -73,7 +37,6 @@ describe('ZeroNorth Step', () => {
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
-          connectorRef: RUNTIME_INPUT_VALUE,
           privileged: RUNTIME_INPUT_VALUE,
           settings: RUNTIME_INPUT_VALUE,
           // Right now we do not support Image Pull Policy but will do in the future
@@ -113,7 +76,6 @@ describe('ZeroNorth Step', () => {
         description: 'Description',
         timeout: '10s',
         spec: {
-          connectorRef: 'account.connectorRef',
           privileged: false,
           settings: {
             policy_type: 'orchestratedScan',
@@ -167,7 +129,6 @@ describe('ZeroNorth Step', () => {
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
-          connectorRef: RUNTIME_INPUT_VALUE,
           privileged: RUNTIME_INPUT_VALUE,
           settings: RUNTIME_INPUT_VALUE,
           // Right now we do not support Image Pull Policy but will do in the future
@@ -188,7 +149,6 @@ describe('ZeroNorth Step', () => {
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
-          connectorRef: RUNTIME_INPUT_VALUE,
           privileged: RUNTIME_INPUT_VALUE,
           settings: RUNTIME_INPUT_VALUE,
           // Right now we do not support Image Pull Policy but will do in the future
@@ -231,7 +191,6 @@ describe('ZeroNorth Step', () => {
         description: 'Description',
         timeout: '10s',
         spec: {
-          connectorRef: 'account.connectorRef',
           privileged: false,
           settings: {
             key1: 'value1',
@@ -277,7 +236,6 @@ describe('ZeroNorth Step', () => {
             description: 'Description',
             timeout: '10s',
             spec: {
-              connectorRef: 'account.connectorRef',
               privileged: false,
               settings: {
                 key1: 'value1',
@@ -315,12 +273,6 @@ describe('ZeroNorth Step', () => {
                   localName: 'step.zeronorth.timeout'
                 }
               },
-              'step-connectorRef': {
-                yamlProperties: {
-                  fqn: 'pipeline.stages.qaStage.execution.steps.zeronorth.spec.connectorRef',
-                  localName: 'step.zeronorth.spec.connectorRef'
-                }
-              },
               'step-settings': {
                 yamlProperties: {
                   fqn: 'pipeline.stages.qaStage.execution.steps.zeronorth.spec.settings',
@@ -354,7 +306,6 @@ describe('ZeroNorth Step', () => {
               description: 'step-description',
               timeout: 'step-timeout',
               spec: {
-                connectorRef: 'step-connectorRef',
                 privileged: 'step-privileged',
                 settings: 'step-settings',
                 // Right now we do not support Image Pull Policy but will do in the future
@@ -385,7 +336,6 @@ describe('ZeroNorth Step', () => {
       type: 'type',
       timeout: '1h',
       spec: {
-        connectorRef: 'connector',
         privileged: true,
         settings: {
           policy_type: 'orchestratedScan',

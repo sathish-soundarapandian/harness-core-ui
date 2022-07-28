@@ -278,11 +278,19 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
         tagType: TagTypes.Value,
         filePath: ''
       }
+    case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
+      return {
+        repositoryFormat: 'generic',
+        identifier: '',
+        tag: RUNTIME_INPUT_VALUE,
+        tagType: TagTypes.Value,
+        tagRegex: RUNTIME_INPUT_VALUE
+      }
+
     case ENABLED_ARTIFACT_TYPES.Acr:
     case ENABLED_ARTIFACT_TYPES.DockerRegistry:
     case ENABLED_ARTIFACT_TYPES.Gcr:
     case ENABLED_ARTIFACT_TYPES.Ecr:
-    case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
     default:
       return {
         identifier: '',

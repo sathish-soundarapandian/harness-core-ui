@@ -26,15 +26,19 @@ import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { useFeature } from '@common/hooks/useFeatures'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 
 function NewTemplatePopoverWrapper(): React.ReactElement {
   const { getString } = useStrings()
   const history = useHistory()
-  const { projectIdentifier, orgIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
-  const scriptTemplateEnabled = useFeatureFlag(FeatureFlag.CUSTOM_SECRET_MANAGER_NG)
-  const allowedTemplateTypes = getAllowedTemplateTypes(getString, module, scriptTemplateEnabled)
+  const { module, ...params } = useParams<ProjectPathProps & ModulePathParams>()
+  const { projectIdentifier, orgIdentifier, accountId } = params
+  const { CUSTOM_SECRET_MANAGER_NG, CVNG_TEMPLATE_MONITORED_SERVICE } = useFeatureFlags()
+  const allowedTemplateTypes = getAllowedTemplateTypes(getScopeFromDTO(params), {
+    [TemplateType.SecretManager]: !!CUSTOM_SECRET_MANAGER_NG,
+    [TemplateType.MonitoredService]: !!CVNG_TEMPLATE_MONITORED_SERVICE
+  })
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { enabled: templatesEnabled } = useFeature({
     featureRequest: {

@@ -373,7 +373,6 @@ function DeployEnvironment({
             setSelectedEnvironment(
               environments?.find(environment => environment.identifier === (item as SelectOption)?.value)
             )
-            formik?.setFieldValue('infrastructureRef', '')
           },
           selectProps: {
             addClearBtn: !readonly,

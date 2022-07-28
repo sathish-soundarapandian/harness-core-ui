@@ -56,6 +56,11 @@
     overflow: auto;
     max-height: 455px;
   }
+
+  div[class*='TableV2--header'] {
+    margin-right: 8px !important;
+  }
+
   div[role='row'] {
     box-shadow: none;
     border: 0;
@@ -85,7 +90,7 @@
     text-overflow: ellipsis;
   }
   .plusMore {
-    margin-left: 10px !important;
+    margin-left: var(--spacing-3) !important;
   }
   .seeMore {
     text-align: center;
@@ -133,13 +138,14 @@
 }
 
 .lastDeploymentText {
-  white-space: nowrap !important;
-  overflow: hidden;
-  text-overflow: ellipsis;
   cursor: pointer;
   font-size: var(--font-size-small) !important;
 }
 
 .deploymentsEmpty {
   flex-shrink: 1 !important;
+}
+
+.infraVisible {
+  max-width: 90px;
 }

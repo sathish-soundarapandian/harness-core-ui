@@ -28,7 +28,8 @@ export default function StartupScriptSelection({
   isPropagating,
   deploymentType,
   isReadonlyServiceMode,
-  readonly
+  readonly,
+  updateStage
 }: StartupScriptSelectionProps): JSX.Element | null {
   const {
     state: {
@@ -36,7 +37,6 @@ export default function StartupScriptSelection({
       selectionState: { selectedStageId }
     },
     getStageFromPipeline,
-    updateStage,
     allowableTypes
   } = usePipelineContext()
 
@@ -68,29 +68,29 @@ export default function StartupScriptSelection({
     queryParams: defaultQueryParams
   })
 
-  const startupScript = useMemo(() => {
+  const startupCommand = useMemo(() => {
     /* istanbul ignore else */
     /* istanbul ignore next */
     if (isReadonlyServiceMode && !isEmpty(serviceInfo)) {
-      return defaultTo(serviceInfo?.spec.startupScript, {})
+      return defaultTo(serviceInfo?.spec.startupCommand, {})
     }
     if (isPropagating) {
-      return get(stage, 'stage.spec.serviceConfig.stageOverrides.startupScript', {})
+      return get(stage, 'stage.spec.serviceConfig.stageOverrides.startupCommand', {})
     }
 
-    return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.startupScript', {})
+    return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.startupCommand', {})
   }, [isReadonlyServiceMode, serviceInfo, isPropagating, stage])
 
   useDeepCompareEffect(() => {
     refetchConnectorList()
-  }, [stage, startupScript])
+  }, [stage, startupCommand])
 
   const getConnectorList = (): Array<{ scope: Scope; identifier: string }> => {
-    return !isEmpty(startupScript)
+    return !isEmpty(startupCommand)
       ? [
           {
-            scope: getScopeFromValue(startupScript?.spec?.connectorRef),
-            identifier: getIdentifierFromValue(startupScript?.spec?.connectorRef)
+            scope: getScopeFromValue(startupCommand?.spec?.connectorRef),
+            identifier: getIdentifierFromValue(startupCommand?.spec?.connectorRef)
           }
         ]
       : []
@@ -122,7 +122,7 @@ export default function StartupScriptSelection({
     refetchConnectors: refetchConnectorList,
     isReadonly: readonly,
     deploymentType,
-    startupScript,
+    startupCommand,
     allowableTypes
   }
   return (

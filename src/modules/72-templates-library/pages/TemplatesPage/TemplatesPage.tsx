@@ -7,7 +7,6 @@
 
 import React, { useState } from 'react'
 import {
-  Container,
   DropDown,
   ExpandingSearchInput,
   ExpandingSearchInputHandle,
@@ -41,8 +40,7 @@ import { getScopeFromDTO } from '@common/components/EntityReference/EntityRefere
 import { getAllowedTemplateTypes, TemplateType } from '@templates-library/utils/templatesUtils'
 import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './TemplatesPage.module.scss'
 
 export default function TemplatesPage(): React.ReactElement {
@@ -62,11 +60,11 @@ export default function TemplatesPage(): React.ReactElement {
   const { projectIdentifier, orgIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { isGitSyncEnabled } = useAppStore()
   const scope = getScopeFromDTO({ projectIdentifier, orgIdentifier, accountIdentifier: accountId })
-
-  const scriptTemplateEnabled = useFeatureFlag(FeatureFlag.CUSTOM_SECRET_MANAGER_NG)
-  const allowedTemplateTypes = getAllowedTemplateTypes(getString, module, scriptTemplateEnabled).filter(
-    item => !item.disabled
-  )
+  const { CUSTOM_SECRET_MANAGER_NG, CVNG_TEMPLATE_MONITORED_SERVICE } = useFeatureFlags()
+  const allowedTemplateTypes = getAllowedTemplateTypes(scope, {
+    [TemplateType.SecretManager]: !!CUSTOM_SECRET_MANAGER_NG,
+    [TemplateType.MonitoredService]: !!CVNG_TEMPLATE_MONITORED_SERVICE
+  }).filter(item => !item.disabled)
 
   useDocumentTitle([getString('common.templates')])
 
@@ -168,8 +166,9 @@ export default function TemplatesPage(): React.ReactElement {
             links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
           />
         }
+        className={css.templatesPageHeader}
       />
-      <Page.SubHeader>
+      <Page.SubHeader className={css.templatesPageSubHeader}>
         <Layout.Horizontal spacing={'medium'}>
           <NewTemplatePopover />
           <DropDown
@@ -216,41 +215,37 @@ export default function TemplatesPage(): React.ReactElement {
         loading={loading}
         error={(error?.data as Error)?.message || error?.message}
         className={css.pageBody}
-        retryOnError={/* istanbul ignore next */ () => reloadTemplates()}
+        retryOnError={reloadTemplates}
       >
-        <Container height={'100%'} style={{ overflow: 'auto' }}>
-          {!templateData?.data?.content?.length && (
+        {!loading &&
+          (!templateData?.data?.content?.length ? (
             <NoResultsView
               hasSearchParam={!!searchParam || !!templateType}
               onReset={reset}
               text={getString('templatesLibrary.templatesPage.noTemplates', { scope })}
             />
-          )}
-          {!!templateData?.data?.content?.length && (
-            <Layout.Vertical height={'100%'} margin={{ left: 'xlarge', right: 'xlarge' }}>
+          ) : (
+            <React.Fragment>
               <ResultsViewHeader templateData={templateData?.data} setPage={setPage} setSort={setSort} />
-              <Container style={{ flexGrow: 1 }} padding={{ bottom: 'large' }}>
-                <TemplatesView
-                  gotoPage={setPage}
-                  data={templateData?.data}
-                  onSelect={setSelectedTemplate}
-                  selectedTemplate={selectedTemplate}
-                  onPreview={setSelectedTemplate}
-                  onOpenEdit={goToTemplateStudio}
-                  onOpenSettings={identifier => {
-                    setTemplateIdentifierToSettings(identifier)
-                    showTemplateSettingsModal()
-                  }}
-                  onDelete={template => {
-                    setTemplateToDelete(template)
-                    showDeleteTemplatesModal()
-                  }}
-                  view={view}
-                />
-              </Container>
-            </Layout.Vertical>
-          )}
-        </Container>
+              <TemplatesView
+                gotoPage={setPage}
+                data={templateData?.data}
+                onSelect={setSelectedTemplate}
+                selectedTemplate={selectedTemplate}
+                onPreview={setSelectedTemplate}
+                onOpenEdit={goToTemplateStudio}
+                onOpenSettings={identifier => {
+                  setTemplateIdentifierToSettings(identifier)
+                  showTemplateSettingsModal()
+                }}
+                onDelete={template => {
+                  setTemplateToDelete(template)
+                  showDeleteTemplatesModal()
+                }}
+                view={view}
+              />
+            </React.Fragment>
+          ))}
       </Page.Body>
       {selectedTemplate && (
         <TemplateDetailsDrawer

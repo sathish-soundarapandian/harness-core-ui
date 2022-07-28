@@ -37,7 +37,7 @@ const columnsProp = {
   },
   envs: {
     width: {
-      preview: '30%',
+      preview: '22%',
       summary: '22%',
       full: '22%'
     }
@@ -96,7 +96,7 @@ export const DeploymentsV2 = (
         Cell: RenderEnvironment
       },
       {
-        Header: getString('cd.serviceDashboard.headers.infras'),
+        Header: getString('cd.serviceDashboard.headers.infrastructures'),
         id: 'infra',
         width: columnsProp.infras.width[tableType],
         Cell: tableType == TableType.PREVIEW ? RenderInfraCount : RenderInfra

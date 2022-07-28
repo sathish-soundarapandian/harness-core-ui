@@ -13,6 +13,7 @@ import { FontVariation } from '@harness/design-system'
 import type { ConfigFileWrapper, StoreConfigWrapper } from 'services/cd-ng'
 import { StringUtils } from '@common/exports'
 import { useStrings } from 'framework/strings'
+import { FileUsage } from '@filestore/interfaces/FileStore'
 import { FILE_TYPE_VALUES, prepareConfigFilesValue } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { MultiConfigSelectField } from './MultiConfigSelectField/MultiConfigSelectField'
 
@@ -165,6 +166,7 @@ export function HarnessConfigStep({
                     formik={formikProps}
                     expressions={expressions}
                     values={formikProps.values.files}
+                    fileUsage={FileUsage.CONFIG}
                     multiTypeFieldSelectorProps={{
                       disableTypeSelection: false,
                       label: (

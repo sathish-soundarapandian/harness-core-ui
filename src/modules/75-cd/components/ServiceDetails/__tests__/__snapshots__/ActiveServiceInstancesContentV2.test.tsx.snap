@@ -1438,7 +1438,7 @@ exports[`ActiveInstance Details Dialog Open details dialog 1`] = `
                             style="width: 100%;"
                           >
                             <p
-                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                              class="StyledProps--font Text--lineclamp StyledProps--main infraVisible StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
                               style="--text-line-clamp: 1;"
                             >
                               infra-1
@@ -1704,7 +1704,7 @@ exports[`ActiveInstance Details Dialog Open details dialog 1`] = `
                             style="width: 100%;"
                           >
                             <p
-                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                              class="StyledProps--font Text--lineclamp StyledProps--main infraVisible StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
                               style="--text-line-clamp: 1;"
                             >
                               infra-5
@@ -2096,9 +2096,6 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
             <div
               class="Layout--horizontal StyledProps--main"
             />
-            <div
-              class="Layout--horizontal StyledProps--main"
-            />
           </div>
           <p
             class="StyledProps--font StyledProps--main moreDetails StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-primary7"
@@ -2143,12 +2140,17 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                   class="TableV2--cell"
                   colspan="1"
                   role="columnheader"
-                  style="width: 12%;"
+                  style="width: 13%;"
                 >
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                   >
-                    cd.serviceDashboard.headers.infras
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey900"
+                      style="--text-line-clamp: 1;"
+                    >
+                      CD.SERVICEDASHBOARD.HEADERS.INFRASTRUCTURES
+                    </p>
                   </p>
                 </div>
                 <div
@@ -2225,7 +2227,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                     <div
                       class="TableV2--cell"
                       role="cell"
-                      style="width: 12%;"
+                      style="width: 13%;"
                     >
                       <div
                         class="StyledProps--font StyledProps--main paddedContainer"
@@ -2308,46 +2310,10 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                             />
                           </span>
                         </span>
-                        <span
-                          class="bp3-popover-wrapper"
-                        >
-                          <span
-                            class="bp3-popover-target"
-                          >
-                            <div
-                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                              style="width: 18px; height: 18px;"
-                            />
-                          </span>
-                        </span>
-                        <span
-                          class="bp3-popover-wrapper"
-                        >
-                          <span
-                            class="bp3-popover-target"
-                          >
-                            <div
-                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                              style="width: 18px; height: 18px;"
-                            />
-                          </span>
-                        </span>
-                        <span
-                          class="bp3-popover-wrapper"
-                        >
-                          <span
-                            class="bp3-popover-target"
-                          >
-                            <div
-                              class="StyledProps--font StyledProps--main hex StyledProps--background-primary3 StyledProps--margin-left-xsmall StyledProps--margin-right-xsmall StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
-                              style="width: 18px; height: 18px;"
-                            />
-                          </span>
-                        </span>
                         <p
                           class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-left-xsmall"
                         >
-                          +7
+                          +10
                         </p>
                       </div>
                     </div>
@@ -2392,7 +2358,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                     <div
                       class="TableV2--cell"
                       role="cell"
-                      style="width: 12%;"
+                      style="width: 13%;"
                     >
                       <div
                         class="StyledProps--font StyledProps--main paddedContainer"
@@ -2513,7 +2479,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                     <div
                       class="TableV2--cell"
                       role="cell"
-                      style="width: 12%;"
+                      style="width: 13%;"
                     >
                       <div
                         class="StyledProps--font StyledProps--main paddedContainer"
@@ -2627,7 +2593,7 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                     <div
                       class="TableV2--cell"
                       role="cell"
-                      style="width: 12%;"
+                      style="width: 13%;"
                     >
                       <div
                         class="StyledProps--font StyledProps--main paddedContainer"
@@ -2832,9 +2798,6 @@ exports[`ActiveServiceInstancesContent should render error 1`] = `
             <div
               class="Layout--horizontal StyledProps--main"
             />
-            <div
-              class="Layout--horizontal StyledProps--main"
-            />
           </div>
           <div
             class="StyledProps--font StyledProps--main"
@@ -3010,9 +2973,6 @@ exports[`ActiveServiceInstancesContent should render loading 1`] = `
                 </p>
               </div>
             </div>
-            <div
-              class="Layout--horizontal StyledProps--main"
-            />
             <div
               class="Layout--horizontal StyledProps--main"
             />
@@ -3222,9 +3182,6 @@ exports[`ActiveServiceInstancesContent should render no data 1`] = `
                 </p>
               </div>
             </div>
-            <div
-              class="Layout--horizontal StyledProps--main"
-            />
             <div
               class="Layout--horizontal StyledProps--main"
             />

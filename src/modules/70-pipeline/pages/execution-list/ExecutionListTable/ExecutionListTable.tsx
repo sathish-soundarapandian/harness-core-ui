@@ -6,16 +6,31 @@
  */
 
 import React from 'react'
-import { matchPath, useLocation, useParams } from 'react-router-dom'
-import { Pagination } from '@harness/uicore'
-import type { PagePipelineExecutionSummary, PipelineExecutionSummary } from 'services/pipeline-ng'
-import ExecutionCard from '@pipeline/components/ExecutionCard/ExecutionCard'
-import { NavigatedToPage } from '@common/constants/TrackingConstants'
-import { useTelemetry } from '@common/hooks/useTelemetry'
-import routes from '@common/RouteDefinitions'
-import type { PipelineType } from '@common/interfaces/RouteInterfaces'
+import { TableV2 } from '@harness/uicore'
+import type { Column } from 'react-table'
+import type {
+  GetListOfExecutionsQueryParams,
+  PagePipelineExecutionSummary,
+  PipelineExecutionSummary
+} from 'services/pipeline-ng'
 import { useUpdateQueryParams } from '@common/hooks'
+import { useStrings } from 'framework/strings'
+import { useExecutionCompareContext } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
+import {
+  DurationCell,
+  LastExecutionCell,
+  MenuCell,
+  PipelineNameCell,
+  RowSelectCell,
+  StatusCell,
+  ToggleAccordionCell,
+  TriggerInfoCell
+} from './ExecutionListCells'
+import { ExecutionStageList } from './ExecutionStageList'
 import css from './ExecutionListTable.module.scss'
+
+const DEFAULT_PAGE_NUMBER = 0
+const DEFAULT_PAGE_SIZE = 20
 
 export interface ExecutionListTableProps {
   executionList: PagePipelineExecutionSummary | undefined
@@ -28,52 +43,96 @@ export function ExecutionListTable({
   isPipelineInvalid,
   onViewCompiledYaml
 }: ExecutionListTableProps): React.ReactElement {
-  const { trackEvent } = useTelemetry()
-  const location = useLocation()
-  const { orgIdentifier, projectIdentifier, accountId, module } = useParams<
-    PipelineType<{
-      orgIdentifier: string
-      projectIdentifier: string
-      pipelineIdentifier: string
-      accountId: string
-    }>
-  >()
-  const { updateQueryParams } = useUpdateQueryParams<{ page: number }>()
+  const { updateQueryParams } = useUpdateQueryParams<Partial<GetListOfExecutionsQueryParams>>()
+  const { getString } = useStrings()
+  const { isCompareMode } = useExecutionCompareContext()
 
-  function gotoPage(index: number): void {
-    updateQueryParams({ page: index + 1 })
-  }
+  const {
+    content = [],
+    totalElements = 0,
+    totalPages = 0,
+    number = DEFAULT_PAGE_NUMBER,
+    size = DEFAULT_PAGE_SIZE
+  } = executionList || {}
 
-  const isDeploymentsPage = !!matchPath(location.pathname, {
-    path: routes.toDeployments({ projectIdentifier, orgIdentifier, accountId, module })
-  })
+  const columns: Column<PipelineExecutionSummary>[] = React.useMemo(() => {
+    return [
+      ...(isCompareMode
+        ? [
+            {
+              Header: '',
+              id: 'rowSelect',
+              width: '3%',
+              Cell: RowSelectCell
+            }
+          ]
+        : []),
+      {
+        Header: '',
+        id: 'expander',
+        width: '3%',
+        Cell: ToggleAccordionCell
+      },
+      {
+        Header: getString('filters.executions.pipelineName'),
+        accessor: 'pipelineIdentifier',
+        width: isCompareMode ? '12%' : '15%',
+        Cell: PipelineNameCell
+      },
+      {
+        Header: 'status',
+        accessor: 'status',
+        width: '8%',
+        Cell: StatusCell
+      },
+      {
+        Header: '',
+        accessor: 'moduleInfo',
+        width: '45%',
+        Cell: TriggerInfoCell
+      },
+      {
+        Header: getString('common.executedBy').toUpperCase(),
+        accessor: 'startTs',
+        width: '20%',
+        Cell: LastExecutionCell
+      },
+      {
+        Header: '',
+        id: 'endTs',
+        width: '4%',
+        Cell: DurationCell
+      },
+      {
+        Header: '',
+        id: 'menu',
+        width: '5%',
+        Cell: MenuCell,
+        isPipelineInvalid,
+        onViewCompiledYaml
+      }
+    ]
+  }, [getString, isCompareMode, isPipelineInvalid, onViewCompiledYaml])
 
-  React.useEffect(() => {
-    if (isDeploymentsPage) {
-      trackEvent(NavigatedToPage.DeploymentsPage, {})
-    }
-  }, [])
+  const renderRowSubComponent = React.useCallback(({ row }) => <ExecutionStageList row={row} />, [])
 
   return (
-    <div className={css.main}>
-      {executionList?.content?.map(pipelineExecution => (
-        <ExecutionCard
-          pipelineExecution={pipelineExecution}
-          key={pipelineExecution.planExecutionId}
-          isPipelineInvalid={isPipelineInvalid}
-          showGitDetails={isDeploymentsPage}
-          onViewCompiledYaml={() => onViewCompiledYaml(pipelineExecution)}
-        />
-      ))}
-      <div className={css.pagination}>
-        <Pagination
-          pageSize={executionList?.size || 0}
-          pageIndex={executionList?.number}
-          pageCount={executionList?.totalPages || 0}
-          itemCount={executionList?.totalElements || 0}
-          gotoPage={gotoPage}
-        />
-      </div>
-    </div>
+    <TableV2<PipelineExecutionSummary>
+      className={css.table}
+      columns={columns}
+      data={content}
+      pagination={
+        totalElements > size
+          ? {
+              itemCount: totalElements,
+              pageSize: size,
+              pageCount: totalPages,
+              pageIndex: number,
+              gotoPage: pageNumber => updateQueryParams({ page: pageNumber + 1 })
+            }
+          : undefined
+      }
+      renderRowSubComponent={renderRowSubComponent}
+    />
   )
 }

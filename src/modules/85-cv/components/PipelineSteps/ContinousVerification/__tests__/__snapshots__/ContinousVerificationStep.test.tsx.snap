@@ -877,93 +877,102 @@ exports[`Test ContinousVerificationStep Step should render editView when current
         class="StyledProps--font StyledProps--main content"
       >
         <div
-          class="formGroup"
+          class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
         >
-          <div
-            class="bp3-form-group"
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-size-small"
           >
-            <label
-              class="bp3-label"
-              for="spec.type"
-            >
-              <span
-                class="Tooltip--acenter"
-                data-tooltip-id="cvData_spec.type"
-              >
-                connectors.cdng.continousVerificationType
-              </span>
-               
-              <span
-                class="bp3-text-muted"
-              />
-            </label>
+            connectors.cdng.verificationTypeHeading
+          </p>
+          <div
+            class="formGroup"
+          >
             <div
-              class="bp3-form-content"
+              class="bp3-form-group"
             >
+              <label
+                class="bp3-label"
+                for="spec.type"
+              >
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="cvData_spec.type"
+                >
+                  connectors.cdng.continousVerificationType
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
               <div
-                class="bp3-popover-wrapper Select--main bp3-fill"
+                class="bp3-form-content"
               >
                 <div
-                  class="bp3-popover-target"
+                  class="bp3-popover-wrapper Select--main bp3-fill"
                 >
                   <div
-                    class="bp3-input-group"
+                    class="bp3-popover-target"
                   >
-                    <span
-                      class="bp3-input-left-container"
+                    <div
+                      class="bp3-input-group"
                     >
                       <span
-                        class="bp3-icon StyledProps--main"
-                        data-icon="rolling"
+                        class="bp3-input-left-container"
                       >
-                        <svg
-                          fill="none"
-                          height="16"
-                          viewBox="0 0 32 32"
-                          width="16"
-                          xmlns="http://www.w3.org/2000/svg"
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="rolling"
                         >
-                          <path
-                            clip-rule="evenodd"
-                            d="M27.427 17.023a2 2 0 00.008-1.986l-5.112-9.023A2 2 0 0020.583 5H10.414a2 2 0 00-1.74 1.014l-5.111 9.023a2 2 0 00.008 1.986l5.1 8.834a2 2 0 001.732 1h10.19a2 2 0 001.733-1l1.645-2.848-8.307.057c-.045 0-.09-.003-.133-.008-2.97-.047-5.624-2.143-6.298-5.185-.784-3.546 1.418-7.071 4.95-7.853 2.74-.606 5.537.342 7.266 2.53l1.55-1.55v5h-5l2.022-2.023c-1.223-1.698-3.31-2.468-5.405-2.004-2.432.538-3.981 2.977-3.43 5.468.48 2.164 2.383 3.628 4.468 3.618.04 0 .08.002.119.006L25.13 21l2.297-3.978z"
-                            fill="#0092E4"
-                            fill-rule="evenodd"
-                          />
-                        </svg>
+                          <svg
+                            fill="none"
+                            height="16"
+                            viewBox="0 0 32 32"
+                            width="16"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              clip-rule="evenodd"
+                              d="M27.427 17.023a2 2 0 00.008-1.986l-5.112-9.023A2 2 0 0020.583 5H10.414a2 2 0 00-1.74 1.014l-5.111 9.023a2 2 0 00.008 1.986l5.1 8.834a2 2 0 001.732 1h10.19a2 2 0 001.733-1l1.645-2.848-8.307.057c-.045 0-.09-.003-.133-.008-2.97-.047-5.624-2.143-6.298-5.185-.784-3.546 1.418-7.071 4.95-7.853 2.74-.606 5.537.342 7.266 2.53l1.55-1.55v5h-5l2.022-2.023c-1.223-1.698-3.31-2.468-5.405-2.004-2.432.538-3.981 2.977-3.43 5.468.48 2.164 2.383 3.628 4.468 3.618.04 0 .08.002.119.006L25.13 21l2.297-3.978z"
+                              fill="#0092E4"
+                              fill-rule="evenodd"
+                            />
+                          </svg>
+                        </span>
                       </span>
-                    </span>
-                    <input
-                      autocomplete="off"
-                      class="bp3-input"
-                      name="spec.type"
-                      placeholder="- Select -"
-                      style="padding-right: 0px; padding-left: 0px;"
-                      type="text"
-                      value="Rolling Update"
-                    />
-                    <span
-                      class="bp3-input-action"
-                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="spec.type"
+                        placeholder="- Select -"
+                        style="padding-right: 0px; padding-left: 0px;"
+                        type="text"
+                        value="Rolling Update"
+                      />
                       <span
-                        class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                        icon="chevron-down"
+                        class="bp3-input-action"
                       >
-                        <svg
-                          data-icon="chevron-down"
-                          height="14"
-                          viewBox="0 0 16 16"
-                          width="14"
+                        <span
+                          class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                          icon="chevron-down"
                         >
-                          <desc>
-                            chevron-down
-                          </desc>
-                          <path
-                            d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                            fill-rule="evenodd"
-                          />
-                        </svg>
+                          <svg
+                            data-icon="chevron-down"
+                            height="14"
+                            viewBox="0 0 16 16"
+                            width="14"
+                          >
+                            <desc>
+                              chevron-down
+                            </desc>
+                            <path
+                              d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                              fill-rule="evenodd"
+                            />
+                          </svg>
+                        </span>
                       </span>
-                    </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1310,14 +1319,9 @@ exports[`Test ContinousVerificationStep Step should render editView when current
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div
-      class="StyledProps--font StyledProps--main container"
-    >
-      <div
-        class="StyledProps--font StyledProps--main content"
-      >
+        <hr
+          class="division"
+        />
         <div
           class="header"
         >
@@ -1337,6 +1341,11 @@ exports[`Test ContinousVerificationStep Step should render editView when current
             </span>
           </button>
         </div>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--padding-bottom-medium"
+        >
+          connectors.cdng.healthSources.healthSourceDef
+        </p>
         <div
           class="TableV2--table table"
         >

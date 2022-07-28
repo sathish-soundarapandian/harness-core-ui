@@ -23,6 +23,7 @@ import { TemplateListCardContextMenu } from '@templates-library/pages/TemplatesP
 import { Badge } from '@pipeline/pages/utils/Badge/Badge'
 import type { NGTemplateInfoConfigWithGitDetails } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import { ScopeBadge } from '@common/components/ScopeBadge/ScopeBadge'
+import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { TemplateColor } from './TemplateColor/TemplateColor'
 import css from './TemplateCard.module.scss'
 
@@ -39,12 +40,11 @@ export interface TemplateCardProps {
 export function TemplateCard(props: TemplateCardProps): JSX.Element {
   const { getString } = useStrings()
   const { template, onSelect, isSelected, onPreview, onOpenEdit, onOpenSettings, onDelete } = props
-
   const { isGitSyncEnabled } = useAppStore()
   const { gitSyncRepos, loadingRepos } = useGitSyncStore()
-
   const templateEntityType =
     (template as TemplateSummaryResponse)?.templateEntityType || (template as NGTemplateInfoConfig)?.type
+  const templateEntityLabel = defaultTo(templateFactory.getTemplateLabel(templateEntityType), '')
   const style = templateColorStyleMap[templateEntityType]
   const showMenu = !onPreview && !onOpenEdit && !onOpenSettings && !onDelete
   const repoIdentifier =
@@ -159,7 +159,7 @@ export function TemplateCard(props: TemplateCardProps): JSX.Element {
             fill={style.fill as string}
             stroke={style.stroke as string}
             textColor={style.color as string}
-            title={templateEntityType.toUpperCase()}
+            title={templateEntityLabel.toUpperCase()}
           />
         </Container>
       </Card>

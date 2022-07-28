@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Layout, Text, Card, Button, Radio, Container, ButtonVariation } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
@@ -14,13 +14,21 @@ import { useStrings } from 'framework/strings'
 import type { ResourceType } from '@rbac/interfaces/ResourceType'
 import useAddResourceModal from '@rbac/modals/AddResourceModal/useAddResourceModal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { isDynamicResourceSelector } from '@rbac/utils/utils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isAtrributeFilterSelector, isDynamicResourceSelector } from '@rbac/utils/utils'
+import type { ResourceSelectorValue } from '@rbac/pages/ResourceGroupDetails/utils'
+import type { AttributeFilter } from 'services/resourcegroups'
 import css from './ResourcesCard.module.scss'
 
 interface ResourcesCardProps {
   resourceType: ResourceType
-  resourceValues: string | string[]
-  onResourceSelectionChange: (resourceType: ResourceType, isAdd: boolean, identifiers?: string[] | undefined) => void
+  resourceValues: ResourceSelectorValue
+  onResourceSelectionChange: (
+    resourceType: ResourceType,
+    isAdd: boolean,
+    identifiers?: string[] | undefined,
+    attributeFilter?: string[] | undefined
+  ) => void
   disableAddingResources?: boolean
   disableSelection?: boolean
 }
@@ -33,16 +41,29 @@ const ResourcesCard: React.FC<ResourcesCardProps> = ({
   disableSelection
 }) => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const isAtrributeFilterEnabled = useMemo(() => isAtrributeFilterSelector(resourceValues), [resourceValues])
   const { getString } = useStrings()
   const { openAddResourceModal } = useAddResourceModal({
     onSuccess: resources => {
-      onResourceSelectionChange(resourceType, true, resources)
+      if (isAtrributeFilterEnabled) {
+        onResourceSelectionChange(resourceType, true, undefined, resources)
+      } else {
+        onResourceSelectionChange(resourceType, true, resources)
+      }
     }
   })
+  const { ATTRIBUTE_TYPE_ACL_ENABLED } = useFeatureFlags()
 
   const resourceDetails = RbacFactory.getResourceTypeHandler(resourceType)
   if (!resourceDetails) return null
-  const { label, icon, addResourceModalBody, staticResourceRenderer } = resourceDetails
+  const { label, icon, addResourceModalBody, addAttributeModalBody, staticResourceRenderer, attributeRenderer } =
+    resourceDetails
+  const attributeModalEnabled = !ATTRIBUTE_TYPE_ACL_ENABLED && addAttributeModalBody
+  const staticResourceValues = isAtrributeFilterEnabled
+    ? (resourceValues as AttributeFilter).attributeValues
+    : resourceValues
+  const resourceRenderer = isAtrributeFilterEnabled ? attributeRenderer : staticResourceRenderer
+
   return (
     <Card className={css.selectedResourceGroupCardDetails} key={resourceType}>
       <Layout.Vertical>
@@ -64,22 +85,43 @@ const ResourcesCard: React.FC<ResourcesCardProps> = ({
                 data-testid={`dynamic-${resourceType}`}
                 checked={isDynamicResourceSelector(resourceValues)}
                 onChange={e => onResourceSelectionChange(resourceType, e.currentTarget.checked)}
+                className={css.radioBtnLabel}
               />
+              {attributeModalEnabled && (
+                <Layout.Horizontal spacing="small" flex padding={{ left: 'huge' }}>
+                  <Radio
+                    label={getString('common.byType')}
+                    data-testid={`attr-${resourceType}`}
+                    checked={isAtrributeFilterEnabled}
+                    onChange={e => onResourceSelectionChange(resourceType, e.currentTarget.checked, undefined, [])}
+                    className={css.radioBtnLabel}
+                  />
+                </Layout.Horizontal>
+              )}
               {addResourceModalBody && (
-                <Layout.Horizontal spacing="small" flex padding={{ left: 'huge' }} className={css.radioBtn}>
+                <Layout.Horizontal spacing="small" flex padding={{ left: 'huge' }}>
                   <Radio
                     label={getString('common.specified')}
                     data-testid={`static-${resourceType}`}
-                    checked={!isDynamicResourceSelector(resourceValues)}
+                    checked={!isDynamicResourceSelector(resourceValues) && !isAtrributeFilterEnabled}
                     onChange={e => onResourceSelectionChange(resourceType, e.currentTarget.checked, [])}
+                    className={css.radioBtnLabel}
                   />
+                </Layout.Horizontal>
+              )}
+              {(attributeModalEnabled || addResourceModalBody) && (
+                <Layout.Horizontal spacing="small" flex padding={{ left: 'none' }}>
                   <Button
                     variation={ButtonVariation.LINK}
                     data-testid={`addResources-${resourceType}`}
                     disabled={disableAddingResources || isDynamicResourceSelector(resourceValues)}
                     className={css.addResourceBtn}
                     onClick={() => {
-                      openAddResourceModal(resourceType, Array.isArray(resourceValues) ? resourceValues : [])
+                      openAddResourceModal(
+                        resourceType,
+                        Array.isArray(staticResourceValues) ? staticResourceValues : [],
+                        isAtrributeFilterEnabled
+                      )
                     }}
                   >
                     {getString('plusAdd')}
@@ -90,23 +132,28 @@ const ResourcesCard: React.FC<ResourcesCardProps> = ({
           )}
         </Layout.Horizontal>
 
-        {Array.isArray(resourceValues) && resourceValues.length > 0 && (
+        {Array.isArray(staticResourceValues) && staticResourceValues.length > 0 && (
           <Layout.Vertical padding={{ top: 'large' }}>
-            {staticResourceRenderer
-              ? staticResourceRenderer({
-                  identifiers: resourceValues,
+            {resourceRenderer
+              ? resourceRenderer({
+                  identifiers: staticResourceValues,
                   resourceScope: { accountIdentifier: accountId, orgIdentifier, projectIdentifier },
                   onResourceSelectionChange,
-                  resourceType
+                  resourceType,
+                  isAtrributeFilterEnabled
                 })
-              : resourceValues.map(resource => (
+              : staticResourceValues.map(resource => (
                   <Layout.Horizontal padding="large" className={css.staticResource} key={resource} flex>
                     <Text>{resource}</Text>
                     <Button
-                      icon="trash"
+                      icon="main-trash"
                       minimal
                       onClick={() => {
-                        onResourceSelectionChange(resourceType, false, [resource])
+                        if (isAtrributeFilterEnabled) {
+                          onResourceSelectionChange(resourceType, false, undefined, [resource])
+                        } else {
+                          onResourceSelectionChange(resourceType, false, [resource])
+                        }
                       }}
                     />
                   </Layout.Horizontal>

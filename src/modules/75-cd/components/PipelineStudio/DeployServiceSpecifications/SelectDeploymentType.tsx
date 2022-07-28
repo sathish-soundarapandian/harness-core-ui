@@ -196,7 +196,7 @@ export default function SelectDeploymentType({
     if (AZURE_WEBAPP_NG) {
       baseTypes.push({
         label: 'Azure Web App',
-        icon: 'microsoft-azure',
+        icon: 'azurewebapp',
         value: ServiceDeploymentType.AzureWebApp
       })
     }

@@ -159,8 +159,8 @@ const updateConnector = async (container: any) => {
   })
 }
 
-const updateTextArea = async (container: any) => {
-  const hostsArea = container.querySelector('textarea')
+const updateHostsInput = async (container: any) => {
+  const hostsArea = queryByAttribute('name', container, 'hosts')
   act(() => {
     fireEvent.change(hostsArea!, { target: { value: 'localhost, 1.2.3.4' } })
   })
@@ -183,7 +183,7 @@ describe('Test PDCInfrastructureSpec behavior - No Preconfigured', () => {
       />
     )
     await checkForFormInit(container)
-    updateTextArea(container)
+    updateHostsInput(container)
     await submitForm(getByText)
     expect(onUpdateHandler).toHaveBeenCalledWith(getInitialValuesNoPreconfigured())
   })
@@ -201,7 +201,7 @@ describe('Test PDCInfrastructureSpec behavior - No Preconfigured', () => {
       />
     )
     await checkForFormInit(container)
-    updateTextArea(container)
+    updateHostsInput(container)
     await submitForm(getByText)
     expect(onUpdateHandler).not.toHaveBeenCalled()
   })
@@ -219,7 +219,7 @@ describe('Test PDCInfrastructureSpec behavior - No Preconfigured', () => {
     )
 
     await checkForFormInit(container)
-    updateTextArea(container)
+    updateHostsInput(container)
     await openPreviewHosts(getByText)
     expect(getByText('localhost')).toBeDefined()
     await submitForm(getByText)
@@ -237,7 +237,7 @@ describe('Test PDCInfrastructureSpec behavior - No Preconfigured', () => {
       />
     )
     await checkForFormInit(container)
-    updateTextArea(container)
+    updateHostsInput(container)
     await clickOnPreconfiguredHostsOption(getByText)
     await clickOnDeploySpecificHostsOption(getByText)
     await waitFor(() => {
@@ -285,7 +285,7 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
       />
     )
     await checkForFormInit(container)
-    updateTextArea(container)
+    updateHostsInput(container)
     await submitForm(getByText)
     expect(onUpdateHandler).not.toHaveBeenCalled()
   })

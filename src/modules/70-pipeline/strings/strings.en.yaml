@@ -368,6 +368,7 @@ manifestToConnectorLabelMap:
 failureStrategies:
   performAction: '{{ $.common.performAction }}'
   title: Failure Strategy
+  learnMoreLink: https://docs.harness.io/article/0zvnn5s1ph
   helpText: |
     Define one or more failure strategies to control the behavior of your pipeline when your step execution encounters an error.
   addedAllStrategies: You have added all possible failure strategies. There are no more options to add.
@@ -1229,11 +1230,12 @@ appServiceConfig:
     fileSource: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Source'
     filePath: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Path'
     subtitle: 'Specify {{$.pipeline.appServiceConfig.connectionStrings.name}} Script File Type'
-startupScript:
-  name: Startup Script
+startupCommand:
+  name: Startup Command
   subtitle: 'Specify Azure Web App Startup Script Type'
-  fileDetails: '{{$.pipeline.startupScript.name}} File Details'
-  fileSource: '{{$.pipeline.startupScript.name}} File Source'
+  fileDetails: '{{$.pipeline.startupCommand.name}} File Details'
+  fileSource: '{{$.pipeline.startupCommand.name}} File Source'
   scriptFilePath: 'Script File Path'
   fileValidation: 'file is required'
   plainText: 'Plain Text'
+triggerInfo: 'Trigger Info'

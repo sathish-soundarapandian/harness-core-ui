@@ -93,7 +93,7 @@ interface FileStoreProps {
   onNodeChange?: (node: any) => void
   scope?: string
   queryParams?: any
-  fileUsage?: string
+  fileUsage?: FileUsage
 }
 
 export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreProps) => {
@@ -118,7 +118,8 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
     isCachedNode,
     scope,
     tempNodes,
-    unsavedNodes
+    unsavedNodes,
+    fileUsage: FILE_USAGE_CONTEXT
   } = useContext(FileStoreContext)
   const { accountIdentifier: accountId, orgIdentifier, projectIdentifier } = queryParams
   const history = useHistory()
@@ -138,7 +139,8 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
 
   const { mutate: getRootNodes, loading } = useGetFolderNodes({
     queryParams: {
-      ...queryParams
+      ...queryParams,
+      fileUsage: FILE_USAGE_CONTEXT
     }
   })
 
@@ -282,7 +284,16 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
         }
       ) as FilesFilterProperties
 
-      const sanitizedFilterRequest = removeNullAndEmpty(requestBodyPayload)
+      const sanitizedFilterRequest = FILE_USAGE_CONTEXT
+        ? removeNullAndEmpty(
+            Object.assign(
+              { fileUsage: FILE_USAGE_CONTEXT },
+              {
+                filterType: 'FileStore'
+              }
+            )
+          )
+        : removeNullAndEmpty(requestBodyPayload)
       setLoading(true)
 
       try {

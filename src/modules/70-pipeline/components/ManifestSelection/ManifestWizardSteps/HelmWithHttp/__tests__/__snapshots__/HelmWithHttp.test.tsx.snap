@@ -280,7 +280,7 @@ exports[`helm with http tests expand advanced section 1`] = `
             </div>
           </div>
           <div
-            class="halfWidth"
+            class=""
           >
             <div
               data-rbd-droppable-context-id="1"
@@ -1069,7 +1069,7 @@ exports[`helm with http tests renders correctly in edit mode with connectorref 1
             </div>
           </div>
           <div
-            class="halfWidth"
+            class=""
           >
             <div
               data-rbd-droppable-context-id="2"
@@ -1558,7 +1558,7 @@ exports[`helm with http tests renders without crashing 1`] = `
             </div>
           </div>
           <div
-            class="halfWidth"
+            class=""
           >
             <div
               data-rbd-droppable-context-id="0"

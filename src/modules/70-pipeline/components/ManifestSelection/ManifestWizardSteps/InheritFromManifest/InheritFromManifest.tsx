@@ -23,12 +23,15 @@ import { FontVariation } from '@harness/design-system'
 import { Form } from 'formik'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import * as Yup from 'yup'
+import cx from 'classnames'
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
 import DragnDropPaths from '../../DragnDropPaths'
 import type { InheritFromManifestDataType, ManifestTypes } from '../../ManifestInterface'
+import { filePathWidth } from '../ManifestUtils'
 import css from '../K8sValuesManifest/ManifestDetails.module.scss'
 
 interface InheritFromManifestPropType {
@@ -51,7 +54,8 @@ function InheritFromManifest({
   handleSubmit,
   prevStepData,
   previousStep,
-  manifestIdsList
+  manifestIdsList,
+  isReadonly
 }: StepProps<ConnectorConfigDTO> & InheritFromManifestPropType): React.ReactElement {
   const { getString } = useStrings()
 
@@ -140,16 +144,34 @@ function InheritFromManifest({
                       placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
                     />
                   </div>
-
-                  <DragnDropPaths
-                    formik={formik}
-                    expressions={expressions}
-                    allowableTypes={allowableTypes}
-                    fieldPath="paths"
-                    pathLabel={getString('fileFolderPathText')}
-                    placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
-                    defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
-                  />
+                  <div
+                    className={cx({
+                      [css.runtimeInput]: getMultiTypeFromValue(formik.values?.paths) === MultiTypeInputType.RUNTIME
+                    })}
+                  >
+                    <DragnDropPaths
+                      formik={formik}
+                      expressions={expressions}
+                      allowableTypes={allowableTypes}
+                      fieldPath="paths"
+                      pathLabel={getString('fileFolderPathText')}
+                      placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                      defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+                      dragDropFieldWidth={filePathWidth}
+                    />
+                    {getMultiTypeFromValue(formik.values.paths) === MultiTypeInputType.RUNTIME && (
+                      <ConfigureOptions
+                        value={formik.values.paths}
+                        type={getString('string')}
+                        variableName={'paths'}
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        showAdvanced={true}
+                        onChange={val => formik?.setFieldValue('paths', val)}
+                        isReadonly={isReadonly}
+                      />
+                    )}
+                  </div>
                 </div>
 
                 <Layout.Horizontal spacing="medium" className={css.saveBtn}>

@@ -6,7 +6,7 @@
  */
 
 import { set } from 'lodash-es'
-import type { ConnectorInfoDTO, ConnectorRequestBody } from 'services/cd-ng'
+import type { ConnectorInfoDTO, ConnectorRequestBody, ConnectorResponse } from 'services/cd-ng'
 import { Connectors } from '@connectors/constants'
 import {
   BitbucketPRTriggerActions,
@@ -93,4 +93,17 @@ export const getPRTriggerActions = (gitProviderType: ConnectorInfoDTO['type']) =
     default:
       return []
   }
+}
+
+export const sortConnectorsByLastConnectedAtTsDescOrder = (
+  unsortedConnectorItems: ConnectorResponse[]
+): ConnectorResponse[] => {
+  const itemsCloneArr = [...unsortedConnectorItems]
+  return [...itemsCloneArr].sort((ctr1, ctr2) => {
+    const lastTestedAt1: number =
+      ctr1?.status?.lastConnectedAt && !isNaN(ctr1.status.lastConnectedAt) ? ctr1.status.lastConnectedAt : 0
+    const lastTestedAt2: number =
+      ctr2?.status?.lastConnectedAt && !isNaN(ctr2.status.lastConnectedAt) ? ctr2.status.lastConnectedAt : 0
+    return lastTestedAt2 - lastTestedAt1
+  })
 }

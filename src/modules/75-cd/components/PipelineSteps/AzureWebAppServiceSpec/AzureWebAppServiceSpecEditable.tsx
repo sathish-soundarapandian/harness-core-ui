@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Card, HarnessDocTooltip } from '@wings-software/uicore'
 import cx from 'classnames'
 import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/WorkflowVariables'
@@ -52,12 +52,14 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
 }) => {
   const { getString } = useStrings()
   const isPropagating = stageIndex > 0 && setupModeType === setupMode.PROPAGATE
+  const [loading, setLoading] = useState(false)
 
   const {
     state: {
       templateServiceData,
       selectionState: { selectedStageId }
     },
+    updateStage,
     getStageFromPipeline
   } = usePipelineContext()
 
@@ -65,16 +67,21 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
   const selectedDeploymentType =
     deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating, templateServiceData)
 
+  const updateStageData = async (newStage: any): Promise<void> => {
+    setLoading(true)
+    await updateStage(newStage).then(() => setLoading(false))
+  }
+
   return (
     <div className={css.serviceDefinition}>
       {!!selectedDeploymentType && (
         <>
-          <Card className={css.sectionCard} id={getString('pipeline.startupScript.name')}>
+          <Card className={css.sectionCard} id={getString('pipeline.startupCommand.name')}>
             <div
               className={cx(css.tabSubHeading, 'ng-tooltip-native')}
               data-tooltip-id={getStartupScriptHeaderTooltipId(selectedDeploymentType)}
             >
-              {getString('pipeline.startupScript.name')}
+              {getString('pipeline.startupCommand.name')}
               <HarnessDocTooltip
                 tooltipId={getStartupScriptHeaderTooltipId(selectedDeploymentType)}
                 useStandAlone={true}
@@ -84,7 +91,8 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
               isPropagating={isPropagating}
               deploymentType={selectedDeploymentType}
               isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-              readonly={!!readonly}
+              readonly={readonly || loading}
+              updateStage={updateStageData}
             />
           </Card>
 
@@ -100,7 +108,8 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
               isPropagating={isPropagating}
               deploymentType={selectedDeploymentType}
               isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-              readonly={!!readonly}
+              readonly={readonly || loading}
+              updateStage={updateStageData}
             />
           </Card>
 

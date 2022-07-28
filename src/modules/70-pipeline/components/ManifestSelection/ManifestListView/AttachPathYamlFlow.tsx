@@ -127,7 +127,7 @@ function AttachPathYamlFlow({
                     pathLabel={ManifestToPathLabelMap[manifestType] && getString(ManifestToPathLabelMap[manifestType])}
                     placeholder={getString('pipeline.manifestType.pathPlaceholder')}
                     defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
-                    dialogWidth={400}
+                    dragDropFieldWidth={400}
                   />
                 ) : (
                   <MultiConfigSelectField

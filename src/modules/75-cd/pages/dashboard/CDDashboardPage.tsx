@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Container, Dialog, PageHeader, PageSpinner } from '@wings-software/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, get } from 'lodash-es'
@@ -58,7 +58,7 @@ export interface CDModuleInfoProps {
   envIdentifiers: string[]
 }
 
-const NoDataOverviewPage = (): JSX.Element => {
+const NoDataOverviewPage: React.FC<{ onHide: () => void }> = ({ onHide }) => {
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
 
   const runPipelineDialogProps: IDialogProps = {
@@ -88,7 +88,7 @@ const NoDataOverviewPage = (): JSX.Element => {
       }}
     >
       <ExecutionListFilterContextProvider>
-        <OverviewExecutionListEmpty onRunPipeline={openModal} />
+        <OverviewExecutionListEmpty onRunPipeline={openModal} onHide={onHide} />
       </ExecutionListFilterContextProvider>
     </div>
   )
@@ -223,6 +223,12 @@ export const CDDashboardPage: React.FC = () => {
 
   const pipelineExecutionSummary = pipelineExecution?.data || {}
 
+  const [showOverviewDialog, setShowOverviewDialog] = useState(!pipelineExecutionSummary?.content?.length)
+
+  useEffect(() => {
+    setShowOverviewDialog(!pipelineExecutionSummary?.content?.length)
+  }, [projectIdentifier])
+
   if (loadingWorkloads || pipelineLoading) {
     return (
       <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
@@ -243,8 +249,8 @@ export const CDDashboardPage: React.FC = () => {
         }
       ></PageHeader>
       <Page.Body className={styles.content} loading={(loading && !refetchingDeployments) || loadingWorkloads}>
-        {!pipelineExecutionSummary?.content?.length ? (
-          <NoDataOverviewPage />
+        {showOverviewDialog ? (
+          <NoDataOverviewPage onHide={() => setShowOverviewDialog(false)} />
         ) : (
           <DeploymentsTimeRangeContext.Provider value={{ timeRange, setTimeRange }}>
             <Container className={styles.page} padding="large">

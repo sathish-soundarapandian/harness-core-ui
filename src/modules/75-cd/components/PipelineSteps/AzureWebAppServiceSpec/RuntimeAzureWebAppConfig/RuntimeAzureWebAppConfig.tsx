@@ -87,8 +87,8 @@ export function AzureWebAppConfig(props: AzureWebAppConfigProps): React.ReactEle
         return getString('pipeline.appServiceConfig.applicationSettings.filePath')
       case AzureWebAppConfigType.connectionStrings:
         return getString('pipeline.appServiceConfig.connectionStrings.filePath')
-      case AzureWebAppConfigType.startupScript:
-        return getString('pipeline.startupScript.scriptFilePath')
+      case AzureWebAppConfigType.startupCommand:
+        return getString('pipeline.startupCommand.scriptFilePath')
       /* istanbul ignore next */
       default:
         return ''
@@ -101,8 +101,8 @@ export function AzureWebAppConfig(props: AzureWebAppConfigProps): React.ReactEle
         return getString('pipeline.appServiceConfig.applicationSettings.name')
       case AzureWebAppConfigType.connectionStrings:
         return getString('pipeline.appServiceConfig.connectionStrings.name')
-      case AzureWebAppConfigType.startupScript:
-        return getString('pipeline.startupScript.name')
+      case AzureWebAppConfigType.startupCommand:
+        return getString('pipeline.startupCommand.name')
       /* istanbul ignore next */
       default:
         return ''

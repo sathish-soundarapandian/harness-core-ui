@@ -61,10 +61,10 @@ const AzureWebAppServiceSpecInputSet = (props: AzureWebAppServiceSpecFormProps):
         />
       )}
 
-      {!!template?.startupScript && (
+      {!!template?.startupCommand && (
         <AzureWebAppConfig
           template={template}
-          azureWebAppConfig={allValues?.startupScript}
+          azureWebAppConfig={allValues?.startupCommand}
           azureWebAppConfigBaseFactory={azureWebAppConfigBaseFactory}
           stepViewType={stepViewType}
           stageIdentifier={stageIdentifier}
@@ -74,7 +74,7 @@ const AzureWebAppServiceSpecInputSet = (props: AzureWebAppServiceSpecFormProps):
           initialValues={initialValues}
           readonly={readonly}
           allowableTypes={allowableTypes}
-          type={AzureWebAppConfigType.startupScript}
+          type={AzureWebAppConfigType.startupCommand}
         />
       )}
 

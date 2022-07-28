@@ -35,7 +35,7 @@ export const ConfigFileTypeTitle: Record<ConfigFileType, StringKeys> = {
   Github: 'common.repo_provider.githubLabel',
   Gitlab: 'common.repo_provider.gitlabLabel',
   Bitbucket: 'pipeline.manifestType.bitBucketLabel',
-  Harness: 'dashboards.modules.harness'
+  Harness: 'harness'
 }
 
 export const allowedConfigFilesTypes: Record<string, Array<ConfigFileType>> = {
@@ -71,7 +71,7 @@ export const ConfigFilesToConnectorLabelMap: Record<ConfigFileType, StringKeys> 
   Github: 'common.repo_provider.githubLabel',
   Gitlab: 'common.repo_provider.gitlabLabel',
   Bitbucket: 'pipeline.manifestType.bitBucketLabel',
-  Harness: 'dashboards.modules.harness'
+  Harness: 'harness'
 }
 
 export const ConfigFilesToConnectorMap: Record<ConfigFileType | string, ConnectorInfoDTO['type']> = {

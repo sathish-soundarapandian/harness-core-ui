@@ -40,7 +40,7 @@ import {
   ManifestStoreMap
 } from '../../Manifesthelper'
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
-import { getRepositoryName } from '../ManifestUtils'
+import { filePathWidth, getRepositoryName } from '../ManifestUtils'
 import DragnDropPaths from '../../DragnDropPaths'
 import css from '../ManifestWizardSteps.module.scss'
 import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
@@ -355,7 +355,12 @@ function KustomizeWithGIT({
                   )}
                 </div>
               </Layout.Horizontal>
-              <div className={helmcss.halfWidth}>
+              <div
+                className={cx({
+                  [helmcss.runtimeInput]:
+                    getMultiTypeFromValue(formik.values?.patchesPaths) === MultiTypeInputType.RUNTIME
+                })}
+              >
                 <DragnDropPaths
                   formik={formik}
                   expressions={expressions}
@@ -364,7 +369,20 @@ function KustomizeWithGIT({
                   pathLabel={getString('pipeline.manifestTypeLabels.KustomizePatches')}
                   placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
                   defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+                  dragDropFieldWidth={filePathWidth}
                 />
+                {getMultiTypeFromValue(formik.values.patchesPaths) === MultiTypeInputType.RUNTIME && (
+                  <ConfigureOptions
+                    value={formik.values.patchesPaths}
+                    type={getString('string')}
+                    variableName={'patchesPaths'}
+                    showRequiredField={false}
+                    showDefaultField={false}
+                    showAdvanced={true}
+                    onChange={val => formik?.setFieldValue('patchesPaths', val)}
+                    isReadonly={isReadonly}
+                  />
+                )}
               </div>
               <Accordion
                 activeId={isActiveAdvancedStep ? getString('advancedTitle') : ''}

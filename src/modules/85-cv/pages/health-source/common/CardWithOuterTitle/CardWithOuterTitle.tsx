@@ -25,15 +25,13 @@ export default function CardWithOuterTitle({
   dataTooltipId
 }: CardWithOuterTitleProp): JSX.Element {
   return (
-    <>
-      <Layout.Vertical margin={'xxlarge'} className={cx(css.tooltipStyle, className)}>
-        {title && (
-          <Text color={Color.BLACK} className={css.header} tooltipProps={{ dataTooltipId }}>
-            {title}
-          </Text>
-        )}
-        <Card className={cx(css.sectionCard, css.shadow)}>{children}</Card>
-      </Layout.Vertical>
-    </>
+    <Layout.Vertical margin={'medium'} className={cx(css.tooltipStyle, className)}>
+      {title && (
+        <Text color={Color.BLACK} className={css.header} tooltipProps={{ dataTooltipId }}>
+          {title}
+        </Text>
+      )}
+      <Card className={cx(css.sectionCard, css.shadow)}>{children}</Card>
+    </Layout.Vertical>
   )
 }

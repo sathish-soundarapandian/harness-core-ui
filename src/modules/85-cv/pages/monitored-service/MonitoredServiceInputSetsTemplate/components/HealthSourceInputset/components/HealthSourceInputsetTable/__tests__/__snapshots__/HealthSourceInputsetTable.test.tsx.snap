@@ -191,23 +191,17 @@ exports[`Validate HealthSourceInputsetTable should render HealthSourceInputsetTa
 exports[`Validate HealthSourceInputsetTable should render HealthSourceInputsetTable with Empty healthSources 1`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main"
-    style="height: 100%;"
+    class="Layout--vertical Layout--layout-spacing-large StyledProps--main mainContainer StyledProps--flex StyledProps--flex-align-center-center"
   >
-    <div
-      class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--flex StyledProps--flex-align-center-center"
-      style="height: 100%;"
+    <img
+      src="test-file-stub"
+      width="117px"
+    />
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey700"
     >
-      <img
-        src="test-file-stub"
-        width="117px"
-      />
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey700"
-      >
-        No Health sources
-      </p>
-    </div>
+      No Health sources
+    </p>
   </div>
 </div>
 `;
@@ -215,23 +209,17 @@ exports[`Validate HealthSourceInputsetTable should render HealthSourceInputsetTa
 exports[`Validate HealthSourceInputsetTable should render HealthSourceInputsetTable with Empty healthSources 2`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main"
-    style="height: 100%;"
+    class="Layout--vertical Layout--layout-spacing-large StyledProps--main mainContainer StyledProps--flex StyledProps--flex-align-center-center"
   >
-    <div
-      class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--flex StyledProps--flex-align-center-center"
-      style="height: 100%;"
+    <img
+      src="test-file-stub"
+      width="117px"
+    />
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey700"
     >
-      <img
-        src="test-file-stub"
-        width="117px"
-      />
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey700"
-      >
-        No Health sources
-      </p>
-    </div>
+      No Health sources
+    </p>
   </div>
 </div>
 `;

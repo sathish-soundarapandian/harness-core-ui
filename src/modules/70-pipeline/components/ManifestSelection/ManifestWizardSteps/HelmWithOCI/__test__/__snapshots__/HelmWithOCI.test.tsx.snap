@@ -280,7 +280,7 @@ exports[`helm with OCI tests renders without crashing 1`] = `
             </div>
           </div>
           <div
-            class="halfWidth"
+            class=""
           >
             <div
               data-rbd-droppable-context-id="0"

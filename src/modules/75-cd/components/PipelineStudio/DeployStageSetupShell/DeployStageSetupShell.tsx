@@ -101,11 +101,10 @@ export default function DeployStageSetupShell(): JSX.Element {
   const { stage: selectedStage } = getStageFromPipeline<DeploymentStageElementConfig>(defaultTo(selectedStageId, ''))
   const { checkErrorsForTab } = React.useContext(StageErrorContext)
   const gitOpsEnabled = selectedStage?.stage?.spec?.gitOpsEnabled
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-
   const isNewService = isNewServiceEnvEntity(NG_SVC_ENV_REDESIGN, selectedStage?.stage as DeploymentStageElementConfig)
   const isNewEnvDef = isNewEnvInfraDef(NG_SVC_ENV_REDESIGN, selectedStage?.stage as DeploymentStageElementConfig)
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceUpdateStage = useCallback(
     debounce(
       (changedStage?: StageElementConfig) =>
@@ -345,7 +344,9 @@ export default function DeployStageSetupShell(): JSX.Element {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(selectedStage)])
 
-  const originalStage = selectedStageId ? getStageFromPipeline(selectedStageId, originalPipeline).stage : undefined
+  const originalStage = selectedStageId
+    ? getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId, originalPipeline).stage
+    : undefined
   const stagePath = getStagePathFromPipeline(selectedStageId || '', 'pipeline.stages')
 
   const executionRef = React.useRef<ExecutionGraphRefObj | null>(null)

@@ -22,20 +22,23 @@ import ConfigFilesListView from './ConfigFilesListView/ConfigFilesListView'
 
 export default function ConfigFilesSelection({
   isPropagating,
-  deploymentType
+  deploymentType,
+  isReadonlyServiceMode,
+  readonly
 }: ConfigFilesSelectionProps): JSX.Element {
   const {
     state: {
-      selectionState: { selectedStageId }
+      selectionState: { selectedStageId },
+      pipeline
     },
     getStageFromPipeline,
     updateStage,
-    isReadonly,
     allowableTypes
   } = usePipelineContext()
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const [selectedConfig, setSelectedConfig] = useState<ConfigFileType>(ConfigFilesMap.Harness)
+  const getServiceCacheId = `${pipeline.identifier}-${selectedStageId}-service`
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<
     PipelineType<{
@@ -63,10 +66,12 @@ export default function ConfigFilesSelection({
         stage={stage}
         setSelectedConfig={handleSelect}
         selectedConfig={selectedConfig}
-        isReadonly={isReadonly}
+        isReadonly={!!readonly}
         deploymentType={deploymentType}
         allowableTypes={allowableTypes}
         selectedServiceResponse={selectedServiceResponse}
+        isReadonlyServiceMode={isReadonlyServiceMode}
+        serviceCacheId={getServiceCacheId}
       />
     </Layout.Vertical>
   )

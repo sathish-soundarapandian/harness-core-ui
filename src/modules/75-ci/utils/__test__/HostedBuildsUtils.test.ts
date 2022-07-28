@@ -10,7 +10,11 @@ import {
   getBackendServerUrl,
   isEnvironmentAllowedForOAuth
 } from '@connectors/components/CreateConnector/CreateConnectorUtils'
-import { getOAuthConnectorPayload, getPRTriggerActions } from '../HostedBuildsUtils'
+import {
+  getOAuthConnectorPayload,
+  getPRTriggerActions,
+  sortConnectorsByLastConnectedAtTsDescOrder
+} from '../HostedBuildsUtils'
 import {
   GitHubPRTriggerActions,
   GitlabPRTriggerActions,
@@ -130,5 +134,24 @@ describe('Test HostedBuildsUtils methods', () => {
     expect(getPRTriggerActions(Connectors.GITLAB)).toBe(GitlabPRTriggerActions)
     expect(getPRTriggerActions(Connectors.BITBUCKET)).toBe(BitbucketPRTriggerActions)
     expect(getPRTriggerActions(Connectors.KUBERNETES_CLUSTER)).toStrictEqual([])
+  })
+
+  test('Test sortConnectorsByLastConnectedAtTsDescOrder method', () => {
+    let sortedItems = sortConnectorsByLastConnectedAtTsDescOrder([
+      { status: { lastConnectedAt: 1668000000000 } },
+      { status: { lastConnectedAt: 1658000000000 } }
+    ])
+    expect(
+      new Number(get(sortedItems[0], 'status.lastConnectedAt')) >
+        new Number(get(sortedItems[1], 'status.lastConnectedAt'))
+    ).toBe(true)
+    sortedItems = sortConnectorsByLastConnectedAtTsDescOrder([
+      { status: {} },
+      { status: { lastConnectedAt: 1658000000000 } }
+    ])
+    expect(
+      new Number(get(sortedItems[0], 'status.lastConnectedAt')) >
+        new Number(get(sortedItems[1], 'status.lastConnectedAt'))
+    ).toBe(false)
   })
 })

@@ -41,8 +41,9 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { IdentifierSchema, NameSchema, TemplateVersionLabelSchema } from '@common/utils/Validation'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
+import { getScopeFromDTO, getScopeLabelfromScope } from '@common/components/EntityReference/EntityReference'
 import type { TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
+import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { DefaultNewTemplateId, DefaultNewVersionLabel } from '../templates'
 import css from './TemplateConfigModal.module.scss'
 
@@ -118,20 +119,15 @@ const BasicTemplateDetails = (props: BasicDetailsInterface): JSX.Element => {
   const pathParams = useParams<TemplateStudioPathProps>()
   const { orgIdentifier, projectIdentifier } = pathParams
   const scope = getScopeFromDTO(pathParams)
-  const SCOPE_OPTIONS: SelectOption[] = [
-    {
-      value: Scope.ACCOUNT,
-      label: getString('account')
-    },
-    {
-      value: Scope.ORG,
-      label: getString('orgLabel')
-    },
-    {
-      value: Scope.PROJECT,
-      label: getString('projectLabel')
-    }
-  ]
+  const allowedScopes = templateFactory.getTemplateAllowedScopes(initialValues.type)
+  const scopeOptions = React.useMemo(
+    () =>
+      (allowedScopes || []).map(item => ({
+        value: item,
+        label: getScopeLabelfromScope(item, getString)
+      })),
+    [allowedScopes]
+  )
 
   const formInitialValues = React.useMemo(
     () =>
@@ -254,7 +250,12 @@ const BasicTemplateDetails = (props: BasicDetailsInterface): JSX.Element => {
                           formikProps={formik}
                           identifierProps={{
                             isIdentifierEditable: !disabledFields.includes(Fields.Identifier) && !isReadonly,
-                            inputGroupProps: { disabled: disabledFields.includes(Fields.Name) || isReadonly }
+                            inputGroupProps: {
+                              disabled: disabledFields.includes(Fields.Name) || isReadonly,
+                              placeholder: getString('templatesLibrary.createNewModal.namePlaceholder', {
+                                entity: formik.values.type
+                              })
+                            }
                           }}
                           className={css.nameIdDescriptionTags}
                           descriptionProps={{
@@ -300,8 +301,8 @@ const BasicTemplateDetails = (props: BasicDetailsInterface): JSX.Element => {
                               {getString('templatesLibrary.templateSettingsModal.scopeLabel')}
                             </label>
                             <Select
-                              value={SCOPE_OPTIONS.find(item => item.value === getScopeFromDTO(formik.values))}
-                              items={SCOPE_OPTIONS}
+                              value={scopeOptions.find(item => item.value === getScopeFromDTO(formik.values))}
+                              items={scopeOptions}
                               onChange={item => onScopeChange(item, formik)}
                             />
                           </Container>

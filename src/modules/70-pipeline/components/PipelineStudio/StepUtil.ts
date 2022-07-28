@@ -500,9 +500,11 @@ export const validateCICodebase = ({
 
     if (pipeline?.properties?.ci?.codebase?.build?.type === CodebaseTypes.PR && !isInputSetForm) {
       if (
-        isNaN(pipeline?.properties?.ci?.codebase?.build?.spec?.number) ||
-        !Number.isInteger(parseFloat(pipeline?.properties?.ci?.codebase?.build?.spec?.number)) ||
-        parseFloat(pipeline?.properties?.ci?.codebase?.build?.spec?.number) < 1
+        getMultiTypeFromValue(pipeline?.properties?.ci?.codebase?.build?.spec?.number) !==
+          MultiTypeInputType.EXPRESSION &&
+        (isNaN(pipeline?.properties?.ci?.codebase?.build?.spec?.number) ||
+          !Number.isInteger(parseFloat(pipeline?.properties?.ci?.codebase?.build?.spec?.number)) ||
+          parseFloat(pipeline?.properties?.ci?.codebase?.build?.spec?.number) < 1)
       ) {
         set(
           errors,

@@ -10,6 +10,7 @@ import { render } from '@testing-library/react'
 import type { AllowedTypesWithRunTime } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 
+import * as templateService from 'services/template-ng'
 import SelectMonitoredServiceType, { SelectMonitoredServiceTypeProps } from '../SelectMonitoredServiceType'
 import {
   mockedFormikWithTemplatesData,
@@ -37,6 +38,17 @@ jest.mock('services/cv', () => {
     })
   }
 })
+
+jest.spyOn(templateService, 'useGetTemplate').mockImplementation(
+  () =>
+    ({
+      data: {},
+      refetch: jest.fn(),
+      error: null,
+      loading: true,
+      cancel: jest.fn()
+    } as any)
+)
 
 jest.mock('framework/Templates/TemplateSelectorContext/useTemplateSelector', () => ({
   useTemplateSelector: jest.fn().mockReturnValue({
@@ -98,8 +110,8 @@ describe('Unit tests for SelectMonitoredServiceType', () => {
       formik: mockedFormikWithTemplatesData,
       allowableTypes: ['FIXED', 'RUNTIME', 'EXPRESSION'] as AllowedTypesWithRunTime[]
     }
-    const { queryByText } = render(<WrapperComponent {...props} />)
-    const useTemplateButton = queryByText('common.useTemplate')
+    const { queryAllByText } = render(<WrapperComponent {...props} />)
+    const useTemplateButton = queryAllByText('common.useTemplate')[0]
     expect(useTemplateButton).toBeInTheDocument()
   })
 

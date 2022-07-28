@@ -84,7 +84,7 @@ function StartupScriptWizardStepTwo({
   }, [])
 
   const submitFormData = (formData: StartupScriptDataType & { store?: string; connectorRef?: string }): void => {
-    const startupScript = {
+    const startupCommand = {
       type: formData?.store as ConnectorTypes,
       spec: {
         connectorRef: formData?.connectorRef,
@@ -97,17 +97,18 @@ function StartupScriptWizardStepTwo({
     }
 
     if (connectionType === GitRepoName.Account) {
-      set(startupScript, 'spec.repoName', formData?.repoName)
+      set(startupCommand, 'spec.repoName', formData?.repoName)
     }
 
-    if (startupScript?.spec) {
+    if (startupCommand?.spec) {
       if (formData?.gitFetchType === 'Branch') {
-        set(startupScript, 'spec.branch', formData?.branch)
+        set(startupCommand, 'spec.branch', formData?.branch)
       } else if (formData?.gitFetchType === 'Commit') {
-        set(startupScript, 'spec.commitId', formData?.commitId)
+        set(startupCommand, 'spec.commitId', formData?.commitId)
       }
     }
-    handleSubmit(startupScript)
+
+    handleSubmit(startupCommand)
   }
 
   if (prevStepData?.store === 'Harness') {
@@ -146,7 +147,7 @@ function StartupScriptWizardStepTwo({
             .trim()
             .required(
               getString('common.validation.fieldIsRequired', {
-                name: getString('pipeline.startupScript.scriptFilePath')
+                name: getString('pipeline.startupCommand.scriptFilePath')
               })
             ),
           repoName: Yup.string().test('repoName', getString('common.validation.repositoryName'), value => {
@@ -257,8 +258,8 @@ function StartupScriptWizardStepTwo({
                   )}
                   <div className={cx(stepCss.formGroup, stepCss.md)}>
                     <FormInput.MultiTextInput
-                      label={getString('pipeline.startupScript.scriptFilePath')}
-                      placeholder={getString('pipeline.startupScript.scriptFilePath')}
+                      label={getString('pipeline.startupCommand.scriptFilePath')}
+                      placeholder={getString('pipeline.startupCommand.scriptFilePath')}
                       name={'paths'}
                       multiTextInputProps={{ expressions, allowableTypes }}
                     />

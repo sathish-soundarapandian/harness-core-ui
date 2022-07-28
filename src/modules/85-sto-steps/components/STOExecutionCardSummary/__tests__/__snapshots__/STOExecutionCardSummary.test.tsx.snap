@@ -21,6 +21,39 @@ exports[`STOExecutionCardSummary renders correctly 1`] = `
       data-testid="Low"
       data-value="4"
     />
+    <div
+      data-testid="Info"
+      data-value="5"
+    />
+  </div>
+</div>
+`;
+
+exports[`STOExecutionCardSummary shows issues on pipeline failure 1`] = `
+<div>
+  <div
+    class="main"
+  >
+    <div
+      data-testid="Critical"
+      data-value="1"
+    />
+    <div
+      data-testid="High"
+      data-value="2"
+    />
+    <div
+      data-testid="Medium"
+      data-value="3"
+    />
+    <div
+      data-testid="Low"
+      data-value="4"
+    />
+    <div
+      data-testid="Info"
+      data-value="5"
+    />
   </div>
 </div>
 `;

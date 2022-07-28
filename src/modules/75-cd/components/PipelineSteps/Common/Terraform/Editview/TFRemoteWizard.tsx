@@ -166,7 +166,7 @@ export const TFRemoteWizard: React.FC<StepProps<any> & TFRemoteProps> = ({
               spec: {
                 store: {
                   /* istanbul ignore next */
-                  type: payload.connectorRef?.connector?.type || prevStepData?.selectedType,
+                  type: prevStepData?.selectedType,
                   spec: {
                     ...payload.varFile.spec?.store?.spec,
                     connectorRef: payload.connectorRef

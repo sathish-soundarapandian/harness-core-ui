@@ -8,8 +8,9 @@
 import React, { createContext, useState, useCallback } from 'react'
 import type { FileStoreNodeDTO as NodeDTO, FileDTO, NGTag } from 'services/cd-ng'
 import { useGetFolderNodes } from 'services/cd-ng'
-import { FILE_VIEW_TAB, FileStoreNodeTypes, FileUsage } from '@filestore/interfaces/FileStore'
+import { FILE_VIEW_TAB, FileStoreNodeTypes } from '@filestore/interfaces/FileStore'
 import { FILE_STORE_ROOT } from '@filestore/utils/constants'
+import type { FileUsage } from '@filestore/interfaces/FileStore'
 import { ScopedObjectDTO, useFileStoreScope } from '../../common/useFileStoreScope/useFileStoreScope'
 
 export interface FileContentDTO extends FileDTO {
@@ -28,6 +29,7 @@ export interface FileStoreNodeDTO extends NodeDTO {
   parentName?: string
   path?: string
   initialContent?: string
+  savedFileUsage?: boolean
 }
 
 export interface FileStoreContextState {
@@ -46,7 +48,7 @@ export interface FileStoreContextState {
   setTempNodes: (node: FileStoreNodeDTO[]) => void
   unsavedNodes: FileStoreNodeDTO[]
   setUnsavedNodes: (node: FileStoreNodeDTO[]) => void
-  updateTempNodes: (node: FileStoreNodeDTO) => void
+  updateTempNodes: (node: FileStoreNodeDTO, isReplace?: boolean) => void
   deletedNode: string
   addDeletedNode: (node: string) => void
   removeFromTempNodes: (nodeId: string) => void
@@ -54,7 +56,7 @@ export interface FileStoreContextState {
   isModalView: boolean
   scope: string
   queryParams: ScopedObjectDTO
-  fileUsage?: string
+  fileUsage?: FileUsage
 }
 
 export interface GetNodeConfig {
@@ -72,11 +74,11 @@ interface FileStoreContextProps {
   scope?: string
   isModalView?: boolean
   children?: any
-  fileUsage?: string
+  fileUsage?: FileUsage
 }
 
 export const FileStoreContextProvider: React.FC<FileStoreContextProps> = (props: FileStoreContextProps) => {
-  const { scope = '', isModalView = false, fileUsage = '' } = props
+  const { scope = '', isModalView = false, fileUsage } = props
   const queryParams = useFileStoreScope({
     scope,
     isModalView
@@ -95,7 +97,10 @@ export const FileStoreContextProvider: React.FC<FileStoreContextProps> = (props:
   const [fileStore, setFileStore] = useState<FileStoreNodeDTO[] | undefined>()
 
   const { mutate: getFolderNodes, loading: isGettingFolderNodes } = useGetFolderNodes({
-    queryParams
+    queryParams: {
+      ...queryParams,
+      fileUsage
+    }
   })
 
   const setCurrentNode = (node: FileStoreNodeDTO): void => {
@@ -113,7 +118,10 @@ export const FileStoreContextProvider: React.FC<FileStoreContextProps> = (props:
     [setFileStore]
   )
 
-  const updateTempNodes = (node: FileStoreNodeDTO): void => {
+  const updateTempNodes = (node: FileStoreNodeDTO, isReplace?: boolean): void => {
+    if (isReplace) {
+      return setTempNodes([node])
+    }
     setTempNodes([
       ...tempNodes.map(
         (tempNode: FileStoreNodeDTO): FileStoreNodeDTO => (tempNode.identifier === node.identifier ? node : tempNode)
@@ -152,11 +160,13 @@ export const FileStoreContextProvider: React.FC<FileStoreContextProps> = (props:
     getFolderNodes({ ...nodeParams, children: undefined }).then(response => {
       if (nodeParams?.identifier === FILE_STORE_ROOT) {
         setFileStore(
-          response?.data?.children?.map((node: FileStoreNodeDTO) => ({
-            ...node,
-            parentIdentifier: FILE_STORE_ROOT,
-            parentName: FILE_STORE_ROOT
-          }))
+          response?.data?.children?.map((node: FileStoreNodeDTO) => {
+            return {
+              ...node,
+              parentIdentifier: FILE_STORE_ROOT,
+              parentName: FILE_STORE_ROOT
+            }
+          })
         )
       }
       if (response?.data) {
@@ -164,10 +174,12 @@ export const FileStoreContextProvider: React.FC<FileStoreContextProps> = (props:
           updateCurrentNode({
             ...nodeParams,
             ...response.data,
-            children: response.data?.children?.map(node => ({
-              ...node,
-              parentName: response?.data?.name
-            })),
+            children: response.data?.children?.map((node: FileStoreNodeDTO) => {
+              return {
+                ...node,
+                parentName: response?.data?.name
+              }
+            }),
             parentName: getParentName(response?.data)
           })
         }
@@ -181,7 +193,7 @@ export const FileStoreContextProvider: React.FC<FileStoreContextProps> = (props:
           setCurrentNode({
             ...nodeParams,
             ...response.data,
-            children: response.data?.children?.map(node => ({
+            children: response.data?.children?.map((node: FileStoreNodeDTO) => ({
               ...node,
               parentName: response?.data?.name
             }))

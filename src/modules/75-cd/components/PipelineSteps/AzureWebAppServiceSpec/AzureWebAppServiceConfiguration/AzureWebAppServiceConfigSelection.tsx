@@ -32,7 +32,8 @@ export default function AzureWebAppConfigSelection({
   isPropagating,
   deploymentType,
   isReadonlyServiceMode,
-  readonly
+  readonly,
+  updateStage
 }: AzureWebAppSelectionProps): JSX.Element | null {
   const {
     state: {
@@ -40,7 +41,6 @@ export default function AzureWebAppConfigSelection({
       selectionState: { selectedStageId }
     },
     getStageFromPipeline,
-    updateStage,
     allowableTypes
   } = usePipelineContext()
 

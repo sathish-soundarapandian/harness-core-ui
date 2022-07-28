@@ -102,7 +102,7 @@ export interface AzureWebAppWizardInitData {
 
 export interface AzureWebAppListViewProps {
   pipeline: any
-  updateStage: (stage: StageElementConfig) => Promise<void>
+  updateStage?: (stage: StageElementConfig) => Promise<void>
   stage: StageElementWrapper | undefined
   isPropagating?: boolean
   isReadonly: boolean
@@ -188,4 +188,5 @@ export interface AzureWebAppSelectionProps {
   deploymentType: ServiceDefinition['type']
   isReadonlyServiceMode: boolean
   readonly: boolean
+  updateStage?: (stage: any) => Promise<void>
 }

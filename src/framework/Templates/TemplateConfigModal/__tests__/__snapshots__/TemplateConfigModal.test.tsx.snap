@@ -136,6 +136,7 @@ exports[`CREATE MODE if form changesupdate the preview card: changed value shoul
                                   autocomplete="off"
                                   class="bp3-input"
                                   name="name"
+                                  placeholder="templatesLibrary.createNewModal.namePlaceholder"
                                   type="text"
                                   value="templatename"
                                 />
@@ -367,31 +368,19 @@ exports[`CREATE MODE if form changesupdate the preview card: changed value shoul
             class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--padding-top-medium"
           >
             <div
-              class="templateColor"
+              class="css-130a1s3"
+              fill="#EADEFF"
+              stroke="#E1D0FF"
+              width="100"
             >
-              <div
-                class="absolutePos"
-              >
-                <svg
-                  fill="none"
-                  height="18"
-                  viewBox="0 0 121 18"
-                  width="121"
-                  xmlns="http://www.w3.org/2000/svg"
+              <div>
+                <p
+                  class="StyledProps--font StyledProps--main text absolutePos"
+                  style="color: rgb(89, 43, 170);"
                 >
-                  <path
-                    d="M10.6577 4.36758L0.989019 17.5H120.044L111.076 4.58226C109.301 2.02513 106.385 0.5 103.272 0.5H18.3079C15.288 0.5 12.4481 1.93575 10.6577 4.36758Z"
-                    fill="#EADEFF"
-                    stroke="#E1D0FF"
-                  />
-                </svg>
+                  
+                </p>
               </div>
-              <p
-                class="StyledProps--font StyledProps--main text absolutePos"
-                style="color: rgb(89, 43, 170);"
-              >
-                STEP
-              </p>
             </div>
           </div>
         </div>

@@ -178,39 +178,45 @@ export default function MonitoredService({
     return (
       <>
         <Card>
-          <div className={cx(stepCss.formGroup)}>
-            <Container className={css.monitoredService}>
-              <FormInput.Text
-                name={'spec.monitoredServiceRef'}
-                label={getString('connectors.cdng.monitoredService.label')}
-                disabled
-              />
-              {serviceIdentifier !== RUNTIME_INPUT_VALUE &&
-              environmentIdentifier !== RUNTIME_INPUT_VALUE &&
-              formValues?.spec?.monitoredServiceRef !== MONITORED_SERVICE_EXPRESSION ? (
-                <div className={css.monitoredServiceText}>
-                  {`
+          <>
+            <div className={cx(stepCss.formGroup)}>
+              <Container className={css.monitoredService}>
+                <FormInput.Text
+                  name={'spec.monitoredServiceRef'}
+                  label={getString('connectors.cdng.monitoredService.label')}
+                  disabled
+                />
+                {serviceIdentifier !== RUNTIME_INPUT_VALUE &&
+                environmentIdentifier !== RUNTIME_INPUT_VALUE &&
+                formValues?.spec?.monitoredServiceRef !== MONITORED_SERVICE_EXPRESSION ? (
+                  <div className={css.monitoredServiceText}>
+                    {`
                     ${getString('connectors.cdng.monitoredService.monitoredServiceText')}
                     ${serviceIdentifier} ${getString('and').toLocaleLowerCase()} ${environmentIdentifier}
                   `}
-                </div>
-              ) : null}
-            </Container>
-          </div>
+                  </div>
+                ) : null}
+              </Container>
+            </div>
+
+            {formValues?.spec?.monitoredServiceRef !== RUNTIME_INPUT_VALUE &&
+            formValues?.spec?.monitoredServiceRef !== MONITORED_SERVICE_EXPRESSION ? (
+              <>
+                <hr className={css.division} />
+                <VerifyStepHealthSourceTable
+                  serviceIdentifier={serviceIdentifier}
+                  envIdentifier={environmentIdentifier}
+                  healthSourcesList={healthSourcesList}
+                  monitoredServiceData={monitoredServiceData as MonitoredServiceDTO}
+                  monitoredServiceRef={monitoredService}
+                  onSuccess={onSuccess}
+                  isRunTimeInput={false}
+                  changeSourcesList={monitoredServiceData?.sources?.changeSources as ChangeSourceDTO[]}
+                />
+              </>
+            ) : null}
+          </>
         </Card>
-        {formValues?.spec?.monitoredServiceRef !== RUNTIME_INPUT_VALUE &&
-        formValues?.spec?.monitoredServiceRef !== MONITORED_SERVICE_EXPRESSION ? (
-          <VerifyStepHealthSourceTable
-            serviceIdentifier={serviceIdentifier}
-            envIdentifier={environmentIdentifier}
-            healthSourcesList={healthSourcesList}
-            monitoredServiceData={monitoredServiceData as MonitoredServiceDTO}
-            monitoredServiceRef={monitoredService}
-            onSuccess={onSuccess}
-            isRunTimeInput={false}
-            changeSourcesList={monitoredServiceData?.sources?.changeSources as ChangeSourceDTO[]}
-          />
-        ) : null}
       </>
     )
   } else {

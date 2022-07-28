@@ -145,77 +145,83 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
   const renderBucketListforS3Gcs = (): React.ReactElement | null => {
     if (manifestStoreType === ManifestStoreMap.S3) {
       return (
-        <ExperimentalInput
-          name={`${path}.${manifestPath}.spec.store.spec.bucketName`}
-          disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.bucketName`)}
-          formik={formik}
-          label={getString('pipeline.manifestType.bucketName')}
-          placeholder={getString('pipeline.manifestType.bucketNamePlaceholder')}
-          multiTypeInputProps={{
-            onFocus: () => {
-              if (
-                !s3BucketList?.data &&
-                getDefaultQueryParam(
-                  manifest?.spec?.spec.connectorRef,
-                  get(initialValues, `${manifestPath}.spec.store.spec.connectorRef`, '')
-                ) &&
-                getDefaultQueryParam(
-                  manifest?.spec?.store?.spec.region,
-                  get(initialValues, `${manifestPath}.spec.store.spec.region`, '')
-                )
-              ) {
-                refetchS3Buckets()
-              }
-            },
-            selectProps: {
-              usePortal: true,
-              addClearBtn: !readonly,
-              items: s3bucketdataLoading
-                ? [{ label: 'Loading Buckets...', value: 'Loading Buckets...' }]
-                : s3BucketOptions,
+        <div className={css.verticalSpacingInput}>
+          <ExperimentalInput
+            name={`${path}.${manifestPath}.spec.store.spec.bucketName`}
+            disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.bucketName`)}
+            formik={formik}
+            label={getString('pipeline.manifestType.bucketName')}
+            placeholder={getString('pipeline.manifestType.bucketNamePlaceholder')}
+            multiTypeInputProps={{
+              onFocus: () => {
+                if (
+                  !s3BucketList?.data &&
+                  getDefaultQueryParam(
+                    manifest?.spec?.spec.connectorRef,
+                    get(initialValues, `${manifestPath}.spec.store.spec.connectorRef`, '')
+                  ) &&
+                  getDefaultQueryParam(
+                    manifest?.spec?.store?.spec.region,
+                    get(initialValues, `${manifestPath}.spec.store.spec.region`, '')
+                  )
+                ) {
+                  refetchS3Buckets()
+                }
+              },
+              selectProps: {
+                usePortal: true,
+                addClearBtn: !readonly,
+                items: s3bucketdataLoading
+                  ? [{ label: 'Loading Buckets...', value: 'Loading Buckets...' }]
+                  : s3BucketOptions,
 
-              allowCreatingNewItems: true
-            },
-            expressions,
-            allowableTypes
-          }}
-          useValue
-          selectItems={s3BucketOptions}
-        />
+                allowCreatingNewItems: true
+              },
+              expressions,
+              allowableTypes
+            }}
+            useValue
+            selectItems={s3BucketOptions}
+          />
+        </div>
       )
     } else if (manifestStoreType === ManifestStoreMap.Gcs) {
       return (
-        <ExperimentalInput
-          name={`${path}.${manifestPath}.spec.store.spec.bucketName`}
-          disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.bucketName`)}
-          formik={formik}
-          label={getString('pipeline.manifestType.bucketName')}
-          placeholder={getString('pipeline.manifestType.bucketNamePlaceholder')}
-          multiTypeInputProps={{
-            onFocus: () => {
-              if (
-                !gcsBucketData?.data &&
-                getDefaultQueryParam(
-                  manifest?.spec?.store.spec.connectorRef,
-                  get(initialValues, `${manifestPath}.spec.store.spec.connectorRef`, '')
-                )
-              ) {
-                refetchGcsBucket()
-              }
-            },
-            selectProps: {
-              usePortal: true,
-              addClearBtn: !readonly,
-              items: gcsBucketLoading ? [{ label: 'Loading Buckets...', value: 'Loading Buckets...' }] : bucketOptions,
+        <div className={css.verticalSpacingInput}>
+          <ExperimentalInput
+            name={`${path}.${manifestPath}.spec.store.spec.bucketName`}
+            disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.bucketName`)}
+            formik={formik}
+            label={getString('pipeline.manifestType.bucketName')}
+            placeholder={getString('pipeline.manifestType.bucketNamePlaceholder')}
+            multiTypeInputProps={{
+              onFocus: () => {
+                if (
+                  !gcsBucketData?.data &&
+                  getDefaultQueryParam(
+                    manifest?.spec?.store.spec.connectorRef,
+                    get(initialValues, `${manifestPath}.spec.store.spec.connectorRef`, '')
+                  )
+                ) {
+                  refetchGcsBucket()
+                }
+              },
+              selectProps: {
+                usePortal: true,
+                addClearBtn: !readonly,
+                items: gcsBucketLoading
+                  ? [{ label: 'Loading Buckets...', value: 'Loading Buckets...' }]
+                  : bucketOptions,
 
-              allowCreatingNewItems: true
-            },
-            expressions,
-            allowableTypes
-          }}
-          useValue
-          selectItems={bucketOptions}
-        />
+                allowCreatingNewItems: true
+              },
+              expressions,
+              allowableTypes
+            }}
+            useValue
+            selectItems={bucketOptions}
+          />
+        </div>
       )
     }
     return null
@@ -356,7 +362,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       )}
       {isFieldFixedType(`${manifestPath}.spec.store.spec.connectorRef`, initialValues) &&
       isFieldFixedType(`${manifestPath}.spec.store.spec.region`, initialValues) ? (
-        <div className={css.verticalSpacingInput}>{renderBucketListforS3Gcs()}</div>
+        renderBucketListforS3Gcs()
       ) : (
         <div className={css.verticalSpacingInput}>
           <FormInput.MultiTextInput

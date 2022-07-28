@@ -7,9 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly illustration: string
-  readonly infoText: string
-  readonly main: string
-  readonly minimal: string
+  readonly mainContainer: string
 }
 export default styles

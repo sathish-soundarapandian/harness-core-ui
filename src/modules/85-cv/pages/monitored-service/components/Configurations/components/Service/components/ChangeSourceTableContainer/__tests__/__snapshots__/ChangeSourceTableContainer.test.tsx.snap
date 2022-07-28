@@ -3,7 +3,7 @@
 exports[`Test ChangeSourceTable should render 1`] = `
 <div>
   <div
-    class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-xxlarge"
+    class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-medium"
   >
     <div
       class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
@@ -234,7 +234,7 @@ exports[`Test ChangeSourceTable should render 1`] = `
 exports[`Test ChangeSourceTable should render 2`] = `
 <div>
   <div
-    class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-xxlarge"
+    class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-medium"
   >
     <div
       class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"

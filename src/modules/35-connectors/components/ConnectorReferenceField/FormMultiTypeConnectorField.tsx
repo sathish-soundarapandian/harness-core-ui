@@ -213,6 +213,15 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected])
+  React.useEffect(() => {
+    if (typeof selectedValue !== 'string' && selectedValue && (selectedValue as ConnectorSelectedValue).connector) {
+      if (isConnectorEdited) {
+        getConnectorStatus()
+      } else {
+        setConnectorStatus((selectedValue as ConnectorSelectedValue).live)
+      }
+    }
+  }, [selectedValue])
 
   React.useEffect(() => {
     if (typeof selected === 'string' && getMultiTypeFromValue(selected) === MultiTypeInputType.FIXED && !loading) {

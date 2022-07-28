@@ -23,11 +23,10 @@ describe('Environment Groups CRUD', () => {
   it('should be able to create environment group and route to Environments section of details page', () => {
     cy.intercept('POST', environmentGroupsCall, {
       fixture: 'ng/api/environmentGroups/environmentGroups.empty.json'
-    })
+    }).as('environmentGroupsCall')
 
-    cy.wait(4000)
+    cy.wait('@environmentGroupsCall')
 
-    cy.contains('h2', 'You have No Environment Groups').should('be.visible')
     cy.contains('button', 'Create new Environment Group').should('be.visible').click()
 
     cy.wait(1000)
@@ -150,12 +149,13 @@ describe('Environment Groups CRUD', () => {
     cy.fillName('testenvgroup')
     cy.get(`[name="description"]`).type(' updated')
 
-    cy.contains('button', 'Save').should('not.be.disabled').click()
-
     cy.intercept('GET', environmentGroupDetailsCall, {
       fixture: 'ng/api/environmentGroups/editEnvironmentGroup.json'
     }).as('environmentGroupDetailsCall')
 
+    cy.contains('button', 'Save').should('not.be.disabled').click()
+
+    cy.wait('@environmentGroupDetailsCall')
     cy.contains('span', 'Environment Group updated successfully')
 
     cy.contains('testenvgroup')

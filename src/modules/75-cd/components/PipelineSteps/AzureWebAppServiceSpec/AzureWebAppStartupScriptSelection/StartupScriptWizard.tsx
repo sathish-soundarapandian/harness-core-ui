@@ -38,12 +38,12 @@ export function StartupScriptWizard<T>({
       iconProps={{
         size: 37
       }}
-      title={getString('pipeline.startupScript.name')}
+      title={getString('pipeline.startupCommand.name')}
     >
       <StartupScriptWizardStepOne
         name={getString('pipeline.fileSource')}
-        stepName={getString('pipeline.startupScript.fileSource')}
-        key={getString('pipeline.startupScript.fileSource')}
+        stepName={getString('pipeline.startupCommand.fileSource')}
+        key={getString('pipeline.startupCommand.fileSource')}
         expressions={expressions}
         allowableTypes={allowableTypes}
         isReadonly={isReadonly}

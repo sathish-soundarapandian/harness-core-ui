@@ -21,10 +21,18 @@ import { KubernetesSidecarArtifacts } from '../../../KubernetesArtifacts/Kuberne
 
 import { template, artifacts } from './mocks'
 
+jest.mock('services/cd-ng', () => ({
+  ...jest.requireActual('services/cd-ng'),
+  useGetBuildDetailsForArtifactoryArtifactWithYaml: jest
+    .fn()
+    .mockReturnValue({ mutate: jest.fn(), cancel: jest.fn(), loading: false }),
+  useGetService: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() }))
+}))
+
 jest.spyOn(artifactSourceUtils, 'fromPipelineInputTriggerTab')
 jest.spyOn(artifactSourceUtils, 'isFieldfromTriggerTabDisabled')
 jest.spyOn(artifactSourceUtils, 'resetTags').mockImplementation(() => jest.fn())
-jest.spyOn(cdng, 'useGetBuildDetailsForArtifactoryArtifactWithYaml')
+jest.spyOn(cdng, 'useGetBuildDetailsForArtifactoryArtifactWithYaml').getMockImplementation()
 
 jest.mock('@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField', () => ({
   ...(jest.requireActual('@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField') as any),

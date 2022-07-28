@@ -66,7 +66,11 @@
 
 .repositories {
   height: 63vh;
-  width: 676px;
+  width: 65%;
+}
+
+.repositoriesWithError {
+  height: 60vh;
 }
 
 .repositoryTable {
@@ -97,7 +101,10 @@
   [class*='bp3-input'] {
     height: 42px;
     width: 675px;
-    border-radius: 6px;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
     padding-left: var(--spacing-xxxlarge) !important;
   }
 }
@@ -134,4 +141,41 @@
 
 .wizard {
   height: var(--page-min-height);
+}
+
+.connectorSelect {
+  input {
+    height: 42px !important;
+    border-top-left-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+    border-top-right-radius: 6px !important;
+    border-bottom-right-radius: 6px !important;
+  }
+  :global {
+    .bp3-active,
+    .bp3-menu-item:hover {
+      background-color: var(--primary-2) !important;
+      color: var(--grey-900) !important;
+    }
+    .bp3-icon-chevron-down {
+      padding: var(--spacing-medium) var(--spacing-3) var(--spacing-xsmall) var(--spacing-xsmall) !important;
+    }
+    .Select--menuItem {
+      padding: var(--spacing-1) var(--spacing-small);
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      height: 42px;
+    }
+  }
+}
+
+.listIcon {
+  margin: var(--spacing-small) var(--spacing-xsmall) var(--spacing-3) var(--spacing-small) !important;
+  padding-left: var(--spacing-1) !important;
+  padding-top: 1px !important;
+  svg {
+    width: 25px;
+    height: 20px;
+  }
 }

@@ -8,6 +8,7 @@
 .table {
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
   > div:nth-child(2) {
     flex-grow: 1;
   }

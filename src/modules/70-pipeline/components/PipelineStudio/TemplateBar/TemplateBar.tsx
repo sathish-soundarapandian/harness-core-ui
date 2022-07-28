@@ -41,7 +41,7 @@ interface TemplateMenuItem {
 export interface TemplateBarProps {
   templateLinkConfig: TemplateLinkConfig
   onOpenTemplateSelector: (selectedTemplate: TemplateSummaryResponse) => void
-  onRemoveTemplate: () => Promise<void>
+  onRemoveTemplate?: () => Promise<void>
   className?: string
 }
 
@@ -101,7 +101,7 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
     confirmButtonText: getString('confirm'),
     onCloseDialog: async isConfirmed => {
       if (isConfirmed) {
-        await onRemoveTemplate()
+        await onRemoveTemplate?.()
       }
     }
   })
@@ -156,22 +156,26 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
     [selectedTemplate?.yaml]
   )
 
+  const menuItems = [
+    {
+      icon: 'command-switch',
+      label: getString('pipeline.changeTemplateLabel'),
+      onClick: onChangeTemplate
+    },
+    ...(onRemoveTemplate
+      ? [
+          {
+            icon: 'main-trash',
+            label: getString('pipeline.removeTemplateLabel'),
+            onClick: openRemoveTemplateDialog
+          }
+        ]
+      : [])
+  ]
+
   const getItems = (): TemplateMenuItem[] => {
     return [
-      ...(!readyOnly
-        ? ([
-            {
-              icon: 'command-switch',
-              label: getString('pipeline.changeTemplateLabel'),
-              onClick: onChangeTemplate
-            },
-            {
-              icon: 'main-trash',
-              label: getString('pipeline.removeTemplateLabel'),
-              onClick: openRemoveTemplateDialog
-            }
-          ] as TemplateMenuItem[])
-        : []),
+      ...(!readyOnly ? (menuItems as TemplateMenuItem[]) : []),
       {
         icon: 'main-share',
         label: getString('pipeline.openTemplateInNewTabLabel'),

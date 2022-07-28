@@ -33,7 +33,7 @@ export interface DragnDropPathsProps<T = unknown> {
   placeholder: string
   defaultValue: T
   allowOnlyOneFilePath?: boolean
-  dialogWidth?: number
+  dragDropFieldWidth?: number
 }
 
 function DragnDropPaths({
@@ -45,7 +45,7 @@ function DragnDropPaths({
   placeholder,
   defaultValue,
   allowOnlyOneFilePath,
-  dialogWidth
+  dragDropFieldWidth: dialogWidth
 }: DragnDropPathsProps): React.ReactElement {
   const { getString } = useStrings()
 

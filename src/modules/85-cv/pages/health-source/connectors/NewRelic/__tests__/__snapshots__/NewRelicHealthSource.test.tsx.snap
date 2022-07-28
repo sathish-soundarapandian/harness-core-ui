@@ -50,7 +50,7 @@ exports[`Unit tests for NewRelic health source Test NewRelic healthSource contai
           >
             <div>
               <div
-                class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-xxlarge"
+                class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-medium"
               >
                 <p
                   class="StyledProps--font StyledProps--main header StyledProps--color StyledProps--color-black"
@@ -181,7 +181,7 @@ exports[`Unit tests for NewRelic health source Test NewRelic healthSource contai
                 </div>
               </div>
               <div
-                class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-xxlarge"
+                class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-medium"
               >
                 <p
                   class="StyledProps--font StyledProps--main header StyledProps--color StyledProps--color-black"
@@ -247,7 +247,7 @@ exports[`Unit tests for NewRelic health source Test NewRelic healthSource contai
                 </div>
               </div>
               <div
-                class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-xxlarge"
+                class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-medium"
               >
                 <div
                   class="Text--withDocsTooltip"
@@ -423,7 +423,7 @@ exports[`Unit tests for NewRelic health source Validation in create mode 1`] = `
           >
             <div>
               <div
-                class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-xxlarge"
+                class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-medium"
               >
                 <p
                   class="StyledProps--font StyledProps--main header StyledProps--color StyledProps--color-black"
@@ -581,7 +581,7 @@ exports[`Unit tests for NewRelic health source Validation in create mode 1`] = `
                 </div>
               </div>
               <div
-                class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-xxlarge"
+                class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-medium"
               >
                 <p
                   class="StyledProps--font StyledProps--main header StyledProps--color StyledProps--color-black"
@@ -677,7 +677,7 @@ exports[`Unit tests for NewRelic health source Validation in create mode 1`] = `
                 </div>
               </div>
               <div
-                class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-xxlarge"
+                class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-medium"
               >
                 <div
                   class="Text--withDocsTooltip"

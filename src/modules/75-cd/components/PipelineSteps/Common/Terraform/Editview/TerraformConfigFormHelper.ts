@@ -30,7 +30,7 @@ export const tfVarIcons: any = {
 export const ConnectorMap: Record<string, ConnectorInfoDTO['type']> = {
   Git: Connectors.GIT,
   Github: Connectors.GITHUB,
-  GitLab: Connectors.GITLAB,
+  GitLab: AllowedTypes[2] as ConnectorInfoDTO['type'],
   Bitbucket: Connectors.BITBUCKET,
   Artifactory: Connectors.ARTIFACTORY
 }

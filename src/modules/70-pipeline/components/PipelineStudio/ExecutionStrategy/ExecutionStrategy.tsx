@@ -114,7 +114,7 @@ function ExecutionStrategyRef(
 
   const [strategiesByDeploymentType, setStrategies] = useState([])
   const [isSubmitDisabled, disableSubmit] = useState(false)
-  const [isVerifyEnabled, setIsVerifyEnabled] = useState(true)
+  const [isVerifyEnabled, setIsVerifyEnabled] = useState(false)
   const [showPlayButton, setShowPlayButton] = useState<boolean>(false)
   const logger = loggerFor(ModuleName.CD)
 

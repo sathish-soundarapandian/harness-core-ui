@@ -40,11 +40,13 @@ export default function InstancesDetailsDialog(props: InstancesDetailsDialogProp
         (deployment.artifactVersion || '').toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1 ||
         deployment.instanceGroupedByEnvironmentList?.filter(
           i =>
-            i.envName?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1 ||
+            (i.envName !== null && i.envName?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1) ||
             i.instanceGroupedByInfraList?.filter(
               infra =>
-                infra.infraName?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1 ||
-                infra.lastPipelineExecutionName?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1
+                (infra.infraName !== null &&
+                  infra.infraName?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1) ||
+                (infra.lastPipelineExecutionName !== null &&
+                  infra.lastPipelineExecutionName?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1)
             ).length
         ).length
     )
@@ -106,27 +108,30 @@ export default function InstancesDetailsDialog(props: InstancesDetailsDialogProp
       <Container style={{ overflowY: 'auto' }}>
         {filteredDeployments?.map((dataItem, index) => {
           return (
-            <Collapse
-              key={index}
-              collapseClassName={css.collapse}
-              collapseHeaderClassName={css.collapseHeader}
-              heading={
-                isActiveInstance ? (
-                  <ActiveServiceInstancesContentV2 tableType={TableType.SUMMARY} data={[dataItem]} />
+            dataItem.artifactVersion &&
+            dataItem.instanceGroupedByEnvironmentList && (
+              <Collapse
+                key={index}
+                collapseClassName={css.collapse}
+                collapseHeaderClassName={css.collapseHeader}
+                heading={
+                  isActiveInstance ? (
+                    <ActiveServiceInstancesContentV2 tableType={TableType.SUMMARY} data={[dataItem]} />
+                  ) : (
+                    <DeploymentsV2 tableType={TableType.SUMMARY} data={[dataItem]} />
+                  )
+                }
+                expandedHeading={<>{/* empty element on purpose */}</>}
+                collapsedIcon={'main-chevron-right'}
+                expandedIcon={'main-chevron-down'}
+              >
+                {isActiveInstance ? (
+                  <ActiveServiceInstancesContentV2 tableType={TableType.FULL} data={[dataItem]} />
                 ) : (
-                  <DeploymentsV2 tableType={TableType.SUMMARY} data={[dataItem]} />
-                )
-              }
-              expandedHeading={<>{/* empty element on purpose */}</>}
-              collapsedIcon={'main-chevron-right'}
-              expandedIcon={'main-chevron-down'}
-            >
-              {isActiveInstance ? (
-                <ActiveServiceInstancesContentV2 tableType={TableType.FULL} data={[dataItem]} />
-              ) : (
-                <DeploymentsV2 tableType={TableType.FULL} data={[dataItem]} />
-              )}
-            </Collapse>
+                  <DeploymentsV2 tableType={TableType.FULL} data={[dataItem]} />
+                )}
+              </Collapse>
+            )
           )
         })}
       </Container>

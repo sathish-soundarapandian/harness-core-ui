@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ExecutionListTable if pipelineExecutionSummary is empty for applied filters then display proper message for no search results found  1`] = `
+exports[`ExecutionListCards if pipelineExecutionSummary is empty for applied filters then display proper message for no search results found  1`] = `
 <div>
   <div
     class="main"
@@ -1280,7 +1280,7 @@ exports[`ExecutionListTable if pipelineExecutionSummary is empty for applied fil
 </div>
 `;
 
-exports[`ExecutionListTable snapshot testing 1`] = `
+exports[`ExecutionListCards snapshot testing 1`] = `
 <div>
   <div
     class="main"

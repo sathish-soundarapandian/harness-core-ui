@@ -71,7 +71,13 @@ jest.mock('services/cd-ng', () => ({
     }
   }),
   useGetListOfAllReposByRefConnector: jest.fn().mockImplementation(() => {
-    return { data: { data: repos, status: 'SUCCESS' }, refetch: jest.fn(), error: null, loading: false }
+    return {
+      data: { data: repos, status: 'SUCCESS' },
+      refetch: jest.fn(),
+      error: null,
+      loading: false,
+      cancel: jest.fn()
+    }
   }),
   useUpdateConnector: jest.fn().mockImplementation(() => ({ mutate: updateConnector })),
   useCreateConnector: jest.fn().mockImplementation(() => ({ mutate: createConnector }))

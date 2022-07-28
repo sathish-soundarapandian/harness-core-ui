@@ -98,22 +98,22 @@ exports[`<TemplateStudio /> tests snapshot test for new template with git sync 1
         <div
           class="StyledProps--font StyledProps--main templateStudioTitle"
         >
-          <svg
-            fill="none"
-            height="26"
-            viewBox="0 0 210 26"
-            width="210"
-            xmlns="http://www.w3.org/2000/svg"
+          <div
+            class="StyledProps--font StyledProps--main"
           >
-            <path
-              d="M20.3896 22.2945L1.10987 0.5H208.932L190.926 22.0853C189.121 24.2491 186.449 25.5 183.631 25.5H27.505C24.7836 25.5 22.1928 24.3328 20.3896 22.2945Z"
-            />
-          </svg>
-          <p
-            class="StyledProps--font StyledProps--main title StyledProps--font-size-xsmall StyledProps--font-weight-bold"
-          >
-            Studio
-          </p>
+            <div
+              class="css-16ofunt"
+              width="0"
+            >
+              <div>
+                <p
+                  class="StyledProps--font StyledProps--main title StyledProps--font-size-xsmall StyledProps--font-weight-bold"
+                >
+                   Template
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -490,22 +490,22 @@ exports[`<TemplateStudio /> tests snapshot test for new template without git syn
         <div
           class="StyledProps--font StyledProps--main templateStudioTitle"
         >
-          <svg
-            fill="none"
-            height="26"
-            viewBox="0 0 210 26"
-            width="210"
-            xmlns="http://www.w3.org/2000/svg"
+          <div
+            class="StyledProps--font StyledProps--main"
           >
-            <path
-              d="M20.3896 22.2945L1.10987 0.5H208.932L190.926 22.0853C189.121 24.2491 186.449 25.5 183.631 25.5H27.505C24.7836 25.5 22.1928 24.3328 20.3896 22.2945Z"
-            />
-          </svg>
-          <p
-            class="StyledProps--font StyledProps--main title StyledProps--font-size-xsmall StyledProps--font-weight-bold"
-          >
-            Studio
-          </p>
+            <div
+              class="css-16ofunt"
+              width="0"
+            >
+              <div>
+                <p
+                  class="StyledProps--font StyledProps--main title StyledProps--font-size-xsmall StyledProps--font-weight-bold"
+                >
+                   Template
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -882,22 +882,22 @@ exports[`<TemplateStudio /> tests snapshot test for template studio in visual vi
         <div
           class="StyledProps--font StyledProps--main templateStudioTitle"
         >
-          <svg
-            fill="none"
-            height="26"
-            viewBox="0 0 210 26"
-            width="210"
-            xmlns="http://www.w3.org/2000/svg"
+          <div
+            class="StyledProps--font StyledProps--main"
           >
-            <path
-              d="M20.3896 22.2945L1.10987 0.5H208.932L190.926 22.0853C189.121 24.2491 186.449 25.5 183.631 25.5H27.505C24.7836 25.5 22.1928 24.3328 20.3896 22.2945Z"
-            />
-          </svg>
-          <p
-            class="StyledProps--font StyledProps--main title StyledProps--font-size-xsmall StyledProps--font-weight-bold"
-          >
-            Studio
-          </p>
+            <div
+              class="css-16ofunt"
+              width="0"
+            >
+              <div>
+                <p
+                  class="StyledProps--font StyledProps--main title StyledProps--font-size-xsmall StyledProps--font-weight-bold"
+                >
+                   Template
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

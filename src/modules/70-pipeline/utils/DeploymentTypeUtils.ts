@@ -9,6 +9,8 @@ import type { IconName } from '@harness/uicore'
 import type { ServiceDefinition } from 'services/cd-ng'
 import type { StringKeys } from 'framework/strings'
 
+export type ServiceTypes = ServiceDefinition['type'] & 'KubernetesGitOps'
+
 export const deploymentTypeLabel: Record<ServiceDefinition['type'], StringKeys> = {
   Kubernetes: 'kubernetesText',
   NativeHelm: 'pipeline.nativeHelm',
@@ -18,10 +20,12 @@ export const deploymentTypeLabel: Record<ServiceDefinition['type'], StringKeys> 
   AzureWebApp: 'pipeline.serviceDeploymentTypes.azureWebApp'
 }
 
-export const deploymentTypeIcon: Record<string, IconName> = {
+export const deploymentTypeIcon: Record<ServiceTypes, IconName> = {
   Kubernetes: 'service-kubernetes',
   NativeHelm: 'service-helm',
   ServerlessAwsLambda: 'service-serverless',
   Ssh: 'secret-ssh',
-  WinRm: 'command-winrm'
+  WinRm: 'command-winrm',
+  AzureWebApp: 'azurewebapp',
+  KubernetesGitOps: 'gitops-green' //type specific to gitops
 }

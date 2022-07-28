@@ -8,7 +8,7 @@
 import React, { useEffect } from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { parse } from 'yaml'
-import { Card, Color, Icon, PageError, Text } from '@harness/uicore'
+import { Card, Color, FontVariation, Icon, PageError, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useGetTemplate } from 'services/template-ng'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
@@ -97,7 +97,11 @@ export default function HealthSourceInputset({
 
   return (
     <Card className={css.cardStyle}>
-      <Text font={'medium'} color={Color.BLACK} style={{ paddingBottom: 'var(--spacing-medium)' }}>
+      <Text
+        font={{ variation: FontVariation.CARD_TITLE }}
+        color={Color.BLACK}
+        style={{ paddingBottom: 'var(--spacing-medium)' }}
+      >
         {getString('cv.templates.healthSourceDetails')}
       </Text>
       {content}

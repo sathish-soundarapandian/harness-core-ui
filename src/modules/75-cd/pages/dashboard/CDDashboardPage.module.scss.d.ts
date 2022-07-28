@@ -14,6 +14,7 @@ declare const styles: {
   readonly chartWrap: string
   readonly childCard: string
   readonly content: string
+  readonly ctn: string
   readonly emptyView: string
   readonly emptyViewCard: string
   readonly emptyViewItem: string

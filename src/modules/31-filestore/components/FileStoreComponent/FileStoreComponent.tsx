@@ -18,6 +18,7 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import type { StringKeys } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { FILE_STORE_ROOT } from '@filestore/utils/constants'
+import type { FileUsage } from '@filestore/interfaces/FileStore'
 import type { FileStoreNodeDTO } from '@filestore/components/FileStoreContext/FileStoreContext'
 import FileStorePage from '@filestore/pages/filestore/FileStorePage'
 
@@ -34,7 +35,7 @@ interface FileStoreNodeDTOWithScope extends FileStoreNodeDTO {
 
 interface UseFileStoreModalProps {
   applySelected: (file: any) => void
-  fileUsage?: string
+  fileUsage?: FileUsage
 }
 
 const useFileStoreModal = ({ applySelected, fileUsage }: UseFileStoreModalProps): UseFileStoreModalReturn => {

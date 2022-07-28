@@ -103,3 +103,4 @@ export const getConnectorPath = (type: string, data: any): string => {
       return data?.spec?.store?.spec?.connectorRef
   }
 }
+export const filePathWidth = 600

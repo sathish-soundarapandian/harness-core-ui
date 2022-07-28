@@ -347,7 +347,7 @@ exports[`Kustomize with Git/ Github/Gitlab/Bitbucket tests expand advanced secti
             </div>
           </div>
           <div
-            class="halfWidth"
+            class=""
           >
             <div
               data-rbd-droppable-context-id="1"
@@ -970,7 +970,7 @@ exports[`Kustomize with Git/ Github/Gitlab/Bitbucket tests renders correctly in 
             </div>
           </div>
           <div
-            class="halfWidth"
+            class=""
           >
             <div
               data-rbd-droppable-context-id="3"
@@ -1526,7 +1526,7 @@ exports[`Kustomize with Git/ Github/Gitlab/Bitbucket tests renders while adding 
             </div>
           </div>
           <div
-            class="halfWidth"
+            class=""
           >
             <div
               data-rbd-droppable-context-id="2"
@@ -2082,7 +2082,7 @@ exports[`Kustomize with Git/ Github/Gitlab/Bitbucket tests renders without crash
             </div>
           </div>
           <div
-            class="halfWidth"
+            class=""
           >
             <div
               data-rbd-droppable-context-id="0"

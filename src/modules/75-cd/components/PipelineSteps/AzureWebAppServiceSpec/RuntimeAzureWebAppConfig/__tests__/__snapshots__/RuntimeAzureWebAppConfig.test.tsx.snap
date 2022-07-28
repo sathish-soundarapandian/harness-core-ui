@@ -585,12 +585,12 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
     <div
       class="subheading"
     >
-      pipeline.startupScript.name
+      pipeline.startupCommand.name
     </div>
     <div>
       <div
         class="Layout--vertical StyledProps--main inputWidth layoutVerticalSpacing"
-        data-name="azureWebAppConfig-startupScript"
+        data-name="azureWebAppConfig-startupCommand"
       >
         <div
           class="verticalSpacingInput"
@@ -621,7 +621,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
                   >
                     <button
                       class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
-                      data-testid="cr-field-undefined.startupScript.spec.connectorRef"
+                      data-testid="cr-field-undefined.startupCommand.spec.connectorRef"
                       disabled=""
                       style="width: 391px;"
                       tabindex="-1"
@@ -689,7 +689,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
           >
             <label
               class="bp3-label"
-              for="undefined.startupScript.spec.repoName"
+              for="undefined.startupCommand.spec.repoName"
             >
               common.repositoryName
                
@@ -710,7 +710,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
                     autocomplete="off"
                     class="bp3-input"
                     disabled=""
-                    name="undefined.startupScript.spec.repoName"
+                    name="undefined.startupCommand.spec.repoName"
                     type="text"
                     value=""
                   />
@@ -748,7 +748,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
           >
             <label
               class="bp3-label"
-              for="undefined.startupScript.spec.branch"
+              for="undefined.startupCommand.spec.branch"
             >
               pipelineSteps.deploy.inputSet.branch
                
@@ -769,7 +769,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
                     autocomplete="off"
                     class="bp3-input"
                     disabled=""
-                    name="undefined.startupScript.spec.branch"
+                    name="undefined.startupCommand.spec.branch"
                     type="text"
                     value=""
                   />
@@ -807,9 +807,9 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
           >
             <label
               class="bp3-label"
-              for="undefined.startupScript.spec.paths[0]"
+              for="undefined.startupCommand.spec.paths[0]"
             >
-              pipeline.startupScript.scriptFilePath
+              pipeline.startupCommand.scriptFilePath
                
               <span
                 class="bp3-text-muted"
@@ -828,7 +828,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
                     autocomplete="off"
                     class="bp3-input"
                     disabled=""
-                    name="undefined.startupScript.spec.paths[0]"
+                    name="undefined.startupCommand.spec.paths[0]"
                     type="text"
                     value=""
                   />

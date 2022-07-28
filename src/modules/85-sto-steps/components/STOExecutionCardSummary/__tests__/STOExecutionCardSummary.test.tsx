@@ -191,10 +191,10 @@ describe('STOExecutionCardSummary', () => {
         />
       </TestWrapper>
     )
-    expect(screen.getByText('stoSteps.noSecurityTests'))
+    expect(screen.getByText('stoSteps.noSecurityResults'))
   })
 
-  test('shows no security tests message on pipeline failure', () => {
+  test('shows issues on pipeline failure', () => {
     jest.spyOn(stoService, 'useIssueCounts').mockReturnValue({
       data: { critical: 1, high: 2, medium: 3, low: 4, info: 5, unassigned: 0 },
       loading: false,
@@ -202,7 +202,7 @@ describe('STOExecutionCardSummary', () => {
       error: null
     })
 
-    render(
+    const { container } = render(
       <TestWrapper path={testPath} pathParams={testParams}>
         <STOExecutionCardSummary
           data={failedPipelineExecutionSummary}
@@ -212,7 +212,7 @@ describe('STOExecutionCardSummary', () => {
         />
       </TestWrapper>
     )
-    expect(screen.getByText('stoSteps.noSecurityTests'))
+    expect(container).toMatchSnapshot()
   })
 
   test('shows no issues message', () => {

@@ -575,7 +575,7 @@ exports[`Resource Groups Page render data 1`] = `
                       class="Layout--horizontal StyledProps--main StyledProps--flex"
                     >
                       <label
-                        class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main"
+                        class="bp3-control bp3-radio StyledProps--font Radio--radio radioBtnLabel StyledProps--main"
                       >
                         <input
                           checked=""
@@ -588,10 +588,10 @@ exports[`Resource Groups Page render data 1`] = `
                         rbac.resourceGroup.all
                       </label>
                       <div
-                        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main radioBtn StyledProps--flex StyledProps--padding-left-huge"
+                        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--padding-left-huge"
                       >
                         <label
-                          class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main"
+                          class="bp3-control bp3-radio StyledProps--font Radio--radio radioBtnLabel StyledProps--main"
                         >
                           <input
                             data-testid="static-SECRET"
@@ -602,6 +602,10 @@ exports[`Resource Groups Page render data 1`] = `
                           />
                           common.specified
                         </label>
+                      </div>
+                      <div
+                        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--padding-left-none"
+                      >
                         <button
                           class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main addResourceBtn Button--with-current-color Button--iconOnly Button--variation Button--variation-link"
                           data-testid="addResources-SECRET"

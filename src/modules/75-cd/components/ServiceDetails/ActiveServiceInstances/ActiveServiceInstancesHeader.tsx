@@ -10,19 +10,12 @@ import { useParams } from 'react-router-dom'
 import moment from 'moment'
 import { Color } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'
-import { Container, Layout, Text } from '@wings-software/uicore'
+import { Layout, Text } from '@wings-software/uicore'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
-import {
-  GetActiveServiceInstanceSummaryQueryParams,
-  GetInstanceGrowthTrendQueryParams,
-  useGetActiveServiceInstanceSummary,
-  useGetInstanceGrowthTrend
-} from 'services/cd-ng'
+import { GetActiveServiceInstanceSummaryQueryParams, useGetActiveServiceInstanceSummary } from 'services/cd-ng'
 import { PieChart, PieChartProps } from '@cd/components/PieChart/PieChart'
 import { useStrings } from 'framework/strings'
 import { INVALID_CHANGE_RATE, numberFormatter } from '@cd/components/Services/common'
-import { TrendPopover } from '@cd/components/TrendPopover/TrendPopover'
-import { SparklineChart } from '@common/components/SparklineChart/SparklineChart'
 import { startOfDay } from '@common/components/TimeRangeSelector/TimeRangeSelector'
 import { Ticker } from '@common/components/Ticker/Ticker'
 import css from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstances.module.scss'
@@ -42,28 +35,6 @@ export const ActiveServiceInstancesHeader: React.FC = () => {
     [accountId, orgIdentifier, projectIdentifier, serviceId]
   )
   const { data, error } = useGetActiveServiceInstanceSummary({ queryParams })
-
-  const instanceGrowthTrendQueryParams: GetInstanceGrowthTrendQueryParams = useMemo(
-    () => ({
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      serviceId,
-      startTime: moment().utc().startOf('day').subtract(6, 'months').toDate().getTime(),
-      endTime: moment().utc().startOf('day').toDate().getTime()
-    }),
-    [accountId, orgIdentifier, projectIdentifier, serviceId]
-  )
-  const { data: instanceGrowthTrendData } = useGetInstanceGrowthTrend({ queryParams: instanceGrowthTrendQueryParams })
-
-  const trendData: number[] = useMemo(() => {
-    const timeValuePairList = instanceGrowthTrendData?.data?.timeValuePairList || []
-    if (!timeValuePairList.length) {
-      return []
-    }
-    timeValuePairList.sort((prev, curr) => (prev.timestamp || 0) - (curr.timestamp || 0))
-    return timeValuePairList.map(timeValuePair => timeValuePair.value || 0)
-  }, [instanceGrowthTrendData])
 
   if (error) {
     return <></>
@@ -155,27 +126,6 @@ export const ActiveServiceInstancesHeader: React.FC = () => {
             })}
           </Text>
         </Layout.Vertical>
-      </Layout.Horizontal>
-      <Layout.Horizontal>
-        {trendData.length ? (
-          <Container>
-            <TrendPopover
-              title={getString('cd.serviceDashboard.serviceInstancesInLast', {
-                period: getString('common.duration.6months')
-              })}
-              data={trendData}
-            >
-              <SparklineChart
-                title={getString('cd.serviceDashboard.6monthTrend')}
-                data={trendData}
-                options={{ chart: { width: 122, height: 54 } }}
-                sparklineChartContainerStyles={css.hover}
-              />
-            </TrendPopover>
-          </Container>
-        ) : (
-          <></>
-        )}
       </Layout.Horizontal>
       <Layout.Horizontal>{totalInstances ? <PieChart {...pieChartProps} /> : <></>}</Layout.Horizontal>
     </Layout.Horizontal>

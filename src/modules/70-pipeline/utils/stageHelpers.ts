@@ -66,6 +66,16 @@ export enum ServiceDeploymentType {
   AzureWebApp = 'AzureWebApp'
 }
 
+export enum RepositoryFormatTypes {
+  Generic = 'generic',
+  Docker = 'docker'
+}
+
+export const repositoryFormats = [
+  { label: 'Generic', value: RepositoryFormatTypes.Generic },
+  { label: 'Docker', value: RepositoryFormatTypes.Docker }
+]
+
 export type ServerlessGCPInfrastructure = Infrastructure & {
   connectorRef: string
   metadata?: string
@@ -244,6 +254,15 @@ export const isAzureWebAppDeploymentType = (deploymentType: string): boolean => 
   return deploymentType === ServiceDeploymentType.AzureWebApp
 }
 
+export const isAzureWebAppGenericDeploymentType = (deploymentType: string, repo: string | undefined): boolean => {
+  if (isAzureWebAppDeploymentType(deploymentType)) {
+    // default repository format should be Generic if none is previously selected
+    return repo ? repo === RepositoryFormatTypes.Generic : true
+  }
+
+  return false
+}
+
 export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessAwsLambda]: 'Amazon Web Services Details',
   [ServiceDeploymentType.ServerlessAzureFunctions]: 'Azure Details',
@@ -313,6 +332,23 @@ export const getStageDeploymentType = (
     return get(parentStage, 'stage.stage.spec.serviceConfig.serviceDefinition.type', null)
   }
   return get(stage, 'stage.spec.serviceConfig.serviceDefinition.type', null)
+}
+
+export const getRepositoryFormat = (
+  pipeline: PipelineInfoConfig,
+  stage: StageElementWrapper<DeploymentStageElementConfig>,
+  isPropagating = false
+): ServiceDefinition['type'] => {
+  if (isPropagating) {
+    const parentStageId = get(stage, 'stage.spec.serviceConfig.useFromStage.stage', null)
+    const parentStage = getStageByPipeline<DeploymentStageElementConfig>(defaultTo(parentStageId, ''), pipeline)
+    return get(
+      parentStage,
+      'stage.stage.spec.serviceConfig.serviceDefinition.spec.artifacts.primary.spec.repositoryFormat',
+      null
+    )
+  }
+  return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.artifacts.primary.spec.repositoryFormat', null)
 }
 
 export const getCustomStepProps = (type: string, getString: (key: StringKeys) => string) => {

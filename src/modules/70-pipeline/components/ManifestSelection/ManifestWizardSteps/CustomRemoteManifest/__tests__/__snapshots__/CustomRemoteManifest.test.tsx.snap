@@ -337,7 +337,7 @@ exports[`Custom remote tests expand advanced section - when type is HelmChart 1`
               </div>
             </div>
             <div
-              class="halfWidth"
+              class=""
             >
               <div
                 data-rbd-droppable-context-id="5"
@@ -449,7 +449,7 @@ exports[`Custom remote tests expand advanced section - when type is HelmChart 1`
                           </p>
                           <div
                             class="bp3-form-group"
-                            style="width: 275px;"
+                            style="width: 600px;"
                           >
                             
                             <div
@@ -1047,7 +1047,7 @@ exports[`Custom remote tests initial rendering 1`] = `
               </div>
             </div>
             <div
-              class="halfWidth"
+              class=""
             >
               <div
                 data-rbd-droppable-context-id="0"
@@ -1159,7 +1159,7 @@ exports[`Custom remote tests initial rendering 1`] = `
                           </p>
                           <div
                             class="bp3-form-group"
-                            style="width: 275px;"
+                            style="width: 600px;"
                           >
                             
                             <div
@@ -1689,7 +1689,7 @@ exports[`Custom remote tests when fields are runtime input 1`] = `
               </div>
             </div>
             <div
-              class="halfWidth"
+              class=""
             >
               <div
                 data-rbd-droppable-context-id="1"
@@ -1801,7 +1801,7 @@ exports[`Custom remote tests when fields are runtime input 1`] = `
                           </p>
                           <div
                             class="bp3-form-group"
-                            style="width: 275px;"
+                            style="width: 600px;"
                           >
                             
                             <div

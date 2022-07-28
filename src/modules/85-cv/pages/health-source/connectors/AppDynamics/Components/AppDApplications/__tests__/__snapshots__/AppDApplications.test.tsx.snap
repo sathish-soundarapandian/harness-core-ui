@@ -2,11 +2,11 @@
 
 exports[`AppDApplications should render AppDApplications with multiInputType Select 1`] = `
 <div>
-  <label
-    class="Label--main"
+  <p
+    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--margin-bottom-small"
   >
     cv.healthSource.connectors.AppDynamics.applicationLabel
-  </label>
+  </p>
   <div
     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
     placeholder="cv.healthSource.connectors.AppDynamics.applicationPlaceholder"
@@ -89,11 +89,11 @@ exports[`AppDApplications should render AppDApplications with multiInputType Sel
 
 exports[`AppDApplications should render AppDApplications with multiInputType Select 2`] = `
 <div>
-  <label
-    class="Label--main"
+  <p
+    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--margin-bottom-small"
   >
     cv.healthSource.connectors.AppDynamics.applicationLabel
-  </label>
+  </p>
   <div
     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
     placeholder="loading"
@@ -176,11 +176,11 @@ exports[`AppDApplications should render AppDApplications with multiInputType Sel
 
 exports[`AppDApplications should render AppDApplications with multiInputType Select 3`] = `
 <div>
-  <label
-    class="Label--main"
+  <p
+    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--margin-bottom-small"
   >
     cv.healthSource.connectors.AppDynamics.applicationLabel
-  </label>
+  </p>
   <div
     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
     placeholder="cv.healthSource.connectors.AppDynamics.applicationPlaceholder"

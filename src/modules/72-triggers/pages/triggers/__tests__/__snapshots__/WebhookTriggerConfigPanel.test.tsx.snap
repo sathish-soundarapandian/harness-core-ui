@@ -217,7 +217,7 @@ exports[`WebhookTriggerConfigPanel Triggers tests Renders/snapshots Initial Rend
               style="width: 650px;"
             >
               <div
-                class="bp3-form-group bottomMarginZero"
+                class="bp3-form-group bp3-disabled bottomMarginZero"
                 data-id="sourceRepo-1"
               >
                 <label
@@ -228,7 +228,11 @@ exports[`WebhookTriggerConfigPanel Triggers tests Renders/snapshots Initial Rend
                     class="Tooltip--acenter"
                     data-tooltip-id="wrapperComponentTestForm_sourceRepo"
                   >
-                    triggers.triggerConfigurationPanel.payloadType
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-form-input-text StyledProps--font-weight-semi-bold"
+                    >
+                      triggers.triggerConfigurationPanel.payloadType
+                    </p>
                   </span>
                    
                   <span
@@ -245,11 +249,12 @@ exports[`WebhookTriggerConfigPanel Triggers tests Renders/snapshots Initial Rend
                       class="bp3-popover-target"
                     >
                       <div
-                        class="bp3-input-group"
+                        class="bp3-input-group bp3-disabled"
                       >
                         <input
                           autocomplete="off"
                           class="bp3-input"
+                          disabled=""
                           name="sourceRepo"
                           placeholder="- Select -"
                           style="padding-right: 0px;"
@@ -510,7 +515,7 @@ exports[`WebhookTriggerConfigPanel Triggers tests Renders/snapshots Initial Rend
               style="width: 650px;"
             >
               <div
-                class="bp3-form-group"
+                class="bp3-form-group bp3-disabled"
                 data-id="sourceRepo-1"
               >
                 <label
@@ -521,7 +526,11 @@ exports[`WebhookTriggerConfigPanel Triggers tests Renders/snapshots Initial Rend
                     class="Tooltip--acenter"
                     data-tooltip-id="wrapperComponentTestForm_sourceRepo"
                   >
-                    triggers.triggerConfigurationPanel.payloadType
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-form-input-text StyledProps--font-weight-semi-bold"
+                    >
+                      triggers.triggerConfigurationPanel.payloadType
+                    </p>
                   </span>
                    
                   <span
@@ -538,11 +547,12 @@ exports[`WebhookTriggerConfigPanel Triggers tests Renders/snapshots Initial Rend
                       class="bp3-popover-target"
                     >
                       <div
-                        class="bp3-input-group"
+                        class="bp3-input-group bp3-disabled"
                       >
                         <input
                           autocomplete="off"
                           class="bp3-input"
+                          disabled=""
                           name="sourceRepo"
                           placeholder="- Select -"
                           style="padding-right: 0px;"

@@ -69,8 +69,7 @@ export const FeatureAddEditStageView: React.FC<FeatureAddEditStageViewProps> = (
   const handleValidate = (values: Values): FormikErrors<Values> => {
     const errors: { name?: string } = {}
     if (isDuplicateStageId(values.identifier, pipeline?.stages || [])) {
-      // This always occurs
-      // errors.name = getString('validation.identifierDuplicate')
+      errors.name = getString('validation.identifierDuplicate')
     }
     if (data) {
       onChange?.(values)

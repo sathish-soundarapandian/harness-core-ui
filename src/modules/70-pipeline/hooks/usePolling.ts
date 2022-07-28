@@ -9,7 +9,7 @@ import { useEffect, useRef, useState, useLayoutEffect } from 'react'
 
 const POLLING_INTERVAL_IN_MS = 5_000
 
-export function usePolling(callback: (props?: any) => Promise<void> | undefined, startPolling: boolean) {
+export function usePolling(callback: () => Promise<void> | undefined, startPolling: boolean): boolean {
   const savedCallback = useRef(callback)
   const [isPolling, setIsPolling] = useState(false)
 
