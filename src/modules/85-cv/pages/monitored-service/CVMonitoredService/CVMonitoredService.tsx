@@ -84,14 +84,14 @@ const MonitoredService: React.FC = () => {
   })
 
   useEffect(() => {
-    if (serviceCountData) {
+    /* istanbul ignore else */if (serviceCountData) {
       refetchServiceCountData()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedView])
 
   const onFilter = (type: FilterTypes): void => {
-    if (type !== selectedFilter) {
+    /* istanbul ignore else */if (type !== selectedFilter) {
       setPage(0)
       setSelectedFilter(type)
       refetchServiceCountData()
@@ -174,7 +174,7 @@ const MonitoredService: React.FC = () => {
         title={createButton(Boolean(serviceCountData?.allServicesCount))}
         toolbar={
           <Layout.Horizontal spacing="medium">
-            <Container>
+             <Container data-name="monitoredServiceSeachContainer">
               <ExpandingSearchInput
                 width={250}
                 alwaysExpanded
