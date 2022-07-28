@@ -38,7 +38,7 @@ export const transformValuesFieldsConfig = [
     type: TransformValuesTypes.ReportPaths
   },
   {
-    name: 'spec.entryPoint',
+    name: 'spec.entrypoint',
     type: TransformValuesTypes.List
   },
   {
@@ -102,7 +102,7 @@ export const editViewValidateFieldsConfig = [
   },
   {
     label: 'entryPointLabel',
-    name: 'spec.entryPoint',
+    name: 'spec.entrypoint',
     type: ValidationFieldTypes.List
   },
   {
@@ -149,7 +149,7 @@ export function getInputSetViewValidateFieldsConfig(
       type: ValidationFieldTypes.Map
     },
     {
-      name: 'spec.entryPoint',
+      name: 'spec.entrypoint',
       type: ValidationFieldTypes.List
     },
     {

@@ -39,7 +39,7 @@ export interface PluginStepSpec {
       paths: MultiTypeListType
     }
   }
-  entryPoint?: MultiTypeListType
+  entrypoint?: MultiTypeListType
   settings?: MultiTypeMapType
   imagePullPolicy?: MultiTypeSelectOption
   runAsUser?: string
@@ -56,10 +56,10 @@ export interface PluginStepData {
 }
 
 export interface PluginStepSpecUI
-  extends Omit<PluginStepSpec, 'connectorRef' | 'reports' | 'entryPoint' | 'settings' | 'pull' | 'resources'> {
+  extends Omit<PluginStepSpec, 'connectorRef' | 'reports' | 'entrypoint' | 'settings' | 'pull' | 'resources'> {
   connectorRef: MultiTypeConnectorRef
   reportPaths?: MultiTypeListUIType
-  entryPoint?: MultiTypeListUIType
+  entrypoint?: MultiTypeListUIType
   settings?: MultiTypeMapUIType
   // TODO: Right now we do not support Image Pull Policy but will do in the future
   // pull?: MultiTypeSelectOption
