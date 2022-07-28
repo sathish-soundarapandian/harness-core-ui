@@ -7,8 +7,8 @@
 
 import produce from 'immer'
 import { RbacResourceGroupTypes } from '@rbac/constants/utils'
-import type { ResourceType } from '@rbac/interfaces/ResourceType'
-import { isDynamicResourceSelector, SelectionType } from '@rbac/utils/utils'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { isAtrributeFilterSelector, isDynamicResourceSelector, SelectionType } from '@rbac/utils/utils'
 import type {
   ResourceSelector,
   ResponseResourceTypeDTO,
@@ -16,7 +16,8 @@ import type {
   ResourceGroupV2,
   ResourceSelectorV2,
   ResourceGroupV2Request,
-  ResourceFilter
+  ResourceFilter,
+  AttributeFilter
 } from 'services/resourcegroups'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { UseStringsReturn } from 'framework/strings'
@@ -33,6 +34,13 @@ export enum SelectorScope {
   CUSTOM = 'CUSTOM'
 }
 
+export const resourceAttributeMap = new Map<ResourceType, string>([
+  [ResourceType.CONNECTOR, 'category'],
+  [ResourceType.ENVIRONMENT, 'type']
+])
+
+export type ResourceSelectorValue = string[] | AttributeFilter | RbacResourceGroupTypes
+
 enum ValidatorTypes {
   BY_RESOURCE_IDENTIFIER = 'BY_RESOURCE_IDENTIFIER',
   BY_RESOURCE_TYPE = 'BY_RESOURCE_TYPE',
@@ -42,8 +50,8 @@ enum ValidatorTypes {
 export const getSelectedResourcesMap = (
   resourceTypes: ResourceType[],
   resourceFilter?: ResourceFilter
-): Map<ResourceType, string[] | string> => {
-  const map: Map<ResourceType, string[] | string> = new Map()
+): Map<ResourceType, ResourceSelectorValue> => {
+  const map: Map<ResourceType, ResourceSelectorValue> = new Map()
   if (resourceFilter?.includeAllResources) {
     resourceTypes.forEach(resourceType => {
       map.set(resourceType, RbacResourceGroupTypes.DYNAMIC_RESOURCE_SELECTOR)
@@ -52,6 +60,8 @@ export const getSelectedResourcesMap = (
     resourceFilter?.resources?.map(resourceSelector => {
       if (resourceSelector.identifiers?.length) {
         map.set(resourceSelector.resourceType as ResourceType, resourceSelector.identifiers)
+      } else if (resourceSelector.attributeFilter?.attributeValues?.length) {
+        map.set(resourceSelector.resourceType as ResourceType, resourceSelector.attributeFilter)
       } else {
         map.set(resourceSelector.resourceType as ResourceType, RbacResourceGroupTypes.DYNAMIC_RESOURCE_SELECTOR)
       }
@@ -74,12 +84,17 @@ export const validateResourceSelectors = (value: ResourceSelector[]): ResourceTy
     .map(val => val.resourceType)
 }
 
-export const getResourceSelectorsfromMap = (map: Map<ResourceType, string[] | string>): ResourceSelectorV2[] => {
+export const getResourceSelectorsfromMap = (map: Map<ResourceType, ResourceSelectorValue>): ResourceSelectorV2[] => {
   const resourceSelectors: ResourceSelectorV2[] = []
   map.forEach((value, key) => {
     if (isDynamicResourceSelector(value)) {
       resourceSelectors.push({
         resourceType: key
+      })
+    } else if (isAtrributeFilterSelector(value)) {
+      resourceSelectors.push({
+        resourceType: key,
+        attributeFilter: value as AttributeFilter
       })
     } else {
       resourceSelectors.push({
@@ -92,11 +107,12 @@ export const getResourceSelectorsfromMap = (map: Map<ResourceType, string[] | st
 }
 
 export const computeResourceMapOnChange = (
-  setSelectedResourceMap: (value: React.SetStateAction<Map<ResourceType, string | string[]>>) => void,
-  selectedResourcesMap: Map<ResourceType, string | string[]>,
+  setSelectedResourceMap: (value: React.SetStateAction<Map<ResourceType, ResourceSelectorValue>>) => void,
+  selectedResourcesMap: Map<ResourceType, ResourceSelectorValue>,
   resourceType: ResourceType,
   isAdd: boolean,
-  identifiers?: string[]
+  identifiers?: string[],
+  attributeFilterValues?: string[]
 ): void => {
   if (identifiers) {
     if (isAdd) {
@@ -114,7 +130,36 @@ export const computeResourceMapOnChange = (
               (draft.get(resourceType) as string[]).filter(el => !identifiers.includes(el))
             )
           }
-          if (draft.get(resourceType)?.length === 0) {
+          const updatedIdentifiers = draft.get(resourceType) as string[]
+          if (updatedIdentifiers?.length === 0) {
+            draft.delete(resourceType)
+          }
+        })
+      )
+    }
+  } else if (attributeFilterValues) {
+    if (isAdd) {
+      const attributeFilter = {
+        attributeName: resourceAttributeMap.get(resourceType),
+        attributeValues: attributeFilterValues
+      }
+      setSelectedResourceMap(
+        produce(selectedResourcesMap, draft => {
+          draft.set(resourceType, attributeFilter)
+        })
+      )
+    } else {
+      setSelectedResourceMap(
+        produce(selectedResourcesMap, draft => {
+          const prevFilters = (draft.get(resourceType) as AttributeFilter).attributeValues
+          const updatedFilters = prevFilters?.filter(attrFilter => !attributeFilterValues.includes(attrFilter))
+
+          if (Array.isArray(updatedFilters) && updatedFilters.length > 0) {
+            draft.set(resourceType, {
+              attributeName: resourceAttributeMap.get(resourceType),
+              attributeValues: updatedFilters
+            })
+          } else {
             draft.delete(resourceType)
           }
         })
@@ -138,8 +183,8 @@ export const computeResourceMapOnChange = (
 }
 
 export const computeResourceMapOnMultiChange = (
-  setSelectedResourceMap: (value: React.SetStateAction<Map<ResourceType, string | string[]>>) => void,
-  selectedResourcesMap: Map<ResourceType, string | string[]>,
+  setSelectedResourceMap: (value: React.SetStateAction<Map<ResourceType, ResourceSelectorValue>>) => void,
+  selectedResourcesMap: Map<ResourceType, ResourceSelectorValue>,
   types: ResourceType[],
   isAdd: boolean
 ): void => {
@@ -294,9 +339,9 @@ export const getAllProjects = (orgScopes?: ScopeSelector[]): string[] => {
 
 export const cleanUpResourcesMap = (
   resourceTypes: ResourceType[],
-  selectedResourcesMap: Map<ResourceType, string | string[]>,
+  selectedResourcesMap: Map<ResourceType, ResourceSelectorValue>,
   selectionType: SelectionType
-): Map<ResourceType, string | string[]> => {
+): Map<ResourceType, ResourceSelectorValue> => {
   const types = [...resourceTypes]
   selectedResourcesMap.forEach((_value, key) => {
     if (!types.includes(key)) {

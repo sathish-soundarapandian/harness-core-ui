@@ -52,9 +52,9 @@ import css from '../../ArtifactConnector.module.scss'
 
 const getRepositoryValue = (
   formData: ImagePathTypes & { connectorId?: string },
-  isServerlessDeploymentTypeSelected = false
+  isServerlessOrSshOrWinRmSelected = false
 ): string => {
-  if (isServerlessDeploymentTypeSelected) {
+  if (isServerlessOrSshOrWinRmSelected) {
     if ((formData?.repository as SelectOption)?.value) {
       return (formData?.repository as SelectOption)?.value as string
     }
@@ -83,6 +83,7 @@ function Artifactory({
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(selectedDeploymentType)
   const isSSHWinRmDeploymentType = isSshOrWinrmDeploymentType(selectedDeploymentType)
+  const isServerlessWinRmSshDeploymentType = isServerlessDeploymentTypeSelected || isSSHWinRmDeploymentType
   const schemaObject = {
     artifactPath: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactPath')),
     repository: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
@@ -148,7 +149,7 @@ function Artifactory({
     queryParams: {
       artifactPath: lastQueryData.artifactPath,
       repository: lastQueryData.repository,
-      repositoryFormat: isServerlessDeploymentTypeSelected || isSSHWinRmDeploymentType ? 'generic' : repositoryFormat,
+      repositoryFormat: isServerlessWinRmSshDeploymentType ? 'generic' : repositoryFormat,
       connectorRef: getConnectorRefQueryData(),
       accountIdentifier: accountId,
       orgIdentifier,
@@ -204,7 +205,7 @@ function Artifactory({
       initialValues,
       selectedArtifact as ArtifactType,
       context === ModalViewFor.SIDECAR,
-      isServerlessDeploymentTypeSelected
+      isServerlessWinRmSshDeploymentType || isSSHWinRmDeploymentType
     )
   }, [context, initialValues, selectedArtifact])
 
@@ -212,18 +213,18 @@ function Artifactory({
     const artifactObj = getFinalArtifactFormObj(
       formData,
       context === ModalViewFor.SIDECAR,
-      isServerlessDeploymentTypeSelected
+      isServerlessWinRmSshDeploymentType
     )
     merge(artifactObj.spec, {
-      repository: getRepositoryValue(formData, isServerlessDeploymentTypeSelected),
+      repository: getRepositoryValue(formData, isServerlessWinRmSshDeploymentType),
       repositoryUrl: formData?.repositoryUrl,
-      repositoryFormat: isServerlessDeploymentTypeSelected || isSSHWinRmDeploymentType ? 'generic' : repositoryFormat
+      repositoryFormat: isServerlessWinRmSshDeploymentType ? 'generic' : repositoryFormat
     })
     handleSubmit(artifactObj)
   }
 
   const getValidationSchema = useCallback(() => {
-    if (isServerlessDeploymentTypeSelected) {
+    if (isServerlessWinRmSshDeploymentType) {
       if (context === ModalViewFor.SIDECAR) {
         return serverlessSidecarSchema
       }
@@ -233,7 +234,7 @@ function Artifactory({
       return sidecarSchema
     }
     return primarySchema
-  }, [context, isServerlessDeploymentTypeSelected, primarySchema, serverlessPrimarySchema, sidecarSchema])
+  }, [context, isServerlessWinRmSshDeploymentType, primarySchema, serverlessPrimarySchema, sidecarSchema])
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
@@ -257,7 +258,7 @@ function Artifactory({
           <Form>
             <div className={css.connectorForm}>
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
-              {!isServerlessDeploymentTypeSelected && (
+              {!isServerlessWinRmSshDeploymentType && (
                 <div className={css.imagePathContainer}>
                   <FormInput.MultiTextInput
                     label={getString('repositoryUrlLabel')}
@@ -290,7 +291,7 @@ function Artifactory({
                 </div>
               )}
 
-              {isServerlessDeploymentTypeSelected ? (
+              {isServerlessWinRmSshDeploymentType ? (
                 <ServerlessArtifactoryRepository
                   connectorRef={
                     getMultiTypeFromValue(prevStepData?.connectorId) === MultiTypeInputType.RUNTIME
@@ -341,7 +342,7 @@ function Artifactory({
                 </div>
               )}
 
-              {isServerlessDeploymentTypeSelected && (
+              {isServerlessWinRmSshDeploymentType && (
                 <div className={css.imagePathContainer}>
                   <FormInput.MultiTextInput
                     label={getString('pipeline.artifactsSelection.artifactDirectory')}
@@ -391,12 +392,12 @@ function Artifactory({
                 tagList={tagList}
                 setTagList={setTagList}
                 tagDisabled={
-                  isServerlessDeploymentTypeSelected
+                  isServerlessWinRmSshDeploymentType
                     ? isArtifactPathDisabled(formik?.values)
                     : isTagDisabled(formik?.values)
                 }
                 isArtifactPath={true}
-                isServerlessDeploymentTypeSelected={isServerlessDeploymentTypeSelected}
+                isServerlessDeploymentTypeSelected={isServerlessWinRmSshDeploymentType}
               />
             </div>
             <Layout.Horizontal spacing="medium">

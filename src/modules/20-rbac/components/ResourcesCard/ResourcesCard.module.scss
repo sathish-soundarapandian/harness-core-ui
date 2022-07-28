@@ -5,9 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.resourceName {
-  border-left: solid black 1px;
-}
 .selectedResourceGroupCardDetails {
   width: 100%;
   box-shadow: var(--card-shadow);
@@ -20,8 +17,8 @@
   column-gap: var(--spacing-xxlarge);
 }
 
-.radioBtn {
-  padding-left: 100px !important;
+.radioBtnLabel {
+  color: var(--grey-700) !important;
 }
 
 .limitAccessCell {

@@ -3,8 +3,7 @@
 exports[`<TemplatesGridView /> tests should match snapshot 1`] = `
 <div>
   <div
-    class="Layout--vertical StyledProps--main"
-    style="height: 100%;"
+    class="Layout--vertical StyledProps--main mainContainer"
   >
     <div
       class="StyledProps--font StyledProps--main gridLayout"

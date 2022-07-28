@@ -86,7 +86,9 @@ const Content = (props: ECRRenderContent): JSX.Element => {
     refetch: refetchTags,
     error: fetchTagsError
   } = useMutateAsGet(useGetBuildDetailsForEcrWithYaml, {
-    body: yamlStringify(formik?.values),
+    body: yamlStringify({
+      pipeline: formik?.values
+    }),
     requestOptions: {
       headers: {
         'content-type': 'application/json'

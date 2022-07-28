@@ -42,31 +42,6 @@ export const getAutoAbortDescription = ({
   return ''
 }
 
-export const handleSourceRepoChange = ({ e, formikProps }: { e: SelectOption; formikProps: any }): void => {
-  if (e.value === GitSourceProviders.CUSTOM.value) {
-    formikProps.setValues({
-      ...formikProps.values,
-      sourceRepo: e.value,
-      connectorRef: undefined,
-      repoName: '',
-      actions: undefined,
-      anyAction: false,
-      secretToken: undefined
-    })
-  } else {
-    formikProps.setValues({
-      ...formikProps.values,
-      sourceRepo: e.value,
-      connectorRef: undefined,
-      repoName: '',
-      actions: undefined,
-      anyAction: false,
-      secretToken: undefined,
-      headerConditions: undefined
-    })
-  }
-}
-
 export const renderNonCustomEventFields = ({
   sourceRepo,
   formikProps,

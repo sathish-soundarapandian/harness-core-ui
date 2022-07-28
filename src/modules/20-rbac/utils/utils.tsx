@@ -35,6 +35,8 @@ import { FeatureWarningTooltip } from '@common/components/FeatureWarning/Feature
 import type { UseStringsReturn } from 'framework/strings'
 import type { ProjectSelectOption } from '@audit-trail/components/FilterDrawer/FilterDrawer'
 import type { RbacMenuItemProps } from '@rbac/components/MenuItem/MenuItem'
+import type { ResourceSelectorValue } from '@rbac/pages/ResourceGroupDetails/utils'
+import type { AttributeFilter } from 'services/resourcegroups'
 
 export const DEFAULT_RG = '_all_resources_including_child_scopes'
 export const PROJECT_DEFAULT_RG = '_all_project_level_resources'
@@ -240,8 +242,12 @@ export const isAssignmentFieldDisabled = (value: RoleOption | ResourceGroupOptio
   }
   return false
 }
-export const isDynamicResourceSelector = (value: string | string[]): boolean => {
+export const isDynamicResourceSelector = (value: ResourceSelectorValue): boolean => {
   return value === RbacResourceGroupTypes.DYNAMIC_RESOURCE_SELECTOR
+}
+
+export const isAtrributeFilterSelector = (value: ResourceSelectorValue): boolean => {
+  return Array.isArray((value as AttributeFilter)?.attributeValues)
 }
 
 export const isScopeResourceSelector = (value: string): boolean => {

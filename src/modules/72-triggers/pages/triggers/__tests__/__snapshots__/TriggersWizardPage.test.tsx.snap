@@ -1694,7 +1694,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                         style="width: 650px;"
                       >
                         <div
-                          class="bp3-form-group"
+                          class="bp3-form-group bp3-disabled"
                           data-id="sourceRepo-3"
                         >
                           <label
@@ -1705,7 +1705,11 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                               class="Tooltip--acenter"
                               data-tooltip-id="wizardForm_webhook_sourceRepo"
                             >
-                              triggers.triggerConfigurationPanel.payloadType
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-form-input-text StyledProps--font-weight-semi-bold"
+                              >
+                                triggers.triggerConfigurationPanel.payloadType
+                              </p>
                             </span>
                              
                             <span
@@ -1722,11 +1726,12 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                                 class="bp3-popover-target"
                               >
                                 <div
-                                  class="bp3-input-group"
+                                  class="bp3-input-group bp3-disabled"
                                 >
                                   <input
                                     autocomplete="off"
                                     class="bp3-input"
+                                    disabled=""
                                     name="sourceRepo"
                                     placeholder="- Select -"
                                     style="padding-right: 0px;"
@@ -2696,7 +2701,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                         style="width: 650px;"
                       >
                         <div
-                          class="bp3-form-group"
+                          class="bp3-form-group bp3-disabled"
                           data-id="sourceRepo-1"
                         >
                           <label
@@ -2707,7 +2712,11 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                               class="Tooltip--acenter"
                               data-tooltip-id="wizardForm_webhook_sourceRepo"
                             >
-                              triggers.triggerConfigurationPanel.payloadType
+                              <p
+                                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-form-input-text StyledProps--font-weight-semi-bold"
+                              >
+                                triggers.triggerConfigurationPanel.payloadType
+                              </p>
                             </span>
                              
                             <span
@@ -2724,11 +2733,12 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                                 class="bp3-popover-target"
                               >
                                 <div
-                                  class="bp3-input-group"
+                                  class="bp3-input-group bp3-disabled"
                                 >
                                   <input
                                     autocomplete="off"
                                     class="bp3-input"
+                                    disabled=""
                                     name="sourceRepo"
                                     placeholder="- Select -"
                                     style="padding-right: 0px;"

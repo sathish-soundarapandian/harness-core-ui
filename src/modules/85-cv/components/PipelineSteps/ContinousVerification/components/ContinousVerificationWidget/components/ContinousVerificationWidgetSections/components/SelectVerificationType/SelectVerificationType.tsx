@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { FormInput, AllowedTypes, SelectOption } from '@wings-software/uicore'
+import { FormInput, AllowedTypes, SelectOption, Text, Layout } from '@wings-software/uicore'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
@@ -26,13 +26,16 @@ export default function SelectVerificationType(props: SelectVerificationTypeProp
   return (
     <Card>
       <>
-        <div className={cx(stepCss.formGroup)}>
-          <FormInput.Select
-            name="spec.type"
-            label={getString('connectors.cdng.continousVerificationType')}
-            items={continousVerificationTypes as SelectOption[]}
-          />
-        </div>
+        <Layout.Vertical spacing={'medium'}>
+          <Text font={{ size: 'small' }}>{getString('connectors.cdng.verificationTypeHeading')}</Text>
+          <div className={cx(stepCss.formGroup)}>
+            <FormInput.Select
+              name="spec.type"
+              label={getString('connectors.cdng.continousVerificationType')}
+              items={continousVerificationTypes as SelectOption[]}
+            />
+          </div>
+        </Layout.Vertical>
         {formik?.values?.spec?.type ? <ConfigureFields formik={formik} allowableTypes={allowableTypes} /> : null}
       </>
     </Card>

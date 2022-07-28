@@ -25,7 +25,7 @@ export function useSaveTemplateListener(): void {
     state,
     state: {
       selectionState: { selectedStageId = '' },
-      pipelineView: { drawerData }
+      pipelineView: { drawerData, isRollbackToggled }
     },
     updatePipeline,
     updateStage,
@@ -65,7 +65,7 @@ export function useSaveTemplateListener(): void {
       updatePipelineView(newPipelineView)
       const stageData = produce(selectedStage, draft => {
         if (draft?.stage?.spec?.execution) {
-          updateStepWithinStage(draft.stage.spec.execution, selectedStepId, processNode)
+          updateStepWithinStage(draft.stage.spec.execution, selectedStepId, processNode, Boolean(isRollbackToggled))
         }
       })
       if (stageData?.stage) {

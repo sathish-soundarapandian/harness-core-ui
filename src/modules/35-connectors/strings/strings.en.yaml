@@ -370,6 +370,7 @@ customHealth:
 cdng:
   continousVerificationType: Continous Verification Type
   monitoredServiceType: Monitored Service Type
+  verificationTypeHeading: Select a type that matches your deployment strategy.
   artifactTag: Artifact Tag
   defineVerificationJob: Define Verification Job
   baseline: Baseline
@@ -382,7 +383,7 @@ cdng:
   selectTheJobNameFirst: Please select the job name first by clicking on Define Verification Job Panel
   error: Something went wrong , please try again by clicking on CV step again
   monitoredService:
-    label: Monitored Service
+    label: Monitored Service Name
     fetchingMonitoredService: Fetching Monitored service ...
     fetchingHealthSources: Fetching Health Sources ...
     creatingMonitoredService: Creating Monitored service ...
@@ -391,6 +392,7 @@ cdng:
     creatingMonitoredServiceError: Failed to create monitored service . Please try again by reopening the Verify step and selecting service, environment.
     monitoredServiceText: A monitored service for the
     backToVerifyStep: Back to Verify Step
+    monitoredServiceDef: A Monitored Service is a Service and Environment combination that monitors any changes, such as deployments, infrastructure changes and any health trend deviations using logs and metrics obtained from APM and Logging tools.
   runTimeMonitoredService:
     pleaseSpecify: Please specify
     toFetchMonitoredService: to fetch the monitored service.
@@ -400,6 +402,7 @@ cdng:
     backToRunPipeline: Back to Run Pipeline
   healthSources:
     label: Health Sources
+    healthSourceDef: Monitors changes in health trends of the Service in a deployment environment using logs, metrics and events collected from an APM or logging tools.
     noHealthSourcesDefined: No health sources have been defined. To complete the verification, you would need at least one healthsource added.
   validations:
     deploymentTagRequired: Deployment Tag is required

@@ -41,6 +41,7 @@ import {
   isMonitoredServiceFixedInput
 } from './ConfiguredMonitoredService.utils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import css from './ConfiguredMonitoredService.module.scss'
 
 interface ConfiguredMonitoredServiceProps {
   allowableTypes: AllowedTypes
@@ -171,16 +172,19 @@ export default function ConfiguredMonitoredService(props: ConfiguredMonitoredSer
       )
     } else if (isMonitoredServiceFixedInput(monitoredServiceRef)) {
       return (
-        <VerifyStepHealthSourceTable
-          serviceIdentifier={serviceIdentifier}
-          envIdentifier={environmentIdentifier}
-          healthSourcesList={healthSourcesList}
-          monitoredServiceData={monitoredServiceData as MonitoredServiceDTO}
-          monitoredServiceRef={monitoredServiceInfo}
-          onSuccess={onSuccess}
-          isRunTimeInput={false}
-          changeSourcesList={monitoredService?.sources?.changeSources as ChangeSourceDTO[]}
-        />
+        <>
+          <hr className={css.division} />
+          <VerifyStepHealthSourceTable
+            serviceIdentifier={serviceIdentifier}
+            envIdentifier={environmentIdentifier}
+            healthSourcesList={healthSourcesList}
+            monitoredServiceData={monitoredServiceData as MonitoredServiceDTO}
+            monitoredServiceRef={monitoredServiceInfo}
+            onSuccess={onSuccess}
+            isRunTimeInput={false}
+            changeSourcesList={monitoredService?.sources?.changeSources as ChangeSourceDTO[]}
+          />
+        </>
       )
     } else {
       return <></>

@@ -19,11 +19,18 @@ import css from './AddResourceModal.module.scss'
 interface RoleModalData {
   resource: ResourceType
   selectedData: string[]
+  isAttributeFilter: boolean
   onSuccess: (resources: string[]) => void
   onClose: () => void
 }
 
-const AddResourceModal: React.FC<RoleModalData> = ({ resource, onSuccess, onClose, selectedData }) => {
+const AddResourceModal: React.FC<RoleModalData> = ({
+  resource,
+  onSuccess,
+  onClose,
+  selectedData,
+  isAttributeFilter
+}) => {
   const resourceHandler = RbacFactory.getResourceTypeHandler(resource)
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
@@ -32,41 +39,51 @@ const AddResourceModal: React.FC<RoleModalData> = ({ resource, onSuccess, onClos
 
   if (!resourceHandler) return <Page.Error />
   const label = resource === ResourceType['DASHBOARDS'] ? resourceHandler.labelOverride : resourceHandler.label
+  const addModalBody = isAttributeFilter
+    ? resourceHandler?.addAttributeModalBody?.({
+        onSelectChange: items => {
+          setSelectedItems(items)
+        },
+        selectedData: selectedItems,
+        resourceScope: {
+          accountIdentifier: accountId,
+          orgIdentifier,
+          projectIdentifier
+        }
+      })
+    : resourceHandler?.addResourceModalBody?.({
+        searchTerm,
+        onSelectChange: items => {
+          setSelectedItems(items)
+        },
+        selectedData: selectedItems,
+        resourceScope: {
+          accountIdentifier: accountId,
+          orgIdentifier,
+          projectIdentifier
+        }
+      })
 
   return (
-    <Layout.Vertical padding="xxxlarge">
+    <Layout.Vertical padding="xsmall">
       <Layout.Vertical>
-        <Text color={Color.BLACK} font="medium">
-          {`${getString('add')} ${getString(resourceHandler.label)}`}
-        </Text>
-        <Layout.Horizontal padding={{ top: 'large' }} flex>
-          <ExpandingSearchInput
-            alwaysExpanded
-            onChange={text => {
-              setSearchTerm(text.trim())
-            }}
-          />
-          <Text color={Color.PRIMARY_7}>
-            {getString('rbac.addResourceModal.selectedText', {
-              name: getString(label || resourceHandler.label),
-              number: selectedItems.length
-            })}
-          </Text>
-        </Layout.Horizontal>
-        <Container className={css.modal}>
-          {resourceHandler?.addResourceModalBody?.({
-            searchTerm,
-            onSelectChange: items => {
-              setSelectedItems(items)
-            },
-            selectedData: selectedItems,
-            resourceScope: {
-              accountIdentifier: accountId,
-              orgIdentifier,
-              projectIdentifier
-            }
-          })}
-        </Container>
+        {!isAttributeFilter && (
+          <Layout.Horizontal flex padding={{ bottom: 'medium' }}>
+            <ExpandingSearchInput
+              alwaysExpanded
+              onChange={text => {
+                setSearchTerm(text.trim())
+              }}
+            />
+            <Text color={Color.PRIMARY_7}>
+              {getString('rbac.addResourceModal.selectedText', {
+                name: getString(label || resourceHandler.label),
+                number: selectedItems.length
+              })}
+            </Text>
+          </Layout.Horizontal>
+        )}
+        <Container className={css.modal}>{addModalBody}</Container>
         <Layout.Horizontal spacing="small">
           <Button
             variation={ButtonVariation.PRIMARY}
@@ -74,7 +91,7 @@ const AddResourceModal: React.FC<RoleModalData> = ({ resource, onSuccess, onClos
               resource === ResourceType['DASHBOARDS']
                 ? getString(resourceHandler.labelOverride || 'dashboards.homePage.folders')
                 : getString(resourceHandler.label)
-            }`}
+            } ${isAttributeFilter ? getString('common.types') : ''}`}
             onClick={() => onSuccess(selectedItems)}
           />
           <Button text={getString('cancel')} onClick={onClose} />

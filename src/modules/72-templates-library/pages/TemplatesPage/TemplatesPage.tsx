@@ -7,7 +7,6 @@
 
 import React, { useState } from 'react'
 import {
-  Container,
   DropDown,
   ExpandingSearchInput,
   ExpandingSearchInputHandle,
@@ -167,8 +166,9 @@ export default function TemplatesPage(): React.ReactElement {
             links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
           />
         }
+        className={css.templatesPageHeader}
       />
-      <Page.SubHeader>
+      <Page.SubHeader className={css.templatesPageSubHeader}>
         <Layout.Horizontal spacing={'medium'}>
           <NewTemplatePopover />
           <DropDown
@@ -215,41 +215,37 @@ export default function TemplatesPage(): React.ReactElement {
         loading={loading}
         error={(error?.data as Error)?.message || error?.message}
         className={css.pageBody}
-        retryOnError={/* istanbul ignore next */ () => reloadTemplates()}
+        retryOnError={reloadTemplates}
       >
-        <Container height={'100%'} style={{ overflow: 'auto' }}>
-          {!templateData?.data?.content?.length && (
+        {!loading &&
+          (!templateData?.data?.content?.length ? (
             <NoResultsView
               hasSearchParam={!!searchParam || !!templateType}
               onReset={reset}
               text={getString('templatesLibrary.templatesPage.noTemplates', { scope })}
             />
-          )}
-          {!!templateData?.data?.content?.length && (
-            <Layout.Vertical height={'100%'} margin={{ left: 'xlarge', right: 'xlarge' }}>
+          ) : (
+            <React.Fragment>
               <ResultsViewHeader templateData={templateData?.data} setPage={setPage} setSort={setSort} />
-              <Container style={{ flexGrow: 1 }} padding={{ bottom: 'large' }}>
-                <TemplatesView
-                  gotoPage={setPage}
-                  data={templateData?.data}
-                  onSelect={setSelectedTemplate}
-                  selectedTemplate={selectedTemplate}
-                  onPreview={setSelectedTemplate}
-                  onOpenEdit={goToTemplateStudio}
-                  onOpenSettings={identifier => {
-                    setTemplateIdentifierToSettings(identifier)
-                    showTemplateSettingsModal()
-                  }}
-                  onDelete={template => {
-                    setTemplateToDelete(template)
-                    showDeleteTemplatesModal()
-                  }}
-                  view={view}
-                />
-              </Container>
-            </Layout.Vertical>
-          )}
-        </Container>
+              <TemplatesView
+                gotoPage={setPage}
+                data={templateData?.data}
+                onSelect={setSelectedTemplate}
+                selectedTemplate={selectedTemplate}
+                onPreview={setSelectedTemplate}
+                onOpenEdit={goToTemplateStudio}
+                onOpenSettings={identifier => {
+                  setTemplateIdentifierToSettings(identifier)
+                  showTemplateSettingsModal()
+                }}
+                onDelete={template => {
+                  setTemplateToDelete(template)
+                  showDeleteTemplatesModal()
+                }}
+                view={view}
+              />
+            </React.Fragment>
+          ))}
       </Page.Body>
       {selectedTemplate && (
         <TemplateDetailsDrawer

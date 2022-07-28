@@ -49,7 +49,7 @@ import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagR
 import css from '../../K8sServiceSpec.module.scss'
 
 interface ArtifactoryRenderContent extends ArtifactSourceRenderProps {
-  isTagsSelectionDisabled: (data: ArtifactSourceRenderProps, isServerlessDeploymentTypeSelected: boolean) => boolean
+  isTagsSelectionDisabled: (data: ArtifactSourceRenderProps, isServerlessOrSshOrWinRmSelected: boolean) => boolean
 }
 
 interface TagFieldsProps extends ArtifactoryRenderContent {
@@ -62,7 +62,7 @@ interface TagFieldsProps extends ArtifactoryRenderContent {
   selectedDeploymentType: ServiceDeploymentType
   isSidecar?: boolean
   artifactPath?: string
-  isTagsSelectionDisabled: (data: ArtifactSourceRenderProps, isServerlessDeploymentTypeSelected: boolean) => boolean
+  isTagsSelectionDisabled: (data: ArtifactSourceRenderProps, isServerlessOrSshOrWinRmSelected: boolean) => boolean
   fetchingTags: boolean
   artifactoryTagsData: ResponseArtifactoryResponseDTO | null
   fetchTagsError: GetDataError<Failure | Error> | null
@@ -87,17 +87,20 @@ const TagFields = (props: TagFieldsProps): JSX.Element => {
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(selectedDeploymentType)
+  const isServerlessOrSshOrWinRmSelected =
+    isServerlessDeploymentType(selectedDeploymentType) ||
+    selectedDeploymentType === 'WinRm' ||
+    selectedDeploymentType === 'Ssh'
 
   const getTagsFieldName = (): string => {
-    if (isServerlessDeploymentTypeSelected) {
+    if (isServerlessOrSshOrWinRmSelected) {
       return `artifacts.${artifactPath}.spec.artifactPath`
     }
     return `artifacts.${artifactPath}.spec.tag`
   }
 
   const getTagRegexFieldName = (): string => {
-    if (isServerlessDeploymentTypeSelected) {
+    if (isServerlessOrSshOrWinRmSelected) {
       return `artifacts.${artifactPath}.spec.artifactPathFilter`
     }
     return `artifacts.${artifactPath}.spec.tagRegex`
@@ -107,7 +110,7 @@ const TagFields = (props: TagFieldsProps): JSX.Element => {
     <>
       {!!fromTrigger && isFieldRuntime(getTagsFieldName(), template) && (
         <FormInput.MultiTextInput
-          label={isServerlessDeploymentTypeSelected ? getString('pipeline.artifactPathLabel') : getString('tagLabel')}
+          label={isServerlessOrSshOrWinRmSelected ? getString('pipeline.artifactPathLabel') : getString('tagLabel')}
           multiTextInputProps={{
             expressions,
             value: TriggerDefaultFieldList.build,
@@ -115,7 +118,7 @@ const TagFields = (props: TagFieldsProps): JSX.Element => {
           }}
           disabled={true}
           tooltipProps={{
-            dataTooltipId: isServerlessDeploymentTypeSelected
+            dataTooltipId: isServerlessOrSshOrWinRmSelected
               ? `wizardForm_artifacts_${path}.artifacts.${artifactPath}.spec.artifactPath`
               : `wizardForm_artifacts_${path}.artifacts.${artifactPath}.spec.tag`
           }}
@@ -133,7 +136,7 @@ const TagFields = (props: TagFieldsProps): JSX.Element => {
           fetchTags={fetchTags}
           expressions={expressions}
           stageIdentifier={stageIdentifier}
-          isServerlessDeploymentTypeSelected={isServerlessDeploymentTypeSelected}
+          isServerlessDeploymentTypeSelected={isServerlessOrSshOrWinRmSelected}
         />
       )}
       {isFieldRuntime(getTagRegexFieldName(), template) && (
@@ -144,10 +147,10 @@ const TagFields = (props: TagFieldsProps): JSX.Element => {
             allowableTypes
           }}
           label={
-            isServerlessDeploymentTypeSelected ? getString('pipeline.artifactPathFilterLabel') : getString('tagRegex')
+            isServerlessOrSshOrWinRmSelected ? getString('pipeline.artifactPathFilterLabel') : getString('tagRegex')
           }
           name={
-            isServerlessDeploymentTypeSelected
+            isServerlessOrSshOrWinRmSelected
               ? `${path}.artifacts.${artifactPath}.spec.artifactPathFilter`
               : `${path}.artifacts.${artifactPath}.spec.tagRegex`
           }
@@ -203,10 +206,13 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
       : (selectedStageSpec?.serviceConfig?.serviceDefinition?.type as ServiceDeploymentType)
   }, [path, props.formik.values, props.stageIdentifier])
 
-  const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(selectedDeploymentType)
+  const isServerlessOrSshOrWinRmSelected =
+    isServerlessDeploymentType(selectedDeploymentType) ||
+    selectedDeploymentType === 'WinRm' ||
+    selectedDeploymentType === 'Ssh'
 
   // Initial values
-  const artifactPathValue = isServerlessDeploymentTypeSelected
+  const artifactPathValue = isServerlessOrSshOrWinRmSelected
     ? getDefaultQueryParam(
         artifact?.spec?.artifactDirectory,
         get(initialValues?.artifacts, `${artifactPath}.spec.artifactDirectory`, '')
@@ -222,7 +228,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
   )
 
   const artifactoryTagsDataCallMetadataQueryParams = React.useMemo(() => {
-    if (isServerlessDeploymentTypeSelected) {
+    if (isServerlessOrSshOrWinRmSelected) {
       return {
         artifactPath: getFinalQueryParamValue(
           getDefaultQueryParam(
@@ -252,7 +258,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
       fqnPath: getFqnPath(path as string, !!isPropagatedStage, stageIdentifier, defaultTo(artifactPath, ''))
     }
   }, [
-    isServerlessDeploymentTypeSelected,
+    isServerlessOrSshOrWinRmSelected,
     artifact?.spec?.artifactPath,
     artifact?.spec?.artifactDirectory,
     initialValues,
@@ -274,7 +280,9 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     refetch: refetchTags,
     error: fetchTagsError
   } = useMutateAsGet(useGetBuildDetailsForArtifactoryArtifactWithYaml, {
-    body: yamlStringify(formik?.values),
+    body: yamlStringify({
+      pipeline: formik?.values
+    }),
     requestOptions: {
       headers: {
         'content-type': 'application/json'
@@ -326,7 +334,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
       return true
     }
     if (isTag) {
-      return isTagsSelectionDisabled(props, isServerlessDeploymentTypeSelected)
+      return isTagsSelectionDisabled(props, isServerlessOrSshOrWinRmSelected)
     }
     return false
   }
@@ -377,7 +385,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
           )}
 
           {isFieldRuntime(`artifacts.${artifactPath}.spec.repository`, template) &&
-          !isServerlessDeploymentTypeSelected ? (
+          !isServerlessOrSshOrWinRmSelected ? (
             <FormInput.MultiTextInput
               label={getString('repository')}
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.repository`)}
@@ -403,7 +411,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
           )}
 
           {isFieldRuntime(`artifacts.${artifactPath}.spec.artifactDirectory`, template) &&
-            isServerlessDeploymentTypeSelected && (
+            isServerlessOrSshOrWinRmSelected && (
               <FormInput.MultiTextInput
                 label={getString('pipeline.artifactsSelection.artifactDirectory')}
                 disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.artifactDirectory`)}
@@ -417,7 +425,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
             )}
 
           {isFieldRuntime(`artifacts.${artifactPath}.spec.artifactPath`, template) &&
-            !isServerlessDeploymentTypeSelected && (
+            !isServerlessOrSshOrWinRmSelected && (
               <FormInput.MultiTextInput
                 label={getString('pipeline.artifactPathLabel')}
                 disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.artifactPath`)}
@@ -449,11 +457,11 @@ export class ArtifactoryArtifactSource extends ArtifactSourceBase<ArtifactSource
   protected artifactType = ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry
   protected isSidecar = false
 
-  isTagsSelectionDisabled(props: ArtifactSourceRenderProps, isServerlessDeploymentTypeSelected = false): boolean {
+  isTagsSelectionDisabled(props: ArtifactSourceRenderProps, isServerlessOrSshOrWinRmSelected = false): boolean {
     const { initialValues, artifactPath, artifact } = props
 
-    if (isServerlessDeploymentTypeSelected) {
-      const isArtifactDirectoryPresent = getDefaultQueryParam(
+    if (isServerlessOrSshOrWinRmSelected) {
+      const isArtifactDirectoryPresent = getImagePath(
         artifact?.spec?.artifactDirectory,
         get(initialValues, `artifacts.${artifactPath}.spec.artifactDirectory`, '')
       )

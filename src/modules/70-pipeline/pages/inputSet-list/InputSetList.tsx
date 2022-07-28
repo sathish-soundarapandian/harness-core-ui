@@ -35,6 +35,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import useImportResource from '@pipeline/components/ImportResource/useImportResource'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import { ResourceType as ImportResourceType } from '@common/interfaces/GitSyncInterface'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import { InputSetListView } from './InputSetListView'
@@ -252,7 +253,7 @@ function InputSetList(): React.ReactElement {
                     showOverlayInputSetForm()
                   }}
                 />
-                {isGitSimplificationEnabled && isImportFlowEnabled ? (
+                {isGitSimplificationEnabled && isImportFlowEnabled && pipeline?.data?.storeType === StoreType.REMOTE ? (
                   <MenuItem text={getString('common.importFromGit')} onClick={showImportResourceModal} />
                 ) : null}
               </Menu>

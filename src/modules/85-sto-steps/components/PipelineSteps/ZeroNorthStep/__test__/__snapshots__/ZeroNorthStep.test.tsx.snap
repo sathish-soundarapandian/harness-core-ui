@@ -4260,25 +4260,6 @@ exports[`ZeroNorth Step InputVariable View should render properly 1`] = `
       <span
         class="nameSection"
       >
-        connectorRef
-      </span>
-      <p
-        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
-        style="--text-line-clamp: 1;"
-      >
-        <span
-          class=""
-        >
-          account.connectorRef
-        </span>
-      </p>
-    </div>
-    <div
-      class="variableListRow variable-list-row"
-    >
-      <span
-        class="nameSection"
-      >
         settings
       </span>
       <p

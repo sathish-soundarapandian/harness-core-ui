@@ -13,6 +13,8 @@ declare const styles: {
   readonly gitFilter: string
   readonly loading: string
   readonly pageBody: string
+  readonly templatesPageHeader: string
+  readonly templatesPageSubHeader: string
   readonly updateTemplateSettingsDialog: string
 }
 export default styles

@@ -21,7 +21,7 @@ export const TemplatesGridView: React.FC<TemplatesViewProps> = (props): JSX.Elem
   const key = React.useMemo(() => uuid(), [data.content])
 
   return (
-    <Layout.Vertical height={'100%'}>
+    <Layout.Vertical className={css.mainContainer}>
       <Container className={css.gridLayout}>
         <Layout.Masonry
           key={key}

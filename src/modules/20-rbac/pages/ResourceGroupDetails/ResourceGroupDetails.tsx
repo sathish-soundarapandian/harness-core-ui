@@ -48,7 +48,8 @@ import {
   getSelectedScopeType,
   getSelectionType,
   SelectorScope,
-  validateResourceSelectors
+  validateResourceSelectors,
+  ResourceSelectorValue
 } from './utils'
 import ResourceGroupScope from './views/ResourceGroupScope'
 import css from './ResourceGroupDetails.module.scss'
@@ -65,7 +66,7 @@ const ResourceGroupDetails: React.FC = () => {
   const [includedScopes, setIncludedScopes] = useState<ScopeSelector[]>([])
   const [selectionType, setSelectionType] = useState<SelectionType>(SelectionType.SPECIFIED)
   const [selectedScope, setSelectedScope] = useState<SelectorScope>(SelectorScope.CURRENT)
-  const [selectedResourcesMap, setSelectedResourceMap] = useState<Map<ResourceType, string[] | string>>(new Map())
+  const [selectedResourcesMap, setSelectedResourceMap] = useState<Map<ResourceType, ResourceSelectorValue>>(new Map())
   const [resourceTypes, setResourceTypes] = useState<ResourceType[]>([])
   const [resourceCategoryMap, setResourceCategoryMap] =
     useState<Map<ResourceType | ResourceCategory, ResourceType[] | undefined>>()
@@ -117,7 +118,7 @@ const ResourceGroupDetails: React.FC = () => {
       )
     )
     setSelectionType(getSelectionType(resourceGroupDetails?.data?.resourceGroup))
-  }, [resourceGroupDetails?.data?.resourceGroup])
+  }, [resourceGroupDetails?.data?.resourceGroup, accountId, orgIdentifier, projectIdentifier, resourceTypes])
 
   useDeepCompareEffect(() => {
     const types = getFilteredResourceTypes(resourceTypeData, selectedScope)
@@ -162,9 +163,21 @@ const ResourceGroupDetails: React.FC = () => {
     }
   }
 
-  const onResourceSelectionChange = (resourceType: ResourceType, isAdd: boolean, identifiers?: string[]): void => {
+  const onResourceSelectionChange = (
+    resourceType: ResourceType,
+    isAdd: boolean,
+    identifiers?: string[],
+    attributeFilter?: string[]
+  ): void => {
     setIsUpdated(true)
-    computeResourceMapOnChange(setSelectedResourceMap, selectedResourcesMap, resourceType, isAdd, identifiers)
+    computeResourceMapOnChange(
+      setSelectedResourceMap,
+      selectedResourcesMap,
+      resourceType,
+      isAdd,
+      identifiers,
+      attributeFilter
+    )
   }
 
   const onSelectionTypeChange = (type: SelectionType): void => {

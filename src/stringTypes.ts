@@ -108,6 +108,7 @@ export interface StringsMap {
   'common.blank': string
   'common.branchName': string
   'common.by': string
+  'common.byType': string
   'common.capsAll': string
   'common.cardNumber': string
   'common.ce.autostopping': string
@@ -787,6 +788,7 @@ export interface StringsMap {
   'common.triggerLabel': string
   'common.triggerName': string
   'common.triggersLabel': string
+  'common.types': string
   'common.unlimited': string
   'common.unsavedChanges': string
   'common.updating': string
@@ -1684,6 +1686,7 @@ export interface StringsMap {
   'connectors.cdng.defineVerificationJob': string
   'connectors.cdng.displayName': string
   'connectors.cdng.error': string
+  'connectors.cdng.healthSources.healthSourceDef': string
   'connectors.cdng.healthSources.label': string
   'connectors.cdng.healthSources.noHealthSourcesDefined': string
   'connectors.cdng.jobTypes.blueGreen': string
@@ -1699,6 +1702,7 @@ export interface StringsMap {
   'connectors.cdng.monitoredService.fetchingMonitoredService': string
   'connectors.cdng.monitoredService.fetchingMonitoredServiceError': string
   'connectors.cdng.monitoredService.label': string
+  'connectors.cdng.monitoredService.monitoredServiceDef': string
   'connectors.cdng.monitoredService.monitoredServiceText': string
   'connectors.cdng.monitoredServiceType': string
   'connectors.cdng.noJobsConfigured': string
@@ -1726,6 +1730,7 @@ export interface StringsMap {
   'connectors.cdng.verificationSensitivityLabel.high': string
   'connectors.cdng.verificationSensitivityLabel.low': string
   'connectors.cdng.verificationSensitivityLabel.medium': string
+  'connectors.cdng.verificationTypeHeading': string
   'connectors.ceAws.crossAccountRoleExtention.heading': string
   'connectors.ceAws.crossAccountRoleExtention.step1.p1': string
   'connectors.ceAws.crossAccountRoleExtention.step1.p2': string
@@ -6222,6 +6227,7 @@ export interface StringsMap {
   'cv.monitoredServices.failedToFetchHealthScore': string
   'cv.monitoredServices.failedToFetchSummaryData': string
   'cv.monitoredServices.filterlabel': string
+  'cv.monitoredServices.heading': string
   'cv.monitoredServices.healthScoreDataNotAvailable': string
   'cv.monitoredServices.monitoredServiceCreated': string
   'cv.monitoredServices.monitoredServiceDeleted': string

@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { ButtonVariation, Container, FormInput, AllowedTypes, SelectOption } from '@wings-software/uicore'
+import { ButtonVariation, Container, FormInput, AllowedTypes, SelectOption, Text, Layout } from '@wings-software/uicore'
 import cx from 'classnames'
 
 import type { FormikProps } from 'formik'
@@ -24,12 +24,14 @@ import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
+import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
 import { monitoredServiceTypes, MONITORED_SERVICE_TYPE } from './SelectMonitoredServiceType.constants'
 import VerifyStepMonitoredServiceInputTemplates from './components/VerifyStepMonitoredServiceInputTemplates/VerifyStepMonitoredServiceInputTemplates'
 import {
   getInitialHealthSources,
   getInitialHealthSourceVariables,
   getInitialServiceAndEnv,
+  getInitialTemplatesData,
   getUpdatedSpecs
 } from './SelectMonitoredServiceType.utils'
 import type { ServiceAndEnv } from './SelectMonitoredServiceType.types'
@@ -63,7 +65,9 @@ export default function SelectMonitoredServiceType(props: SelectMonitoredService
     getInitialHealthSourceVariables(formValues)
   )
   const [serviceAndEnv, setServiceAndEnv] = useState<ServiceAndEnv>(getInitialServiceAndEnv(formValues))
-  const [templateData, setTemplate] = useState<TemplateSummaryResponse | null>()
+  const [templateData, setTemplate] = useState<TemplateSummaryResponse | null>(() =>
+    getInitialTemplatesData(formValues)
+  )
 
   const queryParams = {
     accountIdentifier: accountId,
@@ -148,28 +152,44 @@ export default function SelectMonitoredServiceType(props: SelectMonitoredService
     <Card>
       <>
         <div className={cx(stepCss.formGroup)}>
-          <Container flex>
-            <FormInput.Select
-              className={css.dropdown}
-              name="spec.monitoredService.type"
-              label={getString('connectors.cdng.monitoredServiceType')}
-              items={monitoredServiceTypes as SelectOption[]}
-              onChange={handleOnChangeMonitoredServiceType}
-            />
-            {showTemplateButton && type === MONITORED_SERVICE_TYPE.TEMPLATE ? (
-              <RbacButton
-                text={getString('common.useTemplate')}
-                variation={ButtonVariation.SECONDARY}
-                icon="template-library"
-                onClick={onUseTemplate}
-                featuresProps={{
-                  featuresRequest: {
-                    featureNames: [FeatureIdentifier.TEMPLATE_SERVICE]
-                  }
+          <Layout.Vertical spacing={'medium'}>
+            <Text>{getString('cv.monitoredServices.heading')}</Text>
+            <Text>{getString('connectors.cdng.monitoredService.monitoredServiceDef')}</Text>
+            <Container flex>
+              <FormInput.Select
+                className={css.dropdown}
+                name="spec.monitoredService.type"
+                label={getString('connectors.cdng.monitoredServiceType')}
+                items={monitoredServiceTypes as SelectOption[]}
+                onChange={handleOnChangeMonitoredServiceType}
+              />
+              {showTemplateButton && type === MONITORED_SERVICE_TYPE.TEMPLATE ? (
+                <RbacButton
+                  text={getString('common.useTemplate')}
+                  variation={ButtonVariation.SECONDARY}
+                  icon="template-library"
+                  onClick={onUseTemplate}
+                  featuresProps={{
+                    featuresRequest: {
+                      featureNames: [FeatureIdentifier.TEMPLATE_SERVICE]
+                    }
+                  }}
+                />
+              ) : null}
+            </Container>
+            {showTemplateButton &&
+            type === MONITORED_SERVICE_TYPE.TEMPLATE &&
+            templateData?.identifier &&
+            templateData?.versionLabel ? (
+              <TemplateBar
+                templateLinkConfig={{
+                  templateRef: templateData.identifier as string,
+                  versionLabel: templateData.versionLabel
                 }}
+                onOpenTemplateSelector={onUseTemplate}
               />
             ) : null}
-          </Container>
+          </Layout.Vertical>
         </div>
         {renderMonitoredServiceTemplateInputs()}
       </>

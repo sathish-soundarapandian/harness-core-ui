@@ -100,16 +100,17 @@ const checkDuplicateStep = (
 export const updateStepWithinStage = (
   execution: ExecutionElementConfig,
   processingNodeIdentifier: string,
-  processedNode: StepElementConfig | TemplateStepNode
+  processedNode: StepElementConfig | TemplateStepNode,
+  isRollback: boolean
 ): void => {
   // Finds the step in the stage, and updates with the processed node
-  execution?.steps?.forEach(stepWithinStage => {
+  execution?.[isRollback ? 'rollbackSteps' : 'steps']?.forEach(stepWithinStage => {
     if (stepWithinStage.stepGroup) {
       // If stage has a step group, loop over the step group steps and update the matching identifier with node
       if (stepWithinStage.stepGroup?.identifier === processingNodeIdentifier) {
         stepWithinStage.stepGroup = processedNode as any
       } else {
-        updateStepWithinStage(stepWithinStage.stepGroup, processingNodeIdentifier, processedNode)
+        updateStepWithinStage(stepWithinStage.stepGroup, processingNodeIdentifier, processedNode, isRollback)
       }
     } else if (stepWithinStage.parallel) {
       // If stage has a parallel steps, loop over and update the matching identifier with node
@@ -119,7 +120,7 @@ export const updateStepWithinStage = (
         } else if (parallelStep.step?.identifier === processingNodeIdentifier) {
           parallelStep.step = processedNode as any
         } else if (parallelStep?.stepGroup) {
-          updateStepWithinStage(parallelStep?.stepGroup, processingNodeIdentifier, processedNode)
+          updateStepWithinStage(parallelStep?.stepGroup, processingNodeIdentifier, processedNode, isRollback)
         }
       })
     } else if (stepWithinStage.step?.identifier === processingNodeIdentifier) {
@@ -127,9 +128,6 @@ export const updateStepWithinStage = (
       stepWithinStage.step = processedNode as any
     }
   })
-  if (execution?.rollbackSteps) {
-    updateStepWithinStage({ steps: execution.rollbackSteps }, processingNodeIdentifier, processedNode)
-  }
 }
 
 const addReplace = (item: Partial<Values>, node: any): void => {
@@ -225,7 +223,8 @@ const updateWithNodeIdentifier = async (
   updatePipelineView: (data: PipelineViewData) => void,
   updateStage: (stage: StageElementConfig) => Promise<void>,
   data: any,
-  pipelineView: PipelineViewData
+  pipelineView: PipelineViewData,
+  isRollback: boolean
 ): Promise<void> => {
   const provisioner = (selectedStage?.stage as DeploymentStageElementConfig)?.spec?.infrastructure
     ?.infrastructureDefinition?.provisioner
@@ -233,7 +232,7 @@ const updateWithNodeIdentifier = async (
     const processingNodeIdentifier = data?.stepConfig?.node?.identifier
     const stageData = produce(selectedStage, draft => {
       if (draft.stage?.spec?.execution) {
-        updateStepWithinStage(draft.stage.spec.execution, processingNodeIdentifier, processNode)
+        updateStepWithinStage(draft.stage.spec.execution, processingNodeIdentifier, processNode, isRollback)
       }
     })
     // update view data before updating pipeline because its async
@@ -254,7 +253,7 @@ const updateWithNodeIdentifier = async (
       const provisionerInternal = (draft?.stage as DeploymentStageElementConfig)?.spec?.infrastructure
         ?.infrastructureDefinition?.provisioner
       if (provisionerInternal) {
-        updateStepWithinStage(provisionerInternal, processingNodeIdentifier, processNode)
+        updateStepWithinStage(provisionerInternal, processingNodeIdentifier, processNode, isRollback)
       }
     })
     // update view data before updating pipeline because its async
@@ -278,7 +277,8 @@ const onSubmitStep = async (
   selectedStage: StageElementWrapper<StageElementConfig> | undefined,
   updatePipelineView: (data: PipelineViewData) => void,
   updateStage: (stage: StageElementConfig) => Promise<void>,
-  pipelineView: PipelineViewData
+  pipelineView: PipelineViewData,
+  isRollback: boolean
 ): Promise<void> => {
   if (data?.stepConfig?.node) {
     const processNode = processNodeImpl(item, data, trackEvent)
@@ -291,7 +291,8 @@ const onSubmitStep = async (
         updatePipelineView,
         updateStage,
         data,
-        pipelineView
+        pipelineView,
+        isRollback
       )
     }
   }
@@ -405,7 +406,7 @@ export function RightDrawer(): React.ReactElement {
   const {
     state: {
       templateTypes,
-      pipelineView: { drawerData, isDrawerOpened, isSplitViewOpen },
+      pipelineView: { drawerData, isDrawerOpened, isSplitViewOpen, isRollbackToggled },
       pipelineView,
       selectionState: { selectedStageId, selectedStepId },
       gitDetails,
@@ -478,7 +479,13 @@ export function RightDrawer(): React.ReactElement {
       let step
       let drawerType = DrawerTypes.StepConfig
       // 1. search for step in execution
-      const execStep = getStepFromId(selectedStage?.stage?.spec?.execution, selectedStepId, false, false)
+      const execStep = getStepFromId(
+        selectedStage?.stage?.spec?.execution,
+        selectedStepId,
+        false,
+        false,
+        Boolean(pipelineView.isRollbackToggled)
+      )
       step = execStep.node
       if (!step) {
         drawerType = DrawerTypes.ConfigureService
@@ -651,7 +658,11 @@ export function RightDrawer(): React.ReactElement {
     updatePipelineView({ ...pipelineView, isDrawerOpened: false, drawerData: { type: DrawerTypes.AddStep } })
   }
 
-  const updateNode = async (processNode: StepElementConfig | TemplateStepNode, drawerType: DrawerTypes) => {
+  const updateNode = async (
+    processNode: StepElementConfig | TemplateStepNode,
+    drawerType: DrawerTypes,
+    isRollback: boolean
+  ): Promise<void> => {
     const newPipelineView = produce(pipelineView, draft => {
       set(draft, 'drawerData.data.stepConfig.node', processNode)
     })
@@ -659,12 +670,12 @@ export function RightDrawer(): React.ReactElement {
     const processingNodeIdentifier = defaultTo(drawerData.data?.stepConfig?.node?.identifier, '')
     const stageData = produce(selectedStage, draft => {
       if (drawerType === DrawerTypes.StepConfig && draft?.stage?.spec?.execution) {
-        updateStepWithinStage(draft.stage.spec.execution, processingNodeIdentifier, processNode)
+        updateStepWithinStage(draft.stage.spec.execution, processingNodeIdentifier, processNode, isRollback)
       } else if (drawerType === DrawerTypes.ProvisionerStepConfig) {
         const provisionerInternal = (draft?.stage as DeploymentStageElementConfig)?.spec?.infrastructure
           ?.infrastructureDefinition?.provisioner
         if (provisionerInternal) {
-          updateStepWithinStage(provisionerInternal, processingNodeIdentifier, processNode)
+          updateStepWithinStage(provisionerInternal, processingNodeIdentifier, processNode, isRollback)
         }
       }
     })
@@ -675,7 +686,11 @@ export function RightDrawer(): React.ReactElement {
     drawerData.data?.stepConfig?.onUpdate?.(processNode)
   }
 
-  const addOrUpdateTemplate = async (selectedTemplate: TemplateSummaryResponse, drawerType: DrawerTypes) => {
+  const addOrUpdateTemplate = async (
+    selectedTemplate: TemplateSummaryResponse,
+    drawerType: DrawerTypes,
+    isRollback: boolean
+  ): Promise<void> => {
     try {
       const stepType =
         (data?.stepConfig?.node as StepElementConfig)?.type ||
@@ -692,23 +707,23 @@ export function RightDrawer(): React.ReactElement {
             draft.identifier = defaultTo(node?.identifier, '')
           })
         : createTemplate<TemplateStepNode>(node as unknown as TemplateStepNode, template)
-      await updateNode(processNode, drawerType)
+      await updateNode(processNode, drawerType, isRollback)
     } catch (_) {
       // Do nothing.. user cancelled template selection
     }
   }
 
-  const removeTemplate = async (drawerType: DrawerTypes) => {
+  const removeTemplate = async (drawerType: DrawerTypes, isRollback: boolean): Promise<void> => {
     const node = drawerData.data?.stepConfig?.node as TemplateStepNode
     const processNode = produce({} as StepElementConfig, draft => {
       draft.name = node.name
       draft.identifier = node.identifier
       draft.type = get(templateTypes, node.template.templateRef)
     })
-    await updateNode(processNode, drawerType)
+    await updateNode(processNode, drawerType, isRollback)
   }
 
-  const onDiscard = () => {
+  const onDiscard = (): void => {
     updatePipelineView({
       ...pipelineView,
       isDrawerOpened: false,
@@ -780,13 +795,16 @@ export function RightDrawer(): React.ReactElement {
               selectedStage,
               updatePipelineView,
               updateStage,
-              pipelineView
+              pipelineView,
+              Boolean(isRollbackToggled)
             )
           }
           viewType={StepCommandsViews.Pipeline}
           allowableTypes={allowableTypes}
-          onUseTemplate={(selectedTemplate: TemplateSummaryResponse) => addOrUpdateTemplate(selectedTemplate, type)}
-          onRemoveTemplate={() => removeTemplate(type)}
+          onUseTemplate={(selectedTemplate: TemplateSummaryResponse) =>
+            addOrUpdateTemplate(selectedTemplate, type, Boolean(isRollbackToggled))
+          }
+          onRemoveTemplate={() => removeTemplate(type, Boolean(isRollbackToggled))}
           isStepGroup={data.stepConfig.isStepGroup}
           hiddenPanels={data.stepConfig.hiddenAdvancedPanels}
           stageType={stageType as StageType}
@@ -944,14 +962,17 @@ export function RightDrawer(): React.ReactElement {
               selectedStage,
               updatePipelineView,
               updateStage,
-              pipelineView
+              pipelineView,
+              Boolean(isRollbackToggled)
             )
           }
           isStepGroup={data.stepConfig.isStepGroup}
           hiddenPanels={data.stepConfig.hiddenAdvancedPanels}
           stageType={stageType as StageType}
-          onUseTemplate={(selectedTemplate: TemplateSummaryResponse) => addOrUpdateTemplate(selectedTemplate, type)}
-          onRemoveTemplate={() => removeTemplate(type)}
+          onUseTemplate={(selectedTemplate: TemplateSummaryResponse) =>
+            addOrUpdateTemplate(selectedTemplate, type, Boolean(isRollbackToggled))
+          }
+          onRemoveTemplate={() => removeTemplate(type, Boolean(isRollbackToggled))}
         />
       )}
     </Drawer>

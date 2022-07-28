@@ -11,11 +11,17 @@ import { defaultTo } from 'lodash-es'
 import ResourcesCard from '@rbac/components/ResourcesCard/ResourcesCard'
 import { useStrings } from 'framework/strings'
 import type { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
+import type { ResourceSelectorValue } from '@rbac/pages/ResourceGroupDetails/utils'
 
 export interface ResourcesCardListProps {
-  selectedResourcesMap: Map<ResourceType, string[] | string>
+  selectedResourcesMap: Map<ResourceType, ResourceSelectorValue>
   resourceCategoryMap?: Map<ResourceType | ResourceCategory, ResourceType[] | undefined>
-  onResourceSelectionChange: (resourceType: ResourceType, isAdd: boolean, identifiers?: string[] | undefined) => void
+  onResourceSelectionChange: (
+    resourceType: ResourceType,
+    isAdd: boolean,
+    identifiers?: string[] | undefined,
+    attributeFilter?: string[] | undefined
+  ) => void
   onResourceCategorySelect: (types: ResourceType[], isAdd: boolean) => void
   disableAddingResources?: boolean
   disableSelection?: boolean

@@ -113,6 +113,7 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
       searchRef.current.clear()
     }
     setSelectedChildType(allChildTypes.length === 1 ? allChildTypes[0] : undefined)
+    setSelectedScope(scopeOptions[0])
   }, [searchParam, searchRef.current, allChildTypes])
 
   const getName = React.useCallback(
@@ -243,7 +244,7 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
                 </Container>
               </Layout.Horizontal>
             </Container>
-            <Container className={css.templatesContainer}>
+            <Layout.Vertical className={css.templatesContainer}>
               {loading && <PageSpinner />}
               {!loading && error && (
                 <PageError
@@ -274,7 +275,7 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
                   view={view}
                 />
               )}
-            </Container>
+            </Layout.Vertical>
           </Layout.Vertical>
         </Container>
       </Layout.Vertical>
