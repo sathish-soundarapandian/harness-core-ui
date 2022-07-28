@@ -77,6 +77,7 @@ declare global {
       createDeploymentStage(): void
       visitCreatePipeline(): void
       visitPipelinesList(): void
+      visitGitops(): void
       visitExecutionsList(): void
       visitChangeIntelligence(): void
       visitSRMMonitoredServicePage(): void
@@ -156,6 +157,15 @@ Cypress.Commands.add('visitPipelinesList', () => {
   cy.contains('p', 'Project 1').click()
   cy.contains('p', 'Delivery').click()
   cy.contains('p', 'Pipelines').click()
+})
+
+Cypress.Commands.add('visitGitops', () => {
+  cy.visitPageAssertion('[class^=SideNav-module_main]')
+  cy.contains('p', 'Projects').click()
+  cy.visitPageAssertion('.PageBody--pageBody')
+  cy.contains('p', 'Project 1').click()
+  cy.contains('p', 'Delivery').click()
+  cy.contains('p', 'GitOps').click()
 })
 
 Cypress.Commands.add('visitExecutionsList', () => {
