@@ -6,10 +6,8 @@
  */
 
 import React, { useState } from 'react'
-import { Button, ButtonVariation, Layout, MultiTypeInputType } from '@wings-software/uicore'
+import { Button, ButtonVariation, Layout, ModalDialog, MultiTypeInputType } from '@wings-software/uicore'
 import { defaultTo, get, isEmpty, merge } from 'lodash-es'
-import cx from 'classnames'
-import { Dialog } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { TriggerFormType } from '@pipeline/factories/ArtifactTriggerInputFactory/types'
 import TriggerFactory from '@pipeline/factories/ArtifactTriggerInputFactory'
@@ -254,10 +252,12 @@ const SelectArtifactModal: React.FC<SelectArtifactModalPropsInterface> = ({
       }
 
   return (
-    <Dialog
-      className={cx(css.selectArtifactModal, 'padded-dialog', modalState !== ModalState.SELECT && css.runtimeInputs)}
-      isOpen={isModalOpen}
+    <ModalDialog
+      width={880}
+      height={350}
+      className={css.selectArtifactModal}
       enforceFocus={false}
+      isOpen={isModalOpen}
       title={
         modalState === ModalState.SELECT
           ? isManifest
@@ -268,21 +268,9 @@ const SelectArtifactModal: React.FC<SelectArtifactModalPropsInterface> = ({
             })
       }
       onClose={closeAndReset}
-    >
-      {modalState === ModalState.SELECT ? (
-        <>
-          <ArtifactTableInfo
-            setSelectedArtifact={setSelectedArtifactId}
-            selectedArtifact={selectedArtifactId}
-            setSelectedStage={setSelectedStageId}
-            selectedStage={selectedStageId}
-            setSelectedArtifactLabel={setSelectedArtifactLabel}
-            selectedArtifactLabel={selectedArtifactLabel}
-            isManifest={isManifest}
-            formikProps={formikProps}
-            artifactTableData={artifactTableData}
-          />
-          <Layout.Horizontal spacing="medium" className={css.footer}>
+      footer={
+        modalState === ModalState.SELECT ? (
+          <Layout.Horizontal spacing="medium">
             <Button
               text={getString('select')}
               variation={ButtonVariation.PRIMARY}
@@ -292,31 +280,10 @@ const SelectArtifactModal: React.FC<SelectArtifactModalPropsInterface> = ({
                 setModalState(ModalState.RUNTIME_INPUT)
               }}
             />
-            <Button
-              className={css.cancel}
-              variation={ButtonVariation.TERTIARY}
-              onClick={closeAndReset}
-              text={getString('cancel')}
-            />
+            <Button variation={ButtonVariation.TERTIARY} onClick={closeAndReset} text={getString('cancel')} />
           </Layout.Horizontal>
-        </>
-      ) : (
-        <>
-          <PipelineVariablesContextProvider pipeline={formikProps.values.originalPipeline}>
-            <FormComponent
-              template={templateObject}
-              path={getPathString(runtimeData, selectedStageId)}
-              initialValues={runtimeData}
-              allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
-              readonly={false}
-              stageIdentifier={selectedStageId}
-              formik={formikProps}
-              fromTrigger={true}
-              stepViewType={StepViewType.InputSet}
-              {...formComponentProps}
-            />
-          </PipelineVariablesContextProvider>
-          <Layout.Horizontal spacing="medium" className={css.footer}>
+        ) : (
+          <Layout.Horizontal spacing="medium">
             {isEmpty(values?.selectedArtifact) && (
               <Button
                 text={getString('back')}
@@ -342,16 +309,40 @@ const SelectArtifactModal: React.FC<SelectArtifactModalPropsInterface> = ({
                 closeModal()
               }}
             />
-            <Button
-              className={css.cancel}
-              variation={ButtonVariation.TERTIARY}
-              onClick={closeAndReset}
-              text={getString('cancel')}
-            />
+            <Button variation={ButtonVariation.TERTIARY} onClick={closeAndReset} text={getString('cancel')} />
           </Layout.Horizontal>
-        </>
+        )
+      }
+    >
+      {modalState === ModalState.SELECT ? (
+        <ArtifactTableInfo
+          setSelectedArtifact={setSelectedArtifactId}
+          selectedArtifact={selectedArtifactId}
+          setSelectedStage={setSelectedStageId}
+          selectedStage={selectedStageId}
+          setSelectedArtifactLabel={setSelectedArtifactLabel}
+          selectedArtifactLabel={selectedArtifactLabel}
+          isManifest={isManifest}
+          formikProps={formikProps}
+          artifactTableData={artifactTableData}
+        />
+      ) : (
+        <PipelineVariablesContextProvider pipeline={formikProps.values.originalPipeline}>
+          <FormComponent
+            template={templateObject}
+            path={getPathString(runtimeData, selectedStageId)}
+            initialValues={runtimeData}
+            allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
+            readonly={false}
+            stageIdentifier={selectedStageId}
+            formik={formikProps}
+            fromTrigger={true}
+            stepViewType={StepViewType.InputSet}
+            {...formComponentProps}
+          />
+        </PipelineVariablesContextProvider>
       )}
-    </Dialog>
+    </ModalDialog>
   )
 }
 

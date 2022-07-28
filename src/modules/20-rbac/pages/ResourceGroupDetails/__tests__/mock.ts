@@ -41,7 +41,16 @@ export const resourceGroupDetails: ResponseResourceGroupV2Response = {
       ],
       resourceFilter: {
         includeAllResources: false,
-        resources: [{ resourceType: 'SECRET' }]
+        resources: [
+          { resourceType: 'SECRET' },
+          {
+            resourceType: 'ENVIRONMENT',
+            attributeFilter: {
+              attributeName: 'type',
+              attributeValues: ['Production']
+            }
+          }
+        ]
       },
       tags: {},
       description: '',

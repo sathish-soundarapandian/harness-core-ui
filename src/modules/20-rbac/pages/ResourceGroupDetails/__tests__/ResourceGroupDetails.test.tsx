@@ -89,7 +89,7 @@ describe('Resource Groups Page', () => {
     act(() => {
       fireEvent.click(connector!)
     })
-    expect(getAllByText('rbac.resourceGroup.all')[0]).toBeTruthy()
+    expect(getAllByText('rbac.resourceGroup.all')[1]).toBeTruthy()
     await act(async () => {
       fireEvent.click(getByText(container, 'save'))
     })
@@ -105,7 +105,17 @@ describe('Resource Groups Page', () => {
       ],
       resourceFilter: {
         includeAllResources: false,
-        resources: [{ resourceType: 'SECRET' }, { resourceType: 'CONNECTOR' }]
+        resources: [
+          { resourceType: 'SECRET' },
+          {
+            resourceType: 'ENVIRONMENT',
+            attributeFilter: {
+              attributeName: 'type',
+              attributeValues: ['Production']
+            }
+          },
+          { resourceType: 'CONNECTOR' }
+        ]
       },
       tags: {},
       description: '',
@@ -147,7 +157,17 @@ describe('Resource Groups Page', () => {
       ],
       resourceFilter: {
         includeAllResources: false,
-        resources: [{ resourceType: 'SECRET' }, { resourceType: 'CONNECTOR' }]
+        resources: [
+          { resourceType: 'SECRET' },
+          {
+            resourceType: 'ENVIRONMENT',
+            attributeFilter: {
+              attributeName: 'type',
+              attributeValues: ['Production']
+            }
+          },
+          { resourceType: 'CONNECTOR' }
+        ]
       },
       tags: {},
       description: '',

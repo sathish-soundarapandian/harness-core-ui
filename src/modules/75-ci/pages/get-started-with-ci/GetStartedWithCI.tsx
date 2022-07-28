@@ -5,8 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
+import { useParams } from 'react-router-dom'
 import cx from 'classnames'
+import { get } from 'lodash-es'
 import {
   Text,
   FontVariation,
@@ -16,24 +18,102 @@ import {
   ButtonVariation,
   IconName,
   Container,
-  ButtonSize
+  ButtonSize,
+  PageSpinner
 } from '@harness/uicore'
 import type { IconProps } from '@harness/icons'
+import {
+  ConnectorFilterProperties,
+  ConnectorInfoDTO,
+  ConnectorResponse,
+  getSecretV2Promise,
+  ResponsePageConnectorResponse,
+  ResponseSecretResponseWrapper,
+  SecretDTOV2,
+  useGetConnectorListV2
+} from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { Status } from '@common/utils/Constants'
+import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
+import { Connectors } from '@connectors/constants'
 import { InfraProvisioningWizard } from './InfraProvisioningWizard/InfraProvisioningWizard'
-import { ProvisioningStatus } from './InfraProvisioningWizard/Constants'
+import { InfraProvisiongWizardStepId, ProvisioningStatus } from './InfraProvisioningWizard/Constants'
 import { InfraProvisioningCarousel } from './InfraProvisioningCarousel/InfraProvisioningCarousel'
 import { useProvisionDelegateForHostedBuilds } from '../../hooks/useProvisionDelegateForHostedBuilds'
+import { sortConnectorsByLastConnectedAtTsDescOrder } from '../../utils/HostedBuildsUtils'
 
 import buildImgURL from './build.svg'
 import css from './GetStartedWithCI.module.scss'
 
 export default function GetStartedWithCI(): React.ReactElement {
+  const { accountId } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const [showWizard, setShowWizard] = useState<boolean>(false)
   const [showProvisioningCarousel, setShowProvisioningCarousel] = useState<boolean>(false)
   const { initiateProvisioning, delegateProvisioningStatus } = useProvisionDelegateForHostedBuilds()
+  const [preSelectedGitConnector, setPreselectedGitConnector] = useState<ConnectorInfoDTO>()
+  const [connectorsEligibleForPreSelection, setConnectorsEligibleForPreSelection] = useState<ConnectorInfoDTO[]>()
+  const [secretForPreSelectedConnector, setSecretForPreSelectedConnector] = useState<SecretDTOV2>()
+  const { mutate: fetchGitConnectors, loading: fetchingGitConnectors } = useGetConnectorListV2({
+    queryParams: {
+      accountIdentifier: accountId,
+      pageSize: 10
+    }
+  })
+  const [isFetchingSecret, setIsFetchingSecret] = useState<boolean>()
+  const scrollRef = useRef<Element>()
+
+  useEffect(() => {
+    if (showWizard) {
+      fetchGitConnectors({
+        types: [Connectors.GITHUB, Connectors.GITLAB, Connectors.BITBUCKET],
+        connectivityStatuses: [Status.SUCCESS],
+        filterType: 'Connector'
+      } as ConnectorFilterProperties).then((response: ResponsePageConnectorResponse) => {
+        const { status, data } = response
+        if (status === Status.SUCCESS && Array.isArray(data?.content) && data?.content && data.content.length > 0) {
+          setConnectorsEligibleForPreSelection(
+            data.content.map((item: ConnectorResponse) => item.connector) as ConnectorInfoDTO[]
+          )
+          const selectedConnector = sortConnectorsByLastConnectedAtTsDescOrder(data.content).find(
+            (item: ConnectorResponse) =>
+              get(item, 'connector.spec.apiAccess.spec.tokenRef') && item.status?.status === Status.SUCCESS
+          )
+          if (selectedConnector) {
+            setPreselectedGitConnector(selectedConnector?.connector)
+            const secretIdentifier = getIdentifierFromValue(
+              get(selectedConnector, 'connector.spec.apiAccess.spec.tokenRef')
+            )
+            if (secretIdentifier) {
+              setIsFetchingSecret(true)
+              try {
+                getSecretV2Promise({
+                  identifier: secretIdentifier,
+                  queryParams: {
+                    accountIdentifier: accountId
+                  }
+                })
+                  .then((secretResponse: ResponseSecretResponseWrapper) => {
+                    setIsFetchingSecret(false)
+                    const { status: fetchSecretStatus, data: secretResponseData } = secretResponse
+                    if (fetchSecretStatus === Status.SUCCESS && secretResponseData?.secret) {
+                      setSecretForPreSelectedConnector(secretResponseData?.secret)
+                    }
+                  })
+                  .catch(_e => {
+                    setIsFetchingSecret(false)
+                  })
+              } catch (e) {
+                setIsFetchingSecret(false)
+              }
+            }
+          }
+        }
+      })
+    }
+  }, [showWizard])
 
   useEffect(() => {
     if (delegateProvisioningStatus === ProvisioningStatus.IN_PROGRESS) {
@@ -123,143 +203,166 @@ export default function GetStartedWithCI(): React.ReactElement {
 
   const Divider = <div className={css.divider}></div>
 
-  return showWizard ? (
-    <InfraProvisioningWizard />
-  ) : (
+  const showPageLoader = fetchingGitConnectors || isFetchingSecret
+
+  return (
     <>
-      {showProvisioningCarousel ? (
-        <InfraProvisioningCarousel
-          show={showProvisioningCarousel}
-          provisioningStatus={delegateProvisioningStatus}
-          onClose={() => {
-            if (delegateProvisioningStatus === ProvisioningStatus.FAILURE) {
-              setShowProvisioningCarousel(false)
-            } else if (delegateProvisioningStatus === ProvisioningStatus.SUCCESS) {
-              setShowWizard(true)
-            }
+      {showPageLoader ? <PageSpinner /> : <></>}
+      {!showPageLoader && showWizard ? (
+        <InfraProvisioningWizard
+          precursorData={{
+            preSelectedGitConnector,
+            connectorsEligibleForPreSelection,
+            secretForPreSelectedConnector
           }}
+          lastConfiguredWizardStepId={
+            preSelectedGitConnector
+              ? InfraProvisiongWizardStepId.SelectRepository
+              : InfraProvisiongWizardStepId.SelectGitProvider
+          }
         />
-      ) : null}
-      <Layout.Vertical flex>
-        <Container className={css.topPage}>
-          <Container className={css.buildYourOwnPipeline}>
-            <Container>
-              <Layout.Horizontal flex className={css.ciLogo}>
+      ) : (
+        <>
+          {showProvisioningCarousel ? (
+            <InfraProvisioningCarousel
+              show={showProvisioningCarousel}
+              provisioningStatus={delegateProvisioningStatus}
+              onClose={() => {
+                if (delegateProvisioningStatus === ProvisioningStatus.FAILURE) {
+                  setShowProvisioningCarousel(false)
+                } else if (delegateProvisioningStatus === ProvisioningStatus.SUCCESS) {
+                  setShowWizard(true)
+                }
+              }}
+            />
+          ) : null}
+          <Layout.Vertical flex>
+            <Container className={css.topPage}>
+              <Container className={css.buildYourOwnPipeline}>
+                <Container>
+                  <Layout.Horizontal flex className={css.ciLogo}>
+                    <Icon name="ci-main" size={42} />
+                    <Layout.Vertical flex padding={{ left: 'xsmall' }}>
+                      <Text font={{ variation: FontVariation.BODY2 }} className={css.label}>
+                        {getString('common.purpose.ci.continuousLabel')}
+                      </Text>
+                      <Text font={{ variation: FontVariation.BODY2 }} className={css.label}>
+                        {getString('common.purpose.ci.integration')}
+                      </Text>
+                    </Layout.Vertical>
+                  </Layout.Horizontal>
+                </Container>
+                <Layout.Vertical>
+                  <Text font={{ variation: FontVariation.H2 }}>{getString('ci.getStartedWithCI.firstPipeline')}</Text>
+                  <Text font={{ variation: FontVariation.SMALL }} padding={{ top: 'small' }}>
+                    {getString('common.purpose.ci.descriptionOnly')}
+                  </Text>
+                  <Layout.Horizontal padding={{ top: 'xxlarge', bottom: 'huge' }}>
+                    {renderBuildPipelineStep({
+                      iconProps: { name: 'scm', size: 18, className: cx(css.icon, css.paddingXSmall) },
+                      label: 'ci.getStartedWithCI.connectRepo'
+                    })}
+                    {renderBuildPipelineStep({
+                      iconProps: {
+                        name: 'repository',
+                        size: 14,
+                        className: cx(css.icon, css.iconPadding)
+                      },
+                      label: 'ci.getStartedWithCI.selectRepo'
+                    })}
+                    {renderBuildPipelineStep({
+                      iconProps: {
+                        name: 'ci-build-pipeline',
+                        size: 20,
+                        className: cx(css.icon, css.iconPaddingSmall)
+                      },
+                      label: 'ci.getStartedWithCI.buildPipeline',
+                      isLastStep: true
+                    })}
+                  </Layout.Horizontal>
+                  <Container className={css.buttonRow}>
+                    <Button
+                      variation={ButtonVariation.PRIMARY}
+                      size={ButtonSize.LARGE}
+                      text={getString('getStarted')}
+                      onClick={() => {
+                        if (delegateProvisioningStatus === ProvisioningStatus.SUCCESS) {
+                          setShowWizard(true)
+                        } else {
+                          initiateProvisioning()
+                        }
+                      }}
+                    />
+                  </Container>
+                </Layout.Vertical>
+                <img
+                  className={css.buildImg}
+                  title={getString('ci.getStartedWithCI.buildPipeline')}
+                  src={buildImgURL}
+                  width={413}
+                  height={260}
+                />
+              </Container>
+              <Container className={css.learnMore}>
+                <Button
+                  variation={ButtonVariation.SECONDARY}
+                  round
+                  rightIcon="double-chevron-down"
+                  iconProps={{ size: 12 }}
+                  text={getString('ci.getStartedWithCI.learnMoreAboutCI')}
+                  onClick={() => {
+                    // Note: Without setTimeout, scrollIntoView does not work!
+                    setTimeout(() => scrollRef.current?.scrollIntoView({ behavior: 'smooth' }), 0)
+                  }}
+                />
+              </Container>
+            </Container>
+            <Container ref={scrollRef}>
+              <Layout.Horizontal flex padding={{ top: 'huge' }}>
                 <Icon name="ci-main" size={42} />
                 <Layout.Vertical flex padding={{ left: 'xsmall' }}>
-                  <Text font={{ variation: FontVariation.BODY2 }} className={css.label}>
+                  <Text font={{ variation: FontVariation.H5 }} className={css.label}>
                     {getString('common.purpose.ci.continuousLabel')}
                   </Text>
-                  <Text font={{ variation: FontVariation.BODY2 }} className={css.label}>
+                  <Text font={{ variation: FontVariation.H5 }} className={css.label}>
                     {getString('common.purpose.ci.integration')}
                   </Text>
                 </Layout.Vertical>
               </Layout.Horizontal>
             </Container>
-            <Layout.Vertical>
-              <Text font={{ variation: FontVariation.H2 }}>{getString('ci.getStartedWithCI.firstPipeline')}</Text>
-              <Text font={{ variation: FontVariation.SMALL }} padding={{ top: 'small' }}>
-                {getString('common.purpose.ci.descriptionOnly')}
-              </Text>
-              <Layout.Horizontal padding={{ top: 'xxlarge', bottom: 'huge' }}>
-                {renderBuildPipelineStep({
-                  iconProps: { name: 'scm', size: 18, className: cx(css.icon, css.paddingXSmall) },
-                  label: 'ci.getStartedWithCI.connectRepo'
-                })}
-                {renderBuildPipelineStep({
-                  iconProps: {
-                    name: 'repository',
-                    size: 14,
-                    className: cx(css.icon, css.iconPadding)
-                  },
-                  label: 'ci.getStartedWithCI.selectRepo'
-                })}
-                {renderBuildPipelineStep({
-                  iconProps: {
-                    name: 'ci-build-pipeline',
-                    size: 20,
-                    className: cx(css.icon, css.iconPaddingSmall)
-                  },
-                  label: 'ci.getStartedWithCI.buildPipeline',
-                  isLastStep: true
-                })}
-              </Layout.Horizontal>
-              <Container className={css.buttonRow}>
-                <Button
-                  variation={ButtonVariation.PRIMARY}
-                  size={ButtonSize.LARGE}
-                  text={getString('getStarted')}
-                  onClick={() => initiateProvisioning()}
-                />
-              </Container>
+            <Text
+              font={{ variation: FontVariation.H3 }}
+              className={css.nextLevel}
+              padding={{ top: 'large', bottom: 'xxxlarge' }}
+            >
+              {getString('ci.getStartedWithCI.takeToTheNextLevel')}
+            </Text>
+            {Divider}
+            <Layout.Vertical width="70%" padding={{ top: 'huge', bottom: 'xxlarge' }}>
+              {CI_CATALOGUE_ITEMS.map(
+                (item: { icon: IconName; label: keyof StringsMap; helptext: keyof StringsMap }[], index: number) => {
+                  return (
+                    <Layout.Horizontal padding="xlarge" key={index}>
+                      {renderCatalogueItem(item[0])}
+                      {renderCatalogueItem(item[1])}
+                    </Layout.Horizontal>
+                  )
+                }
+              )}
             </Layout.Vertical>
-            <img
-              className={css.buildImg}
-              title={getString('ci.getStartedWithCI.buildPipeline')}
-              src={buildImgURL}
-              width={413}
-              height={260}
-            />
-          </Container>
-          <Container className={css.learnMore}>
-            <Button
-              variation={ButtonVariation.SECONDARY}
-              round
-              rightIcon="double-chevron-down"
-              iconProps={{ size: 12 }}
-              text={getString('ci.getStartedWithCI.learnMoreAboutCI')}
-              onClick={() => {
-                // Note: Without setTimeout, scrollIntoView does not work!
-                setTimeout(
-                  () => document.getElementById('getStartedPage2Top')?.scrollIntoView({ behavior: 'smooth' }),
-                  0
-                )
-              }}
-            />
-          </Container>
-        </Container>
-        <Layout.Horizontal flex padding={{ top: 'huge' }} id="getStartedPage2Top">
-          <Icon name="ci-main" size={42} />
-          <Layout.Vertical flex padding={{ left: 'xsmall' }}>
-            <Text font={{ variation: FontVariation.H5 }} className={css.label}>
-              {getString('common.purpose.ci.continuousLabel')}
-            </Text>
-            <Text font={{ variation: FontVariation.H5 }} className={css.label}>
-              {getString('common.purpose.ci.integration')}
-            </Text>
+            {Divider}
+            <Container padding={{ top: 'xxxlarge', bottom: 'huge' }}>
+              <Button
+                variation={ButtonVariation.PRIMARY}
+                href="https://docs.harness.io/category/zgffarnh1m-ci-category"
+                target="_blank"
+              >
+                {getString('pipeline.createPipeline.learnMore')}
+              </Button>
+            </Container>
           </Layout.Vertical>
-        </Layout.Horizontal>
-        <Text
-          font={{ variation: FontVariation.H3 }}
-          className={css.nextLevel}
-          padding={{ top: 'large', bottom: 'xxxlarge' }}
-        >
-          {getString('ci.getStartedWithCI.takeToTheNextLevel')}
-        </Text>
-        {Divider}
-        <Layout.Vertical width="70%" padding={{ top: 'huge', bottom: 'xxlarge' }}>
-          {CI_CATALOGUE_ITEMS.map(
-            (item: { icon: IconName; label: keyof StringsMap; helptext: keyof StringsMap }[], index: number) => {
-              return (
-                <Layout.Horizontal padding="xlarge" key={index}>
-                  {renderCatalogueItem(item[0])}
-                  {renderCatalogueItem(item[1])}
-                </Layout.Horizontal>
-              )
-            }
-          )}
-        </Layout.Vertical>
-        {Divider}
-        <Container padding={{ top: 'xxxlarge', bottom: 'huge' }}>
-          <Button
-            variation={ButtonVariation.PRIMARY}
-            href="https://docs.harness.io/category/zgffarnh1m-ci-category"
-            target="_blank"
-          >
-            {getString('pipeline.createPipeline.learnMore')}
-          </Button>
-        </Container>
-      </Layout.Vertical>
+        </>
+      )}
     </>
   )
 }

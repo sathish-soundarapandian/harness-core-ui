@@ -606,9 +606,9 @@ exports[`ServicesList render 1`] = `
                   data-icon="service-kubernetes"
                 >
                   <svg
-                    height="18"
+                    height="20"
                     viewBox="0 0 14 14"
-                    width="18"
+                    width="20"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
@@ -831,7 +831,8 @@ exports[`ServicesList render 1`] = `
                   class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start"
                 >
                   <p
-                    class="StyledProps--font StyledProps--main statusText StyledProps--background-green600 StyledProps--color StyledProps--color-white StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall"
+                    class="StyledProps--font Text--lineclamp StyledProps--main statusText StyledProps--background-green600 StyledProps--color StyledProps--color-white StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall"
+                    style="--text-line-clamp: 1;"
                   >
                     SUCCESS
                   </p>

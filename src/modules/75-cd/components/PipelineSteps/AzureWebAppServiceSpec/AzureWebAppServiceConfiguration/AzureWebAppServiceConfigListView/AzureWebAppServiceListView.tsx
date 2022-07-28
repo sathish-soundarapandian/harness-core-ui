@@ -98,19 +98,23 @@ function AzureWebAppListView({
     /* istanbul ignore else */
     if (stage) {
       const newStage = produce(stage, draft => {
+        const path = isPropagating
+          ? 'stage.spec.serviceConfig.stageOverrides'
+          : 'stage.spec.serviceConfig.serviceDefinition.spec'
+        const { applicationSettings: appSettings, connectionStrings: connSettings, ...rest } = get(stage, path)
         switch (type) {
           case ModalViewOption.APPLICATIONSETTING:
-            set(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.applicationSettings', {})
+            set(draft, path, { ...rest, connectionStrings: connSettings })
             break
           case ModalViewOption.CONNECTIONSTRING:
-            set(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.connectionStrings', {})
+            set(draft, path, { ...rest, applicationSettings: appSettings })
             break
         }
       }).stage
 
       /* istanbul ignore else */
       if (newStage) {
-        updateStage(newStage)
+        updateStage?.(newStage)
       }
     }
   }
@@ -127,7 +131,7 @@ function AzureWebAppListView({
       : `stage.spec.serviceConfig.serviceDefinition.spec.${itemPath}`
 
     if (stage) {
-      updateStage(
+      updateStage?.(
         produce(stage, draft => {
           set(draft, path, item)
         }).stage as StageElementConfig
@@ -397,6 +401,7 @@ function AzureWebAppListView({
       const connectorList = option === ModalViewOption.CONNECTIONSTRING ? stringsConnectors : settingsConnectors
       const { color } = getStatus(selectedConnectorRef, connectorList, accountId)
       const connectorName = getConnectorNameFromValue(selectedConnectorRef, connectorList)
+
       return (
         <div className={css.rowItem}>
           <section className={css.serviceConfigList}>
@@ -461,7 +466,7 @@ function AzureWebAppListView({
         </div>
       )
     },
-    [stringsConnectors, settingsConnectors]
+    [stringsConnectors, settingsConnectors, isReadonly]
   )
 
   const [showConnectorModal, hideConnectorModal] = useModalHook(() => {

@@ -78,7 +78,7 @@ exports[`HealthSource table Should Render all the componetns in edit mode for cl
             >
               <div>
                 <div
-                  class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-xxlarge"
+                  class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-medium"
                 >
                   <p
                     class="StyledProps--font StyledProps--main header StyledProps--color StyledProps--color-black"
@@ -455,7 +455,7 @@ exports[`HealthSource table Should Render all the componetns in edit mode for cl
                   </div>
                 </div>
                 <div
-                  class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-xxlarge"
+                  class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-medium"
                 >
                   <p
                     class="StyledProps--font StyledProps--main header StyledProps--color StyledProps--color-black"
@@ -716,7 +716,7 @@ exports[`HealthSource table Should Render all the componetns in edit mode for lo
             >
               <div>
                 <div
-                  class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-xxlarge"
+                  class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-medium"
                 >
                   <p
                     class="StyledProps--font StyledProps--main header StyledProps--color StyledProps--color-black"
@@ -1093,7 +1093,7 @@ exports[`HealthSource table Should Render all the componetns in edit mode for lo
                   </div>
                 </div>
                 <div
-                  class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-xxlarge"
+                  class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-medium"
                 >
                   <p
                     class="StyledProps--font StyledProps--main header StyledProps--color StyledProps--color-black"
@@ -1353,7 +1353,7 @@ exports[`HealthSource table should matchsnapshot 1`] = `
             >
               <div>
                 <div
-                  class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-xxlarge"
+                  class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-medium"
                 >
                   <p
                     class="StyledProps--font StyledProps--main header StyledProps--color StyledProps--color-black"
@@ -1732,7 +1732,7 @@ exports[`HealthSource table should matchsnapshot 1`] = `
                   </div>
                 </div>
                 <div
-                  class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-xxlarge"
+                  class="Layout--vertical StyledProps--main tooltipStyle StyledProps--margin-medium"
                 >
                   <p
                     class="StyledProps--font StyledProps--main header StyledProps--color StyledProps--color-black"

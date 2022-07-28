@@ -8,13 +8,13 @@
 import React, { useState, useEffect } from 'react'
 import cx from 'classnames'
 import { Layout, FormInput, SelectOption, Text, HarnessDocTooltip, PageSpinner } from '@wings-software/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'
 import { useGetGitTriggerEventDetails } from 'services/pipeline-ng'
 import { NameIdDescriptionTags } from '@common/components'
 import { useStrings } from 'framework/strings'
 import { GitSourceProviders, getSourceRepoOptions } from '../utils/TriggersListUtils'
 import {
-  handleSourceRepoChange,
   renderNonCustomEventFields,
   getEventAndActions,
   clearEventsAndActions
@@ -124,11 +124,15 @@ const WebhookTriggerConfigPanel: React.FC<WebhookTriggerConfigPanelPropsInterfac
       <div className={css.formContent}>
         <section style={{ width: '650px' }}>
           <FormInput.Select
-            label={getString('triggers.triggerConfigurationPanel.payloadType')}
+            label={
+              <Text color={Color.GREY_600} font={{ variation: FontVariation.FORM_INPUT_TEXT, weight: 'semi-bold' }}>
+                {getString('triggers.triggerConfigurationPanel.payloadType')}
+              </Text>
+            }
             name="sourceRepo"
             className={cx(sourceRepo === GitSourceProviders.CUSTOM.value && css.bottomMarginZero)}
             items={getSourceRepoOptions(getString)}
-            onChange={e => handleSourceRepoChange({ e, formikProps })}
+            disabled={true}
           />
           {sourceRepo !== GitSourceProviders.CUSTOM.value
             ? renderNonCustomEventFields({

@@ -133,7 +133,11 @@ const NewFolderForm: React.FC<NewFolderModalData> = props => {
           if (currentNode.type === FileStoreNodeTypes.FOLDER) {
             getNode(getConfig, {
               setNewCurrentNode: true,
-              newNode: { ...createResponse.data, parentName: fileStoreContext.currentNode.name } as FileStoreNodeDTO,
+              newNode: {
+                ...createResponse.data,
+                parentName: fileStoreContext.currentNode.name,
+                children: []
+              } as FileStoreNodeDTO,
               type: FileStoreNodeTypes.FOLDER
             })
           } else {

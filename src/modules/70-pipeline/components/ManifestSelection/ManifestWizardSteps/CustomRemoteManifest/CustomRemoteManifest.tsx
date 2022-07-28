@@ -23,6 +23,7 @@ import { useParams } from 'react-router-dom'
 import { FontVariation } from '@harness/design-system'
 import { Form } from 'formik'
 import * as Yup from 'yup'
+import cx from 'classnames'
 import { defaultTo, get, set } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { useStrings } from 'framework/strings'
@@ -36,6 +37,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { CustomManifestManifestDataType, ManifestTypes } from '../../ManifestInterface'
 import { ManifestDataType, ManifestIdentifierValidation } from '../../Manifesthelper'
 import DragnDropPaths from '../../DragnDropPaths'
+import { filePathWidth } from '../ManifestUtils'
 import css from '../K8sValuesManifest/ManifestDetails.module.scss'
 
 interface CustomRemoteManifestPropType {
@@ -254,7 +256,12 @@ function CustomRemoteManifest({
                     />
                   </div>
                   {showValuesPaths(selectedManifest as ManifestTypes) && (
-                    <div className={css.halfWidth}>
+                    <div
+                      className={cx({
+                        [css.runtimeInput]:
+                          getMultiTypeFromValue(formik.values?.valuesPaths as string) === MultiTypeInputType.RUNTIME
+                      })}
+                    >
                       <DragnDropPaths
                         formik={formik}
                         expressions={expressions}
@@ -263,11 +270,29 @@ function CustomRemoteManifest({
                         pathLabel={getString('pipeline.manifestType.valuesYamlPath')}
                         placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
                         defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+                        dragDropFieldWidth={filePathWidth}
                       />
+                      {getMultiTypeFromValue(formik.values.valuesPaths as string) === MultiTypeInputType.RUNTIME && (
+                        <ConfigureOptions
+                          value={formik.values.valuesPaths as string}
+                          type={getString('string')}
+                          variableName={'valuesPaths'}
+                          showRequiredField={false}
+                          showDefaultField={false}
+                          showAdvanced={true}
+                          onChange={val => formik?.setFieldValue('valuesPaths', val)}
+                          isReadonly={isReadonly}
+                        />
+                      )}
                     </div>
                   )}
                   {showParamsPaths(selectedManifest as ManifestTypes) && (
-                    <div className={css.halfWidth}>
+                    <div
+                      className={cx({
+                        [css.runtimeInput]:
+                          getMultiTypeFromValue(formik.values?.paramsPaths as string) === MultiTypeInputType.RUNTIME
+                      })}
+                    >
                       <DragnDropPaths
                         formik={formik}
                         expressions={expressions}
@@ -276,7 +301,20 @@ function CustomRemoteManifest({
                         pathLabel={getString('pipeline.manifestType.paramsYamlPath')}
                         placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
                         defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+                        dragDropFieldWidth={filePathWidth}
                       />
+                      {getMultiTypeFromValue(formik.values.paramsPaths as string) === MultiTypeInputType.RUNTIME && (
+                        <ConfigureOptions
+                          value={formik.values.paramsPaths as string}
+                          type={getString('string')}
+                          variableName={'paramsPaths'}
+                          showRequiredField={false}
+                          showDefaultField={false}
+                          showAdvanced={true}
+                          onChange={val => formik?.setFieldValue('paramsPaths', val)}
+                          isReadonly={isReadonly}
+                        />
+                      )}
                     </div>
                   )}
                   {showSkipResourceVersion(selectedManifest as ManifestTypes) && (

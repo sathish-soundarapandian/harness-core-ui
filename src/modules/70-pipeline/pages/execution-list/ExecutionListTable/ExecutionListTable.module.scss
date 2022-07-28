@@ -5,18 +5,88 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.main {
-  flex: 1 1 auto;
-  padding: var(--spacing-large) var(--spacing-large) !important;
+.table {
+  padding: var(--spacing-large);
+  [role='row'] > div {
+    align-items: baseline;
+  }
 }
 
-.pagination {
-  z-index: 3;
-  background: var(--grey-100);
-  padding: var(--spacing-medium) var(--spacing-xxlarge) 0;
+.triggerInfo {
+  display: flex;
+  align-items: center;
+  color: var(--grey-600);
+  flex: 1 1 auto;
+  overflow: hidden;
+}
 
-  & > div {
-    border-top: 1px solid var(--grey-300);
-    padding: var(--spacing-small) 0 !important;
+.triggerType {
+  display: flex;
+  align-items: center;
+
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 1px;
+    background: var(--grey-300);
+    height: calc(var(--font-size-small) + 2px);
+    margin: 0 var(--spacing-3);
   }
+}
+
+.triggerInfoCell {
+  padding-right: var(--spacing-5) !important;
+}
+
+.menu {
+  display: flex;
+  justify-content: right;
+}
+
+.stage {
+  display: grid;
+  grid-template-columns: 3% 15% 8% 45% 20% 4% 5%;
+  padding: var(--spacing-4) 0;
+  position: relative;
+  align-items: center;
+  &:before {
+    content: '';
+    position: absolute;
+    width: 92%;
+    left: 3%;
+    right: 5%;
+    top: 0;
+    height: 1px;
+    border-top: 1px solid rgba(11, 11, 11, 0.1);
+  }
+}
+
+.tags {
+  p {
+    color: var(--grey-600) !important;
+    line-height: 1;
+  }
+}
+
+.ci * {
+  color: var(--grey-800) !important;
+}
+
+.executionStageSummary {
+  > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    &:not(:last-child):after {
+      content: '';
+      height: 100%;
+      width: 1px;
+      margin: 0 0.5rem;
+      border-right: 1px solid rgba(11, 11, 11, 0.5);
+    }
+  }
+}
+
+.failureMessage {
+  padding-right: var(--spacing-5) !important;
 }

@@ -39,11 +39,11 @@ export function AzureWebAppServiceSpecVariablesForm(
   props: AzureWebAppServiceSpecVariablesFormProps
 ): React.ReactElement {
   const { initialValues, stepsFactory, onUpdate, variablesData, metadataMap, readonly, path, allowableTypes } = props
-  const { artifacts, variables, startupScript, applicationSettings, connectionStrings } = initialValues
+  const { artifacts, variables, startupCommand, applicationSettings, connectionStrings } = initialValues
   const { getString } = useStrings()
 
   const primaryArtifactVariables = variablesData?.artifacts?.primary?.spec
-  const startupScriptVariables = variablesData?.startupScript
+  const startupScriptVariables = variablesData?.startupCommand
   const applicationSettingsVariables = variablesData?.applicationSettings
   const connectionStringsVariables = variablesData?.connectionStrings
 
@@ -94,7 +94,9 @@ export function AzureWebAppServiceSpecVariablesForm(
           }
         />
       ) : null}
-      {startupScript && typeof startupScriptVariables !== 'string' && !isEmpty(omit(startupScriptVariables, 'uuid')) ? (
+      {startupCommand &&
+      typeof startupScriptVariables !== 'string' &&
+      !isEmpty(omit(startupScriptVariables, 'uuid')) ? (
         <NestedAccordionPanel
           isDefaultOpen
           noAutoScroll
@@ -103,7 +105,7 @@ export function AzureWebAppServiceSpecVariablesForm(
           summary={
             <VariableAccordionSummary>
               <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.BLACK}>
-                {getString('pipeline.startupScript.name')}
+                {getString('pipeline.startupCommand.name')}
               </Text>
             </VariableAccordionSummary>
           }
@@ -114,7 +116,7 @@ export function AzureWebAppServiceSpecVariablesForm(
                 <VariablesListTable
                   className={cx(css.manifestVariablesTable, pipelineVariableCss.variablePaddingL3)}
                   data={startupScriptVariables?.spec}
-                  originalData={initialValues?.startupScript?.spec}
+                  originalData={initialValues?.startupCommand?.spec}
                   metadataMap={metadataMap}
                 />
               </>

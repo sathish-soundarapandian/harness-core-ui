@@ -12,12 +12,14 @@ import { TemplateType } from '@templates-library/utils/templatesUtils'
 import type { NGTemplateInfoConfig } from 'services/template-ng'
 import type { TemplateInputsProps } from '@templates-library/components/TemplateInputs/TemplateInputs'
 import MonitoredServiceInputSetsTemplate from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import { MonitoredTemplateCanvasWithRef } from './MonitoredServiceTemplateCanvas'
 
 export class MonitoredServiceTemplate extends Template<NGTemplateInfoConfig> {
   protected type = TemplateType.MonitoredService
-  protected name = 'Monitored Service Template'
+  protected label = 'Monitored Service'
   protected color = Color.TEAL_700
+  protected allowedScopes = [Scope.PROJECT]
 
   protected defaultValues: NGTemplateInfoConfig = {
     name: 'Template name',

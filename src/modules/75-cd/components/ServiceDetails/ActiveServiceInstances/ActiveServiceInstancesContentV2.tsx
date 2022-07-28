@@ -24,8 +24,7 @@ import type { PipelineType, PipelinePathProps, ExecutionPathProps } from '@commo
 import { ActiveServiceInstancePopover } from './ActiveServiceInstancePopover'
 import css from './ActiveServiceInstances.module.scss'
 
-const TOTAL_VISIBLE_INSTANCES = 7
-
+let TOTAL_VISIBLE_INSTANCES = 7
 export interface TableRowData {
   artifactVersion?: string
   envId?: string
@@ -40,6 +39,13 @@ export interface TableRowData {
   showEnv?: boolean
   totalEnvs?: number
   totalInfras?: number
+  tableType?: TableType
+}
+
+export enum TableType {
+  PREVIEW = 'preview', // for card (headers visible, no Pipeline column, Clusters as count)
+  SUMMARY = 'summary', // for details popup collapsed row, assuming single entry in 'data' (headers hidden)
+  FULL = 'full' // for details popup expanded row (headers hidden)
 }
 
 export const getFullTableData = (instanceGroupedByArtifact?: InstanceGroupedByArtifact[]): TableRowData[] => {
@@ -47,22 +53,27 @@ export const getFullTableData = (instanceGroupedByArtifact?: InstanceGroupedByAr
   instanceGroupedByArtifact?.forEach(artifact => {
     if (artifact.artifactVersion && artifact.instanceGroupedByEnvironmentList) {
       const artifactVersion = artifact.artifactVersion
-      artifact.instanceGroupedByEnvironmentList.forEach((env, envIndex) => {
-        env.instanceGroupedByInfraList?.forEach((infra, infraIndex) => {
-          tableData.push({
-            artifactVersion: artifactVersion,
-            showArtifact: !envIndex && !infraIndex,
-            envId: env.envId,
-            envName: env.envName,
-            showEnv: !infraIndex,
-            infraIdentifier: infra.infraIdentifier,
-            infraName: infra.infraName,
-            instanceCount: infra.count,
-            lastPipelineExecutionId: infra.lastPipelineExecutionId,
-            lastPipelineExecutionName: infra.lastPipelineExecutionName,
-            lastDeployedAt: infra.lastDeployedAt
+      let envShow = true
+      artifact.instanceGroupedByEnvironmentList.forEach(env => {
+        if (env.envId && env.envName) {
+          env.instanceGroupedByInfraList?.forEach((infra, infraIndex) => {
+            tableData.push({
+              artifactVersion: artifactVersion,
+              showArtifact: envShow && !infraIndex,
+              envId: env.envId,
+              envName: env.envName,
+              showEnv: !infraIndex,
+              infraIdentifier: infra.infraIdentifier,
+              infraName: infra.infraName,
+              instanceCount: infra.count,
+              lastPipelineExecutionId: infra.lastPipelineExecutionId,
+              lastPipelineExecutionName: infra.lastPipelineExecutionName,
+              lastDeployedAt: infra.lastDeployedAt,
+              tableType: TableType.FULL
+            })
           })
-        })
+          envShow = false
+        }
       })
     }
   })
@@ -72,21 +83,28 @@ export const getFullTableData = (instanceGroupedByArtifact?: InstanceGroupedByAr
 export const getPreviewTableData = (instanceGroupedByArtifact?: InstanceGroupedByArtifact[]): TableRowData[] => {
   const tableData: TableRowData[] = []
   instanceGroupedByArtifact?.forEach(artifact => {
-    artifact.instanceGroupedByEnvironmentList?.forEach((env, envIndex) => {
-      let totalInstancesPerEnv = 0
-      env.instanceGroupedByInfraList?.forEach(infra => {
-        totalInstancesPerEnv += infra.count || 0
+    if (artifact.artifactVersion && artifact.instanceGroupedByEnvironmentList) {
+      let envShow = true
+      artifact.instanceGroupedByEnvironmentList?.forEach(env => {
+        let totalInstancesPerEnv = 0
+        if (env.envId && env.envName) {
+          env.instanceGroupedByInfraList?.forEach(infra => {
+            totalInstancesPerEnv += infra.count || 0
+          })
+          tableData.push({
+            artifactVersion: artifact.artifactVersion,
+            showArtifact: envShow,
+            envId: env.envId,
+            envName: env.envName,
+            showEnv: true,
+            totalInfras: env.instanceGroupedByInfraList?.length,
+            instanceCount: totalInstancesPerEnv,
+            tableType: TableType.PREVIEW
+          })
+          envShow = false
+        }
       })
-      tableData.push({
-        artifactVersion: artifact.artifactVersion,
-        showArtifact: !envIndex,
-        envId: env.envId,
-        envName: env.envName,
-        showEnv: true,
-        totalInfras: env.instanceGroupedByInfraList?.length,
-        instanceCount: totalInstancesPerEnv
-      })
-    })
+    }
   })
   return tableData
 }
@@ -101,32 +119,39 @@ export const getSummaryTableData = (instanceGroupedByArtifact?: InstanceGroupedB
   let totalInstances = 0
   let lastDeployedAt = '0'
   instanceGroupedByArtifact?.forEach(artifact => {
-    artifactVersion ??= artifact.artifactVersion
-    artifact.instanceGroupedByEnvironmentList?.forEach(env => {
-      totalEnvs++
-      envName ??= env.envName
-      env.instanceGroupedByInfraList?.forEach(infra => {
-        infraName ??= infra.infraName
-        totalInfras++
-        totalInstances += infra.count || 0
-        if (infra.lastDeployedAt) {
-          lastDeployedAt =
-            parseInt(lastDeployedAt) >= parseInt(infra.lastDeployedAt) ? lastDeployedAt : infra.lastDeployedAt
+    if (artifact.artifactVersion && artifact.instanceGroupedByEnvironmentList) {
+      artifactVersion ??= artifact.artifactVersion
+      artifact.instanceGroupedByEnvironmentList?.forEach(env => {
+        if (env.envId && env.envName) {
+          totalEnvs++
+          envName ??= env.envName
+          env.instanceGroupedByInfraList?.forEach(infra => {
+            infraName ??= infra.infraName
+            totalInfras++
+            totalInstances += infra.count || 0
+            if (infra.lastDeployedAt) {
+              lastDeployedAt =
+                parseInt(lastDeployedAt) >= parseInt(infra.lastDeployedAt) ? lastDeployedAt : infra.lastDeployedAt
+            }
+          })
         }
       })
+    }
+  })
+  if (totalEnvs && artifactVersion) {
+    tableData.push({
+      artifactVersion: artifactVersion,
+      showArtifact: true,
+      envName: envName,
+      showEnv: true,
+      totalEnvs: totalEnvs,
+      infraName: infraName,
+      totalInfras: totalInfras,
+      instanceCount: totalInstances,
+      lastDeployedAt: lastDeployedAt,
+      tableType: TableType.SUMMARY
     })
-  })
-  tableData.push({
-    artifactVersion: artifactVersion,
-    showArtifact: true,
-    envName: envName,
-    showEnv: true,
-    totalEnvs: totalEnvs,
-    infraName: infraName,
-    totalInfras: totalInfras,
-    instanceCount: totalInstances,
-    lastDeployedAt: lastDeployedAt
-  })
+  }
   return tableData
 }
 
@@ -189,6 +214,7 @@ export const RenderInfra: Renderer<CellProps<TableRowData>> = ({
       <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} width={'100%'}>
         <Text
           style={{ paddingRight: 'var(--spacing-2)' }}
+          className={cx({ [css.infraVisible]: totalInfras && totalInfras > 1 })}
           font={{ size: 'small', weight: 'semi-bold' }}
           lineClamp={1}
           color={Color.GREY_800}
@@ -255,9 +281,10 @@ const RenderInstanceCount: Renderer<CellProps<TableRowData>> = ({
 
 const RenderInstances: Renderer<CellProps<TableRowData>> = ({
   row: {
-    original: { envId, artifactVersion: buildId, instanceCount }
+    original: { envId, artifactVersion: buildId, instanceCount, tableType }
   }
 }) => {
+  TOTAL_VISIBLE_INSTANCES = tableType === TableType.PREVIEW ? 4 : 7
   return instanceCount ? (
     <Container className={cx(css.paddedContainer, css.hexContainer)} flex={{ justifyContent: 'flex-start' }}>
       {Array(Math.min(instanceCount, TOTAL_VISIBLE_INSTANCES))
@@ -356,12 +383,6 @@ export const RenderPipelineExecution: Renderer<CellProps<TableRowData>> = ({
   )
 }
 
-export enum TableType {
-  PREVIEW = 'preview', // for card (headers visible, no Pipeline column, Clusters as count)
-  SUMMARY = 'summary', // for details popup collapsed row, assuming single entry in 'data' (headers hidden)
-  FULL = 'full' // for details popup expanded row (headers hidden)
-}
-
 const columnsProperties = {
   artifacts: {
     width: {
@@ -379,7 +400,7 @@ const columnsProperties = {
   },
   infras: {
     width: {
-      preview: '12%',
+      preview: '13%',
       summary: '17%',
       full: '17%'
     }
@@ -445,7 +466,11 @@ export const ActiveServiceInstancesContentV2 = (
         Cell: RenderEnvironment
       },
       {
-        Header: getString('cd.serviceDashboard.headers.infras'),
+        Header: (
+          <Text lineClamp={1} color={Color.GREY_900}>
+            {getString('cd.serviceDashboard.headers.infrastructures').toLocaleUpperCase()}
+          </Text>
+        ),
         id: 'infra',
         width: columnsProperties.infras.width[tableType],
         Cell: tableType == TableType.PREVIEW ? RenderInfraCount : RenderInfra

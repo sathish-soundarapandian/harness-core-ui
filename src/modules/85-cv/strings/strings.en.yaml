@@ -447,6 +447,7 @@ cvTrialHomePage:
       description: Start 14 day CV Enterprise trial
 monitoredServices:
   title: Monitored Services
+  heading: Monitored Service
   filterlabel: 'Environment:'
   youHaveNoMonitoredServices: You have no monitored services
   nameValidation: Monitored Service Name is required

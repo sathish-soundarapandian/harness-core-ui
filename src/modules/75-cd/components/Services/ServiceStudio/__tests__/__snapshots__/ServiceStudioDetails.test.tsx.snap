@@ -1016,7 +1016,7 @@ exports[`ServiceStudioDetails Service Entity Modal View check 1`] = `
     </div>
   </div>
   <div
-    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main btnContainer StyledProps--margin-top-medium StyledProps--margin-bottom-medium"
+    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main stickyBtnContainer StyledProps--margin-top-medium StyledProps--margin-bottom-medium"
   >
     <button
       class="bp3-button Button--button StyledProps--font StyledProps--main saveButton Button--with-current-color Button--variation Button--variation-primary"

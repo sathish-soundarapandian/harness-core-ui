@@ -7,6 +7,7 @@
 
 import type { Color } from '@harness/design-system'
 import type { Template } from '@templates-library/components/AbstractTemplate/Template'
+import type { Scope } from '@common/interfaces/SecretsInterface'
 
 export class TemplateFactory {
   /**
@@ -26,8 +27,16 @@ export class TemplateFactory {
     return this.templateBank.get(type) as Template<T>
   }
 
-  getTemplateName(type: string): string | undefined {
-    return this.templateBank.get(type)?.getName()
+  getTemplateIsEnabled(type: string): boolean | undefined {
+    return this.templateBank.get(type)?.getIsEnabled()
+  }
+
+  getTemplateLabel(type: string): string | undefined {
+    return this.templateBank.get(type)?.getLabel()
+  }
+
+  getTemplateAllowedScopes(type: string): Scope[] | undefined {
+    return this.templateBank.get(type)?.getAllowedScopes()
   }
 
   getTemplateColor(type: string): Color | undefined {

@@ -650,7 +650,7 @@ exports[`CICodebaseInputSetForm tests Run Pipeline Form  Re-Run Pipeline Render 
                                   class="rightStatus"
                                 >
                                   <span
-                                    class="bp3-icon bp3-icon-full-circle StyledProps--main status redStatus"
+                                    class="bp3-icon bp3-icon-full-circle StyledProps--main status greenStatus"
                                     data-testid="crf-status"
                                     icon="full-circle"
                                   >

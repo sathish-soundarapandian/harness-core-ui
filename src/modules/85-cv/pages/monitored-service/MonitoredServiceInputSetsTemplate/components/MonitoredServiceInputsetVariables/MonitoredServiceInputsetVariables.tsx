@@ -7,10 +7,9 @@
 
 import React from 'react'
 import { isEmpty } from 'lodash-es'
-import { Card, Text, FormInput, MultiTypeInputType } from '@harness/uicore'
+import { Card, Text, FormInput, MultiTypeInputType, FontVariation, Color } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
-import { spacingMedium } from '../../MonitoredServiceInputSetsTemplate.constants'
 import css from '../../MonitoredServiceInputSetsTemplate.module.scss'
 
 interface MonitoredServiceInputsetVariablesInterface {
@@ -40,7 +39,11 @@ export default function MonitoredServiceInputsetVariables({
 
   return (
     <Card className={css.cardStyle}>
-      <Text font={'normal'} style={{ paddingBottom: spacingMedium }}>
+      <Text
+        color={Color.BLACK}
+        font={{ variation: FontVariation.CARD_TITLE }}
+        style={{ paddingBottom: 'var(--spacing-medium)' }}
+      >
         {getString('common.variables')}
       </Text>
       {content}

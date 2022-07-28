@@ -8,6 +8,8 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly accordionDetails: string
+  readonly accordionDetails: string
+  readonly accordionPanel: string
   readonly accordionPanel: string
   readonly clusterInputWrapper: string
   readonly connectorRef: string

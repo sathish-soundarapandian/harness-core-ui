@@ -12,7 +12,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import type { ServiceSpec, StoreConfigWrapper } from 'services/cd-ng'
 import { AzureWebAppConfigBaseFactory } from '@cd/factory/AzureWebAppConfigFactory/AzureWebAppConfigFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { template, startupScript, applicationSettings, connectionStrings } from './mocks'
+import { template, startupCommand, applicationSettings, connectionStrings } from './mocks'
 import { AzureWebAppConfig } from '../RuntimeAzureWebAppConfig'
 import { AzureWebAppConfigType } from '../../AzureWebAppServiceSpecInterface.types'
 
@@ -21,14 +21,14 @@ describe('Azure Web App config tests', () => {
     const { container } = render(
       <TestWrapper>
         <AzureWebAppConfig
-          initialValues={{ startupScript: startupScript as StoreConfigWrapper }}
+          initialValues={{ startupCommand: startupCommand as StoreConfigWrapper }}
           template={template as ServiceSpec}
-          azureWebAppConfig={startupScript as StoreConfigWrapper}
+          azureWebAppConfig={startupCommand as StoreConfigWrapper}
           readonly
           stageIdentifier="stage-0"
           azureWebAppConfigBaseFactory={new AzureWebAppConfigBaseFactory()}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
-          type={AzureWebAppConfigType.startupScript}
+          type={AzureWebAppConfigType.startupCommand}
           stepViewType={StepViewType.InputSet}
         />
       </TestWrapper>

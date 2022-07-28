@@ -10,6 +10,7 @@ import { Container, Text, Icon, Layout } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import HighchartsReact from 'highcharts-react-official'
 import Highcharts from 'highcharts'
+import cx from 'classnames'
 
 import { useParams } from 'react-router-dom'
 import { Classes } from '@blueprintjs/core'
@@ -284,13 +285,14 @@ export function TotalDepHealthCard({ title, layout, pieChartProps = {}, showPieC
   )
 }
 
-const rateStyle = (rate: number, isParent: boolean): JSX.Element => {
+const rateStyle = (rate: number, isParent: boolean, isFailed: boolean): JSX.Element => {
+  const rateColor = rate > 0 ? (isFailed ? red : green) : isFailed ? green : red
   return rate ? (
     <>
       <Text
         margin={{ left: isParent ? 'small' : 'xsmall' }}
         style={{
-          color: rate > 0 ? green : red
+          color: rateColor
         }}
       >
         {numberFormatter(Math.abs(defaultTo(roundNumber(rate), 0)))}%
@@ -299,7 +301,7 @@ const rateStyle = (rate: number, isParent: boolean): JSX.Element => {
         size={14}
         name={rate > 0 ? 'caret-up' : 'caret-down'}
         style={{
-          color: rate > 0 ? green : red
+          color: rateColor
         }}
       />
     </>
@@ -330,10 +332,25 @@ export function HealthCard({
   emptyState,
   isParent = false
 }: HealthCardProps) {
+  const isFailed = title === 'Failed'
+
+  //sonar recommendation
+  const RateStyleChild =
+    typeof rate === 'number' && !isLoading && !isParent && !emptyState ? (
+      <Container flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+        {rateStyle(rate, isParent, isFailed)}
+      </Container>
+    ) : null
+
+  const RateStyleParent =
+    typeof rate === 'number' && !isLoading && isParent && !emptyState ? (
+      <Container flex>{rateStyle(rate, isParent, false)}</Container>
+    ) : null
+
   return (
     <Container font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_600} className={styles.healthCard}>
       <Text className={styles.cardHeader}>{title}</Text>
-      <Container style={layout === 'horizontal' ? { display: 'flex', justifyContent: 'space-between' } : {}}>
+      <Container className={cx({ [styles.ctn]: layout === 'horizontal' })}>
         <Container className={styles.layoutParent}>
           <Container className={styles.textAndRate}>
             {isLoading ? (
@@ -348,9 +365,7 @@ export function HealthCard({
                 >
                   {numberFormatter(value)}
                 </Text>
-                {typeof rate === 'number' && !isLoading && isParent && !emptyState ? (
-                  <Container flex>{rateStyle(rate, isParent)}</Container>
-                ) : null}
+                {RateStyleParent}
               </>
             )}
           </Container>
@@ -358,11 +373,7 @@ export function HealthCard({
           {primaryChartOptions && !isLoading && !emptyState ? (
             <Container className={styles.chartWrap}>
               <HighchartsReact highcharts={Highcharts} options={primaryChartOptions} />
-              {typeof rate === 'number' && !isLoading && !isParent && !emptyState ? (
-                <Container flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
-                  {rateStyle(rate, isParent)}
-                </Container>
-              ) : null}
+              {RateStyleChild}
             </Container>
           ) : null}
           {secondaryChartOptions && !isLoading && rate ? (

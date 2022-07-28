@@ -87,7 +87,9 @@ const Content = (props: NexusRenderContent): JSX.Element => {
     refetch: refetchTags,
     error: fetchTagsError
   } = useMutateAsGet(useGetBuildDetailsForNexusArtifactWithYaml, {
-    body: yamlStringify(formik?.values),
+    body: yamlStringify({
+      pipeline: formik?.values
+    }),
     requestOptions: {
       headers: {
         'content-type': 'application/json'

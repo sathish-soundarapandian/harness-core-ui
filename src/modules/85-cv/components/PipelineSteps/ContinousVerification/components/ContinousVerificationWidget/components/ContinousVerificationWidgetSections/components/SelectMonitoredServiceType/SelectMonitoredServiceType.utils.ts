@@ -75,6 +75,14 @@ export function getInitialServiceAndEnv(formValues: ContinousVerificationData): 
   }
 }
 
+export function getInitialTemplatesData(formValues: ContinousVerificationData): TemplateSummaryResponse {
+  const { monitoredServiceTemplateRef = '', versionLabel = '' } = formValues?.spec?.monitoredService?.spec || {}
+  return {
+    identifier: monitoredServiceTemplateRef,
+    versionLabel
+  }
+}
+
 export function getInitialHealthSources(
   formValues: ContinousVerificationData
 ): TemplateInputs['sources']['healthSources'] {

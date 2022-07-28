@@ -15,15 +15,8 @@ import { StepTemplateCanvasWithRef } from '@templates-library/components/Templat
 
 export class StepTemplate extends Template<NGTemplateInfoConfig> {
   protected type = TemplateType.Step
-  protected name = 'Step Template'
+  protected label = 'Step'
   protected color = Color.PURPLE_700
-
-  protected defaultValues: NGTemplateInfoConfig = {
-    name: 'Template name',
-    identifier: 'Template_name',
-    versionLabel: '',
-    type: 'Step'
-  }
 
   renderTemplateCanvas(props: TemplateProps<NGTemplateInfoConfig>): JSX.Element {
     return <StepTemplateCanvasWithRef ref={props.formikRef as TemplateFormRef<unknown> | undefined} />

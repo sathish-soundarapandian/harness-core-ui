@@ -108,6 +108,7 @@ export interface StringsMap {
   'common.blank': string
   'common.branchName': string
   'common.by': string
+  'common.byType': string
   'common.capsAll': string
   'common.cardNumber': string
   'common.ce.autostopping': string
@@ -604,6 +605,7 @@ export interface StringsMap {
   'common.reportName': string
   'common.reportNameRequired': string
   'common.repositoryCertificates': string
+  'common.repositoryFormat': string
   'common.repositoryName': string
   'common.request': string
   'common.resolveConflict': string
@@ -787,6 +789,7 @@ export interface StringsMap {
   'common.triggerLabel': string
   'common.triggerName': string
   'common.triggersLabel': string
+  'common.types': string
   'common.unlimited': string
   'common.unsavedChanges': string
   'common.updating': string
@@ -1684,6 +1687,7 @@ export interface StringsMap {
   'connectors.cdng.defineVerificationJob': string
   'connectors.cdng.displayName': string
   'connectors.cdng.error': string
+  'connectors.cdng.healthSources.healthSourceDef': string
   'connectors.cdng.healthSources.label': string
   'connectors.cdng.healthSources.noHealthSourcesDefined': string
   'connectors.cdng.jobTypes.blueGreen': string
@@ -1699,6 +1703,7 @@ export interface StringsMap {
   'connectors.cdng.monitoredService.fetchingMonitoredService': string
   'connectors.cdng.monitoredService.fetchingMonitoredServiceError': string
   'connectors.cdng.monitoredService.label': string
+  'connectors.cdng.monitoredService.monitoredServiceDef': string
   'connectors.cdng.monitoredService.monitoredServiceText': string
   'connectors.cdng.monitoredServiceType': string
   'connectors.cdng.noJobsConfigured': string
@@ -1726,6 +1731,7 @@ export interface StringsMap {
   'connectors.cdng.verificationSensitivityLabel.high': string
   'connectors.cdng.verificationSensitivityLabel.low': string
   'connectors.cdng.verificationSensitivityLabel.medium': string
+  'connectors.cdng.verificationTypeHeading': string
   'connectors.ceAws.crossAccountRoleExtention.heading': string
   'connectors.ceAws.crossAccountRoleExtention.step1.p1': string
   'connectors.ceAws.crossAccountRoleExtention.step1.p2': string
@@ -2732,6 +2738,7 @@ export interface StringsMap {
   'pipeline.artifactTriggerConfigPanel.artifact': string
   'pipeline.artifactTriggerConfigPanel.artifactReferenceUnique': string
   'pipeline.artifactTriggerConfigPanel.artifactRepository': string
+  'pipeline.artifactTriggerConfigPanel.artifactTagSetting': string
   'pipeline.artifactTriggerConfigPanel.buildTagArtifactPath': string
   'pipeline.artifactTriggerConfigPanel.chartVersionRuntimeInput': string
   'pipeline.artifactTriggerConfigPanel.configureArtifactRuntimeInputs': string
@@ -2742,6 +2749,7 @@ export interface StringsMap {
   'pipeline.artifactTriggerConfigPanel.locationRepoPath': string
   'pipeline.artifactTriggerConfigPanel.noArtifacts': string
   'pipeline.artifactTriggerConfigPanel.noSelectableArtifactsFound': string
+  'pipeline.artifactTriggerConfigPanel.noSelectableRuntimeArtifactsFound': string
   'pipeline.artifactTriggerConfigPanel.plusSelect': string
   'pipeline.artifactTriggerConfigPanel.runtimeInput': string
   'pipeline.artifactTriggerConfigPanel.selectAManifest': string
@@ -3060,6 +3068,7 @@ export interface StringsMap {
   'pipeline.failureStrategies.fieldLabels.retryCountLabel': string
   'pipeline.failureStrategies.fieldLabels.retryIntervalsLabel': string
   'pipeline.failureStrategies.helpText': string
+  'pipeline.failureStrategies.learnMoreLink': string
   'pipeline.failureStrategies.onFailureOfType': string
   'pipeline.failureStrategies.performAction': string
   'pipeline.failureStrategies.strategiesLabel.Abort': string
@@ -3513,13 +3522,13 @@ export interface StringsMap {
   'pipeline.stagetoRetryFrom': string
   'pipeline.startTime': string
   'pipeline.startedOn': string
-  'pipeline.startupScript.fileDetails': string
-  'pipeline.startupScript.fileSource': string
-  'pipeline.startupScript.fileValidation': string
-  'pipeline.startupScript.name': string
-  'pipeline.startupScript.plainText': string
-  'pipeline.startupScript.scriptFilePath': string
-  'pipeline.startupScript.subtitle': string
+  'pipeline.startupCommand.fileDetails': string
+  'pipeline.startupCommand.fileSource': string
+  'pipeline.startupCommand.fileValidation': string
+  'pipeline.startupCommand.name': string
+  'pipeline.startupCommand.plainText': string
+  'pipeline.startupCommand.scriptFilePath': string
+  'pipeline.startupCommand.subtitle': string
   'pipeline.stepCommonFields.ifNotPresent': string
   'pipeline.stepCommonFields.runAsUser': string
   'pipeline.stepCommonFields.validation.invalidLimitCPU': string
@@ -3655,6 +3664,7 @@ export interface StringsMap {
   'pipeline.timeRemainingSuffix': string
   'pipeline.totalCount': string
   'pipeline.traffic': string
+  'pipeline.triggerInfo': string
   'pipeline.uniqueIdentifier': string
   'pipeline.uniqueName': string
   'pipeline.unsupportedImagesWarning': string
@@ -5875,6 +5885,7 @@ export interface StringsMap {
   'ci.getStartedWithCI.selectRepo': string
   'ci.getStartedWithCI.selectYourRepo': string
   'ci.getStartedWithCI.setUpAuth': string
+  'ci.getStartedWithCI.settingUpCIPipeline': string
   'ci.getStartedWithCI.startProvisioning': string
   'ci.getStartedWithCI.takeToTheNextLevel': string
   'ci.getStartedWithCI.ti': string
@@ -6219,6 +6230,7 @@ export interface StringsMap {
   'cv.monitoredServices.failedToFetchHealthScore': string
   'cv.monitoredServices.failedToFetchSummaryData': string
   'cv.monitoredServices.filterlabel': string
+  'cv.monitoredServices.heading': string
   'cv.monitoredServices.healthScoreDataNotAvailable': string
   'cv.monitoredServices.monitoredServiceCreated': string
   'cv.monitoredServices.monitoredServiceDeleted': string
@@ -6727,7 +6739,7 @@ export interface StringsMap {
   'stoSteps.noScansRunPipelineText': string
   'stoSteps.noScansText': string
   'stoSteps.noSecurityIssues': string
-  'stoSteps.noSecurityTests': string
+  'stoSteps.noSecurityResults': string
   'stoSteps.scans': string
   'stoSteps.securityReview': string
   'stoSteps.securityStage.description': string

@@ -35,8 +35,16 @@
   padding-bottom: 0 !important;
   :global {
     .bp3-dialog-header {
-      margin-top: 0 !important;
-      margin-bottom: 0 !important;
+      margin: -36px -48px 0 -48px !important;
+      min-height: 50px !important;
+      box-shadow: var(--elevation-2) !important;
+      z-index: 1;
+      .bp3-heading {
+        margin-left: 48px !important;
+      }
+    }
+    .Dialog--close {
+      z-index: 1;
     }
   }
 }

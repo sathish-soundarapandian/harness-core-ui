@@ -9,9 +9,8 @@
 declare const styles: {
   readonly addResourceBtn: string
   readonly limitAccessCell: string
-  readonly radioBtn: string
+  readonly radioBtnLabel: string
   readonly resourceFields: string
-  readonly resourceName: string
   readonly selectedResourceGroupCardDetails: string
   readonly staticResource: string
 }

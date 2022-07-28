@@ -31,6 +31,7 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useServiceContext } from '@cd/context/ServiceContext'
 import { useCache } from '@common/hooks/useCache'
+import { sanitize } from '@common/utils/JSONUtils'
 import ServiceConfiguration from './ServiceConfiguration/ServiceConfiguration'
 import { ServiceTabs, setNameIDDescription, ServicePipelineConfig } from '../utils/ServiceUtils'
 import css from '@cd/components/Services/ServiceStudio/ServiceStudio.module.scss'
@@ -104,12 +105,11 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
       })
     }
     const finalServiceData = view === SelectedView.VISUAL ? props.serviceData : updatedService
-
     const body = {
       ...omit(cloneDeep(finalServiceData?.service), 'serviceDefinition', 'gitOpsEnabled'),
       projectIdentifier,
       orgIdentifier,
-      yaml: yamlStringify({ ...finalServiceData })
+      yaml: yamlStringify(sanitize({ ...finalServiceData }, { removeEmptyObject: false }))
     }
 
     try {
@@ -159,7 +159,11 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
       return (
         <>
           <ServiceConfiguration serviceData={props.serviceData} />
-          <Layout.Horizontal className={css.btnContainer} spacing="medium" margin={{ top: 'medium', bottom: 'medium' }}>
+          <Layout.Horizontal
+            className={css.stickyBtnContainer}
+            spacing="medium"
+            margin={{ top: 'medium', bottom: 'medium' }}
+          >
             <Button
               variation={ButtonVariation.PRIMARY}
               disabled={!isUpdated}

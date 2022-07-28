@@ -61,7 +61,7 @@ function StartupScriptListView({
   stage,
   isPropagating,
   connectors,
-  startupScript,
+  startupCommand,
   isReadonly,
   allowableTypes
 }: StartupScriptListViewProps): JSX.Element {
@@ -87,12 +87,16 @@ function StartupScriptListView({
 
   const removeStartupScript = (): void => {
     if (stage) {
+      const path = isPropagating
+        ? 'stage.spec.serviceConfig.stageOverrides'
+        : 'stage.spec.serviceConfig.serviceDefinition.spec'
+      const { startupCommand: command, ...rest } = get(stage, path)
       const newStage = produce(stage, draft => {
-        set(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.startupScript', {})
+        set(draft, path, rest)
       }).stage
 
       if (newStage) {
-        updateStage(newStage)
+        updateStage?.(newStage)
       }
     }
   }
@@ -108,11 +112,11 @@ function StartupScriptListView({
   }
 
   const getInitialValues = (): StartupScriptWizardInitData => {
-    if (startupScript) {
+    if (startupCommand) {
       const values = {
-        ...startupScript,
-        store: get(startupScript, 'type'),
-        connectorRef: get(startupScript, 'spec.connectorRef')
+        ...startupCommand,
+        store: get(startupCommand, 'type'),
+        connectorRef: get(startupCommand, 'spec.connectorRef')
       }
       return values
     }
@@ -125,11 +129,11 @@ function StartupScriptListView({
   /* istanbul ignore next */
   const updateStageData = (script: StoreConfigWrapper): void => {
     const path = isPropagating
-      ? 'stage.spec.serviceConfig.stageOverrides.startupScript'
-      : 'stage.spec.serviceConfig.serviceDefinition.spec.startupScript'
+      ? 'stage.spec.serviceConfig.stageOverrides.startupCommand'
+      : 'stage.spec.serviceConfig.serviceDefinition.spec.startupCommand'
 
     if (stage) {
-      updateStage(
+      updateStage?.(
         produce(stage, draft => {
           set(draft, path, script)
         }).stage as StageElementConfig
@@ -141,7 +145,7 @@ function StartupScriptListView({
   const handleSubmit = (script: StoreConfigWrapper): void => {
     updateStageData(script)
 
-    trackEvent(StartupScriptActions.SaveStartupScriptOnPipelinePage, { startupScript: startupScript?.type })
+    trackEvent(StartupScriptActions.SaveStartupScriptOnPipelinePage, { startupCommand: startupCommand?.type })
 
     hideConnectorModal()
     setConnectorView(false)
@@ -165,7 +169,7 @@ function StartupScriptListView({
       name: getString('pipeline.fileDetails'),
       expressions,
       allowableTypes,
-      stepName: getString('pipeline.startupScript.fileDetails'),
+      stepName: getString('pipeline.startupCommand.fileDetails'),
       initialValues: getLastStepInitialData(),
       handleSubmit: handleSubmit,
       isReadonly: isReadonly
@@ -190,7 +194,7 @@ function StartupScriptListView({
   }
 
   const getLastStepInitialData = (): StoreConfigWrapper => {
-    const initValues = startupScript
+    const initValues = startupCommand
     /* istanbul ignore next */
     if (get(initValues, 'type') && get(initValues, 'type') !== connectorType) {
       return null as unknown as StoreConfigWrapper
@@ -200,7 +204,7 @@ function StartupScriptListView({
 
   const getLastSteps = useCallback((): React.ReactElement<StepProps<ConnectorConfigDTO>> => {
     return <StartupScriptWizardStepTwo {...lastStepProps()} />
-  }, [startupScript, connectorType, lastStepProps])
+  }, [startupCommand, connectorType, lastStepProps])
 
   const getNewConnectorSteps = useCallback((): JSX.Element | void => {
     const type = ConnectorMap[connectorType]
@@ -343,7 +347,7 @@ function StartupScriptListView({
                     minimal
                   />
 
-                  <Button iconProps={{ size: 18 }} icon="main-trash" onClick={() => removeStartupScript()} minimal />
+                  <Button iconProps={{ size: 18 }} icon="main-trash" onClick={removeStartupScript} minimal />
                 </Layout.Horizontal>
               </span>
             )}
@@ -395,7 +399,7 @@ function StartupScriptListView({
   return (
     <Layout.Vertical style={{ width: '100%' }}>
       <Layout.Vertical spacing="small" style={{ flexShrink: 'initial' }}>
-        {!isEmpty(startupScript) && (
+        {!isEmpty(startupCommand) && (
           <div className={cx(css.startupScriptList, css.listHeader)}>
             <Text font={{ variation: FontVariation.TABLE_HEADERS }} width={200}>
               {getString('store')}
@@ -407,11 +411,11 @@ function StartupScriptListView({
           </div>
         )}
         <Layout.Vertical style={{ flexShrink: 'initial' }}>
-          <section>{!isEmpty(startupScript) && renderStartupScriptList(startupScript)}</section>
+          <section>{!isEmpty(startupCommand) && renderStartupScriptList(startupCommand)}</section>
         </Layout.Vertical>
       </Layout.Vertical>
       <Layout.Vertical spacing={'medium'} flex={{ alignItems: 'flex-start' }}>
-        {!isReadonly && isEmpty(startupScript) && (
+        {!isReadonly && isEmpty(startupCommand) && (
           <Button
             className={css.addStartupScript}
             id="add-startup-script"
@@ -419,7 +423,7 @@ function StartupScriptListView({
             variation={ButtonVariation.LINK}
             data-test-id="addStartupScript"
             onClick={addStartupScript}
-            text={getString('common.plusAddName', { name: getString('pipeline.startupScript.name') })}
+            text={getString('common.plusAddName', { name: getString('pipeline.startupCommand.name') })}
           />
         )}
       </Layout.Vertical>

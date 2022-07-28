@@ -132,7 +132,7 @@ export default function MonitoredServiceOverview(props: MonitoredServiceOverview
               }
             />
           </Layout.Horizontal>
-          <hr className={css.divider} />
+          {!isTemplate && <hr className={css.divider} />}
         </>
       ) : null}
       {!isTemplate && (

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { ButtonVariation, Container, FormInput, Icon, TableV2 } from '@wings-software/uicore'
+import { ButtonVariation, Container, FormInput, Icon, NoDataCard, TableV2, Text } from '@wings-software/uicore'
 import type { CellProps } from 'react-table'
 import { isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -16,8 +16,8 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import RbacButton from '@rbac/components/Button/Button'
 import type { HealthSource } from 'services/cv'
-import Card from '@cv/components/Card/Card'
 import { getIconBySourceType } from '@cv/pages/health-source/HealthSourceTable/HealthSourceTable.utils'
+import noHealthsourcesImage from '@cv/assets/noHealthsources.svg'
 import type { HealthSourcesProps } from './HealthSources.types'
 import css from './HealthSources.module.scss'
 
@@ -69,56 +69,61 @@ export default function HealthSources(props: HealthSourcesProps): React.ReactEle
   }
 
   return (
-    <Card>
-      <>
-        <div className={css.header}>
-          <p>{getString('connectors.cdng.healthSources.label')}</p>
-          {!isRunTimeInput ? (
-            <RbacButton
-              variation={ButtonVariation.LINK}
-              permission={{
-                permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
-                resource: {
-                  resourceType: ResourceType.MONITOREDSERVICE,
-                  resourceIdentifier: projectIdentifier
-                }
-              }}
-              onClick={addHealthSource}
-              text={getString('plusAdd')}
-              data-testid="plusAdd-button"
-              style={{ paddingLeft: 0 }}
-            />
-          ) : null}
-        </div>
-        {isEmpty(healthSources) ? (
-          <>
-            <FormInput.CustomRender
-              name={'spec.healthSources'}
-              render={() => <>{getString('connectors.cdng.healthSources.noHealthSourcesDefined')}</>}
-            />
-          </>
-        ) : (
-          <TableV2<HealthSource>
-            columns={[
-              {
-                Header: 'Source',
-                accessor: 'name',
-                width: '60%',
-                Cell: TypeTableCell
-              },
-              {
-                Header: 'Type',
-                accessor: 'type',
-                width: '40%',
-                Cell: HealthSourceActions
+    <>
+      <div className={css.header}>
+        <p>{getString('connectors.cdng.healthSources.label')}</p>
+        {!isRunTimeInput ? (
+          <RbacButton
+            variation={ButtonVariation.LINK}
+            permission={{
+              permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
+              resource: {
+                resourceType: ResourceType.MONITOREDSERVICE,
+                resourceIdentifier: projectIdentifier
               }
-            ]}
-            data={healthSources as HealthSource[]}
-            className={css.table}
-            rowDataTestID={originalData => `healthSourceTable_${originalData.name}`}
+            }}
+            onClick={addHealthSource}
+            text={getString('plusAdd')}
+            data-testid="plusAdd-button"
+            style={{ paddingLeft: 0 }}
           />
-        )}
-      </>
-    </Card>
+        ) : null}
+      </div>
+      <Text padding={{ bottom: 'medium' }}>{getString('connectors.cdng.healthSources.healthSourceDef')}</Text>
+      {isEmpty(healthSources) ? (
+        <>
+          <NoDataCard
+            image={noHealthsourcesImage}
+            width={290}
+            containerClassName={css.noHealthSourceImage}
+            imageClassName={css.noHealthSourceImageClass}
+          />
+          <FormInput.CustomRender
+            name={'spec.healthSources'}
+            render={() => <>{getString('connectors.cdng.healthSources.noHealthSourcesDefined')}</>}
+          />
+        </>
+      ) : (
+        <TableV2<HealthSource>
+          columns={[
+            {
+              Header: 'Source',
+              accessor: 'name',
+              width: '60%',
+              Cell: TypeTableCell
+            },
+            {
+              Header: 'Type',
+              accessor: 'type',
+              width: '40%',
+              Cell: HealthSourceActions
+            }
+          ]}
+          data={healthSources as HealthSource[]}
+          className={css.table}
+          rowDataTestID={originalData => `healthSourceTable_${originalData.name}`}
+        />
+      )}
+    </>
   )
 }

@@ -45,6 +45,7 @@ jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn(() => mockConnectorResponse),
   useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() })),
   useCreateConnector: jest.fn(() => Promise.resolve(mockCreateConnectorResponse)),
+  useGetService: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() })),
   useUpdateConnector: jest.fn(() =>
     Promise.resolve({
       status: 'SUCCESS',

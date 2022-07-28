@@ -41,7 +41,7 @@ import {
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
 import DragnDropPaths from '../../DragnDropPaths'
 
-import { getRepositoryName } from '../ManifestUtils'
+import { filePathWidth, getRepositoryName } from '../ManifestUtils'
 import css from '../K8sValuesManifest/ManifestDetails.module.scss'
 
 interface ServerlessAwsLambdaManifestPropType {
@@ -289,7 +289,11 @@ function ServerlessAwsLambdaManifest({
                       </div>
                     )}
                   </Layout.Horizontal>
-                  <div className={css.halfWidth}>
+                  <div
+                    className={cx({
+                      [css.runtimeInput]: getMultiTypeFromValue(formik.values.paths) === MultiTypeInputType.RUNTIME
+                    })}
+                  >
                     <DragnDropPaths
                       formik={formik}
                       expressions={expressions}
@@ -299,7 +303,20 @@ function ServerlessAwsLambdaManifest({
                       pathLabel={getString('common.git.folderPath')}
                       placeholder={getString('pipeline.manifestType.folderPathPlaceholder')}
                       defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+                      dragDropFieldWidth={filePathWidth}
                     />
+                    {getMultiTypeFromValue(formik.values.paths) === MultiTypeInputType.RUNTIME && (
+                      <ConfigureOptions
+                        value={formik.values.paths}
+                        type={getString('string')}
+                        variableName={'paths'}
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        showAdvanced={true}
+                        onChange={val => formik?.setFieldValue('paths', val)}
+                        isReadonly={isReadonly}
+                      />
+                    )}
                   </div>
                   <Accordion className={css.advancedStepOpen}>
                     <Accordion.Panel

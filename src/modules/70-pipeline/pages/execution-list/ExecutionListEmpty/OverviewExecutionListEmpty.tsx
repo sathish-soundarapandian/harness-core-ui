@@ -1,17 +1,31 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import { Color, FontVariation } from '@harness/design-system'
 import React from 'react'
+import cx from 'classnames'
 import { Container, Layout, ModalDialog, Text } from '@wings-software/uicore'
 import cdPipelineIllustration from '@pipeline/pages/pipeline-list/images/cd-pipeline-illustration.svg'
 import { useStrings } from 'framework/strings'
-import type { ExecutionListProps } from '../ExecutionList'
 import cdExecutionIllustration from '../images/cd-execution-illustration.svg'
 import { useExecutionListEmptyAction } from './useExecutionListEmptyAction'
 import css from './ExecutionListEmpty.module.scss'
 
+export interface OverviewExecutionListProps {
+  onRunPipeline(): void
+  onHide: () => void
+  isPipelineInvalid?: boolean
+}
+
 export function OverviewExecutionListEmpty({
   isPipelineInvalid,
-  onRunPipeline
-}: Pick<ExecutionListProps, 'isPipelineInvalid' | 'onRunPipeline'>): JSX.Element {
+  onRunPipeline,
+  onHide
+}: OverviewExecutionListProps): JSX.Element {
   const { getString } = useStrings()
   const { hasNoPipelines, loading, EmptyAction } = useExecutionListEmptyAction(!!isPipelineInvalid, onRunPipeline)
   return (
@@ -21,9 +35,11 @@ export function OverviewExecutionListEmpty({
       enforceFocus={false}
       portalClassName={css.overviewNoExecutions}
       usePortal={true}
+      isCloseButtonShown={true}
+      onClose={onHide}
     >
       {!loading && (
-        <Layout.Horizontal>
+        <Layout.Horizontal className={cx({ [css.imageNoPipeline]: !hasNoPipelines })}>
           <Layout.Vertical width="40%">
             <Text
               className={css.noPipelineText}

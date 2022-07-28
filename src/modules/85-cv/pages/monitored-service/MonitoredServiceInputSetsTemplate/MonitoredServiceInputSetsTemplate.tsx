@@ -188,7 +188,7 @@ export default function MonitoredServiceInputSetsTemplate({
       >
         {formik => {
           return (
-            <Card>
+            <>
               <Layout.Vertical>
                 <ServiceEnvironmentInputSet
                   serviceValue={formik.values.serviceRef}
@@ -206,6 +206,7 @@ export default function MonitoredServiceInputSetsTemplate({
                   <Button
                     disabled={showLoading}
                     loading={showLoading}
+                    className={css.cardStyle}
                     variation={ButtonVariation.PRIMARY}
                     onClick={formik.submitForm}
                   >
@@ -213,7 +214,7 @@ export default function MonitoredServiceInputSetsTemplate({
                   </Button>
                 )}
               </Layout.Vertical>
-            </Card>
+            </>
           )
         }}
       </Formik>

@@ -167,7 +167,11 @@ function DeployEnvironmentOrEnvGroup({
     }
     setEnvironments(newEnvironmentsList)
     setSelectedEnvironment(newEnvironmentsList?.find(environment => environment.identifier === values?.identifier))
-    formik?.setFieldValue('environmentOrEnvGroupRef', { label: values.name, value: values.identifier })
+    formik?.setValues({
+      ...formik?.values,
+      isEnvGroup: false,
+      environmentOrEnvGroupRef: { label: defaultTo(values.name, ''), value: defaultTo(values.identifier, '') }
+    })
     hideEnvironmentModal()
   }
 

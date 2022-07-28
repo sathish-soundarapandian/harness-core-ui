@@ -51,16 +51,17 @@ export class CFRollbackStack extends PipelineStep<RollbackStackStepInfo> {
   }
 
   /* istanbul ignore next */
-  validateInputSet({ data, template, getString, viewType }: ValidateInputSetProps<any>): FormikErrors<any> {
+  validateInputSet({
+    data,
+    template,
+    getString,
+    viewType
+  }: ValidateInputSetProps<RollbackStackData>): FormikErrors<RollbackStackStepInfo> {
     const errors = {} as any
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
-      let timeoutSchema = getDurationValidationSchema({ minimum: '10s' })
-      if (isRequired) {
-        timeoutSchema = timeoutSchema.required(getString?.('validation.timeout10SecMinimum'))
-      }
       const timeout = Yup.object().shape({
-        timeout: timeoutSchema
+        timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString?.('validation.timeout10SecMinimum'))
       })
       try {
         timeout.validateSync(data)
@@ -75,6 +76,21 @@ export class CFRollbackStack extends PipelineStep<RollbackStackStepInfo> {
     if (isEmpty(errors.spec)) {
       delete errors.spec
     }
+
+    if (
+      getMultiTypeFromValue(template?.spec?.configuration?.provisionerIdentifier) === MultiTypeInputType.RUNTIME &&
+      isRequired &&
+      isEmpty(data?.spec?.configuration?.provisionerIdentifier)
+    ) {
+      errors.spec = {
+        ...errors.spec,
+        configuration: {
+          ...errors.spec?.configuration,
+          provisionerIdentifier: getString?.('common.validation.provisionerIdentifierIsRequired')
+        }
+      }
+    }
+
     return errors
   }
 

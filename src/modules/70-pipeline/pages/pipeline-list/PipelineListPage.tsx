@@ -21,11 +21,9 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
-import { NavigatedToPage } from '@common/constants/TrackingConstants'
 import { Page, useToaster } from '@common/exports'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { useTelemetry } from '@common/hooks/useTelemetry'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
 import routes from '@common/RouteDefinitions'
 import CreatePipelineButton from '@pipeline/components/CreatePipelineButton/CreatePipelineButton'
@@ -54,7 +52,6 @@ export function PipelineListPage(): React.ReactElement {
   const searchRef = useRef({} as ExpandingSearchInputHandle)
   const [pipelineList, setPipelineList] = useState<PagePMSPipelineSummaryResponse | undefined>()
   const [appliedFilter, setAppliedFilter] = useState<FilterDTO | undefined>() // selected filter
-  const { trackEvent } = useTelemetry()
   const history = useHistory()
   const { getRBACErrorMessage } = useRBACError()
   const { showSuccess, showError } = useToaster()
@@ -162,10 +159,6 @@ export function PipelineListPage(): React.ReactElement {
   useEffect(() => {
     fetchPipelines()
   }, [fetchPipelines])
-
-  useEffect(() => {
-    trackEvent(NavigatedToPage.PipelinesPage, {})
-  }, [])
 
   const onDeletePipeline = async (commitMsg: string): Promise<void> => {
     try {

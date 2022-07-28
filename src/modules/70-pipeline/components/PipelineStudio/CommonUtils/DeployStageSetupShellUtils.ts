@@ -19,6 +19,9 @@ export enum DeployTabs {
 export const isEmptyServiceConfigPath = (stage: DeploymentStageElementConfig): boolean => {
   return isEmpty(stage?.spec?.serviceConfig?.serviceDefinition?.type)
 }
+export const isEmptyInfraPath = (stage: DeploymentStageElementConfig): boolean => {
+  return isEmpty(stage?.spec?.infrastructure)
+}
 export const getServiceEntityServiceRef = (stage: any): boolean => {
   return !isEmpty((stage?.spec as any)?.service?.serviceRef)
 }
@@ -31,4 +34,8 @@ export enum ExecutionType {
   CANARY = 'Canary',
   ROLLING = 'Rolling',
   GITOPS = 'GitOps'
+}
+
+export const isNewEnvInfraDef = (isSvcEnvEntityEnabled: boolean, stage: DeploymentStageElementConfig): boolean => {
+  return isSvcEnvEntityEnabled && isEmptyInfraPath(stage)
 }

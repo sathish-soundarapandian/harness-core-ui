@@ -15,15 +15,8 @@ import { StageTemplateCanvasWrapperWithRef } from '@templates-library/components
 
 export class StageTemplate extends Template<NGTemplateInfoConfig> {
   protected type = TemplateType.Stage
-  protected name = 'Stage Template'
+  protected label = 'Stage'
   protected color = Color.TEAL_700
-
-  protected defaultValues: NGTemplateInfoConfig = {
-    name: 'Template name',
-    identifier: 'Template_name',
-    versionLabel: '',
-    type: 'Stage'
-  }
 
   renderTemplateCanvas(props: TemplateProps<NGTemplateInfoConfig>): JSX.Element {
     return <StageTemplateCanvasWrapperWithRef ref={props.formikRef as TemplateFormRef<unknown> | undefined} />

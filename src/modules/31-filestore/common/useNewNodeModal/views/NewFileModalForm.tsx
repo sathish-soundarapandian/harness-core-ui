@@ -64,7 +64,7 @@ const NewFileForm: React.FC<NewFileModalData> = props => {
     name: '',
     description: '',
     identifier: '',
-    fileUsage: fileUsage || null,
+    fileUsage: null,
     content: '',
     tags: []
   })
@@ -97,6 +97,9 @@ const NewFileForm: React.FC<NewFileModalData> = props => {
   const handleSubmit = async (values: any): Promise<void> => {
     const data = new FormData()
     Object.keys(values).forEach(prop => {
+      if (prop === 'fileUsage' && !values.fileUsage) {
+        return
+      }
       if (prop === 'tags') {
         data.append(
           prop,
@@ -209,11 +212,19 @@ const NewFileForm: React.FC<NewFileModalData> = props => {
   }
 
   const fileUsageItems = React.useMemo(() => {
+    if (fileUsage) {
+      return [
+        {
+          label: getFileUsageNameByType(fileUsage),
+          value: fileUsage
+        }
+      ]
+    }
     return Object.values(FileUsage).map((fs: FileUsage) => ({
       label: getFileUsageNameByType(fs),
       value: fs
     }))
-  }, [])
+  }, [fileUsage])
 
   return (
     <Formik<NewFileFormDTO>
@@ -221,8 +232,7 @@ const NewFileForm: React.FC<NewFileModalData> = props => {
       initialValues={initialValues}
       formName="newFile"
       validationSchema={Yup.object().shape({
-        identifier: IdentifierSchema(),
-        fileUsage: Yup.string().nullable(true).trim().required(getString('filestore.errors.fileUsage'))
+        identifier: IdentifierSchema()
       })}
       onSubmit={values => {
         modalErrorHandler?.hide()
@@ -254,7 +264,6 @@ const NewFileForm: React.FC<NewFileModalData> = props => {
                   items={fileUsageItems}
                   name="fileUsage"
                   label={getString('filestore.view.fileUsage')}
-                  disabled={!tempNode && editMode}
                   onChange={e => {
                     fileStoreContext?.updateCurrentNode({
                       ...fileStoreContext.currentNode,

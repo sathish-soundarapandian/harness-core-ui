@@ -6,11 +6,13 @@ COPY dist /opt/nextgenui
 COPY docker/entrypoint.sh /opt/
 COPY docker/nginx.conf /etc/nginx/
 COPY docker/nginx-ipv6-only.conf /etc/nginx/
+
 WORKDIR /opt/nextgenui
 
-RUN chmod +x -R /opt/nextgenui
-RUN chmod +x -R /tmp
+RUN chown 65534:65534 -R /opt/nextgenui
+RUN chown 65534:65534 -R /var/log/nginx
 
+USER 65534
 
 EXPOSE 8080
 ENTRYPOINT ["sh", "/opt/entrypoint.sh"]

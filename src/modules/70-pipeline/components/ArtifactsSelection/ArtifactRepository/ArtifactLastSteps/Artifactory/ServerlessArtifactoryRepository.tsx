@@ -47,12 +47,14 @@ export interface ServerlessArtifactoryRepositoryProps {
   formik: FormikProps<ImagePathTypes>
   connectorRef: string
   fieldName: string
+  serviceId?: string
+  fqnPath?: string
 }
 
 export default function ServerlessArtifactoryRepository(
   props: ServerlessArtifactoryRepositoryProps
 ): React.ReactElement {
-  const { isReadonly, expressions, allowableTypes, formik, connectorRef, fieldName } = props
+  const { isReadonly, expressions, allowableTypes, formik, connectorRef, fieldName, fqnPath, serviceId } = props
   const { getString } = useStrings()
   const [connectorRepos, setConnectorRepos] = useState<SelectOption[]>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -68,7 +70,9 @@ export default function ServerlessArtifactoryRepository(
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      repositoryType: 'generic'
+      repositoryType: 'generic',
+      serviceId,
+      fqnPath
     },
     lazy: true
   })

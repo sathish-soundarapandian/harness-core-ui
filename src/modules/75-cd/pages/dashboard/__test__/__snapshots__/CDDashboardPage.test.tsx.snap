@@ -411,67 +411,19 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
           executionsText
         </p>
         <div
-          class="chartContainer"
+          class="StyledProps--font StyledProps--main emptyView"
         >
           <div
-            class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
+            class="StyledProps--font StyledProps--main emptyViewCard"
           >
-            <div
-              class="StyledProps--font StyledProps--main StyledProps--flex"
+            <img
+              src="test-file-stub"
+            />
+            <p
+              class="StyledProps--font StyledProps--main"
             >
-              <div
-                class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-              />
-              <div
-                class="StyledProps--font StyledProps--main toggleBtns StyledProps--flex"
-              >
-                <button
-                  class="bp3-button bp3-active bp3-minimal Button--button StyledProps--font StyledProps--main chartIcon active Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
-                  type="button"
-                >
-                  <span
-                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary6"
-                    data-icon="bar-chart"
-                  >
-                    <svg
-                      fill="none"
-                      height="12"
-                      viewBox="0 0 14 11"
-                      width="12"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M11.995 0v10.798H14V0h-2.005zM3.996 1.601v9.197h2.005V1.6H3.996zm4.003 1.601v7.596h1.998V3.202H7.999zM0 4.797v6h1.998v-6H0z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </span>
-                </button>
-                <button
-                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main chartIcon Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
-                  type="button"
-                >
-                  <span
-                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey700"
-                    data-icon="line-chart"
-                  >
-                    <svg
-                      fill="none"
-                      height="12"
-                      viewBox="0 0 14 11"
-                      width="12"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M7.758 10.265L5.703 1.807l-2.799 4.1H0v-.746h2.51L6.032 0l2.076 8.546 2.81-3.765H14v.747h-2.706l-3.536 4.737z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </span>
-                </button>
-              </div>
-            </div>
-            <div />
+              common.noDeployments
+            </p>
           </div>
         </div>
       </div>

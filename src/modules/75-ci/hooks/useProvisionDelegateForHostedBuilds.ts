@@ -36,8 +36,7 @@ export function useProvisionDelegateForHostedBuilds(): ProvisionDelegateForHoste
     loading: fetchingDelegateDetails
   } = useGetDelegateGroupByIdentifier({
     identifier: ProvisionedByHarnessDelegateGroupIdentifier,
-    queryParams: { accountId },
-    lazy: true
+    queryParams: { accountId }
   })
 
   const { mutate: startProvisioning } = useProvisionResourcesForCI({

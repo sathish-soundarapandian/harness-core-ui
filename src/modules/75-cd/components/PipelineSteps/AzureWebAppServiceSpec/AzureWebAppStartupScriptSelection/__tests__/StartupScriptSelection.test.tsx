@@ -63,7 +63,7 @@ describe('StartupScriptSelection', () => {
     expect(addFileButton).toBeDefined()
     fireEvent.click(addFileButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
-    const label = await waitFor(() => findAllByText(portal as HTMLElement, 'pipeline.startupScript.fileSource'))
+    const label = await waitFor(() => findAllByText(portal as HTMLElement, 'pipeline.startupCommand.fileSource'))
     expect(label).toBeDefined()
     const closeButton = portal.querySelector("button[class*='crossIcon']") as Element
     fireEvent.click(closeButton)

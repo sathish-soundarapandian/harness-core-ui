@@ -15,11 +15,11 @@
 
 .header {
   font-size: medium !important;
-  margin-bottom: var(--spacing-large) !important;
+  margin-bottom: var(--spacing-medium) !important;
 }
 
 .tooltipStyle {
   :global(.Text--withDocsTooltip) {
-    align-items: baseline !important;
+    align-items: flex-start !important;
   }
 }

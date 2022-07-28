@@ -5,6 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+.templatesPageHeader {
+  position: sticky;
+  top: 0px;
+}
+
+.templatesPageSubHeader {
+  position: sticky;
+  top: var(--page-header-height);
+  z-index: 1;
+}
+
 .deleteTemplateDialog {
   width: 752px;
   overflow: hidden;
@@ -42,4 +53,5 @@
 
 .pageBody {
   --page-header-height: 138px;
+  padding: var(--spacing-large) var(--spacing-xlarge) var(--spacing-small) var(--spacing-xlarge) !important;
 }

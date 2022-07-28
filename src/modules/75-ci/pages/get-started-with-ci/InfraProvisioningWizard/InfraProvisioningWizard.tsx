@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import set from 'lodash-es/set'
 import get from 'lodash-es/get'
@@ -23,6 +23,7 @@ import { useStrings } from 'framework/strings'
 import { useSideNavContext } from 'framework/SideNavStore/SideNavContext'
 import routes from '@common/RouteDefinitions'
 import {
+  ConnectorInfoDTO,
   ResponseConnectorResponse,
   ResponseScmConnectorResponse,
   useCreateDefaultScmConnector,
@@ -62,11 +63,12 @@ import {
 import { SelectGitProvider, SelectGitProviderRef } from './SelectGitProvider'
 import { SelectRepository, SelectRepositoryRef } from './SelectRepository'
 import { getPRTriggerActions } from '../../../utils/HostedBuildsUtils'
-
 import css from './InfraProvisioningWizard.module.scss'
 
 export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = props => {
-  const { lastConfiguredWizardStepId = InfraProvisiongWizardStepId.SelectGitProvider } = props
+  const { lastConfiguredWizardStepId = InfraProvisiongWizardStepId.SelectGitProvider, precursorData } = props
+  const { preSelectedGitConnector, connectorsEligibleForPreSelection, secretForPreSelectedConnector } =
+    precursorData || {}
   const { getString } = useStrings()
   const [disableBtn, setDisableBtn] = useState<boolean>(false)
   const [currentWizardStepId, setCurrentWizardStepId] =
@@ -75,10 +77,23 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const history = useHistory()
   const [showPageLoader, setShowPageLoader] = useState<boolean>(false)
+  const [configuredGitConnector, setConfiguredGitConnector] = useState<ConnectorInfoDTO>()
   const selectGitProviderRef = React.useRef<SelectGitProviderRef | null>(null)
   const selectRepositoryRef = React.useRef<SelectRepositoryRef | null>(null)
   const { setShowGetStartedTabInMainMenu } = useSideNavContext()
   const { showError: showErrorToaster } = useToaster()
+
+  useEffect(() => {
+    setCurrentWizardStepId(lastConfiguredWizardStepId)
+  }, [lastConfiguredWizardStepId])
+
+  useEffect(() => {
+    if (selectGitProviderRef.current?.validatedConnector) {
+      setConfiguredGitConnector(selectGitProviderRef.current?.validatedConnector)
+    } else if (preSelectedGitConnector) {
+      setConfiguredGitConnector(preSelectedGitConnector)
+    }
+  }, [selectGitProviderRef.current?.validatedConnector, preSelectedGitConnector])
 
   const { mutate: createTrigger } = useCreateTrigger({
     queryParams: {
@@ -101,7 +116,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     (repository: UserRepoResponse): string | undefined => {
       const UNIQUE_PIPELINE_ID = new Date().getTime().toString()
       const { name: repoName, namespace } = repository
-      if (!repoName || !namespace || !selectGitProviderRef.current?.validatedConnector?.identifier) {
+      if (!repoName || !namespace || !configuredGitConnector?.identifier) {
         return
       }
 
@@ -110,7 +125,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
       payload.pipeline.identifier = `${getString('buildText')}_${repoName.replace(/-/g, '_')}_${UNIQUE_PIPELINE_ID}` // pipeline identifier cannot have spaces
       payload.pipeline.projectIdentifier = projectIdentifier
       payload.pipeline.orgIdentifier = orgIdentifier
-      payload.pipeline.properties.ci.codebase.connectorRef = `${ACCOUNT_SCOPE_PREFIX}${selectGitProviderRef.current?.validatedConnector?.identifier}`
+      payload.pipeline.properties.ci.codebase.connectorRef = `${ACCOUNT_SCOPE_PREFIX}${configuredGitConnector?.identifier}`
       payload.pipeline.properties.ci.codebase.repoName = getFullRepoName(repository)
 
       try {
@@ -119,7 +134,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         // Ignore error
       }
     },
-    [projectIdentifier, orgIdentifier, selectGitProviderRef.current?.validatedConnector?.identifier]
+    [projectIdentifier, orgIdentifier, configuredGitConnector?.identifier]
   )
 
   const constructTriggerPayload = React.useCallback(
@@ -130,7 +145,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
       pipelineId: string
       eventType: string
     }): NGTriggerConfigV2 | TriggerConfigDTO | undefined => {
-      if (!selectGitProviderRef?.current?.values?.gitProvider?.type) {
+      const connectorType: ConnectorInfoDTO['type'] | undefined = configuredGitConnector?.type
+      if (!connectorType) {
         return
       }
       if (!pipelineId) {
@@ -162,17 +178,17 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         source: {
           type: 'Webhook',
           spec: {
-            type: selectGitProviderRef.current.values.gitProvider.type,
+            type: connectorType,
             spec: {
               type: eventType,
               spec: {
-                connectorRef: `${ACCOUNT_SCOPE_PREFIX}${selectGitProviderRef.current?.validatedConnector?.identifier}`,
+                connectorRef: `${ACCOUNT_SCOPE_PREFIX}${configuredGitConnector?.identifier}`,
                 repoName: selectRepositoryRef.current?.repository
                   ? getFullRepoName(selectRepositoryRef.current?.repository)
                   : '',
                 autoAbortPreviousExecutions: false,
                 actions: [eventTypes.PULL_REQUEST, eventTypes.MERGE_REQUEST].includes(eventType)
-                  ? getPRTriggerActions(selectGitProviderRef.current.values.gitProvider.type)
+                  ? getPRTriggerActions(connectorType)
                   : []
               }
             }
@@ -182,7 +198,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
       }
     },
     [
-      selectGitProviderRef.current?.validatedConnector?.identifier,
+      configuredGitConnector,
       selectGitProviderRef?.current?.values?.gitProvider,
       selectRepositoryRef.current?.repository
     ]
@@ -233,10 +249,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                     constructTriggerPayload({
                       pipelineId: createPipelineResponse?.data?.identifier,
                       eventType:
-                        selectGitProviderRef?.current?.values?.gitProvider?.type &&
-                        [Connectors.GITHUB, Connectors.BITBUCKET].includes(
-                          selectGitProviderRef?.current?.values?.gitProvider?.type
-                        )
+                        configuredGitConnector?.type &&
+                        [Connectors.GITHUB, Connectors.BITBUCKET].includes(configuredGitConnector?.type)
                           ? eventTypes.PULL_REQUEST
                           : eventTypes.MERGE_REQUEST
                     }) || {}
@@ -301,7 +315,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         setShowPageLoader(false)
       }
     }
-  }, [selectRepositoryRef.current?.repository])
+  }, [selectRepositoryRef.current?.repository, configuredGitConnector])
 
   const WizardSteps: Map<InfraProvisiongWizardStepId, WizardStep> = new Map([
     [
@@ -342,7 +356,12 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           <SelectRepository
             ref={selectRepositoryRef}
             showError={showError}
-            validatedConnectorRef={selectGitProviderRef.current?.validatedConnector?.identifier}
+            validatedConnector={configuredGitConnector}
+            connectorsEligibleForPreSelection={connectorsEligibleForPreSelection}
+            onConnectorSelect={(connector: ConnectorInfoDTO) => {
+              setConfiguredGitConnector(connector)
+              setShowError(false)
+            }}
             disableNextBtn={() => setDisableBtn(true)}
             enableNextBtn={() => setDisableBtn(false)}
           />
@@ -356,7 +375,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         },
         onClickNext: () => {
           const selectedRepo = selectRepositoryRef.current?.repository
-          if (selectedRepo && selectGitProviderRef?.current?.validatedConnector?.spec) {
+          if (selectedRepo && configuredGitConnector?.spec) {
             updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.Success)
             setDisableBtn(true)
             setShowPageLoader(true)
@@ -364,15 +383,16 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
               createSCMConnector({
                 connector: set(
                   set(
-                    selectGitProviderRef.current.validatedConnector,
+                    configuredGitConnector,
                     'spec.validationRepo',
                     getFullRepoName(selectRepositoryRef?.current?.repository || {})
                   ),
                   'spec.authentication.spec.spec.username',
-                  get(selectGitProviderRef.current.validatedConnector, 'spec.authentication.spec.spec.username') ??
-                    OAUTH2_USER_NAME
+                  get(configuredGitConnector, 'spec.authentication.spec.spec.username') ?? OAUTH2_USER_NAME
                 ),
-                secret: selectGitProviderRef?.current?.validatedSecret
+                secret: preSelectedGitConnector
+                  ? secretForPreSelectedConnector
+                  : selectGitProviderRef?.current?.validatedSecret
               })
                 .then((scmConnectorResponse: ResponseScmConnectorResponse) => {
                   if (scmConnectorResponse.status === Status.SUCCESS) {
@@ -387,7 +407,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             } else {
               updateConnector({
                 connector: set(
-                  selectGitProviderRef.current.validatedConnector,
+                  configuredGitConnector,
                   'spec.validationRepo',
                   getFullRepoName(selectRepositoryRef?.current?.repository || {})
                 )
@@ -425,6 +445,13 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     buttonLabel = getString('next')
   }
 
+  const shouldRenderBackButton = useMemo((): boolean => {
+    return !(
+      (preSelectedGitConnector && currentWizardStepId === InfraProvisiongWizardStepId.SelectRepository) ||
+      currentWizardStepId === InfraProvisiongWizardStepId.SelectGitProvider
+    )
+  }, [currentWizardStepId, preSelectedGitConnector])
+
   return stepRender ? (
     <Layout.Vertical
       padding={{ left: 'huge', right: 'huge', top: 'huge' }}
@@ -450,7 +477,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         className={css.footer}
         width="100%"
       >
-        {currentWizardStepId !== InfraProvisiongWizardStepId.SelectGitProvider ? (
+        {shouldRenderBackButton ? (
           <Button
             variation={ButtonVariation.SECONDARY}
             text={getString('back')}
@@ -467,7 +494,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           disabled={disableBtn}
         />
       </Layout.Horizontal>
-      {showPageLoader ? <PageSpinner /> : null}
+      {showPageLoader ? <PageSpinner message={getString('ci.getStartedWithCI.settingUpCIPipeline')} /> : null}
     </Layout.Vertical>
   ) : null
 }

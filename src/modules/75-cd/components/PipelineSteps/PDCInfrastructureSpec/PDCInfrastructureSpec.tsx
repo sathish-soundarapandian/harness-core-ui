@@ -7,6 +7,7 @@
 
 import React, { useState, useMemo, useEffect } from 'react'
 import {
+  Accordion,
   IconName,
   Layout,
   Label,
@@ -29,7 +30,7 @@ import { Radio, RadioGroup } from '@blueprintjs/core'
 import { parse } from 'yaml'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
-import { debounce, noop, isEmpty, set, get } from 'lodash-es'
+import { debounce, noop, set, get } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { loggerFor } from 'framework/logging/logging'
@@ -55,13 +56,14 @@ import { SecretReferenceInterface, setSecretField } from '@secrets/utils/SecretF
 import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
 import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
-import DelegateSelectorPanel from '@pipeline/components/PipelineSteps/AdvancedSteps/DelegateSelectorPanel/DelegateSelectorPanel'
+import { DelegateSelectors } from '@common/components/DelegateSelectors/DelegateSelectors'
 import SSHSecretInput from '@secrets/components/SSHSecretInput/SSHSecretInput'
 import ConnectivityStatus from './connectivityStatus/ConnectivityStatus'
-
+import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 import css from './PDCInfrastructureSpec.module.scss'
 
 const logger = loggerFor(ModuleName.CD)
@@ -72,10 +74,10 @@ const PdcType = 'Pdc'
 
 function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({
-    sshKey: Yup.object().required(getString('validation.password'))
+    credentialsRef: Yup.object().required(getString('validation.password'))
   })
 }
-interface GcpInfrastructureSpecEditableProps {
+interface PDCInfrastructureSpecEditableProps {
   initialValues: PdcInfrastructure
   allValues?: PdcInfrastructure
   onUpdate?: (data: PdcInfrastructure) => void
@@ -132,10 +134,11 @@ export const parseAttributes = (attributes: string) =>
     return prev
   }, {})
 
-const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps> = ({
+const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps> = ({
   initialValues,
   onUpdate,
-  readonly
+  readonly,
+  allowableTypes
 }): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -185,7 +188,6 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
     const setInitial = async () => {
       const values = {
         ...initialValues,
-        connectorRef: initialValues.connectorRef,
         hosts: initialValues.hosts ? initialValues.hosts.join('\n') : '',
         hostFilters: initialValues.hostFilters ? initialValues.hostFilters.join('\n') : '',
         attributeFilters: initialValues.attributeFilters
@@ -193,6 +195,47 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
               .map(group => `${group[0]}:${group[1]}`)
               .join('\n')
           : ''
+      }
+      if (initialValues.connectorRef) {
+        try {
+          const splitedRef = initialValues.connectorRef.split('.')
+          let scope = ''
+          let identifier = ''
+          if (splitedRef.length > 1) {
+            scope = splitedRef[0]
+            identifier = splitedRef[1]
+          } else {
+            identifier = splitedRef[0]
+          }
+          const queryParams = {
+            accountIdentifier: accountId,
+            includeAllConnectorsAvailableAtScope: true
+          }
+          if (!scope) {
+            set(queryParams, 'orgIdentifier', orgIdentifier)
+            set(queryParams, 'projectIdentifier', projectIdentifier)
+          } else if (scope === 'org') {
+            set(queryParams, 'orgIdentifier', orgIdentifier)
+          }
+          const response = await getConnectorListV2Promise({
+            queryParams,
+            body: { types: ['Pdc'], filterType: 'Connector' }
+          })
+          const connResponse = get(response, 'data.content', []).find(
+            (conn: any) => conn.connector.identifier === identifier
+          )
+          const connectorData = {
+            label: initialValues.connectorRef,
+            value: `${scope ? `${scope}.` : ''}${identifier}`,
+            scope: scope,
+            live: connResponse?.status?.status === 'SUCCESS',
+            connector: connResponse.connector
+          }
+          set(values, 'connectorRef', connectorData)
+        } catch (e) {
+          /* istanbul ignore next */
+          showError(e.data?.message || e.message)
+        }
       }
       try {
         const secretData = await setSecretField(initialValues.credentialsRef, {
@@ -281,10 +324,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
       width: '12%',
       Cell: ({ row }) => (
         <ConnectivityStatus
-          identifier={
-            get(formikRef.current, 'values.credentialsRef', '') ||
-            get(formikRef.current, 'values.sshKey.identifier', '')
-          }
+          identifier={get(formikRef.current, 'values.sshKey.referenceString', '')}
           tags={get(formikRef.current, 'values.delegateSelectors', [])}
           host={get(row.original, 'host', '')}
           status={row.original.status}
@@ -326,10 +366,20 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
     setErrors([])
     try {
       const validationHosts = testHost ? [testHost] : detailHosts.map(host => get(host, 'host', ''))
-      const hostResults = await validateHosts({
-        hosts: validationHosts,
-        tags: get(formikRef, 'current.values.delegateSelectors', [])
-      })
+      const hostResults = await validateHosts(
+        {
+          hosts: validationHosts,
+          tags: get(formikRef, 'current.values.delegateSelectors', [])
+        },
+        {
+          queryParams: {
+            accountIdentifier: accountId,
+            projectIdentifier,
+            orgIdentifier,
+            identifier: get(formikRef.current, 'values.sshKey.referenceString', '')
+          }
+        }
+      )
       if (hostResults.status === 'SUCCESS') {
         const tempMap: any = {}
         detailHosts.forEach(hostItem => {
@@ -376,7 +426,8 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
               const data: Partial<PdcInfrastructure> = {
                 allowSimultaneousDeployments: value.allowSimultaneousDeployments,
                 delegateSelectors: value.delegateSelectors,
-                sshKey: value.sshKey
+                sshKey: value.sshKey,
+                credentialsRef: get(formikRef.current, 'values.sshKey.referenceString', '')
               }
               if (isPreconfiguredHosts === PreconfiguredHosts.FALSE) {
                 data.hosts = parseHosts(value.hosts)
@@ -402,12 +453,14 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                 <FormikForm>
                   <Layout.Vertical className={css.formRow} spacing="medium" margin={{ bottom: 'large' }}>
                     {isPreconfiguredHosts === PreconfiguredHosts.FALSE ? (
-                      <FormInput.TextArea
+                      <FormInput.MultiTextInput
+                        key="hosts"
                         name="hosts"
-                        label={'Hosts'}
+                        label={getString('connectors.pdc.hosts')}
+                        placeholder={getString('cd.steps.pdcStep.hostsPlaceholder')}
                         className={`${css.hostsTextArea} ${css.inputWidth}`}
-                        tooltipProps={{
-                          dataTooltipId: 'pdcHosts'
+                        multiTextInputProps={{
+                          allowableTypes
                         }}
                       />
                     ) : (
@@ -476,18 +529,9 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                           ></Select>
                         </Layout.Horizontal>
                         <Layout.Vertical spacing="medium">
-                          {isPreconfiguredHosts === PreconfiguredHosts.FALSE ? (
-                            <FormInput.TextArea
-                              name="hosts"
-                              label={'Hosts'}
-                              placeholder={getString('cd.steps.pdcStep.hostsPlaceholder')}
-                              className={`${css.hostsTextArea} ${css.inputWidth}`}
-                              tooltipProps={{
-                                dataTooltipId: 'pdcHosts'
-                              }}
-                            />
-                          ) : hostsScope === HostScope.ALL ? null : hostSpecifics === SpecificHostOption.HOST_NAME ? (
-                            <FormInput.TextArea
+                          {hostsScope === HostScope.ALL ? null : hostSpecifics === SpecificHostOption.HOST_NAME ? (
+                            <FormInput.MultiTextInput
+                              key="hostFilters"
                               name="hostFilters"
                               label={'Specific Hosts'}
                               placeholder={getString('cd.steps.pdcStep.specificHostsPlaceholder')}
@@ -495,15 +539,25 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                               tooltipProps={{
                                 dataTooltipId: 'pdcSpecificHosts'
                               }}
+                              multiTextInputProps={{
+                                allowableTypes,
+                                textProps: {
+                                  type: 'textarea'
+                                }
+                              }}
                             />
                           ) : (
-                            <FormInput.TextArea
+                            <FormInput.MultiTextInput
+                              key="attributeFilters"
                               name="attributeFilters"
                               label={'Specific Attributes'}
                               placeholder={getString('cd.steps.pdcStep.attributesPlaceholder')}
                               className={`${css.hostsTextArea} ${css.inputWidth}`}
                               tooltipProps={{
                                 dataTooltipId: 'pdcSpecificAttributes'
+                              }}
+                              multiTextInputProps={{
+                                allowableTypes
                               }}
                             />
                           )}
@@ -513,17 +567,16 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                     <div className={css.inputWidth}>
                       <SSHSecretInput name={'sshKey'} label={getString('cd.steps.common.specifyCredentials')} />
                     </div>
-                    <div className={css.inputWidth}>
-                      <DelegateSelectorPanel isReadonly={false} formikProps={formik as any} />
-                    </div>
                     {showPreviewHostBtn ? (
                       <Button
                         onClick={() => {
                           setShowPreviewHostBtn(false)
+                          getHosts()
                         }}
                         size={ButtonSize.SMALL}
                         variation={ButtonVariation.SECONDARY}
                         width={140}
+                        style={{ marginTop: 0 }}
                       >
                         {getString('cd.steps.pdcStep.previewHosts')}
                       </Button>
@@ -543,22 +596,48 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                               {getString('common.refresh')}
                             </Button>
                           </Layout.Horizontal>
-                          <Layout.Horizontal flex={{ alignItems: 'center' }} margin={{ bottom: 'small' }}>
+                          <Layout.Horizontal
+                            flex={{ alignItems: 'center' }}
+                            spacing="small"
+                            margin={{ bottom: 'small' }}
+                          >
                             <Button
                               onClick={() => testConnection()}
                               size={ButtonSize.SMALL}
                               variation={ButtonVariation.SECONDARY}
                               disabled={
-                                detailHosts.length === 0 ||
-                                !(
-                                  get(formikRef.current, 'values.credentialsRef', '') ||
-                                  get(formikRef.current, 'values.sshKey.identifier', '')
-                                )
+                                detailHosts.length === 0 || !get(formikRef.current, 'values.sshKey.referenceString', '')
                               }
                             >
                               {getString('common.smtp.testConnection')}
                             </Button>
+                            <Button
+                              onClick={() => setShowPreviewHostBtn(true)}
+                              size={ButtonSize.SMALL}
+                              variation={ButtonVariation.SECONDARY}
+                            >
+                              {getString('close')}
+                            </Button>
                           </Layout.Horizontal>
+                        </Layout.Horizontal>
+                        <Layout.Horizontal
+                          flex={{ alignItems: 'center' }}
+                          spacing="medium"
+                          margin={{ bottom: 'small', top: 'small' }}
+                        >
+                          <div className={css.inputWidth}>
+                            <Label className={'bp3-label'} style={{ marginBottom: 'small' }}>
+                              {getString('delegate.DelegateSelector')}
+                            </Label>
+                            <DelegateSelectors
+                              accountId={accountId}
+                              projectIdentifier={projectIdentifier}
+                              orgIdentifier={orgIdentifier}
+                              onTagInputChange={delegateSelectors => {
+                                formikRef.current?.setFieldValue('delegateSelectors', delegateSelectors)
+                              }}
+                            />
+                          </div>
                         </Layout.Horizontal>
                         {/* istanbul ignore next */}
                         {errors.length > 0 && <ErrorHandler responseMessages={errors} />}
@@ -576,18 +655,23 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                       </Layout.Vertical>
                     )}
                   </Layout.Vertical>
-
-                  <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }} className={css.lastRow}>
-                    <FormInput.CheckBox
-                      className={css.simultaneousDeployment}
-                      tooltipProps={{
-                        dataTooltipId: 'pdcInfraAllowSimultaneousDeployments'
-                      }}
-                      name={'allowSimultaneousDeployments'}
-                      label={getString('cd.allowSimultaneousDeployments')}
-                      disabled={readonly}
+                  <Accordion>
+                    <Accordion.Panel
+                      id="advanced"
+                      summary={getString('common.advanced')}
+                      details={
+                        <FormInput.CheckBox
+                          className={css.simultaneousDeployment}
+                          tooltipProps={{
+                            dataTooltipId: 'pdcInfraAllowSimultaneousDeployments'
+                          }}
+                          name={'allowSimultaneousDeployments'}
+                          label={getString('cd.allowSimultaneousDeployments')}
+                          disabled={readonly}
+                        />
+                      }
                     />
-                  </Layout.Horizontal>
+                  </Accordion>
                 </FormikForm>
               )
             }}
@@ -596,6 +680,34 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
       )}
     </Layout.Vertical>
   )
+}
+
+interface PDCInfrastructureSpecEditableProps {
+  initialValues: PdcInfrastructure
+  allValues?: PdcInfrastructure
+  onUpdate?: (data: PdcInfrastructure) => void
+  stepViewType?: StepViewType
+  readonly?: boolean
+  template?: PdcInfrastructureTemplate
+  metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
+  variablesData: PdcInfrastructure
+  allowableTypes: AllowedTypes
+}
+
+const PDCInfrastructureSpecVariablesForm: React.FC<PDCInfrastructureSpecEditableProps> = ({
+  metadataMap,
+  variablesData,
+  initialValues
+}) => {
+  const infraVariables = variablesData?.infrastructureDefinition?.spec
+  return infraVariables ? (
+    /* istanbul ignore next */ <VariablesListTable
+      data={infraVariables}
+      originalData={initialValues?.infrastructureDefinition?.spec || initialValues}
+      metadataMap={metadataMap}
+      className={pipelineVariableCss.variablePaddingL1}
+    />
+  ) : null
 }
 
 interface PDCInfrastructureSpecStep extends PdcInfrastructure {
@@ -610,7 +722,6 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
   protected type = StepType.PDC
   /* istanbul ignore next */
   protected defaultValues: PdcInfrastructure = {
-    connectorRef: '',
     credentialsRef: ''
   }
 
@@ -726,7 +837,7 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
     /* istanbul ignore else */
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (
-      isEmpty(data.credentialsRef) &&
+      !data.credentialsRef &&
       isRequired &&
       getMultiTypeFromValue(get(template, 'credentialsRef', undefined)) === MultiTypeInputType.RUNTIME
     ) {
@@ -736,13 +847,26 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
   }
 
   renderStep(props: StepProps<PdcInfrastructure>): JSX.Element {
-    const { initialValues, onUpdate, stepViewType, customStepProps, readonly, allowableTypes } = props
+    const { initialValues, onUpdate, stepViewType, customStepProps, readonly, allowableTypes, inputSetData } = props
+
+    if (stepViewType === StepViewType.InputVariable) {
+      return (
+        <PDCInfrastructureSpecVariablesForm
+          onUpdate={onUpdate}
+          stepViewType={stepViewType}
+          template={inputSetData?.template as PdcInfrastructureTemplate}
+          {...(customStepProps as PDCInfrastructureSpecEditableProps)}
+          initialValues={initialValues}
+        />
+      )
+    }
+
     return (
-      <GcpInfrastructureSpecEditable
+      <PDCInfrastructureSpecEditable
         onUpdate={onUpdate}
         readonly={readonly}
         stepViewType={stepViewType}
-        {...(customStepProps as GcpInfrastructureSpecEditableProps)}
+        {...(customStepProps as PDCInfrastructureSpecEditableProps)}
         initialValues={initialValues}
         allowableTypes={allowableTypes}
       />

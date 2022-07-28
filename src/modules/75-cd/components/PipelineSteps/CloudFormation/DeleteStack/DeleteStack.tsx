@@ -60,20 +60,16 @@ export class CFDeleteStack extends PipelineStep<CFDeleteStackStepInfo> {
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<CFDeleteStackStepInfo>): FormikErrors<CFDeleteStackStepInfo> {
+  }: ValidateInputSetProps<DeleteStackData>): FormikErrors<CFDeleteStackStepInfo> {
     /* istanbul ignore next */
     const errors = {} as any
     /* istanbul ignore next */
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     /* istanbul ignore next */
     if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
-      let timeoutSchema = getDurationValidationSchema({ minimum: '10s' })
       /* istanbul ignore next */
-      if (isRequired) {
-        timeoutSchema = timeoutSchema.required(getString?.('validation.timeout10SecMinimum'))
-      }
       const timeout = Yup.object().shape({
-        timeout: timeoutSchema
+        timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString?.('validation.timeout10SecMinimum'))
       })
       /* istanbul ignore next */
       try {
@@ -91,6 +87,25 @@ export class CFDeleteStack extends PipelineStep<CFDeleteStackStepInfo> {
       delete errors.spec
     }
     /* istanbul ignore next */
+
+    if (
+      getMultiTypeFromValue(template?.spec?.configuration?.spec?.provisionerIdentifier) ===
+        MultiTypeInputType.RUNTIME &&
+      isRequired &&
+      isEmpty(data?.spec?.configuration?.spec?.provisionerIdentifier)
+    ) {
+      errors.spec = {
+        ...errors.spec,
+        configuration: {
+          ...errors.spec?.configuration,
+          spec: {
+            ...errors.spec?.configuration?.spec,
+            provisionerIdentifier: getString?.('common.validation.provisionerIdentifierIsRequired')
+          }
+        }
+      }
+    }
+
     return errors
   }
 

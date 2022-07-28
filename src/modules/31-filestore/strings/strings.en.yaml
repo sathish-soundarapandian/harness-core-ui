@@ -24,7 +24,7 @@ cantDeleteFile: 'Unable to delete {{type}}'
 referenceButtonText: 'Go view references'
 errors:
   fileUsage: 'File Usage is required'
-  cannotRender: 'File format not support, so it can only be previewed'
+  cannotRender: 'File format not supported'
   deleted: 'Node is deleted'
 filter:
   fileUsagePlaceholder: 'Type to view suggestions'

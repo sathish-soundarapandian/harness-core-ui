@@ -637,6 +637,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     types: Array.isArray(type) ? type : [type],
     onSuccess: (data?: ConnectorConfigDTO) => {
       if (data) {
+        setIsConnectorEdited(true)
         props.onChange?.({ ...data.connector, status: data.status }, Scope.PROJECT)
         setInlineSelection({
           selected: true,

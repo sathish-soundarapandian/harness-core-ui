@@ -143,7 +143,7 @@ function StartupScriptWizardStepOne({
       </Text>
 
       <Text font={{ variation: FontVariation.H6 }} margin={{ bottom: 'medium' }}>
-        {getString('pipeline.startupScript.subtitle')}
+        {getString('pipeline.startupCommand.subtitle')}
       </Text>
 
       <Formik

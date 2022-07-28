@@ -173,22 +173,20 @@ export default function VerifyStepHealthSourceTable(tableProps: VerifyStepHealth
     return <ContainerSpinner />
   }
   return (
-    <>
-      <HealthSourceTable
-        onEdit={onEdit}
-        onDeleteHealthSourceVerifyStep={selectedRow => {
-          setRowToDelete(selectedRow)
-          openDialog()
-        }}
-        isRunTimeInput={isRunTimeInput}
-        onAddNewHealthSource={onAddNewHealthSource}
-        value={healthSourcesList as HealthSource[]}
-        shouldRenderAtVerifyStep
-        onSuccess={(data: any) => {
-          onSuccess(data)
-          hideHealthSourceDrawer()
-        }}
-      />
-    </>
+    <HealthSourceTable
+      onEdit={onEdit}
+      onDeleteHealthSourceVerifyStep={selectedRow => {
+        setRowToDelete(selectedRow)
+        openDialog()
+      }}
+      isRunTimeInput={isRunTimeInput}
+      onAddNewHealthSource={onAddNewHealthSource}
+      value={healthSourcesList as HealthSource[]}
+      shouldRenderAtVerifyStep
+      onSuccess={(data: any) => {
+        onSuccess(data)
+        hideHealthSourceDrawer()
+      }}
+    />
   )
 }

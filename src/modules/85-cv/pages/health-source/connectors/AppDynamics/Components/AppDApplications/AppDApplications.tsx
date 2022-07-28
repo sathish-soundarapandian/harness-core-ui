@@ -13,10 +13,11 @@ import {
   MultiTypeInputType,
   FormError,
   MultiTypeInput,
-  Label,
+  Text,
   RUNTIME_INPUT_VALUE,
   AllowedTypes
 } from '@wings-software/uicore'
+import { Color } from '@harness/design-system'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { getPlaceholder, getTypeOfInput, setAppDynamicsApplication } from '../../AppDHealthSource.utils'
@@ -77,7 +78,9 @@ export default function AppDApplications({
 
   return isTemplate ? (
     <>
-      <Label>{getString('cv.healthSource.connectors.AppDynamics.applicationLabel')}</Label>
+      <Text color={Color.BLACK} margin={{ bottom: 'small' }}>
+        {getString('cv.healthSource.connectors.AppDynamics.applicationLabel')}
+      </Text>
       <MultiTypeInput
         key={inputType}
         name={'appdApplication'}

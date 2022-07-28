@@ -22,6 +22,14 @@ import {
   mockApiErrorResponse,
   mockApiFetchingResponse
 } from '@templates-library/components/TemplateActivityLog/__tests__/TemplateActivityLogTestHelper'
+import { StageTemplate } from '@templates-library/components/Templates/StageTemplate/StageTemplate'
+import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
+import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
+import { ExecutionTemplate } from '@templates-library/components/Templates/ExecutionTemplate/ExecutionTemplate'
+import { InfrastructureTemplate } from '@templates-library/components/Templates/InfrastructureTemplate/InfrastructureTemplate'
+import { PipelineTemplate } from '@templates-library/components/Templates/PipelineTemplate/PipelineTemplate'
+import { ServiceTemplate } from '@templates-library/components/Templates/ServiceTemplate/ServiceTemplate'
+import { StepGroupTemplate } from '@templates-library/components/Templates/StepGroupTemplate/StepGroupTemplate'
 
 const templateListCallMock = jest
   .spyOn(hooks, 'useMutateAsGet')
@@ -105,6 +113,15 @@ const mockEmptySuccessResponse = {
 
 describe('<TemplatesPage /> tests', () => {
   beforeEach(() => jest.clearAllMocks())
+  beforeAll(() => {
+    templateFactory.registerTemplate(new StepTemplate())
+    templateFactory.registerTemplate(new StageTemplate())
+    templateFactory.registerTemplate(new PipelineTemplate())
+    templateFactory.registerTemplate(new ServiceTemplate())
+    templateFactory.registerTemplate(new InfrastructureTemplate())
+    templateFactory.registerTemplate(new StepGroupTemplate())
+    templateFactory.registerTemplate(new ExecutionTemplate())
+  })
 
   test('should match snapshot', async () => {
     const { container } = render(

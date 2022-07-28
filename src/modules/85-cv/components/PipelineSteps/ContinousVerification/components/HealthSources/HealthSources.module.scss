@@ -47,3 +47,12 @@
   user-select: none;
   cursor: not-allowed;
 }
+
+.noHealthSourceImage {
+  height: 110px;
+}
+
+.noHealthSourceImageClass {
+  padding-top: var(--spacing-xxlarge);
+  margin-top: var(--spacing-xxxlarge);
+}

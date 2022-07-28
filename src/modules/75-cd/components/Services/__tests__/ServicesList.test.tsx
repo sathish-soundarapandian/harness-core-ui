@@ -227,9 +227,31 @@ describe('DeploymentType in ServicesList ', () => {
     expect(container.querySelector('[data-icon="command-winrm"]')).toBeTruthy()
   })
 
+  test('render GitOps service type', () => {
+    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
+    responseData[1].deploymentTypeList = ['KubernetesGitOps']
+    const { container } = renderSetup(responseData)
+    expect(container.querySelector('[data-icon="gitops-green"]')).toBeTruthy()
+  })
+
+  test('render AzureWebApps deployment type', () => {
+    const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
+    responseData[1].deploymentTypeList = ['AzureWebApp']
+    const { container } = renderSetup(responseData)
+    expect(container.querySelector('[data-icon="azurewebapp"]')).toBeTruthy()
+  })
+
   test('render more than 2 deployments type', () => {
     const responseData = serviceDetails.data.serviceDeploymentDetailsList as unknown as ServiceDetailsDTO[]
-    responseData[1].deploymentTypeList = ['Kubernetes', 'NativeHelm', 'ServerlessAwsLambda', 'Ssh', 'WinRm']
+    responseData[1].deploymentTypeList = [
+      'Kubernetes',
+      'NativeHelm',
+      'ServerlessAwsLambda',
+      'Ssh',
+      'WinRm',
+      'AzureWebApp',
+      'KubernetesGitOps'
+    ]
     const { container, getByText } = renderSetup(responseData)
 
     //first 2 types should be visible

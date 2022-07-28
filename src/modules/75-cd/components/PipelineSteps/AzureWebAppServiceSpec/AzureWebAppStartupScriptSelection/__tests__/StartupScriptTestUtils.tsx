@@ -18,7 +18,7 @@ export const props: StartupScriptSelectionProps = {
   isReadonlyServiceMode: false,
   readonly: false
 }
-export const startupScript = {
+export const startupCommand = {
   type: 'Github',
   spec: {
     connectorRef: 'Github2',
@@ -93,25 +93,25 @@ export const propListView = {
   connectors: connectorsData.data,
   refetchConnectors: jest.fn(),
   isReadonly: false,
-  startupScript,
+  startupCommand,
   deploymentType: props.deploymentType,
   allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
 } as any
 
 export const propStepTwo = {
-  key: 'pipeline.startupScript.fileDetails',
-  name: 'pipeline.startupScript.fileDetails',
+  key: 'pipeline.startupCommand.fileDetails',
+  name: 'pipeline.startupCommand.fileDetails',
   expressions: [],
   allowableTypes: [
     MultiTypeInputType.FIXED,
     MultiTypeInputType.RUNTIME,
     MultiTypeInputType.EXPRESSION
   ] as AllowedTypesWithRunTime[],
-  stepName: 'pipeline.startupScript.fileDetails',
+  stepName: 'pipeline.startupCommand.fileDetails',
   initialValues: {
-    ...startupScript,
-    store: startupScript?.type,
-    connectorRef: startupScript?.spec?.connectorRef
+    ...startupCommand,
+    store: startupCommand?.type,
+    connectorRef: startupCommand?.spec?.connectorRef
   } as any,
   handleSubmit: jest.fn()
 }
@@ -121,12 +121,12 @@ const manifestDetailStep = <StartupScriptWizardStepTwo {...propStepTwo} />
 export const propStepOne = {
   handleConnectorViewChange: jest.fn(),
   handleStoreChange: jest.fn(),
-  stepName: 'pipeline.startupScript.fileSource',
+  stepName: 'pipeline.startupCommand.fileSource',
   isReadonly: false,
   connectorTypes: ['Git', 'Github', 'GitLab', 'Bitbucket'] as Array<ConnectorTypes>,
   initialValues: {
-    ...startupScript,
-    store: startupScript?.type,
+    ...startupCommand,
+    store: startupCommand?.type,
     connectorRef: '<+input>'
   } as any,
   expressions: [],
@@ -151,9 +151,9 @@ export const propWizard = {
   handleConnectorViewChange: jest.fn(),
   handleStoreChange: jest.fn(),
   initialValues: {
-    ...startupScript,
-    store: startupScript?.type,
-    connectorRef: startupScript?.spec?.connectorRef
+    ...startupCommand,
+    store: startupCommand?.type,
+    connectorRef: startupCommand?.spec?.connectorRef
   },
   newConnectorSteps: jest.fn(),
   lastSteps: manifestDetailStep,

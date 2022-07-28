@@ -82,7 +82,9 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
     refetch: fetchTags,
     error: fetchTagsError
   } = useMutateAsGet(useGetBuildDetailsForDockerWithYaml, {
-    body: yamlStringify(formik?.values),
+    body: yamlStringify({
+      pipeline: formik?.values
+    }),
     requestOptions: {
       headers: {
         'content-type': 'application/json'

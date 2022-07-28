@@ -37,11 +37,6 @@ jest.mock('services/cd-ng', () => ({
       status: 'SUCCESS'
     })
   ),
-  useGetDelegateInstallStatus: jest.fn().mockImplementation(() =>
-    Promise.resolve({
-      status: 'SUCCESS'
-    })
-  ),
   useCreateDefaultScmConnector: jest.fn().mockImplementation(() =>
     Promise.resolve({
       status: 'SUCCESS'
@@ -52,6 +47,23 @@ jest.mock('services/cd-ng', () => ({
   }),
   useUpdateConnector: jest.fn().mockImplementation(() => ({ mutate: updateConnector })),
   useCreateConnector: jest.fn().mockImplementation(() => ({ mutate: createConnector }))
+}))
+
+const mockGetCallFunction = jest.fn()
+jest.mock('services/portal', () => ({
+  useGetDelegateGroupByIdentifier: jest.fn().mockImplementation(args => {
+    mockGetCallFunction(args)
+    return {
+      data: {
+        resource: {
+          activelyConnected: false
+        }
+      },
+      refetch: jest.fn(),
+      error: null,
+      loading: false
+    }
+  })
 }))
 
 const pathParams = { accountId: 'accountId', orgIdentifier: 'orgId', projectIdentifier: 'projectId' }

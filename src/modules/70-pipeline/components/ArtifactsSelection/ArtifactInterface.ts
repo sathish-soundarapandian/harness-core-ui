@@ -83,6 +83,7 @@ export interface ImagePathTypes {
   repositoryUrl?: string
   repositoryPortorRepositoryURL?: string
   artifactDirectory?: string
+  repositoryFormat?: string
 }
 
 export interface CustomArtifactSource extends ImagePathTypes {

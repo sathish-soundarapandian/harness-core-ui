@@ -6,7 +6,7 @@
  */
 
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
-import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+import { ArtifactType, TagTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 
 export const props = {
@@ -76,4 +76,45 @@ export const emptyRepoMockData = {
   data: {
     repositories: {}
   }
+}
+
+export const azureWebAppDeploymentTypeProps = {
+  name: 'Artifact details',
+  expressions: [],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
+  context: 1,
+  handleSubmit: jest.fn(),
+  artifactIdentifiers: [],
+  selectedArtifact: 'ArtifactoryRegistry' as ArtifactType,
+  selectedDeploymentType: ServiceDeploymentType.AzureWebApp,
+  prevStepData: {
+    connectorId: {
+      value: 'connectorRef'
+    }
+  }
+}
+
+export const azureWebAppGenericInitialValues = {
+  identifier: '',
+  tag: '',
+  tagRegex: '',
+  artifactPath: '<+input>',
+  tagType: TagTypes.Value,
+  repository: '',
+  artifactDirectory: ''
+}
+
+export const azureWebAppDockerInitialValues = {
+  identifier: '',
+  artifactPath: 'path',
+  tag: '<+input>',
+  tagType: TagTypes.Value,
+  tagRegex: '',
+  repository: 'repo',
+  repositoryUrl: 'url',
+  repositoryFormat: 'docker'
 }

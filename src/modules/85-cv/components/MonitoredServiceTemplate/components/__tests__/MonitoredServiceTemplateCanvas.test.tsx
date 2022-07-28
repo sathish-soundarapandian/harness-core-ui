@@ -9,6 +9,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { Container, Button } from '@wings-software/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import { getTemplateContextMock } from '@templates-library/components/TemplateStudio/__tests__/stateMock'
@@ -115,6 +116,7 @@ describe('Test MonitoredTemplateCanvasWithRef', () => {
   test('should validate props for MonitoredServiceTemplate', async () => {
     const monitoredServiceTemplate = new MonitoredServiceTemplate()
     expect(monitoredServiceTemplate).toEqual({
+      allowedScopes: [Scope.PROJECT],
       color: 'teal700',
       defaultValues: {
         identifier: 'Template_name',
@@ -122,7 +124,8 @@ describe('Test MonitoredTemplateCanvasWithRef', () => {
         type: 'MonitoredService',
         versionLabel: ''
       },
-      name: 'Monitored Service Template',
+      isEnabled: true,
+      label: 'Monitored Service',
       type: 'MonitoredService'
     })
   })

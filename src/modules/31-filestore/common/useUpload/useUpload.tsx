@@ -39,7 +39,8 @@ const useUploadFile = (config: UploadFile): FileStorePopoverItem => {
     tempNodes,
     setTempNodes,
     updateTempNodes,
-    fileUsage = ''
+    fileUsage = '',
+    addDeletedNode
   } = useContext(FileStoreContext)
 
   const handleChange = (event: Event): void => {
@@ -83,20 +84,20 @@ const useUploadFile = (config: UploadFile): FileStorePopoverItem => {
               fileUsage: fileUsage as FileUsage
             }
             if (eventMethod === UPLOAD_EVENTS.REPLACE) {
-              updateCurrentNode({
+              const tempNode = {
                 ...node,
-                identifier: currentNode.identifier,
-                content: reader.result,
+                identifier: `${currentNode.parentIdentifier}_${uniqID.replace(/[^A-Z0-9]+/gi, '_')}`,
                 parentIdentifier: currentNode.parentIdentifier,
-                parentName: currentNode.parentName
-              })
-              if (tempNodes?.length) {
-                updateTempNodes({
-                  ...node,
-                  identifier: currentNode.identifier,
-                  parentIdentifier: currentNode.parentIdentifier
-                })
+                parentName: currentNode.parentName,
+                content: reader.result
               }
+              addDeletedNode(currentNode.identifier)
+
+              if (tempNodes?.length) {
+                updateTempNodes(tempNode, true)
+              }
+              updateCurrentNode(tempNode)
+
               return
             }
             if (currentNode?.type === FileStoreNodeTypes.FILE) {

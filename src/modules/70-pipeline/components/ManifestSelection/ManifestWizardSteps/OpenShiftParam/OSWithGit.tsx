@@ -42,7 +42,7 @@ import {
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
 import DragnDropPaths from '../../DragnDropPaths'
 
-import { getRepositoryName } from '../ManifestUtils'
+import { filePathWidth, getRepositoryName } from '../ManifestUtils'
 import templateCss from './OpenShiftParam.module.scss'
 import css from '../ManifestWizardSteps.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -277,21 +277,20 @@ function OpenShiftParamWithGit({
                   [css.folderRunTimeInput]: getMultiTypeFromValue(formik.values?.paths) === MultiTypeInputType.RUNTIME
                 })}
               >
-                <div className={templateCss.halfWidth}>
-                  <DragnDropPaths
-                    formik={formik}
-                    expressions={expressions}
-                    allowableTypes={allowableTypes}
-                    pathLabel={getString('pipelineSteps.paths')}
-                    fieldPath="paths"
-                    placeholder={getString('pipeline.manifestType.pathPlaceholder')}
-                    defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
-                  />
-                </div>
+                <DragnDropPaths
+                  formik={formik}
+                  expressions={expressions}
+                  allowableTypes={allowableTypes}
+                  pathLabel={getString('pipelineSteps.paths')}
+                  fieldPath="paths"
+                  placeholder={getString('pipeline.manifestType.pathPlaceholder')}
+                  defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+                  dragDropFieldWidth={filePathWidth}
+                />
                 {getMultiTypeFromValue(formik.values.paths) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
                     value={formik.values.paths}
-                    type={getString('list')}
+                    type={getString('string')}
                     variableName={'paths'}
                     showRequiredField={false}
                     showDefaultField={false}

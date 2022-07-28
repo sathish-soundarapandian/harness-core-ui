@@ -30,7 +30,7 @@ const getArtifactsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['
 }
 
 const SshServiceSpecEditable: React.FC<SshWinRmServiceInputFormProps> = ({
-  initialValues: { stageIndex = 0, setupModeType, deploymentType, isReadonlyServiceMode },
+  initialValues: { stageIndex = 0, setupModeType, deploymentType, isReadonlyServiceMode = false },
   factory,
   readonly
 }) => {
@@ -76,7 +76,12 @@ const SshServiceSpecEditable: React.FC<SshWinRmServiceInputFormProps> = ({
             >
               {getString('pipelineSteps.configFiles')}
             </div>
-            <ConfigFilesSelection isPropagating={isPropagating} deploymentType={selectedDeploymentType} />
+            <ConfigFilesSelection
+              isReadonlyServiceMode={isReadonlyServiceMode}
+              isPropagating={isPropagating}
+              deploymentType={selectedDeploymentType}
+              readonly={!!readonly}
+            />
           </Card>
         </>
       )}

@@ -33,7 +33,8 @@ import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import {
   DeployTabs,
   ExecutionType,
-  isNewServiceEnvEntity
+  isNewServiceEnvEntity,
+  isNewEnvInfraDef
 } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { useQueryParams } from '@common/hooks'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -100,6 +101,9 @@ export default function DeployStageSetupShell(): JSX.Element {
   const { stage: selectedStage } = getStageFromPipeline<DeploymentStageElementConfig>(defaultTo(selectedStageId, ''))
   const { checkErrorsForTab } = React.useContext(StageErrorContext)
   const gitOpsEnabled = selectedStage?.stage?.spec?.gitOpsEnabled
+  const isNewService = isNewServiceEnvEntity(NG_SVC_ENV_REDESIGN, selectedStage?.stage as DeploymentStageElementConfig)
+  const isNewEnvDef = isNewEnvInfraDef(NG_SVC_ENV_REDESIGN, selectedStage?.stage as DeploymentStageElementConfig)
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceUpdateStage = useCallback(
     debounce(
@@ -164,11 +168,7 @@ export default function DeployStageSetupShell(): JSX.Element {
   }, [selectedTabId])
 
   const handleTabChange = (nextTab: DeployTabs): void => {
-    if (
-      NG_SVC_ENV_REDESIGN &&
-      isEmpty(selectedStage?.stage?.spec?.infrastructure) &&
-      nextTab === DeployTabs.INFRASTRUCTURE
-    ) {
+    if (isNewEnvDef && nextTab === DeployTabs.INFRASTRUCTURE) {
       nextTab = DeployTabs.ENVIRONMENT
     }
     checkErrorsForTab(selectedTabId).then(_ => {
@@ -180,7 +180,7 @@ export default function DeployStageSetupShell(): JSX.Element {
   const selectedDeploymentType = serviceDefinitionType()
 
   const getStrategyType = (): GetExecutionStrategyYamlQueryParams['strategyType'] => {
-    if (isNewServiceEnvEntity(NG_SVC_ENV_REDESIGN, selectedStage as DeploymentStageElementConfig) && gitOpsEnabled) {
+    if (isNewService && gitOpsEnabled) {
       return ExecutionType.GITOPS
     } else if (selectedDeploymentType === ServiceDeploymentType.ServerlessAwsLambda) {
       return ExecutionType.BASIC
@@ -251,7 +251,8 @@ export default function DeployStageSetupShell(): JSX.Element {
       getCDStageValidationSchema(
         getString,
         selectedDeploymentType as GetExecutionStrategyYamlQueryParams['serviceDefinitionType'],
-        NG_SVC_ENV_REDESIGN,
+        isNewService,
+        isNewEnvDef,
         contextType
       ).validateSync(selectedStage?.stage, {
         abortEarly: false,
@@ -270,7 +271,7 @@ export default function DeployStageSetupShell(): JSX.Element {
       if (!isEmpty(response.name) || !isEmpty(response.identifier) || !isEmpty(response.variables)) {
         newIncompleteTabs[DeployTabs.OVERVIEW] = true
       }
-      if (!isEmpty(get(response.spec, 'serviceConfig'))) {
+      if ((isNewService && !isEmpty(get(response.spec, 'service'))) || !isEmpty(get(response.spec, 'serviceConfig'))) {
         newIncompleteTabs[DeployTabs.SERVICE] = true
       }
       if (!isEmpty(get(response.spec, 'environment'))) {
@@ -343,7 +344,9 @@ export default function DeployStageSetupShell(): JSX.Element {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(selectedStage)])
 
-  const originalStage = selectedStageId ? getStageFromPipeline(selectedStageId, originalPipeline).stage : undefined
+  const originalStage = selectedStageId
+    ? getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId, originalPipeline).stage
+    : undefined
   const stagePath = getStagePathFromPipeline(selectedStageId || '', 'pipeline.stages')
 
   const executionRef = React.useRef<ExecutionGraphRefObj | null>(null)
@@ -404,7 +407,7 @@ export default function DeployStageSetupShell(): JSX.Element {
             </span>
           }
           panel={
-            isNewServiceEnvEntity(NG_SVC_ENV_REDESIGN, selectedStage?.stage as DeploymentStageElementConfig) ? (
+            isNewService ? (
               <DeployServiceEntitySpecifications>{navBtns}</DeployServiceEntitySpecifications>
             ) : (
               <DeployServiceSpecifications setDefaultServiceSchema={setDefaultServiceSchema}>
@@ -414,12 +417,15 @@ export default function DeployStageSetupShell(): JSX.Element {
           }
           data-testid="service"
         />
-        {NG_SVC_ENV_REDESIGN && isEmpty(selectedStage?.stage?.spec?.infrastructure) && (
+        {isNewEnvDef && (
           <Tab
             id={DeployTabs.ENVIRONMENT}
             title={
               <span className={css.title} data-completed={!incompleteTabs[DeployTabs.ENVIRONMENT]}>
-                <Icon name={incompleteTabs[DeployTabs.ENVIRONMENT] ? 'environment' : iconNames.tick} size={16} />
+                <Icon
+                  name={incompleteTabs[DeployTabs.ENVIRONMENT] ? 'environments-outline' : iconNames.tick}
+                  size={16}
+                />
                 {getString('environment')}
               </span>
             }

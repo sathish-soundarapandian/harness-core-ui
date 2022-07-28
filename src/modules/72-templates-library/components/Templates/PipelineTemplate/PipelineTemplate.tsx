@@ -14,15 +14,8 @@ import { PipelineTemplateCanvasWrapperWithRef } from '@templates-library/compone
 
 export class PipelineTemplate extends Template<NGTemplateInfoConfig> {
   protected type = TemplateType.Pipeline
-  protected name = 'Pipeline Template'
+  protected label = 'Pipeline'
   protected color = Color.BLUE_700
-
-  protected defaultValues: NGTemplateInfoConfig = {
-    name: 'Template name',
-    identifier: 'Template_name',
-    versionLabel: '',
-    type: 'Pipeline'
-  }
 
   renderTemplateCanvas(props: TemplateProps<NGTemplateInfoConfig>): JSX.Element {
     return <PipelineTemplateCanvasWrapperWithRef ref={props.formikRef} />

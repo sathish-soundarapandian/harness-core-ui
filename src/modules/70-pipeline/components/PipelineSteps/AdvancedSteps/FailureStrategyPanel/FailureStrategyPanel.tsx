@@ -11,6 +11,8 @@ import { v4 as uuid } from 'uuid'
 import { defaultTo, flatMap, get, isEmpty, uniq } from 'lodash-es'
 import cx from 'classnames'
 
+import { Color } from '@harness/design-system'
+import { Text } from '@harness/uicore'
 import { String, useStrings } from 'framework/strings'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import type { StepMode as Modes } from '@pipeline/utils/stepUtils'
@@ -112,7 +114,12 @@ export default function FailureStrategyPanel(props: FailureStrategyPanelProps): 
 
   return (
     <div data-testid="failure-strategy-panel" className={css.main}>
-      <String className={css.helpText} stringID="pipeline.failureStrategies.helpText" />
+      <Text color={Color.GREY_700} font={{ size: 'small' }}>
+        <String stringID="pipeline.failureStrategies.helpText" />
+        <a rel="noreferrer" target="_blank" href={getString('pipeline.failureStrategies.learnMoreLink')}>
+          {getString('pipeline.createPipeline.learnMore')}
+        </a>
+      </Text>
       <div className={css.header}>
         <FieldArray name="failureStrategies">
           {({ push, remove }) => {

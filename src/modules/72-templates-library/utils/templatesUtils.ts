@@ -5,83 +5,47 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import type { TemplateSummaryResponse } from 'services/template-ng'
+import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
+import type { Scope } from '@common/interfaces/SecretsInterface'
 
 export enum TemplateType {
   Step = 'Step',
   Stage = 'Stage',
   Pipeline = 'Pipeline',
+  MonitoredService = 'MonitoredService',
   Service = 'Service',
   Infrastructure = 'Infrastructure',
   StepGroup = 'StepGroup',
   Execution = 'Execution',
-  MonitoredService = 'MonitoredService',
   SecretManager = 'SecretManager'
 }
 
+interface AllowedTemplate {
+  label: string
+  value: string
+  disabled: boolean
+}
+
 export const getAllowedTemplateTypes = (
-  getString: UseStringsReturn['getString'],
-  module?: string,
-  scriptTemplateEnabled?: boolean
+  scope: Scope,
+  featureFlagBasedTemplates?: { [key: string]: boolean }
 ): { label: string; value: string; disabled?: boolean }[] => {
-  const AllowedTemplateTypes = [
-    {
-      label: getString('step'),
-      value: TemplateType.Step,
-      disabled: false
-    },
-    {
-      label: getString('common.stage'),
-      value: TemplateType.Stage,
-      disabled: false
-    },
-    {
-      label: getString('common.pipeline'),
-      value: TemplateType.Pipeline,
-      disabled: false
-    },
-    {
-      label: getString('service'),
-      value: TemplateType.Service,
-      disabled: true
-    },
-    {
-      label: getString('infrastructureText'),
-      value: TemplateType.Infrastructure,
-      disabled: true
-    },
-    {
-      label: getString('stepGroup'),
-      value: TemplateType.StepGroup,
-      disabled: true
-    },
-    {
-      label: getString('executionText'),
-      value: TemplateType.Execution,
-      disabled: true
-    },
-    ...(scriptTemplateEnabled
-      ? [
-          {
-            label: getString('script'),
-            value: TemplateType.SecretManager,
-            disabled: !scriptTemplateEnabled
-          }
-        ]
-      : [])
-  ]
-  if (module === 'cv') {
-    return [
-      {
-        label: getString('connectors.cdng.monitoredService.label'),
-        value: TemplateType.MonitoredService,
-        disabled: false
-      }
-    ]
-  }
-  return AllowedTemplateTypes
+  const allowedTemplateTypes: AllowedTemplate[] = []
+  Object.keys(TemplateType).forEach(item => {
+    const template = templateFactory.getTemplate(item)
+    const allowedScopes = template?.getAllowedScopes()
+    if (allowedScopes && allowedScopes.includes(scope)) {
+      allowedTemplateTypes.push({
+        label: defaultTo(template?.getLabel(), ''),
+        value: item,
+        disabled: !template?.getIsEnabled() || featureFlagBasedTemplates?.[item] === false
+      })
+    }
+  })
+  return allowedTemplateTypes
 }
 
 export const getVersionLabelText = (template: TemplateSummaryResponse, getString: UseStringsReturn['getString']) => {

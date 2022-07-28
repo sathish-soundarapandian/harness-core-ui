@@ -19,6 +19,7 @@ declare const styles: {
   readonly hex: string
   readonly hexContainer: string
   readonly hover: string
+  readonly infraVisible: string
   readonly instanceCount: string
   readonly instanceTable: string
   readonly labelStyles: string

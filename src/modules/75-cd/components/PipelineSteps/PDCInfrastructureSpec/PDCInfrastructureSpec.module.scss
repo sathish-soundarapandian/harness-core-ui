@@ -45,6 +45,12 @@
 
 .simultaneousDeployment {
   display: inline-flex !important;
+  .Accordion--panel {
+    padding-bottom: 0;
+    .Accordion--details {
+      padding-bottom: 0;
+    }
+  }
 }
 
 .clusterInputWrapper {

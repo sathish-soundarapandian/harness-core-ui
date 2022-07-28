@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Card, Color, SelectOption, Text } from '@harness/uicore'
+import { Card, Color, FontVariation, SelectOption, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import {
   useGetHarnessServices,
@@ -38,7 +38,7 @@ export default function ServiceEnvironmentInputSet({
 
   return (
     <Card className={css.cardStyle}>
-      <Text font={'medium'} color={Color.BLACK} style={{ paddingBottom: spacingMedium }}>
+      <Text font={{ variation: FontVariation.CARD_TITLE }} color={Color.BLACK} style={{ paddingBottom: spacingMedium }}>
         {getString('cv.monitoredServices.serviceAndEnvironment')}
       </Text>
       {serviceValue !== undefined && (

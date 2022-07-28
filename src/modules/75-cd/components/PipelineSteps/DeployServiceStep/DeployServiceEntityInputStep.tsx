@@ -129,7 +129,7 @@ function DeployServiceEntityInputStep({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [initialValues.serviceRef]) // This dependency is added to update the template on switching from yaml to visual view and when input set is selected
 
   useEffect(() => {
     if (serviceInputsResponse?.data) {

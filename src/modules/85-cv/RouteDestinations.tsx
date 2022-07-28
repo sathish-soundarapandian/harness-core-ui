@@ -41,6 +41,7 @@ import { ErrorTracking } from '@et/ErrorTrackingApp'
 import { String } from 'framework/strings'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import ChildAppMounter from '../../microfrontends/ChildAppMounter'
 import CVTrialHomePage from './pages/home/CVTrialHomePage'
 import { editParams } from './utils/routeUtils'
@@ -333,6 +334,13 @@ export default (
       AccessControlRouteDestinations({
         moduleParams: cvModuleParams,
         sidebarProps: CVSideNavProps
+      })?.props.children
+    }
+
+    {
+      GovernanceRouteDestinations({
+        sidebarProps: CVSideNavProps,
+        pathProps: { ...accountPathProps, ...projectPathProps, ...cvModuleParams }
       })?.props.children
     }
   </>

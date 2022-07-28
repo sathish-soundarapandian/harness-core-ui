@@ -160,7 +160,7 @@ export function HarnessOption({
                     }}
                     items={[
                       {
-                        label: getString('pipeline.startupScript.plainText'),
+                        label: getString('pipeline.startupCommand.plainText'),
                         value: fileTypes.FILE_STORE
                       },
                       { label: getString('encrypted'), value: fileTypes.ENCRYPTED }

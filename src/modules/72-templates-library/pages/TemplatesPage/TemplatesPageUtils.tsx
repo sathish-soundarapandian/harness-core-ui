@@ -157,6 +157,8 @@ export const getIconForTemplate = (
     return 'script'
   } else if (templateTye === TemplateType.Pipeline) {
     return 'pipeline'
+  } else if (templateTye === TemplateType.MonitoredService) {
+    return 'cv-main'
   } else {
     const childType =
       (template as TemplateSummaryResponse)?.childType ||

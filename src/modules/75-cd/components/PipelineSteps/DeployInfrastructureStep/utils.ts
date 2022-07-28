@@ -6,7 +6,7 @@
  */
 
 import { FormikErrors, yupToFormErrors } from 'formik'
-import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
+import { defaultTo, get, isArray, isEmpty, isNil } from 'lodash-es'
 import * as Yup from 'yup'
 
 import {
@@ -267,16 +267,18 @@ export function processGitOpsEnvGroupInitialValues(
 }
 
 export function processGitOpsEnvGroupFormValues(data: DeployStageConfig, getString: UseStringsReturn['getString']) {
-  const environmentClusterMap: any = {}
-  ;(data.clusterRef as MultiSelectWithSubmenuOption[])?.forEach(cluster => {
-    if (cluster.value !== getString('all')) {
-      try {
-        environmentClusterMap[get(cluster, 'parentValue', '')].push(cluster.value)
-      } catch (e: any) {
-        environmentClusterMap[get(cluster, 'parentValue', '')] = [cluster.value]
+  const environmentClusterMap: Record<string, (string | number | symbol)[]> = {}
+  if (isArray(data.clusterRef)) {
+    data.clusterRef?.forEach(cluster => {
+      if (cluster.value !== getString('all')) {
+        try {
+          environmentClusterMap[get(cluster, 'parentValue', '')].push(cluster.value)
+        } catch (e: any) {
+          environmentClusterMap[get(cluster, 'parentValue', '')] = [cluster.value]
+        }
       }
-    }
-  })
+    })
+  }
 
   const allEnvironmentsSelected = (data.environmentInEnvGroupRef as SelectOption[])?.[0]?.value === getString('all')
 
@@ -292,7 +294,7 @@ export function processGitOpsEnvGroupFormValues(data: DeployStageConfig, getStri
           data.environmentInEnvGroupRef === RUNTIME_INPUT_VALUE
             ? RUNTIME_INPUT_VALUE
             : (data?.environmentInEnvGroupRef as SelectOption[])?.map(environmentInEnvGroup => {
-                const areClustersSelected = Boolean(environmentClusterMap[environmentInEnvGroup.value])
+                const areClustersSelected = Boolean(environmentClusterMap[environmentInEnvGroup.value as string])
                 return {
                   environmentRef: environmentInEnvGroup?.value,
                   deployToAll: !areClustersSelected,
@@ -300,7 +302,7 @@ export function processGitOpsEnvGroupFormValues(data: DeployStageConfig, getStri
                     gitOpsClusters:
                       data.clusterRef === RUNTIME_INPUT_VALUE
                         ? RUNTIME_INPUT_VALUE
-                        : environmentClusterMap[environmentInEnvGroup.value]?.map((cluster: any) => ({
+                        : environmentClusterMap[environmentInEnvGroup.value as string]?.map((cluster: any) => ({
                             identifier: cluster
                           }))
                   })

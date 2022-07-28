@@ -39,7 +39,7 @@ import {
   ManifestStoreMap
 } from '../../Manifesthelper'
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
-import { getRepositoryName } from '../ManifestUtils'
+import { filePathWidth, getRepositoryName } from '../ManifestUtils'
 import DragnDropPaths from '../../DragnDropPaths'
 import css from '../ManifestWizardSteps.module.scss'
 import templateCss from './OSTemplateWithGit.module.scss'
@@ -315,7 +315,12 @@ function OpenShiftTemplateWithGit({
                   )}
                 </div>
               </Layout.Horizontal>
-              <div className={templateCss.halfWidth}>
+              <div
+                className={cx({
+                  [templateCss.runtimeInput]:
+                    getMultiTypeFromValue(formik.values?.paramsPaths) === MultiTypeInputType.RUNTIME
+                })}
+              >
                 <DragnDropPaths
                   formik={formik}
                   expressions={expressions}
@@ -324,7 +329,20 @@ function OpenShiftTemplateWithGit({
                   pathLabel={getString('pipeline.manifestType.paramsYamlPath')}
                   placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
                   defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+                  dragDropFieldWidth={filePathWidth}
                 />
+                {getMultiTypeFromValue(formik.values.paramsPaths) === MultiTypeInputType.RUNTIME && (
+                  <ConfigureOptions
+                    value={formik.values.paramsPaths}
+                    type={getString('string')}
+                    variableName={'paramsPaths'}
+                    showRequiredField={false}
+                    showDefaultField={false}
+                    showAdvanced={true}
+                    onChange={val => formik?.setFieldValue('paramsPaths', val)}
+                    isReadonly={isReadonly}
+                  />
+                )}
               </div>
               <Accordion
                 activeId={isActiveAdvancedStep ? getString('advancedTitle') : ''}

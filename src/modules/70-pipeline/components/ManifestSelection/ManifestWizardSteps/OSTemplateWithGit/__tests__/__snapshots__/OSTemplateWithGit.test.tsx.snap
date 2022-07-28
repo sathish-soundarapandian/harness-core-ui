@@ -276,7 +276,7 @@ exports[`Open shift template with git tests expand advanced section 1`] = `
             </div>
           </div>
           <div
-            class="halfWidth"
+            class=""
           >
             <div
               data-rbd-droppable-context-id="1"
@@ -828,7 +828,7 @@ exports[`Open shift template with git tests renders correctly in edit case 1`] =
             </div>
           </div>
           <div
-            class="halfWidth"
+            class=""
           >
             <div
               data-rbd-droppable-context-id="2"
@@ -1313,7 +1313,7 @@ exports[`Open shift template with git tests renders without crashing 1`] = `
             </div>
           </div>
           <div
-            class="halfWidth"
+            class=""
           >
             <div
               data-rbd-droppable-context-id="0"

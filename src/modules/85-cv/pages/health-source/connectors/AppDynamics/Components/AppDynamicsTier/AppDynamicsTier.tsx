@@ -12,11 +12,12 @@ import {
   MultiTypeInputType,
   getMultiTypeFromValue,
   MultiTypeInput,
-  Label,
+  Text,
   FormError,
   RUNTIME_INPUT_VALUE,
   AllowedTypes
 } from '@wings-software/uicore'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { getPlaceholder, getTypeOfInput, setAppDynamicsTier } from '../../AppDHealthSource.utils'
 import { getInputGroupProps } from '../../../MonitoredServiceConnector.utils'
@@ -60,13 +61,11 @@ export default function AppDynamicsTier({
     getTypeOfInput(formikValues?.appDTier || formikValues?.appdApplication)
   )
 
-  // React.useEffect(() => {
-  //   setMultitypeInputValue(getTypeOfInput(formikValues?.appdApplication))
-  // }, [formikValues?.appdApplication])
-
   return isTemplate ? (
     <>
-      <Label>{getString('cv.healthSource.connectors.AppDynamics.trierLabel')}</Label>
+      <Text color={Color.BLACK} margin={{ bottom: 'small' }}>
+        {getString('cv.healthSource.connectors.AppDynamics.trierLabel')}
+      </Text>
       <MultiTypeInput
         key={multitypeInputValue + formikValues?.appdApplication}
         name={'appDTier'}

@@ -587,11 +587,17 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
     ]
   )
 
-  return executionView ? (
-    child()
-  ) : isGitSimplificationEnabled && !loadingInputSet && inputSetError ? (
-    <NoEntityFound identifier={inputSetIdentifier} entityType={'inputSet'} />
-  ) : (
+  if (executionView) {
+    return child()
+  }
+
+  if (isGitSimplificationEnabled && !loadingInputSet && inputSetError) {
+    return (
+      <NoEntityFound identifier={inputSetIdentifier} entityType={'inputSet'} errorObj={inputSetError.data as Error} />
+    )
+  }
+
+  return (
     <InputSetFormWrapper
       loading={
         loadingInputSet ||

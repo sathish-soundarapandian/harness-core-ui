@@ -41,7 +41,7 @@ describe('StartupScriptListView', () => {
   })
 
   test(`should delete correctly`, async () => {
-    propListView.isPropagating = true
+    propListView.isPropagating = false
     const { container } = render(
       <TestWrapper>
         <StartupScriptListView {...propListView} />
@@ -76,13 +76,13 @@ describe('StartupScriptListView', () => {
     fireEvent.click(closeButton)
 
     //should be closed
-    waitFor(() => expect(getByText('pipeline.startupScript.fileSource')).not.toBeTruthy())
+    waitFor(() => expect(getByText('pipeline.startupCommand.fileSource')).not.toBeTruthy())
   })
 
   test(`renders empty`, () => {
     const { container } = render(
       <TestWrapper>
-        <StartupScriptListView {...propListView} startupScript={{} as any} />
+        <StartupScriptListView {...propListView} startupCommand={{} as any} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()

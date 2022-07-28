@@ -11,7 +11,8 @@ import {
   isExecutionComplete,
   isExecutionFailed,
   isExecutionRunningLike,
-  isExecutionSuccess
+  isExecutionSuccess,
+  isExecutionWaitingForIntervention
 } from '@pipeline/utils/statusHelpers'
 
 import { getDefaultReducerState } from './utils'
@@ -57,7 +58,7 @@ export function createSections(state: State, action: Action<ActionType.CreateSec
     executableResponse.async ||
     executableResponse.child
 
-  // eslint-disable-next-line prefer-const
+  // eslint-disable-next-line prefer-const, @typescript-eslint/no-explicit-any
   let { units = [], logKeys = [] } = defaultTo(task, {} as any)
   const progressMap = new Map<string, ProgressMapValue>()
   const isStepComplete = isExecutionComplete(node.status)
@@ -95,6 +96,7 @@ export function createSections(state: State, action: Action<ActionType.CreateSec
       const currentStatus = state.dataMap[key]?.status
       const manuallyToggled = !!state.dataMap[key]?.manuallyToggled
       const isRunning = isExecutionRunningLike(unitStatus)
+      const isIntereventionWaiting = isExecutionWaitingForIntervention(unitStatus)
 
       acc[key] = {
         title: unit,
@@ -105,7 +107,7 @@ export function createSections(state: State, action: Action<ActionType.CreateSec
         unitStatus,
         startTime: parseToTime(unitProgress?.startTime),
         endTime: parseToTime(unitProgress?.endTime),
-        dataSource: isRunning ? 'stream' : 'blob'
+        dataSource: isRunning && !isIntereventionWaiting ? 'stream' : 'blob'
       }
 
       return acc

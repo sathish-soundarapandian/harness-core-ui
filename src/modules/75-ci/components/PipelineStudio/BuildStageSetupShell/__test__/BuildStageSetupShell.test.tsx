@@ -11,7 +11,7 @@ import type { IconName } from '@blueprintjs/core'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { UseGetReturnData } from '@common/utils/testUtils'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import type { ResponseConnectorResponse, ResponseDelegateStatus, ResponseSetupStatus } from 'services/cd-ng'
+import type { ResponseConnectorResponse, ResponseSetupStatus } from 'services/cd-ng'
 import type { PipelineContextInterface } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
@@ -135,13 +135,6 @@ jest.mock('services/cd-ng', () => ({
       }
     }),
   listSecretsV2Promise: jest.fn().mockImplementation(() => Promise.resolve(secretMockdata)),
-  useGetDelegateInstallStatus: jest.fn().mockImplementation(() => ({
-    refetch: jest.fn(),
-    data: {
-      status: 'SUCCESS',
-      data: 'SUCCESS'
-    } as ResponseDelegateStatus
-  })),
   useProvisionResourcesForCI: jest.fn().mockImplementation(() => {
     return {
       mutate: () =>
@@ -149,6 +142,23 @@ jest.mock('services/cd-ng', () => ({
           data: 'SUCCESS',
           status: 'SUCCESS'
         } as ResponseSetupStatus)
+    }
+  })
+}))
+
+const mockGetCallFunction = jest.fn()
+jest.mock('services/portal', () => ({
+  useGetDelegateGroupByIdentifier: jest.fn().mockImplementation(args => {
+    mockGetCallFunction(args)
+    return {
+      data: {
+        resource: {
+          activelyConnected: false
+        }
+      },
+      refetch: jest.fn(),
+      error: null,
+      loading: false
     }
   })
 }))

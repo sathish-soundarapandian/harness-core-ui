@@ -6,7 +6,8 @@
  */
 
 .serviceEntity {
-  overflow: hidden;
+  overflow: hidden auto;
+  height: 80vh;
   .optionBtns {
     display: flex;
     margin-top: var(--spacing-medium);

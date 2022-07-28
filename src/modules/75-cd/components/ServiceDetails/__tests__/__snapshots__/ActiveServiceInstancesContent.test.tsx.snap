@@ -120,9 +120,6 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
             <div
               class="Layout--horizontal StyledProps--main"
             />
-            <div
-              class="Layout--horizontal StyledProps--main"
-            />
           </div>
           <div
             class="Layout--horizontal StyledProps--main StyledProps--padding-top-medium"
@@ -532,9 +529,6 @@ exports[`ActiveServiceInstancesContent should render error 1`] = `
             <div
               class="Layout--horizontal StyledProps--main"
             />
-            <div
-              class="Layout--horizontal StyledProps--main"
-            />
           </div>
           <div
             class="StyledProps--font StyledProps--main"
@@ -710,9 +704,6 @@ exports[`ActiveServiceInstancesContent should render loading 1`] = `
                 </p>
               </div>
             </div>
-            <div
-              class="Layout--horizontal StyledProps--main"
-            />
             <div
               class="Layout--horizontal StyledProps--main"
             />
@@ -922,9 +913,6 @@ exports[`ActiveServiceInstancesContent should render no data 1`] = `
                 </p>
               </div>
             </div>
-            <div
-              class="Layout--horizontal StyledProps--main"
-            />
             <div
               class="Layout--horizontal StyledProps--main"
             />
