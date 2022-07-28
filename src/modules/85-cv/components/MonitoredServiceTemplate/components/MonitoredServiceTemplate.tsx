@@ -8,7 +8,7 @@
 import React from 'react'
 import { Color } from '@harness/design-system'
 import { Template, TemplateProps } from '@templates-library/components/AbstractTemplate/Template'
-import { TemplateType } from '@templates-library/utils/templatesUtils'
+import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
 import type { NGTemplateInfoConfig } from 'services/template-ng'
 import type { TemplateInputsProps } from '@templates-library/components/TemplateInputs/TemplateInputs'
 import MonitoredServiceInputSetsTemplate from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate'
@@ -20,6 +20,7 @@ export class MonitoredServiceTemplate extends Template<NGTemplateInfoConfig> {
   protected label = 'Monitored Service'
   protected color = Color.TEAL_700
   protected allowedScopes = [Scope.PROJECT]
+  protected allowedUsage = [TemplateUsage.COPY]
 
   protected defaultValues: NGTemplateInfoConfig = {
     name: 'Template name',

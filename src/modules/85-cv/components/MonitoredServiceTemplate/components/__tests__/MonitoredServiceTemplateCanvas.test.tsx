@@ -117,6 +117,7 @@ describe('Test MonitoredTemplateCanvasWithRef', () => {
     const monitoredServiceTemplate = new MonitoredServiceTemplate()
     expect(monitoredServiceTemplate).toEqual({
       allowedScopes: [Scope.PROJECT],
+      allowedUsage: ['Copy'],
       color: 'teal700',
       defaultValues: {
         identifier: 'Template_name',

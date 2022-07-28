@@ -11,6 +11,11 @@ import type { TemplateSummaryResponse } from 'services/template-ng'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 
+export enum TemplateUsage {
+  USE = 'Use',
+  COPY = 'Copy'
+}
+
 export enum TemplateType {
   Step = 'Step',
   Stage = 'Stage',

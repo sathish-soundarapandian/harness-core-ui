@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { Color } from '@harness/design-system'
-import type { TemplateType } from '@templates-library/utils/templatesUtils'
+import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { TemplateInputsProps } from '../TemplateInputs/TemplateInputs'
@@ -27,6 +27,7 @@ export abstract class Template<T> implements TemplateInputSet {
   protected abstract color: Color
   protected isEnabled = true
   protected allowedScopes = [Scope.PROJECT, Scope.ORG, Scope.ACCOUNT]
+  protected allowedUsage = [TemplateUsage.USE, TemplateUsage.COPY]
 
   getType(): TemplateType {
     return this.type
@@ -46,6 +47,10 @@ export abstract class Template<T> implements TemplateInputSet {
 
   getColor(): Color {
     return this.color
+  }
+
+  getAllowedUsage(): TemplateUsage[] {
+    return this.allowedUsage
   }
 
   abstract renderTemplateCanvas(props: TemplateProps<T>): JSX.Element

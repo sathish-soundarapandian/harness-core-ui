@@ -13,6 +13,7 @@ import type { TemplateSummaryResponse } from 'services/template-ng'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/StagesCollection'
 import type { NGTemplateInfoConfigWithGitDetails } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
+import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 
 export const templateColorStyleMap: { [keyof in TemplateType]: React.CSSProperties } = {
   [TemplateType.Step]: {
@@ -143,7 +144,7 @@ export const getTypeForTemplate = (
     case TemplateType.Stage:
       return stagesCollection.getStageAttributes(childType, getString)?.name
     case TemplateType.MonitoredService:
-      return getString('cv.monitoredServices.heading')
+      return templateFactory.getTemplateLabel(TemplateType.MonitoredService)
     default:
       return undefined
   }
