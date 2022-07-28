@@ -36,7 +36,7 @@ export default function ServiceEnvironmentInputSet({
   const { environmentOptions, setEnvironmentOptions } = useGetHarnessEnvironments()
   const environmentRefValue = environmentOptions?.find(item => item?.value === environmentValue)
 
-  return (
+  return serviceValue !== undefined || environmentValue !== undefined ? (
     <Card className={css.cardStyle}>
       <Text font={{ variation: FontVariation.CARD_TITLE }} color={Color.BLACK} style={{ paddingBottom: spacingMedium }}>
         {getString('cv.monitoredServices.serviceAndEnvironment')}
@@ -89,5 +89,7 @@ export default function ServiceEnvironmentInputSet({
         />
       )}
     </Card>
+  ) : (
+    <></>
   )
 }

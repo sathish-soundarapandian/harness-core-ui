@@ -28,6 +28,7 @@ import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useGetTemplateInputSetYaml } from 'services/template-ng'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { useSaveMonitoredServiceFromYaml } from 'services/cv'
+import { TemplateType } from '@templates-library/utils/templatesUtils'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
@@ -146,7 +147,7 @@ export default function MonitoredServiceInputSetsTemplate({
   }
 
   const onUseTemplate = async (): Promise<void> => {
-    const { template } = await getTemplate({ templateType: 'MonitoredService' })
+    const { template } = await getTemplate({ templateType: TemplateType.MonitoredService })
     const {
       identifier: selectedTemplateIdentifier = '',
       versionLabel: selectedTemplateVersionLabel = '',
@@ -214,40 +215,41 @@ export default function MonitoredServiceInputSetsTemplate({
       >
         {formik => {
           return (
-            <>
-              <Layout.Vertical>
+            <Layout.Vertical>
+              {!isReadOnlyInputSet && (
                 <TemplateBar
+                  className={css.cardStyle}
                   templateLinkConfig={{
-                    templateRef: templateRefData.identifier as string,
-                    versionLabel: templateRefData.versionLabel
+                    templateRef: templateRefData?.identifier,
+                    versionLabel: templateRefData?.versionLabel
                   }}
                   onOpenTemplateSelector={onUseTemplate}
                 />
-                <ServiceEnvironmentInputSet
-                  serviceValue={formik.values.serviceRef}
-                  environmentValue={formik.values.environmentRef}
-                  onChange={formik.setFieldValue}
-                  isReadOnlyInputSet={isReadOnlyInputSet}
-                />
-                <HealthSourceInputset
-                  templateRefData={templateRefData}
-                  isReadOnlyInputSet={isReadOnlyInputSet}
-                  healthSourcesWithRuntimeList={defaultTo(healthSourcesWithRuntimeList, [])}
-                />
-                <MonitoredServiceInputsetVariables monitoredServiceVariables={monitoredServiceInputSet?.variables} />
-                {!isReadOnlyInputSet && (
-                  <Button
-                    disabled={showLoading}
-                    loading={showLoading}
-                    className={css.cardStyle}
-                    variation={ButtonVariation.PRIMARY}
-                    onClick={formik.submitForm}
-                  >
-                    {getString('submit')}
-                  </Button>
-                )}
-              </Layout.Vertical>
-            </>
+              )}
+              <ServiceEnvironmentInputSet
+                serviceValue={formik.values.serviceRef}
+                environmentValue={formik.values.environmentRef}
+                onChange={formik.setFieldValue}
+                isReadOnlyInputSet={isReadOnlyInputSet}
+              />
+              <HealthSourceInputset
+                templateRefData={templateRefData}
+                isReadOnlyInputSet={isReadOnlyInputSet}
+                healthSourcesWithRuntimeList={defaultTo(healthSourcesWithRuntimeList, [])}
+              />
+              <MonitoredServiceInputsetVariables monitoredServiceVariables={monitoredServiceInputSet?.variables} />
+              {!isReadOnlyInputSet && (
+                <Button
+                  disabled={showLoading}
+                  loading={showLoading}
+                  className={css.cardStyle}
+                  variation={ButtonVariation.PRIMARY}
+                  onClick={formik.submitForm}
+                >
+                  {getString('submit')}
+                </Button>
+              )}
+            </Layout.Vertical>
           )
         }}
       </Formik>

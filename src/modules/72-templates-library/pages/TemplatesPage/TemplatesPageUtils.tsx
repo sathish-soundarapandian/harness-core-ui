@@ -142,6 +142,8 @@ export const getTypeForTemplate = (
       return factory.getStepName(childType)
     case TemplateType.Stage:
       return stagesCollection.getStageAttributes(childType, getString)?.name
+    case TemplateType.MonitoredService:
+      return getString('cv.monitoredServices.heading')
     default:
       return undefined
   }
