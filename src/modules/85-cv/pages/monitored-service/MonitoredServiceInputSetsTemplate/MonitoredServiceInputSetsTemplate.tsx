@@ -21,13 +21,15 @@ import {
   useToaster
 } from '@harness/uicore'
 import routes from '@common/RouteDefinitions'
-import { useQueryParams } from '@common/hooks'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useGetTemplateInputSetYaml } from 'services/template-ng'
+import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { useSaveMonitoredServiceFromYaml } from 'services/cv'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
+import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import DetailsBreadcrumb from '@cv/pages/monitored-service/views/DetailsBreadcrumb'
 import ServiceEnvironmentInputSet from './components/ServiceEnvironmentInputSet/ServiceEnvironmentInputSet'
@@ -46,6 +48,8 @@ export default function MonitoredServiceInputSetsTemplate({
   templateData?: TemplateDataInterface
 }): JSX.Element {
   const { templateRef } = useQueryParams<{ templateRef?: string }>()
+  const { updateQueryParams } = useUpdateQueryParams()
+  const { getTemplate } = useTemplateSelector()
   const isReadOnlyInputSet = Boolean(templateData)
   const templateRefData: TemplateDataInterface = isReadOnlyInputSet ? templateData : JSON.parse(templateRef || '{}')
   const { getString } = useStrings()
@@ -141,6 +145,29 @@ export default function MonitoredServiceInputSetsTemplate({
       })
   }
 
+  const onUseTemplate = async (): Promise<void> => {
+    const { template } = await getTemplate({ templateType: 'MonitoredService' })
+    const {
+      identifier = '',
+      accountId: tempAccountId = '',
+      orgIdentifier: tempOrgIdentifier = '',
+      projectIdentifier: tempProjectIdentifier = '',
+      versionLabel = ''
+    } = template || {}
+    const paramValue = {
+      identifier,
+      accountId: tempAccountId,
+      orgIdentifier: tempOrgIdentifier,
+      projectIdentifier: tempProjectIdentifier,
+      versionLabel
+    }
+    if (versionLabel && identifier) {
+      updateQueryParams({
+        templateRef: JSON.stringify(paramValue)
+      })
+    }
+  }
+
   let content = <></>
   const healthSourcesWithRuntimeList = monitoredServiceInputSet?.sources?.healthSources?.map(
     healthSource => healthSource.identifier as string
@@ -190,6 +217,14 @@ export default function MonitoredServiceInputSetsTemplate({
           return (
             <>
               <Layout.Vertical>
+                <TemplateBar
+                  templateLinkConfig={{
+                    templateRef: templateRefData.identifier as string,
+                    versionLabel: templateRefData.versionLabel
+                  }}
+                  onOpenTemplateSelector={onUseTemplate}
+                  onRemoveTemplate={null as any}
+                />
                 <ServiceEnvironmentInputSet
                   serviceValue={formik.values.serviceRef}
                   environmentValue={formik.values.environmentRef}
