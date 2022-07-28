@@ -148,22 +148,21 @@ export default function MonitoredServiceInputSetsTemplate({
   const onUseTemplate = async (): Promise<void> => {
     const { template } = await getTemplate({ templateType: 'MonitoredService' })
     const {
-      identifier = '',
-      accountId: tempAccountId = '',
-      orgIdentifier: tempOrgIdentifier = '',
-      projectIdentifier: tempProjectIdentifier = '',
-      versionLabel = ''
-    } = template || {}
-    const paramValue = {
-      identifier,
-      accountId: tempAccountId,
-      orgIdentifier: tempOrgIdentifier,
-      projectIdentifier: tempProjectIdentifier,
-      versionLabel
-    }
-    if (versionLabel && identifier) {
+      identifier: selectedTemplateIdentifier = '',
+      versionLabel: selectedTemplateVersionLabel = '',
+      accountId: selectedTemplateAccountId = '',
+      orgIdentifier: selectedTemplateOrgIdentifier = '',
+      projectIdentifier: selectedTemplateProjectIdentifier = ''
+    } = template
+    if (selectedTemplateVersionLabel && selectedTemplateIdentifier) {
       updateQueryParams({
-        templateRef: JSON.stringify(paramValue)
+        templateRef: JSON.stringify({
+          selectedTemplateIdentifier,
+          selectedTemplateVersionLabel,
+          selectedTemplateAccountId,
+          selectedTemplateOrgIdentifier,
+          selectedTemplateProjectIdentifier
+        })
       })
     }
   }
