@@ -6,17 +6,27 @@
  */
 
 import React, { useState } from 'react'
-import { Container, PageHeader } from '@wings-software/uicore'
+import { Container, PageHeader, Dialog } from '@wings-software/uicore'
 import { useParams, useHistory } from 'react-router-dom'
 import { camelCase } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
+import type { IDialogProps } from '@blueprintjs/core'
 import moment from 'moment'
+import { useModalHook } from '@harness/use-modal'
 import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useMutateAsGet, useQueryParams } from '@common/hooks'
+import type { QueryParams } from '@pipeline/pages/execution-list/types'
+
+import {
+  ExecutionListFilterContextProvider,
+  processQueryParams
+} from '@pipeline/pages/execution-list/ExecutionListFilterContext/ExecutionListFilterContext'
 import type { Failure } from 'services/cd-ng'
 import { BuildActiveInfo, BuildFailureInfo, CIWebhookInfoDTO, useGetBuilds, useGetRepositoryBuild } from 'services/ci'
 import { useStrings } from 'framework/strings'
+import { OverviewExecutionListEmpty } from '@pipeline/pages/execution-list/ExecutionListEmpty/OverviewExecutionListEmpty'
 import {
   startOfDay,
   TimeRangeSelector,
@@ -26,13 +36,51 @@ import CIDashboardSummaryCards from '@pipeline/components/Dashboards/CIDashboard
 import CardRailView from '@pipeline/components/Dashboards/CardRailView/CardRailView'
 import BuildExecutionsChart from '@pipeline/components/Dashboards/BuildExecutionsChart/BuildExecutionsChart'
 import RepositoryCard from '@pipeline/components/Dashboards/BuildCards/RepositoryCard'
+import PipelineModalListView from '@pipeline/components/PipelineModalListView/PipelineModalListView'
 import { ActiveStatus, FailedStatus, useErrorHandler, useRefetchCall } from '@pipeline/components/Dashboards/shared'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import ExecutionCard from '@pipeline/components/ExecutionCard/ExecutionCard'
 import { CardVariant } from '@pipeline/utils/constants'
-import type { ExecutionTriggerInfo, PipelineExecutionSummary } from 'services/pipeline-ng'
+import { ExecutionTriggerInfo, PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipeline-ng'
 import { TitleWithToolTipId } from '@common/components/Title/TitleWithToolTipId'
+import bgImage from './images/CI-OverviewEmptyState.svg'
 import styles from './CIDashboardPage.module.scss'
+
+const NoDataOverviewPage = (): JSX.Element => {
+  const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
+
+  const runPipelineDialogProps: IDialogProps = {
+    isOpen: true,
+    enforceFocus: false,
+    style: { minWidth: 800, minHeight: 280, backgroundColor: 'var(--grey-50)', padding: 0 }
+  }
+
+  const [openModal, hideModal] = useModalHook(
+    () => (
+      <Dialog {...runPipelineDialogProps}>
+        <PipelineModalListView onClose={hideModal} />
+      </Dialog>
+    ),
+    [projectIdentifier, orgIdentifier, accountId]
+  )
+  return (
+    <div
+      style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundSize: 'cover',
+        height: '100%',
+        width: 'auto',
+        opacity: 0.5,
+        backdropFilter: 'blur(1px)',
+        margin: 16
+      }}
+    >
+      <ExecutionListFilterContextProvider>
+        <OverviewExecutionListEmpty onRunPipeline={openModal} />
+      </ExecutionListFilterContextProvider>
+    </div>
+  )
+}
 
 function buildInfoToExecutionSummary(buildInfo: BuildActiveInfo | BuildFailureInfo): PipelineExecutionSummary {
   const ciExecutionInfoDTO: CIWebhookInfoDTO = {
@@ -65,6 +113,8 @@ export const CIDashboardPage: React.FC = () => {
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const history = useHistory()
   const { getString } = useStrings()
+  const queryParams = useQueryParams<QueryParams>({ processQueryParams })
+
   const [timeRange, setTimeRange] = useState<TimeRangeSelectorProps>({
     range: [startOfDay(moment().subtract(1, 'month').add(1, 'day')), startOfDay(moment())],
     label: getString('common.duration.month')
@@ -75,6 +125,22 @@ export const CIDashboardPage: React.FC = () => {
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier
+    }
+  })
+
+  // this for detecting whether the project have any pipelines or if pipelines then any execution or not
+  const { data: pipelineExecution, loading: pipelineLoading } = useMutateAsGet(useGetListOfExecutions, {
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier
+    },
+    queryParamStringifyOptions: {
+      arrayFormat: 'repeat'
+    },
+    body: {
+      ...queryParams.filters,
+      filterType: 'PipelineExecution'
     }
   })
 
@@ -96,6 +162,8 @@ export const CIDashboardPage: React.FC = () => {
   const refetchingBuilds = useRefetchCall(refetch, loading)
   const refetchingRepos = useRefetchCall(refetchRepos, loadingRepositories)
 
+  const pipelineExecutionSummary = pipelineExecution?.data || {}
+
   useErrorHandler(error as GetDataError<Failure | Error> | null, undefined, 'ci.get.build.error')
   useErrorHandler(repoError as GetDataError<Failure | Error> | null, undefined, 'ci.get.repo.error')
 
@@ -112,72 +180,76 @@ export const CIDashboardPage: React.FC = () => {
       />
       <Page.Body
         className={styles.content}
-        loading={loading && !refetchingBuilds && loadingRepositories && !refetchingRepos}
+        loading={(loading && !refetchingBuilds && loadingRepositories && !refetchingRepos) || pipelineLoading}
       >
-        <Container className={styles.page} padding="large">
-          <CIDashboardSummaryCards timeRange={timeRange} />
-          <Container className={styles.executionsWrapper}>
-            <BuildExecutionsChart isCIPage={true} timeRange={timeRange} />
+        {!pipelineExecutionSummary?.content?.length ? (
+          <NoDataOverviewPage />
+        ) : (
+          <Container className={styles.page} padding="large">
+            <CIDashboardSummaryCards timeRange={timeRange} />
+            <Container className={styles.executionsWrapper}>
+              <BuildExecutionsChart isCIPage={true} timeRange={timeRange} />
+            </Container>
+            <CardRailView contentType="REPOSITORY" isCIPage={true} isLoading={loadingRepositories && !refetchingRepos}>
+              {repositoriesData?.data?.repositoryInfo?.map((repo, index) => (
+                <RepositoryCard
+                  key={index}
+                  title={repo.name!}
+                  message={repo?.lastRepository?.commit}
+                  lastBuildStatus={repo?.lastRepository?.status}
+                  startTime={repo?.lastRepository?.startTime}
+                  endTime={repo?.lastRepository?.endTime}
+                  username={(repo?.lastRepository as any)?.author?.name}
+                  avatarUrl={(repo?.lastRepository as any)?.author?.url}
+                  count={repo.buildCount!}
+                  successRate={repo.percentSuccess!}
+                  successRateDiff={repo.successRate!}
+                  countList={repo.countList}
+                />
+              ))}
+            </CardRailView>
+            <CardRailView
+              contentType="FAILED_BUILD"
+              isLoading={loading && !refetchingBuilds}
+              onShowAll={() =>
+                history.push(
+                  routes.toDeployments({ projectIdentifier, orgIdentifier, accountId, module: 'ci' }) +
+                    `?filters=${JSON.stringify({ status: Object.keys(FailedStatus) })}`
+                )
+              }
+            >
+              {data?.data?.failed?.map((build, index) => (
+                <ExecutionCard
+                  key={index}
+                  variant={CardVariant.Minimal}
+                  pipelineExecution={buildInfoToExecutionSummary(build)}
+                  staticCard={true}
+                  // staticCard={!build?.planExecutionId} // Enable when Backend supports re-routing
+                />
+              ))}
+            </CardRailView>
+            <CardRailView
+              contentType="ACTIVE_BUILD"
+              isLoading={loading && !refetchingBuilds}
+              onShowAll={() =>
+                history.push(
+                  routes.toDeployments({ projectIdentifier, orgIdentifier, accountId, module: 'ci' }) +
+                    `?filters=${JSON.stringify({ status: Object.keys(ActiveStatus) })}`
+                )
+              }
+            >
+              {data?.data?.active?.map((build, index) => (
+                <ExecutionCard
+                  key={index}
+                  variant={CardVariant.Minimal}
+                  pipelineExecution={buildInfoToExecutionSummary(build)}
+                  staticCard={true}
+                  // staticCard={!build?.planExecutionId} // Enable when Backend supports re-routing
+                />
+              ))}
+            </CardRailView>
           </Container>
-          <CardRailView contentType="REPOSITORY" isCIPage={true} isLoading={loadingRepositories && !refetchingRepos}>
-            {repositoriesData?.data?.repositoryInfo?.map((repo, index) => (
-              <RepositoryCard
-                key={index}
-                title={repo.name!}
-                message={repo?.lastRepository?.commit}
-                lastBuildStatus={repo?.lastRepository?.status}
-                startTime={repo?.lastRepository?.startTime}
-                endTime={repo?.lastRepository?.endTime}
-                username={(repo?.lastRepository as any)?.author?.name}
-                avatarUrl={(repo?.lastRepository as any)?.author?.url}
-                count={repo.buildCount!}
-                successRate={repo.percentSuccess!}
-                successRateDiff={repo.successRate!}
-                countList={repo.countList}
-              />
-            ))}
-          </CardRailView>
-          <CardRailView
-            contentType="FAILED_BUILD"
-            isLoading={loading && !refetchingBuilds}
-            onShowAll={() =>
-              history.push(
-                routes.toDeployments({ projectIdentifier, orgIdentifier, accountId, module: 'ci' }) +
-                  `?filters=${JSON.stringify({ status: Object.keys(FailedStatus) })}`
-              )
-            }
-          >
-            {data?.data?.failed?.map((build, index) => (
-              <ExecutionCard
-                key={index}
-                variant={CardVariant.Minimal}
-                pipelineExecution={buildInfoToExecutionSummary(build)}
-                staticCard={true}
-                // staticCard={!build?.planExecutionId} // Enable when Backend supports re-routing
-              />
-            ))}
-          </CardRailView>
-          <CardRailView
-            contentType="ACTIVE_BUILD"
-            isLoading={loading && !refetchingBuilds}
-            onShowAll={() =>
-              history.push(
-                routes.toDeployments({ projectIdentifier, orgIdentifier, accountId, module: 'ci' }) +
-                  `?filters=${JSON.stringify({ status: Object.keys(ActiveStatus) })}`
-              )
-            }
-          >
-            {data?.data?.active?.map((build, index) => (
-              <ExecutionCard
-                key={index}
-                variant={CardVariant.Minimal}
-                pipelineExecution={buildInfoToExecutionSummary(build)}
-                staticCard={true}
-                // staticCard={!build?.planExecutionId} // Enable when Backend supports re-routing
-              />
-            ))}
-          </CardRailView>
-        </Container>
+        )}
       </Page.Body>
     </>
   )

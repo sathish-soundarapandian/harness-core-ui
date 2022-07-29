@@ -52,7 +52,7 @@ export function useExecutionListEmptyAction(isPipelineInvalid: boolean, onRunPip
     <RbacButton
       loading={loading}
       intent="primary"
-      text={hasNoPipelines ? getString('common.createPipeline') : getString('pipeline.runAPipeline')}
+      text={hasNoPipelines ? getString('common.createPipeline') : getString('runPipeline')}
       disabled={isPipelineInvalid}
       tooltip={isPipelineInvalid ? getString('pipeline.cannotRunInvalidPipeline') : ''}
       onClick={hasNoPipelines ? onCreatePipeline : onRunPipeline}
