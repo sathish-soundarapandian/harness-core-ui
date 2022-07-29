@@ -1,0 +1,14 @@
+{
+  "artifacts": {
+    "sidecars": [{ "sidecar": { "identifier": "sidecar1", "type": "Dockerhub", "spec": { "imagePath": "<+input>" } } }]
+  },
+  "manifests": [
+    {
+      "manifest": {
+        "identifier": "gitId",
+        "type": "K8sManifest",
+        "spec": { "store": { "type": "Git", "spec": { "branch": "<+input>" } } }
+      }
+    }
+  ]
+}
