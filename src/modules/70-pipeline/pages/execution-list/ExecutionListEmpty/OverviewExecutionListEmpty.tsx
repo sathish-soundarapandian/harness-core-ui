@@ -15,7 +15,6 @@ import ciPipelineIllustration from '@pipeline/pages/pipeline-list/images/ci-pipe
 import { useStrings } from 'framework/strings'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import type { ProjectPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
-import type { ExecutionListProps } from '../ExecutionList'
 import cdExecutionIllustration from '../images/cd-execution-illustration.svg'
 import ciExecutionIllustration from '../images/ci-execution-illustration.svg'
 import { useExecutionListEmptyAction } from './useExecutionListEmptyAction'

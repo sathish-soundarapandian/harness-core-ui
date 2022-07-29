@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Container, PageHeader, Dialog } from '@wings-software/uicore'
 import { useParams, useHistory } from 'react-router-dom'
 import { camelCase } from 'lodash-es'
@@ -43,10 +43,10 @@ import ExecutionCard from '@pipeline/components/ExecutionCard/ExecutionCard'
 import { CardVariant } from '@pipeline/utils/constants'
 import { ExecutionTriggerInfo, PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipeline-ng'
 import { TitleWithToolTipId } from '@common/components/Title/TitleWithToolTipId'
-import bgImage from './images/CI-OverviewEmptyState.svg'
+import bgImage from './images/CI-OverviewImageBG.png'
 import styles from './CIDashboardPage.module.scss'
 
-const NoDataOverviewPage = (): JSX.Element => {
+const NoDataOverviewPage: React.FC<{ onHide: () => void }> = ({ onHide }): JSX.Element => {
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
 
   const runPipelineDialogProps: IDialogProps = {
@@ -76,7 +76,7 @@ const NoDataOverviewPage = (): JSX.Element => {
       }}
     >
       <ExecutionListFilterContextProvider>
-        <OverviewExecutionListEmpty onRunPipeline={openModal} />
+        <OverviewExecutionListEmpty onRunPipeline={openModal} onHide={onHide} />
       </ExecutionListFilterContextProvider>
     </div>
   )
@@ -163,6 +163,11 @@ export const CIDashboardPage: React.FC = () => {
   const refetchingRepos = useRefetchCall(refetchRepos, loadingRepositories)
 
   const pipelineExecutionSummary = pipelineExecution?.data || {}
+  const [showOverviewDialog, setShowOverviewDialog] = useState(!pipelineExecutionSummary?.content?.length)
+
+  useEffect(() => {
+    setShowOverviewDialog(!pipelineExecutionSummary?.content?.length)
+  }, [pipelineExecutionSummary])
 
   useErrorHandler(error as GetDataError<Failure | Error> | null, undefined, 'ci.get.build.error')
   useErrorHandler(repoError as GetDataError<Failure | Error> | null, undefined, 'ci.get.repo.error')
@@ -182,8 +187,8 @@ export const CIDashboardPage: React.FC = () => {
         className={styles.content}
         loading={(loading && !refetchingBuilds && loadingRepositories && !refetchingRepos) || pipelineLoading}
       >
-        {!pipelineExecutionSummary?.content?.length ? (
-          <NoDataOverviewPage />
+        {showOverviewDialog ? (
+          <NoDataOverviewPage onHide={() => setShowOverviewDialog(false)} />
         ) : (
           <Container className={styles.page} padding="large">
             <CIDashboardSummaryCards timeRange={timeRange} />
