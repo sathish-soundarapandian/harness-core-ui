@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly alignConditions: string
+  readonly approvalChangeWindow: string
   readonly box: string
   readonly conditionalContent: string
   readonly conditionalContentJexl: string
@@ -21,5 +22,6 @@ declare const styles: {
   readonly tab: string
   readonly tabs: string
   readonly title: string
+  readonly windowSelection: string
 }
 export default styles

@@ -3465,6 +3465,7 @@ export interface StringsMap {
   'pipeline.serviceDeploymentTypes.serverlessGoogleFunctions': string
   'pipeline.serviceDeploymentTypes.ssh': string
   'pipeline.serviceDeploymentTypes.winrm': string
+  'pipeline.serviceNowApprovalStep.approvalChangeWindow': string
   'pipeline.serviceNowApprovalStep.connectToServiceNow': string
   'pipeline.serviceNowApprovalStep.connectorRef': string
   'pipeline.serviceNowApprovalStep.execution.conditions.equals': string
@@ -3488,6 +3489,10 @@ export interface StringsMap {
   'pipeline.serviceNowApprovalStep.validations.connectorRef': string
   'pipeline.serviceNowApprovalStep.validations.issueNumber': string
   'pipeline.serviceNowApprovalStep.validations.ticketType': string
+  'pipeline.serviceNowApprovalStep.validations.windowEnd': string
+  'pipeline.serviceNowApprovalStep.validations.windowStart': string
+  'pipeline.serviceNowApprovalStep.windowEnd': string
+  'pipeline.serviceNowApprovalStep.windowStart': string
   'pipeline.serviceNowCreateStep.addFields': string
   'pipeline.serviceNowCreateStep.descriptionPlaceholder': string
   'pipeline.serviceNowCreateStep.fetchingFields': string

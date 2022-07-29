@@ -71,6 +71,10 @@ export const getServiceNowApprovalEditModePropsWithValues = (): ServiceNowApprov
         spec: {
           expression: "<+state> == 'Blocked'"
         }
+      },
+      changeWindow: {
+        startField: 'PROBLEM',
+        endField: 'INCIDENT'
       }
     }
   },

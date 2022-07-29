@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, act, fireEvent, queryByAttribute, waitFor } from '@testing-library/react'
+import { render, act, fireEvent, queryByAttribute, waitFor, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
@@ -195,9 +196,16 @@ describe('ServiceNow Approval tests', () => {
     expect(queryByDisplayValue('itd1')).toBeTruthy()
 
     expect(queryByDisplayValue('somevalue for f1')).toBeTruthy()
-
-    fireEvent.click(getByText('common.optionalConfig'))
+    userEvent.click(getByText('common.optionalConfig'))
     expect(queryByDisplayValue("<+state> == 'Blocked'")).toBeTruthy()
+
+    const enableApprovalChangeWindow = await screen.findByRole('checkbox', {
+      name: 'enable'
+    })
+    expect(enableApprovalChangeWindow).toBeChecked()
+    userEvent.click(enableApprovalChangeWindow)
+    expect(enableApprovalChangeWindow).not.toBeChecked()
+    userEvent.click(enableApprovalChangeWindow)
 
     await act(() => ref.current?.submitForm()!)
     expect(props.onUpdate).toBeCalledWith({
@@ -231,6 +239,10 @@ describe('ServiceNow Approval tests', () => {
           spec: {
             expression: "<+state> == 'Blocked'"
           }
+        },
+        changeWindow: {
+          endField: 'INCIDENT',
+          startField: 'PROBLEM'
         }
       },
       name: 'serviceNow approval step'

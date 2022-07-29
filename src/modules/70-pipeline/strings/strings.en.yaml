@@ -220,6 +220,9 @@ serviceNowApprovalStep:
   jexlExpressionPlaceholder: |
     Example: <+ticket.state.value> == "Done"
   serviceNowField: Service Now Field
+  approvalChangeWindow: Approval Change Window
+  windowStart: Window Start
+  windowEnd: Window End
   execution:
     wasApproved: 'Approval Criteria was met for ServiceNow Ticket:'
     wasRejected: 'Rejection Criteria was met for ServiceNow Ticket:'
@@ -234,6 +237,8 @@ serviceNowApprovalStep:
     connectorRef: ServiceNow Connector is required
     ticketType: Ticket Type is required
     issueNumber: Ticket Number is required
+    windowStart: Window start is required
+    windowEnd: Window end is required
 serviceNowCreateStep:
   fieldType:
     configureFields: Configure Fields

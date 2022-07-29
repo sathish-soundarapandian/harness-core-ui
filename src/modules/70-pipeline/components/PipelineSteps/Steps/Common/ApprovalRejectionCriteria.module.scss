@@ -100,12 +100,12 @@
 }
 
 .conditionalContent {
-  background-color: white;
+  background-color: var(--white);
   padding: var(--spacing-medium);
 }
 
 .conditionalContentJexl {
-  background-color: white;
+  background-color: var(--white);
   padding: var(--spacing-large) var(--spacing-medium);
 }
 
@@ -116,4 +116,17 @@
 .title {
   color: var(--grey-800);
   font-weight: 600;
+}
+
+.approvalChangeWindow {
+  margin-top: var(--spacing-xlarge);
+
+  .windowSelection {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-medium);
+    margin-top: var(--spacing-medium);
+    background-color: var(--white);
+    padding: var(--spacing-medium);
+  }
 }

@@ -12,7 +12,8 @@ import {
   FormikForm,
   FormInput,
   getMultiTypeFromValue,
-  MultiTypeInputType
+  MultiTypeInputType,
+  Layout
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
@@ -58,6 +59,7 @@ import {
 import { StringKeys, useStrings } from 'framework/strings'
 import { ConnectorRefSchema } from '@common/utils/Validation'
 import { ServiceNowApprovalRejectionCriteria } from './ServiceNowApprovalRejectionCriteria'
+import { ServiceNowApprovalChangeWindow } from './ServiceNowApprovalChangeWindow'
 import css from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/ServiceNowApproval.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -323,16 +325,25 @@ function FormContent({
           id="optional-config"
           summary={getString('common.optionalConfig')}
           details={
-            <ServiceNowApprovalRejectionCriteria
-              fieldList={ticketFieldList}
-              title={getString('pipeline.approvalCriteria.rejectionCriteria')}
-              isFetchingFields={false}
-              mode="rejectionCriteria"
-              values={formik.values.spec.rejectionCriteria}
-              onChange={values => formik.setFieldValue('spec.rejectionCriteria', values)}
-              formik={formik}
-              readonly={readonly}
-            />
+            <Layout.Vertical spacing="medium">
+              <ServiceNowApprovalRejectionCriteria
+                fieldList={ticketFieldList}
+                title={getString('pipeline.approvalCriteria.rejectionCriteria')}
+                isFetchingFields={false}
+                mode="rejectionCriteria"
+                values={formik.values.spec.rejectionCriteria}
+                onChange={values => formik.setFieldValue('spec.rejectionCriteria', values)}
+                formik={formik}
+                readonly={readonly}
+              />
+              <ServiceNowApprovalChangeWindow
+                formik={formik}
+                fetchingServiceNowTicketTypes={fetchingServiceNowTicketTypes}
+                serviceNowTicketTypesFetchErrorMessage={serviceNowTicketTypesFetchError?.message}
+                readonly={!!readonly}
+                serviceNowTicketTypesOptions={serviceNowTicketTypesOptions}
+              />
+            </Layout.Vertical>
           }
         />
       </Accordion>
@@ -408,6 +419,14 @@ function ServiceNowApprovalStepMode(
               otherwise: Yup.object().shape({
                 expression: Yup.string().trim().required(getString('pipeline.approvalCriteria.validations.expression'))
               })
+            })
+          }),
+          enableChangeWindow: Yup.boolean(),
+          changeWindow: Yup.object().when('enableChangeWindow', {
+            is: true,
+            then: Yup.object().shape({
+              startField: Yup.string().required(getString('pipeline.serviceNowApprovalStep.validations.windowStart')),
+              endField: Yup.string().required(getString('pipeline.serviceNowApprovalStep.validations.windowEnd'))
             })
           })
         })

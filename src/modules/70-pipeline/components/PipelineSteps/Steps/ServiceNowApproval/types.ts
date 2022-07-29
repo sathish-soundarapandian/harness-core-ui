@@ -29,6 +29,11 @@ export interface ServiceNowApprovalData extends StepElementConfig {
     ticketNumber: string
     approvalCriteria: ApprovalRejectionCriteria
     rejectionCriteria: ApprovalRejectionCriteria
+    enableChangeWindow?: boolean
+    changeWindow?: {
+      startField: string
+      endField: string
+    }
   }
 }
 export interface ServiceNowTicketTypeSelectOption extends SelectOption {
