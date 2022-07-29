@@ -2240,7 +2240,6 @@ export interface StringsMap {
   'connectors.pdc.hostsUpload2': string
   'connectors.pdc.invalidJsonError': string
   'connectors.pdc.manuallyHosts': string
-  'connectors.pdc.replaceJsonFile': string
   'connectors.pdc.selectLabel': string
   'connectors.pdc.testConnection.step1': string
   'connectors.pdc.uploadJson': string
