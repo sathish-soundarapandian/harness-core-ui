@@ -592,7 +592,7 @@ export type CEKubernetesClusterConfig = ConnectorConfigDTO & {
 
 export interface CVConfig {
   accountId: string
-  category: 'PERFORMANCE' | 'ERRORS' | 'INFRASTRUCTURE'
+  category: 'Performance' | 'Errors' | 'Infrastructure'
   connectorIdentifier: string
   createNextTaskIteration?: number
   createdAt?: number
@@ -2819,7 +2819,7 @@ export interface MetricHistory {
 
 export interface MetricPack {
   accountId?: string
-  category: 'PERFORMANCE' | 'ERRORS' | 'INFRASTRUCTURE'
+  category: 'Performance' | 'Errors' | 'Infrastructure'
   createdAt?: number
   dataSourceType:
     | 'APP_DYNAMICS'
@@ -2846,7 +2846,7 @@ export interface MetricPack {
 
 export interface MetricPackDTO {
   accountId?: string
-  category?: 'PERFORMANCE' | 'ERRORS' | 'INFRASTRUCTURE'
+  category?: 'Performance' | 'Errors' | 'Infrastructure'
   dataSourceType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
@@ -4745,7 +4745,7 @@ export interface RiskData {
 }
 
 export interface RiskProfile {
-  category?: 'PERFORMANCE' | 'ERRORS' | 'INFRASTRUCTURE'
+  category?: 'Performance' | 'Errors' | 'Infrastructure'
   metricType?: 'INFRA' | 'RESP_TIME' | 'THROUGHPUT' | 'ERROR' | 'APDEX' | 'OTHER'
   thresholdTypes?: ('ACT_WHEN_LOWER' | 'ACT_WHEN_HIGHER')[]
 }
@@ -5254,7 +5254,7 @@ export interface TimeSeriesDataRecordMetricValue {
 }
 
 export interface TimeSeriesMetricDataDTO {
-  category?: 'PERFORMANCE' | 'ERRORS' | 'INFRASTRUCTURE'
+  category?: 'Performance' | 'Errors' | 'Infrastructure'
   dataSourceType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
