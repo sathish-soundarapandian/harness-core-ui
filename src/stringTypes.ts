@@ -2238,7 +2238,6 @@ export interface StringsMap {
   'connectors.pdc.hostsRule': string
   'connectors.pdc.hostsUpload1': string
   'connectors.pdc.hostsUpload2': string
-  'connectors.pdc.invalidJsonError': string
   'connectors.pdc.manuallyHosts': string
   'connectors.pdc.selectLabel': string
   'connectors.pdc.testConnection.step1': string
