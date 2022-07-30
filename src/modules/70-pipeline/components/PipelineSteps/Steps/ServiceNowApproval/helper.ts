@@ -41,7 +41,7 @@ export const processFormData = (values: ServiceNowApprovalData): ServiceNowAppro
       connectorRef: values.spec.connectorRef,
       approvalCriteria: getApprovalRejectionCriteriaForSubmit(values.spec.approvalCriteria),
       rejectionCriteria: getApprovalRejectionCriteriaForSubmit(values.spec.rejectionCriteria),
-      ...(enableChangeWindow ? { changeWindow } : undefined)
+      ...(enableChangeWindow && { changeWindow })
     }
   }
 }

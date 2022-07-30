@@ -40,9 +40,7 @@ export function ServiceNowApprovalChangeWindow({
 
     placeholder: fetchingServiceNowTicketTypes
       ? getString('pipeline.serviceNowApprovalStep.fetchingTicketTypesPlaceholder')
-      : serviceNowTicketTypesFetchErrorMessage
-      ? serviceNowTicketTypesFetchErrorMessage
-      : `${getString('select')} ${placeholder}`,
+      : serviceNowTicketTypesFetchErrorMessage || `${getString('select')} ${placeholder}`,
 
     useValue: true,
     multiTypeInputProps: {
@@ -62,7 +60,7 @@ export function ServiceNowApprovalChangeWindow({
         {getString('pipeline.serviceNowApprovalStep.approvalChangeWindow')}
       </Text>
 
-      <div className={css.windowSelection}>
+      <Layout.Vertical spacing="medium" className={css.windowSelection}>
         <FormInput.CheckBox
           disabled={readonly}
           name="spec.enableChangeWindow"
@@ -83,7 +81,7 @@ export function ServiceNowApprovalChangeWindow({
             {...commonMultiTypeInputProps(getString('pipeline.serviceNowApprovalStep.windowEnd'))}
           />
         </Layout.Horizontal>
-      </div>
+      </Layout.Vertical>
     </div>
   )
 }
