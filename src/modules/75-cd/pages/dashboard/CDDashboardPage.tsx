@@ -110,7 +110,7 @@ export function executionStatusInfoToExecutionSummary(
 ): PipelineExecutionSummary {
   const cd = {
     serviceIdentifiers: info.serviceInfoList,
-    envIdentifiers: info.environmentInfoList?.map(item => item.envName) as string[]
+    envIdentifiers: info.environmentInfoList
   }
 
   const branch = get(info, 'gitInfo.targetBranch')

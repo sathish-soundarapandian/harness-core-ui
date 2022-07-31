@@ -44,14 +44,16 @@ exports[`ServiceExecutionsCard  empty state 1`] = `
     <div
       class="cardSummary"
     >
-      <div>
-        No valid template with id "pipeline.executionList.servicesDeployedText" found in any namespace
+      <div
+        class="heading"
+      >
+        pipeline.executionList.servicesDeployedText
       </div>
       <div
         class="main"
       >
         <span
-          class="bp3-icon StyledProps--main servicesIcon"
+          class="bp3-icon StyledProps--main icon"
           data-icon="services"
         >
           <svg
@@ -76,8 +78,10 @@ exports[`ServiceExecutionsCard  empty state 1`] = `
     <div
       class="cardSummary"
     >
-      <div>
-        No valid template with id "pipeline.executionList.EnvironmentsText" found in any namespace
+      <div
+        class="heading"
+      >
+        pipeline.executionList.EnvironmentsText
       </div>
       <div
         class="main"
@@ -131,14 +135,16 @@ exports[`ServiceExecutionsCard  initial render 1`] = `
     <div
       class="cardSummary"
     >
-      <div>
-        No valid template with id "pipeline.executionList.servicesDeployedText" found in any namespace
+      <div
+        class="heading"
+      >
+        pipeline.executionList.servicesDeployedText
       </div>
       <div
         class="main"
       >
         <span
-          class="bp3-icon StyledProps--main servicesIcon"
+          class="bp3-icon StyledProps--main icon"
           data-icon="services"
         >
           <svg
@@ -206,8 +212,11 @@ exports[`ServiceExecutionsCard  initial render 1`] = `
             <div
               class="bp3-popover-target"
             >
-              <div>
-                No valid template with id "common.plusNumberNoSpace" found in any namespace
+              <div
+                class="serviceName count"
+                tabindex="0"
+              >
+                common.plusNumberNoSpace
               </div>
             </div>
           </div>
@@ -217,37 +226,139 @@ exports[`ServiceExecutionsCard  initial render 1`] = `
     <div
       class="cardSummary"
     >
-      <div>
-        No valid template with id "pipeline.executionList.EnvironmentsText" found in any namespace
+      <div
+        class="heading"
+      >
+        pipeline.executionList.EnvironmentsText
       </div>
       <div
-        class="main"
+        class="Layout--horizontal StyledProps--main"
       >
-        <div
-          class="environments"
+        <span
+          class="bp3-icon StyledProps--main icon"
+          data-icon="environments"
         >
-          <span
-            class="bp3-icon StyledProps--main envIcon"
-            data-icon="environments"
+          <svg
+            fill="none"
+            height="14"
+            viewBox="0 0 15 14"
+            width="14"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <svg
-              fill="none"
-              height="14"
-              viewBox="0 0 15 14"
-              width="14"
-              xmlns="http://www.w3.org/2000/svg"
+            <path
+              d="M12.688 10.53a1.568 1.568 0 00-1.46 1.028h-2.2a1.893 1.893 0 00-1.263-1.262V9.07c1.767-.072 3.498-.631 3.498-1.713V1.803v-.072C11.263.541 9.226 0 7.315 0c-1.912 0-3.95.54-3.95 1.731v5.626c0 1.046 1.624 1.604 3.319 1.713v1.226a1.893 1.893 0 00-1.263 1.262h-2.38a1.569 1.569 0 100 1.082h2.38a1.875 1.875 0 003.607 0h2.2a1.569 1.569 0 101.46-2.11zM4.466 2.957c.775.325 1.839.487 2.867.487 1.027 0 2.091-.162 2.867-.487v1.497c-.127.198-1.1.667-2.867.667s-2.76-.469-2.867-.667V2.957zm0 4.364V5.716c.775.324 1.839.487 2.867.487 1.027 0 2.091-.163 2.867-.487V7.32c-.127.198-1.1.667-2.867.667s-2.76-.451-2.867-.65v-.017z"
+              fill="currentColor"
+            />
+          </svg>
+        </span>
+        <div
+          class="Layout--horizontal StyledProps--main"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main"
+          >
+            <p
+              class="StyledProps--font StyledProps--main envNameText"
             >
-              <path
-                d="M12.688 10.53a1.568 1.568 0 00-1.46 1.028h-2.2a1.893 1.893 0 00-1.263-1.262V9.07c1.767-.072 3.498-.631 3.498-1.713V1.803v-.072C11.263.541 9.226 0 7.315 0c-1.912 0-3.95.54-3.95 1.731v5.626c0 1.046 1.624 1.604 3.319 1.713v1.226a1.893 1.893 0 00-1.263 1.262h-2.38a1.569 1.569 0 100 1.082h2.38a1.875 1.875 0 003.607 0h2.2a1.569 1.569 0 101.46-2.11zM4.466 2.957c.775.325 1.839.487 2.867.487 1.027 0 2.091-.162 2.867-.487v1.497c-.127.198-1.1.667-2.867.667s-2.76-.469-2.867-.667V2.957zm0 4.364V5.716c.775.324 1.839.487 2.867.487 1.027 0 2.091-.163 2.867-.487V7.32c-.127.198-1.1.667-2.867.667s-2.76-.451-2.867-.65v-.017z"
-                fill="currentColor"
-              />
-            </svg>
-          </span>
-          <p
-            class="StyledProps--font StyledProps--main"
+              testEnvInfra
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main envNameText"
+            >
+               
+              (
+            </p>
+            <div
+              class="main"
+            >
+              <div
+                class="environments"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main"
+                >
+                  testEnvInfra
+                </p>
+              </div>
+            </div>
+            <p
+              class="StyledProps--font StyledProps--main envNameText"
+            >
+              )
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main envNameText"
+            >
+              ,
+            </p>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main"
           >
-            e1, e2
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main envNameText"
+            >
+              env09
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main envNameText"
+            >
+               
+              (
+            </p>
+            <div
+              class="main"
+            >
+              <div
+                class="environments"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main"
+                >
+                  realllyverybignameforinfraheretotesttheUistrengthgoodornot, infra09
+                </p>
+              </div>
+              , 
+              <div
+                class="bp3-popover-wrapper serviceWrapper"
+              >
+                <div
+                  class="bp3-popover-target"
+                >
+                  <div
+                    class="serviceName count"
+                    tabindex="0"
+                  >
+                    common.plusNumberNoSpace
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p
+              class="StyledProps--font StyledProps--main envNameText"
+            >
+              )
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main envNameText"
+            >
+              ,
+            </p>
+          </div>
+          <div
+            class="bp3-popover-wrapper serviceWrapper"
+          >
+            <div
+              class="bp3-popover-target"
+            >
+              <div
+                class="envListPlus"
+                tabindex="0"
+              >
+                common.plusNumberNoSpace
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -299,14 +410,16 @@ exports[`ServiceExecutionsCard  render when called from overview dashboard 1`] =
     <div
       class="cardSummary"
     >
-      <div>
-        No valid template with id "pipeline.executionList.servicesDeployedText" found in any namespace
+      <div
+        class="heading"
+      >
+        pipeline.executionList.servicesDeployedText
       </div>
       <div
         class="main"
       >
         <span
-          class="bp3-icon StyledProps--main servicesIcon"
+          class="bp3-icon StyledProps--main icon"
           data-icon="services"
         >
           <svg
@@ -360,8 +473,11 @@ exports[`ServiceExecutionsCard  render when called from overview dashboard 1`] =
             <div
               class="bp3-popover-target"
             >
-              <div>
-                No valid template with id "common.plusNumberNoSpace" found in any namespace
+              <div
+                class="serviceName count"
+                tabindex="0"
+              >
+                common.plusNumberNoSpace
               </div>
             </div>
           </div>
@@ -371,17 +487,19 @@ exports[`ServiceExecutionsCard  render when called from overview dashboard 1`] =
     <div
       class="cardSummary"
     >
-      <div>
-        No valid template with id "pipeline.executionList.EnvironmentsText" found in any namespace
+      <div
+        class="heading"
+      >
+        pipeline.executionList.EnvironmentsText
       </div>
       <div
         class="main"
       >
         <div
-          class="environments"
+          class="envListOverview"
         >
           <span
-            class="bp3-icon StyledProps--main envIcon"
+            class="bp3-icon StyledProps--main icon"
             data-icon="environments"
           >
             <svg
@@ -400,7 +518,7 @@ exports[`ServiceExecutionsCard  render when called from overview dashboard 1`] =
           <p
             class="StyledProps--font StyledProps--main"
           >
-            e1, e2
+            testEnvInfra, env09
           </p>
         </div>
         , 
@@ -410,8 +528,11 @@ exports[`ServiceExecutionsCard  render when called from overview dashboard 1`] =
           <div
             class="bp3-popover-target"
           >
-            <div>
-              No valid template with id "common.plusNumberNoSpace" found in any namespace
+            <div
+              class="serviceName count"
+              tabindex="0"
+            >
+              common.plusNumberNoSpace
             </div>
           </div>
         </div>

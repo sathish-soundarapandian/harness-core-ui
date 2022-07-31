@@ -43,7 +43,7 @@ import {
   DashboardSelected
 } from '@pipeline/components/ServiceExecutionsCard/ServiceExecutionsCard'
 import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactory/types'
-import type { ServiceDeploymentInfo } from 'services/cd-ng'
+import type { EnvironmentDeploymentsInfo, ServiceDeploymentInfo } from 'services/cd-ng'
 import executionFactory from '@pipeline/factories/ExecutionFactory'
 import { CardVariant } from '@pipeline/utils/constants'
 import { FeatureFlag } from '@common/featureFlags'
@@ -293,7 +293,7 @@ export const TriggerInfoCell: CellType = ({ row }) => {
           })
         ) : (
           <ServiceExecutionsCard
-            envIdentifiers={data?.moduleInfo?.cd?.envIdentifiers as string[]}
+            envIdentifiers={data?.moduleInfo?.cd?.envIdentifiers as EnvironmentDeploymentsInfo[]}
             serviceIdentifiers={data?.moduleInfo?.cd?.serviceIdentifiers as ServiceDeploymentInfo[]}
             caller={IS_SERVICEDETAIL ? DashboardSelected.SERVICEDETAIL : DashboardSelected.OVERVIEW}
           />

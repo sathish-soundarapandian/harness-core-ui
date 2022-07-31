@@ -7,28 +7,39 @@
 
 import React from 'react'
 import { HTMLTable, Popover, Position } from '@blueprintjs/core'
-import { Icon, IconName, Layout, Text } from '@wings-software/uicore'
-import { FontVariation } from '@harness/design-system'
+import { Icon, Layout, Text } from '@wings-software/uicore'
+import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, uniqBy } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'
-import type { ServiceDeploymentInfo } from 'services/cd-ng'
+import type { EnvironmentDeploymentsInfo, InfrastructureInfo, ServiceDeploymentInfo } from 'services/cd-ng'
+import routes from '@common/RouteDefinitions'
+import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import css from './ServiceExecutionsCard.module.scss'
 
 export enum DashboardSelected {
   OVERVIEW = 'overviewPage',
   SERVICEDETAIL = 'serviceDetail'
 }
+
+enum EnvironmentDetailsTab {
+  CONFIGURATION = 'CONFIGURATION'
+}
+
 interface ListProps {
   listName: string[]
   className?: string
   limit?: number
-  iconName: IconName
-  iconClass?: string
+  caller: string
+}
+
+interface EnvListProp {
+  envIdentifiers: EnvironmentDeploymentsInfo[]
+  limit: number
 }
 
 export interface ServiceExecutionsCardProps {
-  envIdentifiers?: string[]
+  envIdentifiers?: EnvironmentDeploymentsInfo[]
   serviceIdentifiers?: ServiceDeploymentInfo[]
   caller: string
 }
@@ -102,7 +113,7 @@ function ServicesTable({ services }: ServicesTableProps): React.ReactElement {
 function ServicesList({ services, limit = 2, className }: ServicesListProps): React.ReactElement {
   return (
     <div className={css.main}>
-      <Icon name="services" className={css.servicesIcon} size={18} />
+      <Icon name="services" className={css.icon} size={18} />
       <div className={className}>
         {services.slice(0, limit).map(service => {
           const { serviceName } = service
@@ -143,14 +154,14 @@ function ServicesList({ services, limit = 2, className }: ServicesListProps): Re
   )
 }
 
-function EnvList({ listName, limit = 2, className, iconName, iconClass }: ListProps): React.ReactElement {
+function InfraList({ listName, limit = 2, className, caller }: ListProps): React.ReactElement {
   const visibleList = listName.slice(0, limit).join(', ')
   return (
     <div className={css.main}>
       {listName.length > 0 ? (
         <>
           <div className={className}>
-            <Icon name={iconName} className={iconClass} size={14} />
+            {caller == DashboardSelected.OVERVIEW && <Icon name={'environments'} className={css.icon} size={14} />}
             <Text>{visibleList}</Text>
           </div>
           {listName.length > limit ? (
@@ -171,7 +182,7 @@ function EnvList({ listName, limit = 2, className, iconName, iconClass }: ListPr
                 />
                 <Layout.Vertical padding="small">
                   {listName.slice(limit).map((name, index) => (
-                    <Text font={{ variation: FontVariation.FORM_LABEL }} key={index}>
+                    <Text className={css.envTextPopover} key={index}>
                       {name}
                     </Text>
                   ))}
@@ -185,12 +196,124 @@ function EnvList({ listName, limit = 2, className, iconName, iconClass }: ListPr
   )
 }
 
+function EnvList({ envIdentifiers, limit = 2 }: EnvListProp): React.ReactElement {
+  const countOfEnv = envIdentifiers.length
+
+  const filterInfra = (infra: InfrastructureInfo[]): string[] => {
+    infra = uniqBy(infra, infras => infras.infrastructureIdentifier)
+    const listName = defaultTo(infra?.map(infras => infras.infrastructureName) as string[], [])
+    return listName
+  }
+
+  const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
+
+  function goToEnvDetail(envId: string): void {
+    if (envId) {
+      const route = routes.toEnvironmentDetails({
+        accountId,
+        orgIdentifier,
+        projectIdentifier,
+        module,
+        environmentIdentifier: envId,
+        sectionId: EnvironmentDetailsTab.CONFIGURATION
+      })
+      window.open(`#${route}`)
+    }
+  }
+
+  const infraOnPopover = (list: EnvironmentDeploymentsInfo): string => {
+    const listName = filterInfra(defaultTo(list.infrastructureDetails, []))
+    const countOfInfra = listName.length
+    const limitInfra = 5
+    const remainCount = countOfInfra - limitInfra
+    const remainString = remainCount > 0 ? `, +${remainCount}` : ''
+    const visibleList = listName.slice(0, limitInfra).join(', ')
+    return remainCount ? visibleList.concat(remainString) : visibleList
+  }
+
+  const checkInfraNotNull = (infraList: InfrastructureInfo[]): boolean => {
+    return infraList.filter(infra => infra.infrastructureName !== null).length !== 0
+  }
+
+  let curCount = false
+  return (
+    <Layout.Horizontal>
+      {envIdentifiers.map((item, idx) =>
+        item.envName && idx < limit ? (
+          <Layout.Horizontal
+            key={item.envId}
+            onClick={e => {
+              e.stopPropagation()
+              goToEnvDetail(defaultTo(item.envId, ''))
+            }}
+          >
+            <Text className={css.envNameText} key={item.envId}>
+              {item.envName}
+            </Text>
+            {checkInfraNotNull(defaultTo(item.infrastructureDetails, [])) ? (
+              <>
+                <Text className={css.envNameText}>&nbsp;{'('}</Text>
+                <InfraList
+                  key={item.envId}
+                  className={css.environments}
+                  listName={filterInfra(defaultTo(item.infrastructureDetails, []))}
+                  limit={limit}
+                  caller={DashboardSelected.SERVICEDETAIL}
+                />
+                <Text className={css.envNameText}>{`)`}</Text>
+              </>
+            ) : null}
+            <Text className={css.envNameText}>{idx !== countOfEnv - 1 ? ',' : ''}</Text>
+          </Layout.Horizontal>
+        ) : (
+          (curCount = true)
+        )
+      )}
+      {curCount && (
+        <Popover
+          wrapperTagName="div"
+          targetTagName="div"
+          interactionKind="hover"
+          position={Position.RIGHT}
+          className={css.serviceWrapper}
+        >
+          <String
+            tagName="div"
+            className={css.envListPlus}
+            stringID={'common.plusNumberNoSpace'}
+            vars={{ number: Math.abs(countOfEnv - limit) }}
+          />
+          <Layout.Vertical padding="small">
+            {envIdentifiers.map(
+              (name, index) =>
+                index >= limit && (
+                  <Layout.Vertical key={name.envId}>
+                    {checkInfraNotNull(defaultTo(name.infrastructureDetails, [])) ? (
+                      <Text className={css.envTextPopover} key={name.envId}>{`${name.envName} (${infraOnPopover(
+                        name
+                      )})`}</Text>
+                    ) : (
+                      <Text className={css.envTextPopover} key={name.envId}>
+                        {name.envName}
+                      </Text>
+                    )}
+                  </Layout.Vertical>
+                )
+            )}
+          </Layout.Vertical>
+        </Popover>
+      )}
+    </Layout.Horizontal>
+  )
+}
+
 export function ServiceExecutionsCard(data: ServiceExecutionsCardProps): React.ReactElement {
   let serviceIdentifiers: ServiceDeploymentInfo[] = defaultTo(data?.serviceIdentifiers as ServiceDeploymentInfo[], [])
-  let envIdentifiers: string[] = defaultTo(data?.envIdentifiers as string[], [])
+  let envIdentifiers: EnvironmentDeploymentsInfo[] = defaultTo(data?.envIdentifiers as EnvironmentDeploymentsInfo[], [])
 
   serviceIdentifiers = [...new Set(serviceIdentifiers.filter(item => !!item))]
-  envIdentifiers = [...new Set(envIdentifiers.filter(item => !!item))]
+  envIdentifiers = envIdentifiers.filter(item => !!item.envId)
+  envIdentifiers = uniqBy(envIdentifiers, env => env.envId)
 
   const limit = data.caller === DashboardSelected.OVERVIEW ? 2 : 3
   return (
@@ -212,13 +335,19 @@ export function ServiceExecutionsCard(data: ServiceExecutionsCardProps): React.R
           stringID="pipeline.executionList.EnvironmentsText"
           vars={{ size: envIdentifiers.length }}
         />
-        <EnvList
-          className={css.environments}
-          listName={envIdentifiers}
-          limit={limit}
-          iconClass={css.envIcon}
-          iconName={'environments'}
-        />
+        {data.caller === DashboardSelected.OVERVIEW ? (
+          <InfraList
+            className={css.envListOverview}
+            listName={defaultTo(envIdentifiers.map(item => item.envName) as string[], [])}
+            limit={limit}
+            caller={data.caller}
+          />
+        ) : (
+          <Layout.Horizontal>
+            {envIdentifiers.length ? <Icon name={'environments'} className={css.icon} size={14} /> : null}
+            <EnvList envIdentifiers={envIdentifiers} limit={limit - 1} />
+          </Layout.Horizontal>
+        )}
       </div>
     </Layout.Horizontal>
   )

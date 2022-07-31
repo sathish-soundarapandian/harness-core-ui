@@ -9,9 +9,13 @@
 declare const styles: {
   readonly cardSummary: string
   readonly count: string
-  readonly envIcon: string
+  readonly envListOverview: string
+  readonly envListPlus: string
+  readonly envNameText: string
+  readonly envTextPopover: string
   readonly environments: string
   readonly heading: string
+  readonly icon: string
   readonly main: string
   readonly mainPopover: string
   readonly moduleData: string
@@ -19,7 +23,6 @@ declare const styles: {
   readonly serviceName: string
   readonly serviceWrapper: string
   readonly services: string
-  readonly servicesIcon: string
   readonly table: string
   readonly titlePopover: string
 }

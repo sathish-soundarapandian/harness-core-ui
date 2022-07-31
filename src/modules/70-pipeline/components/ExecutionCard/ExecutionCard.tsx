@@ -43,7 +43,7 @@ import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactor
 
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
-import type { ServiceDeploymentInfo } from 'services/cd-ng'
+import type { EnvironmentDeploymentsInfo, ServiceDeploymentInfo } from 'services/cd-ng'
 import { DashboardSelected, ServiceExecutionsCard } from '../ServiceExecutionsCard/ServiceExecutionsCard'
 import MiniExecutionGraph from './MiniExecutionGraph/MiniExecutionGraph'
 import { useExecutionCompareContext } from '../ExecutionCompareYaml/ExecutionCompareContext'
@@ -368,7 +368,7 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
               {(IS_SERVICEDETAIL || IS_OVERVIEWPAGE) && cdInfo ? (
                 <div style={{ position: 'relative' }}>
                   <ServiceExecutionsCard
-                    envIdentifiers={pipelineExecution?.moduleInfo?.cd?.envIdentifiers as string[]}
+                    envIdentifiers={pipelineExecution?.moduleInfo?.cd?.envIdentifiers as EnvironmentDeploymentsInfo[]}
                     serviceIdentifiers={
                       pipelineExecution?.moduleInfo?.cd?.serviceIdentifiers as ServiceDeploymentInfo[]
                     }

@@ -70,18 +70,14 @@
     font-size: var(--font-size-small);
     color: var(--grey-800);
 
-    .envIcon {
-      margin-right: var(--spacing-3) !important;
-    }
-
     p {
-      color: var(--grey-800) !important;
+      color: var(--primary-7) !important;
       font-size: var(--font-size-small) !important;
     }
   }
 }
 
-.servicesIcon {
+.icon {
   margin-right: var(--spacing-3) !important;
 }
 
@@ -102,4 +98,35 @@
 
 .table {
   font-size: var(--font-size-small) !important;
+}
+
+.envNameText {
+  color: var(--primary-7) !important;
+  font-size: var(--font-size-small) !important;
+  margin-left: var(--spacing-2) !important;
+}
+
+.envListPlus {
+  font-size: var(--font-size-small);
+  cursor: pointer;
+  text-decoration: underline;
+  color: var(--primary-9);
+  margin-left: var(--spacing-3) !important;
+}
+
+.envTextPopover {
+  color: var(--grey-800) !important;
+  font-size: var(--font-size-small) !important;
+}
+
+.envListOverview {
+  display: flex;
+  align-items: center;
+  font-size: var(--font-size-small);
+  color: var(--grey-800);
+
+  p {
+    color: var(--grey-800) !important;
+    font-size: var(--font-size-small) !important;
+  }
 }
