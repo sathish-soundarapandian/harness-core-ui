@@ -7,8 +7,8 @@
 
 import React, { useRef, useState } from 'react'
 import { noop } from 'lodash-es'
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { Views, EnvironmentStoreContext } from './common'
-
 import { EnvironmentList } from './EnvironmentList/EnvironmentsList'
 
 export const Environments: React.FC = () => {
@@ -22,6 +22,7 @@ export const Environments: React.FC = () => {
         fetchDeploymentList
       }}
     >
+      <HelpPanel referenceId="environmentListing" type={HelpPanelType.FLOATING_CONTAINER} />
       <EnvironmentList />
     </EnvironmentStoreContext.Provider>
   )
