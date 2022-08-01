@@ -19,6 +19,18 @@
     overflow: auto;
   }
 
+  .selectionWrapper {
+    :global {
+      .bp3-radio {
+        margin-left: 26px;
+
+        &:last-of-type {
+          margin-left: 100px !important;
+        }
+      }
+    }
+  }
+
   .hostContainer {
     display: flex;
     min-height: 200px;
