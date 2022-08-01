@@ -572,34 +572,6 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
               })}
         </Container>
       )}
-      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.entrypoint') ? (
-        isInputSetView ? (
-          <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
-            {renderMultiTypeListInputSet({
-              name: `${prefix}spec.entrypoint`,
-              tooltipId: 'entryPoint',
-              labelKey: 'entryPointLabel',
-              allowedTypes: isApplyingTemplate
-                ? SupportedInputTypesForListTypeField
-                : SupportedInputTypesForListTypeFieldInInputSetView,
-              allowedTypesForEntries: SupportedInputTypesForListItems,
-              expressions,
-              getString,
-              readonly,
-              formik
-            })}
-          </Container>
-        ) : (
-          <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
-            {renderMultiTypeList({
-              name: `${prefix}spec.entrypoint`,
-              labelKey: 'entryPointLabel',
-              allowedTypes: SupportedInputTypesForListTypeField,
-              allowedTypesForEntries: SupportedInputTypesForListItems
-            })}
-          </Container>
-        )
-      ) : null}
       {Object.prototype.hasOwnProperty.call(enableFields, 'spec.outputVariables') && (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {isInputSetView
@@ -640,7 +612,9 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
                 name: `${prefix}spec.entrypoint`,
                 tooltipId: 'dependencyEntryPoint',
                 labelKey: 'entryPointLabel',
-                allowedTypes: SupportedInputTypesForListTypeFieldInInputSetView,
+                allowedTypes: isApplyingTemplate
+                  ? SupportedInputTypesForListTypeField
+                  : SupportedInputTypesForListTypeFieldInInputSetView,
                 allowedTypesForEntries: SupportedInputTypesForListItems,
                 expressions,
                 getString,
@@ -651,7 +625,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
                 name: `${prefix}spec.entrypoint`,
                 labelKey: 'entryPointLabel',
                 tooltipId: 'dependencyEntryPoint',
-                allowedTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : SupportedInputTypesForListTypeField,
+                allowedTypes: SupportedInputTypesForListTypeField,
                 allowedTypesForEntries: SupportedInputTypesForListItems
               })}
         </Container>
