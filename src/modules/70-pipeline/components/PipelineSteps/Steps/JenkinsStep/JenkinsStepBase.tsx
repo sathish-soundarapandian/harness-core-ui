@@ -499,7 +499,7 @@ export function JenkinsStepBase(
       ),
       jobName: Yup.lazy(value =>
         typeof value === 'object'
-          ? Yup.object().required('abc') // typeError is necessary here, otherwise we get a bad-looking yup error
+          ? Yup.object().required(getString('pipeline.jenkinsStep.validations.jobName')) // typeError is necessary here, otherwise we get a bad-looking yup error
           : Yup.string().required(getString('pipeline.jenkinsStep.validations.jobName'))
       ),
       jobParameter: variableSchema(getString)

@@ -133,7 +133,7 @@ export class JenkinsStep extends PipelineStep<JenkinsStepData> {
     }
 
     if (
-      typeof template?.spec?.connectorRef === 'string' &&
+      typeof template?.spec?.jobName === 'string' &&
       getMultiTypeFromValue(template?.spec?.jobName) === MultiTypeInputType.RUNTIME &&
       isRequired &&
       isEmpty(data?.spec?.jobName)
