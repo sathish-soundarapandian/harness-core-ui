@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState, Suspense } from 'react'
 
-import { useHistory, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { RestfulProvider } from 'restful-react'
 import { FocusStyleManager } from '@blueprintjs/core'
 import {
@@ -28,7 +28,7 @@ import { LicenseStoreProvider } from 'framework/LicenseStore/LicenseStoreContext
 import RouteDestinationsWithoutAuth from 'modules/RouteDestinationsWithoutAuth'
 import AppErrorBoundary from 'framework/utils/AppErrorBoundary/AppErrorBoundary'
 import { StringsContextProvider } from 'framework/strings/StringsContextProvider'
-import { getLoginPageURL } from 'framework/utils/SessionUtils'
+import { useLogout } from 'framework/utils/SessionUtils'
 import { NGTooltipEditorPortal } from 'framework/tooltip/TooltipEditor'
 import SecureStorage from 'framework/utils/SecureStorage'
 import { SideNavProvider } from 'framework/SideNavStore/SideNavContext'
@@ -36,13 +36,10 @@ import { useRefreshToken } from 'services/portal'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 
 import './App.scss'
-import routes from '@common/RouteDefinitions'
-import { returnUrlParams } from '@common/utils/routeUtils'
 import { PermissionsProvider } from 'framework/rbac/PermissionsContext'
 import { FeaturesProvider } from 'framework/featureStore/FeaturesContext'
 import { ThirdPartyIntegrations } from '3rd-party/ThirdPartyIntegrations'
 import { useGlobalEventListener } from '@common/hooks'
-import { global401HandlerUtils } from '@common/utils/global401HandlerUtils'
 import HelpPanelProvider from 'framework/utils/HelpPanelProvider'
 
 const RouteDestinations = React.lazy(() => import('modules/RouteDestinations'))
@@ -82,7 +79,7 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   // always use accountId from URL, and not from local storage
   // if user lands on /, they'll first get redirected to a path with accountId
   const { accountId } = useParams<AccountPathProps>()
-  const history = useHistory()
+  const { forceLogout } = useLogout()
 
   const getQueryParams = React.useCallback(() => {
     return {
@@ -102,12 +99,9 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   useEffect(() => {
     const token = SessionToken.getToken()
     if (!token) {
-      history.push({
-        pathname: routes.toRedirect(),
-        search: returnUrlParams(getLoginPageURL({ returnUrl: window.location.href }))
-      })
+      forceLogout()
     }
-  }, [history])
+  }, [forceLogout])
 
   useEffect(() => {
     if (refreshTokenResponse?.resource) {
@@ -132,28 +126,10 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   Harness.openTooltipEditor = () => setShowTooltipEditor(true)
 
   const globalResponseHandler = (response: Response): void => {
-    const token = SessionToken.getToken()
     if (!response.ok) {
       switch (response.status) {
         case 401: {
-          if (token) {
-            const lastTokenSetTime = SessionToken.getLastTokenSetTime() as number
-            window.bugsnagClient?.notify?.(
-              new Error('Logout with token'),
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              function (event: any) {
-                event.severity = 'error'
-                event.setUser(username)
-                event.addMetadata('401 Details', {
-                  url: response.url,
-                  status: response.status,
-                  accountId,
-                  lastTokenSetTime
-                })
-              }
-            )
-          }
-          global401HandlerUtils(history)
+          forceLogout()
           return
         }
         case 400: {
@@ -166,7 +142,7 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
               )
               if (notWhiteListedMessage) {
                 showError(notWhiteListedMessage.message)
-                global401HandlerUtils(history)
+                forceLogout()
               }
             })
             .catch(() => {

@@ -10,6 +10,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom'
 
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
+import { useLogout } from 'framework/utils/SessionUtils'
 import { PermissionsContext } from 'framework/rbac/PermissionsContext'
 import { LicenseStoreContext } from 'framework/LicenseStore/LicenseStoreContext'
 import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
@@ -92,7 +93,8 @@ export class ChildAppMounter<T = never> extends React.Component<
           }}
           hooks={{
             useDocumentTitle,
-            useTelemetry
+            useTelemetry,
+            useLogout
           }}
         >
           {children}

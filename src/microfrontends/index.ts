@@ -11,6 +11,7 @@ import type { MonacoDiffEditor } from 'react-monaco-editor'
 import type { PermissionsContextProps } from 'framework/rbac/PermissionsContext'
 import type { LicenseStoreContextProps } from 'framework/LicenseStore/LicenseStoreContext'
 import type { AppStoreContextProps } from 'framework/AppStore/AppStoreContext'
+import type { UseLogoutReturn } from 'framework/utils/SessionUtils'
 import type { NGBreadcrumbsProps } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -46,6 +47,7 @@ export interface CommonComponents {
 export interface Hooks {
   useDocumentTitle(title: Title, accountLevel?: boolean): UseDocumentTitleReturn
   useTelemetry?: (pageParams: PageParams) => TelemetryReturnType
+  useLogout?: () => UseLogoutReturn
 }
 
 /**
@@ -64,7 +66,7 @@ export interface ChildAppProps {
   scope: Scope
   components: CommonComponents
   hooks: Hooks
-  on401: () => void
+  on401?: () => void
   children?: React.ReactNode
 }
 

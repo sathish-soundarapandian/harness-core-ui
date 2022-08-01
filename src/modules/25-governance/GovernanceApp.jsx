@@ -6,12 +6,10 @@
  */
 
 import React, { Suspense, lazy } from 'react'
-import { useHistory, useRouteMatch } from 'react-router-dom'
+import { useRouteMatch } from 'react-router-dom'
 import { Container } from '@wings-software/uicore'
 import { useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import GitFilters from '@common/components/GitFilters/GitFilters'
-import routes from '@common/RouteDefinitions'
-import { returnUrlParams } from '@common/utils/routeUtils'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import AppErrorBoundary from 'framework/utils/AppErrorBoundary/AppErrorBoundary'
 import { useStrings } from 'framework/strings'
@@ -24,10 +22,10 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetSchemaYaml } from 'services/pipeline-ng'
 import { useGetListOfBranchesWithStatus } from 'services/cd-ng'
 import SessionToken from 'framework/utils/SessionToken'
-import { global401HandlerUtils } from '@common/utils/global401HandlerUtils'
 import { useAnyEnterpriseLicense, useCurrentEnterpriseLicense } from '@common/hooks/useModuleLicenses'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { OverviewChartsWithToggle } from '@common/components/OverviewChartsWithToggle/OverviewChartsWithToggle'
+import { useLogout } from 'framework/utils/SessionUtils'
 
 // Due to some typing complexity, governance/App is lazily imported
 // from a .js file for now
@@ -42,7 +40,7 @@ export const GovernanceRemoteComponentMounter = props => {
   const { spinner, component } = props
   const { getString } = useStrings()
   const { path, params } = useRouteMatch()
-  const history = useHistory()
+  const { forceLogout } = useLogout()
   const { getToken: useGetToken } = SessionToken
 
   return (
@@ -52,7 +50,7 @@ export const GovernanceRemoteComponentMounter = props => {
           baseRoutePath={path}
           accountId={params.accountId}
           on401={() => {
-            global401HandlerUtils(history)
+            forceLogout()
           }}
           hooks={{
             usePermission,
