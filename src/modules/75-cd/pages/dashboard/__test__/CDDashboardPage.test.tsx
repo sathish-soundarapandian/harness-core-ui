@@ -109,7 +109,7 @@ describe('CDDashboardPage snapshot test', () => {
     expect(findByText(dailog!, 'pipeline.runAPipeline')).toBeDefined()
 
     //bgImage should be applied
-    expect(container.querySelector('div[style*="background-image: url(test-file-stub)"')).toBeDefined()
+    expect(container.querySelector('div[style*="background-image: url(test-file-stub)"]')).toBeDefined()
   })
 
   test('if loading true', () => {
@@ -128,7 +128,7 @@ describe('CDDashboardPage snapshot test', () => {
     )
 
     //loading icon and text should be visible
-    expect(container.querySelector('[data-icon="steps-spinner"]'))
-    expect(getByText('Loading, please wait...'))
+    expect(container.querySelector('[data-icon="steps-spinner"]')).toBeDefined()
+    expect(getByText('Loading, please wait...')).toBeDefined()
   })
 })

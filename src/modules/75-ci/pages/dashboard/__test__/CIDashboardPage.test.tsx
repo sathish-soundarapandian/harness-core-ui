@@ -288,7 +288,7 @@ describe('CIDashboardPage snapshot test', () => {
     )
 
     //loading icon and text should be visible
-    expect(container.querySelector('[data-icon="steps-spinner"]'))
-    expect(getByText('Loading, please wait...'))
+    expect(container.querySelector('[data-icon="steps-spinner"]')).toBeDefined()
+    expect(getByText('Loading, please wait...')).toBeDefined()
   })
 })
