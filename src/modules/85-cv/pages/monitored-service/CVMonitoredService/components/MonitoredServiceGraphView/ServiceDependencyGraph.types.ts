@@ -22,6 +22,7 @@ export interface ServiceDependencyGraphProps {
   serviceCountLoading?: boolean
   serviceCountErrorMessage?: string
   refetchServiceCountData?: () => void
+  search?: string
 }
 
 export interface ServicePoint {

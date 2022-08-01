@@ -17,7 +17,9 @@ import {
   Views,
   SelectOption,
   Heading,
-  HarnessDocTooltip
+  HarnessDocTooltip,
+  Container,
+  ExpandingSearchInput
 } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -59,6 +61,8 @@ const MonitoredService: React.FC = () => {
   const [selectedView, setSelectedView] = useState<Views>(view === Views.GRID ? Views.GRID : Views.LIST)
   const [environment, setEnvironment] = useState<SelectOption>()
   const [selectedFilter, setSelectedFilter] = useState<FilterTypes>(FilterTypes.ALL)
+  const [search, setSearch] = useState<string>('')
+  
 
   useEffect(() => {
     setPage(0)
@@ -170,7 +174,16 @@ const MonitoredService: React.FC = () => {
       <Page.Header
         title={createButton(Boolean(serviceCountData?.allServicesCount))}
         toolbar={
-          <Layout.Horizontal>
+          <Layout.Horizontal spacing="medium">
+            <Container data-name="monitoredServiceSeachContainer">
+              <ExpandingSearchInput
+                width={250}
+                alwaysExpanded
+                throttle={500}
+                onChange={setSearch}
+                placeholder={'Search monitered service'}
+              />
+            </Container>
             <Select
               value={{
                 label: `${getString('environment')}: ${defaultTo(environment?.label, getString('all'))}`,
@@ -195,6 +208,7 @@ const MonitoredService: React.FC = () => {
       {selectedView === Views.LIST ? (
         <MonitoredServiceList
           page={page}
+          search={search}
           setPage={setPage}
           environmentIdentifier={getEnvironmentIdentifier(environment)}
           createButton={createButton(Boolean(!serviceCountData?.allServicesCount))}
@@ -208,6 +222,7 @@ const MonitoredService: React.FC = () => {
       ) : (
         <ServiceDependencyGraph
           isPageView
+          search={search}
           serviceCountData={serviceCountData}
           selectedFilter={selectedFilter}
           onFilter={onFilter}
