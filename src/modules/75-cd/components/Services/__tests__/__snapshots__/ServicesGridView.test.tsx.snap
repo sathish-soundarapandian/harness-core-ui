@@ -2,6 +2,7 @@
 
 exports[`ServicesGridView render 1`] = `
 <div>
+  Help Panel
   <div
     class="StyledProps--font StyledProps--main masonry"
     style="height: calc(100% - 66px); width: 100%;"
@@ -47,26 +48,17 @@ exports[`ServicesGridView render 1`] = `
                         data-icon="Options"
                       >
                         <svg
-                          fill="currentColor"
+                          fill="none"
                           height="16"
                           viewBox="0 0 4 16"
                           width="16"
                           xmlns="http://www.w3.org/2000/svg"
                         >
-                          <circle
-                            cx="2"
-                            cy="2"
-                            r="1.5"
-                          />
-                          <circle
-                            cx="2"
-                            cy="8"
-                            r="1.5"
-                          />
-                          <circle
-                            cx="2"
-                            cy="14"
-                            r="1.5"
+                          <path
+                            clip-rule="evenodd"
+                            d="M2 12.5a1 1 0 100 2 1 1 0 000-2zm-2 1a2 2 0 114 0 2 2 0 01-4 0zm2-12a1 1 0 100 2 1 1 0 000-2zm-2 1a2 2 0 114 0 2 2 0 01-4 0zM2 7a1 1 0 100 2 1 1 0 000-2zM0 8a2 2 0 114 0 2 2 0 01-4 0z"
+                            fill="currentColor"
+                            fill-rule="evenodd"
                           />
                         </svg>
                       </span>

@@ -163,6 +163,7 @@ exports[`Services should render Services 1`] = `
         id="bp3-tab-panel_serviceLandingPageTabs_dashboard"
         role="tabpanel"
       >
+        Help Panel
         <div
           class="StyledProps--font StyledProps--main PageBody--pageBody pageBody"
           data-name="page-body"
