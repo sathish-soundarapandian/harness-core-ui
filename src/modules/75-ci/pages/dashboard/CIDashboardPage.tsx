@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { Container, PageHeader, Dialog } from '@wings-software/uicore'
+import { Container, PageHeader, Dialog, PageSpinner } from '@wings-software/uicore'
 import { useParams, useHistory } from 'react-router-dom'
 import { camelCase } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
@@ -172,6 +172,14 @@ export const CIDashboardPage: React.FC = () => {
   useErrorHandler(error as GetDataError<Failure | Error> | null, undefined, 'ci.get.build.error')
   useErrorHandler(repoError as GetDataError<Failure | Error> | null, undefined, 'ci.get.repo.error')
 
+  if (loadingRepositories || pipelineLoading) {
+    return (
+      <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
+        <PageSpinner />
+      </div>
+    )
+  }
+
   return (
     <>
       <PageHeader
@@ -185,7 +193,7 @@ export const CIDashboardPage: React.FC = () => {
       />
       <Page.Body
         className={styles.content}
-        loading={(loading && !refetchingBuilds && loadingRepositories && !refetchingRepos) || pipelineLoading}
+        loading={loading && !refetchingBuilds && loadingRepositories && !refetchingRepos}
       >
         {showOverviewDialog ? (
           <NoDataOverviewPage onHide={() => setShowOverviewDialog(false)} />

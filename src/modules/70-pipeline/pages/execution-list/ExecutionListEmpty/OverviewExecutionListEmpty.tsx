@@ -35,7 +35,6 @@ const getEmptyStateText = (
   executionIllustration: string
   pipelineIllustration: string
 } => {
-  console.log(module)
   switch (module) {
     case 'ci':
       return {
