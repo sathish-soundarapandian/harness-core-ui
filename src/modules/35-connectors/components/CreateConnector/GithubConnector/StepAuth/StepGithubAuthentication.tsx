@@ -56,6 +56,7 @@ import {
   OAUTH_PLACEHOLDER_VALUE,
   OAUTH_REDIRECT_URL_PREFIX
 } from '../../CreateConnectorUtils'
+import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './StepGithubAuthentication.module.scss'
 import commonCss from '../../commonSteps/ConnectorCommonStyles.module.scss'
@@ -198,7 +199,7 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
     const [isAccessRevoked, setIsAccessRevoked] = useState<boolean>(false)
     const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
     const [gitAuthType, setGitAuthType] = useState<GitAuthTypes>()
-
+    useConnectorWizard({ helpPanel: { referenceId: 'gitHubConnectorCredentials', contentWidth: 900 } })
     const authOptions: Array<SelectOption> = [
       {
         label: getString('usernameToken'),

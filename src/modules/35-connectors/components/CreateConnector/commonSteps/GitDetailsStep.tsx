@@ -39,6 +39,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Connectors } from '@connectors/constants'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
+import { useConnectorWizard } from '../../CreateConnectorWizard/ConnectorWizardContext'
 import css from './ConnectorDetailsStep.module.scss'
 import commonCss from './ConnectorCommonStyles.module.scss'
 
@@ -90,7 +91,7 @@ const GitDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDetailsS
   const [loading, setLoading] = useState(false)
   const isEdit = props.isEditMode || prevStepData?.isEdit
   const { getString } = useStrings()
-
+  useConnectorWizard({ helpPanel: { referenceId: 'gitHubConnectorDetails', contentWidth: 900 } })
   const getUrlTypeOptions = (connectorType: ConnectorInfoDTO['type']): IOptionProps[] => {
     return [
       ...[
@@ -125,6 +126,7 @@ const GitDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDetailsS
   /**
    * Function to getUrlLabel
    */
+
   const getUrlLabel = (connectorType: ConnectorInfoDTO['type'], urlType: string): string => {
     switch (connectorType) {
       case Connectors.GIT:
