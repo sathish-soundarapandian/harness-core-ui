@@ -15,7 +15,8 @@ import type {
   AppDynamicsHealthSourceSpec,
   AppdynamicsValidationResponse,
   MetricPackDTO,
-  RiskProfile
+  RiskProfile,
+  TimeSeriesMetricPackDTO
 } from 'services/cv'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
@@ -452,7 +453,7 @@ export const createAppDynamicsPayload = (formData: any): UpdatedHealthSource | n
       ...specPayload,
       feature: 'Application Monitoring' as string,
       connectorRef: (formData?.connectorRef?.value as string) || (formData.connectorRef as string),
-      metricPacks: Object.entries(formData?.metricData)
+      metricPacks: (Object.entries(formData?.metricData)
         .map(item => {
           return item[1]
             ? {
@@ -460,7 +461,7 @@ export const createAppDynamicsPayload = (formData: any): UpdatedHealthSource | n
               }
             : {}
         })
-        .filter(item => !isEmpty(item))
+        .filter(item => !isEmpty(item)) as TimeSeriesMetricPackDTO[])
     }
   }
 }

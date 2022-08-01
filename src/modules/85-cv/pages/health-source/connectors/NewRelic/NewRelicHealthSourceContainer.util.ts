@@ -7,7 +7,7 @@
 
 import { isEmpty } from 'lodash-es'
 import { v4 as uuid } from 'uuid'
-import type { NewRelicHealthSourceSpec, NewRelicMetricDefinition, RiskProfile } from 'services/cv'
+import type { NewRelicHealthSourceSpec, NewRelicMetricDefinition, RiskProfile, TimeSeriesMetricPackDTO } from 'services/cv'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { HealthSourceTypes } from '../../types'
 import type { NewRelicData } from './NewRelicHealthSource.types'
@@ -82,7 +82,7 @@ export const createNewRelicPayload = (formData: any): UpdatedHealthSource | null
       ...specPayload,
       feature: formData.product?.value as string,
       connectorRef: (formData?.connectorRef?.connector?.identifier as string) || (formData.connectorRef as string),
-      metricPacks: Object.entries(formData?.metricData)
+      metricPacks: (Object.entries(formData?.metricData)
         .map(item => {
           return item[1]
             ? {
@@ -90,7 +90,7 @@ export const createNewRelicPayload = (formData: any): UpdatedHealthSource | null
               }
             : {}
         })
-        .filter(item => !isEmpty(item))
+        .filter(item => !isEmpty(item)) as TimeSeriesMetricPackDTO[])
     }
   }
 }
