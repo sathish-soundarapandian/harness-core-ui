@@ -453,7 +453,7 @@ export const createAppDynamicsPayload = (formData: any): UpdatedHealthSource | n
       ...specPayload,
       feature: 'Application Monitoring' as string,
       connectorRef: (formData?.connectorRef?.value as string) || (formData.connectorRef as string),
-      metricPacks: (Object.entries(formData?.metricData)
+      metricPacks: Object.entries(formData?.metricData)
         .map(item => {
           return item[1]
             ? {
@@ -461,7 +461,7 @@ export const createAppDynamicsPayload = (formData: any): UpdatedHealthSource | n
               }
             : {}
         })
-        .filter(item => !isEmpty(item)) as TimeSeriesMetricPackDTO[])
+        .filter(item => !isEmpty(item)) as TimeSeriesMetricPackDTO[]
     }
   }
 }

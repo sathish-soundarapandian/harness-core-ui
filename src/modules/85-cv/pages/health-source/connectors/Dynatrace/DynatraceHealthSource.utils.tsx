@@ -36,7 +36,7 @@ export const mapDynatraceMetricDataToHealthSource = (dynatraceMetricData: Dynatr
     serviceId: dynatraceMetricData.selectedService.value as string,
     serviceName: dynatraceMetricData.selectedService.label as string,
     feature: DynatraceProductNames.APM,
-    metricPacks: (Object.entries(dynatraceMetricData.metricData)
+    metricPacks: Object.entries(dynatraceMetricData.metricData)
       .map(item => {
         return item[1]
           ? {
@@ -44,7 +44,7 @@ export const mapDynatraceMetricDataToHealthSource = (dynatraceMetricData: Dynatr
             }
           : {}
       })
-      .filter(item => !isEmpty(item)) as TimeSeriesMetricPackDTO[]),
+      .filter(item => !isEmpty(item)) as TimeSeriesMetricPackDTO[],
     metricDefinitions: [],
     serviceMethodIds: dynatraceMetricData.serviceMethods
   }
