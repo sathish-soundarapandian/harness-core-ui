@@ -11,7 +11,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type {
   ResponseConnectorResponse,
-  ResponseListServiceNowFieldNG,
+  ResponseServiceNowFieldListDTO,
   ResponsePageConnectorResponse,
   ServiceNowFieldSchemaNG,
   ResponseListServiceNowTicketTypeDTO
@@ -312,7 +312,7 @@ export const mockConnectorsResponse: ResponsePageConnectorResponse = {
   }
 }
 
-export const mockServiceNowMetadataResponse: UseGetMockData<ResponseListServiceNowFieldNG> = {
+export const mockServiceNowMetadataResponse: UseGetMockData<ResponseServiceNowFieldListDTO> = {
   loading: false,
   // eslint-disable-next-line
   // @ts-ignore
@@ -321,36 +321,39 @@ export const mockServiceNowMetadataResponse: UseGetMockData<ResponseListServiceN
     correlationId: '',
     status: 'SUCCESS',
     metaData: null as unknown as undefined,
-    data: [
-      {
-        key: 'f1',
-        name: 'f1',
-        allowedValues: [],
-        schema: {
-          type: 'string' as ServiceNowFieldSchemaNG['type'],
-          typeStr: ''
-        }
-      },
-      {
-        key: 'f2',
-        name: 'f2',
-        allowedValues: [
-          {
-            id: 'av1',
-            name: 'av1',
-            value: 'av1'
-          },
-          {
-            id: 'av2',
-            name: 'av2'
+    data: {
+      fields: [
+        {
+          key: 'f1',
+          name: 'f1',
+          allowedValues: [],
+          schema: {
+            type: 'string' as ServiceNowFieldSchemaNG['type'],
+            typeStr: ''
           }
-        ],
-        schema: {
-          type: 'string' as ServiceNowFieldSchemaNG['type'],
-          typeStr: ''
+        },
+        {
+          key: 'f2',
+          name: 'f2',
+          allowedValues: [
+            {
+              id: 'av1',
+              name: 'av1',
+              value: 'av1'
+            },
+            {
+              id: 'av2',
+              name: 'av2'
+            }
+          ],
+          schema: {
+            type: 'string' as ServiceNowFieldSchemaNG['type'],
+            typeStr: ''
+          }
         }
-      }
-    ]
+      ],
+      fieldInternalTypeMap: {}
+    }
   }
 }
 

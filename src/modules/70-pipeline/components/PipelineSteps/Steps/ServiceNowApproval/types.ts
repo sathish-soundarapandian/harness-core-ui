@@ -12,10 +12,10 @@ import type { GetDataError } from 'restful-react'
 import type {
   ResponseListServiceNowTicketTypeDTO,
   StepElementConfig,
-  UseGetServiceNowIssueCreateMetadataProps,
   UseGetServiceNowTicketTypesProps,
   Failure,
-  ResponseListServiceNowFieldNG
+  ResponseServiceNowFieldListDTO,
+  UseGetServiceNowIssueCreateMetadataV2Props
 } from 'services/cd-ng'
 import type { InputSetData, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getDefaultCriterias } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
@@ -36,6 +36,7 @@ export interface ServiceNowApprovalData extends StepElementConfig {
     }
   }
 }
+
 export interface ServiceNowTicketTypeSelectOption extends SelectOption {
   key: string
 }
@@ -76,10 +77,10 @@ export interface ServiceNowFormContentInterface {
   serviceNowTicketTypesFetchError?: GetDataError<Failure | Error> | null
   fetchingServiceNowTicketTypes: boolean
   serviceNowTicketTypesResponse: ResponseListServiceNowTicketTypeDTO | null
-  refetchServiceNowMetadata: (props: UseGetServiceNowIssueCreateMetadataProps) => Promise<void>
-  serviceNowMetadataFetchError?: GetDataError<Failure | Error> | null
-  fetchingServiceNowMetadata: boolean
-  serviceNowMetadataResponse: ResponseListServiceNowFieldNG | null
+  refetchServiceNowIssueCreateMetadata: (props: UseGetServiceNowIssueCreateMetadataV2Props) => Promise<void>
+  serviceNowIssueCreateMetadataFetchError?: GetDataError<Failure | Error> | null
+  fetchingServiceNowIssueCreateMetadata: boolean
+  serviceNowIssueCreateMetadataResponse: ResponseServiceNowFieldListDTO | null
 }
 export const resetForm = (formik: FormikProps<ServiceNowApprovalData>, parent: string) => {
   if (parent === 'connectorRef') {

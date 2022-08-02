@@ -34,7 +34,7 @@ jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('services/cd-ng', () => ({
   useGetConnector: () => mockConnectorResponse,
   useGetServiceNowTicketTypes: () => mockTicketTypesResponse,
-  useGetServiceNowIssueMetadata: () => mockServiceNowMetadataResponse,
+  useGetServiceNowIssueCreateMetadataV2: () => mockServiceNowMetadataResponse,
   useGetServiceNowTemplateMetadata: () => mockServiceNowTemplateResponse
 }))
 

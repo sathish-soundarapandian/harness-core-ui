@@ -25,7 +25,11 @@ import type {
   ServiceNowCreateDeploymentModeProps
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/types'
 import type { ServiceNowTicketTypeSelectOption } from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/types'
-import { ServiceNowTicketTypeDTO, useGetServiceNowIssueMetadata, useGetServiceNowTicketTypes } from 'services/cd-ng'
+import {
+  ServiceNowTicketTypeDTO,
+  useGetServiceNowIssueCreateMetadataV2,
+  useGetServiceNowTicketTypes
+} from 'services/cd-ng'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import {
   ServiceNowCreateFieldType,
@@ -51,9 +55,9 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
     fetchingServiceNowTicketTypes,
     serviceNowTicketTypesFetchError,
     serviceNowTicketTypesResponse,
-    refetchServiceNowMetadata,
-    fetchingServiceNowMetadata,
-    serviceNowMetadataResponse
+    refetchServiceNowIssueCreateMetadata,
+    fetchingServiceNowIssueCreateMetadata,
+    serviceNowIssueCreateMetadataResponse
   } = formContentProps
   const template = inputSetData?.template
   const path = inputSetData?.path
@@ -119,7 +123,7 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
   }, [serviceNowTicketTypesResponse?.data])
   useDeepCompareEffect(() => {
     if (connectorRefFixedValue && ticketTypeKeyFixedValue && fetchMetadataRequired) {
-      refetchServiceNowMetadata({
+      refetchServiceNowIssueCreateMetadata({
         queryParams: {
           ...commonParams,
           connectorRef: connectorRefFixedValue.toString(),
@@ -131,8 +135,8 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
   useEffect(() => {
     const selectedFields: ServiceNowFieldNGWithValue[] = []
     if (ticketTypeKeyFixedValue) {
-      if (template?.spec?.fields && serviceNowMetadataResponse?.data) {
-        serviceNowMetadataResponse?.data.forEach(field => {
+      if (template?.spec?.fields && serviceNowIssueCreateMetadataResponse?.data) {
+        serviceNowIssueCreateMetadataResponse?.data?.fields.forEach(field => {
           if (
             field &&
             field.key !== ServiceNowStaticFields.short_description &&
@@ -149,7 +153,7 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
         setCustomFields([])
       }
     }
-  }, [serviceNowMetadataResponse?.data])
+  }, [serviceNowIssueCreateMetadataResponse?.data])
   return (
     <React.Fragment>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME ? (
@@ -263,7 +267,7 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
           className={css.deploymentViewMedium}
         />
       )}
-      {fetchingServiceNowMetadata ? (
+      {fetchingServiceNowIssueCreateMetadata ? (
         <PageSpinner message={getString('pipeline.serviceNowCreateStep.fetchingFields')} className={css.fetching} />
       ) : fetchMetadataRequired && customFields?.length === 0 ? (
         // Metadata fetch failed, so display as key value pair
@@ -369,15 +373,16 @@ export default function ServiceNowCreateDeploymentMode(props: ServiceNowCreateDe
     }
   })
   const {
-    refetch: refetchServiceNowMetadata,
-    data: serviceNowMetadataResponse,
-    error: serviceNowMetadataFetchError,
-    loading: fetchingServiceNowMetadata
-  } = useGetServiceNowIssueMetadata({
+    refetch: refetchServiceNowIssueCreateMetadata,
+    data: serviceNowIssueCreateMetadataResponse,
+    error: serviceNowIssueCreateMetadataFetchError,
+    loading: fetchingServiceNowIssueCreateMetadata
+  } = useGetServiceNowIssueCreateMetadataV2({
     lazy: true,
     queryParams: {
       ...commonParams,
-      connectorRef: ''
+      connectorRef: '',
+      ticketType: ''
     }
   })
   return (
@@ -387,10 +392,10 @@ export default function ServiceNowCreateDeploymentMode(props: ServiceNowCreateDe
       fetchingServiceNowTicketTypes={fetchingServiceNowTicketTypes}
       serviceNowTicketTypesResponse={serviceNowTicketTypesResponse}
       serviceNowTicketTypesFetchError={serviceNowTicketTypesFetchError}
-      refetchServiceNowMetadata={refetchServiceNowMetadata}
-      fetchingServiceNowMetadata={fetchingServiceNowMetadata}
-      serviceNowMetadataResponse={serviceNowMetadataResponse}
-      serviceNowMetadataFetchError={serviceNowMetadataFetchError}
+      refetchServiceNowIssueCreateMetadata={refetchServiceNowIssueCreateMetadata}
+      fetchingServiceNowIssueCreateMetadata={fetchingServiceNowIssueCreateMetadata}
+      serviceNowIssueCreateMetadataResponse={serviceNowIssueCreateMetadataResponse}
+      serviceNowIssueCreateMetadataFetchError={serviceNowIssueCreateMetadataFetchError}
     />
   )
 }

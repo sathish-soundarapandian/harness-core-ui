@@ -47,7 +47,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { ApprovalRejectionCriteriaType } from '@pipeline/components/PipelineSteps/Steps/Common/types'
 import {
-  useGetServiceNowIssueCreateMetadata,
+  useGetServiceNowIssueCreateMetadataV2,
   useGetServiceNowTicketTypes,
   ServiceNowFieldNG,
   ServiceNowTicketTypeDTO
@@ -74,9 +74,9 @@ function FormContent({
   refetchServiceNowTicketTypes,
   fetchingServiceNowTicketTypes,
   serviceNowTicketTypesResponse,
-  serviceNowMetadataResponse,
   serviceNowTicketTypesFetchError,
-  refetchServiceNowMetadata
+  serviceNowIssueCreateMetadataResponse,
+  refetchServiceNowIssueCreateMetadata
 }: ServiceNowFormContentInterface): JSX.Element {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -84,6 +84,10 @@ function FormContent({
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [ticketFieldList, setTicketFieldList] = useState<ServiceNowFieldNG[]>([])
+  const [ticketFieldInternalTypeMap, setTicketFieldInternalTypeMap] = useState<{
+    [key: string]: string[]
+  }>()
+
   const [count, setCount] = React.useState(0)
   const [serviceNowTicketTypesOptions, setServiceNowTicketTypesOptions] = useState<ServiceNowTicketTypeSelectOption[]>(
     []
@@ -104,10 +108,11 @@ function FormContent({
       : undefined
 
   useEffect(() => {
-    if (ticketTypeKeyFixedValue && serviceNowMetadataResponse?.data) {
-      setTicketFieldList(serviceNowMetadataResponse?.data)
+    if (ticketTypeKeyFixedValue && serviceNowIssueCreateMetadataResponse?.data) {
+      setTicketFieldList(serviceNowIssueCreateMetadataResponse?.data?.fields)
+      setTicketFieldInternalTypeMap(serviceNowIssueCreateMetadataResponse?.data?.fieldInternalTypeMap)
     }
-  }, [serviceNowMetadataResponse?.data, ticketTypeKeyFixedValue])
+  }, [serviceNowIssueCreateMetadataResponse?.data, ticketTypeKeyFixedValue])
 
   useEffect(() => {
     if (connectorRefFixedValue && connectorValueType === MultiTypeInputType.FIXED) {
@@ -122,7 +127,7 @@ function FormContent({
 
   useDeepCompareEffect(() => {
     if (ticketTypeKeyFixedValue && connectorRefFixedValue) {
-      refetchServiceNowMetadata({
+      refetchServiceNowIssueCreateMetadata({
         queryParams: {
           ...commonParams,
           connectorRef: connectorRefFixedValue.toString(),
@@ -338,10 +343,9 @@ function FormContent({
               />
               <ServiceNowApprovalChangeWindow
                 formik={formik}
-                fetchingServiceNowTicketTypes={fetchingServiceNowTicketTypes}
-                serviceNowTicketTypesFetchErrorMessage={serviceNowTicketTypesFetchError?.message}
+                serviceNowIssueCreateMetadataFields={ticketFieldList}
+                serviceNowIssueCreateMetadataFieldInternalTypeMap={ticketFieldInternalTypeMap}
                 readonly={!!readonly}
-                serviceNowTicketTypesOptions={serviceNowTicketTypesOptions}
               />
             </Layout.Vertical>
           }
@@ -380,15 +384,16 @@ function ServiceNowApprovalStepMode(
   })
 
   const {
-    refetch: refetchServiceNowMetadata,
-    data: serviceNowMetadataResponse,
-    error: serviceNowMetadataFetchError,
-    loading: fetchingServiceNowMetadata
-  } = useGetServiceNowIssueCreateMetadata({
+    refetch: refetchServiceNowIssueCreateMetadata,
+    data: serviceNowIssueCreateMetadataResponse,
+    error: serviceNowIssueCreateMetadataFetchError,
+    loading: fetchingServiceNowIssueCreateMetadata
+  } = useGetServiceNowIssueCreateMetadataV2({
     lazy: true,
     queryParams: {
       ...commonParams,
-      connectorRef: ''
+      connectorRef: '',
+      ticketType: ''
     }
   })
   return (
@@ -446,10 +451,10 @@ function ServiceNowApprovalStepMode(
               fetchingServiceNowTicketTypes={fetchingServiceNowTicketTypes}
               serviceNowTicketTypesResponse={serviceNowTicketTypesResponse}
               serviceNowTicketTypesFetchError={serviceNowTicketTypesFetchError}
-              refetchServiceNowMetadata={refetchServiceNowMetadata}
-              fetchingServiceNowMetadata={fetchingServiceNowMetadata}
-              serviceNowMetadataResponse={serviceNowMetadataResponse}
-              serviceNowMetadataFetchError={serviceNowMetadataFetchError}
+              refetchServiceNowIssueCreateMetadata={refetchServiceNowIssueCreateMetadata}
+              fetchingServiceNowIssueCreateMetadata={fetchingServiceNowIssueCreateMetadata}
+              serviceNowIssueCreateMetadataResponse={serviceNowIssueCreateMetadataResponse}
+              serviceNowIssueCreateMetadataFetchError={serviceNowIssueCreateMetadataFetchError}
             />
           </FormikForm>
         )

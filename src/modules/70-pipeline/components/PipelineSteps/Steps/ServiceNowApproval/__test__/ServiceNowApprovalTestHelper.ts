@@ -11,7 +11,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type {
   ResponseConnectorResponse,
-  ResponseListServiceNowFieldNG,
+  ResponseServiceNowFieldListDTO,
   ResponsePageConnectorResponse,
   ResponseListServiceNowTicketTypeDTO
 } from 'services/cd-ng'
@@ -73,8 +73,8 @@ export const getServiceNowApprovalEditModePropsWithValues = (): ServiceNowApprov
         }
       },
       changeWindow: {
-        startField: 'PROBLEM',
-        endField: 'INCIDENT'
+        startField: 'sys_updated_on',
+        endField: 'due_date'
       }
     }
   },
@@ -224,7 +224,7 @@ export const mockTicketTypesResponse: UseGetMockData<ResponseListServiceNowTicke
     ]
   }
 }
-export const mockServiceNowCreateMetadataResponse: UseGetMockData<ResponseListServiceNowFieldNG> = {
+export const mockServiceNowCreateMetadataResponse: UseGetMockData<ResponseServiceNowFieldListDTO> = {
   loading: false,
   // eslint-disable-next-line
   // @ts-ignore
@@ -234,56 +234,98 @@ export const mockServiceNowCreateMetadataResponse: UseGetMockData<ResponseListSe
     correlationId: '',
     status: 'SUCCESS',
     metaData: null as unknown as undefined,
-    data: [
-      {
-        key: 'parent',
-        name: 'Parent',
-        required: false,
-        schema: { array: undefined, customType: undefined, type: 'string', typeStr: '' },
-        allowedValues: [],
-        custom: false
-      },
-      {
-        key: 'made_sla',
-        name: 'Made SLA',
-        required: false,
-        schema: { array: undefined, customType: undefined, type: 'string', typeStr: '' },
-        allowedValues: [],
-        custom: false
-      },
-      {
-        key: 'caused_by',
-        name: 'Caused by Change',
-        required: false,
-        schema: { array: undefined, customType: undefined, type: 'string', typeStr: '' },
-        allowedValues: [],
-        custom: false
-      },
-      {
-        key: 'watch_list',
-        name: 'Watch list',
-        required: false,
-        schema: { array: undefined, customType: undefined, type: 'string', typeStr: '' },
-        allowedValues: [],
-        custom: false
-      },
-      {
-        key: 'upon_reject',
-        name: 'Upon reject',
-        required: false,
-        schema: { array: undefined, customType: undefined, type: 'string', typeStr: '' },
-        allowedValues: [],
-        custom: false
-      },
-      {
-        key: 'sys_updated_on',
-        name: 'updated',
-        required: false,
-        schema: { array: undefined, customType: undefined, type: 'string', typeStr: '' },
-        allowedValues: [],
-        custom: false
+    data: {
+      fields: [
+        {
+          key: 'parent',
+          name: 'Parent',
+          required: false,
+          schema: { array: undefined, customType: undefined, type: 'string', typeStr: '' },
+          internalType: 'reference',
+          allowedValues: [],
+          custom: false
+        },
+        {
+          key: 'made_sla',
+          name: 'Made SLA',
+          required: false,
+          schema: { array: undefined, customType: undefined, type: 'string', typeStr: '' },
+          internalType: 'boolean',
+          allowedValues: [],
+          custom: false
+        },
+        {
+          key: 'caused_by',
+          name: 'Caused by Change',
+          required: false,
+          schema: { array: undefined, customType: undefined, type: 'string', typeStr: '' },
+          internalType: 'reference',
+          allowedValues: [],
+          custom: false
+        },
+        {
+          key: 'watch_list',
+          name: 'Watch list',
+          required: false,
+          schema: { array: undefined, customType: undefined, type: 'string', typeStr: '' },
+          internalType: 'glide_list',
+          allowedValues: [],
+          custom: false
+        },
+        {
+          key: 'upon_reject',
+          name: 'Upon reject',
+          required: false,
+          schema: { array: undefined, customType: undefined, type: 'string', typeStr: '' },
+          internalType: 'string',
+          allowedValues: [],
+          custom: false
+        },
+        {
+          key: 'sys_updated_on',
+          name: 'updated',
+          required: false,
+          schema: { array: undefined, customType: undefined, type: 'string', typeStr: '' },
+          internalType: 'glide_date_time',
+          allowedValues: [],
+          custom: false
+        },
+        {
+          key: 'work_start',
+          name: 'Actual start',
+          required: false,
+          schema: { array: undefined, customType: undefined, type: 'string', typeStr: '' },
+          internalType: 'glide_date',
+          allowedValues: [],
+          custom: false
+        },
+        {
+          key: 'follow_up',
+          name: 'Follow up',
+          required: false,
+          schema: { array: undefined, customType: undefined, type: 'string', typeStr: '' },
+          internalType: 'glide_time',
+          allowedValues: [],
+          custom: false
+        },
+        {
+          key: 'due_date',
+          name: 'Due Date',
+          required: false,
+          schema: { array: undefined, customType: undefined, type: 'string', typeStr: '' },
+          internalType: 'due_date',
+          allowedValues: [],
+          custom: false
+        }
+      ],
+      fieldInternalTypeMap: {
+        OPTION: ['option'],
+        STRING: ['string'],
+        DATE_TIME: ['glide_date_time', 'due_date', 'glide_date', 'glide_time'],
+        BOOLEAN: ['boolean'],
+        INTEGER: ['integer']
       }
-    ]
+    }
   }
 }
 

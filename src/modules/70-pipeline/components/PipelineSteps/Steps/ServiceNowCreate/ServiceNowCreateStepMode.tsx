@@ -34,7 +34,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import {
   ServiceNowFieldNG,
   ServiceNowTicketTypeDTO,
-  useGetServiceNowIssueMetadata,
+  useGetServiceNowIssueCreateMetadataV2,
   useGetServiceNowTemplateMetadata,
   useGetServiceNowTicketTypes
 } from 'services/cd-ng'
@@ -87,10 +87,10 @@ function FormContent({
   refetchServiceNowTicketTypes,
   fetchingServiceNowTicketTypes,
   serviceNowTicketTypesResponse,
-  serviceNowMetadataResponse,
+  serviceNowIssueCreateMetadataResponse,
   serviceNowTicketTypesFetchError,
-  refetchServiceNowMetadata,
-  fetchingServiceNowMetadata,
+  refetchServiceNowIssueCreateMetadata,
+  fetchingServiceNowIssueCreateMetadata,
   refetchServiceNowTemplate,
   serviceNowTemplateResponse,
   fetchingServiceNowTemplate
@@ -174,7 +174,7 @@ function FormContent({
   }, [connectorRefFixedValue, ticketTypeKeyFixedValue, templateName])
   useDeepCompareEffect(() => {
     if (connectorRefFixedValue && ticketTypeKeyFixedValue && ticketValueType === MultiTypeInputType.FIXED) {
-      refetchServiceNowMetadata({
+      refetchServiceNowIssueCreateMetadata({
         queryParams: {
           ...commonParams,
           connectorRef: connectorRefFixedValue.toString(),
@@ -186,9 +186,9 @@ function FormContent({
   useEffect(() => {
     const formikSelectedFields: ServiceNowFieldNGWithValue[] = []
     if (ticketTypeKeyFixedValue) {
-      setTicketFieldList(serviceNowMetadataResponse?.data || [])
-      if (formik.values.spec.fields && serviceNowMetadataResponse?.data) {
-        serviceNowMetadataResponse?.data.forEach(field => {
+      setTicketFieldList(serviceNowIssueCreateMetadataResponse?.data?.fields || [])
+      if (formik.values.spec.fields && serviceNowIssueCreateMetadataResponse?.data) {
+        serviceNowIssueCreateMetadataResponse?.data?.fields.forEach(field => {
           if (
             field &&
             field.key !== ServiceNowStaticFields.short_description &&
@@ -215,7 +215,7 @@ function FormContent({
         setTicketFieldList([])
       }
     }
-  }, [serviceNowMetadataResponse?.data])
+  }, [serviceNowIssueCreateMetadataResponse?.data])
 
   useEffect(() => {
     if (serviceNowTemplateResponse && serviceNowTemplateResponse.data) {
@@ -460,7 +460,7 @@ function FormContent({
         />
         {formik.values.spec.fieldType === FieldType.ConfigureFields && (
           <div>
-            {fetchingServiceNowMetadata ? (
+            {fetchingServiceNowIssueCreateMetadata ? (
               <PageSpinner
                 message={getString('pipeline.serviceNowCreateStep.fetchingFields')}
                 className={css.fetching}
@@ -656,15 +656,16 @@ function ServiceNowCreateStepMode(
   })
 
   const {
-    refetch: refetchServiceNowMetadata,
-    data: serviceNowMetadataResponse,
-    error: serviceNowMetadataFetchError,
-    loading: fetchingServiceNowMetadata
-  } = useGetServiceNowIssueMetadata({
+    refetch: refetchServiceNowIssueCreateMetadata,
+    data: serviceNowIssueCreateMetadataResponse,
+    error: serviceNowIssueCreateMetadataFetchError,
+    loading: fetchingServiceNowIssueCreateMetadata
+  } = useGetServiceNowIssueCreateMetadataV2({
     lazy: true,
     queryParams: {
       ...commonParams,
-      connectorRef: ''
+      connectorRef: '',
+      ticketType: ''
     }
   })
   const {
@@ -747,10 +748,10 @@ function ServiceNowCreateStepMode(
               fetchingServiceNowTicketTypes={fetchingServiceNowTicketTypes}
               serviceNowTicketTypesResponse={serviceNowTicketTypesResponse}
               serviceNowTicketTypesFetchError={serviceNowTicketTypesFetchError}
-              refetchServiceNowMetadata={refetchServiceNowMetadata}
-              fetchingServiceNowMetadata={fetchingServiceNowMetadata}
-              serviceNowMetadataResponse={serviceNowMetadataResponse}
-              serviceNowMetadataFetchError={serviceNowMetadataFetchError}
+              refetchServiceNowIssueCreateMetadata={refetchServiceNowIssueCreateMetadata}
+              fetchingServiceNowIssueCreateMetadata={fetchingServiceNowIssueCreateMetadata}
+              serviceNowIssueCreateMetadataResponse={serviceNowIssueCreateMetadataResponse}
+              serviceNowIssueCreateMetadataFetchError={serviceNowIssueCreateMetadataFetchError}
               refetchServiceNowTemplate={refetchServiceNowTemplate}
               serviceNowTemplateResponse={serviceNowTemplateResponse}
               serviceNowTemplateFetchError={serviceNowTemplateFetchError}

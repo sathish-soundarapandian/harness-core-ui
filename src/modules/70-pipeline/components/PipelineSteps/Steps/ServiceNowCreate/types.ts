@@ -13,12 +13,11 @@ import type {
   Failure,
   ServiceNowFieldNG,
   StepElementConfig,
-  ResponseListServiceNowFieldNG,
+  ResponseServiceNowFieldListDTO,
   ResponseListServiceNowTicketTypeDTO,
   UseGetServiceNowTicketTypesProps,
-  UseGetServiceNowIssueMetadataProps,
+  UseGetServiceNowIssueCreateMetadataV2Props,
   UseGetServiceNowTemplateMetadataProps,
-  UseGetServiceNowIssueCreateMetadataProps,
   ResponseListServiceNowTemplate,
   ServiceNowFieldValueNG
 } from 'services/cd-ng'
@@ -79,10 +78,10 @@ export interface ServiceNowCreateFormContentInterface {
   serviceNowTicketTypesFetchError?: GetDataError<Failure | Error> | null
   fetchingServiceNowTicketTypes: boolean
   serviceNowTicketTypesResponse: ResponseListServiceNowTicketTypeDTO | null
-  refetchServiceNowMetadata: (props: UseGetServiceNowIssueMetadataProps) => Promise<void>
-  serviceNowMetadataFetchError?: GetDataError<Failure | Error> | null
-  fetchingServiceNowMetadata: boolean
-  serviceNowMetadataResponse: ResponseListServiceNowFieldNG | null
+  refetchServiceNowIssueCreateMetadata: (props: UseGetServiceNowIssueCreateMetadataV2Props) => Promise<void>
+  serviceNowIssueCreateMetadataFetchError?: GetDataError<Failure | Error> | null
+  fetchingServiceNowIssueCreateMetadata: boolean
+  serviceNowIssueCreateMetadataResponse: ResponseServiceNowFieldListDTO | null
   refetchServiceNowTemplate: (props: UseGetServiceNowTemplateMetadataProps) => Promise<void>
   serviceNowTemplateResponse: ResponseListServiceNowTemplate | null
   fetchingServiceNowTemplate: boolean
@@ -126,10 +125,10 @@ export interface ServiceNowCreateDeploymentModeFormContentInterface extends Serv
   serviceNowTicketTypesFetchError?: GetDataError<Failure | Error> | null
   fetchingServiceNowTicketTypes: boolean
   serviceNowTicketTypesResponse: ResponseListServiceNowTicketTypeDTO | null
-  refetchServiceNowMetadata: (props: UseGetServiceNowIssueCreateMetadataProps) => Promise<void>
-  serviceNowMetadataFetchError?: GetDataError<Failure | Error> | null
-  fetchingServiceNowMetadata: boolean
-  serviceNowMetadataResponse: ResponseListServiceNowFieldNG | null
+  refetchServiceNowIssueCreateMetadata: (props: UseGetServiceNowIssueCreateMetadataV2Props) => Promise<void>
+  serviceNowIssueCreateMetadataFetchError?: GetDataError<Failure | Error> | null
+  fetchingServiceNowIssueCreateMetadata: boolean
+  serviceNowIssueCreateMetadataResponse: ResponseServiceNowFieldListDTO | null
 }
 
 export enum ServiceNowStaticFields {

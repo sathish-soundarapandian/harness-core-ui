@@ -6,49 +6,54 @@
  */
 
 import { Color } from '@harness/design-system'
-import { FormInput, Layout, Text } from '@harness/uicore'
+import { FormInput, Layout, SelectOption, Text } from '@harness/uicore'
 import type { FormikContextType } from 'formik'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'
-import type { ServiceNowApprovalData, ServiceNowTicketTypeSelectOption } from './types'
+import type { ServiceNowFieldNG } from 'services/cd-ng'
+import type { ServiceNowApprovalData } from './types'
 import css from '../Common/ApprovalRejectionCriteria.module.scss'
 
 interface ServiceNowApprovalChangeWindowProps {
   formik: FormikContextType<ServiceNowApprovalData>
-  fetchingServiceNowTicketTypes: boolean
-  serviceNowTicketTypesFetchErrorMessage?: string
   readonly: boolean
-  serviceNowTicketTypesOptions: ServiceNowTicketTypeSelectOption[]
+  serviceNowIssueCreateMetadataFields: ServiceNowFieldNG[]
+  serviceNowIssueCreateMetadataFieldInternalTypeMap?: {
+    [key: string]: string[]
+  }
 }
 
 export function ServiceNowApprovalChangeWindow({
   formik,
-  fetchingServiceNowTicketTypes,
-  serviceNowTicketTypesFetchErrorMessage,
   readonly,
-  serviceNowTicketTypesOptions
+  serviceNowIssueCreateMetadataFields,
+  serviceNowIssueCreateMetadataFieldInternalTypeMap
 }: ServiceNowApprovalChangeWindowProps): React.ReactElement {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
+  const selectOptions = useMemo(() => {
+    const dataTimeFieldMap = serviceNowIssueCreateMetadataFieldInternalTypeMap?.['DATE_TIME'] || []
+    const dateTimeSelectOptions: SelectOption[] = []
+    serviceNowIssueCreateMetadataFields?.forEach(field => {
+      if (field.internalType && dataTimeFieldMap.includes(field.internalType)) {
+        dateTimeSelectOptions.push({ label: field.name, value: field.key })
+      }
+    })
+
+    return dateTimeSelectOptions
+  }, [serviceNowIssueCreateMetadataFieldInternalTypeMap, serviceNowIssueCreateMetadataFields])
+
   const commonMultiTypeInputProps = (placeholder: string) => ({
-    disabled: !formik.values?.spec.enableChangeWindow || readonly || fetchingServiceNowTicketTypes,
-    selectItems: fetchingServiceNowTicketTypes
-      ? [{ label: getString('pipeline.serviceNowApprovalStep.fetchingTicketTypesPlaceholder'), value: '' }]
-      : serviceNowTicketTypesOptions,
-
-    placeholder: fetchingServiceNowTicketTypes
-      ? getString('pipeline.serviceNowApprovalStep.fetchingTicketTypesPlaceholder')
-      : serviceNowTicketTypesFetchErrorMessage || `${getString('select')} ${placeholder}`,
-
+    disabled: !formik.values?.spec.enableChangeWindow || readonly,
+    selectItems: selectOptions,
+    placeholder: `${getString('select')} ${placeholder}`,
     useValue: true,
     multiTypeInputProps: {
       selectProps: {
         addClearBtn: true,
-        items: fetchingServiceNowTicketTypes
-          ? [{ label: getString('pipeline.serviceNowApprovalStep.fetchingTicketTypesPlaceholder'), value: '' }]
-          : serviceNowTicketTypesOptions
+        items: selectOptions
       },
       expressions
     }

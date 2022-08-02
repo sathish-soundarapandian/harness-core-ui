@@ -394,6 +394,7 @@ export interface Account {
   nextGenEnabled?: boolean
   oauthEnabled?: boolean
   povAccount?: boolean
+  productLed?: boolean
   ringName?: string
   serviceAccountConfig?: ServiceAccountConfig
   serviceGuardLimit?: number
@@ -413,6 +414,7 @@ export interface AccountDTO {
   identifier?: string
   name?: string
   nextGenEnabled?: boolean
+  productLed?: boolean
   serviceAccountConfig?: ServiceAccountConfig
 }
 
@@ -1435,6 +1437,7 @@ export interface CDPipelineModuleInfo {
   envIdentifiers?: string[]
   environmentTypes?: ('PreProduction' | 'Production')[]
   infrastructureIdentifiers?: string[]
+  infrastructureNames?: string[]
   infrastructureTypes?: string[]
   serviceDefinitionTypes?: string[]
   serviceIdentifiers?: string[]
@@ -1650,6 +1653,7 @@ export type CommandStepInfo = StepSpecType & {
   commandUnits?: CommandUnitWrapper[]
   delegateSelectors?: string[]
   environmentVariables?: NGVariable[]
+  host?: string
   metadata?: string
   onDelegate: boolean
   outputVariables?: NGVariable[]
@@ -2818,7 +2822,7 @@ export interface EnvironmentDeploymentsInfo {
   envId?: string
   envName?: string
   envType?: string
-  infrastructureIdentifiers?: string[]
+  infrastructureDetails?: InfrastructureInfo[]
 }
 
 export interface EnvironmentFilterProperties {
@@ -4753,7 +4757,12 @@ export interface GitOpsInstanceRequest {
   envIdentifier?: string
   instanceInfo: K8sBasicInfo
   lastDeployedAt: number
+  lastDeployedById?: string
+  lastDeployedByName?: string
+  lastExecutedAt?: number
   orgIdentifier?: string
+  pipelineExecutionId?: string
+  pipelineName?: string
   projectIdentifier?: string
   serviceIdentifier?: string
 }
@@ -5519,6 +5528,7 @@ export type IgnoreFailureActionConfig = FailureStrategyActionConfig & {
 export interface InfraExecutionSummary {
   identifier?: string
   infrastructureIdentifier?: string
+  infrastructureName?: string
   name?: string
   type?: string
 }
@@ -5586,6 +5596,11 @@ export interface InfrastructureDefinitionConfig {
 
 export interface InfrastructureDetails {
   [key: string]: any
+}
+
+export interface InfrastructureInfo {
+  infrastructureIdentifier?: string
+  infrastructureName?: string
 }
 
 export interface InfrastructureRequestDTO {
@@ -9747,6 +9762,13 @@ export interface ResponseServiceInstanceUsageDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseServiceNowFieldListDTO {
+  correlationId?: string
+  data?: ServiceNowFieldListDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseServiceOverrideResponseDTO {
   correlationId?: string
   data?: ServiceOverrideResponseDTO
@@ -10921,9 +10943,17 @@ export interface ServiceNowFieldAllowedValueNG {
   value?: string
 }
 
+export interface ServiceNowFieldListDTO {
+  fieldInternalTypeMap: {
+    [key: string]: string[]
+  }
+  fields: ServiceNowFieldNG[]
+}
+
 export interface ServiceNowFieldNG {
   allowedValues: ServiceNowFieldAllowedValueNG[]
   custom?: boolean
+  internalType?: string
   key: string
   name: string
   required?: boolean
@@ -10978,6 +11008,8 @@ export interface ServiceOverrides {
 }
 
 export interface ServicePipelineInfo {
+  deployedById?: string
+  deployedByName?: string
   identifier?: string
   lastExecutedAt?: number
   name?: string
@@ -15121,11 +15153,13 @@ export const getLastSuccessfulBuildForArtifactoryArtifactPromise = (
   >('POST', getConfig('ng/api'), `/artifacts/artifactory/getLastSuccessfulBuild`, props, signal)
 
 export interface GetRepositoriesDetailsForArtifactoryQueryParams {
-  connectorRef: string
+  connectorRef?: string
   repositoryType?: string
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  fqnPath?: string
+  serviceId?: string
 }
 
 export type GetRepositoriesDetailsForArtifactoryProps = Omit<
@@ -36330,6 +36364,7 @@ export interface GetServiceNowIssueCreateMetadataQueryParams {
   orgIdentifier?: string
   projectIdentifier?: string
   ticketType?: string
+  fieldType?: 'glide_date_time' | 'integer' | 'boolean' | 'string' | 'option'
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -36380,6 +36415,66 @@ export const getServiceNowIssueCreateMetadataPromise = (
   getUsingFetch<ResponseListServiceNowFieldNG, Failure | Error, GetServiceNowIssueCreateMetadataQueryParams, void>(
     getConfig('ng/api'),
     `/servicenow/createMetadata`,
+    props,
+    signal
+  )
+
+export interface GetServiceNowIssueCreateMetadataV2QueryParams {
+  connectorRef: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  ticketType: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+}
+
+export type GetServiceNowIssueCreateMetadataV2Props = Omit<
+  GetProps<ResponseServiceNowFieldListDTO, Failure | Error, GetServiceNowIssueCreateMetadataV2QueryParams, void>,
+  'path'
+>
+
+/**
+ * Get ServiceNow issue create metadata
+ */
+export const GetServiceNowIssueCreateMetadataV2 = (props: GetServiceNowIssueCreateMetadataV2Props) => (
+  <Get<ResponseServiceNowFieldListDTO, Failure | Error, GetServiceNowIssueCreateMetadataV2QueryParams, void>
+    path={`/servicenow/createMetadataV2`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetServiceNowIssueCreateMetadataV2Props = Omit<
+  UseGetProps<ResponseServiceNowFieldListDTO, Failure | Error, GetServiceNowIssueCreateMetadataV2QueryParams, void>,
+  'path'
+>
+
+/**
+ * Get ServiceNow issue create metadata
+ */
+export const useGetServiceNowIssueCreateMetadataV2 = (props: UseGetServiceNowIssueCreateMetadataV2Props) =>
+  useGet<ResponseServiceNowFieldListDTO, Failure | Error, GetServiceNowIssueCreateMetadataV2QueryParams, void>(
+    `/servicenow/createMetadataV2`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get ServiceNow issue create metadata
+ */
+export const getServiceNowIssueCreateMetadataV2Promise = (
+  props: GetUsingFetchProps<
+    ResponseServiceNowFieldListDTO,
+    Failure | Error,
+    GetServiceNowIssueCreateMetadataV2QueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseServiceNowFieldListDTO, Failure | Error, GetServiceNowIssueCreateMetadataV2QueryParams, void>(
+    getConfig('ng/api'),
+    `/servicenow/createMetadataV2`,
     props,
     signal
   )

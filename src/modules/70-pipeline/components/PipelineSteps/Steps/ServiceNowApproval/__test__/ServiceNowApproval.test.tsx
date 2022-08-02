@@ -30,7 +30,7 @@ jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('services/cd-ng', () => ({
   useGetConnector: () => mockConnectorResponse,
   useGetServiceNowTicketTypes: () => mockTicketTypesResponse,
-  useGetServiceNowIssueCreateMetadata: () => mockServiceNowCreateMetadataResponse,
+  useGetServiceNowIssueCreateMetadataV2: () => mockServiceNowCreateMetadataResponse,
   getConnectorListV2Promise: jest.fn(() => Promise.resolve(ConnectorsResponse.data)),
   getServiceNowTicketTypesPromise: jest.fn(() => Promise.resolve(mockTicketTypesResponse.data))
 }))
@@ -241,8 +241,8 @@ describe('ServiceNow Approval tests', () => {
           }
         },
         changeWindow: {
-          endField: 'INCIDENT',
-          startField: 'PROBLEM'
+          endField: 'due_date',
+          startField: 'sys_updated_on'
         }
       },
       name: 'serviceNow approval step'
