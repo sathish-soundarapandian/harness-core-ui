@@ -17,9 +17,7 @@ import {
   Views,
   SelectOption,
   Heading,
-  HarnessDocTooltip,
-  ExpandingSearchInput,
-  Container
+  HarnessDocTooltip
 } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -60,7 +58,6 @@ const MonitoredService: React.FC = () => {
   const [page, setPage] = useState(0)
   const [selectedView, setSelectedView] = useState<Views>(view === Views.GRID ? Views.GRID : Views.LIST)
   const [environment, setEnvironment] = useState<SelectOption>()
-  const [search, setSearch] = useState<string>('')
   const [selectedFilter, setSelectedFilter] = useState<FilterTypes>(FilterTypes.ALL)
 
   useEffect(() => {
@@ -84,14 +81,14 @@ const MonitoredService: React.FC = () => {
   })
 
   useEffect(() => {
-    /* istanbul ignore else */ if (serviceCountData) {
+    if (serviceCountData) {
       refetchServiceCountData()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedView])
 
   const onFilter = (type: FilterTypes): void => {
-    /* istanbul ignore else */ if (type !== selectedFilter) {
+    if (type !== selectedFilter) {
       setPage(0)
       setSelectedFilter(type)
       refetchServiceCountData()
@@ -173,16 +170,7 @@ const MonitoredService: React.FC = () => {
       <Page.Header
         title={createButton(Boolean(serviceCountData?.allServicesCount))}
         toolbar={
-          <Layout.Horizontal spacing="medium">
-            <Container data-name="monitoredServiceSeachContainer">
-              <ExpandingSearchInput
-                width={250}
-                alwaysExpanded
-                throttle={500}
-                onChange={setSearch}
-                placeholder={'Search monitered service'}
-              />
-            </Container>
+          <Layout.Horizontal>
             <Select
               value={{
                 label: `${getString('environment')}: ${defaultTo(environment?.label, getString('all'))}`,
@@ -207,7 +195,6 @@ const MonitoredService: React.FC = () => {
       {selectedView === Views.LIST ? (
         <MonitoredServiceList
           page={page}
-          search={search}
           setPage={setPage}
           environmentIdentifier={getEnvironmentIdentifier(environment)}
           createButton={createButton(Boolean(!serviceCountData?.allServicesCount))}
@@ -221,7 +208,6 @@ const MonitoredService: React.FC = () => {
       ) : (
         <ServiceDependencyGraph
           isPageView
-          search={search}
           serviceCountData={serviceCountData}
           selectedFilter={selectedFilter}
           onFilter={onFilter}

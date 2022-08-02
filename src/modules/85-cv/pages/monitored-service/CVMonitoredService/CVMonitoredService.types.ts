@@ -50,7 +50,6 @@ export interface MonitoredServiceListProps {
   serviceCountLoading?: boolean
   serviceCountErrorMessage?: string
   refetchServiceCountData: () => Promise<void>
-  search?: string
 }
 
 export interface MonitoredServiceListViewProps {

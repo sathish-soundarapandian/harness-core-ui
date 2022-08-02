@@ -78,7 +78,7 @@ export interface ActivityVerificationSummary {
 }
 
 export interface AdditionalInfo {
-  type?: 'TEST' | 'CANARY' | 'BLUE_GREEN'
+  type?: 'TEST' | 'CANARY' | 'BLUE_GREEN' | 'HEALTH'
 }
 
 export interface AnalysisDTO {
@@ -222,7 +222,7 @@ export type AppDynamicsHealthSourceSpec = HealthSourceSpec & {
   applicationName?: string
   feature: string
   metricDefinitions?: AppDMetricDefinitions[]
-  metricPacks?: TimeSeriesMetricPackDTO[]
+  metricPacks?: MetricPackDTO[]
   tierName?: string
 }
 
@@ -469,8 +469,9 @@ export type AzureRepoConnector = ConnectorConfigDTO & {
   apiAccess?: AzureRepoApiAccess
   authentication: AzureRepoAuthentication
   delegateSelectors?: string[]
-  type: 'Project' | 'Repo'
+  type: 'Account' | 'Repo'
   url: string
+  validationProject?: string
   validationRepo?: string
 }
 
@@ -533,7 +534,7 @@ export type BitbucketConnector = ConnectorConfigDTO & {
   apiAccess?: BitbucketApiAccess
   authentication: BitbucketAuthentication
   delegateSelectors?: string[]
-  type: 'Account' | 'Repo' | 'Project'
+  type: 'Account' | 'Repo'
   url: string
   validationRepo?: string
 }
@@ -801,15 +802,9 @@ export interface ClusterCoordinates {
   y?: number
 }
 
-export interface ClusterHostFrequencyData {
-  frequencyData?: HostFrequencyData[]
-  label?: number
-}
-
 export interface ClusterSummary {
   clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   count?: number
-  frequencyData?: HostFrequencyData[]
   label?: number
   risk?: number
   riskLevel?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
@@ -1218,7 +1213,7 @@ export type DynatraceConnectorDTO = ConnectorConfigDTO & {
 export type DynatraceHealthSourceSpec = HealthSourceSpec & {
   feature: string
   metricDefinitions?: DynatraceMetricDefinition[]
-  metricPacks?: TimeSeriesMetricPackDTO[]
+  metricPacks?: MetricPackDTO[]
   serviceId?: string
   serviceMethodIds?: string[]
   serviceName?: string
@@ -1312,7 +1307,6 @@ export interface Error {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
-    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -1329,7 +1323,6 @@ export interface Error {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
-    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -1465,7 +1458,6 @@ export interface Error {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
-    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -1613,10 +1605,7 @@ export interface Error {
     | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
-    | 'TOO_MANY_REQUESTS'
-    | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
-    | 'SCM_UNEXPECTED_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1678,14 +1667,6 @@ export type ExecutionLogDTO = CVNGLogDTO & {
   logLevel?: 'INFO' | 'WARN' | 'ERROR'
 }
 
-export interface FailMetricCustomThresholdSpec {
-  count?: number
-}
-
-export type FailMetricThresholdSpec = MetricThresholdSpec & {
-  spec?: FailMetricCustomThresholdSpec
-}
-
 export interface Failure {
   code?:
     | 'DEFAULT_ERROR_CODE'
@@ -1714,7 +1695,6 @@ export interface Failure {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
-    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -1731,7 +1711,6 @@ export interface Failure {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
-    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -1867,7 +1846,6 @@ export interface Failure {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
-    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -2015,10 +1993,7 @@ export interface Failure {
     | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
-    | 'TOO_MANY_REQUESTS'
-    | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
-    | 'SCM_UNEXPECTED_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2082,7 +2057,7 @@ export interface GitAuthenticationDTO {
 
 export type GitConfigDTO = ConnectorConfigDTO & {
   branchName?: string
-  connectionType: 'Account' | 'Repo' | 'Project'
+  connectionType: 'Account' | 'Repo'
   delegateSelectors?: string[]
   executeOnDelegate?: boolean
   spec: GitAuthenticationDTO
@@ -2126,7 +2101,7 @@ export type GithubConnector = ConnectorConfigDTO & {
   authentication: GithubAuthentication
   delegateSelectors?: string[]
   executeOnDelegate?: boolean
-  type: 'Account' | 'Repo' | 'Project'
+  type: 'Account' | 'Repo'
   url: string
   validationRepo?: string
 }
@@ -2170,7 +2145,7 @@ export type GithubUsernameToken = GithubHttpCredentialsSpecDTO & {
 
 export interface GitlabApiAccess {
   spec?: GitlabApiAccessSpecDTO
-  type: 'Token' | 'OAuth'
+  type: 'Token'
 }
 
 export interface GitlabApiAccessSpecDTO {
@@ -2186,7 +2161,7 @@ export type GitlabConnector = ConnectorConfigDTO & {
   apiAccess?: GitlabApiAccess
   authentication: GitlabAuthentication
   delegateSelectors?: string[]
-  type: 'Account' | 'Repo' | 'Project'
+  type: 'Account' | 'Repo'
   url: string
   validationRepo?: string
 }
@@ -2197,7 +2172,7 @@ export interface GitlabCredentialsDTO {
 
 export type GitlabHttpCredentials = GitlabCredentialsDTO & {
   spec: GitlabHttpCredentialsSpecDTO
-  type: 'UsernamePassword' | 'UsernameToken' | 'Kerberos' | 'OAuth'
+  type: 'UsernamePassword' | 'UsernameToken' | 'Kerberos'
 }
 
 export interface GitlabHttpCredentialsSpecDTO {
@@ -2206,11 +2181,6 @@ export interface GitlabHttpCredentialsSpecDTO {
 
 export type GitlabKerberos = GitlabHttpCredentialsSpecDTO & {
   kerberosKeyRef: string
-}
-
-export type GitlabOauth = GitlabHttpCredentialsSpecDTO & {
-  refreshTokenRef: string
-  tokenRef: string
 }
 
 export type GitlabSshCredentials = GitlabCredentialsDTO & {
@@ -2329,6 +2299,14 @@ export interface HealthSourceDTO {
   verificationType?: 'TIME_SERIES' | 'LOG'
 }
 
+export interface HealthSourceMetricDefinition {
+  analysis?: AnalysisDTO
+  identifier: string
+  metricName: string
+  riskProfile?: RiskProfile
+  sli?: Slidto
+}
+
 export interface HealthSourceSpec {
   connectorRef?: string
 }
@@ -2357,11 +2335,6 @@ export interface HostData {
   risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
   score?: number
   testData?: number[]
-}
-
-export interface HostFrequencyData {
-  frequencies?: TimestampFrequencyCount[]
-  host?: string
 }
 
 export interface HostInfo {
@@ -2405,8 +2378,6 @@ export type HttpHelmUsernamePasswordDTO = HttpHelmAuthCredentialsDTO & {
   username?: string
   usernameRef?: string
 }
-
-export type IgnoreMetricThresholdSpec = MetricThresholdSpec & {}
 
 export interface InputSetTemplateRequest {
   pipelineYaml?: string
@@ -2677,14 +2648,12 @@ export interface LogAnalysisRadarChartClusterDTO {
 }
 
 export interface LogAnalysisRadarChartListDTO {
-  averageFrequencyData?: TimestampFrequencyCount[]
   baseline?: LogAnalysisRadarChartListDTO
   clusterId?: string
   clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   count?: number
   frequencyData?: number[]
   hasControlData?: boolean
-  hostFrequencyData?: HostFrequencyData[]
   label?: number
   message?: string
   risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
@@ -2883,7 +2852,6 @@ export interface MetricResponseMapping {
   relativeServiceInstanceValueJsonPath?: string
   relativeTimestampJsonPath?: string
   serviceInstanceJsonPath?: string
-  serviceInstanceListJsonPath?: string
   timestampFormat?: string
   timestampJsonPath?: string
 }
@@ -2904,29 +2872,6 @@ export interface MetricSumDTO {
 export interface MetricTagResponseDTO {
   metricTags?: string[]
   tagKeys?: string[]
-}
-
-export interface MetricThreshold {
-  criteria?: MetricThresholdCriteria
-  groupName?: string
-  metricIdentifier?: string
-  metricName?: string
-  spec: MetricThresholdSpec
-  type?: 'IgnoreThreshold' | 'FailImmediately'
-}
-
-export interface MetricThresholdCriteria {
-  spec?: MetricThresholdCriteriaSpec
-  type?: 'Absolute' | 'Percentage'
-}
-
-export interface MetricThresholdCriteriaSpec {
-  greaterThan?: number
-  lessThan?: number
-}
-
-export interface MetricThresholdSpec {
-  action?: 'Ignore' | 'FailImmediately' | 'FailAfterOccurrence' | 'FailAfterConsecutiveOccurrence'
 }
 
 export interface MetricValidationResponse {
@@ -3019,7 +2964,8 @@ export type NewRelicHealthSourceSpec = HealthSourceSpec & {
   applicationId?: string
   applicationName?: string
   feature?: string
-  metricPacks?: TimeSeriesMetricPackDTO[]
+  metricDefinitions?: HealthSourceMetricDefinition[]
+  metricPacks?: MetricPackDTO[]
   newRelicMetricDefinitions?: NewRelicMetricDefinition[]
 }
 
@@ -3054,6 +3000,13 @@ export type NexusUsernamePasswordAuth = NexusAuthCredentials & {
   passwordRef: string
   username?: string
   usernameRef?: string
+}
+
+export interface NodeErrorInfo {
+  fqn?: string
+  identifier?: string
+  name?: string
+  type?: string
 }
 
 export interface NodeRiskCount {
@@ -3409,7 +3362,7 @@ export interface PagerDutyWebhookEventDTO {
 }
 
 export interface PartialSchemaDTO {
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   namespace?: string
   nodeName?: string
   nodeType?: string
@@ -3689,7 +3642,6 @@ export interface ResponseMessage {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
-    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -3706,7 +3658,6 @@ export interface ResponseMessage {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
-    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -3842,7 +3793,6 @@ export interface ResponseMessage {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
-    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -3990,10 +3940,7 @@ export interface ResponseMessage {
     | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
-    | 'TOO_MANY_REQUESTS'
-    | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
-    | 'SCM_UNEXPECTED_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4429,6 +4376,14 @@ export interface RestResponseListString {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseListTestVerificationBaselineExecutionDTO {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: TestVerificationBaselineExecutionDTO[]
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseListTimeSeriesCumulativeSums {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -4722,7 +4677,6 @@ export interface RestResponseVoid {
 }
 
 export interface ResultSummary {
-  controlClusterHostFrequencies?: ClusterHostFrequencyData[]
   controlClusterSummaries?: ControlClusterSummary[]
   risk?: number
   riskLevel?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
@@ -4795,7 +4749,6 @@ export interface SLODashboardDetail {
 
 export interface SLODashboardWidget {
   burnRate: BurnRate
-  calculatingSLI?: boolean
   currentPeriodEndTime: number
   currentPeriodLengthDays: number
   currentPeriodStartTime: number
@@ -4892,6 +4845,16 @@ export interface SampleDataDTO {
   metricValueJSONPath: string
   timestampFormat?: string
   timestampJSONPath: string
+}
+
+export type SampleErrorMetadataDTO = ErrorMetadataDTO & {
+  sampleMap?: {
+    [key: string]: string
+  }
+}
+
+export type ScmErrorMetadataDTO = ErrorMetadataDTO & {
+  conflictCommitId?: string
 }
 
 export interface ServiceDependencyDTO {
@@ -5146,11 +5109,29 @@ export interface TemplateDTO {
   versionLabel: string
 }
 
+export interface TemplateInputsErrorDTO {
+  fieldName?: string
+  identifierOfErrorSource?: string
+  message?: string
+}
+
+export type TemplateInputsErrorMetadataDTO = ErrorMetadataDTO & {
+  errorMap?: {
+    [key: string]: TemplateInputsErrorDTO
+  }
+  errorYaml?: string
+}
+
 export interface TemporalUnit {
   dateBased?: boolean
   duration?: Duration
   durationEstimated?: boolean
   timeBased?: boolean
+}
+
+export interface TestVerificationBaselineExecutionDTO {
+  createdAt?: number
+  verificationJobInstanceId?: string
 }
 
 export type ThresholdSLIMetricSpec = SLIMetricSpec & {
@@ -5282,9 +5263,9 @@ export interface TimeSeriesMetricDataDTO {
 }
 
 export interface TimeSeriesMetricDefinition {
-  action?: 'FAIL_IMMEDIATELY' | 'FAIL_AFTER_OCCURRENCES' | 'FAIL_AFTER_CONSECUTIVE_OCCURRENCES'
-  actionType?: 'IGNORE' | 'FAIL'
-  comparisonType?: 'RATIO' | 'DELTA' | 'ABSOLUTE'
+  action?: 'fail-immediately' | 'fail-after-multiple-occurrences' | 'fail-after-consecutive-occurrences'
+  actionType?: 'ignore' | 'fail'
+  comparisonType?: 'ratio' | 'delta' | 'absolute-value'
   metricGroupName?: string
   metricIdentifier?: string
   metricName?: string
@@ -5292,11 +5273,6 @@ export interface TimeSeriesMetricDefinition {
   occurrenceCount?: number
   thresholdType?: 'ACT_WHEN_LOWER' | 'ACT_WHEN_HIGHER'
   value?: number
-}
-
-export interface TimeSeriesMetricPackDTO {
-  identifier: string
-  metricThresholds?: MetricThreshold[]
 }
 
 export interface TimeSeriesRecordDTO {
@@ -5352,7 +5328,7 @@ export interface TimeSeriesTestDataDTO {
 
 export interface TimeSeriesThreshold {
   accountId: string
-  action: 'IGNORE' | 'FAIL'
+  action: 'ignore' | 'fail'
   createdAt?: number
   criteria: TimeSeriesThresholdCriteria
   dataSourceType:
@@ -5382,15 +5358,15 @@ export interface TimeSeriesThreshold {
 }
 
 export interface TimeSeriesThresholdCriteria {
-  action?: 'FAIL_IMMEDIATELY' | 'FAIL_AFTER_OCCURRENCES' | 'FAIL_AFTER_CONSECUTIVE_OCCURRENCES'
+  action?: 'fail-immediately' | 'fail-after-multiple-occurrences' | 'fail-after-consecutive-occurrences'
   criteria?: string
   occurrenceCount?: number
-  type?: 'RATIO' | 'DELTA' | 'ABSOLUTE'
+  type?: 'ratio' | 'delta' | 'absolute-value'
 }
 
 export interface TimeSeriesThresholdDTO {
   accountId?: string
-  action?: 'IGNORE' | 'FAIL'
+  action?: 'ignore' | 'fail'
   criteria?: TimeSeriesThresholdCriteria
   dataSourceType?:
     | 'APP_DYNAMICS'
@@ -5413,11 +5389,6 @@ export interface TimeSeriesThresholdDTO {
   metricType?: 'INFRA' | 'RESP_TIME' | 'THROUGHPUT' | 'ERROR' | 'APDEX' | 'OTHER'
   orgIdentifier?: string
   projectIdentifier?: string
-}
-
-export interface TimestampFrequencyCount {
-  count?: number
-  timeStamp?: number
 }
 
 export interface TimestampInfo {
@@ -5516,7 +5487,6 @@ export type VaultConnectorDTO = ConnectorConfigDTO & {
   basePath?: string
   default?: boolean
   delegateSelectors?: string[]
-  k8sAuthEndpoint?: string
   namespace?: string
   readOnly?: boolean
   renewalIntervalMinutes: number
@@ -5569,8 +5539,43 @@ export interface VerificationJob {
   orgIdentifier?: string
   projectIdentifier?: string
   serviceIdentifier: string
-  type?: 'TEST' | 'CANARY' | 'BLUE_GREEN'
+  type?: 'TEST' | 'CANARY' | 'BLUE_GREEN' | 'HEALTH'
   uuid?: string
+  verificationJobDTO?: VerificationJobDTO
+  verificationJobUrl?: string
+}
+
+export interface VerificationJobDTO {
+  activitySourceIdentifier?: string
+  allMonitoringSourcesEnabled?: boolean
+  dataSources?: (
+    | 'APP_DYNAMICS'
+    | 'SPLUNK'
+    | 'SPLUNK_METRIC'
+    | 'STACKDRIVER'
+    | 'STACKDRIVER_LOG'
+    | 'KUBERNETES'
+    | 'NEW_RELIC'
+    | 'PROMETHEUS'
+    | 'DATADOG_METRICS'
+    | 'DATADOG_LOG'
+    | 'ERROR_TRACKING'
+    | 'DYNATRACE'
+    | 'CUSTOM_HEALTH_METRIC'
+    | 'CUSTOM_HEALTH_LOG'
+  )[]
+  defaultJob?: boolean
+  duration?: string
+  envIdentifier?: string
+  envName?: string
+  identifier?: string
+  jobName?: string
+  monitoringSources?: string[]
+  orgIdentifier?: string
+  projectIdentifier?: string
+  serviceIdentifier?: string
+  serviceName?: string
+  type?: 'TEST' | 'CANARY' | 'BLUE_GREEN' | 'HEALTH'
   verificationJobUrl?: string
 }
 
@@ -5674,22 +5679,22 @@ export interface YamlSchemaDetailsWrapper {
   yamlSchemaWithDetailsList?: YamlSchemaWithDetails[]
 }
 
+export interface YamlSchemaErrorDTO {
+  fqn?: string
+  hintMessage?: string
+  message?: string
+  stageInfo?: NodeErrorInfo
+  stepInfo?: NodeErrorInfo
+}
+
+export type YamlSchemaErrorWrapperDTO = ErrorMetadataDTO & {
+  schemaErrors?: YamlSchemaErrorDTO[]
+}
+
 export interface YamlSchemaMetadata {
   featureFlags?: string[]
   featureRestrictions?: string[]
-  modulesSupported?: (
-    | 'CD'
-    | 'CI'
-    | 'CV'
-    | 'CF'
-    | 'CE'
-    | 'STO'
-    | 'CORE'
-    | 'PMS'
-    | 'TEMPLATESERVICE'
-    | 'GOVERNANCE'
-    | 'CHAOS'
-  )[]
+  modulesSupported?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE')[]
   namespace?: string
   yamlGroup: YamlGroup
 }
@@ -5698,7 +5703,7 @@ export interface YamlSchemaWithDetails {
   availableAtAccountLevel?: boolean
   availableAtOrgLevel?: boolean
   availableAtProjectLevel?: boolean
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   schema?: JsonNode
   schemaClassName?: string
   yamlSchemaMetadata?: YamlSchemaMetadata
@@ -5769,7 +5774,7 @@ export type ServiceLevelObjectiveDTORequestBody = ServiceLevelObjectiveDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type SaveMonitoredServiceFromYamlBodyRequestBody = string
+export type UpdateMonitoredServiceFromYamlBodyRequestBody = string
 
 export interface ChangeEventListQueryParams {
   serviceIdentifiers?: string[]
@@ -8851,7 +8856,7 @@ export type SaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -8865,7 +8870,7 @@ export const SaveMonitoredServiceFromYaml = (props: SaveMonitoredServiceFromYaml
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -8880,7 +8885,7 @@ export type UseSaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -8894,7 +8899,7 @@ export const useSaveMonitoredServiceFromYaml = (props: UseSaveMonitoredServiceFr
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', `/monitored-service/yaml`, { base: getConfig('cv/api'), ...props })
 
@@ -8906,7 +8911,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -8915,7 +8920,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', getConfig('cv/api'), `/monitored-service/yaml`, props, signal)
 
@@ -10950,7 +10955,6 @@ export interface GetServiceDependencyGraphQueryParams {
   environmentIdentifier?: string
   serviceIdentifier?: string
   monitoredServiceIdentifier?: string
-  filter?: string
   servicesAtRiskFilter: boolean
 }
 
@@ -12648,6 +12652,62 @@ export const saveUserJourneyPromise = (
     'POST',
     getConfig('cv/api'),
     `/user-journey/create`,
+    props,
+    signal
+  )
+
+export interface ListBaselineExecutionsQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  verificationJobIdentifier?: string
+}
+
+export type ListBaselineExecutionsProps = Omit<
+  GetProps<RestResponseListTestVerificationBaselineExecutionDTO, unknown, ListBaselineExecutionsQueryParams, void>,
+  'path'
+>
+
+/**
+ * list of last 5 successful baseline executions
+ */
+export const ListBaselineExecutions = (props: ListBaselineExecutionsProps) => (
+  <Get<RestResponseListTestVerificationBaselineExecutionDTO, unknown, ListBaselineExecutionsQueryParams, void>
+    path={`/verification-job-instance/baseline-executions`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseListBaselineExecutionsProps = Omit<
+  UseGetProps<RestResponseListTestVerificationBaselineExecutionDTO, unknown, ListBaselineExecutionsQueryParams, void>,
+  'path'
+>
+
+/**
+ * list of last 5 successful baseline executions
+ */
+export const useListBaselineExecutions = (props: UseListBaselineExecutionsProps) =>
+  useGet<RestResponseListTestVerificationBaselineExecutionDTO, unknown, ListBaselineExecutionsQueryParams, void>(
+    `/verification-job-instance/baseline-executions`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * list of last 5 successful baseline executions
+ */
+export const listBaselineExecutionsPromise = (
+  props: GetUsingFetchProps<
+    RestResponseListTestVerificationBaselineExecutionDTO,
+    unknown,
+    ListBaselineExecutionsQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponseListTestVerificationBaselineExecutionDTO, unknown, ListBaselineExecutionsQueryParams, void>(
+    getConfig('cv/api'),
+    `/verification-job-instance/baseline-executions`,
     props,
     signal
   )
