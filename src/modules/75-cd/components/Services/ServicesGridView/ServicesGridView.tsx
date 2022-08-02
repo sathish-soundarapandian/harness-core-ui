@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { Container, Layout, /* Layout, */ PageSpinner /* Pagination */, Pagination } from '@harness/uicore'
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import type { ResponsePageServiceResponse, ServiceResponse } from 'services/cd-ng'
 import ServiceCard from '../ServiceCard/ServiceCard'
 import css from './ServicesGridView.module.scss'
@@ -30,6 +31,7 @@ const ServicesGridView: React.FC<ServicesGridViewProps> = props => {
         </div>
       ) : (
         <>
+          <HelpPanel referenceId="serviceDetails" type={HelpPanelType.FLOATING_CONTAINER} />
           <Container className={css.masonry} style={{ height: 'calc(100% - 66px)', width: '100%' }}>
             <Layout.Masonry
               center

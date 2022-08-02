@@ -20,16 +20,15 @@ import {
 } from '@wings-software/uicore'
 import type { Column, Renderer, CellProps } from 'react-table'
 import { useParams, useHistory } from 'react-router-dom'
-import { get, defaultTo } from 'lodash-es'
+import { get } from 'lodash-es'
 import { Intent } from '@blueprintjs/core'
 import {
   useSetDefaultAccountForCurrentUser,
   RestResponseUser,
   useRestrictedSwitchAccount,
-  useGetUserAccounts,
-  useGetUser
+  useGetUserAccounts
 } from 'services/portal'
-import type { User, Account } from 'services/portal'
+import type { Account } from 'services/portal'
 import { PageSpinner } from '@common/components'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
@@ -75,14 +74,12 @@ const ReAuthenticationNote: React.FC<ReAuthenticationNoteProps> = ({ accounts, a
 const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
   const { accountId } = useParams<AccountPathProps>()
   const [page, setPage] = useState(0)
-  const [user, setUser] = useState<User>()
   const { showError } = useToaster()
   const history = useHistory()
   const { getString } = useStrings()
   const { currentUserInfo, updateAppStore } = useAppStore()
-  const { data: userData, loading: userLoading, error, refetch: userRefetch } = useGetUser({ lazy: !__DEV__ })
 
-  const { data, loading, refetch } = useGetUserAccounts({
+  const { data, loading, refetch, error } = useGetUserAccounts({
     queryParams: {
       pageIndex: page,
       pageSize: 10,
@@ -156,11 +153,7 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
         pathParams: { accountId: account.uuid }
       })
       if (resource === true) {
-        if (__DEV__) {
-          userRefetch()
-        } else {
-          fetchCurrentUserInfo()
-        }
+        fetchCurrentUserInfo()
       } else {
         showError(get(responseMessages, '[0].message', getString('somethingWentWrong')))
       }
@@ -179,11 +172,8 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
       }
     })
 
-    const isDefaultAccount = __DEV__
-      ? account.uuid === user?.defaultAccountId
-      : account.uuid === currentUserInfo?.defaultAccountId
     // default account should not be actionable
-    return isDefaultAccount ? (
+    return account.uuid === currentUserInfo?.defaultAccountId ? (
       <Text flex={{ align: 'center-center' }}>Default</Text>
     ) : (
       <Button
@@ -196,24 +186,7 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
     )
   }
 
-  useEffect(() => {
-    setUser(userData?.resource)
-  }, [userData])
-
-  const getAccounts = () => {
-    if (__DEV__) {
-      return defaultTo(
-        user?.accounts
-          ?.concat(defaultTo(user.supportAccounts, []))
-          ?.filter(account => account.accountName.toLowerCase().includes(searchString.toLowerCase())),
-        []
-      )
-    }
-
-    return data?.resource?.content || []
-  }
-
-  const accounts = getAccounts()
+  const accounts = data?.resource?.content || []
 
   const columns: Column<Account>[] = useMemo(
     () => [
@@ -252,7 +225,7 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
     <>
       <ReAuthenticationNote accounts={accounts} accountId={accountId} />
       <Container padding={{ left: 'large', right: 'large' }} className={css.container}>
-        {userLoading || loading || userInfoLoading || settingDefault ? <PageSpinner /> : undefined}
+        {loading || userInfoLoading || settingDefault ? <PageSpinner /> : undefined}
 
         {error ? (
           <PageError message={error.message || getString('somethingWentWrong')} onClick={() => refetch()} />
@@ -261,16 +234,14 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
           accounts.length ? (
             <>
               <TableV2 columns={columns} data={accounts} sortable={false} className={css.table} />
-              {!__DEV__ && (
-                <Pagination
-                  itemCount={data?.resource?.totalItems || 0}
-                  pageSize={data?.resource?.pageSize || 10}
-                  pageCount={data?.resource?.totalPages || 0}
-                  pageIndex={data?.resource?.pageIndex || 0}
-                  gotoPage={setPage}
-                  className={css.pagination}
-                />
-              )}
+              <Pagination
+                itemCount={data?.resource?.totalItems || 0}
+                pageSize={data?.resource?.pageSize || 10}
+                pageCount={data?.resource?.totalPages || 0}
+                pageIndex={data?.resource?.pageIndex || 0}
+                gotoPage={setPage}
+                className={css.pagination}
+              />
             </>
           ) : (
             <NoDataCard

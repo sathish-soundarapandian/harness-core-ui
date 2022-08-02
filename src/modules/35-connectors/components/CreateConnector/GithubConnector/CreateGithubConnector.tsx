@@ -54,6 +54,7 @@ const CreateGithubConnector = (props: CreateConnectorModalProps): JSX.Element =>
         connectorInfo={props.connectorInfo}
         gitDetails={props.gitDetails}
         mock={props.mock}
+        helpPanelReferenceId="gitHubConnectorOverview"
       />
       <GitDetailsStep
         type={Connectors.GITHUB}
@@ -93,6 +94,7 @@ const CreateGithubConnector = (props: CreateConnectorModalProps): JSX.Element =>
           onConnectorCreated={props.onSuccess}
           connectorInfo={props.connectorInfo}
           gitDetails={props.gitDetails}
+          helpPanelReferenceId="ConnectorDelegatesSetup"
         />
       ) : null}
 
@@ -104,6 +106,7 @@ const CreateGithubConnector = (props: CreateConnectorModalProps): JSX.Element =>
         type={Connectors.GITHUB}
         onClose={props.onClose}
         stepIndex={GIT_TESTCONNECTION_STEP_INDEX}
+        helpPanelReferenceId="ConnectorTest"
       />
     </StepWizard>
   )
