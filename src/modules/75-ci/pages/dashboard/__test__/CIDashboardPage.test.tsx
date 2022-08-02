@@ -48,25 +48,6 @@ jest.mock('services/pipeline-ng', () => ({
     return { mutate: jest.fn(() => Promise.resolve(filters)), loading: false }
   })
 }))
-// jest.mock('services/pipeline-ng', () => ({
-//   useGetListOfExecutions: jest.fn(() => ({
-//     mutate: jest.fn(() => Promise.resolve([executionList])),
-//     loading: false,
-//     cancel: jest.fn()
-//   })),
-//   // useGetPipelineList: jest.fn().mockImplementation(args => {
-//   //   mockGetCallFunction(args)
-//   //   return { mutate: jest.fn(() => Promise.resolve(pipelines)), cancel: jest.fn(), loading: false }
-//   // }),
-//   useGetFilterList: jest.fn().mockImplementation(() => {
-//     return { mutate: jest.fn(() => Promise.resolve(filters)), loading: false }
-//   })
-// }))
-
-// jest.mock('@common/hooks', () => ({
-//   ...(jest.requireActual('@common/hooks') as any),
-//   useQueryParams: jest.fn().mockImplementation(() => ({ module: 'ci' }))
-// }))
 
 const buildExecutionMock = {
   data: {
