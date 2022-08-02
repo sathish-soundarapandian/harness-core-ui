@@ -187,11 +187,9 @@ button.runPipelineListBtn {
   margin: auto;
 }
 .noPipelineSection {
-  display: flex;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
+  margin: auto;
   text-align: center;
+
   .clearFilterText {
     color: var(--primary-7);
     font-size: var(--spacing-medium);
