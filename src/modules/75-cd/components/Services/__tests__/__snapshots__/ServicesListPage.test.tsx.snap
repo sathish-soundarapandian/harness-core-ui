@@ -170,6 +170,7 @@ exports[`ServicesListPage ServicesListPage should render data correctly 1`] = `
     <div
       class="Layout--vertical StyledProps--main container StyledProps--margin-left-xlarge StyledProps--margin-right-xlarge StyledProps--margin-top-large StyledProps--margin-bottom-large"
     >
+      Help Panel
       <div
         class="StyledProps--font StyledProps--main masonry"
         style="height: calc(100% - 66px); width: 100%;"
@@ -973,6 +974,7 @@ exports[`ServicesListPage Should open Add-ServiceModal, grid and list view on cl
     <div
       class="Layout--vertical StyledProps--main container StyledProps--margin-left-xlarge StyledProps--margin-right-xlarge StyledProps--margin-top-large StyledProps--margin-bottom-large"
     >
+      Help Panel
       <div
         class="StyledProps--font StyledProps--main masonry"
         style="height: calc(100% - 66px); width: 100%;"

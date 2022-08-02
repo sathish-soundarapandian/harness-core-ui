@@ -39,6 +39,7 @@ import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import useCreateEditConnector, { BuildPayloadProps } from '@connectors/hooks/useCreateEditConnector'
+import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import css from './ConnectivityModeStep.module.scss'
 
 interface ConnectivityModeStepData extends BuildPayloadProps {
@@ -70,7 +71,7 @@ const ConnectivityModeStep: React.FC<StepProps<ConnectorConfigDTO> & Connectivit
     projectIdentifier: projectIdentifierFromUrl,
     orgIdentifier: orgIdentifierFromUrl
   } = useParams<ProjectPathProps>()
-
+  useConnectorWizard({ helpPanel: { referenceId: 'gitHubConnectorConnectToTheProvider', contentWidth: 1040 } })
   const projectIdentifier = connectorInfo ? connectorInfo.projectIdentifier : projectIdentifierFromUrl
   const orgIdentifier = connectorInfo ? connectorInfo.orgIdentifier : orgIdentifierFromUrl
   const isGitSyncEnabled = (useAppStore().isGitSyncEnabled &&

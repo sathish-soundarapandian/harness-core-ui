@@ -2806,7 +2806,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Github 1`
   >
     <div
       class="contentContainer"
-      style="width: 100%;"
+      style="width: 900px;"
     >
       <div
         class="StepWizard--main StepWizard--navBar"
@@ -3185,6 +3185,15 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Github 1`
             />
           </svg>
         </span>
+      </div>
+    </div>
+    <div
+      class="helpPanelContainer"
+    >
+      <div
+        style="min-width: 275px; height: 560px;"
+      >
+        Help Panel
       </div>
     </div>
   </div>

@@ -80,6 +80,7 @@ exports[`ServiceListView Should render options after click 1`] = `
 
 exports[`ServiceListView render Service list 1`] = `
 <div>
+  Help Panel
   <div
     class="StyledProps--font StyledProps--main masonry"
     style="height: calc(100% - 66px); width: 100%;"
