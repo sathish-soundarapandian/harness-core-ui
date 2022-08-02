@@ -32,7 +32,7 @@ import EnvironmentTabs from './EnvironmentTabs'
 import EnvironmentsList from './EnvironmentsList/EnvironmentsList'
 import EnvironmentsGrid from './EnvironmentsGrid/EnvironmentsGrid'
 import EnvironmentsFilters from './EnvironmentsFilters/EnvironmentsFilters'
-
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import EmptyContentImg from './EmptyContent.svg'
 
 import css from './Environments.module.scss'
@@ -106,6 +106,7 @@ export function Environments() {
         setView
       }}
     >
+      <HelpPanel referenceId="environmentListing" type={HelpPanelType.FLOATING_CONTAINER} />
       <PageTemplate
         title={getString('environments')}
         titleTooltipId="ff_env_heading"
