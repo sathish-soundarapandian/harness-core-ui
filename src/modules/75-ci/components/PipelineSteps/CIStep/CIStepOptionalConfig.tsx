@@ -605,7 +605,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
               allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
             })
         : null}
-      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.entrypoint') ? (
+      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.entrypoint') && (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {isInputSetView
             ? renderMultiTypeListInputSet({
@@ -629,7 +629,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
                 allowedTypesForEntries: SupportedInputTypesForListItems
               })}
         </Container>
-      ) : null}
+      )}
       {Object.prototype.hasOwnProperty.call(enableFields, 'spec.args') ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {isInputSetView
