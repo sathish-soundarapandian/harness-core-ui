@@ -2,6 +2,7 @@
 
 exports[`Environments V2 test snapshot test with list view and after sort 1`] = `
 <div>
+  Help Panel
   <main
     class="layout"
   >

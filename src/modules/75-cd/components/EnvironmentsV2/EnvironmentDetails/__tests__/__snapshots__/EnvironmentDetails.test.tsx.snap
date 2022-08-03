@@ -2,6 +2,7 @@
 
 exports[`EnvironmentDetails tests initial render 1`] = `
 <div>
+  Help Panel
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--large environmentDetailsHeader StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
   >
