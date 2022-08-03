@@ -501,7 +501,7 @@ function CICodebaseInputSetFormInternal({
 
   const codebaseHasRuntimeInputs = isCodebaseFieldsRuntimeInputs(template)
 
-  const shouldRender = useMemo((): boolean => {
+  const pipelineHasCodebaseSection = useMemo((): boolean => {
     return (
       (isCloneCodebaseEnabledAtLeastAtOneStage || codebaseHasRuntimeInputs) &&
       getMultiTypeFromValue(finalTemplate?.properties?.ci?.codebase?.build as unknown as string) ===
@@ -511,19 +511,20 @@ function CICodebaseInputSetFormInternal({
 
   useEffect(() => {
     const existingValues = { ...formik?.values }
-    if (!shouldRender && get(existingValues, 'properties.ci')) {
+    if (!pipelineHasCodebaseSection && get(existingValues, 'properties.ci')) {
       let updatedValues = omit(existingValues, 'properties.ci')
       if (isEmpty(get(updatedValues, 'properties'))) {
         updatedValues = omit(updatedValues, 'properties')
       }
       formik?.setValues(updatedValues)
     }
-  }, [shouldRender, formik?.values])
+  }, [pipelineHasCodebaseSection, formik?.values])
 
   useEffect(() => {
     if (
-      (viewType === StepViewType.InputSet && formik?.values?.pipeline?.identifier) ||
-      (viewType === StepViewType.DeploymentForm && formik?.values?.identifier)
+      pipelineHasCodebaseSection &&
+      ((viewType === StepViewType.InputSet && formik?.values?.pipeline?.identifier) ||
+        (viewType === StepViewType.DeploymentForm && formik?.values?.identifier))
     ) {
       const newInitialValues = { ...formik.values }
       // TriggerForm does not instantiate each runtime input with empty string yet but we want default values there
@@ -549,11 +550,11 @@ function CICodebaseInputSetFormInternal({
       }
       formik?.setValues(newInitialValues)
     }
-  }, [formik?.values?.pipeline?.identifier, formik?.values?.identifier])
+  }, [pipelineHasCodebaseSection, formik?.values?.pipeline?.identifier, formik?.values?.identifier])
 
   useEffect(() => {
     // OnEdit Case, persists saved ciCodebase build spec
-    if (codeBaseType) {
+    if (pipelineHasCodebaseSection && codeBaseType) {
       savedValues.current = Object.assign(savedValues.current, {
         [codeBaseType]: get(
           formik?.values,
@@ -568,7 +569,7 @@ function CICodebaseInputSetFormInternal({
       })
       formik?.setValues(updatedValues)
     }
-  }, [codeBaseType])
+  }, [pipelineHasCodebaseSection, codeBaseType])
 
   const handleTypeChange = (newType: CodeBaseType): void => {
     formik?.setFieldValue(`${formattedPath}properties.ci.codebase.build`, '')
@@ -607,7 +608,7 @@ function CICodebaseInputSetFormInternal({
     return readonly || (codeBaseType === CodebaseTypes.branch && isFetchingBranches)
   }, [readonly, codeBaseType, isFetchingBranches])
 
-  return shouldRender ? (
+  return pipelineHasCodebaseSection ? (
     <>
       <Layout.Horizontal spacing="small" padding={{ top: 'medium', left: 'large', right: 0, bottom: 0 }}>
         <Text
