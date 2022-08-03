@@ -343,7 +343,7 @@ export const RecentExecutionsCell: CellType = ({ row }) => {
                   label={getString('common.executedBy')}
                   value={
                     <Layout.Horizontal spacing="small" color={Color.WHITE} font="normal">
-                      <span>{i.executorInfo?.email}</span>
+                      <span>{i.executorInfo?.email || i.executorInfo?.username}</span>
                       <span>|</span>
                       <ReactTimeago date={i.startTs} />
                     </Layout.Horizontal>
