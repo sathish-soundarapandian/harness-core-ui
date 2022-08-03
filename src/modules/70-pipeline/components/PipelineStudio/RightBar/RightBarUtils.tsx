@@ -62,10 +62,10 @@ const getConnectorWidth = ({
 export const renderConnectorAndRepoName = ({
   values,
   setFieldValue,
-  connectorUrl,
-  connectionType,
-  setConnectionType,
-  setConnectorUrl,
+  // connectorUrl,
+  // connectionType,
+  // setConnectionType,
+  // setConnectorUrl,
   connector,
   getString,
   errors,
@@ -87,10 +87,10 @@ export const renderConnectorAndRepoName = ({
 }: {
   values: { [key: string]: any }
   setFieldValue: (field: string, value: any) => void
-  connectorUrl: string
-  connectionType: string
-  setConnectionType: Dispatch<SetStateAction<string>>
-  setConnectorUrl: Dispatch<SetStateAction<string>>
+  // connectorUrl?: string
+  // connectionType?: string
+  // setConnectionType?: Dispatch<SetStateAction<string>>
+  // setConnectorUrl?: Dispatch<SetStateAction<string>>
   connector?: ConnectorInfoDTO
   getString: UseStringsReturn['getString']
   errors: { [key: string]: any }
@@ -108,7 +108,7 @@ export const renderConnectorAndRepoName = ({
   connectorAndRepoNamePath?: string // coming from step / input set
   allowableTypes: AllowedTypes // expression can be used for repoName
   codeBaseInputFieldFormName?: { [key: string]: string }
-  onConnectorChange?: () => void // refetch onEdit connector
+  onConnectorChange?: (val?: ConnectorInfoDTO) => void // refetch onEdit connector
 }): JSX.Element => {
   const connectorFieldName = connectorAndRepoNamePath ? `${connectorAndRepoNamePath}.connectorRef` : 'connectorRef'
   const connectorValue = get(values, connectorFieldName)
@@ -116,7 +116,8 @@ export const renderConnectorAndRepoName = ({
   const repoNameValue = get(values, repoNameFieldName)
   const repoNameWidth =
     connectorWidth && isRuntimeInput(repoNameValue) ? connectorWidth + runtimeInputGearWidth : connectorWidth
-
+  const connectionType = connector?.type === Connectors.GIT ? connector.spec.connectionType : connector?.spec.type
+  const connectorUrl = connector?.spec.url
   return (
     <>
       <Container className={cx(css.bottomMargin3)}>
@@ -149,8 +150,8 @@ export const renderConnectorAndRepoName = ({
             handleCIConnectorRefOnChange({
               value: value as ConnectorRefInterface,
               connectorRefType,
-              setConnectionType,
-              setConnectorUrl,
+              // setConnectionType,
+              // setConnectorUrl,
               setFieldValue,
               codeBaseInputFieldFormName,
               onConnectorChange

@@ -120,6 +120,7 @@ export function RightBar(): JSX.Element {
     updatePipelineView
   } = usePipelineContext()
   const codebase = pipeline?.properties?.ci?.codebase
+  const [codebaseConnector, setCodebaseConnector] = React.useState<ConnectorInfoDTO>()
   const [codebaseStatus, setCodebaseStatus] = React.useState<CodebaseStatuses>(CodebaseStatuses.ZeroState)
   const enableGovernanceSidebar = useFeatureFlag(FeatureFlag.OPA_PIPELINE_GOVERNANCE)
   const { getString } = useStrings()
@@ -181,14 +182,14 @@ export function RightBar(): JSX.Element {
   const [connectionType, setConnectionType] = React.useState<string>('')
   const [connectorUrl, setConnectorUrl] = React.useState<string>('')
 
-  if (connector?.data?.connector) {
-    const scope = getScopeFromDTO<ConnectorInfoDTO>(connector?.data?.connector)
+  if (typeof codebaseConnector !== 'undefined') {
+    const scope = getScopeFromDTO<ConnectorInfoDTO>(codebaseConnector)
     codebaseInitialValues.connectorRef = {
-      label: connector?.data?.connector.name || '',
-      value: `${scope !== Scope.PROJECT ? `${scope}.` : ''}${connector?.data?.connector.identifier}`,
+      label: codebaseConnector.name || '',
+      value: `${scope !== Scope.PROJECT ? `${scope}.` : ''}${codebaseConnector.identifier}`,
       scope: scope,
       live: connector?.data?.status?.status === 'SUCCESS',
-      connector: connector?.data?.connector
+      connector: codebaseConnector
     }
   }
 
@@ -200,19 +201,20 @@ export function RightBar(): JSX.Element {
 
   React.useEffect(() => {
     if (connector?.data?.connector) {
-      setConnectionType(
-        connector?.data?.connector?.type === Connectors.GIT
-          ? connector?.data?.connector.spec.connectionType
-          : connector?.data?.connector.spec.type
-      )
-      setConnectorUrl(connector?.data?.connector.spec.url)
+      setCodebaseConnector(connector.data.connector)
+      // setConnectionType(
+      //   connector?.data?.connector?.type === Connectors.GIT
+      //     ? connector?.data?.connector.spec.connectionType
+      //     : connector?.data?.connector.spec.type
+      // )
+      // setConnectorUrl(connector?.data?.connector.spec.url)
     }
   }, [
-    connector?.data?.connector,
-    connector?.data?.connector?.spec.type,
-    connector?.data?.connector?.spec.url,
-    setConnectionType,
-    setConnectorUrl
+    connector?.data?.connector
+    // connector?.data?.connector?.spec.type,
+    // connector?.data?.connector?.spec.url,
+    // setConnectionType,
+    // setConnectorUrl
   ])
 
   React.useEffect(() => {
@@ -292,16 +294,16 @@ export function RightBar(): JSX.Element {
   const closeCodebaseDialog = React.useCallback(() => {
     setIsCodebaseDialogOpen(false)
 
-    if (!connector?.data?.connector?.spec.type && !connector?.data?.connector?.spec.url) {
-      setConnectionType('')
-      setConnectorUrl('')
-    }
+    // if (!connector?.data?.connector?.spec.type && !connector?.data?.connector?.spec.url) {
+    //   setConnectionType('')
+    //   setConnectorUrl('')
+    // }
   }, [
     connector?.data?.connector?.spec.type,
     connector?.data?.connector?.spec.url,
-    setIsCodebaseDialogOpen,
-    setConnectionType,
-    setConnectorUrl
+    setIsCodebaseDialogOpen
+    // setConnectionType,
+    // setConnectorUrl
   ])
 
   const openVariablesPanel = () => {
@@ -566,11 +568,11 @@ export function RightBar(): JSX.Element {
                     {renderConnectorAndRepoName({
                       values,
                       setFieldValue,
-                      connectorUrl,
-                      connectionType,
-                      setConnectionType,
-                      setConnectorUrl,
-                      connector: connector?.data?.connector,
+                      // connectorUrl,
+                      // connectionType,
+                      // setConnectionType,
+                      // setConnectorUrl,
+                      connector: codebaseConnector,
                       getString,
                       errors,
                       loading,
@@ -583,7 +585,7 @@ export function RightBar(): JSX.Element {
                       isReadonly,
                       setCodebaseRuntimeInputs,
                       codebaseRuntimeInputs,
-                      refetchConnector: refetch,
+                      onConnectorChange: setCodebaseConnector,
                       allowableTypes: [
                         MultiTypeInputType.FIXED,
                         MultiTypeInputType.EXPRESSION,

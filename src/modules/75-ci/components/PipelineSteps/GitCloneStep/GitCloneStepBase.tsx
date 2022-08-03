@@ -60,8 +60,8 @@ export const GitCloneStepBase = (
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
 
   const buildInfrastructureType: CIBuildInfrastructureType = get(currentStage, 'stage.spec.infrastructure.type')
-  const [connectionType, setConnectionType] = React.useState('')
-  const [connectorUrl, setConnectorUrl] = React.useState('')
+  // const [connectionType, setConnectionType] = React.useState('')
+  // const [connectorUrl, setConnectorUrl] = React.useState('')
   const [codebaseConnector, setCodebaseConnector] = React.useState<ConnectorInfoDTO>()
   const [codebaseRuntimeInputs, setCodebaseRuntimeInputs] = React.useState<CodebaseRuntimeInputsInterface>({
     ...(isRuntimeInput(initialValues?.spec?.connectorRef) ? { connectorRef: true, repoName: true } : {})
@@ -102,20 +102,20 @@ export const GitCloneStepBase = (
   // should move below to render
   React.useEffect(() => {
     if (connector?.data?.connector) {
-      setConnectionType(
-        connector?.data?.connector?.type === Connectors.GIT
-          ? connector?.data?.connector.spec.connectionType
-          : connector?.data?.connector.spec.type
-      )
-      setConnectorUrl(connector?.data?.connector.spec.url)
+      //   setConnectionType(
+      //     connector?.data?.connector?.type === Connectors.GIT
+      //       ? connector?.data?.connector.spec.connectionType
+      //       : connector?.data?.connector.spec.type
+      //   )
+      //   setConnectorUrl(connector?.data?.connector.spec.url)
       setCodebaseConnector(connector.data.connector)
     }
   }, [
-    connector?.data?.connector,
-    connector?.data?.connector?.spec.type,
-    connector?.data?.connector?.spec.url,
-    setConnectionType,
-    setConnectorUrl
+    connector?.data?.connector
+    // connector?.data?.connector?.spec.type,
+    // connector?.data?.connector?.spec.url,
+    // setConnectionType,
+    // setConnectorUrl
   ])
   return (
     <Formik
@@ -171,24 +171,19 @@ export const GitCloneStepBase = (
                 name: {},
                 description: {},
                 ['spec.connectorAndRepo']: {
-                  connectorUrl,
-                  connectionType,
+                  // connectorUrl,
+                  // connectionType,
                   connectorWidth: isConnectorRuntimeInput ? connectorWidth - runtimeInputGearWidth : connectorWidth,
-                  setConnectionType,
+                  // setConnectionType,
                   loading,
-                  setConnectorUrl,
+                  // setConnectorUrl,
                   repoIdentifier,
                   branch,
                   isReadonly,
                   setCodebaseRuntimeInputs,
                   codebaseRuntimeInputs,
                   connector: codebaseConnector,
-                  onConnectorChange: val => {
-                    console.log(val)
-                    setCodebaseConnector(val)
-                    // console.log(valueType)
-                    // console.log(type)
-                  }
+                  onConnectorChange: setCodebaseConnector
                 },
                 ['spec.build']: {},
                 ['spec.cloneDirectory']: { tooltipId: 'cloneDirectory' }

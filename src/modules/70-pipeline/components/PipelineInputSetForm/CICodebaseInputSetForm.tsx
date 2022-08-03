@@ -131,8 +131,8 @@ const renderLabel = ({
 export const handleCIConnectorRefOnChange = ({
   value,
   connectorRefType,
-  setConnectionType,
-  setConnectorUrl,
+  // setConnectionType,
+  // setConnectorUrl,
   setFieldValue,
   setIsConnectorExpression,
   setGitAuthProtocol,
@@ -142,8 +142,8 @@ export const handleCIConnectorRefOnChange = ({
 }: {
   value: ConnectorRefInterface | undefined
   connectorRefType: MultiTypeInputType
-  setConnectionType: Dispatch<SetStateAction<string>>
-  setConnectorUrl: Dispatch<SetStateAction<string>>
+  setConnectionType?: Dispatch<SetStateAction<string>>
+  setConnectorUrl?: Dispatch<SetStateAction<string>>
   setFieldValue: (field: string, value: unknown) => void
   setGitAuthProtocol?: React.Dispatch<React.SetStateAction<GitAuthenticationProtocol>>
   setIsConnectorExpression?: Dispatch<SetStateAction<boolean>> // used in inputset form
@@ -160,30 +160,30 @@ export const handleCIConnectorRefOnChange = ({
   if (connectorRefType === MultiTypeInputType.FIXED) {
     const connectionType = newConnectorRef?.record?.spec?.type
     if (connectionType === ConnectionType.Account) {
-      setConnectionType(ConnectionType.Account)
-      setConnectorUrl(newConnectorRef.record?.spec?.url || '')
+      // setConnectionType?.(ConnectionType.Account)
+      // setConnectorUrl?.(newConnectorRef.record?.spec?.url || '')
       setFieldValue(codeBaseInputFieldFormName?.repoName || 'repoName', '')
     } else if (
       connectionType &&
       [ConnectionType.Repo, ConnectionType.Region, ConnectionType.Project].includes(connectionType as ConnectionType)
     ) {
-      setConnectionType(connectionType)
-      setConnectorUrl(newConnectorRef.record?.spec?.url || '')
+      // setConnectionType?.(connectionType)
+      // setConnectorUrl?.(newConnectorRef.record?.spec?.url || '')
       //  clear repoName from yaml so it is not required
       setFieldValue(codeBaseInputFieldFormName?.repoName || 'repoName', undefined)
     } else {
-      setConnectionType('')
-      setConnectorUrl('')
+      // setConnectionType?.('')
+      // setConnectorUrl?.('')
       setFieldValue(codeBaseInputFieldFormName?.repoName || 'repoName', '')
     }
     setIsConnectorExpression?.(false)
   } else if (connectorRefType === MultiTypeInputType.EXPRESSION) {
-    setConnectionType('')
-    setConnectorUrl('')
+    // setConnectionType?.('')
+    // setConnectorUrl?.('')
     setIsConnectorExpression?.(true)
   } else {
-    setConnectionType('')
-    setConnectorUrl('')
+    // setConnectionType?.('')
+    // setConnectorUrl?.('')
     setIsConnectorExpression?.(false)
 
     setFieldValue(
