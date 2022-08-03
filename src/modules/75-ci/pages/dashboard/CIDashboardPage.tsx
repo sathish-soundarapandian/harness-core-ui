@@ -128,7 +128,6 @@ export const CIDashboardPage: React.FC = () => {
     }
   })
 
-  // this for detecting whether the project have any pipelines or if pipelines then any execution or not
   const { data: pipelineExecution, loading: pipelineLoading } = useMutateAsGet(useGetListOfExecutions, {
     queryParams: {
       accountIdentifier: accountId,
