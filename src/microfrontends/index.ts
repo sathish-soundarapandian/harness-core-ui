@@ -41,7 +41,7 @@ export interface CommonComponents {
   RbacMenuItem: React.ComponentType<RbacMenuItemProps>
   MonacoEditor: React.ForwardRefExoticComponent<ExtendedMonacoEditorProps & React.RefAttributes<ReactMonacoEditor>>
   YAMLBuilder: React.FC<YamlBuilderProps>
-  ScopedTitle: React.FC<TitleProps>
+  ScopedTitle?: React.FC<TitleProps>
   MonacoDiffEditor: React.ForwardRefExoticComponent<
     ExtendedMonacoDiffEditorProps & React.RefAttributes<MonacoDiffEditor>
   >
