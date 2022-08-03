@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor, screen } from '@testing-library/react'
+import { render, waitFor, screen, act, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import routes from '@common/RouteDefinitions'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
@@ -260,5 +260,46 @@ describe('Monitored Service list', () => {
     expect(refetchServiceCountData).toBeCalledTimes(2)
     expect(screen.queryByText(`cv.monitoredServices.showingServiceAtRisk`)).not.toBeInTheDocument()
     expect(screen.queryByText('cv.monitoredServices.youHaveNoMonitoredServices')).not.toBeInTheDocument()
+  })
+
+  test('should confirm that searching the expandable search input calls the api', async () => {
+    const { container } = render(
+      <TestWrapper {...testWrapperProps}>
+        <CVMonitoredService />
+      </TestWrapper>
+    )
+
+    await waitFor(() => container.querySelector('[data-name="monitoredServiceSeachContainer"]'))
+    const query = 'abcd'
+    const searchContainer = container.querySelector('[data-name="monitoredServiceSeachContainer"]')
+    const searchIcon = searchContainer?.querySelector('span[data-icon="thinner-search"]')
+    const searchInput = searchContainer?.querySelector(
+      'input[placeholder="Search monitered service"]'
+    ) as HTMLInputElement
+
+    expect(searchIcon).toBeTruthy()
+    expect(searchInput).toBeTruthy()
+    expect(searchInput?.value).toBe('')
+    const expectedResponse = {
+      queryParams: {
+        accountId: '1234_accountId',
+
+        projectIdentifier: '1234_project',
+        orgIdentifier: '1234_org',
+        filter: '',
+        offset: 0,
+        pageSize: 10,
+        servicesAtRiskFilter: false
+      }
+    }
+    expect(cvServices.useListMonitoredService).toBeCalledWith({ queryParams: expectedResponse.queryParams })
+    await act(async () => {
+      fireEvent.click(searchIcon!)
+    })
+    await act(async () => {
+      fireEvent.change(searchInput!, { target: { value: query } })
+    })
+    await waitFor(() => expect(searchInput?.value).toBe(query))
+    await waitFor(() => expect(cvServices.useListMonitoredService).toBeCalledTimes(2))
   })
 })
