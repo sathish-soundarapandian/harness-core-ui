@@ -24,7 +24,7 @@ import { FieldArray } from 'formik'
 import cx from 'classnames'
 import { PopoverInteractionKind, Spinner } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
-import { cloneDeep, isEqual } from 'lodash-es'
+import { cloneDeep, isArray, isEqual } from 'lodash-es'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { StepFormikFowardRef, StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
@@ -329,7 +329,7 @@ function FormContent({
                   spec: {
                     ...formik.values.spec,
                     jobName: newJobName as any,
-                    jobParameter: []
+                    jobParameter: getMultiTypeFromValue(newJobName) === MultiTypeInputType.RUNTIME ? '<+input>' : []
                   }
                 })
                 if (type === MultiTypeInputType.FIXED && newJobName?.label?.length) {
@@ -381,7 +381,7 @@ function FormContent({
           allowedTypes={allowableTypes}
           optionalLabel={getString('common.optionalLabel')}
           defaultValueToReset={[]}
-          disableTypeSelection={true}
+          disableTypeSelection={false}
         >
           <FieldArray
             name="spec.jobParameter"
@@ -396,6 +396,7 @@ function FormContent({
                   {fetchingJobParameters ? (
                     <Spinner />
                   ) : (
+                    isArray(formValues.spec.jobParameter) &&
                     formValues.spec.jobParameter?.map(({ id }: jobParameterInterface, i: number) => {
                       return (
                         <div className={css.jobParameter} key={id}>
@@ -447,8 +448,7 @@ function FormContent({
             }}
           />
         </MultiTypeFieldSelector>
-        {/* Uncomment the below code when making jobParameter runtime */}
-        {/* {getMultiTypeFromValue(formik.values?.spec?.jobParameter as any) === MultiTypeInputType.RUNTIME && (
+        {getMultiTypeFromValue(formik.values?.spec?.jobParameter as any) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions
             value={formik.values?.spec?.jobParameter as any}
             type="String"
@@ -468,7 +468,7 @@ function FormContent({
             }}
             isReadonly={readonly}
           />
-        )} */}
+        )}
       </div>
 
       <div className={stepCss.noLookDivider} />
@@ -502,7 +502,11 @@ export function JenkinsStepBase(
           ? Yup.object().required(getString('pipeline.jenkinsStep.validations.jobName')) // typeError is necessary here, otherwise we get a bad-looking yup error
           : Yup.string().required(getString('pipeline.jenkinsStep.validations.jobName'))
       ),
-      jobParameter: variableSchema(getString)
+      jobParameter: Yup.lazy(value =>
+        typeof value === 'object'
+          ? variableSchema(getString) // typeError is necessary here, otherwise we get a bad-looking yup error
+          : Yup.string()
+      )
     }),
     ...getNameAndIdentifierSchema(getString, stepViewType)
   })
