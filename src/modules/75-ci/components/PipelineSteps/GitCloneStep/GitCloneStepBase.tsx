@@ -19,6 +19,7 @@ import { useStrings } from 'framework/strings'
 import StepCommonFields, {
   GetImagePullPolicyOptions
 } from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
+
 import { getConnectorRefWidth, isRuntimeInput } from '@pipeline/utils/CIUtils'
 import {
   getInitialValuesInCorrectFormat,
@@ -30,7 +31,7 @@ import {
   CodebaseRuntimeInputsInterface
 } from '@pipeline/components/PipelineStudio/RightBar/RightBarUtils'
 import { useGetConnector } from 'services/cd-ng'
-import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import { getScopeFromValue, getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { Connectors } from '@connectors/constants'
 import { CIStepOptionalConfig } from '../CIStep/CIStepOptionalConfig'
@@ -40,6 +41,7 @@ import { CIStep } from '../CIStep/CIStep'
 import { getIsRepoNameRequired, useGetPropagatedStageById } from '../CIStep/StepUtils'
 import type { CIBuildInfrastructureType } from '../../../constants/Constants'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import type { ConnectorInfoDTO } from 'services/portal'
 
 export const GitCloneStepBase = (
   { initialValues, onUpdate, isNewStep = true, readonly, stepViewType, onChange }: GitCloneStepProps,
@@ -60,9 +62,9 @@ export const GitCloneStepBase = (
   const buildInfrastructureType: CIBuildInfrastructureType = get(currentStage, 'stage.spec.infrastructure.type')
   const [connectionType, setConnectionType] = React.useState('')
   const [connectorUrl, setConnectorUrl] = React.useState('')
-  const codebaseConnector = initialValues?.spec?.connectorRef
+  const [codebaseConnector, setCodebaseConnector] = React.useState<ConnectorInfoDTO>()
   const [codebaseRuntimeInputs, setCodebaseRuntimeInputs] = React.useState<CodebaseRuntimeInputsInterface>({
-    ...(isRuntimeInput(codebaseConnector) ? { connectorRef: true, repoName: true } : {})
+    ...(isRuntimeInput(initialValues?.spec?.connectorRef) ? { connectorRef: true, repoName: true } : {})
   })
   const { accountId, projectIdentifier, orgIdentifier } = useParams<
     PipelineType<{
@@ -72,6 +74,8 @@ export const GitCloneStepBase = (
       accountId: string
     }>
   >()
+
+  const connectorId = getIdentifierFromValue(initialValues.spec?.connectorRef || '')
   const initialScope = getScopeFromValue(initialValues.spec?.connectorRef || '')
 
   const {
@@ -79,7 +83,7 @@ export const GitCloneStepBase = (
     loading,
     refetch
   } = useGetConnector({
-    identifier: initialValues.spec?.connectorRef,
+    identifier: connectorId,
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier: initialScope === Scope.ORG || initialScope === Scope.PROJECT ? orgIdentifier : undefined,
@@ -104,6 +108,7 @@ export const GitCloneStepBase = (
           : connector?.data?.connector.spec.type
       )
       setConnectorUrl(connector?.data?.connector.spec.url)
+      setCodebaseConnector(connector.data.connector)
     }
   }, [
     connector?.data?.connector,
@@ -131,7 +136,7 @@ export const GitCloneStepBase = (
           getEditViewValidateFieldsConfig({
             isRepoNameRequired: getIsRepoNameRequired({
               connectorRef: valuesToValidate.spec?.connectorRef,
-              connectorType: connector?.data?.connector?.spec?.type
+              connectorType: codebaseConnector?.spec?.type
             })
           }),
           {
@@ -177,7 +182,13 @@ export const GitCloneStepBase = (
                   isReadonly,
                   setCodebaseRuntimeInputs,
                   codebaseRuntimeInputs,
-                  connector: connector?.data?.connector
+                  connector: codebaseConnector,
+                  onConnectorChange: val => {
+                    console.log(val)
+                    setCodebaseConnector(val)
+                    // console.log(valueType)
+                    // console.log(type)
+                  }
                 },
                 ['spec.build']: {},
                 ['spec.cloneDirectory']: { tooltipId: 'cloneDirectory' }

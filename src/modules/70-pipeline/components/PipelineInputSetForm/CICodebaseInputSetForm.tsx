@@ -104,7 +104,7 @@ const placeholderValues = {
 }
 
 export interface ConnectorRefInterface {
-  record?: { spec?: { type?: string; url?: string; connectionType?: string } }
+  record?: ConnectorInfoDTO
 }
 
 const renderLabel = ({
@@ -137,7 +137,8 @@ export const handleCIConnectorRefOnChange = ({
   setIsConnectorExpression,
   setGitAuthProtocol,
   codeBaseInputFieldFormName,
-  viewType
+  viewType,
+  onConnectorChange
 }: {
   value: ConnectorRefInterface | undefined
   connectorRefType: MultiTypeInputType
@@ -148,8 +149,10 @@ export const handleCIConnectorRefOnChange = ({
   setIsConnectorExpression?: Dispatch<SetStateAction<boolean>> // used in inputset form
   codeBaseInputFieldFormName?: { [key: string]: string } // only used when setting nested values in input set
   viewType?: StepViewType
+  onConnectorChange?: (value?: ConnectorInfoDTO) => void
 }): void => {
   const newConnectorRef = value as ConnectorRefInterface
+  onConnectorChange?.(value?.record)
   setGitAuthProtocol?.(get(value, 'record.spec.authentication.type'))
   if (viewType === StepViewType.DeploymentForm) {
     setFieldValue(codeBaseInputFieldFormName?.branch || 'branch', '')

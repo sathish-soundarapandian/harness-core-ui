@@ -82,7 +82,8 @@ export const renderConnectorAndRepoName = ({
   connectorWidth,
   connectorAndRepoNamePath,
   allowableTypes,
-  codeBaseInputFieldFormName
+  codeBaseInputFieldFormName,
+  onConnectorChange
 }: {
   values: { [key: string]: any }
   setFieldValue: (field: string, value: any) => void
@@ -107,6 +108,7 @@ export const renderConnectorAndRepoName = ({
   connectorAndRepoNamePath?: string // coming from step / input set
   allowableTypes: AllowedTypes // expression can be used for repoName
   codeBaseInputFieldFormName?: { [key: string]: string }
+  onConnectorChange?: () => void // refetch onEdit connector
 }): JSX.Element => {
   const connectorFieldName = connectorAndRepoNamePath ? `${connectorAndRepoNamePath}.connectorRef` : 'connectorRef'
   const connectorValue = get(values, connectorFieldName)
@@ -150,7 +152,8 @@ export const renderConnectorAndRepoName = ({
               setConnectionType,
               setConnectorUrl,
               setFieldValue,
-              codeBaseInputFieldFormName
+              codeBaseInputFieldFormName,
+              onConnectorChange
             })
             setCodebaseRuntimeInputs({
               ...codebaseRuntimeInputs,

@@ -583,6 +583,7 @@ export function RightBar(): JSX.Element {
                       isReadonly,
                       setCodebaseRuntimeInputs,
                       codebaseRuntimeInputs,
+                      refetchConnector: refetch,
                       allowableTypes: [
                         MultiTypeInputType.FIXED,
                         MultiTypeInputType.EXPRESSION,
