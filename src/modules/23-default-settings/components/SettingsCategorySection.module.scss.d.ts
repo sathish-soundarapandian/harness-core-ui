@@ -9,6 +9,7 @@
 declare const styles: {
   readonly defaultSettingRenderer: string
   readonly detailSettings: string
+  readonly emptyCheckBoxSpace: string
   readonly groupHeaderContainer: string
   readonly panelClassName: string
   readonly settingLabelContainer: string

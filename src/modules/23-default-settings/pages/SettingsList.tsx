@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Button, ButtonVariation, FormikForm, getErrorInfoFromErrorObject, Layout, useToaster } from '@harness/uicore'
+import { ButtonVariation, FormikForm, getErrorInfoFromErrorObject, Layout, useToaster } from '@harness/uicore'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
@@ -13,6 +13,9 @@ import { useStrings } from 'framework/strings'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import DefaultSettingsFactory from '@default-settings/factories/DefaultSettingsFactory'
 import { SettingDTO, SettingRequestDTO, useUpdateSettingValue } from 'services/cd-ng'
+import RbacButton from '@rbac/components/Button/Button'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
 import type { SettingCategory, SettingType, SettingYupValidation } from '../interfaces/SettingType.types'
 import SettingsCategorySection from '../components/SettingsCategorySection'
 import css from './SettingsList.module.scss'
@@ -25,6 +28,7 @@ const SettingsList = () => {
   const [settingErrorMessage, updateSettingErrorMessage] = useState<Map<SettingType, string>>(new Map())
   const [disableSave, updateDisableSave] = useState<boolean>(true)
   const { showError } = useToaster()
+  const [savedSettings, updateSavedSettings] = useState<Map<SettingType, SettingDTO>>(new Map())
   const onSettingChange = (
     settingType: SettingType,
     settingDTO: SettingDTO,
@@ -53,15 +57,19 @@ const SettingsList = () => {
     try {
       updateSettingValue(Array.from(changedSettings.values())).then(data => {
         const errorMap = new Map()
+        const savedSettingsLocal: Map<SettingType, SettingDTO> = new Map()
         data.data?.forEach(setting => {
           if (!setting.updateStatus && setting.errorMessage) {
             errorMap.set(setting.identifier, setting.errorMessage)
+          } else {
+            savedSettingsLocal.set(setting.identifier as SettingType, setting.setting)
           }
         })
         updateSettingErrorMessage(errorMap)
         if (!errorMap.size) {
           updateDisableSave(true)
           updateChangedSettings(new Map())
+          updateSavedSettings(savedSettingsLocal)
         }
       })
     } catch (error) {
@@ -95,11 +103,17 @@ const SettingsList = () => {
                   />
                 }
                 toolbar={
-                  <Button
+                  <RbacButton
                     text={getString('save')}
                     disabled={disableSave}
                     variation={ButtonVariation.PRIMARY}
                     type="submit"
+                    permission={{
+                      permission: PermissionIdentifier.EDIT_CORE_SETTING,
+                      resource: {
+                        resourceType: ResourceType.DEFAULT_SETTINGS
+                      }
+                    }}
                   />
                 }
                 breadcrumbs={
@@ -118,6 +132,7 @@ const SettingsList = () => {
                         onSettingChange={onSettingChange}
                         settingErrorMessages={settingErrorMessage}
                         updateValidationSchema={updateValidation}
+                        savedSettings={savedSettings}
                         key={categ}
                       />
                     )

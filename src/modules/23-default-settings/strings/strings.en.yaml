@@ -1,3 +1,5 @@
 restoreToDefault: Restore to Default
 allowOverrides: Allow Overrides
 noSettingToDisplay: No Settings to Display
+harnessDefault: Harness Default
+inheritedFrom: Inherited from {{source}}

@@ -174,5 +174,8 @@ export enum PermissionIdentifier {
   DELETE_CCM_AUTOSTOPPING_RULE = 'ccm_autoStoppingRule_delete',
   VIEW_CCM_LOADBALANCER = 'ccm_loadBalancer_view',
   EDIT_CCM_LOADBALANCER = 'ccm_loadBalancer_edit',
-  DELETE_CCM_LOADBALANCER = 'ccm_loadBalancer_delete'
+  DELETE_CCM_LOADBALANCER = 'ccm_loadBalancer_delete',
+  // Default Settings
+  VIEW_CORE_SETTING = 'core_setting_view',
+  EDIT_CORE_SETTING = 'core_setting_edit'
 }
