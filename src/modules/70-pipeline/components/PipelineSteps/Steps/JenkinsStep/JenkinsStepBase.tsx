@@ -15,7 +15,8 @@ import {
   Accordion,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  SelectOption
+  SelectOption,
+  RUNTIME_INPUT_VALUE
 } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
 import { v4 as uuid } from 'uuid'
@@ -214,6 +215,8 @@ function FormContent({
     })
   }
 
+  console.log('formik', formik.values)
+
   return (
     <React.Fragment>
       {stepViewType !== StepViewType.Template && (
@@ -329,7 +332,8 @@ function FormContent({
                   spec: {
                     ...formik.values.spec,
                     jobName: newJobName as any,
-                    jobParameter: getMultiTypeFromValue(newJobName) === MultiTypeInputType.RUNTIME ? '<+input>' : []
+                    jobParameter:
+                      getMultiTypeFromValue(newJobName) === MultiTypeInputType.RUNTIME ? RUNTIME_INPUT_VALUE : []
                   }
                 })
                 if (type === MultiTypeInputType.FIXED && newJobName?.label?.length) {
@@ -376,6 +380,7 @@ function FormContent({
       <div className={stepCss.formGroup}>
         <MultiTypeFieldSelector
           name="spec.jobParameter"
+          key={getMultiTypeFromValue(formik.values.spec.jobParameter as string)}
           label={getString('pipeline.jenkinsStep.jobParameter')}
           isOptional
           allowedTypes={allowableTypes}
