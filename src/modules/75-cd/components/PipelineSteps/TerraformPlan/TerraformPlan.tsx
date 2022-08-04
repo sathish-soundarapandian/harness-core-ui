@@ -706,6 +706,7 @@ export class TerraformPlan extends PipelineStep<TFPlanFormData> {
     this._hasDelegateSelectionVisible = true
   }
   protected type = StepType.TerraformPlan
+  protected referenceId = 'terraformPlanStep'
   protected defaultValues: TFPlanFormData = {
     identifier: '',
     timeout: '10m',

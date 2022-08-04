@@ -11030,6 +11030,7 @@ export interface StepGroupElementConfig {
   name?: string
   steps: ExecutionWrapperConfig[]
   when?: StepWhenCondition
+  type?:string
 }
 
 export type StepGroupFailureActionConfig = FailureStrategyActionConfig & {

@@ -11,7 +11,6 @@ declare const styles: {
   readonly bottomMargin5: string
   readonly capitalize: string
   readonly gitSyncPopover: string
-  readonly helpPanelContainer: string
   readonly iconButton: string
   readonly inpLabel: string
   readonly labelWrapper: string

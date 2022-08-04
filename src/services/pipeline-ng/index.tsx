@@ -4182,6 +4182,7 @@ export interface TemplateStepNode {
   identifier: string
   name: string
   template: TemplateLinkConfig
+  type?:string
 }
 
 export interface TemplatesResolvedPipelineResponseDTO {

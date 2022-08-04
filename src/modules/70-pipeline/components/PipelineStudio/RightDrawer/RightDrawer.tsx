@@ -461,7 +461,7 @@ export function RightDrawer(): React.ReactElement {
     const toolTipType = type ? `_${type}` : ''
     title = (
       <RightDrawerTitle
-        helpPanelVisible ={helpPanelVisible}
+        helpPanelVisible={helpPanelVisible}
         stepType={stepType}
         toolTipType={toolTipType}
         stepData={stepData}
@@ -721,6 +721,7 @@ export function RightDrawer(): React.ReactElement {
   }
 
   const handleClose = (e?: React.SyntheticEvent<Element, Event>): void => {
+    setHelpPanel(false)
     closeDrawer({
       e,
       formikRef,
@@ -972,7 +973,7 @@ export function RightDrawer(): React.ReactElement {
           size={ButtonSize.SMALL}
           className={css.helpPanel}
           style={helpPanelVisible ? { marginLeft: '920px' } : {}}
-          text={'Help Panel'}
+          text={helpPanelVisible ? 'Hide' : 'Help Panel'}
           onClick={showHelpPanel}
         />
       ) : null}

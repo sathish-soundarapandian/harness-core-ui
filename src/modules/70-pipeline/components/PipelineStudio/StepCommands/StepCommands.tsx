@@ -75,7 +75,7 @@ export function StepCommands(
     allowableTypes
   } = props
   const { getString } = useStrings()
-  const referenceId = stepsFactory.getStepReferenceId(step.type)
+  const referenceId = stepsFactory.getStepReferenceId(step.type || '')
   const templatesEnabled = useFeatureFlag(FeatureFlag.NG_TEMPLATES)
   const [activeTab, setActiveTab] = React.useState(StepCommandTabs.StepConfiguration)
   const stepRef = React.useRef<FormikProps<unknown> | null>(null)
@@ -271,7 +271,7 @@ export function StepCommands(
           </div>
           {props.helpPanelVisible ? (
             <div className={css.helpPanelStyle}>
-              <HelpPanel referenceId={'connectors'} type={HelpPanelType.CONTENT_ONLY}></HelpPanel>
+              <HelpPanel referenceId={referenceId || ''} type={HelpPanelType.CONTENT_ONLY}></HelpPanel>
             </div>
           ) : null}
         </div>
