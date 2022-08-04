@@ -55,7 +55,6 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
       noData={{
         when: () => !sloDashboardWidget
       }}
-      className={css.pageBody}
     >
       {sloDashboardWidget && (
         <Container padding="xlarge">
