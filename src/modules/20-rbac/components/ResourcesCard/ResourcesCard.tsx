@@ -58,7 +58,7 @@ const ResourcesCard: React.FC<ResourcesCardProps> = ({
   if (!resourceDetails) return null
   const { label, icon, addResourceModalBody, addAttributeModalBody, staticResourceRenderer, attributeRenderer } =
     resourceDetails
-  const attributeModalEnabled = !ATTRIBUTE_TYPE_ACL_ENABLED && addAttributeModalBody
+  const attributeModalEnabled = ATTRIBUTE_TYPE_ACL_ENABLED && addAttributeModalBody
   const staticResourceValues = isAtrributeFilterEnabled
     ? (resourceValues as AttributeFilter).attributeValues
     : resourceValues
