@@ -82,7 +82,7 @@ export default function GetStartedWithCI(): React.ReactElement {
             (item: ConnectorResponse) =>
               get(item, 'connector.spec.apiAccess.spec.tokenRef') && item.status?.status === Status.SUCCESS
           )
-          if (selectedConnector) {
+          if (selectedConnector?.connector) {
             setPreselectedGitConnector(selectedConnector?.connector)
             const secretIdentifier = getIdentifierFromValue(
               get(selectedConnector, 'connector.spec.apiAccess.spec.tokenRef')

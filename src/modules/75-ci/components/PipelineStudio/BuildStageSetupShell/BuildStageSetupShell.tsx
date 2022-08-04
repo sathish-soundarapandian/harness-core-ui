@@ -217,7 +217,7 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
     if (sectionId && TabsOrder.includes(sectionId)) {
       setSelectedTabId(sectionId)
     } else {
-      setSelectedSectionId(BuildTabs.OVERVIEW)
+      setSelectedSectionId(BuildTabs.EXECUTION)
     }
   }, [selectedSectionId])
 

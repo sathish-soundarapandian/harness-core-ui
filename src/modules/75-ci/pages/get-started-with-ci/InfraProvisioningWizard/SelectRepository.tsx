@@ -101,6 +101,9 @@ const SelectRepositoryRef = (
   }, [])
 
   const ConnectorSelectionItems = useMemo((): SelectOption[] => {
+    if (!validatedConnector) {
+      return []
+    }
     let items = connectorsEligibleForPreSelection
     if (!connectorsEligibleForPreSelection) {
       items = validatedConnector ? [validatedConnector] : []
