@@ -168,7 +168,7 @@ describe('<CFPipelineDeploymentList /> tests', () => {
       expect.objectContaining({ queryParams: expect.objectContaining({ module: 'cf' }) })
     )
 
-    const runButton = await screen.findByText('runPipeline')
+    const runButton = await screen.findByText('pipeline.runAPipeline')
     userEvent.click(runButton)
     expect(getByTestId('location')).toMatchInlineSnapshot(`
       <div
