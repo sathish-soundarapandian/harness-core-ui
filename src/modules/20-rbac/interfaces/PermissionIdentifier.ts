@@ -153,5 +153,9 @@ export enum PermissionIdentifier {
   EDIT_STO_TESTTARGET = 'sto_testtarget_edit',
   VIEW_STO_EXEMPTION = 'sto_exemption_view',
   CREATE_STO_EXEMPTION = 'sto_exemption_create',
-  APPROVE_STO_EXEMPTION = 'sto_exemption_approve'
+  APPROVE_STO_EXEMPTION = 'sto_exemption_approve',
+
+  // Default Settings
+  VIEW_CORE_SETTING = 'core_setting_view',
+  EDIT_CORE_SETTING = 'core_setting_edit'
 }

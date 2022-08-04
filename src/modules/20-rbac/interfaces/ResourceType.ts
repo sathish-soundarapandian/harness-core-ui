@@ -53,7 +53,8 @@ export enum ResourceType {
   STO_TESTTARGET = 'STO_TESTTARGET',
   STO_EXEMPTION = 'STO_EXEMPTION',
   STO_ISSUE = 'STO_ISSUE',
-  STO_SCAN = 'STO_SCAN'
+  STO_SCAN = 'STO_SCAN',
+  DEFAULT_SETTINGS = 'DEFAULT_SETTINGS'
 }
 
 export enum ResourceCategory {

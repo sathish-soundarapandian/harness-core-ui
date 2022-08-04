@@ -8,7 +8,7 @@ import {
   Container,
   Icon
 } from '@harness/uicore'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useFormikContext } from 'formik'
 import cx from 'classnames'
@@ -29,19 +29,21 @@ interface SettingsCategorySectionProps {
   ) => void
   settingErrorMessages: Map<SettingType, string>
   updateValidationSchema: (val: SettingYupValidation) => void
+  savedSettings: Map<SettingType, SettingDTO>
 }
 interface UpdateSettingValue {
   updateType: 'UPDATE' | 'RESTORE'
   checked?: boolean
   settingType: SettingType
   val?: string
-  action: 'Override' | 'SettingChange' | 'Restore'
+  action: 'OVERRIDE' | 'SETTINGCHANGE' | 'RESTORE'
 }
 const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
   settingCategory,
   onSettingChange,
   settingErrorMessages,
-  updateValidationSchema
+  updateValidationSchema,
+  savedSettings
 }) => {
   const { setFieldValue } = useFormikContext()
 
@@ -56,6 +58,19 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
 
   const { showError } = useToaster()
   const [loadingSettingTypes, updateLoadingSettingTypes] = useState(false)
+  useEffect(() => {
+    let settingsChanged = false
+    const categoryAllSettingsLocal: Map<SettingType, SettingDTO> = new Map(categoryAllSettings)
+    savedSettings.forEach((value, key) => {
+      if (categoryAllSettings.has(key)) {
+        categoryAllSettingsLocal.set(key, value)
+        settingsChanged = true
+      }
+    })
+    if (settingsChanged) {
+      updateCategoryAllSettings(categoryAllSettingsLocal)
+    }
+  }, [savedSettings])
   const categorySectionOpen = async () => {
     if (!refinedSettingTypes.size) {
       updateLoadingSettingTypes(true)
@@ -96,7 +111,7 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
     let selectedSettingTypeDTO = categoryAllSettings.get(settingType)
     if (selectedSettingTypeDTO) {
       switch (action) {
-        case 'SettingChange':
+        case 'SETTINGCHANGE':
           {
             selectedSettingTypeDTO = {
               ...selectedSettingTypeDTO,
@@ -104,7 +119,7 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
             }
           }
           break
-        case 'Override':
+        case 'OVERRIDE':
           {
             selectedSettingTypeDTO = {
               ...selectedSettingTypeDTO,
@@ -112,7 +127,7 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
             }
           }
           break
-        case 'Restore':
+        case 'RESTORE':
           {
             selectedSettingTypeDTO = {
               ...selectedSettingTypeDTO,
@@ -128,15 +143,15 @@ const SettingsCategorySection: React.FC<SettingsCategorySectionProps> = ({
   }
 
   const onSelectionChange = (settingType: SettingType, val: string) => {
-    updateValueInSetting({ action: 'SettingChange', updateType: 'UPDATE', settingType, val })
+    updateValueInSetting({ action: 'SETTINGCHANGE', updateType: 'UPDATE', settingType, val })
   }
 
   const onAllowOverride = (checked: boolean, settingType: SettingType) => {
-    updateValueInSetting({ action: 'Override', updateType: 'UPDATE', settingType, checked })
+    updateValueInSetting({ action: 'OVERRIDE', updateType: 'UPDATE', settingType, checked })
   }
 
   const onRestore = (settingType: SettingType) => {
-    updateValueInSetting({ action: 'Restore', updateType: 'RESTORE', settingType })
+    updateValueInSetting({ action: 'RESTORE', updateType: 'RESTORE', settingType })
   }
 
   if (!settingCategoryHandler) {

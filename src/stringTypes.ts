@@ -1165,6 +1165,8 @@ export interface StringsMap {
   'rbac.youAreMissingTheFollowingPermission': string
   'rbac.youAreNotAuthorizedTo': string
   'defaultSettings.allowOverrides': string
+  'defaultSettings.harnessDefault': string
+  'defaultSettings.inheritedFrom': string
   'defaultSettings.noSettingToDisplay': string
   'defaultSettings.restoreToDefault': string
   'governance.permissions.governancePolicies': string
