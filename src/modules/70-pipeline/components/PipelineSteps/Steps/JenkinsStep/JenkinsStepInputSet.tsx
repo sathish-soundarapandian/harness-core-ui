@@ -8,7 +8,15 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, FormInput, SelectOption } from '@wings-software/uicore'
+import {
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  FormikForm,
+  FormInput,
+  SelectOption,
+  Button,
+  ButtonVariation
+} from '@wings-software/uicore'
 import { cloneDeep, get, isArray, isEmpty, set } from 'lodash-es'
 import { FieldArray } from 'formik'
 import { PopoverInteractionKind, Spinner } from '@blueprintjs/core'
@@ -279,14 +287,14 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
           <div className={css.formGroup}>
             <MultiTypeFieldSelector
               name={`${prefix}spec.jobParameter`}
-              label={getString('pipeline.scriptInputVariables')}
+              label={getString('pipeline.jenkinsStep.jobParameter')}
               defaultValueToReset={[]}
               disableTypeSelection
               formik={formik}
             >
               <FieldArray
                 name={`${prefix}spec.jobParameter`}
-                render={() => {
+                render={({ push, remove }) => {
                   return (
                     <div className={stepCss.panel}>
                       <div className={stepCss.jobParameter}>
@@ -306,13 +314,13 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
                               <FormInput.Text
                                 name={`${prefix}spec.jobParameter[${i}].name`}
                                 placeholder={getString('name')}
-                                disabled={true}
+                                disabled={readonly}
                               />
                               <FormInput.Select
                                 items={jobParameterInputType}
                                 name={`${prefix}spec.jobParameter[${i}].type`}
                                 placeholder={getString('typeLabel')}
-                                disabled={true}
+                                disabled={readonly}
                               />
                               <FormInput.MultiTextInput
                                 name={`${prefix}spec.jobParameter[${i}].value`}
@@ -325,10 +333,27 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
                                 disabled={readonly}
                                 placeholder={getString('valueLabel')}
                               />
+                              <Button
+                                variation={ButtonVariation.ICON}
+                                icon="main-trash"
+                                data-testid={`remove-environmentVar-${i}`}
+                                onClick={() => remove(i)}
+                                disabled={readonly}
+                              />
                             </div>
                           )
                         })
                       )}
+                      <Button
+                        icon="plus"
+                        variation={ButtonVariation.LINK}
+                        data-testid="add-environmentVar"
+                        disabled={readonly}
+                        onClick={() => push({ name: '', type: 'String', value: '' })}
+                        className={stepCss.addButton}
+                      >
+                        {getString('pipeline.jenkinsStep.addJobParameters')}
+                      </Button>
                     </div>
                   )
                 }}
