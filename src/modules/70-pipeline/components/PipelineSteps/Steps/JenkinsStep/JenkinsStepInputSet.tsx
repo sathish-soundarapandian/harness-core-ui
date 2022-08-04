@@ -9,18 +9,18 @@ import React, { useState, useRef, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, FormInput, SelectOption } from '@wings-software/uicore'
-import { cloneDeep, get, isArray, isEmpty } from 'lodash-es'
+import { cloneDeep, get, isArray, isEmpty, set } from 'lodash-es'
 import { FieldArray } from 'formik'
-import { PopoverInteractionKind } from '@blueprintjs/core'
+import { PopoverInteractionKind, Spinner } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { JobDetails, useGetJobDetailsForJenkins } from 'services/cd-ng'
+import { JobDetails, useGetJobDetailsForJenkins, useGetJobParametersForJenkins } from 'services/cd-ng'
 import { MultiTypeFieldSelector } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import type { SubmenuSelectOption } from './types'
+import type { jobParameterInterface, SubmenuSelectOption } from './types'
 import { resetForm } from './helper'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import stepCss from './JenkinsStep.module.scss'
@@ -77,29 +77,35 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
     }
   })
 
-  // To be uncommented when we support runtime jobParameters
-  // const { refetch: refetchJobParameters, data: jobParameterResponse } = useGetJobParametersForJenkins({
-  //   lazy: true,
-  //   jobName: ''
-  // })
+  const {
+    refetch: refetchJobParameters,
+    data: jobParameterResponse,
+    loading: fetchingJobParameters
+  } = useGetJobParametersForJenkins({
+    queryParams: {
+      ...commonParams,
+      connectorRef: connectorRef.toString()
+    },
+    jobName: encodeURIComponent(get(inputSetData?.allValues, 'spec.jobName', ''))
+  })
 
-  // useEffect(() => {
-  //   if (jobParameterResponse?.data) {
-  //     const parameterData: jobParameterInterface[] =
-  //       jobParameterResponse?.data?.map(item => {
-  //         return {
-  //           name: item.name,
-  //           value: item.defaultValue,
-  //           type: 'String'
-  //         } as jobParameterInterface
-  //       }) || []
-  //     const clonedFormik = cloneDeep(formik.values)
-  //     set(clonedFormik, `${prefix}spec.jobParameter`, parameterData)
-  //     formik.setValues({
-  //       ...clonedFormik
-  //     })
-  //   }
-  // }, [jobParameterResponse])
+  useEffect(() => {
+    if (jobParameterResponse?.data) {
+      const parameterData: jobParameterInterface[] =
+        jobParameterResponse?.data?.map(item => {
+          return {
+            name: item.name,
+            value: item.defaultValue,
+            type: 'String'
+          } as jobParameterInterface
+        }) || []
+      const clonedFormik = cloneDeep(formik.values)
+      set(clonedFormik, `${prefix}spec.jobParameter`, parameterData)
+      formik.setValues({
+        ...clonedFormik
+      })
+    }
+  }, [jobParameterResponse])
 
   useEffect(() => {
     if (lastOpenedJob.current) {
@@ -244,6 +250,13 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
                       `${prefix}spec.jobName`,
                       type === MultiTypeInputType.FIXED ? newJobName.label : newJobName
                     )
+                    refetchJobParameters({
+                      pathParams: { jobName: encodeURIComponent(newJobName.label) },
+                      queryParams: {
+                        ...commonParams,
+                        connectorRef: connectorRef.toString()
+                      }
+                    })
                   },
                   onOpening: (item: SelectOption) => {
                     lastOpenedJob.current = item.label
@@ -261,7 +274,8 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
           </div>
         ) : null}
 
-        {isArray(template?.spec?.jobParameter) && template?.spec?.jobParameter ? (
+        {(isArray(template?.spec?.jobParameter) && template?.spec?.jobParameter) ||
+        getMultiTypeFromValue(template?.spec?.jobParameter) === MultiTypeInputType.RUNTIME ? (
           <div className={css.formGroup}>
             <MultiTypeFieldSelector
               name={`${prefix}spec.jobParameter`}
@@ -280,34 +294,41 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
                         <span className={css.label}>Type</span>
                         <span className={css.label}>Value</span>
                       </div>
-                      {template?.spec?.jobParameter?.map((type: any, i: number) => {
-                        return (
-                          <div className={stepCss.jobParameter} key={type.value}>
-                            <FormInput.Text
-                              name={`${prefix}spec.jobParameter[${i}].name`}
-                              placeholder={getString('name')}
-                              disabled={true}
-                            />
-                            <FormInput.Select
-                              items={jobParameterInputType}
-                              name={`${prefix}spec.jobParameter[${i}].type`}
-                              placeholder={getString('typeLabel')}
-                              disabled={true}
-                            />
-                            <FormInput.MultiTextInput
-                              name={`${prefix}spec.jobParameter[${i}].value`}
-                              multiTextInputProps={{
-                                allowableTypes,
-                                expressions,
-                                disabled: readonly
-                              }}
-                              label=""
-                              disabled={readonly}
-                              placeholder={getString('valueLabel')}
-                            />
-                          </div>
-                        )
-                      })}
+                      {fetchingJobParameters ? (
+                        <Spinner />
+                      ) : (
+                        (getMultiTypeFromValue(template?.spec?.jobParameter) === MultiTypeInputType.RUNTIME
+                          ? get(formik, `values.${prefix}spec.jobParameter`) || []
+                          : template?.spec?.jobParameter
+                        )?.map((type: any, i: number) => {
+                          return (
+                            <div className={stepCss.jobParameter} key={type.value}>
+                              <FormInput.Text
+                                name={`${prefix}spec.jobParameter[${i}].name`}
+                                placeholder={getString('name')}
+                                disabled={true}
+                              />
+                              <FormInput.Select
+                                items={jobParameterInputType}
+                                name={`${prefix}spec.jobParameter[${i}].type`}
+                                placeholder={getString('typeLabel')}
+                                disabled={true}
+                              />
+                              <FormInput.MultiTextInput
+                                name={`${prefix}spec.jobParameter[${i}].value`}
+                                multiTextInputProps={{
+                                  allowableTypes,
+                                  expressions,
+                                  disabled: readonly
+                                }}
+                                label=""
+                                disabled={readonly}
+                                placeholder={getString('valueLabel')}
+                              />
+                            </div>
+                          )
+                        })
+                      )}
                     </div>
                   )
                 }}
