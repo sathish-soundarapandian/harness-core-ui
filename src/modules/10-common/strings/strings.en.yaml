@@ -940,6 +940,12 @@ invalidIdentifiers: 'Identifier must not be one of the following values: {{ident
 repositoryFormat: Repository Format
 hostLabel: Host
 useSSL: Use SSL
+moduleList:
+  title: Select a module
+  buildAndTest: Build & Test
+  deployChanges: Deploy Changes
+  manageImpact: Manage Impact
+  optimize: Optimize
 
 # Chaos Module
 chaosText: Chaos

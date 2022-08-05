@@ -78,6 +78,21 @@
     }
   }
 
+  .allModulesButton {
+    border: 1px solid var(--primary-8) !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    background-color: var(--primary-9-dark) !important;
+    padding: var(--spacing-xsmall) !important;
+    color: var(--grey-300) !important;
+
+    &:hover {
+      box-shadow: none !important;
+      border: 1px solid var(--primary-4) !important;
+      color: var(--primary-4) !important;
+    }
+  }
+
   .userLink {
     height: 60px;
     padding: 0px;

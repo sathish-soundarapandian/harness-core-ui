@@ -7,18 +7,13 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly active: string
-  readonly allModulesButton: string
-  readonly hiddenText: string
-  readonly hoverNavLink: string
-  readonly hoverText: string
-  readonly main: string
-  readonly navItem: string
-  readonly navLink: string
-  readonly navList: string
-  readonly settings: string
-  readonly text: string
-  readonly userLink: string
-  readonly userName: string
+  readonly backdrop: string
+  readonly blue: string
+  readonly clickable: string
+  readonly itemContainer: string
+  readonly itemLabel: string
+  readonly itemLink: string
+  readonly modulesList: string
+  readonly modulesListContainer: string
 }
 export default styles
