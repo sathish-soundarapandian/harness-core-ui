@@ -19,7 +19,7 @@ export function useHostedBuilds(): UseHostedBuildsReturn {
   const { status, edition, licenseType } = licenseInformation['CI'] || {}
   // Hosted Builds to be only enabled for free users or paid enterprise/team users
   return {
-    enabledHostedBuildsForFreeUsers: edition === Editions.FREE && status === LICENSE_STATE_VALUES.ACTIVE,
+    enabledHostedBuildsForFreeUsers: false,
     enabledHostedBuilds:
       ((edition === Editions.FREE ||
         ([Editions.TEAM, Editions.ENTERPRISE].includes(edition as Editions) &&

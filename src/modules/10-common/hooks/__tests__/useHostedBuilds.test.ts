@@ -23,7 +23,7 @@ describe('Test useHostedBuilds', () => {
     jest.spyOn(licenseStoreContextMock, 'useLicenseStore').mockReturnValue({
       licenseInformation: { CI: { edition: 'FREE', licenseType: 'TRIAL', status: 'ACTIVE' } }
     } as any)
-    expect(useHostedBuilds().enabledHostedBuildsForFreeUsers).toBe(true)
+    expect(useHostedBuilds().enabledHostedBuildsForFreeUsers).toBe(false)
     expect(useHostedBuilds().enabledHostedBuilds).toBe(true)
   })
 
@@ -31,7 +31,7 @@ describe('Test useHostedBuilds', () => {
     jest.spyOn(licenseStoreContextMock, 'useLicenseStore').mockReturnValue({
       licenseInformation: { CI: { edition: 'FREE', licenseType: 'PAID', status: 'ACTIVE' } }
     } as any)
-    expect(useHostedBuilds().enabledHostedBuildsForFreeUsers).toBe(true)
+    expect(useHostedBuilds().enabledHostedBuildsForFreeUsers).toBe(false)
     expect(useHostedBuilds().enabledHostedBuilds).toBe(true)
   })
 
