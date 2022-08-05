@@ -6,15 +6,16 @@
  */
 
 import React from 'react'
+import * as Yup from 'yup'
+import { FormikContextType, yupToFormErrors } from 'formik'
 import { Button, ButtonVariation, FormInput, Layout, MultiSelectOption, SelectOption } from '@harness/uicore'
 import { Position } from '@blueprintjs/core'
+import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useStrings, String } from 'framework/strings'
 import type { StringKeys } from 'framework/strings/StringsContext'
 import type { FormValues } from './ConfigureOptionsUtils'
-import type { FormikContextType } from 'formik'
 
 import css from './ConfigureOptions.module.scss'
-import { isValidTimeString } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 
 export enum OPTIONS_TYPE {
   TIME = 'TIME'
@@ -29,10 +30,6 @@ export interface AllowedValuesFieldsProps {
   optionsType?: OPTIONS_TYPE
 }
 
-// const PickProps = 'fetchValues' | 'options' | 'isReadonly'
-
-// type RenderFieldProps = Pick<AllowedValuesFieldsProps, PickProps>
-// extends Omit<AllowedValuesFieldsProps, 'values' | 'showAdvanced' | 'setFieldValue'>
 interface RenderFieldProps {
   getString(key: StringKeys, vars?: Record<string, any>): string
   formik: FormikContextType<FormValues>
@@ -40,6 +37,13 @@ interface RenderFieldProps {
   fetchValues?: (done: (response: SelectOption[] | MultiSelectOption[]) => void) => void
   options: SelectOption[] | MultiSelectOption[]
   optionsType?: string
+}
+
+const TYPE_TO_VALIDATOR = {
+  [OPTIONS_TYPE.TIME]: (getString: (key: StringKeys, vars?: Record<string, any>) => string) =>
+    Yup.object().shape({
+      timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum'))
+    })
 }
 
 const renderField = ({ fetchValues, getString, options, optionsType, isReadonly, formik }: RenderFieldProps) => {
@@ -54,26 +58,26 @@ const renderField = ({ fetchValues, getString, options, optionsType, isReadonly,
       />
     )
   }
-  {
-    /** todo */
+  const extraProps = {
+    tagsProps: {}
   }
-  console.log('optionsType', optionsType)
-
-  const extraProps = {}
 
   switch (optionsType) {
     case OPTIONS_TYPE.TIME: {
       extraProps.tagsProps = {
         onChange: (changed: unknown) => {
           const values: string[] = changed as string[]
-          console.log('values on Change', values)
-          const isInvalid = values.some(val => !isValidTimeString(val))
-          if (isInvalid) {
-            // error
-            setErrors({ ...errors, allowedValues: 'Invalid format' })
-          } else {
+          const validator = TYPE_TO_VALIDATOR[OPTIONS_TYPE.TIME](getString)
+          try {
+            validator.validateSync({ timeout: values[values.length - 1] })
             setFieldTouched('allowedValues', true, false)
             setFieldValue('allowedValues', values)
+          } catch (e) {
+            /* istanbul ignore else */
+            if (e instanceof Yup.ValidationError) {
+              const err = yupToFormErrors<{ timeout: string }>(e)
+              setErrors({ ...errors, allowedValues: err.timeout })
+            }
           }
         }
       }
