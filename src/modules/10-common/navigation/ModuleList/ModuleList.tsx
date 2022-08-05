@@ -19,6 +19,7 @@ import css from './ModuleList.module.scss'
 interface ModuleListProps {
   isOpen: boolean
   close: () => void
+  usePortal?: boolean
 }
 
 interface ItemConfig {
@@ -76,7 +77,7 @@ const Group: React.FC<GroupProps> = ({ data }) => {
   )
 }
 
-const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close }) => {
+const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true }) => {
   const { accountId } = useParams<AccountPathProps>()
 
   const listConfig: GroupConfig[] = [
@@ -140,6 +141,7 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close }) => {
       size={Drawer.SIZE_SMALL}
       className={css.modulesList}
       backdropClassName={css.backdrop}
+      usePortal={usePortal}
     >
       <div className={css.modulesListContainer}>
         <Container flex={{ alignItems: 'center' }} margin={{ bottom: 'huge' }}>
