@@ -76,7 +76,12 @@ export default function GetStartedWithCI(): React.ReactElement {
         const { status, data } = response
         if (status === Status.SUCCESS && Array.isArray(data?.content) && data?.content && data.content.length > 0) {
           setConnectorsEligibleForPreSelection(
-            data.content.map((item: ConnectorResponse) => item.connector) as ConnectorInfoDTO[]
+            data.content
+              ?.filter(
+                (item: ConnectorResponse) =>
+                  get(item, 'connector.spec.apiAccess.spec.tokenRef') && item.status?.status === Status.SUCCESS
+              )
+              ?.map((item: ConnectorResponse) => item.connector) as ConnectorInfoDTO[]
           )
           const selectedConnector = sortConnectorsByLastConnectedAtTsDescOrder(data.content).find(
             (item: ConnectorResponse) =>

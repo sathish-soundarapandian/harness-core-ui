@@ -449,7 +449,7 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
               props.getCurrentStepData,
               Object.assign(formikProps.values, {
                 authType: gitAuthType,
-                ...(gitAuthType === GitAuthTypes.OAUTH && { apiAuthType: GitAuthTypes.OAUTH })
+                ...(gitAuthType === GitAuthTypes.OAUTH && { apiAuthType: GitAPIAuthTypes.OAUTH, enableAPIAccess: true })
               }) as unknown as ConnectorInfoDTO
             )
             formikRef.current = formikProps
@@ -486,7 +486,15 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
                             formikProps.setValues({
                               ...formikProps.values,
                               authType: selectedOption,
-                              ...(selectedOption === GitAuthTypes.OAUTH && { apiAuthType: selectedOption })
+                              ...(selectedOption === GitAuthTypes.OAUTH
+                                ? {
+                                    apiAuthType: GitAPIAuthTypes.OAUTH,
+                                    enableAPIAccess: true
+                                  }
+                                : {
+                                    apiAuthType: GitAPIAuthTypes.TOKEN,
+                                    enableAPIAccess: false
+                                  })
                             })
                           }}
                         />

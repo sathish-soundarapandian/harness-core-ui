@@ -29,7 +29,8 @@ export enum GitAuthTypes {
 
 export const GitAPIAuthTypes = {
   GITHUB_APP: 'GithubApp',
-  TOKEN: 'Token'
+  TOKEN: 'Token',
+  OAUTH: 'OAuth'
 }
 
 export const dockerProviderTypes = {
