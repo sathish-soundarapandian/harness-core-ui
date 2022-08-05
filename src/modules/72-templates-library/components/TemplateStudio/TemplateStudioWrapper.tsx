@@ -42,12 +42,12 @@ export const TemplateStudioWrapper: (props: TemplateStudioWrapperProps) => JSX.E
   const defaultRenderPipelineStage = (args: Omit<PipelineStagesProps, 'children'>) => {
     return (
       <PipelineStages {...args}>
-        {stagesCollection.getStage(StageType.BUILD, !!CING_ENABLED && !!licenseInformation['CI'], getString)}
         {stagesCollection.getStage(StageType.DEPLOY, !!CDNG_ENABLED && !!licenseInformation['CD'], getString)}
+        {stagesCollection.getStage(StageType.BUILD, !!CING_ENABLED && !!licenseInformation['CI'], getString)}
         {stagesCollection.getStage(StageType.APPROVAL, true, getString)}
         {stagesCollection.getStage(StageType.FEATURE, !!CFNG_ENABLED && !!licenseInformation['CF'], getString)}
         {stagesCollection.getStage(StageType.SECURITY, !!SECURITY_STAGE, getString)}
-        {stagesCollection.getStage(StageType.PIPELINE, false, getString)}
+        {/*{stagesCollection.getStage(StageType.PIPELINE, false, getString)}*/}
         {stagesCollection.getStage(StageType.CUSTOM, true, getString)}
         {stagesCollection.getStage(StageType.Template, false, getString)}
       </PipelineStages>
