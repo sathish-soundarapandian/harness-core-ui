@@ -8,7 +8,6 @@
 import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
-import { useFeatureFlags } from './useFeatureFlag'
 
 export interface UseHostedBuildsReturn {
   enabledHostedBuildsForFreeUsers: boolean
@@ -16,13 +15,11 @@ export interface UseHostedBuildsReturn {
 }
 
 export function useHostedBuilds(): UseHostedBuildsReturn {
-  const { HOSTED_BUILDS } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
   const { status, edition, licenseType } = licenseInformation['CI'] || {}
   // Hosted Builds to be only enabled for free users or paid enterprise/team users
   return {
-    enabledHostedBuildsForFreeUsers:
-      HOSTED_BUILDS || (edition === Editions.FREE && status === LICENSE_STATE_VALUES.ACTIVE),
+    enabledHostedBuildsForFreeUsers: false,
     enabledHostedBuilds:
       ((edition === Editions.FREE ||
         ([Editions.TEAM, Editions.ENTERPRISE].includes(edition as Editions) &&
