@@ -49,12 +49,14 @@ export function JiraUserMultiTypeInput({ selectedField, props, expressions, form
   return (
     <FormInput.MultiTypeInput
       selectItems={
-        fetchUsers ? [{ label: getString('loading'), value: '' }] : setUserValuesOptions(defaultTo(userData?.data, []))
+        /* istanbul ignore next */ fetchUsers
+          ? [{ label: getString('loading'), value: '' }]
+          : setUserValuesOptions(defaultTo(userData?.data, []))
       }
       label={selectedField.name}
       name={formikFieldPath}
       useValue
-      placeholder={fetchUsers ? getString('loading') : selectedField.name}
+      placeholder={/* istanbul ignore next */ fetchUsers ? getString('loading') : selectedField.name}
       disabled={isApprovalStepFieldDisabled(props.readonly) || fetchUsers}
       className={cx(css.multiSelect, css.md)}
       multiTypeInputProps={{ expressions }}
