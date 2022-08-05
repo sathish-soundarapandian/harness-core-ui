@@ -24,16 +24,20 @@ import {
   mockProjectsErrorResponse,
   getJiraCreateEditModePropsWithConnectorId,
   getJiraRequiredFieldRendererProps,
-  getJiraOptionalFieldRendererProps
+  getJiraOptionalFieldRendererProps,
+  mockJiraUserResponse,
+  getJiraUserFieldRendererProps
 } from './JiraCreateTestHelper'
 import { JiraFieldsRenderer } from '../JiraFieldsRenderer'
+import { JiraUserMultiTypeInput } from '../JiraUserMultiTypeInput'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 jest.mock('services/cd-ng', () => ({
   useGetConnector: () => mockConnectorResponse,
   useGetJiraProjects: jest.fn(),
-  useGetJiraIssueCreateMetadata: () => mockProjectMetadataResponse
+  useGetJiraIssueCreateMetadata: () => mockProjectMetadataResponse,
+  useJiraUserSearch: () => mockJiraUserResponse
 }))
 describe('Jira Create fetch projects', () => {
   beforeAll(() => {
@@ -340,5 +344,31 @@ describe('Jira Create tests', () => {
       viewType: StepViewType.TriggerForm
     })
     expect(response).toMatchSnapshot('Value must be greater than or equal to "10s"')
+  })
+
+  test('Jira User Fields Renderer Test', () => {
+    const props = getJiraUserFieldRendererProps()
+    const { container } = render(
+      <TestWrapper defaultFeatureFlagValues={{ ALLOW_USER_TYPE_FIELDS_JIRA: true }}>
+        <JiraFieldsRenderer {...props}>
+          <JiraUserMultiTypeInput
+            props={{ ...props, connectorRef: 'abc' }}
+            formikFieldPath={'spec.selectedOptionalFields[0].value'}
+            selectedField={{
+              name: 'assignee',
+              key: 'assignee',
+              allowedValues: [],
+              schema: {
+                typeStr: '',
+                type: 'user'
+              },
+              required: false
+            }}
+            expressions={[]}
+          />
+        </JiraFieldsRenderer>
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
   })
 })
