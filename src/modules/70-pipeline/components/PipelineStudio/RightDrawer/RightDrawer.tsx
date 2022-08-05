@@ -5,13 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { SyntheticEvent, useState } from 'react'
+import React, { SyntheticEvent } from 'react'
 import { Drawer, Intent, Position } from '@blueprintjs/core'
-import { Button, useConfirmationDialog, ButtonVariation, ButtonSize } from '@wings-software/uicore'
+import { Button, useConfirmationDialog } from '@wings-software/uicore'
 import { cloneDeep, defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import cx from 'classnames'
 import produce from 'immer'
-import { parse } from 'yaml'
+import { parse } from '@common/utils/YamlHelperMethods'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import type {
   ExecutionElementConfig,
@@ -27,7 +27,6 @@ import type {
   DeploymentStageElementConfig,
   StageElementWrapper
 } from '@pipeline/utils/pipelineTypes'
-import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import type { DependencyElement } from 'services/ci'
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { PipelineGovernanceView } from '@governance/PipelineGovernanceView'
@@ -101,16 +100,17 @@ const checkDuplicateStep = (
 export const updateStepWithinStage = (
   execution: ExecutionElementConfig,
   processingNodeIdentifier: string,
-  processedNode: StepElementConfig | TemplateStepNode
+  processedNode: StepElementConfig | TemplateStepNode,
+  isRollback: boolean
 ): void => {
   // Finds the step in the stage, and updates with the processed node
-  execution?.steps?.forEach(stepWithinStage => {
+  execution?.[isRollback ? 'rollbackSteps' : 'steps']?.forEach(stepWithinStage => {
     if (stepWithinStage.stepGroup) {
       // If stage has a step group, loop over the step group steps and update the matching identifier with node
       if (stepWithinStage.stepGroup?.identifier === processingNodeIdentifier) {
         stepWithinStage.stepGroup = processedNode as any
       } else {
-        updateStepWithinStage(stepWithinStage.stepGroup, processingNodeIdentifier, processedNode)
+        updateStepWithinStage(stepWithinStage.stepGroup, processingNodeIdentifier, processedNode, isRollback)
       }
     } else if (stepWithinStage.parallel) {
       // If stage has a parallel steps, loop over and update the matching identifier with node
@@ -120,7 +120,7 @@ export const updateStepWithinStage = (
         } else if (parallelStep.step?.identifier === processingNodeIdentifier) {
           parallelStep.step = processedNode as any
         } else if (parallelStep?.stepGroup) {
-          updateStepWithinStage(parallelStep?.stepGroup, processingNodeIdentifier, processedNode)
+          updateStepWithinStage(parallelStep?.stepGroup, processingNodeIdentifier, processedNode, isRollback)
         }
       })
     } else if (stepWithinStage.step?.identifier === processingNodeIdentifier) {
@@ -128,9 +128,6 @@ export const updateStepWithinStage = (
       stepWithinStage.step = processedNode as any
     }
   })
-  if (execution?.rollbackSteps) {
-    updateStepWithinStage({ steps: execution.rollbackSteps }, processingNodeIdentifier, processedNode)
-  }
 }
 
 const addReplace = (item: Partial<Values>, node: any): void => {
@@ -226,7 +223,8 @@ const updateWithNodeIdentifier = async (
   updatePipelineView: (data: PipelineViewData) => void,
   updateStage: (stage: StageElementConfig) => Promise<void>,
   data: any,
-  pipelineView: PipelineViewData
+  pipelineView: PipelineViewData,
+  isRollback: boolean
 ): Promise<void> => {
   const provisioner = (selectedStage?.stage as DeploymentStageElementConfig)?.spec?.infrastructure
     ?.infrastructureDefinition?.provisioner
@@ -234,7 +232,7 @@ const updateWithNodeIdentifier = async (
     const processingNodeIdentifier = data?.stepConfig?.node?.identifier
     const stageData = produce(selectedStage, draft => {
       if (draft.stage?.spec?.execution) {
-        updateStepWithinStage(draft.stage.spec.execution, processingNodeIdentifier, processNode)
+        updateStepWithinStage(draft.stage.spec.execution, processingNodeIdentifier, processNode, isRollback)
       }
     })
     // update view data before updating pipeline because its async
@@ -255,7 +253,7 @@ const updateWithNodeIdentifier = async (
       const provisionerInternal = (draft?.stage as DeploymentStageElementConfig)?.spec?.infrastructure
         ?.infrastructureDefinition?.provisioner
       if (provisionerInternal) {
-        updateStepWithinStage(provisionerInternal, processingNodeIdentifier, processNode)
+        updateStepWithinStage(provisionerInternal, processingNodeIdentifier, processNode, isRollback)
       }
     })
     // update view data before updating pipeline because its async
@@ -279,7 +277,8 @@ const onSubmitStep = async (
   selectedStage: StageElementWrapper<StageElementConfig> | undefined,
   updatePipelineView: (data: PipelineViewData) => void,
   updateStage: (stage: StageElementConfig) => Promise<void>,
-  pipelineView: PipelineViewData
+  pipelineView: PipelineViewData,
+  isRollback: boolean
 ): Promise<void> => {
   if (data?.stepConfig?.node) {
     const processNode = processNodeImpl(item, data, trackEvent)
@@ -292,7 +291,8 @@ const onSubmitStep = async (
         updatePipelineView,
         updateStage,
         data,
-        pipelineView
+        pipelineView,
+        isRollback
       )
     }
   }
@@ -406,9 +406,10 @@ export function RightDrawer(): React.ReactElement {
   const {
     state: {
       templateTypes,
-      pipelineView: { drawerData, isDrawerOpened, isSplitViewOpen },
+      pipelineView: { drawerData, isDrawerOpened, isSplitViewOpen, isRollbackToggled },
       pipelineView,
       selectionState: { selectedStageId, selectedStepId },
+      gitDetails,
       pipeline
     },
     allowableTypes,
@@ -423,7 +424,6 @@ export function RightDrawer(): React.ReactElement {
   const { getTemplate } = useTemplateSelector()
   const { type, data, ...restDrawerProps } = drawerData
   const { trackEvent } = useTelemetry()
-  const [helpPanelVisible, setHelpPanel] = useState(false)
 
   const { stage: selectedStage } = getStageFromPipeline(defaultTo(selectedStageId, ''))
   const stageType = selectedStage?.stage?.type
@@ -461,7 +461,6 @@ export function RightDrawer(): React.ReactElement {
     const toolTipType = type ? `_${type}` : ''
     title = (
       <RightDrawerTitle
-        helpPanelVisible={helpPanelVisible}
         stepType={stepType}
         toolTipType={toolTipType}
         stepData={stepData}
@@ -480,7 +479,13 @@ export function RightDrawer(): React.ReactElement {
       let step
       let drawerType = DrawerTypes.StepConfig
       // 1. search for step in execution
-      const execStep = getStepFromId(selectedStage?.stage?.spec?.execution, selectedStepId, false, false)
+      const execStep = getStepFromId(
+        selectedStage?.stage?.spec?.execution,
+        selectedStepId,
+        false,
+        false,
+        Boolean(pipelineView.isRollbackToggled)
+      )
       step = execStep.node
       if (!step) {
         drawerType = DrawerTypes.ConfigureService
@@ -653,7 +658,11 @@ export function RightDrawer(): React.ReactElement {
     updatePipelineView({ ...pipelineView, isDrawerOpened: false, drawerData: { type: DrawerTypes.AddStep } })
   }
 
-  const updateNode = async (processNode: StepElementConfig | TemplateStepNode, drawerType: DrawerTypes) => {
+  const updateNode = async (
+    processNode: StepElementConfig | TemplateStepNode,
+    drawerType: DrawerTypes,
+    isRollback: boolean
+  ): Promise<void> => {
     const newPipelineView = produce(pipelineView, draft => {
       set(draft, 'drawerData.data.stepConfig.node', processNode)
     })
@@ -661,12 +670,12 @@ export function RightDrawer(): React.ReactElement {
     const processingNodeIdentifier = defaultTo(drawerData.data?.stepConfig?.node?.identifier, '')
     const stageData = produce(selectedStage, draft => {
       if (drawerType === DrawerTypes.StepConfig && draft?.stage?.spec?.execution) {
-        updateStepWithinStage(draft.stage.spec.execution, processingNodeIdentifier, processNode)
+        updateStepWithinStage(draft.stage.spec.execution, processingNodeIdentifier, processNode, isRollback)
       } else if (drawerType === DrawerTypes.ProvisionerStepConfig) {
         const provisionerInternal = (draft?.stage as DeploymentStageElementConfig)?.spec?.infrastructure
           ?.infrastructureDefinition?.provisioner
         if (provisionerInternal) {
-          updateStepWithinStage(provisionerInternal, processingNodeIdentifier, processNode)
+          updateStepWithinStage(provisionerInternal, processingNodeIdentifier, processNode, isRollback)
         }
       }
     })
@@ -677,7 +686,11 @@ export function RightDrawer(): React.ReactElement {
     drawerData.data?.stepConfig?.onUpdate?.(processNode)
   }
 
-  const addOrUpdateTemplate = async (selectedTemplate: TemplateSummaryResponse, drawerType: DrawerTypes) => {
+  const addOrUpdateTemplate = async (
+    selectedTemplate: TemplateSummaryResponse,
+    drawerType: DrawerTypes,
+    isRollback: boolean
+  ): Promise<void> => {
     try {
       const stepType =
         (data?.stepConfig?.node as StepElementConfig)?.type ||
@@ -689,28 +702,31 @@ export function RightDrawer(): React.ReactElement {
       })
       const node = drawerData.data?.stepConfig?.node as StepOrStepGroupOrTemplateStepData
       const processNode = isCopied
-        ? produce(defaultTo(parse(defaultTo(template?.yaml, '')).template.spec, {}) as StepElementConfig, draft => {
-            draft.name = defaultTo(node?.name, '')
-            draft.identifier = defaultTo(node?.identifier, '')
-          })
+        ? produce(
+            defaultTo(parse<any>(defaultTo(template?.yaml, '')).template.spec, {}) as StepElementConfig,
+            draft => {
+              draft.name = defaultTo(node?.name, '')
+              draft.identifier = defaultTo(node?.identifier, '')
+            }
+          )
         : createTemplate<TemplateStepNode>(node as unknown as TemplateStepNode, template)
-      await updateNode(processNode, drawerType)
+      await updateNode(processNode, drawerType, isRollback)
     } catch (_) {
       // Do nothing.. user cancelled template selection
     }
   }
 
-  const removeTemplate = async (drawerType: DrawerTypes) => {
+  const removeTemplate = async (drawerType: DrawerTypes, isRollback: boolean): Promise<void> => {
     const node = drawerData.data?.stepConfig?.node as TemplateStepNode
     const processNode = produce({} as StepElementConfig, draft => {
       draft.name = node.name
       draft.identifier = node.identifier
       draft.type = get(templateTypes, node.template.templateRef)
     })
-    await updateNode(processNode, drawerType)
+    await updateNode(processNode, drawerType, isRollback)
   }
 
-  const onDiscard = () => {
+  const onDiscard = (): void => {
     updatePipelineView({
       ...pipelineView,
       isDrawerOpened: false,
@@ -721,7 +737,6 @@ export function RightDrawer(): React.ReactElement {
   }
 
   const handleClose = (e?: React.SyntheticEvent<Element, Event>): void => {
-    setHelpPanel(false)
     closeDrawer({
       e,
       formikRef,
@@ -740,13 +755,6 @@ export function RightDrawer(): React.ReactElement {
     })
   }
 
-  const handleCloseHelpPanel = () => {
-    setHelpPanel(false)
-  }
-  const showHelpPanel = () => {
-    console.log('hello')
-    setHelpPanel(!helpPanelVisible)
-  }
   return (
     <Drawer
       onClose={handleClose}
@@ -756,7 +764,7 @@ export function RightDrawer(): React.ReactElement {
       canOutsideClickClose={type !== DrawerTypes.ExecutionStrategy}
       enforceFocus={false}
       hasBackdrop={true}
-      size={helpPanelVisible ? 1050 : DrawerSizes[type]}
+      size={DrawerSizes[type]}
       isOpen={isDrawerOpened}
       position={Position.RIGHT}
       title={title}
@@ -769,13 +777,12 @@ export function RightDrawer(): React.ReactElement {
       // you must pass only a single classname, not even an empty string, hence passing a dummy class
       // "classnames" package cannot be used here because it returns an empty string when no classes are applied
       portalClassName={isFullScreenDrawer ? css.almostFullScreenPortal : 'pipeline-studio-right-drawer'}
-      // style={helpPanelVisible ? { right: '450px' } : {}}
     >
       <Button minimal className={css.almostFullScreenCloseBtn} icon="cross" withoutBoxShadow onClick={handleClose} />
 
       {type === DrawerTypes.StepConfig && data?.stepConfig?.node && (
         <StepCommands
-          helpPanelVisible={helpPanelVisible}
+          helpPanelVisible
           step={data.stepConfig.node as StepElementConfig | StepGroupElementConfig}
           isReadonly={isReadonly}
           ref={formikRef}
@@ -792,16 +799,20 @@ export function RightDrawer(): React.ReactElement {
               selectedStage,
               updatePipelineView,
               updateStage,
-              pipelineView
+              pipelineView,
+              Boolean(isRollbackToggled)
             )
           }
           viewType={StepCommandsViews.Pipeline}
           allowableTypes={allowableTypes}
-          onUseTemplate={(selectedTemplate: TemplateSummaryResponse) => addOrUpdateTemplate(selectedTemplate, type)}
-          onRemoveTemplate={() => removeTemplate(type)}
+          onUseTemplate={(selectedTemplate: TemplateSummaryResponse) =>
+            addOrUpdateTemplate(selectedTemplate, type, Boolean(isRollbackToggled))
+          }
+          onRemoveTemplate={() => removeTemplate(type, Boolean(isRollbackToggled))}
           isStepGroup={data.stepConfig.isStepGroup}
           hiddenPanels={data.stepConfig.hiddenAdvancedPanels}
           stageType={stageType as StageType}
+          gitDetails={gitDetails}
         />
       )}
       {type === DrawerTypes.AddStep && selectedStageId && data?.paletteData && (
@@ -957,14 +968,17 @@ export function RightDrawer(): React.ReactElement {
               selectedStage,
               updatePipelineView,
               updateStage,
-              pipelineView
+              pipelineView,
+              Boolean(isRollbackToggled)
             )
           }
           isStepGroup={data.stepConfig.isStepGroup}
           hiddenPanels={data.stepConfig.hiddenAdvancedPanels}
           stageType={stageType as StageType}
-          onUseTemplate={(selectedTemplate: TemplateSummaryResponse) => addOrUpdateTemplate(selectedTemplate, type)}
-          onRemoveTemplate={() => removeTemplate(type)}
+          onUseTemplate={(selectedTemplate: TemplateSummaryResponse) =>
+            addOrUpdateTemplate(selectedTemplate, type, Boolean(isRollbackToggled))
+          }
+          onRemoveTemplate={() => removeTemplate(type, Boolean(isRollbackToggled))}
         />
       )}
       {type === DrawerTypes.StepConfig && !isEmpty(stepData?.referenceId) ? (
@@ -977,55 +991,6 @@ export function RightDrawer(): React.ReactElement {
           onClick={showHelpPanel}
         />
       ) : null}
-      {/* {helpPanelVisible ? (
-          <Drawer
-            onClose={handleClose}
-            canEscapeKeyClose={type !== DrawerTypes.ExecutionStrategy}
-            canOutsideClickClose={type !== DrawerTypes.ExecutionStrategy}
-            enforceFocus={false}
-            hasBackdrop={true}
-            size={450}
-            isOpen={isDrawerOpened}
-            position={Position.RIGHT}
-            style={{ width: '450px' }}
-            isCloseButtonShown={false}
-          >
-            {' '}
-            <Button
-              minimal
-              className={css.almostFullScreenCloseBtn}
-              icon="cross"
-              withoutBoxShadow
-              onClick={handleCloseHelpPanel}
-            />
-            <HelpPanel referenceId={stepData?.referenceId || ''} type={HelpPanelType.CONTENT_ONLY}></HelpPanel>
-          </Drawer>
-        ) : null}
-      </Drawer> */}
-      {/* {helpPanelVisible ? (
-        <Drawer
-          onClose={handleClose}
-          canEscapeKeyClose={type !== DrawerTypes.ExecutionStrategy}
-          canOutsideClickClose={type !== DrawerTypes.ExecutionStrategy}
-          enforceFocus={false}
-          hasBackdrop={true}
-          size={450}
-          isOpen={isDrawerOpened}
-          position={Position.RIGHT}
-          style={{ width: '450px' }}
-          isCloseButtonShown={false}
-        >
-          {' '}
-          <Button
-            minimal
-            className={css.almostFullScreenCloseBtn}
-            icon="cross"
-            withoutBoxShadow
-            onClick={handleCloseHelpPanel}
-          />
-          <HelpPanel referenceId={stepData?.referenceId || ''} type={HelpPanelType.CONTENT_ONLY}></HelpPanel>
-        </Drawer>
-      ) : null} */}
     </Drawer>
   )
 }
