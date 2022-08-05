@@ -1016,7 +1016,7 @@ exports[`Default Settings Page render data and save the changed data 2`] = `
                               defaultSettings.allowOverrides
                             </label>
                             <p
-                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-blue600"
+                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-blue600 StyledProps--padding-left-small"
                               style="display: flex; align-items: center;"
                             >
                               <span
@@ -1199,7 +1199,7 @@ exports[`Default Settings Page render data and save the changed data 2`] = `
                               class="emptyCheckBoxSpace"
                             />
                             <p
-                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-blue600"
+                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-blue600 StyledProps--padding-left-small"
                               style="display: flex; align-items: center;"
                             >
                               <span
@@ -2024,7 +2024,7 @@ exports[`Default Settings Page render data and save the changed data 3`] = `
                               defaultSettings.allowOverrides
                             </label>
                             <p
-                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-blue600"
+                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-blue600 StyledProps--padding-left-small"
                               style="display: flex; align-items: center;"
                             >
                               <span
@@ -2207,7 +2207,7 @@ exports[`Default Settings Page render data and save the changed data 3`] = `
                               class="emptyCheckBoxSpace"
                             />
                             <p
-                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-blue600"
+                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-blue600 StyledProps--padding-left-small"
                               style="display: flex; align-items: center;"
                             >
                               <span
@@ -3032,7 +3032,7 @@ exports[`Default Settings Page render data and save the changed data 4`] = `
                               defaultSettings.allowOverrides
                             </label>
                             <p
-                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-blue600"
+                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-blue600 StyledProps--padding-left-small"
                               style="display: flex; align-items: center;"
                             >
                               <span
@@ -3215,7 +3215,7 @@ exports[`Default Settings Page render data and save the changed data 4`] = `
                               class="emptyCheckBoxSpace"
                             />
                             <p
-                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-blue600"
+                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-blue600 StyledProps--padding-left-small"
                               style="display: flex; align-items: center;"
                             >
                               <span
@@ -4040,7 +4040,7 @@ exports[`Default Settings Page render data and save the changed data 5`] = `
                               defaultSettings.allowOverrides
                             </label>
                             <p
-                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-blue600"
+                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-blue600 StyledProps--padding-left-small"
                               style="display: flex; align-items: center;"
                             >
                               <span
@@ -4223,7 +4223,7 @@ exports[`Default Settings Page render data and save the changed data 5`] = `
                               class="emptyCheckBoxSpace"
                             />
                             <p
-                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-blue600"
+                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-blue600 StyledProps--padding-left-small"
                               style="display: flex; align-items: center;"
                             >
                               <span

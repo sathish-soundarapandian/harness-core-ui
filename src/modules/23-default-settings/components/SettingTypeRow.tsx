@@ -126,7 +126,7 @@ const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
           )}
           {(settingChangedVia !== 'UPDATE' && settingValue?.settingSource !== currentScope) ||
           !settingValue?.isSettingEditable ? (
-            <Text icon="info" color={Color.BLUE_600} iconProps={{ color: Color.BLUE_600 }}>
+            <Text icon="info" color={Color.BLUE_600} iconProps={{ color: Color.BLUE_600 }} padding={{ left: 'small' }}>
               {getString('defaultSettings.inheritedFrom', {
                 source: getString(getSettingSourceLabel(settingValue?.settingSource) as keyof StringsMap)
               })}
