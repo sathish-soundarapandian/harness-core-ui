@@ -34,7 +34,6 @@ import type { K8SDirectServiceStep } from '@pipeline/factories/ArtifactTriggerIn
 import { SshServiceSpecVariablesForm, SshServiceSpecVariablesFormProps } from './SshServiceSpecVariablesForm'
 import { SshServiceSpecInputSetMode } from './SshServiceSpecInputSetMode'
 import SshServiceSpecEditable from './SshServiceSpecForm/SshServiceSpecEditable'
-import { getYamlData } from '../K8sServiceSpec/ArtifactSource/artifactSourceUtils'
 
 const logger = loggerFor(ModuleName.CD)
 const tagExists = (value: unknown): boolean => typeof value === 'number' || !isEmpty(value)
@@ -181,7 +180,9 @@ export class SshServiceSpec extends Step<ServiceSpec> {
             pipelineIdentifier: pipelineObj.identifier,
             fqnPath: path
           },
-          body: yamlStringify(getYamlData(pipelineObj))
+          body: yamlStringify({
+            pipeline: pipelineObj
+          })
         }).then(response => {
           return (
             response?.data?.buildDetailsList?.map(buildDetails => ({

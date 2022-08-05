@@ -37,7 +37,6 @@ import {
 } from '@cd/components/PipelineSteps/SshServiceSpec/SshServiceSpecVariablesForm'
 import { SshServiceSpecInputSetMode } from '@cd/components/PipelineSteps/SshServiceSpec/SshServiceSpecInputSetMode'
 import SshServiceSpecEditable from '@cd/components/PipelineSteps/SshServiceSpec/SshServiceSpecForm/SshServiceSpecEditable'
-import { getYamlData } from '../K8sServiceSpec/ArtifactSource/artifactSourceUtils'
 
 const logger = loggerFor(ModuleName.CD)
 const tagExists = (value: unknown): boolean => typeof value === 'number' || !isEmpty(value)
@@ -184,7 +183,9 @@ export class WinRmServiceSpec extends Step<ServiceSpec> {
             pipelineIdentifier: pipelineObj.identifier,
             fqnPath: path
           },
-          body: yamlStringify(getYamlData(pipelineObj))
+          body: yamlStringify({
+            pipeline: pipelineObj
+          })
         }).then(response => {
           return (
             response?.data?.buildDetailsList?.map(buildDetails => ({
