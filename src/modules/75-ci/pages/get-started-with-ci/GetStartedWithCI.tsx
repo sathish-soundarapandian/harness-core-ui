@@ -214,7 +214,7 @@ export default function GetStartedWithCI(): React.ReactElement {
   return (
     <>
       {showPageLoader ? <PageSpinner /> : <></>}
-      {!showPageLoader && showWizard ? (
+      {showWizard ? (
         <InfraProvisioningWizard
           precursorData={{
             preSelectedGitConnector,
