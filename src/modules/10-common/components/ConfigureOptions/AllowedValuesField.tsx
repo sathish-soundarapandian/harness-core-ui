@@ -67,6 +67,14 @@ const renderField = ({ fetchValues, getString, options, optionsType, isReadonly,
       extraProps.tagsProps = {
         onChange: (changed: unknown) => {
           const values: string[] = changed as string[]
+
+          // There is only one value, and we are removing it
+          if (!values.length) {
+            setFieldTouched('allowedValues', true, false)
+            setFieldValue('allowedValues', values)
+            return
+          }
+
           const validator = TYPE_TO_VALIDATOR[OPTIONS_TYPE.TIME](getString)
           try {
             validator.validateSync({ timeout: values[values.length - 1] })
