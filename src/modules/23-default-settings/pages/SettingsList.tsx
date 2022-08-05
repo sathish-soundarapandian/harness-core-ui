@@ -16,12 +16,20 @@ import { SettingDTO, SettingRequestDTO, useUpdateSettingValue } from 'services/c
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { usePermission } from '@rbac/hooks/usePermission'
+import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import type { SettingCategory, SettingType, SettingYupValidation } from '../interfaces/SettingType.types'
 import SettingsCategorySection from '../components/SettingsCategorySection'
 import css from './SettingsList.module.scss'
 
 const SettingsList = () => {
   const { getString } = useStrings()
+  const [hasRBACViewPermission] = usePermission({
+    permissions: [PermissionIdentifier.VIEW_CORE_SETTING],
+    resource: {
+      resourceType: ResourceType.DEFAULT_SETTINGS
+    }
+  })
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps & ModulePathParams>()
   const defaultSettingsCategory: SettingCategory[] = DefaultSettingsFactory.getCategoryNamesList()
   const [changedSettings, updateChangedSettings] = useState<Map<SettingType, SettingRequestDTO>>(new Map())
@@ -83,66 +91,70 @@ const SettingsList = () => {
 
   return (
     <>
-      <Formik
-        formName="defaultSettingsForm"
-        initialValues={{}}
-        validationSchema={Yup.object(validationScheme as any)}
-        onSubmit={saveSettings}
-      >
-        {() => {
-          return (
-            <FormikForm>
-              <Page.Header
-                title={
-                  <ScopedTitle
-                    title={{
-                      [Scope.PROJECT]: getString('common.defaultSettings'),
-                      [Scope.ORG]: getString('common.defaultSettings'),
-                      [Scope.ACCOUNT]: getString('common.defaultSettings')
-                    }}
-                  />
-                }
-                toolbar={
-                  <RbacButton
-                    text={getString('save')}
-                    disabled={disableSave}
-                    variation={ButtonVariation.PRIMARY}
-                    type="submit"
-                    permission={{
-                      permission: PermissionIdentifier.EDIT_CORE_SETTING,
-                      resource: {
-                        resourceType: ResourceType.DEFAULT_SETTINGS
-                      }
-                    }}
-                  />
-                }
-                breadcrumbs={
-                  <NGBreadcrumbs
-                    links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
-                  />
-                }
-              />
-              {savingSettingInProgress && <Page.Spinner message={getString('common.saving')}></Page.Spinner>}
-              <Page.Body>
-                <Layout.Vertical className={css.settingList}>
-                  {defaultSettingsCategory.map(categ => {
-                    return (
-                      <SettingsCategorySection
-                        settingCategory={categ}
-                        onSettingChange={onSettingChange}
-                        settingErrorMessages={settingErrorMessage}
-                        updateValidationSchema={updateValidation}
-                        savedSettings={savedSettings}
-                        key={categ}
-                      />
-                    )
-                  })}
-                </Layout.Vertical>
-              </Page.Body>
-            </FormikForm>
-          )
-        }}
-      </Formik>
+      {hasRBACViewPermission ? (
+        <Formik
+          formName="defaultSettingsForm"
+          initialValues={{}}
+          validationSchema={Yup.object(validationScheme as any)}
+          onSubmit={saveSettings}
+        >
+          {() => {
+            return (
+              <FormikForm>
+                <Page.Header
+                  title={
+                    <ScopedTitle
+                      title={{
+                        [Scope.PROJECT]: getString('common.defaultSettings'),
+                        [Scope.ORG]: getString('common.defaultSettings'),
+                        [Scope.ACCOUNT]: getString('common.defaultSettings')
+                      }}
+                    />
+                  }
+                  toolbar={
+                    <RbacButton
+                      text={getString('save')}
+                      disabled={disableSave}
+                      variation={ButtonVariation.PRIMARY}
+                      type="submit"
+                      permission={{
+                        permission: PermissionIdentifier.EDIT_CORE_SETTING,
+                        resource: {
+                          resourceType: ResourceType.DEFAULT_SETTINGS
+                        }
+                      }}
+                    />
+                  }
+                  breadcrumbs={
+                    <NGBreadcrumbs
+                      links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
+                    />
+                  }
+                />
+                {savingSettingInProgress && <Page.Spinner message={getString('common.saving')}></Page.Spinner>}
+                <Page.Body>
+                  <Layout.Vertical className={css.settingList}>
+                    {defaultSettingsCategory.map(categ => {
+                      return (
+                        <SettingsCategorySection
+                          settingCategory={categ}
+                          onSettingChange={onSettingChange}
+                          settingErrorMessages={settingErrorMessage}
+                          updateValidationSchema={updateValidation}
+                          savedSettings={savedSettings}
+                          key={categ}
+                        />
+                      )
+                    })}
+                  </Layout.Vertical>
+                </Page.Body>
+              </FormikForm>
+            )
+          }}
+        </Formik>
+      ) : (
+        <RBACTooltip permission={PermissionIdentifier.VIEW_CORE_SETTING} resourceType={ResourceType.DEFAULT_SETTINGS} />
+      )}
     </>
   )
 }
