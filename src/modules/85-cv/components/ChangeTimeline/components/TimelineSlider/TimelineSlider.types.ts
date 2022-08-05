@@ -25,6 +25,7 @@ export interface TimelineSliderProps {
   resetFocus?: () => void
   hideSlider?: boolean
   onZoom?: () => void
+  selectedTimePeriod?: string
 }
 
 export type SliderAspects = {
