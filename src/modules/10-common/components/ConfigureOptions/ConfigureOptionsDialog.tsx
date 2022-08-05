@@ -23,7 +23,7 @@ import { FormGroup } from '@blueprintjs/core'
 
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useStrings, String } from 'framework/strings'
-import AllowedValuesFields from './AllowedValuesField'
+import AllowedValuesFields, { OPTIONS_TYPE } from './AllowedValuesField'
 import { Validation, ValidationSchema, FormValues, parseInput, getInputStr } from './ConfigureOptionsUtils'
 
 import css from './ConfigureOptions.module.scss'
@@ -41,6 +41,7 @@ export interface ConfigureOptionsDialogProps {
   showAdvanced?: boolean
   fetchValues?: (done: (response: SelectOption[] | MultiSelectOption[]) => void) => void
   isReadonly?: boolean
+  optionsType?: OPTIONS_TYPE
   closeModal: (
     str?: string | undefined,
     defaultStr?: string | number | undefined,
@@ -61,6 +62,7 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
     showAdvanced = false,
     fetchValues,
     isReadonly = false,
+    optionsType,
     closeModal
   } = props
   const [input, setInput] = React.useState(value)
@@ -117,98 +119,101 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
         closeModal(inputStr, data.defaultValue, data.isRequired)
       }}
     >
-      {({ submitForm, values, setFieldValue }) => (
-        <>
-          <div>
-            <FormGroup className={css.label} label={getString('variableLabel')} inline>
-              <Text lineClamp={1}>{variableName}</Text>
-            </FormGroup>
-            <FormGroup className={css.label} label={getString('typeLabel')} inline>
-              {typeof type === 'string' ? <Text>{type}</Text> : type}
-            </FormGroup>
-            <hr className={css.division} />
-            {showRequiredField && (
-              <FormInput.CheckBox
-                className={css.checkbox}
-                label={getString('common.configureOptions.requiredDuringExecution')}
-                name="isRequired"
-                disabled={isReadonly}
-              />
-            )}
-            {NG_EXECUTION_INPUT && !hideExecutionTimeField ? (
-              <FormInput.CheckBox
-                className={css.checkbox}
-                label={getString('common.configureOptions.askDuringExecution')}
-                name="isExecutionInput"
-                disabled={isReadonly}
-              />
-            ) : null}
-            <div className={css.validationOptions}>
-              <FormInput.RadioGroup
-                disabled={isReadonly}
-                name="validation"
-                // className={css.radioGroup}
-                radioGroup={{ inline: true }}
-                label={getString('common.configureOptions.validation')}
-                items={[
-                  { label: getString('none'), value: Validation.None },
-                  { label: getString('allowedValues'), value: Validation.AllowedValues },
-                  { label: getString('common.configureOptions.regex'), value: Validation.Regex }
-                ]}
-              />
-              {values.validation === Validation.AllowedValues ? (
-                <AllowedValuesFields
-                  values={values}
-                  showAdvanced={showAdvanced}
-                  setFieldValue={setFieldValue}
-                  fetchValues={fetchValues}
-                  isReadonly={isReadonly}
-                  options={options}
-                />
-              ) : null}
-              {values.validation === Validation.Regex ? (
-                <FormInput.TextArea
-                  label={getString('common.configureOptions.regex')}
-                  name="regExValues"
+      {formik => {
+        const { submitForm, values } = formik
+        return (
+          <>
+            <div>
+              <FormGroup className={css.label} label={getString('variableLabel')} inline>
+                <Text lineClamp={1}>{variableName}</Text>
+              </FormGroup>
+              <FormGroup className={css.label} label={getString('typeLabel')} inline>
+                {typeof type === 'string' ? <Text>{type}</Text> : type}
+              </FormGroup>
+              <hr className={css.division} />
+              {showRequiredField && (
+                <FormInput.CheckBox
+                  className={css.checkbox}
+                  label={getString('common.configureOptions.requiredDuringExecution')}
+                  name="isRequired"
                   disabled={isReadonly}
                 />
+              )}
+              {NG_EXECUTION_INPUT && !hideExecutionTimeField ? (
+                <FormInput.CheckBox
+                  className={css.checkbox}
+                  label={getString('common.configureOptions.askDuringExecution')}
+                  name="isExecutionInput"
+                  disabled={isReadonly}
+                />
+              ) : null}
+              <div className={css.validationOptions}>
+                <FormInput.RadioGroup
+                  disabled={isReadonly}
+                  name="validation"
+                  // className={css.radioGroup}
+                  radioGroup={{ inline: true }}
+                  label={getString('common.configureOptions.validation')}
+                  items={[
+                    { label: getString('none'), value: Validation.None },
+                    { label: getString('allowedValues'), value: Validation.AllowedValues },
+                    { label: getString('common.configureOptions.regex'), value: Validation.Regex }
+                  ]}
+                />
+                {values.validation === Validation.AllowedValues ? (
+                  <AllowedValuesFields
+                    showAdvanced={showAdvanced}
+                    formik={formik}
+                    fetchValues={fetchValues}
+                    isReadonly={isReadonly}
+                    options={options}
+                    optionsType={optionsType}
+                  />
+                ) : null}
+                {values.validation === Validation.Regex ? (
+                  <FormInput.TextArea
+                    label={getString('common.configureOptions.regex')}
+                    name="regExValues"
+                    disabled={isReadonly}
+                  />
+                ) : null}
+              </div>
+              {showDefaultField || NG_EXECUTION_INPUT ? (
+                fetchValues ? (
+                  <FormInput.Select
+                    items={options}
+                    label={getString('common.configureOptions.defaultValue')}
+                    name="defaultValue"
+                    isOptional
+                    disabled={isReadonly}
+                  />
+                ) : (
+                  <FormInput.Text
+                    inputGroup={{ type: type === 'Number' ? 'number' : 'text' }}
+                    label={getString('common.configureOptions.defaultValue')}
+                    name="defaultValue"
+                    isOptional
+                    disabled={isReadonly}
+                  />
+                )
               ) : null}
             </div>
-            {showDefaultField || NG_EXECUTION_INPUT ? (
-              fetchValues ? (
-                <FormInput.Select
-                  items={options}
-                  label={getString('common.configureOptions.defaultValue')}
-                  name="defaultValue"
-                  isOptional
-                  disabled={isReadonly}
-                />
-              ) : (
-                <FormInput.Text
-                  inputGroup={{ type: type === 'Number' ? 'number' : 'text' }}
-                  label={getString('common.configureOptions.defaultValue')}
-                  name="defaultValue"
-                  isOptional
-                  disabled={isReadonly}
-                />
-              )
-            ) : null}
-          </div>
-          <Layout.Horizontal spacing="small" margin={{ top: 'xxlarge' }}>
-            <Button
-              variation={ButtonVariation.SECONDARY}
-              text={<String stringID="cancel" />}
-              onClick={() => closeModal()}
-            />
-            <Button
-              variation={ButtonVariation.PRIMARY}
-              text={<String stringID="submit" />}
-              onClick={submitForm}
-              disabled={isReadonly}
-            />
-          </Layout.Horizontal>
-        </>
-      )}
+            <Layout.Horizontal spacing="small" margin={{ top: 'xxlarge' }}>
+              <Button
+                variation={ButtonVariation.SECONDARY}
+                text={<String stringID="cancel" />}
+                onClick={() => closeModal()}
+              />
+              <Button
+                variation={ButtonVariation.PRIMARY}
+                text={<String stringID="submit" />}
+                onClick={submitForm}
+                disabled={isReadonly}
+              />
+            </Layout.Horizontal>
+          </>
+        )
+      }}
     </Formik>
   )
 }

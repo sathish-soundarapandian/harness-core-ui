@@ -30,7 +30,7 @@ import {
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ConfigureOptions, OPTIONS_TYPE } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeTextAreaField } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'
 import { FormMultiTypeUserGroupInput } from '@common/components/UserGroupsInput/FormMultitypeUserGroupInput'
 import { regexPositiveNumbers } from '@common/utils/StringUtils'
@@ -86,6 +86,7 @@ function FormContent({
           <ConfigureOptions
             value={formik.values.timeout || ''}
             type="String"
+            optionsType={OPTIONS_TYPE.TIME}
             variableName="timeout"
             showRequiredField={false}
             showDefaultField={false}

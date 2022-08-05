@@ -9,22 +9,91 @@ import React from 'react'
 import { Button, ButtonVariation, FormInput, Layout, MultiSelectOption, SelectOption } from '@harness/uicore'
 import { Position } from '@blueprintjs/core'
 import { useStrings, String } from 'framework/strings'
-
+import type { StringKeys } from 'framework/strings/StringsContext'
 import type { FormValues } from './ConfigureOptionsUtils'
+import type { FormikContextType } from 'formik'
 
 import css from './ConfigureOptions.module.scss'
+import { isValidTimeString } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+
+export enum OPTIONS_TYPE {
+  TIME = 'TIME'
+}
 
 export interface AllowedValuesFieldsProps {
-  values: FormValues
   showAdvanced: boolean
-  setFieldValue: (field: string, value: any) => void
+  formik: FormikContextType<FormValues>
   isReadonly: boolean
   fetchValues?: (done: (response: SelectOption[] | MultiSelectOption[]) => void) => void
   options: SelectOption[] | MultiSelectOption[]
+  optionsType?: OPTIONS_TYPE
+}
+
+// const PickProps = 'fetchValues' | 'options' | 'isReadonly'
+
+// type RenderFieldProps = Pick<AllowedValuesFieldsProps, PickProps>
+// extends Omit<AllowedValuesFieldsProps, 'values' | 'showAdvanced' | 'setFieldValue'>
+interface RenderFieldProps {
+  getString(key: StringKeys, vars?: Record<string, any>): string
+  formik: FormikContextType<FormValues>
+  isReadonly: boolean
+  fetchValues?: (done: (response: SelectOption[] | MultiSelectOption[]) => void) => void
+  options: SelectOption[] | MultiSelectOption[]
+  optionsType?: string
+}
+
+const renderField = ({ fetchValues, getString, options, optionsType, isReadonly, formik }: RenderFieldProps) => {
+  const { setErrors, errors, setFieldTouched, setFieldValue } = formik
+  if (fetchValues) {
+    return (
+      <FormInput.MultiSelect
+        items={options}
+        label={getString('common.configureOptions.values')}
+        name="allowedValues"
+        disabled={isReadonly}
+      />
+    )
+  }
+  {
+    /** todo */
+  }
+  console.log('optionsType', optionsType)
+
+  const extraProps = {}
+
+  switch (optionsType) {
+    case OPTIONS_TYPE.TIME: {
+      extraProps.tagsProps = {
+        onChange: (changed: unknown) => {
+          const values: string[] = changed as string[]
+          console.log('values on Change', values)
+          const isInvalid = values.some(val => !isValidTimeString(val))
+          if (isInvalid) {
+            // error
+            setErrors({ ...errors, allowedValues: 'Invalid format' })
+          } else {
+            setFieldTouched('allowedValues', true, false)
+            setFieldValue('allowedValues', values)
+          }
+        }
+      }
+    }
+  }
+
+  return (
+    <FormInput.KVTagInput
+      label={getString('allowedValues')}
+      name="allowedValues"
+      isArray={true}
+      disabled={isReadonly}
+      {...extraProps}
+    />
+  )
 }
 
 export default function AllowedValuesFields(props: AllowedValuesFieldsProps): React.ReactElement {
-  const { values, showAdvanced, setFieldValue, isReadonly, fetchValues, options } = props
+  const { showAdvanced, isReadonly, fetchValues, options, optionsType, formik } = props
+  const values = formik.values
   const { getString } = useStrings()
   return (
     <div className={css.allowedOptions}>
@@ -42,7 +111,7 @@ export default function AllowedValuesFields(props: AllowedValuesFieldsProps): Re
             tooltipProps={{ position: Position.RIGHT }}
             text={values.isAdvanced ? getString('common.configureOptions.returnToBasic') : getString('advancedTitle')}
             onClick={() => {
-              setFieldValue('isAdvanced', !values.isAdvanced)
+              formik.setFieldValue('isAdvanced', !values.isAdvanced)
             }}
             disabled={isReadonly}
           />
@@ -57,21 +126,14 @@ export default function AllowedValuesFields(props: AllowedValuesFieldsProps): Re
         />
       ) : (
         <>
-          {!fetchValues ? (
-            <FormInput.KVTagInput
-              label={getString('allowedValues')}
-              name="allowedValues"
-              isArray={true}
-              disabled={isReadonly}
-            />
-          ) : (
-            <FormInput.MultiSelect
-              items={options}
-              label={getString('common.configureOptions.values')}
-              name="allowedValues"
-              disabled={isReadonly}
-            />
-          )}
+          {renderField({
+            fetchValues,
+            getString,
+            options,
+            isReadonly,
+            optionsType,
+            formik
+          })}
         </>
       )}
     </div>
