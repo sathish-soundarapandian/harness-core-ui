@@ -1,0 +1,117 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.panel {
+  border: 1px solid var(--form-field-border);
+  border-radius: 4px;
+  padding: var(--spacing-small);
+  margin-top: var(--spacing-small);
+}
+
+.environmentVarHeader {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 2fr 30px;
+  column-gap: var(--spacing-small);
+  margin-bottom: var(--spacing-small);
+  align-items: start;
+
+  :global(.bp3-form-group) {
+    margin: 0;
+  }
+
+  .label {
+    color: var(--grey-400);
+  }
+}
+
+.outputVarHeader {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 2fr 30px;
+  column-gap: var(--spacing-small);
+  margin-bottom: var(--spacing-small);
+  align-items: start;
+
+  :global(.bp3-form-group) {
+    margin: 0;
+  }
+
+  .label {
+    color: var(--grey-400);
+  }
+}
+
+.variablesList {
+  margin-top: var(--spacing-large);
+}
+
+.minConfigBtn {
+  padding: 0 !important;
+  height: 28px !important;
+  min-height: auto;
+}
+
+.addButton {
+  padding-left: 0 !important;
+}
+
+.formGroup {
+  display: grid;
+  grid-template-columns: 1fr 30px;
+  align-items: center;
+  width: 100%;
+
+  > button {
+    margin-bottom: 5px !important;
+  }
+  &.sm {
+    width: 45%;
+  }
+
+  &.md {
+    width: 55%;
+  }
+
+  &.lg {
+    width: 75%;
+  }
+
+  &.xlg {
+    width: 85%;
+  }
+
+  &.lgOverride {
+    width: 75% !important;
+  }
+
+  &.kvpairLg {
+    width: 70%;
+  }
+
+  &.alignStart {
+    align-items: start;
+  }
+
+  textarea.code {
+    min-height: 200px;
+    font-family: var(--font-family-mono);
+  }
+
+  :global {
+    .bp3-label {
+      color: var(--grey-600);
+    }
+
+    .InputWithIdentifier--txtNameContainer {
+      // Overwriting the 12px margin added by nameid field
+      margin-bottom: 0;
+    }
+
+    #configureOptions {
+      margin-bottom: var(--spacing-3);
+    }
+  }
+}
