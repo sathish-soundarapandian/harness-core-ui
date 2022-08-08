@@ -493,7 +493,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
           page: CONNECTORS_PAGE
         })
       }
-      openConnectorModal(false, val?.value as ConnectorInfoDTO['type'], undefined)
+      openConnectorModal(false, Connectors.CUSTOM_SECRET_MANAGER as ConnectorInfoDTO['type'], undefined)
       hideDrawer()
     }
 
