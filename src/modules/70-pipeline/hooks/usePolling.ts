@@ -28,13 +28,14 @@ export function usePolling(callback: () => Promise<void> | undefined, startPolli
     if (!startPolling) {
       return
     }
+
     const timerId = setTimeout(() => {
       setIsPolling(true)
       savedCallback.current()?.finally(() => setIsPolling(false))
     }, POLLING_INTERVAL_IN_MS)
 
     return () => clearTimeout(timerId)
-  }, [startPolling])
+  }, [isPolling, startPolling])
 
   return isPolling
 }
