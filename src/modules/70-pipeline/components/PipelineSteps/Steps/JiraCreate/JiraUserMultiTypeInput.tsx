@@ -32,6 +32,7 @@ interface JiraUserProps {
 
 export function JiraUserMultiTypeInput({ selectedField, props, expressions, formikFieldPath }: JiraUserProps) {
   const { getString } = useStrings()
+  const [searchTerm, setSearchTerm] = React.useState<string>('')
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps & GitQueryParams>>()
 
@@ -40,10 +41,11 @@ export function JiraUserMultiTypeInput({ selectedField, props, expressions, form
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
-      userQuery: '',
+      userQuery: searchTerm,
       connectorIdentifier: props.connectorRef,
-      offset: '0'
-    }
+      offset: ''
+    },
+    debounce: 300
   })
 
   return (
@@ -57,9 +59,17 @@ export function JiraUserMultiTypeInput({ selectedField, props, expressions, form
       name={formikFieldPath}
       useValue
       placeholder={/* istanbul ignore next */ fetchUsers ? getString('loading') : selectedField.name}
-      disabled={isApprovalStepFieldDisabled(props.readonly) || fetchUsers}
+      disabled={isApprovalStepFieldDisabled(props.readonly)}
       className={cx(css.multiSelect, css.md)}
-      multiTypeInputProps={{ expressions }}
+      multiTypeInputProps={{
+        expressions,
+        selectProps: {
+          items: setUserValuesOptions(defaultTo(userData?.data, [])),
+          onQueryChange: (query: string) => {
+            setSearchTerm(query)
+          }
+        }
+      }}
     />
   )
 }
