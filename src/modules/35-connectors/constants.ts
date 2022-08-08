@@ -103,7 +103,8 @@ export const Connectors: ConnectorType = {
   ERROR_TRACKING: 'ErrorTracking',
   AZURE: 'Azure',
   AWSSECRETMANAGER: 'AwsSecretManager',
-  JENKINS: 'Jenkins'
+  JENKINS: 'Jenkins',
+  CUSTOM_SECRET_MANAGER: 'CustomSecretManager'
 }
 
 export const ConnectorInfoText = {
