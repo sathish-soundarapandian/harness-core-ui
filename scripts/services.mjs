@@ -7,7 +7,11 @@
 
 import prompts from 'prompts'
 import { $ } from 'zx'
-;(async () => {
+import * as OpenAPI from 'openapi-typescript-codegen'
+import { upperFirst, camelCase } from 'lodash-es'
+import pLimit from 'p-limit'
+
+const load = async () => {
   const config = await import('../configs/restful-react.config.js')
   const services = Object.keys(config.default)
 
@@ -25,11 +29,30 @@ import { $ } from 'zx'
     process.exit(0)
   }
 
-  for (const index of response.services) {
+  const limit = pLimit(5)
+
+  const promises = response.services.map(index => {
     const service = services[index]
-    const { output } = config.default[service]
-    await $`npx restful-react import --config configs/restful-react.config.js ${service}`
-    await $`npx prettier --write ${output}`
-    await $`scripts/license/stamp.sh ${output}`
-  }
-})()
+    const { output, url, file, cluster } = config.default[service]
+
+    return limit(() =>
+      OpenAPI.generate({
+        input: file || `https://qa.harness.io/prod1/${cluster}/swagger.json`,
+        output: output.replace('src/services', 'generated').replace('/index.tsx', ''),
+        useOptions: true,
+        useUnionTypes: true,
+        clientName: upperFirst(camelCase(`${service}Client`))
+      })
+        .then(() => {
+          console.log(`successfully generated for service: ${service}`)
+        })
+        .catch(() => {
+          console.error(`failed to generate for service: ${service}`)
+        })
+    )
+  })
+
+  await Promise.all(promises)
+}
+
+load()

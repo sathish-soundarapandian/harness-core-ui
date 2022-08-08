@@ -8,18 +8,22 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { HashRouter, Route, Switch } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import languageLoader from 'strings/languageLoader'
 import type { LangLocale } from 'strings/languageLoader'
+import reactQueryConfig from '../react-query/react-query-config'
 
 import { AppWithAuthentication, AppWithoutAuthentication } from './App'
 
 const ignoredErrorClasses = ['YAMLSemanticError', 'YAMLSyntaxError', 'AbortError']
 
+// Create a client
+const queryClient = new QueryClient({defaultOptions: reactQueryConfig.app})
+
 export default async function render(): Promise<void> {
   const lang: LangLocale = 'en'
   const strings = await languageLoader(lang)
-
   if (window.bugsnagToken && typeof Bugsnag !== 'undefined' && Bugsnag.start && window.deploymentType === 'SAAS') {
     window.bugsnagClient = Bugsnag.start({
       apiKey: window.bugsnagToken,
@@ -36,24 +40,26 @@ export default async function render(): Promise<void> {
   }
 
   ReactDOM.render(
-    <HashRouter>
-      <Switch>
-        <Route
-          path={[
-            // this path is needed for AppStoreProvider to populate accountId, orgId and projectId
-            '/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier',
-            '/account/:accountId/orgs/:orgIdentifier/projects/:projectIdentifier',
-            '/account/:accountId/settings/organizations/:orgIdentifier/',
-            '/account/:accountId'
-          ]}
-        >
-          <AppWithAuthentication strings={strings} />
-        </Route>
-        <Route path="/">
-          <AppWithoutAuthentication strings={strings} />
-        </Route>
-      </Switch>
-    </HashRouter>,
+    <QueryClientProvider client={queryClient}>
+      <HashRouter>
+        <Switch>
+          <Route
+            path={[
+              // this path is needed for AppStoreProvider to populate accountId, orgId and projectId
+              '/account/:accountId/:module/orgs/:orgIdentifier/projects/:projectIdentifier',
+              '/account/:accountId/orgs/:orgIdentifier/projects/:projectIdentifier',
+              '/account/:accountId/settings/organizations/:orgIdentifier/',
+              '/account/:accountId'
+            ]}
+          >
+            <AppWithAuthentication strings={strings} />
+          </Route>
+          <Route path="/">
+            <AppWithoutAuthentication strings={strings} />
+          </Route>
+        </Switch>
+      </HashRouter>
+    </QueryClientProvider>,
     document.getElementById('react-root')
   )
 }

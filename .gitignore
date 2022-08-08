@@ -20,3 +20,4 @@ src/microfrontends/declarations
 certificates
 .npmrc
 .vscode/launch.json
+generated

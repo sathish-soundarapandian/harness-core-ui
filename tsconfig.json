@@ -54,7 +54,8 @@
       "@sto-steps/*": ["modules/85-sto-steps/*"],
       "@ce/*": ["modules/75-ce/*"],
       "@gitops/*": ["modules/90-gitops/*"],
-      "@wings-software/*": ["../node_modules/@harness/*"]
+      "@wings-software/*": ["../node_modules/@harness/*"],
+      "@generated/*": ["../generated/*"]
     }
   },
   "types": ["cypress"],

@@ -22,7 +22,8 @@ module.exports = {
     customGenerator: arg => customGenerator(arg, "getConfig('api')"),
     customProps: {
       base: `{getConfig("api")}`
-    }
+    },
+    cluster: 'api'
   },
   'cd-ng': {
     output: 'src/services/cd-ng/index.tsx',
@@ -31,6 +32,7 @@ module.exports = {
     customProps: {
       base: `{getConfig("ng/api")}`
     },
+    cluster: 'ng/api',
     customGenerator: arg => customGenerator(arg, "getConfig('ng/api')"),
     ...(process.env.cdng_schema_path
       ? { file: process.env.cdng_schema_path }
@@ -44,6 +46,7 @@ module.exports = {
     customProps: {
       base: `{getConfig("pipeline/api")}`
     },
+    cluster: 'pipeline/api',
     customGenerator: arg => customGenerator(arg, "getConfig('pipeline/api')")
   },
   'template-ng': {
@@ -54,6 +57,7 @@ module.exports = {
     customProps: {
       base: `{getConfig("template/api")}`
     },
+    cluster: 'template/api',
     customGenerator: arg => customGenerator(arg, "getConfig('template/api')")
   },
   audit: {
@@ -64,6 +68,7 @@ module.exports = {
     customProps: {
       base: `{getConfig("audit/api")}`
     },
+    cluster: 'audit/api',
     customGenerator: arg => customGenerator(arg, "getConfig('audit/api')")
   },
   'dashboard-service': {
@@ -74,6 +79,7 @@ module.exports = {
     customProps: {
       base: `{getConfig("ng-dashboard/api")}`
     },
+    cluster: 'ng-dashboard/api',
     customGenerator: arg => customGenerator(arg, "getConfig('ng-dashboard/api')")
   },
   'custom-dashboards': {
@@ -84,6 +90,7 @@ module.exports = {
     customProps: {
       base: `{getConfig("dashboard/")}`
     },
+    cluster: 'dashboard',
     customGenerator: arg => customGenerator(arg, "getConfig('dashboard/')")
   },
   logs: {
@@ -94,6 +101,7 @@ module.exports = {
     customProps: {
       base: `{getConfig("log-service")}`
     },
+    cluster: 'log-service',
     customGenerator: arg => customGenerator(arg, "getConfig('log-service')")
   },
   notifications: {
@@ -104,6 +112,7 @@ module.exports = {
     customProps: {
       base: `{getConfig("notifications/api")}`
     },
+    cluster: 'notifications/api',
     customGenerator: arg => customGenerator(arg, "getConfig('notifications/api')")
   },
   resourcegroups: {
@@ -114,6 +123,7 @@ module.exports = {
     customProps: {
       base: `{getConfig("resourcegroup/api")}`
     },
+    cluster: 'resourcegroup/api',
     customGenerator: arg => customGenerator(arg, "getConfig('resourcegroup/api')")
   },
   rbac: {
@@ -124,6 +134,7 @@ module.exports = {
     customProps: {
       base: `{getConfig("authz/api")}`
     },
+    cluster: 'authz/api',
     customGenerator: arg => customGenerator(arg, "getConfig('authz/api')")
   },
   ci: {
@@ -134,6 +145,7 @@ module.exports = {
     customProps: {
       base: `{getConfig("ci")}`
     },
+    cluster: 'ci',
     customGenerator: arg => customGenerator(arg, "getConfig('ci')")
   },
   'ti-service': {
@@ -143,7 +155,8 @@ module.exports = {
     customImport: `import { getConfig } from "../config";`,
     customProps: {
       base: `{getConfig("ti-service")}`
-    }
+    },
+    cluster: 'ti-service'
   },
   cv: {
     output: 'src/services/cv/index.tsx',
@@ -153,6 +166,7 @@ module.exports = {
     customProps: {
       base: `{getConfig("cv/api")}`
     },
+    cluster: 'cv/api',
     customGenerator: arg => customGenerator(arg, "getConfig('cv/api')")
   },
   cf: {
@@ -163,6 +177,8 @@ module.exports = {
     customProps: {
       base: `{getConfig("cf")}`
     },
+    cluster: 'cf',
+
     customGenerator: arg => customGenerator(arg, "getConfig('cf')")
   },
   lw: {
@@ -172,7 +188,8 @@ module.exports = {
     customImport: `import { getConfig } from "../config";`,
     customProps: {
       base: `{getConfig("lw/api")}`
-    }
+    },
+    cluster: 'lw/api'
   },
   ccm: {
     output: 'src/services/ce/index.tsx',
@@ -181,7 +198,8 @@ module.exports = {
     customImport: `import { getConfig } from "../config";`,
     customProps: {
       base: `{getConfig("ccm/api")}`
-    }
+    },
+    cluster: 'ccm/api'
   },
   'ccm-recommender': {
     output: 'src/services/ce/recommenderService.tsx',
@@ -190,7 +208,8 @@ module.exports = {
     customImport: `import { getConfig } from "../config";`,
     customProps: {
       base: `{getConfig("ccm/recommendations/api/v1")}`
-    }
+    },
+    cluster: 'ccm/recommendations/api/v1'
   },
   'ccm-public-pricing': {
     output: 'src/services/ce/publicPricingService.tsx',
@@ -199,7 +218,8 @@ module.exports = {
     customImport: `import { getConfig } from "../config";`,
     customProps: {
       base: `{getConfig("ccm/public-pricing/api/v1")}`
-    }
+    },
+    cluster: 'ccm/public-pricing/api/v1'
   },
   pm: {
     output: 'src/services/pm/index.tsx',
@@ -208,6 +228,7 @@ module.exports = {
     customImport: `import { getConfig } from "../config";`,
     customProps: {
       base: `{getConfig("pm/api/v1")}`
-    }
+    },
+    cluster: 'pm/api/v1'
   }
 }
