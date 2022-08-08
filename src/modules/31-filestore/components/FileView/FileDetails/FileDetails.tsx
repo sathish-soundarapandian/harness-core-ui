@@ -205,9 +205,13 @@ function FileDetails({ handleError }: FileDetailsProps): React.ReactElement {
   }, [data, isCachedNode, currentNode.identifier])
 
   return (
-    <Container style={{ width: '100%', height: '100%' }} className={css.fileDetails}>
+    <Container style={{ width: '100%', height: '100%' }} className={css.fileDetails} data-testid="details-container">
       {downloadLoading && !isCachedNode(currentNode.identifier) ? (
-        <Container flex={{ justifyContent: 'center', alignItems: 'center' }} style={{ width: '100%', height: '100%' }}>
+        <Container
+          data-testid="fileDetailsLoader"
+          flex={{ justifyContent: 'center', alignItems: 'center' }}
+          style={{ width: '100%', height: '100%' }}
+        >
           <Spinner />
         </Container>
       ) : (
@@ -225,6 +229,7 @@ function FileDetails({ handleError }: FileDetailsProps): React.ReactElement {
             return (
               <FormikForm>
                 <Layout.Horizontal
+                  data-testid="details-form-container"
                   className={css.fileEditPanel}
                   padding="medium"
                   flex={{ justifyContent: 'space-between', alignItems: 'center' }}
@@ -296,7 +301,8 @@ function FileDetails({ handleError }: FileDetailsProps): React.ReactElement {
                           disabled={
                             !get(formikProps.values, 'fileEditor') ||
                             saveLoading ||
-                            initialContent === get(formikProps.values, 'fileEditor')
+                            (initialContent === get(formikProps.values, 'fileEditor') &&
+                              !isCachedNode(currentNode.identifier))
                           }
                           loading={saveLoading}
                         />
