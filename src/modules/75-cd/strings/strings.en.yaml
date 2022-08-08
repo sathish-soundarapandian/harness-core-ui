@@ -407,3 +407,9 @@ getStartedWithCD:
   delegateInfo: Delegates are worker processes that run on your infrastructure to execute tasks on behalf of the Harness platform.
   setupaNewDelegate: + Setup a New Delegate
 serviceName: Service Name
+azureBluePrint: 
+  description: Build Azure Blueprint artifacts to rapidly build and start up new environments.
+  templateFileSource: Template File Source
+  templateFileDetails: Template File Details
+  specifyTemplateFileSource: Specify Template File Source
+  assignmentName: Assignment Name

@@ -3977,6 +3977,11 @@ export interface StringsMap {
   'cd.artifactName': string
   'cd.artifactPaths': string
   'cd.artifactRepoTooltip': string
+  'cd.azureBluePrint.assignmentName': string
+  'cd.azureBluePrint.description': string
+  'cd.azureBluePrint.specifyTemplateFileSource': string
+  'cd.azureBluePrint.templateFileDetails': string
+  'cd.azureBluePrint.templateFileSource': string
   'cd.azureWebAppRollbackDescription': string
   'cd.azureWebAppSwapSlotDescription': string
   'cd.backEndConfig': string
