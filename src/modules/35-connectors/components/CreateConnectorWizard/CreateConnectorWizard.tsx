@@ -53,6 +53,7 @@ import CreateAzureConnector from '../CreateConnector/AzureConnector/CreateAzureC
 import { ConnectorWizardContextProvider } from './ConnectorWizardContext'
 import CreateJenkinsConnector from '../CreateConnector/JenkinsConnector/CreateJenkinsConnector'
 import OCIHelmConnector from '../CreateConnector/OCIHelmConnector.tsx/OCIHelmConnector'
+import CreateCustomSMConnector from '../CreateConnector/CustomSecretManagerConnector/CreateCustomSMConnector'
 
 interface CreateConnectorWizardProps {
   accountId: string
@@ -183,6 +184,8 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
       return NG_AZURE ? <CreateAzureConnector {...commonProps} /> : null
     case Connectors.JENKINS:
       return <CreateJenkinsConnector {...commonProps} />
+    case Connectors.CUSTOM_SECRET_MANAGER:
+      return <CreateCustomSMConnector {...commonProps} />
     default:
       return null
   }
