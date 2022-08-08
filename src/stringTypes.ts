@@ -2133,6 +2133,8 @@ export interface StringsMap {
   'connectors.customHealth.validationPath': string
   'connectors.customHealth.valueRequired': string
   'connectors.customLabel': string
+  'connectors.customSM.details': string
+  'connectors.customSM.selectTemplate': string
   'connectors.datadog.encryptedAPPKeyLabel': string
   'connectors.datadog.encryptedAPPKeyValidation': string
   'connectors.datadog.urlValidation': string

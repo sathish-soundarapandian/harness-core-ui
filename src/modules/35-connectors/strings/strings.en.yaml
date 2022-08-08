@@ -912,3 +912,6 @@ gitProviderURLs:
   gitlab: 'https://gitlab.com'
   bitbucket: 'https://bitbucket.org'
   azureRepos: 'https://dev.azure.com'
+customSM:
+  details: Custom Secret Manager Details
+  selectTemplate: Select Template

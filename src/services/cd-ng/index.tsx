@@ -1925,6 +1925,7 @@ export interface ConnectorInfoDTO {
     | 'AzureRepo'
     | 'Jenkins'
     | 'OciHelmRepo'
+    | 'CustomSecretManager'
 }
 
 export interface ConnectorResponse {
@@ -1995,6 +1996,7 @@ export interface ConnectorTypeStatistics {
     | 'AzureRepo'
     | 'Jenkins'
     | 'OciHelmRepo'
+    | 'CustomSecretManager'
 }
 
 export interface ConnectorValidationResult {
