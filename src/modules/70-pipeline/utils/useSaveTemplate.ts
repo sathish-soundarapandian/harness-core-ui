@@ -14,7 +14,7 @@ import {
   EntityGitDetails,
   NGTemplateInfoConfig,
   TemplateSummaryResponse,
-  updateExistingTemplateLabelPromise
+  updateExistingTemplateVersionPromise
 } from 'services/template-ng'
 import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
@@ -126,7 +126,7 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
     lastObject?: { lastObjectId?: string }
   ): Promise<UseSaveSuccessResponse> => {
     try {
-      const response = await updateExistingTemplateLabelPromise({
+      const response = await updateExistingTemplateVersionPromise({
         templateIdentifier: latestTemplate.identifier,
         versionLabel: latestTemplate.versionLabel,
         body: stringifyTemplate(latestTemplate),

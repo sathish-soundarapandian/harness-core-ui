@@ -16,7 +16,7 @@ import * as templateNg from 'services/template-ng'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import gitSyncListResponse from '@common/utils/__tests__/mocks/gitSyncRepoListMock.json'
 import { GitSyncTestWrapper } from '@common/utils/gitSyncTestUtils'
-import { createTemplatePromiseArg, updateExistingTemplateLabelPromiseArg } from './useSaveTemplateHelper'
+import { createTemplatePromiseArg, updateExistingTemplateVersionPromiseArg } from './useSaveTemplateHelper'
 
 export const stepTemplateMock = {
   name: 'Test Http Template',
@@ -35,7 +35,7 @@ export const stepTemplateMock = {
 
 jest.mock('services/template-ng', () => ({
   createTemplatePromise: jest.fn().mockImplementation(() => Promise.resolve({ status: 'SUCCESS' })),
-  updateExistingTemplateLabelPromise: jest.fn().mockImplementation(() => Promise.resolve({ status: 'SUCCESS' }))
+  updateExistingTemplateVersionPromise: jest.fn().mockImplementation(() => Promise.resolve({ status: 'SUCCESS' }))
 }))
 
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))
@@ -126,7 +126,7 @@ describe('useSaveTemplate Test', () => {
     await act(async () => {
       fireEvent.click(saveBtn)
     })
-    expect(templateNg.updateExistingTemplateLabelPromise).toBeCalled()
+    expect(templateNg.updateExistingTemplateVersionPromise).toBeCalled()
     expect(props.fetchTemplate).toBeCalled()
   })
 
@@ -217,15 +217,17 @@ describe('useSaveTemplate Test', () => {
         expect(saveToGitSaveBtn).toBeInTheDocument()
       })
       fireEvent.click(saveToGitSaveBtn!)
-      await waitFor(() => expect(templateNg.updateExistingTemplateLabelPromise).toHaveBeenCalled())
-      expect(templateNg.updateExistingTemplateLabelPromise).toHaveBeenCalledWith(updateExistingTemplateLabelPromiseArg)
+      await waitFor(() => expect(templateNg.updateExistingTemplateVersionPromise).toHaveBeenCalled())
+      expect(templateNg.updateExistingTemplateVersionPromise).toHaveBeenCalledWith(
+        updateExistingTemplateVersionPromiseArg
+      )
 
       expect(props.fetchTemplate).toBeCalled()
     })
 
     test('edit should work as expected', async () => {
       jest
-        .spyOn(templateNg, 'updateExistingTemplateLabelPromise')
+        .spyOn(templateNg, 'updateExistingTemplateVersionPromise')
         .mockImplementation(() => Promise.reject({ status: 'ERROR', message: 'There was error' }))
 
       const props: WrappedComponentProps = {
@@ -261,8 +263,10 @@ describe('useSaveTemplate Test', () => {
         expect(saveToGitSaveBtn).toBeInTheDocument()
       })
       fireEvent.click(saveToGitSaveBtn!)
-      await waitFor(() => expect(templateNg.updateExistingTemplateLabelPromise).toHaveBeenCalled())
-      expect(templateNg.updateExistingTemplateLabelPromise).toHaveBeenCalledWith(updateExistingTemplateLabelPromiseArg)
+      await waitFor(() => expect(templateNg.updateExistingTemplateVersionPromise).toHaveBeenCalled())
+      expect(templateNg.updateExistingTemplateVersionPromise).toHaveBeenCalledWith(
+        updateExistingTemplateVersionPromiseArg
+      )
 
       expect(props.fetchTemplate).toBeCalledTimes(0)
       await waitFor(() => expect(getByText('There was error')).toBeInTheDocument())

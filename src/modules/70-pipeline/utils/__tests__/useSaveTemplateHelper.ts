@@ -45,7 +45,7 @@ export const createTemplatePromiseArg = {
   }
 }
 
-export const updateExistingTemplateLabelPromiseArg = {
+export const updateExistingTemplateVersionPromiseArg = {
   body: `template:
   name: Test Http Template
   identifier: Test_Http_Template
