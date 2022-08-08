@@ -448,6 +448,7 @@ cvTrialHomePage:
 monitoredServices:
   title: Monitored Services
   filterlabel: 'Environment:'
+  searchPlaceholder: 'Search monitored service'
   youHaveNoMonitoredServices: You have no monitored services
   nameValidation: Monitored Service Name is required
   environmentValidation: '{{ $.common.validation.environmentIsRequired }}'

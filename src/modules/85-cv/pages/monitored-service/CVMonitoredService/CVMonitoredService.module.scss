@@ -74,3 +74,7 @@ $headerHeight: 146px;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
 }
+
+.searchInput {
+  margin-right: var(--spacing-xlarge);
+}

@@ -17,7 +17,9 @@ import {
   Views,
   SelectOption,
   Heading,
-  HarnessDocTooltip
+  HarnessDocTooltip,
+  Container,
+  ExpandingSearchInput
 } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -54,6 +56,7 @@ const MonitoredService: React.FC = () => {
   }
 
   const [page, setPage] = useState(0)
+  const [search, setSearch] = useState<string>()
   const [selectedView, setSelectedView] = useState<Views>(view === Views.GRID ? Views.GRID : Views.LIST)
   const [environment, setEnvironment] = useState<SelectOption>()
   const [selectedFilter, setSelectedFilter] = useState<FilterTypes>(FilterTypes.ALL)
@@ -169,6 +172,16 @@ const MonitoredService: React.FC = () => {
         title={createButton(Boolean(serviceCountData?.allServicesCount))}
         toolbar={
           <Layout.Horizontal>
+            <Container data-name="monitoredServiceSeachContainer">
+              <ExpandingSearchInput
+                width={250}
+                throttle={500}
+                alwaysExpanded
+                onChange={setSearch}
+                className={css.searchInput}
+                placeholder={getString('cv.monitoredServices.searchPlaceholder')}
+              />
+            </Container>
             <Select
               value={{
                 label: `${getString('environment')}: ${defaultTo(environment?.label, getString('all'))}`,
@@ -193,6 +206,7 @@ const MonitoredService: React.FC = () => {
       {selectedView === Views.LIST ? (
         <MonitoredServiceList
           page={page}
+          search={search}
           setPage={setPage}
           environmentIdentifier={getEnvironmentIdentifier(environment)}
           createButton={createButton(Boolean(!serviceCountData?.allServicesCount))}
