@@ -383,7 +383,7 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
         }
       />
     ) : (
-      <Layout.Vertical width="60%" style={{ minHeight: 460 }} className={cx(css.secondStep, commonCss.stepContainer)}>
+      <Layout.Vertical width="100%" style={{ minHeight: 460 }} className={cx(css.secondStep, commonCss.stepContainer)}>
         <Text font={{ variation: FontVariation.H3 }}>{getString('credentials')}</Text>
 
         <Formik
