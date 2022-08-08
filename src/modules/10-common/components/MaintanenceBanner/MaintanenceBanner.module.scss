@@ -1,0 +1,13 @@
+.callout {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-medium);
+  background-color: var(--yellow-100) !important;
+  border-bottom: 1px solid var(--grey-200);
+  position: relative;
+  padding-right: var(--spacing-xlarge);
+  .cross {
+    position: absolute;
+    right: 4px;
+  }
+}
