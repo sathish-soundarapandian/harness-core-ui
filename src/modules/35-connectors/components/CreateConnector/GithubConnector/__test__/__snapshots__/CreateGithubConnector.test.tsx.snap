@@ -2515,7 +2515,7 @@ exports[`Create Github connector Wizard should form for edit http and authtype u
        
       <div
         class="Layout--vertical StyledProps--main secondStep stepContainer"
-        style="min-height: 460px; width: 60%;"
+        style="min-height: 460px; width: 100%;"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
@@ -3261,7 +3261,7 @@ exports[`Create Github connector Wizard should form for edit http and authtype u
        
       <div
         class="Layout--vertical StyledProps--main secondStep stepContainer"
-        style="min-height: 460px; width: 60%;"
+        style="min-height: 460px; width: 100%;"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
@@ -4007,7 +4007,7 @@ exports[`Create Github connector Wizard should render form for edit http and aut
        
       <div
         class="Layout--vertical StyledProps--main secondStep stepContainer"
-        style="min-height: 460px; width: 60%;"
+        style="min-height: 460px; width: 100%;"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
@@ -4812,7 +4812,7 @@ exports[`Create Github connector Wizard should render form for edit http and aut
        
       <div
         class="Layout--vertical StyledProps--main secondStep stepContainer"
-        style="min-height: 460px; width: 60%;"
+        style="min-height: 460px; width: 100%;"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
