@@ -188,7 +188,7 @@ export function SaveTemplatePopover({ getErrors }: SaveTemplatePopoverProps): Re
               disabled:
                 isEmpty(get(template.spec, 'type')) &&
                 template.type !== TemplateType.Pipeline &&
-                template.type !== TemplateType.Script,
+                template.type !== TemplateType.SecretManager,
 
               onClick: onSave
             }

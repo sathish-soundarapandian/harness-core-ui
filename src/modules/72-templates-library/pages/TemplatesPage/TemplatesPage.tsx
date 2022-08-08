@@ -35,8 +35,6 @@ import TemplatesView from '@templates-library/pages/TemplatesPage/views/Template
 import ResultsViewHeader from '@templates-library/pages/TemplatesPage/views/ResultsViewHeader/ResultsViewHeader'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { getAllowedTemplateTypes, TemplateType } from '@templates-library/utils/templatesUtils'
@@ -64,7 +62,7 @@ export default function TemplatesPage(): React.ReactElement {
   const scope = getScopeFromDTO({ projectIdentifier, orgIdentifier, accountIdentifier: accountId })
   const { CUSTOM_SECRET_MANAGER_NG, CVNG_TEMPLATE_MONITORED_SERVICE } = useFeatureFlags()
   const allowedTemplateTypes = getAllowedTemplateTypes(scope, {
-    [TemplateType.SecretManager]: !!CUSTOM_SECRET_MANAGER_NG,
+    [TemplateType.SecretManager]: true,
     [TemplateType.MonitoredService]: !!CVNG_TEMPLATE_MONITORED_SERVICE
   }).filter(item => !item.disabled)
 

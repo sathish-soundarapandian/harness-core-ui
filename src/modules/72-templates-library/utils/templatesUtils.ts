@@ -38,6 +38,10 @@ export const getAllowedTemplateTypes = (
   Object.keys(TemplateType).forEach(item => {
     const template = templateFactory.getTemplate(item)
     const allowedScopes = template?.getAllowedScopes()
+    console.log(allowedScopes)
+    console.log(allowedTemplateTypes)
+    console.log(template)
+    console.log(featureFlagBasedTemplates)
     if (allowedScopes && allowedScopes.includes(scope)) {
       allowedTemplateTypes.push({
         label: defaultTo(template?.getLabel(), ''),

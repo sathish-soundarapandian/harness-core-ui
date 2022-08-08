@@ -36,7 +36,7 @@ function NewTemplatePopoverWrapper(): React.ReactElement {
   const { projectIdentifier, orgIdentifier, accountId } = params
   const { CUSTOM_SECRET_MANAGER_NG, CVNG_TEMPLATE_MONITORED_SERVICE } = useFeatureFlags()
   const allowedTemplateTypes = getAllowedTemplateTypes(getScopeFromDTO(params), {
-    [TemplateType.SecretManager]: !!CUSTOM_SECRET_MANAGER_NG,
+    [TemplateType.SecretManager]: true,
     [TemplateType.MonitoredService]: !!CVNG_TEMPLATE_MONITORED_SERVICE
   })
   const [menuOpen, setMenuOpen] = React.useState(false)
