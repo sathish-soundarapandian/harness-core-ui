@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import cx from 'classnames'
 import { Drawer, Position } from '@blueprintjs/core'
 import { Color, Container, Icon, IconName, Layout, Text } from '@harness/uicore'
@@ -14,6 +14,7 @@ import { String, StringKeys } from 'framework/strings'
 
 import routes from '@common/RouteDefinitions'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import ModuleConfigurationScreen from '../ModuleConfigurationScreen/ModuleConfigurationScreen'
 import css from './ModuleList.module.scss'
 
 interface ModuleListProps {
@@ -79,6 +80,7 @@ const Group: React.FC<GroupProps> = ({ data }) => {
 
 const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true }) => {
   const { accountId } = useParams<AccountPathProps>()
+  const [showModuleConfigScreen, setModuleConfigScreen] = useState(false)
 
   const listConfig: GroupConfig[] = [
     {
@@ -134,29 +136,44 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
   ]
 
   return (
-    <Drawer
-      isOpen={isOpen}
-      onClose={close}
-      position={Position.LEFT}
-      size={Drawer.SIZE_SMALL}
-      className={css.modulesList}
-      backdropClassName={css.backdrop}
-      usePortal={usePortal}
-    >
-      <div className={css.modulesListContainer}>
-        <Container flex={{ alignItems: 'center' }} margin={{ bottom: 'huge' }}>
-          <Text font={{ size: 'large', weight: 'bold' }} color={Color.WHITE}>
-            <String stringID="common.moduleList.title" />
-          </Text>
-          <Icon name="customize" size={20} className={cx(css.blue, css.clickable)} padding={'small'} />
-        </Container>
-        <Layout.Vertical spacing="xxxlarge">
-          {listConfig.map(item => (
-            <Group data={item} key={item.label} />
-          ))}
-        </Layout.Vertical>
-      </div>
-    </Drawer>
+    <>
+      <Drawer
+        isOpen={isOpen}
+        onClose={close}
+        position={Position.LEFT}
+        size={Drawer.SIZE_SMALL}
+        className={css.modulesList}
+        backdropClassName={css.backdrop}
+        usePortal={usePortal}
+      >
+        <div className={css.modulesListContainer}>
+          <Container flex={{ alignItems: 'center' }} margin={{ bottom: 'huge' }}>
+            <Text font={{ size: 'large', weight: 'bold' }} color={Color.WHITE}>
+              <String stringID="common.moduleList.title" />
+            </Text>
+            <Icon
+              name="customize"
+              size={20}
+              className={cx(css.blue, css.clickable)}
+              padding={'small'}
+              onClick={() => setModuleConfigScreen(true)}
+            />
+          </Container>
+          <Layout.Vertical spacing="xxxlarge">
+            {listConfig.map(item => (
+              <Group data={item} key={item.label} />
+            ))}
+          </Layout.Vertical>
+        </div>
+      </Drawer>
+      {showModuleConfigScreen && (
+        <ModuleConfigurationScreen
+          onClose={() => {
+            setModuleConfigScreen(false)
+          }}
+        />
+      )}
+    </>
   )
 }
 

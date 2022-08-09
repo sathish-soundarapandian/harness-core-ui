@@ -946,6 +946,10 @@ moduleList:
   deployChanges: Deploy Changes
   manageImpact: Manage Impact
   optimize: Optimize
+moduleConfig:
+  customize: Customize your navigation
+  title: Organize the product modules you need on your navigation
+  autoSaved: Changes are automatically saved
 
 # Chaos Module
 chaosText: Chaos

@@ -465,6 +465,9 @@ export interface StringsMap {
   'common.module.pms': string
   'common.module.sto': string
   'common.module.templateService': string
+  'common.moduleConfig.autoSaved': string
+  'common.moduleConfig.customize': string
+  'common.moduleConfig.title': string
   'common.moduleLabel': string
   'common.moduleTitles.cd': string
   'common.moduleTitles.cf': string
