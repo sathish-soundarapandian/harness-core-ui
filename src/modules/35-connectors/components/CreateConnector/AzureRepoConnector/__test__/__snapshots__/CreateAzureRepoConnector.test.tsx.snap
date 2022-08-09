@@ -1975,8 +1975,7 @@ exports[`Create AzureRepoconnector Wizard Creating AzureRepo connector step two 
     >
        
       <div
-        class="Layout--vertical StyledProps--main secondStep stepContainer"
-        style="min-height: 460px; width: 60%;"
+        class="Layout--vertical StyledProps--main secondStep connectorModalMinHeight stepContainer"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
@@ -2842,8 +2841,7 @@ exports[`Create AzureRepoconnector Wizard form for edit http and authtype userna
     >
        
       <div
-        class="Layout--vertical StyledProps--main secondStep stepContainer"
-        style="min-height: 460px; width: 60%;"
+        class="Layout--vertical StyledProps--main secondStep connectorModalMinHeight stepContainer"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"

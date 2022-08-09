@@ -213,7 +213,7 @@ exports[`Validate HealthSourceInputset should render HealthSourceInputset 1`] = 
             class="bp3-label"
             for="sources.healthSources.0.spec.connectorRef"
           >
-            connectors.selectConnector
+            connector
              
             <span
               class="bp3-text-muted"
@@ -246,7 +246,7 @@ exports[`Validate HealthSourceInputset should render HealthSourceInputset 1`] = 
             class="bp3-label"
             for="sources.healthSources.0.spec.tierName"
           >
-            cv.healthSource.connectors.AppDynamics.trierLabel
+            cv.monitoringSources.appD.tierName
              
             <span
               class="bp3-text-muted"
@@ -279,7 +279,7 @@ exports[`Validate HealthSourceInputset should render HealthSourceInputset 1`] = 
             class="bp3-label"
             for="sources.healthSources.0.spec.applicationName"
           >
-            cv.healthSource.connectors.AppDynamics.applicationLabel
+            cv.monitoringSources.appD.applicationName
              
             <span
               class="bp3-text-muted"
@@ -323,7 +323,7 @@ exports[`Validate HealthSourceInputset should render HealthSourceInputset 1`] = 
             class="bp3-label"
             for="sources.healthSources.1.spec.connectorRef"
           >
-            connectors.selectConnector
+            connector
              
             <span
               class="bp3-text-muted"
@@ -356,7 +356,7 @@ exports[`Validate HealthSourceInputset should render HealthSourceInputset 1`] = 
             class="bp3-label"
             for="sources.healthSources.1.spec.tierName"
           >
-            cv.healthSource.connectors.AppDynamics.trierLabel
+            cv.monitoringSources.appD.tierName
              
             <span
               class="bp3-text-muted"
@@ -389,7 +389,7 @@ exports[`Validate HealthSourceInputset should render HealthSourceInputset 1`] = 
             class="bp3-label"
             for="sources.healthSources.1.spec.applicationName"
           >
-            cv.healthSource.connectors.AppDynamics.applicationLabel
+            cv.monitoringSources.appD.applicationName
              
             <span
               class="bp3-text-muted"
@@ -430,7 +430,7 @@ exports[`Validate HealthSourceInputset should render HealthSourceInputset 1`] = 
               class="bp3-label"
               for="sources.healthSources.1.spec.metricDefinitions.0.completeMetricPath"
             >
-              cv.healthSource.connectors.AppDynamics.metricPathType.text
+              cv.monitoringSources.appD.completeMetricPath
                
               <span
                 class="bp3-text-muted"
@@ -770,7 +770,7 @@ exports[`Validate HealthSourceInputset should render HealthSourceInputset 2`] = 
             class="bp3-label"
             for="sources.healthSources.0.spec.tierName"
           >
-            cv.healthSource.connectors.AppDynamics.trierLabel
+            cv.monitoringSources.appD.tierName
              
             <span
               class="bp3-text-muted"
@@ -803,7 +803,7 @@ exports[`Validate HealthSourceInputset should render HealthSourceInputset 2`] = 
             class="bp3-label"
             for="sources.healthSources.0.spec.applicationName"
           >
-            cv.healthSource.connectors.AppDynamics.applicationLabel
+            cv.monitoringSources.appD.applicationName
              
             <span
               class="bp3-text-muted"
@@ -908,7 +908,7 @@ exports[`Validate HealthSourceInputset should render HealthSourceInputset 2`] = 
             class="bp3-label"
             for="sources.healthSources.1.spec.tierName"
           >
-            cv.healthSource.connectors.AppDynamics.trierLabel
+            cv.monitoringSources.appD.tierName
              
             <span
               class="bp3-text-muted"
@@ -941,7 +941,7 @@ exports[`Validate HealthSourceInputset should render HealthSourceInputset 2`] = 
             class="bp3-label"
             for="sources.healthSources.1.spec.applicationName"
           >
-            cv.healthSource.connectors.AppDynamics.applicationLabel
+            cv.monitoringSources.appD.applicationName
              
             <span
               class="bp3-text-muted"
@@ -982,7 +982,7 @@ exports[`Validate HealthSourceInputset should render HealthSourceInputset 2`] = 
               class="bp3-label"
               for="sources.healthSources.1.spec.metricDefinitions.0.completeMetricPath"
             >
-              cv.healthSource.connectors.AppDynamics.metricPathType.text
+              cv.monitoringSources.appD.completeMetricPath
                
               <span
                 class="bp3-text-muted"

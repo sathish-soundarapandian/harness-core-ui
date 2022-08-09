@@ -45,3 +45,14 @@
 .simultaneousDeployment {
   display: inline-flex !important;
 }
+
+.tagsSelect {
+  :global(.bp3-menu) {
+    height: 200px;
+  }
+}
+
+.removeTagBtn {
+  padding-bottom: 20px !important;
+  align-items: flex-end;
+}

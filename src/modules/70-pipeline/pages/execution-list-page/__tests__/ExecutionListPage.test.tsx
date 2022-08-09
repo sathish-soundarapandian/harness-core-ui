@@ -11,6 +11,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import filters from '@pipeline/pages/execution-list/__mocks__/filters.json'
+import { useGetListOfExecutions } from 'services/pipeline-ng'
 import services from '../../pipelines/__tests__/mocks/services.json'
 import environments from '../../pipelines/__tests__/mocks/environments.json'
 import deploymentTypes from '../../pipelines/__tests__/mocks/deploymentTypes.json'
@@ -105,6 +106,9 @@ describe('ExecutionListPage', () => {
     const noDeploymentText = await screen.findByText('pipeline.noDeploymentText')
     expect(noDeploymentText).toBeInTheDocument()
     expect(screen.getByText('noDeploymentText')).toBeInTheDocument()
+    expect(useGetListOfExecutions).toHaveBeenLastCalledWith(
+      expect.objectContaining({ queryParams: expect.objectContaining({ module: 'cd' }) })
+    )
   })
 
   test('CI module', async () => {
@@ -117,6 +121,9 @@ describe('ExecutionListPage', () => {
     const noBuildsText = await screen.findByText('pipeline.noBuildsText')
     expect(noBuildsText).toBeInTheDocument()
     expect(screen.getByText('noBuildsText')).toBeInTheDocument()
+    expect(useGetListOfExecutions).toHaveBeenLastCalledWith(
+      expect.objectContaining({ queryParams: expect.objectContaining({ module: 'ci' }) })
+    )
   })
 
   test('STO module', async () => {
@@ -129,5 +136,8 @@ describe('ExecutionListPage', () => {
     const noScansText = await screen.findByText('stoSteps.noScansText')
     expect(noScansText).toBeInTheDocument()
     expect(screen.getByText('stoSteps.noScansRunPipelineText')).toBeInTheDocument()
+    expect(useGetListOfExecutions).toHaveBeenLastCalledWith(
+      expect.objectContaining({ queryParams: expect.objectContaining({ module: 'sto' }) })
+    )
   })
 })

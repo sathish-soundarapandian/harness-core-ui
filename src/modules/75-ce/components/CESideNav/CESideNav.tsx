@@ -163,6 +163,13 @@ const SideNavItems = () => {
           label={getString('ce.co.breadCrumb.rules')}
           to={routes.toCECORules({ accountId, params: '' })}
         />
+        <SidebarLink
+          onClick={() => {
+            trackEvent(USER_JOURNEY_EVENTS.BI_DASHBOARD_NAV_CLICK, {})
+          }}
+          label={getString('ce.biDashboard.sideNavText')}
+          to={routes.toCEDashboards({ accountId })}
+        />
         <NavExpandable title={getString('common.setup')} route={routes.toCECOAccessPoints({ accountId })}>
           <Layout.Vertical spacing="small">
             <SidebarLink

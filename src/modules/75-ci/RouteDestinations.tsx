@@ -53,6 +53,7 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import featureFactory from 'framework/featureStore/FeaturesFactory'
 import { LICENSE_STATE_NAMES, LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
+import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
 import { CIExecutionCardSummary } from './components/CIExecutionCardSummary/CIExecutionCardSummary'
 import { CIExecutionSummary } from './components/CIExecutionSummary/CIExecutionSummary'
 import CISideNav from './components/CISideNav/CISideNav'
@@ -341,6 +342,13 @@ export default (
 
     {
       ConnectorRouteDestinations({
+        moduleParams,
+        licenseRedirectData,
+        sidebarProps: CISideNavProps
+      })?.props.children
+    }
+    {
+      DefaultSettingsRouteDestinations({
         moduleParams,
         licenseRedirectData,
         sidebarProps: CISideNavProps

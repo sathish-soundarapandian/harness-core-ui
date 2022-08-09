@@ -32,6 +32,7 @@ export class ServiceNowCreate extends PipelineStep<ServiceNowCreateData> {
     this._hasDelegateSelectionVisible = true
   }
 
+  protected referenceId = 'serviceNowCreateStep'
   protected isHarnessSpecific = true
   protected type = StepType.ServiceNowCreate
   protected stepName = 'ServiceNow Create'

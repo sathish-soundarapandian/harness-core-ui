@@ -12,7 +12,6 @@ modules:
   harness: 'By Harness'
 homePage:
   folders: 'Folders'
-  searchPlaceholder: 'Search by name'
   noFolderAvailable: 'No Folders available'
   noTags: 'No custom tags available'
   noDashboardsAvailable: 'No dashboards available'

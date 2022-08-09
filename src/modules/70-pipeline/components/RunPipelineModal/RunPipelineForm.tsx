@@ -66,7 +66,7 @@ import { useQueryParams } from '@common/hooks'
 import { yamlStringify, yamlParse } from '@common/utils/YamlHelperMethods'
 import { PipelineActions } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import type { InputSetDTO } from '@pipeline/utils/types'
+import type { InputSetDTO, Pipeline } from '@pipeline/utils/types'
 import {
   isCloneCodebaseEnabledAtLeastOneStage,
   isCodebaseFieldsRuntimeInputs,
@@ -95,7 +95,7 @@ import { PipelineInvalidRequestContent } from './PipelineInvalidRequestContent'
 import RunModalHeader from './RunModalHeader'
 import CheckBoxActions from './CheckBoxActions'
 import VisualView from './VisualView'
-import { Pipeline, useInputSets } from './useInputSets'
+import { useInputSets } from './useInputSets'
 
 import css from './RunPipelineForm.module.scss'
 

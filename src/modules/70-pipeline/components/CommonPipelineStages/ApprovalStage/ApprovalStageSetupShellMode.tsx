@@ -7,8 +7,7 @@
 
 import React, { useEffect, useRef } from 'react'
 import cx from 'classnames'
-import { unset, capitalize as _capitalize } from 'lodash-es'
-import YAML from 'yaml'
+import { unset, capitalize as _capitalize, toUpper } from 'lodash-es'
 import produce from 'immer'
 import { Button, Icon, Layout, Tab, Tabs } from '@wings-software/uicore'
 import { Expander } from '@blueprintjs/core'
@@ -25,10 +24,9 @@ import {
 import type { StageElementConfig } from 'services/cd-ng'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import { useQueryParams } from '@common/hooks'
+import { parse } from '@common/utils/YamlHelperMethods'
 import { ApprovalStageOverview } from './ApprovalStageOverview'
 import { ApprovalStageExecution } from './ApprovalStageExecution'
 import ApprovalAdvancedSpecifications from './ApprovalStageAdvanced'
@@ -41,20 +39,20 @@ interface ApprovalStageElementConfig extends StageElementConfig {
 export function ApprovalStageSetupShellMode(): React.ReactElement {
   const { getString } = useStrings()
   const tabHeadings = [getString('overview'), getString('executionText'), getString('advancedTitle')]
-  const isTemplatesEnabled = useFeatureFlag(FeatureFlag.NG_TEMPLATES)
   const layoutRef = useRef<HTMLDivElement>(null)
   const [selectedTabId, setSelectedTabId] = React.useState<string>(tabHeadings[1])
   const pipelineContext = usePipelineContext()
   const {
     state: {
       pipeline,
-      selectionState: { selectedStageId = '', selectedStepId },
+      selectionState: { selectedStageId = '', selectedStepId, selectedSectionId },
       gitDetails
     },
     contextType,
     getStageFromPipeline,
     updatePipeline,
-    updateStage
+    updateStage,
+    setSelectedSectionId
   } = pipelineContext
   const query = useQueryParams()
 
@@ -66,9 +64,9 @@ export function ApprovalStageSetupShellMode(): React.ReactElement {
     if (sectionId?.length && tabHeadings.includes(_capitalize(sectionId))) {
       setSelectedTabId(_capitalize(sectionId))
     } else {
-      setSelectedTabId(tabHeadings[1])
+      setSelectedSectionId(toUpper(tabHeadings[1]))
     }
-  }, [])
+  }, [selectedSectionId])
 
   React.useEffect(() => {
     if (selectedStepId) {
@@ -113,7 +111,7 @@ export function ApprovalStageSetupShellMode(): React.ReactElement {
       if (!selectedStage?.stage?.spec?.execution) {
         updateStage(
           produce(selectedStage as StageElementWrapperConfig, draft => {
-            const jsonFromYaml = YAML.parse(yamlSnippet?.data || '') as ApprovalStageElementConfig
+            const jsonFromYaml = parse(yamlSnippet?.data || '') as ApprovalStageElementConfig
             if (draft?.stage && draft?.stage?.spec) {
               draft.stage.failureStrategies = jsonFromYaml.failureStrategies
               ;(draft.stage.spec as ApprovalStageConfig).execution =
@@ -137,7 +135,10 @@ export function ApprovalStageSetupShellMode(): React.ReactElement {
     <section ref={layoutRef} key={selectedStageId} className={css.approvalStageSetupShellWrapper}>
       <Tabs
         id="approvalStageSetupShell"
-        onChange={(tabId: string) => setSelectedTabId(tabId)}
+        onChange={(tabId: string) => {
+          setSelectedTabId(tabId)
+          setSelectedSectionId(toUpper(tabId))
+        }}
         selectedTabId={selectedTabId}
         data-tabId={selectedTabId}
       >
@@ -206,7 +207,7 @@ export function ApprovalStageSetupShellMode(): React.ReactElement {
           panel={<ApprovalAdvancedSpecifications />}
           data-testid={tabHeadings[2]}
         />
-        {isTemplatesEnabled && isContextTypeNotStageTemplate(contextType) && selectedStage?.stage && (
+        {isContextTypeNotStageTemplate(contextType) && selectedStage?.stage && (
           <>
             <Expander />
             <SaveTemplateButton data={selectedStage?.stage} type={'Stage'} gitDetails={gitDetails} />

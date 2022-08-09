@@ -17,7 +17,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import type { SidecarArtifact } from 'services/cd-ng'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isArtifactSourceRuntime, isFieldfromTriggerTabDisabled } from '../artifactSourceUtils'
-import css from '../../K8sServiceSpec.module.scss'
+import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 interface CustomArtifactRenderContent extends ArtifactSourceRenderProps {
   isTagsSelectionDisabled: (data: ArtifactSourceRenderProps) => boolean

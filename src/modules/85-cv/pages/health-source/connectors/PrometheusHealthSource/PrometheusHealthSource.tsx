@@ -29,6 +29,8 @@ import { StackdriverDefinition, useGetLabelNames, useGetMetricNames, useGetMetri
 import { useStrings } from 'framework/strings'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import useGroupedSideNaveHook from '@cv/hooks/GroupedSideNaveHook/useGroupedSideNaveHook'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { PrometheusQueryBuilder } from './components/PrometheusQueryBuilder/PrometheusQueryBuilder'
 import {
   validateMappings,
@@ -45,7 +47,10 @@ import CustomMetric from '../../common/CustomMetric/CustomMetric'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { updateMultiSelectOption } from './components/PrometheusQueryBuilder/components/PrometheusFilterSelector/utils'
 import { PrometheusQueryViewer } from './components/PrometheusQueryViewer/PrometheusQueryViewer'
+import type { MetricThresholdsState } from './PrometheusHealthSource.types'
 import SelectHealthSourceServices from '../../common/SelectHealthSourceServices/SelectHealthSourceServices'
+import PrometheusMetricThreshold from './components/MetricThreshold/PrometheusMetricThreshold'
+import { getCustomMetricGroupNames } from '../../common/MetricThresholds/MetricThresholds.utils'
 import css from './PrometheusHealthSource.module.scss'
 
 export interface PrometheusHealthSourceProps {
@@ -64,6 +69,8 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
     onPrevious,
     sourceData: { existingMetricDetails }
   } = useContext(SetupSourceTabsContext)
+
+  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD)
 
   const metricDefinitions = existingMetricDetails?.spec?.metricDefinitions
 
@@ -95,6 +102,11 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
     [sourceData]
   )
 
+  const [metricThresholds, setMetricThresholds] = useState<MetricThresholdsState>({
+    ignoreThresholds: transformedSourceData.ignoreThresholds,
+    failFastThresholds: transformedSourceData.failFastThresholds
+  })
+
   const {
     createdMetrics,
     mappedMetrics,
@@ -119,7 +131,7 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
   return (
     <Formik<MapPrometheusQueryToService>
       formName="mapPrometheus"
-      initialValues={initialFormValues}
+      initialValues={{ ...initialFormValues, ...metricThresholds }}
       isInitialValid={(args: any) =>
         Object.keys(
           validateMappings(
@@ -127,19 +139,21 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
             groupedCreatedMetricsList,
             groupedCreatedMetricsList.indexOf(selectedMetric),
             args.initialValues,
-            mappedMetrics
+            mappedMetrics,
+            isMetricThresholdEnabled
           )
         ).length === 0
       }
       onSubmit={noop}
-      enableReinitialize={true}
+      enableReinitialize
       validate={values => {
         return validateMappings(
           getString,
           groupedCreatedMetricsList,
           groupedCreatedMetricsList.indexOf(selectedMetric),
           values,
-          mappedMetrics
+          mappedMetrics,
+          isMetricThresholdEnabled
         )
       }}
     >
@@ -156,7 +170,6 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
             [PrometheusMonitoringSourceFieldNames.METRIC_NAME]: true
           })
         }
-
         return (
           <FormikForm>
             <CustomMetric
@@ -300,10 +313,24 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
                 </Layout.Horizontal>
               </Container>
             </CustomMetric>
+            {/* Metric thresholds feature flag must be true and atleast one group must be present */}
+            {isMetricThresholdEnabled && Boolean(getCustomMetricGroupNames(groupedCreatedMetrics).length) && (
+              <PrometheusMetricThreshold
+                formikValues={formikProps.values}
+                groupedCreatedMetrics={groupedCreatedMetrics}
+                setMetricThresholds={setMetricThresholds}
+              />
+            )}
+
+            {/* To provide scrolling for custom metric even though metric thresholds are not present */}
+            <Container style={{ marginTop: '120px' }} />
+
             <DrawerFooter
               isSubmit
               onPrevious={onPrevious}
               onNext={async () => {
+                formikProps.submitForm()
+
                 formikProps.setTouched({
                   ...formikProps.touched,
                   [PrometheusMonitoringSourceFieldNames.QUERY]: true,
@@ -326,10 +353,14 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
                 if (updatedMetric) mappedMetrics.set(selectedMetric, updatedMetric)
                 await onSubmit(
                   sourceData,
-                  transformPrometheusSetupSourceToHealthSource({
-                    ...transformedSourceData,
-                    mappedServicesAndEnvs: mappedMetrics as Map<string, MapPrometheusQueryToService>
-                  })
+                  transformPrometheusSetupSourceToHealthSource(
+                    {
+                      ...transformedSourceData,
+                      ...metricThresholds,
+                      mappedServicesAndEnvs: mappedMetrics as Map<string, MapPrometheusQueryToService>
+                    },
+                    isMetricThresholdEnabled
+                  )
                 )
               }}
             />

@@ -98,7 +98,7 @@ const RecommendationSummaryCard: (props: RecommendationSummaryCardProps) => JSX.
     return (
       <Card elevation={1}>
         <Container className={css.mainCard}>
-          <Text color={Color.GREY_500} font={{ variation: FontVariation.SMALL }}>
+          <Text color={Color.GREY_500} font={{ variation: FontVariation.SMALL_BOLD }}>
             {getString('ce.recommendation.sideNavText')}
           </Text>
           <Text
@@ -124,7 +124,7 @@ const RecommendationSummaryCard: (props: RecommendationSummaryCardProps) => JSX.
     <Card elevation={1} interactive={false}>
       <Container className={css.mainCard}>
         <Layout.Horizontal>
-          <Text color={Color.GREY_500} font={{ variation: FontVariation.SMALL }}>
+          <Text color={Color.GREY_500} font={{ variation: FontVariation.SMALL_BOLD }}>
             {getString('ce.recommendation.sideNavText')}
           </Text>
           <FlexExpander />

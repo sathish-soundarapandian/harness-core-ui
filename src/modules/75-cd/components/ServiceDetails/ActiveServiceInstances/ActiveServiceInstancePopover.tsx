@@ -12,6 +12,7 @@ import { Color } from '@harness/design-system'
 import {
   AzureWebAppInstanceInfoDTO,
   GetActiveInstancesByServiceIdEnvIdAndBuildIdsQueryParams,
+  GitOpsInstanceInfoDTO,
   InstanceDetailsDTO,
   NativeHelmInstanceInfoDTO,
   useGetActiveInstancesByServiceIdEnvIdAndBuildIds
@@ -145,6 +146,22 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
     }
   }
 
+  const infrastructureSectionValues = Object.keys(instanceData.infrastructureDetails || {}).map(
+    infrastructureDetailsKey => ({
+      label: infrastructureDetailsKey,
+      value: instanceData.infrastructureDetails?.[infrastructureDetailsKey]
+    })
+  )
+
+  const clusterIdentifier = (instanceData.instanceInfoDTO as GitOpsInstanceInfoDTO)?.clusterIdentifier
+
+  if (clusterIdentifier) {
+    infrastructureSectionValues.push({
+      label: getString('common.cluster').toLowerCase(),
+      value: clusterIdentifier
+    })
+  }
+
   const sectionData: SectionProps[] = [
     {
       header: getString('cd.serviceDashboard.instanceDetails'),
@@ -152,10 +169,7 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
     },
     {
       header: getString('infrastructureText'),
-      values: Object.keys(instanceData.infrastructureDetails || {}).map(infrastructureDetailsKey => ({
-        label: infrastructureDetailsKey,
-        value: instanceData.infrastructureDetails?.[infrastructureDetailsKey]
-      }))
+      values: infrastructureSectionValues
     },
     {
       header: getString('deploymentText'),

@@ -18,7 +18,7 @@ import {
 } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { useQueryParams } from '@common/hooks'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import RepositorySelect from '@common/components/RepositorySelect/RepositorySelect'
@@ -70,6 +70,7 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
   const { formikProps, isEdit, disableFields = {}, initialValues, errorData } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { branch, connectorRef, repoName } = useQueryParams<GitQueryParams>()
+  const { updateQueryParams } = useUpdateQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const isAzureRepoSupported = useFeatureFlag(FeatureFlag.AZURE_REPO_CONNECTOR)
   const [errorResponse, setErrorResponse] = useState<ResponseMessage[]>(errorData ?? [])
@@ -127,6 +128,7 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
               })
               formikProps.setFieldValue?.('repo', '')
               formikProps.setFieldValue?.('branch', '')
+              updateQueryParams({ repoName: '', branch: '' })
             }}
             disabled={isEdit || disableFields.connectorRef}
           />

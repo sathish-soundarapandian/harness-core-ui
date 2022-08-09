@@ -1,0 +1,33 @@
+.metricThreshold {
+  &Select {
+    margin-bottom: var(--spacing-0) !important;
+
+    input {
+      width: 150px !important;
+      border-color: transparent;
+    }
+  }
+
+  &Criteria {
+    margin-right: var(--spacing-3);
+  }
+
+  &Input {
+    margin-bottom: var(--spacing-0) !important;
+    input {
+      width: 70px !important;
+    }
+
+    label span {
+      white-space: nowrap;
+    }
+
+    &:not(:last-child) {
+      margin-right: var(--spacing-3);
+    }
+
+    &Wrapper {
+      margin-bottom: 0 !important;
+    }
+  }
+}

@@ -8,7 +8,6 @@
 import React from 'react'
 import { deleteDB, IDBPDatabase, openDB } from 'idb'
 import { cloneDeep, defaultTo, get, isEmpty, isEqual, isNil, omit, pick } from 'lodash-es'
-import { parse } from 'yaml'
 import {
   AllowedTypes,
   AllowedTypesWithRunTime,
@@ -49,12 +48,13 @@ import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { PipelineStageWrapper } from '@pipeline/utils/pipelineTypes'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { getTemplateTypesByRef, TemplateServiceDataType } from '@pipeline/utils/templateUtils'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
+import type { Pipeline } from '@pipeline/utils/types'
 import {
   ActionReturnType,
   DefaultNewPipelineId,
@@ -75,11 +75,15 @@ import {
   getStagePathFromPipeline as _getStagePathFromPipeline
 } from './helpers'
 
-interface PipelineInfoConfigWithGitDetails extends PipelineInfoConfig {
+export interface PipelineInfoConfigWithGitDetails extends Partial<PipelineInfoConfig> {
   gitDetails?: EntityGitDetails
   entityValidityDetails?: EntityValidityDetails
   templateError?: GetDataError<Failure | Error> | null
   yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
+}
+
+export interface TemplateError {
+  templateError: GetDataError<Failure | Error>
 }
 
 const logger = loggerFor(ModuleName.CD)
@@ -89,7 +93,7 @@ export const getPipelineByIdentifier = (
   params: GetPipelineQueryParams,
   identifier: string,
   signal?: AbortSignal
-): Promise<PipelineInfoConfigWithGitDetails> => {
+): Promise<PipelineInfoConfigWithGitDetails | TemplateError> => {
   return getPipelinePromise(
     {
       pipelineIdentifier: identifier,
@@ -110,14 +114,14 @@ export const getPipelineByIdentifier = (
   ).then((response: ResponsePMSPipelineResponseDTO & { message?: string }) => {
     let obj = {} as ResponsePMSPipelineResponseDTO
     if ((typeof response as unknown) === 'string') {
-      obj = defaultTo(parse(response as string)?.data?.yamlPipeline, {})
+      obj = defaultTo(parse<any>(response as string)?.data?.yamlPipeline, {})
     } else if (response.data?.yamlPipeline) {
       obj = response
     }
     if (obj.status === 'SUCCESS' && obj.data?.yamlPipeline) {
-      let yamlPipelineDetails = null
+      let yamlPipelineDetails: Pipeline | null = null
       try {
-        yamlPipelineDetails = parse(obj.data?.yamlPipeline)
+        yamlPipelineDetails = parse<Pipeline>(obj.data?.yamlPipeline)
       } catch (e) {
         // caught YAMLSemanticError, YAMLReferenceError, YAMLSyntaxError, YAMLWarning
       }
@@ -129,13 +133,14 @@ export const getPipelineByIdentifier = (
         yamlSchemaErrorWrapper: obj.data.yamlSchemaErrorWrapper ?? {}
       }
     } else {
+      const message = defaultTo(response?.message, '')
       return {
         templateError: {
-          message: response?.message,
+          message,
           data: {
-            message: defaultTo(response?.message, '')
+            message
           },
-          status: response?.status
+          status: 500
         }
       }
     }
@@ -168,16 +173,10 @@ export const savePipeline = (
   const createPipeline = useAPIV2 ? createPipelineV2Promise : createPipelinePromise
   const updatePipeline = useAPIV2 ? putPipelineV2Promise : putPipelinePromise
 
-  // we need to do this due to https://github.com/eemeli/yaml/issues/239
-  // can remove it once fixed
-  const body = yamlStringify(
-    JSON.parse(
-      JSON.stringify({
-        pipeline: { ...pipeline, ...pick(params, 'projectIdentifier', 'orgIdentifier') }
-      })
-    ),
-    { version: '1.1' }
-  )
+  const body = yamlStringify({
+    pipeline: { ...pipeline, ...pick(params, 'projectIdentifier', 'orgIdentifier') }
+  })
+
   return isEdit
     ? updatePipeline({
         pipelineIdentifier: pipeline.identifier,
@@ -378,17 +377,19 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       getDefaultFromOtherRepo: true
     })
 
-    const pipelineWithGitDetails: PipelineInfoConfigWithGitDetails = await getPipelineByIdentifier(
+    const pipelineById = await getPipelineByIdentifier(
       { ...queryParams, ...(repoIdentifier ? { repoIdentifier } : {}), ...(branch ? { branch } : {}) },
       pipelineId,
       signal
     )
-    if (pipelineWithGitDetails?.templateError) {
-      dispatch(PipelineContextActions.error({ templateError: pipelineWithGitDetails?.templateError }))
+    if (pipelineById?.templateError) {
+      dispatch(PipelineContextActions.error({ templateError: pipelineById.templateError }))
       return
     } else {
-      delete pipelineWithGitDetails.templateError
+      delete pipelineById.templateError
     }
+
+    const pipelineWithGitDetails = pipelineById as PipelineInfoConfigWithGitDetails
 
     id = getId(
       queryParams.accountIdentifier,
@@ -404,7 +405,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
     } catch (_) {
       logger.info(DBNotFoundErrorMessage)
     }
-    const pipeline: PipelineInfoConfig = omit(
+    const pipeline = omit(
       pipelineWithGitDetails,
       'gitDetails',
       'entityValidityDetails',
@@ -413,7 +414,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       'connectorRef',
       'filePath',
       'yamlSchemaErrorWrapper'
-    )
+    ) as PipelineInfoConfig
     const payload: PipelinePayload = {
       [KeyPath]: id,
       pipeline,

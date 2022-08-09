@@ -10,7 +10,7 @@ import { act, fireEvent, render, RenderResult, screen, waitFor } from '@testing-
 import { TestWrapper } from '@common/utils/testUtils'
 import type { StringKeys } from 'framework/strings'
 import type { DashboardModel } from 'services/custom-dashboards'
-import { DashboardLayoutViews, DashboardType } from '@dashboards/types/DashboardTypes'
+import { DashboardLayoutViews, DashboardType } from '@dashboards/types/DashboardTypes.types'
 import * as customDashboardServices from 'services/custom-dashboards'
 import Dashboards, { DashboardsProps } from '../Dashboards'
 

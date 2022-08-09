@@ -270,7 +270,6 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     getStagePathFromPipeline,
     updatePipelineView
   } = usePipelineContext()
-  const templatesEnabled: boolean = useFeatureFlag(FeatureFlag.NG_TEMPLATES)
   const newPipelineStudioEnabled: boolean = useFeatureFlag(FeatureFlag.NEW_PIPELINE_STUDIO)
   // NOTE: we are using ref as DynamicPopover use memo
   const stageCloneRef = React.useRef<StageElementWrapper<T>>({})
@@ -371,9 +370,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     if (allowAddGroup && showStepGroup) {
       options.addStepGroup = getString('addStepGroup')
     }
-    if (templatesEnabled) {
-      options.useTemplate = getString('common.useTemplate')
-    }
+    options.useTemplate = getString('common.useTemplate')
     if (Object.keys(options).length === 1 && options.addStep) {
       onPopoverSelection(false, isParallel, event)
     } else {

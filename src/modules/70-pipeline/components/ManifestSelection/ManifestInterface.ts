@@ -53,6 +53,11 @@ export interface ManifestSelectionProps {
   deploymentType: ServiceDefinition['type']
   isReadonlyServiceMode: boolean
   readonly: boolean
+  updateManifestList?: (manifestObj: ManifestConfigWrapper, manifestIndex: number) => void
+  initialManifestList?: ManifestConfigWrapper[]
+  allowOnlyOneManifest?: boolean
+  addManifestBtnText?: string
+  preSelectedManifestType?: ManifestTypes
 }
 
 export interface ManifestListViewProps {
@@ -66,7 +71,9 @@ export interface ManifestListViewProps {
   removeManifestConfig: (idx: number) => void
   attachPathYaml: (formData: ConnectorConfigDTO, manifestId: string, manifestType: PrimaryManifestType) => void
   removeValuesYaml: (index: number, manifestId: string, manifestType: PrimaryManifestType) => void
-  allowOnlyOne?: boolean
+  allowOnlyOneManifest?: boolean
+  addManifestBtnText?: string
+  preSelectedManifestType?: ManifestTypes
 }
 
 export interface ManifestStepInitData {
@@ -74,7 +81,7 @@ export interface ManifestStepInitData {
   store: ManifestStores | string
   selectedManifest: ManifestTypes | null
 }
-export interface K8sValuesManifestDataType {
+export interface CommonManifestDataType {
   identifier: string
   branch: string | undefined
   commitId: string | undefined
@@ -168,6 +175,8 @@ export interface KustomizeWithGITDataType {
   folderPath: string
   pluginPath: string
   patchesPaths?: any
+  optimizedKustomizeManifestCollection?: boolean
+  kustomizeYamlFolderPath?: string
 }
 export interface OpenShiftParamDataType {
   identifier: string
@@ -177,7 +186,7 @@ export interface OpenShiftParamDataType {
   gitFetchType?: 'Branch' | 'Commit'
   paths: string[] | any
 }
-export interface ServerlessManifestDataType extends K8sValuesManifestDataType {
+export interface ServerlessManifestDataType extends CommonManifestDataType {
   identifier: string
   branch: string | undefined
   commitId: string | undefined
@@ -214,7 +223,12 @@ export interface HelmHarnessFileStoreFormData extends HarnessFileStoreFormData {
 }
 export interface KustomizeWithHarnessStorePropTypeDataType extends HarnessFileStoreFormData {
   patchesPaths: string[] | string
-  manifestScope: string
+  overlayConfiguration:
+    | string
+    | {
+        kustomizeYamlFolderPath: string
+      }
+  pluginPath: string
 }
 export interface CustomManifestManifestDataType {
   identifier: string

@@ -39,6 +39,7 @@
 
     &[data-primary-state='failed'] {
       background-color: var(--red-200);
+      color: var(--red-900);
       &:hover,
       &:focus {
         box-shadow: var(--white) 0px 0px 0px 2px, var(--red-200) 0px 0px 0px 4px;
@@ -47,6 +48,7 @@
 
     &[data-primary-state='paused'] {
       background-color: var(--orange-200);
+      color: var(--orange-900);
       &:hover,
       &:focus {
         box-shadow: var(--white) 0px 0px 0px 2px, var(--orange-200) 0px 0px 0px 4px;
@@ -55,6 +57,7 @@
 
     &[data-primary-state='running'] {
       background-color: var(--primary-3);
+      color: var(--primary-7);
       &:hover,
       &:focus {
         box-shadow: var(--white) 0px 0px 0px 2px, var(--primary-3) 0px 0px 0px 4px;

@@ -1,5 +1,3 @@
-extends:
-  - ./custom.eslintrc.yml
 rules:
   no-restricted-imports:
     - error
@@ -29,11 +27,12 @@ rules:
         - '@gitops/*'
       paths:
         - lodash
+        - name: js-yaml
+          message: Please use methods from @common/utils/YamlHelperMethods instead of using js-yaml
         - name: yaml
           importNames:
             - stringify
-          message: Please use yamlStringify from @common/utils/YamlHelperMethods instead
-            of this
+          message: Please use yamlStringify from @common/utils/YamlHelperMethods instead of this
         - name: react-router
           message: import from "react-router-dom" instead
         - name: microfrontends
@@ -45,3 +44,15 @@ rules:
             - Intent
             - Spacing
           message: import from "@harness/design-system" instead
+        - name: yaml
+          message: Please use methods from @common/utils/YamlHelperMethods instead of using yaml
+  react/function-component-definition:
+    - error
+    - namedComponents: function-declaration
+      unnamedComponents: arrow-function
+overrides:
+  - files:
+      - '*.stories.tsx'
+    rules:
+      react/function-component-definition:
+        - 'off'

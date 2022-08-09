@@ -9,6 +9,7 @@
 declare const styles: {
   readonly cardStyle: string
   readonly healthSourceInputSet: string
+  readonly inputSetForm: string
   readonly inputsetContainer: string
 }
 export default styles

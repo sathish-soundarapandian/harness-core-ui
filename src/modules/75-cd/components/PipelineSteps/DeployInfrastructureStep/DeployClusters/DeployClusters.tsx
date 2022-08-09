@@ -14,7 +14,6 @@ import {
   AllowedTypes,
   FormInput,
   getMultiTypeFromValue,
-  MultiSelectTypeInput,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
   SelectOption,
@@ -22,10 +21,9 @@ import {
 } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
-import { ClusterResponse, ClusterYaml, useGetClusterList } from 'services/cd-ng'
+import { ClusterResponse, useGetClusterList } from 'services/cd-ng'
 
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
-import { useDeepCompareEffect } from '@common/hooks'
 
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
@@ -38,21 +36,18 @@ interface DeployClusterProps {
   readonly?: boolean
   environmentIdentifier: string
   allowableTypes: AllowedTypes
-  path?: string
 }
 
 function DeployClusters({
   formik,
   readonly,
   environmentIdentifier,
-  allowableTypes,
-  path
+  allowableTypes
 }: DeployClusterProps): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const [firstLoad, setFirstLoad] = useState(true)
 
   const [clustersRefType, setClustersRefType] = useState<MultiTypeInputType>(
     getMultiTypeFromValue(formik?.values?.clusterRef)
@@ -68,29 +63,12 @@ function DeployClusters({
       orgIdentifier,
       projectIdentifier,
       environmentIdentifier
-    }
+    },
+    lazy: getMultiTypeFromValue(environmentIdentifier) === MultiTypeInputType.RUNTIME
   })
 
   const [clusters, setClusters] = useState<ClusterResponse[]>()
   const [clustersSelectOptions, setClustersSelectOptions] = useState<SelectOption[]>()
-  const [selectedClusters, setSelectedClusters] = useState<SelectOption[]>()
-
-  useDeepCompareEffect(() => {
-    if (firstLoad && clustersSelectOptions?.length && path) {
-      setFirstLoad(false)
-      const { deployToAll, gitOpsClusters } = get(formik?.values, defaultTo(path, ''))
-
-      if (deployToAll) {
-        setSelectedClusters([clustersSelectOptions[0]])
-      } else if (gitOpsClusters?.length) {
-        const clusterIdentifiers = gitOpsClusters.map((cluster: ClusterYaml) => cluster.identifier)
-        const newSelectedClusters = clustersSelectOptions.filter(
-          option => clusterIdentifiers.indexOf(option.value) !== -1
-        )
-        setSelectedClusters(newSelectedClusters)
-      }
-    }
-  }, [path, get(formik?.values, `${path}.gitOpsClusters`), clustersSelectOptions])
 
   useEffect(() => {
     if (!clustersLoading && !get(clustersResponse, 'data.empty')) {
@@ -107,6 +85,7 @@ function DeployClusters({
         })
       ])
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clusters])
 
   useEffect(() => {
@@ -121,99 +100,50 @@ function DeployClusters({
         }
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clustersSelectOptions])
 
   useEffect(() => {
     if (!isNil(clustersError)) {
       showError(getRBACErrorMessage(clustersError))
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clustersError])
 
   return (
     <div className={css.clusterMultiSelect}>
-      {path ? (
-        <MultiSelectTypeInput
-          name={'test'}
-          onChange={items => {
+      <FormInput.MultiSelectTypeInput
+        label={getString('cd.pipelineSteps.environmentTab.specifyGitOpsClusters')}
+        tooltipProps={{ dataTooltipId: 'specifyGitOpsClusters' }}
+        name="clusterRef"
+        disabled={readonly || (clustersRefType === MultiTypeInputType.FIXED && clustersLoading)}
+        placeholder={
+          clustersLoading ? getString('loading') : getString('cd.pipelineSteps.environmentTab.specifyGitOpsClusters')
+        }
+        multiSelectTypeInputProps={{
+          onTypeChange: setClustersRefType,
+          multiSelectProps: {
+            items: defaultTo(clustersSelectOptions, [])
+          },
+          allowableTypes,
+          onChange: items => {
             if (items !== RUNTIME_INPUT_VALUE && (items as SelectOption[]).length !== 1) {
               const selectAllItemIndex = (items as SelectOption[]).findIndex(item => item.value === getString('all'))
 
               if (selectAllItemIndex === 0) {
-                setSelectedClusters((items as SelectOption[]).slice(1))
-                formik?.setFieldValue(
-                  `${path}.gitOpsClusters`,
-                  (items as SelectOption[]).slice(1).map(item => ({ identifier: item.value }))
-                )
-                formik?.setFieldValue(`${path}.deployToAll`, false)
+                formik?.setFieldValue('clusterRef', (items as SelectOption[]).slice(1))
               } else if (selectAllItemIndex === (items as SelectOption[]).length - 1) {
-                setSelectedClusters((items as SelectOption[]).slice(-1))
-                formik?.setFieldValue(`${path}.gitOpsClusters`, undefined)
-                formik?.setFieldValue(`${path}.deployToAll`, true)
-              } else {
-                setSelectedClusters(items as SelectOption[])
-                formik?.setFieldValue(
-                  `${path}.gitOpsClusters`,
-                  (items as SelectOption[]).map(item => ({ identifier: item.value }))
-                )
-                formik?.setFieldValue(`${path}.deployToAll`, false)
-              }
-            } else {
-              setSelectedClusters(items as SelectOption[])
-              if ((items as SelectOption[])[0].value === getString('all')) {
-                formik?.setFieldValue(`${path}.gitOpsClusters`, undefined)
-                formik?.setFieldValue(`${path}.deployToAll`, true)
-              } else {
-                formik?.setFieldValue(
-                  `${path}.gitOpsClusters`,
-                  (items as SelectOption[]).map(item => ({ identifier: item.value }))
-                )
-                formik?.setFieldValue(`${path}.deployToAll`, false)
-              }
-            }
-          }}
-          multiSelectProps={{
-            items: defaultTo(clustersSelectOptions, []),
-            disabled: clustersLoading,
-            placeholder: clustersLoading
-              ? getString('loading')
-              : getString('cd.pipelineSteps.environmentTab.specifyGitOpsClusters')
-          }}
-          value={selectedClusters}
-        />
-      ) : (
-        <FormInput.MultiSelectTypeInput
-          label={getString('cd.pipelineSteps.environmentTab.specifyGitOpsClusters')}
-          tooltipProps={{ dataTooltipId: 'specifyGitOpsClusters' }}
-          name="clusterRef"
-          disabled={readonly || (clustersRefType === MultiTypeInputType.FIXED && clustersLoading)}
-          placeholder={
-            clustersLoading ? getString('loading') : getString('cd.pipelineSteps.environmentTab.specifyGitOpsClusters')
-          }
-          multiSelectTypeInputProps={{
-            onTypeChange: setClustersRefType,
-            multiSelectProps: {
-              items: defaultTo(clustersSelectOptions, [])
-            },
-            allowableTypes,
-            onChange: items => {
-              if (items !== RUNTIME_INPUT_VALUE && (items as SelectOption[]).length !== 1) {
-                const selectAllItemIndex = (items as SelectOption[]).findIndex(item => item.value === getString('all'))
-
-                if (selectAllItemIndex === 0) {
-                  formik?.setFieldValue('clusterRef', (items as SelectOption[]).slice(1))
-                } else if (selectAllItemIndex === (items as SelectOption[]).length - 1) {
-                  formik?.setFieldValue('clusterRef', (items as SelectOption[]).slice(-1))
-                } else {
-                  formik?.setFieldValue('clusterRef', items)
-                }
+                formik?.setFieldValue('clusterRef', (items as SelectOption[]).slice(-1))
               } else {
                 formik?.setFieldValue('clusterRef', items)
               }
+            } else {
+              formik?.setFieldValue('clusterRef', items)
             }
-          }}
-          selectItems={defaultTo(clustersSelectOptions, [])}
-        />
-      )}
+          }
+        }}
+        selectItems={defaultTo(clustersSelectOptions, [])}
+      />
     </div>
   )
 }

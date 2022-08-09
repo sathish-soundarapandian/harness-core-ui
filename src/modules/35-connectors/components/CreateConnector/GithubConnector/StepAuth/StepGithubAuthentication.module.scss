@@ -59,6 +59,8 @@
   border-radius: 4px;
 }
 
-.linkToGitBtn {
-  width: fit-content;
+.oAuthFailure {
+  width: fit-content !important;
+  background-color: var(--red-50) !important;
+  border-radius: 4px;
 }

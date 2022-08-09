@@ -105,7 +105,7 @@ export default function EnvironmentConfiguration({
   data,
   isEdit,
   context
-}: EnvironmentConfigurationProps) {
+}: EnvironmentConfigurationProps): JSX.Element {
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & EnvironmentPathProps>()
@@ -149,6 +149,7 @@ export default function EnvironmentConfiguration({
         ...yamlVisual
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [yamlHandler])
 
   const handleModeSwitch = useCallback(
@@ -168,6 +169,7 @@ export default function EnvironmentConfiguration({
       }
       setSelectedView(view)
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [yamlHandler?.getLatestYaml, data]
   )
 
@@ -240,7 +242,13 @@ export default function EnvironmentConfiguration({
             id="variables"
           >
             <Container width={'40%'} padding={{ top: 'small' }} margin={{ bottom: 'large' }}>
-              <NameIdDescriptionTags formikProps={formikProps} identifierProps={{ isIdentifierEditable: !isEdit }} />
+              <NameIdDescriptionTags
+                formikProps={formikProps}
+                identifierProps={{ isIdentifierEditable: !isEdit }}
+                inputGroupProps={{ disabled: !canEdit }}
+                descriptionProps={{ disabled: !canEdit }}
+                tagsProps={{ disabled: !canEdit }}
+              />
             </Container>
             <Text
               color={Color.GREY_450}
@@ -249,7 +257,7 @@ export default function EnvironmentConfiguration({
             >
               {getString('envType')}
             </Text>
-            <ThumbnailSelect className={css.thumbnailSelect} name={'type'} items={typeList} />
+            <ThumbnailSelect className={css.thumbnailSelect} name={'type'} items={typeList} isReadonly={!canEdit} />
           </Card>
           {/* #region Advanced section */}
           {data?.data && (
@@ -283,7 +291,7 @@ export default function EnvironmentConfiguration({
                           MultiTypeInputType.RUNTIME,
                           MultiTypeInputType.EXPRESSION
                         ]}
-                        readonly={false}
+                        readonly={!canEdit}
                         onUpdate={values => {
                           formikProps.setFieldValue('variables', values.variables)
                         }}

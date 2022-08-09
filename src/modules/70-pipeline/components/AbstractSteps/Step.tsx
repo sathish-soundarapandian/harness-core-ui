@@ -72,6 +72,7 @@ export function setFormikRef<T = unknown, U = unknown>(ref: StepFormikFowardRef<
 export abstract class Step<T> {
   protected abstract type: StepType
   protected abstract defaultValues: T
+  protected referenceId?: string
   protected abstract stepIcon: IconName
   protected stepIconColor?: string
   protected stepIconSize?: number
@@ -99,6 +100,10 @@ export abstract class Step<T> {
 
   getIsHarnessSpecific(): boolean {
     return this.isHarnessSpecific
+  }
+
+  getReferenceId(): string | undefined {
+    return this.referenceId
   }
 
   getIconName(): IconName {

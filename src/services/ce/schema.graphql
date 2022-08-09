@@ -154,6 +154,7 @@ type CCMMetaData {
   inventoryDataPresent: Boolean!
   isSampleClusterPresent: Boolean!
   k8sClusterConnectorPresent: Boolean!
+  showCostOverview: Boolean!
 }
 
 type ClusterData {
@@ -542,6 +543,8 @@ type Query {
   recommendationsV2(
     filter: K8sRecommendationFilterDTOInput = { limit: 10, minSaving: 0.0, offset: 0 }
   ): RecommendationsDTO
+  "Labels for workloads"
+  workloadLabels(filters: [QLCEViewFilterWrapperInput], workloads: [String]): Map_String_Map_String_StringScalar
 }
 
 type RecommendClusterRequest {
@@ -759,6 +762,7 @@ enum QLCEViewFilterOperator {
   NOT_IN
   NOT_NULL
   NULL
+  SEARCH
 }
 
 enum QLCEViewSortType {

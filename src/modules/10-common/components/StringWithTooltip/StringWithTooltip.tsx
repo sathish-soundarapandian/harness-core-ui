@@ -14,6 +14,7 @@ import css from './StringWithTooltip.module.scss'
 export interface StringWithTooltipProps extends React.HTMLAttributes<HTMLSpanElement> {
   stringId: StringKeys
   tooltipId: string
+  stringIdVars?: Record<string, any>
   className?: string
 }
 
@@ -21,13 +22,14 @@ const StringWithTooltip = ({
   stringId,
   tooltipId,
   className = '',
+  stringIdVars,
   ...otherProps
 }: StringWithTooltipProps): ReactElement => {
   const { getString } = useStrings()
 
   return (
     <span className={cx(css.align, className)} {...otherProps} data-tooltip-id={tooltipId}>
-      {getString(stringId)}
+      {getString(stringId, stringIdVars)}
       <HarnessDocTooltip tooltipId={tooltipId} useStandAlone />
     </span>
   )

@@ -166,6 +166,11 @@ export class CommandScriptsStep extends PipelineStep<CommandScriptsData> {
     type: StepType.Command,
     spec: {
       onDelegate: false
+    },
+    strategy: {
+      repeat: {
+        items: '<+stage.output.hosts>' as any // used any because BE needs string variable while they can not change type
+      }
     }
   }
 

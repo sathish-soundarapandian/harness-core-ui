@@ -7,9 +7,8 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import cx from 'classnames'
 
-import { Button, ButtonSize, ButtonVariation, Container, Dialog, Page } from '@harness/uicore'
+import { ButtonSize, ButtonVariation, Container, ModalDialog, Page } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 
 import { useGetInfrastructureList } from 'services/cd-ng'
@@ -19,19 +18,22 @@ import type { EnvironmentPathProps, ProjectPathProps } from '@common/interfaces/
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import RbacButton from '@rbac/components/Button/Button'
 
 import InfrastructureList from './InfrastructureList/InfrastructureList'
 import InfrastructureModal from './InfrastructureModal'
 
 import css from './InfrastructureDefinition.module.scss'
 
-export default function InfrastructureDefinition() {
+export default function InfrastructureDefinition(): JSX.Element {
   const { accountId, orgIdentifier, projectIdentifier, environmentIdentifier } = useParams<
     ProjectPathProps & EnvironmentPathProps
   >()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
-  const [infrastructureToEdit, setInfrastructureToEdit] = useState<string | undefined>()
+  const [selectedInfrastructure, setSelectedInfrastructure] = useState<string>('')
 
   const { data, loading, error, refetch } = useGetInfrastructureList({
     queryParams: {
@@ -42,37 +44,41 @@ export default function InfrastructureDefinition() {
     }
   })
 
-  useEffect(() => {
-    if (infrastructureToEdit) {
-      showModal()
-    }
-  }, [infrastructureToEdit])
+  const onClose = (): void => {
+    setSelectedInfrastructure('')
+    hideModal()
+  }
 
   const [showModal, hideModal] = useModalHook(
     () => (
-      <Dialog
+      <ModalDialog
         isOpen
         isCloseButtonShown
         canEscapeKeyClose
         canOutsideClickClose
         enforceFocus={false}
-        onClose={() => {
-          setInfrastructureToEdit('')
-          hideModal()
-        }}
-        title={getString('cd.infrastructure.createNew')}
-        className={cx('padded-dialog', css.dialogStyles)}
+        onClose={onClose}
+        title={selectedInfrastructure ? getString('cd.infrastructure.edit') : getString('cd.infrastructure.createNew')}
+        width={1128}
+        height={840}
+        className={css.dialogStyles}
       >
         <InfrastructureModal
-          hideModal={hideModal}
+          hideModal={onClose}
           refetch={refetch}
-          infrastructureToEdit={infrastructureToEdit}
-          setInfrastructureToEdit={setInfrastructureToEdit}
+          environmentIdentifier={environmentIdentifier}
+          selectedInfrastructure={selectedInfrastructure}
         />
-      </Dialog>
+      </ModalDialog>
     ),
-    [refetch, infrastructureToEdit, setInfrastructureToEdit]
+    [refetch, selectedInfrastructure, setSelectedInfrastructure]
   )
+
+  useEffect(() => {
+    if (selectedInfrastructure) {
+      showModal()
+    }
+  }, [selectedInfrastructure, showModal])
 
   return (
     <Container padding={{ left: 'medium', right: 'medium' }}>
@@ -82,19 +88,25 @@ export default function InfrastructureDefinition() {
         <Page.Error>{getRBACErrorMessage(error)}</Page.Error>
       ) : (
         <>
-          <Button
+          <RbacButton
             text={getString('pipelineSteps.deploy.infrastructure.infraDefinition')}
             font={{ weight: 'bold' }}
             icon="plus"
             onClick={showModal}
             size={ButtonSize.SMALL}
             variation={ButtonVariation.LINK}
+            permission={{
+              resource: {
+                resourceType: ResourceType.ENVIRONMENT
+              },
+              permission: PermissionIdentifier.EDIT_ENVIRONMENT
+            }}
           />
           <InfrastructureList
             list={data?.data?.content}
             showModal={showModal}
             refetch={refetch}
-            setInfrastructureToEdit={setInfrastructureToEdit}
+            setSelectedInfrastructure={setSelectedInfrastructure}
           />
         </>
       )}

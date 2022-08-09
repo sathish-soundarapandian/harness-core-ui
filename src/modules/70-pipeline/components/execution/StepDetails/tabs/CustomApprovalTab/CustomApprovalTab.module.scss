@@ -29,17 +29,19 @@
       color: currentColor;
     }
   }
-
-  .customApproval-ticket {
-    margin: var(--spacing-large) 0;
-
-    & a {
-      margin-left: var(--spacing-xsmall);
-      color: var(--primary-7);
-    }
-  }
 }
 
 .custom-approval {
-  padding: var(--spacing-medium) var(--spacing-large);
+  padding: 0 var(--spacing-large) var(--spacing-medium);
+}
+
+.applyTopPadding {
+  padding-top: var(--spacing-medium);
+}
+
+.stepDetailsContainer {
+  > table {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
 }

@@ -8,7 +8,7 @@
 import React, { CSSProperties, useRef } from 'react'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
-import { Icon, IconName, Text, Layout } from '@wings-software/uicore'
+import { Icon, IconName, Text, Layout, Container } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
 import { DynamicPopover, DynamicPopoverHandlerBinding } from '@common/exports'
@@ -34,6 +34,7 @@ interface Node {
   id: string
   type: string
   status: string
+  isTemplateNode: boolean
 }
 function GroupNode(props: GroupNodeProps): React.ReactElement {
   const [selected, setSelected] = React.useState<boolean>(false)
@@ -56,7 +57,8 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
         identifier: props.identifier as string,
         id: props.id,
         type: props.type as string,
-        status: props.status as string
+        status: props.status as string,
+        isTemplateNode: !!props.data?.isTemplateNode
       }
 
       nodesArr = props?.children && props.children.length ? [firstNodeData, ...props.children] : [firstNodeData]
@@ -82,7 +84,8 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
         identifier: node.identifier,
         id: node.id,
         type: node.type,
-        status: node.status as string
+        status: node.status as string,
+        isTemplateNode: !!defaultTo((node as any)?.data?.isTemplateNode, node?.isTemplateNode)
       }
       if (isSelectedNode) {
         nodesFinal.unshift(nodeToBePushed)
@@ -127,11 +130,11 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
 
     const renderView = (node: Node): JSX.Element => {
       return (
-        <Layout.Horizontal
-          style={{ cursor: 'pointer' }}
-          spacing="small"
-          padding="small"
+        <Container
           key={node.identifier}
+          className={groupnodecss.stageRow}
+          background={node.isTemplateNode ? Color.PRIMARY_1 : undefined}
+          padding="small"
           onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
             event.stopPropagation()
             props?.fireEvent?.({
@@ -148,19 +151,24 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
             dynamicPopoverHandler?.hide()
           }}
         >
-          <Icon name={node.icon} />
-          <Text lineClamp={1} width={200}>
-            {node.name}
-          </Text>
-          {isExecutionView && <ExecutionStatusLabel status={node?.status as ExecutionStatus} />}
-        </Layout.Horizontal>
+          {node.isTemplateNode && (
+            <Icon name={'template-library'} size={6} className={groupnodecss.secondaryIcon} color={Color.PRIMARY_7} />
+          )}
+          <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} spacing="small">
+            <Icon name={node.icon} />
+            <Text lineClamp={1} width={200} font={{ weight: 'semi-bold', size: 'small' }} color={Color.GREY_800}>
+              {node.name}
+            </Text>
+            {isExecutionView && <ExecutionStatusLabel status={node?.status as ExecutionStatus} />}
+          </Layout.Horizontal>
+        </Container>
       )
     }
     return (
-      <div className={groupnodecss.nodelistpopover}>
+      <Layout.Vertical padding={'small'} spacing={'xsmall'} className={groupnodecss.nodelistpopover}>
         {runningStageList.length > 0 && runningStageList.map((node: Node) => renderView(node))}
         {restStageList.map((node: Node) => renderView(node))}
-      </div>
+      </Layout.Vertical>
     )
   }
 

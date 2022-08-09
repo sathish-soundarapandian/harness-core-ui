@@ -21,12 +21,15 @@ import {
   useToaster
 } from '@harness/uicore'
 import routes from '@common/RouteDefinitions'
-import { useQueryParams } from '@common/hooks'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useGetTemplateInputSetYaml } from 'services/template-ng'
 import { useSaveMonitoredServiceFromYaml } from 'services/cv'
+import { TemplateType } from '@templates-library/utils/templatesUtils'
+import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
+import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import DetailsBreadcrumb from '@cv/pages/monitored-service/views/DetailsBreadcrumb'
@@ -47,6 +50,8 @@ export default function MonitoredServiceInputSetsTemplate({
 }): JSX.Element {
   const { templateRef } = useQueryParams<{ templateRef?: string }>()
   const isReadOnlyInputSet = Boolean(templateData)
+  const { updateQueryParams } = useUpdateQueryParams()
+  const { getTemplate } = useTemplateSelector()
   const templateRefData: TemplateDataInterface = isReadOnlyInputSet ? templateData : JSON.parse(templateRef || '{}')
   const { getString } = useStrings()
   const history = useHistory()
@@ -141,6 +146,28 @@ export default function MonitoredServiceInputSetsTemplate({
       })
   }
 
+  const onUseTemplate = async (): Promise<void> => {
+    const { template } = await getTemplate({ templateType: TemplateType.MonitoredService })
+    const {
+      identifier: selectedTemplateIdentifier = '',
+      versionLabel: selectedTemplateVersionLabel = '',
+      accountId: selectedTemplateAccountId = '',
+      orgIdentifier: selectedTemplateOrgIdentifier = '',
+      projectIdentifier: selectedTemplateProjectIdentifier = ''
+    } = template
+    if (selectedTemplateVersionLabel && selectedTemplateIdentifier) {
+      updateQueryParams({
+        templateRef: JSON.stringify({
+          selectedTemplateIdentifier,
+          selectedTemplateVersionLabel,
+          selectedTemplateAccountId,
+          selectedTemplateOrgIdentifier,
+          selectedTemplateProjectIdentifier
+        })
+      })
+    }
+  }
+
   let content = <></>
   const healthSourcesWithRuntimeList = monitoredServiceInputSet?.sources?.healthSources?.map(
     healthSource => healthSource.identifier as string
@@ -155,8 +182,8 @@ export default function MonitoredServiceInputSetsTemplate({
     )
   } else if (!monitoredServiceInputSet || isEmpty(monitoredServiceInputSet)) {
     content = (
-      <Card>
-        <Layout.Vertical>
+      <>
+        <Layout.Vertical className={css.inputSetForm}>
           <Card className={css.cardStyle}>
             <NoResultsView minimal={true} text={getString('templatesLibrary.noInputsRequired')} />
           </Card>
@@ -175,7 +202,7 @@ export default function MonitoredServiceInputSetsTemplate({
             </Button>
           )}
         </Layout.Vertical>
-      </Card>
+      </>
     )
   } else if (monitoredServiceInputSet) {
     content = (
@@ -189,7 +216,15 @@ export default function MonitoredServiceInputSetsTemplate({
         {formik => {
           return (
             <>
-              <Layout.Vertical>
+              <Layout.Vertical className={css.inputSetForm}>
+                <TemplateBar
+                  className={css.cardStyle}
+                  templateLinkConfig={{
+                    templateRef: templateRefData?.identifier,
+                    versionLabel: templateRefData?.versionLabel
+                  }}
+                  onOpenTemplateSelector={onUseTemplate}
+                />
                 <ServiceEnvironmentInputSet
                   serviceValue={formik.values.serviceRef}
                   environmentValue={formik.values.environmentRef}

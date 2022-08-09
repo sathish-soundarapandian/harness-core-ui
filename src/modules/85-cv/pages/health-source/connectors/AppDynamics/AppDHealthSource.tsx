@@ -26,8 +26,8 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   useGetAppDynamicsApplications,
   useGetAppDynamicsTiers,
-  MetricPackDTO,
-  AppdynamicsValidationResponse
+  AppdynamicsValidationResponse,
+  TimeSeriesMetricPackDTO
 } from 'services/cv'
 import { Connectors } from '@connectors/constants'
 import { useStrings } from 'framework/strings'
@@ -37,6 +37,8 @@ import ValidationStatus from '@cv/pages/components/ValidationStatus/ValidationSt
 import MetricsVerificationModal from '@cv/components/MetricsVerificationModal/MetricsVerificationModal'
 import { StatusOfValidation } from '@cv/pages/components/ValidationStatus/ValidationStatus.constants'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import useGroupedSideNaveHook from '@cv/hooks/GroupedSideNaveHook/useGroupedSideNaveHook'
 import { getOptions, validateMetrics, createMetricDataFormik } from '../MonitoredServiceConnector.utils'
 import { HealthSoureSupportedConnectorTypes } from '../MonitoredServiceConnector.constants'
@@ -44,8 +46,10 @@ import {
   checkAppAndTierAreNotFixed,
   createAppDFormData,
   getAllowedTypes,
+  getIsMetricPacksSelected,
   initAppDCustomFormValue,
   initializeNonCustomFields,
+  persistCustomMetric,
   resetShowCustomMetric,
   setAppAndTierAsInputIfConnectorIsInput,
   setCustomFieldAndValidation,
@@ -60,6 +64,7 @@ import CustomMetric from '../../common/CustomMetric/CustomMetric'
 import AppDCustomMetricForm from './Components/AppDCustomMetricForm/AppDCustomMetricForm'
 import AppDApplications from './Components/AppDApplications/AppDApplications'
 import AppDynamicsTier from './Components/AppDynamicsTier/AppDynamicsTier'
+import AppDMetricThreshold from './Components/AppDMetricThreshold/AppDMetricThreshold'
 import css from './AppDHealthSource.module.scss'
 
 export default function AppDMonitoredSource({
@@ -78,7 +83,9 @@ export default function AppDMonitoredSource({
   const { getString } = useStrings()
   const { showError, clear } = useToaster()
 
-  const [selectedMetricPacks, setSelectedMetricPacks] = useState<MetricPackDTO[]>([])
+  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD)
+
+  const [selectedMetricPacks, setSelectedMetricPacks] = useState<TimeSeriesMetricPackDTO[]>([])
   const [validationResultData, setValidationResultData] = useState<AppdynamicsValidationResponse[]>()
   const [appDValidation, setAppDValidation] = useState<{
     status: string
@@ -221,12 +228,14 @@ export default function AppDMonitoredSource({
     mappedServicesAndEnvs: showCustomMetric ? appDynamicsData?.mappedServicesAndEnvs : new Map()
   })
 
-  const [nonCustomFeilds, setNonCustomFeilds] = useState(initializeNonCustomFields(appDynamicsData))
+  const [nonCustomFeilds, setNonCustomFeilds] = useState(() =>
+    initializeNonCustomFields(appDynamicsData, isMetricThresholdEnabled)
+  )
 
   const initPayload = useMemo(
     () =>
       createAppDFormData(appDynamicsData, mappedMetrics, selectedMetric, nonCustomFeilds, showCustomMetric, isTemplate),
-    [appDynamicsData, mappedMetrics, selectedMetric, nonCustomFeilds, showCustomMetric]
+    [appDynamicsData, mappedMetrics, selectedMetric, nonCustomFeilds, showCustomMetric, isTemplate]
   )
 
   useEffect(() => {
@@ -256,6 +265,7 @@ export default function AppDMonitoredSource({
     <Formik<AppDynamicsFomikFormInterface>
       enableReinitialize
       formName={'appDHealthSourceform'}
+      validateOnMount
       isInitialValid={(args: any) =>
         Object.keys(
           validateMapping({
@@ -263,7 +273,8 @@ export default function AppDMonitoredSource({
             createdMetrics: groupedCreatedMetricsList,
             selectedMetricIndex: groupedCreatedMetricsList.indexOf(selectedMetric),
             getString,
-            mappedMetrics
+            mappedMetrics,
+            isMetricThresholdEnabled
           })
         ).length === 0
       }
@@ -273,13 +284,22 @@ export default function AppDMonitoredSource({
           createdMetrics: groupedCreatedMetricsList,
           selectedMetricIndex: groupedCreatedMetricsList.indexOf(selectedMetric),
           getString,
-          mappedMetrics
+          mappedMetrics,
+          isMetricThresholdEnabled
         })
       }}
       initialValues={initPayload}
       onSubmit={noop}
     >
       {formik => {
+        // This is a temporary fix to persist data
+        persistCustomMetric({
+          mappedMetrics,
+          selectedMetric,
+          nonCustomFeilds,
+          formikValues: formik.values,
+          setMappedMetrics
+        })
         return (
           <FormikForm className={css.formFullheight}>
             <CardWithOuterTitle title={getString('cv.healthSource.connectors.AppDynamics.applicationsAndTiers')}>
@@ -414,20 +434,35 @@ export default function AppDMonitoredSource({
                 </Button>
               </CardWithOuterTitle>
             )}
+            {isMetricThresholdEnabled && getIsMetricPacksSelected(formik.values.metricData) && (
+              <AppDMetricThreshold
+                formikValues={formik.values}
+                groupedCreatedMetrics={groupedCreatedMetrics}
+                metricPacks={selectedMetricPacks}
+                setNonCustomFeilds={setNonCustomFeilds}
+              />
+            )}
+
             <DrawerFooter
               isSubmit
               onPrevious={onPrevious}
-              onNext={() =>
-                submitData(
-                  formik,
-                  mappedMetrics,
-                  selectedMetric,
-                  groupedCreatedMetricsList.indexOf(selectedMetric),
-                  groupedCreatedMetricsList,
-                  getString,
-                  onSubmit
-                )
-              }
+              onNext={() => {
+                // For showing validation error message purpose
+                formik.submitForm()
+
+                if (formik.isValid) {
+                  submitData(
+                    formik,
+                    mappedMetrics,
+                    selectedMetric,
+                    groupedCreatedMetricsList.indexOf(selectedMetric),
+                    groupedCreatedMetricsList,
+                    getString,
+                    onSubmit,
+                    isMetricThresholdEnabled
+                  )
+                }
+              }}
             />
           </FormikForm>
         )

@@ -2649,8 +2649,7 @@ exports[`Create Gitlab connector Wizard should be able to edit  usernamePassword
     >
        
       <div
-        class="Layout--vertical StyledProps--main secondStep stepContainer"
-        style="min-height: 460px; width: 60%;"
+        class="Layout--vertical StyledProps--main secondStep connectorModalMinHeight stepContainer"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
@@ -3231,8 +3230,7 @@ exports[`Create Gitlab connector Wizard should be able to edit ssh with API acce
     >
        
       <div
-        class="Layout--vertical StyledProps--main secondStep stepContainer"
-        style="min-height: 460px; width: 60%;"
+        class="Layout--vertical StyledProps--main secondStep connectorModalMinHeight stepContainer"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"

@@ -11,7 +11,7 @@ import type { FormikErrors } from 'formik'
 import { get, isEmpty } from 'lodash-es'
 import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import {
   getAzureResourceGroupsBySubscriptionPromise,
   getAzureSubscriptionsPromise,
@@ -27,6 +27,7 @@ import { ModuleName } from 'framework/types/ModuleName'
 import { Connectors } from '@connectors/constants'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
+import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
 import {
   AzureInfrastructureSpecEditableProps,
@@ -35,10 +36,27 @@ import {
   resourceGroupLabel
 } from './SshWinRmAzureInfrastructureInterface'
 import { AzureInfrastructureSpecForm } from './SshWinRmAzureInfrastructureForm'
+import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 const logger = loggerFor(ModuleName.CD)
 
 const yamlErrorMessage = 'cd.parsingYamlError'
+
+const AzureInfrastructureSpecVariablesForm: React.FC<AzureInfrastructureSpecEditableProps> = ({
+  metadataMap,
+  variablesData,
+  initialValues
+}) => {
+  const infraVariables = variablesData?.infrastructureDefinition?.spec
+  return infraVariables ? (
+    /* istanbul ignore next */ <VariablesListTable
+      data={infraVariables}
+      originalData={initialValues?.infrastructureDefinition?.spec || initialValues}
+      metadataMap={metadataMap}
+      className={pipelineVariableCss.variablePaddingL1}
+    />
+  ) : null
+}
 
 interface AzureInfrastructureSpecStep extends SshWinRmAzureInfrastructure {
   name?: string
@@ -59,7 +77,8 @@ export class SshWinRmAzureInfrastructureSpec extends PipelineStep<AzureInfrastru
     subscriptionId: '',
     resourceGroup: '',
     tags: {},
-    usePublicDns: false
+    usePublicDns: false,
+    allowSimultaneousDeployments: false
   }
 
   protected stepIcon: IconName = 'microsoft-azure'
@@ -213,7 +232,7 @@ export class SshWinRmAzureInfrastructureSpec extends PipelineStep<AzureInfrastru
     getString
   }: ValidateInputSetProps<SshWinRmAzureInfrastructure>): FormikErrors<SshWinRmAzureInfrastructure> {
     const errors: Partial<SshWinRmAzureInfrastructureTemplate> = {}
-    if (isEmpty(data.sshKey)) {
+    if (isEmpty(data.credentialsRef)) {
       errors.credentialsRef = getString?.('common.validation.fieldIsRequired', { name: getString('connector') })
     }
     if (isEmpty(data.connectorRef)) {
@@ -229,7 +248,20 @@ export class SshWinRmAzureInfrastructureSpec extends PipelineStep<AzureInfrastru
   }
 
   renderStep(props: StepProps<SshWinRmAzureInfrastructure>): JSX.Element {
-    const { initialValues, onUpdate, stepViewType, customStepProps, readonly, allowableTypes } = props
+    const { initialValues, onUpdate, stepViewType, customStepProps, readonly, allowableTypes, inputSetData } = props
+
+    if (stepViewType === StepViewType.InputVariable) {
+      return (
+        <AzureInfrastructureSpecVariablesForm
+          onUpdate={onUpdate}
+          stepViewType={stepViewType}
+          template={inputSetData?.template as SshWinRmAzureInfrastructureTemplate}
+          {...(customStepProps as AzureInfrastructureSpecEditableProps)}
+          initialValues={initialValues}
+        />
+      )
+    }
+
     return (
       <AzureInfrastructureSpecForm
         onUpdate={onUpdate}

@@ -127,7 +127,7 @@ exports[`Validate HealthSourceInputsetForm should render HealthSourceInputsetFor
             class="Tooltip--acenter"
             data-tooltip-id="wrapperComponent_sources.healthSources.0.spec.tierName"
           >
-            cv.healthSource.connectors.AppDynamics.trierLabel
+            cv.monitoringSources.appD.tierName
           </span>
            
           <span
@@ -170,7 +170,7 @@ exports[`Validate HealthSourceInputsetForm should render HealthSourceInputsetFor
             class="Tooltip--acenter"
             data-tooltip-id="wrapperComponent_sources.healthSources.0.spec.applicationName"
           >
-            cv.healthSource.connectors.AppDynamics.applicationLabel
+            cv.monitoringSources.appD.applicationName
           </span>
            
           <span
@@ -325,7 +325,7 @@ exports[`Validate HealthSourceInputsetForm should render HealthSourceInputsetFor
             class="Tooltip--acenter"
             data-tooltip-id="wrapperComponent_sources.healthSources.1.spec.tierName"
           >
-            cv.healthSource.connectors.AppDynamics.trierLabel
+            cv.monitoringSources.appD.tierName
           </span>
            
           <span
@@ -368,7 +368,7 @@ exports[`Validate HealthSourceInputsetForm should render HealthSourceInputsetFor
             class="Tooltip--acenter"
             data-tooltip-id="wrapperComponent_sources.healthSources.1.spec.applicationName"
           >
-            cv.healthSource.connectors.AppDynamics.applicationLabel
+            cv.monitoringSources.appD.applicationName
           </span>
            
           <span
@@ -419,7 +419,7 @@ exports[`Validate HealthSourceInputsetForm should render HealthSourceInputsetFor
               class="Tooltip--acenter"
               data-tooltip-id="wrapperComponent_sources.healthSources.1.spec.metricDefinitions.0.completeMetricPath"
             >
-              cv.healthSource.connectors.AppDynamics.metricPathType.text
+              cv.monitoringSources.appD.completeMetricPath
             </span>
              
             <span

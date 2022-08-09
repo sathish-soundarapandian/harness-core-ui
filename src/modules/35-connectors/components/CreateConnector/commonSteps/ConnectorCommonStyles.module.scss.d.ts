@@ -12,6 +12,7 @@ declare const styles: {
   readonly bottomMargin4: string
   readonly bottomMargin5: string
   readonly bottomPadding1: string
+  readonly connectorModalMinHeight: string
   readonly fullHeight: string
   readonly fullHeightDivsWithFlex: string
   readonly label: string

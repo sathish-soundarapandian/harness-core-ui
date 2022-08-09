@@ -10,7 +10,6 @@ declare const styles: {
   readonly bodyWrapper: string
   readonly count: string
   readonly disabledMode: string
-  readonly excludeSideNavOverlay: string
   readonly header: string
   readonly limitWarningTooltipCtn: string
   readonly listContainer: string

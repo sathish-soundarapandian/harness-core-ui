@@ -110,7 +110,7 @@ export function executionStatusInfoToExecutionSummary(
 ): PipelineExecutionSummary {
   const cd = {
     serviceIdentifiers: info.serviceInfoList,
-    envIdentifiers: info.environmentInfoList?.map(item => item.envName) as string[]
+    envIdentifiers: info.environmentInfoList
   }
 
   const branch = get(info, 'gitInfo.targetBranch')
@@ -227,7 +227,7 @@ export const CDDashboardPage: React.FC = () => {
 
   useEffect(() => {
     setShowOverviewDialog(!pipelineExecutionSummary?.content?.length)
-  }, [projectIdentifier])
+  }, [pipelineExecutionSummary])
 
   if (loadingWorkloads || pipelineLoading) {
     return (

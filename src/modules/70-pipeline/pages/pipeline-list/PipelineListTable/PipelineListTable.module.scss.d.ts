@@ -9,11 +9,15 @@
 declare const styles: {
   readonly actionButton: string
   readonly avatar: string
+  readonly draft: string
   readonly hidden: string
   readonly link: string
+  readonly pipelineNameCell: string
   readonly recentExecutions: string
+  readonly statusLabel: string
   readonly storeTypeColumn: string
   readonly storeTypeColumnContainer: string
   readonly table: string
+  readonly tableRow: string
 }
 export default styles

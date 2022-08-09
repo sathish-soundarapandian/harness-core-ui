@@ -8,7 +8,7 @@
 import React, { useEffect, useMemo, useState, useCallback, useRef } from 'react'
 import { Container, Tab, Tabs, PageError, Views } from '@wings-software/uicore'
 import { useHistory, useParams, matchPath } from 'react-router-dom'
-import { defaultTo, isEqual, omit } from 'lodash-es'
+import { defaultTo, isEmpty, isEqual, omit } from 'lodash-es'
 import { parse } from 'yaml'
 import type { FormikProps } from 'formik'
 import { useQueryParams } from '@common/hooks'
@@ -153,26 +153,34 @@ export default function Configurations(
         changeSource['category'] = ChangeSourceCategoryName.DEPLOYMENT as ChangeSourceDTO['category']
         changeSource['spec'] = {}
       })
-      setDefaultMonitoredService(prevService => {
-        if (!prevService) {
-          return monitoredService
+
+      if (isTemplate) {
+        if (templateValue?.spec?.sources && isEmpty(templateValue?.spec?.sources?.changeSources)) {
+          templateValue.spec.sources['changeSources'] = monitoredService.sources?.changeSources
         }
-        const currSources = prevService.sources?.changeSources || []
-        return {
-          ...prevService,
-          sources: {
-            changeSources: currSources.concat(monitoredService.sources?.changeSources || []),
-            healthSources: prevService.sources?.healthSources || []
+        updateTemplate?.(templateValue?.spec as MonitoredServiceForm)
+      } else {
+        setDefaultMonitoredService(prevService => {
+          if (!prevService) {
+            return monitoredService
           }
-        }
-      })
+          const currSources = prevService.sources?.changeSources || []
+          return {
+            ...prevService,
+            sources: {
+              changeSources: currSources.concat(monitoredService.sources?.changeSources || []),
+              healthSources: prevService.sources?.healthSources || []
+            }
+          }
+        })
+      }
     }
   }, [yamlMonitoredService])
 
   useEffect(() => {
     if (identifier) {
       fetchMonitoredService()
-    } else {
+    } else if ((isTemplate && templateIdentifier === DefaultNewTemplateId) || (!isTemplate && !identifier)) {
       fetchMonitoredServiceYAML()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -181,11 +189,10 @@ export default function Configurations(
   const initialValues: MonitoredServiceForm = useMemo(
     () =>
       getInitFormData(
-        dataMonitoredServiceById?.data?.monitoredService,
         defaultMonitoredService,
         isTemplate ? templateIdentifier !== DefaultNewTemplateId : !!identifier,
         isTemplate,
-        templateValue
+        isTemplate ? templateValue : dataMonitoredServiceById?.data?.monitoredService
       ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [

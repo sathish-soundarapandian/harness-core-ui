@@ -265,7 +265,7 @@ const FoldersPage: React.FC = () => {
       <Layout.Vertical className={css.foldersContent}>
         <Layout.Horizontal padding={{ top: 'large', right: 'xxxlarge', bottom: 'large', left: 'xxxlarge' }}>
           <ExpandingSearchInput
-            placeholder={getString('dashboards.homePage.searchPlaceholder')}
+            placeholder={getString('common.searchByNamePlaceholder')}
             onChange={(text: string) => {
               setSearchTerm(text)
             }}

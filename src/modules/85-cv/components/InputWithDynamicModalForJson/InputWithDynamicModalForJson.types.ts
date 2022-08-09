@@ -20,6 +20,7 @@ export interface InputWithDynamicModalForJsonProps {
   fieldValue: string
   showExactJsonPath?: boolean
   dataTooltipId?: string
+  isMultiType?: boolean
 }
 
 export const DialogProps: IDialogProps = {

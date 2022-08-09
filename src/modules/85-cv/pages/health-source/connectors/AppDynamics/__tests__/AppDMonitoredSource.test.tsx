@@ -7,9 +7,10 @@
 
 import React from 'react'
 import * as uuid from 'uuid'
-import { fireEvent, render, waitFor, act } from '@testing-library/react'
+import { fireEvent, render, waitFor, act, screen } from '@testing-library/react'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { Connectors } from '@connectors/constants'
+import * as useFeatureFlagMock from '@common/hooks/useFeatureFlag'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import routes from '@common/RouteDefinitions'
@@ -23,7 +24,8 @@ import {
   metricPack,
   validationData,
   onPreviousPayload,
-  onSubmitPayload
+  onSubmitPayload,
+  appDynamicsDataFull
 } from './AppDMonitoredSource.mock'
 import AppDMonitoredSource from '../AppDHealthSource'
 
@@ -37,6 +39,7 @@ const createModeProps: TestWrapperProps = {
 }
 
 jest.mock('uuid')
+jest.mock('@common/hooks/useFeatureFlag')
 
 const onNextMock = jest.fn().mockResolvedValue(jest.fn())
 const onPrevious = jest.fn().mockResolvedValue(jest.fn())
@@ -68,6 +71,7 @@ describe('Unit tests for createAppd monitoring source', () => {
   const refetchMock = jest.fn()
 
   beforeAll(() => {
+    beforeEach(() => jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true))
     jest
       .spyOn(cvServices, 'useGetAppDynamicsTiers')
       .mockImplementation(() => ({ loading: false, error: null, data: appTier, refetch: refetchMock } as any))
@@ -179,5 +183,65 @@ describe('Unit tests for createAppd monitoring source', () => {
     })
 
     await waitFor(() => expect(getByText('cv.healthSource.connectors.AppDynamics.validation.application')).toBeTruthy())
+  })
+
+  describe('Metric thresholds', () => {
+    beforeEach(() => {
+      jest.mock('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs', () => ({
+        ...(jest.requireActual('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs') as any),
+        get SetupSourceTabsContext() {
+          return React.createContext({
+            tabsInfo: [],
+            sourceData: { sourceType: Connectors.APP_DYNAMICS },
+            onNext: onNextMock,
+            onPrevious: onPrevious
+          })
+        }
+      }))
+    })
+    test('should render metric thresholds', async () => {
+      const submitData = jest.fn()
+      const { container } = render(
+        <TestWrapper {...createModeProps}>
+          <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
+            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+            {/* @ts-ignore */}
+            <AppDMonitoredSource data={appDynamicsDataFull} onSubmit={submitData} onPrevious={jest.fn()} />
+          </SetupSourceTabs>
+        </TestWrapper>
+      )
+
+      expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (0)')).toBeInTheDocument()
+      expect(screen.getByText('cv.monitoringSources.appD.failFastThresholds (0)')).toBeInTheDocument()
+
+      expect(container.querySelector("input[name='metricData.Errors']")).toBeChecked()
+      expect(container.querySelector("input[name='metricData.Performance']")).toBeChecked()
+
+      const addButton = screen.getByTestId('AddThresholdButton')
+
+      expect(addButton).toBeInTheDocument()
+
+      fireEvent.click(addButton)
+
+      expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (1)')).toBeInTheDocument()
+    })
+
+    test('should not render metric thresholds when feature flag is disabled', () => {
+      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(false)
+
+      const submitData = jest.fn()
+      render(
+        <TestWrapper {...createModeProps}>
+          <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
+            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+            {/* @ts-ignore */}
+            <AppDMonitoredSource data={appDynamicsDataFull} onSubmit={submitData} onPrevious={jest.fn()} />
+          </SetupSourceTabs>
+        </TestWrapper>
+      )
+
+      expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).not.toBeInTheDocument()
+      expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).not.toBeInTheDocument()
+    })
   })
 })

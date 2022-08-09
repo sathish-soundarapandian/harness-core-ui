@@ -678,7 +678,7 @@ export default function ArtifactsSelection({
       accountId={accountId}
       refetchConnectors={refetchConnectorList}
       isReadonly={readonly}
-      isAdditionAllowed={isAdditionAllowed(deploymentType, readonly)}
+      isAdditionAllowed={isAdditionAllowed(readonly)}
       isSidecarAllowed={isSidecarAllowed(deploymentType, readonly)}
     />
   )

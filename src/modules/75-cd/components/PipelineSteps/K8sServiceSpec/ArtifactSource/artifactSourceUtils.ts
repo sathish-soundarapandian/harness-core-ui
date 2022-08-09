@@ -7,9 +7,8 @@
 
 import { getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import type { FormikValues } from 'formik'
-import { get, isEmpty, unset, defaultTo } from 'lodash-es'
+import { get, isEmpty, unset } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
-import { parse } from 'yaml'
 import {
   PRIMARY_ARTIFACT,
   TriggerDefaultFieldList,
@@ -24,9 +23,7 @@ import type {
   GcrBuildDetailsDTO,
   NexusBuildDetailsDTO
 } from 'services/cd-ng'
-import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { checkIfQueryParamsisNotEmpty, RegistryHostNames } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
-import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 
 export const DefaultParam = 'defaultParam'
@@ -192,9 +189,9 @@ export function getFqnPath(
     return `pipeline.stages.${stageIdentifier}.spec.service.serviceInputs.serviceDefinition.spec.artifacts.${artifactPath}.spec.${fieldName}`
   } else {
     if (isPropagatedStage) {
-      return `pipeline.stages.${stageIdentifier}.spec.serviceConfig.stageOverrides.artifacts.${artifactPath}.spec..${fieldName}`
+      return `pipeline.stages.${stageIdentifier}.spec.serviceConfig.stageOverrides.artifacts.${artifactPath}.spec.${fieldName}`
     }
-    return `pipeline.stages.${stageIdentifier}.spec.serviceConfig.serviceDefinition.spec.artifacts.${artifactPath}.spec..${fieldName}`
+    return `pipeline.stages.${stageIdentifier}.spec.serviceConfig.serviceDefinition.spec.artifacts.${artifactPath}.spec.${fieldName}`
   }
 }
 
@@ -209,20 +206,8 @@ export function getConnectorRefFqnPath(
     return `pipeline.stages.${stageIdentifier}.spec.service.serviceInputs.serviceDefinition.spec.artifacts.${artifactPath}.spec.${fieldName}`
   } else {
     if (isPropagatedStage) {
-      return `pipeline.stages.${stageIdentifier}.spec.serviceConfig.stageOverrides.artifacts.${artifactPath}.spec..${fieldName}`
+      return `pipeline.stages.${stageIdentifier}.spec.serviceConfig.stageOverrides.artifacts.${artifactPath}.spec.${fieldName}`
     }
-    return `pipeline.stages.${stageIdentifier}.spec.serviceConfig.serviceDefinition.spec.artifacts.${artifactPath}.spec..${fieldName}`
+    return `pipeline.stages.${stageIdentifier}.spec.serviceConfig.serviceDefinition.spec.artifacts.${artifactPath}.spec.${fieldName}`
   }
 }
-
-export const getYamlData = (formikValues: Record<string, any>): PipelineInfoConfig =>
-  clearRuntimeInput(
-    parse(
-      defaultTo(
-        JSON.stringify({
-          pipeline: formikValues
-        }),
-        ''
-      )
-    )
-  )

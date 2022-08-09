@@ -33,6 +33,9 @@ import { useGetCommunity } from '@common/utils/utils'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
 import { FeatureFlag } from '@common/featureFlags'
+import { Sort, SortFields } from '@pipeline/pages/pipelines/PipelinesPage'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { SortOptionComponent } from '../ServicesList/ServicesList'
 import ServicesGridView from '../ServicesGridView/ServicesGridView'
 import ServicesListView from '../ServicesListView/ServicesListView'
 import { ServiceTabs } from '../utils/ServiceUtils'
@@ -46,6 +49,13 @@ export const ServicesListPage: React.FC = () => {
   const { showError } = useToaster()
   const { fetchDeploymentList } = useServiceStore()
   const history = useHistory()
+
+  const { preference: savedSortOption, setPreference: setSavedSortOption } = usePreferenceStore<string[] | undefined>(
+    PreferenceScope.USER,
+    'sortOptionManageService'
+  )
+
+  const [sort, setSort] = useState<string[]>(savedSortOption || [SortFields.LastModifiedAt, Sort.DESC])
 
   const [view, setView] = useState(Views.LIST)
   const [page, setPage] = useState(0)
@@ -147,13 +157,13 @@ export const ServicesListPage: React.FC = () => {
     ),
     [fetchDeploymentList, orgIdentifier, projectIdentifier, mode, isEdit, serviceDetails]
   )
-
   const queryParams: GetServiceListQueryParams = {
     accountIdentifier: accountId,
     orgIdentifier,
     projectIdentifier,
     size: 10,
-    page: page
+    page: page,
+    sort
   }
 
   const {
@@ -161,7 +171,8 @@ export const ServicesListPage: React.FC = () => {
     data: serviceList,
     refetch
   } = useGetServiceList({
-    queryParams
+    queryParams,
+    queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
 
   useEffect(() => {
@@ -192,8 +203,10 @@ export const ServicesListPage: React.FC = () => {
               setMode(SelectedView.VISUAL)
             }}
           />
-
-          <GridListToggle initialSelectedView={Views.LIST} onViewToggle={setView} />
+          <Layout.Horizontal className={css.sortClass}>
+            {SortOptionComponent({ setSavedSortOption, setSort, sort })}
+            <GridListToggle initialSelectedView={Views.LIST} onViewToggle={setView} />
+          </Layout.Horizontal>
         </Layout.Horizontal>
 
         <Layout.Vertical

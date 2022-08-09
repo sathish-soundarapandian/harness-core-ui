@@ -30,11 +30,11 @@ import type {
 
 export type ReleaseRepoPipeline = PipelineInfoConfig & { gitOpsEnabled: boolean }
 
-export const isAllowedManifestDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
-  return (
-    deploymentType === ServiceDeploymentType.Kubernetes ||
-    deploymentType === ServiceDeploymentType.NativeHelm ||
-    deploymentType === ServiceDeploymentType.ServerlessAwsLambda
+export const isManifestAdditionAllowed = (deploymentType: ServiceDefinition['type']): boolean => {
+  return !(
+    deploymentType === ServiceDeploymentType.Ssh ||
+    deploymentType === ServiceDeploymentType.WinRm ||
+    deploymentType === ServiceDeploymentType.AzureWebApp
   )
 }
 
@@ -44,17 +44,13 @@ export const showAddManifestBtn = (
   listOfManifests: Array<any>,
   deploymentType?: ServiceDefinition['type']
 ): boolean => {
-  if (allowOnlyOne && listOfManifests.length === 1) {
+  if (allowOnlyOne && listOfManifests.length >= 1) {
     return false
   }
   if (deploymentType) {
-    return !isReadonly && isAllowedManifestDeploymentTypes(deploymentType)
+    return !isReadonly && isManifestAdditionAllowed(deploymentType)
   }
   return !isReadonly
-}
-
-export const isServerlessManifestType = (selectedManifest: ManifestTypes | null): boolean => {
-  return selectedManifest === ManifestDataType.ServerlessAwsLambda
 }
 
 export const ManifestDataType: Record<ManifestTypes, ManifestTypes> = {
@@ -125,8 +121,11 @@ export const gitStoreTypes: Array<ManifestStores> = [
   ManifestStoreMap.GitLab,
   ManifestStoreMap.Bitbucket
 ]
+
+export const gitStoreTypesWithHarnessStoreType: Array<ManifestStores> = [...gitStoreTypes, ManifestStoreMap.Harness]
+
 export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
-  K8sManifest: [...gitStoreTypes, ManifestStoreMap.Harness, ManifestStoreMap.CustomRemote],
+  K8sManifest: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.CustomRemote],
   Values: [
     ...gitStoreTypes,
     ManifestStoreMap.InheritFromManifest,
@@ -142,14 +141,14 @@ export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
     ManifestStoreMap.Harness,
     ManifestStoreMap.CustomRemote
   ],
-  OpenshiftTemplate: [...gitStoreTypes, ManifestStoreMap.Harness, ManifestStoreMap.CustomRemote],
+  OpenshiftTemplate: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.CustomRemote],
   OpenshiftParam: [
     ...gitStoreTypes,
     ManifestStoreMap.InheritFromManifest,
     ManifestStoreMap.Harness,
     ManifestStoreMap.CustomRemote
   ],
-  Kustomize: [...gitStoreTypes, ManifestStoreMap.Harness],
+  Kustomize: gitStoreTypesWithHarnessStoreType,
   KustomizePatches: [...gitStoreTypes, ManifestStoreMap.InheritFromManifest, ManifestStoreMap.Harness],
   ServerlessAwsLambda: gitStoreTypes
 }
@@ -320,5 +319,14 @@ export const getBuildPayload = (type: ConnectorInfoDTO['type']) => {
       return buildGitlabPayload
     default:
       return () => ({})
+  }
+}
+
+export const getManifestsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
+  switch (selectedDeploymentType) {
+    case ServiceDeploymentType.ServerlessAwsLambda:
+      return 'serverlessDeploymentTypeManifests'
+    default:
+      return 'deploymentTypeManifests'
   }
 }

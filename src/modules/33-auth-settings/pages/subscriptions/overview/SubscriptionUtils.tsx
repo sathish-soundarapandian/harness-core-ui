@@ -196,12 +196,13 @@ function getLicenseCountByModule({
     case ModuleName.CD: {
       const cdModuleLicenseDTO = licenseData as CDModuleLicenseDTO
       const workloads = cdModuleLicenseDTO?.workloads?.toLocaleString()
-      const serviceInstances = cdModuleLicenseDTO?.serviceInstances?.toLocaleString()
+      // # disabled reading serviceInstances as part of https://harness.atlassian.net/browse/PLG-1382
+      // const serviceInstances = cdModuleLicenseDTO?.serviceInstances?.toLocaleString()
       const cdLicenseType = cdModuleLicenseDTO?.cdLicenseType
       const serviceStr =
         cdLicenseType === CDLicenseType.SERVICES
-          ? getString('common.subscriptions.cd.services', { workloads: workloads })
-          : getString('common.subscriptions.cd.serviceInstances', { workloads: serviceInstances })
+          ? getString('common.subscriptions.cd.services', { workloads })
+          : getString('common.subscriptions.cd.serviceInstances', { workloads })
 
       return (
         <Layout.Vertical spacing="medium">

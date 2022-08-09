@@ -188,7 +188,9 @@ const VerifyOutOfClusterDelegate: React.FC<StepProps<VerifyOutOfClusterStepProps
       status: 'PROCESS'
     })
     useConnectorWizard({
-      helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
+      helpPanel: props.helpPanelReferenceId
+        ? { referenceId: props.helpPanelReferenceId, contentWidth: 1020 }
+        : undefined
     })
 
     const showCustomErrorHints = showCustomErrorSuggestion(props.type)

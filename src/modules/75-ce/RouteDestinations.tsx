@@ -33,6 +33,10 @@ import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTrailFactory'
 import type { ResourceDTO } from 'services/audit'
+import RbacFactory from '@rbac/factories/RbacFactory'
+import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { String as LocaleString } from 'framework/strings'
 import RecommendationFilters from '@ce/components/RecommendationFilters'
 import type { CCMUIAppCustomProps } from '@ce/interface/CCMUIApp.types'
 import CEHomePage from './pages/home/CEHomePage'
@@ -58,6 +62,87 @@ import formatCost from './utils/formatCost'
 import BusinessMapping from './pages/business-mapping/BusinessMapping'
 import ECSRecommendationDetailsPage from './pages/ecs-recommendation-details/ECSRecommendationDetailsPage'
 import OverviewAddCluster from './components/OverviewPage/OverviewAddCluster'
+import BIDashboard from './pages/bi-dashboards/BIDashboard'
+
+RbacFactory.registerResourceCategory(ResourceCategory.CLOUD_COSTS, {
+  icon: 'ccm-solid',
+  label: 'common.purpose.ce.continuous'
+})
+
+RbacFactory.registerResourceTypeHandler(ResourceType.CCM_OVERVIEW, {
+  icon: 'ccm-solid',
+  label: 'overview',
+  category: ResourceCategory.CLOUD_COSTS,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_CCM_OVERVIEW]: <LocaleString stringID="rbac.permissionLabels.view" />
+  }
+})
+
+RbacFactory.registerResourceTypeHandler(ResourceType.CCM_PERSPECTIVE, {
+  icon: 'ccm-solid',
+  label: 'ce.perspectives.sideNavText',
+  category: ResourceCategory.CLOUD_COSTS,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_CCM_PERSPECTIVE]: <LocaleString stringID="rbac.permissionLabels.view" />,
+    [PermissionIdentifier.EDIT_CCM_PERSPECTIVE]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+    [PermissionIdentifier.DELETE_CCM_PERSPECTIVE]: <LocaleString stringID="delete" />
+  }
+})
+
+RbacFactory.registerResourceTypeHandler(ResourceType.CCM_PERSPECTIVE_FOLDERS, {
+  icon: 'ccm-solid',
+  label: 'ce.perspectives.folders.customFolders',
+  category: ResourceCategory.CLOUD_COSTS,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_CCM_PERSPECTIVE_FOLDERS]: <LocaleString stringID="rbac.permissionLabels.view" />,
+    [PermissionIdentifier.EDIT_CCM_PERSPECTIVE_FOLDERS]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+    [PermissionIdentifier.DELETE_CCM_PERSPECTIVE_FOLDERS]: <LocaleString stringID="delete" />
+  }
+})
+
+RbacFactory.registerResourceTypeHandler(ResourceType.CCM_BUDGETS, {
+  icon: 'ccm-solid',
+  label: 'ce.budgets.sideNavText',
+  category: ResourceCategory.CLOUD_COSTS,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_CCM_BUDGET]: <LocaleString stringID="rbac.permissionLabels.view" />,
+    [PermissionIdentifier.EDIT_CCM_BUDGET]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+    [PermissionIdentifier.DELETE_CCM_BUDGET]: <LocaleString stringID="delete" />
+  }
+})
+
+RbacFactory.registerResourceTypeHandler(ResourceType.CCM_COST_CATEGORY, {
+  icon: 'ccm-solid',
+  label: 'ce.businessMapping.sideNavText',
+  category: ResourceCategory.CLOUD_COSTS,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_CCM_COST_CATEGORY]: <LocaleString stringID="rbac.permissionLabels.view" />,
+    [PermissionIdentifier.EDIT_CCM_COST_CATEGORY]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+    [PermissionIdentifier.DELETE_CCM_COST_CATEGORY]: <LocaleString stringID="delete" />
+  }
+})
+
+RbacFactory.registerResourceTypeHandler(ResourceType.AUTOSTOPPINGRULE, {
+  icon: 'ccm-solid',
+  label: 'ce.co.breadCrumb.rules',
+  category: ResourceCategory.CLOUD_COSTS,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_CCM_AUTOSTOPPING_RULE]: <LocaleString stringID="rbac.permissionLabels.view" />,
+    [PermissionIdentifier.EDIT_CCM_AUTOSTOPPING_RULE]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+    [PermissionIdentifier.DELETE_CCM_AUTOSTOPPING_RULE]: <LocaleString stringID="delete" />
+  }
+})
+
+RbacFactory.registerResourceTypeHandler(ResourceType.LOADBALANCER, {
+  icon: 'ccm-solid',
+  label: 'ce.co.accessPoint.loadbalancer',
+  category: ResourceCategory.CLOUD_COSTS,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_CCM_LOADBALANCER]: <LocaleString stringID="rbac.permissionLabels.view" />,
+    [PermissionIdentifier.EDIT_CCM_LOADBALANCER]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+    [PermissionIdentifier.DELETE_CCM_LOADBALANCER]: <LocaleString stringID="delete" />
+  }
+})
 
 featureFactory.registerFeaturesByModule('ce', {
   features: [FeatureIdentifier.PERSPECTIVES],
@@ -141,13 +226,38 @@ AuditTrailFactory.registerResourceHandler('PERSPECTIVE_BUDGET', {
 AuditTrailFactory.registerResourceHandler('PERSPECTIVE_REPORT', {
   moduleIcon: { name: 'ccm-solid' },
   moduleLabel: 'common.purpose.ce.continuous',
-  resourceLabel: 'ce.perspectives.reports.perspectiveReport'
+  resourceLabel: 'ce.perspectives.reports.perspectiveReport',
+  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+    const { accountIdentifier } = resourceScope
+    const perspectiveId = resource.labels?.RelatedPerspectiveId
+
+    if (perspectiveId) {
+      return routes.toPerspectiveDetails({
+        accountId: accountIdentifier,
+        perspectiveId: perspectiveId,
+        perspectiveName: perspectiveId
+      })
+    }
+    return undefined
+  }
 })
 
 AuditTrailFactory.registerResourceHandler('COST_CATEGORY', {
   moduleIcon: { name: 'ccm-solid' },
   moduleLabel: 'common.purpose.ce.continuous',
   resourceLabel: 'ce.businessMapping.costCategory'
+})
+
+AuditTrailFactory.registerResourceHandler('PERSPECTIVE_FOLDER', {
+  moduleIcon: { name: 'ccm-solid' },
+  moduleLabel: 'common.purpose.ce.continuous',
+  resourceLabel: 'ce.perspectives.folders.title',
+  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+    const { accountIdentifier } = resourceScope
+    return `${routes.toCEPerspectives({
+      accountId: accountIdentifier
+    })}?folderId="${resource.identifier}"`
+  }
 })
 
 const CESideNavProps: SidebarContext = {
@@ -552,6 +662,16 @@ const CERoutes: React.FC = () => {
         >
           <BusinessMapping />
         </RouteWithLayout>
+        <RouteWithLayout
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CESideNavProps}
+          path={routes.toCEDashboards({ ...accountPathProps })}
+          exact
+          pageName={PAGE_NAME.CEDashboards}
+        >
+          <BIDashboard />
+        </RouteWithLayout>
+
         <RouteWithLayout
           licenseRedirectData={licenseRedirectData}
           sidebarProps={CESideNavProps}

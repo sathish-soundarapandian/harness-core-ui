@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
-import { act, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
-import { TestWrapper } from '@common/utils/testUtils'
+import userEvent from '@testing-library/user-event'
+import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import { FeatureFlag } from '@common/featureFlags'
 import KustomizeWithGIT from '../KustomizeWithGIT'
 
 const props = {
@@ -140,14 +142,13 @@ describe('Kustomize with Git/ Github/Gitlab/Bitbucket tests', () => {
         <KustomizeWithGIT initialValues={initialValues} {...props} prevStepData={prevStepData} />
       </TestWrapper>
     )
-    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
     await act(async () => {
-      fireEvent.change(queryByNameAttribute('identifier')!, { target: { value: 'testidentifier' } })
-      fireEvent.change(queryByNameAttribute('gitFetchType')!, { target: { value: 'Branch' } })
-      fireEvent.change(queryByNameAttribute('branch')!, { target: { value: 'testBranch' } })
-      fireEvent.change(queryByNameAttribute('folderPath')!, { target: { value: 'test-path' } })
-      fireEvent.change(queryByNameAttribute('pluginPath')!, { target: { value: 'plugin-path' } })
-      fireEvent.change(queryByNameAttribute('repoName')!, { target: { value: 'repo-name' } })
+      fireEvent.change(queryByNameAttribute('identifier', container)!, { target: { value: 'testidentifier' } })
+      fireEvent.change(queryByNameAttribute('gitFetchType', container)!, { target: { value: 'Branch' } })
+      fireEvent.change(queryByNameAttribute('branch', container)!, { target: { value: 'testBranch' } })
+      fireEvent.change(queryByNameAttribute('folderPath', container)!, { target: { value: 'test-path' } })
+      fireEvent.change(queryByNameAttribute('pluginPath', container)!, { target: { value: 'plugin-path' } })
+      fireEvent.change(queryByNameAttribute('repoName', container)!, { target: { value: 'repo-name' } })
     })
     fireEvent.click(container.querySelector('button[type="submit"]')!)
     await waitFor(() => {
@@ -172,5 +173,64 @@ describe('Kustomize with Git/ Github/Gitlab/Bitbucket tests', () => {
         }
       })
     })
+  })
+
+  test('renders "Optimized Kustomize Manifest Collection" checkbox when feature flag is enabled', async () => {
+    const initialValues = {
+      identifier: '',
+      spec: {},
+      type: ManifestDataType.Kustomize,
+      branch: undefined,
+      commitId: undefined,
+      gitFetchType: 'Branch',
+      folderPath: '',
+      skipResourceVersioning: false,
+      repoName: '',
+      pluginPath: ''
+    }
+    const { container, getByTestId } = render(
+      <TestWrapper
+        defaultFeatureFlagValues={{
+          [FeatureFlag.NG_OPTIMIZE_FETCH_FILES_KUSTOMIZE]: true
+        }}
+      >
+        <KustomizeWithGIT {...props} initialValues={initialValues} />
+      </TestWrapper>
+    )
+
+    await act(async () => userEvent.click(getByTestId('advancedTitle-summary')))
+    expect(queryByNameAttribute('optimizedKustomizeManifestCollection', container)).toBeInTheDocument()
+  })
+
+  test('renders "Kustomize YAML Folder Path" input when feature flag is enabled and checkbox is selected', async () => {
+    const initialValues = {
+      identifier: '',
+      spec: {},
+      type: ManifestDataType.Kustomize,
+      branch: undefined,
+      commitId: undefined,
+      gitFetchType: 'Branch',
+      folderPath: '',
+      skipResourceVersioning: false,
+      repoName: '',
+      pluginPath: ''
+    }
+    const { container, getByTestId } = render(
+      <TestWrapper
+        defaultFeatureFlagValues={{
+          [FeatureFlag.NG_OPTIMIZE_FETCH_FILES_KUSTOMIZE]: true
+        }}
+      >
+        <KustomizeWithGIT {...props} initialValues={initialValues} />
+      </TestWrapper>
+    )
+
+    await act(async () => userEvent.click(getByTestId('advancedTitle-summary')))
+    expect(queryByNameAttribute('kustomizeYamlFolderPath', container)).toBeNull()
+
+    await act(async () =>
+      userEvent.click(container.querySelector('input[name="optimizedKustomizeManifestCollection"]')!)
+    )
+    expect(queryByNameAttribute('kustomizeYamlFolderPath', container)).toBeInTheDocument()
   })
 })

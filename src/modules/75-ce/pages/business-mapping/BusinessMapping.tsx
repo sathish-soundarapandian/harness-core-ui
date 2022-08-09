@@ -7,7 +7,6 @@
 
 import React, { useState } from 'react'
 import {
-  Button,
   Layout,
   PageBody,
   PageHeader,
@@ -27,17 +26,36 @@ import BusinessMappingBuilder from '@ce/components/BusinessMappingBuilder/Busine
 import BusinessMappingList from '@ce/components/BusinessMappingList/BusinessMappingList'
 import EmptyPage from '@ce/common/EmptyPage/EmptyPage'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import RbacButton from '@rbac/components/Button/Button'
+import HandleError from '@ce/components/PermissionError/PermissionError'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import PermissionError from '@ce/images/permission-error.svg'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { getToolTip } from '@ce/components/PerspectiveViews/PerspectiveMenuItems'
 
 const BusinessMappingPage: () => React.ReactElement = () => {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
   const [selectedBM, setSelectedBM] = useState<BusinessMapping>({})
-  const { data, loading, refetch } = useGetBusinessMappingList({ queryParams: { accountIdentifier: accountId } })
+  const { data, loading, error, refetch } = useGetBusinessMappingList({ queryParams: { accountIdentifier: accountId } })
   const { mutate: deleteBusinessMapping, loading: deleteLoading } = useDeleteBusinessMapping({
     queryParams: { accountIdentifier: accountId }
   })
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false)
   const { showError, showSuccess } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
+
+  const [canEdit] = usePermission(
+    {
+      resource: {
+        resourceType: ResourceType.CCM_COST_CATEGORY
+      },
+      permissions: [PermissionIdentifier.EDIT_CCM_COST_CATEGORY]
+    },
+    []
+  )
 
   useDocumentTitle(getString('ce.businessMapping.sideNavText'), true)
 
@@ -56,10 +74,16 @@ const BusinessMappingPage: () => React.ReactElement = () => {
         bottom: true
       }}
     >
-      <Button
+      <RbacButton
         icon="plus"
-        text={getString('ce.businessMapping.newButton')}
         intent="primary"
+        text={getString('ce.businessMapping.newButton')}
+        permission={{
+          permission: PermissionIdentifier.EDIT_CCM_COST_CATEGORY,
+          resource: {
+            resourceType: ResourceType.CCM_COST_CATEGORY
+          }
+        }}
         onClick={() => {
           setDrawerOpen(true)
         }}
@@ -104,6 +128,12 @@ const BusinessMappingPage: () => React.ReactElement = () => {
             subtitle={getString('ce.businessMapping.emptySubtitles')}
             buttonText={getString('ce.businessMapping.newButton')}
             buttonAction={() => setDrawerOpen(true)}
+            isBtnDisabled={!canEdit}
+            buttonTooltip={getToolTip(
+              canEdit,
+              PermissionIdentifier.EDIT_CCM_COST_CATEGORY,
+              ResourceType.CCM_COST_CATEGORY
+            )}
           />
           {NewCostCategoryDrawer}
         </PageBody>
@@ -136,16 +166,22 @@ const BusinessMappingPage: () => React.ReactElement = () => {
     <>
       <PageHeader breadcrumbs={<NGBreadcrumbs />} title={getString('ce.businessMapping.sideNavText')} />
       <PageBody loading={loading || deleteLoading}>
-        {ToolBar}
-        <Container padding="medium">
-          {businessMappingData.length ? (
-            <Text font={{ variation: FontVariation.H5 }}>
-              {getString('ce.common.totalCount', { count: businessMappingData.length })}
-            </Text>
-          ) : null}
-          <BusinessMappingList onEdit={onEdit} handleDelete={handleDelete} data={businessMappingData} />
-        </Container>
-        {NewCostCategoryDrawer}
+        {error ? (
+          <HandleError errorMsg={getRBACErrorMessage(error as RBACError)} imgSrc={PermissionError} />
+        ) : (
+          <>
+            {ToolBar}
+            <Container padding="medium">
+              {businessMappingData.length ? (
+                <Text font={{ variation: FontVariation.H5 }}>
+                  {getString('ce.common.totalCount', { count: businessMappingData.length })}
+                </Text>
+              ) : null}
+              <BusinessMappingList onEdit={onEdit} handleDelete={handleDelete} data={businessMappingData} />
+            </Container>
+            {NewCostCategoryDrawer}
+          </>
+        )}
       </PageBody>
     </>
   )

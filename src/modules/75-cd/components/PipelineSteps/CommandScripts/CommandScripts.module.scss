@@ -10,9 +10,9 @@
   justify-content: flex-start;
 }
 
-.textBox {
-  background-color: var(--white) !important;
-  padding: 0 var(--spacing-4) !important;
-  border: 1px solid var(--grey-200);
-  height: 32px;
+.commandUnitNumber {
+  padding: var(--spacing-2) var(--spacing-4);
+  background-color: var(--grey-200);
+  color: var(--grey-900);
+  font-size: var(--font-size-xsmall);
 }

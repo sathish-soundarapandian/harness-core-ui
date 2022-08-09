@@ -8,7 +8,6 @@
 import { Container, PageSpinner } from '@wings-software/uicore'
 import React from 'react'
 import { matchPath, useLocation, useParams } from 'react-router-dom'
-import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { Page } from '@common/exports'
 import { useMutateAsGet } from '@common/hooks'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
@@ -64,6 +63,18 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
     path: routes.toExecutions({ projectIdentifier, orgIdentifier, accountId, module })
   })
 
+  const isExecutionHistoryView = !!matchPath(location.pathname, {
+    path: routes.toPipelineDeploymentList({
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+      accountId,
+      module,
+      repoIdentifier,
+      branch
+    })
+  })
+
   const {
     data,
     initLoading,
@@ -74,7 +85,6 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
-      module,
       size: 20,
       pipelineIdentifier: pipelineIdentifier || pipelineIdentifierFromQueryParam,
       page: page ? page - 1 : 0,
@@ -83,7 +93,8 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
       status,
       branch,
       searchTerm,
-      ...(isGitSyncEnabled ? { repoIdentifier } : {})
+      ...(isGitSyncEnabled ? { repoIdentifier } : {}),
+      ...(!isExecutionHistoryView ? { module } : {})
     },
     queryParamStringifyOptions: {
       arrayFormat: 'repeat'
@@ -142,7 +153,6 @@ export function ExecutionList(props: ExecutionListProps): React.ReactElement {
           </ExecutionCompareProvider>
         </ExecutionListFilterContextProvider>
       </GitSyncStoreProvider>
-      <HelpPanel referenceId="ExecutionHistory" type={HelpPanelType.FLOATING_CONTAINER} />
     </>
   )
 }

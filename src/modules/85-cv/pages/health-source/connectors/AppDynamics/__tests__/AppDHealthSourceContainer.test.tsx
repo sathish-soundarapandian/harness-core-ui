@@ -6,10 +6,10 @@
  */
 
 import { createAppDynamicsData } from '../AppDHealthSource.utils'
-import { sourceData, expectedAppDynamicData } from './AppDMonitoredSource.mock'
+import { sourceData, expectedAppDynamicDataForContainer } from './AppDMonitoredSource.mock'
 
 describe('Test AppDynamics Utils', () => {
   test('Verify createAppDynamicsData', () => {
-    expect(createAppDynamicsData(sourceData)).toEqual(expectedAppDynamicData)
+    expect(createAppDynamicsData(sourceData)).toEqual(expectedAppDynamicDataForContainer)
   })
 })

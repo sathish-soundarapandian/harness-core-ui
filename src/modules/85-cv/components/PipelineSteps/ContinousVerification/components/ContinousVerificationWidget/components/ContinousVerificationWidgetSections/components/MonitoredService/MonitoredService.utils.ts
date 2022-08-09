@@ -28,7 +28,12 @@ export const isAnExpression = (value: string): boolean => {
 }
 
 export const getServiceIdFromStage = (stage: StageElementWrapper<DeploymentStageElementConfig>): string => {
-  return stage?.stage?.spec?.serviceConfig?.service?.identifier || stage?.stage?.spec?.serviceConfig?.serviceRef || ''
+  return (
+    stage?.stage?.spec?.serviceConfig?.service?.identifier ||
+    stage?.stage?.spec?.serviceConfig?.serviceRef ||
+    stage?.stage?.spec?.service?.serviceRef ||
+    ''
+  )
 }
 
 export function getServiceIdentifierFromStage(
@@ -52,6 +57,7 @@ export function getEnvironmentIdentifierFromStage(
   return (
     selectedStage?.stage?.spec?.infrastructure?.environment?.identifier ||
     selectedStage?.stage?.spec?.infrastructure?.environmentRef ||
+    selectedStage?.stage?.spec?.environment?.environmentRef ||
     ''
   )
 }

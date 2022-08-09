@@ -17,6 +17,7 @@ import { CEView, useUpdatePerspective, ViewPreferences } from 'services/ce'
 import routes from '@common/RouteDefinitions'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
+import { clusterInfoUtil } from '@ce/utils/perspectiveUtils'
 
 import css from './PerspectivePreferences.module.scss'
 
@@ -38,8 +39,7 @@ const PerspectivePreferences: React.FC<PerspectivePreferencesProps> = ({
 
   const [preferences, setPreferences] = useState<ViewPreferences | undefined>(perspectiveData.viewPreferences)
 
-  const isClusterDatasource =
-    perspectiveData.dataSources?.length === 1 && perspectiveData.dataSources.includes('CLUSTER')
+  const { isClusterOnly } = clusterInfoUtil(perspectiveData?.dataSources)
 
   const { mutate: updatePerspective } = useUpdatePerspective({
     queryParams: {
@@ -99,7 +99,7 @@ const PerspectivePreferences: React.FC<PerspectivePreferencesProps> = ({
             className={css.labelContainer}
             onChange={() => setPreferences(prevPref => ({ ...prevPref, includeOthers: !prevPref?.includeOthers }))}
           />
-          {isClusterDatasource ? (
+          {isClusterOnly ? (
             <>
               <Switch
                 large

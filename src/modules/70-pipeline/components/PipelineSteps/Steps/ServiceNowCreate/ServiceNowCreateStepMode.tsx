@@ -51,6 +51,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { ConnectorRefSchema } from '@common/utils/Validation'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import { ServiceNowTemplateFieldsRenderer } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowTemplateFieldRenderer'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import type { ServiceNowTicketTypeSelectOption } from '../ServiceNowApproval/types'
 import { getGenuineValue } from '../ServiceNowApproval/helper'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
@@ -547,7 +548,7 @@ function FormContent({
                                 disabled={isApprovalStepFieldDisabled(readonly)}
                                 multiTextInputProps={{
                                   allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                                    item => item !== MultiTypeInputType.RUNTIME
+                                    item => !isMultiTypeRuntime(item)
                                   ) as AllowedTypes,
                                   expressions
                                 }}

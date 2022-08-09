@@ -68,6 +68,20 @@ const routes = {
       })
     }
   ),
+  toDefaultSettings: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
+      const path = `resources/default-settings`
+      return getScopeBasedRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path
+      })
+    }
+  ),
+
   toUser: withAccountId(() => '/user'),
   toSubscriptions: withAccountId(({ moduleCard, tab }: SubscriptionQueryParams) => {
     const url = '/settings/subscriptions'
@@ -709,6 +723,10 @@ const routes = {
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/execution-list`
   ),
   toGetStartedWithCI: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/get-started`
+  ),
+  toGetStartedWithCD: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/get-started`
   ),
@@ -1567,6 +1585,7 @@ const routes = {
     ({ recommendation, recommendationName }: { recommendation: string; recommendationName: string }) =>
       `/ce/recommendations/ecs/${recommendation}/name/${recommendationName}/details`
   ),
+  toCEDashboards: withAccountId(() => '/ce/bi-dashboards'),
   /********************************************************************************************************************/
   toSTO: withAccountId(() => `/sto`),
   toSTOHome: withAccountId(() => `/sto/home`),
@@ -1612,11 +1631,19 @@ const routes = {
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
       `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/scenarios`
   ),
+  toChaosScenario: withAccountId(
+    ({ orgIdentifier, projectIdentifier, identifier }: Partial<ProjectPathProps> & { identifier: string }) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/scenarios/${identifier}`
+  ),
   toChaosHubs: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
       `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-hubs`
   ),
-  toChaosDelegate: withAccountId(
+  toChaosHub: withAccountId(
+    ({ orgIdentifier, projectIdentifier, identifier }: Partial<ProjectPathProps> & { identifier: string }) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-hubs/${identifier}`
+  ),
+  toChaosDelegates: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
       `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-delegates`
   )

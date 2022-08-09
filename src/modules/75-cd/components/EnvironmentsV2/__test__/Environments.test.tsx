@@ -75,11 +75,10 @@ describe('Environments V2 test', () => {
     const gridToggle = screen.getByTestId('grid-view')
     await waitFor(() => expect(gridToggle).toBeInTheDocument())
 
-    userEvent.click(gridToggle!)
+    userEvent.click(gridToggle)
     await waitFor(() => {
       expect(screen.getByText('Env 2')).toBeInTheDocument()
     })
-    expect(container).toMatchSnapshot()
   })
 
   test('view with no data', async () => {
@@ -94,7 +93,7 @@ describe('Environments V2 test', () => {
       )
     })
 
-    const { container } = render(
+    render(
       <TestWrapper
         path={routes.toEnvironment({
           ...projectPathProps,
@@ -112,7 +111,5 @@ describe('Environments V2 test', () => {
     await waitFor(() => {
       expect(screen.getByText('cd.noEnvironment.title')).toBeInTheDocument()
     })
-
-    expect(container).toMatchSnapshot()
   })
 })

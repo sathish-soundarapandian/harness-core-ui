@@ -11,6 +11,7 @@ declare const styles: {
   readonly errorText: string
   readonly listContainer: string
   readonly nameContainer: string
+  readonly permissionErrorWrapper: string
   readonly potentialEmissionCard: string
   readonly potentialReducedEmissionCard: string
 }

@@ -875,11 +875,16 @@ ceGcp:
     step1: 'Verifying GCP connector setup'
     error: 'Could not verify connectivity'
 pdc:
+  selectLabel: 'Select how you would like to define your list of hosts'
+  manuallyHosts: 'Manually enter host names'
+  uploadJson: 'Upload JSON file'
   hosts: 'Hosts'
+  hostsJson: 'JSON content'
   hostsRule: 'Enter JSON or comma separated list here'
   hostsUpload1: 'Drop JSON file here'
   hostsUpload2: 'or click to upload'
   errorUploading: 'Uploading file error'
+  errorParsingJsonFile: 'File format not supported. Please provide a valid json file.'
   editHosts: 'Edit hosts'
   testConnection:
     step1: 'Validating the PDC hosts connectivity'

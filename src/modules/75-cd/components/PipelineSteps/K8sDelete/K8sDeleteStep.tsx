@@ -53,6 +53,7 @@ import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/S
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import List from '@common/components/List/List'
 import type { StringsMap } from 'stringTypes'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './K8sDelete.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
@@ -341,7 +342,7 @@ function K8sDeleteDeployWidget(props: K8sDeleteProps, formikRef: StepFormikFowar
                                   expressions,
                                   textProps: { disabled: isDisabled },
                                   allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                                    item => item !== MultiTypeInputType.RUNTIME
+                                    item => !isMultiTypeRuntime(item)
                                   ) as AllowedTypes
                                 }}
                               />
@@ -417,7 +418,7 @@ function K8sDeleteDeployWidget(props: K8sDeleteProps, formikRef: StepFormikFowar
                                 multiTextInputProps={{
                                   expressions,
                                   allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                                    item => item !== MultiTypeInputType.RUNTIME
+                                    item => !isMultiTypeRuntime(item)
                                   ) as AllowedTypes,
                                   disabled: isDisabled
                                 }}
@@ -860,6 +861,7 @@ export class K8sDeleteStep extends PipelineStep<K8sDeleteFormData> {
   protected stepIcon: IconName = 'delete'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.K8sDelete'
   protected isHarnessSpecific = true
+  protected referenceId = 'k8sDeleteStep'
 
   protected defaultValues: K8sDeleteFormData = {
     identifier: '',

@@ -38,6 +38,7 @@ export enum StepType {
   Plugin = 'Plugin',
   Run = 'Run',
   GCR = 'BuildAndPushGCR',
+  ACR = 'BuildAndPushACR',
   PDC = 'Pdc',
   SshWinRmAws = 'SshWinRmAws',
   ECR = 'BuildAndPushECR',

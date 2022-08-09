@@ -6,6 +6,7 @@ rules:
         - microfrontends/*
         - '!microfrontends/ChildAppMounter'
         - modules/20-rbac/*
+        - modules/23-default-settings/*
         - modules/25-governance/*
         - modules/28-et/*
         - modules/30-delegates/*
@@ -30,6 +31,7 @@ rules:
         - modules/85-sto-steps/*
         - modules/90-gitops/*
         - '@rbac/*'
+        - '@default-settings/*'
         - '@governance/*'
         - '@et/*'
         - '@delegates/*'
@@ -55,11 +57,12 @@ rules:
         - '@gitops/*'
       paths:
         - lodash
+        - name: js-yaml
+          message: Please use methods from @common/utils/YamlHelperMethods instead of using js-yaml
         - name: yaml
           importNames:
             - stringify
-          message: Please use yamlStringify from @common/utils/YamlHelperMethods instead
-            of this
+          message: Please use yamlStringify from @common/utils/YamlHelperMethods instead of this
         - name: react-router
           message: import from "react-router-dom" instead
         - name: microfrontends

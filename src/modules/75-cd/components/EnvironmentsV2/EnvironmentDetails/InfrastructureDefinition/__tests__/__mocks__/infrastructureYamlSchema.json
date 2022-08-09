@@ -1,0 +1,346 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "type": "object",
+    "properties": { "infrastructureDefinition": { "$ref": "#/definitions/InfrastructureDefinitionConfig" } },
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+      "AwsInstanceFilter": {
+        "type": "object",
+        "properties": {
+          "tags": { "type": "object", "additionalProperties": { "type": "string" } },
+          "vpcs": { "type": "array", "items": { "type": "string" } }
+        },
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "AzureWebAppInfrastructure": {
+        "allOf": [
+          { "$ref": "#/definitions/Infrastructure" },
+          {
+            "type": "object",
+            "required": ["connectorRef", "deploymentSlot", "resourceGroup", "subscriptionId", "webApp"],
+            "properties": {
+              "connectorRef": { "type": "string", "minLength": 1 },
+              "deploymentSlot": { "type": "string", "minLength": 1 },
+              "resourceGroup": { "type": "string", "minLength": 1 },
+              "subscriptionId": { "type": "string", "minLength": 1 },
+              "targetSlot": { "type": "string" },
+              "webApp": { "type": "string", "minLength": 1 }
+            }
+          }
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "Infrastructure": {
+        "type": "object",
+        "discriminator": "type",
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "InfrastructureConfig": {
+        "type": "object",
+        "properties": { "infrastructureDefinition": { "$ref": "#/definitions/InfrastructureDefinitionConfig" } },
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "InfrastructureDefinitionConfig": {
+        "type": "object",
+        "required": ["identifier", "name", "spec", "type", "orgIdentifier", "projectIdentifier"],
+        "properties": {
+          "allowSimultaneousDeployments": { "type": "boolean" },
+          "description": { "type": "string" },
+          "environmentRef": { "type": "string" },
+          "identifier": { "type": "string", "pattern": "^[a-zA-Z_][0-9a-zA-Z_$]{0,63}$" },
+          "name": { "type": "string", "pattern": "^[a-zA-Z_][-0-9a-zA-Z_\\s]{0,63}$" },
+          "orgIdentifier": { "type": "string", "const": "default" },
+          "projectIdentifier": { "type": "string", "const": "Ashwin_svc_env" },
+          "tags": { "type": "object", "additionalProperties": { "type": "string" } },
+          "type": {
+            "type": "string",
+            "enum": [
+              "KubernetesDirect",
+              "KubernetesGcp",
+              "KubernetesAzure",
+              "Pdc",
+              "SshWinRmAzure",
+              "ServerlessAwsLambda",
+              "AzureWebApp",
+              "SshWinRmAws"
+            ]
+          }
+        },
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "allOf": [
+          {
+            "if": { "properties": { "type": { "const": "AzureWebApp" } } },
+            "then": { "properties": { "spec": { "$ref": "#/definitions/AzureWebAppInfrastructure" } } }
+          },
+          {
+            "if": { "properties": { "type": { "const": "KubernetesAzure" } } },
+            "then": { "properties": { "spec": { "$ref": "#/definitions/K8sAzureInfrastructure" } } }
+          },
+          {
+            "if": { "properties": { "type": { "const": "KubernetesDirect" } } },
+            "then": { "properties": { "spec": { "$ref": "#/definitions/K8SDirectInfrastructure" } } }
+          },
+          {
+            "if": { "properties": { "type": { "const": "KubernetesGcp" } } },
+            "then": { "properties": { "spec": { "$ref": "#/definitions/K8sGcpInfrastructure" } } }
+          },
+          {
+            "if": { "properties": { "type": { "const": "Pdc" } } },
+            "then": { "properties": { "spec": { "$ref": "#/definitions/PdcInfrastructure" } } }
+          },
+          {
+            "if": { "properties": { "type": { "const": "ServerlessAwsLambda" } } },
+            "then": { "properties": { "spec": { "$ref": "#/definitions/ServerlessAwsLambdaInfrastructure" } } }
+          },
+          {
+            "if": { "properties": { "type": { "const": "SshWinRmAws" } } },
+            "then": { "properties": { "spec": { "$ref": "#/definitions/SshWinRmAwsInfrastructure" } } }
+          },
+          {
+            "if": { "properties": { "type": { "const": "SshWinRmAzure" } } },
+            "then": { "properties": { "spec": { "$ref": "#/definitions/SshWinRmAzureInfrastructure" } } }
+          }
+        ]
+      },
+      "K8SDirectInfrastructure": {
+        "allOf": [
+          { "$ref": "#/definitions/Infrastructure" },
+          {
+            "type": "object",
+            "required": ["connectorRef", "namespace", "releaseName"],
+            "properties": {
+              "connectorRef": { "type": "string", "minLength": 1 },
+              "namespace": { "type": "string", "minLength": 1 },
+              "releaseName": { "type": "string", "minLength": 1 }
+            }
+          }
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "K8sAzureInfrastructure": {
+        "allOf": [
+          { "$ref": "#/definitions/Infrastructure" },
+          {
+            "type": "object",
+            "required": ["cluster", "connectorRef", "namespace", "releaseName", "resourceGroup", "subscriptionId"],
+            "properties": {
+              "cluster": { "type": "string", "minLength": 1 },
+              "connectorRef": { "type": "string", "minLength": 1 },
+              "namespace": { "type": "string", "minLength": 1 },
+              "releaseName": { "type": "string", "minLength": 1 },
+              "resourceGroup": { "type": "string", "minLength": 1 },
+              "subscriptionId": { "type": "string", "minLength": 1 },
+              "useClusterAdminCredentials": { "type": "boolean" }
+            }
+          }
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "K8sGcpInfrastructure": {
+        "allOf": [
+          { "$ref": "#/definitions/Infrastructure" },
+          {
+            "type": "object",
+            "required": ["cluster", "connectorRef", "namespace", "releaseName"],
+            "properties": {
+              "cluster": { "type": "string", "minLength": 1 },
+              "connectorRef": { "type": "string", "minLength": 1 },
+              "metadata": { "type": "string" },
+              "namespace": { "type": "string", "minLength": 1 },
+              "releaseName": { "type": "string", "minLength": 1 }
+            }
+          }
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "PdcInfrastructure": {
+        "allOf": [{ "$ref": "#/definitions/Infrastructure" }, {}],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["credentialsRef", "connectorRef"],
+            "properties": {
+              "connectorRef": { "type": "string" },
+              "credentialsRef": { "type": "string", "minLength": 1 },
+              "delegateSelectors": {
+                "oneOf": [
+                  { "type": "array", "items": { "type": "string" } },
+                  { "type": "string", "pattern": "^<\\+input>(\\.(allowedValues|regex)\\(.+?\\))*$", "minLength": 1 }
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": ["credentialsRef", "hosts"],
+            "properties": {
+              "credentialsRef": { "type": "string", "minLength": 1 },
+              "delegateSelectors": {
+                "oneOf": [
+                  { "type": "array", "items": { "type": "string" } },
+                  { "type": "string", "pattern": "^<\\+input>(\\.(allowedValues|regex)\\(.+?\\))*$", "minLength": 1 }
+                ]
+              },
+              "hosts": {
+                "oneOf": [
+                  { "type": "array", "items": { "type": "string" } },
+                  { "type": "string", "pattern": "^<\\+input>(\\.(allowedValues|regex)\\(.+?\\))*$", "minLength": 1 }
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": ["credentialsRef", "connectorRef", "hostFilters"],
+            "properties": {
+              "connectorRef": { "type": "string" },
+              "credentialsRef": { "type": "string", "minLength": 1 },
+              "delegateSelectors": {
+                "oneOf": [
+                  { "type": "array", "items": { "type": "string" } },
+                  { "type": "string", "pattern": "^<\\+input>(\\.(allowedValues|regex)\\(.+?\\))*$", "minLength": 1 }
+                ]
+              },
+              "hostFilters": {
+                "oneOf": [
+                  { "type": "array", "items": { "type": "string" } },
+                  { "type": "string", "pattern": "^<\\+input>(\\.(allowedValues|regex)\\(.+?\\))*$", "minLength": 1 }
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": ["credentialsRef", "connectorRef", "attributeFilters"],
+            "properties": {
+              "attributeFilters": {
+                "oneOf": [
+                  { "type": "object", "additionalProperties": { "type": "string" } },
+                  { "type": "string", "pattern": "^<\\+input>(\\.(allowedValues|regex)\\(.+?\\))*$", "minLength": 1 }
+                ]
+              },
+              "connectorRef": { "type": "string" },
+              "credentialsRef": { "type": "string", "minLength": 1 },
+              "delegateSelectors": {
+                "oneOf": [
+                  { "type": "array", "items": { "type": "string" } },
+                  { "type": "string", "pattern": "^<\\+input>(\\.(allowedValues|regex)\\(.+?\\))*$", "minLength": 1 }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        ]
+      },
+      "ServerlessAwsLambdaInfrastructure": {
+        "allOf": [
+          { "$ref": "#/definitions/Infrastructure" },
+          {
+            "type": "object",
+            "required": ["connectorRef", "region", "stage"],
+            "properties": {
+              "connectorRef": { "type": "string", "minLength": 1 },
+              "metadata": { "type": "string" },
+              "region": { "type": "string", "minLength": 1 },
+              "stage": { "type": "string", "minLength": 1 }
+            }
+          }
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "SshWinRmAwsInfrastructure": {
+        "allOf": [{ "$ref": "#/definitions/Infrastructure" }, {}],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["connectorRef", "credentialsRef", "hostNameConvention", "loadBalancer", "region"],
+            "properties": {
+              "autoScalingGroupName": { "type": "string" },
+              "connectorRef": { "type": "string", "minLength": 1 },
+              "credentialsRef": { "type": "string", "minLength": 1 },
+              "delegateSelectors": {
+                "oneOf": [
+                  { "type": "array", "items": { "type": "string" } },
+                  { "type": "string", "pattern": "^<\\+input>(\\.(allowedValues|regex)\\(.+?\\))*$", "minLength": 1 }
+                ]
+              },
+              "hostNameConvention": {
+                "oneOf": [
+                  { "type": "string" },
+                  { "type": "string", "pattern": "^<\\+input>(\\.(allowedValues|regex)\\(.+?\\))*$", "minLength": 1 }
+                ],
+                "minLength": 1
+              },
+              "loadBalancer": { "type": "string", "minLength": 1 },
+              "region": { "type": "string", "minLength": 1 },
+              "useAutoScalingGroup": { "type": "boolean" }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": ["connectorRef", "credentialsRef", "hostNameConvention", "loadBalancer", "region"],
+            "properties": {
+              "awsInstanceFilter": { "$ref": "#/definitions/AwsInstanceFilter" },
+              "connectorRef": { "type": "string", "minLength": 1 },
+              "credentialsRef": { "type": "string", "minLength": 1 },
+              "delegateSelectors": {
+                "oneOf": [
+                  { "type": "array", "items": { "type": "string" } },
+                  { "type": "string", "pattern": "^<\\+input>(\\.(allowedValues|regex)\\(.+?\\))*$", "minLength": 1 }
+                ]
+              },
+              "hostNameConvention": {
+                "oneOf": [
+                  { "type": "string" },
+                  { "type": "string", "pattern": "^<\\+input>(\\.(allowedValues|regex)\\(.+?\\))*$", "minLength": 1 }
+                ],
+                "minLength": 1
+              },
+              "loadBalancer": { "type": "string", "minLength": 1 },
+              "region": { "type": "string", "minLength": 1 },
+              "useAutoScalingGroup": { "type": "boolean" }
+            },
+            "additionalProperties": false
+          }
+        ]
+      },
+      "SshWinRmAzureInfrastructure": {
+        "allOf": [
+          { "$ref": "#/definitions/Infrastructure" },
+          {
+            "type": "object",
+            "required": ["connectorRef", "credentialsRef", "resourceGroup", "subscriptionId"],
+            "properties": {
+              "connectorRef": { "type": "string", "minLength": 1 },
+              "credentialsRef": { "type": "string", "minLength": 1 },
+              "resourceGroup": { "type": "string", "minLength": 1 },
+              "subscriptionId": { "type": "string", "minLength": 1 },
+              "tags": {
+                "oneOf": [
+                  { "type": "object", "additionalProperties": { "type": "string" } },
+                  { "type": "string", "pattern": "^<\\+input>(\\.(allowedValues|regex)\\(.+?\\))*$", "minLength": 1 }
+                ]
+              },
+              "usePublicDns": {
+                "oneOf": [
+                  { "type": "boolean" },
+                  { "type": "string", "pattern": "^<\\+input>(\\.(allowedValues|regex)\\(.+?\\))*$", "minLength": 1 }
+                ]
+              }
+            }
+          }
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    }
+  },
+  "metaData": null,
+  "correlationId": "62cc77e3-9fae-46c5-a5e5-c66d61b05682"
+}

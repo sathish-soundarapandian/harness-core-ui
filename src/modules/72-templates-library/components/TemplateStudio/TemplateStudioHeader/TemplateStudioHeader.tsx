@@ -37,7 +37,7 @@ export const StyledTemplateStudioTitle = styled.div`
     right: 0;
     height: 40px;
     border: 1px solid ${(props: StyledTemplateStudioTitleInterface) => props?.stroke};
-    background: ${(props: StyledTemplateStudioTitleInterface) => props?.fill};
+    background: ${(props: StyledTemplateStudioTitleInterface) => (props.width > 0 ? props?.fill : 'transparent')};
     border-radius: 0 0 5px 5px;
     transform: perspective(${(props: StyledTemplateStudioTitleInterface) => props.width}) rotateX(-45deg);
   }

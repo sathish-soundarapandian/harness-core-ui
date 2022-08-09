@@ -17,6 +17,7 @@ import {
   MultiSelectWithSubmenuOption,
   AllowedTypes
 } from '@harness/uicore'
+import type { StringsMap } from 'stringTypes'
 import type { EnvironmentResponseDTO } from 'services/cd-ng'
 import type { UseStringsReturn } from 'framework/strings'
 
@@ -36,8 +37,16 @@ export interface DeployInfrastructureProps {
     template?: DeployStageConfig
     path?: string
     readonly?: boolean
+    allValues?: DeployStageConfig
   }
-  gitOpsEnabled?: boolean
+}
+
+export interface CustomStepProps extends DeployStageConfig {
+  getString: (key: keyof StringsMap) => string
+  serviceRef?: string
+  environmentRef?: string
+  infrastructureRef?: string
+  clusterRef?: string
 }
 
 export function isEditEnvironment(data?: EnvironmentResponseDTO): boolean {
@@ -98,7 +107,7 @@ export function validateStepForm({
   return errors
 }
 
-export function processNonGitOpsInitialValues(initialValues: DeployStageConfig) {
+export function processNonGitOpsInitialValues(initialValues: DeployStageConfig): DeployStageConfig {
   return {
     environment: {
       environmentRef: defaultTo(initialValues.environment?.environmentRef, ''),
@@ -110,7 +119,7 @@ export function processNonGitOpsInitialValues(initialValues: DeployStageConfig) 
   }
 }
 
-export function processNonGitOpsFormValues(data: DeployStageConfig) {
+export function processNonGitOpsFormValues(data: DeployStageConfig): DeployStageConfig {
   return {
     environment: {
       environmentRef: data.environment?.environmentRef,
@@ -151,14 +160,15 @@ export function processNonGitOpsFormValues(data: DeployStageConfig) {
 export function processGitOpsEnvironmentInitialValues(
   initialValues: DeployStageConfig,
   getString: UseStringsReturn['getString']
-) {
+): DeployStageConfig {
   return {
     isEnvGroup: false,
     environmentOrEnvGroupRef: defaultTo(initialValues.environment?.environmentRef, ''),
     environmentOrEnvGroupAsRuntime: 'Environment',
     deployToAll: defaultTo(initialValues.environment?.deployToAll, false),
     clusterRef:
-      getMultiTypeFromValue(initialValues.environment?.gitOpsClusters as any) === MultiTypeInputType.RUNTIME
+      getMultiTypeFromValue(initialValues.environment?.gitOpsClusters as unknown as string) ===
+      MultiTypeInputType.RUNTIME
         ? RUNTIME_INPUT_VALUE
         : initialValues.environment?.deployToAll
         ? [
@@ -176,7 +186,10 @@ export function processGitOpsEnvironmentInitialValues(
   }
 }
 
-export function processGitOpsEnvironmentFormValues(data: DeployStageConfig, getString: UseStringsReturn['getString']) {
+export function processGitOpsEnvironmentFormValues(
+  data: DeployStageConfig,
+  getString: UseStringsReturn['getString']
+): DeployStageConfig {
   const allClustersSelected = (data.clusterRef as SelectOption[])?.[0]?.value === getString('all')
 
   return {
@@ -210,13 +223,13 @@ export function processGitOpsEnvironmentFormValues(data: DeployStageConfig, getS
               : (data.clusterRef as SelectOption[])?.map(cluster => ({ identifier: cluster.value }))
         })
     }
-  }
+  } as DeployStageConfig
 }
 
 export function processGitOpsEnvGroupInitialValues(
   initialValues: DeployStageConfig,
   getString: UseStringsReturn['getString']
-) {
+): DeployStageConfig {
   return {
     isEnvGroup: true,
     environmentOrEnvGroupRef: defaultTo(initialValues.environmentGroup?.envGroupRef, ''),
@@ -238,7 +251,8 @@ export function processGitOpsEnvGroupInitialValues(
             }
           }),
     deployToAll: defaultTo(initialValues.environmentGroup?.deployToAll, false),
-    ...(getMultiTypeFromValue(initialValues.environmentGroup?.environments as any) !== MultiTypeInputType.RUNTIME && {
+    ...(getMultiTypeFromValue(initialValues.environmentGroup?.environments as unknown as string) !==
+      MultiTypeInputType.RUNTIME && {
       clusterRef: initialValues.environmentGroup?.environments?.reduce((prev, environment) => {
         return [
           ...prev,
@@ -266,13 +280,17 @@ export function processGitOpsEnvGroupInitialValues(
   }
 }
 
-export function processGitOpsEnvGroupFormValues(data: DeployStageConfig, getString: UseStringsReturn['getString']) {
+export function processGitOpsEnvGroupFormValues(
+  data: DeployStageConfig,
+  getString: UseStringsReturn['getString']
+): DeployStageConfig {
   const environmentClusterMap: Record<string, (string | number | symbol)[]> = {}
   if (isArray(data.clusterRef)) {
     data.clusterRef?.forEach(cluster => {
       if (cluster.value !== getString('all')) {
         try {
           environmentClusterMap[get(cluster, 'parentValue', '')].push(cluster.value)
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (e: any) {
           environmentClusterMap[get(cluster, 'parentValue', '')] = [cluster.value]
         }
@@ -302,7 +320,7 @@ export function processGitOpsEnvGroupFormValues(data: DeployStageConfig, getStri
                     gitOpsClusters:
                       data.clusterRef === RUNTIME_INPUT_VALUE
                         ? RUNTIME_INPUT_VALUE
-                        : environmentClusterMap[environmentInEnvGroup.value as string]?.map((cluster: any) => ({
+                        : environmentClusterMap[environmentInEnvGroup.value as string]?.map(cluster => ({
                             identifier: cluster
                           }))
                   })
@@ -310,5 +328,53 @@ export function processGitOpsEnvGroupFormValues(data: DeployStageConfig, getStri
               })
       })
     }
-  }
+  } as DeployStageConfig
+}
+
+export function processInputSetInitialValues(
+  initialValues: DeployStageConfig,
+  customStepProps: CustomStepProps
+): DeployStageConfig {
+  return {
+    environment: {
+      ...(initialValues.environment?.environmentRef && { environmentRef: initialValues.environment?.environmentRef }),
+      ...(initialValues.environment?.environmentInputs && {
+        environmentInputs: initialValues.environment?.environmentInputs
+      }),
+      ...(initialValues.environment?.serviceOverrideInputs && {
+        serviceOverrideInputs: initialValues.environment?.serviceOverrideInputs
+      }),
+      ...(initialValues.environment?.infrastructureDefinitions?.[0]?.identifier && {
+        infrastructureDefinitions: initialValues.environment?.infrastructureDefinitions
+      }),
+      ...(initialValues.environment?.gitOpsClusters?.[0]?.identifier && {
+        gitOpsClusters: initialValues.environment?.gitOpsClusters
+      })
+    },
+    ...(!customStepProps.gitOpsEnabled && {
+      infrastructureRef: (initialValues.environment?.infrastructureDefinitions?.[0]?.identifier ||
+        initialValues.environment?.infrastructureDefinitions ||
+        '') as string
+    }),
+
+    ...(customStepProps.gitOpsEnabled && {
+      clusterRef:
+        getMultiTypeFromValue(initialValues.environment?.gitOpsClusters as unknown as string) ===
+        MultiTypeInputType.RUNTIME
+          ? RUNTIME_INPUT_VALUE
+          : initialValues.environment?.deployToAll
+          ? [
+              {
+                label: customStepProps.getString('cd.pipelineSteps.environmentTab.allClustersSelected'),
+                value: customStepProps.getString('all')
+              }
+            ]
+          : (initialValues.environment?.gitOpsClusters || [])?.map(cluster => {
+              return {
+                label: cluster.identifier,
+                value: cluster.identifier
+              }
+            })
+    })
+  } as DeployStageConfig
 }

@@ -9,9 +9,10 @@ import React, { ReactNode } from 'react'
 import { ButtonProps, Container, FontVariation, Text } from '@harness/uicore'
 import FlagDialog from '@cf/components/CreateFlagDialog/FlagDialog'
 import { NoData } from '@cf/components/NoData/NoData'
-import { useStrings } from 'framework/strings'
+import { useStrings, String } from 'framework/strings'
 import noFlagsImg from '@cf/images/Feature_Flags_Teepee.svg'
 import noResultsImg from '@cf/images/EmptySearchResults.svg'
+import css from './NoFeatureFlags.module.scss'
 
 export interface NoFeatureFlagsProps {
   hasFeatureFlags: boolean
@@ -37,7 +38,7 @@ export const NoFeatureFlags: React.FC<NoFeatureFlagsProps> = ({
       if (hasFlagFilter) return getString('common.filters.noMatchingFilterData')
       if (hasSearchTerm) return getString('cf.noResultMatch')
     }
-    return getString('cf.noFlag')
+    return getString('cf.featureFlags.noFlagsInProject')
   }
 
   const buttonText = (): string => {
@@ -72,7 +73,17 @@ export const NoFeatureFlags: React.FC<NoFeatureFlagsProps> = ({
       return <Text font={{ variation: FontVariation.BODY1 }}>{getString('cf.featureFlags.changeOrReset')}</Text>
     }
     if (!hasFeatureFlags) {
-      return <FlagDialog environment={environmentIdentifier} />
+      return (
+        <>
+          <div className={css.noFlagsDescription}>
+            <String stringID="cf.featureFlags.noFlagsDescription" />
+          </div>
+          <div className={css.noFlagsToGetStarted}>
+            <String useRichText stringID="cf.featureFlags.noFlagsToGetStarted" />
+          </div>
+          <FlagDialog environment={environmentIdentifier} />
+        </>
+      )
     }
   }
 
@@ -85,6 +96,7 @@ export const NoFeatureFlags: React.FC<NoFeatureFlagsProps> = ({
         buttonText={buttonText()}
         buttonProps={buttonProps()}
         padding="xxxlarge"
+        width="570px"
       />
     </Container>
   )

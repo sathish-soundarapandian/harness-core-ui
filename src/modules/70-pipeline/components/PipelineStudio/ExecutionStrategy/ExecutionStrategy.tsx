@@ -6,7 +6,6 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react'
-import YAML from 'yaml'
 import { Switch } from '@blueprintjs/core'
 import {
   Text,
@@ -37,6 +36,7 @@ import { PageSpinner } from '@common/components'
 import { getServiceDefinitionType, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import { parse } from '@common/utils/YamlHelperMethods'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerTypes } from '../PipelineContext/PipelineActions'
 import Default from './resources/BlankCanvas.png'
@@ -138,15 +138,27 @@ function ExecutionStrategyRef(
         setSelectedStrategy(ExecutionType.CANARY)
         break
     }
-  }, [serviceDefinitionType])
+  }, [])
 
-  const infoByType: { [key: string]: string } = {
+  const azureWebAppDeploymentDescriptions = {
+    BlueGreen: getString('pipeline.azureWebApp.strategy.blueGreen'),
+    Canary: getString('pipeline.azureWebApp.strategy.canary'),
+    Basic: getString('pipeline.azureWebApp.strategy.basic'),
+    Default: getString('pipeline.executionStrategy.strategies.default.description')
+  }
+
+  const defaultDeploymentDescriptions = {
     BlueGreen: getString('pipeline.executionStrategy.strategies.blueGreen.description'),
     Rolling: getString('pipeline.executionStrategy.strategies.rolling.description'),
     Canary: getString('pipeline.executionStrategy.strategies.canary.description'),
     Default: getString('pipeline.executionStrategy.strategies.default.description'),
     Basic: getString('pipeline.executionStrategy.strategies.basic.description')
   }
+
+  const infoByType: { [key: string]: string } =
+    serviceDefinitionType() === ServiceDeploymentType.AzureWebApp
+      ? azureWebAppDeploymentDescriptions
+      : defaultDeploymentDescriptions
 
   const learnMoreLinkByType: { [key: string]: string } = {
     BlueGreen: getString('pipeline.executionStrategy.strategies.blueGreen.learnMoreLink'),
@@ -202,7 +214,8 @@ function ExecutionStrategyRef(
       strategyType: selectedStrategy !== 'BlankCanvas' ? selectedStrategy : 'Rolling',
       ...(isVerifyEnabled && { includeVerify: true })
     },
-    lazy: true
+    lazy: true,
+    debounce: 500
   })
 
   const getServiceDefintionType = serviceDefinitionType()
@@ -225,7 +238,7 @@ function ExecutionStrategyRef(
     if (yamlSnippet?.data) {
       updateStage(
         produce(selectedStage, draft => {
-          const jsonFromYaml = YAML.parse(defaultTo(yamlSnippet?.data, '{}')) as StageElementConfig
+          const jsonFromYaml = parse(defaultTo(yamlSnippet?.data, '{}')) as StageElementConfig
           set(draft, 'stage.failureStrategies', jsonFromYaml.failureStrategies)
           set(draft, 'stage.spec.execution', defaultTo((jsonFromYaml.spec as DeploymentStageConfig)?.execution, {}))
         }).stage as StageElementConfig
@@ -247,7 +260,7 @@ function ExecutionStrategyRef(
   const cancelSelection = (): void => {
     updateStage(
       produce(selectedStage, draft => {
-        const jsonFromYaml = YAML.parse(defaultTo(yamlSnippet?.data, '{}')) as StageElementConfig
+        const jsonFromYaml = parse(defaultTo(yamlSnippet?.data, '{}')) as StageElementConfig
         set(draft, 'stage.failureStrategies', jsonFromYaml.failureStrategies)
         set(draft, 'stage.spec.execution', { steps: [], rollbackSteps: [] })
       }).stage as StageElementConfig
@@ -428,7 +441,7 @@ function ExecutionStrategyRef(
                 text={getString('pipeline.executionStrategy.useStrategy')}
                 onClick={() => {
                   const newStage = produce(selectedStage, draft => {
-                    const jsonFromYaml = YAML.parse(defaultTo(yamlSnippet?.data, '')) as StageElementConfig
+                    const jsonFromYaml = parse(defaultTo(yamlSnippet?.data, '')) as StageElementConfig
                     if (draft.stage && draft.stage.spec) {
                       draft.stage.failureStrategies = jsonFromYaml?.failureStrategies
                       ;(draft.stage.spec as DeploymentStageConfig).execution = (

@@ -32,7 +32,7 @@ import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextFi
 import { ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
 import type { InlineDataType, ManifestTypes } from '../../ManifestInterface'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-import css from '../K8sValuesManifest/ManifestDetails.module.scss'
+import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
 interface InlinePropType {
   stepName: string

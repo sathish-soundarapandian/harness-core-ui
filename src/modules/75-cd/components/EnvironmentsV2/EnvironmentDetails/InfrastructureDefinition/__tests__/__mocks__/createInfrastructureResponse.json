@@ -1,0 +1,21 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "infrastructure": {
+      "accountId": "dummy",
+      "identifier": "Infra_1",
+      "orgIdentifier": "dummy",
+      "projectIdentifier": "dummy",
+      "environmentRef": "test_env",
+      "name": "Infra 1",
+      "description": "",
+      "tags": {},
+      "type": "KubernetesDirect",
+      "yaml": "infrastructureDefinition:\n  name: \"Infra 10\"\n  identifier: \"Infra_1\"\n  orgIdentifier: \"dummy\"\n  projectIdentifier: \"dummy\"\n  environmentRef: \"test_env\"\n  description: \"\"\n  tags: {}\n  allowSimultaneousDeployments: false\n  type: \"KubernetesDirect\"\n  spec:\n    connectorRef: \"account.harnessci\"\n    namespace: \"ashwin\"\n    releaseName: \"release-<+INFRA_KEY>\"\n"
+    },
+    "createdAt": 1659072066480,
+    "lastModifiedAt": 1659072066480
+  },
+  "metaData": null,
+  "correlationId": "0e206b1d-084a-41d6-85ce-7f640773b288"
+}

@@ -32,7 +32,7 @@ exports[`<ServiceNowApprovalTab/> tests isWaiting test 1`] = `
     </div>
   </div>
   <div
-    class="serviceNowApproval"
+    class="serviceNowApproval applyTopPadding"
   >
     <div
       class="collapse serviceNowCriteria"
@@ -223,6 +223,42 @@ exports[`<ServiceNowApprovalTab/> tests not isWaiting test - rejected 1`] = `
         CDNG-1234
       </a>
     </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main stepDetailsContainer StyledProps--padding-top-large"
+  >
+    <table
+      class="detailsTable"
+    >
+      <tbody>
+        <tr>
+          <th>
+            startedAt
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            endedAt
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            pipeline.duration
+          </th>
+          <td>
+            <div>
+              MOCK DURATION
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
   <div
     class="serviceNowApproval"
@@ -416,6 +452,42 @@ exports[`<ServiceNowApprovalTab/> tests not isWaiting test 1`] = `
         CDNG-1234
       </a>
     </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main stepDetailsContainer StyledProps--padding-top-large"
+  >
+    <table
+      class="detailsTable"
+    >
+      <tbody>
+        <tr>
+          <th>
+            startedAt
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            endedAt
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            pipeline.duration
+          </th>
+          <td>
+            <div>
+              MOCK DURATION
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
   <div
     class="serviceNowApproval"

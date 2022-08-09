@@ -86,7 +86,8 @@ export const deploymentTypeInfraTypeMap = {
   ServerlessGoogleFunctions: InfraDeploymentType.ServerlessGoogleFunctions,
   AmazonSAM: InfraDeploymentType.AmazonSAM,
   AzureFunctions: InfraDeploymentType.AzureFunctions,
-  AzureWebApp: InfraDeploymentType.AzureWebApp
+  AzureWebApp: InfraDeploymentType.AzureWebApp,
+  ECS: InfraDeploymentType.ECS
 }
 
 type InfraTypes =
@@ -411,7 +412,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
           />
         )
       }
-      case 'ServerlessAwsLambda': {
+      case InfraDeploymentType.ServerlessAwsLambda: {
         return (
           <StepWidget<ServerlessAwsLambdaSpec>
             factory={factory}
@@ -429,14 +430,14 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   region: value.region,
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments
                 },
-                'ServerlessAwsLambda'
+                InfraDeploymentType.ServerlessAwsLambda
               )
             }
             customStepProps={getCustomStepProps('ServerlessAwsLambda', getString)}
           />
         )
       }
-      case 'ServerlessGoogleFunctions': {
+      case InfraDeploymentType.ServerlessGoogleFunctions: {
         return (
           <StepWidget<ServerlessGCPSpec>
             factory={factory}
@@ -453,14 +454,14 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   stage: value.stage,
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments
                 },
-                'ServerlessGoogleFunctions'
+                InfraDeploymentType.ServerlessGoogleFunctions
               )
             }
             customStepProps={getCustomStepProps('ServerlessGoogleFunctions', getString)}
           />
         )
       }
-      case 'ServerlessAzureFunctions': {
+      case InfraDeploymentType.ServerlessAzureFunctions: {
         return (
           <StepWidget<ServerlessAzureSpec>
             factory={factory}
@@ -477,7 +478,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   stage: value.stage,
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments
                 },
-                'ServerlessAzureFunctions'
+                InfraDeploymentType.ServerlessAzureFunctions
               )
             }
             customStepProps={getCustomStepProps('ServerlessAzureFunctions', getString)}
@@ -497,8 +498,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
             onUpdate={value => {
               onUpdateInfrastructureDefinition(
                 {
-                  connectorRef: value.connectorRef?.connector?.identifier,
-                  credentialsRef: value.sshKey?.referenceString,
+                  connectorRef: value.connectorRef?.connector?.identifier || value.connectorRef,
+                  credentialsRef: value.credentialsRef,
                   attributeFilters: value.attributeFilters,
                   hostFilters: value.hostFilters,
                   hosts: value.hosts,
@@ -544,9 +545,9 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   connectorRef: value.connectorRef,
                   subscriptionId: value.subscriptionId,
                   resourceGroup: value.resourceGroup,
-                  cluster: value.cluster,
                   tags: value.tags,
-                  usePublicDns: value.usePublicDns
+                  usePublicDns: value.usePublicDns,
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
                 },
                 InfraDeploymentType.SshWinRmAzure
               )
@@ -622,6 +623,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
               <StringWithTooltip
                 tooltipId="pipelineStep.infrastructureDefinitionMethod"
                 stringId="pipelineSteps.deploy.infrastructure.selectMethod"
+                stringIdVars={{ deploymentSpecificText: selectedDeploymentType }}
               />
             </Text>
           )}

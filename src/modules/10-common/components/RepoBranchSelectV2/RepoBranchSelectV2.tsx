@@ -71,7 +71,7 @@ export const getBranchSelectOptions = (data: GitBranchDetailsDTO[] = [], selecte
   return selectOptions
 }
 const getDefaultSelectedOption = (defaultToBranch: string, selected?: string): SelectOption => {
-  return { label: selected || defaultToBranch, value: selected || defaultToBranch }
+  return { label: selected ?? defaultToBranch, value: selected ?? defaultToBranch }
 }
 
 const hasToRefetchBranches = (

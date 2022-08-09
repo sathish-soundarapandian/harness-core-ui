@@ -78,6 +78,7 @@ exports[`EXECUTION VIEW should should have the values prefilled and fields as di
                     >
                       <div
                         class="bp3-form-group bp3-disabled variableInput"
+                        data-id="variables[0].value-0"
                       >
                         
                         <div

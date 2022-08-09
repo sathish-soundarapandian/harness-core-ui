@@ -47,6 +47,7 @@ parallelSelectedStages: '{{selected}}, +{{total}} Stages'
 parallelStages: '+{{total}} Stages'
 runAPipeline: Run a Pipeline
 regionPlaceholder: Select Region
+repositoryPlaceholder: <repo-name>.azurecr.io/<image>
 repositoryUrlPlaceholder: Enter Repository URL
 lastSevenDays: In Last 7 days
 neverRan: This pipeline never ran
@@ -269,7 +270,7 @@ customApprovalStep:
     wasRejected: 'Rejection Criteria was met for Custom Shell Script Approval'
     wasExpired: 'Custom Shell Script Approval expired'
     wasAborted: 'Custom Shell Script Approval aborted'
-    customApprovalTicket: 'Custom Shell Script Approval Pending Approval'
+    customApprovalPending: 'Custom Shell Script Approval Pending Approval'
     conditions:
       equals: '{{ key }} equals'
       not_equals: '{{ key }} does not equals'
@@ -329,6 +330,7 @@ manifestType:
   commitPlaceholder: Enter Commit Id / Git Tag
   filePathPlaceholder: Enter File or Folder Path
   kustomizeFolderPath: Kustomize Folder Path
+  kustomizeBasePath: Kustomize Base Path
   kustomizeFolderPathPlaceholder: Enter Kustomize Folder Path
   kustomizePluginPathPlaceholder: Enter Kustomize Plugin Path
   repoNamePlaceholder: Enter Repository Name
@@ -339,7 +341,6 @@ manifestType:
   customRemoteExtractedFileLocation: Extracted Manifest File Location
   customRemoteExtractedFileLocationPlaceholder: Enter Extracted Manifest File Location
   paramsYamlPath: Openshift Parameters
-  manifestScope: Specify a folder path as the scope of reference
   http:
     chartName: 'Chart Name'
     chartVersion: 'Chart Version'
@@ -350,6 +351,9 @@ manifestType:
   oci:
     basePathRequired: 'Base Path is required'
     chartVersionValidation: '"latest" tag is not supported as chart version'
+  optimizedKustomizeManifestCollection: Optimized Kustomize Manifest Collection
+  kustomizeYamlFolderPath: Kustomize YAML Folder Path
+  kustomizeYamlFolderPathRequired: Kustomize YAML Folder Path is required
 manifestTypeLabels:
   K8sManifest: K8s Manifest
   ValuesYaml: Values YAML
@@ -363,6 +367,7 @@ manifestTypeLabels:
   ServerlessGCP: Serverless GCP Manifest
   AwsSAM: AWS SAM Manifest
   AzureFunctions: Azure Functions Manifest
+  ReleaseRepo: Release Repo Manifest
 manifestToConnectorLabelMap:
   AWSLabel: '{{ $.common.aws }}'
 failureStrategies:
@@ -605,7 +610,7 @@ dashboards:
   failedDeployments: Failed Deployments
   activeDeployments: Active Deployments
   pendingDeployments: Pending Approval/Manual Intervention
-  baselineTargets: Targets Baselines
+  baselineTargets: Target Baselines
   baselineActivityComingSoon: Baseline target activity coming soon!
   noRepositories: No Repositories found
   noFailedBuilds: No Failed Builds found
@@ -916,6 +921,7 @@ stepDescription:
   K8sRollingDeploy: Use a rolling update to schedule new pods on nodes with available resources. This step uses the number of replicas you specified in the Deployment manifest.
   Plugin: Use Docker containers to perform predefined tasks like deploy code, publish artifacts, send notifications, and more.
   Run: Execute one or more commands on a container image in a CI stage.
+  ACR: Build a Docker image and push it to Azure Container Registry (ACR).
   GCR: Build a Docker image and push it to Google Container Registry (GCR).
   ECR: Build a Docker image and push it to AWS Elastic Container Registry (ECR).
   SaveCacheGCS: Preserve files and directories between builds using Google Cloud Storage (GCS).
@@ -1053,9 +1059,10 @@ noApprovalInstanceCreated: Approval instance not created, no details to display
 approvalTypeRequired: Approval type is required
 executionList:
   servicesDeployedText: 'Services deployed ({{size}})'
+  servicesDeployed: 'Services deployed'
   artifactDeployedText: 'Artifacts deployed ({{size}})'
   EnvironmentsText: 'Environments ({{size}})'
-
+artifactImageTag: 'Artifact (Image: Tag)'
 replacedExpressions: Replaced Expressions
 expressionRequired: Expression value is required.
 nativeHelm: Native Helm
@@ -1193,10 +1200,10 @@ configFiles:
     files: 'File(s) is required'
     file: 'This field is required'
 OverviewEmptyStates:
-  createPipelineHeaderMsg: Set up a Pipeline and run your first deployment!
-  createPipelineInfo: A Harness Pipeline is a series of stages that performs operations like building and deploying software.
+  createPipelineHeaderMsg: Set up a Pipeline and run your first {{executionLabel}}!
+  createPipelineInfo: A Harness Pipeline is a series of stages that performs operations like {{pipelineOperation1}} and {{pipelineOperation2}} software.
   runPipelineHeaderMsg: You haven’t tried running your pipelines yet.
-  runPipelineInfo: Click the button below to select a pipeline and get your deployments started.
+  runPipelineInfo: Click the button below to select a pipeline and get your {{executionsLabel}} started.
 importSuccessMessage: '{{resourceType}} has been imported successfully'
 MatrixNode:
   maxConcurrency: 'Max Concurrency:'
@@ -1207,7 +1214,7 @@ fieldPlaceholders:
 traffic: Traffic
 viewPipeline: View Pipeline
 codeSource: 'Code Source'
-recentTenExecutions: 'Recent 10 Executions'
+recentExecutions: 'Recent Executions'
 lastExecution: 'Last Execution'
 lastModified: 'Last Modified'
 executionId: Execution Id
@@ -1239,3 +1246,12 @@ startupCommand:
   fileValidation: 'file is required'
   plainText: 'Plain Text'
 triggerInfo: 'Trigger Info'
+draft: 'Draft'
+duplicateStepIdentifiers: 'Duplicate identifiers found: {{duplicateIdString}}'
+alwaysEditModeYAML: Enable read/write mode always
+warningForInvalidYAMLDiscard: Enabling this sets the YAML editor in read/write mode for the Pipelines you view. You can enable/disable this setting in any Pipeline.
+azureWebApp:
+  strategy:
+    basic: In a Basic deployment, a new Service/Artifact version is deployed to the deployment slot. Basic deployments are useful for development, learning Harness, and any non-mission critical workflows.
+    canary: 'Harness performs a three phase deployment: Phase 1 deploys a new service version to the deployment slot. Phase 2 performs a Traffic Shift to that deployment slot. Phase 3 swaps the deployment slot with target slot.'
+    blueGreen: 'Harness performs a two phase deployment: Phase 1 deploys a new service version to deployment slot. Phase 2 swaps the deployment slot with target slot.'

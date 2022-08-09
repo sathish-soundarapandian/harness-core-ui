@@ -100,6 +100,7 @@ export enum Sort {
 
 export enum SortFields {
   LastUpdatedAt = 'lastUpdatedAt',
+  LastModifiedAt = 'lastModifiedAt', //this key is supported by Service Dash/Manage Service APIs
   RecentActivity = 'executionSummaryInfo.lastExecutionTs',
   AZ09 = 'AZ09',
   ZA90 = 'ZA90',

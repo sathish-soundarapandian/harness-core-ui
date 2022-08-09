@@ -25,6 +25,8 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isNewServiceEnvEntity } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
+import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { TriggersListSection, GoToEditWizardInterface } from './TriggersListSection'
 
 import { TriggerTypes } from '../utils/TriggersWizardPageUtils'
@@ -35,10 +37,11 @@ interface TriggersListPropsInterface {
   onNewTriggerClick: (val: TriggerDataInterface) => void
   isPipelineInvalid?: boolean
   gitAwareForTriggerEnabled?: boolean
+  pipeline: any
 }
 
 export default function TriggersList(props: TriggersListPropsInterface & GitQueryParams): JSX.Element {
-  const { onNewTriggerClick, isPipelineInvalid, gitAwareForTriggerEnabled } = props
+  const { onNewTriggerClick, isPipelineInvalid, gitAwareForTriggerEnabled, pipeline } = props
   const { branch, repoIdentifier, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
 
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } = useParams<
@@ -52,10 +55,14 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
   const [searchParam, setSearchParam] = useState('')
   const { getString } = useStrings()
 
-  const { NG_AZURE, AZURE_REPO_CONNECTOR } = useFeatureFlags()
+  const { NG_AZURE, AZURE_REPO_CONNECTOR, NG_SVC_ENV_REDESIGN = false } = useFeatureFlags()
+  const isNewService = isNewServiceEnvEntity(
+    NG_SVC_ENV_REDESIGN,
+    pipeline?.stages?.[0]?.stage as DeploymentStageElementConfig
+  )
 
   const getCategories = (): AddDrawerMapInterface => {
-    const categories = getCategoryItems(getString, AZURE_REPO_CONNECTOR)
+    const categories = getCategoryItems(getString, isNewService, AZURE_REPO_CONNECTOR)
 
     return {
       ...categories,

@@ -7,8 +7,15 @@
 
 import type { SelectOption } from '@wings-software/uicore'
 import type { StringKeys } from 'framework/strings'
-import type { MetricPackDTO } from 'services/cv'
-import type { CustomMappedMetric } from '../../common/CustomMetric/CustomMetric.types'
+import type {
+  FailMetricThresholdSpec,
+  MetricPackDTO,
+  MetricThreshold,
+  MetricThresholdSpec,
+  TimeSeriesMetricPackDTO
+} from 'services/cv'
+import type { CustomMappedMetric, CustomSelectedAndMappedMetrics } from '../../common/CustomMetric/CustomMetric.types'
+import type { CriteriaThresholdValues } from '../../common/MetricThresholds/MetricThresholds.types'
 import type { HealthSourceTypes } from '../../types'
 import type { BasePathData } from './Components/BasePath/BasePath.types'
 import type { MetricPathData } from './Components/MetricPath/MetricPath.types'
@@ -34,6 +41,8 @@ export type MapAppDynamicsMetric = {
   fullPath?: string
   pathType?: string
   completeMetricPath?: string
+  ignoreThresholds: MetricThresholdType[]
+  failFastThresholds: MetricThresholdType[]
 }
 
 export interface AppDynamicsData {
@@ -45,10 +54,21 @@ export interface AppDynamicsData {
   type: HealthSourceTypes
   applicationName: string
   tierName: string
-  metricPacks?: MetricPackDTO[]
+  metricPacks?: TimeSeriesMetricPackDTO[]
   showCustomMetric?: boolean
   mappedServicesAndEnvs: Map<string, MapAppDynamicsMetric>
 }
+
+interface CriteriaPercentageType {
+  criteriaPercentageType?: CriteriaThresholdValues
+}
+
+export type MetricThresholdType = MetricThreshold & {
+  criteria: MetricThreshold['criteria'] & CriteriaPercentageType
+  metricType?: string
+  spec?: MetricThresholdSpec & FailMetricThresholdSpec
+}
+
 export interface AppDynamicsFomikFormInterface {
   name: string
   identifier: string
@@ -78,6 +98,8 @@ export interface AppDynamicsFomikFormInterface {
   fullPath?: string
   pathType?: string
   completeMetricPath?: string
+  ignoreThresholds: MetricThresholdType[]
+  failFastThresholds: MetricThresholdType[]
 }
 
 export interface InitAppDCustomFormInterface {
@@ -93,18 +115,37 @@ export interface InitAppDCustomFormInterface {
   serviceInstanceMetricPath: string
 }
 export interface ValidateMappingInterface {
-  values: any
+  values: AppDynamicsFomikFormInterface
   createdMetrics: string[]
   selectedMetricIndex: number
   getString: (key: StringKeys) => string
   mappedMetrics?: Map<string, CustomMappedMetric>
+  isMetricThresholdEnabled: boolean
 }
 
 export interface NonCustomFeildsInterface {
+  appdApplication: string
+  appDTier: string
+  metricPacks?: TimeSeriesMetricPackDTO[]
+  metricData: {
+    [key: string]: boolean
+  }
+  ignoreThresholds: MetricThresholdType[]
+  failFastThresholds: MetricThresholdType[]
+}
+
+export interface NonCustomFieldsInterface {
   appdApplication: string
   appDTier: string
   metricPacks: MetricPackDTO[] | undefined
   metricData: {
     [key: string]: boolean
   }
+}
+export interface PersistCustomMetricInterface {
+  mappedMetrics: Map<string, CustomMappedMetric>
+  selectedMetric: string
+  nonCustomFeilds: NonCustomFeildsInterface
+  formikValues: AppDynamicsFomikFormInterface
+  setMappedMetrics: React.Dispatch<React.SetStateAction<CustomSelectedAndMappedMetrics>>
 }

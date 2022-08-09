@@ -59,7 +59,6 @@ secret:
   secretActivity: Secret Activity
   labelSecretFile: 'Select File'
   labelSecretReference: 'Reference Secret Identifier'
-  saving: 'Saving'
   messageSelectSM: 'Please select a Secret Manager'
   placeholderSecretValue: 'Add your secret value'
   placeholderSecretReference: 'Add the Identifier of the secret to reference'

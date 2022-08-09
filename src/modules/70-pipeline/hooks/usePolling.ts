@@ -34,7 +34,7 @@ export function usePolling(callback: () => Promise<void> | undefined, startPolli
     }, POLLING_INTERVAL_IN_MS)
 
     return () => clearTimeout(timerId)
-  }, [startPolling])
+  }, [isPolling, startPolling])
 
   return isPolling
 }

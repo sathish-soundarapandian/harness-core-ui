@@ -14,28 +14,27 @@ import { getSelectedDeploymentType, isServerlessDeploymentType } from '@pipeline
 import StartupScriptSelection from '@cd/components/PipelineSteps/AzureWebAppServiceSpec/AzureWebAppStartupScriptSelection/StartupScriptSelection'
 import { useStrings } from 'framework/strings'
 import type { ServiceDefinition } from 'services/cd-ng'
-import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
+import {
+  DeployTabs,
+  isNewServiceEnvEntity
+} from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import VariableListReadOnlyView from '@pipeline/components/WorkflowVariablesSelection/VariableListReadOnlyView'
-import { setupMode } from '../K8sServiceSpec/K8sServiceSpecHelper'
+import { getArtifactsHeaderTooltipId } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
+import ConfigFilesSelection from '@pipeline/components/ConfigFilesSelection/ConfigFilesSelection'
+import { useServiceContext } from '@cd/context/ServiceContext'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { AzureWebAppServiceSpecFormProps } from './AzureWebAppServiceSpecInterface.types'
 import AzureWebAppConfigSelection from './AzureWebAppServiceConfiguration/AzureWebAppServiceConfigSelection'
-//todo: css
-import css from '../K8sServiceSpec/K8sServiceSpec.module.scss'
+import { setupMode } from '../PipelineStepsUtil'
+import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 const getStartupScriptHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
   if (isServerlessDeploymentType(selectedDeploymentType)) {
     return 'serverlessDeploymentTypeStartupScript'
   }
   return 'deploymentTypeStartupScript'
-}
-
-const getArtifactsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
-  if (isServerlessDeploymentType(selectedDeploymentType)) {
-    return 'serverlessDeploymentTypeArtifacts'
-  }
-  return 'deploymentTypeArtifacts'
 }
 
 const getAppConfigHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
@@ -62,10 +61,13 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
     updateStage,
     getStageFromPipeline
   } = usePipelineContext()
+  const { isServiceEntityPage } = useServiceContext()
+  const { NG_FILE_STORE, NG_SVC_ENV_REDESIGN } = useFeatureFlags()
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const selectedDeploymentType =
     deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating, templateServiceData)
+  const isNewService = isNewServiceEnvEntity(!!NG_SVC_ENV_REDESIGN, stage?.stage as DeploymentStageElementConfig)
 
   const updateStageData = async (newStage: any): Promise<void> => {
     setLoading(true)
@@ -131,6 +133,23 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
               readonly={!!readonly}
             />
           </Card>
+          {(isNewService || isServiceEntityPage) &&
+            NG_FILE_STORE && ( //Config files are only available for creation or readonly mode for service V2
+              <Card className={css.sectionCard} id={getString('pipelineSteps.configFiles')}>
+                <div
+                  className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+                  data-tooltip-id={getArtifactsHeaderTooltipId(selectedDeploymentType)}
+                >
+                  {getString('pipelineSteps.configFiles')}
+                </div>
+                <ConfigFilesSelection
+                  isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                  isPropagating={isPropagating}
+                  deploymentType={selectedDeploymentType}
+                  readonly={!!readonly}
+                />
+              </Card>
+            )}
         </>
       )}
 

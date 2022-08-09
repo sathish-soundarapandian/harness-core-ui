@@ -33,6 +33,7 @@ import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/compon
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -41,7 +42,7 @@ import {
   isFieldfromTriggerTabDisabled,
   resetTags
 } from '../artifactSourceUtils'
-import css from '../../K8sServiceSpec.module.scss'
+import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 interface JenkinsRenderContent extends ArtifactSourceRenderProps {
   isTagsSelectionDisabled: (data: ArtifactSourceRenderProps) => boolean
@@ -330,8 +331,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                         : primaryValue || ''
                     formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.jobName`, newJobName.label)
                     setJenkinsBuilds([])
-                    selectedJobName.current =
-                      type === MultiTypeInputType.RUNTIME ? (newJobName as unknown as string) : newJobName.label
+                    selectedJobName.current = isMultiTypeRuntime(type)
+                      ? (newJobName as unknown as string)
+                      : newJobName.label
                     if (type === MultiTypeInputType.FIXED && newJobName?.label?.length) {
                       refetchartifactPaths({
                         queryParams: {

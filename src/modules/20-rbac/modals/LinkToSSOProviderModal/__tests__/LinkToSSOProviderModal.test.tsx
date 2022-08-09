@@ -21,20 +21,28 @@ const TEST_PATH = routes.toUserGroups({
 
 const mockAuthResponse = {
   status: 'SUCCESS',
-  data: {
-    resource: {
-      ngAuthSettings: [
-        {
-          settingsType: 'SAML',
-          origin: 'mock_origin',
-          identifier: 'mock_id',
-          logoutUrl: undefined,
-          groupMembershipAttr: undefined,
-          displayName: 'mock_sso_name',
-          authorizationEnabled: undefined
-        }
-      ]
-    }
+  resource: {
+    ngAuthSettings: [
+      {
+        settingsType: 'SAML',
+        origin: 'mock_origin',
+        identifier: 'mock_id',
+        logoutUrl: undefined,
+        groupMembershipAttr: undefined,
+        displayName: 'mock_sso_name',
+        authorizationEnabled: undefined
+      },
+      {
+        settingsType: 'LDAP',
+        connectionSettings: {},
+        identifier: 'mock_id',
+        userSettingsList: [],
+        groupSettingsList: [],
+        displayName: 'mock_ldap_name',
+        cronExpression: 'mock_cron_expr',
+        nextIterations: []
+      }
+    ]
   },
   metaData: {},
   correlationId: ''
@@ -50,9 +58,12 @@ const mockSuccessResponse = {
 const useUnlinkSsoGroup = jest.fn()
 jest.mock('services/cd-ng', () => ({
   useGetAuthenticationSettings: jest.fn().mockImplementation(() => {
-    return { mutate: () => Promise.resolve(mockAuthResponse) }
+    return { data: mockAuthResponse, loading: false, refetch: jest.fn().mockReturnValue(mockAuthResponse), error: null }
   }),
   useLinkToSamlGroup: jest.fn().mockImplementation(() => {
+    return { mutate: () => Promise.resolve(mockSuccessResponse) }
+  }),
+  useLinkToLdapGroup: jest.fn().mockImplementation(() => {
     return { mutate: () => Promise.resolve(mockSuccessResponse) }
   }),
   useUnlinkSsoGroup: jest.fn().mockImplementation(() => {
@@ -89,6 +100,16 @@ describe('Create LinkToSSOProviderModal', () => {
 
   test('should render the form with ssoLinked false', async () => {
     mockUserGroup.ssoLinked = false
+    const { container } = render(
+      <TestWrapper path={TEST_PATH} pathParams={{ accountId: TEST_ID }}>
+        <LinkToSSOProviderForm onSubmit={noop} userGroupData={mockUserGroup} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should render the form with ssoLinked true', async () => {
+    mockUserGroup.ssoLinked = true
     const { container } = render(
       <TestWrapper path={TEST_PATH} pathParams={{ accountId: TEST_ID }}>
         <LinkToSSOProviderForm onSubmit={noop} userGroupData={mockUserGroup} />

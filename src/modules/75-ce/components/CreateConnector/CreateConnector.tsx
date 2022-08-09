@@ -19,6 +19,8 @@ import { CE_CONNECTOR_CLICK } from '@connectors/trackingConstants'
 import AutoStoppingImage from './images/autoStopping.svg'
 import BudgetsImage from './images/budgets-anomalies.svg'
 import PerspectiveImage from './images/Perspectives.svg'
+import bgImage from './images/perspectiveBg.png'
+import NoData from '../OverviewPage/OverviewNoData'
 import css from './CreateConnector.module.scss'
 
 // interface useCreateConnectorProps {}
@@ -38,7 +40,7 @@ interface CloudProviderListProps {
   selected?: string
 }
 
-interface UseCreateConnectorProps {
+export interface UseCreateConnectorProps {
   portalClassName?: string
   onSuccess?: () => void
   onClose?: () => void
@@ -82,6 +84,36 @@ const CloudProviderList: React.FC<CloudProviderListProps> = ({ onChange, selecte
           <Text key={provider.title}>{provider.title}</Text>
         ))}
       </div>
+    </div>
+  )
+}
+
+interface NoConnectorDataProps {
+  showConnectorModal?: boolean
+}
+
+export const NoConnectorDataHandling: (props: NoConnectorDataProps) => JSX.Element = ({ showConnectorModal }) => {
+  const { openModal, closeModal } = useCreateConnectorMinimal({
+    portalClassName: css.excludeSideNavOverlay,
+    onSuccess: () => {
+      closeModal()
+    }
+  })
+
+  const [showNoDataOverlay, setShowNoDataOverlay] = useState(!showConnectorModal)
+
+  useEffect(() => {
+    showConnectorModal && openModal()
+  }, [])
+
+  const handleConnectorClick = (): void => {
+    setShowNoDataOverlay(false)
+    openModal()
+  }
+
+  return (
+    <div style={{ backgroundImage: `url(${bgImage})`, backgroundSize: 'cover', height: '100%', width: '100%' }}>
+      {showNoDataOverlay && <NoData onConnectorCreateClick={handleConnectorClick} />}
     </div>
   )
 }

@@ -185,7 +185,9 @@ const UserGroupDetails: React.FC = () => {
               {userGroup.ssoLinked ? (
                 <Layout.Horizontal className={css.truncatedText} flex={{ alignItems: 'center' }} spacing="xsmall">
                   <Text icon={'link'} iconProps={{ color: Color.BLUE_500, size: 10 }} color={Color.BLACK}>
-                    {getString('rbac.userDetails.linkToSSOProviderModal.saml')}
+                    {userGroup.linkedSsoType === 'SAML'
+                      ? getString('rbac.userDetails.linkToSSOProviderModal.saml')
+                      : getString('rbac.userDetails.linkToSSOProviderModal.ldap')}
                   </Text>
                   <Text lineClamp={1} width={70}>
                     {userGroup.linkedSsoDisplayName}

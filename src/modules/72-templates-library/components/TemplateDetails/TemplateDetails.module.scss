@@ -80,9 +80,10 @@
 }
 
 .referencedByBody {
-  height: unset;
-  min-height: unset;
+  height: unset !important;
+  min-height: unset !important;
   display: flex;
+  justify-content: center;
   flex-grow: 1;
   padding-bottom: var(--spacing-4) !important;
 

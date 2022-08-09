@@ -10,7 +10,7 @@ import { cloneDeep, defaultTo, get, isEmpty, merge, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { produce } from 'immer'
 import { useQueryParams } from '@common/hooks'
-import { ServicePipelineProvider } from '@cd/components/ServiceEnvironmentPipelineContext/ServicePipelineContext'
+import { ServicePipelineProvider } from '@cd/context/ServicePipelineContext'
 import type { GitQueryParams, ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { usePermission } from '@rbac/hooks/usePermission'
@@ -22,6 +22,7 @@ import { yamlParse } from '@common/utils/YamlHelperMethods'
 import type { NGServiceConfig } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useServiceContext } from '@cd/context/ServiceContext'
+import { PipelineVariablesContextProvider } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import {
   initialServiceState,
   DefaultNewStageName,
@@ -128,15 +129,17 @@ function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): R
   return (
     <ServicePipelineProvider
       queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier, repoIdentifier, branch }}
-      initialValue={
-        isServiceCreateModalView ? (createPipeline as PipelineInfoConfig) : (currentPipeline as PipelineInfoConfig)
-      }
+      initialValue={isServiceCreateModalView ? createPipeline : (currentPipeline as PipelineInfoConfig)}
       onUpdatePipeline={onUpdatePipeline}
       serviceIdentifier={serviceId}
       contextType={PipelineContextType.Pipeline}
       isReadOnly={!isEdit}
     >
-      <ServiceStudioDetails serviceData={currentService} {...props} />
+      <PipelineVariablesContextProvider
+        pipeline={isServiceCreateModalView ? createPipeline : (currentPipeline as PipelineInfoConfig)}
+      >
+        <ServiceStudioDetails serviceData={currentService} {...props} />
+      </PipelineVariablesContextProvider>
     </ServicePipelineProvider>
   )
 }

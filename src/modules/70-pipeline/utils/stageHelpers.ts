@@ -63,7 +63,8 @@ export enum ServiceDeploymentType {
   ServerlessGoogleFunctions = 'ServerlessGoogleFunctions',
   AmazonSAM = 'AwsSAM',
   AzureFunctions = 'AzureFunctions',
-  AzureWebApp = 'AzureWebApp'
+  AzureWebApp = 'AzureWebApp',
+  ECS = 'ECS'
 }
 
 export enum RepositoryFormatTypes {
@@ -493,19 +494,18 @@ export const infraDefinitionTypeMapping: { [key: string]: string } = {
 }
 
 export const getStepTypeByDeploymentType = (deploymentType: string): StepType => {
-  if (isServerlessDeploymentType(deploymentType)) {
-    return StepType.ServerlessAwsLambda
+  switch (deploymentType) {
+    case ServiceDeploymentType.ServerlessAwsLambda:
+      return StepType.ServerlessAwsLambda
+    case ServiceDeploymentType.AzureWebApp:
+      return StepType.AzureWebAppServiceSpec
+    case ServiceDeploymentType.Ssh:
+      return StepType.SshServiceSpec
+    case ServiceDeploymentType.WinRm:
+      return StepType.WinRmServiceSpec
+    default:
+      return StepType.K8sServiceSpec
   }
-  if (deploymentType === ServiceDeploymentType.Ssh) {
-    return StepType.SshServiceSpec
-  }
-  if (deploymentType === ServiceDeploymentType.WinRm) {
-    return StepType.WinRmServiceSpec
-  }
-  if (deploymentType === ServiceDeploymentType.AzureWebApp) {
-    return StepType.AzureWebAppServiceSpec
-  }
-  return StepType.K8sServiceSpec
 }
 export const STATIC_SERVICE_GROUP_NAME = 'static_service_group'
 export const getDefaultBuildDependencies = (serviceDependencies: DependencyElement[]): PipelineGraphState => ({

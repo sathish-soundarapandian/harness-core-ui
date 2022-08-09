@@ -18,7 +18,7 @@ import {
   RUNTIME_INPUT_VALUE,
   AllowedTypes
 } from '@harness/uicore'
-import { connect } from 'formik'
+import { connect, FormikProps } from 'formik'
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo, get, identity, isEmpty, isNil, pickBy, set } from 'lodash-es'
 import cx from 'classnames'
@@ -60,13 +60,13 @@ import {
   getStepTypeByDeploymentType,
   infraDefinitionTypeMapping
 } from '@pipeline/utils/stageHelpers'
-import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import type { K8sDirectInfraYaml } from 'services/ci'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { Connectors } from '@connectors/constants'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import factory from '../PipelineSteps/PipelineStepFactory'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
 import { CollapseForm } from './CollapseForm'
@@ -268,7 +268,7 @@ export interface StageInputSetFormProps {
   deploymentStageTemplate: DeploymentStageConfig
   path: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  formik?: any
+  formik?: FormikProps<any>
   readonly?: boolean
   viewType: StepViewType
   stageIdentifier?: string
@@ -881,7 +881,7 @@ export function StageInputSetFormInternal({
         </div>
       )}
 
-      {isSvcEnvEntityEnabled && (deploymentStageTemplate as DeployStageConfig).environmentGroup?.envGroupRef && (
+      {deploymentStageTemplate?.environmentGroup?.envGroupRef && (
         <div id={`Stage.${stageIdentifier}.EnvironmentGroup`} className={cx(css.accordionSummary)}>
           <StepWidget
             factory={factory}
@@ -890,21 +890,17 @@ export function StageInputSetFormInternal({
             template={deploymentStageTemplate}
             type={StepType.DeployInfrastructure}
             stepViewType={viewType}
-            path={`${path}.environmentGroup`}
+            path={path}
             readonly={readonly}
-            customStepProps={{
-              getString,
-              allValues: (deploymentStage as DeployStageConfig)?.environment
-            }}
           />
         </div>
       )}
 
-      {isSvcEnvEntityEnabled && (deploymentStageTemplate as DeployStageConfig).environment && (
+      {deploymentStageTemplate?.environment && deploymentStage?.environment && (
         <div id={`Stage.${stageIdentifier}.Environment`} className={cx(css.accordionSummary)}>
           <StepWidget
             factory={factory}
-            initialValues={deploymentStage}
+            initialValues={deploymentStageInputSet}
             allowableTypes={allowableTypes}
             template={deploymentStageTemplate}
             type={StepType.DeployInfrastructure}
@@ -913,49 +909,68 @@ export function StageInputSetFormInternal({
             readonly={readonly}
             customStepProps={{
               getString,
-              allValues: deploymentStage?.environment,
-              gitOpsEnabled: (deploymentStage as DeployStageConfig)?.gitOpsEnabled
+              // Show clusters instead of infra on env selection
+              gitOpsEnabled: deploymentStage.gitOpsEnabled,
+              // load service overrides for environment
+              serviceRef: deploymentStage.service?.serviceRef,
+              // load infrastructures/clusters in environemnt
+              environmentRef: deploymentStage.environment?.environmentRef,
+              // load infrastructure runtime inputs
+              infrastructureRef: deploymentStage.environment?.infrastructureDefinitions?.[0].identifier,
+              // load cluster runtime inputs
+              clusterRef: deploymentStage.environment?.gitOpsClusters?.[0].identifier
+            }}
+            onUpdate={values => {
+              if (deploymentStageInputSet?.environment) {
+                formik?.setValues(set(formik?.values, `${path}.environment`, values.environment))
+              }
             }}
           />
           {(deploymentStageTemplate as DeployStageConfig).environment?.infrastructureDefinitions &&
             ((deploymentStageTemplate as DeployStageConfig).environment
               ?.infrastructureDefinitions as unknown as string) !== RUNTIME_INPUT_VALUE && (
               <>
-                {(deploymentStageTemplate as DeployStageConfig).environment?.infrastructureDefinitions
+                {deploymentStage.environment?.environmentRef &&
+                  ((deploymentStage as DeployStageConfig)?.environment
+                    ?.infrastructureDefinitions as unknown as string) !== RUNTIME_INPUT_VALUE && (
+                    <div className={css.inputheader}>{getString('infrastructureText')}</div>
+                  )}
+                {deploymentStageTemplate.environment?.infrastructureDefinitions
                   ?.map((infrastructureDefinition, index) => {
                     return (
-                      <StepWidget<Infrastructure>
-                        key={infrastructureDefinition.identifier}
-                        factory={factory}
-                        template={infrastructureDefinition.inputs?.spec}
-                        initialValues={{
-                          ...infrastructureDefinition.inputs?.spec,
-                          environmentRef: (deploymentStage as DeployStageConfig).environment?.environmentRef,
-                          infrastructureRef: infrastructureDefinition.identifier
-                        }}
-                        allowableTypes={allowableTypes}
-                        allValues={{
-                          ...(deploymentStage as DeployStageConfig)?.environment?.infrastructureDefinitions?.[index]
-                            ?.inputs?.spec,
-                          environmentRef: (deploymentStage as DeployStageConfig).environment?.environmentRef,
-                          infrastructureRef: infrastructureDefinition.identifier
-                        }}
-                        type={
-                          ((infraDefinitionTypeMapping[
-                            (deploymentStage as DeployStageConfig)?.environment?.infrastructureDefinitions?.[index]
-                              ?.inputs?.type as unknown as string
-                          ] ||
-                            (deploymentStage as DeployStageConfig)?.environment?.infrastructureDefinitions?.[index]
-                              ?.inputs?.type) as StepType) || StepType.KubernetesDirect
-                        }
-                        path={`${path}.environment.infrastructureDefinitions.${index}.inputs.spec`}
-                        readonly={readonly}
-                        stepViewType={viewType}
-                        customStepProps={getCustomStepProps(
-                          ((deploymentStage as DeployStageConfig)?.deploymentType as StepType) || '',
-                          getString
-                        )}
-                      />
+                      <>
+                        <StepWidget<Infrastructure>
+                          key={infrastructureDefinition.identifier}
+                          factory={factory}
+                          template={infrastructureDefinition.inputs?.spec}
+                          initialValues={{
+                            ...deploymentStage?.environment?.infrastructureDefinitions?.[index]?.inputs,
+                            environmentRef: deploymentStage?.environment?.environmentRef,
+                            infrastructureRef: infrastructureDefinition.identifier
+                          }}
+                          allowableTypes={allowableTypes}
+                          allValues={{
+                            ...deploymentStage?.environment?.infrastructureDefinitions?.[index]?.inputs?.spec,
+                            environmentRef: deploymentStage?.environment?.environmentRef,
+                            infrastructureRef: infrastructureDefinition.identifier
+                          }}
+                          type={
+                            ((infraDefinitionTypeMapping[
+                              deploymentStage?.environment?.infrastructureDefinitions?.[index]?.inputs
+                                ?.type as unknown as string
+                            ] ||
+                              deploymentStage?.environment?.infrastructureDefinitions?.[index]?.inputs
+                                ?.type) as StepType) || StepType.KubernetesDirect
+                          }
+                          path={`${path}.environment.infrastructureDefinitions.${index}.inputs.spec`}
+                          readonly={readonly}
+                          stepViewType={viewType}
+                          customStepProps={getCustomStepProps(
+                            (deploymentStage?.deploymentType as StepType) || '',
+                            getString
+                          )}
+                        />
+                      </>
                     )
                   })
                   .filter(data => data)}
@@ -1105,7 +1120,7 @@ export function StageInputSetFormInternal({
               <Container data-name="100width" className={stepCss.bottomMargin5}>
                 <Volumes
                   name={`${namePath}infrastructure.spec.volumes`}
-                  formik={formik}
+                  formik={formik as FormikProps<unknown>}
                   expressions={expressions}
                   disabled={readonly}
                   allowableTypes={[MultiTypeInputType.FIXED]}

@@ -7,6 +7,8 @@
 
 import React, { useContext, useCallback } from 'react'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { createAppDynamicsData, createAppDynamicsPayload } from './AppDHealthSource.utils'
 import AppDMonitoredSource from './AppDHealthSource'
@@ -22,9 +24,11 @@ export default function AppDHealthSourceContainer(props: AppDynamicsHealthSource
   const { data: sourceData, onSubmit, isTemplate, expressions } = props
   const { onPrevious } = useContext(SetupSourceTabsContext)
 
+  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD)
+
   const handleSubmit = useCallback(
     async (value: UpdatedHealthSource) => {
-      const appDynamicsPayload = createAppDynamicsPayload(value)
+      const appDynamicsPayload = createAppDynamicsPayload(value, isMetricThresholdEnabled)
       appDynamicsPayload && (await onSubmit(sourceData, appDynamicsPayload))
     },
     [sourceData]

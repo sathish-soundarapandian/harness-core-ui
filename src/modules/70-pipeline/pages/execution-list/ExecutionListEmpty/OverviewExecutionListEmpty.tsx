@@ -8,10 +8,14 @@
 import { Color, FontVariation } from '@harness/design-system'
 import React from 'react'
 import cx from 'classnames'
+import { useParams } from 'react-router-dom'
 import { Container, Layout, ModalDialog, Text } from '@wings-software/uicore'
 import cdPipelineIllustration from '@pipeline/pages/pipeline-list/images/cd-pipeline-illustration.svg'
+import ciPipelineIllustration from '@pipeline/pages/pipeline-list/images/ci-pipeline-illustration.svg'
 import { useStrings } from 'framework/strings'
+import type { ProjectPathProps, PipelineType, Module } from '@common/interfaces/RouteInterfaces'
 import cdExecutionIllustration from '../images/cd-execution-illustration.svg'
+import ciExecutionIllustration from '../images/ci-execution-illustration.svg'
 import { useExecutionListEmptyAction } from './useExecutionListEmptyAction'
 import css from './ExecutionListEmpty.module.scss'
 
@@ -21,13 +25,45 @@ export interface OverviewExecutionListProps {
   isPipelineInvalid?: boolean
 }
 
+const getEmptyStateText = (
+  module: Module
+): {
+  executionLabel: string
+  pipelineOperation1: string
+  pipelineOperation2: string
+  executionIllustration: string
+  pipelineIllustration: string
+} => {
+  switch (module) {
+    case 'ci':
+      return {
+        executionLabel: 'build',
+        pipelineOperation1: 'building',
+        pipelineOperation2: 'testing',
+        executionIllustration: ciExecutionIllustration,
+        pipelineIllustration: ciPipelineIllustration
+      }
+    default:
+      return {
+        executionLabel: 'deployment',
+        pipelineOperation1: 'building',
+        pipelineOperation2: 'deploying',
+        executionIllustration: cdExecutionIllustration,
+        pipelineIllustration: cdPipelineIllustration
+      }
+  }
+}
+
 export function OverviewExecutionListEmpty({
   isPipelineInvalid,
   onRunPipeline,
   onHide
 }: OverviewExecutionListProps): JSX.Element {
   const { getString } = useStrings()
+  const { module } = useParams<PipelineType<ProjectPathProps>>()
   const { hasNoPipelines, loading, EmptyAction } = useExecutionListEmptyAction(!!isPipelineInvalid, onRunPipeline)
+  const { executionLabel, pipelineOperation1, pipelineOperation2, executionIllustration, pipelineIllustration } =
+    getEmptyStateText(module)
   return (
     <ModalDialog
       isOpen={true}
@@ -48,7 +84,7 @@ export function OverviewExecutionListEmpty({
               color={Color.GREY_700}
             >
               {hasNoPipelines
-                ? getString('pipeline.OverviewEmptyStates.createPipelineHeaderMsg')
+                ? getString('pipeline.OverviewEmptyStates.createPipelineHeaderMsg', { executionLabel })
                 : getString('pipeline.OverviewEmptyStates.runPipelineHeaderMsg')}
             </Text>
             <Text
@@ -58,13 +94,16 @@ export function OverviewExecutionListEmpty({
               padding={{ bottom: 'small' }}
             >
               {hasNoPipelines
-                ? getString('pipeline.OverviewEmptyStates.createPipelineInfo')
-                : getString('pipeline.OverviewEmptyStates.runPipelineInfo')}
+                ? getString('pipeline.OverviewEmptyStates.createPipelineInfo', {
+                    pipelineOperation1,
+                    pipelineOperation2
+                  })
+                : getString('pipeline.OverviewEmptyStates.runPipelineInfo', { executionsLabel: `${executionLabel}s` })}
             </Text>
             <EmptyAction />
           </Layout.Vertical>
           <Container width="50%">
-            <img src={hasNoPipelines ? cdPipelineIllustration : cdExecutionIllustration} />
+            <img src={hasNoPipelines ? pipelineIllustration : executionIllustration} />
           </Container>
         </Layout.Horizontal>
       )}

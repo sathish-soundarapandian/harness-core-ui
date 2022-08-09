@@ -24,7 +24,6 @@ import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { parse } from 'yaml'
 import { isEmpty, pick } from 'lodash-es'
 import type { FormikErrors } from 'formik'
 import { Classes, Dialog, Tooltip } from '@blueprintjs/core'
@@ -60,7 +59,7 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { usePermission } from '@rbac/hooks/usePermission'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useToaster } from '@common/exports'
 import routes from '@common/RouteDefinitions'
 import { useQueryParams } from '@common/hooks'
@@ -70,7 +69,7 @@ import {
   getFeaturePropsForRunPipelineButton,
   mergeTemplateWithInputSetData
 } from '@pipeline/utils/runPipelineUtils'
-import type { InputSetDTO, Pipeline } from '@pipeline/utils/types'
+import type { InputSet, InputSetDTO, Pipeline } from '@pipeline/utils/types'
 import { PipelineErrorView } from '@pipeline/components/RunPipelineModal/PipelineErrorView'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
@@ -176,7 +175,7 @@ function RetryPipeline({
   const [resolvedPipeline, setResolvedPipeline] = React.useState<PipelineInfoConfig>()
 
   const yamlTemplate = React.useMemo(() => {
-    return parse(inputSetTemplateYaml || '')?.pipeline
+    return parse<Pipeline>(inputSetTemplateYaml || '')?.pipeline
   }, [inputSetTemplateYaml])
 
   /*------------------------------------------------API Calls------------------------------*/
@@ -295,7 +294,7 @@ function RetryPipeline({
   })
   /*------------------------------------------------API Calls------------------------------*/
 
-  const pipeline: PipelineInfoConfig | undefined = parse(pipelineResponse?.data?.yamlPipeline || '')?.pipeline
+  const pipeline: PipelineInfoConfig | undefined = parse<Pipeline>(pipelineResponse?.data?.yamlPipeline || '')?.pipeline
   const valuesPipelineRef = useRef<PipelineInfoConfig>()
   const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
     fileName: `retry-pipeline.yaml`,
@@ -327,7 +326,7 @@ function RetryPipeline({
   React.useEffect(() => {
     const mergedPipelineYaml = pipelineResponse?.data?.resolvedTemplatesPipelineYaml
     if (mergedPipelineYaml) {
-      setResolvedPipeline(parse(mergedPipelineYaml)?.pipeline)
+      setResolvedPipeline(parse<Pipeline>(mergedPipelineYaml)?.pipeline)
     }
   }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
 
@@ -349,7 +348,7 @@ function RetryPipeline({
 
   useEffect(() => {
     if (inputSetYaml) {
-      const parsedYAML = parse(inputSetYaml)
+      const parsedYAML = parse<Pipeline>(inputSetYaml)
       setExistingProvide('provide')
       setCurrentPipeline(parsedYAML)
     }
@@ -404,7 +403,7 @@ function RetryPipeline({
           })
           if (data?.data?.inputSetYaml) {
             if (selectedInputSets[0].type === 'INPUT_SET') {
-              const inputSetPortion = pick(parse(data.data.inputSetYaml)?.inputSet, 'pipeline') as {
+              const inputSetPortion = pick(parse<InputSet>(data.data.inputSetYaml)?.inputSet, 'pipeline') as {
                 pipeline: PipelineInfoConfig
               }
               const toBeUpdated = mergeTemplateWithInputSetData({
@@ -438,7 +437,7 @@ function RetryPipeline({
     ) {
       errors = validatePipeline({
         pipeline: { ...clearRuntimeInput(currentPipeline.pipeline) },
-        template: parse(inputSetTemplateYaml || '')?.pipeline,
+        template: parse<Pipeline>(inputSetTemplateYaml || '')?.pipeline,
         originalPipeline: currentPipeline.pipeline,
         getString,
         viewType: StepViewType.DeploymentForm
@@ -605,7 +604,7 @@ function RetryPipeline({
           {existingProvide === 'existing' ? <div className={css.divider} /> : null}
           <PipelineInputSetForm
             originalPipeline={resolvedPipeline}
-            template={parse(templateSource)?.pipeline}
+            template={parse<Pipeline>(templateSource)?.pipeline}
             readonly={false}
             path=""
             viewType={StepViewType.DeploymentForm}
@@ -662,7 +661,7 @@ function RetryPipeline({
               const validatedErrors =
                 (validatePipeline({
                   pipeline: values as PipelineInfoConfig,
-                  template: parse(inputSetTemplateYaml || '')?.pipeline,
+                  template: parse<Pipeline>(inputSetTemplateYaml || '')?.pipeline,
                   originalPipeline: pipeline,
                   getString,
                   viewType: StepViewType.DeploymentForm

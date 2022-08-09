@@ -527,7 +527,12 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
                           title={
                             <Text className={css.tabTitle}>{getString('cf.featureFlags.flagPipeline.title')}</Text>
                           }
-                          panel={<FlagPipelineTab flagIdentifier={flagData.identifier} />}
+                          panel={
+                            <FlagPipelineTab
+                              flagIdentifier={flagData.identifier}
+                              flagVariations={flagData.variations}
+                            />
+                          }
                           panelClassName={css.flagPipelinePanel}
                         />
                       )}

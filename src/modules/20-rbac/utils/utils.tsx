@@ -117,7 +117,7 @@ export const getPermissionRequestFromProps = (
 ): PermissionsRequest | undefined => {
   if (permission) {
     return {
-      ...pick(permission, ['resourceScope', 'resource', 'options']),
+      ...pick(permission, ['resourceScope', 'resource', 'options', 'attributeFilter']),
       permissions: [permission.permission]
     } as PermissionsRequest
   }

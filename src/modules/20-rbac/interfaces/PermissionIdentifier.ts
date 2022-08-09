@@ -134,9 +134,17 @@ export enum PermissionIdentifier {
   DELETE_GITOPS_CERT = 'gitops_cert_delete',
 
   // Chaos Permissions
-  VIEW_CHAOSHUB = 'chaos_chaoshub_view',
-  EDIT_CHAOSHUB = 'chaos_chaoshub_edit',
-  DELETE_CHAOSHUB = 'chaos_chaoshub_delete',
+  VIEW_CHAOS_HUB = 'chaos_chaoshub_view',
+  EDIT_CHAOS_HUB = 'chaos_chaoshub_edit',
+  DELETE_CHAOS_HUB = 'chaos_chaoshub_delete',
+  VIEW_CHAOS_SCENARIO = 'chaos_chaosworkflow_view',
+  EDIT_CHAOS_SCENARIO = 'chaos_chaosworkflow_edit',
+  DELETE_CHAOS_SCENARIO = 'chaos_chaosworkflow_delete',
+  VIEW_CHAOS_DELEGATE = 'chaos_chaosagent_view',
+  EDIT_CHAOS_DELEGATE = 'chaos_chaosagent_edit',
+  DELETE_CHAOS_DELEGATE = 'chaos_chaosagent_delete',
+  VIEW_CHAOS_GITOPS = 'chaos_chaosgitops_view',
+  EDIT_CHAOS_GITOPS = 'chaos_chaosgitops_edit',
 
   // STO Permissions
   VIEW_STO_ISSUE = 'sto_issue_view',
@@ -145,5 +153,26 @@ export enum PermissionIdentifier {
   EDIT_STO_TESTTARGET = 'sto_testtarget_edit',
   VIEW_STO_EXEMPTION = 'sto_exemption_view',
   CREATE_STO_EXEMPTION = 'sto_exemption_create',
-  APPROVE_STO_EXEMPTION = 'sto_exemption_approve'
+  APPROVE_STO_EXEMPTION = 'sto_exemption_approve',
+
+  // CCM Permissions
+  VIEW_CCM_OVERVIEW = 'ccm_overview_view',
+  VIEW_CCM_PERSPECTIVE_FOLDERS = 'ccm_folder_view',
+  EDIT_CCM_PERSPECTIVE_FOLDERS = 'ccm_folder_edit',
+  DELETE_CCM_PERSPECTIVE_FOLDERS = 'ccm_folder_delete',
+  VIEW_CCM_PERSPECTIVE = 'ccm_perspective_view',
+  EDIT_CCM_PERSPECTIVE = 'ccm_perspective_edit',
+  DELETE_CCM_PERSPECTIVE = 'ccm_perspective_delete',
+  VIEW_CCM_BUDGET = 'ccm_budget_view',
+  EDIT_CCM_BUDGET = 'ccm_budget_edit',
+  DELETE_CCM_BUDGET = 'ccm_budget_delete',
+  VIEW_CCM_COST_CATEGORY = 'ccm_costCategory_view',
+  EDIT_CCM_COST_CATEGORY = 'ccm_costCategory_edit',
+  DELETE_CCM_COST_CATEGORY = 'ccm_costCategory_delete',
+  VIEW_CCM_AUTOSTOPPING_RULE = 'ccm_autoStoppingRule_view',
+  EDIT_CCM_AUTOSTOPPING_RULE = 'ccm_autoStoppingRule_edit',
+  DELETE_CCM_AUTOSTOPPING_RULE = 'ccm_autoStoppingRule_delete',
+  VIEW_CCM_LOADBALANCER = 'ccm_loadBalancer_view',
+  EDIT_CCM_LOADBALANCER = 'ccm_loadBalancer_edit',
+  DELETE_CCM_LOADBALANCER = 'ccm_loadBalancer_delete'
 }

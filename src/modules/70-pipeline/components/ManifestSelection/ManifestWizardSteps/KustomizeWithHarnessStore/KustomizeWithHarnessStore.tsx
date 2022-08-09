@@ -30,9 +30,10 @@ import { FormMultiTypeCheckboxField } from '@common/components'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import MultiConfigSelectField from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/MultiConfigSelectField/MultiConfigSelectField'
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
+import { FileUsage } from '@filestore/interfaces/FileStore'
 import { ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
 import type { KustomizeWithHarnessStorePropTypeDataType, ManifestTypes } from '../../ManifestInterface'
-import css from '../K8sValuesManifest/ManifestDetails.module.scss'
+import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
 interface KustomizeWithHarnessStorePropType {
   stepName: string
@@ -62,20 +63,23 @@ function KustomizeWithHarnessStore({
   const getInitialValues = (): KustomizeWithHarnessStorePropTypeDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
     const patchesPaths = get(initialValues, 'spec.patchesPaths')
+    const overlayConfiguration = get(initialValues, 'spec.overlayConfiguration.kustomizeYamlFolderPath')
     if (specValues) {
       return {
         ...specValues,
         identifier: initialValues.identifier,
-        manifestScope: get(initialValues, 'spec.manifestScope'),
-        skipResourceVersioning: get(initialValues, 'spec.skipResourceVersioning'),
-        patchesPaths
+        overlayConfiguration,
+        patchesPaths,
+        pluginPath: get(initialValues, 'spec.pluginPath'),
+        skipResourceVersioning: get(initialValues, 'spec.skipResourceVersioning')
       }
     }
     return {
       identifier: '',
-      manifestScope: '',
       files: [''],
+      overlayConfiguration: '',
       patchesPaths: [''],
+      pluginPath: '',
       skipResourceVersioning: false
     }
   }
@@ -94,8 +98,9 @@ function KustomizeWithHarnessStore({
                 files: formData.files
               }
             },
+            overlayConfiguration: { kustomizeYamlFolderPath: formData.overlayConfiguration },
             patchesPaths: formData.patchesPaths,
-            manifestScope: formData.manifestScope,
+            pluginPath: formData?.pluginPath,
             skipResourceVersioning: formData.skipResourceVersioning
           }
         }
@@ -115,7 +120,9 @@ function KustomizeWithHarnessStore({
         formName="kustomizeHarnessFileStore"
         validationSchema={Yup.object().shape({
           ...ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName')),
-          manifestScope: Yup.mixed().required(getString('pipeline.manifestType.folderPathRequired')),
+          overlayConfiguration: Yup.mixed().required(
+            getString('pipeline.manifestType.kustomizeYamlFolderPathRequired')
+          ),
           files: Yup.lazy((value): Yup.Schema<unknown> => {
             if (getMultiTypeFromValue(value as string[]) === MultiTypeInputType.FIXED) {
               return Yup.array().of(Yup.string().required(getString('pipeline.manifestType.pathRequired')))
@@ -148,25 +155,29 @@ function KustomizeWithHarnessStore({
                   <div
                     className={cx(css.halfWidth, {
                       [css.runtimeInput]:
-                        getMultiTypeFromValue(formik.values?.manifestScope) === MultiTypeInputType.RUNTIME
+                        getMultiTypeFromValue(formik.values?.overlayConfiguration as string) ===
+                        MultiTypeInputType.RUNTIME
                     })}
                   >
                     <FormInput.MultiTextInput
-                      name="manifestScope"
+                      name="overlayConfiguration"
                       multiTextInputProps={{ expressions, allowableTypes }}
-                      label={getString('pipeline.manifestType.manifestScope')}
-                      placeholder={getString('pipeline.manifestType.folderPathPlaceholder')}
+                      label={getString('pipeline.manifestType.kustomizeYamlFolderPath')}
+                      placeholder={getString('pipeline.manifestType.kustomizeFolderPathPlaceholder')}
                     />
-                    {getMultiTypeFromValue(get(formik, 'values.manifestScope')) === MultiTypeInputType.RUNTIME && (
+                    {getMultiTypeFromValue(get(formik, 'values.overlayConfiguration')) ===
+                      MultiTypeInputType.RUNTIME && (
                       <ConfigureOptions
                         style={{ alignSelf: 'center', marginBottom: 4 }}
-                        value={get(formik, 'values.manifestScope', '')}
+                        value={get(formik, 'values.overlayConfiguration', '')}
                         type="String"
-                        variableName="manifestScope"
+                        variableName="overlayConfiguration"
                         showRequiredField={false}
                         showDefaultField={false}
                         showAdvanced={true}
-                        onChange={/* istanbul ignore next */ value => formik.setFieldValue('manifestScope', value)}
+                        onChange={
+                          /* istanbul ignore next */ value => formik.setFieldValue('overlayConfiguration', value)
+                        }
                         isReadonly={isReadonly}
                       />
                     )}
@@ -179,9 +190,10 @@ function KustomizeWithHarnessStore({
                       formik={formik}
                       expressions={expressions}
                       values={formik.values.files}
+                      fileUsage={FileUsage.MANIFEST_FILE}
                       multiTypeFieldSelectorProps={{
                         disableTypeSelection: false,
-                        label: <Text>{getString('fileFolderPathText')}</Text>
+                        label: <Text>{getString('pipeline.manifestType.kustomizeFolderPath')}</Text>
                       }}
                     />
                   </div>
@@ -193,11 +205,39 @@ function KustomizeWithHarnessStore({
                       formik={formik}
                       expressions={expressions}
                       values={formik.values.files}
+                      fileUsage={FileUsage.MANIFEST_FILE}
                       multiTypeFieldSelectorProps={{
                         disableTypeSelection: false,
-                        label: <Text>label={getString('pipeline.manifestTypeLabels.KustomizePatches')}</Text>
+                        label: <Text>{getString('pipeline.manifestTypeLabels.KustomizePatches')}</Text>
                       }}
                     />
+                  </div>
+                  <div
+                    className={cx(css.halfWidth, {
+                      [css.runtimeInput]:
+                        getMultiTypeFromValue(formik.values?.pluginPath) === MultiTypeInputType.RUNTIME
+                    })}
+                  >
+                    <FormInput.MultiTextInput
+                      label={getString('pluginPath')}
+                      placeholder={getString('pipeline.manifestType.kustomizePluginPathPlaceholder')}
+                      name="pluginPath"
+                      isOptional={true}
+                      multiTextInputProps={{ expressions, allowableTypes }}
+                    />
+                    {getMultiTypeFromValue(formik.values?.pluginPath) === MultiTypeInputType.RUNTIME && (
+                      <ConfigureOptions
+                        style={{ alignSelf: 'center', marginBottom: 4 }}
+                        value={formik.values?.pluginPath as string}
+                        type="String"
+                        variableName="pluginPath"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        showAdvanced={true}
+                        onChange={value => formik.setFieldValue('pluginPath', value)}
+                        isReadonly={isReadonly}
+                      />
+                    )}
                   </div>
                   <Accordion
                     activeId={get(initialValues, 'spec.skipResourceVersioning') ? getString('advancedTitle') : ''}

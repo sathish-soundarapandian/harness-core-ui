@@ -6,6 +6,7 @@
  */
 
 import React, { useState } from 'react'
+import { isUndefined } from 'lodash-es'
 import type { FieldArrayRenderProps } from 'formik'
 import { Dialog } from '@blueprintjs/core'
 import type { AllowedTypes } from '@harness/uicore'
@@ -78,9 +79,9 @@ export default function useCommands(props: UseImportResourceProps): UseImportRes
     (commandData: CommandUnitType): void => {
       const transformedCommandData = getCommandDataByType(commandData)
       if (isEdit) {
-        allArrayHelpers?.replace(editIndex, { commandUnit: transformedCommandData })
+        allArrayHelpers?.replace(editIndex, transformedCommandData)
       } else {
-        allArrayHelpers?.push({ commandUnit: { ...transformedCommandData } })
+        allArrayHelpers?.push(transformedCommandData)
       }
       hideCommandModal()
     },
@@ -91,7 +92,7 @@ export default function useCommands(props: UseImportResourceProps): UseImportRes
     const { isUpdate = false, initialModalValues, updateIndex, arrayHelpers } = args
     setAllArrayHelpers(arrayHelpers)
     setIsEdit(isUpdate)
-    if (updateIndex) {
+    if (!isUndefined(updateIndex)) {
       setEditIndex(updateIndex)
     }
     if (initialModalValues) {

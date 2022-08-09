@@ -9,9 +9,12 @@ import React from 'react'
 import { Color } from '@harness/design-system'
 import { Text, Container, Formik, FormikForm, Button } from '@wings-software/uicore'
 import * as Yup from 'yup'
-import type { FormikErrors } from 'formik'
+import type { FormikConfig, FormikErrors } from 'formik'
 import type { FeatureFlagStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import {
+  PipelineContextType,
+  usePipelineContext
+} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
 import { NameIdDescription } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
@@ -41,8 +44,11 @@ export const FeatureAddEditStageView: React.FC<FeatureAddEditStageViewProps> = (
 }): JSX.Element => {
   const { getString } = useStrings()
   const {
-    state: { pipeline }
+    state: { pipeline },
+    contextType
   } = usePipelineContext()
+
+  const isTemplate = contextType === PipelineContextType.StageTemplate
 
   const initialValues: Values = {
     identifier: data?.stage?.identifier || '',
@@ -92,6 +98,13 @@ export const FeatureAddEditStageView: React.FC<FeatureAddEditStageViewProps> = (
     }
   }
 
+  const validation: Partial<FormikConfig<Values>> = {}
+
+  if (!isTemplate) {
+    validation.validate = handleValidate
+    validation.validationSchema = validationSchema
+  }
+
   return (
     <div className={css.stageCreate}>
       <Container padding="medium">
@@ -99,21 +112,22 @@ export const FeatureAddEditStageView: React.FC<FeatureAddEditStageViewProps> = (
           enableReinitialize
           initialValues={initialValues}
           formName="featureAddStage"
-          validationSchema={validationSchema}
-          validate={handleValidate}
           onSubmit={handleSubmit}
+          {...validation}
         >
           {formikProps => (
             <FormikForm>
               <Text font={{ weight: 'bold' }} icon="cf-main" iconProps={{ size: 16 }} margin={{ bottom: 'medium' }}>
                 {getString('pipelineSteps.build.create.aboutYourStage')}
               </Text>
-              <NameIdDescription
-                formikProps={formikProps}
-                identifierProps={{
-                  inputLabel: getString('stageNameLabel')
-                }}
-              />
+              {!isTemplate && (
+                <NameIdDescription
+                  formikProps={formikProps}
+                  identifierProps={{
+                    inputLabel: getString('stageNameLabel')
+                  }}
+                />
+              )}
               {template && (
                 <Text
                   icon={'template-library'}

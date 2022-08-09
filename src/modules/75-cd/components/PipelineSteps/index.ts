@@ -13,7 +13,7 @@ import { HttpStep } from './HttpStep/HttpStep'
 import { K8RolloutDeployStep } from './K8sRolloutDeployStep/K8sRolloutDeployStep'
 import { ShellScriptStep } from './ShellScriptStep/ShellScriptStep'
 import { KubernetesInfraSpec } from './KubernetesInfraSpec/KubernetesInfraSpec'
-import { KubernetesServiceSpec } from './K8sServiceSpec/K8sServiceSpec'
+import { GenericServiceSpec } from './K8sServiceSpec/K8sServiceSpec'
 import { K8sBlueGreenDeployStep } from './K8sBgStep/K8sBlueGreenDeployStep'
 import { K8sCanaryDeployStep } from './K8sCanaryDeploy/K8sCanaryDeployStep'
 import { K8sBGSwapServices } from './K8sBGSwapServices/K8sBGSwapServices'
@@ -80,7 +80,7 @@ factory.registerStep(new ServerlessGCPSpec())
 factory.registerStep(new DeployEnvironmentStep())
 factory.registerStep(new DeployInfrastructureStep())
 factory.registerStep(new DeployServiceStep())
-factory.registerStep(new KubernetesServiceSpec())
+factory.registerStep(new GenericServiceSpec())
 factory.registerStep(new ServerlessAwsLambdaServiceSpec())
 factory.registerStep(new AzureWebAppServiceSpec())
 factory.registerStep(new HelmDeploy())

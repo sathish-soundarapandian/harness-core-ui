@@ -221,7 +221,7 @@ function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): R
       />
     )
   }
-  if (currentPipeline?.pipeline && resolvedPipeline && hasRuntimeInputs) {
+  if (currentPipeline?.pipeline && resolvedPipeline && (hasRuntimeInputs || executionView)) {
     return (
       <>
         {existingProvide === 'existing' ? <div className={css.divider} /> : null}

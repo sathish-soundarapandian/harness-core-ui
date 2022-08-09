@@ -20,8 +20,6 @@ shared:
   pleaseSelectVariation: Please select a variation first.
   getStarted: '{{ $.getStarted }}'
   quickGuide: Quick Guide
-  true: 'true'
-  false: 'false'
 messages:
   flagCreated: Flag created.
   flagUpdated: Flag updated.
@@ -107,7 +105,6 @@ editDetails:
 boolean: Boolean
 multivariate: Multivariate
 featureNotReady: This feature is not yet ready. Please check back later.
-noFlag: You currently have no flags
 noResultMatch: No results match your search criteria
 homepage:
   slogan: '{{ $.common.purpose.cf.descriptionOnly }}'
@@ -133,6 +130,9 @@ featureFlags:
   newFlag: New Flag
   true: 'True'
   false: 'False'
+  noFlagsInProject: There are no Flags in this Project
+  noFlagsDescription: A Feature Flag controls what you want to release, who receives it, and how it will be delivered.
+  noFlagsToGetStarted: To get started with Feature Flags, you can <a href="https://docs.harness.io/article/1j7pdkqh7j-create-a-feature-flag" target="_blank" rel="noreferrer">create your first Flag</a>, <a href="https://docs.harness.io/category/rtce97j1wu-ff-sdks" target="_blank" rel="noreferrer">get started with our SDKs</a>, or <a href="https://docs.harness.io/category/iqgyied1c0-ff-getting-started" target="_blank" rel="noreferrer">read our getting started guide</a>.
   typeOfFlag: Select the Type of Flag You Want to Create
   startVariation: Start by selecting the variation type that the flag will use
   booleanBtnText: This is a simple ON/OFF toggle
@@ -265,6 +265,10 @@ featureFlags:
     noAvailablePipelines: No available pipelines found
     noExecutionMessage: There are no pipeline executions yet
     noExecutionDescription: Once a pipeline has been triggered, the execution details will appear here
+    triggerDetails: Trigger Details
+    flagState: Flag State
+    to: to {{ target }}
+    openExecution: Open Pipeline Execution
 featureFlagDetail:
   variationCount: '{{ count }} variations'
 flagFilters:

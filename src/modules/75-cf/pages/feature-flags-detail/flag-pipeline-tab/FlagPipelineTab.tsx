@@ -5,22 +5,23 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Container } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { NoData } from '@cf/components/NoData/NoData'
 import imageUrl from '@cf/images/pipeline_flags_empty_state.svg'
 import { useStrings } from 'framework/strings'
-import { useGetFeaturePipeline } from 'services/cf'
+import { useGetFeaturePipeline, Variation } from 'services/cf'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import AvailablePipelinesDrawer from './components/available-pipelines-drawer/AvailablePipelinesDrawer'
 import ConfiguredPipelineView from './components/configured-pipeline-view/ConfiguredPipelineView'
 export interface FlagPipelineTabProps {
   flagIdentifier: string
+  flagVariations: Variation[]
 }
 
-const FlagPipelineTab: React.FC<FlagPipelineTabProps> = ({ flagIdentifier }) => {
+const FlagPipelineTab: React.FC<FlagPipelineTabProps> = ({ flagIdentifier, flagVariations }) => {
   const { getString } = useStrings()
   const { activeEnvironment: environmentIdentifier } = useActiveEnvironment()
   const { orgIdentifier, accountId: accountIdentifier, projectIdentifier } = useParams<Record<string, string>>()
@@ -46,9 +47,20 @@ const FlagPipelineTab: React.FC<FlagPipelineTabProps> = ({ flagIdentifier }) => 
     debounce: 500
   })
 
+  const POLLING_INTERVAL = 5000
+  const [isPolling, setIsPolling] = useState(false)
+
+  useEffect(() => {
+    if (featurePipeline?.pipelineDetails) {
+      setIsPolling(true)
+      const polling = window.setTimeout(refetchFeaturePipeline, POLLING_INTERVAL)
+      return () => window.clearTimeout(polling)
+    }
+  }, [featurePipeline, refetchFeaturePipeline])
+
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
-  if (loading && !isDrawerOpen) {
+  if (loading && !isDrawerOpen && !isPolling) {
     return (
       <Container height="100%" flex={{ align: 'center-center' }}>
         <ContainerSpinner />
@@ -62,6 +74,7 @@ const FlagPipelineTab: React.FC<FlagPipelineTabProps> = ({ flagIdentifier }) => 
         <ConfiguredPipelineView
           pipelineData={featurePipeline}
           flagIdentifier={flagIdentifier}
+          flagVariations={flagVariations}
           onEdit={() => setIsDrawerOpen(true)}
           refetchFeaturePipeline={async () => await refetchFeaturePipeline()}
         />

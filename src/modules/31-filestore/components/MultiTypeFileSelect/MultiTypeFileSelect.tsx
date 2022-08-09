@@ -15,6 +15,7 @@ import { FormikContextType, connect } from 'formik'
 import { get } from 'lodash-es'
 import { errorCheck } from '@common/utils/formikHelpers'
 import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 
 import css from './MultiTypeFileSelect.module.scss'
 
@@ -100,8 +101,8 @@ export function MultiTypeFileSelect(props: ConnectedMultiTypeFieldSelectorProps)
   }
 
   if (
-    type === MultiTypeInputType.RUNTIME &&
-    getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions) !== MultiTypeInputType.RUNTIME
+    isMultiTypeRuntime(type) &&
+    !isMultiTypeRuntime(getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions))
   ) {
     setType(getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions))
   }
@@ -124,7 +125,7 @@ export function MultiTypeFileSelect(props: ConnectedMultiTypeFieldSelectorProps)
           children
         ) : type === MultiTypeInputType.EXPRESSION && typeof expressionRender === 'function' ? (
           <div className={css.expressionWrapper}>{expressionRender()}</div>
-        ) : type === MultiTypeInputType.RUNTIME && typeof value === 'string' ? (
+        ) : isMultiTypeRuntime(type) && typeof value === 'string' ? (
           <FormInput.Text className={css.runtimeDisabled} name={name} disabled label="" />
         ) : null}
         {disableTypeSelection ? null : (

@@ -9,7 +9,6 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
 import { connect, FormikProps } from 'formik'
-import cx from 'classnames'
 import { parse } from 'yaml'
 import { Spinner } from '@blueprintjs/core'
 
@@ -18,10 +17,10 @@ import {
   ButtonSize,
   ButtonVariation,
   Container,
-  Dialog,
   FormInput,
   getMultiTypeFromValue,
   Layout,
+  ModalDialog,
   MultiTypeInputType,
   SelectOption,
   useToaster
@@ -93,7 +92,8 @@ function DeployInfrastructures({
       orgIdentifier,
       projectIdentifier,
       environmentIdentifier
-    }
+    },
+    lazy: getMultiTypeFromValue(environmentIdentifier) === MultiTypeInputType.RUNTIME
   })
 
   const {
@@ -134,6 +134,7 @@ function DeployInfrastructures({
     } else {
       formik?.setFieldValue('infrastructureInputs', undefined)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [infrastructureInputsLoading])
 
   useEffect(() => {
@@ -153,6 +154,7 @@ function DeployInfrastructures({
         }
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedInfrastructure])
 
   useEffect(() => {
@@ -166,6 +168,8 @@ function DeployInfrastructures({
           []
         )
       )
+    } else if (!infrastructuresLoading && get(infrastructuresResponse, 'data.empty')) {
+      setInfrastructures([])
     }
   }, [infrastructuresLoading, infrastructuresResponse])
 
@@ -194,7 +198,7 @@ function DeployInfrastructures({
         )
         if (!existingInfrastructure) {
           if (!readonly) {
-            formik?.setFieldValue(path ? `${path}.infrastructureDefinitions[0].identifier` : 'infrastructureRef', '')
+            formik?.setFieldValue('infrastructureRef', '')
           } else {
             const options = [...infrastructuresSelectOptions]
             options.push({
@@ -204,16 +208,28 @@ function DeployInfrastructures({
             setInfrastructuresSelectOptions(options)
           }
         } else {
-          formik?.setFieldValue(
-            path ? `${path}.infrastructureDefinitions[0].identifier` : 'infrastructureRef',
-            existingInfrastructure.value
-          )
+          formik?.setFieldValue('infrastructureRef', existingInfrastructure.value)
           setSelectedInfrastructure(
             infrastructures?.filter(infra => infra.identifier === existingInfrastructure?.value)?.[0]?.yaml
           )
         }
       }
     }
+
+    // This may not be required anymore
+    if (
+      !isEmpty(infrastructuresSelectOptions) &&
+      !isNil(infrastructuresSelectOptions) &&
+      path &&
+      initialValues.environment?.infrastructureDefinitions?.[0]?.identifier
+    ) {
+      setSelectedInfrastructure(
+        infrastructures?.filter(
+          infra => infra.identifier === initialValues.environment?.infrastructureDefinitions?.[0]?.identifier
+        )?.[0]?.yaml
+      )
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [infrastructuresSelectOptions])
 
   useEffect(() => {
@@ -221,9 +237,10 @@ function DeployInfrastructures({
     if (!isNil(infrastructuresError)) {
       showError(getRBACErrorMessage(infrastructuresError))
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [infrastructuresError])
 
-  const updateInfrastructuresList = /* istanbul ignore next */ (values: InfrastructureResponseDTO) => {
+  const updateInfrastructuresList = /* istanbul ignore next */ (values: InfrastructureResponseDTO): void => {
     const newInfrastructureList = [...defaultTo(infrastructures, [])]
     const existingIndex = newInfrastructureList.findIndex(item => item.identifier === values.identifier)
     if (existingIndex >= 0) {
@@ -239,7 +256,7 @@ function DeployInfrastructures({
 
   const [showInfrastructuresModal, hideInfrastructuresModal] = useModalHook(
     () => (
-      <Dialog
+      <ModalDialog
         isOpen
         isCloseButtonShown
         canEscapeKeyClose
@@ -251,16 +268,17 @@ function DeployInfrastructures({
             ? getString('cd.infrastructure.edit')
             : getString('cd.infrastructure.createNew')
         }
-        className={cx('padded-dialog', css.dialogStyles)}
+        width={1128}
+        height={840}
+        className={css.dialogStyles}
       >
         <InfrastructureModal
           hideModal={hideInfrastructuresModal}
           refetch={updateInfrastructuresList}
-          envIdentifier={environmentIdentifier}
-          infrastructureToEdit={selectedInfrastructure}
-          setInfrastructureToEdit={setSelectedInfrastructure}
+          environmentIdentifier={environmentIdentifier}
+          selectedInfrastructure={selectedInfrastructure}
         />
-      </Dialog>
+      </ModalDialog>
     ),
     [environmentIdentifier, selectedInfrastructure, setSelectedInfrastructure]
   )
@@ -274,7 +292,7 @@ function DeployInfrastructures({
       <FormInput.MultiTypeInput
         label={getString('cd.pipelineSteps.environmentTab.specifyYourInfrastructure')}
         tooltipProps={{ dataTooltipId: 'specifyYourInfrastructure' }}
-        name={path ? `${path}.infrastructureDefinitions[0].identifier` : 'infrastructureRef'}
+        name={'infrastructureRef'}
         useValue
         disabled={readonly || (infrastructureRefType === MultiTypeInputType.FIXED && infrastructuresLoading)}
         placeholder={

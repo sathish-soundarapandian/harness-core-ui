@@ -68,6 +68,110 @@ export const mockedSelectedDerivedStage = {
   }
 }
 
+export const mockedSelectedStageNewDesign = {
+  stage: {
+    name: 'stage-1',
+    identifier: 'stage1',
+    description: '',
+    type: 'Deployment',
+    spec: {
+      deploymentType: 'Kubernetes',
+      service: {
+        serviceRef: 'service1'
+      },
+      environment: {
+        environmentRef: 'env1',
+        deployToAll: false,
+        infrastructureDefinitions: [
+          {
+            identifier: 'infra1'
+          }
+        ]
+      },
+      execution: {
+        steps: [
+          {
+            step: {
+              type: 'Verify',
+              name: 'Test',
+              identifier: 'Test',
+              spec: {
+                type: 'Rolling',
+                monitoredService: {
+                  type: 'Default',
+                  spec: {}
+                },
+                spec: {
+                  sensitivity: 'HIGH',
+                  duration: '5m',
+                  deploymentTag: '<+serviceConfig.artifacts.primary.tag>'
+                }
+              },
+              timeout: '2h',
+              failureStrategies: [
+                {
+                  onFailure: {
+                    errors: ['Verification'],
+                    action: {
+                      type: 'ManualIntervention',
+                      spec: {
+                        timeout: '2h',
+                        onTimeout: {
+                          action: {
+                            type: 'StageRollback'
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  onFailure: {
+                    errors: ['Unknown'],
+                    action: {
+                      type: 'ManualIntervention',
+                      spec: {
+                        timeout: '2h',
+                        onTimeout: {
+                          action: {
+                            type: 'Ignore'
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        rollbackSteps: [
+          {
+            step: {
+              name: 'Rollback Rollout Deployment',
+              identifier: 'rollbackRolloutDeployment',
+              type: 'K8sRollingRollback',
+              timeout: '10m',
+              spec: {}
+            }
+          }
+        ]
+      }
+    },
+    tags: {},
+    failureStrategies: [
+      {
+        onFailure: {
+          errors: ['AllErrors'],
+          action: {
+            type: 'StageRollback'
+          }
+        }
+      }
+    ]
+  }
+}
+
 export const mockedPipeline = {
   name: 'Pipeline-demo',
   identifier: 'Pipelinedemo',

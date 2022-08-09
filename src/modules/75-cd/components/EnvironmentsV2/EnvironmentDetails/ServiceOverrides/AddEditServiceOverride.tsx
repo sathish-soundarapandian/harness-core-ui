@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import { defaultTo, get, isEmpty, isEqual } from 'lodash-es'
 import { parse } from 'yaml'
+import * as Yup from 'yup'
 
 import {
   Button,
@@ -113,6 +114,7 @@ export default function AddEditServiceOverride({
   const [variablesOptions, setVariablesOptions] = useState<SelectOption[]>([])
 
   useEffect(() => {
+    // istanbul ignore else
     if (services) {
       if (selectedVariable?.serviceRef?.length) {
         const serviceToBeSelected = services?.data?.content?.filter(
@@ -153,6 +155,7 @@ export default function AddEditServiceOverride({
   const handleServiceChange = (item: SelectOption, isEdit: boolean) => {
     const serviceSelected = services?.data?.content?.find(serviceObj => serviceObj.service?.identifier === item.value)
 
+    // istanbul ignore else
     if (serviceSelected) {
       const parsedServiceYaml = defaultTo(
         yamlParse(defaultTo(serviceSelected?.service?.yaml, '{}')),
@@ -184,6 +187,8 @@ export default function AddEditServiceOverride({
   const handleVariableChange = (item: SelectOption) => {
     const variableSelected = serviceVariables?.find(serviceVariable => serviceVariable.name === item.value)
     if (variableSelected) {
+      // istanbul ignore else
+      if (variableSelected?.name === formikRef.current?.values?.variableOverride?.name) return
       formikRef.current?.setFieldValue('variableOverride', {
         name: variableSelected?.name,
         value: (variableSelected as AllNGVariables)?.value,
@@ -207,29 +212,13 @@ export default function AddEditServiceOverride({
     }
   }
 
-  const validate = (values: AddEditServiceOverrideFormProps) => {
-    const { name, type, value } = defaultTo(formikRef.current?.values.variableOverride, {})
-    const { variableOverride: { name: newName, type: newType, value: newValue } = {} } = values
-
-    if (
-      (name === newName && type === newType && value === newValue) ||
-      isEmpty(newName) ||
-      (newType === 'String' && isEmpty(newValue)) ||
-      // the above condition of isEmpty does not work for numbers and hence the additional check below
-      (newType === 'Number' && newValue === '')
-    ) {
-      setIsModified(false)
-    } else {
-      setIsModified(true)
-    }
-  }
-
   const handleModeSwitch = useCallback(
     /* istanbul ignore next */ (view: SelectedView) => {
       if (view === SelectedView.VISUAL) {
         const yaml = defaultTo(yamlHandler?.getLatestYaml(), '{}')
         const yamlVisual = (parse(yaml) as NGServiceOverrideConfig).serviceOverrides
 
+        // istanbul ignore else
         if (yamlVisual) {
           formikRef.current?.setValues({
             ...yamlVisual,
@@ -238,6 +227,7 @@ export default function AddEditServiceOverride({
           } as any)
         }
       } else {
+        // istanbul ignore else
         if (!formikRef.current?.values?.serviceRef) {
           showError('Please select a service first')
           return
@@ -349,7 +339,29 @@ export default function AddEditServiceOverride({
           })
         }
       }
-      validate={validate}
+      validationSchema={Yup.object().shape({
+        serviceRef: Yup.string().required(
+          getString('common.validation.fieldIsRequired', { name: getString('service') })
+        ),
+        variableOverride: Yup.object()
+          .required()
+          .shape({
+            name: Yup.string().required(getString('common.validation.fieldIsRequired', { name: getString('name') })),
+            type: Yup.string().oneOf(['String', 'Number', 'Secret']).required(),
+            value: Yup.mixed().test({
+              test(valueObj): boolean | Yup.ValidationError {
+                // istanbul ignore else
+                if (valueObj === undefined) {
+                  return this.createError({
+                    path: 'variableOverride.value',
+                    message: getString('common.validation.fieldIsRequired', { name: getString('valueLabel') })
+                  })
+                }
+                return true
+              }
+            })
+          })
+      })}
     >
       {formikProps => {
         formikRef.current = formikProps
@@ -400,14 +412,11 @@ export default function AddEditServiceOverride({
                   items={getVariableTypeOptions(getString)}
                   label={getString('typeLabel')}
                   placeholder={getString('common.selectName', { name: getString('service') })}
+                  onChange={() => {
+                    formikProps.setFieldValue('variableOverride.value', '')
+                  }}
                 />
-                {formikProps.values.variableOverride?.type === VariableType.Secret ? (
-                  <MultiTypeSecretInput
-                    name={`variableOverride.value`}
-                    label={getString('cd.overrideValue')}
-                    isMultiType
-                  />
-                ) : (
+                {formikProps.values.variableOverride?.type !== VariableType.Secret && (
                   <FormInput.MultiTextInput
                     className="variableInput"
                     name={`variableOverride.value`}
@@ -419,6 +428,13 @@ export default function AddEditServiceOverride({
                       },
                       multitypeInputValue: getMultiTypeFromValue(formikProps.values.variableOverride?.value)
                     }}
+                  />
+                )}
+                {formikProps.values.variableOverride?.type === VariableType.Secret && (
+                  <MultiTypeSecretInput
+                    name={`variableOverride.value`}
+                    label={getString('cd.overrideValue')}
+                    isMultiType
                   />
                 )}
               </Container>
@@ -447,7 +463,7 @@ export default function AddEditServiceOverride({
                   }
                 }
                 data-testid="addVariableSave"
-                disabled={!isModified || upsertServiceOverrideLoading}
+                disabled={(selectedView === SelectedView.YAML && !isModified) || upsertServiceOverrideLoading}
               />
               <Button
                 variation={ButtonVariation.TERTIARY}

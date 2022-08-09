@@ -33,6 +33,7 @@ export class ServiceNowUpdate extends PipelineStep<ServiceNowUpdateData> {
     this._hasDelegateSelectionVisible = true
   }
 
+  protected referenceId = 'serviceNowUpdateStep'
   protected isHarnessSpecific = true
   protected type = StepType.ServiceNowUpdate
   protected stepName = 'ServiceNow Update'

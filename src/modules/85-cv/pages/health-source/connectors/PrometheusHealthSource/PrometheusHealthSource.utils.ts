@@ -14,7 +14,12 @@ import {
 } from '@wings-software/uicore'
 import { clone, defaultTo, isNumber } from 'lodash-es'
 import type { FormikProps } from 'formik'
-import type { PrometheusFilter, PrometheusHealthSourceSpec, TimeSeriesMetricDefinition } from 'services/cv'
+import type {
+  PrometheusFilter,
+  PrometheusHealthSourceSpec,
+  TimeSeriesMetricDefinition,
+  TimeSeriesMetricPackDTO
+} from 'services/cv'
 import type { StringsMap } from 'stringTypes'
 import type { UseStringsReturn } from 'framework/strings'
 import {
@@ -27,8 +32,19 @@ import {
   PrometheusProductNames
 } from './PrometheusHealthSource.constants'
 import { HealthSourceTypes } from '../../types'
-import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
+import type {
+  PrometheusHealthSourceType,
+  UpdatedHealthSource
+} from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import type { CustomMappedMetric } from '../../common/CustomMetric/CustomMetric.types'
+import {
+  MetricThresholdPropertyName,
+  MetricThresholdTypes,
+  MetricTypeValues
+} from '../../common/MetricThresholds/MetricThresholds.constants'
+import { validateCommonFieldsForMetricThreshold } from '../../common/MetricThresholds/MetricThresholds.utils'
+import type { AvailableThresholdTypes } from '../../common/MetricThresholds/MetricThresholds.types'
+import type { PrometheusMetricThresholdType } from './PrometheusHealthSource.types'
 
 type UpdateSelectedMetricsMap = {
   updatedMetric: string
@@ -57,7 +73,7 @@ export function updateSelectedMetricsMap({
       metricName: updatedMetric,
       query: '',
       isManualQuery: false
-    })
+    } as MapPrometheusQueryToService)
   }
 
   // update map with current form data
@@ -75,12 +91,12 @@ export function initializeSelectedMetricsMap(
     selectedMetric: (Array.from(mappedServicesAndEnvs?.keys() || [])?.[0] as string) || defaultSelectedMetricName,
     mappedMetrics:
       mappedServicesAndEnvs ||
-      new Map([
+      (new Map([
         [
           defaultSelectedMetricName,
           { metricName: defaultSelectedMetricName, isManualQuery: false, query: '', identifier: '' }
         ]
-      ])
+      ]) as Map<string, MapPrometheusQueryToService>)
   }
 }
 
@@ -123,12 +139,37 @@ export function validateAssginComponent(
   return requiredFieldErrors
 }
 
+const validateMetricThresholds = (
+  errors: any,
+  values: MapPrometheusQueryToService,
+  getString: UseStringsReturn['getString']
+): void => {
+  // ignoreThresholds Validation
+  validateCommonFieldsForMetricThreshold(
+    MetricThresholdPropertyName.IgnoreThreshold,
+    errors,
+    values[MetricThresholdPropertyName.IgnoreThreshold] as PrometheusMetricThresholdType[],
+    getString,
+    false
+  )
+
+  // failFastThresholds Validation
+  validateCommonFieldsForMetricThreshold(
+    MetricThresholdPropertyName.FailFastThresholds,
+    errors,
+    values[MetricThresholdPropertyName.FailFastThresholds] as PrometheusMetricThresholdType[],
+    getString,
+    false
+  )
+}
+
 export function validateMappings(
   getString: UseStringsReturn['getString'],
   createdMetrics: string[],
   selectedMetricIndex: number,
   values?: MapPrometheusQueryToService,
-  mappedMetrics?: Map<string, CustomMappedMetric>
+  mappedMetrics?: Map<string, CustomMappedMetric>,
+  isMetricThresholdEnabled?: boolean
 ): { [fieldName: string]: string } {
   let requiredFieldErrors = {
     [PrometheusMonitoringSourceFieldNames.ENVIRONMENT_FILTER]: getString(
@@ -218,6 +259,10 @@ export function validateMappings(
 
   requiredFieldErrors = validateAssginComponent(values, { ...requiredFieldErrors }, getString)
 
+  if (isMetricThresholdEnabled) {
+    validateMetricThresholds(requiredFieldErrors, values, getString)
+  }
+
   return requiredFieldErrors
 }
 
@@ -277,6 +322,21 @@ function generateMultiSelectOptionListFromPrometheusFilter(filters?: PrometheusF
   return options
 }
 
+export function getFilteredMetricThresholdValues(
+  thresholdName: AvailableThresholdTypes,
+  metricPacks: TimeSeriesMetricPackDTO[]
+): PrometheusMetricThresholdType[] {
+  const customMetricThresholdDetails = metricPacks.find(metricPack => metricPack.identifier === MetricTypeValues.Custom)
+
+  if (!customMetricThresholdDetails) {
+    return []
+  }
+
+  return (customMetricThresholdDetails?.metricThresholds as PrometheusMetricThresholdType[]).filter(
+    (metricThreshold: PrometheusMetricThresholdType) => metricThreshold.type === thresholdName
+  )
+}
+
 export function transformPrometheusHealthSourceToSetupSource(
   sourceData: any,
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
@@ -295,15 +355,17 @@ export function transformPrometheusHealthSourceToSetupSource(
           getString('cv.monitoringSources.prometheus.prometheusMetric'),
           {
             metricName: getString('cv.monitoringSources.prometheus.prometheusMetric'),
-            isManualQuery: false,
+            isManualQuery: Boolean(isTemplate),
             query: isConnectorRuntimeOrExpression ? RUNTIME_INPUT_VALUE : '',
             identifier: 'prometheus_metric'
           }
         ]
-      ]),
+      ]) as Map<string, MapPrometheusQueryToService>,
       healthSourceName: sourceData.healthSourceName,
       connectorRef: sourceData.connectorRef,
-      product: { label: PrometheusProductNames.APM, value: PrometheusProductNames.APM }
+      product: { label: PrometheusProductNames.APM, value: PrometheusProductNames.APM },
+      ignoreThresholds: [],
+      failFastThresholds: []
     }
   }
 
@@ -313,7 +375,15 @@ export function transformPrometheusHealthSourceToSetupSource(
     healthSourceIdentifier: sourceData.healthSourceIdentifier,
     healthSourceName: sourceData.healthSourceName,
     product: sourceData.product,
-    connectorRef: sourceData.connectorRef
+    connectorRef: sourceData.connectorRef,
+    ignoreThresholds: getFilteredMetricThresholdValues(
+      MetricThresholdTypes.IgnoreThreshold,
+      (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks || []
+    ),
+    failFastThresholds: getFilteredMetricThresholdValues(
+      MetricThresholdTypes.FailImmediately,
+      (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks || []
+    )
   }
 
   for (const metricDefinition of (healthSource?.spec as PrometheusHealthSourceSpec)?.metricDefinitions || []) {
@@ -347,15 +417,18 @@ export function transformPrometheusHealthSourceToSetupSource(
         continuousVerification: metricDefinition?.analysis?.deploymentVerification?.enabled,
         healthScore: metricDefinition?.analysis?.liveMonitoring?.enabled,
         sli: metricDefinition.sli?.enabled
-      })
+      } as MapPrometheusQueryToService)
     }
   }
 
   return setupSource
 }
 
-export function transformPrometheusSetupSourceToHealthSource(setupSource: PrometheusSetupSource): UpdatedHealthSource {
-  const dsConfig: UpdatedHealthSource = {
+export function transformPrometheusSetupSourceToHealthSource(
+  setupSource: PrometheusSetupSource,
+  isMetricThresholdEnabled: boolean
+): PrometheusHealthSourceType {
+  const dsConfig: PrometheusHealthSourceType = {
     type: HealthSourceTypes.Prometheus as UpdatedHealthSource['type'],
     identifier: setupSource.healthSourceIdentifier,
     name: setupSource.healthSourceName,
@@ -365,7 +438,8 @@ export function transformPrometheusSetupSourceToHealthSource(setupSource: Promet
           ? setupSource?.connectorRef
           : (setupSource?.connectorRef?.value as string),
       feature: PrometheusProductNames.APM,
-      metricDefinitions: []
+      metricDefinitions: [],
+      metricPacks: []
     }
   }
 
@@ -431,6 +505,13 @@ export function transformPrometheusSetupSourceToHealthSource(setupSource: Promet
           serviceInstanceFieldName: typeof serviceInstance === 'string' ? serviceInstance : serviceInstance?.value
         }
       }
+    })
+  }
+
+  if (isMetricThresholdEnabled) {
+    dsConfig.spec?.metricPacks?.push({
+      identifier: MetricTypeValues.Custom,
+      metricThresholds: [...setupSource.ignoreThresholds, ...setupSource.failFastThresholds]
     })
   }
 

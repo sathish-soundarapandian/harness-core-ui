@@ -33,6 +33,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import {
   formatInitialValues,
   terraformArtifactorySchema,
@@ -238,7 +239,7 @@ export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = 
                       multiTextInputProps={{
                         expressions,
                         allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                          item => item !== MultiTypeInputType.RUNTIME
+                          item => !isMultiTypeRuntime(item)
                         ) as AllowedTypes
                       }}
                     />
@@ -282,7 +283,7 @@ export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = 
                         multiTextInputProps={{
                           expressions,
                           allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                            item => item !== MultiTypeInputType.RUNTIME
+                            item => !isMultiTypeRuntime(item)
                           ) as AllowedTypes
                         }}
                       />
@@ -320,7 +321,7 @@ export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = 
                                       multiTextInputProps={{
                                         expressions,
                                         allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                                          item => item !== MultiTypeInputType.RUNTIME
+                                          item => !isMultiTypeRuntime(item)
                                         ) as AllowedTypes
                                       }}
                                       style={{ width: 320 }}

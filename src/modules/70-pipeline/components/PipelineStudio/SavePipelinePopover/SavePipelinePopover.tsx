@@ -17,8 +17,8 @@ import {
 } from '@wings-software/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, noop, omit } from 'lodash-es'
-import { parse } from 'yaml'
 import { useModalHook } from '@harness/use-modal'
+import { parse } from '@common/utils/YamlHelperMethods'
 import { useStrings } from 'framework/strings'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -50,9 +50,10 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { EvaluationModal } from '@governance/EvaluationModal'
 import type { SaveToGitFormV2Interface } from '@common/components/SaveToGitFormV2/SaveToGitFormV2'
 import { SCHEMA_VALIDATION_FAILED } from '@common/interfaces/GitSyncInterface'
+import type { Pipeline } from '@pipeline/utils/types'
 import usePipelineErrors from '../PipelineCanvas/PipelineErrors/usePipelineErrors'
 
-export interface SavePipelinePopoverProps extends PopoverProps {
+export default interface SavePipelinePopoverProps extends PopoverProps {
   toPipelineStudio: PathFn<PipelineType<PipelinePathProps> & PipelineStudioQueryParams>
 }
 
@@ -77,7 +78,7 @@ export function SavePipelinePopover({ toPipelineStudio }: SavePipelinePopoverPro
   const { showSuccess, showError, clear } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
-  const { OPA_PIPELINE_GOVERNANCE, NG_TEMPLATES: templatesFeatureFlagEnabled } = useFeatureFlags()
+  const { OPA_PIPELINE_GOVERNANCE } = useFeatureFlags()
   const history = useHistory()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } =
     useParams<PipelineType<PipelinePathProps>>()
@@ -116,7 +117,7 @@ export function SavePipelinePopover({ toPipelineStudio }: SavePipelinePopoverPro
     permissions: [PermissionIdentifier.EDIT_TEMPLATE]
   })
 
-  const isTemplatesEnabled = templatesFeatureEnabled && templatesFeatureFlagEnabled && canEdit && !pipeline?.template
+  const isTemplatesEnabled = templatesFeatureEnabled && canEdit && !pipeline?.template
 
   const isSaveEnabled = !isReadonly && isUpdated
 
@@ -245,7 +246,8 @@ export function SavePipelinePopover({ toPipelineStudio }: SavePipelinePopoverPro
 
     if (isYaml && yamlHandler) {
       try {
-        latestPipeline = payload?.pipeline || (parse(yamlHandler.getLatestYaml()).pipeline as PipelineInfoConfig)
+        latestPipeline =
+          payload?.pipeline || (parse<Pipeline>(yamlHandler.getLatestYaml()).pipeline as PipelineInfoConfig)
       } /* istanbul ignore next */ catch (err) {
         showError(err.message || err, undefined, 'pipeline.save.gitinfo.error')
       }
@@ -289,7 +291,7 @@ export function SavePipelinePopover({ toPipelineStudio }: SavePipelinePopoverPro
         return
       }
       try {
-        latestPipeline = parse(yamlHandler.getLatestYaml()).pipeline as PipelineInfoConfig
+        latestPipeline = parse<Pipeline>(yamlHandler.getLatestYaml()).pipeline as PipelineInfoConfig
       } /* istanbul ignore next */ catch (err) {
         showError(err.message || err, undefined, 'pipeline.save.pipeline.error')
       }

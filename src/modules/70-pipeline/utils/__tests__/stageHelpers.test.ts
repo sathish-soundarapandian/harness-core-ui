@@ -5,7 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { isServerlessManifestType, ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { DeploymentStageElementConfig } from '../pipelineTypes'
 import {
@@ -117,11 +116,6 @@ test('isServerlessDeploymentType', () => {
   expect(isServerlessDeploymentType(ServiceDeploymentType.AmazonSAM)).toBe(true)
   expect(isServerlessDeploymentType(ServiceDeploymentType.AzureFunctions)).toBe(true)
   expect(isServerlessDeploymentType(ServiceDeploymentType.Kubernetes)).toBe(false)
-})
-
-test('isServerlessManifestType', () => {
-  expect(isServerlessManifestType(ManifestDataType.ServerlessAwsLambda)).toBe(true)
-  expect(isServerlessManifestType(ManifestDataType.HelmChart)).toBe(false)
 })
 
 test('getHelpeTextForTags', () => {

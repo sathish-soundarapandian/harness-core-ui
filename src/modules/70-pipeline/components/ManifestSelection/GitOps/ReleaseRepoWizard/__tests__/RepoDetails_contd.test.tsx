@@ -68,6 +68,7 @@ describe('RepoDetails contd testing', () => {
               spec: {
                 connectorRef: '<+input>',
                 gitFetchType: 'Branch',
+                repoName: RUNTIME_INPUT_VALUE,
                 paths: ['<+input>'],
                 branch: RUNTIME_INPUT_VALUE
               },
@@ -103,7 +104,7 @@ describe('test with commitid', () => {
             type: 'ReleaseRepo',
 
             commitId: 'testbranch',
-
+            repoName: 'repotest',
             gitFetchType: 'Commit',
             paths: 'eqwewq'
           }}
@@ -117,7 +118,8 @@ describe('test with commitid', () => {
                   connectorRef: 'dsfds',
                   gitFetchType: 'Commit',
                   commitId: 'testbranch',
-                  paths: ['eqwewq']
+                  paths: ['eqwewq'],
+                  repoName: 'repotest'
                 }
               }
             }
@@ -140,7 +142,8 @@ describe('test with commitid', () => {
                 commitId: 'testbranch',
                 connectorRef: 'dsfds',
                 gitFetchType: 'Commit',
-                paths: ['eqwewq']
+                paths: ['eqwewq'],
+                repoName: 'repotest'
               },
               type: undefined
             }
@@ -169,7 +172,7 @@ describe('test with commitid when no connectorref', () => {
             identifier: 'test',
 
             type: 'ReleaseRepo',
-
+            repoName: 'test',
             commitId: 'testbranch',
 
             gitFetchType: 'Commit',
@@ -178,6 +181,7 @@ describe('test with commitid when no connectorref', () => {
           manifest={{
             identifier: 'test',
             type: 'ReleaseRepo',
+            connectorRef: 'test',
             spec: {
               store: {
                 type: undefined,
@@ -185,7 +189,8 @@ describe('test with commitid when no connectorref', () => {
                   connectorRef: 'dsfds',
                   gitFetchType: 'Commit',
                   commitId: 'testbranch',
-                  paths: ['eqwewq']
+                  paths: ['eqwewq'],
+                  repoName: 'test'
                 }
               }
             }
@@ -208,7 +213,8 @@ describe('test with commitid when no connectorref', () => {
                 commitId: 'testbranch',
                 connectorRef: 'test',
                 gitFetchType: 'Commit',
-                paths: ['eqwewq']
+                paths: ['eqwewq'],
+                repoName: 'test'
               },
               type: undefined
             }
@@ -234,9 +240,8 @@ describe('test with commitid when no connectorref and identifier', () => {
             identifier: 'test',
 
             type: 'ReleaseRepo',
-
+            repoName: 'test',
             commitId: 'testbranch',
-
             gitFetchType: 'Commit',
             paths: 'eqwewq'
           }}
@@ -250,7 +255,8 @@ describe('test with commitid when no connectorref and identifier', () => {
                   connectorRef: 'dsfds',
                   gitFetchType: 'Commit',
                   commitId: 'testbranch',
-                  paths: ['eqwewq']
+                  paths: ['eqwewq'],
+                  repoName: 'test'
                 }
               }
             }
@@ -273,7 +279,8 @@ describe('test with commitid when no connectorref and identifier', () => {
                 commitId: 'testbranch',
                 connectorRef: '',
                 gitFetchType: 'Commit',
-                paths: ['eqwewq']
+                paths: ['eqwewq'],
+                repoName: 'test'
               },
               type: undefined
             }

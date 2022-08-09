@@ -26,6 +26,7 @@ import {
 import { isRuntimeInput } from '@pipeline/utils/CIUtils'
 import { Connectors } from '@connectors/constants'
 import { getCompleteConnectorUrl } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import css from './RightBar.module.scss'
 
 const onlyPositiveIntegerKeyRef = 'pipeline.onlyPositiveInteger'
@@ -127,7 +128,7 @@ export const renderConnectorAndRepoName = ({
           setCodebaseRuntimeInputs({
             ...codebaseRuntimeInputs,
             connectorRef: isRuntimeInput(value),
-            repoName: connectorRefType === MultiTypeInputType.RUNTIME
+            repoName: isMultiTypeRuntime(connectorRefType)
           })
         }}
       />

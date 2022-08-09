@@ -7,11 +7,12 @@
 
 import React, { useMemo } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
+import { parse } from 'yaml'
 import routes from '@common/RouteDefinitions'
 import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { useGetPipelineSummary } from 'services/pipeline-ng'
+import { useGetPipeline, useGetPipelineSummary } from 'services/pipeline-ng'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useQueryParams } from '@common/hooks'
 import TriggersList from './views/TriggersList'
@@ -63,6 +64,17 @@ const TriggersPage: React.FC = (): React.ReactElement => {
       branch
     }
   })
+  const { data: pipelineResponse } = useGetPipeline({
+    pipelineIdentifier,
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      getTemplatesResolvedPipeline: true,
+      branch
+    }
+  })
+  const resolvedPipeline = parse(pipelineResponse?.data?.yamlPipeline || '')
 
   useDocumentTitle([pipeline?.data?.name || getString('pipelines'), getString('common.triggersLabel')])
 
@@ -82,6 +94,7 @@ const TriggersPage: React.FC = (): React.ReactElement => {
       branch={branch}
       isPipelineInvalid={isPipelineInvalid}
       gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
+      pipeline={resolvedPipeline}
     />
   )
 }

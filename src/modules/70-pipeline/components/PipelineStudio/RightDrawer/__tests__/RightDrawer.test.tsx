@@ -412,7 +412,7 @@ describe('Right Drawer tests', () => {
     test('Edit step works as expected', async () => {
       const { findByText } = render(
         <PipelineContext.Provider value={pipelineContextMock}>
-          <TestWrapper defaultAppStoreValues={{ featureFlags: { NG_TEMPLATES: true } }}>
+          <TestWrapper>
             <RightDrawer />
           </TestWrapper>
         </PipelineContext.Provider>
@@ -428,7 +428,7 @@ describe('Right Drawer tests', () => {
     test('Step save succeeds with allowed key values in step configuration', async () => {
       const { container, findByText } = render(
         <PipelineContext.Provider value={pipelineContextMock}>
-          <TestWrapper defaultAppStoreValues={{ featureFlags: { NG_TEMPLATES: true } }}>
+          <TestWrapper>
             <RightDrawer />
           </TestWrapper>
         </PipelineContext.Provider>
@@ -445,7 +445,7 @@ describe('Right Drawer tests', () => {
     test('discard changes works as expected', async () => {
       const { findByText } = render(
         <PipelineContext.Provider value={pipelineContextMock}>
-          <TestWrapper defaultAppStoreValues={{ featureFlags: { NG_TEMPLATES: true } }}>
+          <TestWrapper>
             <RightDrawer />
           </TestWrapper>
         </PipelineContext.Provider>
@@ -461,7 +461,7 @@ describe('Right Drawer tests', () => {
     test('clicking on close button should close drawer', () => {
       const { container } = render(
         <PipelineContext.Provider value={pipelineContextMock}>
-          <TestWrapper defaultAppStoreValues={{ featureFlags: { NG_TEMPLATES: true } }}>
+          <TestWrapper>
             <RightDrawer />
           </TestWrapper>
         </PipelineContext.Provider>
@@ -560,7 +560,7 @@ describe('Right Drawer tests', () => {
       const { container } = render(
         <PipelineContext.Provider value={pipelineContextMock}>
           <PipelineVariablesContext.PipelineVariablesContext.Provider value={pipelineVariablesContextMock}>
-            <TestWrapper defaultAppStoreValues={{ featureFlags: { NG_TEMPLATES: true } }}>
+            <TestWrapper>
               <RightDrawer />
             </TestWrapper>
           </PipelineVariablesContext.PipelineVariablesContext.Provider>
@@ -625,7 +625,7 @@ describe('Right Drawer tests', () => {
     test('clicking on close button should close drawer', () => {
       const { container } = render(
         <PipelineContext.Provider value={pipelineContextMock}>
-          <TestWrapper defaultAppStoreValues={{ featureFlags: { NG_TEMPLATES: true } }}>
+          <TestWrapper>
             <RightDrawer />
           </TestWrapper>
         </PipelineContext.Provider>
@@ -765,7 +765,7 @@ describe('Right Drawer tests', () => {
       pipelineContextMock.state.pipelineView.drawerData.type = DrawerTypes.ProvisionerStepConfig
       const { findByText } = render(
         <PipelineContext.Provider value={pipelineContextMock}>
-          <TestWrapper defaultAppStoreValues={{ featureFlags: { NG_TEMPLATES: true } }}>
+          <TestWrapper>
             <RightDrawer />
           </TestWrapper>
         </PipelineContext.Provider>

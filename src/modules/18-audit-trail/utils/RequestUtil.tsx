@@ -43,6 +43,7 @@ export const moduleToLabelMap: Record<AuditEventDTO['module'], StringKeys> = {
   CV: 'common.module.cv',
   CI: 'common.module.ci',
   CORE: 'common.module.core',
+  CHAOS: 'common.module.chaos',
   PMS: 'common.module.pms',
   TEMPLATESERVICE: 'common.module.templateService',
   STO: 'common.module.sto',
@@ -61,6 +62,8 @@ export const getModuleNameFromAuditModule = (auditModule: AuditEventDTO['module'
       return 'ce'
     case 'CV':
       return 'cv'
+    case 'CHAOS':
+      return 'chaos'
   }
   return undefined
 }
@@ -110,6 +113,10 @@ export const moduleInfoMap: Record<AuditEventDTO['module'], ModuleInfo> = {
   GOVERNANCE: {
     moduleLabel: 'common.module.governance',
     icon: { name: 'governance' }
+  },
+  CHAOS: {
+    moduleLabel: 'common.module.chaos',
+    icon: { name: 'chaos-main' }
   }
 }
 

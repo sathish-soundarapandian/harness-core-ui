@@ -18,6 +18,7 @@ import deploymentTypes from '@pipeline/pages/pipelines/__tests__/mocks/deploymen
 import services from '@pipeline/pages/pipelines/__tests__/mocks/services.json'
 import environments from '@pipeline/pages/pipelines/__tests__/mocks/environments.json'
 import { PipelineResponse as PipelineDetailsMockResponse } from '@pipeline/pages/pipeline-details/__tests__/PipelineDetailsMocks'
+import { useGetListOfExecutions } from 'services/pipeline-ng'
 import CDPipelineDeploymentList from '../CDPipelineDeploymentList'
 import data from './response.json'
 import mockData from './pipelineMockData.json'
@@ -150,12 +151,16 @@ describe('<CDPipelineDeploymentList /> tests', () => {
           orgIdentifier: 'testOrg',
           projectIdentifier: 'test',
           pipelineIdentifier: 'pipeline',
-          module: 'ci'
+          module: 'cd'
         }}
         defaultAppStoreValues={defaultAppStoreValues}
       >
         <CDPipelineDeploymentList />
       </TestWrapper>
+    )
+    expect(useGetListOfExecutions).toHaveBeenCalled()
+    expect(useGetListOfExecutions).not.toHaveBeenLastCalledWith(
+      expect.objectContaining({ queryParams: expect.objectContaining({ module: 'cd' }) })
     )
 
     const runButton = await screen.findByText('runPipelineText')

@@ -25,7 +25,7 @@ describe('Environment Groups CRUD', () => {
       fixture: 'ng/api/environmentGroups/environmentGroups.empty.json'
     }).as('environmentGroupsCall')
 
-    cy.wait('@environmentGroupsCall')
+    cy.wait('@environmentGroupsCall', { timeout: 10000 })
 
     cy.contains('button', 'Create new Environment Group').should('be.visible').click()
 

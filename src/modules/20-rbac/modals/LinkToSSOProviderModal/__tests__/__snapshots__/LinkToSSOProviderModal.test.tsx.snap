@@ -139,7 +139,7 @@ exports[`Create LinkToSSOProviderModal should render the form with ssoLinked fal
                               autocomplete="off"
                               class="bp3-input"
                               name="sso"
-                              placeholder="- noData -"
+                              placeholder="- rbac.userDetails.linkToSSOProviderModal.selectSSOSetting -"
                               style="padding-right: 0px;"
                               type="text"
                               value=""
@@ -173,39 +173,115 @@ exports[`Create LinkToSSOProviderModal should render the form with ssoLinked fal
                     </div>
                   </div>
                 </div>
-                <div
-                  class="bp3-form-group bp3-disabled"
-                  data-id="groupName-1"
+              </div>
+            </div>
+            <div
+              class="Layout--horizontal StyledProps--main"
+            >
+              <button
+                class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
+                data-testid="submitLinkSSOProvider"
+                type="submit"
+              >
+                <span
+                  class="bp3-button-text"
                 >
-                  <label
-                    class="bp3-label"
-                    for="groupName"
-                  >
-                    <span
-                      class="Tooltip--acenter"
-                      data-tooltip-id="linkToSSOProviderForm_groupName"
-                    >
-                      rbac.userDetails.linkToSSOProviderModal.groupNameLabel
-                    </span>
-                     
-                    <span
-                      class="bp3-text-muted"
-                    />
-                  </label>
+                  save
+                </span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Create LinkToSSOProviderModal should render the form with ssoLinked true 1`] = `
+<div>
+  <div
+    class="Layout--vertical StyledProps--main StyledProps--padding-xlarge"
+  >
+    <div
+      class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-medium"
+      >
+        rbac.userDetails.linkToSSOProviderModal.linkLabel
+      </p>
+      <div
+        class="OverlaySpinner--overlaySpinner"
+      >
+        <form
+          action="#"
+          class="FormikForm--main"
+        >
+          <div>
+            <div
+              class="StyledProps--font StyledProps--main StyledProps--margin-bottom-medium"
+            >
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--padding-bottom-medium"
+              />
+              <div
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+              >
+                <div
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-end"
+                >
                   <div
-                    class="bp3-form-content"
+                    class="bp3-form-group select"
+                    data-id="sso-0"
                   >
                     <div
-                      class="bp3-input-group bp3-disabled"
+                      class="bp3-form-content"
                     >
-                      <input
-                        autocomplete="off"
-                        class="bp3-input"
-                        disabled=""
-                        name="groupName"
-                        type="text"
-                        value=""
-                      />
+                      <div
+                        class="bp3-popover-wrapper Select--main bp3-fill"
+                      >
+                        <div
+                          class="bp3-popover-target"
+                        >
+                          <div
+                            class="bp3-input-group"
+                          >
+                            <input
+                              autocomplete="off"
+                              class="bp3-input"
+                              name="sso"
+                              placeholder="- rbac.userDetails.linkToSSOProviderModal.selectSSOSetting -"
+                              style="padding-right: 0px;"
+                              type="text"
+                              value=""
+                            />
+                            <span
+                              class="bp3-input-action"
+                            >
+                              <span
+                                class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                                icon="chevron-down"
+                              >
+                                <svg
+                                  data-icon="chevron-down"
+                                  height="14"
+                                  viewBox="0 0 16 16"
+                                  width="14"
+                                >
+                                  <desc>
+                                    chevron-down
+                                  </desc>
+                                  <path
+                                    d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                    fill-rule="evenodd"
+                                  />
+                                </svg>
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

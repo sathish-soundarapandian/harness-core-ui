@@ -1,6 +1,7 @@
 gridColumnSelector: 'Columns'
 continuous: '{{$.common.purpose.ce.continuous}}'
 trialCta: 'Start 14 day CCM trial'
+permissionError: Please contact your Account Admin
 common:
   newBudget: 'New Budget'
   budget: 'Budget'
@@ -678,6 +679,8 @@ savedYamlSuccess: YAML validated successfully
 uploadCertiHeader: Upload a new certificate for the Application Load Balancer
 perspectives:
   newPerspective: New Perspective
+  editDefaultPerspective: These perspectives are not allowed to edit
+  deleteDefaultPerspective: These perspectives are not allowed to delete
   newPerspectiveLimitWarning: You have used {{count}} / {{limit}} free perspectives incuded in your current plan. Consider upgrading for unlimited perspectives.
   allPerspectiveTxt: 'All ({{ count }})'
   recentPerspectiveTxt: 'Recent ({{ count }})'
@@ -697,6 +700,8 @@ perspectives:
   noOfRowsLessThan: 'Number of rows should be less than {{ number }}'
   noOfRowsGreaterThan: 'Number of rows should be greater than or equal to 1'
   excludeRowswithCost: Exclude rows with cost below
+  top12GroupBy: Top 12 {{ groupBy }}
+  groupByByCost: '{{ groupBy }} by cost'
   workloadDetails:
     aggregation:
       text: 'Aggregation:'
@@ -787,6 +792,7 @@ perspectives:
       selectValuesText: 'SELECT VALUES'
       selectAll: 'Select all'
       chooseOperand: 'Choose Operand'
+      searchValue: Search Value
     preview:
       groupBy: 'Group By'
       title: '{{$.executionStrategy.preview}}'
@@ -797,7 +803,7 @@ perspectives:
       opNotNull: 'NOT NULL'
       opLike: 'LIKE'
     preferences:
-      changeLater: You can change them later when vieweing perspectives
+      changeLater: You can change them later when viewing perspectives
       includeOthers: Include Others
       includeUnallocated: Include Unallocated
   reports:
@@ -874,6 +880,7 @@ perspectives:
       enterPercent: Enter %
       emailPlaceholder: Enter email IDs/email groups/Slack webhook url
   folders:
+    title: Perspective Folder
     customFolders: '{{ $.dashboards.homePage.folders }}'
     newFolder: New folder
     createNewFolderHeading: Create new Folder for Perspectives
@@ -929,6 +936,7 @@ overview:
     idleAndUnallocatedClusters: 'Idle + Unallocated clusters'
     fromClousUsageTitle: 'Carbon emissions from Cloud Usage'
     tillDate: 'till date'
+  costPermissionError: You don't have access to View Cost Overview
 sideNav:
   perspective: 'Perspective'
 nodeRecommendation:
@@ -1138,3 +1146,7 @@ businessMapping:
     lastEdit: Last Edit
     unallocated: Unallocated
   costCategory: Cost Category
+biDashboard:
+  sideNavText: BI Dashboards
+  bannerText: 'These are dashboards created by Harness for you. You can head to the Dashboards section and create your own '
+  bannerLinkText: '{{ $.dashboards.getStarted.title }}'

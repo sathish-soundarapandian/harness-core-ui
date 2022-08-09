@@ -272,6 +272,7 @@ export interface Account {
   nextGenEnabled?: boolean
   oauthEnabled?: boolean
   povAccount?: boolean
+  productLed?: boolean
   ringName?: string
   serviceAccountConfig?: ServiceAccountConfig
   serviceGuardLimit?: number
@@ -11064,6 +11065,7 @@ export interface InstanceExecutionHistory {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
   executionInterruptType?:
     | 'ABORT'
     | 'ABORT_ALL'
@@ -12872,7 +12874,7 @@ export interface ModuleLicenseDTO {
   id?: string
   lastModifiedAt?: number
   licenseType?: 'TRIAL' | 'PAID'
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
   premiumSupport?: boolean
   selfService?: boolean
   startTime?: number
@@ -15225,6 +15227,7 @@ export interface ResponseMessage {
     | 'TOO_MANY_REQUESTS'
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -25212,47 +25215,6 @@ export const getDelegateFromIdPromise = (
     signal
   )
 
-export interface GetUserAccountsQueryParams {
-  pageIndex?: number
-  pageSize?: number
-  searchTerm?: string
-}
-
-export type GetUserAccountsProps = Omit<
-  GetProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
-  'path'
->
-
-export const GetUserAccounts = (props: GetUserAccountsProps) => (
-  <Get<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>
-    path={`/users/accounts`}
-    base={getConfig('api')}
-    {...props}
-  />
-)
-
-export type UseGetUserAccountsProps = Omit<
-  UseGetProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
-  'path'
->
-
-export const useGetUserAccounts = (props: UseGetUserAccountsProps) =>
-  useGet<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>(`/users/accounts`, {
-    base: getConfig('api'),
-    ...props
-  })
-
-export const getUserAccountsPromise = (
-  props: GetUsingFetchProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>(
-    getConfig('api'),
-    `/users/accounts`,
-    props,
-    signal
-  )
-
 export interface GetFeatureFlagsPathParams {
   accountId: string
 }
@@ -25484,6 +25446,47 @@ export const getUserPromise = (
   props: GetUsingFetchProps<RestResponseUser, unknown, void, void>,
   signal?: RequestInit['signal']
 ) => getUsingFetch<RestResponseUser, unknown, void, void>(getConfig('api'), `/users/user`, props, signal)
+
+export interface GetUserAccountsQueryParams {
+  pageIndex?: number
+  pageSize?: number
+  searchTerm?: string
+}
+
+export type GetUserAccountsProps = Omit<
+  GetProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
+  'path'
+>
+
+export const GetUserAccounts = (props: GetUserAccountsProps) => (
+  <Get<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>
+    path={`/users/userAccounts`}
+    base={getConfig('api')}
+    {...props}
+  />
+)
+
+export type UseGetUserAccountsProps = Omit<
+  UseGetProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
+  'path'
+>
+
+export const useGetUserAccounts = (props: UseGetUserAccountsProps) =>
+  useGet<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>(`/users/userAccounts`, {
+    base: getConfig('api'),
+    ...props
+  })
+
+export const getUserAccountsPromise = (
+  props: GetUsingFetchProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>(
+    getConfig('api'),
+    `/users/userAccounts`,
+    props,
+    signal
+  )
 
 export interface Logout1PathParams {
   userId: string

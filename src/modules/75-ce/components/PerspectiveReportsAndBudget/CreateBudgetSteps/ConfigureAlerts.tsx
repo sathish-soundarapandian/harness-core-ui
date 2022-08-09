@@ -105,6 +105,7 @@ const ConfigureAlerts: React.FC<StepProps<BudgetStepData> & Props> = props => {
       alertThresholds: budget?.alertThresholds?.map(alert => ({
         ...alert,
         notificationChannel: alert.slackWebhooks?.length ? BudgetAlertChannels.SLACK : BudgetAlertChannels.EMAIL,
+        emailAddresses: alert.emailAddresses || [],
         slackWebhooks: alert.slackWebhooks || []
       })) || [makeNewThresold()]
     }

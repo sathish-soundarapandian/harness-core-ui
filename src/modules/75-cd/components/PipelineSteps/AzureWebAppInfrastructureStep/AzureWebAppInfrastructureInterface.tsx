@@ -30,7 +30,7 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
   return Yup.object().shape({
     connectorRef: getConnectorSchema(getString),
     subscriptionId: Yup.lazy((value): Yup.Schema<unknown> => {
-      /* istanbul ignore else */ if (typeof value === 'string') {
+      /* istanbul ignore next */ if (typeof value === 'string') {
         return Yup.string().required(
           getString('common.validation.fieldIsRequired', { name: getString('pipeline.ACR.subscription') })
         )
@@ -47,7 +47,7 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
       })
     }),
     resourceGroup: Yup.lazy((value): Yup.Schema<unknown> => {
-      /* istanbul ignore else */ if (typeof value === 'string') {
+      /* istanbul ignore next */ if (typeof value === 'string') {
         return Yup.string().required(
           getString('common.validation.fieldIsRequired', { name: getString(resourceGroupLabel) })
         )

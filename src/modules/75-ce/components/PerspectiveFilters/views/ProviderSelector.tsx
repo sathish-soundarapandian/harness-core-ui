@@ -10,7 +10,7 @@ import { Container } from '@wings-software/uicore'
 import CustomMenuItem from '@ce/components/CustomMenu/CustomMenuItem'
 import type { QlceViewFieldIdentifierData } from 'services/ce/services'
 
-import { FIELD_TO_ICON_MAPPING } from '../constants'
+import { CommonFieldIds, FIELD_TO_ICON_MAPPING } from '../constants'
 import type { ProviderType } from '../FilterPill'
 import css from './views.module.scss'
 
@@ -53,7 +53,7 @@ const ProviderSelector: React.FC<ProviderSelectorProps> = ({ fieldValueList, set
 
         {commonFields.map(commonField =>
           commonField.values.map(field => {
-            if (field) {
+            if (field && field.fieldId !== CommonFieldIds.None) {
               const onClick: () => void = () => {
                 setProvider({
                   id: commonField.identifier,

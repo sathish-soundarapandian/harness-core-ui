@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { forwardRef, useMemo, useRef, useState } from 'react'
+import React, { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
 import {
   Container,
   Formik,
@@ -20,9 +20,9 @@ import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
-import { getErrorMessage } from '@cf/utils/CFUtils'
+import { CF_DEFAULT_PAGE_SIZE, getErrorMessage } from '@cf/utils/CFUtils'
 import { GetEnvironmentListQueryParams, useGetEnvironmentList } from 'services/cd-ng'
-import { GetAllFeaturesQueryParams, useGetAllFeatures } from 'services/cf'
+import { GetAllFeaturesQueryParams, GetFeatureFlagQueryParams, useGetAllFeatures, useGetFeatureFlag } from 'services/cf'
 import { useStrings } from 'framework/strings'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import type { FlagConfigurationStepData } from './types'
@@ -37,6 +37,7 @@ export interface FlagConfigurationStepWidgetProps {
   stepViewType?: StepViewType
 }
 
+// eslint-disable-next-line react/display-name
 const FlagConfigurationStepWidget = forwardRef(
   (
     { initialValues, onUpdate, isNewStep, readonly, stepViewType }: FlagConfigurationStepWidgetProps,
@@ -69,7 +70,7 @@ const FlagConfigurationStepWidget = forwardRef(
       orgIdentifier,
       projectIdentifier,
       environmentIdentifier: formValuesRef.current?.spec?.environment || '',
-      pageSize: 15,
+      pageSize: CF_DEFAULT_PAGE_SIZE,
       pageNumber: 0
     }
 
@@ -110,13 +111,57 @@ const FlagConfigurationStepWidget = forwardRef(
       })) as SelectOption[]
     }, [environmentsData?.data?.content])
 
+    const queryParams: GetFeatureFlagQueryParams = {
+      projectIdentifier,
+      environmentIdentifier: featureQueryParams.environmentIdentifier,
+      accountIdentifier,
+      orgIdentifier
+    }
+
+    const savedFlagId = initialValues.spec.feature
+
+    const {
+      data: savedFlagData,
+      loading: getFlagLoading,
+      refetch: getFlag
+    } = useGetFeatureFlag({
+      identifier: savedFlagId,
+      queryParams,
+      debounce: 250,
+      lazy: true
+    })
+
     const featureItems = useMemo<SelectOption[]>(() => {
       if (!featuresData?.features?.length) {
         return []
       }
 
-      return featuresData.features.map(({ name, identifier }) => ({ label: name, value: identifier }))
-    }, [featuresData?.features])
+      const flags = featuresData.features.map(({ name, identifier }) => ({ label: name, value: identifier }))
+
+      // get flag data if not in first page of features then prepend to list
+      if (
+        flags.length === featureQueryParams.pageSize &&
+        !flags.some(flag => flag.value === savedFlagId) &&
+        savedFlagData
+      ) {
+        flags.unshift({ label: savedFlagData.name, value: savedFlagData.identifier })
+      }
+
+      return flags
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [featuresData?.features, savedFlagId, savedFlagData])
+
+    useEffect(() => {
+      // fetch only if a saved flag exists & flag is not in current list
+      if (
+        savedFlagId &&
+        !featuresData?.features?.some(flag => flag.identifier === savedFlagId) &&
+        !savedFlagData &&
+        !getFlagLoading
+      ) {
+        getFlag()
+      }
+    }, [savedFlagId, savedFlagData, featureItems, getFlag, getFlagLoading, featuresData?.features])
 
     if (showLoading) {
       return (

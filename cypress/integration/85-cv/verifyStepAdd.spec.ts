@@ -260,7 +260,7 @@ describe.skip('Verify step add', () => {
     cy.wait('@savePipelineGetResponse')
     cy.wait('@stagesExecutionList')
 
-    cy.findByText('Specify Service').should('exist')
+    cy.findByText('Select Service').should('exist')
 
     cy.get('.MultiTypeInput--fixedValueInput input').should('exist')
 

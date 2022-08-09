@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { cloneDeep, defaultTo, get, isEmpty, set } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isEmpty, set, trim } from 'lodash-es'
 import type { SelectOption } from '@wings-software/uicore'
 
 import { getStageFromPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
@@ -14,10 +14,7 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import type { FeaturesProps } from 'framework/featureStore/featureStoreUtil'
 import type { UseStringsReturn } from 'framework/strings'
 import type { InputSetErrorResponse, PipelineInfoConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
-import {
-  INPUT_EXPRESSION_REGEX_STRING,
-  isExecionInput
-} from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
+import { INPUT_EXPRESSION_REGEX_STRING, parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 
 export interface MergeStageProps {
   stage: StageElementWrapperConfig
@@ -28,7 +25,6 @@ export interface MergeStageProps {
 
 /**
  * Loops over the pipeline and clears all the runtime inputs i.e. <+input>
- * expect for execution time inputs i.e. <+input>.executionInput()
  */
 export function clearRuntimeInput<T = PipelineInfoConfig>(template: T, shouldAlsoClearRuntimeInputs?: boolean): T {
   const INPUT_EXPRESSION_REGEX = new RegExp(`"${INPUT_EXPRESSION_REGEX_STRING}"`, 'g')
@@ -36,7 +32,21 @@ export function clearRuntimeInput<T = PipelineInfoConfig>(template: T, shouldAls
     JSON.stringify(template || {}).replace(
       new RegExp(`"${INPUT_EXPRESSION_REGEX.source.slice(1).slice(0, -1)}"`, 'g'),
       value => {
-        return isExecionInput(value) && !shouldAlsoClearRuntimeInputs ? value : '""'
+        const parsed = parseInput(trim(value, '"'))
+
+        if (!parsed) {
+          return value
+        }
+
+        if (parsed.executionInput && !shouldAlsoClearRuntimeInputs) {
+          return value
+        }
+
+        if (parsed.default !== null) {
+          return `"${parsed.default}"`
+        }
+
+        return '""'
       }
     )
   )

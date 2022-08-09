@@ -544,96 +544,82 @@ exports[`Create GCP connector Wizard Should render form 2`] = `
           class="OverlaySpinner--overlaySpinner"
         >
           <div
+            class="StyledProps--font StyledProps--main selectionWrapper"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--margin-top-medium StyledProps--margin-bottom-medium"
+            >
+              connectors.pdc.selectLabel
+            </p>
+            <div
+              class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
+            >
+              <label
+                class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--inline"
+              >
+                <input
+                  checked=""
+                  type="radio"
+                  value="MANUAL"
+                />
+                <span
+                  class="bp3-control-indicator"
+                />
+                connectors.pdc.manuallyHosts
+              </label>
+              <label
+                class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--inline"
+              >
+                <input
+                  type="radio"
+                  value="JSON"
+                />
+                <span
+                  class="bp3-control-indicator"
+                />
+                connectors.pdc.uploadJson
+              </label>
+            </div>
+          </div>
+          <div
             class="StyledProps--font StyledProps--main clusterWrapper"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main hostContainer"
+              class="manualHostContainer"
             >
               <div
-                class="manualHostContainer"
+                class="bp3-form-group textInput"
               >
-                <div
-                  class="bp3-form-group textInput"
+                <label
+                  class="bp3-label"
+                  for="hosts"
                 >
-                  <label
-                    class="bp3-label"
-                    for="hosts"
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="pdcDetailsForm_hosts"
                   >
                     <span
                       class="Tooltip--acenter"
-                      data-tooltip-id="pdcDetailsForm_hosts"
+                      data-tooltip-id="pdc-connector-hosts"
                     >
-                      <span
-                        class="Tooltip--acenter"
-                        data-tooltip-id="pdc-connector-hosts"
-                      >
-                        connectors.pdc.hosts
-                      </span>
+                      connectors.pdc.hosts
                     </span>
-                     
-                    <span
-                      class="bp3-text-muted"
-                    />
-                  </label>
-                  <div
-                    class="bp3-form-content"
-                  >
-                    <textarea
-                      autocomplete="off"
-                      class="bp3-input bp3-fill"
-                      maxlength="1024"
-                      name="hosts"
-                    />
-                  </div>
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <textarea
+                    autocomplete="off"
+                    class="bp3-input bp3-fill"
+                    maxlength="1024"
+                    name="hosts"
+                  />
                 </div>
-              </div>
-              <span>
-                common.orCaps
-              </span>
-              <div
-                class="uploadComponent "
-              >
-                <input
-                  id="bulk"
-                  name="bulk-upload"
-                  style="display: none;"
-                  type="file"
-                />
-                <span
-                  class="bp3-icon StyledProps--main uploadIcon"
-                  data-icon="upload-box"
-                >
-                  <svg
-                    fill="none"
-                    height="24"
-                    viewBox="0 0 16 16"
-                    width="24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M5.333 8.334l2.668-2.667L8 13.334V5.667l2.67 2.667"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <path
-                      d="M3.333 6V3.333h9.334V6"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </span>
-                <p
-                  class="StyledProps--font StyledProps--main"
-                >
-                  connectors.pdc.hostsUpload1
-                </p>
-                <p
-                  class="StyledProps--font StyledProps--main"
-                >
-                  connectors.pdc.hostsUpload2
-                </p>
               </div>
             </div>
           </div>
@@ -1233,96 +1219,82 @@ exports[`Create GCP connector Wizard Should render form 4`] = `
           class="OverlaySpinner--overlaySpinner"
         >
           <div
+            class="StyledProps--font StyledProps--main selectionWrapper"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--margin-top-medium StyledProps--margin-bottom-medium"
+            >
+              connectors.pdc.selectLabel
+            </p>
+            <div
+              class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main"
+            >
+              <label
+                class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--inline"
+              >
+                <input
+                  checked=""
+                  type="radio"
+                  value="MANUAL"
+                />
+                <span
+                  class="bp3-control-indicator"
+                />
+                connectors.pdc.manuallyHosts
+              </label>
+              <label
+                class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--inline"
+              >
+                <input
+                  type="radio"
+                  value="JSON"
+                />
+                <span
+                  class="bp3-control-indicator"
+                />
+                connectors.pdc.uploadJson
+              </label>
+            </div>
+          </div>
+          <div
             class="StyledProps--font StyledProps--main clusterWrapper"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-xxlarge StyledProps--main hostContainer"
+              class="manualHostContainer"
             >
               <div
-                class="manualHostContainer"
+                class="bp3-form-group textInput"
               >
-                <div
-                  class="bp3-form-group textInput"
+                <label
+                  class="bp3-label"
+                  for="hosts"
                 >
-                  <label
-                    class="bp3-label"
-                    for="hosts"
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="pdcDetailsForm_hosts"
                   >
                     <span
                       class="Tooltip--acenter"
-                      data-tooltip-id="pdcDetailsForm_hosts"
+                      data-tooltip-id="pdc-connector-hosts"
                     >
-                      <span
-                        class="Tooltip--acenter"
-                        data-tooltip-id="pdc-connector-hosts"
-                      >
-                        connectors.pdc.hosts
-                      </span>
+                      connectors.pdc.hosts
                     </span>
-                     
-                    <span
-                      class="bp3-text-muted"
-                    />
-                  </label>
-                  <div
-                    class="bp3-form-content"
-                  >
-                    <textarea
-                      autocomplete="off"
-                      class="bp3-input bp3-fill"
-                      maxlength="1024"
-                      name="hosts"
-                    />
-                  </div>
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <textarea
+                    autocomplete="off"
+                    class="bp3-input bp3-fill"
+                    maxlength="1024"
+                    name="hosts"
+                  />
                 </div>
-              </div>
-              <span>
-                common.orCaps
-              </span>
-              <div
-                class="uploadComponent "
-              >
-                <input
-                  id="bulk"
-                  name="bulk-upload"
-                  style="display: none;"
-                  type="file"
-                />
-                <span
-                  class="bp3-icon StyledProps--main uploadIcon"
-                  data-icon="upload-box"
-                >
-                  <svg
-                    fill="none"
-                    height="24"
-                    viewBox="0 0 16 16"
-                    width="24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M5.333 8.334l2.668-2.667L8 13.334V5.667l2.67 2.667"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <path
-                      d="M3.333 6V3.333h9.334V6"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </span>
-                <p
-                  class="StyledProps--font StyledProps--main"
-                >
-                  connectors.pdc.hostsUpload1
-                </p>
-                <p
-                  class="StyledProps--font StyledProps--main"
-                >
-                  connectors.pdc.hostsUpload2
-                </p>
               </div>
             </div>
           </div>

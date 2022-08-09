@@ -22,8 +22,10 @@ import {
 import { IFormGroupProps, Intent, FormGroup } from '@blueprintjs/core'
 import { FormikContextType, connect } from 'formik'
 import { get, isEmpty } from 'lodash-es'
+import cx from 'classnames'
 import { errorCheck } from '@common/utils/formikHelpers'
 import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 
 import css from './MultiConfigSelectField.module.scss'
 
@@ -127,12 +129,12 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
     }
 
     const runtimeValue = useExecutionTimeInput ? EXECUTION_TIME_INPUT_VALUE : RUNTIME_INPUT_VALUE
-    formik.setFieldValue(name, newType === MultiTypeInputType.RUNTIME ? runtimeValue : defaultValueToReset)
+    formik.setFieldValue(name, isMultiTypeRuntime(newType) ? runtimeValue : defaultValueToReset)
   }
 
   if (
-    type === MultiTypeInputType.RUNTIME &&
-    getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions) !== MultiTypeInputType.RUNTIME
+    isMultiTypeRuntime(type) &&
+    !isMultiTypeRuntime(getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions))
   ) {
     value
       ? setType(getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions))
@@ -146,7 +148,7 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
     if (type === MultiTypeInputType.EXPRESSION && typeof expressionRender === 'function') {
       return expressionRender()
     }
-    if (type === MultiTypeInputType.RUNTIME && typeof value === 'string') {
+    if (isMultiTypeRuntime(type) && typeof value === 'string') {
       return <FormInput.Text className={css.runtimeDisabled} name={name} disabled label="" />
     }
     return null
@@ -183,7 +185,7 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
   ) : (
     <FormGroup
       {...rest}
-      className={type === MultiTypeInputType.RUNTIME ? css.formGroup : ''}
+      className={cx({ [css.formGroup]: isMultiTypeRuntime(type) })}
       labelFor={name}
       helperText={helperText}
       intent={intent}

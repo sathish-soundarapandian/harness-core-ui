@@ -24,14 +24,16 @@ import { FontVariation } from '@harness/design-system'
 import { Form } from 'formik'
 import * as Yup from 'yup'
 
-import { defaultTo, get, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, set } from 'lodash-es'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ReleaseRepoManifest } from 'services/cd-ng'
-import { gitFetchTypeList, GitFetchTypes } from '../../Manifesthelper'
 
-import css from '../../ManifestWizardSteps/K8sValuesManifest/ManifestDetails.module.scss'
+import GitRepositoryName from '../../ManifestWizardSteps/GitRepositoryName/GitRepositoryName'
+import { gitFetchTypeList, GitFetchTypes, GitRepoName, ManifestStoreMap } from '../../Manifesthelper'
+import { getRepositoryNameReleaseRepo } from './ReleaseRepoUtils'
+import css from '../../ManifestWizardSteps/CommonManifestDetails/CommonManifestDetails.module.scss'
 
 interface ReleaseRepoDataType {
   identifier: string
@@ -136,38 +138,8 @@ function FormField({
   )
 }
 
-const submitFormData = (
-  formData: ReleaseRepoDataType & { store?: string; connectorRef?: string },
-  handleSubmit: (data: ReleaseRepoManifest) => void
-): void => {
-  const manifestObj: ReleaseRepoManifest = {
-    manifest: {
-      identifier: formData.identifier,
-      type: 'ReleaseRepo',
-      spec: {
-        store: {
-          type: formData.store,
-          spec: {
-            connectorRef: formData.connectorRef,
-            gitFetchType: formData.gitFetchType,
-            paths: [formData.paths]
-          }
-        }
-      }
-    }
-  }
-  /* istanbul ignore else */
-  if (manifestObj.manifest.spec.store) {
-    if (formData.gitFetchType === 'Branch') {
-      set(manifestObj, 'manifest.spec.store.spec.branch', defaultTo(formData.branch, ''))
-    } /*istanbul ignore else */ else if (formData.gitFetchType === 'Commit') {
-      /* istanbul ignore next */
-      set(manifestObj, 'manifest.spec.store.spec.commitId', defaultTo(formData.commitId, ''))
-    }
-  }
-
-  handleSubmit(manifestObj)
-}
+const getAccountUrl = (prevStepData?: ConnectorConfigDTO): string =>
+  prevStepData?.connectorRef?.connector?.spec?.url || prevStepData?.url
 
 function RepoDetails({
   stepName,
@@ -177,7 +149,8 @@ function RepoDetails({
   previousStep,
   manifest,
   allowableTypes,
-  isReadonly = false
+  isReadonly = false,
+  initialValues
 }: StepProps<ConnectorConfigDTO> & ReleaseRepoProps): React.ReactElement {
   const { getString } = useStrings()
 
@@ -189,7 +162,8 @@ function RepoDetails({
       return {
         ...specValues,
         identifier: manifest.identifier,
-        paths: pathValue
+        paths: pathValue,
+        repoName: getRepositoryNameReleaseRepo(prevStepData, initialValues)
       }
     }
     return {
@@ -197,10 +171,53 @@ function RepoDetails({
       branch: undefined,
       commitId: undefined,
       gitFetchType: 'Branch',
-      paths: ''
+      paths: '',
+      repoName: getRepositoryNameReleaseRepo(prevStepData, initialValues)
     }
   }, [])
 
+  const gitConnectionType: string = prevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
+
+  const connectionType =
+    prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
+    prevStepData?.urlType === GitRepoName.Repo
+      ? GitRepoName.Repo
+      : GitRepoName.Account
+
+  const accountUrl = connectionType === GitRepoName.Account ? getAccountUrl(prevStepData) : null
+
+  const submitFormData = (formData: ReleaseRepoDataType & { store?: string; connectorRef?: string }): void => {
+    const manifestObj: ReleaseRepoManifest = {
+      manifest: {
+        identifier: formData.identifier,
+        type: 'ReleaseRepo',
+        spec: {
+          store: {
+            type: formData.store,
+            spec: {
+              connectorRef: formData.connectorRef,
+              gitFetchType: formData.gitFetchType,
+              paths: [formData.paths]
+            }
+          }
+        }
+      }
+    }
+    /* istanbul ignore else */
+    if (manifestObj.manifest.spec.store) {
+      if (formData.gitFetchType === GitFetchTypes.Branch) {
+        set(manifestObj, 'manifest.spec.store.spec.branch', defaultTo(formData.branch, ''))
+      } /*istanbul ignore else */ else if (formData.gitFetchType === GitFetchTypes.Commit) {
+        /* istanbul ignore next */
+        set(manifestObj, 'manifest.spec.store.spec.commitId', defaultTo(formData.commitId, ''))
+      }
+    }
+    if (connectionType === GitRepoName.Account) {
+      set(manifestObj, 'manifest.spec.store.spec.repoName', formData?.repoName)
+    }
+
+    handleSubmit(manifestObj)
+  }
   return (
     <Layout.Vertical height={'inherit'} spacing="medium" className={css.optionsViewContainer}>
       <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
@@ -219,23 +236,29 @@ function RepoDetails({
             is: 'Commit',
             then: Yup.string().trim().required(getString('validation.commitId'))
           }),
-          paths: Yup.string().required(getString('pipeline.manifestType.pathRequired'))
+          paths: Yup.string().required(getString('pipeline.manifestType.pathRequired')),
+          repoName: Yup.string().test('repoName', getString('common.validation.repositoryName'), value => {
+            if (
+              connectionType === GitRepoName.Repo ||
+              getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+            ) {
+              return true
+            }
+            return !isEmpty(value) && value?.length > 0
+          })
         })}
         onSubmit={formData => {
-          submitFormData(
-            {
-              ...prevStepData,
-              ...formData,
-              connectorRef: defaultTo(prevStepData, { connectorRef: '' }).connectorRef
-                ? getMultiTypeFromValue(get(prevStepData, 'connectorRef', '')) !== MultiTypeInputType.FIXED
-                  ? defaultTo(prevStepData, { connectorRef: '' }).connectorRef
-                  : defaultTo(prevStepData, { connectorRef: '' }).connectorRef.value
-                : get(prevStepData, 'identifier', '')
-                ? get(prevStepData, 'identifier', '')
-                : ''
-            },
-            handleSubmit
-          )
+          submitFormData({
+            ...prevStepData,
+            ...formData,
+            connectorRef: defaultTo(prevStepData, { connectorRef: '' }).connectorRef
+              ? getMultiTypeFromValue(get(prevStepData, 'connectorRef', '')) !== MultiTypeInputType.FIXED
+                ? defaultTo(prevStepData, { connectorRef: '' }).connectorRef
+                : defaultTo(prevStepData, { connectorRef: '' }).connectorRef.value
+              : get(prevStepData, 'identifier', '')
+              ? get(prevStepData, 'identifier', '')
+              : ''
+          })
         }}
       >
         {(formik: { setFieldValue: (a: string, b: string) => void; values: ReleaseRepoDataType }) => {
@@ -253,6 +276,17 @@ function RepoDetails({
                       placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
                     />
                   </div>
+
+                  {!!(connectionType === GitRepoName.Account && accountUrl) && (
+                    <GitRepositoryName
+                      accountUrl={accountUrl}
+                      expressions={expressions}
+                      allowableTypes={allowableTypes}
+                      fieldValue={formik.values?.repoName}
+                      changeFieldValue={(value: string) => formik.setFieldValue('repoName', value)}
+                      isReadonly={isReadonly}
+                    />
+                  )}
 
                   <Layout.Horizontal spacing="huge" margin={{ top: 'small', bottom: 'small' }}>
                     <div className={css.halfWidth}>

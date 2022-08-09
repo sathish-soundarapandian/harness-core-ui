@@ -34,12 +34,12 @@ export default function InfrastructureList({
   list,
   showModal,
   refetch,
-  setInfrastructureToEdit
+  setSelectedInfrastructure
 }: {
   list?: InfrastructureResponse[]
   showModal: () => void
   refetch: () => void
-  setInfrastructureToEdit: (infrastructureYaml: string) => void
+  setSelectedInfrastructure: (infrastructureYaml: string) => void
 }) {
   const { accountId, orgIdentifier, projectIdentifier, environmentIdentifier } = useParams<
     ProjectPathProps & EnvironmentPathProps
@@ -57,7 +57,7 @@ export default function InfrastructureList({
   })
 
   const onEdit = (yaml: string) => {
-    setInfrastructureToEdit(yaml)
+    setSelectedInfrastructure(yaml)
   }
 
   const onDelete = async (identifier: string) => {

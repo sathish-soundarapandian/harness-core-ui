@@ -55,18 +55,16 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
             return (
               <>
                 {template?.spec.commandUnits?.map((command, i) => (
-                  <React.Fragment key={(command.commandUnit as any).identifier}>
+                  <React.Fragment key={(command as any).identifier}>
                     <Layout.Horizontal className={css.commandUnitName}>
                       {i + 1}
                       <Layout.Horizontal spacing="small" margin={{ left: 'small' }}>
                         <Icon name="command-shell-script" />
-                        <Text lineClamp={1}>
-                          {defaultTo(command.commandUnit.name, (command.commandUnit as any).identifier)}
-                        </Text>
+                        <Text lineClamp={1}>{defaultTo(command.name, (command as any).identifier)}</Text>
                       </Layout.Horizontal>
                     </Layout.Horizontal>
 
-                    {getMultiTypeFromValue((command?.commandUnit as CopyCommandUnit).spec?.destinationPath) ===
+                    {getMultiTypeFromValue((command as CopyCommandUnit).spec?.destinationPath) ===
                       MultiTypeInputType.RUNTIME && (
                       <Container className={css.textField}>
                         <MultiTypeTextField
@@ -79,7 +77,7 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
                               {getString('cd.steps.commands.destinationPath')}
                             </Text>
                           }
-                          name={`${prefix}spec.commandUnits[${i}].commandUnit.spec.destinationPath`}
+                          name={`${prefix}spec.commandUnits[${i}].spec.destinationPath`}
                           multiTextInputProps={{
                             multiTextInputProps: { expressions, allowableTypes },
                             disabled: readonly,
@@ -89,7 +87,7 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
                       </Container>
                     )}
 
-                    {getMultiTypeFromValue((command.commandUnit as CustomScriptCommandUnit)?.spec?.workingDirectory) ===
+                    {getMultiTypeFromValue((command as CustomScriptCommandUnit)?.spec?.workingDirectory) ===
                       MultiTypeInputType.RUNTIME && (
                       <Container className={css.textField}>
                         <MultiTypeTextField
@@ -102,7 +100,7 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
                               {getString('workingDirectory')}
                             </Text>
                           }
-                          name={`${prefix}spec.commandUnits[${i}].commandUnit.spec.workingDirectory`}
+                          name={`${prefix}spec.commandUnits[${i}].spec.workingDirectory`}
                           multiTextInputProps={{
                             multiTextInputProps: { expressions, allowableTypes },
                             disabled: readonly,
@@ -112,12 +110,11 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
                       </Container>
                     )}
 
-                    {getMultiTypeFromValue(
-                      (command.commandUnit as CustomScriptCommandUnit)?.spec?.source?.spec?.script
-                    ) === MultiTypeInputType.RUNTIME ? (
+                    {getMultiTypeFromValue((command as CustomScriptCommandUnit)?.spec?.source?.spec?.script) ===
+                    MultiTypeInputType.RUNTIME ? (
                       <div className={cx(stepCss.formGroup, stepCss.alignStart, stepCss.md)}>
                         <MultiTypeFieldSelector
-                          name={`${prefix}spec.commandUnits[${i}].commandUnit.spec.source.spec.script`}
+                          name={`${prefix}spec.commandUnits[${i}].spec.source.spec.script`}
                           label={getString('script')}
                           defaultValueToReset=""
                           disabled={readonly}
@@ -127,7 +124,7 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
                           expressionRender={() => {
                             return (
                               <ShellScriptMonacoField
-                                name={`${prefix}spec.commandUnits[${i}].commandUnit.spec.source.spec.script`}
+                                name={`${prefix}spec.commandUnits[${i}].spec.source.spec.script`}
                                 scriptType={scriptType}
                                 disabled={readonly}
                                 expressions={expressions}
@@ -136,7 +133,7 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
                           }}
                         >
                           <ShellScriptMonacoField
-                            name={`${prefix}spec.commandUnits[${i}].commandUnit.spec.source.spec.script`}
+                            name={`${prefix}spec.commandUnits[${i}].spec.source.spec.script`}
                             scriptType={scriptType}
                             disabled={readonly}
                             expressions={expressions}

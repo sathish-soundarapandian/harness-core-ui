@@ -38,7 +38,7 @@ import type { CustomManifestManifestDataType, ManifestTypes } from '../../Manife
 import { ManifestDataType, ManifestIdentifierValidation } from '../../Manifesthelper'
 import DragnDropPaths from '../../DragnDropPaths'
 import { filePathWidth } from '../ManifestUtils'
-import css from '../K8sValuesManifest/ManifestDetails.module.scss'
+import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
 interface CustomRemoteManifestPropType {
   stepName: string

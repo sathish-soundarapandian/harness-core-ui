@@ -11,6 +11,10 @@ import {
   initializeSelectedMetricsMap
 } from '@cv/pages/health-source/common/CustomMetric/CustomMetric.utils'
 import {
+  FailFastActionValues,
+  IgnoreThresholdType
+} from '@cv/pages/health-source/common/MetricThresholds/MetricThresholds.constants'
+import {
   validateMapping,
   createAppDFormData,
   getBaseAndMetricPath,
@@ -20,20 +24,29 @@ import {
   convertStringMetricPathToObject,
   convertStringBasePathToObject,
   convertFullPathToBaseAndMetric,
-  initAppDCustomFormValue
+  initAppDCustomFormValue,
+  getMetricPacksForPayload,
+  getIsMetricPacksSelected
 } from '../AppDHealthSource.utils'
 import {
   appDMetricValue,
   expectedAppDynamicData,
+  expectedThresholdsInitialData,
   formData,
   formDataExpectedOutput,
+  formDataMock,
   formikInitialData,
+  metricThresholdsPayloadMockData,
   nonCustomFeilds,
+  payloadWithThreshold,
   validateMappingNoError,
   validateMappingWithErrors,
   validateMappingWithMetricPathError
 } from './AppDMonitoredSource.mock'
 import { PATHTYPE } from '../Components/AppDCustomMetricForm/AppDCustomMetricForm.constants'
+import { ThresholdTypes } from '../AppDHealthSource.constants'
+import { CriteriaValues } from '../Components/AppDMetricThreshold/AppDMetricThresholdConstants'
+import type { AppDynamicsFomikFormInterface } from '../AppDHealthSource.types'
 
 jest.mock('uuid')
 describe('Test Util funcitons', () => {
@@ -43,7 +56,8 @@ describe('Test Util funcitons', () => {
         values: validateMappingNoError,
         createdMetrics: ['appdMetric Two', 'appdMetric One Updated'],
         selectedMetricIndex: 0,
-        getString: val => val
+        getString: val => val,
+        isMetricThresholdEnabled: false
       })
     ).toEqual({})
   })
@@ -53,7 +67,8 @@ describe('Test Util funcitons', () => {
         values: validateMappingWithErrors,
         createdMetrics: ['appdMetric Two', 'appdMetric One Updated'],
         selectedMetricIndex: 0,
-        getString: val => val
+        getString: val => val,
+        isMetricThresholdEnabled: false
       })
     ).toEqual({
       appDTier: 'cv.healthSource.connectors.AppDynamics.validation.tier',
@@ -71,7 +86,8 @@ describe('Test Util funcitons', () => {
         values: validateMappingWithMetricPathError,
         createdMetrics: ['appdMetric Two', 'appdMetric One Updated'],
         selectedMetricIndex: 0,
-        getString: val => val
+        getString: val => val,
+        isMetricThresholdEnabled: false
       })
     ).toEqual({ metricPath: 'cv.healthSource.connectors.AppDynamics.validation.metricPathWithoutLeafNode' })
 
@@ -83,14 +99,78 @@ describe('Test Util funcitons', () => {
         values: fullPathMissingTierInfo,
         createdMetrics: ['appdMetric Two', 'appdMetric One Updated'],
         selectedMetricIndex: 0,
-        getString: val => val
+        getString: val => val,
+        isMetricThresholdEnabled: false
       })
     ).toEqual({ fullPath: 'cv.healthSource.connectors.AppDynamics.validation.missingTierInFullPath' })
   })
 
+  test('thresholds validation errors', () => {
+    const fullPathMissingTierInfo = Object.assign({}, validateMappingNoError) as any
+    fullPathMissingTierInfo['pathType'] = PATHTYPE.FullPath
+    fullPathMissingTierInfo['fullPath'] = 'Overall Application Performance | docker-tier | Calls per Minute'
+    fullPathMissingTierInfo.ignoreThresholds = [
+      {
+        metricType: undefined,
+        groupName: undefined,
+        metricName: undefined,
+        type: ThresholdTypes.IgnoreThreshold,
+        spec: {
+          action: IgnoreThresholdType
+        },
+        criteria: {
+          type: CriteriaValues.Absolute,
+          spec: {}
+        }
+      }
+    ]
+    fullPathMissingTierInfo.failFastThresholds = [
+      {
+        metricType: undefined,
+        groupName: undefined,
+        metricName: undefined,
+        type: ThresholdTypes.FailImmediately,
+        spec: {
+          action: FailFastActionValues.FailImmediately,
+          spec: {}
+        },
+        criteria: {
+          type: CriteriaValues.Absolute,
+          spec: {}
+        }
+      }
+    ]
+    expect(
+      validateMapping({
+        values: fullPathMissingTierInfo,
+        createdMetrics: ['appdMetric Two', 'appdMetric One Updated'],
+        selectedMetricIndex: 0,
+        getString: val => val,
+        isMetricThresholdEnabled: true
+      })
+    ).toEqual({
+      'failFastThresholds.0.criteria.spec.greaterThan': 'cv.required',
+      'failFastThresholds.0.criteria.spec.lessThan': 'cv.required',
+      'failFastThresholds.0.groupName': 'cv.metricThresholds.validations.groupTransaction',
+      'failFastThresholds.0.metricName': 'cv.metricThresholds.validations.metricName',
+      'failFastThresholds.0.metricType': 'cv.metricThresholds.validations.metricType',
+      fullPath: 'cv.healthSource.connectors.AppDynamics.validation.missingTierInFullPath',
+      'ignoreThresholds.0.criteria.spec.greaterThan': 'cv.required',
+      'ignoreThresholds.0.criteria.spec.lessThan': 'cv.required',
+      'ignoreThresholds.0.groupName': 'cv.metricThresholds.validations.groupTransaction',
+      'ignoreThresholds.0.metricName': 'cv.metricThresholds.validations.metricName',
+      'ignoreThresholds.0.metricType': 'cv.metricThresholds.validations.metricType'
+    })
+  })
+
   test('should validate createAppDynamicsPayload', () => {
     jest.spyOn(uuid, 'v4').mockReturnValue('MockedUUID')
-    expect(createAppDynamicsPayload(formData)).toEqual(formDataExpectedOutput)
+    expect(createAppDynamicsPayload(formData, false)).toEqual(formDataExpectedOutput)
+  })
+
+  test('should validate createAppDynamicsPayload with thresholds', () => {
+    jest.spyOn(uuid, 'v4').mockReturnValue('MockedUUID')
+    expect(createAppDynamicsPayload(formData, true)).toEqual(payloadWithThreshold)
   })
 
   test('should validate createAppDynamicsPayload ifOnlySliIsSelected and no metricPack selected', () => {
@@ -116,7 +196,7 @@ describe('Test Util funcitons', () => {
       serviceInstanceMetricPath: undefined
     }
     formDataExpectedOutput.spec.metricDefinitions[1].analysis.riskProfile = {} as any
-    expect(createAppDynamicsPayload(formData)).toEqual(formDataExpectedOutput)
+    expect(createAppDynamicsPayload(formData, false)).toEqual(formDataExpectedOutput)
 
     // Metrick packs are not selected
     validateMappingNoError.metricData = { Performance: false, Errors: true }
@@ -128,13 +208,14 @@ describe('Test Util funcitons', () => {
         values: validateMappingNoError,
         createdMetrics: ['appdMetric Two', 'appdMetric One Updated'],
         selectedMetricIndex: 0,
-        getString: val => val
+        getString: val => val,
+        isMetricThresholdEnabled: false
       })
     ).toEqual({})
   })
 
-  test('should validate initializeNonCustomFields', () => {
-    expect(initializeNonCustomFields(expectedAppDynamicData as any)).toEqual(nonCustomFeilds)
+  test('should check initializeNonCustomFields for metric thresholds', () => {
+    expect(initializeNonCustomFields(expectedAppDynamicData as any, true)).toEqual(expectedThresholdsInitialData)
   })
 
   test('should validate createAppDFormData', () => {
@@ -232,5 +313,22 @@ describe('Test Util funcitons', () => {
       derivedBasePath: 'Overall Application Performance',
       derivedMetricPath: 'Exceptions per Minute'
     })
+  })
+
+  test('should create correct payload for AppD health source', () => {
+    const result = getMetricPacksForPayload(formDataMock as unknown as AppDynamicsFomikFormInterface, true)
+    expect(result).toEqual(metricThresholdsPayloadMockData)
+  })
+
+  test('getIsMetricPacksSelected returns true if atleast one metric pack is selected', () => {
+    const result = getIsMetricPacksSelected({ Performance: true })
+
+    expect(result).toBe(true)
+  })
+
+  test('getIsMetricPacksSelected returns true if atleast one metric pack is selected', () => {
+    const result = getIsMetricPacksSelected({ Performance: false, Errors: false })
+
+    expect(result).toBe(false)
   })
 })

@@ -13,7 +13,7 @@ import { defaultTo } from 'lodash-es'
 import { Container, Dialog, Heading, Text, Views } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color, FontVariation } from '@harness/design-system'
-
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { useGetEnvironmentListV2 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 
@@ -32,7 +32,6 @@ import EnvironmentTabs from './EnvironmentTabs'
 import EnvironmentsList from './EnvironmentsList/EnvironmentsList'
 import EnvironmentsGrid from './EnvironmentsGrid/EnvironmentsGrid'
 import EnvironmentsFilters from './EnvironmentsFilters/EnvironmentsFilters'
-
 import EmptyContentImg from './EmptyContent.svg'
 
 import css from './Environments.module.scss'
@@ -106,6 +105,7 @@ export function Environments() {
         setView
       }}
     >
+      <HelpPanel referenceId="environmentListing" type={HelpPanelType.FLOATING_CONTAINER} />
       <PageTemplate
         title={getString('environments')}
         titleTooltipId="ff_env_heading"

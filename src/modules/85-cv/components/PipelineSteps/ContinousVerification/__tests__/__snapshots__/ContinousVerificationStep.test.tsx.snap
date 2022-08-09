@@ -1435,9 +1435,13 @@ exports[`Test ContinousVerificationStep Step should render editView when current
                   <div
                     class="StyledProps--font StyledProps--main header"
                   >
-                    AppDynamics
                     <div
-                      class="StyledProps--font StyledProps--main"
+                      class="tableType"
+                    >
+                      AppDynamics
+                    </div>
+                    <div
+                      class="StyledProps--font StyledProps--main StyledProps--flex"
                     >
                       <span
                         class="bp3-icon bp3-icon-edit StyledProps--main link StyledProps--padding-small"

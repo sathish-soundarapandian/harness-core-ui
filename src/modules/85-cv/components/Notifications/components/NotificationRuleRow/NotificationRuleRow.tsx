@@ -191,6 +191,7 @@ export default function NotificationRuleRow({
         {showDeleteNotificationsIcon ? (
           <Container padding={{ top: 'large' }}>
             <Button
+              data-name="trash"
               icon="main-trash"
               iconProps={{ size: 20 }}
               minimal

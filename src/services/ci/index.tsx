@@ -12,67 +12,33 @@ import { Get, GetProps, useGet, UseGetProps, Mutate, MutateProps, useMutate, Use
 
 import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from '../config'
 export const SPEC_VERSION = '2.0'
+export type ACRStepInfo = StepSpecType & {
+  baseImageConnectorRefs?: string[]
+  buildArgs?: {
+    [key: string]: string
+  }
+  connectorRef: string
+  context?: string
+  dockerfile?: string
+  labels?: {
+    [key: string]: string
+  }
+  optimize?: boolean
+  remoteCacheImage?: string
+  repository: string
+  resources?: ContainerResource
+  runAsUser?: number
+  tags: string[]
+  target?: string
+}
+
 export type AbortFailureActionConfig = FailureStrategyActionConfig & {
   type: 'Abort'
-}
-
-export type AddRuleYaml = PatchInstruction & {
-  identifier: string
-  spec: AddRuleYamlSpec
-  type: 'AddRule'
-}
-
-export interface AddRuleYamlSpec {
-  clauses?: Clause[]
-  distribution?: DistributionYamlSpec
-  priority?: number
-  serve?: Serve
-}
-
-export type AddSegmentToVariationTargetMapYaml = PatchInstruction & {
-  identifier: string
-  spec: AddSegmentToVariationTargetMapYamlSpec
-  type: 'AddSegmentToVariationTargetMap'
-}
-
-export interface AddSegmentToVariationTargetMapYamlSpec {
-  segments: string[]
-  variation: string
-}
-
-export type AddTargetsToVariationTargetMapYaml = PatchInstruction & {
-  identifier: string
-  spec: AddTargetsToVariationTargetMapYamlSpec
-  type: 'AddTargetsToVariationTargetMap'
-}
-
-export interface AddTargetsToVariationTargetMapYamlSpec {
-  targets: string[]
-  variation: string
-}
-
-export type ApprovalStageConfig = StageInfoConfig & {
-  execution: ExecutionElementConfig
-}
-
-export interface ApproverInputInfo {
-  defaultValue?: string
-  name?: string
-}
-
-export interface Approvers {
-  disallowPipelineExecutor: boolean
-  minimumCount: number
-  userGroups?: string[]
 }
 
 export interface AuthorInfo {
   name?: string
   url?: string
-}
-
-export type BarrierStepInfo = StepSpecType & {
-  barrierRef: string
 }
 
 export type BranchBuildSpec = BuildSpec & {
@@ -206,6 +172,7 @@ export interface CIExecutionArgs {
 export interface CIExecutionImages {
   addonTag?: string
   artifactoryUploadTag?: string
+  buildAndPushACRTag?: string
   buildAndPushDockerRegistryTag?: string
   buildAndPushECRTag?: string
   buildAndPushGCRTag?: string
@@ -218,15 +185,37 @@ export interface CIExecutionImages {
   securityTag?: string
 }
 
+export interface CIImageDetails {
+  imageName?: string
+  imageTag?: string
+}
+
+export interface CIInfraDetails {
+  infraHostType?: string
+  infraOSType?: string
+  infraType?: string
+}
+
 export interface CIPipelineModuleInfo {
   branch?: string
   buildType?: string
   ciExecutionInfoDTO?: CIWebhookInfoDTO
+  imageDetailsList?: CIImageDetails[]
+  infraDetailsList?: CIInfraDetails[]
   isPrivateRepo?: boolean
   prNumber?: string
   repoName?: string
+  scmDetailsList?: CIScmDetails[]
   tag?: string
+  tiBuildDetailsList?: TIBuildDetails[]
   triggerRepoName?: string
+}
+
+export interface CIScmDetails {
+  scmAuthType?: string
+  scmHostType?: string
+  scmProvider?: string
+  scmUrl?: string
 }
 
 export type CIServiceInfo = DependencySpecType & {
@@ -269,20 +258,6 @@ export interface Capabilities {
   drop?: string[]
 }
 
-export interface Clause {
-  attribute: string
-  id: string
-  negate: boolean
-  op: string
-  values: string[]
-}
-
-export interface ClauseYamlSpec {
-  attribute?: string
-  op: string
-  values: string[]
-}
-
 export type CleanupStepInfo = StepSpecType & {
   infrastructure: Infrastructure
   podName: string
@@ -306,12 +281,6 @@ export interface CommitDetails {
   ownerId?: string
   ownerName?: string
   timeStamp?: number
-}
-
-export interface Condition {
-  key: string
-  operator: 'equals' | 'not equals' | 'in' | 'not in'
-  value?: string
 }
 
 export interface ConnectorConversionInfo {
@@ -361,26 +330,9 @@ export interface ContainerResourceParams {
   resourceRequestMilliCpu?: number
 }
 
-export interface CriteriaSpec {
-  [key: string]: any
-}
-
-export interface CriteriaSpecWrapper {
-  spec: CriteriaSpec
-  type: 'Jexl' | 'KeyValues'
-}
-
 export type CustomExecutionSource = ExecutionSource & {
   branch?: string
   tag?: string
-}
-
-export type CustomPolicyStepSpec = PolicySpec & {
-  payload: string
-}
-
-export type CustomStageConfig = StageInfoConfig & {
-  execution: ExecutionElementConfig
 }
 
 export interface DashboardBuildExecutionInfo {
@@ -415,17 +367,6 @@ export interface DependencySpecType {
 export interface DeprecatedImageInfo {
   tag?: string
   version?: string
-}
-
-export interface Distribution {
-  bucketBy: string
-  variations: WeightedVariation[]
-}
-
-export interface DistributionYamlSpec {
-  bucketBy: string
-  clauses?: ClauseYamlSpec[]
-  variations?: VariationYamlSpec[]
 }
 
 export type DockerStepInfo = StepSpecType & {
@@ -488,6 +429,22 @@ export interface EmptyDirYamlSpec {
   size?: string
 }
 
+export interface EntityGitDetails {
+  branch?: string
+  commitId?: string
+  filePath?: string
+  fileUrl?: string
+  objectId?: string
+  repoIdentifier?: string
+  repoName?: string
+  rootFolder?: string
+}
+
+export interface EntityValidityDetails {
+  invalidYaml?: string
+  valid?: boolean
+}
+
 export interface Error {
   code?:
     | 'DEFAULT_ERROR_CODE'
@@ -516,6 +473,7 @@ export interface Error {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -532,6 +490,7 @@ export interface Error {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -667,6 +626,7 @@ export interface Error {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -679,6 +639,7 @@ export interface Error {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -806,8 +767,16 @@ export interface Error {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
+    | 'SPOTINST_NULL_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -820,6 +789,19 @@ export interface ErrorMetadataDTO {
   type?: string
 }
 
+export interface ErrorNodeSummary {
+  childrenErrorNodes?: ErrorNodeSummary[]
+  nodeInfo?: NodeInfo
+  templateInfo?: TemplateInfo
+  templateResponse?: TemplateResponse
+}
+
+export interface ExcludeConfig {
+  exclude?: {
+    [key: string]: string
+  }
+}
+
 export interface ExecutionElementConfig {
   rollbackSteps?: ExecutionWrapperConfig[]
   steps: ExecutionWrapperConfig[]
@@ -827,12 +809,6 @@ export interface ExecutionElementConfig {
 
 export interface ExecutionSource {
   type?: 'WEBHOOK' | 'MANUAL' | 'CUSTOM'
-}
-
-export interface ExecutionTarget {
-  connectorRef?: string
-  host?: string
-  workingDirectory?: string
 }
 
 export interface ExecutionWrapperConfig {
@@ -869,6 +845,7 @@ export interface Failure {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -885,6 +862,7 @@ export interface Failure {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -1020,6 +998,7 @@ export interface Failure {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -1032,6 +1011,7 @@ export interface Failure {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -1159,8 +1139,16 @@ export interface Failure {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
+    | 'SPOTINST_NULL_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1175,13 +1163,7 @@ export interface FailureStrategyConfig {
   onFailure: OnFailureConfig
 }
 
-export type FeatureFlagStageConfig = StageInfoConfig & {}
-
-export type FlagConfigurationStepInfo = StepSpecType & {
-  environment: string
-  feature: string
-  instructions: PatchInstruction[]
-}
+export type FilterCreatorErrorResponse = ErrorMetadataDTO & {}
 
 export type GCRStepInfo = StepSpecType & {
   baseImageConnectorRefs?: ParameterFieldListString
@@ -1214,11 +1196,13 @@ export interface GitInfo {
   targetBranch?: string
 }
 
-export type HarnessApprovalStepInfo = StepSpecType & {
-  approvalMessage: string
-  approverInputs?: ApproverInputInfo[]
-  approvers: Approvers
-  includePipelineExecutionHistory: boolean
+export interface HarnessForConfig {
+  end?: number
+  items?: string[]
+  maxConcurrency?: number
+  start?: number
+  times?: number
+  unit?: 'Percentage' | 'Count'
 }
 
 export type HostPathVolume = PodVolume & {
@@ -1237,21 +1221,6 @@ export type HostPathYaml = CIVolume & {
 export interface HostPathYamlSpec {
   path: string
   type?: string
-}
-
-export interface HttpHeaderConfig {
-  key?: string
-  value?: string
-}
-
-export type HttpStepInfo = StepSpecType & {
-  assertion?: string
-  delegateSelectors?: string[]
-  headers?: HttpHeaderConfig[]
-  method: string
-  outputVariables?: NGVariable[]
-  requestBody?: string
-  url: string
 }
 
 export type IgnoreFailureActionConfig = FailureStrategyActionConfig & {
@@ -1286,6 +1255,23 @@ export type InitializeStepInfo = StepSpecType & {
   variables?: NGVariable[]
 }
 
+export interface InputSetError {
+  fieldName?: string
+  identifierOfErrorSource?: string
+  message?: string
+}
+
+export interface InputSetErrorResponse {
+  errors?: InputSetError[]
+}
+
+export type InputSetErrorWrapper = ErrorMetadataDTO & {
+  errorPipelineYaml?: string
+  uuidToErrorResponseMap?: {
+    [key: string]: InputSetErrorResponse
+  }
+}
+
 export interface InputSetValidator {
   parameters?: string
   validatorType?: 'ALLOWED_VALUES' | 'REGEX'
@@ -1295,52 +1281,23 @@ export interface IntegrationStageConfig {
   cloneCodebase?: ParameterFieldBoolean
   execution?: ExecutionElementConfig
   infrastructure?: Infrastructure
+  runsOn?: ParameterFieldString
   serviceDependencies?: ParameterFieldListDependencyElement
   sharedPaths?: ParameterFieldListString
 }
 
 export type IntegrationStageConfigImpl = StageInfoConfig & {
   cloneCodebase?: boolean
-  infrastructure: Infrastructure
+  infrastructure?: Infrastructure
+  runsOn?: string
   serviceDependencies?: DependencyElement[]
   sharedPaths?: string[]
 }
 
+export type InvalidFieldsDTO = ErrorMetadataDTO & {}
+
 export type JUnitTestReport = UnitTestReportSpec & {
   paths?: string[]
-}
-
-export type JexlCriteriaSpec = CriteriaSpec & {
-  expression: string
-}
-
-export type JiraApprovalStepInfo = StepSpecType & {
-  approvalCriteria: CriteriaSpecWrapper
-  connectorRef: string
-  delegateSelectors?: string[]
-  issueKey: string
-  rejectionCriteria?: CriteriaSpecWrapper
-}
-
-export type JiraCreateStepInfo = StepSpecType & {
-  connectorRef: string
-  delegateSelectors?: string[]
-  fields?: JiraField[]
-  issueType: string
-  projectKey: string
-}
-
-export interface JiraField {
-  name?: string
-  value: string
-}
-
-export type JiraUpdateStepInfo = StepSpecType & {
-  connectorRef: string
-  delegateSelectors?: string[]
-  fields?: JiraField[]
-  issueKey: string
-  transitionTo?: TransitionTo
 }
 
 export interface JsonNode {
@@ -1393,11 +1350,6 @@ export interface K8sHostedInfraYamlSpec {
   identifier: string
 }
 
-export type KeyValuesCriteriaSpec = CriteriaSpec & {
-  conditions: Condition[]
-  matchAnyCondition?: boolean
-}
-
 export interface LastRepositoryInfo {
   author?: AuthorInfo
   commit?: string
@@ -1432,6 +1384,15 @@ export type MarkAsSuccessFailureActionConfig = FailureStrategyActionConfig & {
   type: 'MarkAsSuccess'
 }
 
+export type MatrixConfig = MatrixConfigInterface & {
+  exclude?: ParameterFieldListExcludeConfig
+  maxConcurrency?: number
+}
+
+export interface MatrixConfigInterface {
+  [key: string]: any
+}
+
 export interface NGVariable {
   description?: string
   metadata?: string
@@ -1445,6 +1406,12 @@ export interface NodeErrorInfo {
   identifier?: string
   name?: string
   type?: string
+}
+
+export interface NodeInfo {
+  identifier?: string
+  localFqn?: string
+  name?: string
 }
 
 export type NumberNGVariable = NGVariable & {
@@ -1477,9 +1444,20 @@ export interface OnTimeoutConfig {
   action?: FailureStrategyActionConfig
 }
 
+export interface Operation {
+  field: string
+  value?: string
+}
+
 export interface OutputNGVariable {
   description?: string
   name?: string
+}
+
+export type OverlayInputSetErrorWrapper = ErrorMetadataDTO & {
+  invalidReferences?: {
+    [key: string]: string
+  }
 }
 
 export type PRBuildSpec = BuildSpec & {
@@ -1518,6 +1496,8 @@ export type PVCVolume = PodVolume & {
 export type ParallelStepElementConfig = ExecutionWrapperConfig[]
 
 export interface ParameterField {
+  defaultValue?: { [key: string]: any }
+  executionInput?: boolean
   expression?: boolean
   expressionValue?: string
   inputSetValidator?: InputSetValidator
@@ -1528,6 +1508,8 @@ export interface ParameterField {
 }
 
 export interface ParameterFieldBoolean {
+  defaultValue?: boolean
+  executionInput?: boolean
   expression?: boolean
   expressionValue?: string
   inputSetValidator?: InputSetValidator
@@ -1538,6 +1520,8 @@ export interface ParameterFieldBoolean {
 }
 
 export interface ParameterFieldListDependencyElement {
+  defaultValue?: DependencyElement[]
+  executionInput?: boolean
   expression?: boolean
   expressionValue?: string
   inputSetValidator?: InputSetValidator
@@ -1547,7 +1531,21 @@ export interface ParameterFieldListDependencyElement {
   value?: DependencyElement[]
 }
 
+export interface ParameterFieldListExcludeConfig {
+  defaultValue?: ExcludeConfig[]
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: ExcludeConfig[]
+}
+
 export interface ParameterFieldListString {
+  defaultValue?: string[]
+  executionInput?: boolean
   expression?: boolean
   expressionValue?: string
   inputSetValidator?: InputSetValidator
@@ -1558,6 +1556,10 @@ export interface ParameterFieldListString {
 }
 
 export interface ParameterFieldMapStringJsonNode {
+  defaultValue?: {
+    [key: string]: JsonNode
+  }
+  executionInput?: boolean
   expression?: boolean
   expressionValue?: string
   inputSetValidator?: InputSetValidator
@@ -1569,6 +1571,18 @@ export interface ParameterFieldMapStringJsonNode {
   }
 }
 
+export interface ParameterFieldString {
+  defaultValue?: string
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: string
+}
+
 export interface PartialSchemaDTO {
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE'
   namespace?: string
@@ -1576,20 +1590,6 @@ export interface PartialSchemaDTO {
   nodeType?: string
   schema?: JsonNode
   skipStageSchema?: boolean
-}
-
-export interface PatchInstruction {
-  type?:
-    | 'SetFeatureFlagState'
-    | 'SetOnVariation'
-    | 'SetOffVariation'
-    | 'SetDefaultVariations'
-    | 'AddRule'
-    | 'UpdateRule'
-    | 'AddTargetsToVariationTargetMap'
-    | 'RemoveTargetsToVariationTargetMap'
-    | 'AddSegmentToVariationTargetMap'
-    | 'RemoveSegmentsToVariationTargetMap'
 }
 
 export type PersistentVolumeClaimYaml = CIVolume & {
@@ -1641,17 +1641,6 @@ export interface PodsSetupInfo {
   podSetupInfoList?: PodSetupInfo[]
 }
 
-export interface PolicySpec {
-  type?: string
-}
-
-export type PolicyStepInfo = StepSpecType & {
-  metadata?: string
-  policySets: string[]
-  policySpec?: PolicySpec
-  type?: string
-}
-
 export interface ReferenceDTO {
   accountIdentifier?: string
   count?: number
@@ -1659,28 +1648,6 @@ export interface ReferenceDTO {
   name?: string
   orgIdentifier?: string
   projectIdentifier?: string
-}
-
-export type RemoveSegmentToVariationTargetMapYaml = PatchInstruction & {
-  identifier: string
-  spec: RemoveSegmentToVariationTargetMapYamlSpec
-  type: 'RemoveSegmentToVariationTargetMap'
-}
-
-export interface RemoveSegmentToVariationTargetMapYamlSpec {
-  segments: string[]
-  variation: string
-}
-
-export type RemoveTargetsToVariationTargetMapYaml = PatchInstruction & {
-  identifier: string
-  spec: RemoveTargetsToVariationTargetMapYamlSpec
-  type: 'RemoveTargetsToVariationTargetMap'
-}
-
-export interface RemoveTargetsToVariationTargetMapYamlSpec {
-  targets: string[]
-  variation: string
 }
 
 export interface Repository {
@@ -1706,14 +1673,6 @@ export interface RepositoryInfo {
   name?: string
   percentSuccess?: number
   successRate?: number
-}
-
-export type ResourceConstraintStepInfo = StepSpecType & {
-  acquireMode: 'ENSURE' | 'ACCUMULATE'
-  holdingScope: 'PLAN' | 'PIPELINE' | 'STAGE' | 'STEP_GROUP'
-  name: string
-  permits: number
-  resourceUnit: string
 }
 
 export interface Response {
@@ -1828,6 +1787,7 @@ export interface ResponseMessage {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -1844,6 +1804,7 @@ export interface ResponseMessage {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -1979,6 +1940,7 @@ export interface ResponseMessage {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -1991,6 +1953,7 @@ export interface ResponseMessage {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -2118,8 +2081,16 @@ export interface ResponseMessage {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
+    | 'SPOTINST_NULL_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -2209,6 +2180,10 @@ export interface RetryFailureSpecConfig {
   retryIntervals: string[]
 }
 
+export interface RunOnInfraSpec {
+  runsOn: string
+}
+
 export type RunStepInfo = StepSpecType & {
   command: string
   connectorRef?: string
@@ -2249,6 +2224,11 @@ export type RunTestsStepInfo = StepSpecType & {
   runOnlySelectedTests?: boolean
   shell?: 'Sh' | 'Bash' | 'Powershell' | 'Pwsh'
   testAnnotations?: string
+}
+
+export type RunsOnInfra = Infrastructure & {
+  spec: RunOnInfraSpec
+  type: 'KubernetesDirect' | 'UseFromStage' | 'VM' | 'KubernetesHosted'
 }
 
 export type SampleErrorMetadataDTO = ErrorMetadataDTO & {
@@ -2309,13 +2289,13 @@ export interface SecurityContext {
 export type SecurityStageConfigImpl = StageInfoConfig & {
   cloneCodebase?: boolean
   infrastructure: Infrastructure
+  runsOn?: string
   serviceDependencies?: DependencyElement[]
   sharedPaths?: string[]
 }
 
 export type SecurityStepInfo = StepSpecType & {
   baseImageConnectorRefs?: ParameterFieldListString
-  connectorRef: string
   imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
   outputVariables?: OutputNGVariable[]
   privileged?: boolean
@@ -2324,112 +2304,10 @@ export type SecurityStepInfo = StepSpecType & {
   settings?: ParameterFieldMapStringJsonNode
 }
 
-export interface Serve {
-  distribution?: Distribution
-  variation?: string
-}
-
 export interface ServiceDeploymentInfo {
+  image?: string
   serviceName?: string
   serviceTag?: string
-}
-
-export type ServiceNowApprovalStepInfo = StepSpecType & {
-  approvalCriteria: CriteriaSpecWrapper
-  connectorRef: string
-  delegateSelectors?: string[]
-  rejectionCriteria?: CriteriaSpecWrapper
-  ticketNumber: string
-  ticketType: string
-}
-
-export type ServiceNowCreateStepInfo = StepSpecType & {
-  connectorRef: string
-  delegateSelectors?: string[]
-  fields?: ServiceNowField[]
-  templateName?: string
-  ticketType: string
-  useServiceNowTemplate: boolean
-}
-
-export interface ServiceNowField {
-  name?: string
-  value: string
-}
-
-export type ServiceNowUpdateStepInfo = StepSpecType & {
-  connectorRef: string
-  delegateSelectors?: string[]
-  fields?: ServiceNowField[]
-  templateName?: string
-  ticketNumber: string
-  ticketType: string
-  useServiceNowTemplate: boolean
-}
-
-export type SetDefaultVariationsYaml = PatchInstruction & {
-  identifier: string
-  spec: SetDefaultVariationsYamlSpec
-  type: 'SetDefaultVariations'
-}
-
-export interface SetDefaultVariationsYamlSpec {
-  off: string
-  on: string
-}
-
-export type SetFeatureFlagStateYaml = PatchInstruction & {
-  identifier: string
-  spec: SetFeatureFlagStateYamlSpec
-  type: 'SetFeatureFlagState'
-}
-
-export interface SetFeatureFlagStateYamlSpec {
-  state: string
-}
-
-export type SetOffVariationYaml = PatchInstruction & {
-  identifier: string
-  spec: SetOffVariationYamlSpec
-  type: 'SetOffVariation'
-}
-
-export interface SetOffVariationYamlSpec {
-  variation: string
-}
-
-export type SetOnVariationYaml = PatchInstruction & {
-  identifier: string
-  spec: SetOnVariationYamlSpec
-  type: 'SetOnVariation'
-}
-
-export interface SetOnVariationYamlSpec {
-  variation: string
-}
-
-export interface ShellScriptBaseSource {
-  type?: string
-}
-
-export type ShellScriptInlineSource = ShellScriptBaseSource & {
-  script?: string
-}
-
-export interface ShellScriptSourceWrapper {
-  spec: ShellScriptBaseSource
-  type: string
-}
-
-export type ShellScriptStepInfo = StepSpecType & {
-  delegateSelectors?: string[]
-  environmentVariables?: NGVariable[]
-  executionTarget?: ExecutionTarget
-  metadata?: string
-  onDelegate: boolean
-  outputVariables?: NGVariable[]
-  shell: 'Bash' | 'PowerShell'
-  source: ShellScriptSourceWrapper
 }
 
 export interface StackTraceElement {
@@ -2450,6 +2328,7 @@ export interface StageElementConfig {
   identifier: string
   name: string
   spec?: StageInfoConfig
+  strategy?: StrategyConfig
   tags?: {
     [key: string]: string
   }
@@ -2478,6 +2357,7 @@ export interface StepElementConfig {
   identifier: string
   name: string
   spec?: StepSpecType
+  strategy?: StrategyConfig
   timeout?: string
   type: string
   when?: StepWhenCondition
@@ -2489,6 +2369,7 @@ export interface StepGroupElementConfig {
   identifier: string
   name: string
   steps: ExecutionWrapperConfig[]
+  strategy?: StrategyConfig
   when?: StepWhenCondition
 }
 
@@ -2505,6 +2386,12 @@ export interface StepWhenCondition {
   stageStatus: 'Success' | 'Failure' | 'All'
 }
 
+export interface StrategyConfig {
+  matrix?: MatrixConfigInterface
+  parallelism?: number
+  repeat?: HarnessForConfig
+}
+
 export type StringNGVariable = NGVariable & {
   default?: string
   name?: string
@@ -2512,8 +2399,19 @@ export type StringNGVariable = NGVariable & {
   value: string
 }
 
+export interface TIBuildDetails {
+  buildTool?: string
+  language?: string
+}
+
 export type TagBuildSpec = BuildSpec & {
   tag: string
+}
+
+export interface TemplateInfo {
+  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'Script'
+  templateIdentifier?: string
+  versionLabel?: string
 }
 
 export interface TemplateInputsErrorDTO {
@@ -2535,6 +2433,28 @@ export interface TemplateLinkConfig {
   versionLabel?: string
 }
 
+export interface TemplateResponse {
+  accountId: string
+  childType?: string
+  description?: string
+  entityValidityDetails?: EntityValidityDetails
+  gitDetails?: EntityGitDetails
+  identifier: string
+  lastUpdatedAt?: number
+  name: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  stableTemplate?: boolean
+  tags?: {
+    [key: string]: string
+  }
+  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'Script'
+  templateScope?: 'account' | 'org' | 'project' | 'unknown'
+  version?: number
+  versionLabel?: string
+  yaml?: string
+}
+
 export interface Throwable {
   cause?: Throwable
   localizedMessage?: string
@@ -2551,11 +2471,6 @@ export interface Toleration {
   value?: string
 }
 
-export interface TransitionTo {
-  status: string
-  transitionName?: string
-}
-
 export interface UnitTestReport {
   spec?: UnitTestReportSpec
   type?: 'JUnit'
@@ -2563,19 +2478,6 @@ export interface UnitTestReport {
 
 export interface UnitTestReportSpec {
   [key: string]: any
-}
-
-export type UpdateRuleYaml = PatchInstruction & {
-  identifier: string
-  spec: UpdateRuleYamlSpec
-  type: 'UpdateRule'
-}
-
-export interface UpdateRuleYamlSpec {
-  bucketBy: string
-  ruleID: string
-  serve?: Serve
-  variations?: VariationYamlSpec[]
 }
 
 export type UploadToArtifactoryStepInfo = StepSpecType & {
@@ -2620,14 +2522,14 @@ export type UseFromStageInfraYaml = Infrastructure & {
   useFromStage: string
 }
 
+export type ValidateTemplateInputsResponseDTO = ErrorMetadataDTO & {
+  errorNodeSummary?: ErrorNodeSummary
+  validYaml?: boolean
+}
+
 export interface ValidationError {
   error?: string
   fieldId?: string
-}
-
-export interface VariationYamlSpec {
-  variation: string
-  weight: number
 }
 
 export type VmBuildJobInfo = BuildJobEnvInfo & {
@@ -2695,11 +2597,6 @@ export interface WebhookGitUser {
   name?: string
 }
 
-export interface WeightedVariation {
-  variation: string
-  weight: number
-}
-
 export interface YamlGroup {
   group?: string
 }
@@ -2712,6 +2609,7 @@ export interface YamlSchemaErrorDTO {
   fqn?: string
   hintMessage?: string
   message?: string
+  messageWithFQN?: string
   stageInfo?: NodeErrorInfo
   stepInfo?: NodeErrorInfo
 }
@@ -2737,6 +2635,8 @@ export interface YamlSchemaWithDetails {
   schemaClassName?: string
   yamlSchemaMetadata?: YamlSchemaMetadata
 }
+
+export type OperationArrayRequestBody = Operation[]
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
@@ -3092,12 +2992,169 @@ export const getExecutionConfigPromise = (
     signal
   )
 
+export interface GetCustomerConfigQueryParams {
+  infra: 'K8' | 'VM' | 'DLITE_VM'
+  overridesOnly: boolean
+  accountIdentifier: string
+}
+
+export type GetCustomerConfigProps = Omit<
+  GetProps<ResponseCIExecutionImages, Failure | Error, GetCustomerConfigQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get customer's execution config
+ */
+export const GetCustomerConfig = (props: GetCustomerConfigProps) => (
+  <Get<ResponseCIExecutionImages, Failure | Error, GetCustomerConfigQueryParams, void>
+    path={`/execution-config/get-customer-config`}
+    base={getConfig('ci')}
+    {...props}
+  />
+)
+
+export type UseGetCustomerConfigProps = Omit<
+  UseGetProps<ResponseCIExecutionImages, Failure | Error, GetCustomerConfigQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get customer's execution config
+ */
+export const useGetCustomerConfig = (props: UseGetCustomerConfigProps) =>
+  useGet<ResponseCIExecutionImages, Failure | Error, GetCustomerConfigQueryParams, void>(
+    `/execution-config/get-customer-config`,
+    { base: getConfig('ci'), ...props }
+  )
+
+/**
+ * Get customer's execution config
+ */
+export const getCustomerConfigPromise = (
+  props: GetUsingFetchProps<ResponseCIExecutionImages, Failure | Error, GetCustomerConfigQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseCIExecutionImages, Failure | Error, GetCustomerConfigQueryParams, void>(
+    getConfig('ci'),
+    `/execution-config/get-customer-config`,
+    props,
+    signal
+  )
+
+export interface GetDefaultConfigQueryParams {
+  infra: 'K8' | 'VM' | 'DLITE_VM'
+}
+
+export type GetDefaultConfigProps = Omit<
+  GetProps<ResponseCIExecutionImages, Failure | Error, GetDefaultConfigQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get default execution config
+ */
+export const GetDefaultConfig = (props: GetDefaultConfigProps) => (
+  <Get<ResponseCIExecutionImages, Failure | Error, GetDefaultConfigQueryParams, void>
+    path={`/execution-config/get-default-config`}
+    base={getConfig('ci')}
+    {...props}
+  />
+)
+
+export type UseGetDefaultConfigProps = Omit<
+  UseGetProps<ResponseCIExecutionImages, Failure | Error, GetDefaultConfigQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get default execution config
+ */
+export const useGetDefaultConfig = (props: UseGetDefaultConfigProps) =>
+  useGet<ResponseCIExecutionImages, Failure | Error, GetDefaultConfigQueryParams, void>(
+    `/execution-config/get-default-config`,
+    { base: getConfig('ci'), ...props }
+  )
+
+/**
+ * Get default execution config
+ */
+export const getDefaultConfigPromise = (
+  props: GetUsingFetchProps<ResponseCIExecutionImages, Failure | Error, GetDefaultConfigQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseCIExecutionImages, Failure | Error, GetDefaultConfigQueryParams, void>(
+    getConfig('ci'),
+    `/execution-config/get-default-config`,
+    props,
+    signal
+  )
+
+export interface ResetExecutionConfigQueryParams {
+  infra: 'K8' | 'VM' | 'DLITE_VM'
+  accountIdentifier: string
+}
+
+export type ResetExecutionConfigProps = Omit<
+  MutateProps<ResponseBoolean, Failure | Error, ResetExecutionConfigQueryParams, OperationArrayRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Reset execution config
+ */
+export const ResetExecutionConfig = (props: ResetExecutionConfigProps) => (
+  <Mutate<ResponseBoolean, Failure | Error, ResetExecutionConfigQueryParams, OperationArrayRequestBody, void>
+    verb="POST"
+    path={`/execution-config/reset-config`}
+    base={getConfig('ci')}
+    {...props}
+  />
+)
+
+export type UseResetExecutionConfigProps = Omit<
+  UseMutateProps<ResponseBoolean, Failure | Error, ResetExecutionConfigQueryParams, OperationArrayRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Reset execution config
+ */
+export const useResetExecutionConfig = (props: UseResetExecutionConfigProps) =>
+  useMutate<ResponseBoolean, Failure | Error, ResetExecutionConfigQueryParams, OperationArrayRequestBody, void>(
+    'POST',
+    `/execution-config/reset-config`,
+    { base: getConfig('ci'), ...props }
+  )
+
+/**
+ * Reset execution config
+ */
+export const resetExecutionConfigPromise = (
+  props: MutateUsingFetchProps<
+    ResponseBoolean,
+    Failure | Error,
+    ResetExecutionConfigQueryParams,
+    OperationArrayRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseBoolean, Failure | Error, ResetExecutionConfigQueryParams, OperationArrayRequestBody, void>(
+    'POST',
+    getConfig('ci'),
+    `/execution-config/reset-config`,
+    props,
+    signal
+  )
+
 export interface UpdateExecutionConfigQueryParams {
+  infra: 'K8' | 'VM' | 'DLITE_VM'
   accountIdentifier: string
 }
 
 export type UpdateExecutionConfigProps = Omit<
-  MutateProps<ResponseBoolean, Failure | Error, UpdateExecutionConfigQueryParams, CIExecutionImages, void>,
+  MutateProps<ResponseBoolean, Failure | Error, UpdateExecutionConfigQueryParams, OperationArrayRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -3105,16 +3162,16 @@ export type UpdateExecutionConfigProps = Omit<
  * Update execution config
  */
 export const UpdateExecutionConfig = (props: UpdateExecutionConfigProps) => (
-  <Mutate<ResponseBoolean, Failure | Error, UpdateExecutionConfigQueryParams, CIExecutionImages, void>
+  <Mutate<ResponseBoolean, Failure | Error, UpdateExecutionConfigQueryParams, OperationArrayRequestBody, void>
     verb="POST"
-    path={`/execution-config`}
+    path={`/execution-config/update-config`}
     base={getConfig('ci')}
     {...props}
   />
 )
 
 export type UseUpdateExecutionConfigProps = Omit<
-  UseMutateProps<ResponseBoolean, Failure | Error, UpdateExecutionConfigQueryParams, CIExecutionImages, void>,
+  UseMutateProps<ResponseBoolean, Failure | Error, UpdateExecutionConfigQueryParams, OperationArrayRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -3122,9 +3179,9 @@ export type UseUpdateExecutionConfigProps = Omit<
  * Update execution config
  */
 export const useUpdateExecutionConfig = (props: UseUpdateExecutionConfigProps) =>
-  useMutate<ResponseBoolean, Failure | Error, UpdateExecutionConfigQueryParams, CIExecutionImages, void>(
+  useMutate<ResponseBoolean, Failure | Error, UpdateExecutionConfigQueryParams, OperationArrayRequestBody, void>(
     'POST',
-    `/execution-config`,
+    `/execution-config/update-config`,
     { base: getConfig('ci'), ...props }
   )
 
@@ -3136,101 +3193,15 @@ export const updateExecutionConfigPromise = (
     ResponseBoolean,
     Failure | Error,
     UpdateExecutionConfigQueryParams,
-    CIExecutionImages,
+    OperationArrayRequestBody,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponseBoolean, Failure | Error, UpdateExecutionConfigQueryParams, CIExecutionImages, void>(
+  mutateUsingFetch<ResponseBoolean, Failure | Error, UpdateExecutionConfigQueryParams, OperationArrayRequestBody, void>(
     'POST',
     getConfig('ci'),
-    `/execution-config`,
-    props,
-    signal
-  )
-
-export interface GetCurrentConfigQueryParams {
-  accountIdentifier: string
-}
-
-export type GetCurrentConfigProps = Omit<
-  GetProps<ResponseCIExecutionImages, Failure | Error, GetCurrentConfigQueryParams, void>,
-  'path'
->
-
-/**
- * Get account's execution config
- */
-export const GetCurrentConfig = (props: GetCurrentConfigProps) => (
-  <Get<ResponseCIExecutionImages, Failure | Error, GetCurrentConfigQueryParams, void>
-    path={`/execution-config/get-current-config`}
-    base={getConfig('ci')}
-    {...props}
-  />
-)
-
-export type UseGetCurrentConfigProps = Omit<
-  UseGetProps<ResponseCIExecutionImages, Failure | Error, GetCurrentConfigQueryParams, void>,
-  'path'
->
-
-/**
- * Get account's execution config
- */
-export const useGetCurrentConfig = (props: UseGetCurrentConfigProps) =>
-  useGet<ResponseCIExecutionImages, Failure | Error, GetCurrentConfigQueryParams, void>(
-    `/execution-config/get-current-config`,
-    { base: getConfig('ci'), ...props }
-  )
-
-/**
- * Get account's execution config
- */
-export const getCurrentConfigPromise = (
-  props: GetUsingFetchProps<ResponseCIExecutionImages, Failure | Error, GetCurrentConfigQueryParams, void>,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<ResponseCIExecutionImages, Failure | Error, GetCurrentConfigQueryParams, void>(
-    getConfig('ci'),
-    `/execution-config/get-current-config`,
-    props,
-    signal
-  )
-
-export type GetDefaultConfigProps = Omit<GetProps<ResponseCIExecutionImages, Failure | Error, void, void>, 'path'>
-
-/**
- * Get default execution config
- */
-export const GetDefaultConfig = (props: GetDefaultConfigProps) => (
-  <Get<ResponseCIExecutionImages, Failure | Error, void, void>
-    path={`/execution-config/get-default-config`}
-    base={getConfig('ci')}
-    {...props}
-  />
-)
-
-export type UseGetDefaultConfigProps = Omit<UseGetProps<ResponseCIExecutionImages, Failure | Error, void, void>, 'path'>
-
-/**
- * Get default execution config
- */
-export const useGetDefaultConfig = (props: UseGetDefaultConfigProps) =>
-  useGet<ResponseCIExecutionImages, Failure | Error, void, void>(`/execution-config/get-default-config`, {
-    base: getConfig('ci'),
-    ...props
-  })
-
-/**
- * Get default execution config
- */
-export const getDefaultConfigPromise = (
-  props: GetUsingFetchProps<ResponseCIExecutionImages, Failure | Error, void, void>,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<ResponseCIExecutionImages, Failure | Error, void, void>(
-    getConfig('ci'),
-    `/execution-config/get-default-config`,
+    `/execution-config/update-config`,
     props,
     signal
   )
@@ -3317,15 +3288,20 @@ export interface GetStepYamlSchemaQueryParams {
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
   entityType?:
+    | 'CreatePR'
+    | 'GITOPS_MERGE_PR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
     | 'Http'
+    | 'Email'
     | 'JiraCreate'
     | 'JiraUpdate'
     | 'JiraApproval'
     | 'HarnessApproval'
+    | 'CustomApproval'
     | 'Barrier'
+    | 'Queue'
     | 'FlagConfiguration'
     | 'ShellScript'
     | 'K8sCanaryDeploy'
@@ -3365,6 +3341,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ApprovalStage'
     | 'FeatureFlagStage'
     | 'Template'
+    | 'TemplateStage'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -3373,7 +3350,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'Policy'
+    | 'POLICY_STEP'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -3387,6 +3364,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'S3Upload'
     | 'BuildAndPushGCR'
     | 'BuildAndPushECR'
+    | 'BuildAndPushACR'
     | 'BuildAndPushDockerRegistry'
     | 'CreateStack'
     | 'DeleteStack'
@@ -3395,6 +3373,13 @@ export interface GetStepYamlSchemaQueryParams {
     | 'CustomStage'
     | 'RollbackStack'
     | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
   yamlGroup?: string
 }
 

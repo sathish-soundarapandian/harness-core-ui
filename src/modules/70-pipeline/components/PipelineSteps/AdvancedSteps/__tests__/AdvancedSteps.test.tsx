@@ -29,6 +29,7 @@ describe('<AdvancedSteps /> tests', () => {
     const { container } = render(
       <TestWrapper>
         <AdvancedStepsWithRef
+          helpPanelVisible
           isStepGroup={false}
           isReadonly={false}
           step={{} as any}
@@ -49,6 +50,7 @@ describe('<AdvancedSteps /> tests', () => {
     render(
       <TestWrapper>
         <AdvancedStepsWithRef
+          helpPanelVisible
           isStepGroup={false}
           step={{} as any}
           isReadonly={false}

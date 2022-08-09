@@ -48,9 +48,10 @@ const initialValues = {
   spec: {},
   type: ManifestDataType.Kustomize,
   files: [],
-  manifestScope: '',
+  overlayConfiguration: '',
   skipResourceVersioning: false,
-  patchesPaths: []
+  patchesPaths: [],
+  pluginPath: ''
 }
 
 describe('Harness File Store with Kustomize Manifest tests', () => {
@@ -73,9 +74,10 @@ describe('Harness File Store with Kustomize Manifest tests', () => {
       initialValues: {
         identifier: 'test',
         files: RUNTIME_INPUT_VALUE,
-        manifestScope: RUNTIME_INPUT_VALUE,
+        overlayConfiguration: RUNTIME_INPUT_VALUE,
         patchesPaths: RUNTIME_INPUT_VALUE,
-        skipResourceVersioning: RUNTIME_INPUT_VALUE
+        skipResourceVersioning: RUNTIME_INPUT_VALUE,
+        pluginPath: RUNTIME_INPUT_VALUE
       },
       prevStepData: {
         store: 'Harness'
@@ -87,10 +89,10 @@ describe('Harness File Store with Kustomize Manifest tests', () => {
         <KustomizeWithHarnessStore {...defaultProps} initialValues={initialValues} />
       </TestWrapper>
     )
-    const filePaths = getAllByText('fileFolderPathText')[0]
+    const filePaths = getAllByText('pipeline.manifestType.kustomizeFolderPath')[0]
     expect(filePaths).toBeDefined()
-    const manifestScope = getByText('pipeline.manifestType.manifestScope')
-    expect(manifestScope).toBeDefined()
+    const overlayConfiguration = getByText('pipeline.manifestType.kustomizeYamlFolderPath')
+    expect(overlayConfiguration).toBeDefined()
     expect(container).toMatchSnapshot()
   })
   // eslint-disable-next-line jest/no-disabled-tests
@@ -107,7 +109,8 @@ describe('Harness File Store with Kustomize Manifest tests', () => {
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
     await act(async () => {
       fireEvent.change(queryByNameAttribute('identifier')!, { target: { value: 'test-identifier' } })
-      fireEvent.change(queryByNameAttribute('manifestScope')!, { target: { value: 'scope' } })
+      fireEvent.change(queryByNameAttribute('overlayConfiguration')!, { target: { value: 'scope' } })
+      fireEvent.change(queryByNameAttribute('pluginPath')!, { target: { value: 'pluginPath' } })
     })
 
     fireEvent.click(container.querySelector('button[type="submit"]')!)
@@ -131,8 +134,9 @@ describe('Harness File Store with Kustomize Manifest tests', () => {
         type: ManifestDataType.Kustomize,
         spec: {
           skipResourceVersioning: false,
-          manifestScope: 'scope',
+          overlayConfiguration: 'scope',
           patchesPaths: ['test-path'],
+          pluginPath: 'pluginPath',
           store: {
             spec: {
               files: ['file path']
@@ -159,7 +163,7 @@ describe('Harness File Store with Kustomize Manifest tests', () => {
     expect(defaultProps.previousStep).toHaveBeenCalledWith(defaultProps.prevStepData)
   })
 
-  test('when files, skipResourceVersioning and manifestScope runtime input', async () => {
+  test('when files, skipResourceVersioning and overlayConfiguration runtime input', async () => {
     const defaultProps = {
       ...props,
       stepName: 'Manifest details',
@@ -168,8 +172,9 @@ describe('Harness File Store with Kustomize Manifest tests', () => {
         identifier: 'test',
         spec: {
           patchesPaths: RUNTIME_INPUT_VALUE,
-          manifestScope: RUNTIME_INPUT_VALUE,
+          overlayConfiguration: RUNTIME_INPUT_VALUE,
           skipResourceVersioning: RUNTIME_INPUT_VALUE,
+          pluginPath: RUNTIME_INPUT_VALUE,
           store: {
             spec: {
               files: RUNTIME_INPUT_VALUE
@@ -192,8 +197,10 @@ describe('Harness File Store with Kustomize Manifest tests', () => {
     const filesInput = queryByAttribute('name', container, 'files') as HTMLInputElement
     expect(filesInput.value).toBe('<+input>')
 
-    const manifestScope = queryByAttribute('name', container, 'manifestScope') as HTMLInputElement
-    expect(manifestScope.value).toBe('<+input>')
+    const overlayConfiguration = queryByAttribute('name', container, 'overlayConfiguration') as HTMLInputElement
+    expect(overlayConfiguration.value).toBe('')
+    const pluginPath = queryByAttribute('name', container, 'pluginPath') as HTMLInputElement
+    expect(pluginPath.value).toBe('<+input>')
 
     const skipResourceVersioningField = queryByAttribute(
       'name',
@@ -219,7 +226,7 @@ describe('Harness File Store with Kustomize Manifest tests', () => {
         spec: {
           patchesPaths: ['values-path'],
           skipResourceVersioning: true,
-          manifestScope: 'manifest-scope',
+          overlayConfiguration: 'overlay-config',
           store: {
             spec: {
               files: RUNTIME_INPUT_VALUE

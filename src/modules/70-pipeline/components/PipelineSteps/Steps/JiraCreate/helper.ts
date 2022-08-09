@@ -8,11 +8,12 @@
 import { getMultiTypeFromValue, MultiSelectOption, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
 import { isEmpty } from 'lodash-es'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import type { JiraFieldNG } from 'services/cd-ng'
 import type { JiraProjectSelectOption } from '../JiraApproval/types'
 import type { JiraCreateData, JiraCreateFieldType, JiraFieldNGWithValue } from './types'
 
-export const resetForm = (formik: FormikProps<JiraCreateData>, parent: string) => {
+export const resetForm = (formik: FormikProps<JiraCreateData>, parent: string): void => {
   if (parent === 'connectorRef') {
     formik.setFieldValue('spec.projectKey', '')
     formik.setFieldValue('spec.issueType', '')
@@ -186,5 +187,5 @@ export const updateMap = (alreadySelectedFields: JiraFieldNG[]): Record<string, 
 }
 
 export const isRuntimeOrExpressionType = (fieldType: MultiTypeInputType): boolean => {
-  return fieldType === MultiTypeInputType.EXPRESSION || fieldType === MultiTypeInputType.RUNTIME
+  return fieldType === MultiTypeInputType.EXPRESSION || isMultiTypeRuntime(fieldType)
 }

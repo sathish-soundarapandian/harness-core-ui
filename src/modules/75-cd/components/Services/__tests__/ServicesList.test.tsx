@@ -47,7 +47,15 @@ const renderSetup = (data: ServiceDetailsDTO[]) => {
       path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
     >
-      <ServicesList loading={false} error={false} data={data} refetch={noop} />
+      <ServicesList
+        loading={false}
+        error={false}
+        data={data}
+        refetch={noop}
+        setSavedSortOption={jest.fn()}
+        setSort={jest.fn()}
+        sort={['name', 'ASC']}
+      />
     </TestWrapper>
   )
 }

@@ -20,9 +20,11 @@ import {
 } from '@harness/uicore'
 import { IFormGroupProps, Intent, FormGroup } from '@blueprintjs/core'
 import { FormikContextType, connect } from 'formik'
+import cx from 'classnames'
 import { get } from 'lodash-es'
 import { errorCheck } from '@common/utils/formikHelpers'
 import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 
 import css from './MultiConfigSelectField.module.scss'
 
@@ -111,12 +113,12 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
     }
 
     const runtimeValue = useExecutionTimeInput ? EXECUTION_TIME_INPUT_VALUE : RUNTIME_INPUT_VALUE
-    formik.setFieldValue(name, newType === MultiTypeInputType.RUNTIME ? runtimeValue : defaultValueToReset)
+    formik.setFieldValue(name, isMultiTypeRuntime(newType) ? runtimeValue : defaultValueToReset)
   }
 
   if (
-    type === MultiTypeInputType.RUNTIME &&
-    getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions) !== MultiTypeInputType.RUNTIME
+    isMultiTypeRuntime(type) &&
+    !isMultiTypeRuntime(getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions))
   ) {
     setType(getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions))
   }
@@ -145,14 +147,14 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
         children
       ) : type === MultiTypeInputType.EXPRESSION && typeof expressionRender === 'function' ? (
         expressionRender()
-      ) : type === MultiTypeInputType.RUNTIME && typeof value === 'string' ? (
+      ) : isMultiTypeRuntime(type) && typeof value === 'string' ? (
         <FormInput.Text className={css.runtimeDisabled} name={name} disabled label="" />
       ) : null}
     </FormGroup>
   ) : (
     <FormGroup
       {...rest}
-      className={type === MultiTypeInputType.RUNTIME ? css.formGroup : ''}
+      className={cx({ [css.formGroup]: isMultiTypeRuntime(type) })}
       intent={intent}
       disabled={disabled}
       label={
@@ -166,7 +168,7 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
           children
         ) : type === MultiTypeInputType.EXPRESSION && typeof expressionRender === 'function' ? (
           expressionRender()
-        ) : type === MultiTypeInputType.RUNTIME && typeof value === 'string' ? (
+        ) : isMultiTypeRuntime(type) && typeof value === 'string' ? (
           <FormInput.Text className={css.runtimeDisabled} name={name} disabled label="" />
         ) : null}
         {disableTypeSelection ? null : (

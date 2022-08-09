@@ -19,7 +19,9 @@ import {
   useConfirmationDialog,
   useToaster,
   Dialog,
-  Icon
+  Icon,
+  SelectOption,
+  DropDown
 } from '@harness/uicore'
 import { Color, FontVariation, Intent } from '@harness/design-system'
 import { Classes, Menu, Position } from '@blueprintjs/core'
@@ -51,6 +53,7 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
 import { isExecutionNotStarted } from '@pipeline/utils/statusHelpers'
+import { Sort, SortFields } from '@pipeline/pages/pipelines/PipelinesPage'
 import { ServiceTabs } from '../utils/ServiceUtils'
 import css from '@cd/components/Services/ServicesList/ServiceList.module.scss'
 
@@ -90,6 +93,75 @@ export interface ServicesListProps {
   error: boolean
   data: ServiceDetailsDTO[]
   refetch: () => void
+  setSavedSortOption: (value: string[] | undefined) => void
+  setSort: React.Dispatch<React.SetStateAction<string[]>>
+  sort: string[]
+}
+
+export const selectedOpt = (sortOption: string[]): 1 | 2 | 0 => {
+  if (sortOption[0] === SortFields.Name && sortOption[1] === Sort.ASC) {
+    return 1
+  } else if (sortOption[0] === SortFields.Name) {
+    return 2
+  }
+  return 0
+}
+
+export const SortOptionComponent = (
+  props: Pick<ServicesListProps, 'setSavedSortOption' | 'setSort' | 'sort'>
+): JSX.Element => {
+  const { setSavedSortOption, setSort, sort } = props
+  const { getString } = useStrings()
+
+  const sortOptions = React.useMemo(() => {
+    return [
+      {
+        label: getString('pipeline.lastModified'),
+        value: SortFields.LastModifiedAt
+      },
+      {
+        label: getString('AZ09'),
+        value: SortFields.AZ09
+      },
+
+      {
+        label: getString('ZA90'),
+        value: SortFields.ZA90
+      }
+    ]
+  }, [])
+
+  const [selectedSort, setSelectedSort] = useState<SelectOption>(sortOptions[selectedOpt(sort)])
+
+  const onDropDownChange = React.useCallback(
+    item => {
+      if (item.value === SortFields.AZ09) {
+        setSort([SortFields.Name, Sort.ASC])
+        setSavedSortOption([SortFields.Name, Sort.ASC])
+      } else if (item.value === SortFields.ZA90) {
+        setSort([SortFields.Name, Sort.DESC])
+        setSavedSortOption([SortFields.Name, Sort.DESC])
+      } else {
+        setSort([SortFields.LastModifiedAt, Sort.DESC])
+        setSavedSortOption([SortFields.LastModifiedAt, Sort.DESC])
+      }
+      setSelectedSort(item)
+    },
+    [setSort, setSavedSortOption]
+  )
+
+  return (
+    <DropDown
+      items={sortOptions}
+      value={selectedSort.value.toString()}
+      filterable={false}
+      width={180}
+      icon={'main-sort'}
+      iconProps={{ size: 16, color: Color.GREY_400 }}
+      onChange={onDropDownChange}
+      usePortal
+    />
+  )
 }
 
 const transformServiceDetailsData = (data: ServiceDetailsDTO[]): ServiceListItem[] => {
@@ -519,7 +591,7 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
 }
 
 export const ServicesList: React.FC<ServicesListProps> = props => {
-  const { loading, data, error, refetch } = props
+  const { loading, data, error, refetch, setSavedSortOption, setSort, sort } = props
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const history = useHistory()
@@ -536,6 +608,7 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [data]
   )
+
   const columns: TableProps<ServiceListItem>['columns'] = useMemo(
     () => {
       return [
@@ -610,7 +683,8 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
     data: transformServiceDetailsData(data),
     refetch,
     HeaderCustomPrimary: ServiceListHeaderCustomPrimary,
-    onRowClick: goToServiceDetails
+    onRowClick: goToServiceDetails,
+    SortList: SortOptionComponent({ setSavedSortOption, setSort, sort })
   }
   return <DashboardList<ServiceListItem> {...dashboardListProps} />
 }

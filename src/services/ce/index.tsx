@@ -390,6 +390,15 @@ export type AzureUserAssignedMSIAuth = AzureAuthCredentialDTO & {
   clientId: string
 }
 
+export interface BIDashboardSummary {
+  cloudProvider?: string
+  dashboardId?: string
+  dashboardName?: string
+  description?: string
+  redirectionURL?: string
+  serviceType?: string
+}
+
 export interface BillingExportSpec {
   containerName: string
   directoryName: string
@@ -2941,6 +2950,13 @@ export interface ResponseListAnomalyWidgetData {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseListBIDashboardSummary {
+  correlationId?: string
+  data?: BIDashboardSummary[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseListBudget {
   correlationId?: string
   data?: Budget[]
@@ -4041,6 +4057,40 @@ export const useGetAnomalyWidgetsData = (props: UseGetAnomalyWidgetsDataProps) =
     AnomalyFilterPropertiesRequestBody,
     void
   >('POST', `/anomaly/widgets`, { base: getConfig('ccm/api'), ...props })
+
+export interface ListBIDashboardsQueryParams {
+  accountIdentifier: string
+}
+
+export type ListBIDashboardsProps = Omit<
+  GetProps<ResponseListBIDashboardSummary, unknown, ListBIDashboardsQueryParams, void>,
+  'path'
+>
+
+/**
+ * List all CCM BI Dashboards
+ */
+export const ListBIDashboards = (props: ListBIDashboardsProps) => (
+  <Get<ResponseListBIDashboardSummary, unknown, ListBIDashboardsQueryParams, void>
+    path={`/bi-dashboards`}
+    base={getConfig('ccm/api')}
+    {...props}
+  />
+)
+
+export type UseListBIDashboardsProps = Omit<
+  UseGetProps<ResponseListBIDashboardSummary, unknown, ListBIDashboardsQueryParams, void>,
+  'path'
+>
+
+/**
+ * List all CCM BI Dashboards
+ */
+export const useListBIDashboards = (props: UseListBIDashboardsProps) =>
+  useGet<ResponseListBIDashboardSummary, unknown, ListBIDashboardsQueryParams, void>(`/bi-dashboards`, {
+    base: getConfig('ccm/api'),
+    ...props
+  })
 
 export interface ListBudgetsForAccountQueryParams {
   accountIdentifier: string

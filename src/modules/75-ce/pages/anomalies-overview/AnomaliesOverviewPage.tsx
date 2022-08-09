@@ -6,13 +6,12 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Container, PageBody, PageHeader, Text, getErrorInfoFromErrorObject } from '@wings-software/uicore'
+import { Container, PageBody, PageHeader, Text } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { useModalHook } from '@harness/use-modal'
 import { Drawer, Position } from '@blueprintjs/core'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { useToaster } from '@common/exports'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { CcmMetaData, QlceViewTimeFilterOperator, useFetchCcmMetaDataQuery } from 'services/ce/services'
 import {
@@ -40,6 +39,10 @@ import AnomaliesSettings from '@ce/components/AnomaliesSettings/AnomaliesSetting
 import { PAGE_NAMES } from '@ce/TrackingEventsConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import HandleError from '@ce/components/PermissionError/PermissionError'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import PermissionError from '@ce/images/permission-error.svg'
+import css from './AnomaliesOverviewPage.module.scss'
 
 const getTimeFilters = (from: number, to: number) => {
   return [
@@ -61,7 +64,6 @@ interface SortByObjInterface {
 
 const AnomaliesOverviewPage: React.FC = () => {
   const { getString } = useStrings()
-  const { showError } = useToaster()
   const [searchText, setSearchText] = React.useState('')
   const { accountId } = useParams<AccountPathProps>()
   const [listData, setListData] = useState<AnomalyData[] | null>(null)
@@ -71,6 +73,7 @@ const AnomaliesOverviewPage: React.FC = () => {
   const [statusWiseData, setStatusWiseData] = useState([])
   const [selectedFilterProperties, setSelectedFilterProperties] = useState<AnomalyFilterProperties>({})
   const { trackEvent } = useTelemetry()
+  const { getRBACErrorMessage } = useRBACError()
 
   const [timeRange, setTimeRange] = useQueryParamsState<TimeRangeFilterType>('timeRange', {
     to: DATE_RANGE_SHORTCUTS.LAST_30_DAYS[1].format(CE_DATE_FORMAT_INTERNAL),
@@ -96,7 +99,7 @@ const AnomaliesOverviewPage: React.FC = () => {
 
   const {
     mutate: getAnomaliesList,
-    error: isAnomaliesListError,
+    error: anomaliesListError,
     loading: isListFetching
   } = useListAnomalies({
     queryParams: {
@@ -140,7 +143,7 @@ const AnomaliesOverviewPage: React.FC = () => {
         })
         setListData(response?.data as AnomalyData[])
       } catch (error) {
-        showError(getErrorInfoFromErrorObject(error))
+        // showError(getErrorInfoFromErrorObject(error))
       }
     }
 
@@ -159,7 +162,7 @@ const AnomaliesOverviewPage: React.FC = () => {
         const { data } = response
         parseSummaryData(data)
       } catch (error) {
-        showError(getErrorInfoFromErrorObject(error))
+        // showError(getErrorInfoFromErrorObject(error))
       }
     }
     getSummary()
@@ -235,32 +238,40 @@ const AnomaliesOverviewPage: React.FC = () => {
         timeRange={timeRange}
       />
       <PageBody loading={isListFetching || isFetchingCcmMetaData || isSummaryDataFetching}>
-        <Container
-          padding={{
-            right: 'xxxlarge',
-            left: 'xxxlarge',
-            bottom: 'medium',
-            top: 'medium'
-          }}
-        >
-          <AnomaliesSearch onChange={setSearchText} showModal={showModal} />
-          <AnomaliesSummary
-            costData={costData}
-            perspectiveAnomaliesData={perspectiveAnomaliesData}
-            cloudProvidersWiseData={cloudProvidersWiseData}
-            statusWiseData={statusWiseData}
-            allDefaultProviders={ccmMetaData}
-            isAnomaliesSummaryError={Boolean(isAnomaliesSummaryError)}
+        {anomaliesListError ? (
+          <HandleError
+            errorMsg={getRBACErrorMessage(anomaliesListError as RBACError)}
+            imgSrc={PermissionError}
+            wrapperClassname={css.permissionErrorWrapper}
           />
-          <AnomaliesListGridView
-            searchText={searchText}
-            timeRange={timeRange}
-            listData={listData}
-            sortByObj={sortByObj}
-            setSortByObj={setSortByObj}
-            isAnomaliesListError={Boolean(isAnomaliesListError)}
-          />
-        </Container>
+        ) : (
+          <Container
+            padding={{
+              right: 'xxxlarge',
+              left: 'xxxlarge',
+              bottom: 'medium',
+              top: 'medium'
+            }}
+          >
+            <AnomaliesSearch onChange={setSearchText} showModal={showModal} />
+            <AnomaliesSummary
+              costData={costData}
+              perspectiveAnomaliesData={perspectiveAnomaliesData}
+              cloudProvidersWiseData={cloudProvidersWiseData}
+              statusWiseData={statusWiseData}
+              allDefaultProviders={ccmMetaData}
+              isAnomaliesSummaryError={Boolean(isAnomaliesSummaryError)}
+            />
+            <AnomaliesListGridView
+              searchText={searchText}
+              timeRange={timeRange}
+              listData={listData}
+              sortByObj={sortByObj}
+              setSortByObj={setSortByObj}
+              isAnomaliesListError={Boolean(anomaliesListError)}
+            />
+          </Container>
+        )}
       </PageBody>
     </>
   )

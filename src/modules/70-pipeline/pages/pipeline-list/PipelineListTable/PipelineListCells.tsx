@@ -7,7 +7,7 @@
  */
 
 import { Classes, Menu, PopoverInteractionKind, Position } from '@blueprintjs/core'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { Button, Icon, Layout, Popover, Text, useToggleOpen, Container, TagsPopover } from '@harness/uicore'
 import defaultTo from 'lodash-es/defaultTo'
 import { useParams, Link } from 'react-router-dom'
@@ -40,9 +40,13 @@ import css from './PipelineListTable.module.scss'
 
 const LabeValue = ({ label, value }: { label: string; value: ReactNode }) => {
   return (
-    <Layout.Horizontal spacing="small">
-      <Text color={Color.GREY_200}>{label}:</Text>
-      <Text color={Color.WHITE}>{value}</Text>
+    <Layout.Horizontal spacing="xsmall">
+      <Text color={Color.GREY_200} font={{ variation: FontVariation.SMALL_SEMI }}>
+        {label}:
+      </Text>
+      <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }}>
+        {value}
+      </Text>
     </Layout.Horizontal>
   )
 }
@@ -62,7 +66,10 @@ export const PipelineNameCell: CellType = ({ row }) => {
     module
   })
   return (
-    <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'space-between' }}>
+    <Layout.Horizontal
+      flex={{ alignItems: 'center', justifyContent: 'space-between' }}
+      className={css.pipelineNameCell}
+    >
       <Layout.Vertical spacing="xsmall" data-testid={data.identifier}>
         <Layout.Horizontal spacing="medium">
           <Link to={href}>
@@ -71,7 +78,7 @@ export const PipelineNameCell: CellType = ({ row }) => {
               color={Color.PRIMARY_7}
               tooltipProps={{ isDark: true }}
               tooltip={
-                <Layout.Vertical spacing="medium" padding="medium" style={{ maxWidth: 400 }}>
+                <Layout.Vertical spacing="medium" padding="large" style={{ maxWidth: 400 }}>
                   <LabeValue label={getString('name')} value={data.name} />
                   <LabeValue label={getString('common.ID')} value={data.identifier} />
                   {data.description && <LabeValue label={getString('description')} value={data.description} />}
@@ -83,7 +90,7 @@ export const PipelineNameCell: CellType = ({ row }) => {
           </Link>
           {data.tags && Object.keys(data.tags || {}).length ? <TagsPopover tags={data.tags} /> : null}
         </Layout.Horizontal>
-        <Text color={Color.GREY_400} font="small">
+        <Text color={Color.GREY_600} font="xsmall">
           {getString('idLabel', { id: data.identifier })}
         </Text>
       </Layout.Vertical>
@@ -97,6 +104,14 @@ export const PipelineNameCell: CellType = ({ row }) => {
             entityType={'Pipeline'}
           />
         </Container>
+      )}
+
+      {data.isDraft && (
+        <div className={css.draft}>
+          <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_400}>
+            {getString('pipeline.draft')}
+          </Text>
+        </div>
       )}
     </Layout.Horizontal>
   )
@@ -116,21 +131,25 @@ export const CodeSourceCell: CellType = ({ row }) => {
         interactionKind={PopoverInteractionKind.HOVER}
         className={Classes.DARK}
         content={
-          <Layout.Vertical spacing="medium" padding="medium" style={{ maxWidth: 400 }}>
+          <Layout.Vertical spacing="small" padding="large" style={{ maxWidth: 400 }}>
             <Layout.Horizontal spacing="small">
-              <Icon name="github" size={16} color={Color.GREY_200} />
-              <Text color={Color.WHITE}>{gitDetails?.repoName || gitDetails?.repoIdentifier}</Text>
+              <Icon name="github" size={14} color={Color.GREY_200} />
+              <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }}>
+                {gitDetails?.repoName || gitDetails?.repoIdentifier}
+              </Text>
             </Layout.Horizontal>
             <Layout.Horizontal spacing="small">
-              <Icon name="remotefile" size={16} color={Color.GREY_200} />
-              <Text color={Color.WHITE}>{gitDetails?.filePath}</Text>
+              <Icon name="remotefile" size={14} color={Color.GREY_200} />
+              <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }}>
+                {gitDetails?.filePath}
+              </Text>
             </Layout.Horizontal>
           </Layout.Vertical>
         }
       >
         <div className={css.storeTypeColumn}>
-          <Icon name={isRemote ? 'remote-setup' : 'repository'} size={12} color={Color.GREY_800} />
-          <Text margin={{ left: 'xsmall' }} font={{ size: 'small' }} color={Color.GREY_800}>
+          <Icon name={isRemote ? 'remote-setup' : 'repository'} size={10} color={Color.GREY_600} />
+          <Text margin={{ left: 'xsmall' }} font={{ variation: FontVariation.TINY_SEMI }} color={Color.GREY_600}>
             {isRemote ? getString('repository') : getString('inline')}
           </Text>
         </div>
@@ -149,15 +168,21 @@ export const LastExecutionCell: CellType = ({ row }) => {
   return (
     <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>
       <div className={cx(css.avatar, !executor && css.hidden)}>{executor?.charAt(0)}</div>
-      <Layout.Vertical spacing="small">
+      <Layout.Vertical spacing="xsmall">
         {executor && (
-          <Text color={Color.GREY_600} font={{ size: 'small' }}>
+          <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL }}>
             {executor}
           </Text>
         )}
-        <Text color={Color.GREY_400} font={{ size: 'small' }}>
-          {startTs ? <ReactTimeago date={startTs} /> : getString('pipeline.neverRan')}
-        </Text>
+        {startTs ? (
+          <Text color={Color.GREY_600} font={{ variation: FontVariation.TINY }}>
+            <ReactTimeago date={startTs} />
+          </Text>
+        ) : (
+          <Text color={Color.GREY_400} font={{ variation: FontVariation.SMALL }}>
+            {startTs ? <ReactTimeago date={startTs} /> : getString('pipeline.neverRan')}
+          </Text>
+        )}
       </Layout.Vertical>
     </Layout.Horizontal>
   )
@@ -166,7 +191,7 @@ export const LastExecutionCell: CellType = ({ row }) => {
 export const LastModifiedCell: CellType = ({ row }) => {
   const data = row.original
   return (
-    <Text color={Color.GREY_600} font={{ size: 'small' }}>
+    <Text color={Color.GREY_900} font={{ size: 'small' }}>
       {getReadableDateTime(data.lastUpdatedAt)}
     </Text>
   )
@@ -286,7 +311,7 @@ export const MenuCell: CellType = ({ row, column }) => {
   )
 }
 
-export const RecentTenExecutionsCell: CellType = ({ row }) => {
+export const RecentExecutionsCell: CellType = ({ row }) => {
   const { getString } = useStrings()
   const data = row.original
   let recentExecutions = data.recentExecutionsInfo || []
@@ -321,8 +346,8 @@ export const RecentTenExecutionsCell: CellType = ({ row }) => {
         position: Position.TOP,
         interactionKind: PopoverInteractionKind.HOVER,
         content: (
-          <Layout.Vertical padding="medium" spacing="medium">
-            <div>
+          <Layout.Vertical padding="large" spacing="medium">
+            <div className={css.statusLabel}>
               <ExecutionStatusLabel status={i.status as ExecutionStatus} />
             </div>
             {i.startTs && (
@@ -331,8 +356,8 @@ export const RecentTenExecutionsCell: CellType = ({ row }) => {
                 <LabeValue
                   label={getString('common.executedBy')}
                   value={
-                    <Layout.Horizontal spacing="small" color={Color.WHITE} font="normal">
-                      <span>{i.executorInfo?.email}</span>
+                    <Layout.Horizontal spacing="xsmall" color={Color.WHITE} font="normal">
+                      <span>{i.executorInfo?.email || i.executorInfo?.username}</span>
                       <span>|</span>
                       <ReactTimeago date={i.startTs} />
                     </Layout.Horizontal>

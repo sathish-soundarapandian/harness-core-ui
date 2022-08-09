@@ -7,7 +7,7 @@
 
 .cardStyle {
   width: 100%;
-  margin: var(--spacing-small), 0;
+  margin: var(--spacing-small) 0;
 }
 
 .inputsetContainer {
@@ -18,4 +18,8 @@
 .healthSourceInputSet {
   width: 100% !important;
   margin-top: var(--spacing-large);
+}
+
+.inputSetForm {
+  width: 500px !important;
 }

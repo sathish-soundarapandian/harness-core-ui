@@ -1,0 +1,59 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "connector": {
+      "name": "connectorName",
+      "identifier": "connectorName_1658954816450",
+      "description": null,
+      "orgIdentifier": "default",
+      "projectIdentifier": "project1",
+      "tags": {},
+      "type": "K8sCluster",
+      "spec": {
+        "credential": {
+          "type": "InheritFromDelegate",
+          "spec": null
+        },
+        "delegateSelectors": ["abc"]
+      }
+    },
+    "createdAt": 1658954817342,
+    "lastModifiedAt": 1658954817339,
+    "status": null,
+    "activityDetails": {
+      "lastActivityTime": 1658954817339
+    },
+    "harnessManaged": false,
+    "gitDetails": {
+      "objectId": null,
+      "branch": null,
+      "repoIdentifier": null,
+      "rootFolder": null,
+      "filePath": null,
+      "repoName": null,
+      "commitId": null,
+      "fileUrl": null
+    },
+    "entityValidityDetails": {
+      "valid": true,
+      "invalidYaml": null
+    },
+    "governanceMetadata": {
+      "id": "0",
+      "deny": false,
+      "details": [],
+      "message": "",
+      "timestamp": "1658954817317",
+      "status": "pass",
+      "accountId": "accountId",
+      "orgId": "default",
+      "projectId": "project1",
+      "entity": "connectorName_1658954816450",
+      "type": "connector",
+      "action": "onsave",
+      "created": "1658954817302"
+    }
+  },
+  "metaData": null,
+  "correlationId": "47978299-95a3-4f58-96aa-a9cfeb617223"
+}

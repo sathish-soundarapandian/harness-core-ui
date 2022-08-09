@@ -102,7 +102,7 @@ exports[`<TemplateStudio /> tests snapshot test for new template with git sync 1
             class="StyledProps--font StyledProps--main"
           >
             <div
-              class="css-16ofunt"
+              class="css-1xxlbl1"
               width="0"
             >
               <div>
@@ -494,7 +494,7 @@ exports[`<TemplateStudio /> tests snapshot test for new template without git syn
             class="StyledProps--font StyledProps--main"
           >
             <div
-              class="css-16ofunt"
+              class="css-1xxlbl1"
               width="0"
             >
               <div>
@@ -886,7 +886,7 @@ exports[`<TemplateStudio /> tests snapshot test for template studio in visual vi
             class="StyledProps--font StyledProps--main"
           >
             <div
-              class="css-16ofunt"
+              class="css-1xxlbl1"
               width="0"
             >
               <div>

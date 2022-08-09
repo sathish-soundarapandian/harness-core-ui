@@ -50,6 +50,7 @@ import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { RedirectToModuleTrialHomeFactory, RedirectToSubscriptionsFactory } from '@common/Redirects'
 import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
 import { LICENSE_STATE_NAMES, LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
+import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
 import { CFTemplateStudioWrapper } from '@cf/components/TemplateStudio/CFTemplateStudioWrapper/CFTemplateStudioWrapper'
 import { registerFeatureFlagPipelineStage } from './pages/pipeline-studio/views/FeatureFlagStage'
 import { registerFlagConfigurationPipelineStep } from './components/PipelineSteps'
@@ -145,7 +146,7 @@ registerFeatureFlagPipelineStage()
 registerFlagConfigurationPipelineStep()
 
 const CFRoutes: FC = () => {
-  const { FF_PIPELINE, FFM_1512, FFM_1827 } = useFeatureFlags()
+  const { FF_PIPELINE, FFM_1512, FFM_1827, NG_SETTINGS } = useFeatureFlags()
 
   return (
     <>
@@ -338,6 +339,13 @@ const CFRoutes: FC = () => {
           licenseRedirectData={licenseRedirectData}
           sidebarProps={CFSideNavProps}
         />
+        {NG_SETTINGS && (
+          <DefaultSettingsRouteDestinations
+            moduleParams={moduleParams}
+            licenseRedirectData={licenseRedirectData}
+            sidebarProps={CFSideNavProps}
+          />
+        )}
         <SecretRouteDestinations
           moduleParams={moduleParams}
           licenseRedirectData={licenseRedirectData}

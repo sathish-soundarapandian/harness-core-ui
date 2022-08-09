@@ -74,6 +74,17 @@ jest.mock('services/cd-ng', () => ({
   }),
   useUnlinkSsoGroup: jest.fn().mockImplementation(() => {
     return { mutate: unLinkToSSoMock }
+  }),
+  useSearchLdapGroups: jest.fn().mockImplementation(() => {
+    return {
+      data: mockResponse,
+      loading: false,
+      refetch: jest.fn().mockReturnValue(mockResponse),
+      error: null
+    }
+  }),
+  useLinkToLdapGroup: jest.fn().mockImplementation(() => {
+    return { mutate: () => Promise.resolve(mockResponse) }
   })
 }))
 
@@ -167,6 +178,7 @@ describe('UserGroupDetails Test', () => {
       </TestWrapper>
     )
     await waitFor(() => getAllByTextLinked('accessControl: common.userGroups'))
+    await waitFor(() => expect(getAllByTextLinked('rbac.userDetails.linkToSSOProviderModal.ldap')).not.toBeNull())
     const unLinkSSOButton = getAllByTextLinked('rbac.userDetails.linkToSSOProviderModal.delinkLabel')[0]
     fireEvent.click(unLinkSSOButton)
     await act(async () => {

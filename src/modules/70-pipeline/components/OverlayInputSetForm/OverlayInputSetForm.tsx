@@ -24,7 +24,6 @@ import {
   Container
 } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
-import { parse } from 'yaml'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 
@@ -66,7 +65,7 @@ import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { AppStoreContext, useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import type { CreateUpdateInputSetsReturnType, InputSetDTO } from '@pipeline/utils/types'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { getOverlayErrors } from '@pipeline/utils/runPipelineUtils'
 import { getYamlFileName } from '@pipeline/utils/yamlUtils'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
@@ -252,9 +251,11 @@ export function OverlayInputSetForm({
       return getDefaultInputSet(orgIdentifier, projectIdentifier, pipelineIdentifier)
     }
     const inputSetObj = overlayInputSetResponse.data
-    const parsedInputSetObj = parse(defaultTo(inputSetObj?.overlayInputSetYaml, ''))
+    const parsedInputSetObj = parse<{ overlayInputSet: OverlayInputSetDTO }>(
+      defaultTo(inputSetObj?.overlayInputSetYaml, '')
+    )
     if ((isGitSyncEnabled || inputSetObj.storeType === StoreType.REMOTE) && parsedInputSetObj?.overlayInputSet) {
-      const parsedOverlayInputSet = parsedInputSetObj.overlayInputSet as OverlayInputSetDTO
+      const parsedOverlayInputSet = parsedInputSetObj.overlayInputSet
       return {
         name: parsedOverlayInputSet.name as string,
         tags: parsedOverlayInputSet.tags as {
@@ -340,12 +341,12 @@ export function OverlayInputSetForm({
     refetchInputSetList()
   }, [selectedRepo, selectedBranch])
 
-  const onRepoChange = (gitDetails: EntityGitDetails) => {
+  const onRepoChange = (gitDetails: EntityGitDetails): void => {
     setSelectedRepo(defaultTo(gitDetails.repoIdentifier, ''))
     setSelectedBranch(defaultTo(gitDetails.branch, ''))
   }
 
-  const onBranchChange = (gitDetails: EntityGitDetails) => {
+  const onBranchChange = (gitDetails: EntityGitDetails): void => {
     setSelectedBranch(defaultTo(gitDetails.branch, ''))
   }
 
@@ -353,7 +354,7 @@ export function OverlayInputSetForm({
     (view: SelectedView) => {
       if (view === SelectedView.VISUAL) {
         const yaml = defaultTo(yamlHandler?.getLatestYaml(), '')
-        const inputSetYamlVisual = parse(yaml).overlayInputSet as OverlayInputSetDTO
+        const inputSetYamlVisual = parse<{ overlayInputSet: OverlayInputSetDTO }>(yaml).overlayInputSet
 
         inputSet.name = inputSetYamlVisual.name
         inputSet.identifier = inputSetYamlVisual.identifier
@@ -378,7 +379,7 @@ export function OverlayInputSetForm({
   ): CreateUpdateInputSetsReturnType => {
     let response: ResponseOverlayInputSetResponse | null = null
     try {
-      const requestData = yamlStringify({ overlayInputSet: clearNullUndefined(inputSetObj) }) as any
+      const requestData = yamlStringify({ overlayInputSet: clearNullUndefined(inputSetObj) })
       const requestOptions = getCreateUpdateRequestBodyOptions({
         isEdit,
         initialGitDetails,
@@ -392,7 +393,7 @@ export function OverlayInputSetForm({
         initialStoreMetadata
       })
       response = isEdit
-        ? await updateOverlayInputSet(requestData, {
+        ? await updateOverlayInputSet(requestData as unknown as void, {
             ...(requestOptions as MutateRequestOptions<
               UpdateOverlayInputSetForPipelineQueryParams,
               UpdateOverlayInputSetForPipelinePathParams
@@ -743,7 +744,7 @@ export function OverlayInputSetForm({
                             const latestYaml = defaultTo(yamlHandler?.getLatestYaml(), '')
 
                             handleSubmit(
-                              parse(latestYaml)?.overlayInputSet,
+                              parse<{ overlayInputSet: OverlayInputSetDTO }>(latestYaml)?.overlayInputSet,
                               {
                                 repoIdentifier: formikProps.values.repo,
                                 branch: formikProps.values.branch,

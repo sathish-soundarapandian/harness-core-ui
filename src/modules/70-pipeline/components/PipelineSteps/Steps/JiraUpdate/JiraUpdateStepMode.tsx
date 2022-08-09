@@ -44,6 +44,7 @@ import type {
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useQueryParams } from '@common/hooks'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import type { JiraProjectSelectOption } from '../JiraApproval/types'
 import { getGenuineValue } from '../JiraApproval/helper'
 import type { JiraCreateFieldType } from '../JiraCreate/types'
@@ -426,7 +427,7 @@ function FormContent({
                               placeholder={getString('common.valuePlaceholder')}
                               multiTextInputProps={{
                                 allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                                  item => item !== MultiTypeInputType.RUNTIME
+                                  item => !isMultiTypeRuntime(item)
                                 ) as AllowedTypes,
                                 expressions
                               }}

@@ -43,6 +43,7 @@ export class TerraformApply extends PipelineStep<TFFormData> {
     this._hasDelegateSelectionVisible = true
   }
   protected type = StepType.TerraformApply
+  protected referenceId = 'terraformApplyStep'
   protected defaultValues: TFFormData = {
     identifier: '',
     timeout: '10m',

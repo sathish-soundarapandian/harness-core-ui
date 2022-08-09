@@ -7,7 +7,6 @@
 
 import React from 'react'
 import { cloneDeep, defaultTo, isEmpty, omit } from 'lodash-es'
-import { parse } from 'yaml'
 import { useHistory, useParams } from 'react-router-dom'
 import { VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
 import {
@@ -24,7 +23,7 @@ import { useToaster } from '@common/exports'
 import { UseSaveSuccessResponse, useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
 import { DefaultNewTemplateId } from 'framework/Templates/templates'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { sanitize } from '@common/utils/JSONUtils'
 import routes from '@common/RouteDefinitions'
 import type { GitQueryParams, ModulePathParams, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
@@ -33,6 +32,7 @@ import type { PromiseExtraArgs } from 'framework/Templates/TemplateConfigModal/T
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import type { Pipeline } from './types'
 
 export interface FetchTemplateUnboundProps {
   forceFetch?: boolean
@@ -109,20 +109,13 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
   const stringifyTemplate = React.useCallback(
     // Important to sanitize the final template to avoid sending null values as it fails schema validation
     (temp: NGTemplateInfoConfig) =>
-      yamlStringify(
-        JSON.parse(
-          JSON.stringify({
-            template: sanitize(temp, {
-              removeEmptyString: false,
-              removeEmptyObject: false,
-              removeEmptyArray: false
-            })
-          })
-        ),
-        {
-          version: '1.1'
-        }
-      ),
+      yamlStringify({
+        template: sanitize(temp, {
+          removeEmptyString: false,
+          removeEmptyObject: false,
+          removeEmptyArray: false
+        })
+      }),
     []
   )
 
@@ -241,7 +234,8 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
 
     if (isYaml && yamlHandler) {
       try {
-        latestTemplate = payload?.template || (parse(yamlHandler.getLatestYaml()).pipeline as NGTemplateInfoConfig)
+        latestTemplate =
+          payload?.template || (parse<Pipeline>(yamlHandler.getLatestYaml()).pipeline as NGTemplateInfoConfig)
       } /* istanbul ignore next */ catch (err) {
         showError(getRBACErrorMessage(err), undefined, 'template.save.gitinfo.error')
       }

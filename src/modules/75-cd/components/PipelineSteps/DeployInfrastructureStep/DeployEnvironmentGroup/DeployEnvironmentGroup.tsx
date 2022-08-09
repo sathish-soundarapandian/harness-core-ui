@@ -37,7 +37,6 @@ interface DeployEnvironmentGroupProps {
   formik?: FormikProps<DeployStageConfig>
   readonly?: boolean
   allowableTypes: MultiTypeAllowedValues
-  serviceRef?: string
   path?: string
 }
 
@@ -47,7 +46,7 @@ function DeployEnvironmentGroup({
   formik,
   allowableTypes,
   path
-}: DeployEnvironmentGroupProps) {
+}: DeployEnvironmentGroupProps): JSX.Element {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
   const { showError } = useToaster()
@@ -107,7 +106,7 @@ function DeployEnvironmentGroup({
         if (initialValues.isEnvGroup) {
           if (!existingEnvironmentGroup) {
             if (!readonly) {
-              formik?.setFieldValue('environmentGroup?.envGroupRef', '')
+              formik?.setFieldValue(path ? `${path}.environmentGroup.envGroupRef` : 'environmentGroup.envGroupRef', '')
             } else {
               const options = [...environmentGroupsSelectOptions]
               options.push({
@@ -117,17 +116,22 @@ function DeployEnvironmentGroup({
               setEnvironmentGroupsSelectOptions(options)
             }
           } else {
-            formik?.setFieldValue('environmentGroup?.envGroupRef', existingEnvironmentGroup)
+            formik?.setFieldValue(
+              path ? `${path}.environmentGroup.envGroupRef` : 'environmentGroup.envGroupRef',
+              existingEnvironmentGroup
+            )
           }
         }
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [environmentGroupsSelectOptions])
 
   useEffect(() => {
     if (!isNil(environmentGroupsError)) {
       showError(getRBACErrorMessage(environmentGroupsError))
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [environmentGroupsError])
 
   return (
@@ -139,7 +143,7 @@ function DeployEnvironmentGroup({
       <FormInput.MultiTypeInput
         label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup')}
         tooltipProps={{ dataTooltipId: 'specifyYourEnvironmentGroup' }}
-        name={`${path}.envGroupRef`}
+        name={path ? `${path}.environmentGroup.envGroupRef` : 'environmentGroup.envGroupRef'}
         useValue
         disabled={readonly}
         placeholder={

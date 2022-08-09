@@ -330,7 +330,7 @@ const ResourceGroupDetails: React.FC = () => {
                 onResourceSelectionChange={onResourceSelectionChange}
                 onResourceCategorySelect={onResourceCategorySelect}
                 disableAddingResources={isHarnessManaged}
-                disableSelection={
+                disableSpecificResourcesSelection={
                   selectionType === SelectionType.ALL ||
                   getSelectedScopeType(resourceGroupScope, includedScopes) !== SelectorScope.CURRENT
                 }

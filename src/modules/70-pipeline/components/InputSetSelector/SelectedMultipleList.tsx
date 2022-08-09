@@ -96,7 +96,7 @@ export default function SelectedMultipleList(props: SelectedMultipleListProps): 
               labelElement={
                 <Layout.Horizontal
                   flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-                  padding={{ left: true }}
+                  padding={{ right: 'xxlarge' }}
                   width="100%"
                 >
                   <Icon name={getIconByType(selected.type)}></Icon>
@@ -112,6 +112,7 @@ export default function SelectedMultipleList(props: SelectedMultipleListProps): 
               }
               checked={true}
             />
+
             {selected.gitDetails?.repoIdentifier ? <InputSetGitDetails gitDetails={selected.gitDetails} /> : null}
             {isInputSetInvalid(selected) && (
               <Container padding={{ left: 'large' }}>

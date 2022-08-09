@@ -153,7 +153,7 @@ export interface ParsedInput {
   [InpuSetFunction.DEFAULT]: string | null
 }
 
-export function isExecionInput(input: string): boolean {
+export function isExecutionInput(input: string): boolean {
   // split the string based on functions
   const splitData = input.split(INPUT_EXPRESSION_SPLIT_REGEX).slice(1)
 

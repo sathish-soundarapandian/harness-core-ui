@@ -16,7 +16,7 @@ import type { ResponseMessage } from 'services/cd-ng'
 import { PDCInfrastructureSpec, PdcRegex, SshKeyRegex, parseAttributes } from '../PDCInfrastructureSpec'
 import { ConnectorsResponse } from './mock/ConnectorsResponse.mock'
 import { ConnectorResponse } from './mock/ConnectorResponse.mock'
-import { mockListSecrets, mockSecret } from './mock/Secrets.mock'
+import { mockListSecrets } from './mock/Secrets.mock'
 
 const getYaml = (): string => `pipeline:
     stages:
@@ -47,7 +47,6 @@ jest.mock('services/cd-ng', () => ({
     mutate: jest.fn(() => Promise.resolve({ data: { content: [{ hostname: '1.2.3.4' }] } }))
   })),
   useValidateHosts: jest.fn(() => ({ mutate: validateHosts })),
-  getSecretV2Promise: jest.fn().mockImplementation(() => Promise.resolve(mockSecret)),
   listSecretsV2Promise: jest.fn().mockImplementation(() => Promise.resolve(mockListSecrets))
 }))
 
@@ -138,16 +137,16 @@ const clickOn = (getByText: any, textIdentifier: string) => {
 const clickOnPreconfiguredHostsOption = async (getByText: any) => {
   clickOn(getByText, 'cd.steps.pdcStep.preconfiguredHostsOption')
   await waitFor(() => {
-    expect(getByText('cd.steps.pdcStep.deployAllHostsOption')).toBeDefined()
+    expect(getByText('cd.steps.pdcStep.includeAllHosts')).toBeDefined()
   })
 }
 
 const clickOnDeploySpecificHostsOption = async (getByText: any) => {
-  clickOn(getByText, 'cd.steps.pdcStep.deploySpecificHostsOption')
+  clickOn(getByText, 'cd.steps.pdcStep.filterHostName')
 }
 
 const clickOnDeployAllHostsOption = async (getByText: any) => {
-  clickOn(getByText, 'cd.steps.pdcStep.deployAllHostsOption')
+  clickOn(getByText, 'cd.steps.pdcStep.includeAllHosts')
 }
 
 const updateConnector = async (container: any) => {
@@ -320,7 +319,7 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
       />
     )
     await checkForFormInit(container)
-    clickOn(getByText, 'cd.steps.pdcStep.deploySpecificHostsOption')
+    clickOn(getByText, 'cd.steps.pdcStep.filterHostName')
     await waitFor(() => {
       expect(getByPlaceholderText('cd.steps.pdcStep.specificHostsPlaceholder')).toBeDefined()
     })
@@ -426,23 +425,6 @@ describe('test api rejections', () => {
       expect(getByText('1.2.3.4')).toBeDefined()
     })
     await checkTestConnection(getByText)
-    await submitForm(getByText)
-  })
-  test('getSecretV2Promise rejection', async () => {
-    jest
-      .spyOn(CDNG, 'getSecretV2Promise')
-      .mockImplementationOnce(() => Promise.reject({ data: { message: 'error...' } }))
-    const { getByText } = render(
-      <TestStepWidget
-        initialValues={getInitialValuesPreconfigured()}
-        template={getRuntimeInputsValues()}
-        allValues={getInitialValuesPreconfigured()}
-        type={StepType.PDC}
-        stepViewType={StepViewType.InputSet}
-        onUpdate={jest.fn()}
-      />
-    )
-    expect(CDNG.getSecretV2Promise).toBeCalled()
     await submitForm(getByText)
   })
   test('useValidateHosts failure test', async () => {

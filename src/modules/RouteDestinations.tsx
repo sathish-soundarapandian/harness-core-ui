@@ -34,7 +34,7 @@ import DASHBOARDRoutes from '@dashboards/RouteDestinations'
 import AccountSideNav from '@common/components/AccountSideNav/AccountSideNav'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import NotFoundPage from '@common/pages/404/NotFoundPage'
-
+import DefaultSettingsRoutes from '@default-settings/RouteDestinations'
 export const AccountSideNavProps: SidebarContext = {
   navComponent: AccountSideNav,
   icon: 'nav-settings',
@@ -42,7 +42,7 @@ export const AccountSideNavProps: SidebarContext = {
 }
 
 export default function RouteDestinations(): React.ReactElement {
-  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, SECURITY, CHAOS_ENABLED } =
+  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, SECURITY, CHAOS_ENABLED, NG_SETTINGS } =
     useFeatureFlags()
 
   return (
@@ -52,6 +52,7 @@ export default function RouteDestinations(): React.ReactElement {
       {variableRoutes.props.children}
       {auditTrailRoutes.props.children}
       {rbacRoutes.props.children}
+      {NG_SETTINGS ? DefaultSettingsRoutes().props.children : null}
       {delegatesRoutes.props.children}
       {fileStoreRoutes.props.children}
       {projectsOrgsRoutes.props.children}

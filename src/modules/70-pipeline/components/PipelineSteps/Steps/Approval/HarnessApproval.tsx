@@ -7,12 +7,12 @@
 
 import React from 'react'
 import * as Yup from 'yup'
-import { parse } from 'yaml'
 import { isEmpty, get, compact } from 'lodash-es'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { connect, FormikErrors, yupToFormErrors } from 'formik'
 import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
+import { parse } from '@common/utils/YamlHelperMethods'
 import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { getUserGroupListPromise } from 'services/cd-ng'
 import { loggerFor } from 'framework/logging/logging'
@@ -45,6 +45,7 @@ export class HarnessApproval extends PipelineStep<HarnessApprovalData> {
     this.invocationMap.set(UserGroupRegex, this.getUgListForYaml.bind(this))
   }
 
+  protected referenceId = 'harnessApprovalStep'
   protected isHarnessSpecific = true
   protected type = StepType.HarnessApproval
   protected stepName = 'Manual Approval'

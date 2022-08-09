@@ -15,5 +15,6 @@ declare const styles: {
   readonly noHealthSourceImage: string
   readonly noHealthSourceImageClass: string
   readonly table: string
+  readonly tableType: string
 }
 export default styles

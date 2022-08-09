@@ -71,6 +71,7 @@ export interface DeployStageConfig
   clusterRef?: SelectOption[] | string
   isEnvGroup?: boolean
   deploymentType?: ServiceDefinition['type']
+  deployToAll?: boolean
 }
 
 export interface ServiceInputsConfig {

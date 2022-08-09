@@ -20,7 +20,7 @@ import type { SidecarArtifact } from 'services/cd-ng'
 import type { KubernetesArtifactsProps } from '../../K8sServiceSpecInterface'
 import { isRuntimeMode } from '../../K8sServiceSpecHelper'
 import { fromPipelineInputTriggerTab, getSidecarInitialValues } from '../../ArtifactSource/artifactSourceUtils'
-import css from '../../K8sServiceSpec.module.scss'
+import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 const ArtifactInputField = (props: KubernetesArtifactsProps): React.ReactElement | null => {
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<

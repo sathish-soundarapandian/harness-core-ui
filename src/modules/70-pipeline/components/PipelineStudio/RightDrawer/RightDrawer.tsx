@@ -5,13 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { SyntheticEvent } from 'react'
+import React, { SyntheticEvent, useState } from 'react'
 import { Drawer, Intent, Position } from '@blueprintjs/core'
-import { Button, useConfirmationDialog } from '@wings-software/uicore'
+import { Button, useConfirmationDialog, ButtonVariation, ButtonSize } from '@wings-software/uicore'
 import { cloneDeep, defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import cx from 'classnames'
 import produce from 'immer'
-import { parse } from 'yaml'
+import { parse } from '@common/utils/YamlHelperMethods'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import type {
   ExecutionElementConfig,
@@ -167,7 +167,9 @@ const processNodeImpl = (
       set(node, 'spec.commandOptions', (item as StepElementConfig)?.spec?.commandOptions)
     }
 
-    if (item.tab === TabTypes.Advanced) {
+    // strategy: { repeat: { items: '<+stage.output.hosts>'}} will be added by default for Command Script step
+    // even if user does not go to Advanced tab
+    if (item.tab === TabTypes.Advanced || (item as StepElementConfig).type === StepType.Command) {
       if (isEmpty(item.strategy)) {
         delete (node as any).strategy
       } else {
@@ -422,6 +424,7 @@ export function RightDrawer(): React.ReactElement {
     setSelectedStepId
   } = usePipelineContext()
   const { getTemplate } = useTemplateSelector()
+  const [helpPanelVisible, setHelpPanel] = useState(false)
   const { type, data, ...restDrawerProps } = drawerData
   const { trackEvent } = useTelemetry()
 
@@ -461,6 +464,7 @@ export function RightDrawer(): React.ReactElement {
     const toolTipType = type ? `_${type}` : ''
     title = (
       <RightDrawerTitle
+        helpPanelVisible={helpPanelVisible}
         stepType={stepType}
         toolTipType={toolTipType}
         stepData={stepData}
@@ -702,10 +706,13 @@ export function RightDrawer(): React.ReactElement {
       })
       const node = drawerData.data?.stepConfig?.node as StepOrStepGroupOrTemplateStepData
       const processNode = isCopied
-        ? produce(defaultTo(parse(defaultTo(template?.yaml, '')).template.spec, {}) as StepElementConfig, draft => {
-            draft.name = defaultTo(node?.name, '')
-            draft.identifier = defaultTo(node?.identifier, '')
-          })
+        ? produce(
+            defaultTo(parse<any>(defaultTo(template?.yaml, '')).template.spec, {}) as StepElementConfig,
+            draft => {
+              draft.name = defaultTo(node?.name, '')
+              draft.identifier = defaultTo(node?.identifier, '')
+            }
+          )
         : createTemplate<TemplateStepNode>(node as unknown as TemplateStepNode, template)
       await updateNode(processNode, drawerType, isRollback)
     } catch (_) {
@@ -733,7 +740,12 @@ export function RightDrawer(): React.ReactElement {
     })
   }
 
+  const showHelpPanel = () => {
+    setHelpPanel(!helpPanelVisible)
+  }
+
   const handleClose = (e?: React.SyntheticEvent<Element, Event>): void => {
+    setHelpPanel(false)
     closeDrawer({
       e,
       formikRef,
@@ -761,7 +773,7 @@ export function RightDrawer(): React.ReactElement {
       canOutsideClickClose={type !== DrawerTypes.ExecutionStrategy}
       enforceFocus={false}
       hasBackdrop={true}
-      size={DrawerSizes[type]}
+      size={helpPanelVisible ? 1050 : DrawerSizes[type]}
       isOpen={isDrawerOpened}
       position={Position.RIGHT}
       title={title}
@@ -779,6 +791,7 @@ export function RightDrawer(): React.ReactElement {
 
       {type === DrawerTypes.StepConfig && data?.stepConfig?.node && (
         <StepCommands
+          helpPanelVisible={helpPanelVisible}
           step={data.stepConfig.node as StepElementConfig | StepGroupElementConfig}
           isReadonly={isReadonly}
           ref={formikRef}
@@ -851,6 +864,7 @@ export function RightDrawer(): React.ReactElement {
       {type === DrawerTypes.PolicySets && <PipelineGovernanceView pipelineName={pipeline.name} />}
       {type === DrawerTypes.ConfigureService && selectedStageId && data?.stepConfig && data?.stepConfig.node && (
         <StepCommands
+          helpPanelVisible={helpPanelVisible}
           key={`step-form-${data.stepConfig.node.identifier}`}
           step={data.stepConfig.node as StepElementConfig}
           isReadonly={isReadonly}
@@ -945,6 +959,7 @@ export function RightDrawer(): React.ReactElement {
       )}
       {type === DrawerTypes.ProvisionerStepConfig && data?.stepConfig?.node && (
         <StepCommands
+          helpPanelVisible={helpPanelVisible}
           step={data.stepConfig.node as StepElementConfig}
           ref={formikRef}
           isReadonly={isReadonly}
@@ -975,6 +990,16 @@ export function RightDrawer(): React.ReactElement {
           onRemoveTemplate={() => removeTemplate(type, Boolean(isRollbackToggled))}
         />
       )}
+      {type === DrawerTypes.StepConfig && !isEmpty(stepData?.referenceId) ? (
+        <Button
+          variation={ButtonVariation.SECONDARY}
+          size={ButtonSize.SMALL}
+          className={css.helpPanel}
+          style={helpPanelVisible ? { marginLeft: '920px' } : {}}
+          text={helpPanelVisible ? 'Hide' : 'Help Panel'}
+          onClick={showHelpPanel}
+        />
+      ) : null}
     </Drawer>
   )
 }

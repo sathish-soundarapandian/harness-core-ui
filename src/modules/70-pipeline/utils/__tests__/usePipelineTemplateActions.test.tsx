@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { act, fireEvent, render } from '@testing-library/react'
-import { parse } from 'yaml'
+import { parse } from '@common/utils/YamlHelperMethods'
 import { TestWrapper } from '@common/utils/testUtils'
 import { usePipelineTemplateActions } from '@pipeline/utils/usePipelineTemplateActions'
 import pipelineContextMock from '@pipeline/components/PipelineStudio/RightDrawer/__tests__/stateMock'
@@ -163,7 +163,7 @@ describe('usePipelineTemplateActions Test', () => {
       orgIdentifier: 'CV',
       projectIdentifier: 'Milos2',
       tags: {},
-      ...parse(pipelineTemplate?.yaml || '')?.template.spec
+      ...parse<any>(pipelineTemplate?.yaml || '')?.template.spec
     })
   })
 

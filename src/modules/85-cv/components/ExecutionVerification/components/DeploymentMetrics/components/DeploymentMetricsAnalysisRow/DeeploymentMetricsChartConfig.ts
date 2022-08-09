@@ -74,8 +74,8 @@ export function chartsConfig(
         const testDataValue = testData?.points[this.points[0]?.point.index]?.y
 
         // to show "No data" text when the y axis value is null
-        const baseDataDisplayValue = baseDataValue?.toFixed(2) ?? getString('noData')
-        const testDataDisplayValue = testDataValue?.toFixed(2) ?? getString('noData')
+        const baseDataDisplayValue = baseDataValue?.toFixed(3) ?? getString('noData')
+        const testDataDisplayValue = testDataValue?.toFixed(3) ?? getString('noData')
 
         return `
         <div class="sectionParent" style="margin-top: 4px">

@@ -10,7 +10,7 @@ import { PageError, Tag } from '@wings-software/uicore'
 import { defaultTo, get, merge } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { PageSpinner } from '@harness/uicore'
-import { parse } from 'yaml'
+import { parse } from '@common/utils/YamlHelperMethods'
 import { useStageBuilderCanvasState } from '@pipeline/components/PipelineStudio/StageBuilder/useStageBuilderCanvasState'
 import { CanvasWidget, createEngine } from '@pipeline/components/Diagram'
 import { StageBuilderModel } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderModel'
@@ -106,7 +106,7 @@ export function TemplatePipelineCanvas(): React.ReactElement {
 
   React.useEffect(() => {
     if (pipelineTemplateResponse?.data?.yaml) {
-      setResolvedPipeline(parse(pipelineTemplateResponse.data.yaml)?.template?.spec)
+      setResolvedPipeline(parse<any>(pipelineTemplateResponse.data.yaml)?.template?.spec)
     }
   }, [pipelineTemplateResponse?.data?.yaml])
 

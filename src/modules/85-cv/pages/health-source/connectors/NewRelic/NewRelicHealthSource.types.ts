@@ -11,6 +11,7 @@ import type { HealthSourceTypes } from '../../types'
 
 export type MapNewRelicMetric = {
   metricName: string
+  metricIdentifier?: string
   groupName: SelectOption
   query: string
   metricValue: string
@@ -60,4 +61,5 @@ export interface InitNewRelicCustomFormInterface {
   continuousVerification: boolean
   serviceInstanceMetricPath?: string
   riskCategory?: string
+  metricIdentifier?: string
 }

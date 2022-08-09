@@ -80,6 +80,7 @@ import StepArtifactoryAuthentication from '@connectors/components/CreateConnecto
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import {
   CommandTypes,
   onSubmitTFPlanData,
@@ -116,7 +117,7 @@ function TerraformPlanWidget(
 ): React.ReactElement {
   const { initialValues, onUpdate, onChange, allowableTypes, isNewStep, readonly = false, stepViewType } = props
   const { getString } = useStrings()
-  const { TF_MODULE_SOURCE_INHERIT_SSH, EXPORT_TF_PLAN_JSON_NG } = useFeatureFlags()
+  const { EXPORT_TF_PLAN_JSON_NG } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
   const [connectorView, setConnectorView] = useState(false)
   const [selectedConnector, setSelectedConnector] = useState<ConnectorTypes | ''>('')
@@ -537,7 +538,7 @@ function TerraformPlanWidget(
                           multiTextInputProps={{
                             expressions,
                             allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                              item => item !== MultiTypeInputType.RUNTIME
+                              item => !isMultiTypeRuntime(item)
                             ) as AllowedTypes
                           }}
                           multiTypeFieldSelectorProps={{
@@ -558,7 +559,7 @@ function TerraformPlanWidget(
                           valueMultiTextInputProps={{
                             expressions,
                             allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                              item => item !== MultiTypeInputType.RUNTIME
+                              item => !isMultiTypeRuntime(item)
                             ) as AllowedTypes
                           }}
                           multiTypeFieldSelectorProps={{
@@ -659,9 +660,7 @@ function TerraformPlanWidget(
                               ...data.spec?.configuration?.configFiles
                             }
 
-                            if (TF_MODULE_SOURCE_INHERIT_SSH) {
-                              configObject.moduleSource = data.spec?.configuration?.configFiles?.moduleSource
-                            }
+                            configObject.moduleSource = data.spec?.configuration?.configFiles?.moduleSource
 
                             if (prevStepData.identifier && prevStepData.identifier !== data?.identifier) {
                               configObject.store.spec.connectorRef = prevStepData?.identifier
@@ -710,6 +709,7 @@ export class TerraformPlan extends PipelineStep<TFPlanFormData> {
     this._hasStepVariables = true
     this._hasDelegateSelectionVisible = true
   }
+  protected referenceId = 'terraformPlanStep'
   protected type = StepType.TerraformPlan
   protected defaultValues: TFPlanFormData = {
     identifier: '',

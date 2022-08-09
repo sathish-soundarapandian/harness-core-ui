@@ -35,7 +35,7 @@ export const VariableList = (props: VariableListProps): React.ReactElement => {
   const { expressions } = useVariablesExpression()
 
   return (
-    <div className={stepCss.formGroup}>
+    <div className={stepCss.formGroup} data-testid={fieldName}>
       <MultiTypeFieldSelector
         name={fieldName}
         label={fieldLabel}
@@ -56,7 +56,7 @@ export const VariableList = (props: VariableListProps): React.ReactElement => {
                 </div>
                 {get(formik.values, fieldName)?.map((_var: NGVariable, i: number) => {
                   return (
-                    <div className={css.environmentVarHeader} key={i}>
+                    <div className={css.environmentVarHeader} key={i} data-testid={`${fieldName}[${i}]`}>
                       <FormInput.Text
                         name={`${fieldName}[${i}].name`}
                         placeholder={getString('name')}
@@ -82,7 +82,7 @@ export const VariableList = (props: VariableListProps): React.ReactElement => {
                       <Button
                         variation={ButtonVariation.ICON}
                         icon="main-trash"
-                        data-testid={`${fieldName}-${i}`}
+                        data-testid={`remove-${fieldName}-${i}`}
                         onClick={() => remove(i)}
                         disabled={readonly}
                       />

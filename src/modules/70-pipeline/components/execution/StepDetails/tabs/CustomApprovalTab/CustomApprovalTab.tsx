@@ -6,27 +6,51 @@
  */
 
 import React from 'react'
+import cx from 'classnames'
+import { Container } from '@wings-software/uicore'
+import { Color } from '@harness/design-system'
+import type { StringsMap } from 'stringTypes'
 import type { ApprovalInstanceResponse } from 'services/pipeline-ng'
 import { Duration } from '@common/exports'
 import { ApprovalStatus } from '@pipeline/utils/approvalUtils'
 import { String } from 'framework/strings'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
+import { StepDetails } from '@pipeline/components/execution/StepDetails/common/StepDetails/StepDetails'
+import type { StepExecutionTimeInfo } from '@pipeline/components/execution/StepDetails/views/BaseApprovalView/BaseApprovalView'
 import { CustomApprovalCriteria } from './CustomApprovalCriteria/CustomApprovalCriteria'
 import headerCss from '@pipeline/pages/execution/ExecutionPipelineView/ExecutionGraphView/ExecutionStageDetailsHeader/ExecutionStageDetailsHeader.module.scss'
 import css from './CustomApprovalTab.module.scss'
 
-export interface CustomApprovalTabProps {
+export interface CustomApprovalTabProps extends StepExecutionTimeInfo {
   approvalData: ApprovalInstanceResponse
   isWaiting: boolean
 }
 
+const statusToStringIdMap = {
+  [ApprovalStatus.APPROVED]: 'pipeline.customApprovalStep.execution.wasApproved',
+  [ApprovalStatus.REJECTED]: 'pipeline.customApprovalStep.execution.wasRejected',
+  [ApprovalStatus.EXPIRED]: 'pipeline.customApprovalStep.execution.wasExpired',
+  [ApprovalStatus.ABORTED]: 'pipeline.customApprovalStep.execution.wasAborted'
+}
+
+function CustomApprovalMessage({ status }: { status: keyof typeof ApprovalStatus }) {
+  const stringId = statusToStringIdMap[status] as keyof StringsMap
+
+  return stringId ? (
+    <Container
+      color={Color.BLACK}
+      background={Color.YELLOW_100}
+      padding={{ top: 'xxlarge', bottom: 'xxlarge', left: 'large', right: 'large' }}
+    >
+      <String stringID={stringId} />
+    </Container>
+  ) : null
+}
+
 export function CustomApprovalTab(props: CustomApprovalTabProps): React.ReactElement {
-  const { approvalData, isWaiting } = props
-  const wasApproved = !isWaiting && approvalData?.status === ApprovalStatus.APPROVED
-  const wasRejected =
-    !isWaiting && (approvalData?.status === ApprovalStatus.REJECTED || approvalData?.status === ApprovalStatus.EXPIRED)
+  const { approvalData, isWaiting, startTs, endTs, stepParameters } = props
   const wasFailed = !isWaiting && approvalData?.status === ApprovalStatus.FAILED
-  const wasAborted = !isWaiting && approvalData?.status === ApprovalStatus.ABORTED
+  const shouldShowExecutionTimeInfo = !isWaiting && approvalData?.status !== ApprovalStatus.WAITING
 
   return (
     <>
@@ -39,9 +63,9 @@ export function CustomApprovalTab(props: CustomApprovalTabProps): React.ReactEle
           </div>
         </div>
       ) : (
-        <div className={css.info} data-type="customApproval">
+        <div>
           {isWaiting ? (
-            <>
+            <div className={css.info}>
               <div className={css.timer}>
                 <Duration
                   className={css.duration}
@@ -52,37 +76,21 @@ export function CustomApprovalTab(props: CustomApprovalTabProps): React.ReactEle
                 />
                 <String stringID="pipeline.timeRemainingSuffix" />
               </div>
-              <div className={css.customApprovalTicket}>
-                <String stringID="pipeline.customApprovalStep.execution.customApprovalTicket" />
-              </div>
-            </>
-          ) : null}
-          {wasApproved ? (
-            <div className={css.customApprovalTicket}>
-              <String stringID="pipeline.customApprovalStep.execution.wasApproved" />
+              <Container color={Color.BLACK} margin={{ top: 'large', bottom: 'large' }}>
+                <String stringID="pipeline.customApprovalStep.execution.customApprovalPending" />
+              </Container>
             </div>
-          ) : null}
-
-          {wasRejected ? (
-            <div className={css.customApprovalTicket}>
-              {approvalData?.status === ApprovalStatus.REJECTED ? (
-                <String stringID="pipeline.customApprovalStep.execution.wasRejected" />
-              ) : null}
-              {approvalData?.status === ApprovalStatus.EXPIRED ? (
-                <String stringID="pipeline.customApprovalStep.execution.wasExpired" />
-              ) : null}
-            </div>
-          ) : null}
-
-          {wasAborted ? (
-            <div className={css.customApprovalTicket}>
-              <String stringID="pipeline.customApprovalStep.execution.wasAborted" />
-            </div>
-          ) : null}
+          ) : (
+            <CustomApprovalMessage status={approvalData?.status} />
+          )}
         </div>
       )}
-
-      <div className={css.customApproval}>
+      {shouldShowExecutionTimeInfo && (
+        <Container className={css.stepDetailsContainer} padding={{ top: 'large' }}>
+          <StepDetails step={{ startTs, endTs, stepParameters }} />
+        </Container>
+      )}
+      <div className={cx(css.customApproval, { [css.applyTopPadding]: !shouldShowExecutionTimeInfo })}>
         {approvalData?.details?.approvalCriteria ? (
           <CustomApprovalCriteria type="approval" criteria={approvalData.details.approvalCriteria} />
         ) : null}

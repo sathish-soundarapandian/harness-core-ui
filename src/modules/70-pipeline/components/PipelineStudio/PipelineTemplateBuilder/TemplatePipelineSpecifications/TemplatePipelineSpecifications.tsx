@@ -8,7 +8,6 @@
 import { cloneDeep, debounce, defaultTo, isEqual, merge, noop, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import React, { useRef } from 'react'
-import { parse } from 'yaml'
 import { Container, Formik, FormikForm, Heading, Layout, PageError } from '@wings-software/uicore'
 import { Color } from '@wings-software/design-system'
 import type { FormikProps, FormikErrors } from 'formik'
@@ -30,7 +29,8 @@ import { useStrings } from 'framework/strings'
 import { validatePipeline } from '@pipeline/components/PipelineStudio/StepUtil'
 import { ErrorsStrip } from '@pipeline/components/ErrorsStrip/ErrorsStrip'
 import { useMutateAsGet } from '@common/hooks'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
+import type { Pipeline } from '@pipeline/utils/types'
 import css from './TemplatePipelineSpecifications.module.scss'
 
 export function TemplatePipelineSpecifications(): JSX.Element {
@@ -98,7 +98,7 @@ export function TemplatePipelineSpecifications(): JSX.Element {
   React.useEffect(() => {
     if (!templateInputSetLoading) {
       try {
-        const templateInputs = parse(defaultTo(templateInputSetYaml?.data, ''))
+        const templateInputs = parse<PipelineInfoConfig>(defaultTo(templateInputSetYaml?.data, ''))
         setInputsTemplate(templateInputs)
       } catch (error) {
         showError(error.message, undefined, 'template.parse.inputSet.error')
@@ -108,7 +108,7 @@ export function TemplatePipelineSpecifications(): JSX.Element {
 
   React.useEffect(() => {
     if (pipelineResponse?.data?.mergedPipelineYaml) {
-      setAllValues(parse(pipelineResponse.data.mergedPipelineYaml).pipeline)
+      setAllValues(parse<Pipeline>(pipelineResponse.data.mergedPipelineYaml).pipeline)
     }
   }, [pipelineResponse?.data?.mergedPipelineYaml])
 

@@ -61,7 +61,8 @@ export const userGroupInfoSSOLinked = {
       tags: {},
       ssoLinked: true,
       ssoGroupName: 'mock_group_sso_name',
-      linkedSsoDisplayName: 'mock_sso_display_name'
+      linkedSsoDisplayName: 'mock_sso_display_name',
+      linkedSsoType: 'LDAP'
     },
     users: [
       { name: 'Admin', email: 'admin@harness.io', uuid: 'lv0euRhKRCyiXWzS7pOg6g' },

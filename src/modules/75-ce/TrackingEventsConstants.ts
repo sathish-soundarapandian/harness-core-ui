@@ -50,6 +50,10 @@ const ANOMALY_EVENTS = {
   SAVE_ANOMALY_ALERTS: PREFIX_CCM_EVENTS + 'save_anomaly_alerts'
 }
 
+const BI_DASHBOARD_EVENTS = {
+  BI_DASHBOARD_NAV_CLICK: PREFIX_CCM_EVENTS + 'bi_dashboard_nav_click'
+}
+
 export const USER_JOURNEY_EVENTS = {
   AS_NAV_CLICK: PREFIX_CCM_EVENTS + 'as_nav_click',
   LOAD_AS_LANDING_PAGE: PREFIX_CCM_EVENTS + 'load_as_landing_page',
@@ -67,7 +71,8 @@ export const USER_JOURNEY_EVENTS = {
   ...PERSPECTIVE_EVENTS,
   ...RECOMMENDATION_EVENTS,
   ...BUDGET_EVENTS,
-  ...ANOMALY_EVENTS
+  ...ANOMALY_EVENTS,
+  ...BI_DASHBOARD_EVENTS
 }
 
 export const PAGE_NAMES = {

@@ -50,8 +50,21 @@
 }
 
 .dialogStyles {
-  width: 1024px !important;
-  min-height: 600px;
+  :global {
+    .ModalDialog--body {
+      padding: 0 !important;
+    }
+  }
+
+  overflow: hidden;
+}
+
+.modalFooter {
+  position: sticky;
+  bottom: 0;
+  background-color: var(--white) !important;
+  z-index: 11;
+  border-radius: 6px !important;
 }
 
 .fullWidth {

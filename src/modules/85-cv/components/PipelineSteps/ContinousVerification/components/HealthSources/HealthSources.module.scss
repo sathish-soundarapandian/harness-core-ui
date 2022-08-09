@@ -48,11 +48,17 @@
   cursor: not-allowed;
 }
 
-.noHealthSourceImage {
-  height: 110px;
-}
+.tableType {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
-.noHealthSourceImageClass {
-  padding-top: var(--spacing-xxlarge);
-  margin-top: var(--spacing-xxxlarge);
+  .noHealthSourceImage {
+    height: 110px;
+  }
+
+  .noHealthSourceImageClass {
+    padding-top: var(--spacing-xxlarge);
+    margin-top: var(--spacing-xxxlarge);
+  }
 }

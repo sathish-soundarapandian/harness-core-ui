@@ -27,6 +27,11 @@ export const RepoStoreIcons: Record<string, IconName> = {
 
   AzureRepo: 'service-azure'
 }
+export type ReleaseRepoManifestTypes = 'ReleaseRepo'
+
+export const ReleaseRepoManifestDataType: Record<ReleaseRepoManifestTypes, ReleaseRepoManifestTypes> = {
+  ReleaseRepo: 'ReleaseRepo'
+}
 
 export type ReleaseRepoManifestStores = 'Git' | 'Github' | 'GitLab' | 'Bitbucket' | 'AzureRepo'
 

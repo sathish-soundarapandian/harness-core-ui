@@ -46,7 +46,7 @@
   border-top: 1px solid var(--grey-100);
 }
 
-.preferencesPopover {
+.popoverTarget {
   width: 100%;
 
   .preferencesContainer {
@@ -58,20 +58,22 @@
     border: 1px solid rgb(217, 218, 230);
     border-radius: 4px;
     height: 32px;
-    margin-right: var(--spacing-medium) !important ;
     padding: 0 var(--spacing-small) 0 12px !important;
   }
 }
 
-.preferenceMenu {
-  padding: var(--spacing-medium) !important;
+.preferencesPopover {
+  box-shadow: var(--elevation-4) !important;
+}
 
-  .prefLabel {
-    font-weight: 500;
-    font-size: 12px;
-    color: var(--grey-1000) !important;
-    letter-spacing: 0.2px;
-    padding-top: var(--spacing-small);
+.preferenceMenu {
+  padding: var(--spacing-large) var(--spacing-large) var(--spacing-xsmall) var(--spacing-large) !important;
+  width: 263px;
+
+  .labelCtn {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--spacing-medium);
   }
 }
 

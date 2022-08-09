@@ -7,9 +7,10 @@
 
 import { cloneDeep } from 'lodash-es'
 import type { FormikProps } from 'formik'
-import type { SelectOption } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@wings-software/uicore'
 import type { StringKeys } from 'framework/strings'
 import type { MetricPackDTO } from 'services/cv'
+import { StatusOfValidation } from '@cv/pages/components/ValidationStatus/ValidationStatus.constants'
 import type {
   CreatedMetricsWithSelectedIndex,
   MapNewRelicMetric,
@@ -33,6 +34,7 @@ export const validateMapping = (
   }
 
   if (
+    getMultiTypeFromValue(values?.newRelicApplication) === MultiTypeInputType.FIXED &&
     values?.newRelicApplication &&
     (!values.newRelicApplication.value || values.newRelicApplication.value === 'loading')
   ) {
@@ -165,7 +167,10 @@ export const convertMetricPackToMetricData = (value?: MetricPackDTO[]) => {
 
 export const initializeNonCustomFields = (newRelicData: NewRelicData) => {
   return {
-    newRelicApplication: { label: newRelicData?.applicationName, value: newRelicData?.applicationId },
+    newRelicApplication:
+      getMultiTypeFromValue(newRelicData?.applicationName) === MultiTypeInputType.FIXED
+        ? { label: newRelicData?.applicationName, value: newRelicData?.applicationId }
+        : newRelicData?.applicationName,
     metricPacks: newRelicData?.metricPacks || undefined,
     metricData: convertMetricPackToMetricData(newRelicData?.metricPacks)
   }
@@ -176,7 +181,7 @@ export const createNewRelicFormData = (
   mappedMetrics: Map<string, CustomMappedMetric>,
   selectedMetric: string,
   nonCustomFeilds: {
-    newRelicApplication: SelectOption
+    newRelicApplication: SelectOption | string
     metricPacks?: MetricPackDTO[]
     metricData: {
       [key: string]: boolean
@@ -197,6 +202,19 @@ export const createNewRelicFormData = (
     metricName: selectedMetric,
     metricIdentifier: selectedMetric?.split(' ').join('_'),
     showCustomMetric
+  }
+}
+
+export const setApplicationIfConnectorIsInput = (
+  isConnectorRuntimeOrExpression: boolean,
+  nonCustomFeilds: any,
+  setNonCustomFeilds: (data: any) => void
+): void => {
+  if (isConnectorRuntimeOrExpression) {
+    setNonCustomFeilds({
+      ...nonCustomFeilds,
+      newRelicApplication: RUNTIME_INPUT_VALUE
+    })
   }
 }
 
@@ -248,3 +266,21 @@ export const setNewRelicApplication = (
   !newRelicApplication
     ? { label: '', value: '' }
     : applicationOptions.find((item: SelectOption) => item.label === newRelicApplication)
+
+export const shouldRunValidation = ({
+  isEdit,
+  hasMetricPacks,
+  validationStatus,
+  isConnectorRuntimeOrExpression
+}: {
+  isEdit: boolean
+  hasMetricPacks: boolean
+  validationStatus: string
+  isConnectorRuntimeOrExpression?: boolean
+}): boolean =>
+  isEdit && hasMetricPacks && validationStatus !== StatusOfValidation.IN_PROGRESS && !isConnectorRuntimeOrExpression
+
+export const shouldFetchApplication = (query?: string, isConnectorRuntimeOrExpression?: boolean) =>
+  query?.trim().length &&
+  !isConnectorRuntimeOrExpression &&
+  getMultiTypeFromValue(query?.trim().length) === MultiTypeInputType.FIXED

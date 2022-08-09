@@ -31,3 +31,12 @@
     width: 200px !important;
   }
 }
+
+.overide {
+  :global {
+    .bp3-card {
+      margin-top: var(--spacing-medium);
+      margin-bottom: var(--spacing-medium);
+    }
+  }
+}

@@ -40,6 +40,8 @@ import { yamlStringify } from '@common/utils/YamlHelperMethods'
 
 import EnvironmentConfiguration from '@cd/components/EnvironmentsV2/EnvironmentDetails/EnvironmentConfiguration/EnvironmentConfiguration'
 
+import css from './DeployInfrastructureStep.module.scss'
+
 export interface AddEditEnvironmentModalProps {
   data: NGEnvironmentConfig
   onCreateOrUpdate(data: EnvironmentResponseDTO): void
@@ -52,7 +54,7 @@ export default function AddEditEnvironmentModal({
   onCreateOrUpdate,
   closeModal,
   isEdit
-}: AddEditEnvironmentModalProps) {
+}: AddEditEnvironmentModalProps): JSX.Element {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
   const { showSuccess, showError, clear } = useToaster()
@@ -95,6 +97,7 @@ export default function AddEditEnvironmentModal({
         showError(getErrorInfoFromErrorObject(e, true))
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [onCreateOrUpdate, orgIdentifier, projectIdentifier]
   )
 
@@ -142,7 +145,7 @@ export default function AddEditEnvironmentModal({
             <FormikForm>
               <Container
                 background={Color.FORM_BG}
-                padding={{ top: 'large', right: 'medium', bottom: 'large', left: 'medium' }}
+                padding={{ top: 'large', right: 'medium', bottom: 'large', left: 'xlarge' }}
               >
                 <EnvironmentConfiguration
                   formikProps={formikProps}
@@ -151,15 +154,15 @@ export default function AddEditEnvironmentModal({
                   yamlHandler={yamlHandler}
                   setYamlHandler={setYamlHandler}
                   isModified={false}
-                  data={{ data: data } as any}
+                  data={{ data: data }}
                   isEdit={isEdit}
                 />
               </Container>
             </FormikForm>
             <Layout.Horizontal
               spacing="medium"
-              flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-              margin={{ top: 'large' }}
+              padding={{ top: 'xlarge', left: 'huge', bottom: 'large' }}
+              className={css.modalFooter}
             >
               <Button
                 variation={ButtonVariation.PRIMARY}

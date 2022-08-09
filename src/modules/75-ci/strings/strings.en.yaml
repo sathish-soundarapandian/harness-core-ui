@@ -132,17 +132,15 @@ containerPort: Container Port
 baseConnectorImage: Base Image Connector
 getStartedWithCI:
   learnMoreAboutCI: Learn more about Harness CI
-  firstPipeline: 'Let’s get you started with your first Pipeline!'
   buildyourOwnPipeline: Build your own Pipeline
   configInfra: Configure Infrastructure
   connectRepo: Connect to Git Repository
   selectRepo: Select Repository
-  buildPipeline: Build Pipeline
   hostedByHarness: Hosted by Harness
   takeToTheNextLevel: Take your software build process to the next level using our Harness Continuous Integration
   ti: Test Intelligence
   languageAgnostic: Language Agnostic
-  parameterization: Flexible Parametrization & Template Library
+  parameterization: Flexible Parametrization and Template Library
   parallelization: Parallel Execution and Automatic Failure Strategy
   flexibleInfra: Flexible Infrastructure Support
   devFriendly: Developer Friendly Experience
@@ -172,18 +170,7 @@ getStartedWithCI:
   onCloudLabel: on Cloud
   onPremLabel: On-prem
   codeRepo: Which code repository do you use?
-  authMethod: Select your Authentication method
-  accessTokenLabel: Access Token
-  codeRepoLabel: Code repository
-  authMethodLabel: Authentication method
-  selectYourRepo: Select your Repository
   createPipeline: Create Pipeline
-  codebaseHelptext: Harness will clone your codebase to your build infrastructure at Pipeline runtime.
-  searchRepo: Search Repository
-  learnMoreAboutPermissions: Learn more about the required permissions
-  verifyConnection: Verify connection before you can continue
-  appPassword: Application Password
-  apiUrlLabel: API URL
   provisioningSuccessful: Provisioning successful
   provisioningFailed: Provisioning failed
   setUpAuth: Set up Authentication

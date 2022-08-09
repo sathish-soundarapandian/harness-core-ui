@@ -8,15 +8,13 @@
 import React, { useRef } from 'react'
 import cx from 'classnames'
 import { Button, Icon, Layout, Tab, Tabs } from '@wings-software/uicore'
-import { capitalize as _capitalize } from 'lodash-es'
+import { capitalize as _capitalize, toUpper } from 'lodash-es'
 import { Expander } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
 import type { StageElementConfig } from 'services/cd-ng'
 import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import { useQueryParams } from '@common/hooks'
 import ApprovalAdvancedSpecifications from '../ApprovalStage/ApprovalStageAdvanced'
@@ -27,19 +25,19 @@ import approvalStepCss from '../ApprovalStage/ApprovalStageSetupShellMode.module
 export function CustomStageSetupShellMode(): React.ReactElement {
   const { getString } = useStrings()
   const tabHeadings = [getString('overview'), getString('executionText'), getString('advancedTitle')]
-  const isTemplatesEnabled = useFeatureFlag(FeatureFlag.NG_TEMPLATES)
   const layoutRef = useRef<HTMLDivElement>(null)
   const [selectedTabId, setSelectedTabId] = React.useState<string>(tabHeadings[1])
   const pipelineContext = usePipelineContext()
   const {
     state: {
       pipeline,
-      selectionState: { selectedStageId = '', selectedStepId },
+      selectionState: { selectedStageId = '', selectedStepId, selectedSectionId },
       gitDetails
     },
     contextType,
     getStageFromPipeline,
-    updatePipeline
+    updatePipeline,
+    setSelectedSectionId
   } = pipelineContext
   const query = useQueryParams()
 
@@ -50,9 +48,9 @@ export function CustomStageSetupShellMode(): React.ReactElement {
     if (sectionId?.length && tabHeadings.includes(_capitalize(sectionId))) {
       setSelectedTabId(_capitalize(sectionId))
     } else {
-      setSelectedTabId(tabHeadings[1])
+      setSelectedSectionId(toUpper(tabHeadings[1]))
     }
-  }, [])
+  }, [selectedSectionId])
 
   React.useEffect(() => {
     if (selectedStepId) {
@@ -88,7 +86,10 @@ export function CustomStageSetupShellMode(): React.ReactElement {
     <section ref={layoutRef} key={selectedStageId} className={approvalStepCss.approvalStageSetupShellWrapper}>
       <Tabs
         id="approvalStageSetupShell"
-        onChange={(tabId: string) => setSelectedTabId(tabId)}
+        onChange={(tabId: string) => {
+          setSelectedTabId(tabId)
+          setSelectedSectionId(toUpper(tabId))
+        }}
         selectedTabId={selectedTabId}
         data-tabId={selectedTabId}
       >
@@ -152,14 +153,12 @@ export function CustomStageSetupShellMode(): React.ReactElement {
           data-testid={tabHeadings[2]}
         />
         {/* istanbul ignore next */}
-        {isTemplatesEnabled &&
-          isContextTypeNotStageTemplate(contextType) &&
-          /* istanbul ignore next */ selectedStage?.stage && (
-            <>
-              <Expander />
-              <SaveTemplateButton data={selectedStage.stage} type={'Stage'} gitDetails={gitDetails} />
-            </>
-          )}
+        {isContextTypeNotStageTemplate(contextType) && /* istanbul ignore next */ selectedStage?.stage && (
+          <>
+            <Expander />
+            <SaveTemplateButton data={selectedStage.stage} type={'Stage'} gitDetails={gitDetails} />
+          </>
+        )}
       </Tabs>
     </section>
   )

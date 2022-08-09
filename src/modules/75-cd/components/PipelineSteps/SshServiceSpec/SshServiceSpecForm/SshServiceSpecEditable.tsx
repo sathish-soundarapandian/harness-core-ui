@@ -11,23 +11,16 @@ import cx from 'classnames'
 import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/WorkflowVariables'
 import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ArtifactsSelection'
 import ConfigFilesSelection from '@pipeline/components/ConfigFilesSelection/ConfigFilesSelection'
-import { getSelectedDeploymentType, isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
+import { getSelectedDeploymentType } from '@pipeline/utils/stageHelpers'
 import { useStrings } from 'framework/strings'
-import type { ServiceDefinition } from 'services/cd-ng'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import VariableListReadOnlyView from '@pipeline/components/WorkflowVariablesSelection/VariableListReadOnlyView'
-import { setupMode } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sServiceSpecHelper'
+import { getArtifactsHeaderTooltipId } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
+import { setupMode } from '../../PipelineStepsUtil'
 import type { SshWinRmServiceInputFormProps } from '../SshServiceSpecInterface'
 import css from '../SshServiceSpec.module.scss'
-
-const getArtifactsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
-  if (isServerlessDeploymentType(selectedDeploymentType)) {
-    return 'serverlessDeploymentTypeArtifacts'
-  }
-  return 'deploymentTypeArtifacts'
-}
 
 const SshServiceSpecEditable: React.FC<SshWinRmServiceInputFormProps> = ({
   initialValues: { stageIndex = 0, setupModeType, deploymentType, isReadonlyServiceMode = false },

@@ -34,6 +34,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { FormMultiTypeTextAreaField } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'
 import { FormMultiTypeUserGroupInput } from '@common/components/UserGroupsInput/FormMultitypeUserGroupInput'
 import { regexPositiveNumbers } from '@common/utils/StringUtils'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type {
   ApproverInputsSubmitCallInterface,
@@ -222,7 +223,7 @@ function FormContent({
                                   placeholder={getString('valueLabel')}
                                   multiTextInputProps={{
                                     allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                                      item => item !== MultiTypeInputType.RUNTIME
+                                      item => !isMultiTypeRuntime(item)
                                     ) as AllowedTypes,
                                     expressions
                                   }}

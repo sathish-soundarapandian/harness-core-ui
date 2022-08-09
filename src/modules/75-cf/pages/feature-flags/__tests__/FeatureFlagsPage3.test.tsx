@@ -48,7 +48,7 @@ const renderComponent = (): RenderResult =>
 
 const mockEnvs = (includeEnvs = true): void => {
   const data = cloneDeep(mockEnvironments)
-  let newLocation = `path?activeEnvironment=${data.data.content[0].identifier}`
+  let newLocation = `path?activeEnvironment=Mock_Environment`
 
   if (!includeEnvs) {
     data.data.content = []
@@ -91,7 +91,9 @@ describe('FeatureFlagsPage', () => {
     fireEvent.click(document.getElementsByClassName('TableV2--row TableV2--card TableV2--clickable')[0] as HTMLElement)
 
     expect(
-      screen.getByText('/account/dummy/cf/orgs/dummy/projects/dummy/feature-flags/hello_world?activeEnvironment=foobar')
+      screen.getByText(
+        '/account/dummy/cf/orgs/dummy/projects/dummy/feature-flags/hello_world?activeEnvironment=Mock_Environment'
+      )
     ).toBeDefined()
   })
 
@@ -102,7 +104,9 @@ describe('FeatureFlagsPage', () => {
     fireEvent.click(document.querySelector('[icon="edit"]') as HTMLElement)
 
     expect(
-      screen.getByText('/account/dummy/cf/orgs/dummy/projects/dummy/feature-flags/hello_world?activeEnvironment=sfgsd')
+      screen.getByText(
+        '/account/dummy/cf/orgs/dummy/projects/dummy/feature-flags/hello_world?activeEnvironment=Mock_Environment'
+      )
     ).toBeDefined()
   })
 
@@ -148,7 +152,7 @@ describe('FeatureFlagsPage', () => {
       renderComponent()
 
       expect(screen.queryAllByTestId('filter-card')).toHaveLength(0)
-      expect(screen.getByText('cf.noFlag')).toBeVisible()
+      expect(screen.getByText('cf.featureFlags.noFlagsInProject')).toBeVisible()
     })
   })
 

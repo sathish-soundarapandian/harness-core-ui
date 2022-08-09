@@ -63,6 +63,14 @@ export const getResourceTypeHandlerMock = (resource: ResourceType): ResourceHand
         // eslint-disable-next-line react/display-name
         addResourceModalBody: () => <></>
       }
+    case ResourceType.ENVIRONMENT:
+      return {
+        icon: 'environment',
+        label: 'environment',
+        addResourceModalBody: () => <></>,
+        addAttributeModalBody: () => <></>,
+        staticResourceRenderer: () => <></>
+      }
   }
 }
 

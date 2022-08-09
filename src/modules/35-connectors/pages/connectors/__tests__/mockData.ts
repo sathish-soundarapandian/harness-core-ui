@@ -304,6 +304,104 @@ export const K8WithInheritFromDelegate = {
   correlationId: '1db0858d-fac0-43d7-9d0a-0e4fcaa785e5'
 }
 
+export const PDC = {
+  data: {
+    connector: {
+      name: 'PDC',
+      identifier: 'PDCX',
+      description: '',
+      orgIdentifier: undefined,
+      projectIdentifier: undefined,
+      tags: {},
+      type: 'Pdc',
+      spec: {
+        hosts: [
+          {
+            hostname: 'test hostname',
+            hostAttributes: {}
+          }
+        ],
+        delegateSelectors: []
+      }
+    },
+    createdAt: 1612855114667,
+    lastModifiedAt: 1613484012059,
+    status: {
+      status: 'FAILURE',
+      errorSummary: 'Unexpected Error',
+      errors: [
+        {
+          reason: 'Unexpected Error',
+          message: 'Something went wrong on our end. Please contact Harness Support.',
+          code: 450
+        }
+      ],
+      testedAt: 1613484012267,
+      lastTestedAt: 0,
+      lastConnectedAt: 0
+    },
+    activityDetails: { lastActivityTime: 1613484012084 },
+    harnessManaged: false
+  },
+  metaData: null,
+  correlationId: '1db0858d-fac0-43d7-9d0a-0e4fcaa785e5'
+}
+
+export const GithubRepo = {
+  connector: {
+    name: 'github',
+    identifier: 'github-identifier',
+    description: '',
+    orgIdentifier: 'default',
+    projectIdentifier: 'connectors',
+    tags: {},
+    type: 'Github',
+    spec: {
+      url: 'git@github.com:wings-software/sample-k8s-manifests.git',
+      validationRepo: null,
+      authentication: {
+        type: 'Ssh',
+        spec: {
+          sshKeyRef: 'githubkey'
+        }
+      },
+      apiAccess: null,
+      delegateSelectors: [],
+      executeOnDelegate: true,
+      type: 'Repo'
+    }
+  },
+  createdAt: 1659427218440,
+  lastModifiedAt: 1659427218399,
+  status: {
+    status: 'SUCCESS',
+    errorSummary: null,
+    errors: null,
+    testedAt: 1659441287276,
+    lastTestedAt: 0,
+    lastConnectedAt: 1659441287276
+  },
+  activityDetails: {
+    lastActivityTime: 1659427218574
+  },
+  harnessManaged: false,
+  gitDetails: {
+    objectId: null,
+    branch: null,
+    repoIdentifier: null,
+    rootFolder: null,
+    filePath: null,
+    repoName: null,
+    commitId: null,
+    fileUrl: null
+  },
+  entityValidityDetails: {
+    valid: true,
+    invalidYaml: null
+  },
+  governanceMetadata: null
+}
+
 export const GitHttp = {
   status: 'SUCCESS' as const,
   data: {

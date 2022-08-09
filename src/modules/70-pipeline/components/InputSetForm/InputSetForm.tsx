@@ -21,7 +21,6 @@ import {
 } from '@wings-software/uicore'
 import { FontVariation, Color, Intent } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
-import { parse } from 'yaml'
 import type { FormikProps } from 'formik'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -58,10 +57,10 @@ import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import type { GitContextProps } from '@common/components/GitContextForm/GitContextForm'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
-import type { InputSetDTO, InputSetType } from '@pipeline/utils/types'
+import type { InputSetDTO, InputSetType, Pipeline, InputSet } from '@pipeline/utils/types'
 import { clearNullUndefined, isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
@@ -108,7 +107,7 @@ const getInputSet = (
   if (inputSetResponse?.data) {
     const inputSetObj = inputSetResponse?.data
 
-    const parsedInputSetObj = parse(defaultTo(inputSetObj?.inputSetYaml, ''))
+    const parsedInputSetObj = parse<InputSet>(defaultTo(inputSetObj?.inputSetYaml, ''))
     /*
       Context of the below if block
       We need to populate existing values of input set in the form.
@@ -116,7 +115,7 @@ const getInputSet = (
       But if the merge API fails (due to invalid input set or any other reason) - we populate the value from the input set response recevied (parsedInputSetObj).
     */
     const parsedPipelineWithValues = mergeTemplate
-      ? defaultTo(parse(defaultTo(mergeTemplate, ''))?.pipeline, {})
+      ? defaultTo(parse<Pipeline>(defaultTo(mergeTemplate, ''))?.pipeline, {} as PipelineInfoConfig)
       : parsedInputSetObj?.inputSet?.pipeline
 
     if (isGitSyncEnabled && parsedInputSetObj && parsedInputSetObj.inputSet) {
@@ -147,7 +146,7 @@ const getInputSet = (
     }
   }
   return getDefaultInputSet(
-    clearRuntimeInput(parse(defaultTo(template?.data?.inputSetTemplateYaml, ''))?.pipeline),
+    clearRuntimeInput(parse<Pipeline>(defaultTo(template?.data?.inputSetTemplateYaml, ''))?.pipeline),
     orgIdentifier,
     projectIdentifier
   )
@@ -496,7 +495,10 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
     isNewInModal
       ? document.title
       : [
-          defaultTo(parse(defaultTo(pipeline?.data?.yamlPipeline, ''))?.pipeline?.name, getString('pipelines')),
+          defaultTo(
+            parse<Pipeline>(defaultTo(pipeline?.data?.yamlPipeline, ''))?.pipeline?.name,
+            getString('pipelines')
+          ),
           isEdit ? defaultTo(inputSetResponse?.data?.name, '') : getString('inputSets.newInputSetLabel')
         ]
   )
@@ -518,7 +520,7 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
     (view: SelectedView) => {
       if (view === SelectedView.VISUAL) {
         const yaml = defaultTo(yamlHandler?.getLatestYaml(), '')
-        const inputSetYamlVisual = parse(yaml).inputSet as InputSetDTO
+        const inputSetYamlVisual = parse<InputSet>(yaml).inputSet
         if (inputSetYamlVisual) {
           inputSet.name = inputSetYamlVisual.name
           inputSet.identifier = inputSetYamlVisual.identifier
@@ -700,7 +702,7 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
                     branch: isGitSyncEnabled ? pipeline?.data?.gitDetails?.branch : branch,
                     storeType
                   }),
-                  label: defaultTo(parse(defaultTo(pipeline?.data?.yamlPipeline, ''))?.pipeline.name, '')
+                  label: defaultTo(parse<Pipeline>(defaultTo(pipeline?.data?.yamlPipeline, ''))?.pipeline.name, '')
                 }
               ]}
             />

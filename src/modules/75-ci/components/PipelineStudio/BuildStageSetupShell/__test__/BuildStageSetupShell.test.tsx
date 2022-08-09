@@ -135,6 +135,9 @@ jest.mock('services/cd-ng', () => ({
       }
     }),
   listSecretsV2Promise: jest.fn().mockImplementation(() => Promise.resolve(secretMockdata)),
+  useCreatePR: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useCreatePRV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useGetFileContent: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
   useProvisionResourcesForCI: jest.fn().mockImplementation(() => {
     return {
       mutate: () =>

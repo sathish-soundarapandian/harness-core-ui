@@ -20,26 +20,32 @@ import {
 } from '@pipeline/utils/statusHelpers'
 import css from './StatusHeatMap.module.scss'
 
-export const getStatusMapping = (status: ExecutionStatus) => {
+type StatusMap = {
+  primaryState: string
+  icon?: IconName
+  iconColor?: string
+}
+
+export const getStatusMapping = (status: ExecutionStatus): StatusMap => {
   // ['Skipped,Queued,Discontinuing,NotStarted'] or any other unknown status will default to this
-  const colorMap = {
+  const colorMap: StatusMap = {
     primaryState: 'default',
-    icon: '' as IconName | '',
-    iconColor: ''
+    icon: undefined,
+    iconColor: undefined
   }
   if (isExecutionSuccess(status)) {
     colorMap.primaryState = 'success'
   } else if (isExecutionCompletedWithBadState(status)) {
     colorMap.primaryState = 'failed'
     colorMap.icon = 'cross'
-    colorMap.iconColor = Color.RED_500
+    colorMap.iconColor = Color.RED_900
   } else if (isExecutionPaused(status) || isExecutionPausing(status) || isExecutionWaiting(status)) {
     colorMap.primaryState = 'paused'
     colorMap.icon = 'pause'
-    colorMap.iconColor = Color.ORANGE_500
+    colorMap.iconColor = Color.ORANGE_900
   } else if (isExecutionRunning(status)) {
     colorMap.primaryState = 'running'
-    colorMap.icon = 'circle'
+    colorMap.icon = 'spinner'
     colorMap.iconColor = Color.PRIMARY_7
   }
   return colorMap
@@ -65,7 +71,7 @@ export function StatusHeatMap<T>(props: StatusHeatMapProps<T>): React.ReactEleme
   const { data, getId, getStatus, className, getPopoverProps, onClick, getRouteTo } = props
 
   function StatusCell({ row, id }: StatusCell<T>) {
-    const { iconColor, icon, primaryState } = getStatusMapping(getStatus(row))
+    const { primaryState, icon, iconColor } = getStatusMapping(getStatus(row))
     return (
       <div
         data-id={getId(row, id)}

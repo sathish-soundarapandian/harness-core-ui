@@ -10,7 +10,7 @@ import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ActiveServiceInstancePopover } from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstancePopover'
 import * as cdngServices from 'services/cd-ng'
-import { mockserviceInstanceDetails } from './mocks'
+import { mockserviceInstanceDetails, mockGitopsServiceInstanceDetails } from './mocks'
 
 describe('ActiveServiceInstancePopover', () => {
   beforeEach(() => {
@@ -54,5 +54,22 @@ describe('ActiveServiceInstancePopover', () => {
     )
 
     expect(getByText('cd.serviceDashboard.function:')).toBeDefined()
+  })
+
+  test('should display cluster when clusterIdentifier field is present', () => {
+    jest
+      .spyOn(cdngServices, 'useGetActiveInstancesByServiceIdEnvIdAndBuildIds')
+      .mockImplementation(() => mockGitopsServiceInstanceDetails as any)
+
+    const { getByText } = render(
+      <TestWrapper
+        path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      >
+        <ActiveServiceInstancePopover buildId="buildId" envId="envId" instanceNum={0} />
+      </TestWrapper>
+    )
+
+    expect(getByText('common.cluster:')).toBeDefined()
   })
 })

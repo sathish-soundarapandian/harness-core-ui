@@ -11,7 +11,7 @@ import { Color } from '@harness/design-system'
 import { v4 as uuid } from 'uuid'
 import type { NodeModelListener, LinkModelListener, DiagramEngine } from '@projectstorm/react-diagrams-core'
 import produce from 'immer'
-import { parse } from 'yaml'
+import { parse } from '@common/utils/YamlHelperMethods'
 import type { PageConnectorResponse, DeploymentStageConfig } from 'services/cd-ng'
 import type { StageElementWrapperConfig, PipelineInfoConfig } from 'services/pipeline-ng'
 import type * as Diagram from '@pipeline/components/Diagram'
@@ -111,7 +111,7 @@ export const getNewStageFromTemplate = (
 ): StageElementWrapperConfig => {
   return {
     stage: {
-      ...parse(template?.yaml || '')?.template.spec,
+      ...parse<any>(template?.yaml || '')?.template.spec,
       name: clearDefaultValues ? '' : EmptyStageName,
       identifier: clearDefaultValues ? '' : uuid()
     }

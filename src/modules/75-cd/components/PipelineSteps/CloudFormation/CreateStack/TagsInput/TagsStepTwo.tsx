@@ -28,6 +28,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import { FormatRemoteTagsData } from '../../CloudFormationHelper'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -239,7 +240,7 @@ const TagsStepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
                       multiTextInputProps={{
                         expressions,
                         allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                          item => item !== MultiTypeInputType.RUNTIME
+                          item => !isMultiTypeRuntime(item)
                         ) as AllowedTypes
                       }}
                     />

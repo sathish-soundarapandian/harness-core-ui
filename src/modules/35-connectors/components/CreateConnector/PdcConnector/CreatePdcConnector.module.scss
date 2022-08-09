@@ -17,6 +17,19 @@
   .clusterWrapper {
     padding: var(--spacing-xsmall) !important;
     overflow: auto;
+    padding-bottom: 100px !important;
+  }
+
+  .selectionWrapper {
+    :global {
+      .bp3-radio {
+        margin-left: 26px;
+
+        &:last-of-type {
+          margin-left: 100px !important;
+        }
+      }
+    }
   }
 
   .hostContainer {

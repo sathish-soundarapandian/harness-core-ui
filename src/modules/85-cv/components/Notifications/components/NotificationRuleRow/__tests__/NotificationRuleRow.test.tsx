@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import NotificationRuleRow from '../NotificationRuleRow'
 import type { NotificationRuleRowProps } from '../NotificationRuleRow.types'
@@ -46,5 +47,33 @@ describe('Unit tests for NotificationRuleRow', () => {
     const { container } = render(<WrapperComponent {...newProps} />)
     const deleteInvite = container.querySelector('[data-icon="main-trash"]')
     expect(deleteInvite).toBeInTheDocument()
+  })
+
+  test('should be able to fill all the fields of a condition Row when condition is Change Impact', async () => {
+    const { getByText, container } = render(<WrapperComponent {...props} />)
+
+    // Selecting first condition
+    const monitoredServiceConditionType = 'Change Impact'
+    const conditionDropdown = container.querySelector('input[name="conditions.0.condition"]') as any
+    userEvent.click(conditionDropdown)
+    const typeToSelect = getByText(monitoredServiceConditionType)
+    userEvent.click(typeToSelect)
+    expect(conditionDropdown.value).toBe(monitoredServiceConditionType)
+
+    // Selecting second condition
+    const secondMonitoredServiceConditionType = 'Health Score'
+    const secondConditionDropdown = container.querySelector('input[name="conditions.0.condition"]') as any
+    userEvent.click(conditionDropdown)
+    const secondTypeToSelect = getByText(secondMonitoredServiceConditionType)
+    userEvent.click(secondTypeToSelect)
+    expect(secondConditionDropdown.value).toBe(secondMonitoredServiceConditionType)
+
+    // Selecting third condition
+    const thirdMonitoredServiceConditionType = 'Change Observed'
+    const thirdConditionDropdown = container.querySelector('input[name="conditions.0.condition"]') as any
+    userEvent.click(conditionDropdown)
+    const thirdTypeToSelect = getByText(thirdMonitoredServiceConditionType)
+    userEvent.click(thirdTypeToSelect)
+    expect(thirdConditionDropdown.value).toBe(thirdMonitoredServiceConditionType)
   })
 })

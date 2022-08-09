@@ -14,18 +14,15 @@ import { MonitoredServiceProvider } from '@cv/pages/monitored-service/MonitoredS
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { DefaultSpec } from './MonitoredServiceTemplateCanvas.constants'
-import type { NGMonitoredServiceTemplateInfoConfig } from './MonitoredServiceTemplateCanvas.types'
 
 const MonitoredServiceTemplateCanvas = (_props: unknown, formikRef: TemplateFormRef<unknown>) => {
   const { state, updateTemplate } = React.useContext(TemplateContext)
-  const stateTemplate = state.template as NGMonitoredServiceTemplateInfoConfig
   const onUpdate = (formikValue: MonitoredServiceForm) => {
     if (
       !isEqual(state.template.spec, {
         serviceRef: formikValue?.serviceRef,
         environmentRef: formikValue?.environmentRef
-      }) ||
-      !isEqual(stateTemplate.notificationRuleRefs, formikValue.notificationRuleRefs)
+      })
     ) {
       updateTemplate({
         ...state.template,

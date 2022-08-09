@@ -19,6 +19,7 @@ import environments from '@pipeline/pages/pipelines/__tests__/mocks/environments
 import pipelines from '@pipeline/components/PipelineModalListView/__tests__/RunPipelineListViewMocks'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import { getMockFor_useGetPipeline } from '@pipeline/components/RunPipelineModal/__tests__/mocks'
+import { useGetListOfExecutions } from 'services/pipeline-ng'
 import CIPipelineDeploymentList from '../CIPipelineDeploymentList'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
@@ -152,6 +153,11 @@ describe('<CIPipelineDeploymentList /> tests', () => {
       >
         <ComponentWrapper />
       </TestWrapper>
+    )
+
+    expect(useGetListOfExecutions).toHaveBeenCalled()
+    expect(useGetListOfExecutions).not.toHaveBeenLastCalledWith(
+      expect.objectContaining({ queryParams: expect.objectContaining({ module: 'ci' }) })
     )
 
     const runButton = await screen.findByText('runPipelineText')

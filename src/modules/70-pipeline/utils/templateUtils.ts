@@ -7,7 +7,7 @@
 
 import { defaultTo, get, isEmpty, isEqual, set, unset } from 'lodash-es'
 import produce from 'immer'
-import { parse } from 'yaml'
+import { parse } from '@common/utils/YamlHelperMethods'
 import type {
   PipelineInfoConfig,
   StageElementConfig,
@@ -66,7 +66,7 @@ export const getStepType = (step?: StepElementConfig | TemplateStepNode): StepTy
 export const setTemplateInputs = (
   data: TemplateStepNode | StageElementConfig | PipelineInfoConfig,
   templateInputs: TemplateLinkConfig['templateInputs']
-) => {
+): void => {
   if (isEmpty(templateInputs)) {
     unset(data, TEMPLATE_INPUT_PATH)
   } else {
@@ -77,7 +77,7 @@ export const setTemplateInputs = (
 export const createTemplate = <T extends PipelineInfoConfig | StageElementConfig | StepOrStepGroupOrTemplateStepData>(
   data?: T,
   template?: TemplateSummaryResponse
-) => {
+): T => {
   return produce({} as T, draft => {
     draft.name = defaultTo(data?.name, '')
     draft.identifier = defaultTo(data?.identifier, '')
@@ -90,9 +90,9 @@ export const createTemplate = <T extends PipelineInfoConfig | StageElementConfig
   })
 }
 
-export const createStepNodeFromTemplate = (template: TemplateSummaryResponse, isCopied = false) => {
+export const createStepNodeFromTemplate = (template: TemplateSummaryResponse, isCopied = false): StepElementConfig => {
   return (isCopied
-    ? produce(defaultTo(parse(defaultTo(template?.yaml, ''))?.template.spec, {}) as StepElementConfig, draft => {
+    ? produce(defaultTo(parse<any>(defaultTo(template?.yaml, ''))?.template.spec, {}) as StepElementConfig, draft => {
         draft.name = defaultTo(template?.name, '')
         draft.identifier = generateRandomString(defaultTo(template?.name, ''))
       })
@@ -148,7 +148,7 @@ export const getTemplateTypesByRef = (
       const templateTypes = {}
       responses.forEach(response => {
         response.data?.content?.forEach(item => {
-          const templateData = parse(item.yaml || '').template
+          const templateData = parse<any>(item.yaml || '').template
           const scopeBasedTemplateRef = getScopeBasedTemplateRef(item)
           set(templateTypes, scopeBasedTemplateRef, templateData.spec.type)
 

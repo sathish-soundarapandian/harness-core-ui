@@ -41,6 +41,7 @@ import { ErrorTracking } from '@et/ErrorTrackingApp'
 import { String } from 'framework/strings'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
 import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import ChildAppMounter from '../../microfrontends/ChildAppMounter'
 import CVTrialHomePage from './pages/home/CVTrialHomePage'
@@ -325,6 +326,12 @@ export default (
 
     {
       ConnectorRouteDestinations({
+        moduleParams: cvModuleParams,
+        sidebarProps: CVSideNavProps
+      })?.props.children
+    }
+    {
+      DefaultSettingsRouteDestinations({
         moduleParams: cvModuleParams,
         sidebarProps: CVSideNavProps
       })?.props.children

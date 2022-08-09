@@ -194,6 +194,44 @@ exports[`Approval Stage readonly view if readonly view works: readonly view appr
             advancedTitle
           </span>
         </div>
+        <div
+          class="bp3-flex-expander"
+        />
+        <button
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--withLeftIcon Button--variation Button--variation-secondary Button--size Button--small"
+          type="button"
+        >
+          <span
+            class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
+            data-icon="upload-box"
+          >
+            <svg
+              fill="none"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M5.333 8.334l2.668-2.667L8 13.334V5.667l2.67 2.667"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M3.333 6V3.333h9.334V6"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <span
+            class="bp3-button-text"
+          >
+            common.saveAsTemplate
+          </span>
+        </button>
       </div>
       <div
         aria-hidden="false"

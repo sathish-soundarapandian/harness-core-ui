@@ -10,17 +10,23 @@ import { clone } from 'lodash-es'
 import { Container } from '@wings-software/uicore'
 import { fireEvent, render, waitFor, act, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import * as useFeatureFlagMock from '@common/hooks/useFeatureFlag'
 import * as cvService from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { PrometheusHealthSource, PrometheusHealthSourceProps } from '../PrometheusHealthSource'
 import { PrometheusMonitoringSourceFieldNames } from '../PrometheusHealthSource.constants'
 import {
+  emptyCustomMetricData,
+  manualQueryMock,
+  manualQueryMock2,
   MockManualQueryData,
   MockManualQueryDataForCreate,
   MockManualQueryDataForIdentifierCheck,
   MockManualQueryDataWithoutIdentifier
 } from './PrometheusHealthSource.mock'
+
+jest.mock('@common/hooks/useFeatureFlag')
 
 jest.mock('../components/PrometheusQueryViewer/PrometheusQueryViewer', () => ({
   PrometheusQueryViewer: function MockComponent(props: any) {
@@ -78,6 +84,7 @@ jest.mock('@cv/hooks/IndexedDBHook/IndexedDBHook', () => ({
 
 describe('Unit tests for PrometheusHealthSource', () => {
   beforeAll(() => {
+    jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
     jest.spyOn(cvService, 'useGetLabelNames').mockReturnValue({ data: { data: [] } } as any)
     jest.spyOn(cvService, 'useGetMetricNames').mockReturnValue({ data: { data: [] } } as any)
     jest.spyOn(cvService, 'useGetMetricPacks').mockReturnValue({ data: { data: [] } } as any)
@@ -91,51 +98,17 @@ describe('Unit tests for PrometheusHealthSource', () => {
     const { container, getByText } = render(<WrapperComponent data={MockManualQueryData} onSubmit={onSubmitMock} />)
 
     await waitFor(() => expect(getByText('cv.monitoringSources.prometheus.customizeQuery')).not.toBeNull())
-    expect(container.querySelectorAll('[class*="Accordion--panel"]').length).toBe(3)
+    expect(container.querySelectorAll('[class*="Accordion--panel"]').length).toBe(4)
 
     fireEvent.click(container.querySelector('button[class*="manualQuery"]')!)
     await waitFor(() => expect(getByText('cv.monitoringSources.prometheus.isManualQuery')).not.toBeNull())
-    expect(container.querySelectorAll('[class*="Accordion--panel"]').length).toBe(2)
+    expect(container.querySelectorAll('[class*="Accordion--panel"]').length).toBe(3)
 
     act(() => {
       fireEvent.click(getByText('submit'))
     })
 
-    await waitFor(() =>
-      expect(onSubmitMock).toHaveBeenCalledWith(MockManualQueryData, {
-        identifier: 'prometheus',
-        name: 'prometheus',
-        spec: {
-          connectorRef: 'prometheusConnector',
-          feature: 'apm',
-          metricDefinitions: [
-            {
-              additionalFilters: [],
-              aggregation: undefined,
-              analysis: {
-                deploymentVerification: { enabled: true, serviceInstanceFieldName: 'serviceInstanceFieldName' },
-                liveMonitoring: { enabled: true },
-                riskProfile: {
-                  category: 'Infrastructure',
-                  metricType: 'INFRA',
-                  thresholdTypes: ['ACT_WHEN_LOWER', 'ACT_WHEN_HIGHER']
-                }
-              },
-              envFilter: [],
-              groupName: 'group1',
-              identifier: 'My Identifier',
-              isManualQuery: true,
-              metricName: 'NoLongerManualQuery',
-              prometheusMetric: undefined,
-              query: 'count(container_cpu_load_average_10s{container="cv-demo",namespace="cv-demo"})',
-              serviceFilter: [],
-              sli: { enabled: true }
-            }
-          ]
-        },
-        type: 'Prometheus'
-      })
-    )
+    await waitFor(() => expect(onSubmitMock).toHaveBeenCalledWith(manualQueryMock, manualQueryMock2))
   })
 
   test('Ensure validation for Assign component works', async () => {
@@ -151,7 +124,7 @@ describe('Unit tests for PrometheusHealthSource', () => {
     )
 
     await waitFor(() => expect(getByText('cv.monitoringSources.prometheus.customizeQuery')).not.toBeNull())
-    expect(container.querySelectorAll('[class*="Accordion--panel"]').length).toBe(3)
+    expect(container.querySelectorAll('[class*="Accordion--panel"]').length).toBe(4)
 
     act(() => {
       fireEvent.click(container.querySelector('div[data-testid="assign-summary"]')!)
@@ -182,18 +155,9 @@ describe('Unit tests for PrometheusHealthSource', () => {
               analysis: {
                 deploymentVerification: { enabled: false, serviceInstanceFieldName: 'serviceInstanceFieldName' },
                 liveMonitoring: { enabled: false },
-                riskProfile: {
-                  category: '',
-                  metricType: undefined,
-                  thresholdTypes: []
-                }
+                riskProfile: { category: '', metricType: undefined, thresholdTypes: [] }
               },
-              envFilter: [
-                {
-                  labelName: 'namespace',
-                  labelValue: 'cv-demo'
-                }
-              ],
+              envFilter: [{ labelName: 'namespace', labelValue: 'cv-demo' }],
               groupName: 'group1',
               identifier: 'My Identifier',
               isManualQuery: false,
@@ -203,7 +167,8 @@ describe('Unit tests for PrometheusHealthSource', () => {
               serviceFilter: [{ labelName: 'container', labelValue: 'cv-demo' }],
               sli: { enabled: true }
             }
-          ]
+          ],
+          metricPacks: [{ identifier: 'Custom', metricThresholds: [] }]
         },
         type: 'Prometheus'
       })
@@ -225,13 +190,13 @@ describe('Unit tests for PrometheusHealthSource', () => {
     )
 
     await waitFor(() => expect(getByText('cv.monitoringSources.prometheus.customizeQuery')).not.toBeNull())
-    expect(container.querySelectorAll('[class*="Accordion--panel"]').length).toBe(3)
+    expect(container.querySelectorAll('[class*="Accordion--panel"]').length).toBe(4)
 
     act(() => {
       userEvent.click(container.querySelector('button[class*="manualQuery"]')!)
     })
     await waitFor(() => expect(getByText('cv.monitoringSources.prometheus.isManualQuery')).not.toBeNull())
-    expect(container.querySelectorAll('[class*="Accordion--panel"]').length).toBe(2)
+    expect(container.querySelectorAll('[class*="Accordion--panel"]').length).toBe(3)
 
     act(() => {
       userEvent.click(getByText('submit'))
@@ -250,13 +215,13 @@ describe('Unit tests for PrometheusHealthSource', () => {
     )
 
     await waitFor(() => expect(getByText('cv.monitoringSources.prometheus.customizeQuery')).not.toBeNull())
-    expect(container.querySelectorAll('[class*="Accordion--panel"]').length).toBe(3)
+    expect(container.querySelectorAll('[class*="Accordion--panel"]').length).toBe(4)
 
     act(() => {
       userEvent.click(container.querySelector('button[class*="manualQuery"]')!)
     })
     await waitFor(() => expect(getByText('cv.monitoringSources.prometheus.isManualQuery')).not.toBeNull())
-    expect(container.querySelectorAll('[class*="Accordion--panel"]').length).toBe(2)
+    expect(container.querySelectorAll('[class*="Accordion--panel"]').length).toBe(3)
 
     act(() => {
       userEvent.click(getByText('submit'))
@@ -274,5 +239,44 @@ describe('Unit tests for PrometheusHealthSource', () => {
     render(<WrapperComponent data={MockManualQueryDataForCreate} onSubmit={onSubmitMock} />)
 
     expect(screen.getByText(/prometheus_metric/i)).toBeInTheDocument()
+  })
+
+  describe('Metric thresholds', () => {
+    test('should render metric thresholds', () => {
+      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
+      render(<WrapperComponent data={MockManualQueryData} onSubmit={jest.fn()} />)
+
+      expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (0)')).toBeInTheDocument()
+      expect(screen.getByText('cv.monitoringSources.appD.failFastThresholds (0)')).toBeInTheDocument()
+      const addButton = screen.getByTestId('AddThresholdButton')
+
+      expect(addButton).toBeInTheDocument()
+
+      fireEvent.click(addButton)
+
+      expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (1)')).toBeInTheDocument()
+
+      expect(screen.getByText(/submit/)).toBeInTheDocument()
+
+      act(() => {
+        fireEvent.click(screen.getByText(/submit/))
+      })
+    })
+
+    test('should not render metric thresholds when feature flag is turned off', () => {
+      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(false)
+      render(<WrapperComponent data={MockManualQueryData} onSubmit={jest.fn()} />)
+
+      expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).not.toBeInTheDocument()
+      expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).not.toBeInTheDocument()
+    })
+
+    test('should not render metric thresholds there is not custom metric', () => {
+      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
+      render(<WrapperComponent data={emptyCustomMetricData} onSubmit={jest.fn()} />)
+
+      expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).not.toBeInTheDocument()
+      expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).not.toBeInTheDocument()
+    })
   })
 })

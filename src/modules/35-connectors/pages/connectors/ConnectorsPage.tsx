@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, ReactElement } from 'react'
 import {
   Layout,
   SelectOption,
@@ -87,6 +87,9 @@ import { Connectors } from '@connectors/constants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CE_CONNECTOR_CLICK, CONNECTORS_PAGE } from '@connectors/trackingConstants'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
+import { resourceAttributeMap } from '@rbac/pages/ResourceGroupDetails/utils'
+import { usePermissionsContext } from 'framework/rbac/PermissionsContext'
 import ConnectorsListView from './views/ConnectorsListView'
 import { getIconByType, getConnectorDisplayName } from './utils/ConnectorUtils'
 import {
@@ -148,6 +151,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
   const isAzureEnabled = useFeatureFlag(FeatureFlag.NG_AZURE)
   const isOciHelmEnabled = useFeatureFlag(FeatureFlag.HELM_OCI_SUPPORT)
   const { trackEvent } = useTelemetry()
+  const { checkPermission } = usePermissionsContext()
 
   const ConnectorCatalogueNames = new Map<ConnectorCatalogueItem['category'], string>()
   // This list will control which categories will be displayed in UI and its order
@@ -336,9 +340,26 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
       CEK8sCluster: k8sLimitWarningRenderer
     }
 
-    const isRestrictedConnector = (item: ConnectorCatalogueItem, connector: string) => {
-      if (!item.category) {
+    const isRestrictedConnector = (item: ConnectorCatalogueItem, connector: string): boolean => {
+      const { category } = item
+      if (!category) {
         return false
+      }
+
+      if (connectorCatalogueOrder.includes(category)) {
+        const permissionRequest = {
+          resourceScope: {
+            accountIdentifier: accountId,
+            orgIdentifier,
+            projectIdentifier
+          },
+          resourceAttributes: {
+            category
+          },
+          resourceType: ResourceType.CONNECTOR,
+          permission: PermissionIdentifier.UPDATE_CONNECTOR
+        }
+        return !checkPermission(permissionRequest) // Invert the boolean resultas restricted is inversion of permitted
       }
 
       // TODO: make it generic
@@ -358,15 +379,34 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
       }
     }
 
+    const getAccessWarningMessage = (category: ResourceType, resourceTypeLabel: string): ReactElement => {
+      return (
+        <RBACTooltip
+          permission={PermissionIdentifier.UPDATE_CONNECTOR}
+          resourceType={category as ResourceType}
+          resourceTypeLabel={resourceTypeLabel}
+          resourceScope={{
+            accountIdentifier: accountId,
+            projectIdentifier,
+            orgIdentifier
+          }}
+        />
+      )
+    }
+
     return Object.assign(
       {},
       {
         drawerLabel: 'Connectors',
         categories:
           orderedCatalogue.map((item: ConnectorCatalogueItem) => {
+            const categoryLabel = ConnectorCatalogueNames.get(item['category']) || ''
             return {
-              categoryLabel: ConnectorCatalogueNames.get(item['category']) || '',
+              categoryLabel,
               warningTooltipRenderer: i => {
+                if (connectorCatalogueOrder.includes(item['category'])) {
+                  return getAccessWarningMessage(item['category'] as ResourceType, categoryLabel)
+                }
                 const renderer = RestrictionLimitWarningRenderers[i.value]
                 return renderer && renderer(i)
               },
@@ -723,6 +763,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
   fieldToLabelMapping.set('tags', getString('tagsLabel'))
   fieldToLabelMapping.set('connectivityStatuses', getString('connectivityStatus'))
 
+  const attributeFilterName = resourceAttributeMap.get(ResourceType.CONNECTOR)
   /* #endregion */
 
   return (
@@ -755,6 +796,10 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
                   permission: PermissionIdentifier.UPDATE_CONNECTOR,
                   resource: {
                     resourceType: ResourceType.CONNECTOR
+                  },
+                  attributeFilter: {
+                    attributeName: attributeFilterName ?? ('' as string),
+                    attributeValues: connectorCatalogueOrder as string[]
                   }
                 }}
                 onClick={openDrawer}

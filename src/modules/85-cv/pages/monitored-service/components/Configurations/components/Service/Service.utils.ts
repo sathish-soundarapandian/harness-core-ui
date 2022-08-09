@@ -13,15 +13,13 @@ import { MonitoredServiceType } from './components/MonitoredServiceOverview/Moni
 import type { MonitoredServiceForm } from './Service.types'
 
 export const getInitFormData = (
-  data: MonitoredServiceDTO | undefined,
   defaultMonitoredService: MonitoredServiceDTO | undefined,
   isEdit: boolean,
   isTemplate = false,
-  templateValue?: NGMonitoredServiceTemplateInfoConfig
+  data?: MonitoredServiceDTO | NGMonitoredServiceTemplateInfoConfig
 ): MonitoredServiceForm => {
-  const monitoredServiceData = isEdit ? data : defaultMonitoredService
-
   if (isTemplate) {
+    const templateValue = data as NGMonitoredServiceTemplateInfoConfig
     return {
       isEdit: false,
       name: templateValue?.name || '',
@@ -32,15 +30,14 @@ export const getInitFormData = (
       type: MonitoredServiceType.APPLICATION as MonitoredServiceForm['type'],
       environmentRef: templateValue?.spec?.environmentRef,
       environmentRefList: [],
-      sources: isEdit
-        ? templateValue?.spec?.sources
-        : { changeSources: defaultMonitoredService?.sources?.changeSources, ...templateValue?.spec?.sources },
+      sources: templateValue?.spec?.sources,
       dependencies: [],
       ...(templateValue?.notificationRuleRefs && {
         notificationRuleRefs: templateValue?.notificationRuleRefs
       })
     }
   }
+  const monitoredServiceData = isEdit ? data : defaultMonitoredService
   const {
     name = '',
     identifier = '',
@@ -53,7 +50,7 @@ export const getInitFormData = (
     dependencies = [],
     type,
     notificationRuleRefs = []
-  } = monitoredServiceData || {}
+  } = (monitoredServiceData || {}) as MonitoredServiceDTO
 
   return {
     isEdit,

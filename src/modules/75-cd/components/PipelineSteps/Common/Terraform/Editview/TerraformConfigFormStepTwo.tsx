@@ -29,7 +29,6 @@ import { Form } from 'formik'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { formInputNames, formikOnChangeNames, stepTwoValidationSchema } from './TerraformConfigFormHelper'
 
 import type { Connector } from '../TerraformInterfaces'
@@ -52,7 +51,6 @@ export const TerraformConfigStepTwo: React.FC<StepProps<any> & TerraformConfigSt
   isTerraformPlan = false
 }) => {
   const { getString } = useStrings()
-  const { TF_MODULE_SOURCE_INHERIT_SSH } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
   const gitFetchTypes: SelectOption[] = [
     { label: getString('gitFetchTypes.fromBranch'), value: getString('pipelineSteps.deploy.inputSet.branch') },
@@ -209,46 +207,44 @@ export const TerraformConfigStepTwo: React.FC<StepProps<any> & TerraformConfigSt
                   }
                 </div>
 
-                {TF_MODULE_SOURCE_INHERIT_SSH && (
-                  <Accordion>
-                    <Accordion.Panel
-                      id="advanced-config"
-                      summary={getString('common.advanced')}
-                      details={
-                        <Container margin={{ top: 'xsmall' }}>
-                          <Text
-                            tooltipProps={{ dataTooltipId: 'sourceModule' }}
-                            font={{ variation: FontVariation.FORM_LABEL }}
-                          >
-                            Module Source
-                          </Text>
+                <Accordion>
+                  <Accordion.Panel
+                    id="advanced-config"
+                    summary={getString('common.advanced')}
+                    details={
+                      <Container margin={{ top: 'xsmall' }}>
+                        <Text
+                          tooltipProps={{ dataTooltipId: 'sourceModule' }}
+                          font={{ variation: FontVariation.FORM_LABEL }}
+                        >
+                          Module Source
+                        </Text>
 
-                          <>
-                            <Checkbox
-                              data-testid={`useConnectorCredentials`}
-                              name={formInputNames(isTerraformPlan).useConnectorCredentials}
-                              label={getString('cd.useConnectorCredentials')}
-                              className={css.checkBox}
-                              checked={
-                                isTerraformPlan
-                                  ? formik?.values?.spec?.configuration?.configFiles?.moduleSource
-                                      ?.useConnectorCredentials
-                                  : formik?.values?.spec?.configuration?.spec?.configFiles?.moduleSource
-                                      ?.useConnectorCredentials
-                              }
-                              onChange={e => {
-                                formik.setFieldValue(
-                                  formikOnChangeNames(isTerraformPlan).useConnectorCredentials,
-                                  e.currentTarget.checked
-                                )
-                              }}
-                            />
-                          </>
-                        </Container>
-                      }
-                    />
-                  </Accordion>
-                )}
+                        <>
+                          <Checkbox
+                            data-testid={`useConnectorCredentials`}
+                            name={formInputNames(isTerraformPlan).useConnectorCredentials}
+                            label={getString('cd.useConnectorCredentials')}
+                            className={css.checkBox}
+                            checked={
+                              isTerraformPlan
+                                ? formik?.values?.spec?.configuration?.configFiles?.moduleSource
+                                    ?.useConnectorCredentials
+                                : formik?.values?.spec?.configuration?.spec?.configFiles?.moduleSource
+                                    ?.useConnectorCredentials
+                            }
+                            onChange={e => {
+                              formik.setFieldValue(
+                                formikOnChangeNames(isTerraformPlan).useConnectorCredentials,
+                                e.currentTarget.checked
+                              )
+                            }}
+                          />
+                        </>
+                      </Container>
+                    }
+                  />
+                </Accordion>
               </div>
 
               <Layout.Horizontal spacing="xxlarge">

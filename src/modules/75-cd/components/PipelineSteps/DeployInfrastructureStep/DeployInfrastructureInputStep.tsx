@@ -5,22 +5,33 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
-import { Container, Layout, RUNTIME_INPUT_VALUE, Text } from '@harness/uicore'
+import React from 'react'
+import {
+  Container,
+  getMultiTypeFromValue,
+  Layout,
+  MultiTypeInputType,
+  RUNTIME_INPUT_VALUE,
+  SelectOption,
+  Text
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { connect } from 'formik'
-import { defaultTo, get } from 'lodash-es'
+import { connect, Formik, FormikProps } from 'formik'
+import { defaultTo, noop, set, unset } from 'lodash-es'
+import produce from 'immer'
 
 import { useStrings } from 'framework/strings'
-import { useDeepCompareEffect } from '@common/hooks'
-import { CustomVariableInputSet } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
-import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import {
+  CustomVariableInputSet,
+  CustomVariablesData
+} from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
+import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 
-import DeployInfrastructures from './DeployInfrastructures/DeployInfrastructures'
 import DeployEnvironment from './DeployEnvironment/DeployEnvironment'
-import DeployEnvironmentGroup from './DeployEnvironmentGroup/DeployEnvironmentGroup'
+import DeployInfrastructures from './DeployInfrastructures/DeployInfrastructures'
 import DeployClusters from './DeployClusters/DeployClusters'
-import type { DeployInfrastructureProps } from './utils'
+import DeployEnvironmentGroup from './DeployEnvironmentGroup/DeployEnvironmentGroup'
+import type { CustomStepProps, DeployInfrastructureProps } from './utils'
 
 import css from './DeployInfrastructureStep.module.scss'
 
@@ -28,35 +39,21 @@ function DeployInfrastructureInputStepInternal({
   inputSetData,
   initialValues,
   allowableTypes,
-  formik,
-  gitOpsEnabled,
-  stepViewType
-}: DeployInfrastructureProps & { formik?: any }) {
+  customStepProps,
+  stepViewType,
+  readonly,
+  onUpdate
+}: DeployInfrastructureProps & {
+  formik?: FormikProps<DeployStageConfig>
+  customStepProps: CustomStepProps
+}): JSX.Element {
   const { getString } = useStrings()
-  const [isInfrastructureDefinitionRuntime, setIsInfrastructureDefinitionRuntime] = useState(false)
-  const [isGitopsClusterRuntime, setIsGitopsClusterRuntime] = useState(false)
-
-  useDeepCompareEffect(() => {
-    if ((inputSetData?.template?.environment?.infrastructureDefinitions as unknown as string) === RUNTIME_INPUT_VALUE) {
-      setIsInfrastructureDefinitionRuntime(true)
-
-      // This will have to be removed once multi infra support is implemented.
-      // Current issue is with the mismatch in the structure required and structure that should be used
-      if (stepViewType === StepViewType.InputSet) {
-        formik.setFieldValue(`${inputSetData?.path}.infrastructureDefinitions[0].identifier`, RUNTIME_INPUT_VALUE)
-      }
-    }
-  }, [inputSetData?.template?.environment?.infrastructureDefinitions])
-
-  useDeepCompareEffect(() => {
-    if ((inputSetData?.template?.environment?.gitOpsClusters as unknown as string) === RUNTIME_INPUT_VALUE) {
-      setIsGitopsClusterRuntime(true)
-    }
-  }, [inputSetData?.template?.environment?.gitOpsClusters])
+  const { gitOpsEnabled, serviceRef, environmentRef, infrastructureRef, clusterRef } = customStepProps
 
   return (
     <>
-      {inputSetData?.template?.environmentGroup?.envGroupRef && (
+      {/* Environment Group Section */}
+      {getMultiTypeFromValue(inputSetData?.template?.environmentGroup?.envGroupRef) === MultiTypeInputType.RUNTIME && (
         <Container margin={{ bottom: 'medium' }}>
           <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
             {getString('common.environmentGroup.label')}
@@ -65,131 +62,139 @@ function DeployInfrastructureInputStepInternal({
             initialValues={initialValues}
             allowableTypes={allowableTypes}
             path={inputSetData?.path}
-            serviceRef={initialValues.service?.serviceRef}
+            readonly={readonly}
           />
         </Container>
       )}
-      {inputSetData?.template?.environment?.environmentRef && (
-        <Container margin={{ bottom: 'medium' }}>
-          <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
-            {getString('environment')}
-          </Text>
-          <DeployEnvironment
-            initialValues={initialValues}
-            allowableTypes={allowableTypes}
-            path={inputSetData?.path}
-            serviceRef={initialValues.service?.serviceRef}
-            gitOpsEnabled={gitOpsEnabled}
-            stepViewType={stepViewType}
-          />
-        </Container>
-      )}
-      {inputSetData?.template?.environment?.environmentInputs?.variables && (
-        <>
-          <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
-            {getString('environmentVariables')}
-          </Text>
-          <div className={css.sectionContent}>
-            <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
-              <CustomVariableInputSet
-                allowableTypes={allowableTypes}
-                // TODO: Change after type is created
-                initialValues={initialValues.environment?.environmentInputs as any}
-                template={inputSetData.template.environment.environmentInputs as any}
-                path={`${inputSetData.path}.environmentInputs`}
-                className={css.fullWidth}
-              />
-            </Layout.Horizontal>
-          </div>
-        </>
-      )}
+      <Formik
+        initialValues={initialValues}
+        onSubmit={noop}
+        validate={values => {
+          onUpdate?.(
+            produce(values, draft => {
+              if (
+                draft.infrastructureRef &&
+                getMultiTypeFromValue(draft.infrastructureRef) !== MultiTypeInputType.RUNTIME
+              ) {
+                set(draft, 'environment.infrastructureDefinitions[0].identifier', draft.infrastructureRef)
+                delete draft.infrastructureRef
+              }
 
-      {inputSetData?.template?.environment?.serviceOverrideInputs?.variables && (
-        <>
-          <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
-            {getString('common.serviceOverrides')}
-          </Text>
-          <div className={css.sectionContent}>
-            <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
-              <CustomVariableInputSet
-                allowableTypes={allowableTypes}
-                // TODO: Change after type is created
-                initialValues={initialValues.environment?.serviceOverrideInputs as any}
-                template={inputSetData.template.environment.serviceOverrideInputs as any}
-                path={`${inputSetData.path}.serviceOverrideInputs`}
-                className={css.fullWidth}
-              />
-            </Layout.Horizontal>
-          </div>
-        </>
-      )}
+              if (draft.clusterRef) {
+                const allClustersSelected = (draft.clusterRef as SelectOption[])?.[0]?.value === getString('all')
 
-      {!gitOpsEnabled &&
-        isInfrastructureDefinitionRuntime &&
-        inputSetData?.template?.environment?.infrastructureDefinitions && (
-          <>
-            {initialValues.environment?.environmentRef !== RUNTIME_INPUT_VALUE && (
-              <>
+                if (allClustersSelected) {
+                  set(draft, 'environment.deployToAll', true)
+                  unset(draft, 'environment.gitOpsClusters')
+                } else {
+                  set(draft, 'environment.deployToAll', false)
+                  set(
+                    draft,
+                    'environment.gitOpsClusters',
+                    (draft.clusterRef as SelectOption[])?.map(cluster => ({ identifier: cluster.value }))
+                  )
+                }
+
+                delete draft.clusterRef
+              }
+            })
+          )
+        }}
+      >
+        <>
+          {/* Environments Section */}
+          {getMultiTypeFromValue(inputSetData?.template?.environment?.environmentRef) ===
+            MultiTypeInputType.RUNTIME && (
+            <Container margin={{ bottom: 'medium' }}>
+              {/* This loads the environment input field when environment is marked as runtime input */}
+              <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
+                {getString('environment')}
+              </Text>
+              <DeployEnvironment
+                initialValues={initialValues}
+                allowableTypes={allowableTypes}
+                path={inputSetData?.path}
+                serviceRef={defaultTo(initialValues.service?.serviceRef, serviceRef)}
+                gitOpsEnabled={gitOpsEnabled}
+                stepViewType={stepViewType}
+              />
+            </Container>
+          )}
+          {inputSetData?.template?.environment?.environmentInputs?.variables && (
+            <>
+              {/* This loads the environment runtime inputs when environment is selected at runtime */}
+              <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
+                {getString('environmentVariables')}
+              </Text>
+              <div className={css.sectionContent}>
+                <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
+                  <CustomVariableInputSet
+                    allowableTypes={allowableTypes}
+                    initialValues={initialValues.environment?.environmentInputs as unknown as CustomVariablesData}
+                    template={inputSetData.template.environment.environmentInputs as unknown as CustomVariablesData}
+                    path={'environment.environmentInputs'}
+                    className={css.fullWidth}
+                  />
+                </Layout.Horizontal>
+              </div>
+            </>
+          )}
+          {inputSetData?.template?.environment?.serviceOverrideInputs?.variables && (
+            <>
+              {/* This loads the service override runtime inputs when environment is selected at runtime */}
+              <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
+                {getString('common.serviceOverrides')}
+              </Text>
+              <div className={css.sectionContent}>
+                <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
+                  <CustomVariableInputSet
+                    allowableTypes={allowableTypes}
+                    initialValues={initialValues.environment?.serviceOverrideInputs as unknown as CustomVariablesData}
+                    template={inputSetData.template.environment.serviceOverrideInputs as unknown as CustomVariablesData}
+                    path={'environment.serviceOverrideInputs'}
+                    className={css.fullWidth}
+                  />
+                </Layout.Horizontal>
+              </div>
+            </>
+          )}
+
+          {/* This loads the infrastructure input */}
+          {!gitOpsEnabled &&
+            !infrastructureRef &&
+            (initialValues.infrastructureRef ||
+              (inputSetData?.template?.environment?.infrastructureDefinitions as unknown as string) ===
+                RUNTIME_INPUT_VALUE) && (
+              <Container margin={{ bottom: 'medium' }}>
                 <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
                   {getString('infrastructureText')}
                 </Text>
                 <DeployInfrastructures
                   initialValues={initialValues}
                   allowableTypes={allowableTypes}
-                  environmentRef={initialValues.environment?.environmentRef}
+                  environmentRef={initialValues.environment?.environmentRef || environmentRef}
                   path={inputSetData?.path}
                 />
-              </>
+              </Container>
             )}
 
-            {initialValues.environment?.environmentRef === RUNTIME_INPUT_VALUE &&
-              stepViewType !== StepViewType.InputSet &&
-              get(formik.values, `${inputSetData?.path}.environmentRef`) && (
-                <>
-                  <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
-                    {getString('infrastructureText')}
-                  </Text>
-                  <DeployInfrastructures
-                    initialValues={initialValues}
-                    allowableTypes={allowableTypes}
-                    environmentRef={get(formik.values, `${inputSetData.path}.environmentRef`)}
-                    path={inputSetData?.path}
-                  />
-                </>
-              )}
-          </>
-        )}
-
-      {gitOpsEnabled && isGitopsClusterRuntime && inputSetData?.template?.environment?.gitOpsClusters && (
-        <>
-          {initialValues.environment?.environmentRef !== RUNTIME_INPUT_VALUE && (
-            <>
-              <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
-                {getString('common.clusters')}
-              </Text>
-              <DeployClusters
-                allowableTypes={allowableTypes}
-                environmentIdentifier={defaultTo(initialValues.environment?.environmentRef, '')}
-                path={inputSetData?.path}
-              />
-            </>
-          )}
-
-          {initialValues.environment?.environmentRef === RUNTIME_INPUT_VALUE &&
-            get(formik.values, `${inputSetData?.path}.environmentRef`) && (
-              <>
+          {/* This loads the clusters input */}
+          {gitOpsEnabled &&
+            !clusterRef &&
+            (initialValues.clusterRef ||
+              (inputSetData?.template?.environment?.gitOpsClusters as unknown as string) === RUNTIME_INPUT_VALUE) && (
+              <Container margin={{ bottom: 'medium' }}>
                 <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
                   {getString('common.clusters')}
                 </Text>
                 <DeployClusters
                   allowableTypes={allowableTypes}
-                  environmentIdentifier={get(formik.values, `${inputSetData.path}.environmentRef`)}
-                  path={inputSetData?.path}
+                  environmentIdentifier={defaultTo(initialValues.environment?.environmentRef || environmentRef, '')}
                 />
-              </>
+              </Container>
             )}
         </>
-      )}
+      </Formik>
     </>
   )
 }

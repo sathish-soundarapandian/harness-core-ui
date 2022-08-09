@@ -8,6 +8,9 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly form: string
+  readonly helpPanelGrid: string
+  readonly helpPanelStyleClose: string
+  readonly helpPanelStyleOpen: string
   readonly saveButton: string
   readonly stepCommand: string
   readonly stepTabs: string

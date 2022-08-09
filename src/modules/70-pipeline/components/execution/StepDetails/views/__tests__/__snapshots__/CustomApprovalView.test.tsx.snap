@@ -110,52 +110,53 @@ exports[`SUCCESS show tabs when data is present and authorized: jira approval ex
       id="bp3-tab-panel_step-details_Approval"
       role="tabpanel"
     >
-      <div
-        class="info"
-        data-type="customApproval"
-      >
+      <div>
         <div
-          class="timer"
+          class="info"
         >
-          <span
-            class="StyledProps--font StyledProps--main duration StyledProps--inline"
-            style="display: inline-flex; align-items: center;"
+          <div
+            class="timer"
           >
             <span
-              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
-              data-icon="hourglass"
+              class="StyledProps--font StyledProps--main duration StyledProps--inline"
+              style="display: inline-flex; align-items: center;"
             >
-              <svg
-                height="8"
-                viewBox="0 0 9 12"
-                width="8"
-                xmlns="http://www.w3.org/2000/svg"
+              <span
+                class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+                data-icon="hourglass"
               >
-                <path
-                  clip-rule="evenodd"
-                  d="M8.189 1.308c-.173 2.328-1.267 3.115-2.011 3.65-.48.344-.73.54-.73.909 0 .368.25.565.73.91.772.554 1.92 1.38 2.026 3.916h.09a.58.58 0 01.584.576v.155a.58.58 0 01-.584.576H.585A.58.58 0 010 11.424v-.155a.58.58 0 01.585-.577H.83c.107-2.535 1.255-3.361 2.027-3.916.478-.344.727-.542.727-.91s-.25-.565-.73-.91c-.744-.534-1.837-1.321-2.01-3.65h-.26A.58.58 0 010 .732V.576A.58.58 0 01.585 0h7.71a.58.58 0 01.583.576v.156a.58.58 0 01-.584.576H8.19zm-.523 9.384C7.57 8.435 6.627 7.756 5.861 7.206c-.489-.351-.95-.683-.95-1.34 0-.655.461-.987.95-1.338l.002-.001c.733-.528 1.631-1.174 1.788-3.22H1.38C1.54 3.355 2.437 4 3.172 4.528v.001c.49.351.951.683.951 1.339 0 .656-.462.988-.95 1.339-.766.55-1.71 1.229-1.806 3.486h6.3zm-.83-7.585h-.001zm-.001 0a6.679 6.679 0 00-2.356-.414 6.707 6.707 0 00-2.295.39c.293.484.694.892 1.172 1.193.507.364 1.08.776 1.08 1.59v.019h.16v-.018c0-.815.573-1.227 1.079-1.59.47-.298.867-.697 1.16-1.17zm-5.143 7.395a7.08 7.08 0 01.022-.24 3.144 3.144 0 015.622.187l.002.026.002.027H1.692z"
-                  fill="#77788D"
-                  fill-rule="evenodd"
-                />
-              </svg>
+                <svg
+                  height="8"
+                  viewBox="0 0 9 12"
+                  width="8"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M8.189 1.308c-.173 2.328-1.267 3.115-2.011 3.65-.48.344-.73.54-.73.909 0 .368.25.565.73.91.772.554 1.92 1.38 2.026 3.916h.09a.58.58 0 01.584.576v.155a.58.58 0 01-.584.576H.585A.58.58 0 010 11.424v-.155a.58.58 0 01.585-.577H.83c.107-2.535 1.255-3.361 2.027-3.916.478-.344.727-.542.727-.91s-.25-.565-.73-.91c-.744-.534-1.837-1.321-2.01-3.65h-.26A.58.58 0 010 .732V.576A.58.58 0 01.585 0h7.71a.58.58 0 01.583.576v.156a.58.58 0 01-.584.576H8.19zm-.523 9.384C7.57 8.435 6.627 7.756 5.861 7.206c-.489-.351-.95-.683-.95-1.34 0-.655.461-.987.95-1.338l.002-.001c.733-.528 1.631-1.174 1.788-3.22H1.38C1.54 3.355 2.437 4 3.172 4.528v.001c.49.351.951.683.951 1.339 0 .656-.462.988-.95 1.339-.766.55-1.71 1.229-1.806 3.486h6.3zm-.83-7.585h-.001zm-.001 0a6.679 6.679 0 00-2.356-.414 6.707 6.707 0 00-2.295.39c.293.484.694.892 1.172 1.193.507.364 1.08.776 1.08 1.59v.019h.16v-.018c0-.815.573-1.227 1.079-1.59.47-.298.867-.697 1.16-1.17zm-5.143 7.395a7.08 7.08 0 01.022-.24 3.144 3.144 0 015.622.187l.002.026.002.027H1.692z"
+                    fill="#77788D"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              
+              
             </span>
-            
-            
-          </span>
-          <span>
-            pipeline.timeRemainingSuffix
-          </span>
-        </div>
-        <div
-          class="customApprovalTicket"
-        >
-          <span>
-            pipeline.customApprovalStep.execution.customApprovalTicket
-          </span>
+            <span>
+              pipeline.timeRemainingSuffix
+            </span>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--margin-top-large StyledProps--margin-bottom-large"
+          >
+            <span>
+              pipeline.customApprovalStep.execution.customApprovalPending
+            </span>
+          </div>
         </div>
       </div>
       <div
-        class="customApproval"
+        class="customApproval applyTopPadding"
       />
     </div>
   </div>

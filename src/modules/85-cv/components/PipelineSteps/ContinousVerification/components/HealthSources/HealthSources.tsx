@@ -43,8 +43,8 @@ export default function HealthSources(props: HealthSourcesProps): React.ReactEle
   const HealthSourceActions = (tableProps: CellProps<HealthSource>): JSX.Element => {
     return (
       <Container className={css.header}>
-        <>{tableProps.value}</>
-        <Container>
+        <div className={css.tableType}>{tableProps.value}</div>
+        <Container flex>
           <Icon
             name="edit"
             size={14}

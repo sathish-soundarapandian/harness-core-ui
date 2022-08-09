@@ -23,7 +23,12 @@ import { StatusOfValidation } from '@cv/pages/components/ValidationStatus/Valida
 import MetricPackCustom from '@cv/pages/health-source/connectors/MetricPackCustom'
 import MetricsVerificationModal from '@cv/components/MetricsVerificationModal/MetricsVerificationModal'
 import { Connectors } from '@connectors/constants'
-import { MetricPackDTO, MetricPackValidationResponse, useGetDynatraceServices } from 'services/cv'
+import {
+  MetricPackDTO,
+  MetricPackValidationResponse,
+  TimeSeriesMetricPackDTO,
+  useGetDynatraceServices
+} from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { DynatraceMetricPacksToServiceProps } from './DynatraceMetricPacksToService.types'
 import { extractServiceMethods } from './DynatraceMetricPacksToService.utils'
@@ -147,7 +152,9 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
               }}
               metricPackValue={metricValues.metricPacks}
               metricDataValue={metricValues.metricData}
-              setSelectedMetricPacks={setSelectedMetricPacks}
+              setSelectedMetricPacks={
+                setSelectedMetricPacks as React.Dispatch<React.SetStateAction<TimeSeriesMetricPackDTO[]>>
+              }
               connector={HealthSoureSupportedConnectorTypes.DYNATRACE}
               onChange={async metricValue => {
                 setDynatraceMetricData({

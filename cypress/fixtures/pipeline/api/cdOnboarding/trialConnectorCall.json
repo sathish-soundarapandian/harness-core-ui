@@ -1,0 +1,123 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "connectorResponseDTO": {
+      "connector": {
+        "name": "Github",
+        "identifier": "Github",
+        "description": null,
+        "orgIdentifier": null,
+        "projectIdentifier": null,
+        "tags": {},
+        "type": "Github",
+        "spec": {
+          "url": "https://github.com",
+          "validationRepo": null,
+          "authentication": {
+            "type": "Http",
+            "spec": {
+              "type": "UsernameToken",
+              "spec": {
+                "username": null,
+                "usernameRef": null,
+                "tokenRef": "account.Github_Access_Token"
+              }
+            }
+          },
+          "apiAccess": {
+            "type": "Token",
+            "spec": {
+              "tokenRef": "account.Github_Access_Token"
+            }
+          },
+          "delegateSelectors": [],
+          "executeOnDelegate": true,
+          "type": "Account"
+        }
+      },
+      "createdAt": 1654167180861,
+      "lastModifiedAt": 1658954659899,
+      "status": {
+        "status": "SUCCESS",
+        "errorSummary": null,
+        "errors": null,
+        "testedAt": 1658738574948,
+        "lastTestedAt": 0,
+        "lastConnectedAt": 1658738574948
+      },
+      "activityDetails": {
+        "lastActivityTime": 1658738570132
+      },
+      "harnessManaged": false,
+      "gitDetails": {
+        "objectId": null,
+        "branch": null,
+        "repoIdentifier": null,
+        "rootFolder": null,
+        "filePath": null,
+        "repoName": null,
+        "commitId": null,
+        "fileUrl": null
+      },
+      "entityValidityDetails": {
+        "valid": true,
+        "invalidYaml": null
+      },
+      "governanceMetadata": {
+        "id": "0",
+        "deny": false,
+        "details": [],
+        "message": "",
+        "timestamp": "1658954659882",
+        "status": "pass",
+        "accountId": "px7xd_BFRCi-pfWPYXVjvw",
+        "orgId": "",
+        "projectId": "",
+        "entity": "Github",
+        "type": "connector",
+        "action": "onsave",
+        "created": "1658954659869"
+      }
+    },
+    "secretResponseWrapper": {
+      "secret": {
+        "type": "SecretText",
+        "name": "Github Access Token",
+        "identifier": "Github_Access_Token",
+        "tags": {},
+        "spec": {
+          "secretManagerIdentifier": "harnessSecretManager",
+          "valueType": "Inline",
+          "value": null
+        }
+      },
+      "createdAt": 1654167180709,
+      "updatedAt": 1658954659736,
+      "draft": false,
+      "governanceMetadata": {
+        "id": "",
+        "deny": false,
+        "details": [],
+        "message": "FF: [OPA_SECRET_GOVERNANCE] is disabled for account: [px7xd_BFRCi-pfWPYXVjvw]",
+        "timestamp": "0",
+        "status": "",
+        "accountId": "",
+        "orgId": "",
+        "projectId": "",
+        "entity": "",
+        "type": "",
+        "action": "",
+        "created": "0"
+      }
+    },
+    "connectorValidationResult": {
+      "status": "SUCCESS",
+      "errors": null,
+      "errorSummary": null,
+      "testedAt": 1658954662137,
+      "delegateId": "zbp_bj7kTcaenw2COSIYeg"
+    }
+  },
+  "metaData": null,
+  "correlationId": "12974a19-a38d-4f8f-b203-43f1b608e311"
+}

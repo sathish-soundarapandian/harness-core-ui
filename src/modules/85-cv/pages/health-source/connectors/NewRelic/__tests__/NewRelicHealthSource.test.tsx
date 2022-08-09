@@ -109,11 +109,13 @@ describe('Unit tests for NewRelic health source', () => {
 
     // default all metrics are selected
     container.querySelectorAll('[type="checkbox"]').forEach(metricCheckbox => {
-      expect(metricCheckbox).not.toBeChecked()
+      expect(metricCheckbox).toBeChecked()
     })
-
-    await waitFor(() => expect(getByText('Performance')).toBeTruthy())
-
+    const performanceCheckbox = container.querySelector('input[name="metricData.Performance"]')
+    await waitFor(() => expect(performanceCheckbox).toBeChecked())
+    act(() => {
+      fireEvent.click(performanceCheckbox!)
+    })
     await act(() => {
       fireEvent.click(getByText('submit'))
     })
@@ -131,6 +133,12 @@ describe('Unit tests for NewRelic health source', () => {
       </TestWrapper>
     )
     await waitFor(() => expect(getByText('submit')).not.toBeNull())
+    const performanceCheckbox = container.querySelector('input[name="metricData.Performance"]')
+    expect(performanceCheckbox).toBeChecked()
+    act(() => {
+      fireEvent.click(performanceCheckbox!)
+    })
+
     act(() => {
       fireEvent.click(getByText('submit'))
     })

@@ -14,7 +14,7 @@ import type { ConnectorConfigDTO } from 'services/cd-ng'
 import type { ConnectorRefLabelType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ManifestRepoTypes } from '../ManifestWizardSteps/ManifestRepoTypes'
 import ManifestStore from '../ManifestWizardSteps/ManifestStore'
-import { isServerlessManifestType, manifestTypeLabels } from '../Manifesthelper'
+import { ManifestDataType, manifestTypeLabels } from '../Manifesthelper'
 import type { ManifestStepInitData, ManifestStores, ManifestTypes } from '../ManifestInterface'
 import css from './ManifestWizard.module.scss'
 
@@ -40,6 +40,10 @@ interface ManifestWizardStepsProps<T, U> {
   manifestStoreTypes: ManifestStores[]
   changeManifestType: (data: U | null) => void
   types: ManifestTypes[]
+}
+
+const showManifestStoreStepDirectly = (selectedManifest: ManifestTypes | null) => {
+  return !!(selectedManifest && [ManifestDataType.ServerlessAwsLambda].includes(selectedManifest))
 }
 
 export function ManifestWizard<T, U>({
@@ -98,7 +102,7 @@ export function ManifestWizard<T, U>({
       className={css.manifestWizard}
       subtitle={renderSubtitle()}
       onStepChange={onStepChange}
-      initialStep={isServerlessManifestType(selectedManifest) ? 2 : undefined}
+      initialStep={showManifestStoreStepDirectly(selectedManifest) ? 2 : undefined}
     >
       <ManifestRepoTypes
         manifestTypes={types}

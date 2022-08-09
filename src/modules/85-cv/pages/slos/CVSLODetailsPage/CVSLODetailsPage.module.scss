@@ -18,10 +18,4 @@
       margin-top: var(--spacing-none) !important;
     }
   }
-
-  .pageBody {
-    --page-header-height: 140px !important;
-    height: calc(100vh - 140px) !important;
-    max-height: calc(100vh - 140px) !important;
-  }
 }

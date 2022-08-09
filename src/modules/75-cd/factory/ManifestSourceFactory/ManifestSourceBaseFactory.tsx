@@ -13,6 +13,8 @@ import { KustomizeManifestSource } from '@cd/components/PipelineSteps/K8sService
 import { KustomizePatchesManifestSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/KustomizePatchesManifestSource/KustomizePatchesManifestSource'
 import { HelmChartManifestSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/HelmChartManifestSource/HelmChartManifestSource'
 import { ServerlessAwsLambdaManifestSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/ServerlessAwsLambdaManifestSource/ServerlessAwsLambdaManifestSource'
+import { ReleaseRepoManifestSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/ReleaseRepoManifestSource/ReleaseRepoManifestSource'
+
 import type { ManifestSourceBase } from './ManifestSourceBase'
 
 export class ManifestSourceBaseFactory {
@@ -46,5 +48,6 @@ manifestSourceBaseFactory.registerManifestSource(new KustomizeManifestSource())
 manifestSourceBaseFactory.registerManifestSource(new KustomizePatchesManifestSource())
 manifestSourceBaseFactory.registerManifestSource(new HelmChartManifestSource())
 manifestSourceBaseFactory.registerManifestSource(new ServerlessAwsLambdaManifestSource())
+manifestSourceBaseFactory.registerManifestSource(new ReleaseRepoManifestSource())
 
 export default manifestSourceBaseFactory

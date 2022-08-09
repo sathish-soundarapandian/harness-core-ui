@@ -11,11 +11,11 @@ export default {
   pageIndex: 0,
   pageSize: 15,
   featureCounts: {
-    totalActive: 1,
-    totalEnabled: 4,
-    totalFeatures: 13,
-    totalPermanent: 5,
-    totalPotentiallyStale: 1,
+    totalActive: 0,
+    totalEnabled: 3,
+    totalFeatures: 17,
+    totalPermanent: 2,
+    totalPotentiallyStale: 0,
     totalRecentlyAccessed: 0
   },
   features: [
@@ -26,7 +26,7 @@ export default {
       defaultOnVariation: 'true',
       envProperties: {
         defaultServe: { variation: 'true' },
-        environment: 'sfgsd',
+        environment: 'Mock_Environment',
         modifiedAt: 1619223188516,
         offVariation: 'false',
         rules: [],
@@ -38,7 +38,7 @@ export default {
       identifier: 'hello_world',
       kind: 'boolean',
       modifiedAt: 1619223188494,
-      name: 'hello-world',
+      name: 'hello world',
       owner: ['current auth user?'],
       permanent: true,
       prerequisites: [],
@@ -58,7 +58,7 @@ export default {
       defaultOnVariation: 'true',
       envProperties: {
         defaultServe: { variation: 'true' },
-        environment: 'sfgsd',
+        environment: 'Mock_Environment',
         modifiedAt: 1619221911901,
         offVariation: 'false',
         rules: [],
@@ -90,7 +90,7 @@ export default {
       defaultOnVariation: 'true',
       envProperties: {
         defaultServe: { variation: 'true' },
-        environment: 'sfgsd',
+        environment: 'Mock_Environment',
         modifiedAt: 1619221542086,
         offVariation: 'false',
         rules: [],
@@ -122,7 +122,7 @@ export default {
       defaultOnVariation: 'true',
       envProperties: {
         defaultServe: { variation: 'true' },
-        environment: 'sfgsd',
+        environment: 'Mock_Environment',
         modifiedAt: 1619221204658,
         offVariation: 'false',
         rules: [],
@@ -154,7 +154,7 @@ export default {
       defaultOnVariation: 'true',
       envProperties: {
         defaultServe: { variation: 'true' },
-        environment: 'sfgsd',
+        environment: 'Mock_Environment',
         modifiedAt: 1619220635840,
         offVariation: 'false',
         rules: [],
@@ -186,7 +186,7 @@ export default {
       defaultOnVariation: 'true',
       envProperties: {
         defaultServe: { variation: 'true' },
-        environment: 'sfgsd',
+        environment: 'Mock_Environment',
         modifiedAt: 1619220447680,
         offVariation: 'false',
         rules: [],
@@ -218,7 +218,7 @@ export default {
       defaultOnVariation: 'true',
       envProperties: {
         defaultServe: { variation: 'true' },
-        environment: 'sfgsd',
+        environment: 'Mock_Environment',
         modifiedAt: 1619219698577,
         offVariation: 'false',
         rules: [],
@@ -250,7 +250,7 @@ export default {
       defaultOnVariation: 'true',
       envProperties: {
         defaultServe: { variation: 'true' },
-        environment: 'sfgsd',
+        environment: 'Mock_Environment',
         modifiedAt: 1619219291554,
         offVariation: 'false',
         rules: [],
@@ -282,7 +282,7 @@ export default {
       defaultOnVariation: 'true',
       envProperties: {
         defaultServe: { variation: 'true' },
-        environment: 'sfgsd',
+        environment: 'Mock_Environment',
         modifiedAt: 1619219291549,
         offVariation: 'false',
         rules: [],
@@ -314,7 +314,7 @@ export default {
       defaultOnVariation: 'true',
       envProperties: {
         defaultServe: { variation: 'true' },
-        environment: 'sfgsd',
+        environment: 'Mock_Environment',
         modifiedAt: 1619219291545,
         offVariation: 'false',
         rules: [],
@@ -346,7 +346,7 @@ export default {
       defaultOnVariation: 'true',
       envProperties: {
         defaultServe: { variation: 'true' },
-        environment: 'sfgsd',
+        environment: 'Mock_Environment',
         modifiedAt: 1619219291541,
         offVariation: 'false',
         rules: [],
@@ -378,7 +378,7 @@ export default {
       defaultOnVariation: 'true',
       envProperties: {
         defaultServe: { variation: 'true' },
-        environment: 'sfgsd',
+        environment: 'Mock_Environment',
         modifiedAt: 1619219291536,
         offVariation: 'false',
         rules: [],
@@ -410,7 +410,7 @@ export default {
       defaultOnVariation: 'true',
       envProperties: {
         defaultServe: { variation: 'true' },
-        environment: 'sfgsd',
+        environment: 'Mock_Environment',
         modifiedAt: 1619219291530,
         offVariation: 'false',
         rules: [],
@@ -433,6 +433,173 @@ export default {
       variations: [
         { identifier: 'true', name: 'True', value: 'true' },
         { identifier: 'false', name: 'False', value: 'false' }
+      ]
+    },
+    {
+      archived: false,
+      createdAt: 1658149819402,
+      defaultOffVariation: 'false',
+      defaultOnVariation: 'true',
+      envProperties: {
+        defaultServe: {},
+        environment: 'Mock_Environment',
+        modifiedAt: -6795364578871,
+        offVariation: '',
+        pipelineConfigured: false,
+        rules: [],
+        state: '',
+        variationMap: null,
+        version: 0
+      },
+      evaluation: '',
+      evaluationIdentifier: '',
+      identifier: 'onboardingflag1',
+      kind: 'boolean',
+      modifiedAt: 1658149819402,
+      name: 'OnboardingFlag1',
+      owner: [''],
+      permanent: false,
+      prerequisites: [],
+      project: 'KiraFFQA',
+      results: null,
+      tags: [],
+      variations: [
+        {
+          identifier: 'true',
+          name: 'True',
+          value: 'true'
+        },
+        {
+          identifier: 'false',
+          name: 'False',
+          value: 'false'
+        }
+      ]
+    },
+    {
+      archived: false,
+      createdAt: 1658952592521,
+      defaultOffVariation: 'false',
+      defaultOnVariation: 'true',
+      description: '',
+      envProperties: {
+        defaultServe: {},
+        environment: 'Mock_Environment',
+        modifiedAt: -6795364578871,
+        offVariation: '',
+        pipelineConfigured: false,
+        rules: [],
+        state: 'on',
+        variationMap: null,
+        version: 0
+      },
+      evaluation: '',
+      evaluationIdentifier: '',
+      identifier: 'X_Flag_10',
+      kind: 'boolean',
+      modifiedAt: 1658952592521,
+      name: 'X Flag 10',
+      owner: ['kira.jennings@harness.io'],
+      permanent: false,
+      prerequisites: [],
+      project: 'KiraFFQA',
+      results: null,
+      tags: [],
+      variations: [
+        {
+          identifier: 'true',
+          name: 'True',
+          value: 'true'
+        },
+        {
+          identifier: 'false',
+          name: 'False',
+          value: 'false'
+        }
+      ]
+    },
+    {
+      archived: false,
+      createdAt: 1658952603835,
+      defaultOffVariation: 'false',
+      defaultOnVariation: 'true',
+      description: '',
+      envProperties: {
+        defaultServe: {},
+        environment: 'Mock_Environment',
+        modifiedAt: -6795364578871,
+        offVariation: '',
+        pipelineConfigured: false,
+        rules: [],
+        state: 'on',
+        variationMap: null,
+        version: 0
+      },
+      evaluation: '',
+      evaluationIdentifier: '',
+      identifier: 'X_Flag_11',
+      kind: 'boolean',
+      modifiedAt: 1658955497817,
+      name: 'X Flag 11',
+      owner: ['kira.jennings@harness.io'],
+      permanent: false,
+      prerequisites: [],
+      project: 'KiraFFQA',
+      results: null,
+      tags: [],
+      variations: [
+        {
+          identifier: 'true',
+          name: 'True',
+          value: 'true'
+        },
+        {
+          identifier: 'false',
+          name: 'False',
+          value: 'false'
+        }
+      ]
+    },
+    {
+      archived: false,
+      createdAt: 1658952612141,
+      defaultOffVariation: 'false',
+      defaultOnVariation: 'true',
+      description: '',
+      envProperties: {
+        defaultServe: {},
+        environment: 'Mock_Environment',
+        modifiedAt: -6795364578871,
+        offVariation: '',
+        pipelineConfigured: false,
+        rules: [],
+        state: 'on',
+        variationMap: null,
+        version: 0
+      },
+      evaluation: '',
+      evaluationIdentifier: '',
+      identifier: 'Test_Paging_Flag',
+      kind: 'boolean',
+      modifiedAt: 1659001655331,
+      name: 'Test Paging Flag',
+      owner: ['kira.jennings@harness.io'],
+      permanent: true,
+      prerequisites: [],
+      project: 'dummy',
+      results: null,
+      tags: [],
+      variations: [
+        {
+          identifier: 'true',
+          name: 'True',
+          value: 'true'
+        },
+        {
+          identifier: 'false',
+          name: 'False',
+          value: 'false'
+        }
       ]
     }
   ]

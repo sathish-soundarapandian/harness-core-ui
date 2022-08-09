@@ -1,0 +1,23 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "identifier": "Repo1_1658954822540",
+    "governanceMetadata": {
+      "id": "0",
+      "deny": false,
+      "details": [],
+      "message": "",
+      "timestamp": "1658954823592",
+      "status": "pass",
+      "accountId": "px7xd_BFRCi-pfWPYXVjvw",
+      "orgId": "default",
+      "projectId": "project1",
+      "entity": "accountIdentifier%3Apx7xd_BFRCi-pfWPYXVjvw%2ForgIdentifier%3Adefault%2FprojectIdentifier%3Aproject1%2FpipelineIdentifier%3ARepo1_1658954822540",
+      "type": "pipeline",
+      "action": "onsave",
+      "created": "1658954823578"
+    }
+  },
+  "metaData": null,
+  "correlationId": "10768226-04b1-4961-8ccb-beec05992f5a"
+}

@@ -286,9 +286,7 @@ describe('Test Shell Script Step', () => {
             script: 'script test'
           }
         },
-        executionTarget: {
-          connectorRef: undefined
-        },
+        executionTarget: {},
         environmentVariables: [
           {
             name: 'testInput1',

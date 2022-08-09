@@ -25,7 +25,9 @@ import {
   processGitOpsEnvironmentInitialValues,
   processNonGitOpsFormValues,
   processGitOpsEnvironmentFormValues,
-  processGitOpsEnvGroupFormValues
+  processGitOpsEnvGroupFormValues,
+  CustomStepProps,
+  processInputSetInitialValues
 } from './utils'
 
 export class DeployInfrastructureStep extends Step<DeployStageConfig> {
@@ -81,6 +83,13 @@ export class DeployInfrastructureStep extends Step<DeployStageConfig> {
     }
   }
 
+  private processInputSetInitialValues(
+    initialValues: DeployStageConfig,
+    customStepProps: CustomStepProps
+  ): DeployStageConfig {
+    return processInputSetInitialValues(initialValues, customStepProps)
+  }
+
   renderStep(props: StepProps<DeployStageConfig>): JSX.Element {
     const {
       initialValues,
@@ -95,25 +104,25 @@ export class DeployInfrastructureStep extends Step<DeployStageConfig> {
     if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
       return (
         <DeployInfrastructureInputStep
-          initialValues={initialValues}
+          initialValues={this.processInputSetInitialValues(initialValues, customStepProps as CustomStepProps)}
           readonly={readonly}
-          onUpdate={data => onUpdate?.(this.processFormData(data, (customStepProps as any).getString))}
+          onUpdate={data => onUpdate?.(data)}
           stepViewType={stepViewType}
           allowableTypes={allowableTypes}
           inputSetData={inputSetData}
-          gitOpsEnabled={(customStepProps as any).gitOpsEnabled}
+          customStepProps={customStepProps as CustomStepProps}
         />
       )
     }
 
     return (
       <DeployInfrastructureWidget
-        initialValues={this.processInitialValues(initialValues, (customStepProps as any).getString)}
+        initialValues={this.processInitialValues(initialValues, (customStepProps as CustomStepProps)?.getString)}
         readonly={readonly}
-        onUpdate={data => onUpdate?.(this.processFormData(data, (customStepProps as any).getString))}
+        onUpdate={data => onUpdate?.(this.processFormData(data, (customStepProps as CustomStepProps)?.getString))}
         stepViewType={stepViewType}
         allowableTypes={allowableTypes}
-        serviceRef={(customStepProps as any).serviceRef}
+        serviceRef={(customStepProps as CustomStepProps).serviceRef}
       />
     )
   }
@@ -144,8 +153,8 @@ export class DeployInfrastructureStep extends Step<DeployStageConfig> {
       }
     })
 
-    if (!(errors as any)?.serviceOverrideInputs?.variables?.length) {
-      delete (errors as any)?.serviceOverrideInputs
+    if (!(errors as unknown as DeployStageConfig['environment'])?.serviceOverrideInputs?.variables?.length) {
+      delete (errors as unknown as DeployStageConfig['environment'])?.serviceOverrideInputs
     }
 
     data?.environment?.environmentInputs?.variables?.forEach((variable: AllNGVariables, index: number) => {
@@ -165,8 +174,8 @@ export class DeployInfrastructureStep extends Step<DeployStageConfig> {
       }
     })
 
-    if (!(errors as any)?.environmentInputs?.variables?.length) {
-      delete (errors as any)?.environmentInputs
+    if (!(errors as unknown as DeployStageConfig['environment'])?.environmentInputs?.variables?.length) {
+      delete (errors as unknown as DeployStageConfig['environment'])?.environmentInputs
     }
 
     return errors

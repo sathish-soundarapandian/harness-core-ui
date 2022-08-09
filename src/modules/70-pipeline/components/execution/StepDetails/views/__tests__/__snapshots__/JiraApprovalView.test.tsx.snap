@@ -148,7 +148,7 @@ exports[`SUCCESS show tabs when data is present and authorized: jira approval ex
         </div>
       </div>
       <div
-        class="jiraApproval"
+        class="jiraApproval applyTopPadding"
       />
     </div>
   </div>

@@ -29,6 +29,7 @@
       "@notifications/*": ["modules/15-notifications/*"],
       "@audit-trail/*": ["modules/18-audit-trail/*"],
       "@rbac/*": ["modules/20-rbac/*"],
+      "@default-settings/*": ["modules/23-default-settings/*"],
       "@governance/*": ["modules/25-governance/*"],
       "@sto/*": ["modules/27-sto/*"],
       "@filestore/*": ["modules/31-filestore/*"],

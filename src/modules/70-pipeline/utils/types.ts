@@ -71,3 +71,7 @@ export interface SaveInputSetDTO {
 export interface Pipeline {
   pipeline: PipelineInfoConfig
 }
+
+export interface InputSet {
+  inputSet: InputSetDTO
+}

@@ -6,10 +6,10 @@
  */
 
 import { defaultTo } from 'lodash-es'
-import { parse } from 'yaml'
 import produce from 'immer'
 import { useCallback } from 'react'
 import type { StageElementConfig } from 'services/cd-ng'
+import { parse } from '@common/utils/YamlHelperMethods'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { createTemplate, getStageType } from '@pipeline/utils/templateUtils'
 import type { TemplateSummaryResponse } from 'services/template-ng'
@@ -42,7 +42,7 @@ export function useStageTemplateActions(): TemplateActionsReturnType {
         })
         const node = stage?.stage
         const processNode = isCopied
-          ? produce(defaultTo(parse(template?.yaml || '')?.template.spec, {}) as StageElementConfig, draft => {
+          ? produce(defaultTo(parse<any>(template?.yaml || '')?.template.spec, {}) as StageElementConfig, draft => {
               draft.name = defaultTo(node?.name, '')
               draft.identifier = defaultTo(node?.identifier, '')
             })

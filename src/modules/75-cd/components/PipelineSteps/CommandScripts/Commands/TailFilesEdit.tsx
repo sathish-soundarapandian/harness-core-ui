@@ -39,7 +39,7 @@ export function TailFilesEdit(props: TailFilesEditProps): React.ReactElement {
     >
       <Droppable droppableId="droppable">
         {provided => (
-          <Layout.Vertical {...provided.droppableProps} ref={provided.innerRef}>
+          <Layout.Vertical {...provided.droppableProps} ref={provided.innerRef} data-testid="tail-files-edit">
             <Container className={css.filesPatternsHeaderContainer}>
               <Text className={css.filesPatternsHeader}>{getString('cd.steps.commands.filesAndPatterns')}</Text>
               <Text className={css.filesPatternsHeaderOptional}>{getString('optionalField')}</Text>
@@ -97,7 +97,7 @@ export function TailFilesEdit(props: TailFilesEditProps): React.ReactElement {
                       <Button
                         icon="plus"
                         variation={ButtonVariation.LINK}
-                        data-testid="add-taileFile"
+                        data-testid="add-tailFile"
                         disabled={readonly}
                         onClick={() => push({ tailFile: '', tailPattern: '' })}
                         className={css.addButton}

@@ -99,7 +99,7 @@ describe('Render and test InfraProvisioningWizard', () => {
     })
 
     await act(async () => {
-      fireEvent.click(getByText('ci.getStartedWithCI.accessTokenLabel'))
+      fireEvent.click(getByText('common.getStarted.accessTokenLabel'))
     })
 
     await waitFor(() =>

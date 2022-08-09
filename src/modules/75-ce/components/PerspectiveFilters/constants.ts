@@ -30,3 +30,11 @@ export enum Operator {
   NULL = 'NULL',
   NOT_NULL = 'NOT_NULL'
 }
+
+export enum CommonFieldIds {
+  Region = 'region',
+  Product = 'product',
+  CloudProvider = 'cloudProvider',
+  Label = 'label',
+  None = 'none'
+}

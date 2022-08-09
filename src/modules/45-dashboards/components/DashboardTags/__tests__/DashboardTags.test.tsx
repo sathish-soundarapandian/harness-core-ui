@@ -9,7 +9,7 @@ import React from 'react'
 import { render, RenderResult, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { DashboardModel } from 'services/custom-dashboards'
-import { DashboardType } from '@dashboards/types/DashboardTypes'
+import { DashboardType } from '@dashboards/types/DashboardTypes.types'
 import type { StringKeys } from 'framework/strings'
 import DashboardTags, { DashboardTagProps } from '../DashboardTags'
 

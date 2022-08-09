@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Card, Layout } from '@wings-software/uicore'
 import { Page } from '@common/exports'
@@ -21,6 +21,8 @@ import { ServicesList, ServicesListProps } from '@cd/components/Services/Service
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useStrings } from 'framework/strings'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { Sort, SortFields } from '@pipeline/pages/pipelines/PipelinesPage'
 import css from '@cd/components/Services/ServicesContent/ServicesContent.module.scss'
 
 export const ServicesContent: React.FC = () => {
@@ -28,6 +30,11 @@ export const ServicesContent: React.FC = () => {
   const { getString } = useStrings()
 
   const { timeRange, setTimeRange } = useContext(DeploymentsTimeRangeContext)
+  const { preference: savedSortOption, setPreference: setSavedSortOption } = usePreferenceStore<string[] | undefined>(
+    PreferenceScope.USER,
+    'sortOptionServiceDash'
+  )
+  const [sort, setSort] = useState<string[]>(savedSortOption || [SortFields.LastModifiedAt, Sort.DESC])
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
 
@@ -36,7 +43,8 @@ export const ServicesContent: React.FC = () => {
     orgIdentifier,
     projectIdentifier,
     startTime: timeRange?.range[0]?.getTime() || 0,
-    endTime: timeRange?.range[1]?.getTime() || 0
+    endTime: timeRange?.range[1]?.getTime() || 0,
+    sort
   }
 
   useDocumentTitle([getString('services')])
@@ -47,7 +55,8 @@ export const ServicesContent: React.FC = () => {
     error,
     refetch
   } = useGetServiceDetails({
-    queryParams
+    queryParams,
+    queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
 
   useEffect(() => {
@@ -60,7 +69,10 @@ export const ServicesContent: React.FC = () => {
     loading,
     error: !!error,
     data: serviceDeploymentDetailsList,
-    refetch
+    refetch,
+    setSavedSortOption,
+    setSort,
+    sort
   }
 
   const serviceInstanceProps: ServiceInstanceWidgetProps = {

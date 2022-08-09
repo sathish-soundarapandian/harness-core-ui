@@ -7,10 +7,12 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly applyTopPadding: string
   readonly duration: string
   readonly info: string
   readonly jiraApproval: string
   readonly jiraTicket: string
+  readonly stepDetailsContainer: string
   readonly timer: string
 }
 export default styles

@@ -249,6 +249,7 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                   type={Connectors.AZURE}
                   gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                   onChange={type => {
+                    /* istanbul ignore next */
                     if (type !== MultiTypeInputType.FIXED) {
                       getMultiTypeFromValue(formik.values?.subscriptionId) !== MultiTypeInputType.RUNTIME &&
                         formik.setFieldValue('subscriptionId', '')
@@ -300,7 +301,7 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                     },
                     expressions,
                     disabled: readonly,
-                    onFocus: () => {
+                    onFocus: /* istanbul ignore next */ () => {
                       const connectorValue = getValue(formik.values?.connectorRef)
                       if (getMultiTypeFromValue(formik.values?.subscriptionId) === MultiTypeInputType.FIXED) {
                         refetchSubscriptions({
@@ -363,7 +364,7 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                   multiTypeInputProps={{
                     expressions,
                     disabled: readonly,
-                    onFocus: () => {
+                    onFocus: /* istanbul ignore next */ () => {
                       if (getMultiTypeFromValue(formik.values?.resourceGroup) === MultiTypeInputType.FIXED) {
                         refetchResourceGroups({
                           queryParams: {

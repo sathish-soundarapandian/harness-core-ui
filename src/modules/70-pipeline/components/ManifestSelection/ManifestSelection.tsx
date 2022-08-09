@@ -20,7 +20,6 @@ import {
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
-import { isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { useDeepCompareEffect } from '@common/hooks'
@@ -36,7 +35,12 @@ export default function ManifestSelection({
   isPropagating,
   deploymentType,
   isReadonlyServiceMode,
-  readonly
+  readonly,
+  initialManifestList,
+  allowOnlyOneManifest,
+  addManifestBtnText,
+  updateManifestList,
+  preSelectedManifestType
 }: ManifestSelectionProps): JSX.Element | null {
   const {
     state: {
@@ -76,7 +80,7 @@ export default function ManifestSelection({
     queryParams: defaultQueryParams
   })
 
-  const listOfManifests = useMemo(() => {
+  const manifestList = useMemo(() => {
     /* istanbul ignore next */
     /* istanbul ignore else */
     if (isReadonlyServiceMode && !isEmpty(serviceInfo)) {
@@ -87,6 +91,10 @@ export default function ManifestSelection({
     }
     return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests', [])
   }, [isReadonlyServiceMode, serviceInfo, isPropagating, stage])
+
+  const listOfManifests = useMemo(() => {
+    return initialManifestList ?? manifestList
+  }, [initialManifestList, manifestList])
 
   useDeepCompareEffect(() => {
     refetchConnectorList()
@@ -144,22 +152,18 @@ export default function ManifestSelection({
     }
   }, [isPropagating, listOfManifests, stage, updateStage])
 
-  const updateManifestList = useCallback(
+  const updateListOfManifests = useCallback(
     (manifestObj: ManifestConfigWrapper, manifestIndex: number): void => {
-      if (isPropagating) {
-        if (listOfManifests?.length > 0) {
-          listOfManifests.splice(manifestIndex, 1, manifestObj)
-        } else {
-          listOfManifests.push(manifestObj)
-        }
+      if (updateManifestList) {
+        updateManifestList(manifestObj, manifestIndex)
       } else {
         if (listOfManifests?.length > 0) {
           listOfManifests.splice(manifestIndex, 1, manifestObj)
         } else {
           listOfManifests.push(manifestObj)
         }
+        updateStageData()
       }
-      updateStageData()
       refetchConnectorList()
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -184,7 +188,9 @@ export default function ManifestSelection({
       const manifestData = listOfManifests?.find(
         (manifestObj: ManifestConfigWrapper) => manifestObj.manifest?.identifier === manifestId
       )
-      set(manifestData, `manifest.spec.${ManifestToPathKeyMap[manifestType]}`, manifestPathData)
+      if (manifestData) {
+        set(manifestData, `manifest.spec.${ManifestToPathKeyMap[manifestType]}`, manifestPathData)
+      }
       updateStageData()
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -196,7 +202,7 @@ export default function ManifestSelection({
       const manifestData = listOfManifests?.find(
         (manifestObj: ManifestConfigWrapper) => manifestObj.manifest?.identifier === manifestId
       )
-      manifestData?.manifest.spec[ManifestToPathKeyMap[manifestType]].splice(valuesYamlIndex, 1)
+      manifestData?.manifest?.spec[ManifestToPathKeyMap[manifestType]].splice(valuesYamlIndex, 1)
       updateStageData()
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -216,11 +222,13 @@ export default function ManifestSelection({
         <ManifestListView
           {...manifestListViewCommonProps}
           pipeline={pipeline}
-          updateManifestList={updateManifestList}
+          updateManifestList={updateListOfManifests}
           removeManifestConfig={removeManifestConfig}
           attachPathYaml={attachPathYaml}
           removeValuesYaml={removeValuesYaml}
-          allowOnlyOne={isServerlessDeploymentType(deploymentType)}
+          allowOnlyOneManifest={allowOnlyOneManifest}
+          addManifestBtnText={addManifestBtnText}
+          preSelectedManifestType={preSelectedManifestType}
         />
       ) : (
         <ReleaseRepoListView

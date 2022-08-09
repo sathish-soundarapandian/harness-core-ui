@@ -113,6 +113,24 @@ jest.mock('services/cv', () => ({
       loading: false,
       cancel: jest.fn()
     }
+  }),
+  useGetAllHealthSourcesForMonitoredServiceIdentifier: jest.fn().mockImplementation(() => {
+    return {
+      data: {},
+      refetch: jest.fn(),
+      error: null,
+      loading: false,
+      cancel: jest.fn()
+    }
+  }),
+  useGetTimeSeriesMetricData: jest.fn().mockImplementation(() => {
+    return {
+      data: {},
+      refetch: jest.fn(),
+      error: null,
+      loading: false,
+      cancel: jest.fn()
+    }
   })
 }))
 
@@ -124,16 +142,15 @@ describe('Unit tests for ServiceHealth', () => {
     hasChangeSource: true
   }
   test('Verify if all the fields are rendered correctly inside ServiceHealth and with correct document title', async () => {
-    const { container } = render(<WrapperComponent {...props} />)
-    expect(container).toMatchSnapshot()
+    render(<WrapperComponent {...props} />)
     expect(document.title).toBe('cv.srmTitle | cv.monitoredServices.title | harness')
   })
 
   test('Verify if reset functionality works correctly', async () => {
-    const { getByText, getByTestId } = render(<WrapperComponent {...props} />)
+    const { getByText, getByTestId, queryByText } = render(<WrapperComponent {...props} />)
 
     //initially verifying if select timeline message is displayed for metrics and logs
-    expect(getByText('cv.monitoredServices.serviceHealth.selectTimeline')).toBeInTheDocument()
+    expect(queryByText('cv.monitoredServices.serviceHealth.selectTimeline')).not.toBeInTheDocument()
 
     // Clicking on the slider to set the selected timeline and display the slider
     await act(async () => {

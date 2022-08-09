@@ -24,7 +24,7 @@ export interface ResourcesCardListProps {
   ) => void
   onResourceCategorySelect: (types: ResourceType[], isAdd: boolean) => void
   disableAddingResources?: boolean
-  disableSelection?: boolean
+  disableSpecificResourcesSelection?: boolean
 }
 
 const ResourcesCardList: React.FC<ResourcesCardListProps> = ({

@@ -39,6 +39,7 @@ export class CFDeleteStack extends PipelineStep<CFDeleteStackStepInfo> {
   protected stepName = 'CloudFormation Delete Stack'
   protected stepDescription: keyof StringsMap = 'cd.cloudFormation.deleteDescription'
   protected stepIconSize = 32
+  protected referenceId = 'cloudFormationDeleteStep'
 
   protected defaultValues = {
     type: StepType.CloudFormationDeleteStack,

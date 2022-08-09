@@ -13,7 +13,6 @@ import produce from 'immer'
 import { Tabs, Tab, Icon, Button, Layout, ButtonVariation, IconName } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import type { HarnessIconName } from '@harness/icons'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import {
   PipelineContextType,
   usePipelineContext
@@ -43,7 +42,6 @@ import type {
   VmInfraYaml,
   VmPoolYaml
 } from 'services/ci'
-import { FeatureFlag } from '@common/featureFlags'
 import { useQueryParams } from '@common/hooks'
 import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
 import { useAddStepTemplate } from '@pipeline/hooks/useAddStepTemplate'
@@ -79,8 +77,6 @@ const TabsOrder = [BuildTabs.OVERVIEW, BuildTabs.INFRASTRUCTURE, BuildTabs.EXECU
 const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon }) => {
   const icon = moduleIcon ? moduleIcon : 'ci-main'
   const { getString } = useStrings()
-  const isTemplatesEnabled = useFeatureFlag(FeatureFlag.NG_TEMPLATES)
-  const ciStepGroupEnabled = useFeatureFlag(FeatureFlag.CI_STEP_GROUP_ENABLED)
   const [selectedTabId, setSelectedTabId] = React.useState<BuildTabs>(BuildTabs.OVERVIEW)
   const [filledUpStages, setFilledUpStages] = React.useState<StagesFilledStateFlags>({
     specifications: false,
@@ -217,7 +213,7 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
     if (sectionId && TabsOrder.includes(sectionId)) {
       setSelectedTabId(sectionId)
     } else {
-      setSelectedSectionId(BuildTabs.OVERVIEW)
+      setSelectedSectionId(BuildTabs.EXECUTION)
     }
   }, [selectedSectionId])
 
@@ -345,7 +341,7 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
           panel={
             selectedStageClone ? (
               <ExecutionGraph
-                allowAddGroup={ciStepGroupEnabled}
+                allowAddGroup={true}
                 hasRollback={false}
                 isReadonly={isReadonly}
                 hasDependencies={true}
@@ -468,7 +464,7 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
           panel={<BuildAdvancedSpecifications>{navBtns}</BuildAdvancedSpecifications>}
           data-testid={getString('ci.advancedLabel')}
         />
-        {isTemplatesEnabled && isContextTypeNotStageTemplate(contextType) && selectedStage?.stage && (
+        {isContextTypeNotStageTemplate(contextType) && selectedStage?.stage && (
           <>
             <Expander />
             <SaveTemplateButton data={selectedStage?.stage} type={'Stage'} gitDetails={gitDetails} />

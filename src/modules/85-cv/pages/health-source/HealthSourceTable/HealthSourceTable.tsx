@@ -21,6 +21,7 @@ import ContextMenuActions from '@cv/components/ContextMenuActions/ContextMenuAct
 import HealthSources from '@cv/components/PipelineSteps/ContinousVerification/components/HealthSources/HealthSources'
 import type { RowData } from '../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { getIconBySourceType, getTypeByFeature } from './HealthSourceTable.utils'
+import CardWithOuterTitle from '../common/CardWithOuterTitle/CardWithOuterTitle'
 import css from './HealthSourceTable.module.scss'
 
 export default function HealthSourceTable({
@@ -166,7 +167,7 @@ export default function HealthSourceTable({
         )
       }
       return (
-        <>
+        <CardWithOuterTitle>
           <Text tooltipProps={{ dataTooltipId: 'healthSourcesLabel' }} className={css.tableTitle}>
             {getString('connectors.cdng.healthSources.label')}
           </Text>
@@ -186,7 +187,7 @@ export default function HealthSourceTable({
               }
             }}
           />
-        </>
+        </CardWithOuterTitle>
       )
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

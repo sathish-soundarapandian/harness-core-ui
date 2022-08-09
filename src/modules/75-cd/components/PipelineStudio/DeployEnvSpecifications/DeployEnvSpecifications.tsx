@@ -27,6 +27,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import DeployServiceErrors from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
+import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 
 export default function DeployEnvSpecifications(props: PropsWithChildren<unknown>): JSX.Element {
@@ -38,7 +39,7 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
     if (errorMap.size > 0) {
       submitFormsForTab(DeployTabs.ENVIRONMENT)
     }
-  }, [errorMap])
+  }, [errorMap, submitFormsForTab])
 
   const {
     state: {
@@ -51,6 +52,7 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
     updateStage
   } = usePipelineContext()
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceUpdateStage = useCallback(
     debounce(
       (changedStage?: StageElementConfig) =>
@@ -63,7 +65,11 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   useEffect(() => {
-    if (isEmpty((stage?.stage?.spec as any)?.environment) && stage?.stage?.type === StageType.DEPLOY) {
+    if (
+      isEmpty(stage?.stage?.spec?.environment) &&
+      isEmpty(stage?.stage?.spec?.environmentGroup) &&
+      stage?.stage?.type === StageType.DEPLOY
+    ) {
       const stageData = produce(stage, draft => {
         if (draft) {
           set(draft, 'stage.spec', {
@@ -74,12 +80,13 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
       })
       debounceUpdateStage(stageData?.stage)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const updateEnvStep = useCallback(
-    (value: any) => {
+    (value: DeployStageConfig) => {
       const stageData = produce(stage, draft => {
-        const specObject: any = get(draft, 'stage.spec', {})
+        const specObject: DeployStageConfig = get(draft, 'stage.spec', {})
 
         if (specObject) {
           if (value.environment) {
@@ -93,6 +100,7 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
       })
       debounceUpdateStage(stageData?.stage)
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [stage, debounceUpdateStage, stage?.stage?.spec?.infrastructure?.infrastructureDefinition]
   )
 
@@ -110,10 +118,10 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
             initialValues={{
               gitOpsEnabled: get(stage, 'stage.spec.gitOpsEnabled', false),
               ...(get(stage, 'stage.spec.environment', false) && {
-                environment:
-                  scope === Scope.ACCOUNT
-                    ? { environmentRef: RUNTIME_INPUT_VALUE }
-                    : get(stage, 'stage.spec.environment')
+                environment: get(stage, 'stage.spec.environment')
+              }),
+              ...(scope === Scope.ACCOUNT && {
+                environment: { environmentRef: RUNTIME_INPUT_VALUE }
               }),
               ...(get(stage, 'stage.spec.environmentGroup', false) && {
                 environmentGroup: get(stage, 'stage.spec.environmentGroup')

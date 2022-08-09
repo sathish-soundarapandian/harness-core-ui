@@ -66,6 +66,8 @@ import CreateSecretFromYamlPage from '@secrets/pages/createSecretFromYaml/Create
 import { validateYAMLWithSchema } from '@common/utils/YamlUtils'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTrailFactory'
+import type { ResourceDTO } from 'services/audit'
 import ChaosHomePage from './pages/home/ChaosHomePage'
 import type { ChaosCustomMicroFrontendProps } from './interfaces/Chaos.types'
 import ChaosSideNav from './components/ChaosSideNav/ChaosSideNav'
@@ -77,13 +79,75 @@ const ChaosSideNavProps: SidebarContext = {
   navComponent: ChaosSideNav,
   subtitle: 'Chaos',
   title: 'Engineering',
-  icon: 'command-stop'
+  icon: 'chaos-main'
 }
 
 const chaosModuleParams: ModulePathParams = {
   module: ':module(chaos)'
 }
 const module = 'chaos'
+
+// AuditTrail registrations
+AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_HUB, {
+  moduleIcon: {
+    name: 'chaos-main'
+  },
+  moduleLabel: 'chaos.chaosHub',
+  resourceLabel: 'chaos.chaosHub',
+  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+    const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
+
+    return routes.toChaosHub({
+      accountId: accountIdentifier,
+      orgIdentifier,
+      projectIdentifier,
+      identifier: resource.identifier
+    })
+  }
+})
+
+AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_SCENARIO, {
+  moduleIcon: {
+    name: 'chaos-main'
+  },
+  moduleLabel: 'chaos.chaosScenario',
+  resourceLabel: 'chaos.chaosScenario',
+  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+    const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
+
+    return routes.toChaosScenario({
+      accountId: accountIdentifier,
+      orgIdentifier,
+      projectIdentifier,
+      identifier: resource.identifier
+    })
+  }
+})
+
+AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_DELEGATE, {
+  moduleIcon: {
+    name: 'chaos-main'
+  },
+  moduleLabel: 'chaos.chaosDelegate',
+  resourceLabel: 'chaos.chaosDelegate',
+  resourceUrl: (_: ResourceDTO, resourceScope: ResourceScope) => {
+    const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
+
+    return routes.toChaosDelegates({
+      accountId: accountIdentifier,
+      orgIdentifier,
+      projectIdentifier
+    })
+  }
+})
+
+AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_GITOPS, {
+  moduleIcon: {
+    name: 'chaos-main'
+  },
+  moduleLabel: 'chaos.chaosGitops',
+  resourceLabel: 'chaos.chaosGitops'
+})
 
 // RedirectToAccessControlHome: redirects to users page in access control
 const RedirectToAccessControlHome = (): React.ReactElement => {
@@ -115,21 +179,54 @@ const RedirectToChaosProject = (): React.ReactElement => {
 export default function ChaosRoutes(): React.ReactElement {
   const isChaosEnabled = useFeatureFlag(FeatureFlag.CHAOS_ENABLED)
 
-  // Register Chaos into RBAC Factory only when Feature Flag is enabled
+  // Register Chaos into RBAC Factory and AuditTrail only when Feature Flag is enabled
   if (isChaosEnabled) {
+    // RBAC registrations
     RbacFactory.registerResourceCategory(ResourceCategory.CHAOS, {
-      icon: 'ci-dev-exp',
+      icon: 'chaos-main',
       label: 'common.chaosText'
     })
 
     RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_HUB, {
-      icon: 'ci-dev-exp',
-      label: 'chaos.chaoshub',
+      icon: 'chaos-main',
+      label: 'chaos.chaosHub',
       category: ResourceCategory.CHAOS,
       permissionLabels: {
-        [PermissionIdentifier.VIEW_CHAOSHUB]: <LocaleString stringID="rbac.permissionLabels.view" />,
-        [PermissionIdentifier.EDIT_CHAOSHUB]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-        [PermissionIdentifier.DELETE_CHAOSHUB]: <LocaleString stringID="delete" />
+        [PermissionIdentifier.VIEW_CHAOS_HUB]: <LocaleString stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.EDIT_CHAOS_HUB]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+        [PermissionIdentifier.DELETE_CHAOS_HUB]: <LocaleString stringID="delete" />
+      }
+    })
+
+    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_SCENARIO, {
+      icon: 'chaos-main',
+      label: 'chaos.chaosScenario',
+      category: ResourceCategory.CHAOS,
+      permissionLabels: {
+        [PermissionIdentifier.VIEW_CHAOS_SCENARIO]: <LocaleString stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.EDIT_CHAOS_SCENARIO]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+        [PermissionIdentifier.DELETE_CHAOS_SCENARIO]: <LocaleString stringID="delete" />
+      }
+    })
+
+    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_DELEGATE, {
+      icon: 'chaos-main',
+      label: 'chaos.chaosDelegate',
+      category: ResourceCategory.CHAOS,
+      permissionLabels: {
+        [PermissionIdentifier.VIEW_CHAOS_DELEGATE]: <LocaleString stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.EDIT_CHAOS_DELEGATE]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+        [PermissionIdentifier.DELETE_CHAOS_DELEGATE]: <LocaleString stringID="delete" />
+      }
+    })
+
+    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_GITOPS, {
+      icon: 'chaos-main',
+      label: 'chaos.chaosGitops',
+      category: ResourceCategory.CHAOS,
+      permissionLabels: {
+        [PermissionIdentifier.VIEW_CHAOS_GITOPS]: <LocaleString stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.EDIT_CHAOS_GITOPS]: <LocaleString stringID="rbac.permissionLabels.createEdit" />
       }
     })
   }

@@ -58,6 +58,7 @@ import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes
 import { FeatureFlag } from '@common/featureFlags'
 import { isNewServiceEnvEntity } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import { K8sOverrideValuesRuntimeFields } from './K8sOverrideValuesRuntimeFields'
 import K8sOverrideValuesManifest from './K8sOverrideValuesManifest'
 import type {
@@ -222,7 +223,7 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
                               name={`spec.filePaths[${index}].value`}
                               multiTextInputProps={{
                                 allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                                  item => item !== MultiTypeInputType.RUNTIME
+                                  item => !isMultiTypeRuntime(item)
                                 ) as AllowedTypes,
                                 expressions,
                                 textProps: { disabled: isDisabled }

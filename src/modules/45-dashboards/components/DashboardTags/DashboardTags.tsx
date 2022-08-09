@@ -9,7 +9,7 @@ import React from 'react'
 import { Container } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { DashboardModel } from 'services/custom-dashboards'
-import { DashboardType } from '@dashboards/types/DashboardTypes'
+import { DashboardType } from '@dashboards/types/DashboardTypes.types'
 import moduleTagCss from '@dashboards/common/ModuleTags.module.scss'
 
 export interface DashboardTagProps {

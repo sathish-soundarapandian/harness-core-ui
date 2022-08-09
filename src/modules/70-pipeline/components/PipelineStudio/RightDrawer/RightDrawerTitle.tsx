@@ -15,13 +15,14 @@ import css from './RightDrawer.module.scss'
 
 export function RightDrawerTitle(props: {
   stepType: string
+  helpPanelVisible: boolean
   toolTipType: string
   stepData: StepData | null | undefined
   discardChanges: () => void
   applyChanges: () => void
 }): JSX.Element {
   const { stepsFactory } = usePipelineContext()
-  const { stepType, toolTipType, stepData } = props
+  const { stepType, toolTipType, stepData, helpPanelVisible } = props
   const { getString } = useStrings()
   return (
     <div className={css.stepConfig}>
@@ -43,7 +44,7 @@ export function RightDrawerTitle(props: {
           {stepData ? stepData?.name : stepsFactory.getStepName(stepType || '')}
         </Text>
       </div>
-      <div>
+      <div className={helpPanelVisible ? css.showHelpPanel : undefined}>
         <Button
           variation={ButtonVariation.SECONDARY}
           size={ButtonSize.SMALL}

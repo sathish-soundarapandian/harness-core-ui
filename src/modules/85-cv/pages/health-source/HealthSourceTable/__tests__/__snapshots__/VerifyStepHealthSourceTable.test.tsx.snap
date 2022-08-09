@@ -122,9 +122,13 @@ exports[`Verify VerifyStepHealthSourceTable should render with isRunTimeInput fa
             <div
               class="StyledProps--font StyledProps--main header"
             >
-              Stackdriver
               <div
-                class="StyledProps--font StyledProps--main"
+                class="tableType"
+              >
+                Stackdriver
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--flex"
               >
                 <span
                   class="bp3-icon bp3-icon-edit StyledProps--main link StyledProps--padding-small"
@@ -223,9 +227,13 @@ exports[`Verify VerifyStepHealthSourceTable should render with isRunTimeInput fa
             <div
               class="StyledProps--font StyledProps--main header"
             >
-              AppDynamics
               <div
-                class="StyledProps--font StyledProps--main"
+                class="tableType"
+              >
+                AppDynamics
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--flex"
               >
                 <span
                   class="bp3-icon bp3-icon-edit StyledProps--main link StyledProps--padding-small"
@@ -385,9 +393,13 @@ exports[`Verify VerifyStepHealthSourceTable should render with isRunTimeInput tr
             <div
               class="StyledProps--font StyledProps--main header"
             >
-              Stackdriver
               <div
-                class="StyledProps--font StyledProps--main"
+                class="tableType"
+              >
+                Stackdriver
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--flex"
               >
                 <span
                   class="bp3-icon bp3-icon-edit StyledProps--main link StyledProps--padding-small"
@@ -486,9 +498,13 @@ exports[`Verify VerifyStepHealthSourceTable should render with isRunTimeInput tr
             <div
               class="StyledProps--font StyledProps--main header"
             >
-              AppDynamics
               <div
-                class="StyledProps--font StyledProps--main"
+                class="tableType"
+              >
+                AppDynamics
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main StyledProps--flex"
               >
                 <span
                   class="bp3-icon bp3-icon-edit StyledProps--main link StyledProps--padding-small"

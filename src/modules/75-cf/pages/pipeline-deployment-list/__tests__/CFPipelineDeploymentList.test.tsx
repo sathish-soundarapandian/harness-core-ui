@@ -21,7 +21,7 @@ import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mo
 import { getMockFor_useGetPipeline } from '@pipeline/components/RunPipelineModal/__tests__/mocks'
 import executionList from '@pipeline/pages/execution-list/__mocks__/execution-list.json'
 import { useGetListOfExecutions } from 'services/pipeline-ng'
-import CIPipelineDeploymentList from '../CFPipelineDeploymentList'
+import CFPipelineDeploymentList from '../CFPipelineDeploymentList'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder', () => ({ children }: { children: JSX.Element }) => (
   <div>{children}</div>
@@ -97,7 +97,7 @@ jest.mock('services/cd-ng', () => ({
 function ComponentWrapper(): React.ReactElement {
   return (
     <React.Fragment>
-      <CIPipelineDeploymentList />
+      <CFPipelineDeploymentList />
       <CurrentLocation />
     </React.Fragment>
   )
@@ -109,7 +109,7 @@ const TEST_PATH = routes.toPipelineDeploymentList({
   ...pipelineModuleParams
 })
 
-describe('<CIPipelineDeploymentList /> tests', () => {
+describe('<CFPipelineDeploymentList /> tests', () => {
   beforeAll(() => {
     jest.spyOn(global.Date, 'now').mockReturnValue(1603645966706)
   })
@@ -126,11 +126,11 @@ describe('<CIPipelineDeploymentList /> tests', () => {
           orgIdentifier: 'testOrg',
           projectIdentifier: 'test',
           pipelineIdentifier: 'testPip',
-          module: 'ci'
+          module: 'cf'
         }}
         defaultAppStoreValues={defaultAppStoreValues}
       >
-        <CIPipelineDeploymentList />
+        <CFPipelineDeploymentList />
       </TestWrapper>
     )
     await waitForElementToBeRemoved(() => screen.getByText('Loading, please wait...'))
@@ -154,7 +154,7 @@ describe('<CIPipelineDeploymentList /> tests', () => {
           orgIdentifier: 'testOrg',
           projectIdentifier: 'test',
           pipelineIdentifier: 'testPip',
-          module: 'ci'
+          module: 'cf'
         }}
         defaultAppStoreValues={defaultAppStoreValues}
       >
@@ -162,13 +162,19 @@ describe('<CIPipelineDeploymentList /> tests', () => {
       </TestWrapper>
     )
     await waitForElementToBeRemoved(() => screen.getByText('Loading, please wait...'))
+
+    expect(useGetListOfExecutions).toHaveBeenCalled()
+    expect(useGetListOfExecutions).not.toHaveBeenLastCalledWith(
+      expect.objectContaining({ queryParams: expect.objectContaining({ module: 'cf' }) })
+    )
+
     const runButton = await screen.findByText('pipeline.runAPipeline')
     userEvent.click(runButton)
     expect(getByTestId('location')).toMatchInlineSnapshot(`
       <div
         data-testid="location"
       >
-        /account/testAcc/ci/orgs/testOrg/projects/test/pipelines/testPip/pipeline-studio/?runPipeline=true
+        /account/testAcc/cf/orgs/testOrg/projects/test/pipelines/testPip/pipeline-studio/?runPipeline=true
       </div>
     `)
   })

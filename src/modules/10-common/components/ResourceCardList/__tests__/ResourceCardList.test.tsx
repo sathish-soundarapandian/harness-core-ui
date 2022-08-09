@@ -15,7 +15,6 @@ import { smtpConfig } from './mocks/mockData'
 
 jest.spyOn(cdngServices, 'useGetSmtpConfig').mockImplementation(() => ({ mutate: () => smtpConfig } as any))
 jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-  NG_TEMPLATES: true,
   NG_VARIABLES: true
 })
 

@@ -154,7 +154,6 @@ describe('Test Azure Infrastructure Spec behavior', () => {
     fireEvent.click(
       container.querySelector(`[class*="subscriptionId-select"] .bp3-input-action [data-icon="chevron-down"]`)!
     )
-    await waitFor(() => expect(container.querySelector('[class*="menuItemLabel"]')).not.toBeNull())
     fireEvent.click(getByText('subscription1'))
     await waitFor(() => {
       expect(CDNG.getAzureResourceGroupsBySubscriptionPromise).toBeCalled()
@@ -166,20 +165,7 @@ describe('Test Azure Infrastructure Spec behavior', () => {
     fireEvent.click(
       container.querySelector(`[class*="resourceGroup-select"] .bp3-input-action [data-icon="chevron-down"]`)!
     )
-    await waitFor(() => expect(container.querySelector('[class*="menuItemLabel"]')).not.toBeNull())
     fireEvent.click(getByText('rg1'))
-    await waitFor(() => {
-      expect(CDNG.getAzureClustersPromise).toBeCalled()
-    })
-
-    await waitFor(() => {
-      expect(queryByAttribute('name', container, 'cluster')).not.toBeDisabled()
-    })
-    fireEvent.click(container.querySelector(`[class*="cluster-select"] .bp3-input-action [data-icon="chevron-down"]`)!)
-    await waitFor(() => expect(container.querySelector('[class*="menuItemLabel"]')).not.toBeNull())
-    act(() => {
-      fireEvent.click(getByText('us-west2/abc'))
-    })
 
     await submitForm(getByText)
     await waitFor(() => {

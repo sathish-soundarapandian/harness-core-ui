@@ -215,9 +215,7 @@ describe('Test MonitoredServiceInputSetsTemplate', () => {
   })
 
   test('should validate getLabelByName', () => {
-    expect(getLabelByName('applicationName', str => str)).toEqual(
-      'cv.healthSource.connectors.AppDynamics.applicationLabel'
-    )
+    expect(getLabelByName('applicationName', str => str)).toEqual('cv.monitoringSources.appD.applicationName')
     expect(getLabelByName('category', str => str)).toEqual('Category for cv.monitoringSources.riskCategoryLabel')
     expect(getLabelByName('', str => str)).toEqual('')
   })

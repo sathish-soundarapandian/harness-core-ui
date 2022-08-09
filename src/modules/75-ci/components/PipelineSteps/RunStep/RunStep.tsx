@@ -111,7 +111,10 @@ export class RunStep extends PipelineStep<RunStepData> {
       this.getConnectorList.bind(this, ['Github', 'Gitlab', 'Bitbucket', 'Codecommit'])
     )
     this.invocationMap.set(infrastructureConRegEx, this.getConnectorList.bind(this, ['K8sCluster']))
-    this.invocationMap.set(serviceDepConRegEx, this.getConnectorList.bind(this, ['Gcp', 'Aws', 'DockerRegistry']))
+    this.invocationMap.set(
+      serviceDepConRegEx,
+      this.getConnectorList.bind(this, ['Gcp', 'Aws', 'DockerRegistry', 'Azure'])
+    )
   }
 
   protected type = StepType.Run
@@ -151,7 +154,7 @@ export class RunStep extends PipelineStep<RunStepData> {
     if (pipelineObj) {
       const obj = get(pipelineObj, path.replace('.spec.connectorRef', ''))
       if (obj.type === StepType.Run || obj.type === StepType.Plugin) {
-        return getConnectorSuggestions(params, ['Gcp', 'Aws', 'DockerRegistry'])
+        return getConnectorSuggestions(params, ['Gcp', 'Aws', 'DockerRegistry', 'Azure'])
       }
     }
     return []

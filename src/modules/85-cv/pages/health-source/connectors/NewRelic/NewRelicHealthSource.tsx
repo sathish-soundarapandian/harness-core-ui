@@ -17,12 +17,21 @@ import {
   SelectOption,
   Utils,
   useToaster,
-  Button
+  Button,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  MultiTypeInput
 } from '@wings-software/uicore'
+import { defaultTo } from 'lodash-es'
 import { PopoverInteractionKind } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useGetNewRelicApplications, MetricPackDTO, MetricPackValidationResponse } from 'services/cv'
+import {
+  useGetNewRelicApplications,
+  MetricPackDTO,
+  MetricPackValidationResponse,
+  TimeSeriesMetricPackDTO
+} from 'services/cv'
 import { Connectors } from '@connectors/constants'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useStrings } from 'framework/strings'
@@ -44,13 +53,16 @@ import {
   createNewRelicFormData,
   createNewRelicPayloadBeforeSubmission,
   initializeNonCustomFields,
+  setApplicationIfConnectorIsInput,
   setNewRelicApplication,
+  shouldRunValidation,
   validateMapping
 } from './NewRelicHealthSource.utils'
 import CustomMetric from '../../common/CustomMetric/CustomMetric'
 import MetricPackCustom from '../MetricPackCustom'
 import NewRelicCustomMetricForm from './components/NewRelicCustomMetricForm/NewRelicCustomMetricForm'
 import { initNewRelicCustomFormValue } from './components/NewRelicCustomMetricForm/NewRelicCustomMetricForm.utils'
+import { getTypeOfInput, setAppDynamicsApplication } from '../AppDynamics/AppDHealthSource.utils'
 import css from './NewrelicMonitoredSource.module.scss'
 
 const guid = Utils.randomId()
@@ -58,11 +70,15 @@ const guid = Utils.randomId()
 export default function NewRelicHealthSource({
   data: newRelicData,
   onSubmit,
-  onPrevious
+  onPrevious,
+  isTemplate,
+  expressions
 }: {
   data: any
   onSubmit: (healthSourcePayload: any) => void
   onPrevious: () => void
+  isTemplate?: boolean
+  expressions?: string[]
 }): JSX.Element {
   const { getString } = useStrings()
   const { showError } = useToaster()
@@ -78,8 +94,9 @@ export default function NewRelicHealthSource({
   })
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const connectorIdentifier = newRelicData?.connectorRef?.connector?.identifier || newRelicData?.connectorRef
   const [showCustomMetric, setShowCustomMetric] = useState(!!Array.from(newRelicData?.mappedServicesAndEnvs)?.length)
+  const connectorIdentifier = (newRelicData?.connectorRef?.value || newRelicData?.connectorRef) as string
+  const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED
 
   const {
     createdMetrics,
@@ -96,13 +113,15 @@ export default function NewRelicHealthSource({
     mappedServicesAndEnvs: showCustomMetric ? newRelicData?.mappedServicesAndEnvs : new Map()
   })
 
-  const [nonCustomFeilds, setNonCustomFeilds] = useState(initializeNonCustomFields(newRelicData))
+  const [nonCustomFeilds, setNonCustomFeilds] = useState(() => initializeNonCustomFields(newRelicData))
 
   const {
     data: applicationsData,
     loading: applicationLoading,
-    error: applicationError
+    error: applicationError,
+    refetch: fetchApplication
   } = useGetNewRelicApplications({
+    lazy: true,
     queryParams: {
       accountId,
       connectorIdentifier,
@@ -114,6 +133,12 @@ export default function NewRelicHealthSource({
       tracingId: guid
     }
   })
+
+  useEffect(() => {
+    if (!isConnectorRuntimeOrExpression) {
+      fetchApplication()
+    }
+  }, [fetchApplication, isConnectorRuntimeOrExpression])
 
   const onValidate = async (appName: string, appId: string, metricObject: { [key: string]: any }): Promise<void> => {
     setNewRelicValidation({ status: StatusOfValidation.IN_PROGRESS, result: [] })
@@ -150,12 +175,19 @@ export default function NewRelicHealthSource({
     }
   }, [mappedMetrics, selectedMetric])
 
+  const runValidation = useMemo(
+    () =>
+      shouldRunValidation({
+        isEdit: newRelicData.isEdit,
+        hasMetricPacks: Boolean(selectedMetricPacks.length),
+        validationStatus: newRelicValidation.status,
+        isConnectorRuntimeOrExpression
+      }),
+    [newRelicData.isEdit, selectedMetricPacks.length, newRelicValidation.status, isConnectorRuntimeOrExpression]
+  )
+
   useEffect(() => {
-    if (
-      newRelicData.isEdit &&
-      selectedMetricPacks.length &&
-      newRelicValidation.status !== StatusOfValidation.IN_PROGRESS
-    ) {
+    if (runValidation) {
       onValidate(
         newRelicData?.applicationName,
         newRelicData?.applicationId,
@@ -167,12 +199,33 @@ export default function NewRelicHealthSource({
 
   const initPayload = useMemo(
     () => createNewRelicFormData(newRelicData, mappedMetrics, selectedMetric, nonCustomFeilds, showCustomMetric),
-    [newRelicData, mappedMetrics, selectedMetric, nonCustomFeilds, showCustomMetric]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [newRelicData, mappedMetrics, selectedMetric, nonCustomFeilds, showCustomMetric, isTemplate]
   )
 
   if (applicationError) {
     showError(getErrorMessage(applicationError))
   }
+
+  useEffect(() => {
+    if (!newRelicData.isEdit) {
+      setApplicationIfConnectorIsInput(isConnectorRuntimeOrExpression, nonCustomFeilds, setNonCustomFeilds)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const [inputType, setInputType] = React.useState<MultiTypeInputType | undefined>(() =>
+    getTypeOfInput(newRelicData?.newRelicApplication)
+  )
+
+  React.useEffect(() => {
+    if (
+      getTypeOfInput(connectorIdentifier) !== MultiTypeInputType.FIXED &&
+      getTypeOfInput(nonCustomFeilds.newRelicApplication) !== MultiTypeInputType.FIXED
+    ) {
+      setInputType(getTypeOfInput(nonCustomFeilds.newRelicApplication))
+    }
+  }, [connectorIdentifier, nonCustomFeilds.newRelicApplication])
 
   return (
     <Formik
@@ -207,38 +260,83 @@ export default function NewRelicHealthSource({
             <CardWithOuterTitle title={'Application'}>
               <Layout.Horizontal spacing={'large'} className={css.horizontalCenterAlign}>
                 <Container margin={{ bottom: 'small' }} width={'300px'} color={Color.BLACK}>
-                  <FormInput.Select
-                    className={css.applicationDropdown}
-                    onChange={item => {
-                      setNonCustomFeilds({
-                        ...nonCustomFeilds,
-                        newRelicApplication: { label: item?.label, value: item?.value as string }
-                      })
-                      onValidate(
-                        formik?.values?.newRelicApplication?.label,
-                        formik?.values?.newRelicApplication?.value,
-                        formik.values.metricData
-                      )
-                    }}
-                    value={setNewRelicApplication(formik?.values?.newRelicApplication?.label, applicationOptions)}
-                    name={'newRelicApplication'}
-                    placeholder={
-                      applicationLoading
-                        ? getString('loading')
-                        : getString('cv.healthSource.connectors.AppDynamics.applicationPlaceholder')
-                    }
-                    items={applicationOptions}
-                    label={getString('cv.healthSource.connectors.NewRelic.applicationLabel')}
-                    {...getInputGroupProps(() =>
-                      setNonCustomFeilds({
-                        ...nonCustomFeilds,
-                        newRelicApplication: { label: '', value: '' }
-                      })
-                    )}
-                  />
+                  {isTemplate ? (
+                    <>
+                      <Text color={Color.BLACK} margin={{ bottom: 'small' }}>
+                        {getString('cv.healthSource.connectors.NewRelic.applicationLabel')}
+                      </Text>
+                      <MultiTypeInput
+                        key={inputType}
+                        name={'newRelicApplication'}
+                        selectProps={{
+                          items: applicationOptions
+                        }}
+                        expressions={expressions}
+                        allowableTypes={
+                          isConnectorRuntimeOrExpression
+                            ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+                            : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+                        }
+                        multitypeInputValue={inputType}
+                        value={setAppDynamicsApplication(
+                          formik.values?.newRelicApplication,
+                          applicationOptions,
+                          inputType
+                        )}
+                        onChange={(item, _valueType, type) => {
+                          if (type === MultiTypeInputType.FIXED) {
+                            setNonCustomFeilds({
+                              ...nonCustomFeilds,
+                              newRelicApplication: { label: item as string, value: item as string }
+                            })
+                            onValidate(
+                              formik?.values?.newRelicApplication?.label,
+                              formik?.values?.newRelicApplication?.value,
+                              formik.values.metricData
+                            )
+                          } else {
+                            setNonCustomFeilds({
+                              ...nonCustomFeilds,
+                              newRelicApplication: defaultTo(item, '') as string
+                            })
+                          }
+                        }}
+                      />
+                    </>
+                  ) : (
+                    <FormInput.Select
+                      className={css.applicationDropdown}
+                      onChange={item => {
+                        setNonCustomFeilds({
+                          ...nonCustomFeilds,
+                          newRelicApplication: { label: item?.label, value: item?.value as string }
+                        })
+                        onValidate(
+                          formik?.values?.newRelicApplication?.label,
+                          formik?.values?.newRelicApplication?.value,
+                          formik.values.metricData
+                        )
+                      }}
+                      value={setNewRelicApplication(formik?.values?.newRelicApplication?.label, applicationOptions)}
+                      name={'newRelicApplication'}
+                      placeholder={
+                        applicationLoading
+                          ? getString('loading')
+                          : getString('cv.healthSource.connectors.AppDynamics.applicationPlaceholder')
+                      }
+                      items={applicationOptions}
+                      label={getString('cv.healthSource.connectors.NewRelic.applicationLabel')}
+                      {...getInputGroupProps(() =>
+                        setNonCustomFeilds({
+                          ...nonCustomFeilds,
+                          newRelicApplication: { label: '', value: '' }
+                        })
+                      )}
+                    />
+                  )}
                 </Container>
                 <Container width={'300px'} color={Color.BLACK}>
-                  {formik.values?.newRelicApplication.label && formik.values.newRelicApplication.value && (
+                  {formik.values?.newRelicApplication?.label && formik.values.newRelicApplication?.value && (
                     <ValidationStatus
                       validationStatus={newRelicValidation?.status as StatusOfValidation}
                       onClick={
@@ -271,7 +369,9 @@ export default function NewRelicHealthSource({
                     }}
                     metricPackValue={formik.values.metricPacks}
                     metricDataValue={formik.values.metricData}
-                    setSelectedMetricPacks={setSelectedMetricPacks}
+                    setSelectedMetricPacks={
+                      setSelectedMetricPacks as React.Dispatch<React.SetStateAction<TimeSeriesMetricPackDTO[]>>
+                    }
                     connector={HealthSoureSupportedConnectorTypes.NEW_RELIC}
                     onChange={async metricValue => {
                       setNonCustomFeilds({
@@ -319,6 +419,8 @@ export default function NewRelicHealthSource({
                   selectedMetric={selectedMetric}
                   formikValues={formik.values}
                   formikSetField={formik.setFieldValue}
+                  isTemplate={isTemplate}
+                  expressions={expressions}
                 />
               </CustomMetric>
             ) : (

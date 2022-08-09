@@ -28,11 +28,6 @@ export const clearRuntimeInputValue = (template: PipelineInfoConfig): PipelineIn
   )
 }
 
-export const setupMode = {
-  PROPAGATE: 'PROPAGATE',
-  DIFFERENT: 'DIFFERENT'
-}
-
 export const isFieldRuntime = (fieldPath: string, template?: ServiceSpec): boolean =>
   getMultiTypeFromValue(get(template, fieldPath)) === MultiTypeInputType.RUNTIME
 

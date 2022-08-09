@@ -8,7 +8,8 @@
 import React from 'react'
 import { StepWizard } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { getIconAndTitleByDeploymentType } from '../ConfigFilesHelper'
+import { deploymentTypeIcon, deploymentTypeLabel, ServiceTypes } from '@pipeline/utils/DeploymentTypeUtils'
+import type { ServiceDefinition } from 'services/cd-ng'
 import ConfigFilesStore from './ConfigFilesSteps/ConfigFilesStore'
 
 import css from './ConfigFilesWizard.module.scss'
@@ -39,15 +40,16 @@ export function ConfigFilesWizard({
     }
   }
 
-  const ConfigWizard = getIconAndTitleByDeploymentType(deploymentType)
-
   return (
     <StepWizard
       className={css.configFileWizard}
       onStepChange={onStepChange}
-      icon={ConfigWizard.icon}
+      icon={deploymentTypeIcon[deploymentType as ServiceTypes]}
       iconProps={{ size: 50 }}
-      title={`${ConfigWizard.label} ${getString('pipeline.configFiles.title', { type: 'Source' })}`}
+      title={`${getString(deploymentTypeLabel[deploymentType as ServiceDefinition['type']])} ${getString(
+        'pipeline.configFiles.title',
+        { type: 'Source' }
+      )}`}
       initialStep={1}
     >
       <ConfigFilesStore

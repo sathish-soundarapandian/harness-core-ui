@@ -16,7 +16,7 @@ import {
   LastExecutionCell,
   MenuCell,
   PipelineNameCell,
-  RecentTenExecutionsCell,
+  RecentExecutionsCell,
   LastModifiedCell
 } from './PipelineListCells'
 import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE } from '../PipelineListUtils'
@@ -71,15 +71,15 @@ export function PipelineListTable({
       {
         Header: getString('pipeline.codeSource'),
         accessor: 'storeType',
-        width: '10%',
+        width: '12%',
         disableSortBy: true,
         Cell: CodeSourceCell
       },
       {
-        Header: getString('pipeline.recentTenExecutions').toUpperCase(),
-        accessor: 'recentTenExecutions',
-        width: '25%',
-        Cell: RecentTenExecutionsCell,
+        Header: getString('pipeline.recentExecutions').toUpperCase(),
+        accessor: 'recentExecutions',
+        width: '28%',
+        Cell: RecentExecutionsCell,
         disableSortBy: true
       },
       {
@@ -92,14 +92,14 @@ export function PipelineListTable({
       {
         Header: getString('pipeline.lastModified').toUpperCase(),
         accessor: 'lastUpdatedAt',
-        width: '15%',
+        width: '12%',
         Cell: LastModifiedCell,
         serverSortProps: getServerSortProps('lastUpdatedAt')
       },
       {
         Header: '',
         accessor: 'menu',
-        width: '5%',
+        width: '3%',
         Cell: MenuCell,
         disableSortBy: true,
         onDeletePipeline,
@@ -125,6 +125,7 @@ export function PipelineListTable({
           : undefined
       }
       sortable
+      getRowClassName={() => css.tableRow}
     />
   )
 }

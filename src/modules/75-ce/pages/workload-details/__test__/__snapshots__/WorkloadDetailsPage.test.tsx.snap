@@ -359,7 +359,7 @@ exports[`test cases for Workload details Page should be able to render the detai
               class="StyledProps--font StyledProps--main mainCard"
             >
               <p
-                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small"
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-small-bold"
               >
                 ce.recommendation.sideNavText
               </p>
@@ -659,8 +659,8 @@ exports[`test cases for Workload details Page should be able to render the detai
           class="StyledProps--font StyledProps--main StyledProps--background-white"
         >
           <div
-            class="Layout--horizontal StyledProps--main"
-            style="align-items: flex-end;"
+            class="Layout--horizontal StyledProps--main StyledProps--padding-left-xlarge StyledProps--padding-top-xlarge"
+            style="align-items: center;"
           >
             <span
               style="flex-grow: 1;"

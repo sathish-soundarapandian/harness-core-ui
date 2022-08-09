@@ -25,6 +25,7 @@ import * as Yup from 'yup'
 import { get, set } from 'lodash-es'
 import type { ConnectorConfigDTO, StoreConfigWrapper } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import {
   ConnectorTypes,
   fileTypes,
@@ -56,8 +57,9 @@ export function HarnessOption({
     if (specValues) {
       if (specValues.files?.length) {
         if (
-          getMultiTypeFromValue(specValues.files, [MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED], true) ===
-          MultiTypeInputType.RUNTIME
+          isMultiTypeRuntime(
+            getMultiTypeFromValue(specValues.files, [MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED], true)
+          )
         ) {
           return {
             fileType: fileTypes.FILE_STORE,
@@ -70,8 +72,9 @@ export function HarnessOption({
         }
       } else {
         if (
-          getMultiTypeFromValue(specValues.files, [MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED], true) ===
-          MultiTypeInputType.RUNTIME
+          isMultiTypeRuntime(
+            getMultiTypeFromValue(specValues.files, [MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED], true)
+          )
         ) {
           return {
             fileType: fileTypes.ENCRYPTED,
@@ -98,8 +101,9 @@ export function HarnessOption({
         }
       }
       if (
-        getMultiTypeFromValue(formData.file, [MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED], true) ===
-        MultiTypeInputType.RUNTIME
+        isMultiTypeRuntime(
+          getMultiTypeFromValue(formData.file, [MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED], true)
+        )
       ) {
         set(startupScript, 'spec.files', formData.file)
       }
@@ -112,8 +116,9 @@ export function HarnessOption({
         }
       }
       if (
-        getMultiTypeFromValue(formData.file, [MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED], true) ===
-        MultiTypeInputType.RUNTIME
+        isMultiTypeRuntime(
+          getMultiTypeFromValue(formData.file, [MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED], true)
+        )
       ) {
         set(startupScript, 'spec.secretFiles', formData.file)
       }

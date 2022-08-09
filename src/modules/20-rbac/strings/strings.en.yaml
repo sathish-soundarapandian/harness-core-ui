@@ -148,8 +148,11 @@ userDetails:
     delinkText: Do you want to delink the Harness User Group '{{name}}' from '{{ssoName}}'
     selectSSOSetting: Search SSO Settings
     groupNameLabel: Group name
+    groupSearchLabel: LDAP Group Search Query
+    groupSearchInfo: Only 10 queries will be fetched. Please be specific with your search.
     retainMembersLabel: Retain all members in the user group
     btnDisabledTooltipText: New members cannot be added to SSOLinked UserGroups manually, They will be synced automatically by SSO Provider GroupDetails
+    ldap: 'LDAP: '
     saml: 'SAML: '
     group: 'Group: '
     validation:
@@ -227,10 +230,6 @@ unableToEditInheritedMembership: 'Members managed in {{parentScope}} scope'
 manageInheritedGroupText: 'Unable to {{action}} this User Group because it is managed at {{parentScope}} level'
 unableToEditInheritedMembershipDetailed: 'This group is managed at {{parentScope}} level. Its user membership and notification settings can not be modified at {{childScope}} level.'
 linkToOriginalUserGroup: Click here to modify settings
-copyGroup:
-  title: 'Copy group: {{name}}'
-  success: User group copied successfully
-  copyToProjects: Copy to project(s)
 scopeItems:
   accountOnly: Account only
   orgOnly: Organization only

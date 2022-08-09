@@ -14,14 +14,14 @@ const getString = (key: StringKeys): string => key
 
 describe('Test util methods', () => {
   test('Test getCategoryItems method', () => {
-    let triggerCategories = getCategoryItems(getString, false).categories
+    let triggerCategories = getCategoryItems(getString, true, false).categories
     expect(triggerCategories.length).toBe(5)
     let webhookTriggerCategories = triggerCategories.find((item: CategoryInterface) => item.categoryValue === 'Webhook')
     expect(webhookTriggerCategories).toBeDefined()
     expect(webhookTriggerCategories?.items?.length).toBe(5)
 
     // with AZURE_REPO_CONNECTOR FF enabled
-    triggerCategories = getCategoryItems(getString, true).categories
+    triggerCategories = getCategoryItems(getString, true, true).categories
     expect(triggerCategories.length).toBe(5)
     webhookTriggerCategories = triggerCategories.find((item: CategoryInterface) => item.categoryValue === 'Webhook')
     expect(webhookTriggerCategories).toBeDefined()

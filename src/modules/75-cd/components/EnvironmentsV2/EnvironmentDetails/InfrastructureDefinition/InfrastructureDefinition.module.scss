@@ -12,7 +12,21 @@
 }
 
 .dialogStyles {
-  width: 1184px !important;
+  :global {
+    .ModalDialog--body {
+      padding: 0 !important;
+    }
+  }
+
+  overflow: hidden;
+}
+
+.modalFooter {
+  position: sticky;
+  bottom: 0;
+  background-color: var(--white) !important;
+  z-index: 11;
+  border-radius: 6px !important;
 }
 
 .nameIdCard {
@@ -22,12 +36,11 @@
 
 .yamlBuilder {
   position: relative;
-  padding: var(--spacing-large);
 
   .buttonWrapper {
     position: absolute;
-    top: var(--spacing-xxlarge);
-    right: var(--spacing-xxxlarge);
+    top: var(--spacing-medium);
+    right: var(--spacing-large);
     display: flex;
     column-gap: var(--spacing-large);
     align-items: center;

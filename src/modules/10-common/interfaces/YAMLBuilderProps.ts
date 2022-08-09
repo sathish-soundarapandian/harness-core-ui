@@ -41,7 +41,7 @@ export interface YamlBuilderProps {
   hideErrorMesageOnReadOnlyMode?: boolean
   onExpressionTrigger?: (yamlPath: string, currentExpression: string) => Promise<CompletionItemInterface[]>
   schema?: Record<string, string | any>
-  onEnableEditMode?: () => void
+  onEnableEditMode?: (didConfirm?: boolean) => void
   theme?: Theme
   yamlSanityConfig?: YamlSanityConfig
   /* Snippet section related props */
@@ -53,6 +53,7 @@ export interface YamlBuilderProps {
   onChange?: (isEditorDirty: boolean) => void
   onErrorCallback?: (error: Record<string, any>) => void
   renderCustomHeader?: () => React.ReactElement | null
+  openDialogProp?: () => void
 }
 
 export interface CompletionItemInterface {

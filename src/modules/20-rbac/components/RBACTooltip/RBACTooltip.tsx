@@ -25,10 +25,11 @@ interface Props {
   permission: PermissionIdentifier
   resourceType: ResourceType
   resourceScope?: ResourceScope
+  resourceTypeLabel?: string
   className?: string
 }
 
-const RBACTooltip: React.FC<Props> = ({ permission, resourceType, resourceScope, className }) => {
+const RBACTooltip: React.FC<Props> = ({ permission, resourceType, resourceScope, resourceTypeLabel, className }) => {
   const { getString } = useStrings()
   const { selectedProject } = useAppStore()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -72,7 +73,7 @@ const RBACTooltip: React.FC<Props> = ({ permission, resourceType, resourceScope,
       <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_800}>
         {`${getString('rbac.youAreNotAuthorizedTo')} `}
         <span className={css.textToLowercase}>{resourceTypeHandler?.permissionLabels?.[permission] || permission}</span>
-        <span>{` ${resourceTypeHandler?.label && getString(resourceTypeHandler?.label)}.`}</span>
+        <span>{` ${resourceTypeHandler?.label ? getString(resourceTypeHandler?.label) : resourceTypeLabel}.`}</span>
       </Text>
       <Text font={{ size: 'small' }} color={Color.GREY_800}>
         {getString('rbac.youAreMissingTheFollowingPermission')}
@@ -80,7 +81,7 @@ const RBACTooltip: React.FC<Props> = ({ permission, resourceType, resourceScope,
       <Text font={{ size: 'small' }} color={Color.GREY_800}>
         {'"'}
         {resourceTypeHandler?.permissionLabels?.[permission] || permission}
-        <span>{` ${resourceTypeHandler?.label && getString(resourceTypeHandler?.label)}`}</span>
+        <span>{` ${resourceTypeHandler?.label ? getString(resourceTypeHandler?.label) : resourceTypeLabel}`}</span>
         {'"'}
         <span>{` ${getString('rbac.in')} ${getScopeSuffix()}`}</span>
       </Text>

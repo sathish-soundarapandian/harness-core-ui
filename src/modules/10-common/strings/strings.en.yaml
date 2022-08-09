@@ -672,6 +672,7 @@ environmentCreated: Environment created successfully
 environmentUpdated: Environment updated successfully
 discard: Discard
 default: Default
+searchByNamePlaceholder: Search by name
 searchPlaceholder: Search by name or Id
 monthly: Monthly
 perMonth: /month
@@ -705,6 +706,7 @@ module:
   ce: CCM
   cv: CV
   core: CORE
+  chaos: CHAOS
   pms: PMS
   templateService: TEMPLATESERVICE
   sto: STO
@@ -741,6 +743,7 @@ feature:
     planMessage: is supported in {{plan}} plan(s).
 repositoryName: Repository Name
 mostActiveServices: Most active services
+monitoredServices: Monitored Services
 allErrors: All Errors
 connectivityErrors: Connectivity Errors
 apply: '{{ $.filters.apply }}'
@@ -915,6 +918,7 @@ download: Download
 gitOps: GitOps
 showHarnessManagedError: Harness Managed Resource cannot be edited
 contentRequired: Content is required
+defaultSettings: Default Settings
 oAuthLabel: OAuth
 import: Import
 importEntityFromGit: Import {{resourceType}} From Git
@@ -935,4 +939,31 @@ cardNumber: Card number
 perDeveloper: per developer
 triggerName: Trigger Name
 versionLabel: Version Label
+true: 'true'
+false: 'false'
+saving: 'Saving'
 executedBy: Executed By
+selectWorkload: Select Workload
+
+# Onboarding
+getStarted:
+  firstPipeline: 'Let’s get you started with your first Pipeline!'
+  buildPipeline: Build Pipeline
+  quicklyCreate: Quickly create a Pipeline using your own codebase and our intuitive visual editor.
+  selectArtifact: Select Artifact
+  selectInfra: Select Infrastructure
+  fetchingRepos: Please wait while we fetch repositories...
+  plsChoose: 'Please choose {{field}}'
+  fieldIsMissing: '{{field}} is missing'
+  authMethod: Select your Authentication method
+  accessTokenLabel: Access Token
+  codeRepoLabel: Code repository
+  codebaseHelptext: Harness will clone your codebase to your build infrastructure at Pipeline runtime.
+  searchRepo: Search Repository
+  learnMoreAboutPermissions: Learn more about the required permissions
+  verifyConnection: Verify connection before you can continue
+  appPassword: Application Password
+  apiUrlLabel: API URL
+  authMethodLabel: Authentication method
+  specificDelegate: Use from a specific harness Delegate
+selectYourRepo: Select your Repository

@@ -21,7 +21,7 @@ import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import { SecretRouteDestinations } from '@secrets/RouteDestinations'
 import { UserLabel } from '@common/components'
 import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import routes from '@common/RouteDefinitions'
 import { RouteWithLayout } from '@common/router'
@@ -40,6 +40,7 @@ import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { String as LocaleString } from 'framework/strings'
+import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
 import AuditTrailFactory from '@audit-trail/factories/AuditTrailFactory'
 
 const STOSideNavProps: SidebarContext = {
@@ -136,6 +137,7 @@ const RedirectToProjectOverviewPage = (): React.ReactElement => {
 
 const RouteDestinations: React.FC = () => {
   const isV2 = useFeatureFlag(FeatureFlag.STO_API_V2)
+  const { NG_SETTINGS } = useFeatureFlags()
   const RemoteSTOApp = lazy(() => (isV2 ? import(`stoV2/App`) : import(`sto/App`)))
 
   return (
@@ -202,6 +204,13 @@ const RouteDestinations: React.FC = () => {
           // licenseRedirectData={licenseRedirectData}
           sidebarProps={STOSideNavProps}
         />
+        {NG_SETTINGS && (
+          <DefaultSettingsRouteDestinations
+            moduleParams={moduleParams}
+            // licenseRedirectData={licenseRedirectData}
+            sidebarProps={STOSideNavProps}
+          />
+        )}
         <SecretRouteDestinations
           moduleParams={moduleParams}
           // licenseRedirectData={licenseRedirectData}

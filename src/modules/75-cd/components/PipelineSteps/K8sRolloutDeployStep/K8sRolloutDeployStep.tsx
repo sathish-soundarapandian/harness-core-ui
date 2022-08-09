@@ -303,6 +303,7 @@ export class K8RolloutDeployStep extends PipelineStep<K8RolloutDeployData> {
   protected stepIcon: IconName = 'rolling'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.K8sRollingDeploy'
   protected isHarnessSpecific = true
+  protected referenceId = 'rollingDeploymentStep'
 
   protected defaultValues: K8RolloutDeployData = {
     identifier: '',

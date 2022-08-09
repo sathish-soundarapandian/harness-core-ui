@@ -131,7 +131,7 @@ export class Dependency extends PipelineStep<DependencyData> {
     if (pipelineObj) {
       const obj = get(pipelineObj, path.replace('.spec.connectorRef', ''))
       if (obj.type === StepType.Dependency) {
-        return getConnectorSuggestions(params, ['Gcp', 'Aws', 'DockerRegistry'])
+        return getConnectorSuggestions(params, ['Gcp', 'Aws', 'DockerRegistry', 'Azure'])
       }
     }
     return []

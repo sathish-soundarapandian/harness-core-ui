@@ -9,7 +9,7 @@ import { cloneDeep, isEmpty } from 'lodash-es'
 import type { SelectOption } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
 import type { UpdatedHealthSource } from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
-import type { DynatraceHealthSourceSpec, DynatraceServiceDTO } from 'services/cv'
+import type { DynatraceHealthSourceSpec, DynatraceServiceDTO, TimeSeriesMetricPackDTO } from 'services/cv'
 import type {
   DynatraceFormDataInterface,
   DynatraceMetricData,
@@ -44,7 +44,7 @@ export const mapDynatraceMetricDataToHealthSource = (dynatraceMetricData: Dynatr
             }
           : {}
       })
-      .filter(item => !isEmpty(item)),
+      .filter(item => !isEmpty(item)) as TimeSeriesMetricPackDTO[],
     metricDefinitions: [],
     serviceMethodIds: dynatraceMetricData.serviceMethods
   }

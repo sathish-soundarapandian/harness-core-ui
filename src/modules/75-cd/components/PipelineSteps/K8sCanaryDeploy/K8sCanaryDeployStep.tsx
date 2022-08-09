@@ -312,7 +312,7 @@ export class K8sCanaryDeployStep extends PipelineStep<K8sCanaryDeployData> {
 
   protected type = StepType.K8sCanaryDeploy
   protected stepName = 'K8s Canary Deploy'
-
+  protected referenceId = 'canaryDeploymentStep'
   protected stepIcon: IconName = 'canary'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.K8sCanaryDeploy'
   protected isHarnessSpecific = true

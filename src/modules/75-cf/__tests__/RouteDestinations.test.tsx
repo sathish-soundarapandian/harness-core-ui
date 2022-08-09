@@ -21,7 +21,8 @@ describe('RouteDestinations', () => {
   const defaultFlagValues: Partial<Record<FeatureFlag, boolean>> = {
     FF_PIPELINE: true,
     FFM_1512: false,
-    FFM_1827: false
+    FFM_1827: false,
+    NG_SETTINGS: false
   }
 
   const renderRoutes = (flagOverrides: Partial<Record<FeatureFlag, boolean>> = {}): ReactElement[] => {

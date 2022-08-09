@@ -14,6 +14,8 @@ import {
   GitlabPRTriggerActions
 } from '../pages/get-started-with-ci/InfraProvisioningWizard/Constants'
 
+export const DELEGATE_SELECTOR_FOR_HARNESS_PROVISIONED_DELEGATE = 'harness-kubernetes-delegate'
+
 const OAuthConnectorPayload: ConnectorRequestBody = {
   connector: {
     name: '',
@@ -35,6 +37,7 @@ const OAuthConnectorPayload: ConnectorRequestBody = {
           tokenRef: ''
         }
       },
+      delegateSelectors: [DELEGATE_SELECTOR_FOR_HARNESS_PROVISIONED_DELEGATE],
       executeOnDelegate: true,
       type: 'Account'
     }

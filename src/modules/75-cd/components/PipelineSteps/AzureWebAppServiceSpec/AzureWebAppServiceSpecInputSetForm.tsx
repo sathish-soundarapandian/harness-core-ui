@@ -23,8 +23,7 @@ import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/Artifac
 import { KubernetesArtifacts } from '../K8sServiceSpec/KubernetesArtifacts/KubernetesArtifacts'
 import { AzureWebAppConfig } from './RuntimeAzureWebAppConfig/RuntimeAzureWebAppConfig'
 import { AzureWebAppConfigType, AzureWebAppServiceSpecFormProps } from './AzureWebAppServiceSpecInterface.types'
-//todo: css
-import css from '../K8sServiceSpec/K8sServiceSpec.module.scss'
+import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 const AzureWebAppServiceSpecInputSet = (props: AzureWebAppServiceSpecFormProps): React.ReactElement => {
   const {

@@ -7,9 +7,20 @@
 
 import React from 'react'
 import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
-import { Container, Icon, Checkbox, Layout, Text, FlexExpander } from '@wings-software/uicore'
+import {
+  Container,
+  Icon,
+  Checkbox,
+  Layout,
+  Text,
+  FlexExpander,
+  ExpandingSearchInput,
+  Button,
+  ButtonVariation
+} from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
+import type { QlceViewFieldInputInput } from 'services/ce/services'
 import type { Column } from './Columns'
 import css from './ColumnSelector.module.scss'
 
@@ -19,11 +30,23 @@ interface ColumnSelectorProps {
   onChange: (cols: Column[]) => void
   openDownloadCSVModal?: () => void
   allowExportAsCSV?: boolean
+  groupBy: QlceViewFieldInputInput
+  setGridSearchParam?: React.Dispatch<React.SetStateAction<string>>
+  isPerspectiveDetailsPage?: boolean
 }
 
 const ColumSelector = (props: ColumnSelectorProps): JSX.Element => {
   const { getString } = useStrings()
-  const { columns, selectedColumns, onChange, openDownloadCSVModal, allowExportAsCSV = false } = props
+  const {
+    columns,
+    selectedColumns,
+    onChange,
+    openDownloadCSVModal,
+    allowExportAsCSV = false,
+    setGridSearchParam,
+    groupBy,
+    isPerspectiveDetailsPage
+  } = props
 
   const handleSelectOne = (column: Column): void => {
     const originalPosition = columns.indexOf(column)
@@ -37,20 +60,30 @@ const ColumSelector = (props: ColumnSelectorProps): JSX.Element => {
   }
 
   return (
-    <Layout.Horizontal style={{ alignItems: 'flex-end' }}>
-      {allowExportAsCSV ? (
+    <Layout.Horizontal style={{ alignItems: 'center' }} padding={{ left: 'xlarge', top: 'xlarge' }}>
+      {isPerspectiveDetailsPage ? (
         <Text
-          onClick={openDownloadCSVModal}
-          font={{ variation: FontVariation.SMALL_BOLD }}
-          rightIcon="launch"
-          color={Color.PRIMARY_7}
-          rightIconProps={{ size: 12, color: Color.PRIMARY_7 }}
-          className={css.exportCsvBtn}
+          font={{ variation: FontVariation.H6 }}
+          color={Color.GREY_400}
+          padding={{ right: 'large' }}
+          border={{ right: true }}
         >
-          {getString('ce.perspectives.exportCSV')}
+          {getString('ce.perspectives.groupByByCost', { groupBy: groupBy.fieldName })}
         </Text>
       ) : null}
+      {allowExportAsCSV ? (
+        <Button
+          onClick={openDownloadCSVModal}
+          text={getString('ce.perspectives.exportCSV')}
+          rightIcon="launch"
+          iconProps={{ size: 12 }}
+          variation={ButtonVariation.LINK}
+        />
+      ) : null}
       <FlexExpander />
+      {isPerspectiveDetailsPage ? (
+        <ExpandingSearchInput onChange={setGridSearchParam} alwaysExpanded width={230} className={css.search} />
+      ) : null}
       <Popover
         interactionKind={PopoverInteractionKind.CLICK}
         position={Position.BOTTOM_LEFT}

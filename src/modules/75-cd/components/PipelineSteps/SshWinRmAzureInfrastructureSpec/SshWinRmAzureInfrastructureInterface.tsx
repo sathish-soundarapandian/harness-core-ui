@@ -26,7 +26,6 @@ export const getValue = (item: { label?: string; value?: string } | string | any
 
 export function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({
-    sshKey: Yup.object().required(getString('validation.password')),
     connectorRef: getConnectorSchema(getString),
     subscriptionId: Yup.lazy((value): Yup.Schema<unknown> => {
       /* istanbul ignore else */ if (typeof value === 'string') {
@@ -56,21 +55,6 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
           if (isEmpty(valueObj) || isEmpty(valueObj.value)) {
             return this.createError({
               message: getString('common.validation.fieldIsRequired', { name: getString(resourceGroupLabel) })
-            })
-          }
-          return true
-        }
-      })
-    }),
-    cluster: Yup.lazy((value): Yup.Schema<unknown> => {
-      /* istanbul ignore else */ if (typeof value === 'string') {
-        return Yup.string().required(getString('common.validation.fieldIsRequired', { name: getString(clusterLabel) }))
-      }
-      return Yup.object().test({
-        test(valueObj: SelectOption): boolean | Yup.ValidationError {
-          if (isEmpty(valueObj) || isEmpty(valueObj.value)) {
-            return this.createError({
-              message: getString('common.validation.fieldIsRequired', { name: getString(clusterLabel) })
             })
           }
           return true

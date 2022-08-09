@@ -184,6 +184,7 @@ export function MatrixStepNode(props: any): JSX.Element {
             <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
               <Layout.Horizontal
                 spacing="small"
+                width="60%"
                 onMouseOver={e => {
                   e.stopPropagation()
                 }}
@@ -204,7 +205,6 @@ export function MatrixStepNode(props: any): JSX.Element {
                   font={{ weight: 'semi-bold' }}
                   className={css.cursor}
                   onMouseEnter={event => {
-                    event.stopPropagation()
                     props?.fireEvent?.({
                       type: Event.MouseEnterNode,
                       target: event.target,
@@ -212,7 +212,6 @@ export function MatrixStepNode(props: any): JSX.Element {
                     })
                   }}
                   onMouseLeave={event => {
-                    event.stopPropagation()
                     setVisibilityOfAdd(false)
                     props?.fireEvent?.({
                       type: Event.MouseLeaveNode,

@@ -25,7 +25,11 @@ import { QlceView, ViewType, ViewState } from 'services/ce/services'
 import { perspectiveDateLabelToDisplayText, SOURCE_ICON_MAPPING } from '@ce/utils/perspectiveUtils'
 import formatCost from '@ce/utils/formatCost'
 import { useStrings } from 'framework/strings'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import useMoveFolderModal from '../PerspectiveFolders/MoveFolderModal'
+import PopoverMenuItem, { getToolTip } from './PerspectiveMenuItems'
 import css from './PerspectiveGridView.module.scss'
 
 interface PerspectiveGridCardProps {
@@ -41,6 +45,8 @@ interface PerspectiveGridCardProps {
   setRefetchFolders: React.Dispatch<React.SetStateAction<boolean>>
   setSelectedFolder: (newState: string) => void
   setRefetchPerspectives: React.Dispatch<React.SetStateAction<boolean>>
+  canEdit: boolean
+  canDelete: boolean
 }
 
 const PerpsectiveGridCard: (props: PerspectiveGridCardProps) => JSX.Element | null = ({
@@ -50,7 +56,9 @@ const PerpsectiveGridCard: (props: PerspectiveGridCardProps) => JSX.Element | nu
   clonePerspective,
   setRefetchFolders,
   setSelectedFolder,
-  setRefetchPerspectives
+  setRefetchPerspectives,
+  canEdit,
+  canDelete
 }) => {
   const history = useHistory()
   const { accountId } = useParams<{
@@ -140,26 +148,54 @@ const PerpsectiveGridCard: (props: PerspectiveGridCardProps) => JSX.Element | nu
             }}
           >
             <Menu>
-              <Menu.Item disabled={isDefaultPerspective} onClick={editClick} icon="edit" text="Edit" />
-              <Menu.Item
+              <PopoverMenuItem
+                disabled={isDefaultPerspective || !canEdit}
+                onClick={editClick}
+                icon="edit"
+                text="Edit"
+                tooltip={getToolTip(
+                  canEdit,
+                  PermissionIdentifier.EDIT_CCM_PERSPECTIVE,
+                  ResourceType.CCM_PERSPECTIVE,
+                  isDefaultPerspective,
+                  getString('ce.perspectives.editDefaultPerspective')
+                )}
+              />
+              <PopoverMenuItem
+                disabled={!canEdit}
                 onClick={onCloneClick}
                 icon="duplicate"
                 text="Clone"
                 data-testid={`clone-perspective-${data?.id}`}
+                tooltip={getToolTip(canEdit, PermissionIdentifier.EDIT_CCM_PERSPECTIVE, ResourceType.CCM_PERSPECTIVE)}
               />
-              <Menu.Item
-                disabled={isDefaultPerspective}
+              <PopoverMenuItem
+                disabled={isDefaultPerspective || !canDelete}
                 className={Classes.POPOVER_DISMISS}
                 onClick={onDeleteClick}
                 icon="trash"
                 text="Delete"
+                tooltip={getToolTip(
+                  canDelete,
+                  PermissionIdentifier.DELETE_CCM_PERSPECTIVE,
+                  ResourceType.CCM_PERSPECTIVE,
+                  isDefaultPerspective,
+                  getString('ce.perspectives.deleteDefaultPerspective')
+                )}
               />
-              <Menu.Item
-                disabled={isDefaultPerspective}
+              <PopoverMenuItem
+                disabled={isDefaultPerspective || !canEdit}
                 className={Classes.POPOVER_DISMISS}
                 onClick={openMoveFoldersModal}
                 icon="add-to-folder"
                 text={getString('ce.perspectives.folders.moveToLabel')}
+                tooltip={getToolTip(
+                  canEdit,
+                  PermissionIdentifier.EDIT_CCM_PERSPECTIVE,
+                  ResourceType.CCM_PERSPECTIVE,
+                  isDefaultPerspective,
+                  getString('ce.perspectives.editDefaultPerspective')
+                )}
               />
             </Menu>
           </Container>
@@ -250,6 +286,16 @@ const PerspectiveListView: React.FC<PerspectiveListViewProps> = ({
   setSelectedFolder,
   setRefetchPerspectives
 }) => {
+  const [canEdit, canDelete] = usePermission(
+    {
+      resource: {
+        resourceType: ResourceType.CCM_PERSPECTIVE
+      },
+      permissions: [PermissionIdentifier.EDIT_CCM_PERSPECTIVE, PermissionIdentifier.DELETE_CCM_PERSPECTIVE]
+    },
+    []
+  )
+
   return (
     <Container className={css.mainGridContainer}>
       {pespectiveData.map(data => {
@@ -263,6 +309,8 @@ const PerspectiveListView: React.FC<PerspectiveListViewProps> = ({
             setRefetchFolders={setRefetchFolders}
             setSelectedFolder={setSelectedFolder}
             setRefetchPerspectives={setRefetchPerspectives}
+            canEdit={canEdit}
+            canDelete={canDelete}
           />
         )
       })}

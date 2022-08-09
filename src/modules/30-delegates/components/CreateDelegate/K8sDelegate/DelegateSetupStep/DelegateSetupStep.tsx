@@ -122,7 +122,7 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
-  const IS_HELM_DELEGATE_ENABLED: boolean = isHelmDelegateEnabled()
+  const IS_HELM_DELEGATE_ENABLED: boolean = isHelmDelegateEnabled(true)
 
   const { mutate: createKubernetesYaml } = useValidateKubernetesYaml({
     queryParams: { accountId, projectId: projectIdentifier, orgId: orgIdentifier }

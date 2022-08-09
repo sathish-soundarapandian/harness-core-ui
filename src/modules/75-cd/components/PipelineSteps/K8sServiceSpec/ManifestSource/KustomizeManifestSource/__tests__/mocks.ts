@@ -11,6 +11,9 @@ export const manifests = [
       identifier: 'manifestKustomize',
       type: 'Kustomize',
       spec: {
+        overlayConfiguration: {
+          kustomizeYamlFolderPath: '<+input>'
+        },
         store: {
           type: 'Github',
           spec: {
@@ -50,6 +53,9 @@ export const template = {
         identifier: 'manifestKustomize',
         type: 'Kustomize',
         spec: {
+          overlayConfiguration: {
+            kustomizeYamlFolderPath: '<+input>'
+          },
           store: {
             type: 'Github',
             spec: {

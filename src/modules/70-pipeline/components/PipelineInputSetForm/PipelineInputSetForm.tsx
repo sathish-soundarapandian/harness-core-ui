@@ -34,6 +34,7 @@ import { useDeepCompareEffect } from '@common/hooks'
 import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { RunPipelineFormContextProvider } from '@pipeline/context/RunPipelineFormContext'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import { StageInputSetForm } from './StageInputSetForm'
 import { StageAdvancedInputSetForm } from './StageAdvancedInputSetForm'
 import { CICodebaseInputSetForm } from './CICodebaseInputSetForm'
@@ -290,9 +291,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
             }}
             // pipeline varibales do not support execution time inputs
             allowableTypes={
-              (allowableTypes as MultiTypeInputType[]).filter(
-                type => type !== MultiTypeInputType.RUNTIME
-              ) as AllowedTypes
+              (allowableTypes as MultiTypeInputType[]).filter(type => !isMultiTypeRuntime(type)) as AllowedTypes
             }
             readonly={readonly}
             type={StepType.CustomVariable}
@@ -398,7 +397,7 @@ export function PipelineInputSetForm(props: Omit<PipelineInputSetFormProps, 'all
         template={template}
         allowableTypes={
           NG_EXECUTION_INPUT
-            ? [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+            ? [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.EXECUTION_TIME]
             : [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
         }
       />

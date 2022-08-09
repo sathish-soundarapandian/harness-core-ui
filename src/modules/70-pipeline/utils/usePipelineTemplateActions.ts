@@ -6,9 +6,9 @@
  */
 
 import { defaultTo } from 'lodash-es'
-import { parse } from 'yaml'
 import produce from 'immer'
 import { useCallback } from 'react'
+import { parse } from '@common/utils/YamlHelperMethods'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { createTemplate } from '@pipeline/utils/templateUtils'
@@ -44,7 +44,7 @@ export function usePipelineTemplateActions(): TemplateActionsReturnType {
         selectedTemplate
       })
       const processNode = isCopied
-        ? produce(defaultTo(parse(template?.yaml || '')?.template.spec, {}) as PipelineInfoConfig, draft => {
+        ? produce(defaultTo(parse<any>(template?.yaml || '')?.template.spec, {}) as PipelineInfoConfig, draft => {
             draft.name = defaultTo(pipeline?.name, '')
             draft.identifier = defaultTo(pipeline?.identifier, '')
           })

@@ -47,6 +47,7 @@ import type {
   PipelinePathProps,
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useQueryParams, useDeepCompareEffect } from '@common/hooks'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -581,7 +582,7 @@ function FormContent({
                                   disabled={isApprovalStepFieldDisabled(readonly)}
                                   multiTextInputProps={{
                                     allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                                      item => item !== MultiTypeInputType.RUNTIME
+                                      item => !isMultiTypeRuntime(item)
                                     ) as AllowedTypes,
                                     expressions
                                   }}

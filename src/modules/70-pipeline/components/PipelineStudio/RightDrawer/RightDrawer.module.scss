@@ -19,6 +19,23 @@ $top-offset: 110px;
     box-shadow: none;
     border-bottom: 1px solid var(--grey-300);
   }
+
+  .showHelpPanel {
+    margin-right: 445px;
+  }
+
+  .helpPanelContainer {
+    display: flex;
+    align-items: center;
+    margin-right: var(--spacing-xxlarge);
+  }
+  .helpPanel {
+    margin-bottom: 5px;
+    margin-left: 450px;
+    width: 100px;
+    margin-top: 10px;
+  }
+
   .step-config {
     display: flex;
     justify-content: space-between;

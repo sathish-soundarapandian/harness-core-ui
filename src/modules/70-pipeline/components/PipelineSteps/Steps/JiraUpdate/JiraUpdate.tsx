@@ -31,6 +31,7 @@ export class JiraUpdate extends PipelineStep<JiraUpdateData> {
     this._hasDelegateSelectionVisible = true
   }
 
+  protected referenceId = 'jiraUpdateStep'
   protected isHarnessSpecific = true
   protected type = StepType.JiraUpdate
   protected stepName = 'Jira Update'

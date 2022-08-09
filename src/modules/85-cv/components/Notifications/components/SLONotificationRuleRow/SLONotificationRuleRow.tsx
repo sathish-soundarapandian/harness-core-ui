@@ -32,7 +32,7 @@ export default function SLONotificationRuleRow({
     [lookBackDuration, notificationRule]
   )
 
-  const renderThresholdField = (): JSX.Element => {
+  const renderThresholdField = (idx: number): JSX.Element => {
     switch (condition?.value) {
       case SLOCondition.ERROR_BUDGET_REMAINING_MINUTES:
         return (
@@ -44,7 +44,7 @@ export default function SLONotificationRuleRow({
               placeholder={'min'}
               min={0}
               value={threshold as string}
-              name={`${id}.threshold`}
+              name={`${idx}.threshold`}
               className={css.numberField}
               onChange={handleThresholdChange}
             />
@@ -60,7 +60,7 @@ export default function SLONotificationRuleRow({
               placeholder={'%'}
               min={0}
               value={threshold as string}
-              name={`${id}.threshold`}
+              name={`${idx}.threshold`}
               className={css.numberField}
               onChange={handleThresholdChange}
             />
@@ -77,7 +77,7 @@ export default function SLONotificationRuleRow({
               min={0}
               max={100}
               value={threshold as string}
-              name={`${id}.threshold`}
+              name={`${idx}.threshold`}
               className={css.numberField}
               onChange={handleThresholdChange}
             />
@@ -96,6 +96,7 @@ export default function SLONotificationRuleRow({
 
           <FormInput.Select
             name={`conditions.${index}.condition`}
+            data-name="condition"
             className={css.sloConditionField}
             value={condition}
             items={sloConditionOptions}
@@ -104,7 +105,7 @@ export default function SLONotificationRuleRow({
             }}
           />
         </Layout.Vertical>
-        {threshold ? renderThresholdField() : null}
+        {threshold ? renderThresholdField(index) : null}
         {lookBackDuration && condition?.value === SLOCondition.ERROR_BUDGET_BURN_RATE_IS_ABOVE ? (
           <Layout.Vertical spacing="xsmall" padding={{ left: 'small' }}>
             <Text>{'Lookback Duration'}</Text>
@@ -114,7 +115,7 @@ export default function SLONotificationRuleRow({
               min={0}
               placeholder="min"
               value={lookBackDuration as string}
-              name={`${id}.lookBackDuration`}
+              name={`${index}.lookBackDuration`}
               className={css.numberField}
               onChange={e => {
                 handleChangeField(notificationRule, getValueFromEvent(e), 'lookBackDuration')
@@ -125,6 +126,7 @@ export default function SLONotificationRuleRow({
         {showDeleteNotificationsIcon ? (
           <Container padding={{ top: 'large' }}>
             <Button
+              data-name="trash"
               icon="main-trash"
               iconProps={{ size: 20 }}
               minimal

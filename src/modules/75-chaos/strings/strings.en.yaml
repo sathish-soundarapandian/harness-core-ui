@@ -2,4 +2,7 @@ homepage:
   chaosHomePageTitle: Chaos Engineering
   slogan: Take your software build process to the next level using our Harness Chaos Engineering.
   learnMore: Learn more about Chaos Engineering
-chaoshub: ChaosHub
+chaosHub: ChaosHub
+chaosScenario: Chaos Scenario
+chaosDelegate: Chaos Delegate
+chaosGitops: Chaos Gitops

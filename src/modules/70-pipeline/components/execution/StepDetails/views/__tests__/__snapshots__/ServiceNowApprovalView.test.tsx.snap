@@ -148,7 +148,7 @@ exports[`SUCCESS show tabs when data is present and authorized: ServiceNow appro
         </div>
       </div>
       <div
-        class="serviceNowApproval"
+        class="serviceNowApproval applyTopPadding"
       />
     </div>
   </div>

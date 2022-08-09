@@ -30,6 +30,8 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import { FormMultiTypeCheckboxField } from '@common/components'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import type { KustomizeWithGITDataType } from '../../ManifestInterface'
 import {
   gitFetchTypeList,
@@ -67,8 +69,11 @@ function KustomizeWithGIT({
   isReadonly = false
 }: StepProps<ConnectorConfigDTO> & KustomizeWithGITPropType): React.ReactElement {
   const { getString } = useStrings()
+  const isOptimizeFetchFilesEnabled = useFeatureFlag(FeatureFlag.NG_OPTIMIZE_FETCH_FILES_KUSTOMIZE)
 
-  const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags
+  const kustomizeYamlFolderPath = get(initialValues, 'spec.overlayConfiguration.kustomizeYamlFolderPath', '')
+  const isActiveAdvancedStep: boolean =
+    initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags || !!kustomizeYamlFolderPath
   const gitConnectionType: string = prevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
   const connectionType =
     prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
@@ -97,7 +102,9 @@ function KustomizeWithGIT({
           typeof initialValues?.spec?.patchesPaths === 'string'
             ? initialValues?.spec?.patchesPaths
             : initialValues?.spec?.patchesPaths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) })),
-        skipResourceVersioning: initialValues?.spec?.skipResourceVersioning
+        skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
+        optimizedKustomizeManifestCollection: !!kustomizeYamlFolderPath,
+        kustomizeYamlFolderPath
       }
     }
     return {
@@ -108,7 +115,9 @@ function KustomizeWithGIT({
       folderPath: '',
       skipResourceVersioning: false,
       repoName: getRepositoryName(prevStepData, initialValues),
-      pluginPath: ''
+      pluginPath: '',
+      optimizedKustomizeManifestCollection: false,
+      kustomizeYamlFolderPath: ''
     }
   }
 
@@ -118,6 +127,13 @@ function KustomizeWithGIT({
         identifier: formData.identifier,
         type: ManifestDataType.Kustomize,
         spec: {
+          ...(isOptimizeFetchFilesEnabled && formData.optimizedKustomizeManifestCollection
+            ? {
+                overlayConfiguration: {
+                  kustomizeYamlFolderPath: formData.kustomizeYamlFolderPath
+                }
+              }
+            : {}),
           store: {
             type: formData?.store,
             spec: {
@@ -188,6 +204,11 @@ function KustomizeWithGIT({
               )
             }
             return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
+          }),
+          optimizedKustomizeManifestCollection: Yup.boolean(),
+          kustomizeYamlFolderPath: Yup.string().when('optimizedKustomizeManifestCollection', {
+            is: true,
+            then: Yup.string().trim().required(getString('pipeline.manifestType.kustomizeYamlFolderPathRequired'))
           })
         })}
         onSubmit={formData => {
@@ -301,7 +322,11 @@ function KustomizeWithGIT({
                   })}
                 >
                   <FormInput.MultiTextInput
-                    label={getString('pipeline.manifestType.kustomizeFolderPath')}
+                    label={
+                      formik.values.optimizedKustomizeManifestCollection
+                        ? getString('pipeline.manifestType.kustomizeBasePath')
+                        : getString('pipeline.manifestType.kustomizeFolderPath')
+                    }
                     placeholder={getString('pipeline.manifestType.kustomizeFolderPathPlaceholder')}
                     name="folderPath"
                     tooltipProps={{
@@ -395,34 +420,72 @@ function KustomizeWithGIT({
                   addDomId={true}
                   summary={getString('advancedTitle')}
                   details={
-                    <Layout.Horizontal
-                      flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
-                      margin={{ bottom: 'huge' }}
-                    >
-                      <FormMultiTypeCheckboxField
-                        name="skipResourceVersioning"
-                        label={getString('skipResourceVersion')}
-                        multiTypeTextbox={{ expressions, allowableTypes }}
-                        tooltipProps={{
-                          dataTooltipId: 'helmSkipResourceVersion'
-                        }}
-                        className={cx(helmcss.checkbox, helmcss.halfWidth)}
-                      />
-                      {getMultiTypeFromValue(formik.values?.skipResourceVersioning) === MultiTypeInputType.RUNTIME && (
-                        <ConfigureOptions
-                          value={(formik.values?.skipResourceVersioning || '') as string}
-                          type="String"
-                          variableName="skipResourceVersioning"
-                          showRequiredField={false}
-                          showDefaultField={false}
-                          showAdvanced={true}
-                          onChange={value => formik.setFieldValue('skipResourceVersioning', value)}
-                          style={{ alignSelf: 'center', marginTop: 11 }}
-                          className={css.addmarginTop}
-                          isReadonly={isReadonly}
-                        />
+                    <>
+                      {isOptimizeFetchFilesEnabled && (
+                        <Layout.Vertical margin={{ bottom: 'small' }}>
+                          <FormInput.CheckBox
+                            name="optimizedKustomizeManifestCollection"
+                            label={getString('pipeline.manifestType.optimizedKustomizeManifestCollection')}
+                          />
+                          {!!formik.values.optimizedKustomizeManifestCollection && (
+                            <Layout.Horizontal
+                              flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
+                              margin={{ left: 'xlarge' }}
+                              width={430}
+                            >
+                              <FormInput.MultiTextInput
+                                className={css.kustomizeYamlFolderPath}
+                                label={getString('pipeline.manifestType.kustomizeYamlFolderPath')}
+                                placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                                name="kustomizeYamlFolderPath"
+                                multiTextInputProps={{ expressions, allowableTypes }}
+                              />
+                              {getMultiTypeFromValue(formik.values?.kustomizeYamlFolderPath) ===
+                                MultiTypeInputType.RUNTIME && (
+                                <ConfigureOptions
+                                  style={{ alignSelf: 'center', marginBottom: 4 }}
+                                  value={formik.values?.kustomizeYamlFolderPath || ''}
+                                  type="String"
+                                  variableName="kustomizeYamlFolderPath"
+                                  showRequiredField={false}
+                                  showDefaultField={false}
+                                  showAdvanced={true}
+                                  onChange={value => formik.setFieldValue('kustomizeYamlFolderPath', value)}
+                                  isReadonly={isReadonly}
+                                />
+                              )}
+                            </Layout.Horizontal>
+                          )}
+                        </Layout.Vertical>
                       )}
-                    </Layout.Horizontal>
+
+                      <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'center' }}>
+                        <FormMultiTypeCheckboxField
+                          name="skipResourceVersioning"
+                          label={getString('skipResourceVersion')}
+                          multiTypeTextbox={{ expressions, allowableTypes }}
+                          tooltipProps={{
+                            dataTooltipId: 'helmSkipResourceVersion'
+                          }}
+                          className={cx(helmcss.checkbox, helmcss.halfWidth)}
+                        />
+                        {getMultiTypeFromValue(formik.values?.skipResourceVersioning) ===
+                          MultiTypeInputType.RUNTIME && (
+                          <ConfigureOptions
+                            value={(formik.values?.skipResourceVersioning || '') as string}
+                            type="String"
+                            variableName="skipResourceVersioning"
+                            showRequiredField={false}
+                            showDefaultField={false}
+                            showAdvanced={true}
+                            onChange={value => formik.setFieldValue('skipResourceVersioning', value)}
+                            style={{ alignSelf: 'center', marginTop: 11 }}
+                            className={css.addmarginTop}
+                            isReadonly={isReadonly}
+                          />
+                        )}
+                      </Layout.Horizontal>
+                    </>
                   }
                 />
               </Accordion>

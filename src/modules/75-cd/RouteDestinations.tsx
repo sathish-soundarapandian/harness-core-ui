@@ -64,6 +64,7 @@ import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import type { ModuleListCardProps } from '@projects-orgs/components/ModuleListCard/ModuleListCard'
 import { FeatureFlag } from '@common/featureFlags'
+import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
 import { CDTemplateStudioWrapper } from '@cd/components/TemplateStudio/CDTemplateStudioWrapper/CDTemplateStudioWrapper'
 import { Environments } from './components/Environments/Environments'
 import { Environments as EnvironmentsV2 } from './components/EnvironmentsV2/Environments'
@@ -83,6 +84,7 @@ import { KubernetesManifests } from './components/PipelineSteps/K8sServiceSpec/K
 import manifestSourceBaseFactory from './factory/ManifestSourceFactory/ManifestSourceBaseFactory'
 import { getBannerText } from './utils/renderMessageUtils'
 import ServiceStudio from './components/Services/ServiceStudio/ServiceStudio'
+import GetStartedWithCD from './pages/get-started-with-cd/GetStartedWithCD'
 
 RbacFactory.registerResourceCategory(ResourceCategory.GITOPS, {
   icon: 'gitops-blue-circle',
@@ -263,6 +265,15 @@ export default (
       <RedirectToCDProject />
     </Route>
     <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CDSideNavProps}
+      pageName={PAGE_NAME.GetStartedWithCI}
+      path={routes.toGetStartedWithCD({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
+    >
+      <GetStartedWithCD />
+    </RouteWithLayout>
+    <RouteWithLayout
       licenseRedirectData={licenseRedirectData}
       sidebarProps={CDSideNavProps}
       path={routes.toCDHome({ ...accountPathProps })}
@@ -271,6 +282,7 @@ export default (
     >
       <CDHomePage />
     </RouteWithLayout>
+
     <RouteWithLayout
       layout={MinimalLayout}
       path={routes.toModuleTrialHome({ ...accountPathProps, module: 'cd' })}
@@ -358,6 +370,13 @@ export default (
       <FileStorePage />
     </RouteWithLayout>
 
+    {
+      DefaultSettingsRouteDestinations({
+        moduleParams,
+        licenseRedirectData,
+        sidebarProps: CDSideNavProps
+      })?.props.children
+    }
     {
       PipelineRouteDestinations({
         pipelineStudioComponent: CDPipelineStudio,

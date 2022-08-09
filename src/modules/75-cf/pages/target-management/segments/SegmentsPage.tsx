@@ -158,7 +158,7 @@ export const SegmentsPage: React.FC = () => {
                 margin={{ right: 'small' }}
               />
               <Container>
-                <Text style={{ fontWeight: 600, lineHeight: '24px', color: '#22222A' }}>{cell.row.original.name}</Text>
+                <Text color={Color.GREY_900}>{cell.row.original.name}</Text>
                 {description && <Text>{description}</Text>}
               </Container>
             </Layout.Horizontal>

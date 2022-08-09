@@ -9,6 +9,7 @@ import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 
 import { RunStep } from './RunStep/RunStep'
 import { PluginStep } from './PluginStep/PluginStep'
+import { ACRStep } from './ACRStep/ACRStep'
 import { GCRStep } from './GCRStep/GCRStep'
 import { ECRStep } from './ECRStep/ECRStep'
 import { SaveCacheGCSStep } from './SaveCacheGCSStep/SaveCacheGCSStep'
@@ -24,6 +25,7 @@ import { RunTestsStep } from './RunTestsStep/RunTestsStep'
 
 factory.registerStep(new RunStep())
 factory.registerStep(new PluginStep())
+factory.registerStep(new ACRStep())
 factory.registerStep(new GCRStep())
 factory.registerStep(new ECRStep())
 factory.registerStep(new SaveCacheGCSStep())

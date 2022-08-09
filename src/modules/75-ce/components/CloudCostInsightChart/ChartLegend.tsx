@@ -69,7 +69,6 @@ const ChartLegend: React.FC<ChartLegendProps> = ({ chartRefObj }) => {
     <Container
       className={cx(css.legendContainer, { [css.preferences]: chartRefObj.series.length > 12 })}
       padding={{
-        left: 'medium',
         top: 'small',
         bottom: 'small'
       }}
@@ -78,7 +77,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({ chartRefObj }) => {
         const chartColor: string = (chart as any).color
         return (
           <Layout.Horizontal
-            key={chart.userOptions.name}
+            key={chart.userOptions.id}
             spacing="small"
             style={{
               alignItems: 'center'

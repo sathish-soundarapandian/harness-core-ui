@@ -10,8 +10,10 @@ import React from 'react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cfServicesMock from 'services/cf'
+import type { FeaturePipelineExecution } from 'services/cf'
 import FlagPipelineTab, { FlagPipelineTabProps } from '../FlagPipelineTab'
 import mockAvailablePipelines from './__data__/mockAvailablePipelines'
+import mockExecutionHistory from './__data__/mockExecutionHistory'
 
 const renderComponent = (props: Partial<FlagPipelineTabProps> = {}): void => {
   render(
@@ -20,7 +22,22 @@ const renderComponent = (props: Partial<FlagPipelineTabProps> = {}): void => {
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       queryParams={{ tab: 'flag_pipeline', activeEnvironment: 'TEST_ENV' }}
     >
-      <FlagPipelineTab flagIdentifier="TEST_FLAG" {...props} />
+      <FlagPipelineTab
+        flagIdentifier="TEST_FLAG"
+        flagVariations={[
+          {
+            identifier: 'true',
+            name: 'True',
+            value: 'true'
+          },
+          {
+            identifier: 'false',
+            name: 'False',
+            value: 'false'
+          }
+        ]}
+        {...props}
+      />
     </TestWrapper>
   )
 }
@@ -54,6 +71,24 @@ describe('FlagPipelineTab', () => {
       loading: false,
       refetch: refetchAvailablePipelinesMock
     } as any)
+  })
+
+  describe('Flag pipeline fetching states', () => {
+    beforeEach(() => {
+      jest.spyOn(cfServicesMock, 'useGetFeaturePipeline').mockReturnValue({
+        data: {
+          pipelineConfigured: false
+        },
+        loading: true,
+        refetch: jest.fn()
+      } as any)
+    })
+
+    test('it should show loading spinner when loading', async () => {
+      renderComponent()
+
+      await waitFor(() => expect(screen.getByText('Loading, please wait...')).toBeInTheDocument())
+    })
   })
 
   describe('Flag pipeline not configured', () => {
@@ -200,7 +235,7 @@ describe('FlagPipelineTab', () => {
     )
   })
 
-  describe('Flag pipeline configured', () => {
+  describe('Flag pipeline configured with no executions', () => {
     const getFeaturePipelineRefetchMock = jest.fn()
     beforeEach(() => {
       jest.spyOn(cfServicesMock, 'useGetFeaturePipeline').mockReturnValue({
@@ -350,6 +385,79 @@ describe('FlagPipelineTab', () => {
       await waitFor(() => {
         expect(screen.getByText('ERROR DELETING PIPELINE')).toBeInTheDocument()
       })
+    })
+  })
+
+  describe('Flag pipeline configured with executions', () => {
+    const setupExecutionMocks = (executionHistory: FeaturePipelineExecution[] = mockExecutionHistory): void => {
+      jest.spyOn(cfServicesMock, 'useGetFeaturePipeline').mockReturnValue({
+        data: {
+          executionHistory: executionHistory,
+          pipelineConfigured: true,
+          pipelineDetails: {
+            identifier: 'pipeline5',
+            name: 'Pipeline 5',
+            description: 'This is a test pipeline'
+          }
+        },
+        loading: false,
+        refetch: jest.fn()
+      } as any)
+    }
+
+    test('it should render execution list correctly', async () => {
+      setupExecutionMocks()
+      renderComponent()
+
+      expect(screen.getByRole('list')).toBeInTheDocument()
+      expect(screen.getAllByRole('listitem')).toHaveLength(mockExecutionHistory.length)
+    })
+
+    test('it should render execution card with trigger details correctly', async () => {
+      setupExecutionMocks([mockExecutionHistory[2]])
+      renderComponent()
+
+      // execution card header details
+      expect(screen.getByText('tick-circle')).toBeInTheDocument()
+      expect(screen.getByText('pipeline.executionStatus.Success')).toBeInTheDocument()
+      expect(screen.getByText('pipeline.executionId: 1996')).toBeInTheDocument()
+      expect(screen.getByText(/common.durationPrefix/)).toBeInTheDocument()
+      expect(screen.getByText('dummy date')).toBeInTheDocument()
+      expect(screen.getByText('Production')).toBeInTheDocument()
+      expect(screen.getByText('Elenor Pena')).toBeInTheDocument()
+      expect(screen.getByText('cf.featureFlags.flagPipeline.triggerDetails')).toBeInTheDocument()
+
+      // stage completion
+      expect(screen.getByText('3/3')).toBeInTheDocument()
+
+      // trigger details
+      userEvent.click(screen.getByText('cf.featureFlags.flagPipeline.triggerDetails'))
+      await waitFor(() => {
+        expect(screen.getByTestId('flag-state')).toHaveTextContent('on')
+        expect(screen.getAllByTestId('target-variation')[0]).toHaveTextContent('True')
+
+        expect(screen.getAllByTestId('target')[0]).toHaveTextContent('Beta Target, Charlie Target')
+        expect(screen.getAllByTestId('target-variation')[1]).toHaveTextContent('False')
+        expect(screen.getAllByTestId('target')[1]).toHaveTextContent('Delta Target')
+        expect(screen.getAllByTestId('target-group-variation')[0]).toHaveTextContent('True')
+        expect(screen.getAllByTestId('target-group')[0]).toHaveTextContent('User Group 1')
+        expect(screen.getAllByTestId('target-group-variation')[1]).toHaveTextContent('False')
+        expect(screen.getAllByTestId('target-group')[1]).toHaveTextContent('User Group 2')
+        expect(screen.getAllByTestId('percentage-rollout-group')[0]).toHaveTextContent('User Group 3')
+        expect(screen.getAllByTestId('percentage-rollout-group')[1]).toHaveTextContent('User Group 4')
+        expect(screen.getAllByTestId('percentage-rollout-variation-weight')[0]).toHaveTextContent('True (50%)')
+        expect(screen.getAllByTestId('percentage-rollout-variation-weight')[1]).toHaveTextContent('False (50%)')
+        expect(screen.getAllByTestId('percentage-rollout-variation-weight')[2]).toHaveTextContent('True (70%)')
+        expect(screen.getAllByTestId('percentage-rollout-variation-weight')[3]).toHaveTextContent('False (30%)')
+      })
+    })
+
+    test('it should render execution card with failed stage count correctly', async () => {
+      setupExecutionMocks([mockExecutionHistory[3]])
+      renderComponent()
+
+      expect(screen.getAllByText('warning-sign')).toHaveLength(2)
+      expect(screen.getByTestId('stage-count')).toHaveTextContent('1')
     })
   })
 })

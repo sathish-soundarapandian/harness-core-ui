@@ -6,6 +6,7 @@
  */
 
 import type { SelectOption, MultiSelectOption } from '@wings-software/uicore'
+import type { PrometheusMetricThresholdType } from './PrometheusHealthSource.types'
 
 export const PrometheusMonitoringSourceFieldNames = {
   METRIC_IDENTIFIER: 'identifier',
@@ -35,6 +36,8 @@ export interface PrometheusSetupSource {
   healthSourceName: string
   product: SelectOption
   connectorRef?: { value: string } | string
+  ignoreThresholds: PrometheusMetricThresholdType[]
+  failFastThresholds: PrometheusMetricThresholdType[]
 }
 
 export type MapPrometheusQueryToService = {
@@ -56,6 +59,8 @@ export type MapPrometheusQueryToService = {
   sli?: boolean
   continuousVerification?: boolean
   healthScore?: boolean
+  ignoreThresholds: PrometheusMetricThresholdType[]
+  failFastThresholds: PrometheusMetricThresholdType[]
 }
 
 export type RiskProfileCatgory = 'Performance' | 'Errors' | 'Infrastructure'

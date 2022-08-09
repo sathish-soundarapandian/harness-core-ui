@@ -21,17 +21,27 @@
   color: var(--grey-700) !important;
 }
 
-.limitAccessCell {
-  justify-self: end;
-}
-// making text alignt to left of button
-.addResourceBtn {
-  justify-content: flex-start !important;
-}
-
 .staticResource {
   border-bottom: 1px solid var(--grey-300);
   &:last-child {
     border: 0px;
+  }
+}
+
+.radioBtnSet {
+  flex-basis: 315px !important;
+}
+
+.radioBtnCtr {
+  &:nth-child(1),
+  &:nth-child(4) {
+    flex-grow: 1;
+  }
+  &:nth-child(2) {
+    flex-grow: 3;
+    flex-basis: 30% !important;
+  }
+  &:nth-child(3) {
+    flex-grow: 3;
   }
 }

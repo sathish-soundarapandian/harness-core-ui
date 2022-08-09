@@ -9,11 +9,15 @@ import React from 'react'
 
 import { useParams } from 'react-router-dom'
 
-import { Button, ButtonSize, ButtonVariation, Container } from '@harness/uicore'
+import { ButtonSize, ButtonVariation, Container } from '@harness/uicore'
 
 import { useGetClusterList } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
+
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import RbacButton from '@rbac/components/Button/Button'
 
 import AddCluster from './AddCluster'
 import ClusterTableView from './ClusterTableView'
@@ -41,7 +45,7 @@ const GitOpsCluster = (props: { envRef: string }): React.ReactElement => {
   return (
     <Container padding={{ left: 'medium', right: 'medium' }}>
       <>
-        <Button
+        <RbacButton
           minimal
           intent="primary"
           onClick={() => {
@@ -50,9 +54,15 @@ const GitOpsCluster = (props: { envRef: string }): React.ReactElement => {
           icon="plus"
           size={ButtonSize.SMALL}
           variation={ButtonVariation.LINK}
+          permission={{
+            resource: {
+              resourceType: ResourceType.ENVIRONMENT
+            },
+            permission: PermissionIdentifier.EDIT_ENVIRONMENT
+          }}
         >
           {getString('cd.selectClusterLabel')}
-        </Button>
+        </RbacButton>
         <Container padding={{ top: 'medium' }}>
           <ClusterTableView linkedClusters={data} loading={loading} refetch={refetch} {...props} />
         </Container>

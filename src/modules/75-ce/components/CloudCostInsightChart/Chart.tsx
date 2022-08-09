@@ -8,10 +8,11 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import type { OptionsStackingValue } from 'highcharts'
 import moment from 'moment'
-import { Icon } from '@wings-software/uicore'
+import { Icon, Layout, Text } from '@wings-software/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import qs from 'qs'
-import { QlceViewTimeGroupType } from 'services/ce/services'
+import { QlceViewFieldInputInput, QlceViewTimeGroupType } from 'services/ce/services'
 import type { PerspectiveAnomalyData } from 'services/ce'
 import formatCost from '@ce/utils/formatCost'
 import routes from '@common/RouteDefinitions'
@@ -53,6 +54,7 @@ interface GetChartProps {
   setFilterUsingChartClick?: (value: string) => void
   showLegends: boolean
   anomaliesCountData?: PerspectiveAnomalyData[]
+  groupBy: QlceViewFieldInputInput
 }
 
 const GetChart: React.FC<GetChartProps> = ({
@@ -64,7 +66,8 @@ const GetChart: React.FC<GetChartProps> = ({
   xAxisPointCount,
   setFilterUsingChartClick,
   showLegends,
-  anomaliesCountData
+  anomaliesCountData,
+  groupBy
 }) => {
   const [chartObj, setChartObj] = useState<Highcharts.Chart | null>(null)
 
@@ -226,9 +229,9 @@ const GetChart: React.FC<GetChartProps> = ({
       chart.map(chartItem => {
         switch (chartItem.name) {
           case 'Others':
-            return { ...chartItem, color: 'var(--primary-2)' }
-          case 'Unallocated':
             return { ...chartItem, color: 'var(--blue-100)' }
+          case 'Unallocated':
+            return { ...chartItem, color: 'var(--primary-2)' }
           default:
             return chartItem
         }
@@ -285,7 +288,12 @@ const GetChart: React.FC<GetChartProps> = ({
         }}
       />
       {chartObj && showLegends ? (
-        <ChartLegend chartRefObj={chartObj as unknown as Highcharts.Chart} />
+        <Layout.Horizontal style={{ alignItems: 'center' }}>
+          <Text padding={{ left: 'large' }} font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_400}>
+            {getString('ce.perspectives.top12GroupBy', { groupBy: groupBy.fieldName })}
+          </Text>
+          <ChartLegend chartRefObj={chartObj as unknown as Highcharts.Chart} />
+        </Layout.Horizontal>
       ) : showLegends ? (
         <Icon name="spinner" />
       ) : null}
@@ -302,6 +310,7 @@ interface CCMChartProps {
   setFilterUsingChartClick?: (value: string) => void
   showLegends: boolean
   anomaliesCountData?: PerspectiveAnomalyData[]
+  groupBy: QlceViewFieldInputInput
 }
 
 const Chart: React.FC<CCMChartProps> = ({
@@ -312,7 +321,8 @@ const Chart: React.FC<CCMChartProps> = ({
   xAxisPointCount,
   setFilterUsingChartClick,
   showLegends,
-  anomaliesCountData
+  anomaliesCountData,
+  groupBy
 }) => {
   return (
     <>
@@ -329,6 +339,7 @@ const Chart: React.FC<CCMChartProps> = ({
             onLoad={onLoad}
             showLegends={showLegends}
             anomaliesCountData={anomaliesCountData}
+            groupBy={groupBy}
           />
         ) : /* istanbul ignore next */ null
       })}

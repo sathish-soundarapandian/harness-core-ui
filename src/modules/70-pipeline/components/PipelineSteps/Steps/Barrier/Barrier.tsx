@@ -20,7 +20,7 @@ import { FormikProps, yupToFormErrors } from 'formik'
 import { isEmpty } from 'lodash-es'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { parse } from 'yaml'
+import { parse } from '@common/utils/YamlHelperMethods'
 import {
   StepFormikFowardRef,
   setFormikRef,
@@ -384,6 +384,7 @@ export class BarrierStep extends PipelineStep<BarrierData> {
   protected type = StepType.Barrier
   protected stepName = 'Synchronization Barrier'
   protected stepIcon: IconName = 'barrier-open'
+  protected referenceId = 'barrierStep'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.Barrier'
 
   protected defaultValues: BarrierData = {

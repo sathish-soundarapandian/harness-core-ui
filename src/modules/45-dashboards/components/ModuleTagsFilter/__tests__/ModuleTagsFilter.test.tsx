@@ -10,7 +10,7 @@ import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as useFeatureFlag from '@common/hooks/useFeatureFlag'
-import type { MappedDashboardTagOptions } from '@dashboards/types/DashboardTypes'
+import type { MappedDashboardTagOptions } from '@dashboards/types/DashboardTypes.types'
 import ModuleTagsFilter, { ModuleTagsFilterProps } from '../ModuleTagsFilter'
 
 const DEFAULT_FILTER: MappedDashboardTagOptions = {

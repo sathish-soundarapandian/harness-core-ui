@@ -29,16 +29,34 @@ import { useToaster } from '@common/components'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import { UserGroupDTO, SAMLSettings, useGetAuthenticationSettings, useLinkToSamlGroup } from 'services/cd-ng'
+import {
+  LdapGroupResponse,
+  UserGroupDTO,
+  SAMLSettings,
+  useGetAuthenticationSettings,
+  useLinkToSamlGroup,
+  useLinkToLdapGroup,
+  SSOSettings
+} from 'services/cd-ng'
+import LinkToLDAPProviderForm from './LinkToLDAPProviderForm'
 import css from '../useLinkToSSOProviderModal.module.scss'
+
 interface LinkToSSOProviderModalData {
   userGroupData: UserGroupDTO
   onSubmit?: () => void
 }
 
+interface SelectOptionWithType extends SelectOption {
+  ssoType: SSOSettings['type']
+}
+
 export interface LinkToSSOProviderFormData {
   groupName: string
   sso: string
+}
+
+export interface LinkToLdapProviderFormData extends LinkToSSOProviderFormData {
+  selectedRadioValue: LdapGroupResponse
 }
 
 const getSelectPlaceholder = (
@@ -59,7 +77,6 @@ const LinkToSSOProviderForm: React.FC<LinkToSSOProviderModalData> = props => {
   const { getString } = useStrings()
   const { showSuccess } = useToaster()
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
-  const [selectedSso, setSelectedSso] = useState<SelectOption>()
 
   let fetching = false
   const {
@@ -76,8 +93,8 @@ const LinkToSSOProviderForm: React.FC<LinkToSSOProviderModalData> = props => {
   const authSettingsData = authDataResponse?.resource?.ngAuthSettings as SAMLSettings[]
 
   const { mutate: linkSsoGroup, loading: linking } = useLinkToSamlGroup({
-    userGroupId: userGroupData.identifier,
-    samlId: selectedSso?.value as string,
+    userGroupId: '',
+    samlId: '',
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
@@ -85,23 +102,56 @@ const LinkToSSOProviderForm: React.FC<LinkToSSOProviderModalData> = props => {
     }
   })
 
-  fetching = linking || authLoading
+  const { mutate: linkLdapGroup, loading: linkingLdapGroup } = useLinkToLdapGroup({
+    userGroupId: '',
+    ldapId: '',
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    }
+  })
 
-  const ssoSettings: SelectOption[] = useMemo(
+  fetching = linking || linkingLdapGroup || authLoading
+
+  const ssoSettings: SelectOptionWithType[] = useMemo(
     () =>
-      ((authSettingsData || []).filter(el => el.settingsType === 'SAML' && el.authorizationEnabled) || []).map(data => {
-        return {
-          label: data.displayName || data.identifier,
-          value: data.identifier
+      (authSettingsData || []).reduce<SelectOptionWithType[]>((acc, setting: SAMLSettings) => {
+        if ((setting.settingsType === 'SAML' && setting.authorizationEnabled) || setting.settingsType === 'LDAP') {
+          acc.push({
+            label: setting.displayName || setting.identifier,
+            value: setting.identifier,
+            ssoType: setting.settingsType
+          })
         }
-      }) || [],
+        return acc
+      }, []),
     [authSettingsData]
   )
+
+  const getSelectedSSOType = (identifier: string) => {
+    return ssoSettings.find(setting => setting.value === identifier)
+  }
 
   const handleOnSubmit = async (values: LinkToSSOProviderFormData): Promise<void> => {
     modalErrorHandler?.hide()
     try {
-      const created = await linkSsoGroup({ samlGroupName: values.groupName })
+      let created
+      if (getSelectedSSOType(values.sso)?.ssoType === 'LDAP') {
+        const ldapFormValues = values as LinkToLdapProviderFormData
+        created = await linkLdapGroup(
+          {
+            ldapGroupName: ldapFormValues.selectedRadioValue?.name,
+            ldapGroupDN: ldapFormValues.selectedRadioValue?.dn
+          },
+          { pathParams: { userGroupId: userGroupData.identifier, ldapId: values.sso } }
+        )
+      } else if (getSelectedSSOType(values.sso)?.ssoType === 'SAML') {
+        created = await linkSsoGroup(
+          { samlGroupName: values.groupName },
+          { pathParams: { userGroupId: userGroupData.identifier, samlId: values.sso } }
+        )
+      }
       if (created) {
         showSuccess(getString('rbac.userGroupForm.createSuccess', { name: values.groupName }))
         onSubmit?.()
@@ -122,13 +172,18 @@ const LinkToSSOProviderForm: React.FC<LinkToSSOProviderModalData> = props => {
         {error ? (
           <PageError message={getRBACErrorMessage(error as any)} onClick={refetch as any} />
         ) : (
-          <Formik<LinkToSSOProviderFormData>
+          <Formik<LinkToSSOProviderFormData | LinkToLdapProviderFormData>
             formName="linkToSSOProviderForm"
             initialValues={{ groupName: '', sso: '' }}
             validationSchema={Yup.object().shape({
               groupName: Yup.string()
                 .trim()
-                .required(getString('rbac.userDetails.linkToSSOProviderModal.validation.groupNameRequired')),
+                .when('sso', {
+                  is: sso => getSelectedSSOType(sso)?.ssoType === 'SAML',
+                  then: Yup.string().required(
+                    getString('rbac.userDetails.linkToSSOProviderModal.validation.groupNameRequired')
+                  )
+                }),
               sso: Yup.string().required(getString('rbac.userDetails.linkToSSOProviderModal.validation.ssoIdRequired'))
             })}
             onSubmit={values => {
@@ -136,7 +191,7 @@ const LinkToSSOProviderForm: React.FC<LinkToSSOProviderModalData> = props => {
             }}
             enableReinitialize
           >
-            {() => {
+            {formik => {
               return (
                 <Form>
                   <Container margin={{ bottom: 'medium' }}>
@@ -150,18 +205,18 @@ const LinkToSSOProviderForm: React.FC<LinkToSSOProviderModalData> = props => {
                           disabled={fetching}
                           className={css.select}
                           items={ssoSettings}
-                          value={selectedSso}
+                          data-id="sso-value-select"
                           placeholder={getSelectPlaceholder(ssoSettings, fetching, getString)}
-                          onChange={value => {
-                            setSelectedSso(value)
-                          }}
                         />
                       </Layout.Vertical>
-                      <FormInput.Text
-                        disabled={!selectedSso || fetching}
-                        name="groupName"
-                        label={getString('rbac.userDetails.linkToSSOProviderModal.groupNameLabel')}
-                      />
+                      {getSelectedSSOType(formik.values.sso)?.ssoType === 'SAML' && (
+                        <FormInput.Text
+                          disabled={!formik.values.sso || fetching}
+                          name="groupName"
+                          label={getString('rbac.userDetails.linkToSSOProviderModal.groupNameLabel')}
+                        />
+                      )}
+                      {getSelectedSSOType(formik.values.sso)?.ssoType === 'LDAP' && <LinkToLDAPProviderForm />}
                     </Layout.Vertical>
                   </Container>
                   <Layout.Horizontal>
@@ -170,7 +225,11 @@ const LinkToSSOProviderForm: React.FC<LinkToSSOProviderModalData> = props => {
                       data-testid="submitLinkSSOProvider"
                       text={getString('save')}
                       type="submit"
-                      disabled={fetching}
+                      disabled={
+                        fetching ||
+                        (getSelectedSSOType(formik.values.sso)?.ssoType === 'LDAP' &&
+                          (formik.values as LinkToLdapProviderFormData)?.selectedRadioValue === undefined)
+                      }
                     />
                   </Layout.Horizontal>
                 </Form>

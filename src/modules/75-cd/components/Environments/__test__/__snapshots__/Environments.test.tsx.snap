@@ -2,6 +2,7 @@
 
 exports[`Environments should render Environments 1`] = `
 <div>
+  Help Panel
   <main
     class="layout"
   >

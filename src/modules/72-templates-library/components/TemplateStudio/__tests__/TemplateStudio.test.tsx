@@ -26,6 +26,24 @@ jest.spyOn(cdng, 'useGetSourceCodeManagers').mockImplementation((): any => {
   return { data: sourceCodeManagers, refetch: jest.fn(), loading: false }
 })
 
+jest.mock('services/template-ng', () => ({
+  useGetTemplateSchema: jest.fn(() => ({})),
+  useUpdateStableTemplate: jest.fn().mockImplementation(() => {
+    return {
+      mutate: () =>
+        Promise.resolve({
+          data: { name: 'date name' }
+        }),
+      loading: false
+    }
+  })
+}))
+
+jest.mock('@common/hooks', () => ({
+  ...(jest.requireActual('@common/hooks') as any),
+  useMutateAsGet: jest.fn(() => ({}))
+}))
+
 const updateTemplate = jest.fn()
 const updateTemplateView = jest.fn()
 

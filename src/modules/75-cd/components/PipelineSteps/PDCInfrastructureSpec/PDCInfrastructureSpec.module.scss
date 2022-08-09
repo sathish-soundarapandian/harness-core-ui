@@ -44,13 +44,8 @@
 }
 
 .simultaneousDeployment {
-  display: inline-flex !important;
-  .Accordion--panel {
-    padding-bottom: 0;
-    .Accordion--details {
-      padding-bottom: 0;
-    }
-  }
+  padding-top: var(--spacing) !important;
+  border-top: 1px solid var(--grey-200);
 }
 
 .clusterInputWrapper {
@@ -83,6 +78,8 @@
   width: 200px !important;
 }
 
-.hostSpecificContainer {
-  align-items: center;
+.hostsControls {
+  border-bottom: 1px solid var(--grey-200);
+  padding-bottom: var(--spacing-small) !important;
+  justify-content: flex-start !important;
 }

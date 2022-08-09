@@ -32,7 +32,6 @@ const ManifestInputField = (props: ManifestInputFieldProps): React.ReactElement 
 
   const runtimeMode = isRuntimeMode(props.stepViewType)
   const isManifestsRuntime = runtimeMode && !!get(props.template, 'manifests', false)
-
   const manifestSource = manifestSourceBaseFactory.getManifestSource(props.manifest.type)
   const manifestDefaultValue = defaultTo(props.manifests, props.template.manifests)?.find(
     manifestData => manifestData?.manifest?.identifier === props.manifest?.identifier

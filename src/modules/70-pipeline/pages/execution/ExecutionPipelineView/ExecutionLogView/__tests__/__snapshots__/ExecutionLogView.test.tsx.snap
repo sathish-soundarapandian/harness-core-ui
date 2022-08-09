@@ -29,21 +29,23 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
                   data-primary-state="running"
                 >
                   <span
-                    class="bp3-icon bp3-icon-circle StyledProps--main StyledProps--color StyledProps--color-primary7"
-                    icon="circle"
+                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary7"
+                    data-icon="spinner"
                   >
                     <svg
-                      data-icon="circle"
+                      fill="none"
                       height="12"
-                      viewBox="0 0 16 16"
+                      viewBox="0 0 36 36"
                       width="12"
+                      xmlns="http://www.w3.org/2000/svg"
                     >
-                      <desc>
-                        circle
-                      </desc>
                       <path
-                        d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 14c-3.3 0-6-2.7-6-6s2.7-6 6-6 6 2.7 6 6-2.7 6-6 6z"
-                        fill-rule="evenodd"
+                        d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
+                        stroke="currentColor"
+                        stroke-dasharray="75,100"
+                        stroke-linecap="round"
+                        stroke-width="2.8"
+                        style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
                       />
                     </svg>
                   </span>
@@ -62,21 +64,23 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
                   data-primary-state="running"
                 >
                   <span
-                    class="bp3-icon bp3-icon-circle StyledProps--main StyledProps--color StyledProps--color-primary7"
-                    icon="circle"
+                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary7"
+                    data-icon="spinner"
                   >
                     <svg
-                      data-icon="circle"
+                      fill="none"
                       height="12"
-                      viewBox="0 0 16 16"
+                      viewBox="0 0 36 36"
                       width="12"
+                      xmlns="http://www.w3.org/2000/svg"
                     >
-                      <desc>
-                        circle
-                      </desc>
                       <path
-                        d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 14c-3.3 0-6-2.7-6-6s2.7-6 6-6 6 2.7 6 6-2.7 6-6 6z"
-                        fill-rule="evenodd"
+                        d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
+                        stroke="currentColor"
+                        stroke-dasharray="75,100"
+                        stroke-linecap="round"
+                        stroke-width="2.8"
+                        style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
                       />
                     </svg>
                   </span>

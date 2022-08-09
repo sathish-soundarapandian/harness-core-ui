@@ -13,7 +13,6 @@
     { "uuid": null, "name": "CD_OVERVIEW_PAGE", "enabled": true, "lastUpdatedAt": 0 },
     { "uuid": null, "name": "CI_OVERVIEW_PAGE", "enabled": true, "lastUpdatedAt": 0 },
     { "uuid": null, "name": "TI_CALLGRAPH", "enabled": true, "lastUpdatedAt": 0 },
-    { "uuid": null, "name": "NG_TEMPLATES", "enabled": true, "lastUpdatedAt": 0 },
     { "uuid": null, "name": "GTM_CCM_ENABLED", "enabled": true, "lastUpdatedAt": 0 },
     { "uuid": null, "name": "CDNG_ENABLED", "enabled": true, "lastUpdatedAt": 0 },
     { "uuid": null, "name": "CHI_CUSTOM_HEALTH", "enabled": true, "lastUpdatedAt": 0 },
@@ -21,6 +20,7 @@
     { "uuid": null, "name": "DYNATRACE_APM_ENABLED", "enabled": true, "lastUpdatedAt": 0 },
     { "uuid": null, "name": "SECURITY_STAGE", "enabled": true, "lastUpdatedAt": 0 },
     { "uuid": null, "name": "SERVERLESS_SUPPORT", "enabled": true, "lastUpdatedAt": 0 },
+    { "uuid": null, "name": "AZURE_WEBAPP_NG", "enabled": true, "lastUpdatedAt": 0 },
     { "uuid": null, "name": "ENV_GROUP", "enabled": true, "lastUpdatedAt": 0 },
     { "uuid": null, "name": "NG_CUSTOM_STAGE", "enabled": true, "lastUpdatedAt": 0 }
   ],

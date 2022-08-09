@@ -30,6 +30,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 
 import type { KustomizePatchDataType, ManifestTypes } from '../../ManifestInterface'
 
@@ -196,7 +197,7 @@ const renderPathArr = ({
         multiTextInputProps={{
           expressions,
           allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-            allowedType => allowedType !== MultiTypeInputType.RUNTIME
+            allowedType => !isMultiTypeRuntime(allowedType)
           ) as AllowedTypes
         }}
       />

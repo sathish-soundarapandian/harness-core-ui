@@ -22,8 +22,8 @@ import { Color, FontVariation } from '@harness/design-system'
 import copy from 'copy-to-clipboard'
 import { useParams } from 'react-router-dom'
 import type { IconName } from '@blueprintjs/icons'
-import { defaultTo } from 'lodash-es'
-import { Classes, Menu, Popover, Position } from '@blueprintjs/core'
+import { defaultTo, get } from 'lodash-es'
+import { Menu, Popover, Position } from '@blueprintjs/core'
 // import { Dialog, IconName, IDialogProps } from '@blueprintjs/core'
 import { AccessPoint, useAccessPointActivity, useAccessPointRules, useAllAccessPoints } from 'services/lw'
 import { useToaster } from '@common/exports'
@@ -31,12 +31,19 @@ import { useStrings } from 'framework/strings'
 // import CreateAccessPointWizard from '../COGatewayAccess/CreateAccessPointWizard'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import RbacButton from '@rbac/components/Button/Button'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import PermissionError from '@ce/images/permission-error.svg'
+import EmptyPage from '@ce/common/EmptyPage/EmptyPage'
 import DeleteAccessPoint from '../COAccessPointDelete/DeleteAccessPoint'
 import { getRelativeTime } from '../COGatewayList/Utils'
 // import LoadBalancerDnsConfig from '../COGatewayAccess/LoadBalancerDnsConfig'
 import useCreateAccessPointDialog from './COCreateAccessPointDialog'
 import TextWithToolTip, { textWithToolTipStatus } from '../TextWithTooltip/TextWithToolTip'
 import useEditAccessPoint from './EditAccessPoint'
+import HandleError from '../PermissionError/PermissionError'
 import css from './COAcessPointList.module.scss'
 
 function NameCell(tableProps: CellProps<AccessPoint>): JSX.Element {
@@ -181,10 +188,9 @@ const RenderColumnMenu = (
         onInteraction={nextOpenState => {
           setMenuOpen(nextOpenState)
         }}
-        className={Classes.DARK}
         position={Position.BOTTOM_RIGHT}
       >
-        <Button
+        <RbacButton
           minimal
           icon="Options"
           onClick={e => {
@@ -192,9 +198,25 @@ const RenderColumnMenu = (
             setMenuOpen(true)
           }}
           data-testid={`menu-${columnId}`}
+          permission={{
+            permission: PermissionIdentifier.EDIT_CCM_LOADBALANCER,
+            resource: {
+              resourceType: ResourceType.LOADBALANCER
+            }
+          }}
         />
         <Menu style={{ minWidth: 'unset' }}>
-          <Menu.Item icon="edit" text="Edit" onClick={() => openEditAccessPointModal(row.original)} />
+          <RbacMenuItem
+            icon="edit"
+            text="Edit"
+            onClick={() => openEditAccessPointModal(row.original)}
+            permission={{
+              permission: PermissionIdentifier.EDIT_CCM_LOADBALANCER,
+              resource: {
+                resourceType: ResourceType.LOADBALANCER
+              }
+            }}
+          />
         </Menu>
       </Popover>
     </Layout.Horizontal>
@@ -234,9 +256,6 @@ const COLoadBalancerList: React.FC = () => {
     [allAccessPoints]
   )
 
-  if (error) {
-    showError(error.data || error.message, undefined, 'ce.all.ap.rules.error')
-  }
   useEffect(() => {
     if (loading) {
       return
@@ -248,6 +267,27 @@ const COLoadBalancerList: React.FC = () => {
     refetch()
     setSelectedAccessPoints([])
   }
+
+  if (loading) {
+    return (
+      <div className={css.loaderContainer}>
+        <PageSpinner />
+      </div>
+    )
+  }
+
+  if (error) {
+    if (error.status === 403) {
+      return (
+        <Container className={css.loaderContainer}>
+          <HandleError imgSrc={PermissionError} errorMsg={get(error, 'data.message', '')} />
+        </Container>
+      )
+    } else {
+      showError((error.data as any)?.message || error.message)
+    }
+  }
+
   return (
     <Container background={Color.WHITE}>
       <Page.Header
@@ -257,29 +297,31 @@ const COLoadBalancerList: React.FC = () => {
       />
       <Layout.Horizontal padding="large">
         <Layout.Horizontal width="55%" spacing="medium">
-          <Button
+          <RbacButton
             intent="primary"
             text={getString('ce.co.accessPoint.new')}
             icon="plus"
             disabled={loading}
             onClick={() => openCreateAccessPointModal()}
+            permission={{
+              permission: PermissionIdentifier.EDIT_CCM_LOADBALANCER,
+              resource: {
+                resourceType: ResourceType.LOADBALANCER
+              }
+            }}
           />
           <DeleteAccessPoint accessPoints={selectedAccessPoints} accountId={accountId} refresh={refreshList} />
         </Layout.Horizontal>
       </Layout.Horizontal>
       <Page.Body className={css.pageContainer}>
-        {!loading ? (
-          allAccessPoints?.length > 0 && (
-            <AccessPointTable
-              allAccessPoints={allAccessPoints}
-              selectedAccessPoints={selectedAccessPoints}
-              setSelectedAccessPoints={setSelectedAccessPoints}
-            />
-          )
+        {allAccessPoints?.length > 0 ? (
+          <AccessPointTable
+            allAccessPoints={allAccessPoints}
+            selectedAccessPoints={selectedAccessPoints}
+            setSelectedAccessPoints={setSelectedAccessPoints}
+          />
         ) : (
-          <div className={css.loaderContainer}>
-            <PageSpinner />
-          </div>
+          <EmptyPage />
         )}
       </Page.Body>
     </Container>

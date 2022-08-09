@@ -32,6 +32,7 @@ export enum StepCommandsViews {
 }
 
 export interface StepCommandsProps {
+  helpPanelVisible?: boolean
   step: StepOrStepGroupOrTemplateStepData
   onChange?: (step: Partial<Values>) => void
   onUpdate: (step: Partial<Values>) => void

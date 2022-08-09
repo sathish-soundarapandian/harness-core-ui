@@ -10,6 +10,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom'
 
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
+import { useLogout } from 'framework/utils/SessionUtils'
 import { PermissionsContext } from 'framework/rbac/PermissionsContext'
 import { LicenseStoreContext } from 'framework/LicenseStore/LicenseStoreContext'
 import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
@@ -23,6 +24,7 @@ import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import { global401HandlerUtils } from '@common/utils/global401HandlerUtils'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import ChildAppError from './ChildAppError'
 import type { ChildAppProps, Scope } from './index'
 
@@ -92,7 +94,9 @@ export class ChildAppMounter<T = never> extends React.Component<
           }}
           hooks={{
             useDocumentTitle,
-            useTelemetry
+            useTelemetry,
+            useLogout,
+            useRBACError
           }}
         >
           {children}

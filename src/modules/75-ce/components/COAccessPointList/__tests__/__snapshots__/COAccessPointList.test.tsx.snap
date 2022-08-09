@@ -480,7 +480,7 @@ exports[`Test Access Point List Renders without errors 1`] = `
                   class="Layout--horizontal StyledProps--main layout"
                 >
                   <span
-                    class="bp3-popover-wrapper bp3-dark"
+                    class="bp3-popover-wrapper"
                   >
                     <span
                       class="bp3-popover-target"

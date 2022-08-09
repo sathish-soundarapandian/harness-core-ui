@@ -25,3 +25,12 @@
 .select {
   width: 100%;
 }
+
+.wrapper {
+  width: 80%;
+  :global {
+    .bp3-control-indicator {
+      margin-left: 0px !important;
+    }
+  }
+}

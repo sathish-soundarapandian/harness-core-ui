@@ -22,7 +22,7 @@ import * as useValidationErrors from '@pipeline/components/PipelineStudio/Piplin
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { DeployServiceStep } from '@cd/components/PipelineSteps/DeployServiceStep/DeployServiceStep'
-import { KubernetesServiceSpec } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sServiceSpec'
+import { GenericServiceSpec } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sServiceSpec'
 import { ServerlessAwsLambdaServiceSpec } from '@cd/components/PipelineSteps/ServerlessAwsLambdaServiceSpec/ServerlessAwsLambdaServiceSpec'
 import services, { servicesV2Mock } from './servicesMock'
 import mockListSecrets from './mockListSecret.json'
@@ -100,7 +100,7 @@ window.IntersectionObserver = jest.fn().mockImplementation(intersectionObserverM
 describe('Deploy service stage specifications', () => {
   beforeAll(() => {
     factory.registerStep(new DeployServiceStep())
-    factory.registerStep(new KubernetesServiceSpec())
+    factory.registerStep(new GenericServiceSpec())
     factory.registerStep(new ServerlessAwsLambdaServiceSpec())
   })
   test(`Propagate from option and dropdown to select previous stage and service should be present`, async () => {

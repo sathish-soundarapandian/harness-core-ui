@@ -20,6 +20,7 @@ import {
 interface ProvisionDelegateForHostedBuildsReturns {
   initiateProvisioning: () => void
   delegateProvisioningStatus: ProvisioningStatus
+  fetchingDelegateDetails: boolean
 }
 
 export function useProvisionDelegateForHostedBuilds(): ProvisionDelegateForHostedBuildsReturns {
@@ -99,5 +100,5 @@ export function useProvisionDelegateForHostedBuilds(): ProvisionDelegateForHoste
     }
   }, [initProvisioning])
 
-  return { initiateProvisioning: () => setInitProvisioning(true), delegateProvisioningStatus }
+  return { initiateProvisioning: () => setInitProvisioning(true), delegateProvisioningStatus, fetchingDelegateDetails }
 }

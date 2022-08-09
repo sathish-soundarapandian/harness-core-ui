@@ -57,8 +57,9 @@ import {
   MAX_ERR_MSSG_LENGTH,
   CONTROL_EVENT_KEY_CODE,
   META_EVENT_KEY_CODE,
-  KEY_CODE_FOR_CHAR_V,
-  KEY_CODE_FOR_CHAR_C
+  SHIFT_EVENT_KEY_CODE,
+  navigationKeysMap,
+  allowedKeysInEditModeMap
 } from './YAMLBuilderConstants'
 import CopyToClipboard from '../CopyToClipBoard/CopyToClipBoard'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
@@ -118,7 +119,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     yamlSanityConfig,
     onChange,
     onErrorCallback,
-    renderCustomHeader
+    renderCustomHeader,
+    openDialogProp
   } = props
   setUpEditor(theme)
   const params = useParams()
@@ -393,28 +395,33 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   /* #endregion */
 
-  const { openDialog } = useConfirmationDialog({
-    contentText: getString('yamlBuilder.enableEditContext'),
-    titleText: getString('confirm'),
-    confirmButtonText: getString('enable'),
-    cancelButtonText: getString('cancel'),
-    intent: Intent.WARNING,
-    onCloseDialog: async didConfirm => {
-      if (didConfirm) {
-        onEnableEditMode?.()
-      }
-    }
-  })
+  const { openDialog } = openDialogProp
+    ? { openDialog: openDialogProp }
+    : useConfirmationDialog({
+        contentText: getString('yamlBuilder.enableEditContext'),
+        titleText: getString('confirm'),
+        confirmButtonText: getString('enable'),
+        cancelButtonText: getString('cancel'),
+        intent: Intent.WARNING,
+        onCloseDialog: async didConfirm => {
+          if (didConfirm) {
+            onEnableEditMode?.()
+          }
+        }
+      })
 
   const handleEditorKeyDownEvent = (event: IKeyboardEvent, editor: any): void => {
     if (isHarnessManaged) {
       showHarnessManagedError()
     } else if (props.isReadOnlyMode && isEditModeSupported) {
-      const { keyCode, code, ctrlKey, metaKey } = event
-      const isMetaOrControlKeyPressed = [CONTROL_EVENT_KEY_CODE, META_EVENT_KEY_CODE].includes(keyCode)
+      const { keyCode, code, ctrlKey, metaKey, shiftKey } = event
+      const isMetaOrControlKeyPressed = [CONTROL_EVENT_KEY_CODE, META_EVENT_KEY_CODE, SHIFT_EVENT_KEY_CODE].includes(
+        keyCode
+      )
       const isMetaOrControlKeyPressedForCopyPaste =
-        (ctrlKey || metaKey) && [KEY_CODE_FOR_CHAR_V, KEY_CODE_FOR_CHAR_C].includes(code)
-      if (!(isMetaOrControlKeyPressed || isMetaOrControlKeyPressedForCopyPaste)) {
+        (ctrlKey || metaKey || shiftKey) && allowedKeysInEditModeMap.includes(code)
+      const navigationKeysPressed = navigationKeysMap.includes(code)
+      if (!(isMetaOrControlKeyPressed || isMetaOrControlKeyPressedForCopyPaste || navigationKeysPressed)) {
         // this is to avoid showing warning dialog if user just wants to copy paste
         openDialog()
       }

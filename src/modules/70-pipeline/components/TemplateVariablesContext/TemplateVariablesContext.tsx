@@ -8,10 +8,9 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get } from 'lodash-es'
-import { parse } from 'yaml'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import type { GitQueryParams, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import {
   Failure,
   NGTemplateInfoConfig,

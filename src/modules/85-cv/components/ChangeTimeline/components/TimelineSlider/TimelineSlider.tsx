@@ -45,7 +45,8 @@ const TimelineSlider: React.FC<TimelineSliderProps> = ({
   resetFocus,
   maxSliderWidth,
   hideSlider,
-  onZoom
+  onZoom,
+  selectedTimePeriod
 }) => {
   const { getString } = useStrings()
   const mainRef = useRef<HTMLDivElement>(null)
@@ -114,6 +115,18 @@ const TimelineSlider: React.FC<TimelineSliderProps> = ({
       })
     }
   }, [hideSlider, initialSliderWidth])
+
+  useEffect(() => {
+    if (selectedTimePeriod) {
+      const offset = containerWidth - initialSliderWidth
+      setSliderAspects({
+        width: initialSliderWidth,
+        leftOffset: offset,
+        rightHandlePosition: initialSliderWidth - INITIAL_RIGHT_SLIDER_OFFSET,
+        leftHandlePosition: LEFT_SLIDER_OFFSET
+      })
+    }
+  }, [containerWidth, selectedTimePeriod, initialSliderWidth])
 
   const containerStyles = useMemo(
     () => ({ width: initialContainerWidth, left: leftContainerOffset }),

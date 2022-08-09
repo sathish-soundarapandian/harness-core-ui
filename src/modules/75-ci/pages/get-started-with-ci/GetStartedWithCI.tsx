@@ -52,7 +52,8 @@ export default function GetStartedWithCI(): React.ReactElement {
   const { getString } = useStrings()
   const [showWizard, setShowWizard] = useState<boolean>(false)
   const [showProvisioningCarousel, setShowProvisioningCarousel] = useState<boolean>(false)
-  const { initiateProvisioning, delegateProvisioningStatus } = useProvisionDelegateForHostedBuilds()
+  const { initiateProvisioning, delegateProvisioningStatus, fetchingDelegateDetails } =
+    useProvisionDelegateForHostedBuilds()
   const [preSelectedGitConnector, setPreselectedGitConnector] = useState<ConnectorInfoDTO>()
   const [connectorsEligibleForPreSelection, setConnectorsEligibleForPreSelection] = useState<ConnectorInfoDTO[]>()
   const [secretForPreSelectedConnector, setSecretForPreSelectedConnector] = useState<SecretDTOV2>()
@@ -81,7 +82,7 @@ export default function GetStartedWithCI(): React.ReactElement {
             (item: ConnectorResponse) =>
               get(item, 'connector.spec.apiAccess.spec.tokenRef') && item.status?.status === Status.SUCCESS
           )
-          if (selectedConnector) {
+          if (selectedConnector?.connector) {
             setPreselectedGitConnector(selectedConnector?.connector)
             const secretIdentifier = getIdentifierFromValue(
               get(selectedConnector, 'connector.spec.apiAccess.spec.tokenRef')
@@ -208,7 +209,7 @@ export default function GetStartedWithCI(): React.ReactElement {
   return (
     <>
       {showPageLoader ? <PageSpinner /> : <></>}
-      {!showPageLoader && showWizard ? (
+      {showWizard ? (
         <InfraProvisioningWizard
           precursorData={{
             preSelectedGitConnector,
@@ -253,7 +254,7 @@ export default function GetStartedWithCI(): React.ReactElement {
                   </Layout.Horizontal>
                 </Container>
                 <Layout.Vertical>
-                  <Text font={{ variation: FontVariation.H2 }}>{getString('ci.getStartedWithCI.firstPipeline')}</Text>
+                  <Text font={{ variation: FontVariation.H2 }}>{getString('common.getStarted.firstPipeline')}</Text>
                   <Text font={{ variation: FontVariation.SMALL }} padding={{ top: 'small' }}>
                     {getString('common.purpose.ci.descriptionOnly')}
                   </Text>
@@ -276,7 +277,7 @@ export default function GetStartedWithCI(): React.ReactElement {
                         size: 20,
                         className: cx(css.icon, css.iconPaddingSmall)
                       },
-                      label: 'ci.getStartedWithCI.buildPipeline',
+                      label: 'common.getStarted.buildPipeline',
                       isLastStep: true
                     })}
                   </Layout.Horizontal>
@@ -292,12 +293,13 @@ export default function GetStartedWithCI(): React.ReactElement {
                           initiateProvisioning()
                         }
                       }}
+                      disabled={fetchingDelegateDetails}
                     />
                   </Container>
                 </Layout.Vertical>
                 <img
                   className={css.buildImg}
-                  title={getString('ci.getStartedWithCI.buildPipeline')}
+                  title={getString('common.getStarted.buildPipeline')}
                   src={buildImgURL}
                   width={413}
                   height={260}

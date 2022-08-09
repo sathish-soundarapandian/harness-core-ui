@@ -25,8 +25,14 @@ interface ProjectSetupMenuProps {
 const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<PipelineType<ProjectPathProps>>()
-  const { NG_TEMPLATES, OPA_PIPELINE_GOVERNANCE, NG_VARIABLES, CVNG_TEMPLATE_MONITORED_SERVICE, NG_FILE_STORE } =
-    useFeatureFlags()
+  const {
+    OPA_PIPELINE_GOVERNANCE,
+    NG_VARIABLES,
+    CVNG_TEMPLATE_MONITORED_SERVICE,
+    NG_FILE_STORE,
+    NG_SETTINGS,
+    CD_ONBOARDING_ENABLED
+  } = useFeatureFlags()
   const { showGetStartedTabInMainMenu } = useSideNavContext()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
   const params = { accountId, orgIdentifier, projectIdentifier, module }
@@ -44,15 +50,16 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
         {NG_VARIABLES && <SidebarLink label={getString('common.variables')} to={routes.toVariables(params)} />}
         <SidebarLink to={routes.toAccessControl(params)} label={getString('accessControl')} />
         <SidebarLink label={getString('delegate.delegates')} to={routes.toDelegates(params)} />
+        {NG_SETTINGS && (
+          <SidebarLink label={getString('common.defaultSettings')} to={routes.toDefaultSettings(params)} />
+        )}
         {getGitSyncEnabled ? (
           <SidebarLink
             label={getString('gitManagement')}
             to={routes.toGitSyncAdmin({ accountId, orgIdentifier, projectIdentifier, module })}
           />
         ) : null}
-        {NG_TEMPLATES && isCIorCDorSTO && (
-          <SidebarLink label={getString('common.templates')} to={routes.toTemplates(params)} />
-        )}
+        {isCIorCDorSTO && <SidebarLink label={getString('common.templates')} to={routes.toTemplates(params)} />}
         {CVNG_TEMPLATE_MONITORED_SERVICE && isCV && (
           <SidebarLink
             label={getString('common.templates')}
@@ -67,6 +74,10 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
         )}
         {enabledHostedBuildsForFreeUsers && !showGetStartedTabInMainMenu && module === 'ci' && (
           <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCI({ ...params, module })} />
+        )}
+
+        {CD_ONBOARDING_ENABLED && module === 'cd' && !showGetStartedTabInMainMenu && (
+          <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCD({ ...params, module })} />
         )}
       </Layout.Vertical>
     </NavExpandable>

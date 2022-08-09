@@ -8,8 +8,6 @@
 import { AllowedTypes, StepWizard } from '@harness/uicore'
 import React from 'react'
 import { get } from 'lodash-es'
-
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { ConnectorRefLabelType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import type { ReleaseRepoManifest } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -55,11 +53,10 @@ function ReleaseRepoWizard({
   handleSubmit,
   manifest,
   allowableTypes,
-  isReadonly
+  isReadonly,
+  expressions
 }: ReleaseRepoStepProps): React.ReactElement {
   const { getString } = useStrings()
-
-  const { expressions } = useVariablesExpression()
 
   const onStepChange = (arg: StepChangeData<any>): void => {
     /*istanbul ignore next */

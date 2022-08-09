@@ -20,6 +20,7 @@ import type { HttpHeaderConfig, StringNGVariable } from 'services/pipeline-ng'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import type { StringsMap } from 'stringTypes'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import { httpStepType } from './HttpStepBase'
 import HttpInputSetStep from './HttpInputSetStep'
 import { HttpStepWidgetWithRef } from './HttpStepWidget'
@@ -83,6 +84,7 @@ export class HttpStep extends PipelineStep<HttpStepData> {
   protected type = StepType.HTTP
   protected stepName = 'HTTP Step'
   protected stepIcon: IconName = 'http-step'
+  protected referenceId = 'httpStep'
   protected stepIconColor = Color.GREY_700
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.HTTP'
 
@@ -199,13 +201,12 @@ export class HttpStep extends PipelineStep<HttpStepData> {
       ...initialValues,
       spec: {
         ...(initialValues.spec as HttpStepFormData),
-        method:
-          type === MultiTypeInputType.RUNTIME
-            ? (methodValue as string)
-            : type === MultiTypeInputType.EXPRESSION
-            ? methodValue
-            : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              httpStepType.find(step => step.value === (methodValue || 'GET'))!,
+        method: isMultiTypeRuntime(type)
+          ? (methodValue as string)
+          : type === MultiTypeInputType.EXPRESSION
+          ? methodValue
+          : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            httpStepType.find(step => step.value === (methodValue || 'GET'))!,
         headers:
           getMultiTypeFromValue(initialValues.spec?.headers as string) === MultiTypeInputType.RUNTIME
             ? (initialValues.spec?.headers as string)

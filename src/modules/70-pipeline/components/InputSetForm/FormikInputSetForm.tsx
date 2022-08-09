@@ -18,7 +18,6 @@ import {
   VisualYamlSelectedView as SelectedView
 } from '@wings-software/uicore'
 import { useHistory, useParams } from 'react-router-dom'
-import { parse } from 'yaml'
 import cx from 'classnames'
 import type { FormikErrors, FormikProps } from 'formik'
 import type {
@@ -49,6 +48,7 @@ import {
 import { mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { getYamlFileName } from '@pipeline/utils/yamlUtils'
+import { parse } from '@common/utils/YamlHelperMethods'
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import { factory } from '../PipelineSteps/Steps/__tests__/StepTestUtil'
@@ -60,8 +60,10 @@ export const showPipelineInputSetForm = (
   resolvedTemplatesPipelineYaml: string | undefined,
   template: ResponseInputSetTemplateWithReplacedExpressionsResponse | null
 ): boolean => {
-  return (
-    resolvedTemplatesPipelineYaml && template?.data?.inputSetTemplateYaml && parse(template.data.inputSetTemplateYaml)
+  return !!(
+    resolvedTemplatesPipelineYaml &&
+    template?.data?.inputSetTemplateYaml &&
+    parse<Pipeline>(template.data.inputSetTemplateYaml)
   )
 }
 
@@ -146,8 +148,8 @@ function useValidateValues({
       if (values.pipeline && isYamlPresent(template, pipeline)) {
         errors.pipeline = validatePipeline({
           pipeline: values.pipeline,
-          template: parse(defaultTo(template?.data?.inputSetTemplateYaml, '')).pipeline,
-          originalPipeline: parse(defaultTo(pipeline?.data?.yamlPipeline, '')).pipeline,
+          template: parse<Pipeline>(defaultTo(template?.data?.inputSetTemplateYaml, '')).pipeline,
+          originalPipeline: parse<Pipeline>(defaultTo(pipeline?.data?.yamlPipeline, '')).pipeline,
           getString,
           viewType: StepViewType.InputSet,
           viewTypeMetadata: { isInputSet: true },
@@ -226,7 +228,10 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
   >()
   const { repoIdentifier, branch, connectorRef, storeType, repoName } = useQueryParams<InputSetGitQueryParams>()
   const history = useHistory()
-  const resolvedPipeline = defaultTo(parse(defaultTo(resolvedTemplatesPipelineYaml, ''))?.pipeline, {})
+  const resolvedPipeline = defaultTo(
+    parse<Pipeline>(defaultTo(resolvedTemplatesPipelineYaml, ''))?.pipeline,
+    {} as PipelineInfoConfig
+  )
 
   useEffect(() => {
     if (!isUndefined(inputSet?.outdated) && yamlHandler?.setLatestYaml) {
@@ -401,8 +406,10 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                               <PipelineInputSetForm
                                 path="pipeline"
                                 readonly={!isEditable}
-                                originalPipeline={parse(defaultTo(resolvedTemplatesPipelineYaml, ''))?.pipeline}
-                                template={parse(defaultTo(template?.data?.inputSetTemplateYaml, '')).pipeline}
+                                originalPipeline={
+                                  parse<Pipeline>(defaultTo(resolvedTemplatesPipelineYaml, ''))?.pipeline
+                                }
+                                template={parse<Pipeline>(defaultTo(template?.data?.inputSetTemplateYaml, '')).pipeline}
                                 viewType={StepViewType.InputSet}
                               />
                             )}
@@ -470,7 +477,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                         text={getString('save')}
                         onClick={() => {
                           const latestYaml = defaultTo(yamlHandler?.getLatestYaml(), '')
-                          const inputSetDto: InputSetDTO = parse(latestYaml)?.inputSet
+                          const inputSetDto: InputSetDTO = parse<{ inputSet: InputSetDTO }>(latestYaml)?.inputSet
                           const identifier = inputSetDto.identifier
                           const defaultFilePath = identifier ? `.harness/${identifier}.yaml` : ''
 

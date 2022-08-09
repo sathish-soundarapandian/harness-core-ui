@@ -59,12 +59,3 @@
     cursor: pointer;
   }
 }
-
-.excludeSideNavOverlay {
-  :global {
-    .bp3-overlay-backdrop,
-    .bp3-overlay {
-      left: 270px;
-    }
-  }
-}

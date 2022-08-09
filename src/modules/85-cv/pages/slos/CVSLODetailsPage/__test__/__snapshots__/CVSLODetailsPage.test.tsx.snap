@@ -389,7 +389,7 @@ exports[`Test cases for CVSLODetailsPage it should render the component with cor
         role="tabpanel"
       >
         <div
-          class="StyledProps--font StyledProps--main PageBody--pageBody pageBody"
+          class="StyledProps--font StyledProps--main PageBody--pageBody"
           data-name="page-body"
         >
           <div

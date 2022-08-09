@@ -42,7 +42,7 @@ import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
 import DragnDropPaths from '../../DragnDropPaths'
 
 import { filePathWidth, getRepositoryName } from '../ManifestUtils'
-import css from '../K8sValuesManifest/ManifestDetails.module.scss'
+import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
 interface ServerlessAwsLambdaManifestPropType {
   stepName: string

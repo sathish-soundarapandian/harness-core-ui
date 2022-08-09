@@ -81,6 +81,7 @@ export const getTriggerIcon = ({
 
 const triggerDrawerMap = (
   getString: (key: StringKeys) => string,
+  isNewService: boolean,
   includeAzureReposTrigger?: boolean
 ): AddDrawerMapInterface => ({
   drawerLabel: getString('common.triggersLabel'),
@@ -126,6 +127,14 @@ const triggerDrawerMap = (
         }
       ]
     },
+    ...(isNewService
+      ? [
+          {
+            categoryLabel: getString('common.comingSoon'),
+            categoryValue: 'ArtifactComingSoon'
+          }
+        ]
+      : []),
     {
       categoryLabel: getString('pipeline.artifactTriggerConfigPanel.artifact'),
       categoryValue: 'Artifact',
@@ -133,42 +142,61 @@ const triggerDrawerMap = (
         {
           itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Gcr]),
           value: ENABLED_ARTIFACT_TYPES.Gcr,
-          iconName: ArtifactIconByType.Gcr
+          iconName: ArtifactIconByType.Gcr,
+          disabled: isNewService
         },
         {
           itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Ecr]),
           value: ENABLED_ARTIFACT_TYPES.Ecr,
-          iconName: ArtifactIconByType.Ecr
+          iconName: ArtifactIconByType.Ecr,
+          disabled: isNewService
         },
         {
           itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.DockerRegistry]),
           value: ENABLED_ARTIFACT_TYPES.DockerRegistry,
-          iconName: ArtifactIconByType.DockerRegistry
+          iconName: ArtifactIconByType.DockerRegistry,
+          disabled: isNewService
         },
         {
           itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry]),
           value: ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
-          iconName: ArtifactIconByType.ArtifactoryRegistry
+          iconName: ArtifactIconByType.ArtifactoryRegistry,
+          disabled: isNewService
         },
         {
           itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Acr]),
           value: ENABLED_ARTIFACT_TYPES.Acr,
-          iconName: ArtifactIconByType.Acr
-        }
+          iconName: ArtifactIconByType.Acr,
+          disabled: isNewService
+        },
+        ...(isNewService
+          ? [
+              {
+                itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Nexus3Registry]),
+                value: ENABLED_ARTIFACT_TYPES.Nexus3Registry,
+                iconName: ArtifactIconByType.Nexus3Registry as IconName,
+                disabled: true
+              }
+            ]
+          : [])
       ]
     },
-    {
-      categoryLabel: getString('common.comingSoon'),
-      categoryValue: 'ArtifactComingSoon',
-      items: [
-        {
-          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Nexus3Registry]),
-          value: ENABLED_ARTIFACT_TYPES.Nexus3Registry,
-          iconName: ArtifactIconByType.Nexus3Registry,
-          disabled: true
-        }
-      ]
-    },
+    ...(!isNewService
+      ? [
+          {
+            categoryLabel: getString('common.comingSoon'),
+            categoryValue: 'ArtifactComingSoon',
+            items: [
+              {
+                itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Nexus3Registry]),
+                value: ENABLED_ARTIFACT_TYPES.Nexus3Registry,
+                iconName: ArtifactIconByType.Nexus3Registry as IconName,
+                disabled: true
+              }
+            ]
+          }
+        ]
+      : []),
     {
       categoryLabel: getString('manifestsText'),
       categoryValue: 'Manifest',
@@ -176,7 +204,8 @@ const triggerDrawerMap = (
         {
           itemLabel: getString(manifestTypeLabels.HelmChart),
           value: ManifestDataType.HelmChart,
-          iconName: manifestTypeIcons.HelmChart
+          iconName: manifestTypeIcons.HelmChart,
+          disabled: isNewService
         }
       ]
     },
@@ -205,8 +234,9 @@ export const getSourceRepoOptions = (getString: (str: StringKeys) => string): { 
 
 export const getCategoryItems = (
   getString: (key: StringKeys) => string,
+  isNewService: boolean,
   includeAzureReposTrigger?: boolean
-): AddDrawerMapInterface => triggerDrawerMap(getString, includeAzureReposTrigger)
+): AddDrawerMapInterface => triggerDrawerMap(getString, isNewService, includeAzureReposTrigger)
 
 export interface ItemInterface {
   itemLabel: string

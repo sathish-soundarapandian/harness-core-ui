@@ -9,6 +9,7 @@
 declare const styles: {
   readonly authHeaderRow: string
   readonly headingStepTwo: string
+  readonly linkToGitBtn: string
   readonly secondStep: string
   readonly stepFormWrapper: string
 }

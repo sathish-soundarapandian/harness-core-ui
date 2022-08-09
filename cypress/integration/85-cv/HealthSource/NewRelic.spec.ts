@@ -25,7 +25,7 @@ import {
 } from '../../../support/85-cv/monitoredService/health-sources/NewRelic/constants'
 import { Connectors } from '../../../utils/connctors-utils'
 
-describe.skip('Create empty monitored service', () => {
+describe('Create empty monitored service', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       return false
@@ -57,7 +57,8 @@ describe.skip('Create empty monitored service', () => {
     cy.wait('@MetricPackCall')
     cy.wait(1000)
 
-    cy.get('input[name="metricData.Performance"]').should('not.be.checked')
+    cy.get('input[name="metricData.Performance"]').should('be.checked')
+    cy.get('input[name="metricData.Performance"]').uncheck({ force: true })
 
     // Validation
     cy.contains('span', 'Submit').click({ force: true })

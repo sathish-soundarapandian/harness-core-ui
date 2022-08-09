@@ -1,5 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`test cases for Perspective details Page Should render the error component in case of API error 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main noResultsContainer"
+  >
+    <img
+      src=""
+    />
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey1000"
+    >
+      Missing Permission
+    </p>
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey500"
+    >
+      ce.permissionError
+    </p>
+  </div>
+</div>
+`;
+
 exports[`test cases for Perspective details Page should be able to render and switch to list view 1`] = `
 <div>
   <div

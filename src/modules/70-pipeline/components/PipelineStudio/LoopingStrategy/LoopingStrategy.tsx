@@ -21,7 +21,7 @@ import { clone, defaultTo, isEqual, noop } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
-import { parse } from 'yaml'
+import { parse } from '@common/utils/YamlHelperMethods'
 import type { StrategyConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import {

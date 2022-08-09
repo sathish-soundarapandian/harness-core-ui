@@ -7,8 +7,8 @@
 
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
-import { getServiceIdentifierFromStage } from '../MonitoredService.utils'
-import { mockedPipeline, mockedSelectedDerivedStage } from './MonitoredService.mock'
+import { getEnvironmentIdentifierFromStage, getServiceIdentifierFromStage } from '../MonitoredService.utils'
+import { mockedPipeline, mockedSelectedDerivedStage, mockedSelectedStageNewDesign } from './MonitoredService.mock'
 
 describe('Unit tests for MonitoredService', () => {
   test('Verify if getServiceIdentifierFromStage method gives correct serviceIdentifier when service is derived from a stage', async () => {
@@ -38,5 +38,23 @@ describe('Unit tests for MonitoredService', () => {
         mockedPipeline as PipelineInfoConfig
       )
     ).toEqual('service400')
+  })
+
+  test('Verify if getServiceIdentifierFromStage method gives correct serviceIdentifier when service from a stage from the new service Path', async () => {
+    const mockedSelectedStage = { ...mockedSelectedStageNewDesign }
+    expect(
+      getServiceIdentifierFromStage(
+        mockedSelectedStage as StageElementWrapper<DeploymentStageElementConfig>,
+        mockedPipeline as PipelineInfoConfig
+      )
+    ).toEqual('service1')
+  })
+
+  test('Verify if getEnvironmentIdentifierFromStage method gives correct envIdentifier when env from a stage from the new env Path', async () => {
+    const mockedSelectedStage = { ...mockedSelectedStageNewDesign }
+
+    expect(
+      getEnvironmentIdentifierFromStage(mockedSelectedStage as StageElementWrapper<DeploymentStageElementConfig>)
+    ).toEqual('env1')
   })
 })

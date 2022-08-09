@@ -9,6 +9,7 @@
 declare const styles: {
   readonly buttonWrapper: string
   readonly dialogStyles: string
+  readonly modalFooter: string
   readonly nameIdCard: string
   readonly tagsPopover: string
   readonly yamlBuilder: string

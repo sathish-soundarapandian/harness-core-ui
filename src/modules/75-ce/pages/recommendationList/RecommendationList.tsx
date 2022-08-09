@@ -6,18 +6,7 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import {
-  Card,
-  Text,
-  Layout,
-  Container,
-  Icon,
-  Button,
-  ButtonVariation,
-  TableV2,
-  IconName,
-  getErrorInfoFromErrorObject
-} from '@wings-software/uicore'
+import { Card, Text, Layout, Container, Icon, Button, ButtonVariation, TableV2, IconName } from '@wings-software/uicore'
 import { useHistory, useParams, Link } from 'react-router-dom'
 import type { CellProps, Renderer } from 'react-table'
 import qs from 'qs'
@@ -26,7 +15,7 @@ import { defaultTo, get, isEmpty } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'
 import { ResourceType, useFetchCcmMetaDataQuery, CcmMetaData, Maybe } from 'services/ce/services'
 import routes from '@common/RouteDefinitions'
-import { Page, useToaster } from '@common/exports'
+import { Page } from '@common/exports'
 import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import formatCost from '@ce/utils/formatCost'
 import { getViewFilterForId, GROUP_BY_CLUSTER_NAME } from '@ce/utils/perspectiveUtils'
@@ -55,6 +44,9 @@ import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import type { StringsMap } from 'stringTypes'
+import HandleError from '@ce/components/PermissionError/PermissionError'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import PermissionError from '@ce/images/permission-error.svg'
 import RecommendationSavingsCard from '../../components/RecommendationSavingsCard/RecommendationSavingsCard'
 import RecommendationFilters from '../../components/RecommendationFilters'
 import css from './RecommendationList.module.scss'
@@ -366,8 +358,6 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
 const RecommendationListPage: React.FC = () => {
   const [page, setPage] = useQueryParamsState('page', 0)
 
-  const { showError } = useToaster()
-
   const { trackPage } = useTelemetry()
   const history = useHistory()
   const { accountId } = useParams<{ accountId: string }>()
@@ -388,7 +378,7 @@ const RecommendationListPage: React.FC = () => {
   const [recommendationStats, setRecommendationStats] = useState<RecommendationOverviewStats>()
   const [recommendationCount, setRecommendationCount] = useState<number>()
   const [recommendationList, setRecommendationList] = useState<RecommendationItemDTO[]>([])
-
+  const { getRBACErrorMessage } = useRBACError()
   const perspectiveFilters = (perspectiveId ? [getViewFilterForId(perspectiveId)] : []) as QLCEViewFilterWrapper[]
 
   useEffect(() => {
@@ -409,8 +399,11 @@ const RecommendationListPage: React.FC = () => {
       accountIdentifier: accountId
     }
   })
-
-  const { loading: listLoading, mutate: fetchRecommendationList } = useListRecommendations({
+  const {
+    loading: listLoading,
+    mutate: fetchRecommendationList,
+    error: recommendationListError
+  } = useListRecommendations({
     queryParams: {
       accountIdentifier: accountId
     }
@@ -484,7 +477,7 @@ const RecommendationListPage: React.FC = () => {
       setRecommendationStats(stats.data)
       setRecommendationCount(count.data)
     } catch (error: any) {
-      showError(getErrorInfoFromErrorObject(error))
+      // showError(getErrorInfoFromErrorObject(error))
     }
   }
 
@@ -548,26 +541,34 @@ const RecommendationListPage: React.FC = () => {
         </Layout.Horizontal>
       </Card>
       <Page.Body loading={isPageLoading || fetchingCCMMetaData}>
-        <Container className={css.listContainer}>
-          <Layout.Vertical spacing="large">
-            <RecommendationCards
-              isEmptyView={isEmptyView}
-              recommendationCount={defaultTo(recommendationCount, 0)}
-              totalMonthlyCost={totalMonthlyCost}
-              totalSavings={totalSavings}
-            />
-            <RecommendationsList
-              onAddClusterSuccess={() => {
-                refetchCCMMetaData()
-              }}
-              ccmData={ccmData?.ccmMetaData}
-              pagination={pagination}
-              fetching={listLoading || fetchingCCMMetaData}
-              data={recommendationList}
-              filters={selectedFilterProperties}
-            />
-          </Layout.Vertical>
-        </Container>
+        {recommendationListError ? (
+          <HandleError
+            errorMsg={getRBACErrorMessage(recommendationListError as RBACError)}
+            imgSrc={PermissionError}
+            wrapperClassname={css.permissionErrorWrapper}
+          />
+        ) : (
+          <Container className={css.listContainer}>
+            <Layout.Vertical spacing="large">
+              <RecommendationCards
+                isEmptyView={isEmptyView}
+                recommendationCount={defaultTo(recommendationCount, 0)}
+                totalMonthlyCost={totalMonthlyCost}
+                totalSavings={totalSavings}
+              />
+              <RecommendationsList
+                onAddClusterSuccess={() => {
+                  refetchCCMMetaData()
+                }}
+                ccmData={ccmData?.ccmMetaData}
+                pagination={pagination}
+                fetching={listLoading || fetchingCCMMetaData}
+                data={recommendationList}
+                filters={selectedFilterProperties}
+              />
+            </Layout.Vertical>
+          </Container>
+        )}
       </Page.Body>
     </>
   )

@@ -14,14 +14,13 @@ import type {
   ScriptCommandUnitSpec,
   ShellScriptInlineSource,
   ShellScriptSourceWrapper,
-  StepCommandUnit,
+  CommandUnitWrapper,
   StepElementConfig,
   StepSpecType
 } from 'services/cd-ng'
 
 // Copy Command Unit type
-export interface CopyCommandUnit extends StepCommandUnit {
-  identifier: string
+export interface CopyCommandUnit extends CommandUnitWrapper {
   spec: CopyCommandUnitSpec
 }
 
@@ -32,17 +31,12 @@ interface CustomShellScriptSourceWrapper extends ShellScriptSourceWrapper {
 export interface CustomScriptCommandUnitSpec extends ScriptCommandUnitSpec {
   source: CustomShellScriptSourceWrapper
 }
-export interface CustomScriptCommandUnit extends StepCommandUnit {
-  identifier: string
+export interface CustomScriptCommandUnit extends CommandUnitWrapper {
   spec: CustomScriptCommandUnitSpec
 }
 
 // Overall Command Unit Type
 export type CommandUnitType = CopyCommandUnit | CustomScriptCommandUnit
-
-interface CustomCommandUnitWrapper {
-  commandUnit: CommandUnitType
-}
 
 export interface CommandScriptStepVariable {
   value: number | string
@@ -53,7 +47,7 @@ export interface CommandScriptStepVariable {
 
 export interface CommandScriptsData extends StepElementConfig {
   spec: StepSpecType & {
-    commandUnits?: CustomCommandUnitWrapper[]
+    commandUnits?: CommandUnitType[]
     delegateSelectors?: string[]
     environmentVariables?: Array<Omit<CommandScriptStepVariable, 'id'>>
     outputVariables?: Array<Omit<CommandScriptStepVariable, 'id'>>
@@ -64,7 +58,7 @@ export interface CommandScriptsData extends StepElementConfig {
 
 export interface CommandScriptsFormData extends StepElementConfig {
   spec: StepSpecType & {
-    commandUnits?: CustomCommandUnitWrapper[]
+    commandUnits?: CommandUnitType[]
     delegateSelectors?: string[]
     environmentVariables?: Array<CommandScriptStepVariable>
     outputVariables?: Array<CommandScriptStepVariable>

@@ -24,9 +24,7 @@ import type {
 } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableEditable'
 import type { AllNGVariables } from '@pipeline/utils/types'
 import type { AzureWebAppServiceSpecVariablesFormProps } from './AzureWebAppServiceSpecInterface.types'
-
-//todo: css
-import css from '../K8sServiceSpec/K8sServiceSpec.module.scss'
+import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 export interface VariableRowProps {

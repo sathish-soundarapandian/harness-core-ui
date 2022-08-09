@@ -320,7 +320,7 @@ exports[`INPUT SET SELECTOR input set displayed in popover list: snapshot aftero
                           class="bp3-control-indicator"
                         />
                         <div
-                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-xxlarge"
                           style="width: 100%;"
                         >
                           <span
@@ -412,7 +412,7 @@ exports[`INPUT SET SELECTOR input set displayed in popover list: snapshot aftero
                           class="bp3-control-indicator"
                         />
                         <div
-                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-xxlarge"
                           style="width: 100%;"
                         >
                           <span
@@ -876,7 +876,7 @@ exports[`INPUT SET SELECTOR input set displayed in popover list: snapshot aftero
                           class="bp3-control-indicator"
                         />
                         <div
-                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-xxlarge"
                           style="width: 100%;"
                         >
                           <span
@@ -968,7 +968,7 @@ exports[`INPUT SET SELECTOR input set displayed in popover list: snapshot aftero
                           class="bp3-control-indicator"
                         />
                         <div
-                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-xxlarge"
                           style="width: 100%;"
                         >
                           <span
@@ -1432,7 +1432,7 @@ exports[`INPUT SET SELECTOR input set displayed in popover list: snapshot aftero
                           class="bp3-control-indicator"
                         />
                         <div
-                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-xxlarge"
                           style="width: 100%;"
                         >
                           <span
@@ -1524,7 +1524,7 @@ exports[`INPUT SET SELECTOR input set displayed in popover list: snapshot aftero
                           class="bp3-control-indicator"
                         />
                         <div
-                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-xxlarge"
                           style="width: 100%;"
                         >
                           <span

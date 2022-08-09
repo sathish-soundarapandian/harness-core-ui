@@ -46,6 +46,7 @@ import type {
 import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
 import type { SubmenuSelectOption } from '@pipeline/components/PipelineSteps/Steps/JenkinsStep/types'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import SideCarArtifactIdentifier from '../SideCarArtifactIdentifier'
 import css from '../../ArtifactConnector.module.scss'
@@ -59,7 +60,7 @@ function FormComponent({
   previousStep,
   isReadonly = false,
   formik
-}: any) {
+}: any): React.ReactElement {
   const { getString } = useStrings()
   const lastOpenedJob = useRef<any>(null)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -267,8 +268,9 @@ function FormComponent({
                       : primaryValue || ''
                   formik.setFieldValue('spec.jobName', newJobName)
                   setJenkinsBuilds([])
-                  selectedJobName.current =
-                    type === MultiTypeInputType.RUNTIME ? (newJobName as unknown as string) : newJobName.label
+                  selectedJobName.current = isMultiTypeRuntime(type)
+                    ? (newJobName as unknown as string)
+                    : newJobName.label
                   if (type === MultiTypeInputType.FIXED && newJobName?.label?.length) {
                     refetchartifactPaths({
                       queryParams: {

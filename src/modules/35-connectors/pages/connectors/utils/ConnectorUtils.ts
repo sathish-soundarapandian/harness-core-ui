@@ -252,7 +252,7 @@ export const buildGithubPayload = (formData: FormData) => {
               }
       },
       apiAccess: {
-        type: formData.authType === GitAuthTypes.OAUTH ? GitAuthTypes.OAUTH : formData.apiAuthType,
+        type: formData.apiAuthType,
         spec: {}
       }
     }
@@ -260,7 +260,7 @@ export const buildGithubPayload = (formData: FormData) => {
 
   if (formData.enableAPIAccess) {
     savedData.spec.apiAccess.spec =
-      formData.authType === GitAuthTypes.OAUTH
+      formData.apiAuthType === GitAPIAuthTypes.OAUTH
         ? getGitApiAccessSpec(formData)
         : formData.apiAuthType === GitAPIAuthTypes.TOKEN
         ? {
@@ -301,13 +301,18 @@ export const buildGitlabPayload = (formData: FormData) => {
                 spec: getGitAuthSpec(formData)
               }
       },
-      apiAccess: { type: formData.apiAuthType, spec: {} }
+      apiAccess: {
+        type: formData.apiAuthType,
+        spec: {}
+      }
     }
   }
 
   if (formData.enableAPIAccess) {
     savedData.spec.apiAccess.spec =
-      formData.apiAuthType === GitAPIAuthTypes.TOKEN
+      formData.apiAuthType === GitAPIAuthTypes.OAUTH
+        ? getGitApiAccessSpec(formData)
+        : formData.apiAuthType === GitAPIAuthTypes.TOKEN
         ? {
             tokenRef: formData.apiAccessToken?.referenceString
           }

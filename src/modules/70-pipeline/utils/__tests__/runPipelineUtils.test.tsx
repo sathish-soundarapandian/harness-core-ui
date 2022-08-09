@@ -390,6 +390,7 @@ describe('getFeaturePropsForRunPipelineButton tests', () => {
     })
   })
 })
+
 describe('clearRuntimeInput tests', () => {
   test('clearRuntimeInput clears all inputs except execution ones', () => {
     expect(
@@ -442,7 +443,7 @@ describe('clearRuntimeInput tests', () => {
           Object {
             "name": "var6",
             "type": "String",
-            "value": "",
+            "value": "myDefaultValue",
           },
           Object {
             "name": "var7",

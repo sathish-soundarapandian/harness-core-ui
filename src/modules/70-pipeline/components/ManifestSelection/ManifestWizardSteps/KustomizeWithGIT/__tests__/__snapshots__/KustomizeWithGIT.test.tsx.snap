@@ -490,7 +490,7 @@ exports[`Kustomize with Git/ Github/Gitlab/Bitbucket tests expand advanced secti
                     data-testid="advancedTitle-details"
                   >
                     <div
-                      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-center StyledProps--margin-bottom-huge"
+                      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-center"
                     >
                       <div
                         class="bp3-form-group multiTypeCheckbox checkbox halfWidth"

@@ -241,7 +241,7 @@ exports[`GitSyncForm test Rendering GitSyncForm for while create and filling for
                             placeholder="- common.git.selectBranchPlaceholder -"
                             style="padding-right: 0px;"
                             type="text"
-                            value="main"
+                            value=""
                           />
                           <span
                             class="bp3-input-action"

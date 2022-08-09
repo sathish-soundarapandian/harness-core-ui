@@ -785,6 +785,8 @@ function StageBuilder(): JSX.Element {
         return 'ServicePipelineStudio'
       case 'INFRASTRUCTURE':
         return 'InfrastructurePipelineStudio'
+      case 'ENVIRONMENT':
+        return 'environmentDetails'
       case 'EXECUTION':
         return 'ExecutionPipelineStudio'
       case 'ADVANCED':

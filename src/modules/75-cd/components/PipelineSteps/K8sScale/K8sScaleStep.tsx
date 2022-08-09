@@ -357,7 +357,7 @@ export class K8sScaleStep extends PipelineStep<K8sScaleData> {
 
   protected type = StepType.K8sScale
   protected stepName = 'K8s Scale'
-
+  protected referenceId = 'K8sScaleStep'
   protected stepIcon: IconName = 'swap-vertical'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.K8sScale'
   protected isHarnessSpecific = true

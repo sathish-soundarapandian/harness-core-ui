@@ -2,6 +2,7 @@
 
 exports[`<CDPipelineDeploymentList /> tests snapshot test 1`] = `
 <div>
+  Help Panel
   <div
     class="Layout--horizontal StyledProps--main PageSubHeader--container main StyledProps--flex"
   >
@@ -672,6 +673,5 @@ exports[`<CDPipelineDeploymentList /> tests snapshot test 1`] = `
       </div>
     </div>
   </div>
-  Help Panel
 </div>
 `;

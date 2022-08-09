@@ -37,22 +37,16 @@ export const isAllowedCustomArtifactDeploymentTypes = (deploymentType: ServiceDe
 export const isSidecarAllowed = (deploymentType: ServiceDefinition['type'], isReadOnly: boolean): boolean => {
   return (
     !isReadOnly &&
-    (deploymentType === ServiceDeploymentType.Kubernetes ||
-      deploymentType === ServiceDeploymentType.NativeHelm ||
-      deploymentType === ServiceDeploymentType.ServerlessAwsLambda)
+    !(
+      deploymentType === ServiceDeploymentType.WinRm ||
+      deploymentType === ServiceDeploymentType.Ssh ||
+      deploymentType === ServiceDeploymentType.AzureWebApp
+    )
   )
 }
 
-export const isAdditionAllowed = (deploymentType: ServiceDefinition['type'], isReadOnly: boolean): boolean => {
-  return (
-    !isReadOnly &&
-    (deploymentType === ServiceDeploymentType.Kubernetes ||
-      deploymentType === ServiceDeploymentType.NativeHelm ||
-      deploymentType === ServiceDeploymentType.ServerlessAwsLambda ||
-      deploymentType === ServiceDeploymentType.Ssh ||
-      deploymentType === ServiceDeploymentType.WinRm ||
-      deploymentType === ServiceDeploymentType.AzureWebApp)
-  )
+export const isAdditionAllowed = (isReadOnly: boolean): boolean => {
+  return !isReadOnly
 }
 
 export const ArtifactIconByType: Record<ArtifactType, IconName> = {
@@ -180,5 +174,14 @@ export const ArtifactIdentifierValidation = (
   }
   return {
     identifier: IdentifierSchemaWithOutName(getString)
+  }
+}
+
+export const getArtifactsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
+  switch (selectedDeploymentType) {
+    case ServiceDeploymentType.ServerlessAwsLambda:
+      return 'serverlessDeploymentTypeArtifacts'
+    default:
+      return 'deploymentTypeArtifacts'
   }
 }

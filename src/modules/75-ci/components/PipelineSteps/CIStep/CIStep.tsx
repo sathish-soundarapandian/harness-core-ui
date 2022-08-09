@@ -453,6 +453,24 @@ export const CIStep: React.FC<CIStepProps> = props => {
           })}
         </Container>
       ) : null}
+      {Object.prototype.hasOwnProperty.call(enableFields, 'spec.repository') ? (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          {renderMultiTypeTextField({
+            name: `${prefix}spec.repository`,
+            tooltipId: 'repository',
+            labelKey: 'repository',
+            inputProps: {
+              placeholder: getString('pipeline.repositoryPlaceholder'),
+              multiTextInputProps: {
+                expressions,
+                allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
+              },
+              disabled: readonly
+            },
+            fieldPath: 'spec.repository'
+          })}
+        </Container>
+      ) : null}
       {Object.prototype.hasOwnProperty.call(enableFields, 'spec.tags') ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {/* Corresponding input set view is handled in ArtifactStepCommon.tsx */}

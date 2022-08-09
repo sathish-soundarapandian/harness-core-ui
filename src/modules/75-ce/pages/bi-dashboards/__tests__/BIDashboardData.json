@@ -1,0 +1,23 @@
+{
+  "status": "SUCCESS",
+  "data": [
+    {
+      "dashboardName": "AWS EC2 Inventory Cost Dashboard",
+      "dashboardId": "663",
+      "cloudProvider": "AWS",
+      "description": "AWS EC2 Inventory Cost Dashboard..",
+      "serviceType": "AWS EC2",
+      "redirectionURL": "#/account/kmpySmUISimoRrJL6NL73w/dashboards/folder/shared/view/663"
+    },
+    {
+      "dashboardName": "AWS Cost Dashboard",
+      "dashboardId": "226",
+      "cloudProvider": "AWS",
+      "description": "",
+      "serviceType": "",
+      "redirectionURL": "#/account/kmpySmUISimoRrJL6NL73w/dashboards/folder/shared/view/226"
+    }
+  ],
+  "metaData": null,
+  "correlationId": "01b79695-cafc-4479-9664-d0b47c1286eb"
+}

@@ -8,11 +8,11 @@
 import React from 'react'
 import type { Meta, Story } from '@storybook/react'
 import { Formik } from 'formik'
-import yaml from 'yaml'
 import { Button, Card, H3 } from '@blueprintjs/core'
 import { identity } from 'lodash-es'
 import * as Yup from 'yup'
 
+import { stringify } from '@common/utils/YamlHelperMethods'
 import { TestWrapper } from '@common/utils/testUtils'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
@@ -59,7 +59,7 @@ export const Basic: Story<BasicArgs> = args => {
                 </Button>
               </Card>
               <Card>
-                <pre data-testid="code-output">{yaml.stringify(formik.values)}</pre>
+                <pre data-testid="code-output">{stringify(formik.values)}</pre>
               </Card>
             </div>
           )

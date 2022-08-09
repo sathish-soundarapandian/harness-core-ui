@@ -12,6 +12,8 @@ import { fromValue } from 'wonka'
 import type { DocumentNode } from 'graphql'
 import { TestWrapper } from '@common/utils/testUtils'
 import { FetchAllPerspectivesDocument } from 'services/ce/services'
+import * as ceServices from 'services/ce'
+import HandleError from '@ce/components/PermissionError/PermissionError'
 import PerspectiveListPage from '../PerspectiveListPage'
 import FoldersData from './FoldersData.json'
 import ResponseData from './ResponseData.json'
@@ -132,5 +134,29 @@ describe('test cases for Perspective details Page', () => {
 
     await waitFor(() => getByTestId('location'))
     expect(getByTestId('location')).toHaveTextContent('/account/TEST_ACC/ce/perspectives/mock_id/create')
+  })
+
+  test('Should render the error component in case of API error', () => {
+    jest
+      .spyOn(ceServices, 'useGetFolders')
+      .mockImplementation(() => ({ data: [], loading: false, refetch: jest.fn, error: true } as any))
+
+    const responseState = {
+      executeQuery: ({ query }: { query: DocumentNode }) => {
+        if (query === FetchAllPerspectivesDocument) {
+          return fromValue(ResponseData)
+        }
+      }
+    }
+    const { container, getByText } = render(
+      <TestWrapper path="account/:accountId/ce/perspectives" pathParams={params}>
+        <Provider value={responseState as any}>
+          <HandleError imgSrc={''} errorMsg={'Missing Permission'} />
+        </Provider>
+      </TestWrapper>
+    )
+
+    expect(container).toMatchSnapshot()
+    expect(getByText('Missing Permission')).toBeInTheDocument()
   })
 })

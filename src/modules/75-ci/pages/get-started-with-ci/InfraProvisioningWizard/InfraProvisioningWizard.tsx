@@ -368,10 +368,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         ),
         onClickBack: () => {
           setCurrentWizardStepId(InfraProvisiongWizardStepId.SelectGitProvider)
-          updateStepStatus(
-            [InfraProvisiongWizardStepId.SelectGitProvider, InfraProvisiongWizardStepId.SelectRepository],
-            StepStatus.ToDo
-          )
+          updateStepStatus([InfraProvisiongWizardStepId.SelectGitProvider], StepStatus.InProgress)
+          updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.ToDo)
         },
         onClickNext: () => {
           const selectedRepo = selectRepositoryRef.current?.repository

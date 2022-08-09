@@ -15,12 +15,12 @@ import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { InputOutputVariablesInputSet } from '../Common/InputOutputVariablesInputSet/InputOutputVariablesInputSet'
-import type { CommandScriptsData } from './CommandScriptsTypes'
+import type { CommandScriptsData, CommandScriptsFormData } from './CommandScriptsTypes'
 import { CommandListInputSet } from './CommandListInputSet'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 interface CommandScriptsInputSetProps {
-  initialValues: CommandScriptsData
+  initialValues: CommandScriptsFormData
   stepViewType: StepViewType
   allowableTypes: AllowedTypes
   inputSetData: {
@@ -37,7 +37,7 @@ export function CommandScriptsInputSet(props: CommandScriptsInputSetProps): Reac
   const { expressions } = useVariablesExpression()
 
   return (
-    <FormikForm>
+    <FormikForm data-testid="command-scripts-input-set-form">
       {getMultiTypeFromValue(inputSetData.template?.timeout) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <FormMultiTypeDurationField

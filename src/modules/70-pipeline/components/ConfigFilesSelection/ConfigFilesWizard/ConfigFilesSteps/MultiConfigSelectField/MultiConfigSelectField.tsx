@@ -32,6 +32,7 @@ import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/Conf
 import type { FileUsage } from '@filestore/interfaces/FileStore'
 import FileStoreSelectField from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
 import FileSelectField from '@filestore/components/MultiTypeFileSelect/EncryptedSelect/EncryptedFileSelectField'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import MultiTypeConfigFileSelect from './MultiTypeConfigFileSelect'
 import css from './MultiConfigSelectField.module.scss'
 
@@ -130,7 +131,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
               disableTypeSelection={multiTypeFieldSelectorProps.disableTypeSelection || disabled}
               hasParentValidation={true}
               onTypeChange={e => {
-                if (e !== MultiTypeInputType.RUNTIME) {
+                if (!isMultiTypeRuntime(e)) {
                   formik?.setFieldValue(name, [''])
                 }
               }}

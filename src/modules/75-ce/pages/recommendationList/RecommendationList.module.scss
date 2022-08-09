@@ -41,3 +41,7 @@
   -webkit-filter: grayscale(50%);
   filter: grayscale(50%);
 }
+
+.permissionErrorWrapper {
+  height: calc(var(--page-min-height) - 147px);
+}

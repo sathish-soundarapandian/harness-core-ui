@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<CIPipelineDeploymentList /> tests snapshot test 1`] = `
+exports[`<CFPipelineDeploymentList /> tests snapshot test 1`] = `
 <div>
   <div
     class="Layout--horizontal StyledProps--main PageSubHeader--container main StyledProps--flex"
@@ -29,7 +29,7 @@ exports[`<CIPipelineDeploymentList /> tests snapshot test 1`] = `
         <span
           class="bp3-control-indicator"
         />
-        pipeline.myBuildsText
+        pipeline.myPipelineRunsText
       </label>
       <div
         class="bp3-popover-wrapper MultiSelectDropDown--main"
@@ -1475,6 +1475,5 @@ exports[`<CIPipelineDeploymentList /> tests snapshot test 1`] = `
       </div>
     </div>
   </div>
-  Help Panel
 </div>
 `;

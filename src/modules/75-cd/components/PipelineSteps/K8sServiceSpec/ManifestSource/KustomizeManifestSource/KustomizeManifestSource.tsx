@@ -40,6 +40,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
     )
   }
 
+  const hasKustomizeYamlFolderPath = !!manifest?.spec?.overlayConfiguration?.kustomizeYamlFolderPath
+
   return (
     <Layout.Vertical
       data-name="manifest"
@@ -57,7 +59,11 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               expressions,
               allowableTypes
             }}
-            label={getString('pipeline.manifestType.kustomizeFolderPath')}
+            label={
+              hasKustomizeYamlFolderPath
+                ? getString('pipeline.manifestType.kustomizeBasePath')
+                : getString('pipeline.manifestType.kustomizeFolderPath')
+            }
           />
         </div>
       )}
@@ -74,16 +80,16 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
           />
         </div>
       )}
-      {isFieldRuntime(`${manifestPath}.spec.manifestScope`, template) && (
+      {isFieldRuntime(`${manifestPath}.spec.overlayConfiguration`, template) && (
         <div className={css.verticalSpacingInput}>
           <FormInput.MultiTextInput
-            disabled={isFieldDisabled(`${manifestPath}.spec.manifestScope`)}
-            name={`${path}.${manifestPath}.spec.manifestScope`}
+            disabled={isFieldDisabled(`${manifestPath}.spec.overlayConfiguration`)}
+            name={`${path}.${manifestPath}.spec.overlayConfiguration`}
             multiTextInputProps={{
               expressions,
               allowableTypes
             }}
-            label={getString('pipeline.manifestType.manifestScope')}
+            label={getString('pipeline.manifestType.kustomizeYamlFolderPath')}
           />
         </div>
       )}
@@ -98,6 +104,19 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             style={{ marginBottom: 'var(--spacing-small)' }}
             expressions={expressions}
             isNameOfArrayType
+          />
+        </div>
+      )}
+      {isFieldRuntime(`${manifestPath}.spec.overlayConfiguration.kustomizeYamlFolderPath`, template) && (
+        <div className={css.verticalSpacingInput}>
+          <FormInput.MultiTextInput
+            disabled={isFieldDisabled(`${manifestPath}.spec.overlayConfiguration.kustomizeYamlFolderPath`)}
+            name={`${path}.${manifestPath}.spec.overlayConfiguration.kustomizeYamlFolderPath`}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+            label={getString('pipeline.manifestType.kustomizeYamlFolderPath')}
           />
         </div>
       )}

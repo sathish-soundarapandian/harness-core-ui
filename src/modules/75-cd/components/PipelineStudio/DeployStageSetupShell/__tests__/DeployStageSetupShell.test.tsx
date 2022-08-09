@@ -20,7 +20,7 @@ import ExecutionGraph from '@pipeline/components/PipelineStudio/ExecutionGraph/E
 import { StageType } from '@pipeline/utils/stageHelpers'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { DeployServiceStep } from '@cd/components/PipelineSteps/DeployServiceStep/DeployServiceStep'
-import { KubernetesServiceSpec } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sServiceSpec'
+import { GenericServiceSpec } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sServiceSpec'
 import { DeployEnvironmentStep } from '@cd/components/PipelineSteps/DeployEnvStep/DeployEnvStep'
 import { envs, services } from './mocks'
 import overridePipelineContext from './overrideSetPipeline.json'
@@ -80,7 +80,10 @@ jest.mock('services/cd-ng', () => ({
     loading: false
   }),
   useGetExecutionStrategyYaml: jest.fn().mockReturnValue({ refetch: jest.fn() }),
-  useGetRuntimeInputsServiceEntity: jest.fn().mockReturnValue({})
+  useGetRuntimeInputsServiceEntity: jest.fn().mockReturnValue({}),
+  useCreatePR: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useCreatePRV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useGetFileContent: jest.fn().mockImplementation(() => ({ refetch: jest.fn() }))
 }))
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -96,7 +99,7 @@ window.HTMLElement.prototype.scrollTo = jest.fn()
 describe('DeployStageSetupShell tests', () => {
   beforeAll(() => {
     factory.registerStep(new DeployServiceStep())
-    factory.registerStep(new KubernetesServiceSpec())
+    factory.registerStep(new GenericServiceSpec())
     factory.registerStep(new DeployEnvironmentStep())
   })
   test('opens services tab by default', async () => {

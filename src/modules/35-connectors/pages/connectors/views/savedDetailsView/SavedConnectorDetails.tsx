@@ -968,6 +968,18 @@ export const RenderDetailsSection: React.FC<RenderDetailsSectionProps> = props =
   )
 }
 
+const getPDCConnectorHosts = (connector: ConnectorInfoDTO) => {
+  const hosts = connector.spec?.hosts.map((host: any) => host.hostname)
+  return Array.isArray(hosts)
+    ? [
+        {
+          label: 'connectors.pdc.hosts',
+          value: hosts.join(', ')
+        }
+      ]
+    : []
+}
+
 const SavedConnectorDetails: React.FC<SavedConnectorDetailsProps> = props => {
   const { getString } = useStrings()
   const connectorDetailsSchema = getSchema(props)
@@ -977,10 +989,20 @@ const SavedConnectorDetails: React.FC<SavedConnectorDetailsProps> = props => {
   return (
     <Layout.Horizontal className={css.detailsSectionContainer} spacing="xlarge">
       <RenderDetailsSection title={getString('overview')} data={connectorDetailsSchema} />
-      <RenderDetailsSection
-        title={getString('credentials')}
-        data={[...credenatialsDetailsSchema, ...commonCredentialsDetailsSchema]}
-      />
+
+      {props.connector?.type !== Connectors.PDC && (
+        <RenderDetailsSection
+          title={getString('credentials')}
+          data={[...credenatialsDetailsSchema, ...commonCredentialsDetailsSchema]}
+        />
+      )}
+
+      {props.connector?.type === Connectors.PDC && (
+        <RenderDetailsSection
+          title={getString('connectors.pdc.hosts')}
+          data={[...getPDCConnectorHosts(props.connector)]}
+        />
+      )}
     </Layout.Horizontal>
   )
 }

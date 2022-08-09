@@ -7,10 +7,65 @@
 
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
+import { TestWrapper } from '@common/utils/testUtils'
 import { DashboardSelected, ServiceExecutionsCard, ServiceExecutionsCardProps } from '../ServiceExecutionsCard'
 
 const props: ServiceExecutionsCardProps = {
-  envIdentifiers: ['e1', 'e2'],
+  envIdentifiers: [
+    {
+      envId: 'testEnvInfra',
+      envName: 'testEnvInfra',
+      envType: 'PreProduction',
+      infrastructureDetails: [
+        {
+          infrastructureIdentifier: 'testEnvInfra',
+          infrastructureName: 'testEnvInfra'
+        }
+      ]
+    },
+    {
+      envId: 'env09',
+      envName: 'env09',
+      envType: 'PreProduction',
+      infrastructureDetails: [
+        {
+          infrastructureIdentifier: 'realllyverybignameforinfraheretotesttheUistrengthgoodornot',
+          infrastructureName: 'realllyverybignameforinfraheretotesttheUistrengthgoodornot'
+        },
+        {
+          infrastructureIdentifier: 'infra09',
+          infrastructureName: 'infra09'
+        },
+        {
+          infrastructureIdentifier: 'infra09',
+          infrastructureName: 'infra09'
+        },
+        {
+          infrastructureIdentifier: 'infra03',
+          infrastructureName: 'infra09'
+        }
+      ]
+    },
+    {
+      envId: 'testEnvInfra3',
+      envName: 'testEnvInfra3',
+      envType: 'PreProduction',
+      infrastructureDetails: [
+        {
+          infrastructureIdentifier: 'testEnvInfra3',
+          infrastructureName: 'testEnvInfra3'
+        },
+        {
+          infrastructureIdentifier: 'testEnvInfra31',
+          infrastructureName: 'testEnvInfra3'
+        },
+        {
+          infrastructureIdentifier: 'testEnvInfra32',
+          infrastructureName: 'testEnvInfra3'
+        }
+      ]
+    }
+  ],
   serviceIdentifiers: [
     {
       image: 'imageCustom',
@@ -38,19 +93,41 @@ const props: ServiceExecutionsCardProps = {
 
 describe('ServiceExecutionsCard ', () => {
   test('initial render', async () => {
-    const { container } = render(<ServiceExecutionsCard {...props} />)
+    const { container } = render(
+      <TestWrapper>
+        <ServiceExecutionsCard {...props} />
+      </TestWrapper>
+    )
     await waitFor(() => expect(container).toMatchSnapshot())
   })
   test('render when called from overview dashboard', () => {
     props.caller = DashboardSelected.OVERVIEW
-    props.envIdentifiers = ['e1', 'e2', 'e3', 'e4']
-    const { container } = render(<ServiceExecutionsCard {...props} />)
+    props.envIdentifiers?.push({
+      envId: 'testEnvInfra1',
+      envName: 'testEnvInfra1',
+      envType: 'PreProduction',
+      infrastructureDetails: [
+        {
+          infrastructureIdentifier: 'testEnvInfra1',
+          infrastructureName: 'testEnvInfra1'
+        }
+      ]
+    })
+    const { container } = render(
+      <TestWrapper>
+        <ServiceExecutionsCard {...props} />
+      </TestWrapper>
+    )
     expect(container).toMatchSnapshot()
   })
   test('empty state', () => {
     props.envIdentifiers = []
     props.serviceIdentifiers = []
-    const { container } = render(<ServiceExecutionsCard {...props} />)
+    const { container } = render(
+      <TestWrapper>
+        <ServiceExecutionsCard {...props} />
+      </TestWrapper>
+    )
     expect(container).toMatchSnapshot()
   })
 })

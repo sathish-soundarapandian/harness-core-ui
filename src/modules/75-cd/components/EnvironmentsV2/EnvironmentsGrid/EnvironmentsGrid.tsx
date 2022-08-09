@@ -65,7 +65,7 @@ export default function EnvironmentsGrid({ response, refetch }: any) {
       <Layout.Masonry
         center
         gutter={25}
-        items={defaultTo(response?.content, [])}
+        items={defaultTo(/* istanbul ignore next */ response?.content, [])}
         renderItem={(item: EnvironmentResponse) => (
           <EnvironmentCard response={item} onEdit={handleEnvEdit} onDelete={handleEnvDelete} />
         )}

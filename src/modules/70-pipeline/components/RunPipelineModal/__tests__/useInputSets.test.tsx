@@ -7,9 +7,9 @@
 
 import { renderHook } from '@testing-library/react-hooks'
 import { waitFor } from '@testing-library/react'
-import { parse } from 'yaml'
 import { useGetTemplateFromPipeline, useGetMergeInputSetFromPipelineTemplateWithListInput } from 'services/pipeline-ng'
 
+import { parse } from '@common/utils/YamlHelperMethods'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { useInputSets } from '../useInputSets'
 import type { UseInputSetsProps } from '../useInputSets'

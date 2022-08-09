@@ -6,6 +6,7 @@
  */
 
 import React, { useCallback, useContext, useMemo, useState } from 'react'
+import { Virtuoso } from 'react-virtuoso'
 import { useParams } from 'react-router-dom'
 import { Card, Container, ExpandingSearchInput, Layout, Text, PageError, NoDataCard } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
@@ -75,15 +76,22 @@ export const PipelineExecutions: React.FC = () => {
       )
     }
     return (
-      <>
-        {filteredDeployments.map(d => (
-          <ExecutionCard
-            variant={CardVariant.Minimal}
-            key={d.planExecutionId}
-            pipelineExecution={executionStatusInfoToExecutionSummary(d, DashboardSelected.SERVICEDETAIL)}
-          />
-        ))}
-      </>
+      <Virtuoso
+        overscan={10}
+        style={{ height: 600 }}
+        totalCount={filteredDeployments.length}
+        className={css.overide}
+        itemContent={index => {
+          const deployment = filteredDeployments[index]
+          return (
+            <ExecutionCard
+              variant={CardVariant.Minimal}
+              key={deployment?.planExecutionId}
+              pipelineExecution={executionStatusInfoToExecutionSummary(deployment, DashboardSelected.SERVICEDETAIL)}
+            />
+          )
+        }}
+      />
     )
   }
 

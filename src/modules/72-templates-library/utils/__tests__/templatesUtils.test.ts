@@ -8,7 +8,12 @@
 import { unset } from 'lodash-es'
 import type { StringKeys } from 'framework/strings'
 import { stageTemplateMock } from '@templates-library/components/TemplateStudio/__tests__/stateMock'
-import { getAllowedTemplateTypes, getVersionLabelText, TemplateType } from '@templates-library/utils/templatesUtils'
+import {
+  getAllowedTemplateTypes,
+  getVersionLabelText,
+  TemplateType,
+  replaceDefaultValuesinTemplate
+} from '@templates-library/utils/templatesUtils'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
@@ -66,5 +71,17 @@ describe('templatesUtils tests', () => {
         }
       ])
     )
+  })
+
+  test('replaceDefaultValuesinTemplate test', () => {
+    const template = {
+      var1: '<+input>',
+      var2: { var3: { var4: '<+input>', var5: '<+input>.default(myDefaultValue)' } }
+    }
+
+    expect(replaceDefaultValuesinTemplate(template)).toEqual({
+      var1: '<+input>',
+      var2: { var3: { var4: '<+input>', var5: 'myDefaultValue' } }
+    })
   })
 })

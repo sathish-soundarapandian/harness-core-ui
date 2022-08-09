@@ -6,7 +6,15 @@
  */
 
 import type { StringKeys } from 'framework/strings'
-import { validateAssginComponent } from '../PrometheusHealthSource.utils'
+import type { TimeSeriesMetricPackDTO } from 'services/cv'
+import { metricThresholdsPayloadMockData } from '../../AppDynamics/__tests__/AppDMonitoredSource.mock'
+import type { PrometheusSetupSource } from '../PrometheusHealthSource.constants'
+import {
+  getFilteredMetricThresholdValues,
+  transformPrometheusSetupSourceToHealthSource,
+  validateAssginComponent
+} from '../PrometheusHealthSource.utils'
+import { expectedResultPrometheusPayload, sourceDataPrometheusPayload } from './PrometheusHealthSource.mock'
 
 function getString(key: StringKeys): StringKeys {
   return key
@@ -40,6 +48,41 @@ describe('Validate Prometheus Utils', () => {
     expect(error).toEqual({
       lowerBaselineDeviation: 'cv.monitoringSources.prometheus.validation.deviation',
       riskCategory: 'cv.monitoringSources.gco.mapMetricsToServicesPage.validation.riskCategory'
+    })
+  })
+
+  test('should test getFilteredMetricThresholdValues', () => {
+    const result = getFilteredMetricThresholdValues(
+      'IgnoreThreshold',
+      metricThresholdsPayloadMockData as TimeSeriesMetricPackDTO[]
+    )
+
+    expect(result).toEqual([
+      {
+        criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 12 }, type: 'Percentage' },
+        groupName: 'testP',
+        metricName: 'stall_count',
+        metricType: 'Custom',
+        spec: { action: 'Ignore' },
+        type: 'IgnoreThreshold'
+      }
+    ])
+  })
+
+  test('prometheus payload with metric thresholds', () => {
+    expect(
+      transformPrometheusSetupSourceToHealthSource(sourceDataPrometheusPayload as PrometheusSetupSource, true)
+    ).toEqual(expectedResultPrometheusPayload)
+  })
+
+  test('prometheus payload without metric thresholds', () => {
+    expect(
+      transformPrometheusSetupSourceToHealthSource(sourceDataPrometheusPayload as PrometheusSetupSource, false)
+    ).toEqual({
+      identifier: 'test',
+      name: 'test',
+      spec: { connectorRef: 'testprometheus2', feature: 'apm', metricDefinitions: [], metricPacks: [] },
+      type: 'Prometheus'
     })
   })
 })

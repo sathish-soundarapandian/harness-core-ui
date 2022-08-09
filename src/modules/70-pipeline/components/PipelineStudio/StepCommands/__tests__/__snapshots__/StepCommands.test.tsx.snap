@@ -6,62 +6,69 @@ exports[`<StepCommands /> tests able to switch tab 1`] = `
     class="stepCommand"
   >
     <div
-      class="stepTabs"
+      class="helpPanelGrid"
     >
       <div
-        class="bp3-tabs Tabs--main Tabs--horizontal"
+        class="stepTabs"
       >
         <div
-          class="bp3-tab-list"
-          role="tablist"
+          class="bp3-tabs Tabs--main Tabs--horizontal"
         >
           <div
-            class="bp3-tab-indicator-wrapper"
-            style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
+            class="bp3-tab-list"
+            role="tablist"
           >
             <div
-              class="bp3-tab-indicator"
-            />
+              class="bp3-tab-indicator-wrapper"
+              style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
+            >
+              <div
+                class="bp3-tab-indicator"
+              />
+            </div>
+            <div
+              aria-controls="bp3-tab-panel_step-commands_StepConfiguration"
+              aria-disabled="false"
+              aria-expanded="true"
+              aria-selected="true"
+              class="bp3-tab"
+              data-tab-id="StepConfiguration"
+              id="bp3-tab-title_step-commands_StepConfiguration"
+              role="tab"
+              tabindex="0"
+            >
+              stepConfiguration
+            </div>
+            <div
+              aria-controls="bp3-tab-panel_step-commands_Advanced"
+              aria-disabled="false"
+              aria-expanded="false"
+              aria-selected="false"
+              class="bp3-tab"
+              data-tab-id="Advanced"
+              id="bp3-tab-title_step-commands_Advanced"
+              role="tab"
+              tabindex="0"
+            >
+              advancedTitle
+            </div>
           </div>
           <div
-            aria-controls="bp3-tab-panel_step-commands_StepConfiguration"
-            aria-disabled="false"
-            aria-expanded="true"
-            aria-selected="true"
-            class="bp3-tab"
-            data-tab-id="StepConfiguration"
-            id="bp3-tab-title_step-commands_StepConfiguration"
-            role="tab"
-            tabindex="0"
+            aria-hidden="false"
+            aria-labelledby="bp3-tab-title_step-commands_StepConfiguration"
+            class="bp3-tab-panel"
+            id="bp3-tab-panel_step-commands_StepConfiguration"
+            role="tabpanel"
           >
-            stepConfiguration
-          </div>
-          <div
-            aria-controls="bp3-tab-panel_step-commands_Advanced"
-            aria-disabled="false"
-            aria-expanded="false"
-            aria-selected="false"
-            class="bp3-tab"
-            data-tab-id="Advanced"
-            id="bp3-tab-title_step-commands_Advanced"
-            role="tab"
-            tabindex="0"
-          >
-            advancedTitle
-          </div>
-        </div>
-        <div
-          aria-hidden="false"
-          aria-labelledby="bp3-tab-title_step-commands_StepConfiguration"
-          class="bp3-tab-panel"
-          id="bp3-tab-panel_step-commands_StepConfiguration"
-          role="tabpanel"
-        >
-          <div>
-            {"a":"a","identifier":"testStep","name":"testStep","type":"Run","spec":{"connectorRef":"account.dockerdev","image":"maven:3-openjdk-8","command":"mvn clean compile war:war"}}
+            <div>
+              {"a":"a","identifier":"testStep","name":"testStep","type":"Run","spec":{"connectorRef":"account.dockerdev","image":"maven:3-openjdk-8","command":"mvn clean compile war:war"}}
+            </div>
           </div>
         </div>
       </div>
+      <div
+        class="helpPanelStyleClose"
+      />
     </div>
   </div>
 </div>
@@ -73,62 +80,69 @@ exports[`<StepCommands /> tests renders ok 1`] = `
     class="stepCommand"
   >
     <div
-      class="stepTabs"
+      class="helpPanelGrid"
     >
       <div
-        class="bp3-tabs Tabs--main Tabs--horizontal"
+        class="stepTabs"
       >
         <div
-          class="bp3-tab-list"
-          role="tablist"
+          class="bp3-tabs Tabs--main Tabs--horizontal"
         >
           <div
-            class="bp3-tab-indicator-wrapper"
-            style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
+            class="bp3-tab-list"
+            role="tablist"
           >
             <div
-              class="bp3-tab-indicator"
-            />
+              class="bp3-tab-indicator-wrapper"
+              style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
+            >
+              <div
+                class="bp3-tab-indicator"
+              />
+            </div>
+            <div
+              aria-controls="bp3-tab-panel_step-commands_StepConfiguration"
+              aria-disabled="false"
+              aria-expanded="true"
+              aria-selected="true"
+              class="bp3-tab"
+              data-tab-id="StepConfiguration"
+              id="bp3-tab-title_step-commands_StepConfiguration"
+              role="tab"
+              tabindex="0"
+            >
+              stepConfiguration
+            </div>
+            <div
+              aria-controls="bp3-tab-panel_step-commands_Advanced"
+              aria-disabled="false"
+              aria-expanded="false"
+              aria-selected="false"
+              class="bp3-tab"
+              data-tab-id="Advanced"
+              id="bp3-tab-title_step-commands_Advanced"
+              role="tab"
+              tabindex="0"
+            >
+              advancedTitle
+            </div>
           </div>
           <div
-            aria-controls="bp3-tab-panel_step-commands_StepConfiguration"
-            aria-disabled="false"
-            aria-expanded="true"
-            aria-selected="true"
-            class="bp3-tab"
-            data-tab-id="StepConfiguration"
-            id="bp3-tab-title_step-commands_StepConfiguration"
-            role="tab"
-            tabindex="0"
+            aria-hidden="false"
+            aria-labelledby="bp3-tab-title_step-commands_StepConfiguration"
+            class="bp3-tab-panel"
+            id="bp3-tab-panel_step-commands_StepConfiguration"
+            role="tabpanel"
           >
-            stepConfiguration
-          </div>
-          <div
-            aria-controls="bp3-tab-panel_step-commands_Advanced"
-            aria-disabled="false"
-            aria-expanded="false"
-            aria-selected="false"
-            class="bp3-tab"
-            data-tab-id="Advanced"
-            id="bp3-tab-title_step-commands_Advanced"
-            role="tab"
-            tabindex="0"
-          >
-            advancedTitle
-          </div>
-        </div>
-        <div
-          aria-hidden="false"
-          aria-labelledby="bp3-tab-title_step-commands_StepConfiguration"
-          class="bp3-tab-panel"
-          id="bp3-tab-panel_step-commands_StepConfiguration"
-          role="tabpanel"
-        >
-          <div>
-            {"a":"a","identifier":"testStep","name":"testStep","type":"Run","spec":{"connectorRef":"account.dockerdev","image":"maven:3-openjdk-8","command":"mvn clean compile war:war"}}
+            <div>
+              {"a":"a","identifier":"testStep","name":"testStep","type":"Run","spec":{"connectorRef":"account.dockerdev","image":"maven:3-openjdk-8","command":"mvn clean compile war:war"}}
+            </div>
           </div>
         </div>
       </div>
+      <div
+        class="helpPanelStyleClose"
+      />
     </div>
   </div>
 </div>

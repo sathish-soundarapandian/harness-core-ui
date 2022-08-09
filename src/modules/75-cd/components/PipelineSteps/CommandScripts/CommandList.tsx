@@ -5,15 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useRef } from 'react'
 import { FieldArray, FieldArrayRenderProps, useFormikContext } from 'formik'
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
 import { defaultTo } from 'lodash-es'
-import cx from 'classnames'
 import {
   AllowedTypes,
   Button,
   ButtonVariation,
+  Color,
   FontVariation,
   FormikTooltipContext,
   HarnessDocTooltip,
@@ -38,6 +38,7 @@ export function CommandList(props: CommandListProps): React.ReactElement {
   const { getString } = useStrings()
   const tooltipContext = React.useContext(FormikTooltipContext)
   const formik = useFormikContext<CommandScriptsData>()
+  const arrayHelpersRef = useRef<FieldArrayRenderProps>()
   const dataTooltipId = tooltipContext?.formName ? `${tooltipContext?.formName}_commandUnits` : ''
 
   const { openCommandModal } = useCommands({
@@ -46,7 +47,11 @@ export function CommandList(props: CommandListProps): React.ReactElement {
   })
 
   return (
-    <div className={cx(stepCss.formGroup, stepCss.lg)}>
+    <div>
+      <Label data-tooltip-id={dataTooltipId} className={stepCss.bottomMargin5}>
+        <Text font={{ variation: FontVariation.BODY2_SEMI }}>{getString('cd.steps.commands.runTheCommands')}</Text>
+        <HarnessDocTooltip useStandAlone={true} tooltipId={dataTooltipId} />
+      </Label>
       <DragDropContext
         onDragEnd={(result: DropResult) => {
           if (!result.destination) {
@@ -60,97 +65,88 @@ export function CommandList(props: CommandListProps): React.ReactElement {
       >
         <Droppable droppableId="droppable">
           {provided => (
-            <Layout.Vertical {...provided.droppableProps} ref={provided.innerRef}>
-              <Label data-tooltip-id={dataTooltipId}>
-                <Text font={{ variation: FontVariation.BODY2_SEMI }}>
-                  {getString('cd.steps.commands.runTheCommands')}
-                </Text>
-                <HarnessDocTooltip useStandAlone={true} tooltipId={dataTooltipId} />
-              </Label>
+            <div {...provided.droppableProps} ref={provided.innerRef}>
               <FieldArray
                 name="spec.commandUnits"
                 render={(arrayHelpers: FieldArrayRenderProps) => {
+                  arrayHelpersRef.current = arrayHelpers
                   return (
                     <>
                       {formik.values.spec.commandUnits?.map((command, i) => (
-                        <Draggable
-                          key={command.commandUnit?.name}
-                          draggableId={command.commandUnit?.name || ''}
-                          index={i}
-                        >
-                          {providedDrag => (
+                        <Draggable key={command.name} draggableId={defaultTo(command.name, '')} index={i}>
+                          {(providedDrag, draggableSnapshot) => (
                             <Layout.Horizontal
                               spacing="medium"
+                              padding={{ top: 'small', bottom: 'small' }}
                               flex={{ alignItems: 'center' }}
+                              border={{
+                                bottom: true,
+                                ...(i === 0 || draggableSnapshot.isDragging ? { top: true } : {})
+                              }}
+                              background={Color.FORM_BG}
                               ref={providedDrag.innerRef}
                               {...providedDrag.draggableProps}
                               {...providedDrag.dragHandleProps}
                             >
-                              <Icon name="drag-handle-vertical" margin={{ right: 'small' }} />
-                              {i + 1}
-                              <Layout.Horizontal
-                                flex={{ justifyContent: 'space-between' }}
-                                spacing="small"
-                                className={css.textBox}
-                                style={{ flex: 1 }}
-                              >
-                                <Layout.Horizontal spacing="small">
-                                  <Icon name="command-shell-script" />
-                                  <Text
-                                    lineClamp={1}
-                                    style={{ width: 200 }}
-                                    font={{ variation: FontVariation.SMALL_SEMI }}
-                                  >
-                                    {command.commandUnit?.name}
-                                  </Text>
-                                </Layout.Horizontal>
+                              <Icon name="drag-handle-vertical" />
+                              <span className={css.commandUnitNumber}>{i + 1}</span>
+                              <Text lineClamp={1} width="100%" font={{ variation: FontVariation.BODY2 }}>
+                                {command.name}
+                              </Text>
+                              <Layout.Horizontal>
                                 <Button
-                                  icon="edit"
+                                  icon="Edit"
                                   disabled={readonly}
                                   variation={ButtonVariation.ICON}
                                   onClick={() => {
                                     openCommandModal({
                                       arrayHelpers,
                                       isUpdate: true,
-                                      initialModalValues: command.commandUnit,
+                                      initialModalValues: command,
                                       updateIndex: i
                                     })
                                   }}
+                                  data-testid={`edit-command-unit-${i}`}
+                                ></Button>
+                                <Button
+                                  icon="main-trash"
+                                  disabled={readonly}
+                                  onClick={() => arrayHelpers.remove(i)}
+                                  variation={ButtonVariation.ICON}
+                                  data-testid={`delete-command-unit-${i}`}
                                 ></Button>
                               </Layout.Horizontal>
-                              <Button
-                                icon="main-trash"
-                                disabled={readonly}
-                                onClick={() => arrayHelpers.remove(i)}
-                                variation={ButtonVariation.ICON}
-                              ></Button>
                             </Layout.Horizontal>
                           )}
                         </Draggable>
                       ))}
-                      <Button
-                        icon="plus"
-                        variation={ButtonVariation.LINK}
-                        data-testid="add-command-unit"
-                        disabled={readonly}
-                        onClick={() => {
-                          openCommandModal({
-                            arrayHelpers,
-                            isUpdate: false
-                          })
-                        }}
-                        className={css.addButton}
-                      >
-                        {getString('cd.steps.commands.addCommand')}
-                      </Button>
                     </>
                   )
                 }}
               />
-            </Layout.Vertical>
+              {provided.placeholder}
+            </div>
           )}
         </Droppable>
       </DragDropContext>
+
+      <Button
+        icon="plus"
+        variation={ButtonVariation.LINK}
+        data-testid="add-command-unit"
+        disabled={readonly}
+        onClick={() => {
+          if (!arrayHelpersRef.current) return
+
+          openCommandModal({
+            arrayHelpers: arrayHelpersRef.current,
+            isUpdate: false
+          })
+        }}
+        className={stepCss.topMargin5}
+      >
+        {getString('cd.steps.commands.addCommand')}
+      </Button>
     </div>
   )
 }

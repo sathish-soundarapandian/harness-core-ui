@@ -12,7 +12,7 @@ import qs from 'qs'
 import cx from 'classnames'
 import { Button, Container, Text, PageHeader, PageBody, Icon, useToaster } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
-import { Popover, Position, Switch } from '@blueprintjs/core'
+import { Popover, PopoverInteractionKind, Position, Switch } from '@blueprintjs/core'
 import routes from '@common/RouteDefinitions'
 import {
   PerspectiveAnomalyData,
@@ -34,7 +34,8 @@ import {
   ViewType,
   QlceViewAggregateOperation,
   useFetchPerspectiveTotalCountQuery,
-  QlceViewPreferencesInput
+  QlceViewPreferencesInput,
+  QlceViewFilterWrapperInput
 } from 'services/ce/services'
 import { useStrings } from 'framework/strings'
 import PerspectiveGrid from '@ce/components/PerspectiveGrid/PerspectiveGrid'
@@ -71,6 +72,10 @@ import { useDeepCompareEffect, useQueryParams, useUpdateQueryParams } from '@com
 import type { PerspectiveQueryParams, TimeRangeFilterType } from '@ce/types'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { getToolTip } from '@ce/components/PerspectiveViews/PerspectiveMenuItems'
 import css from './PerspectiveDetailsPage.module.scss'
 
 const PAGE_SIZE = 10
@@ -109,6 +114,16 @@ const PerspectiveHeader: React.FC<{ title: string; viewType: string }> = ({ titl
         label: getString('ce.perspectives.sideNavText')
       }
     ],
+    []
+  )
+
+  const [canEdit] = usePermission(
+    {
+      resource: {
+        resourceType: ResourceType.CCM_PERSPECTIVE
+      },
+      permissions: [PermissionIdentifier.EDIT_CCM_PERSPECTIVE]
+    },
     []
   )
 
@@ -163,7 +178,14 @@ const PerspectiveHeader: React.FC<{ title: string; viewType: string }> = ({ titl
       content={getHeaderContent()}
       toolbar={
         <Button
-          disabled={isDefaultPerspective}
+          disabled={isDefaultPerspective || !canEdit}
+          tooltip={getToolTip(
+            canEdit,
+            PermissionIdentifier.EDIT_CCM_PERSPECTIVE,
+            ResourceType.CCM_PERSPECTIVE,
+            isDefaultPerspective,
+            getString('ce.perspectives.editDefaultPerspective')
+          )}
           text={getString('edit')}
           icon="edit"
           intent="primary"
@@ -346,10 +368,25 @@ const PerspectiveDetailsPage: React.FC = () => {
     return af
   }
 
+  const [gridSearchParam, setGridSearchParam] = useState('')
+
+  const gridSearchFilter = useMemo(() => {
+    if (gridSearchParam) {
+      return {
+        idFilter: {
+          field: groupBy,
+          operator: QlceViewFilterOperator.Search,
+          values: [gridSearchParam]
+        }
+      } as QlceViewFilterWrapperInput
+    }
+    return undefined
+  }, [groupBy, gridSearchParam])
+
   const [gridResults, executePerspectiveGridQuery] = useFetchperspectiveGridQuery({
     variables: {
       aggregateFunction: getAggregationFunc(),
-      filters: queryFilters,
+      filters: gridSearchFilter ? [...queryFilters, gridSearchFilter] : queryFilters,
       isClusterOnly: isClusterOnly,
       limit: PAGE_SIZE,
       offset: gridPageOffset,
@@ -425,9 +462,6 @@ const PerspectiveDetailsPage: React.FC = () => {
   const { licenseInformation } = useLicenseStore()
   const isFreeEdition = licenseInformation['CE']?.edition === ModuleLicenseType.FREE
 
-  const isClusterDatasource =
-    perspectiveData?.dataSources?.length === 1 && perspectiveData?.dataSources.includes('CLUSTER')
-
   return (
     <>
       <PerspectiveHeader title={persName} viewType={perspectiveData?.viewType || ViewType.Default} />
@@ -466,9 +500,8 @@ const PerspectiveDetailsPage: React.FC = () => {
                 <PreferencesDropDown
                   preferences={preferences}
                   setPreferences={setPreferences}
-                  showIncludeUnallocatedCost={
-                    isClusterDatasource &&
-                    (Object.values(UnallocatedCostClusterFields) as string[]).includes(groupBy.fieldId)
+                  showIncludeUnallocated={
+                    isClusterOnly && (Object.values(UnallocatedCostClusterFields) as string[]).includes(groupBy.fieldId)
                   }
                 />
               }
@@ -485,6 +518,7 @@ const PerspectiveDetailsPage: React.FC = () => {
                 aggregation={aggregation}
                 xAxisPointCount={chartData?.perspectiveTimeSeriesStats?.stats?.length || DAYS_FOR_TICK_INTERVAL + 1}
                 anomaliesCountData={anomaliesCountData}
+                groupBy={groupBy}
               />
             )}
           </Container>
@@ -530,7 +564,7 @@ const PerspectiveDetailsPage: React.FC = () => {
             }
             setColumnSequence={colSeq => setColumnSequence(colSeq)}
             groupBy={groupBy}
-            totalItemCount={perspectiveTotalCount || 0}
+            totalItemCount={gridData?.perspectiveTotalCount || 0}
             gridPageIndex={gridPageIndex}
             pageSize={PAGE_SIZE}
             fetchData={(pageIndex, pageSize) => {
@@ -539,6 +573,8 @@ const PerspectiveDetailsPage: React.FC = () => {
             }}
             allowExportAsCSV={true}
             openDownloadCSVModal={openDownloadCSVModal}
+            setGridSearchParam={setGridSearchParam}
+            isPerspectiveDetailsPage
           />
         </Container>
       </PageBody>
@@ -551,40 +587,59 @@ export default PerspectiveDetailsPage
 const PreferencesDropDown: React.FC<{
   preferences: QlceViewPreferencesInput
   setPreferences: React.Dispatch<React.SetStateAction<QlceViewPreferencesInput>>
-  showIncludeUnallocatedCost: boolean
-}> = ({ preferences, setPreferences, showIncludeUnallocatedCost }) => {
+  showIncludeUnallocated: boolean
+}> = ({ preferences, setPreferences, showIncludeUnallocated }) => {
   const { getString } = useStrings()
 
   return (
     <Popover
-      interactionKind="click"
-      targetClassName={css.preferencesPopover}
+      interactionKind={PopoverInteractionKind.CLICK}
+      targetClassName={css.popoverTarget}
+      popoverClassName={css.preferencesPopover}
       content={
         <Container className={css.preferenceMenu}>
           <Switch
             large
             checked={Boolean(preferences.includeOthers)}
-            label={getString('ce.perspectives.createPerspective.preferences.includeOthers')}
-            className={css.prefLabel}
+            labelElement={
+              <Text
+                font={{ variation: FontVariation.SMALL_SEMI }}
+                color={Color.GREY_1000}
+                tooltipProps={{ dataTooltipId: 'includeOthers' }}
+              >
+                {getString('ce.perspectives.createPerspective.preferences.includeOthers')}
+              </Text>
+            }
+            className={css.labelCtn}
             onChange={event => {
               setPreferences(prevPref => ({ ...prevPref, includeOthers: event.currentTarget.checked }))
             }}
           />
-          {showIncludeUnallocatedCost ? (
-            <Switch
-              large
-              checked={Boolean(preferences.includeUnallocatedCost)}
-              label={getString('ce.perspectives.createPerspective.preferences.includeUnallocated')}
-              className={css.prefLabel}
-              onChange={event => {
-                setPreferences(prevPref => ({ ...prevPref, includeUnallocatedCost: event.currentTarget.checked }))
-              }}
-            />
+          {showIncludeUnallocated ? (
+            <>
+              <Switch
+                large
+                checked={Boolean(preferences.includeUnallocatedCost)}
+                labelElement={
+                  <Text
+                    font={{ variation: FontVariation.SMALL_SEMI }}
+                    color={Color.GREY_1000}
+                    tooltipProps={{ dataTooltipId: 'includeUnallocated' }}
+                  >
+                    {getString('ce.perspectives.createPerspective.preferences.includeUnallocated')}
+                  </Text>
+                }
+                className={css.labelCtn}
+                onChange={event => {
+                  setPreferences(prevPref => ({ ...prevPref, includeUnallocatedCost: event.currentTarget.checked }))
+                }}
+              />
+            </>
           ) : null}
         </Container>
       }
       minimal
-      position={Position.BOTTOM}
+      position={Position.BOTTOM_RIGHT}
     >
       <Container className={css.preferencesContainer}>
         <Text color={Color.GREY_800} font={{ variation: FontVariation.SMALL_SEMI }}>

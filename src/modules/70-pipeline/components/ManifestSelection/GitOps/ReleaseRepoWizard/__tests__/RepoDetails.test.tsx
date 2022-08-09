@@ -25,7 +25,20 @@ describe('Repo Details testing', () => {
           expressions={[]}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
           isReadonly={false}
-          initialValues={{}}
+          initialValues={{
+            spec: {
+              store: {
+                spec: 'test'
+              }
+            }
+          }}
+          prevStepData={{
+            spec: {
+              store: {
+                spec: 'test'
+              }
+            }
+          }}
           manifest={null}
           handleSubmit={submitFn}
         />
@@ -43,7 +56,20 @@ describe('Repo Details testing', () => {
           expressions={[]}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
           isReadonly={true}
-          initialValues={{}}
+          initialValues={{
+            spec: {
+              store: {
+                spec: 'test'
+              }
+            }
+          }}
+          prevStepData={{
+            spec: {
+              store: {
+                spec: 'test'
+              }
+            }
+          }}
           manifest={null}
           handleSubmit={submitFn}
         />
@@ -243,7 +269,8 @@ describe('Repo Details testing', () => {
             branch: 'testbranch',
 
             gitFetchType: 'Branch',
-            paths: 'eqwewq'
+            paths: 'eqwewq',
+            repoName: 'repo'
           }}
           manifest={{
             identifier: 'test',
@@ -255,7 +282,8 @@ describe('Repo Details testing', () => {
                   connectorRef: 'dsfds',
                   gitFetchType: 'Branch',
                   branch: 'testbranch',
-                  paths: ['eqwewq']
+                  paths: ['eqwewq'],
+                  repoName: 'repo'
                 }
               }
             }
@@ -278,7 +306,8 @@ describe('Repo Details testing', () => {
                 branch: 'testbranch',
                 connectorRef: 'dsfds',
                 gitFetchType: 'Branch',
-                paths: ['eqwewq']
+                paths: ['eqwewq'],
+                repoName: 'repo'
               },
               type: undefined
             }

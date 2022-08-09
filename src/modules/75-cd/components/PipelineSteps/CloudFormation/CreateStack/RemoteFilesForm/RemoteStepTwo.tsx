@@ -27,6 +27,7 @@ import {
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import { FormatFilePaths, AllowedTypes, StepTwoTitle, RemoteFileStorePath } from '../../CloudFormationHelper'
 import { onDragStart, onDragEnd, onDragLeave, onDragOver, onDrop } from '../../DragHelper'
 import { ParameterRepoDetails } from './ParameterRepoDetails'
@@ -171,7 +172,7 @@ const StepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
                         multiTextInputProps={{
                           expressions,
                           allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                            item => item !== MultiTypeInputType.RUNTIME
+                            item => !isMultiTypeRuntime(item)
                           ) as MultiTypeAllowedTypes
                         }}
                       />
@@ -212,7 +213,7 @@ const StepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
                                     multiTextInputProps={{
                                       expressions,
                                       allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                                        item => item !== MultiTypeInputType.RUNTIME
+                                        item => !isMultiTypeRuntime(item)
                                       ) as MultiTypeAllowedTypes
                                     }}
                                     style={{ width: 320 }}

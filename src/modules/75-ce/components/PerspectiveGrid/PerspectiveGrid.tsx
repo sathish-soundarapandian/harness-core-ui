@@ -7,6 +7,7 @@
 
 import React, { useMemo, useEffect, useState } from 'react'
 import { Container, Icon } from '@wings-software/uicore'
+import { Color } from '@harness/design-system'
 import type { Column, Row } from 'react-table'
 import { isEqual } from 'lodash-es'
 import type { QlceViewFieldInputInput, QlceViewEntityStatsDataPoint, Maybe } from 'services/ce/services'
@@ -36,6 +37,8 @@ export interface PerspectiveGridProps {
   goToNodeDetails?: (clusterName: string, nodeId: string) => void
   allowExportAsCSV?: boolean
   openDownloadCSVModal?: () => void
+  setGridSearchParam?: React.Dispatch<React.SetStateAction<string>>
+  isPerspectiveDetailsPage?: boolean
 }
 
 const PerspectiveGrid: React.FC<PerspectiveGridProps> = props => {
@@ -56,7 +59,9 @@ const PerspectiveGrid: React.FC<PerspectiveGridProps> = props => {
     fetchData,
     goToNodeDetails,
     allowExportAsCSV = false,
-    openDownloadCSVModal
+    openDownloadCSVModal,
+    setGridSearchParam,
+    isPerspectiveDetailsPage
   } = props
 
   const gridColumns = getGridColumnsByGroupBy(groupBy, isClusterOnly)
@@ -79,14 +84,6 @@ const PerspectiveGrid: React.FC<PerspectiveGridProps> = props => {
   useEffect(() => {
     setSelectedColumns(getGridColumnsByGroupBy(groupBy, isClusterOnly))
   }, [groupBy, isClusterOnly])
-
-  if (fetching) {
-    return (
-      <Container className={css.gridLoadingContainer}>
-        <Icon name="spinner" color="blue500" size={30} />
-      </Container>
-    )
-  }
 
   const { fieldName } = groupBy
 
@@ -111,30 +108,41 @@ const PerspectiveGrid: React.FC<PerspectiveGridProps> = props => {
     <Container background="white">
       {showColumnSelector && (
         <ColumnSelector
+          groupBy={groupBy}
           allowExportAsCSV={allowExportAsCSV}
           openDownloadCSVModal={openDownloadCSVModal}
           columns={gridColumns}
           selectedColumns={selectedColumns}
           onChange={columns => setSelectedColumns(columns)}
+          setGridSearchParam={setGridSearchParam}
+          isPerspectiveDetailsPage={isPerspectiveDetailsPage}
         />
       )}
-      <Grid<GridData>
-        data={gridData}
-        onRowClick={onRowClick}
-        onMouseEnter={row => {
-          highlightNode && row.original.id && highlightNode(row.original.id)
-        }}
-        onMouseLeave={() => {
-          resetNodeState && resetNodeState()
-        }}
-        columns={props.tempGridColumns ? (DEFAULT_COLS as Column<GridData>[]) : (selectedColumns as Column<GridData>[])}
-        showPagination={props.showPagination}
-        totalItemCount={totalItemCount}
-        gridPageIndex={gridPageIndex}
-        pageSize={pageSize}
-        fetchData={fetchData}
-        isRowClickable={isRowClickable}
-      />
+      {fetching ? (
+        <Container className={css.gridLoadingContainer}>
+          <Icon name="spinner" color={Color.BLUE_500} size={30} />
+        </Container>
+      ) : (
+        <Grid<GridData>
+          data={gridData}
+          onRowClick={onRowClick}
+          onMouseEnter={row => {
+            highlightNode && row.original.id && highlightNode(row.original.id)
+          }}
+          onMouseLeave={() => {
+            resetNodeState && resetNodeState()
+          }}
+          columns={
+            props.tempGridColumns ? (DEFAULT_COLS as Column<GridData>[]) : (selectedColumns as Column<GridData>[])
+          }
+          showPagination={props.showPagination}
+          totalItemCount={totalItemCount}
+          gridPageIndex={gridPageIndex}
+          pageSize={pageSize}
+          fetchData={fetchData}
+          isRowClickable={isRowClickable}
+        />
+      )}
     </Container>
   )
 }

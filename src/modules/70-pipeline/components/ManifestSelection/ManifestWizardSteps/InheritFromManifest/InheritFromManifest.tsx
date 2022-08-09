@@ -32,7 +32,7 @@ import { ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthe
 import DragnDropPaths from '../../DragnDropPaths'
 import type { InheritFromManifestDataType, ManifestTypes } from '../../ManifestInterface'
 import { filePathWidth } from '../ManifestUtils'
-import css from '../K8sValuesManifest/ManifestDetails.module.scss'
+import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
 interface InheritFromManifestPropType {
   stepName: string

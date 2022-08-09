@@ -76,6 +76,21 @@ describe('<LoopingStrategy /> tests', () => {
     expect(container).toMatchSnapshot()
   })
 
+  test('should have repeat selected with given content', async () => {
+    const { findByTestId } = render(
+      <TestWrapper>
+        <LoopingStrategy strategy={{ repeat: { items: '<+stage.output.hosts>' as any } }} />
+      </TestWrapper>
+    )
+
+    const repeatStrategyPill = await findByTestId('repeat')
+    expect(repeatStrategyPill).toHaveClass('selected')
+    const editor = (await findByTestId('editor')) as HTMLTextAreaElement
+
+    expect(editor.value.trim()).toBe(`repeat:
+  items: <+stage.output.hosts>`)
+  })
+
   test('can select parallelism', async () => {
     const { findByTestId, container } = render(
       <TestWrapper>

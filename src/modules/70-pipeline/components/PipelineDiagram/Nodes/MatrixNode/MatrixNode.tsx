@@ -54,7 +54,7 @@ const getHeight = (nodeHeight: number, maxChildLength: number, parallelism: numb
 }
 
 const getCalculatedStyles = (data: PipelineGraphState[], parallelism: number, showAllNodes?: boolean): LayoutStyles => {
-  const nodeWidth = data?.[0]?.nodeType === StageType.APPROVAL ? 140 : 165 // (125- text with lineClamp,90-PipelineStage), 130(Diamond) + 40(padding)
+  const nodeWidth = data?.[0]?.nodeType === StageType.APPROVAL ? 142 : 165 // (125- text with lineClamp,90-PipelineStage), 132(Diamond) + 40(padding)
   const nodeHeight = data?.[0]?.nodeType === StageType.APPROVAL ? 120 : 100 // 40(node) + 60(text)
   parallelism = !parallelism ? 0 : (parallelism === 1 ? data.length : parallelism) || DEFAULT_MATRIX_PARALLELISM // parallelism strategy (undefined)- setting to default 0
   if (showAllNodes) {
@@ -205,6 +205,7 @@ export function MatrixNode(props: any): JSX.Element {
             <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
               <Layout.Horizontal
                 spacing="small"
+                width="60%"
                 onMouseOver={e => {
                   e.stopPropagation()
                 }}
@@ -225,7 +226,6 @@ export function MatrixNode(props: any): JSX.Element {
                   font={{ weight: 'semi-bold' }}
                   className={css.cursor}
                   onMouseEnter={event => {
-                    event.stopPropagation()
                     props?.fireEvent?.({
                       type: Event.MouseEnterNode,
                       target: event.target,
@@ -233,7 +233,6 @@ export function MatrixNode(props: any): JSX.Element {
                     })
                   }}
                   onMouseLeave={event => {
-                    event.stopPropagation()
                     setVisibilityOfAdd(false)
                     props?.fireEvent?.({
                       type: Event.MouseLeaveNode,

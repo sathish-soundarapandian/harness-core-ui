@@ -29,9 +29,10 @@ import MultiConfigSelectField from '@pipeline/components/ConfigFilesSelection/Co
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { FileUsage } from '@filestore/interfaces/FileStore'
 import { ManifestDataType, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
 import type { HarnessFileStoreDataType, HarnessFileStoreFormData, ManifestTypes } from '../../ManifestInterface'
-import css from '../K8sValuesManifest/ManifestDetails.module.scss'
+import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
 interface HarnessFileStorePropType {
   stepName: string
@@ -169,6 +170,7 @@ function HarnessFileStore({
                       fileType={FILE_TYPE_VALUES.FILE_STORE}
                       formik={formik}
                       expressions={expressions}
+                      fileUsage={FileUsage.MANIFEST_FILE}
                       values={formik.values.files}
                       multiTypeFieldSelectorProps={{
                         disableTypeSelection: false,
@@ -183,6 +185,7 @@ function HarnessFileStore({
                         fileType={FILE_TYPE_VALUES.FILE_STORE}
                         formik={formik}
                         expressions={expressions}
+                        fileUsage={FileUsage.MANIFEST_FILE}
                         allowableTypes={allowableTypes}
                         values={formik.values.valuesPaths}
                         multiTypeFieldSelectorProps={{
@@ -200,6 +203,7 @@ function HarnessFileStore({
                         fileType={FILE_TYPE_VALUES.FILE_STORE}
                         formik={formik}
                         expressions={expressions}
+                        fileUsage={FileUsage.MANIFEST_FILE}
                         values={formik.values.paramsPaths}
                         multiTypeFieldSelectorProps={{
                           disableTypeSelection: false,

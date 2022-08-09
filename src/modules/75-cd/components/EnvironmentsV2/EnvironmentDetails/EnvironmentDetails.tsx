@@ -28,7 +28,7 @@ import {
   getErrorInfoFromErrorObject
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
 import {
   EnvironmentResponse,
@@ -52,7 +52,6 @@ import { ServiceOverrides } from './ServiceOverrides/ServiceOverrides'
 import InfrastructureDefinition from './InfrastructureDefinition/InfrastructureDefinition'
 import { EnvironmentDetailsTab } from '../utils'
 import GitOpsCluster from './GitOpsCluster/GitOpsCluster'
-
 import css from './EnvironmentDetails.module.scss'
 
 export default function EnvironmentDetails() {
@@ -164,6 +163,7 @@ export default function EnvironmentDetails() {
 
   return (
     <>
+      <HelpPanel referenceId="environmentDetails" type={HelpPanelType.FLOATING_CONTAINER} />
       {firstLoad || error ? null : (
         <Page.Header
           className={cx({ [css.environmentDetailsHeader]: Boolean(description) })}

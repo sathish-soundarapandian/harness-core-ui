@@ -40,7 +40,13 @@
     &.alert {
       width: 100%;
       opacity: 0.8;
-      background: repeating-linear-gradient(-60deg, #e43326, #e43326 2px, #e5e5f7 2px, #e5e5f7 3px);
+      background: repeating-linear-gradient(
+        -60deg,
+        var(--red-500),
+        var(--red-500) 2px,
+        var(--grey-100) 2px,
+        var(--grey-100) 3px
+      );
     }
   }
 

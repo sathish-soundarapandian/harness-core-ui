@@ -68,7 +68,7 @@ describe('Resource Groups Page', () => {
       <TestWrapper
         path={routes.toResourceGroupDetails({ ...accountPathProps, ...resourceGroupPathProps })}
         pathParams={{ accountId: 'dummy', resourceGroupIdentifier: 'dummyResourceGroupIdentifier' }}
-        defaultFeatureFlagValues={{ CUSTOM_RESOURCEGROUP_SCOPE: true }}
+        defaultFeatureFlagValues={{ CUSTOM_RESOURCEGROUP_SCOPE: true, ATTRIBUTE_TYPE_ACL_ENABLED: true }}
       >
         <ResourceGroupDetails />
       </TestWrapper>

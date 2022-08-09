@@ -29,7 +29,7 @@ import css from '@rbac/components/RBACTooltip/RBACTooltip.module.scss'
 export type RBACError =
   | ErrorHandlerProps
   | GetDataError<FailureCDNG | FailurePipeline | AccessControlCheckError | ErrorCDNG | ErrorPipeline>
-interface RbacErrorReturn {
+export interface RbacErrorReturn {
   getRBACErrorMessage: (error: RBACError) => React.ReactElement | string
 }
 

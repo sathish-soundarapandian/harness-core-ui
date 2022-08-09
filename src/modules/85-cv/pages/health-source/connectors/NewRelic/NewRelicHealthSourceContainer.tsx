@@ -14,10 +14,12 @@ import NewRelicHealthSource from './NewRelicHealthSource'
 interface NewRelicHealthSource {
   data: any
   onSubmit: (formdata: any, UpdatedHealthSource: UpdatedHealthSource) => Promise<void>
+  isTemplate?: boolean
+  expressions?: string[]
 }
 
 export default function NewrelicMonitoredSourceContainer(props: NewRelicHealthSource): JSX.Element {
-  const { data: sourceData, onSubmit } = props
+  const { data: sourceData, onSubmit, isTemplate, expressions } = props
   const { onPrevious } = useContext(SetupSourceTabsContext)
 
   const handleSubmit = useCallback(
@@ -37,6 +39,8 @@ export default function NewrelicMonitoredSourceContainer(props: NewRelicHealthSo
         data={createNewRelicData(sourceData)}
         onSubmit={handleSubmit}
         onPrevious={() => onPrevious(sourceData)}
+        isTemplate={isTemplate}
+        expressions={expressions}
       />
     </>
   )

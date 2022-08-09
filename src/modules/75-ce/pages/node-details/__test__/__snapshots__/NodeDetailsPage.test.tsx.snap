@@ -562,8 +562,8 @@ exports[`test cases for Node details Page should be able to render the details p
           class="StyledProps--font StyledProps--main StyledProps--background-white"
         >
           <div
-            class="Layout--horizontal StyledProps--main"
-            style="align-items: flex-end;"
+            class="Layout--horizontal StyledProps--main StyledProps--padding-left-xlarge StyledProps--padding-top-xlarge"
+            style="align-items: center;"
           >
             <span
               style="flex-grow: 1;"

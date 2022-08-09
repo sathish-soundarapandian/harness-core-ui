@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { Container, PageSpinner, Pagination, TableV2 } from '@harness/uicore'
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import type { ResponsePageServiceResponse, ServiceResponseDTO } from 'services/cd-ng'
 import { ServiceName, ServiceDescription, ServiceMenu } from '../ServicesListColumns/ServicesListColumns'
 
@@ -27,22 +28,20 @@ const ServicesListView = (props: ServicesListViewProps): React.ReactElement => {
   }
   return (
     <>
+      <HelpPanel referenceId="serviceDetails" type={HelpPanelType.FLOATING_CONTAINER} />
       <Container className={css.masonry} style={{ height: 'calc(100% - 66px)', width: '100%' }}>
         <TableV2<any>
           className={css.table}
-          sortable
           columns={[
             {
               Header: 'SERVICE',
               id: 'name',
-              accessor: 'name',
               width: '60%',
               Cell: ServiceName
             },
             {
               Header: 'DESCRIPTION',
               id: 'destination',
-              accessor: 'description',
               width: '35%',
               Cell: ServiceDescription
             },

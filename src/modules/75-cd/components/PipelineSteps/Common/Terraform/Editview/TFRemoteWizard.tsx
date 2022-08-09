@@ -32,6 +32,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import { Connector, PathInterface, RemoteVar, TerraformStoreTypes } from '../TerraformInterfaces'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -374,7 +375,7 @@ export const TFRemoteWizard: React.FC<StepProps<any> & TFRemoteProps> = ({
                                     multiTextInputProps={{
                                       expressions,
                                       allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                                        item => item !== MultiTypeInputType.RUNTIME
+                                        item => !isMultiTypeRuntime(item)
                                       ) as AllowedTypes
                                     }}
                                     style={{ width: 320 }}

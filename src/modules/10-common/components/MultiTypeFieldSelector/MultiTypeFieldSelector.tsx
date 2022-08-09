@@ -20,9 +20,11 @@ import {
   AllowedTypesWithExecutionTime
 } from '@wings-software/uicore'
 import { IFormGroupProps, Intent, FormGroup } from '@blueprintjs/core'
+import cx from 'classnames'
 import { FormikContextType, connect } from 'formik'
 import { get } from 'lodash-es'
 import { errorCheck } from '@common/utils/formikHelpers'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import MultiTypeSelectorButton from '../MultiTypeSelectorButton/MultiTypeSelectorButton'
 
 import css from './MultiTypeFieldSelctor.module.scss'
@@ -101,12 +103,12 @@ export function MultiTypeFieldSelector(props: ConnectedMultiTypeFieldSelectorPro
       (allowedTypes as AllowedTypesWithExecutionTime[]).includes(MultiTypeInputType.EXECUTION_TIME)
         ? EXECUTION_TIME_INPUT_VALUE
         : RUNTIME_INPUT_VALUE
-    formik.setFieldValue(name, newType === MultiTypeInputType.RUNTIME ? runtimeValue : defaultValueToReset)
+    formik.setFieldValue(name, isMultiTypeRuntime(newType) ? runtimeValue : defaultValueToReset)
   }
 
   if (
-    type === MultiTypeInputType.RUNTIME &&
-    getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions) !== MultiTypeInputType.RUNTIME
+    isMultiTypeRuntime(type) &&
+    !isMultiTypeRuntime(getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions))
   ) {
     return null
   }
@@ -114,7 +116,7 @@ export function MultiTypeFieldSelector(props: ConnectedMultiTypeFieldSelectorPro
   return (
     <FormGroup
       {...rest}
-      className={type === MultiTypeInputType.RUNTIME ? css.formGroup : ''}
+      className={cx({ [css.formGroup]: isMultiTypeRuntime(type) })}
       labelFor={name}
       helperText={helperText}
       intent={intent}
@@ -137,7 +139,7 @@ export function MultiTypeFieldSelector(props: ConnectedMultiTypeFieldSelectorPro
         children
       ) : type === MultiTypeInputType.EXPRESSION && typeof expressionRender === 'function' ? (
         expressionRender()
-      ) : type === MultiTypeInputType.RUNTIME && typeof value === 'string' ? (
+      ) : isMultiTypeRuntime(type) && typeof value === 'string' ? (
         <FormInput.Text className={css.runtimeDisabled} name={name} disabled label="" />
       ) : null}
     </FormGroup>

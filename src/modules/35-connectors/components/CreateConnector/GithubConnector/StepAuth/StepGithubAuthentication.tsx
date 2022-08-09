@@ -19,14 +19,11 @@ import {
   Container,
   SelectOption,
   ButtonVariation,
-  PageSpinner,
-  useToaster,
-  Icon
+  PageSpinner
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
-import { Color, FontVariation } from '@harness/design-system'
+import { FontVariation } from '@harness/design-system'
 import type { FormikContextType, FormikProps } from 'formik'
-import { getRequestOptions } from 'framework/app/App'
 import { Status } from '@common/utils/Constants'
 import { useHostedBuilds } from '@common/hooks/useHostedBuild'
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -48,14 +45,14 @@ import SSHSecretInput from '@secrets/components/SSHSecretInput/SSHSecretInput'
 import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
 import { useStrings } from 'framework/strings'
 import { GitAuthTypes, GitAPIAuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
+import { ConnectViaOAuth } from '@connectors/common/ConnectViaOAuth/ConnectViaOAuth'
+import { Connectors } from '@connectors/constants'
 import {
   ConnectorSecretScope,
-  getBackendServerUrl,
-  isEnvironmentAllowedForOAuth,
-  MAX_TIMEOUT_OAUTH,
-  OAUTH_PLACEHOLDER_VALUE,
-  OAUTH_REDIRECT_URL_PREFIX
+  handleOAuthEventProcessing,
+  OAuthEventProcessingResponse
 } from '../../CreateConnectorUtils'
+import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './StepGithubAuthentication.module.scss'
 import commonCss from '../../commonSteps/ConnectorCommonStyles.module.scss'
@@ -121,7 +118,6 @@ const RenderGithubAuthForm: React.FC<{ formikProps: FormikProps<GithubFormInterf
             <SecretInput name="accessToken" label={getString('personalAccessToken')} />
           </>
         )
-      case GitAuthTypes.OAUTH:
       default:
         return null
     }
@@ -191,14 +187,15 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
     const [initialValues, setInitialValues] = useState(defaultInitialFormData)
     const [loadingConnectorSecrets, setLoadingConnectorSecrets] = useState(props.isEditMode)
     const oAuthSecretIntercepted = useRef<boolean>(false)
-    const { showError, clear } = useToaster()
     const [oAuthStatus, setOAuthStatus] = useState<Status>(Status.TO_DO)
     const formikRef = useRef<FormikContextType<any>>()
-    const [isOAuthGettingRelinked, setIsOAuthGettingRelinked] = useState<boolean>(false)
     const [isAccessRevoked, setIsAccessRevoked] = useState<boolean>(false)
     const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
     const [gitAuthType, setGitAuthType] = useState<GitAuthTypes>()
+    const [forceFailOAuthTimeoutId, setForceFailOAuthTimeoutId] = useState<NodeJS.Timeout>()
+    const [oAuthResponse, setOAuthResponse] = useState<OAuthEventProcessingResponse>()
 
+    useConnectorWizard({ helpPanel: { referenceId: 'gitHubConnectorCredentials', contentWidth: 900 } })
     const authOptions: Array<SelectOption> = [
       {
         label: getString('usernameToken'),
@@ -207,6 +204,8 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
     ]
     enabledHostedBuildsForFreeUsers &&
       authOptions.push({ label: getString('common.oAuthLabel'), value: GitAuthTypes.OAUTH })
+
+    //#region  OAuth setup and processing
 
     const isGithubConnectorOAuthBased = useMemo((): boolean => {
       return get(prevStepData, 'spec.authentication.spec.type') === GitAuthTypes.OAUTH
@@ -220,83 +219,36 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
       )
     }, [prevStepData, isGithubConnectorOAuthBased, props.status?.status])
 
-    const markOAuthAsFailed = useCallback(() => {
-      setOAuthStatus(Status.FAILURE)
-      clear()
-      showError(getString('connectors.oAuth.failed'))
-    }, [])
-
-    const handleOAuthLinking = useCallback(async () => {
-      setTimeout(() => {
-        if (oAuthStatus !== Status.SUCCESS) {
-          markOAuthAsFailed()
-        }
-      }, MAX_TIMEOUT_OAUTH)
-      setOAuthStatus(Status.IN_PROGRESS)
-      if (isExistingOAuthConnectionHealthy) {
-        setIsOAuthGettingRelinked(true)
-      }
-      oAuthSecretIntercepted.current = false
-      try {
-        const { headers } = getRequestOptions()
-        const oauthRedirectEndpoint = `${OAUTH_REDIRECT_URL_PREFIX}?provider=github&accountId=${accountId}`
-        const response = await fetch(oauthRedirectEndpoint, {
-          headers
-        })
-        const oAuthURL = await response.text()
-        if (typeof oAuthURL === 'string') {
-          window.open(oAuthURL, '_blank')
-        }
-      } catch (e) {
-        markOAuthAsFailed()
-      }
-    }, [isExistingOAuthConnectionHealthy, accountId])
-
     const handleOAuthServerEvent = useCallback(
       (event: MessageEvent): void => {
-        if (oAuthStatus === Status.IN_PROGRESS) {
-          if (event.origin !== getBackendServerUrl() && !isEnvironmentAllowedForOAuth()) {
-            return
-          }
-          if (!event || !event.data) {
-            return
-          }
-          const { accessTokenRef, refreshTokenRef, status, errorMessage } = event.data
-          // valid oauth event from server will always have some value
-          if (accessTokenRef && refreshTokenRef && status && errorMessage) {
-            // safeguard against backend server sending multiple oauth events
-            if (!oAuthSecretIntercepted.current) {
-              if (
-                accessTokenRef !== OAUTH_PLACEHOLDER_VALUE &&
-                (status as string).toLowerCase() === Status.SUCCESS.toLowerCase()
-              ) {
-                setOAuthStatus(Status.SUCCESS)
-                oAuthSecretIntercepted.current = true
-
-                // update formik
-                const formValuesCopy = { ...formikRef.current?.values }
-                let updatedFormValues = set(
-                  formValuesCopy,
-                  'oAuthAccessTokenRef',
-                  `${ConnectorSecretScope[Scope.ACCOUNT]}${accessTokenRef}`
-                )
-                if (refreshTokenRef !== OAUTH_PLACEHOLDER_VALUE) {
-                  updatedFormValues = set(
-                    updatedFormValues,
-                    'oAuthRefreshTokenRef',
-                    `${ConnectorSecretScope[Scope.ACCOUNT]}${refreshTokenRef}`
-                  )
-                }
-                formikRef.current?.setValues(updatedFormValues)
-              } else if (errorMessage !== OAUTH_PLACEHOLDER_VALUE) {
-                markOAuthAsFailed()
-              }
+        handleOAuthEventProcessing({
+          event,
+          oAuthStatus,
+          setOAuthStatus,
+          oAuthSecretIntercepted,
+          onSuccessCallback: ({ accessTokenRef }: OAuthEventProcessingResponse) => {
+            setOAuthResponse({ accessTokenRef })
+            if (forceFailOAuthTimeoutId) {
+              clearTimeout(forceFailOAuthTimeoutId)
             }
           }
-        }
+        })
       },
-      [formikRef.current?.values, markOAuthAsFailed, oAuthStatus, handleOAuthLinking]
+      [formikRef, oAuthStatus, forceFailOAuthTimeoutId]
     )
+
+    useEffect(() => {
+      if (oAuthStatus === Status.SUCCESS && oAuthResponse) {
+        const { accessTokenRef } = oAuthResponse
+        const formValuesCopy = { ...formikRef.current?.values }
+        const updatedFormValues = set(
+          formValuesCopy,
+          'oAuthAccessTokenRef',
+          `${ConnectorSecretScope[Scope.ACCOUNT]}${accessTokenRef}`
+        )
+        formikRef.current?.setValues(updatedFormValues)
+      }
+    }, [oAuthStatus, oAuthResponse, formikRef.current])
 
     useEffect(() => {
       window.addEventListener('message', handleOAuthServerEvent)
@@ -316,7 +268,9 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
       if (oAuthSecretIntercepted.current) {
         window.removeEventListener('message', handleOAuthServerEvent) // remove event listener once oauth is done
       }
-    }, [oAuthSecretIntercepted.current])
+    }, [oAuthSecretIntercepted])
+
+    //#endregion
 
     useEffect(() => {
       setGitAuthType(
@@ -337,40 +291,60 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
       }
     }, [loadingConnectorSecrets])
 
-    useEffect(() => {
-      saveCurrentStepData<ConnectorInfoDTO>(props.getCurrentStepData, formikRef.current?.values)
-    }, [formikRef.current?.values])
-
     const handleSubmit = (formData: ConnectorConfigDTO) => {
       nextStep?.({ ...props.connectorInfo, ...prevStepData, ...formData } as StepGithubAuthenticationProps)
     }
 
-    const renderOAuthStatus = useCallback((): JSX.Element => {
-      if (oAuthStatus === Status.TO_DO && isAccessRevoked) {
-        return (
-          <Layout.Horizontal spacing="xsmall" flex={{ justifyContent: 'flex-start' }}>
-            <Icon size={20} name="danger-icon" />
-            <Text font={{ variation: FontVariation.SMALL }}>{getString('connectors.oAuth.accessRevoked')}</Text>
-          </Layout.Horizontal>
-        )
-      }
-      if (isExistingOAuthConnectionHealthy || oAuthStatus === Status.SUCCESS) {
-        return (
-          <Layout.Horizontal
-            className={css.oAuthSuccess}
-            flex={{ justifyContent: 'flex-start' }}
-            padding={{ left: 'small', top: 'xsmall', right: 'small', bottom: 'xsmall' }}
-            spacing="xsmall"
-          >
-            <Icon name="success-tick" size={24} />
-            <Text font={{ weight: 'semi-bold' }} color={Color.GREEN_800}>
-              {getString(isOAuthGettingRelinked ? 'connectors.oAuth.reConfigured' : 'connectors.oAuth.configured')}
-            </Text>
-          </Layout.Horizontal>
-        )
-      }
-      return <></>
-    }, [oAuthStatus, isAccessRevoked, prevStepData, isOAuthGettingRelinked, isExistingOAuthConnectionHealthy])
+    const getValidationSchema = useCallback((): Yup.ObjectSchema<Record<string, any> | undefined> => {
+      return gitAuthType === GitAuthTypes.OAUTH
+        ? Yup.object().shape({})
+        : Yup.object().shape({
+            username: Yup.string()
+              .nullable()
+              .when('connectionType', {
+                is: val => val === GitConnectionType.HTTP,
+                then: Yup.string().trim().required(getString('validation.username'))
+              }),
+            authType: Yup.string().when('connectionType', {
+              is: val => val === GitConnectionType.HTTP,
+              then: Yup.string().trim().required(getString('validation.authType'))
+            }),
+            sshKey: Yup.object().when('connectionType', {
+              is: val => val === GitConnectionType.SSH,
+              then: Yup.object().required(getString('validation.sshKey')),
+              otherwise: Yup.object().nullable()
+            }),
+            accessToken: Yup.object().when(['connectionType', 'authType'], {
+              is: (connectionType, authType) =>
+                connectionType === GitConnectionType.HTTP && authType === GitAuthTypes.USER_TOKEN,
+
+              then: Yup.object().required(getString('validation.accessToken')),
+              otherwise: Yup.object().nullable()
+            }),
+            apiAccessToken: Yup.object().when(['enableAPIAccess', 'apiAuthType'], {
+              is: (enableAPIAccess, apiAuthType) => enableAPIAccess && apiAuthType === GitAPIAuthTypes.TOKEN,
+              then: Yup.object().required(getString('validation.accessToken')),
+              otherwise: Yup.object().nullable()
+            }),
+            privateKey: Yup.string().when(['enableAPIAccess', 'apiAuthType'], {
+              is: (enableAPIAccess, apiAuthType) => enableAPIAccess && apiAuthType === GitAPIAuthTypes.GITHUB_APP,
+              then: Yup.string().required(getString('validation.privateKey')),
+              otherwise: Yup.string().nullable()
+            }),
+            apiAuthType: Yup.string().when('enableAPIAccess', {
+              is: val => val,
+              then: Yup.string().trim().required(getString('validation.authType'))
+            }),
+            installationId: Yup.string().when(['enableAPIAccess', 'apiAuthType'], {
+              is: (enableAPIAccess, apiAuthType) => enableAPIAccess && apiAuthType === GitAPIAuthTypes.GITHUB_APP,
+              then: Yup.string().trim().required(getString('validation.installationId'))
+            }),
+            applicationId: Yup.string().when(['enableAPIAccess', 'apiAuthType'], {
+              is: (enableAPIAccess, apiAuthType) => enableAPIAccess && apiAuthType === GitAPIAuthTypes.GITHUB_APP,
+              then: Yup.string().trim().required(getString('validation.applicationId'))
+            })
+          })
+    }, [gitAuthType])
 
     return loadingConnectorSecrets ||
       (formikRef.current?.values.authType === GitAuthTypes.OAUTH && oAuthStatus === Status.IN_PROGRESS) ? (
@@ -382,7 +356,7 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
         }
       />
     ) : (
-      <Layout.Vertical width="60%" style={{ minHeight: 460 }} className={cx(css.secondStep, commonCss.stepContainer)}>
+      <Layout.Vertical className={cx(css.secondStep, commonCss.connectorModalMinHeight, commonCss.stepContainer)}>
         <Text font={{ variation: FontVariation.H3 }}>{getString('credentials')}</Text>
 
         <Formik
@@ -391,56 +365,7 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
             ...prevStepData
           }}
           formName="stepGithubAuthForm"
-          validationSchema={
-            gitAuthType === GitAuthTypes.OAUTH
-              ? Yup.object().shape({})
-              : Yup.object().shape({
-                  username: Yup.string()
-                    .nullable()
-                    .when('connectionType', {
-                      is: val => val === GitConnectionType.HTTP,
-                      then: Yup.string().trim().required(getString('validation.username'))
-                    }),
-                  authType: Yup.string().when('connectionType', {
-                    is: val => val === GitConnectionType.HTTP,
-                    then: Yup.string().trim().required(getString('validation.authType'))
-                  }),
-                  sshKey: Yup.object().when('connectionType', {
-                    is: val => val === GitConnectionType.SSH,
-                    then: Yup.object().required(getString('validation.sshKey')),
-                    otherwise: Yup.object().nullable()
-                  }),
-                  accessToken: Yup.object().when(['connectionType', 'authType'], {
-                    is: (connectionType, authType) =>
-                      connectionType === GitConnectionType.HTTP && authType === GitAuthTypes.USER_TOKEN,
-
-                    then: Yup.object().required(getString('validation.accessToken')),
-                    otherwise: Yup.object().nullable()
-                  }),
-                  apiAccessToken: Yup.object().when(['enableAPIAccess', 'apiAuthType'], {
-                    is: (enableAPIAccess, apiAuthType) => enableAPIAccess && apiAuthType === GitAPIAuthTypes.TOKEN,
-                    then: Yup.object().required(getString('validation.accessToken')),
-                    otherwise: Yup.object().nullable()
-                  }),
-                  privateKey: Yup.string().when(['enableAPIAccess', 'apiAuthType'], {
-                    is: (enableAPIAccess, apiAuthType) => enableAPIAccess && apiAuthType === GitAPIAuthTypes.GITHUB_APP,
-                    then: Yup.string().required(getString('validation.privateKey')),
-                    otherwise: Yup.string().nullable()
-                  }),
-                  apiAuthType: Yup.string().when('enableAPIAccess', {
-                    is: val => val,
-                    then: Yup.string().trim().required(getString('validation.authType'))
-                  }),
-                  installationId: Yup.string().when(['enableAPIAccess', 'apiAuthType'], {
-                    is: (enableAPIAccess, apiAuthType) => enableAPIAccess && apiAuthType === GitAPIAuthTypes.GITHUB_APP,
-                    then: Yup.string().trim().required(getString('validation.installationId'))
-                  }),
-                  applicationId: Yup.string().when(['enableAPIAccess', 'apiAuthType'], {
-                    is: (enableAPIAccess, apiAuthType) => enableAPIAccess && apiAuthType === GitAPIAuthTypes.GITHUB_APP,
-                    then: Yup.string().trim().required(getString('validation.applicationId'))
-                  })
-                })
-          }
+          validationSchema={getValidationSchema()}
           onSubmit={handleSubmit}
         >
           {formikProps => {
@@ -448,7 +373,7 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
               props.getCurrentStepData,
               Object.assign(formikProps.values, {
                 authType: gitAuthType,
-                ...(gitAuthType === GitAuthTypes.OAUTH && { apiAuthType: GitAuthTypes.OAUTH })
+                ...(gitAuthType === GitAuthTypes.OAUTH && { apiAuthType: GitAPIAuthTypes.OAUTH, enableAPIAccess: true })
               }) as unknown as ConnectorInfoDTO
             )
             formikRef.current = formikProps
@@ -485,34 +410,35 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
                             formikProps.setValues({
                               ...formikProps.values,
                               authType: selectedOption,
-                              ...(selectedOption === GitAuthTypes.OAUTH && { apiAuthType: selectedOption })
+                              ...(selectedOption === GitAuthTypes.OAUTH
+                                ? {
+                                    apiAuthType: GitAPIAuthTypes.OAUTH,
+                                    enableAPIAccess: true
+                                  }
+                                : {
+                                    apiAuthType: GitAPIAuthTypes.TOKEN,
+                                    enableAPIAccess: false
+                                  })
                             })
                           }}
                         />
                       </Container>
-
                       <RenderGithubAuthForm formikProps={formikProps} gitAuthType={gitAuthType} />
                     </Container>
                   )}
 
                   {gitAuthType === GitAuthTypes.OAUTH && enabledHostedBuildsForFreeUsers ? (
-                    <Layout.Vertical spacing="xlarge">
-                      {renderOAuthStatus()}
-                      <Button
-                        intent="primary"
-                        text={getString(
-                          isExistingOAuthConnectionHealthy
-                            ? 'connectors.relinkToGitProvider'
-                            : 'connectors.linkToGitProvider',
-                          {
-                            gitProvider: getString('common.repo_provider.githubLabel')
-                          }
-                        )}
-                        onClick={handleOAuthLinking}
-                        variation={ButtonVariation.PRIMARY}
-                        className={css.linkToGitBtn}
-                      />
-                    </Layout.Vertical>
+                    <ConnectViaOAuth
+                      gitProviderType={Connectors.GITHUB}
+                      accountId={accountId}
+                      status={oAuthStatus}
+                      setOAuthStatus={setOAuthStatus}
+                      isOAuthAccessRevoked={isAccessRevoked}
+                      isExistingConnectionHealthy={isExistingOAuthConnectionHealthy}
+                      oAuthSecretIntercepted={oAuthSecretIntercepted}
+                      forceFailOAuthTimeoutId={forceFailOAuthTimeoutId}
+                      setForceFailOAuthTimeoutId={setForceFailOAuthTimeoutId}
+                    />
                   ) : (
                     <>
                       <FormInput.CheckBox

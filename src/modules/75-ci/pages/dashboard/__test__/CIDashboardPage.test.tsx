@@ -6,9 +6,13 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
-import { TestWrapper } from '@common/utils/testUtils'
+import { render, findByText } from '@testing-library/react'
+import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
+import executionList from '@pipeline/pages/execution-list/__mocks__/execution-list.json'
+import pipelines from '@pipeline/components/PipelineModalListView/__tests__/RunPipelineListViewMocks'
+import filters from '@pipeline/pages/execution-list/__mocks__/filters.json'
+import * as hooksMock from '@common/hooks'
 import CIDashboardPage from '../CIDashboardPage'
 
 jest.mock('@common/utils/YamlUtils', () => ({}))
@@ -19,6 +23,29 @@ jest.mock('framework/exports', () => ({
     params: {
       projectIdentifier: 'test'
     }
+  })
+}))
+
+const mockGetCallFunction = jest.fn()
+jest.mock('@common/hooks', () => ({
+  ...(jest.requireActual('@common/hooks') as any),
+  useMutateAsGet: jest.fn().mockImplementation(() => {
+    return { data: executionList, refetch: jest.fn(), error: null, loading: false }
+  })
+}))
+
+jest.mock('services/pipeline-ng', () => ({
+  useGetListOfExecutions: jest.fn(() => ({
+    mutate: jest.fn(() => Promise.resolve([executionList])),
+    loading: false,
+    cancel: jest.fn()
+  })),
+  useGetPipelineList: jest.fn().mockImplementation(args => {
+    mockGetCallFunction(args)
+    return { mutate: jest.fn(() => Promise.resolve(pipelines)), cancel: jest.fn(), loading: false }
+  }),
+  useGetFilterList: jest.fn().mockImplementation(() => {
+    return { mutate: jest.fn(() => Promise.resolve(filters)), loading: false }
   })
 }))
 
@@ -201,5 +228,48 @@ describe('CIDashboardPage snapshot test', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
+  })
+  test('should bg image when no pipeline/no execution', () => {
+    jest.spyOn(hooksMock, 'useMutateAsGet').mockImplementation((): any => {
+      return {
+        data: [],
+        refetch: jest.fn(),
+        error: null,
+        loading: false
+      }
+    })
+
+    const { container } = render(
+      <TestWrapper defaultAppStoreValues={defaultAppStoreValues}>
+        <CIDashboardPage />
+      </TestWrapper>
+    )
+
+    // modal should open saying run pipeline
+    const dailog = findDialogContainer()
+    expect(findByText(dailog!, 'pipeline.runAPipeline')).toBeDefined()
+
+    //bgImage should be applied
+    expect(container.querySelector('div[style*="background-image: url(test-file-stub)"]')).toBeDefined()
+  })
+
+  test('if loading true', () => {
+    jest.spyOn(hooksMock, 'useMutateAsGet').mockImplementation((): any => {
+      return {
+        data: [],
+        refetch: jest.fn(),
+        error: null,
+        loading: true
+      }
+    })
+    const { getByText, container } = render(
+      <TestWrapper defaultAppStoreValues={defaultAppStoreValues}>
+        <CIDashboardPage />
+      </TestWrapper>
+    )
+
+    //loading icon and text should be visible
+    expect(container.querySelector('[data-icon="steps-spinner"]')).toBeDefined()
+    expect(getByText('Loading, please wait...')).toBeDefined()
   })
 })

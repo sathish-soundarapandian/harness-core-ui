@@ -88,7 +88,14 @@ export const LoadSourceByType = ({
         <PrometheusHealthSource data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
       )
     case Connectors.NEW_RELIC:
-      return <NewrelicMonitoredSourceContainer data={data} onSubmit={onSubmit} />
+      return (
+        <NewrelicMonitoredSourceContainer
+          isTemplate={isTemplate}
+          expressions={expressions}
+          data={data}
+          onSubmit={onSubmit}
+        />
+      )
     case Connectors.DYNATRACE:
       return <DynatraceHealthSourceContainer data={data} onSubmit={onSubmit} />
     case Connectors.SPLUNK:

@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { useGetPipelineSummary } from 'services/pipeline-ng'
@@ -51,5 +52,10 @@ export default function CDPipelineDeploymentList(): React.ReactElement {
 
   useDocumentTitle([pipeline?.data?.name || getString('pipelines'), getString('executionsText')])
 
-  return <ExecutionList showHealthAndExecution onRunPipeline={onRunPipeline} isPipelineInvalid={isPipelineInvalid} />
+  return (
+    <>
+      <HelpPanel referenceId="ExecutionHistory" type={HelpPanelType.FLOATING_CONTAINER} />
+      <ExecutionList showHealthAndExecution onRunPipeline={onRunPipeline} isPipelineInvalid={isPipelineInvalid} />
+    </>
+  )
 }

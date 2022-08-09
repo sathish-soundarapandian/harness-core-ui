@@ -14,8 +14,6 @@ import * as Yup from 'yup'
 import { Container, Formik, FormikForm, Button, ButtonVariation, Text } from '@wings-software/uicore'
 import { FontVariation } from '@wings-software/design-system'
 import { Divider } from '@blueprintjs/core'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 
 import { useStrings } from 'framework/strings'
 import { loggerFor } from 'framework/logging/logging'
@@ -88,7 +86,6 @@ export default function CreatePipelines({
   const { updateQueryParams } = useUpdateQueryParams()
   const { isGitSyncEnabled, isGitSimplificationEnabled } = useAppStore()
   const { trackEvent } = useTelemetry()
-  const isPipelineTemplateEnabled = useFeatureFlag(FeatureFlag.NG_TEMPLATES)
   const newInitialValues = React.useMemo(() => {
     return produce(initialValues, draft => {
       if (draft.identifier === DefaultNewPipelineId) {
@@ -216,7 +213,7 @@ export default function CreatePipelines({
               <Divider className={cx({ [css.gitSimplificationDivider]: storeTypeParam === StoreType.INLINE })} />
             ) : null}
 
-            {!isEdit && isPipelineTemplateEnabled && (
+            {!isEdit && (
               <Container padding={{ top: 'large' }}>
                 <Button
                   text={getString('common.templateStartLabel')}

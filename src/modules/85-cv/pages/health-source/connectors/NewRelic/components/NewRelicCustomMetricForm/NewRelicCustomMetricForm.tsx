@@ -6,16 +6,26 @@
  */
 
 import React, { useMemo, useState, useContext, useCallback, useEffect } from 'react'
+import { noop } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { GetDataError } from 'restful-react'
-import { Container, Accordion, SelectOption, Utils, Button } from '@wings-software/uicore'
+import {
+  Container,
+  Accordion,
+  SelectOption,
+  Utils,
+  Button,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  Layout
+} from '@wings-software/uicore'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import SelectHealthSourceServices from '@cv/pages/health-source/common/SelectHealthSourceServices/SelectHealthSourceServices'
 import GroupName from '@cv/components/GroupName/GroupName'
 import MetricLineChart from '@cv/pages/health-source/common/MetricLineChart/MetricLineChart'
 import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSourceCardHeader/SetupSourceCardHeader'
 import { QueryViewer } from '@cv/components/QueryViewer/QueryViewer'
-import { InputWithDynamicModalForJson } from '@cv/components/InputWithDynamicModalForJson/InputWithDynamicModalForJson'
+import { InputWithDynamicModalForJsonMultiType } from '@cv/components/InputWithDynamicModalForJson/InputWithDynamicModalForJsonMultiType'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useStrings } from 'framework/strings'
 import {
@@ -30,12 +40,15 @@ import { initializeGroupNames } from '@cv/pages/health-source/common/GroupName/G
 import { NewRelicHealthSourceFieldNames } from '../../NewRelicHealthSource.constants'
 import { getOptionsForChart } from './NewRelicCustomMetricForm.utils'
 import type { NewRelicCustomFormInterface } from './NewRelicCustomMetricForm.types'
+import { shouldFetchApplication } from '../../NewRelicHealthSource.utils'
 import css from '../../NewrelicMonitoredSource.module.scss'
 
-export default function NewRelicCustomMetricForm(props: NewRelicCustomFormInterface) {
-  const { connectorIdentifier, mappedMetrics, selectedMetric, formikSetField, formikValues } = props
+export default function NewRelicCustomMetricForm(props: NewRelicCustomFormInterface): JSX.Element {
+  const { connectorIdentifier, mappedMetrics, selectedMetric, formikSetField, formikValues, isTemplate, expressions } =
+    props
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED
 
   const metricPackResponse = useGetMetricPacks({
     queryParams: { projectIdentifier, orgIdentifier, accountId, dataSourceType: 'NEW_RELIC' }
@@ -99,9 +112,10 @@ export default function NewRelicCustomMetricForm(props: NewRelicCustomFormInterf
   }, [queryParamsForNRQL])
 
   useEffect(() => {
-    if (query?.trim().length) {
+    if (shouldFetchApplication(query, isConnectorRuntimeOrExpression)) {
       fetchNewRelicResponse()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleBuildChart = useCallback(() => {
@@ -113,6 +127,7 @@ export default function NewRelicCustomMetricForm(props: NewRelicCustomFormInterf
     }).then(data => {
       setNewRelicTimeSeriesData(data.data)
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchNewRelicResponse, fetchNewRelicTimeSeriesData, formikValues, sampleRecord])
 
   const options = useMemo(() => {
@@ -130,6 +145,10 @@ export default function NewRelicCustomMetricForm(props: NewRelicCustomFormInterf
     (metricDefinition: NewRelicMetricDefinition) =>
       metricDefinition.metricName === mappedMetrics.get(selectedMetric || '')?.metricName
   )
+
+  const showMetricChart =
+    getMultiTypeFromValue(formikValues.timestamp) === MultiTypeInputType.FIXED &&
+    getMultiTypeFromValue(formikValues.metricValue) === MultiTypeInputType.FIXED
 
   return (
     <Container className={css.main}>
@@ -170,17 +189,25 @@ export default function NewRelicCustomMetricForm(props: NewRelicCustomFormInterf
             details={
               <>
                 <QueryViewer
+                  key={formikValues?.metricIdentifier}
                   recordsClassName={css.recordsClassName}
                   queryLabel={getString('cv.healthSource.connectors.NewRelic.nrqlQuery')}
                   isQueryExecuted={isQueryExecuted}
-                  queryNotExecutedMessage={getString('cv.healthSource.connectors.NewRelic.submitQueryNoRecords')}
+                  queryNotExecutedMessage={
+                    getMultiTypeFromValue(formikValues?.query) !== MultiTypeInputType.FIXED
+                      ? getString('cv.customHealthSource.chartRuntimeWarning')
+                      : getString('cv.healthSource.connectors.NewRelic.submitQueryNoRecords')
+                  }
                   records={[sampleRecord] as Record<string, any>[]}
-                  fetchRecords={fetchNewRelicResponse}
+                  fetchRecords={!isConnectorRuntimeOrExpression ? fetchNewRelicResponse : noop}
                   loading={loading}
                   error={error}
                   query={query}
                   fetchEntityName={getString('cv.response')}
                   dataTooltipId={'newRelicQuery'}
+                  isTemplate={isTemplate}
+                  expressions={expressions}
+                  isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
                 />
               </>
             }
@@ -189,8 +216,8 @@ export default function NewRelicCustomMetricForm(props: NewRelicCustomFormInterf
             id="metricChart"
             summary={getString('cv.healthSource.connectors.NewRelic.metricValueAndCharts')}
             details={
-              <>
-                <InputWithDynamicModalForJson
+              <Layout.Vertical key={formikValues?.metricIdentifier}>
+                <InputWithDynamicModalForJsonMultiType
                   onChange={formikSetField}
                   fieldValue={formikValues?.metricValue}
                   isQueryExecuted={isQueryExecuted}
@@ -203,8 +230,15 @@ export default function NewRelicCustomMetricForm(props: NewRelicCustomFormInterf
                   )}
                   dataTooltipId={'metricValueJsonPath'}
                   showExactJsonPath={true}
+                  isMultiType={Boolean(isTemplate)}
+                  expressions={expressions}
+                  allowableTypes={
+                    isConnectorRuntimeOrExpression
+                      ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+                      : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+                  }
                 />
-                <InputWithDynamicModalForJson
+                <InputWithDynamicModalForJsonMultiType
                   onChange={formikSetField}
                   fieldValue={formikValues?.timestamp}
                   isQueryExecuted={isQueryExecuted}
@@ -217,21 +251,32 @@ export default function NewRelicCustomMetricForm(props: NewRelicCustomFormInterf
                   )}
                   dataTooltipId={'timestampJsonPath'}
                   showExactJsonPath={true}
+                  isMultiType={Boolean(isTemplate)}
+                  expressions={expressions}
+                  allowableTypes={
+                    isConnectorRuntimeOrExpression
+                      ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+                      : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+                  }
                 />
-                <Button
-                  intent="primary"
-                  text={getString('cv.healthSource.connectors.buildChart')}
-                  onClick={handleBuildChart}
-                  disabled={!formikValues.query?.trim().length}
-                />
-                <Container padding={{ top: 'small' }}>
-                  <MetricLineChart
-                    loading={timeSeriesDataLoading}
-                    error={timeseriesDataError as GetDataError<Error>}
-                    options={options}
+                {showMetricChart && (
+                  <Button
+                    intent="primary"
+                    text={getString('cv.healthSource.connectors.buildChart')}
+                    onClick={handleBuildChart}
+                    disabled={!formikValues.query?.trim().length || isConnectorRuntimeOrExpression}
                   />
-                </Container>
-              </>
+                )}
+                {showMetricChart && (
+                  <Container padding={{ top: 'small' }}>
+                    <MetricLineChart
+                      loading={timeSeriesDataLoading}
+                      error={timeseriesDataError as GetDataError<Error>}
+                      options={options}
+                    />
+                  </Container>
+                )}
+              </Layout.Vertical>
             }
           />
           <Accordion.Panel

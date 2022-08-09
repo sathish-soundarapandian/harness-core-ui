@@ -23,7 +23,13 @@ import tabCss from '../DefaultView/DefaultView.module.scss'
 
 export const REFRESH_APPROVAL = 'REFRESH_APPROVAL'
 
-interface ApprovalTabComponentProps {
+export interface StepExecutionTimeInfo {
+  stepParameters?: { [key: string]: { [key: string]: any } }
+  startTs?: number
+  endTs?: number
+}
+
+interface ApprovalTabComponentProps extends StepExecutionTimeInfo {
   approvalData: ApprovalInstanceResponse
   isWaiting: boolean
 }
@@ -105,7 +111,15 @@ export function BaseApprovalView(props: BaseApprovalViewProps): React.ReactEleme
       <Tabs.Tab
         id="Approval"
         title={getString('approvalStage.title')}
-        panel={<ApprovalTabComponent approvalData={data?.data as ApprovalInstanceResponse} isWaiting={isWaiting} />}
+        panel={
+          <ApprovalTabComponent
+            approvalData={data?.data as ApprovalInstanceResponse}
+            isWaiting={isWaiting}
+            startTs={step.startTs}
+            endTs={step.endTs}
+            stepParameters={step.stepParameters}
+          />
+        }
       />
       <Tabs.Tab id="PipelineDetails" title={getString('common.pipelineDetails')} panel={<PipelineDetailsTab />} />
       <Tabs.Tab

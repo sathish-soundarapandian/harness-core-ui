@@ -48,7 +48,29 @@ export const KEY_CODE_FOR_SPACE = 'Space'
 export const KEY_CODE_FOR_CHAR_Z = 'KeyZ'
 export const KEY_CODE_FOR_CHAR_C = 'KeyC'
 export const KEY_CODE_FOR_CHAR_V = 'KeyV'
+export const KEY_CODE_FOR_CHAR_A = 'KeyA'
+export const KEY_CODE_FOR_CHAR_F = 'KeyF'
+export const KEY_CODE_FOR_ARROW_UP = 'ArrowUp'
+export const KEY_CODE_FOR_ARROW_DOWN = 'ArrowDown'
+export const KEY_CODE_FOR_ARROW_LEFT = 'ArrowLeft'
+export const KEY_CODE_FOR_ARROW_RIGHT = 'ArrowRight'
 export const META_EVENT_KEY_CODE = 57
 export const CONTROL_EVENT_KEY_CODE = 5
+export const SHIFT_EVENT_KEY_CODE = 4
 
 export const MAX_ERR_MSSG_LENGTH = 80
+
+export const navigationKeysMap = [
+  KEY_CODE_FOR_ARROW_DOWN,
+  KEY_CODE_FOR_ARROW_UP,
+  KEY_CODE_FOR_ARROW_LEFT,
+  KEY_CODE_FOR_ARROW_RIGHT
+]
+
+export const allowedKeysInEditModeMap = [
+  ...navigationKeysMap,
+  KEY_CODE_FOR_CHAR_V,
+  KEY_CODE_FOR_CHAR_C,
+  KEY_CODE_FOR_CHAR_A,
+  KEY_CODE_FOR_CHAR_F
+]

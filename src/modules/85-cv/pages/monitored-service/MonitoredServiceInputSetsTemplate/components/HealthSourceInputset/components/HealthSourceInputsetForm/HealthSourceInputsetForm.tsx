@@ -40,7 +40,9 @@ export default function HealthSourceInputsetForm({
         return { name: item[0], path: `${path}.${item[0]}` }
       })
     const hasQueries = healthSource?.spec?.queries !== undefined
-    const metricDefinitions = hasQueries ? healthSource?.spec?.queries : healthSource?.spec?.metricDefinitions
+    const metricDefinitions = hasQueries
+      ? healthSource?.spec?.queries
+      : healthSource?.spec?.metricDefinitions || healthSource?.spec?.newRelicMetricDefinitions
     return (
       <Card key={`${healthSource?.name}.${index}`} className={css.healthSourceInputSet}>
         <Text font={'normal'} color={Color.BLACK} style={{ paddingBottom: spacingMedium }}>

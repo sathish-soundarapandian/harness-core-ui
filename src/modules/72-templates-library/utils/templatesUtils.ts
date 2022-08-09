@@ -5,11 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty, trim } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import type { Scope } from '@common/interfaces/SecretsInterface'
+import { INPUT_EXPRESSION_REGEX_STRING, parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 
 export enum TemplateType {
   Step = 'Step',
@@ -48,7 +49,10 @@ export const getAllowedTemplateTypes = (
   return allowedTemplateTypes
 }
 
-export const getVersionLabelText = (template: TemplateSummaryResponse, getString: UseStringsReturn['getString']) => {
+export const getVersionLabelText = (
+  template: TemplateSummaryResponse,
+  getString: UseStringsReturn['getString']
+): string | undefined => {
   return isEmpty(template.versionLabel)
     ? getString('templatesLibrary.alwaysUseStableVersion')
     : template.stableTemplate
@@ -58,3 +62,29 @@ export const getVersionLabelText = (template: TemplateSummaryResponse, getString
 
 export const getTemplateRuntimeInputsCount = (templateInfo: { [key: string]: any }): number =>
   (JSON.stringify(templateInfo).match(/<\+input>/g) || []).length
+
+/**
+ * Replaces all the "<+input>.defaultValue(value)" with "value"
+ * Does not replace any other "<+input>"
+ */
+export function replaceDefaultValuesinTemplate<T>(template: T): T {
+  const INPUT_EXPRESSION_REGEX = new RegExp(`"${INPUT_EXPRESSION_REGEX_STRING}"`, 'g')
+  return JSON.parse(
+    JSON.stringify(template || {}).replace(
+      new RegExp(`"${INPUT_EXPRESSION_REGEX.source.slice(1).slice(0, -1)}"`, 'g'),
+      value => {
+        const parsed = parseInput(trim(value, '"'))
+
+        if (!parsed) {
+          return value
+        }
+
+        if (parsed.default !== null) {
+          return `"${parsed.default}"`
+        }
+
+        return value
+      }
+    )
+  )
+}

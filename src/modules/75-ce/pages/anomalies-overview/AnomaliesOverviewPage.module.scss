@@ -84,3 +84,7 @@
   padding-left: var(--spacing-medium) !important;
   margin-right: var(--spacing-medium) !important;
 }
+
+.permissionErrorWrapper {
+  height: calc(var(--page-min-height) - 138px);
+}

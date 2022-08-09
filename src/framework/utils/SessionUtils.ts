@@ -5,6 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { useHistory } from 'react-router-dom'
+import routes from '@common/RouteDefinitions'
+import { returnUrlParams } from '@common/utils/routeUtils'
+import SecureStorage from './SecureStorage'
+
 interface GetLoginPageURL {
   returnUrl?: string
 }
@@ -25,4 +30,26 @@ export const getForgotPasswordURL = (): string => {
   return window.HARNESS_ENABLE_NG_AUTH_UI
     ? `${window.location.pathname.replace(/\/ng\/?/, '/')}auth/#/forgot-password`
     : `${window.location.pathname.replace(/\/ng\//, '/')}#/forgot-password`
+}
+
+export interface UseLogoutReturn {
+  forceLogout: () => void
+}
+
+export const useLogout = (): UseLogoutReturn => {
+  const history = useHistory()
+  let isTriggered = false
+
+  const forceLogout = (): void => {
+    if (!isTriggered) {
+      isTriggered = true
+      SecureStorage.clear()
+      history.push({
+        pathname: routes.toRedirect(),
+        search: returnUrlParams(getLoginPageURL({ returnUrl: window.location.href }))
+      })
+    }
+  }
+
+  return { forceLogout }
 }

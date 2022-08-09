@@ -1219,14 +1219,14 @@ const checkForTypeArtifactOrManifest = (
   let isTypeFound = false
   artifactOrManifestArray.forEach(artifactOrManifest => {
     if (isManifest) {
-      artifactOrManifest.some((manifest: { manifest: { type: string } }) => manifest.manifest.type === manifestType)
+      artifactOrManifest?.some((manifest: { manifest: { type: string } }) => manifest.manifest.type === manifestType)
         ? (isTypeFound = true)
         : null
     } else {
       if (artifactOrManifest.primary?.type === artifactType) {
         isTypeFound = true
       }
-      artifactOrManifest.sidecars.some(
+      artifactOrManifest.sidecars?.some(
         (sideCar: { sidecar: { type: string } }) => sideCar.sidecar.type === artifactType
       )
         ? (isTypeFound = true)
@@ -1272,7 +1272,9 @@ export const getArtifactsObjectFromPipeline = (pipelineObj: any, isManifest: boo
     if (isManifest) {
       if (!isEmpty(artifactDetail)) artifactOrManifestObj.push(artifactDetail)
     } else {
-      if ('primary' in artifactDetail || artifactDetail.sidecars?.length) artifactOrManifestObj.push(artifactDetail)
+      if (!isEmpty(artifactDetail)) {
+        if ('primary' in artifactDetail || artifactDetail.sidecars?.length) artifactOrManifestObj.push(artifactDetail)
+      }
     }
   })
   return artifactOrManifestObj

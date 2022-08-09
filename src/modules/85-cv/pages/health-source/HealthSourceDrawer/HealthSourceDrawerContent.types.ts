@@ -81,3 +81,11 @@ export interface HealthSourceDrawerInterface {
   isTemplate?: boolean
   expressions?: string[]
 }
+
+type PrometheusSpec = PrometheusHealthSourceSpec & {
+  feature: string
+}
+
+export type PrometheusHealthSourceType = Omit<HealthSource, 'spec'> & {
+  spec: PrometheusSpec
+}

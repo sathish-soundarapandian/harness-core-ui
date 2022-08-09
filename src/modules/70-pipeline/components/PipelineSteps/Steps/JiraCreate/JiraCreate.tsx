@@ -31,6 +31,7 @@ export class JiraCreate extends PipelineStep<JiraCreateData> {
     this._hasDelegateSelectionVisible = true
   }
 
+  protected referenceId = 'jiraCreateStep'
   protected isHarnessSpecific = true
   protected type = StepType.JiraCreate
   protected stepName = 'Jira Create'

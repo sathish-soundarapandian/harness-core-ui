@@ -60,7 +60,7 @@ describe('NoFeatureFlags', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('nodata-image')).toBeVisible()
-      expect(screen.getByText('cf.noFlag')).toBeVisible()
+      expect(screen.getByText('cf.featureFlags.noFlagsInProject')).toBeVisible()
       expect(screen.getByText('cf.featureFlags.newFlag')).toBeVisible()
     })
 

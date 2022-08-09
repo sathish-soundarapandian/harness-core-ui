@@ -8,8 +8,8 @@
 import React from 'react'
 import { act, fireEvent, queryAllByAttribute, render, waitFor } from '@testing-library/react'
 import { get, times } from 'lodash-es'
-import yaml from 'yaml'
 
+import { parse } from '@common/utils/YamlHelperMethods'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 import { ErrorType, Strategy } from '@pipeline/utils/FailureStrategyUtils'
 import { Basic } from '../FailureStrategyPanel.stories'
@@ -47,7 +47,7 @@ describe('<FailureStrategyPanel /> tests', () => {
       "
     `)
 
-    const data = yaml.parse(code.innerHTML)
+    const data = parse(code.innerHTML)
     expect(get(data, 'failureStrategies.length')).toBe(1)
   })
 
@@ -105,7 +105,7 @@ describe('<FailureStrategyPanel /> tests', () => {
       "
     `)
 
-    const data = yaml.parse(code.innerHTML)
+    const data = parse(code.innerHTML)
     expect(get(data, 'failureStrategies.length')).toBe(1)
   })
 
@@ -244,7 +244,7 @@ describe('<FailureStrategyPanel /> tests', () => {
       "
     `)
 
-    const data = yaml.parse(code.innerHTML)
+    const data = parse(code.innerHTML)
     expect(get(data, 'failureStrategies[0].onFailure.errors')).not.toContain(ErrorType.Authorization)
   })
 
@@ -431,7 +431,7 @@ describe('<FailureStrategyPanel /> tests', () => {
       "
     `)
 
-    const data = yaml.parse(code.innerHTML)
+    const data = parse(code.innerHTML)
     expect(get(data, 'failureStrategies[0].onFailure.action.spec')).toBeUndefined()
   })
 })

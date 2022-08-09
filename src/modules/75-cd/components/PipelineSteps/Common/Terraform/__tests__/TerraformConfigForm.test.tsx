@@ -198,7 +198,7 @@ describe('TerraformConfigForm StepOne tests', () => {
 
 const renderStepTwoComponent = (data?: any): void => {
   render(
-    <TestWrapper defaultAppStoreValues={{ featureFlags: { TF_MODULE_SOURCE_INHERIT_SSH: true } }}>
+    <TestWrapper>
       <TerraformConfigStepTwo
         isTerraformPlan={isTerraformPlan}
         prevStepData={data}

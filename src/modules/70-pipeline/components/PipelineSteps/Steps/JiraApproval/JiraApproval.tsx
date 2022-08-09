@@ -31,6 +31,7 @@ export class JiraApproval extends PipelineStep<JiraApprovalData> {
     this._hasDelegateSelectionVisible = true
   }
 
+  protected referenceId = 'jiraApprovalStep'
   protected isHarnessSpecific = true
   protected type = StepType.JiraApproval
   protected stepName = 'Jira Approval'

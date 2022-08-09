@@ -15,6 +15,7 @@ import type { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier
 import type { ResourceType } from '@rbac/interfaces/ResourceType'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetCommunity } from '@common/utils/utils'
+import type { AttributeFilter } from 'services/resourcegroups'
 
 export interface Resource {
   resourceType: ResourceType
@@ -25,6 +26,7 @@ export interface PermissionRequest {
   resourceScope?: ResourceScope
   resource: Resource
   permission: PermissionIdentifier
+  attributeFilter?: Required<AttributeFilter>
 }
 
 export interface PermissionsRequest {
@@ -32,14 +34,23 @@ export interface PermissionsRequest {
   resource: Resource
   permissions: PermissionIdentifier[]
   options?: PermissionRequestOptions
+  attributeFilter?: AttributeFilter
 }
 
 export function getDTOFromRequest(permissionRequest: PermissionRequest, defaultScope: ResourceScope): PermissionCheck {
-  const { resource, resourceScope, permission } = permissionRequest
+  const { resource, resourceScope, permission, attributeFilter } = permissionRequest
+  const { attributeName, attributeValues } = attributeFilter || {}
+  const [attributeValue] = Array.isArray(attributeValues) ? attributeValues : []
   return {
     // pickBy(obj, identity) removes keys with undefined values
     resourceScope: pickBy(resourceScope || defaultScope, identity),
     ...pickBy(resource, identity),
+    ...(attributeName &&
+      attributeValue && {
+        resourceAttributes: {
+          [attributeName]: attributeValue
+        }
+      }),
     permission
   }
 }
@@ -49,21 +60,30 @@ export function usePermission(permissionsRequest?: PermissionsRequest, deps: Arr
   const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const defaultScope = { accountIdentifier, orgIdentifier, projectIdentifier }
   const isCommunity = useGetCommunity()
+  const attributeFilterKey = permissionsRequest?.attributeFilter?.attributeName || ''
+  // We wish to run map consume over filter values at least ones to handle no filter scenario
+  const attributeFilterValues = permissionsRequest?.attributeFilter?.attributeValues || ['']
 
   useDeepCompareEffect(() => {
     // generate PermissionRequest for every action user requested
     permissionsRequest &&
       !isCommunity &&
       permissionsRequest.permissions.forEach(permission => {
-        const permissionCheckDto = getDTOFromRequest(
-          {
-            permission,
-            ...pick(permissionsRequest, ['resourceScope', 'resource'])
-          } as PermissionRequest,
-          defaultScope
-        )
-        // register request in the context
-        requestPermission(permissionCheckDto, permissionsRequest?.options)
+        attributeFilterValues.forEach(attrFilterVal => {
+          const permissionCheckDto = getDTOFromRequest(
+            {
+              permission,
+              attributeFilter: {
+                attributeName: attributeFilterKey,
+                attributeValues: [attrFilterVal]
+              },
+              ...pick(permissionsRequest, ['resourceScope', 'resource'])
+            } as PermissionRequest,
+            defaultScope
+          )
+          // register request in the context
+          requestPermission(permissionCheckDto, permissionsRequest?.options)
+        })
       })
 
     return () => {
@@ -90,14 +110,40 @@ export function usePermission(permissionsRequest?: PermissionsRequest, deps: Arr
       if (isCommunity) {
         return true
       }
-      const permissionCheckDto = getDTOFromRequest(
-        {
-          permission,
-          ...pick(permissionsRequest, ['resourceScope', 'resource'])
-        } as PermissionRequest,
-        defaultScope
-      )
-      return checkPermission(permissionCheckDto)
+
+      // Following condition watches for when either attributes passed down for ABAC are none or just one
+      if (attributeFilterValues.length === 1) {
+        const permissionCheckDto = getDTOFromRequest(
+          {
+            permission,
+            attributeFilter: {
+              attributeName: attributeFilterKey,
+              attributeValues: attributeFilterValues
+            },
+            ...pick(permissionsRequest, ['resourceScope', 'resource'])
+          } as PermissionRequest,
+          defaultScope
+        )
+        return checkPermission(permissionCheckDto)
+      } else {
+        // attributeFilterValues would always be an array with either one or more values, this block covers latter scenario
+        return attributeFilterValues
+          .map(attrFilterval => {
+            const permissionCheckDto = getDTOFromRequest(
+              {
+                permission,
+                attributeFilter: {
+                  attributeName: attributeFilterKey,
+                  attributeValues: [attrFilterval]
+                },
+                ...pick(permissionsRequest, ['resourceScope', 'resource'])
+              } as PermissionRequest,
+              defaultScope
+            )
+            return checkPermission(permissionCheckDto)
+          })
+          .some(permissionResult => permissionResult) // If permission is true for even a single attribute, it is overall true
+      }
     })
   }
   // hook will return true if there are no parameters passed to it.

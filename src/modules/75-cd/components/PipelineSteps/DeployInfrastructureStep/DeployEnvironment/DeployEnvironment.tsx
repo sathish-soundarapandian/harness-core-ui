@@ -7,7 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil, set, unset } from 'lodash-es'
 import { parse } from 'yaml'
 import { connect, FormikProps } from 'formik'
 import { Spinner } from '@blueprintjs/core'
@@ -18,10 +18,10 @@ import {
   ButtonSize,
   ButtonVariation,
   Container,
-  Dialog,
   FormInput,
   getMultiTypeFromValue,
   Layout,
+  ModalDialog,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
   SelectOption,
@@ -52,6 +52,7 @@ import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useRunPipelineFormContext } from '@pipeline/context/RunPipelineFormContext'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import AddEditEnvironmentModal from '../AddEditEnvironmentModal'
 import { isEditEnvironment } from '../utils'
 
@@ -77,7 +78,7 @@ function DeployEnvironment({
   path,
   gitOpsEnabled,
   stepViewType
-}: DeployEnvironmentProps) {
+}: DeployEnvironmentProps): JSX.Element {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
   const { showError } = useToaster()
@@ -103,8 +104,7 @@ function DeployEnvironment({
     body: {
       filterType: 'Environment'
     },
-    lazy:
-      !orgIdentifier || (stepViewType === StepViewType.InputSet && environmentRefType === MultiTypeInputType.RUNTIME)
+    lazy: !orgIdentifier || (stepViewType === StepViewType.InputSet && isMultiTypeRuntime(environmentRefType))
   })
 
   const {
@@ -126,114 +126,113 @@ function DeployEnvironment({
   const { template: getTemplate, updateTemplate } = useRunPipelineFormContext()
 
   useEffect(() => {
-    if (
-      !environmentInputsLoading &&
-      !serviceOverrideInputsLoading &&
-      (environmentInputsResponse?.data?.inputSetTemplateYaml ||
-        serviceOverrideInputsResponse?.data?.inputSetTemplateYaml)
-    ) {
-      const parsedEnvironmentYaml = parse(defaultTo(environmentInputsResponse?.data?.inputSetTemplateYaml, '{}'))
-      const parsedServiceOverridesYaml = parse(
-        defaultTo(serviceOverrideInputsResponse?.data?.inputSetTemplateYaml, '{}')
-      )
-
-      if (path) {
-        const values = { ...formik?.values }
-        set(
-          values,
-          `${path}.environmentInputs`,
-          parsedEnvironmentYaml.environmentInputs
-            ? {
-                ...clearRuntimeInput(parsedEnvironmentYaml.environmentInputs)
-              }
-            : undefined
-        )
-        set(
-          values,
-          `${path}.serviceOverrideInputs`,
-          parsedServiceOverridesYaml.serviceOverrideInputs
-            ? {
-                ...clearRuntimeInput(parsedServiceOverridesYaml.serviceOverrideInputs)
-              }
-            : undefined
+    // once response has loaded
+    if (!environmentInputsLoading && !serviceOverrideInputsLoading) {
+      // check for exisitence of environment and service override runtime inputs
+      if (
+        environmentInputsResponse?.data?.inputSetTemplateYaml ||
+        serviceOverrideInputsResponse?.data?.inputSetTemplateYaml
+      ) {
+        const parsedEnvironmentYaml = parse(defaultTo(environmentInputsResponse?.data?.inputSetTemplateYaml, '{}'))
+        const parsedServiceOverridesYaml = parse(
+          defaultTo(serviceOverrideInputsResponse?.data?.inputSetTemplateYaml, '{}')
         )
 
-        if (gitOpsEnabled) {
-          set(values, `${path}.gitOpsClusters`, '')
-        } else {
-          set(values, `${path}.infrastructureDefinitions`, '')
-        }
-        formik?.setValues({ ...values })
+        if (path) {
+          updateTemplate(
+            {
+              environmentRef: RUNTIME_INPUT_VALUE,
+              ...(parsedEnvironmentYaml?.environmentInputs && {
+                environmentInputs: parsedEnvironmentYaml?.environmentInputs
+              }),
+              ...(parsedServiceOverridesYaml?.serviceOverrideInputs && {
+                serviceOverrideInputs: parsedServiceOverridesYaml?.serviceOverrideInputs
+              }),
+              ...(!gitOpsEnabled && { infrastructureDefinitions: RUNTIME_INPUT_VALUE }),
+              ...(gitOpsEnabled && { gitOpsClusters: RUNTIME_INPUT_VALUE })
+            },
+            path
+          )
 
-        updateTemplate(
-          {
-            environmentRef: RUNTIME_INPUT_VALUE,
-            ...(parsedEnvironmentYaml?.environmentInputs && {
-              environmentInputs: parsedEnvironmentYaml?.environmentInputs
-            }),
-            ...(parsedServiceOverridesYaml?.serviceOverrideInputs && {
-              serviceOverrideInputs: parsedServiceOverridesYaml?.serviceOverrideInputs
-            }),
-            ...(!gitOpsEnabled && { infrastructureDefinitions: RUNTIME_INPUT_VALUE }),
-            ...(gitOpsEnabled && { gitOpsClusters: RUNTIME_INPUT_VALUE })
-          },
-          path
-        )
-      } else {
-        formik?.setValues({
-          ...formik.values,
-          environment: {
-            ...formik.values.environment,
-            ...parsedEnvironmentYaml,
-            ...parsedServiceOverridesYaml
+          const values = { ...formik?.values }
+          if (parsedEnvironmentYaml.environmentInputs) {
+            set(values, 'environment.environmentInputs', {
+              ...clearRuntimeInput(parsedEnvironmentYaml.environmentInputs)
+            })
+          } else {
+            unset(values, 'environment.environmentInputs')
           }
-        } as DeployStageConfig)
-      }
-    } else if (
-      !environmentInputsLoading &&
-      !serviceOverrideInputsLoading &&
-      !environmentInputsResponse?.data?.inputSetTemplateYaml &&
-      !serviceOverrideInputsResponse?.data?.inputSetTemplateYaml &&
-      path
-    ) {
-      const updatedTemplate = produce(getTemplate(path), (draft: EnvironmentYamlV2) => {
-        if (draft) {
-          delete draft.environmentInputs
-          delete draft.serviceOverrideInputs
-        }
-        if (gitOpsEnabled) {
-          set(draft, 'gitOpsClusters', RUNTIME_INPUT_VALUE)
-        } else {
-          set(draft, 'infrastructureDefinitions', RUNTIME_INPUT_VALUE)
-        }
-      })
-      const environmentValues = get(formik?.values, `${path}`)
 
-      if (environmentValues) {
-        if (environmentValues.environmentRef === RUNTIME_INPUT_VALUE) {
-          environmentValues.environmentInputs = RUNTIME_INPUT_VALUE
-          environmentValues.serviceOverrideInputs = RUNTIME_INPUT_VALUE
-        } else {
-          delete environmentValues.environmentInputs
-          delete environmentValues.serviceOverrideInputs
-        }
+          if (parsedServiceOverridesYaml.serviceOverrideInputs) {
+            set(values, 'environment.serviceOverrideInputs', {
+              ...clearRuntimeInput(parsedServiceOverridesYaml.serviceOverrideInputs)
+            })
+          } else {
+            unset(values, `environment.serviceOverrideInputs`)
+          }
 
-        formik?.setFieldValue(path, {
-          ...environmentValues,
-          ...(!gitOpsEnabled && {
-            infrastructureDefinitions:
-              environmentValues.environmentRef === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : []
-          }),
-          ...(gitOpsEnabled && {
-            gitOpsClusters: environmentValues.environmentRef === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : []
-          })
+          if (gitOpsEnabled) {
+            set(values, `environment.gitOpsClusters`, '')
+          } else {
+            set(values, `environment.infrastructureDefinitions`, '')
+          }
+          formik?.setValues({ ...values })
+        } else {
+          formik?.setValues({
+            ...formik.values,
+            environment: {
+              ...formik.values.environment,
+              ...parsedEnvironmentYaml,
+              ...parsedServiceOverridesYaml
+            }
+          } as DeployStageConfig)
+        }
+      } else if (
+        !environmentInputsResponse?.data?.inputSetTemplateYaml &&
+        !serviceOverrideInputsResponse?.data?.inputSetTemplateYaml &&
+        path
+      ) {
+        const updatedTemplate = produce(getTemplate(path), (draft: EnvironmentYamlV2) => {
+          if (draft) {
+            delete draft.environmentInputs
+            delete draft.serviceOverrideInputs
+          }
+          if (gitOpsEnabled) {
+            set(draft, 'gitOpsClusters', RUNTIME_INPUT_VALUE)
+          } else {
+            set(draft, 'infrastructureDefinitions', RUNTIME_INPUT_VALUE)
+          }
         })
-        updateTemplate(updatedTemplate, path)
+        const environmentValues = get(formik?.values, 'environment')
+
+        if (environmentValues) {
+          if (environmentValues.environmentRef === RUNTIME_INPUT_VALUE) {
+            set(environmentValues, 'environmentInputs', RUNTIME_INPUT_VALUE)
+            set(environmentValues, 'serviceOverrideInputs', RUNTIME_INPUT_VALUE)
+          } else {
+            unset(environmentValues, 'environmentInputs')
+            unset(environmentValues, 'serviceOverrideInputs')
+          }
+
+          formik?.setFieldValue('environment', {
+            ...environmentValues,
+            ...(!gitOpsEnabled && {
+              infrastructureDefinitions:
+                environmentValues.environmentRef === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : []
+            }),
+            ...(gitOpsEnabled && {
+              gitOpsClusters: environmentValues.environmentRef === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : []
+            })
+          })
+          updateTemplate(updatedTemplate, path)
+        }
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [environmentInputsLoading, serviceOverrideInputsLoading])
 
   useEffect(() => {
+    // this fetches the environment runtime inputs and service override inputs upon selection of environment
     if (selectedEnvironment?.identifier) {
       const queryParams = {
         accountIdentifier: accountId,
@@ -253,6 +252,7 @@ function DeployEnvironment({
         })
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedEnvironment])
 
   useEffect(() => {
@@ -307,15 +307,17 @@ function DeployEnvironment({
         }
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [environmentsSelectOptions])
 
   useEffect(() => {
     if (!isNil(environmentsError)) {
       showError(getRBACErrorMessage(environmentsError))
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [environmentsError])
 
-  const updateEnvironmentsList = (values: EnvironmentResponseDTO) => {
+  const updateEnvironmentsList = (values: EnvironmentResponseDTO): void => {
     const newEnvironmentsList = [...defaultTo(environments, [])]
     const existingIndex = newEnvironmentsList.findIndex(item => item.identifier === values.identifier)
     if (existingIndex >= 0) {
@@ -332,12 +334,13 @@ function DeployEnvironment({
   const [showEnvironmentModal, hideEnvironmentModal] = useModalHook(() => {
     const environmentValues = parse(defaultTo(selectedEnvironment?.yaml, '{}'))
     return (
-      <Dialog
+      <ModalDialog
         isOpen={true}
         enforceFocus={false}
         onClose={hideEnvironmentModal}
         title={isEditEnvironment(selectedEnvironment) ? getString('editEnvironment') : getString('newEnvironment')}
         className={css.dialogStyles}
+        width={1024}
       >
         <AddEditEnvironmentModal
           data={{
@@ -347,7 +350,7 @@ function DeployEnvironment({
           closeModal={hideEnvironmentModal}
           isEdit={Boolean(selectedEnvironment)}
         />
-      </Dialog>
+      </ModalDialog>
     )
   }, [environments, updateEnvironmentsList])
 
@@ -360,7 +363,7 @@ function DeployEnvironment({
       <FormInput.MultiTypeInput
         label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironment')}
         tooltipProps={{ dataTooltipId: 'specifyYourEnvironment' }}
-        name={path ? `${path}.environmentRef` : 'environment.environmentRef'}
+        name={'environment.environmentRef'}
         useValue
         disabled={readonly || (environmentRefType === MultiTypeInputType.FIXED && environmentsLoading)}
         placeholder={
@@ -373,6 +376,9 @@ function DeployEnvironment({
             setSelectedEnvironment(
               environments?.find(environment => environment.identifier === (item as SelectOption)?.value)
             )
+            if (formik?.values['infrastructureRef']) {
+              formik?.setFieldValue('infrastructureRef', '')
+            }
           },
           selectProps: {
             addClearBtn: !readonly,

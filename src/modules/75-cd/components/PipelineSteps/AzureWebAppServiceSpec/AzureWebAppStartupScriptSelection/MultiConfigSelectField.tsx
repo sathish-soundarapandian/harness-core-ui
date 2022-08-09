@@ -24,6 +24,7 @@ import type { MultiTypeFieldSelectorProps } from '@common/components/MultiTypeFi
 
 import FileStoreSelectField from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
 import FileSelectField from '@filestore/components/MultiTypeFileSelect/EncryptedSelect/EncryptedFileSelectField'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import { fileTypes } from './StartupScriptInterface.types'
 import MultiTypeConfigFileSelect from './MultiTypeConfigFileSelect'
 
@@ -83,7 +84,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
         {...multiTypeFieldSelectorProps}
         disableTypeSelection={multiTypeFieldSelectorProps.disableTypeSelection || disabled}
         onTypeChange={e => {
-          if (e !== MultiTypeInputType.RUNTIME) {
+          if (!isMultiTypeRuntime(e)) {
             formik?.setFieldValue(name, '')
           }
         }}

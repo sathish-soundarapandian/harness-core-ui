@@ -11,5 +11,6 @@ declare const styles: {
   readonly crossIcon: string
   readonly dialog: string
   readonly select: string
+  readonly wrapper: string
 }
 export default styles

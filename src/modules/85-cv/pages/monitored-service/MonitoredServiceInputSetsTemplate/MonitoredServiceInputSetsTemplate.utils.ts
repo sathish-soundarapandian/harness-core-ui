@@ -16,18 +16,18 @@ import type { MonitoredServiceInputSetInterface } from './MonitoredServiceInputS
 export const getLabelByName = (name: string, getString: UseStringsReturn['getString']): string => {
   switch (name) {
     case 'applicationName':
-      return getString('cv.healthSource.connectors.AppDynamics.applicationLabel')
+      return getString('cv.monitoringSources.appD.applicationName')
     case 'tierName':
-      return getString('cv.healthSource.connectors.AppDynamics.trierLabel')
+      return getString('cv.monitoringSources.appD.tierName')
     case 'completeMetricPath':
-      return getString('cv.healthSource.connectors.AppDynamics.metricPathType.text')
+      return getString('cv.monitoringSources.appD.completeMetricPath')
     case 'serviceInstanceMetricPath':
       return getString('cv.monitoringSources.appD.serviceInstanceMetricPath')
     case 'serviceInstanceFieldName':
     case 'serviceInstanceIdentifier':
-      return getString('cv.monitoringSources.serviceInstanceIdentifier')
+      return getString('cv.monitoringSources.appD.serviceInstanceFieldName')
     case 'connectorRef':
-      return getString('connectors.selectConnector')
+      return getString('connector')
     case 'query':
       return getString('cv.query')
     case 'category':
@@ -36,6 +36,10 @@ export const getLabelByName = (name: string, getString: UseStringsReturn['getStr
       return `Metric type for ${getString('cv.monitoringSources.riskCategoryLabel')}`
     case 'indexes':
       return getString('cv.monitoringSources.datadogLogs.logIndexesLabel')
+    case 'metricValueJsonPath':
+      return getString('cv.healthSource.connectors.NewRelic.metricFields.metricValueJsonPath.label')
+    case 'timestampJsonPath':
+      return getString('cv.healthSource.connectors.NewRelic.metricFields.timestampJsonPath.label')
     default:
       return name
   }

@@ -2,17 +2,50 @@
 
 exports[`<CustomApprovalTab/> tests expired scenario 1`] = `
 <div>
-  <div
-    class="info"
-    data-type="customApproval"
-  >
+  <div>
     <div
-      class="customApprovalTicket"
+      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--background-yellow100 StyledProps--padding-top-xxlarge StyledProps--padding-bottom-xxlarge StyledProps--padding-left-large StyledProps--padding-right-large"
     >
       <span>
         pipeline.customApprovalStep.execution.wasExpired
       </span>
     </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main stepDetailsContainer StyledProps--padding-top-large"
+  >
+    <table
+      class="detailsTable"
+    >
+      <tbody>
+        <tr>
+          <th>
+            startedAt
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            endedAt
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            pipeline.duration
+          </th>
+          <td>
+            <div>
+              MOCK DURATION
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
   <div
     class="customApproval"
@@ -229,6 +262,42 @@ exports[`<CustomApprovalTab/> tests failed scenario 1`] = `
     </div>
   </div>
   <div
+    class="StyledProps--font StyledProps--main stepDetailsContainer StyledProps--padding-top-large"
+  >
+    <table
+      class="detailsTable"
+    >
+      <tbody>
+        <tr>
+          <th>
+            startedAt
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            endedAt
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            pipeline.duration
+          </th>
+          <td>
+            <div>
+              MOCK DURATION
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div
     class="customApproval"
   >
     <div
@@ -402,30 +471,31 @@ exports[`<CustomApprovalTab/> tests failed scenario 1`] = `
 
 exports[`<CustomApprovalTab/> tests is in waiting state 1`] = `
 <div>
-  <div
-    class="info"
-    data-type="customApproval"
-  >
+  <div>
     <div
-      class="timer"
+      class="info"
     >
-      <div>
-        MOCK DURATION
+      <div
+        class="timer"
+      >
+        <div>
+          MOCK DURATION
+        </div>
+        <span>
+          pipeline.timeRemainingSuffix
+        </span>
       </div>
-      <span>
-        pipeline.timeRemainingSuffix
-      </span>
-    </div>
-    <div
-      class="customApprovalTicket"
-    >
-      <span>
-        pipeline.customApprovalStep.execution.customApprovalTicket
-      </span>
+      <div
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--margin-top-large StyledProps--margin-bottom-large"
+      >
+        <span>
+          pipeline.customApprovalStep.execution.customApprovalPending
+        </span>
+      </div>
     </div>
   </div>
   <div
-    class="customApproval"
+    class="customApproval applyTopPadding"
   >
     <div
       class="collapse customApprovalCriteria"
@@ -598,17 +668,50 @@ exports[`<CustomApprovalTab/> tests is in waiting state 1`] = `
 
 exports[`<CustomApprovalTab/> tests not in waiting state  1`] = `
 <div>
-  <div
-    class="info"
-    data-type="customApproval"
-  >
+  <div>
     <div
-      class="customApprovalTicket"
+      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--background-yellow100 StyledProps--padding-top-xxlarge StyledProps--padding-bottom-xxlarge StyledProps--padding-left-large StyledProps--padding-right-large"
     >
       <span>
         pipeline.customApprovalStep.execution.wasApproved
       </span>
     </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main stepDetailsContainer StyledProps--padding-top-large"
+  >
+    <table
+      class="detailsTable"
+    >
+      <tbody>
+        <tr>
+          <th>
+            startedAt
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            endedAt
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            pipeline.duration
+          </th>
+          <td>
+            <div>
+              MOCK DURATION
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
   <div
     class="customApproval"
@@ -784,17 +887,50 @@ exports[`<CustomApprovalTab/> tests not in waiting state  1`] = `
 
 exports[`<CustomApprovalTab/> tests rejected scenario 1`] = `
 <div>
-  <div
-    class="info"
-    data-type="customApproval"
-  >
+  <div>
     <div
-      class="customApprovalTicket"
+      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--background-yellow100 StyledProps--padding-top-xxlarge StyledProps--padding-bottom-xxlarge StyledProps--padding-left-large StyledProps--padding-right-large"
     >
       <span>
         pipeline.customApprovalStep.execution.wasRejected
       </span>
     </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main stepDetailsContainer StyledProps--padding-top-large"
+  >
+    <table
+      class="detailsTable"
+    >
+      <tbody>
+        <tr>
+          <th>
+            startedAt
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            endedAt
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            pipeline.duration
+          </th>
+          <td>
+            <div>
+              MOCK DURATION
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
   <div
     class="customApproval"

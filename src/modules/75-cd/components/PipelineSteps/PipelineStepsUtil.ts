@@ -15,7 +15,7 @@ import {
   getFailureStrategiesValidationSchema,
   getVariablesValidationField
 } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/validation'
-import { isServerlessDeploymentType, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import type { GetExecutionStrategyYamlQueryParams } from 'services/cd-ng'
 
@@ -34,7 +34,8 @@ export enum InfraDeploymentType {
   AzureFunctions = 'AzureFunctions',
   SshWinRmAws = 'SshWinRmAws',
   SshWinRmAzure = 'SshWinRmAzure',
-  AzureWebApp = 'AzureWebApp'
+  AzureWebApp = 'AzureWebApp',
+  ECS = 'ECS'
 }
 
 export const deploymentTypeToInfraTypeMap = {
@@ -42,6 +43,11 @@ export const deploymentTypeToInfraTypeMap = {
   [ServiceDeploymentType.ServerlessAzureFunctions]: InfraDeploymentType.ServerlessAzureFunctions,
   [ServiceDeploymentType.ServerlessGoogleFunctions]: InfraDeploymentType.ServerlessGoogleFunctions,
   [ServiceDeploymentType.Ssh]: InfraDeploymentType.PDC
+}
+
+export const setupMode = {
+  PROPAGATE: 'PROPAGATE',
+  DIFFERENT: 'DIFFERENT'
 }
 
 export function getNameSpaceSchema(
@@ -188,38 +194,34 @@ export const getInfrastructureDefinitionValidationSchema = (
   deploymentType: GetExecutionStrategyYamlQueryParams['serviceDefinitionType'],
   getString: UseStringsReturn['getString']
 ) => {
-  if (isServerlessDeploymentType(deploymentType)) {
-    if (deploymentType === ServiceDeploymentType.ServerlessAwsLambda) {
+  switch (deploymentType) {
+    case ServiceDeploymentType.ServerlessAwsLambda:
       return getValidationSchemaWithRegion(getString)
-    }
-    return getValidationSchema(getString)
-  } else {
-    if (deploymentType === ServiceDeploymentType.Ssh) {
+    case ServiceDeploymentType.Ssh:
       return Yup.object().shape({
         credentialsRef: getCredentialsRefSchema(getString)
       })
-    }
-    if (deploymentType === ServiceDeploymentType.WinRm) {
+    case ServiceDeploymentType.WinRm:
       return Yup.object().shape({})
-    }
-    return Yup.object().shape({
-      connectorRef: getConnectorSchema(getString),
-      namespace: getNameSpaceSchema(getString),
-      releaseName: getReleaseNameSchema(getString),
-      cluster: Yup.mixed().test({
-        test(val): boolean | Yup.ValidationError {
-          const infraDeploymentType = get(this.options.context, 'spec.infrastructure.infrastructureDefinition.type')
-          if (infraDeploymentType === InfraDeploymentType.KubernetesGcp) {
-            if (isEmpty(val) || (typeof val === 'object' && isEmpty(val.value))) {
-              return this.createError({
-                message: getString('fieldRequired', { field: getString('common.cluster') })
-              })
+    default:
+      return Yup.object().shape({
+        connectorRef: getConnectorSchema(getString),
+        namespace: getNameSpaceSchema(getString),
+        releaseName: getReleaseNameSchema(getString),
+        cluster: Yup.mixed().test({
+          test(val): boolean | Yup.ValidationError {
+            const infraDeploymentType = get(this.options.context, 'spec.infrastructure.infrastructureDefinition.type')
+            if (infraDeploymentType === InfraDeploymentType.KubernetesGcp) {
+              if (isEmpty(val) || (typeof val === 'object' && isEmpty(val.value))) {
+                return this.createError({
+                  message: getString('fieldRequired', { field: getString('common.cluster') })
+                })
+              }
             }
+            return true
           }
-          return true
-        }
+        })
       })
-    })
   }
 }
 
@@ -285,5 +287,19 @@ export function getCDStageValidationSchema(
     }),
     failureStrategies: getFailureStrategiesValidationSchema(getString),
     ...getVariablesValidationField(getString)
+  })
+}
+
+export function getECSInfraValidationSchema(getString: UseStringsReturn['getString']) {
+  return Yup.object().shape({
+    connectorRef: getConnectorSchema(getString),
+    region: Yup.lazy((): Yup.Schema<unknown> => {
+      return Yup.string().required(getString('validation.regionRequired'))
+    }),
+    cluster: Yup.lazy((): Yup.Schema<unknown> => {
+      return Yup.string().required(
+        getString('common.validation.fieldIsRequired', { name: getString('common.cluster') })
+      )
+    })
   })
 }
