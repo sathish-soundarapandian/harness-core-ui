@@ -317,7 +317,7 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
                       ) : (
                         (get(formik, `values.${prefix}spec.jobParameter`) || [])?.map((type: any, i: number) => {
                           return (
-                            <div className={stepCss.jobParameter} key={type.value}>
+                            <div className={stepCss.jobParameter} key={type.id}>
                               <FormInput.Text
                                 name={`${prefix}spec.jobParameter[${i}].name`}
                                 placeholder={getString('name')}
