@@ -117,10 +117,12 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
   }, [jobParameterResponse])
 
   useEffect(() => {
-    formik.setFieldValue(
-      `${prefix}spec.jobParameter`,
-      isArray(template?.spec?.jobParameter) ? template?.spec?.jobParameter : []
-    )
+    if (!isArray(get(formik, `values.${prefix}spec.jobParameter`))) {
+      formik.setFieldValue(
+        `${prefix}spec.jobParameter`,
+        isArray(template?.spec?.jobParameter) ? template?.spec?.jobParameter : []
+      )
+    }
   }, [])
 
   useEffect(() => {
