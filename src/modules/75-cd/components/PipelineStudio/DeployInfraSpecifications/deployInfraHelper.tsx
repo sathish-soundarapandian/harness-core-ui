@@ -249,9 +249,9 @@ export const getInfraGroups = (
           value: InfraDeploymentType.SshWinRmAzure
         },
         {
-          label: getString('common.azure'),
-          icon: 'service-azure',
-          value: InfraDeploymentType.SshWinRmAzure
+          label: getString('common.aws'),
+          icon: 'service-aws',
+          value: InfraDeploymentType.SshWinRmAws
         }
       ]
     }

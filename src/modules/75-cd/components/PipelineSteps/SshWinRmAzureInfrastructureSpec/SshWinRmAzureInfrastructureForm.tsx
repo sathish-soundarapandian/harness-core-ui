@@ -215,15 +215,6 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
       tags: typeof initialValues.tags === 'string' ? initialValues.tags : '',
       sshKey: initialValues.credentialsRef
     }
-<<<<<<< HEAD
-    currentValues.subscriptionId = initialValues.subscriptionId
-      ? { label: initialValues.subscriptionId, value: initialValues.subscriptionId }
-      : ''
-    currentValues.resourceGroup = initialValues.resourceGroup
-      ? { label: initialValues.resourceGroup, value: initialValues.resourceGroup }
-      : ''
-=======
->>>>>>> develop
     return currentValues
   }, [])
 
@@ -287,24 +278,9 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
               getValue(value.resourceGroup) === ''
                 ? /* istanbul ignore next */ undefined
                 : getValue(value.resourceGroup),
-<<<<<<< HEAD
-            tags: /* istanbul ignore next */ value.tags.reduce(
-              (obj: object, tag: AzureTagDTO) => ({
-                ...obj,
-                [tag.tag]: tag.tag
-              }),
-              {}
-            ),
-            usePublicDns: value.usePublicDns
-          }
-          if (value.sshKey) {
-            const prefix = value.sshKey.projectIdentifier ? '' : value.sshKey.projectIdentifier ? 'org.' : 'account.'
-            data.credentialsRef = `${prefix}${value.sshKey.identifier}`
-=======
             tags,
             usePublicDns: value.usePublicDns,
             allowSimultaneousDeployments: value.allowSimultaneousDeployments
->>>>>>> develop
           }
           delayedOnUpdate(data)
         }}
@@ -359,37 +335,11 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                         fetchSubscriptions(connectorValue as string)
                       }
                       clearSubscriptionId()
-<<<<<<< HEAD
-                      fetchSubscriptions(connectorValue)
-                    }
-                  }}
-                  gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-                />
-                <FormInput.MultiSelectTypeInput
-                  label={getString(subscriptionLabel)}
-                  name="subscriptionId"
-                  selectItems={subscriptions}
-                  placeholder={
-                    isSubsLoading ? getString('loading') : getString('cd.steps.azureInfraStep.subscriptionPlaceholder')
-                  }
-                  multiSelectTypeInputProps={{
-                    allowableTypes
-                  }}
-                />
-                <FormInput.Select
-                  name="subscriptionId"
-                  className={`subscriptionId-select ${css.inputWidth}`}
-                  items={subscriptions}
-                  placeholder={
-                    isSubsLoading ? getString('loading') : getString('cd.steps.azureInfraStep.subscriptionPlaceholder')
-                  }
-=======
                     }}
                     gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                   />
                 </Layout.Vertical>
                 <MultiTypeSelectField
->>>>>>> develop
                   label={getString(subscriptionLabel)}
                   name={'subscriptionId'}
                   className={`subscriptionId-select ${css.inputWidth}`}
@@ -418,20 +368,6 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                   label={getString(resourceGroupLabel)}
                   name={'resourceGroup'}
                   className={`resourceGroup-select ${css.inputWidth}`}
-<<<<<<< HEAD
-                  items={resourceGroups}
-                  placeholder={getString('cd.steps.azureInfraStep.resourceGroupPlaceholder')}
-                  onChange={value => {
-                    formik.setFieldValue('resourceGroup', value)
-                  }}
-                  label={getString(resourceGroupLabel)}
-                />
-                <FormInput.MultiSelect
-                  name="tags"
-                  label={getString('tagLabel')}
-                  items={azureTags}
-                  className={css.inputWidth}
-=======
                   useValue
                   multiTypeInputProps={{
                     placeholder: isResGroupLoading ? getString('loading') : undefined,
@@ -441,7 +377,6 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                       allowableTypes
                     }
                   }}
->>>>>>> develop
                 />
                 <Layout.Vertical className={`tags-select ${css.inputWidth}`} spacing={'large'}>
                   <MultiTypeFieldSelector
