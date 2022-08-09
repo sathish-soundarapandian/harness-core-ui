@@ -13,6 +13,7 @@ declare const styles: {
   readonly hoverNavLink: string
   readonly hoverText: string
   readonly main: string
+  readonly modulesContainer: string
   readonly navItem: string
   readonly navLink: string
   readonly navList: string

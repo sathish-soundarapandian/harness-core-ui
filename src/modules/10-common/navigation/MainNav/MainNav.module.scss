@@ -6,6 +6,11 @@
  */
 
 .main {
+  /* stylelint-disable  color-no-hex */
+  --module-list-bg: #0a2c54;
+  --module-list-border: #2a578c;
+  /* stylelint-enable  color-no-hex */
+
   background: var(--primary-9);
   box-shadow: var(--panel-shadow);
   display: flex;
@@ -22,6 +27,13 @@
     list-style: none;
     padding: 0;
     margin: 0;
+
+    .modulesContainer {
+      overflow-y: scroll;
+      background: var(--module-list-bg);
+      border-bottom: 1px solid var(--module-list-border);
+      border-top: 1px solid var(--module-list-border);
+    }
   }
 
   .navItem {
@@ -45,12 +57,22 @@
     position: relative;
     overflow: hidden;
     flex-flow: column;
-    opacity: 0.6;
+
+    :global {
+      .bp3-icon {
+        opacity: 0.6;
+      }
+    }
 
     &:hover {
       text-decoration: none;
-      opacity: 1;
       background: var(--theme-light-nav-panel-bg);
+
+      :global {
+        .bp3-icon {
+          opacity: 1;
+        }
+      }
 
       &::after {
         position: absolute;
@@ -64,7 +86,11 @@
     }
 
     &.active {
-      opacity: 1;
+      :global {
+        .bp3-icon {
+          opacity: 1;
+        }
+      }
       background: var(--theme-light-nav-panel-bg);
       &::after {
         position: absolute;
@@ -79,11 +105,11 @@
   }
 
   .allModulesButton {
-    border: 1px solid var(--primary-8) !important;
+    border: 1px solid var(--module-list-border) !important;
+    border-top: none !important;
     border-top-left-radius: 0 !important;
     border-top-right-radius: 0 !important;
-    background-color: var(--primary-9-dark) !important;
-    padding: var(--spacing-xsmall) !important;
+    background-color: var(--module-list-bg) !important;
     color: var(--grey-300) !important;
 
     &:hover {

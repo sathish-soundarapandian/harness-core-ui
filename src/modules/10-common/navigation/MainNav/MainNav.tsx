@@ -27,6 +27,8 @@ const commonLinkProps: Partial<NavLinkProps> = {
   className: cx(css.navLink)
 }
 
+const maxNumOfModulesToShow = 3
+
 export default function L1Nav(): React.ReactElement {
   const params = useParams<ProjectPathProps>()
   const {
@@ -55,6 +57,8 @@ export default function L1Nav(): React.ReactElement {
     // set the CSS variable defined in src/modules/10-common/layouts/layouts.module.scss
     const root = document.querySelector(':root') as HTMLElement
     root.style.setProperty('--main-nav-height', `${minNavHeight}px`)
+
+    document.getElementsByClassName(css.active)[0]?.scrollIntoView({ block: 'nearest' })
   })
 
   return (
@@ -76,125 +80,127 @@ export default function L1Nav(): React.ReactElement {
               </Layout.Vertical>
             </Link>
           </li>
-          {CHAOS_ENABLED && (
-            <li className={css.navItem}>
-              <Link {...commonLinkProps} to={paths.toChaos(params)}>
-                <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                  <Icon name="chaos-main" size={30} />
-                  <Text
-                    font={{ weight: 'semi-bold', align: 'center' }}
-                    padding={{ bottom: 'xsmall' }}
-                    color={Color.WHITE}
-                    className={css.text}
-                  >
-                    <String stringID="common.chaosText" />
-                  </Text>
-                </Layout.Vertical>
-              </Link>
-            </li>
-          )}
-          {CDNG_ENABLED && (
-            <li className={css.navItem}>
-              <Link {...commonLinkProps} to={paths.toCD(params)}>
-                <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                  <Icon name="cd-main" size={30} />
-                  <Text
-                    font={{ weight: 'semi-bold', align: 'center' }}
-                    padding={{ bottom: 'xsmall' }}
-                    color={Color.WHITE}
-                    className={css.text}
-                  >
-                    <String stringID="deploymentsText" />
-                  </Text>
-                </Layout.Vertical>
-              </Link>
-            </li>
-          )}
-          {CING_ENABLED && (
-            <li className={css.navItem}>
-              <Link {...commonLinkProps} to={paths.toCI(params)}>
-                <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                  <Icon name="ci-main" size={30} />
-                  <Text
-                    font={{ weight: 'semi-bold', align: 'center' }}
-                    padding={{ bottom: 'xsmall' }}
-                    color={Color.WHITE}
-                    className={css.text}
-                  >
-                    <String stringID="buildsText" />
-                  </Text>
-                </Layout.Vertical>
-              </Link>
-            </li>
-          )}
-          {CFNG_ENABLED && (
-            <li className={css.navItem}>
-              <Link {...commonLinkProps} to={paths.toCF(params)}>
-                <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                  <Icon name="cf-main" size={30} />
-                  <Text
-                    font={{ weight: 'semi-bold', align: 'center' }}
-                    padding={{ bottom: 'xsmall' }}
-                    color={Color.WHITE}
-                    className={css.text}
-                  >
-                    <String stringID="featureFlagsText" />
-                  </Text>
-                </Layout.Vertical>
-              </Link>
-            </li>
-          )}
-          {CENG_ENABLED && (
-            <li className={css.navItem}>
-              <Link {...commonLinkProps} to={paths.toCE(params)}>
-                <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                  <Icon name="ce-main" size={30} />
-                  <Text
-                    font={{ weight: 'semi-bold', align: 'center' }}
-                    padding={{ bottom: 'xsmall' }}
-                    color={Color.WHITE}
-                    className={css.text}
-                  >
-                    <String stringID="cloudCostsText" />
-                  </Text>
-                </Layout.Vertical>
-              </Link>
-            </li>
-          )}
-          {CVNG_ENABLED && (
-            <li className={css.navItem}>
-              <Link {...commonLinkProps} to={paths.toCV(params)}>
-                <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                  <Icon name="cv-main" size={30} />
-                  <Text
-                    font={{ weight: 'semi-bold', align: 'center' }}
-                    padding={{ bottom: 'xsmall' }}
-                    color={Color.WHITE}
-                    className={css.text}
-                  >
-                    <String stringID="common.purpose.cv.serviceReliability" />
-                  </Text>
-                </Layout.Vertical>
-              </Link>
-            </li>
-          )}
-          {SECURITY && (
-            <li className={css.navItem}>
-              <Link {...commonLinkProps} to={paths.toSTO(params)}>
-                <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                  <Icon name="sto-color-filled" size={30} />
-                  <Text
-                    font={{ weight: 'semi-bold', align: 'center' }}
-                    padding={{ bottom: 'xsmall' }}
-                    color={Color.WHITE}
-                    className={css.text}
-                  >
-                    <String stringID="common.purpose.sto.continuous" />
-                  </Text>
-                </Layout.Vertical>
-              </Link>
-            </li>
-          )}
+          <div className={css.modulesContainer} style={{ height: 92 * maxNumOfModulesToShow }}>
+            {CHAOS_ENABLED && (
+              <li className={css.navItem}>
+                <Link {...commonLinkProps} to={paths.toChaos(params)}>
+                  <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+                    <Icon name="chaos-main" size={30} />
+                    <Text
+                      font={{ weight: 'semi-bold', align: 'center' }}
+                      padding={{ bottom: 'xsmall' }}
+                      color={Color.WHITE}
+                      className={css.text}
+                    >
+                      <String stringID="common.chaosText" />
+                    </Text>
+                  </Layout.Vertical>
+                </Link>
+              </li>
+            )}
+            {CDNG_ENABLED && (
+              <li className={css.navItem}>
+                <Link {...commonLinkProps} to={paths.toCD(params)}>
+                  <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+                    <Icon name="cd-main" size={30} />
+                    <Text
+                      font={{ weight: 'semi-bold', align: 'center' }}
+                      padding={{ bottom: 'xsmall' }}
+                      color={Color.WHITE}
+                      className={css.text}
+                    >
+                      <String stringID="deploymentsText" />
+                    </Text>
+                  </Layout.Vertical>
+                </Link>
+              </li>
+            )}
+            {CING_ENABLED && (
+              <li className={css.navItem}>
+                <Link {...commonLinkProps} to={paths.toCI(params)}>
+                  <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+                    <Icon name="ci-main" size={30} />
+                    <Text
+                      font={{ weight: 'semi-bold', align: 'center' }}
+                      padding={{ bottom: 'xsmall' }}
+                      color={Color.WHITE}
+                      className={css.text}
+                    >
+                      <String stringID="buildsText" />
+                    </Text>
+                  </Layout.Vertical>
+                </Link>
+              </li>
+            )}
+            {CFNG_ENABLED && (
+              <li className={css.navItem}>
+                <Link {...commonLinkProps} to={paths.toCF(params)}>
+                  <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+                    <Icon name="cf-main" size={30} />
+                    <Text
+                      font={{ weight: 'semi-bold', align: 'center' }}
+                      padding={{ bottom: 'xsmall' }}
+                      color={Color.WHITE}
+                      className={css.text}
+                    >
+                      <String stringID="featureFlagsText" />
+                    </Text>
+                  </Layout.Vertical>
+                </Link>
+              </li>
+            )}
+            {CENG_ENABLED && (
+              <li className={css.navItem}>
+                <Link {...commonLinkProps} to={paths.toCE(params)}>
+                  <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+                    <Icon name="ce-main" size={30} />
+                    <Text
+                      font={{ weight: 'semi-bold', align: 'center' }}
+                      padding={{ bottom: 'xsmall' }}
+                      color={Color.WHITE}
+                      className={css.text}
+                    >
+                      <String stringID="cloudCostsText" />
+                    </Text>
+                  </Layout.Vertical>
+                </Link>
+              </li>
+            )}
+            {CVNG_ENABLED && (
+              <li className={css.navItem}>
+                <Link {...commonLinkProps} to={paths.toCV(params)}>
+                  <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+                    <Icon name="cv-main" size={30} />
+                    <Text
+                      font={{ weight: 'semi-bold', align: 'center' }}
+                      padding={{ bottom: 'xsmall' }}
+                      color={Color.WHITE}
+                      className={css.text}
+                    >
+                      <String stringID="common.purpose.cv.serviceReliability" />
+                    </Text>
+                  </Layout.Vertical>
+                </Link>
+              </li>
+            )}
+            {SECURITY && (
+              <li className={css.navItem}>
+                <Link {...commonLinkProps} to={paths.toSTO(params)}>
+                  <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+                    <Icon name="sto-color-filled" size={30} />
+                    <Text
+                      font={{ weight: 'semi-bold', align: 'center' }}
+                      padding={{ bottom: 'xsmall' }}
+                      color={Color.WHITE}
+                      className={css.text}
+                    >
+                      <String stringID="common.purpose.sto.continuous" />
+                    </Text>
+                  </Layout.Vertical>
+                </Link>
+              </li>
+            )}
+          </div>
           {NEW_LEFT_NAVBAR_SETTINGS && (
             <li>
               <Container flex={{ justifyContent: 'center' }}>
