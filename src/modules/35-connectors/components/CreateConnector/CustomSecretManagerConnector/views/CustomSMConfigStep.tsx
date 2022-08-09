@@ -4,7 +4,7 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
+import React, { useState } from 'react'
 import {
   StepProps,
   Layout,
@@ -15,11 +15,13 @@ import {
   Button,
   ButtonVariation,
   PageSpinner,
-  FormikForm
+  FormikForm,
+  MultiTypeInputType
 } from '@wings-software/uicore'
-import React, { useState } from 'react'
+
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
+import { parse } from 'yaml'
 import type { ConnectorInfoDTO, ConnectorRequestBody, ConnectorConfigDTO } from 'services/cd-ng'
 
 import { useStrings } from 'framework/strings'
@@ -31,7 +33,8 @@ import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWiza
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import RbacButton from '@rbac/components/Button/Button'
 import { getTemplateInputSetYamlPromise, useGetTemplateInputSetYaml } from 'services/template-ng'
-import { defaultTo } from 'lodash-es'
+import { ScriptVariablesRuntimeInput } from './ScriptVariableRuntimeInput/ScriptVariablesRuntimeInput'
+import AllowedValuesFields from '@common/components/ConfigureOptions/AllowedValuesField'
 
 interface StepCustomSMConfigStepProps extends ConnectorInfoDTO {
   name: string
@@ -113,27 +116,35 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
   //       getDefaultFromOtherRepo: true
   //     }
   //   })
-
-  const onUseTemplate = async () => {
+  const [templateInputSets, setTemplateInputSets] = React.useState<any>()
+  const onUseTemplate = async formikProps => {
     const { template } = await getTemplate({ templateType: 'Step' })
-    const templateRefData = {
-      identifier: template?.identifier,
-      accountId: template?.accountId,
+    formikProps.setFieldValue('templateInfo', {
+      accountIdentifier: accountId || '',
       orgIdentifier: template?.orgIdentifier,
       projectIdentifier: template?.projectIdentifier,
-      versionLabel: template?.versionLabel
-    }
+      templateVersion: template.versionLabel,
+      templateId: template.identifier
+    })
 
     try {
-      const data = await getTemplateInputSetYamlPromise({
-        templateIdentifier: template.identifier || '',
+      const templateInputYaml = await getTemplateInputSetYamlPromise({
+        templateIdentifier: template?.identifier || '',
         queryParams: {
           accountIdentifier: accountId || '',
-          orgIdentifier: template.orgIdentifier,
-          projectIdentifier: template.projectIdentifier,
-          versionLabel: template.versionLabel || ''
+          orgIdentifier: template?.orgIdentifier,
+          projectIdentifier: template?.projectIdentifier,
+          versionLabel: template?.versionLabel || ''
         }
       })
+      // Set InputSet Yaml as state variable
+
+      if (templateInputYaml && templateInputYaml?.data) {
+        const inputSet = parse(templateInputYaml?.data?.replace(/"<\+input>"/g, '""')) as any
+        console.log(inputSet)
+        formikProps.setFieldValue('spec.environmentVariables', inputSet.spec.environmentVariables)
+        setTemplateInputSets(inputSet)
+      }
     } catch (e) {}
   }
 
@@ -234,20 +245,33 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
             <FormikForm>
               <FormInput.CustomRender
                 name="templateInfo"
+                label="Shell Script"
                 render={formikProps => {
                   return (
-                    <Layout.Horizontal spacing="medium">
+                    <Layout.Vertical spacing="medium">
                       <RbacButton
-                        text={getString('connectors.customSM.selectTemplate')}
+                        text={
+                          formikProps.values.templateInfo ? (
+                            <>{`Selected: ${formikProps.values.templateInfo.templateId}(Version: ${formikProps.values.templateInfo.templateVersion})`}</>
+                          ) : (
+                            getString('connectors.customSM.selectTemplate')
+                          )
+                        }
                         variation={ButtonVariation.SECONDARY}
                         icon="template-library"
-                        onClick={onUseTemplate}
+                        onClick={() => onUseTemplate(formikProps)}
                       />
-                    </Layout.Horizontal>
+                    </Layout.Vertical>
                   )
                 }}
               />
-
+              {templateInputSets ? (
+                <ScriptVariablesRuntimeInput
+                  allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
+                  path={''}
+                  template={templateInputSets}
+                />
+              ) : null}
               <Layout.Horizontal spacing="medium">
                 <Button
                   variation={ButtonVariation.SECONDARY}
