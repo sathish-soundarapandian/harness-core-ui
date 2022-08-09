@@ -1473,6 +1473,15 @@ const routes = {
       `/home/orgs/${orgIdentifier}/projects/${projectIdentifier}/details`
   ),
   toProjects: withAccountId(() => '/home/projects'),
+
+  /******************Temporary change for new nav changes: (behind this FF - NEW_LEFT_NAVBAR_SETTINGS)*****************/
+  toProjectDetails1: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
+      `/projects/orgs/${orgIdentifier}/projects/${projectIdentifier}/details`
+  ),
+  toProjects1: withAccountId(() => '/projects'),
+  /********************************************************************************************************************/
+
   toLandingDashboard: withAccountId(() => '/home/get-started'),
   /********************************************************************************************************************/
   toCE: withAccountId(() => `/ce`),

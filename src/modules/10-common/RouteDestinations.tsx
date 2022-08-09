@@ -11,8 +11,8 @@ import { ModalProvider } from '@harness/use-modal'
 import { RouteWithLayout } from '@common/router'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, withAccountId } from '@common/utils/routeUtils'
-
 import SessionToken from 'framework/utils/SessionToken'
+import ProjectsSideNav from '@projects-orgs/components/ProjectsSideNav/ProjectsSideNav'
 import type { SidebarContext } from './navigation/SidebarProvider'
 import type { AccountPathProps } from './interfaces/RouteInterfaces'
 import GenericErrorPage from './pages/GenericError/GenericErrorPage'
@@ -31,6 +31,12 @@ export const HomeSideNavProps: SidebarContext = {
   navComponent: HomeSideNav,
   icon: 'harness',
   title: 'Home'
+}
+
+export const ProjectSideNavProps: SidebarContext = {
+  navComponent: ProjectsSideNav,
+  icon: 'nav-project',
+  title: 'All Projects'
 }
 
 export const AccountSideNavProps: SidebarContext = {

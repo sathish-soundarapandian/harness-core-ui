@@ -99,6 +99,7 @@ function PipelineStudioTestWrapper({
           repoIdentifier: 'identifier',
           branch: 'feature'
         }}
+        defaultFeatureFlagValues={{ NEW_LEFT_NAVBAR_SETTINGS: false }}
         defaultAppStoreValues={{ isGitSyncEnabled: true }}
       >
         <PipelineStudio

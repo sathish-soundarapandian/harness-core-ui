@@ -8,8 +8,8 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { Layout } from '@wings-software/uicore'
-
 import routes from '@common/RouteDefinitions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { useStrings } from 'framework/strings'
@@ -19,11 +19,11 @@ import { LaunchButton } from '../LaunchButton/LaunchButton'
 export default function HomeSideNav(): React.ReactElement {
   const params = useParams<AccountPathProps>()
   const { getString } = useStrings()
-
+  const { NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
   return (
     <Layout.Vertical spacing="small" margin={{ top: 'xxxlarge' }}>
       <SidebarLink label={getString('common.welcome')} to={routes.toLandingDashboard(params)} />
-      <SidebarLink label={getString('projectsText')} to={routes.toProjects(params)} />
+      {!NEW_LEFT_NAVBAR_SETTINGS && <SidebarLink label={getString('projectsText')} to={routes.toProjects(params)} />}
       <LaunchButton
         launchButtonText={getString('common.cgLaunchText')}
         redirectUrl={returnLaunchUrl(`#/account/${params.accountId}/dashboard`)}

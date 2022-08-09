@@ -25,7 +25,7 @@ import {
   connectorPathProps,
   serviceAccountProps
 } from '@common/utils/routeUtils'
-
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ProjectsPage from '@projects-orgs/pages/projects/ProjectsPage'
 import DelegateTokens from '@delegates/components/DelegateTokens/DelegateTokens'
 import ProjectDetails from '@projects-orgs/pages/projects/views/ProjectDetails/ProjectDetails'
@@ -63,7 +63,7 @@ import UserDetails from '@rbac/pages/UserDetails/UserDetails'
 import DelegateProfileDetails from '@delegates/pages/delegates/DelegateConfigurationDetailPage'
 import CreateSecretFromYamlPage from '@secrets/pages/createSecretFromYaml/CreateSecretFromYamlPage'
 import CreateConnectorFromYamlPage from '@connectors/pages/createConnectorFromYaml/CreateConnectorFromYamlPage'
-import { HomeSideNavProps, AccountSideNavProps } from '@common/RouteDestinations'
+import { HomeSideNavProps, AccountSideNavProps, ProjectSideNavProps } from '@common/RouteDestinations'
 import GitSyncEntityTab from '@gitsync/pages/entities/GitSyncEntityTab'
 import GitSyncPage from '@gitsync/pages/GitSyncPage'
 import GitSyncRepoTab from '@gitsync/pages/repos/GitSyncRepoTab'
@@ -158,9 +158,36 @@ const RedirectToDelegatesHome = (): React.ReactElement => {
   return <Redirect to={routes.toDelegateList({ accountId, projectIdentifier, orgIdentifier })} />
 }
 
+const RedirectToProjectsPage = (): React.ReactElement => {
+  const { NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
+  const { accountId } = useParams<ProjectPathProps>()
+  return NEW_LEFT_NAVBAR_SETTINGS ? (
+    <Redirect to={routes.toProjects1({ accountId })} />
+  ) : (
+    <Redirect to={routes.toProjects({ accountId })} />
+  )
+}
+
+const RedirectToProjectDetails = (): React.ReactElement => {
+  const { NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  return NEW_LEFT_NAVBAR_SETTINGS ? (
+    <Redirect to={routes.toProjectDetails1({ accountId, projectIdentifier, orgIdentifier })} />
+  ) : (
+    <Redirect to={routes.toProjectDetails({ accountId, projectIdentifier, orgIdentifier })} />
+  )
+}
+
 export default (
   <>
     <RouteWithLayout sidebarProps={HomeSideNavProps} path={routes.toProjects({ ...accountPathProps })} exact>
+      <RedirectToProjectsPage />
+      <ProjectsPage />
+    </RouteWithLayout>
+
+    {/* Temporary change for new nav changes (Behind FF:  NEW_LEFT_NAVBAR_SETTINGS) */}
+    <RouteWithLayout sidebarProps={ProjectSideNavProps} path={routes.toProjects1({ ...accountPathProps })} exact>
+      <RedirectToProjectsPage />
       <ProjectsPage />
     </RouteWithLayout>
 
@@ -172,6 +199,7 @@ export default (
       path={routes.toProjectDetails({ ...accountPathProps, ...projectPathProps })}
       exact
     >
+      <RedirectToProjectDetails />
       <ProjectDetails />
     </RouteWithLayout>
     <RouteWithLayout

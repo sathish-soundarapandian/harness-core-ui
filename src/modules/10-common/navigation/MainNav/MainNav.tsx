@@ -37,10 +37,11 @@ export default function L1Nav(): React.ReactElement {
     CHAOS_ENABLED,
     SECURITY,
     RESOURCE_CENTER_ENABLED,
-    NG_DASHBOARDS
+    NG_DASHBOARDS,
+    NEW_LEFT_NAVBAR_SETTINGS
   } = useFeatureFlags()
 
-  const { currentUserInfo: user } = useAppStore()
+  const { currentUserInfo: user, selectedProject } = useAppStore()
 
   useLayoutEffect(() => {
     // main nav consists of two UL sections with classname "css.navList"
@@ -73,6 +74,23 @@ export default function L1Nav(): React.ReactElement {
             </Layout.Vertical>
           </Link>
         </li>
+        {NEW_LEFT_NAVBAR_SETTINGS && (
+          <li className={css.navItem}>
+            <Link {...commonLinkProps} to={selectedProject ? paths.toProjectDetails(params) : paths.toProjects(params)}>
+              <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+                <Icon name="nav-project" size={30} color={Color.PRIMARY_4} />
+                <Text
+                  font={{ weight: 'semi-bold', align: 'center' }}
+                  padding={{ bottom: 'xsmall' }}
+                  color={Color.WHITE}
+                  className={css.text}
+                >
+                  <String stringID="projectsText" />
+                </Text>
+              </Layout.Vertical>
+            </Link>
+          </li>
+        )}
         {CHAOS_ENABLED && (
           <li className={css.navItem}>
             <Link {...commonLinkProps} to={paths.toChaos(params)}>

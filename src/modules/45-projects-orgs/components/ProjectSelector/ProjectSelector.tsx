@@ -28,6 +28,7 @@ import { useStrings } from 'framework/strings'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import ProjectCard from '@projects-orgs/components/ProjectCard/ProjectCard'
 import { PageSpinner } from '@common/components'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import pointerImage from './pointer.svg'
 import css from './ProjectSelector.module.scss'
 
@@ -156,6 +157,7 @@ export const ProjectSelector: React.FC<ProjectSelectorProps> = ({ onSelect, modu
   const { selectedProject, updateAppStore } = useAppStore()
   const { getString } = useStrings()
   const history = useHistory()
+  const { NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
 
   useEffect(() => {
     // deselect current project if user switches module
@@ -172,7 +174,11 @@ export const ProjectSelector: React.FC<ProjectSelectorProps> = ({ onSelect, modu
           {getString('projectLabel')}
         </Text>
         <div className={cx(css.projectSelector, { [css.selectProjectDisplay]: !selectedProject })}>
-          {selectedProject && (
+          {selectedProject && NEW_LEFT_NAVBAR_SETTINGS ? (
+            <Text color={Color.WHITE} padding="xsmall" className={css.projectText}>
+              {selectedProject.name}
+            </Text>
+          ) : selectedProject ? (
             <Button
               minimal
               tooltipProps={{
@@ -194,7 +200,7 @@ export const ProjectSelector: React.FC<ProjectSelectorProps> = ({ onSelect, modu
                 {selectedProject.name}
               </Text>
             </Button>
-          )}
+          ) : null}
           <ProjectSelect onSelect={onSelect} />
         </div>
       </Layout.Vertical>
