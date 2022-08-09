@@ -90,6 +90,7 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
     data: jobParameterResponse,
     loading: fetchingJobParameters
   } = useGetJobParametersForJenkins({
+    lazy: isArray(template?.spec?.jobParameter) ? true : false,
     queryParams: {
       ...commonParams,
       connectorRef: connectorRef.toString()
@@ -114,6 +115,13 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
       })
     }
   }, [jobParameterResponse])
+
+  useEffect(() => {
+    formik.setFieldValue(
+      `${prefix}spec.jobParameter`,
+      isArray(template?.spec?.jobParameter) ? template?.spec?.jobParameter : []
+    )
+  }, [])
 
   useEffect(() => {
     if (lastOpenedJob.current) {
@@ -305,10 +313,7 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
                       {fetchingJobParameters ? (
                         <Spinner />
                       ) : (
-                        (getMultiTypeFromValue(template?.spec?.jobParameter) === MultiTypeInputType.RUNTIME
-                          ? get(formik, `values.${prefix}spec.jobParameter`) || []
-                          : template?.spec?.jobParameter
-                        )?.map((type: any, i: number) => {
+                        (get(formik, `values.${prefix}spec.jobParameter`) || [])?.map((type: any, i: number) => {
                           return (
                             <div className={stepCss.jobParameter} key={type.value}>
                               <FormInput.Text
