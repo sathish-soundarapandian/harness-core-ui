@@ -54,6 +54,7 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
                       <span className={css.label}>Name</span>
                       <span className={css.label}>Type</span>
                       <span className={css.label}>Value</span>
+                      <span className={css.label}>Use as Default</span>
                     </div>
                     {template.spec?.environmentVariables?.map((type: any, i: number) => {
                       return (
@@ -79,6 +80,12 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
                             label=""
                             disabled={readonly}
                             placeholder={getString('valueLabel')}
+                          />
+                          <FormInput.CheckBox
+                            label=""
+                            name={`${prefix}spec.environmentVariables[${i}].useAsDefault`}
+                            placeholder={getString('typeLabel')}
+                            disabled={true}
                           />
                         </div>
                       )

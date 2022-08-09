@@ -54,6 +54,8 @@ import { ConnectorWizardContextProvider } from './ConnectorWizardContext'
 import CreateJenkinsConnector from '../CreateConnector/JenkinsConnector/CreateJenkinsConnector'
 import OCIHelmConnector from '../CreateConnector/OCIHelmConnector.tsx/OCIHelmConnector'
 import CreateCustomSMConnector from '../CreateConnector/CustomSecretManagerConnector/CreateCustomSMConnector'
+import { TemplateSelectorContextProvider } from 'framework/Templates/TemplateSelectorContext/TemplateSelectorContext'
+import { TemplateSelectorDrawer } from 'framework/Templates/TemplateSelectorDrawer/TemplateSelectorDrawer'
 
 interface CreateConnectorWizardProps {
   accountId: string
@@ -194,7 +196,10 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
 export const CreateConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
   return (
     <ConnectorWizardContextProvider>
-      <ConnectorWizard {...props} />
+      <TemplateSelectorContextProvider>
+        <ConnectorWizard {...props} />
+        <TemplateSelectorDrawer />
+      </TemplateSelectorContextProvider>
     </ConnectorWizardContextProvider>
   )
 }
