@@ -23,7 +23,8 @@ import { FormGroup } from '@blueprintjs/core'
 
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useStrings, String } from 'framework/strings'
-import AllowedValuesFields, { OPTIONS_TYPE } from './AllowedValuesField'
+import AllowedValuesFields from './AllowedValuesField'
+import type { ALLOWED_VALUES_TYPE } from './constants'
 import { Validation, ValidationSchema, FormValues, parseInput, getInputStr } from './ConfigureOptionsUtils'
 
 import css from './ConfigureOptions.module.scss'
@@ -41,7 +42,7 @@ export interface ConfigureOptionsDialogProps {
   showAdvanced?: boolean
   fetchValues?: (done: (response: SelectOption[] | MultiSelectOption[]) => void) => void
   isReadonly?: boolean
-  optionsType?: OPTIONS_TYPE
+  allowedValuesType?: ALLOWED_VALUES_TYPE
   closeModal: (
     str?: string | undefined,
     defaultStr?: string | number | undefined,
@@ -62,7 +63,7 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
     showAdvanced = false,
     fetchValues,
     isReadonly = false,
-    optionsType,
+    allowedValuesType,
     closeModal
   } = props
   const [input, setInput] = React.useState(value)
@@ -167,7 +168,7 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
                     fetchValues={fetchValues}
                     isReadonly={isReadonly}
                     options={options}
-                    optionsType={optionsType}
+                    allowedValuesType={allowedValuesType}
                   />
                 ) : null}
                 {values.validation === Validation.Regex ? (

@@ -13,7 +13,7 @@ import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 
 import ConfigureOptionsDialog, { ConfigureOptionsDialogProps } from './ConfigureOptionsDialog'
-import { OPTIONS_TYPE } from './AllowedValuesField'
+import { ALLOWED_VALUES_TYPE } from './constants'
 import css from './ConfigureOptions.module.scss'
 
 export interface ConfigureOptionsProps extends Omit<ConfigureOptionsDialogProps, 'closeModal' | 'isOpen'> {
@@ -22,7 +22,7 @@ export interface ConfigureOptionsProps extends Omit<ConfigureOptionsDialogProps,
   style?: CSSProperties
 }
 
-export { OPTIONS_TYPE }
+export { ALLOWED_VALUES_TYPE }
 
 export function ConfigureOptions(props: ConfigureOptionsProps): JSX.Element {
   const {
@@ -37,7 +37,7 @@ export function ConfigureOptions(props: ConfigureOptionsProps): JSX.Element {
     showAdvanced = false,
     hideExecutionTimeField = false,
     fetchValues,
-    optionsType,
+    allowedValuesType,
     className,
     isReadonly = false
   } = props
@@ -97,7 +97,7 @@ export function ConfigureOptions(props: ConfigureOptionsProps): JSX.Element {
           showRequiredField={showRequiredField}
           showAdvanced={showAdvanced}
           fetchValues={fetchValues}
-          optionsType={optionsType}
+          allowedValuesType={allowedValuesType}
         />
       </Dialog>
     </React.Fragment>
