@@ -15,10 +15,10 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import type { StringsMap } from 'stringTypes'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { AzureBlueprintRef } from './AzureBlueprintRef'
+import { AzureBlueprintRef } from './AzureBluePrintRef'
 import { AzureBlueprintVariableView } from './VariableView/VariableView'
 import AzureBlueprintInputStep from './InputSteps/InputSteps'
-import { AzureBlueprintStepInfo, AzureBlueprintData, ScopeTypes, isRuntime } from './AzureBlueprintTypes.types'
+import { AzureBlueprintStepInfo, AzureBlueprintData, ScopeTypes, isRuntime } from './AzureBluePrintTypes.types'
 const AzureBlueprintWithRef = forwardRef(AzureBlueprintRef)
 
 export class AzureBlueprintStep extends PipelineStep<AzureBlueprintStepInfo> {

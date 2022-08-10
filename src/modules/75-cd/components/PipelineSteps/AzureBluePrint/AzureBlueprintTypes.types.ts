@@ -92,6 +92,7 @@ export interface AzureBlueprintData {
       }
     }
   }
+  store?: string
 }
 
 export interface AzureBlueprintProps {

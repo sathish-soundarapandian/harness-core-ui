@@ -21,7 +21,7 @@ import {
   ConnectorLabelMap,
   ConnectorTypes,
   ConnectorMap
-} from '../AzureBlueprintTypes.types'
+} from '../AzureBluePrintTypes.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const TemplateInputStep = (props: AzureBlueprintProps & { formik?: FormikContextType<any> }): JSX.Element => {

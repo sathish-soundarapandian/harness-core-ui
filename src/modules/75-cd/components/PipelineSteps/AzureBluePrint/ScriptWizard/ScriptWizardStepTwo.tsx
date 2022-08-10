@@ -14,7 +14,9 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Text,
-  ButtonVariation
+  ButtonVariation,
+  AllowedTypes,
+  StepProps
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
@@ -24,15 +26,23 @@ import * as Yup from 'yup'
 import { get, isEmpty, isUndefined, set } from 'lodash-es'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { Connectors } from '@connectors/constants'
-
+import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { GitRepoName } from '@pipeline/components/ManifestSelection/Manifesthelper'
 
-import { ConnectorTypes, gitFetchTypeList, GitFetchTypes } from '../AzureBlueprintTypes.types'
+import { ConnectorTypes, gitFetchTypeList, GitFetchTypes, AzureBlueprintData } from '../AzureBluePrintTypes.types'
 import { HarnessOption } from '../../AzureWebAppServiceSpec/HarnessOption'
 
 import css from './ScriptWizard.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+
+interface ScriptWizardStepTwoProps {
+  expressions: string[]
+  allowableTypes: AllowedTypes
+  initialValues: AzureBlueprintData
+  handleSubmit: (data: any) => void
+  isReadonly: boolean
+}
 
 export const ScriptWizardStepTwo = ({
   expressions,
@@ -42,7 +52,7 @@ export const ScriptWizardStepTwo = ({
   prevStepData,
   previousStep,
   isReadonly = false
-}: any): React.ReactElement => {
+}: StepProps<ConnectorConfigDTO> & ScriptWizardStepTwoProps): React.ReactElement => {
   const { getString } = useStrings()
   /* istanbul ignore next */
   const gitConnectionType: string = prevStepData?.store === Connectors.GIT ? 'connectionType' : 'type'
@@ -106,7 +116,7 @@ export const ScriptWizardStepTwo = ({
   if (prevStepData?.store === 'Harness') {
     return (
       <HarnessOption
-        initialValues={initialValues}
+        initialValues={initialValues as any}
         stepName={getString('pipeline.fileDetails')}
         handleSubmit={handleSubmit}
         formName="azureScriptDetails"

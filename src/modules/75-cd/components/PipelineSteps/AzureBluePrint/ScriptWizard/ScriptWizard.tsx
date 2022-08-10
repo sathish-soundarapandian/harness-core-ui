@@ -31,7 +31,7 @@ import {
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 
-import { ConnectorMap, AllowedTypes } from '../AzureBlueprintTypes.types'
+import { ConnectorMap, AllowedTypes } from '../AzureBluePrintTypes.types'
 import { ScriptWizardStepOne } from './ScriptWizardStepOne'
 import { ScriptWizardStepTwo } from './ScriptWizardStepTwo'
 
@@ -72,7 +72,6 @@ export const ScriptWizard = ({
   const [isEditMode, setIsEditMode] = useState(false)
   const [connectorType, setConnectorType] = useState('')
   const stepOneName = getString('cd.azureBluePrint.templateFileSource')
-  const stepTwoName = getString('cd.azureBluePrint.templateFileDetails')
 
   /* istanbul ignore next */
   const handleStoreChange = (type?: string): void => {
@@ -91,7 +90,6 @@ export const ScriptWizard = ({
       <ScriptWizardStepTwo
         expressions={expressions}
         allowableTypes={allowableTypes}
-        stepName={stepTwoName}
         initialValues={initialValues}
         handleSubmit={onSubmit}
         isReadonly={isReadonly}

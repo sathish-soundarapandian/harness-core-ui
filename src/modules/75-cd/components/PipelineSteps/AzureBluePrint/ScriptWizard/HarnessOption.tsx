@@ -25,7 +25,7 @@ import * as Yup from 'yup'
 import { get, set } from 'lodash-es'
 import type { ConnectorConfigDTO, StoreConfigWrapper } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-import { ConnectorTypes, fileTypes, HarnessFileStore, isRuntime } from '../AzureBlueprintTypes.types'
+import { ConnectorTypes, fileTypes, HarnessFileStore, isRuntime } from '../AzureBluePrintTypes.types'
 import MultiConfigSelectField from '../../AzureWebAppServiceSpec/AzureWebAppStartupScriptSelection/MultiConfigSelectField'
 import css from './HarnessOption.module.scss'
 

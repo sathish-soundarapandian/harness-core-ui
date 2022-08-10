@@ -10,7 +10,7 @@ import { isEmpty } from 'lodash-es'
 import { Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
-import type { AzureBlueprintData } from '../AzureBlueprintTypes.types'
+import type { AzureBlueprintData } from '../AzureBluePrintTypes.types'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 export function AzureBlueprintVariableView(props: any): React.ReactElement {

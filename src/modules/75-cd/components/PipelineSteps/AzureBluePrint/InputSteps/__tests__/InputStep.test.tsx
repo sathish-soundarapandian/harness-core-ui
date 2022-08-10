@@ -12,7 +12,7 @@ import { Formik, FormikForm, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@ha
 import { TestWrapper } from '@common/utils/testUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { ScopeTypes } from '../../AzureBlueprintTypes.types'
+import { ScopeTypes } from '../../AzureBluePrintTypes.types'
 
 import AzureBlueprintInputStep from '../InputSteps'
 

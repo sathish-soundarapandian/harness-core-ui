@@ -11,7 +11,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 
 import { TestWrapper } from '@common/utils/testUtils'
 import { AzureBlueprintVariableView } from '../VariableView'
-import { ScopeTypes } from '../../AzureBlueprintTypes.types'
+import { ScopeTypes } from '../../AzureBluePrintTypes.types'
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 const renderComponent = (props: any) => {

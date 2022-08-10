@@ -14,6 +14,7 @@ import {
   Formik,
   StepProps,
   getMultiTypeFromValue,
+  AllowedTypes,
   MultiTypeInputType,
   ThumbnailSelect,
   ButtonVariation,
@@ -35,9 +36,26 @@ import type { ConnectorSelectedValue } from '@connectors/components/ConnectorRef
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ConnectorIcons, ConnectorLabelMap, ConnectorMap, ConnectorTypes } from '../AzureBlueprintTypes.types'
+import {
+  ConnectorIcons,
+  ConnectorLabelMap,
+  ConnectorMap,
+  ConnectorTypes,
+  AzureBlueprintData
+} from '../AzureBluePrintTypes.types'
 
 import css from './ScriptWizard.module.scss'
+
+interface ScriptWizardStepOneProps {
+  stepName: string
+  expressions: string[]
+  allowableTypes: AllowedTypes
+  isReadonly: boolean
+  connectorTypes: Array<ConnectorTypes>
+  initialValues: AzureBlueprintData
+  handleConnectorViewChange: () => void
+  handleStoreChange: (store: ConnectorTypes) => void
+}
 
 export const ScriptWizardStepOne = ({
   handleConnectorViewChange,
@@ -50,7 +68,7 @@ export const ScriptWizardStepOne = ({
   allowableTypes,
   prevStepData,
   nextStep
-}: StepProps<ConnectorConfigDTO> & any): JSX.Element => {
+}: StepProps<ConnectorConfigDTO> & ScriptWizardStepOneProps): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()

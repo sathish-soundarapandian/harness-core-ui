@@ -13,8 +13,8 @@ import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import * as cdServices from 'services/cd-ng'
-import { AzureBlueprintStep } from '../AzureBlueprint'
-import { ScopeTypes } from '../AzureBlueprintTypes.types'
+import { AzureBlueprintStep } from '../AzureBluePrint'
+import { ScopeTypes } from '../AzureBluePrintTypes.types'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('react-monaco-editor', () => ({ value, onChange, name }: any) => {

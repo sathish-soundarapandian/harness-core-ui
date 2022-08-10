@@ -18,7 +18,7 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { Connectors } from '@connectors/constants'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
-import { isRuntime, AzureBlueprintProps } from '../AzureBlueprintTypes.types'
+import { isRuntime, AzureBlueprintProps } from '../AzureBluePrintTypes.types'
 import { TemplateInputStep } from './TemplateInput'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'

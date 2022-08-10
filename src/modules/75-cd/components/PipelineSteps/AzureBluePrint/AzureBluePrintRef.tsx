@@ -36,10 +36,10 @@ import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/S
 import { Connectors } from '@connectors/constants'
 
 import { ScriptWizard } from './ScriptWizard/ScriptWizard'
-import { ScopeTypes, AzureBlueprintProps } from './AzureBlueprintTypes.types'
+import { ScopeTypes, AzureBlueprintProps } from './AzureBluePrintTypes.types'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-import css from './AzureBlueprint.module.scss'
+import css from './AzureBluePrint.module.scss'
 
 export const AzureBlueprintRef = (
   { allowableTypes, isNewStep, readonly = false, initialValues, onUpdate, onChange, stepViewType }: AzureBlueprintProps,
