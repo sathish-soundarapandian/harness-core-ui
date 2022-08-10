@@ -10,9 +10,10 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { K8sApplyStepInfo, ManifestConfigWrapper, StepElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 export interface K8sApplyData extends StepElementConfig {
-  spec: Omit<K8sApplyStepInfo, 'skipDryRun' | 'skipSteadyStateCheck'> & {
+  spec: Omit<K8sApplyStepInfo, 'skipDryRun' | 'skipSteadyStateCheck' | 'skipRendering'> & {
     skipDryRun: boolean
     skipSteadyStateCheck?: boolean
+    skipRendering?: boolean
   }
 }
 export interface K8sApplyVariableStepProps {
@@ -31,6 +32,7 @@ export interface K8sApplyFormData extends StepElementConfig {
   spec: {
     skipDryRun: boolean
     skipSteadyStateCheck?: boolean
+    skipRendering?: boolean
     filePaths?: FilePathConfig[] | string
     overrides?: ManifestConfigWrapper[]
   }

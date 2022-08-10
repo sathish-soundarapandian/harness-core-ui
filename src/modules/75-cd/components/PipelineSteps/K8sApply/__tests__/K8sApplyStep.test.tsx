@@ -57,6 +57,7 @@ describe('Test K8sApplyStep', () => {
           spec: {
             skipDryRun: RUNTIME_INPUT_VALUE,
             skipSteadyStateCheck: false,
+            skipRendering: false,
             filePaths: ['test-1', 'test-2'],
             overrides: overrides
           }
@@ -84,6 +85,7 @@ describe('Test K8sApplyStep', () => {
           spec: {
             skipDryRun: RUNTIME_INPUT_VALUE,
             skipSteadyStateCheck: false,
+            skipRendering: false,
             filePaths: ['test-1', 'test-2']
           }
         }}
@@ -96,6 +98,7 @@ describe('Test K8sApplyStep', () => {
           spec: {
             skipDryRun: RUNTIME_INPUT_VALUE,
             skipSteadyStateCheck: RUNTIME_INPUT_VALUE,
+            skipRendering: RUNTIME_INPUT_VALUE,
             filePaths: RUNTIME_INPUT_VALUE
           }
         }}
@@ -108,6 +111,7 @@ describe('Test K8sApplyStep', () => {
           spec: {
             skipDryRun: RUNTIME_INPUT_VALUE,
             skipSteadyStateCheck: false,
+            skipRendering: false,
             filePaths: RUNTIME_INPUT_VALUE
           }
         }}
@@ -129,6 +133,7 @@ describe('Test K8sApplyStep', () => {
           spec: {
             skipDryRun: RUNTIME_INPUT_VALUE,
             skipSteadyStateCheck: RUNTIME_INPUT_VALUE,
+            skipRendering: RUNTIME_INPUT_VALUE,
             filePaths: RUNTIME_INPUT_VALUE
           }
         }}
@@ -151,6 +156,7 @@ describe('Test K8sApplyStep', () => {
           spec: {
             skipDryRun: false,
             skipSteadyStateCheck: false,
+            skipRendering: false,
             filePaths: ['test-1', 'test-2']
           }
         }}
@@ -163,6 +169,7 @@ describe('Test K8sApplyStep', () => {
           spec: {
             skipDryRun: false,
             skipSteadyStateCheck: false,
+            skipRendering: false,
             filePaths: ['test-1', 'test-2']
           }
         }}
@@ -175,6 +182,7 @@ describe('Test K8sApplyStep', () => {
           spec: {
             skipDryRun: false,
             skipSteadyStateCheck: false,
+            skipRendering: false,
             filePaths: ['test-1', 'test-2']
           }
         }}
@@ -211,6 +219,12 @@ describe('Test K8sApplyStep', () => {
                 fqn: 'pipeline.stages.qaStage.execution.steps.k8sApply.skipSteadyStateCheck',
                 localName: 'step.k8sApply.skipSteadyStateCheck'
               }
+            },
+            'step-skipRendering': {
+              yamlProperties: {
+                fqn: 'pipeline.stages.qaStage.execution.steps.k8sApply.skipRendering',
+                localName: 'step.k8sApply.skipRendering'
+              }
             }
           },
           variablesData: {
@@ -222,6 +236,7 @@ describe('Test K8sApplyStep', () => {
             spec: {
               skipDryRun: 'step-skipdryRun',
               skipSteadyStateCheck: 'step-skipSteadyCheck',
+              skipRendering: 'step-skipRendering',
               filePaths: ['step-filePaths', 'test-2']
             }
           }
@@ -247,6 +262,7 @@ describe('Test K8sApplyStep', () => {
           spec: {
             skipDryRun: false,
             skipSteadyStateCheck: false,
+            skipRendering: false,
             filePaths: ['test-1', 'test-2'],
             overrides: overrides
           }
@@ -265,6 +281,7 @@ describe('Test K8sApplyStep', () => {
         filePaths: ['test-1', 'test-2'],
         skipDryRun: false,
         skipSteadyStateCheck: false,
+        skipRendering: false,
         overrides: overrides
       },
       timeout: '10m',
@@ -281,6 +298,7 @@ describe('Test K8sApplyStep', () => {
         spec: {
           skipDryRun: false,
           skipSteadyStateCheck: false,
+          skipRendering: false,
           filePaths: null
         }
       },
@@ -292,6 +310,7 @@ describe('Test K8sApplyStep', () => {
         spec: {
           skipDryRun: false,
           skipSteadyStateCheck: false,
+          skipRendering: false,
           filePaths: RUNTIME_INPUT_VALUE
         }
       },
@@ -315,6 +334,7 @@ describe('Test K8sApplyStep', () => {
           spec: {
             skipDryRun: RUNTIME_INPUT_VALUE,
             skipSteadyStateCheck: false,
+            skipRendering: RUNTIME_INPUT_VALUE,
             filePaths: ['test-1', 'test-2'],
             overrides: overrides
           }
@@ -328,6 +348,7 @@ describe('Test K8sApplyStep', () => {
           spec: {
             skipDryRun: RUNTIME_INPUT_VALUE,
             skipSteadyStateCheck: RUNTIME_INPUT_VALUE,
+            skipRendering: RUNTIME_INPUT_VALUE,
             filePaths: RUNTIME_INPUT_VALUE,
             overrides: [
               {

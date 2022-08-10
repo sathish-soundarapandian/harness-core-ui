@@ -874,6 +874,7 @@ pipelineSteps:
     kubernetes: '{{$.kubernetesText}}'
     gk8engine: Google Kubernetes Engine
   skipSteadyStateCheck: Skip Steady State Check
+  skipRendering: Skip Rendering
   workload: 'Workload'
   stepNameRequired: 'Step Name is required'
   provisionerIdentifierRequired: 'Provisioner Identifier is required.'

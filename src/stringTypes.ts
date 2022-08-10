@@ -9443,6 +9443,10 @@ export interface StringsMap {
   /**
    * @deprecated migrate this string to module level file
    */
+  'pipelineSteps.skipRendering': string
+  /**
+   * @deprecated migrate this string to module level file
+   */
   'pipelineSteps.skipSteadyStateCheck': string
   /**
    * @deprecated migrate this string to module level file
