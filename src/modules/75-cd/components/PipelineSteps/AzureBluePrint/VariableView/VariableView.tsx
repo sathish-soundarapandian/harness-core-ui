@@ -10,14 +10,12 @@ import { isEmpty } from 'lodash-es'
 import { Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
-// import type { CreateStackVariableStepProps, CreateStackData } from '../../CloudFormationInterfaces.types'
+import type { AzureBlueprintData } from '../AzureBlueprintTypes.types'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
-export function AzureBluePrintVariableView({
-  variablesData = {} as any,
-  initialValues = {} as any,
-  metadataMap
-}: any): React.ReactElement {
+export function AzureBlueprintVariableView(props: any): React.ReactElement {
+  /* istanbul ignore next */
+  const { variablesData = {} as AzureBlueprintData, initialValues = {} as AzureBlueprintData, metadataMap } = props
   const { getString } = useStrings()
   return (
     <>

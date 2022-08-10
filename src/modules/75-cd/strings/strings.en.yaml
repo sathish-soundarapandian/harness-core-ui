@@ -411,5 +411,7 @@ azureBluePrint:
   description: Build Azure Blueprint artifacts to rapidly build and start up new environments.
   templateFileSource: Template File Source
   templateFileDetails: Template File Details
-  specifyTemplateFileSource: Specify Template File Source
+  specifyTemplateFileSource: Specify Azure Blueprint Template File
+  azureBlueprintTemplate: Azure Blueprint Template
   assignmentName: Assignment Name
+  assignmentNameError: Assignment Name Required

@@ -3978,6 +3978,8 @@ export interface StringsMap {
   'cd.artifactPaths': string
   'cd.artifactRepoTooltip': string
   'cd.azureBluePrint.assignmentName': string
+  'cd.azureBluePrint.assignmentNameError': string
+  'cd.azureBluePrint.azureBlueprintTemplate': string
   'cd.azureBluePrint.description': string
   'cd.azureBluePrint.specifyTemplateFileSource': string
   'cd.azureBluePrint.templateFileDetails': string

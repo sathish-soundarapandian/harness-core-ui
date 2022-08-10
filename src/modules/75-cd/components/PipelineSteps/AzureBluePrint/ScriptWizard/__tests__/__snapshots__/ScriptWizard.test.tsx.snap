@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ScriptWizard & stepOne initial render with stepOne 1`] = `<div />`;
+
+exports[`ScriptWizard & stepOne initial render with stepOne 2`] = `<div />`;
+
+exports[`ScriptWizard & stepOne runtime stepOne 1`] = `<div />`;
+
+exports[`ScriptWizard & stepOne runtime stepOne 2`] = `<div />`;

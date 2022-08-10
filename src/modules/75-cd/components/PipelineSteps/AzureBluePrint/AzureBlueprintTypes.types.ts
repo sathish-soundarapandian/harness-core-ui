@@ -66,7 +66,7 @@ export enum ScopeTypes {
 
 export const isRuntime = (value?: string): boolean => getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME
 
-export interface AzureBluePrintData {
+export interface AzureBlueprintData {
   type: string
   name: string
   identifier: string
@@ -94,25 +94,25 @@ export interface AzureBluePrintData {
   }
 }
 
-export interface AzureBluePrintProps {
-  initialValues: AzureBluePrintData
-  onUpdate?: (data: AzureBluePrintData) => void
-  onChange?: (data: AzureBluePrintData) => void
+export interface AzureBlueprintProps {
+  initialValues: AzureBlueprintData
+  onUpdate?: (data: AzureBlueprintData) => void
+  onChange?: (data: AzureBlueprintData) => void
   allowableTypes: MultiTypeAllowedTypes
   stepViewType?: StepViewType
   configTypes?: SelectOption[]
   isNewStep?: boolean
   inputSetData?: {
-    template?: AzureBluePrintData
+    template?: AzureBlueprintData
     path?: string
   }
   readonly?: boolean
   path?: string
   stepType?: string
-  allValues?: AzureBluePrintData
+  allValues?: AzureBlueprintData
 }
 
-export interface AzureBluePrintStepInfo {
+export interface AzureBlueprintStepInfo {
   spec: any
   name: string
   identifier: string

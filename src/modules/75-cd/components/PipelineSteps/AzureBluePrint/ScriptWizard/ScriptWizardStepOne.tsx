@@ -35,7 +35,7 @@ import type { ConnectorSelectedValue } from '@connectors/components/ConnectorRef
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ConnectorIcons, ConnectorLabelMap, ConnectorMap, ConnectorTypes } from '../AzureBluePrint.types'
+import { ConnectorIcons, ConnectorLabelMap, ConnectorMap, ConnectorTypes } from '../AzureBlueprintTypes.types'
 
 import css from './ScriptWizard.module.scss'
 
@@ -76,7 +76,9 @@ export const ScriptWizardStepOne = ({
     setSelectedStore(type)
   }, [initialValues])
 
-  const shouldGotoNextStep = (connectorRefValue: ConnectorSelectedValue | string): boolean => {
+  const shouldGotoNextStep = /* istanbul ignore next */ (
+    connectorRefValue: ConnectorSelectedValue | string
+  ): boolean => {
     return (
       !isLoadingConnectors &&
       !!selectedStore &&
@@ -109,7 +111,7 @@ export const ScriptWizardStepOne = ({
       initValues.connectorRef = prevStepData.connectorRef
       handleStoreChange(selectedStore)
     }
-
+    /* istanbul ignore next */
     if (selectedStore !== initValues.store && selectedStore !== prevStepData?.store) {
       initValues.connectorRef = ''
     }
@@ -159,9 +161,12 @@ export const ScriptWizardStepOne = ({
                       name={'store'}
                       items={connectorTypesOptions}
                       isReadonly={isReadonly}
-                      onChange={storeSelected => {
-                        handleOptionSelection(values, storeSelected as ConnectorTypes)
-                      }}
+                      onChange={
+                        /* istanbul ignore next */
+                        storeSelected => {
+                          handleOptionSelection(values, storeSelected as ConnectorTypes)
+                        }
+                      }
                     />
                   </Layout.Horizontal>
 
@@ -217,18 +222,20 @@ export const ScriptWizardStepOne = ({
                           variation={ButtonVariation.LINK}
                           size={ButtonSize.SMALL}
                           disabled={isReadonly || !canCreate}
-                          id="new-startup-script-connector"
+                          data-testid="newConnectorButton"
                           text={newConnectorLabel}
                           className={css.addStartupScript}
                           icon="plus"
                           iconProps={{ size: 12 }}
-                          onClick={() => {
-                            handleConnectorViewChange()
-                            nextStep?.({
-                              ...prevStepData,
-                              store: selectedStore
-                            })
-                          }}
+                          onClick={
+                            /* istanbul ignore next */ () => {
+                              handleConnectorViewChange()
+                              nextStep?.({
+                                ...prevStepData,
+                                store: selectedStore
+                              })
+                            }
+                          }
                         />
                       )}
                     </Layout.Horizontal>

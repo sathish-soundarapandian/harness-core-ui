@@ -31,13 +31,13 @@ import {
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 
-import { ConnectorMap, AllowedTypes } from '../AzureBluePrint.types'
+import { ConnectorMap, AllowedTypes } from '../AzureBlueprintTypes.types'
 import { ScriptWizardStepOne } from './ScriptWizardStepOne'
 import { ScriptWizardStepTwo } from './ScriptWizardStepTwo'
 
 import css from './ScriptWizard.module.scss'
 
-interface StartupScriptWizardStepsProps {
+interface ScriptWizardStepsProps {
   handleConnectorViewChange: (isConnectorView: boolean) => void
   initialValues: any
   expressions: string[]
@@ -65,7 +65,7 @@ export const ScriptWizard = ({
   isOpen,
   onClose,
   onSubmit
-}: StartupScriptWizardStepsProps): JSX.Element => {
+}: ScriptWizardStepsProps): JSX.Element => {
   const { getString } = useStrings()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -89,8 +89,6 @@ export const ScriptWizard = ({
   const getLastSteps = useCallback(
     () => (
       <ScriptWizardStepTwo
-        key={getString('pipeline.fileDetails')}
-        name={getString('pipeline.fileDetails')}
         expressions={expressions}
         allowableTypes={allowableTypes}
         stepName={stepTwoName}

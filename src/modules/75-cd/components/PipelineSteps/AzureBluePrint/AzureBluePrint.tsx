@@ -15,27 +15,27 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import type { StringsMap } from 'stringTypes'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { AzureBluePrintRef } from './AzureBluePrintRef'
-import { AzureBluePrintVariableView } from './VariableView/VariableView'
-import AzureBluePrintInputStep from './InputSteps/InputSteps'
-import { AzureBluePrintStepInfo, AzureBluePrintData, ScopeTypes, isRuntime } from './AzureBluePrint.types'
-const AzureBluePrintWithRef = forwardRef(AzureBluePrintRef)
+import { AzureBlueprintRef } from './AzureBlueprintRef'
+import { AzureBlueprintVariableView } from './VariableView/VariableView'
+import AzureBlueprintInputStep from './InputSteps/InputSteps'
+import { AzureBlueprintStepInfo, AzureBlueprintData, ScopeTypes, isRuntime } from './AzureBlueprintTypes.types'
+const AzureBlueprintWithRef = forwardRef(AzureBlueprintRef)
 
-export class AzureBluePrintStep extends PipelineStep<AzureBluePrintStepInfo> {
+export class AzureBlueprintStep extends PipelineStep<AzureBlueprintStepInfo> {
   constructor() {
     super()
     this._hasStepVariables = true
     this._hasDelegateSelectionVisible = true
   }
 
-  protected type = StepType.AzureBluePrint
+  protected type = StepType.AzureBlueprint
   protected stepIcon: IconName = 'microsoft-azure'
-  protected stepName = 'Azure ARM'
+  protected stepName = 'Azure Blueprint Create'
   protected stepDescription: keyof StringsMap = 'cd.azureBluePrint.description'
   protected stepIconSize = 32
 
   protected defaultValues = {
-    type: StepType.AzureBluePrint,
+    type: StepType.AzureBlueprint,
     name: '',
     identifier: '',
     timeout: '10m',
@@ -55,7 +55,7 @@ export class AzureBluePrintStep extends PipelineStep<AzureBluePrintStepInfo> {
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<AzureBluePrintData>): FormikErrors<AzureBluePrintStepInfo> {
+  }: ValidateInputSetProps<AzureBlueprintData>): FormikErrors<AzureBlueprintStepInfo> {
     const errors = {} as any
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
 
@@ -200,7 +200,7 @@ export class AzureBluePrintStep extends PipelineStep<AzureBluePrintStepInfo> {
   }
 
   /* istanbul ignore next */
-  private getInitialValues(data: AzureBluePrintData): AzureBluePrintData {
+  private getInitialValues(data: AzureBlueprintData): AzureBlueprintData {
     return data
   }
 
@@ -216,10 +216,10 @@ export class AzureBluePrintStep extends PipelineStep<AzureBluePrintStepInfo> {
     inputSetData,
     path,
     customStepProps
-  }: StepProps<AzureBluePrintStepInfo>): JSX.Element {
+  }: StepProps<AzureBlueprintStepInfo>): JSX.Element {
     if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
       return (
-        <AzureBluePrintInputStep
+        <AzureBlueprintInputStep
           initialValues={initialValues}
           allowableTypes={allowableTypes}
           allValues={inputSetData?.allValues}
@@ -230,11 +230,11 @@ export class AzureBluePrintStep extends PipelineStep<AzureBluePrintStepInfo> {
         />
       )
     } else if (stepViewType === StepViewType.InputVariable) {
-      return <AzureBluePrintVariableView {...(customStepProps as any)} initialValues={initialValues} />
+      return <AzureBlueprintVariableView {...(customStepProps as any)} initialValues={initialValues} />
     }
 
     return (
-      <AzureBluePrintWithRef
+      <AzureBlueprintWithRef
         initialValues={this.getInitialValues(initialValues)}
         onUpdate={onUpdate}
         onChange={onChange}

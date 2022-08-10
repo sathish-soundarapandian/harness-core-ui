@@ -9,6 +9,7 @@
 declare const styles: {
   readonly addMarginBottom: string
   readonly addMarginTop: string
+  readonly azureBlueprintTitle: string
   readonly center: string
   readonly configPlaceHolder: string
   readonly divider: string

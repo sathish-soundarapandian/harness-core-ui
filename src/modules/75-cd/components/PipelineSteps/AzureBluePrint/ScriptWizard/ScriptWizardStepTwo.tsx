@@ -28,14 +28,13 @@ import { Connectors } from '@connectors/constants'
 import { useStrings } from 'framework/strings'
 import { GitRepoName } from '@pipeline/components/ManifestSelection/Manifesthelper'
 
-import { ConnectorTypes, gitFetchTypeList, GitFetchTypes } from '../AzureBluePrint.types'
-import { HarnessOption } from './HarnessOption'
+import { ConnectorTypes, gitFetchTypeList, GitFetchTypes } from '../AzureBlueprintTypes.types'
+import { HarnessOption } from '../../AzureWebAppServiceSpec/HarnessOption'
 
 import css from './ScriptWizard.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const ScriptWizardStepTwo = ({
-  stepName,
   expressions,
   allowableTypes,
   initialValues,
@@ -45,8 +44,9 @@ export const ScriptWizardStepTwo = ({
   isReadonly = false
 }: any): React.ReactElement => {
   const { getString } = useStrings()
-
+  /* istanbul ignore next */
   const gitConnectionType: string = prevStepData?.store === Connectors.GIT ? 'connectionType' : 'type'
+  /* istanbul ignore next */
   const connectionType =
     prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
     prevStepData?.urlType === GitRepoName.Repo
@@ -74,7 +74,7 @@ export const ScriptWizardStepTwo = ({
       repoName: undefined
     }
   }, [])
-
+  /* istanbul ignore next */
   const submitFormData = (formData: any & { store?: string; connectorRef?: string }): void => {
     const startupCommand = {
       type: formData?.store as ConnectorTypes,
@@ -87,11 +87,11 @@ export const ScriptWizardStepTwo = ({
             : [formData?.paths]
       }
     }
-
+    /* istanbul ignore next */
     if (connectionType === GitRepoName.Account) {
       set(startupCommand, 'spec.repoName', formData?.repoName)
     }
-
+    /* istanbul ignore next */
     if (startupCommand?.spec) {
       if (formData?.gitFetchType === 'Branch') {
         set(startupCommand, 'spec.branch', formData?.branch)
@@ -107,9 +107,9 @@ export const ScriptWizardStepTwo = ({
     return (
       <HarnessOption
         initialValues={initialValues}
-        stepName={stepName}
+        stepName={getString('pipeline.fileDetails')}
         handleSubmit={handleSubmit}
-        formName="startupScriptDetails"
+        formName="azureScriptDetails"
         prevStepData={prevStepData}
         previousStep={previousStep}
         expressions={expressions}
@@ -120,7 +120,7 @@ export const ScriptWizardStepTwo = ({
   return (
     <Layout.Vertical height={'inherit'} spacing="medium" className={css.optionsViewContainer}>
       <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {stepName}
+        {getString('pipeline.fileDetails')}
       </Text>
 
       <Formik
@@ -142,26 +142,31 @@ export const ScriptWizardStepTwo = ({
                 name: getString('pipeline.startupCommand.scriptFilePath')
               })
             ),
-          repoName: Yup.string().test('repoName', getString('common.validation.repositoryName'), value => {
-            if (connectionType === GitRepoName.Repo) {
-              return true
+          repoName: Yup.string().test(
+            'repoName',
+            getString('common.validation.repositoryName'),
+            /* istanbul ignore next */ value => {
+              if (connectionType === GitRepoName.Repo) {
+                return true
+              }
+              /* istanbul ignore next */
+              return !isEmpty(value) && value?.length > 0
             }
-            return !isEmpty(value) && value?.length > 0
-          })
+          )
         })}
-        onSubmit={formData => {
-          submitFormData({
-            ...prevStepData,
-            ...formData,
-            connectorRef: prevStepData?.connectorRef
-              ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
-                ? prevStepData?.connectorRef
-                : prevStepData?.connectorRef?.value
-              : /* istanbul ignore next */ prevStepData?.identifier
-              ? prevStepData?.identifier
-              : ''
-          })
-        }}
+        onSubmit={
+          /* istanbul ignore next */ formData => {
+            submitFormData({
+              ...prevStepData,
+              ...formData,
+              connectorRef: prevStepData?.connectorRef
+                ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+                  ? prevStepData?.connectorRef
+                  : prevStepData?.connectorRef?.value
+                : /* istanbul ignore next */ prevStepData?.identifier || ''
+            })
+          }
+        }
       >
         {(formik: { setFieldValue: (a: string, b: string) => void; values: any }) => {
           return (
@@ -171,7 +176,7 @@ export const ScriptWizardStepTwo = ({
                 className={cx(css.startupScriptForm, css.scriptWizard)}
               >
                 <div className={css.scriptWizard}>
-                  {!!(connectionType === GitRepoName.Account) && (
+                  {connectionType !== GitRepoName.Account && (
                     <div className={cx(stepCss.formGroup, stepCss.md)}>
                       <FormInput.MultiTextInput
                         multiTextInputProps={{ expressions, allowableTypes }}
@@ -280,7 +285,7 @@ export const ScriptWizardStepTwo = ({
                     variation={ButtonVariation.SECONDARY}
                     text={getString('back')}
                     icon="chevron-left"
-                    onClick={() => previousStep?.(prevStepData)}
+                    onClick={/* istanbul ignore next */ () => previousStep?.(prevStepData)}
                   />
                   <Button
                     variation={ButtonVariation.PRIMARY}
