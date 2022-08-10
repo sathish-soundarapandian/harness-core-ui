@@ -213,6 +213,7 @@ export function StepCommands(
       return step as StepElementConfig
     }
   }
+
   return (
     <div className={cx(css.stepCommand, className)}>
       {stepType === StepType.Template && onUseTemplate && onRemoveTemplate ? (
@@ -226,7 +227,10 @@ export function StepCommands(
         </Layout.Vertical>
       ) : (
         <div className={css.helpPanelGrid}>
-          <div className={cx(css.stepTabs, { stepTabsAdvanced: activeTab === StepCommandTabs.Advanced })}>
+          <div
+            className={cx(css.stepTabs, { stepTabsAdvanced: activeTab === StepCommandTabs.Advanced })}
+            style={props.helpPanelVisible ? { width: '600px' } : { width: '100%' }}
+          >
             <Tabs id="step-commands" selectedTabId={activeTab} onChange={handleTabChange}>
               <Tab
                 id={StepCommandTabs.StepConfiguration}
