@@ -113,6 +113,8 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = props => {
         return { stage: inputSetTemplate } as StageElementWrapperConfig
       case TemplateType.Pipeline:
         return inputSetTemplate as PipelineInfoConfig
+      case TemplateType.SecretManager:
+        return { spec: inputSetTemplate }
       default:
         return {}
     }
@@ -232,40 +234,41 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = props => {
                             stageClassName={css.stageCard}
                           />
                         )}
-                        {templateEntityType === TemplateType.Step && (
-                          <Container
-                            className={css.inputsCard}
-                            background={Color.WHITE}
-                            padding={'large'}
-                            margin={{ bottom: 'xxlarge' }}
-                          >
-                            <StepWidget<Partial<StepElementConfig>>
-                              factory={factory}
-                              initialValues={formikProps.values as StepElementConfig}
-                              template={originalValues as StepElementConfig}
-                              readonly={true}
-                              type={(formikProps.values as StepElementConfig)?.type as StepType}
-                              stepViewType={StepViewType.InputSet}
-                              allowableTypes={allowableTypes}
-                            />
-                            {getMultiTypeFromValue(
-                              (formikProps.values as StepElementConfig).spec?.delegateSelectors
-                            ) === MultiTypeInputType.RUNTIME && (
-                              <div className={cx(stepCss.formGroup, stepCss.sm)}>
-                                <MultiTypeDelegateSelector
-                                  inputProps={{
-                                    projectIdentifier: template.projectIdentifier,
-                                    orgIdentifier: template.orgIdentifier
-                                  }}
-                                  allowableTypes={allowableTypes}
-                                  label={getString('delegate.DelegateSelector')}
-                                  name={'spec.delegateSelectors'}
-                                  disabled={true}
-                                />
-                              </div>
-                            )}
-                          </Container>
-                        )}
+                        {templateEntityType === TemplateType.Step ||
+                          (templateEntityType === TemplateType.SecretManager && (
+                            <Container
+                              className={css.inputsCard}
+                              background={Color.WHITE}
+                              padding={'large'}
+                              margin={{ bottom: 'xxlarge' }}
+                            >
+                              <StepWidget<Partial<StepElementConfig>>
+                                factory={factory}
+                                initialValues={formikProps.values as StepElementConfig}
+                                template={originalValues as StepElementConfig}
+                                readonly={true}
+                                type={(formikProps.values as StepElementConfig)?.type as StepType}
+                                stepViewType={StepViewType.InputSet}
+                                allowableTypes={allowableTypes}
+                              />
+                              {getMultiTypeFromValue(
+                                (formikProps.values as StepElementConfig).spec?.delegateSelectors
+                              ) === MultiTypeInputType.RUNTIME && (
+                                <div className={cx(stepCss.formGroup, stepCss.sm)}>
+                                  <MultiTypeDelegateSelector
+                                    inputProps={{
+                                      projectIdentifier: template.projectIdentifier,
+                                      orgIdentifier: template.orgIdentifier
+                                    }}
+                                    allowableTypes={allowableTypes}
+                                    label={getString('delegate.DelegateSelector')}
+                                    name={'spec.delegateSelectors'}
+                                    disabled={true}
+                                  />
+                                </div>
+                              )}
+                            </Container>
+                          ))}
                         {templateEntityType === TemplateType.MonitoredService &&
                           templateFactory
                             .getTemplate(templateEntityType)

@@ -82,6 +82,7 @@ connectivityMode:
   connectToProvider: 'Connect to the provider'
   selectText: 'Select how you would like to connect to the provider'
 title:
+  customSecretManager: 'Custom Secret Manager'
   k8sCluster: 'Kubernetes Cluster'
   gcpConnector: 'Google Cloud Provider'
   pdcConnector: 'Physical Data Center'

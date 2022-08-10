@@ -57,8 +57,8 @@ export const templateColorStyleMap: { [keyof in TemplateType]: React.CSSProperti
     fill: '#E4F7E1'
   },
   [TemplateType.SecretManager]: {
-    color: '#CDF4FE',
-    stroke: '#A3E9FF',
+    color: '#06B7C3',
+    stroke: '#D4E7D1',
     fill: '#CDF4FE'
   }
 }
@@ -145,6 +145,8 @@ export const getTypeForTemplate = (
       return stagesCollection.getStageAttributes(childType, getString)?.name
     case TemplateType.MonitoredService:
       return templateFactory.getTemplateLabel(TemplateType.MonitoredService)
+    case TemplateType.SecretManager:
+      return templateFactory.getTemplateLabel(TemplateType.SecretManager)
     default:
       return undefined
   }

@@ -9,11 +9,11 @@
 declare const styles: {
   readonly addButton: string
   readonly environmentVarHeader: string
+  readonly formGroup: string
   readonly label: string
   readonly minConfigBtn: string
   readonly outputVarHeader: string
   readonly panel: string
   readonly variablesList: string
-  readonly formGroup: string
 }
 export default styles

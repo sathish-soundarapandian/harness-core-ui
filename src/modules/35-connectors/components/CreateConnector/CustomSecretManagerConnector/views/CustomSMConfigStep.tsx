@@ -4,7 +4,7 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
+import React, { useState } from 'react'
 import {
   StepProps,
   Layout,
@@ -15,11 +15,13 @@ import {
   Button,
   ButtonVariation,
   PageSpinner,
-  FormikForm
+  FormikForm,
+  MultiTypeInputType
 } from '@wings-software/uicore'
-import React, { useState } from 'react'
+
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
+import { parse } from 'yaml'
 import type { ConnectorInfoDTO, ConnectorRequestBody, ConnectorConfigDTO } from 'services/cd-ng'
 
 import { useStrings } from 'framework/strings'
@@ -28,13 +30,21 @@ import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
 
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
-import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
+import {
+  GetTemplateProps,
+  GetTemplateResponse,
+  useTemplateSelector
+} from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import RbacButton from '@rbac/components/Button/Button'
-import { getTemplateInputSetYamlPromise, useGetTemplateInputSetYaml } from 'services/template-ng'
-import { defaultTo } from 'lodash-es'
+import { getTemplateInputSetYamlPromise } from 'services/template-ng'
+import { ScriptVariablesRuntimeInput } from './ScriptVariableRuntimeInput/ScriptVariablesRuntimeInput'
+import { MultiTypeSecretInput } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
+import { getRefFromIdAndScopeParams } from '@connectors/pages/connectors/utils/ConnectorUtils'
 
 interface StepCustomSMConfigStepProps extends ConnectorInfoDTO {
   name: string
+  environmentVariables?: []
+  templateInputs?: {}
 }
 
 interface StepCustomSMConfigProps {
@@ -47,6 +57,7 @@ interface StepCustomSMConfigProps {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
+  // getTemplate: (data: GetTemplateProps) => Promise<GetTemplateResponse>
 }
 
 const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & StepCustomSMConfigProps> = ({
@@ -56,37 +67,28 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
   isEditMode,
   connectorInfo,
   accountId
+  // getTemplate
 }) => {
   const { getString } = useStrings()
   const { getTemplate } = useTemplateSelector()
 
-  //   const defaultInitialFormData: VaultConfigFormData = {
-  //     vaultUrl: '',
-  //     basePath: '',
-  //     namespace: undefined,
-  //     readOnly: false,
-  //     default: false,
-  //     accessType: HashiCorpVaultAccessTypes.APP_ROLE,
-  //     appRoleId: '',
-  //     secretId: undefined,
-  //     authToken: undefined,
-  //     sinkPath: undefined,
-  //     renewalIntervalMinutes: 10,
-  //     k8sAuthEndpoint: '',
-  //     vaultK8sAuthRole: '',
-  //     serviceAccountTokenPath: ''
-  //   }
+  const defaultInitialFormData: any = {
+    template: '',
+    templateInputs: undefined,
+    onDelegate: true,
+    executionDetails: {}
+  }
 
-  //   const [initialValues, setInitialValues] = useState(defaultInitialFormData)
+  const [initialValues, setInitialValues] = useState(defaultInitialFormData)
   const [loadingFormData, setLoadingFormData] = useState(isEditMode)
   useConnectorWizard({ helpPanel: { referenceId: 'HashiCorpVaultDetails', contentWidth: 900 } })
 
   React.useEffect(() => {
     if (isEditMode && connectorInfo) {
-      //   setupVaultFormData(connectorInfo, accountId).then(data => {
-      //     setInitialValues(data as VaultConfigFormData)
-      //     setLoadingFormData(false)
-      //   })
+      // setupCustomSMFormData(connectorInfo, accountId).then(data => {
+      //   setInitialValues(data as VaultConfigFormData)
+      //   setLoadingFormData(false)
+      // })
     }
   }, [isEditMode, connectorInfo])
 
@@ -97,50 +99,53 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
     connector_type: Connectors.Vault
   })
 
-  //   const {
-  //     data: templateInputYaml,
-  //     loading: loadingTemplateYaml,
-  //     error: errorTemplateYaml,
-  //     refetch: refetchTemplateInputYaml
-  //   } = useGetTemplateInputSetYaml({
-  //     lazy: true,
-  //     templateIdentifier: defaultTo(templateRefData?.identifier, ''),
-  //     queryParams: {
-  //       accountIdentifier: templateRefData?.accountId,
-  //       orgIdentifier: templateRefData?.orgIdentifier,
-  //       projectIdentifier: templateRefData?.projectIdentifier,
-  //       versionLabel: defaultTo(templateRefData?.versionLabel, ''),
-  //       getDefaultFromOtherRepo: true
-  //     }
-  //   })
+  const [templateInputSets, setTemplateInputSets] = React.useState<any>()
+  const onUseTemplate = async formikProps => {
+    const { template } = await getTemplate({ templateType: 'SecretManager' })
+    formikProps.setFieldValue('template', {
+      ...template,
+      versionLabel: template.versionLabel,
+      templateRef: getRefFromIdAndScopeParams(
+        template.identifier || '',
+        accountId,
+        template.orgIdentifier,
+        template.projectIdentifier
+      )
+    })
 
-  const onUseTemplate = async () => {
-    const { template } = await getTemplate({ templateType: 'Step' })
-    const templateRefData = {
-      identifier: template?.identifier,
-      accountId: template?.accountId,
-      orgIdentifier: template?.orgIdentifier,
-      projectIdentifier: template?.projectIdentifier,
-      versionLabel: template?.versionLabel
-    }
+    const templateJSON = parse(template.yaml || '')?.template
+    formikProps.setFieldValue('templateJson', templateJSON)
+    formikProps.setFieldValue('onDelegate', templateJSON.spec.onDelegate)
 
     try {
-      const data = await getTemplateInputSetYamlPromise({
-        templateIdentifier: template.identifier || '',
+      const templateInputYaml = await getTemplateInputSetYamlPromise({
+        templateIdentifier: template?.identifier || '',
         queryParams: {
           accountIdentifier: accountId || '',
-          orgIdentifier: template.orgIdentifier,
-          projectIdentifier: template.projectIdentifier,
-          versionLabel: template.versionLabel || ''
+          orgIdentifier: template?.orgIdentifier,
+          projectIdentifier: template?.projectIdentifier,
+          versionLabel: template?.versionLabel || ''
         }
       })
+
+      let inputSet
+      if (templateInputYaml && templateInputYaml?.data) {
+        inputSet = parse(templateInputYaml?.data?.replace(/"<\+input>"/g, '""')) as any
+        console.log(inputSet)
+        formikProps.setFieldValue('templateInputs', inputSet)
+        setTemplateInputSets(inputSet)
+      }
+
+      if (templateJSON.spec.onDelegate !== true && !inputSet.hasOwnProperty('executionTarget')) {
+        formikProps.setFieldValue('executionTarget', templateJSON.spec.executionTarget)
+      }
     } catch (e) {}
   }
 
   return loadingFormData ? (
     <PageSpinner />
   ) : (
-    <Container padding={{ top: 'medium' }}>
+    <Container padding={{ top: 'medium' }} height="100%">
       <Text font={{ variation: FontVariation.H3 }} padding={{ bottom: 'xlarge' }}>
         {getString('connectors.customSM.details')}
       </Text>
@@ -232,21 +237,71 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
         {formik => {
           return (
             <FormikForm>
-              <FormInput.CustomRender
-                name="templateInfo"
-                render={formikProps => {
-                  return (
-                    <Layout.Horizontal spacing="medium">
-                      <RbacButton
-                        text={getString('connectors.customSM.selectTemplate')}
-                        variation={ButtonVariation.SECONDARY}
-                        icon="template-library"
-                        onClick={onUseTemplate}
-                      />
-                    </Layout.Horizontal>
-                  )
-                }}
-              />
+              <Container style={{ minHeight: '450px' }}>
+                <FormInput.CustomRender
+                  name="template"
+                  label="Shell Script"
+                  render={formikProps => {
+                    return (
+                      <Layout.Vertical spacing="medium">
+                        <RbacButton
+                          text={
+                            formikProps.values.template
+                              ? `Selected: ${formikProps.values.template.templateRef}(${formikProps.values.template.versionLabel})`
+                              : getString('connectors.customSM.selectTemplate')
+                          }
+                          variation={ButtonVariation.PRIMARY}
+                          icon="template-library"
+                          style={{ width: 'fit-content', maxWidth: '400px' }}
+                          onClick={() => onUseTemplate(formikProps)}
+                        />
+                      </Layout.Vertical>
+                    )
+                  }}
+                />
+                {formik.values.templateInputs ? (
+                  <ScriptVariablesRuntimeInput
+                    allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
+                    path={''}
+                    template={templateInputSets || prevStepData?.templateInputs}
+                  />
+                ) : null}
+
+                <FormInput.CheckBox
+                  label="Execute on Delegate"
+                  name={`onDelegate`}
+                  placeholder={getString('typeLabel')}
+                />
+                {formik.values.onDelegate !== true ? (
+                  <>
+                    <FormInput.Text
+                      name="executionTarget.host"
+                      placeholder={getString('cd.specifyTargetHost')}
+                      label={getString('targetHost')}
+                      style={{ marginTop: 'var(--spacing-small)' }}
+                      // multiTextInputProps={{ '', disabled: false, allowableTypes }}
+                      disabled={false}
+                    />
+
+                    <MultiTypeSecretInput
+                      type="SSHKey"
+                      name="executionTarget.connectorRef"
+                      label={getString('sshConnector')}
+                      disabled={false}
+                      formik={formik}
+                      allowableTypes={[]}
+                    />
+
+                    <FormInput.Text
+                      name="executionTarget.workingDirectory"
+                      placeholder={getString('cd.enterWorkDirectory')}
+                      label={getString('workingDirectory')}
+                      style={{ marginTop: 'var(--spacing-medium)' }}
+                      disabled={false}
+                    />
+                  </>
+                ) : null}
+              </Container>
 
               <Layout.Horizontal spacing="medium">
                 <Button

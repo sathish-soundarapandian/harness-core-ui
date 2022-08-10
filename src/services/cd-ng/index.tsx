@@ -1766,6 +1766,7 @@ export interface ConnectorCatalogueItem {
     | 'AzureRepo'
     | 'Jenkins'
     | 'OciHelmRepo'
+    | 'CustomSecretManager'
   )[]
 }
 

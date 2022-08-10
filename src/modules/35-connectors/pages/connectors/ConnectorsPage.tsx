@@ -312,7 +312,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
     const originalData = catalogueData?.data?.catalogue || []
     originalData.forEach(value => {
       if (value.category === 'SECRET_MANAGER') {
-        value.connectors = ['Vault', 'AwsKms', 'AzureKeyVault', 'AwsSecretManager', 'GcpKms']
+        value.connectors = ['Vault', 'AwsKms', 'AzureKeyVault', 'AwsSecretManager', 'GcpKms', 'CustomSecretManager']
       }
     })
     const orderedCatalogue: ConnectorCatalogueItem[] | { category: string; connectors: string[] } = []
@@ -496,7 +496,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
           page: CONNECTORS_PAGE
         })
       }
-      openConnectorModal(false, Connectors.CUSTOM_SECRET_MANAGER as ConnectorInfoDTO['type'], undefined)
+      openConnectorModal(false, val?.value as ConnectorInfoDTO['type'], undefined)
       hideDrawer()
     }
 

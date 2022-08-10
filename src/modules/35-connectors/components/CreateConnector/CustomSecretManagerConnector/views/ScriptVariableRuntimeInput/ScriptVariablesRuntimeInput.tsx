@@ -10,7 +10,6 @@ import { FieldArray } from 'formik'
 import { isArray, isEmpty } from 'lodash-es'
 import { AllowedTypes, FormInput, SelectOption } from '@harness/uicore'
 
-import type { StepElementConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -37,16 +36,16 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
 
   return (
     <>
-      {isArray(template?.spec?.environmentVariables) && template?.spec?.environmentVariables ? (
+      {isArray(template?.environmentVariables) && template?.environmentVariables ? (
         <div className={css.formGroup}>
           <MultiTypeFieldSelector
-            name="spec.environmentVariables"
+            name="templateInputs.environmentVariables"
             label={getString('pipeline.scriptInputVariables')}
             defaultValueToReset={[]}
             disableTypeSelection
           >
             <FieldArray
-              name="spec.environmentVariables"
+              name="templateInputs.environmentVariables"
               render={() => {
                 return (
                   <div className={css.panel}>
@@ -54,23 +53,24 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
                       <span className={css.label}>Name</span>
                       <span className={css.label}>Type</span>
                       <span className={css.label}>Value</span>
+                      <span className={css.label}>Default</span>
                     </div>
-                    {template.spec?.environmentVariables?.map((type: any, i: number) => {
+                    {template?.environmentVariables?.map((type: any, i: number) => {
                       return (
                         <div className={css.environmentVarHeader} key={type.value}>
                           <FormInput.Text
-                            name={`${prefix}spec.environmentVariables[${i}].name`}
+                            name={`${prefix}templateInputs.environmentVariables[${i}].name`}
                             placeholder={getString('name')}
                             disabled={true}
                           />
                           <FormInput.Select
                             items={scriptInputType}
-                            name={`${prefix}spec.environmentVariables[${i}].type`}
+                            name={`${prefix}templateInputs.environmentVariables[${i}].type`}
                             placeholder={getString('typeLabel')}
                             disabled={true}
                           />
                           <FormInput.MultiTextInput
-                            name={`${prefix}spec.environmentVariables[${i}].value`}
+                            name={`${prefix}templateInputs.environmentVariables[${i}].value`}
                             multiTextInputProps={{
                               allowableTypes,
                               expressions,
@@ -79,6 +79,13 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
                             label=""
                             disabled={readonly}
                             placeholder={getString('valueLabel')}
+                          />
+                          <FormInput.CheckBox
+                            label=""
+                            name={`${prefix}templateInputs.environmentVariables[${i}].useAsDefault`}
+                            placeholder={getString('typeLabel')}
+                            disabled={false}
+                            style={{ margin: 'auto' }}
                           />
                         </div>
                       )

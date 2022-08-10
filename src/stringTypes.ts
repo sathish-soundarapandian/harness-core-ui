@@ -2375,6 +2375,7 @@ export interface StringsMap {
   'connectors.title.bitbucketConnector': string
   'connectors.title.ceAws': string
   'connectors.title.ceAzureConnector': string
+  'connectors.title.customSecretManager': string
   'connectors.title.datadog': string
   'connectors.title.delegateSelection': string
   'connectors.title.gcpConnector': string

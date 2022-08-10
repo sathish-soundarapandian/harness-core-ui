@@ -20,6 +20,7 @@ import type { IGitContextFormProps } from '@common/components/GitContextForm/Git
 import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import { getConnectivityMode } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import css from '../../components/CreateConnectorWizard/CreateConnectorWizard.module.scss'
+import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 
 export interface UseCreateConnectorModalProps {
   onSuccess?: (data?: ConnectorRequestBody) => void
@@ -70,6 +71,7 @@ const useCreateConnectorModal = (props: UseCreateConnectorModalProps): UseCreate
     props.onSuccess?.(data)
   }
   const { trackEvent } = useTelemetry()
+  const { getTemplate } = useTemplateSelector()
 
   const [showModal, hideModal] = useModalHook(
     () => (
@@ -93,6 +95,7 @@ const useCreateConnectorModal = (props: UseCreateConnectorModalProps): UseCreate
             props.onClose?.()
             hideModal()
           }}
+          getTemplat={getTemplate}
         />
         <Button
           minimal

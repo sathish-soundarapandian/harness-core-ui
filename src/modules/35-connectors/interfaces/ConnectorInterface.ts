@@ -147,3 +147,5 @@ export interface AzureFormInterface {
   clientId?: string
   managedIdentity?: string
 }
+
+export interface CustomSMFormInterface {}
