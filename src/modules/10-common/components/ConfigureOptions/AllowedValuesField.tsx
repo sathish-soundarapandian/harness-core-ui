@@ -10,9 +10,9 @@ import * as Yup from 'yup'
 import { FormikContextType, yupToFormErrors } from 'formik'
 import { Button, ButtonVariation, FormInput, Layout, MultiSelectOption, SelectOption } from '@harness/uicore'
 import { Position } from '@blueprintjs/core'
-import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useStrings, String } from 'framework/strings'
 import { ALLOWED_VALUES_TYPE } from './constants'
+import { VALIDATORS } from './validators'
 import type { StringKeys } from 'framework/strings/StringsContext'
 import type { FormValues } from './ConfigureOptionsUtils'
 
@@ -25,6 +25,7 @@ export interface AllowedValuesFieldsProps {
   fetchValues?: (done: (response: SelectOption[] | MultiSelectOption[]) => void) => void
   options: SelectOption[] | MultiSelectOption[]
   allowedValuesType?: ALLOWED_VALUES_TYPE
+  allowedValuesValidator?: Yup.Schema<unknown>
 }
 
 interface RenderFieldProps {
@@ -34,16 +35,18 @@ interface RenderFieldProps {
   fetchValues?: (done: (response: SelectOption[] | MultiSelectOption[]) => void) => void
   options: SelectOption[] | MultiSelectOption[]
   allowedValuesType?: ALLOWED_VALUES_TYPE
+  allowedValuesValidator?: Yup.Schema<unknown>
 }
 
-const TYPE_TO_VALIDATOR = {
-  [ALLOWED_VALUES_TYPE.TIME]: (getString: (key: StringKeys, vars?: Record<string, any>) => string) =>
-    Yup.object().shape({
-      timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum'))
-    })
-}
-
-const renderField = ({ fetchValues, getString, options, allowedValuesType, isReadonly, formik }: RenderFieldProps) => {
+const renderField = ({
+  fetchValues,
+  getString,
+  options,
+  allowedValuesType,
+  allowedValuesValidator,
+  isReadonly,
+  formik
+}: RenderFieldProps) => {
   const { setErrors, errors, setFieldTouched, setFieldValue } = formik
   if (fetchValues) {
     return (
@@ -72,7 +75,7 @@ const renderField = ({ fetchValues, getString, options, allowedValuesType, isRea
             return
           }
 
-          const validator = TYPE_TO_VALIDATOR[ALLOWED_VALUES_TYPE.TIME](getString)
+          const validator = allowedValuesValidator || VALIDATORS[ALLOWED_VALUES_TYPE.TIME]({ minimum: '10s' })
           try {
             validator.validateSync({ timeout: values[values.length - 1] })
             setFieldTouched('allowedValues', true, false)
@@ -101,7 +104,7 @@ const renderField = ({ fetchValues, getString, options, allowedValuesType, isRea
 }
 
 export default function AllowedValuesFields(props: AllowedValuesFieldsProps): React.ReactElement {
-  const { showAdvanced, isReadonly, fetchValues, options, allowedValuesType, formik } = props
+  const { showAdvanced, isReadonly, fetchValues, options, allowedValuesType, allowedValuesValidator, formik } = props
   const values = formik.values
   const { getString } = useStrings()
   return (
@@ -141,6 +144,7 @@ export default function AllowedValuesFields(props: AllowedValuesFieldsProps): Re
             options,
             isReadonly,
             allowedValuesType,
+            allowedValuesValidator,
             formik
           })}
         </>

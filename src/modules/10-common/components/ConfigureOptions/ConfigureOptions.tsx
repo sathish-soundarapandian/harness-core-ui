@@ -14,6 +14,7 @@ import { useStrings } from 'framework/strings'
 
 import ConfigureOptionsDialog, { ConfigureOptionsDialogProps } from './ConfigureOptionsDialog'
 import { ALLOWED_VALUES_TYPE } from './constants'
+import { VALIDATORS } from './validators'
 import css from './ConfigureOptions.module.scss'
 
 export interface ConfigureOptionsProps extends Omit<ConfigureOptionsDialogProps, 'closeModal' | 'isOpen'> {
@@ -22,7 +23,7 @@ export interface ConfigureOptionsProps extends Omit<ConfigureOptionsDialogProps,
   style?: CSSProperties
 }
 
-export { ALLOWED_VALUES_TYPE }
+export { ALLOWED_VALUES_TYPE, VALIDATORS }
 
 export function ConfigureOptions(props: ConfigureOptionsProps): JSX.Element {
   const {
@@ -38,6 +39,7 @@ export function ConfigureOptions(props: ConfigureOptionsProps): JSX.Element {
     hideExecutionTimeField = false,
     fetchValues,
     allowedValuesType,
+    allowedValuesValidator,
     className,
     isReadonly = false
   } = props
@@ -98,6 +100,7 @@ export function ConfigureOptions(props: ConfigureOptionsProps): JSX.Element {
           showAdvanced={showAdvanced}
           fetchValues={fetchValues}
           allowedValuesType={allowedValuesType}
+          allowedValuesValidator={allowedValuesValidator}
         />
       </Dialog>
     </React.Fragment>

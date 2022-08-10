@@ -43,6 +43,7 @@ export interface ConfigureOptionsDialogProps {
   fetchValues?: (done: (response: SelectOption[] | MultiSelectOption[]) => void) => void
   isReadonly?: boolean
   allowedValuesType?: ALLOWED_VALUES_TYPE
+  allowedValuesValidator?: Yup.Schema<unknown>
   closeModal: (
     str?: string | undefined,
     defaultStr?: string | number | undefined,
@@ -64,6 +65,7 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
     fetchValues,
     isReadonly = false,
     allowedValuesType,
+    allowedValuesValidator,
     closeModal
   } = props
   const [input, setInput] = React.useState(value)
@@ -169,6 +171,7 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
                     isReadonly={isReadonly}
                     options={options}
                     allowedValuesType={allowedValuesType}
+                    allowedValuesValidator={allowedValuesValidator}
                   />
                 ) : null}
                 {values.validation === Validation.Regex ? (
