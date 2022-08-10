@@ -10,6 +10,7 @@ exports[`<StepCommands /> tests able to switch tab 1`] = `
     >
       <div
         class="stepTabs"
+        style="width: 100%;"
       >
         <div
           class="bp3-tabs Tabs--main Tabs--horizontal"
@@ -84,6 +85,7 @@ exports[`<StepCommands /> tests renders ok 1`] = `
     >
       <div
         class="stepTabs"
+        style="width: 100%;"
       >
         <div
           class="bp3-tabs Tabs--main Tabs--horizontal"
