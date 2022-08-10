@@ -58,7 +58,7 @@ describe('route utils', () => {
     )
     expect(
       getScopeBasedRoute({ scope: { orgIdentifier: 'org', projectIdentifier: 'project' }, path: 'dummy' })
-    ).toEqual('/home/orgs/org/projects/project/setup/dummy')
+    ).toEqual('/projects/orgs/org/projects/project/setup/dummy')
     expect(
       getScopeBasedRoute({ scope: { orgIdentifier: 'org', projectIdentifier: 'project', module: 'cd' }, path: 'dummy' })
     ).toEqual('/cd/orgs/org/projects/project/setup/dummy')

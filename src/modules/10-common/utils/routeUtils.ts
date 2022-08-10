@@ -195,7 +195,7 @@ export const getScopeBasedRoute = ({
   if (module && orgIdentifier && projectIdentifier) {
     return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/${path}`
   } else if (orgIdentifier && projectIdentifier) {
-    return `/home/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/${path}`
+    return `/projects/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/${path}`
   } else if (orgIdentifier) {
     return `/settings/organizations/${orgIdentifier}/setup/${path}`
   }

@@ -1481,9 +1481,9 @@ const routes = {
   /********************************************************************************************************************/
   toProjectDetails: withAccountId(
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
-      `/home/orgs/${orgIdentifier}/projects/${projectIdentifier}/details`
+      `/projects/orgs/${orgIdentifier}/projects/${projectIdentifier}/details`
   ),
-  toProjects: withAccountId(() => '/home/projects'),
+  toProjects: withAccountId(() => `/projects`),
   toLandingDashboard: withAccountId(() => '/home/get-started'),
   /********************************************************************************************************************/
   toCE: withAccountId(() => `/ce`),

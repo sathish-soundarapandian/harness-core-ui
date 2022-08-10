@@ -15,16 +15,6 @@ exports[`HomeSidenav Disable launch button for community edition 1`] = `
         common.welcome
       </p>
     </a>
-    <a
-      class="link"
-      href="/account/undefined/home/projects"
-    >
-      <p
-        class="StyledProps--font StyledProps--main text"
-      >
-        projectsText
-      </p>
-    </a>
   </div>
 </div>
 `;
@@ -43,16 +33,6 @@ exports[`HomeSidenav render 1`] = `
         class="StyledProps--font StyledProps--main text"
       >
         common.welcome
-      </p>
-    </a>
-    <a
-      class="link"
-      href="/account/dummy/home/projects"
-    >
-      <p
-        class="StyledProps--font StyledProps--main text"
-      >
-        projectsText
       </p>
     </a>
     <button
