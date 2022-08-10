@@ -17,31 +17,53 @@ import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMenu'
-
+import css from './ProjectSideNav.module.scss'
 export default function ProjectsSideNav(): React.ReactElement {
   const params = useParams<PipelinePathProps>()
   const routeMatch = useRouteMatch()
   const history = useHistory()
-  const { updateAppStore } = useAppStore()
+  const { selectedProject, updateAppStore } = useAppStore()
   const { getString } = useStrings()
+
+  const common = {
+    accountId: params.accountId,
+    projectIdentifier: selectedProject?.identifier ? selectedProject?.identifier : '',
+    orgIdentifier: selectedProject?.orgIdentifier ? selectedProject?.orgIdentifier : ''
+  }
 
   return (
     <Layout.Vertical spacing="small">
-      <ProjectSelector
-        onSelect={data => {
-          updateAppStore({ selectedProject: data })
-          // changing project
-          history.push(
-            compile(routeMatch.path)({
-              ...routeMatch.params,
-              projectIdentifier: data.identifier,
-              orgIdentifier: data.orgIdentifier
-            })
-          )
-        }}
-      />
-      <SidebarLink label={getString('overview')} to={routes.toProjectDetails(params)} />
-      <ProjectSetupMenu />
+      <>
+        <SidebarLink
+          label={getString('rbac.scopeItems.allProjects')}
+          to={routes.toProjects(params)}
+          icon="nav-project"
+          style={{ marginTop: 'var(--spacing-medium)', marginBottom: 'var(--spacing-small)' }}
+          className={css.iconColor}
+          exact
+        ></SidebarLink>
+        <div className={css.divStyle} />
+      </>
+
+      {/* {selectedProject && ( */}
+      <>
+        <ProjectSelector
+          onSelect={data => {
+            updateAppStore({ selectedProject: data })
+            // changing project
+            history.push(
+              compile(routeMatch.path)({
+                ...routeMatch.params,
+                projectIdentifier: data.identifier,
+                orgIdentifier: data.orgIdentifier
+              })
+            )
+          }}
+        />
+        <SidebarLink label={getString('overview')} to={routes.toProjectDetails({ ...common })} />
+        <ProjectSetupMenu />
+      </>
+      {/* )} */}
     </Layout.Vertical>
   )
 }

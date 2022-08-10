@@ -77,11 +77,13 @@ import VariablesPage from '@variables/pages/variables/VariablesPage'
 import FileStorePage from '@filestore/pages/filestore/FileStorePage'
 import SettingsList from '@default-settings/pages/SettingsList'
 import LandingDashboardPage from './pages/LandingDashboardPage/LandingDashboardPage'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { isEmpty } from 'lodash-es'
 
 const ProjectDetailsSideNavProps: SidebarContext = {
   navComponent: ProjectDetailsSideNav,
-  icon: 'harness',
-  title: 'Project Details'
+  icon: 'nav-project',
+  title: 'Projects'
 }
 
 RbacFactory.registerResourceTypeHandler(ResourceType.PROJECT, {
@@ -158,10 +160,29 @@ const RedirectToDelegatesHome = (): React.ReactElement => {
   return <Redirect to={routes.toDelegateList({ accountId, projectIdentifier, orgIdentifier })} />
 }
 
+const RedirectToProjects = (): React.ReactElement => {
+  const { accountId } = useParams<ProjectPathProps>()
+  const { selectedProject } = useAppStore()
+
+  // if (selectedProject) {
+  //   return (
+  //     <Redirect
+  //       to={routes.toProjectDetails({
+  //         accountId,
+  //         orgIdentifier: selectedProject.orgIdentifier ? selectedProject.orgIdentifier : '',
+  //         projectIdentifier: selectedProject?.identifier
+  //       })}
+  //     />
+  //   )
+  // } else {
+  return <ProjectsPage />
+  // }
+}
+
 export default (
   <>
-    <RouteWithLayout sidebarProps={HomeSideNavProps} path={routes.toProjects({ ...accountPathProps })} exact>
-      <ProjectsPage />
+    <RouteWithLayout sidebarProps={ProjectDetailsSideNavProps} path={routes.toProjects({ ...accountPathProps })} exact>
+      <RedirectToProjects />
     </RouteWithLayout>
 
     <RouteWithLayout sidebarProps={HomeSideNavProps} path={routes.toLandingDashboard({ ...accountPathProps })} exact>
