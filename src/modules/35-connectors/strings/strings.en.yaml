@@ -911,3 +911,9 @@ gitProviderURLs:
 customSM:
   details: Custom Secret Manager Details
   selectTemplate: Select Template
+  executeOnDelegate: Execute on Delegate
+  templateRef: Template Reference
+  templateVersion: Template Version
+  host: Host
+  sshKey: SSH Key Reference
+  workingDirectory: Working Directory

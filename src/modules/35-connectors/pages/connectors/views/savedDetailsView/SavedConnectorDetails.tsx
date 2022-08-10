@@ -100,6 +100,8 @@ const getLabelByType = (type: string): string => {
       return 'connectors.title.serviceNow'
     case Connectors.GCP_KMS:
       return 'connectors.name_labels.gcpKms'
+    case Connectors.CUSTOM_SECRET_MANAGER:
+      return 'connectors.title.customSecretManager'
     case Connectors.VAULT:
     case Connectors.LOCAL:
       return 'connectors.name_labels.SecretManager'
@@ -318,6 +320,35 @@ const getJenkinsSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRow
     {
       label: 'connectors.bearerToken',
       value: connector?.spec?.auth?.spec?.tokenRef
+    }
+  ]
+}
+
+const getCustomSMSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
+  return [
+    {
+      label: 'connectors.customSM.templateRef',
+      value: connector?.spec?.template?.templateRef
+    },
+    {
+      label: 'connectors.customSM.templateVersion',
+      value: connector?.spec?.template?.versionLabel
+    },
+    {
+      label: 'connectors.customSM.executeOnDelegate',
+      value: connector?.spec?.onDelegate
+    },
+    {
+      label: 'connectors.customSM.host',
+      value: connector?.spec?.host
+    },
+    {
+      label: 'connectors.customSM.sshKey',
+      value: connector?.spec?.connectorRef
+    },
+    {
+      label: 'connectors.customSM.workingDirectory',
+      value: connector?.spec?.workingDirectory
     }
   ]
 }
@@ -834,6 +865,8 @@ const getSchemaByType = (
       return getAzureSchema(connector)
     case Connectors.JENKINS:
       return getJenkinsSchema(connector)
+    case Connectors.CUSTOM_SECRET_MANAGER:
+      return getCustomSMSchema(connector)
     default:
       return []
   }

@@ -12,9 +12,11 @@ import type {
   ConnectorConfigDTO,
   ConnectorInfoDTO,
   ConnectorRequestBody,
+  JsonNode,
   VaultMetadataRequestSpecDTO
 } from 'services/cd-ng'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
+import type { TemplateSummaryResponse } from 'services/template-ng'
 
 export interface KubFormData {
   name?: string
@@ -147,5 +149,16 @@ export interface AzureFormInterface {
   clientId?: string
   managedIdentity?: string
 }
+export interface ExecutionTarget {
+  connectorRef?: string
+  host?: string
+  workingDirectory?: string
+}
 
-export interface CustomSMFormInterface {}
+export interface CustomSMFormInterface {
+  template: TemplateSummaryResponse
+  templateInputs: JsonNode
+  onDelegate: boolean
+  executionTarget: ExecutionTarget
+  templateJson: JsonNode
+}

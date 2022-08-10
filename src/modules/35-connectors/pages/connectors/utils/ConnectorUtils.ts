@@ -218,6 +218,22 @@ export const buildCustomSMPayload = (formData: FormData) => {
   return { connector: savedData }
 }
 
+export const setupCustomSMFormData = async (connectorInfo: ConnectorInfoDTO, accountId: string): Promise<FormData> => {
+  const connectorInfoSpec = connectorInfo?.spec
+
+  return {
+    template: connectorInfoSpec.template,
+    templateInputs: connectorInfoSpec.template.templateInputs,
+    executionTarget: {
+      host: connectorInfoSpec?.host || '',
+      workingDirectory: connectorInfoSpec?.workingDirectory || '',
+      connectorRef: connectorInfoSpec?.connectorRef
+    },
+    templateJson: {},
+    onDelegate: connectorInfoSpec?.onDelegate || ''
+  }
+}
+
 export const useGetHelpPanel = (refernceId: string, width: number) => {
   return useConnectorWizard({ helpPanel: { referenceId: refernceId, contentWidth: width } })
 }
@@ -1898,28 +1914,6 @@ export const setupAzureKeyVaultFormData = async (
 export const setupAzureKeyVaultNameFormData = async (connectorInfo: ConnectorInfoDTO): Promise<FormData> => {
   return {
     vaultName: connectorInfo?.spec?.vaultName
-  }
-}
-
-export const setupCustomSMFormData = async (connectorInfo: ConnectorInfoDTO, accountId: string): Promise<FormData> => {
-  const connectorInfoSpec = connectorInfo?.spec
-  const scopeQueryParams: GetSecretV2QueryParams = {
-    accountIdentifier: accountId,
-    projectIdentifier: connectorInfo.projectIdentifier,
-    orgIdentifier: connectorInfo.orgIdentifier
-  }
-  // const secretId = await setSecretField(connectorInfoSpec?.secretId, scopeQueryParams)
-  // const authToken = await setSecretField(connectorInfoSpec?.authToken, scopeQueryParams)
-  // const xvaultAwsIamServerId = await setSecretField(connectorInfoSpec.xvaultAwsIamServerId, scopeQueryParams)
-
-  return {
-    templateInfo: connectorInfoSpec.template || '',
-    environmentVariables: connectorInfoSpec?.template?.templateInputs?.environmentVariables || [],
-    outputVariables: connectorInfoSpec?.template?.templateInputs?.outputVariables || [],
-    host: connectorInfoSpec?.host || '',
-    workingDirectory: connectorInfoSpec?.workingDirectory || '',
-    connectorRef: connectorInfoSpec?.connectorRef || '',
-    onDelegate: connectorInfoSpec?.onDelegate || ''
   }
 }
 

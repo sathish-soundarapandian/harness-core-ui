@@ -47,6 +47,7 @@ const CreateCustomSMConnector: React.FC<CreateConnectorModalProps> = props => {
       />
       <CustomSMConfigStep
         name={getString('details')}
+        isEditMode={props.isEditMode}
         onConnectorCreated={props.onSuccess}
         hideModal={props.onClose}
         {...commonProps}

@@ -22,14 +22,13 @@ import {
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { parse } from 'yaml'
-import type { ConnectorInfoDTO, ConnectorRequestBody, ConnectorConfigDTO } from 'services/cd-ng'
+import type { ConnectorInfoDTO, ConnectorRequestBody, ConnectorConfigDTO, JsonNode } from 'services/cd-ng'
 
 import { useStrings } from 'framework/strings'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
 
-import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import {
   GetTemplateProps,
   GetTemplateResponse,
@@ -39,7 +38,9 @@ import RbacButton from '@rbac/components/Button/Button'
 import { getTemplateInputSetYamlPromise } from 'services/template-ng'
 import { ScriptVariablesRuntimeInput } from './ScriptVariableRuntimeInput/ScriptVariablesRuntimeInput'
 import { MultiTypeSecretInput } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
-import { getRefFromIdAndScopeParams } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { getRefFromIdAndScopeParams, setupCustomSMFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import type { CustomSMFormInterface } from '@connectors/interfaces/ConnectorInterface'
+import type { FormikContextType } from 'formik'
 
 interface StepCustomSMConfigStepProps extends ConnectorInfoDTO {
   name: string
@@ -72,23 +73,27 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
   const { getString } = useStrings()
   const { getTemplate } = useTemplateSelector()
 
-  const defaultInitialFormData: any = {
-    template: '',
-    templateInputs: undefined,
+  const defaultInitialFormData: CustomSMFormInterface = {
+    template: {},
+    templateInputs: {},
     onDelegate: true,
-    executionDetails: {}
+    executionTarget: {},
+    templateJson: {}
   }
 
   const [initialValues, setInitialValues] = useState(defaultInitialFormData)
   const [loadingFormData, setLoadingFormData] = useState(isEditMode)
-  useConnectorWizard({ helpPanel: { referenceId: 'HashiCorpVaultDetails', contentWidth: 900 } })
 
   React.useEffect(() => {
+    console.log(connectorInfo)
     if (isEditMode && connectorInfo) {
-      // setupCustomSMFormData(connectorInfo, accountId).then(data => {
-      //   setInitialValues(data as VaultConfigFormData)
-      //   setLoadingFormData(false)
-      // })
+      if (connectorInfo) {
+        setupCustomSMFormData(connectorInfo, accountId).then(data => {
+          setInitialValues(data as CustomSMFormInterface)
+          setTemplateInputSets(data.templateInputs)
+        })
+      }
+      setLoadingFormData(false)
     }
   }, [isEditMode, connectorInfo])
 
@@ -99,8 +104,8 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
     connector_type: Connectors.Vault
   })
 
-  const [templateInputSets, setTemplateInputSets] = React.useState<any>()
-  const onUseTemplate = async formikProps => {
+  const [templateInputSets, setTemplateInputSets] = React.useState<JsonNode>()
+  const onUseTemplate = async (formikProps: FormikContextType<CustomSMFormInterface>) => {
     const { template } = await getTemplate({ templateType: 'SecretManager' })
     formikProps.setFieldValue('template', {
       ...template,
@@ -149,9 +154,9 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
       <Text font={{ variation: FontVariation.H3 }} padding={{ bottom: 'xlarge' }}>
         {getString('connectors.customSM.details')}
       </Text>
-      <Formik<any>
+      <Formik<CustomSMFormInterface>
         enableReinitialize
-        initialValues={{ ...[], ...prevStepData }}
+        initialValues={{ ...initialValues, ...prevStepData }}
         formName="customSMForm"
         // validationSchema={Yup.object().shape({
         // //   vaultUrl: URLValidationSchema(),
@@ -231,10 +236,11 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
             category: Category.CONNECTOR,
             connector_type: Connectors.Vault
           })
-          nextStep?.({ ...connectorInfo, ...prevStepData, ...formData })
+          nextStep?.({ ...connectorInfo, ...prevStepData, ...formData } as ConnectorInfoDTO)
         }}
       >
         {formik => {
+          console.log(formik)
           return (
             <FormikForm>
               <Container style={{ minHeight: '450px' }}>
@@ -279,7 +285,6 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
                       placeholder={getString('cd.specifyTargetHost')}
                       label={getString('targetHost')}
                       style={{ marginTop: 'var(--spacing-small)' }}
-                      // multiTextInputProps={{ '', disabled: false, allowableTypes }}
                       disabled={false}
                     />
 

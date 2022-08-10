@@ -2108,7 +2108,13 @@ export interface StringsMap {
   'connectors.customHealth.valueRequired': string
   'connectors.customLabel': string
   'connectors.customSM.details': string
+  'connectors.customSM.executeOnDelegate': string
+  'connectors.customSM.host': string
   'connectors.customSM.selectTemplate': string
+  'connectors.customSM.sshKey': string
+  'connectors.customSM.templateRef': string
+  'connectors.customSM.templateVersion': string
+  'connectors.customSM.workingDirectory': string
   'connectors.datadog.encryptedAPPKeyLabel': string
   'connectors.datadog.encryptedAPPKeyValidation': string
   'connectors.datadog.urlValidation': string
