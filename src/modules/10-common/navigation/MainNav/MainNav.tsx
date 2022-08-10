@@ -11,16 +11,35 @@ import { NavLink as Link, useParams } from 'react-router-dom'
 import type { NavLinkProps } from 'react-router-dom'
 import { Text, Icon, Layout, Avatar, Button, Container, useToggleOpen } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
+import ModuleList from '@common/navigation/ModuleList/ModuleList'
 import { String } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 
 import paths from '@common/RouteDefinitions'
 
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ResourceCenter } from '@common/components/ResourceCenter/ResourceCenter'
-import ModuleList from '../ModuleList/ModuleList'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+
+import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'
+import { FeatureFlag } from '@common/featureFlags'
+import { useModuleInfo } from '@common/hooks/useModuleInfo'
+import {
+  MODULES_CONFIG_PREFERENCE_STORE_KEY,
+  ModulesPreferenceStoreData
+} from '../ModuleConfigurationScreen/ModuleSortableList/ModuleSortableList'
+import {
+  BuildsNavItem,
+  ChaosNavItem,
+  CloudCostsNavItem,
+  DeploymentsNavItem,
+  FeatureFlagsNavItem,
+  SRMNavItem,
+  STONavItem
+} from './ModuleLinks'
 import css from './MainNav.module.scss'
+import { DEFAULT_MODULES_ORDER } from '../ModuleConfigurationScreen/util'
 
 const commonLinkProps: Partial<NavLinkProps> = {
   activeClassName: css.active,
@@ -31,20 +50,40 @@ const maxNumOfModulesToShow = 3
 
 export default function L1Nav(): React.ReactElement {
   const params = useParams<ProjectPathProps>()
-  const {
-    CDNG_ENABLED,
-    CVNG_ENABLED,
-    CING_ENABLED,
-    CENG_ENABLED,
-    CFNG_ENABLED,
-    CHAOS_ENABLED,
-    SECURITY,
-    RESOURCE_CENTER_ENABLED,
-    NG_DASHBOARDS,
-    NEW_LEFT_NAVBAR_SETTINGS
-  } = useFeatureFlags()
+  const { module } = useModuleInfo()
+  const { RESOURCE_CENTER_ENABLED, NG_DASHBOARDS, NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
   const { isOpen: isModuleListOpen, toggle: toggleModuleList, close: closeModuleList } = useToggleOpen(false)
   const { currentUserInfo: user } = useAppStore()
+
+  const { preference: modulesPreferenceData } = usePreferenceStore<ModulesPreferenceStoreData>(
+    PreferenceScope.USER,
+    MODULES_CONFIG_PREFERENCE_STORE_KEY
+  )
+  const moduleToNavItemsMap = new Map<ModuleName, () => JSX.Element>()
+  const CDNG_ENABLED = useFeatureFlag(FeatureFlag.CDNG_ENABLED)
+  CDNG_ENABLED && moduleToNavItemsMap.set(ModuleName.CD, DeploymentsNavItem)
+  const CING_ENABLED = useFeatureFlag(FeatureFlag.CING_ENABLED)
+  CING_ENABLED && moduleToNavItemsMap.set(ModuleName.CI, BuildsNavItem)
+  const CFNG_ENABLED = useFeatureFlag(FeatureFlag.CFNG_ENABLED)
+  CFNG_ENABLED && moduleToNavItemsMap.set(ModuleName.CF, FeatureFlagsNavItem)
+  const CENG_ENABLED = useFeatureFlag(FeatureFlag.CENG_ENABLED)
+  CENG_ENABLED && moduleToNavItemsMap.set(ModuleName.CE, CloudCostsNavItem)
+  const CVNG_ENABLED = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
+  CVNG_ENABLED && moduleToNavItemsMap.set(ModuleName.CV, SRMNavItem)
+  const CHAOS_ENABLED = useFeatureFlag(FeatureFlag.CHAOS_ENABLED)
+  CHAOS_ENABLED && moduleToNavItemsMap.set(ModuleName.CHAOS, ChaosNavItem)
+  const SECURITY = useFeatureFlag(FeatureFlag.SECURITY)
+  SECURITY && moduleToNavItemsMap.set(ModuleName.STO, STONavItem)
+
+  const modulesToShow = [...(modulesPreferenceData?.selectedModules || DEFAULT_MODULES_ORDER)]
+  // if current module is not selecting in the modules config, add it temporarily
+  if (
+    module &&
+    !(modulesPreferenceData?.selectedModules || DEFAULT_MODULES_ORDER).includes(moduleToModuleNameMapping[module])
+  ) {
+    modulesToShow.push(moduleToModuleNameMapping[module])
+  }
+  const modulesListHeight = 92 * Math.min(maxNumOfModulesToShow, modulesToShow.length)
 
   useLayoutEffect(() => {
     // main nav consists of two UL sections with classname "css.navList"
@@ -80,126 +119,12 @@ export default function L1Nav(): React.ReactElement {
               </Layout.Vertical>
             </Link>
           </li>
-          <div className={css.modulesContainer} style={{ height: 92 * maxNumOfModulesToShow }}>
-            {CHAOS_ENABLED && (
-              <li className={css.navItem}>
-                <Link {...commonLinkProps} to={paths.toChaos(params)}>
-                  <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                    <Icon name="chaos-main" size={30} />
-                    <Text
-                      font={{ weight: 'semi-bold', align: 'center' }}
-                      padding={{ bottom: 'xsmall' }}
-                      color={Color.WHITE}
-                      className={css.text}
-                    >
-                      <String stringID="common.chaosText" />
-                    </Text>
-                  </Layout.Vertical>
-                </Link>
-              </li>
-            )}
-            {CDNG_ENABLED && (
-              <li className={css.navItem}>
-                <Link {...commonLinkProps} to={paths.toCD(params)}>
-                  <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                    <Icon name="cd-main" size={30} />
-                    <Text
-                      font={{ weight: 'semi-bold', align: 'center' }}
-                      padding={{ bottom: 'xsmall' }}
-                      color={Color.WHITE}
-                      className={css.text}
-                    >
-                      <String stringID="deploymentsText" />
-                    </Text>
-                  </Layout.Vertical>
-                </Link>
-              </li>
-            )}
-            {CING_ENABLED && (
-              <li className={css.navItem}>
-                <Link {...commonLinkProps} to={paths.toCI(params)}>
-                  <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                    <Icon name="ci-main" size={30} />
-                    <Text
-                      font={{ weight: 'semi-bold', align: 'center' }}
-                      padding={{ bottom: 'xsmall' }}
-                      color={Color.WHITE}
-                      className={css.text}
-                    >
-                      <String stringID="buildsText" />
-                    </Text>
-                  </Layout.Vertical>
-                </Link>
-              </li>
-            )}
-            {CFNG_ENABLED && (
-              <li className={css.navItem}>
-                <Link {...commonLinkProps} to={paths.toCF(params)}>
-                  <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                    <Icon name="cf-main" size={30} />
-                    <Text
-                      font={{ weight: 'semi-bold', align: 'center' }}
-                      padding={{ bottom: 'xsmall' }}
-                      color={Color.WHITE}
-                      className={css.text}
-                    >
-                      <String stringID="featureFlagsText" />
-                    </Text>
-                  </Layout.Vertical>
-                </Link>
-              </li>
-            )}
-            {CENG_ENABLED && (
-              <li className={css.navItem}>
-                <Link {...commonLinkProps} to={paths.toCE(params)}>
-                  <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                    <Icon name="ce-main" size={30} />
-                    <Text
-                      font={{ weight: 'semi-bold', align: 'center' }}
-                      padding={{ bottom: 'xsmall' }}
-                      color={Color.WHITE}
-                      className={css.text}
-                    >
-                      <String stringID="cloudCostsText" />
-                    </Text>
-                  </Layout.Vertical>
-                </Link>
-              </li>
-            )}
-            {CVNG_ENABLED && (
-              <li className={css.navItem}>
-                <Link {...commonLinkProps} to={paths.toCV(params)}>
-                  <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                    <Icon name="cv-main" size={30} />
-                    <Text
-                      font={{ weight: 'semi-bold', align: 'center' }}
-                      padding={{ bottom: 'xsmall' }}
-                      color={Color.WHITE}
-                      className={css.text}
-                    >
-                      <String stringID="common.purpose.cv.serviceReliability" />
-                    </Text>
-                  </Layout.Vertical>
-                </Link>
-              </li>
-            )}
-            {SECURITY && (
-              <li className={css.navItem}>
-                <Link {...commonLinkProps} to={paths.toSTO(params)}>
-                  <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                    <Icon name="sto-color-filled" size={30} />
-                    <Text
-                      font={{ weight: 'semi-bold', align: 'center' }}
-                      padding={{ bottom: 'xsmall' }}
-                      color={Color.WHITE}
-                      className={css.text}
-                    >
-                      <String stringID="common.purpose.sto.continuous" />
-                    </Text>
-                  </Layout.Vertical>
-                </Link>
-              </li>
-            )}
+          <div className={css.modulesContainer} style={{ height: modulesListHeight }}>
+            {(modulesPreferenceData?.orderedModules || DEFAULT_MODULES_ORDER).map(moduleName => {
+              const NavItem = moduleToNavItemsMap.get(moduleName)
+              if (!NavItem || !modulesToShow.includes(moduleName)) return null
+              return <NavItem key={moduleName} />
+            })}
           </div>
           {NEW_LEFT_NAVBAR_SETTINGS && (
             <li>

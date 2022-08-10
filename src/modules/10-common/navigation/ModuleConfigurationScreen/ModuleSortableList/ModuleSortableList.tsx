@@ -17,7 +17,7 @@ interface ModuleSortableListProps {
   onSelect: (module: ModuleName) => void
 }
 
-interface ModulesPreferenceStoreData {
+export interface ModulesPreferenceStoreData {
   orderedModules: ModuleName[]
   selectedModules: ModuleName[]
 }
