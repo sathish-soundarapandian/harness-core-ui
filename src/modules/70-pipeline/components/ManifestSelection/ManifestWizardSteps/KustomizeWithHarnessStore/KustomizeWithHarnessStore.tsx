@@ -23,7 +23,7 @@ import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import { Form } from 'formik'
 import * as Yup from 'yup'
-import { get } from 'lodash-es'
+import { get, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import { FormMultiTypeCheckboxField } from '@common/components'
@@ -77,9 +77,6 @@ function KustomizeWithHarnessStore({
     return {
       identifier: '',
       files: [''],
-      overlayConfiguration: '',
-      patchesPaths: [''],
-      pluginPath: '',
       skipResourceVersioning: false
     }
   }
@@ -98,7 +95,11 @@ function KustomizeWithHarnessStore({
                 files: formData.files
               }
             },
-            overlayConfiguration: { kustomizeYamlFolderPath: formData.overlayConfiguration },
+            overlayConfiguration: !isEmpty(formData.overlayConfiguration)
+              ? {
+                  kustomizeYamlFolderPath: formData.overlayConfiguration
+                }
+              : undefined,
             patchesPaths: formData.patchesPaths,
             pluginPath: formData?.pluginPath,
             skipResourceVersioning: formData.skipResourceVersioning
@@ -120,9 +121,6 @@ function KustomizeWithHarnessStore({
         formName="kustomizeHarnessFileStore"
         validationSchema={Yup.object().shape({
           ...ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName')),
-          overlayConfiguration: Yup.mixed().required(
-            getString('pipeline.manifestType.kustomizeYamlFolderPathRequired')
-          ),
           files: Yup.lazy((value): Yup.Schema<unknown> => {
             if (getMultiTypeFromValue(value as string[]) === MultiTypeInputType.FIXED) {
               return Yup.array().of(Yup.string().required(getString('pipeline.manifestType.pathRequired')))
@@ -150,6 +148,21 @@ function KustomizeWithHarnessStore({
                       name="identifier"
                       label={getString('pipeline.manifestType.manifestIdentifier')}
                       placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
+                    />
+                  </div>
+                  <div className={css.halfWidth}>
+                    <MultiConfigSelectField
+                      name="files"
+                      allowableTypes={allowableTypes}
+                      fileType={FILE_TYPE_VALUES.FILE_STORE}
+                      formik={formik}
+                      expressions={expressions}
+                      values={formik.values.files}
+                      fileUsage={FileUsage.MANIFEST_FILE}
+                      multiTypeFieldSelectorProps={{
+                        disableTypeSelection: false,
+                        label: <Text>{getString('pipeline.manifestType.kustomizeFolderPath')}</Text>
+                      }}
                     />
                   </div>
                   <div
@@ -181,21 +194,6 @@ function KustomizeWithHarnessStore({
                         isReadonly={isReadonly}
                       />
                     )}
-                  </div>
-                  <div className={css.halfWidth}>
-                    <MultiConfigSelectField
-                      name="files"
-                      allowableTypes={allowableTypes}
-                      fileType={FILE_TYPE_VALUES.FILE_STORE}
-                      formik={formik}
-                      expressions={expressions}
-                      values={formik.values.files}
-                      fileUsage={FileUsage.MANIFEST_FILE}
-                      multiTypeFieldSelectorProps={{
-                        disableTypeSelection: false,
-                        label: <Text>{getString('pipeline.manifestType.kustomizeFolderPath')}</Text>
-                      }}
-                    />
                   </div>
                   <div className={css.halfWidth}>
                     <MultiConfigSelectField

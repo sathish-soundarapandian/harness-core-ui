@@ -115,7 +115,7 @@ export const getOptions = (
       }) || []
 }
 
-export const createMetricDataFormik = (metricPacks: MetricPackDTO[] | undefined): { [key: string]: boolean } => {
+export const createMetricDataFormik = (metricPacks?: MetricPackDTO[]): { [key: string]: boolean } => {
   const metricData: { [key: string]: boolean } = {}
   if (!metricPacks) {
     metricPacks = []

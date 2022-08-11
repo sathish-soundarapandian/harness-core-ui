@@ -10,6 +10,7 @@ import { Layout, Text, ExpressionAndRuntimeType, AllowedTypes, MultiTypeInputTyp
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import type { InputWithDynamicModalForJsonProps } from './InputWithDynamicModalForJson.types'
 import { InputWithDynamicModalForJson } from './InputWithDynamicModalForJson'
+import css from './InputWithDynamicModalForJson.module.scss'
 
 export const InputWithDynamicModalForJsonMultiType = (
   props: InputWithDynamicModalForJsonProps & { isMultiType?: boolean } & { allowableTypes?: AllowedTypes } & {
@@ -19,7 +20,11 @@ export const InputWithDynamicModalForJsonMultiType = (
   const { isMultiType, allowableTypes, expressions, ...rest } = props
   return isMultiType ? (
     <>
-      <Layout.Vertical spacing={'small'} style={{ marginBottom: 'var(--spacing-medium)' }}>
+      <Layout.Vertical
+        className={css.fixedItemMultiType}
+        spacing={'small'}
+        style={{ marginBottom: 'var(--spacing-medium)' }}
+      >
         <Text style={{ fontSize: 13, fontWeight: 'normal' }} tooltipProps={{ dataTooltipId: props.dataTooltipId }}>
           {props.inputLabel}
         </Text>

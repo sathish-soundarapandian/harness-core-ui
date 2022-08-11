@@ -19,11 +19,14 @@ import type {
   SSHPasswordCredentialDTO,
   TGTKeyTabFilePathSpecDTO,
   ConnectorConnectivityDetails,
-  TGTPasswordSpecDTO
+  TGTPasswordSpecDTO,
+  WinRmCredentialsSpecDTO,
+  NTLMConfigDTO
 } from 'services/cd-ng'
 import { getKeyForCredentialType, getStringForType } from '@secrets/utils/SSHAuthUtils'
 
-import VerifyConnection from '@secrets/modals/CreateSSHCredModal/views/VerifyConnection'
+import VerifyConnectionSSH from '@secrets/modals/CreateSSHCredModal/views/VerifyConnection'
+import VerifyConnectionWinRM from '@secrets/modals/CreateWinRmCredModal/views/VerifyConnection'
 import ConnectorStats from '@common/components/ConnectorStats/ConnectorStats'
 import {
   ActivityDetailsRowInterface,
@@ -54,6 +57,61 @@ const ViewSecretDetails: React.FC<ViewSecretDetailsProps> = props => {
   const getSecretCredentialsRow = (): ActivityDetailsRowInterface[] => {
     const items: ActivityDetailsRowInterface[] = []
     items.push({ label: getString('secrets.labelType'), value: getStringForType(secret.type) })
+    if (secret.type === 'WinRmCredentials' && (secret.spec as WinRmCredentialsSpecDTO)?.auth?.type) {
+      items.push({
+        label: getString('authentication'),
+        value: (secret.spec as WinRmCredentialsSpecDTO)?.auth.type
+      })
+      if ((secret.spec as WinRmCredentialsSpecDTO)?.auth.type === 'NTLM') {
+        items.push({
+          label: getString('secrets.winRmAuthFormFields.domain'),
+          value: ((secret.spec as WinRmCredentialsSpecDTO)?.auth.spec as NTLMConfigDTO).domain
+        })
+        items.push({
+          label: getString('username'),
+          value: ((secret.spec as WinRmCredentialsSpecDTO)?.auth.spec as NTLMConfigDTO).username
+        })
+        items.push({
+          label: getString('secrets.winRmAuthFormFields.useSSL'),
+          value: ((secret.spec as WinRmCredentialsSpecDTO)?.auth.spec as NTLMConfigDTO).useSSL!.toString()
+        })
+        items.push({
+          label: getString('secrets.winRmAuthFormFields.skipCertCheck'),
+          value: ((secret.spec as WinRmCredentialsSpecDTO)?.auth.spec as NTLMConfigDTO).skipCertChecks!.toString()
+        })
+        items.push({
+          label: getString('secrets.winRmAuthFormFields.useNoProfile'),
+          value: ((secret.spec as WinRmCredentialsSpecDTO)?.auth.spec as NTLMConfigDTO).useNoProfile!.toString()
+        })
+      }
+      if ((secret.spec as WinRmCredentialsSpecDTO)?.auth.type === 'Kerberos') {
+        items.push({
+          label: getString('secrets.sshAuthFormFields.labelPrincipal'),
+          value: ((secret.spec as WinRmCredentialsSpecDTO)?.auth.spec as KerberosConfigDTO).principal
+        })
+        items.push({
+          label: getString('secrets.sshAuthFormFields.labelRealm'),
+          value: ((secret.spec as WinRmCredentialsSpecDTO)?.auth.spec as KerberosConfigDTO).realm
+        })
+        items.push({
+          label: getString('secrets.winRmAuthFormFields.useSSL'),
+          value: ((secret.spec as WinRmCredentialsSpecDTO)?.auth.spec as KerberosConfigDTO).useSSL!.toString()
+        })
+        items.push({
+          label: getString('secrets.winRmAuthFormFields.skipCertCheck'),
+          value: ((secret.spec as WinRmCredentialsSpecDTO)?.auth.spec as KerberosConfigDTO).skipCertChecks!.toString()
+        })
+        items.push({
+          label: getString('secrets.winRmAuthFormFields.useNoProfile'),
+          value: ((secret.spec as WinRmCredentialsSpecDTO)?.auth.spec as KerberosConfigDTO).useNoProfile!.toString()
+        })
+      }
+      items.push({
+        label: getString('secrets.winRmAuthFormFields.labelWinRmPort'),
+        value: (secret.spec as WinRmCredentialsSpecDTO)?.port
+      })
+    }
+
     if (secret.type === 'SSHKey' && (secret.spec as SSHKeySpecDTO)?.auth?.type) {
       items.push({
         label: getString('authentication'),
@@ -171,7 +229,7 @@ const ViewSecretDetails: React.FC<ViewSecretDetailsProps> = props => {
           <RenderDetailsTable title={'Credentials'} data={getSecretCredentialsRow()} className={css.renderDetails} />
         </Layout.Horizontal>
       </Layout.Vertical>
-      {secret.type === 'SSHKey' ? (
+      {secret.type === 'SSHKey' || secret.type === 'WinRmCredentials' ? (
         <Layout.Vertical width="40%" spacing="xxxlarge" border={{ left: true }} padding={{ left: 'xxxlarge' }}>
           <ConnectorStats
             createdAt={props.secret.createdAt as number}
@@ -179,7 +237,8 @@ const ViewSecretDetails: React.FC<ViewSecretDetailsProps> = props => {
             status={'' as ConnectorConnectivityDetails['status']}
             className={css.stats}
           />
-          <VerifyConnection identifier={secret.identifier} />
+          {secret.type === 'SSHKey' && <VerifyConnectionSSH identifier={secret.identifier} />}
+          {secret.type === 'WinRmCredentials' && <VerifyConnectionWinRM identifier={secret.identifier} />}
         </Layout.Vertical>
       ) : null}
     </Layout.Horizontal>

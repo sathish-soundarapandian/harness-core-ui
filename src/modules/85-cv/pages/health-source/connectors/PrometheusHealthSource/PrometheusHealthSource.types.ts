@@ -6,7 +6,9 @@
  */
 
 import type { FailMetricThresholdSpec, MetricThreshold, MetricThresholdSpec } from 'services/cv'
+import type { CustomMappedMetric, CustomSelectedAndMappedMetrics } from '../../common/CustomMetric/CustomMetric.types'
 import type { CriteriaThresholdValues } from '../../common/MetricThresholds/MetricThresholds.types'
+import type { MapPrometheusQueryToService } from './PrometheusHealthSource.constants'
 
 interface CriteriaPercentageType {
   criteriaPercentageType?: CriteriaThresholdValues
@@ -27,3 +29,11 @@ export type PrometheusMetricPacksType = Array<{
   identifier: string
   metricThresholds: PrometheusMetricThresholdType[]
 }>
+
+export interface PersistMappedMetricsType {
+  mappedMetrics: Map<string, CustomMappedMetric>
+  selectedMetric: string
+  metricThresholds: MetricThresholdsState
+  formikValues: MapPrometheusQueryToService
+  setMappedMetrics: React.Dispatch<React.SetStateAction<CustomSelectedAndMappedMetrics>>
+}

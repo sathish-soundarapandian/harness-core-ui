@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
-import { isPlainObject, get, isNil, escape, defaultTo } from 'lodash-es'
+import React, { useMemo, useState } from 'react'
+import { isPlainObject, get, isNil, escape, defaultTo, find } from 'lodash-es'
 import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
 import { Text, useNestedAccordion } from '@wings-software/uicore'
@@ -50,11 +50,21 @@ export function VariablesListTable<T>(props: VariableListTableProps<T>): React.R
       }
     }
   }, [searchIndex, openNestedPath, searchText])
+
+  const getIdentifierYamlProps = useMemo(() => {
+    const uuid = get(data, '__uuid', '')
+    const metadata = metadataMap?.[uuid]
+    const yamlProps = metadata?.yamlExtraProperties?.properties
+    const yamlPropsIdentifier = find(yamlProps, { variableName: 'identifier' })
+    return yamlPropsIdentifier
+  }, [data, metadataMap])
+
   if (!data || !originalData || !metadataMap) return null
+
   return (
     <div className={cx(css.variablesListTable, className)} ref={tableRef as any}>
       {Object.entries(data || {}).map(([key, value]) => {
-        if (typeof value !== 'string' || key === 'uuid' || isNil(value)) return null
+        if (typeof value !== 'string' || key === '__uuid' || isNil(value)) return null
         const metadata = metadataMap[value]
 
         const finalvalue = get(originalData, key)
@@ -69,8 +79,17 @@ export function VariablesListTable<T>(props: VariableListTableProps<T>): React.R
           formattedValue = finalvalue
         }
 
-        if (isNil(metadata) || isNil(formattedValue)) return null
-        const yamlProps = defaultTo(metadata?.yamlProperties, metadata?.yamlOutputProperties)
+        const yamlProps =
+          key !== 'identifier'
+            ? defaultTo(metadata?.yamlProperties, metadata?.yamlOutputProperties)
+            : getIdentifierYamlProps
+
+        if (
+          (key !== 'identifier' && isNil(metadata)) ||
+          isNil(formattedValue) ||
+          (key === 'identifier' && isNil(yamlProps))
+        )
+          return null
         const variableNameParts = defaultTo(yamlProps?.localName?.split('.'), [])
         const variableName = variableNameParts[variableNameParts?.length - 1]
         const searchedEntityType = defaultTo(searchedEntity?.type, null)

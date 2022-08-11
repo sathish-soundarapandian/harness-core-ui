@@ -16,13 +16,19 @@ import produce from 'immer'
 import { get, isEmpty, set } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 
-import type { ConnectorConfigDTO, ConnectorInfoDTO, StageElementConfig, StoreConfigWrapper } from 'services/cd-ng'
+import type {
+  ApplicationSettingsConfiguration,
+  ConnectionStringsConfiguration,
+  ConnectorConfigDTO,
+  ConnectorInfoDTO,
+  StageElementConfig
+} from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
+import { Connectors } from '@connectors/constants'
 import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
 import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
 import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
@@ -39,6 +45,7 @@ import {
 import { getConnectorNameFromValue, getStatus } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { AzureWebAppServiceConfigWizard } from '@cd/components/PipelineSteps/AzureWebAppServiceSpec/AzureWebAppServiceConfiguration/AzureWebAppServiceConfigListView/AzureWebAppServiceWizard/AzureWebAppServiceConfigWizard'
 import { ServiceConfigActions } from '@common/constants/TrackingConstants'
+import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import AzureWebAppServiceStepTwo from './AzureWebAppServiceWizard/AzureWebAppServiceStepTwo'
 import ConnectorField from './AzureWebAppServiceConnectorField'
 import {
@@ -125,7 +132,10 @@ function AzureWebAppListView({
     showConnectorModal()
   }
 
-  const updateStageData = /* istanbul ignore next */ (item: StoreConfigWrapper, itemPath: string): void => {
+  const updateStageData = /* istanbul ignore next */ (
+    item: ApplicationSettingsConfiguration | ConnectionStringsConfiguration,
+    itemPath: string
+  ): void => {
     const path = isPropagating
       ? `stage.spec.serviceConfig.stageOverrides.${itemPath}`
       : `stage.spec.serviceConfig.serviceDefinition.spec.${itemPath}`
@@ -139,7 +149,9 @@ function AzureWebAppListView({
     }
   }
 
-  const handleSubmit = /* istanbul ignore next */ (item: StoreConfigWrapper): void => {
+  const handleSubmit = /* istanbul ignore next */ (
+    item: ApplicationSettingsConfiguration | ConnectionStringsConfiguration
+  ): void => {
     let path = ''
     switch (selectedOption) {
       case ModalViewOption.APPLICATIONSETTING:
@@ -147,7 +159,7 @@ function AzureWebAppListView({
         path = 'applicationSettings'
         updateStageData(applicationSettings, path)
         trackEvent(ServiceConfigActions.SaveApplicationSettingOnPipelinePage, {
-          applicationSetting: applicationSettings?.type
+          applicationSetting: applicationSettings?.store?.type
         })
         break
       case ModalViewOption.CONNECTIONSTRING:
@@ -155,7 +167,7 @@ function AzureWebAppListView({
         path = 'connectionStrings'
         updateStageData(connectionStrings, path)
         trackEvent(ServiceConfigActions.SaveConnectionStringOnPipelinePage, {
-          connectionStrings: connectionStrings?.type
+          connectionStrings: connectionStrings?.store?.type
         })
         break
     }
@@ -214,20 +226,22 @@ function AzureWebAppListView({
     }
   }, [selectedOption])
 
-  const getLastStepInitialData = React.useCallback((): StoreConfigWrapper => {
+  const getLastStepInitialData = React.useCallback(():
+    | ApplicationSettingsConfiguration
+    | ConnectionStringsConfiguration => {
     switch (selectedOption) {
       case ModalViewOption.APPLICATIONSETTING:
-        if (applicationSettings?.type && applicationSettings?.type === connectorType) {
+        if (applicationSettings?.store?.type && applicationSettings?.store?.type === connectorType) {
           return { ...applicationSettings }
         }
         break
       case ModalViewOption.CONNECTIONSTRING:
-        if (connectionStrings?.type && connectionStrings?.type === connectorType) {
+        if (connectionStrings?.store?.type && connectionStrings?.store?.type === connectorType) {
           return { ...connectionStrings }
         }
         break
     }
-    return null as unknown as StoreConfigWrapper
+    return null as unknown as ApplicationSettingsConfiguration | ConnectionStringsConfiguration
   }, [selectedOption, applicationSettings, connectionStrings, connectorType])
 
   const lastStepProps = React.useCallback((): LastStepProps => {
@@ -279,7 +293,8 @@ function AzureWebAppListView({
             isEditMode={isEditMode}
             gitDetails={{ repoIdentifier, branch, getDefaultFromOtherRepo: true }}
           />
-          {connectorType === Connectors.GIT ? (
+          <GitDetailsStep type={type} name={getString('details')} isEditMode={isEditMode} connectorInfo={undefined} />
+          {type === Connectors.GIT ? (
             <StepGitAuthentication
               name={getString('credentials')}
               onConnectorCreated={() => {
@@ -293,7 +308,7 @@ function AzureWebAppListView({
               projectIdentifier={projectIdentifier}
             />
           ) : null}
-          {connectorType === Connectors.GITHUB ? (
+          {type === Connectors.GITHUB ? (
             <StepGithubAuthentication
               name={getString('credentials')}
               onConnectorCreated={() => {
@@ -307,7 +322,7 @@ function AzureWebAppListView({
               projectIdentifier={projectIdentifier}
             />
           ) : null}
-          {connectorType === Connectors.BITBUCKET ? (
+          {type === Connectors.BITBUCKET ? (
             <StepBitbucketAuthentication
               name={getString('credentials')}
               onConnectorCreated={() => {
@@ -321,10 +336,9 @@ function AzureWebAppListView({
               projectIdentifier={projectIdentifier}
             />
           ) : null}
-          {connectorType === Connectors.GITLAB ? (
+          {type === Connectors.GITLAB ? (
             <StepGitlabAuthentication
               name={getString('credentials')}
-              identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
               onConnectorCreated={() => {
                 // Handle on success
               }}
@@ -362,13 +376,13 @@ function AzureWebAppListView({
         if (applicationSettings) {
           const values = {
             ...applicationSettings,
-            store: applicationSettings?.type,
-            connectorRef: applicationSettings?.spec?.connectorRef
+            selectedStore: applicationSettings?.store?.type,
+            connectorRef: applicationSettings?.store?.spec?.connectorRef
           }
           return values
         }
         return {
-          store: '',
+          selectedStore: '',
           connectorRef: undefined
         }
       case ModalViewOption.CONNECTIONSTRING:
@@ -377,27 +391,30 @@ function AzureWebAppListView({
         if (connectionStrings) {
           const values = {
             ...connectionStrings,
-            store: connectionStrings?.type,
-            connectorRef: connectionStrings?.spec?.connectorRef
+            selectedStore: connectionStrings?.store?.type,
+            connectorRef: connectionStrings?.store?.spec?.connectorRef
           }
           return values
         }
         return {
-          store: '',
+          selectedStore: '',
           connectorRef: undefined
         }
       default:
         return {
-          store: '',
+          selectedStore: '',
           connectorRef: undefined
         }
     }
   }, [selectedOption])
 
   const renderListView = React.useCallback(
-    (currentOption: StoreConfigWrapper | undefined, option: ModalViewOption): React.ReactElement => {
-      const selectedStore = currentOption?.type
-      const selectedConnectorRef = get(currentOption, 'spec.connectorRef')
+    (
+      currentOption: ApplicationSettingsConfiguration | ConnectionStringsConfiguration | undefined,
+      option: ModalViewOption
+    ): React.ReactElement => {
+      const selectedStore = currentOption?.store?.type
+      const selectedConnectorRef = get(currentOption, 'store.spec.connectorRef')
       const connectorList = option === ModalViewOption.CONNECTIONSTRING ? stringsConnectors : settingsConnectors
       const { color } = getStatus(selectedConnectorRef, connectorList, accountId)
       const connectorName = getConnectorNameFromValue(selectedConnectorRef, connectorList)
@@ -413,33 +430,33 @@ function AzureWebAppListView({
               </Text>
             </div>
             <div className={css.columnId}>
-              <Icon inline name={ConnectorIcons[currentOption?.type as ConnectorTypes]} size={20} />
-              {get(currentOption, 'type') === 'Harness'
+              <Icon inline name={ConnectorIcons[currentOption?.store?.type as ConnectorTypes]} size={20} />
+              {get(currentOption, 'store.type') === 'Harness'
                 ? getString('harness')
-                : renderConnectorField(get(currentOption, 'spec.connectorRef'), connectorName, color)}
+                : renderConnectorField(get(currentOption, 'store.spec.connectorRef'), connectorName, color)}
             </div>
-            {!!get(currentOption, 'spec.paths')?.length && (
+            {!!get(currentOption, 'store.spec.paths')?.length && (
               <div>
                 <Text lineClamp={1} width={200}>
                   <span className={css.noWrap}>
-                    {typeof get(currentOption, 'spec.paths') === 'string'
-                      ? get(currentOption, 'spec.paths')
-                      : get(currentOption, 'spec.paths').join(', ')}
+                    {typeof get(currentOption, 'store.spec.paths') === 'string'
+                      ? get(currentOption, 'store.spec.paths')
+                      : get(currentOption, 'store.spec.paths').join(', ')}
                   </span>
                 </Text>
               </div>
             )}
-            {get(currentOption, 'spec.files')?.length && (
+            {get(currentOption, 'store.spec.files')?.length && (
               <div className={css.columnId}>
                 <Text lineClamp={1} width={300}>
-                  <span className={css.noWrap}>{get(currentOption, 'spec.files')}</span>
+                  <span className={css.noWrap}>{get(currentOption, 'store.spec.files')}</span>
                 </Text>
               </div>
             )}
-            {get(currentOption, 'spec.secretFiles')?.length && (
+            {get(currentOption, 'store.spec.secretFiles')?.length && (
               <div className={css.columnId}>
                 <Text lineClamp={1} width={300}>
-                  <span className={css.noWrap}>{get(currentOption, 'spec.secretFiles')}</span>
+                  <span className={css.noWrap}>{get(currentOption, 'store.spec.secretFiles')}</span>
                 </Text>
               </div>
             )}

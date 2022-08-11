@@ -56,7 +56,7 @@ interface LeftViewProps {
   setView: (value: SubscribeViews) => void
 }
 
-const stripePromise = loadStripe(window.stripeApiKey)
+const stripePromise = window.stripeApiKey ? loadStripe(window.stripeApiKey) : Promise.resolve(null)
 
 const View: React.FC<UseSubscribeModalProps> = ({ module, plan, time, onClose }) => {
   const { accountId } = useParams<AccountPathProps>()

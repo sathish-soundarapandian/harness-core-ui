@@ -132,4 +132,28 @@ describe('Render and test InfraProvisioningWizard', () => {
 
     expect(routesToPipelineStudio).toHaveBeenCalled()
   })
+
+  test('Test "Option" flow end-to-end', async () => {
+    const { container, getByText } = render(
+      <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
+        <InfraProvisioningWizard />
+      </TestWrapper>
+    )
+    await act(async () => {
+      const cards = Array.from(container.querySelectorAll('div[class*="bp3-card"]')) as HTMLElement[]
+      fireEvent.click(cards[cards.length - 1])
+    })
+
+    try {
+      expect(getByText('next: ci.getStartedWithCI.selectRepo')).not.toBeInTheDocument()
+    } catch (e) {
+      // Ignore error
+    }
+
+    await act(async () => {
+      fireEvent.click(getByText('ci.getStartedWithCI.createPipeline'))
+    })
+
+    expect(routesToPipelineStudio).toHaveBeenCalled()
+  })
 })

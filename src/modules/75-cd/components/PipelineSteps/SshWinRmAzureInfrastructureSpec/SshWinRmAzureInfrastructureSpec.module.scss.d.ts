@@ -12,6 +12,7 @@ declare const styles: {
   readonly connectorRef: string
   readonly formRow: string
   readonly inputWidth: string
+  readonly inputWrapper: string
   readonly lastRow: string
   readonly marginTop: string
   readonly removeTagBtn: string

@@ -15,7 +15,6 @@ import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import { VaultConfigFormData, HashiCorpVaultAccessTypes } from '@connectors/interfaces/ConnectorInterface'
 import { useListAwsRegions } from 'services/portal'
 import type { OrgPathProps } from '@common/interfaces/RouteInterfaces'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 interface VaultConnectorFormFieldsProps {
   formik: FormikContextType<VaultConfigFormData>
@@ -33,7 +32,6 @@ export const accessTypeOptionsMap: AccessType = {
 const VaultConnectorFormFields: React.FC<VaultConnectorFormFieldsProps> = ({ formik }) => {
   const { getString } = useStrings()
   const { accountId } = useParams<OrgPathProps>()
-  const { ENABLE_K8S_AUTH_IN_VAULT } = useFeatureFlags()
 
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
   const {
@@ -72,15 +70,12 @@ const VaultConnectorFormFields: React.FC<VaultConnectorFormFieldsProps> = ({ for
     {
       label: getString(accessTypeOptionsMap[HashiCorpVaultAccessTypes.AWS_IAM]),
       value: HashiCorpVaultAccessTypes.AWS_IAM
-    }
-  ]
-
-  if (ENABLE_K8S_AUTH_IN_VAULT) {
-    accessTypeOptions.push({
+    },
+    {
       label: getString(accessTypeOptionsMap[HashiCorpVaultAccessTypes.K8s_AUTH]),
       value: HashiCorpVaultAccessTypes.K8s_AUTH
-    })
-  }
+    }
+  ]
 
   return (
     <>

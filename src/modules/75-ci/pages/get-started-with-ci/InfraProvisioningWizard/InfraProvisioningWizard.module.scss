@@ -33,6 +33,12 @@
   margin-right: var(--spacing-large);
 }
 
+.otherOptionCard {
+  height: 110px;
+  width: 110px;
+  padding: var(--spacing-small) !important;
+}
+
 .githubIcon {
   padding: var(--spacing-xsmall) !important;
 }
@@ -65,12 +71,12 @@
 }
 
 .repositories {
-  height: 63vh;
+  height: 58vh;
   width: 65%;
 }
 
 .repositoriesWithError {
-  height: 60vh;
+  height: 55vh;
 }
 
 .repositoryTable {
@@ -178,4 +184,25 @@
     width: 25px;
     height: 20px;
   }
+}
+
+.divider {
+  border: 1px solid var(--grey-100);
+}
+
+.infoIcon {
+  margin: var(--spacing-3) var(--spacing-3) 0 0 !important;
+}
+
+.noCodebaseHelpText {
+  border-radius: 5px;
+  background: var(--primary-2) !important;
+  width: fit-content;
+}
+
+.separator {
+  border-left: 1px solid var(--grey-200);
+  width: var(--spacing-xlarge);
+  display: flex;
+  margin: var(--spacing-large) 0 var(--spacing-large) 0 !important;
 }

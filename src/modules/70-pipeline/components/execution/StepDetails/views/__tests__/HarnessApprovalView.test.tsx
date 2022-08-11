@@ -77,7 +77,7 @@ describe('SUCCESS', () => {
       <TestWrapper>
         <HarnessApprovalView
           step={{
-            status: 'ResourceWaiting',
+            status: 'ApprovalWaiting',
             // eslint-disable-next-line
             // @ts-ignore
             executableResponses: [{ async: { callbackIds: ['approvalInstanceId'] } }]

@@ -195,7 +195,7 @@ exports[`test cases for node recommendations details should be able to render no
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-tiny-semi StyledProps--font-align-center"
                   >
-                    (CPU: 4 Mem: 4)
+                    (CPU: 4 Mem: 15)
                   </p>
                 </div>
               </div>
@@ -307,7 +307,7 @@ exports[`test cases for node recommendations details should be able to render no
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-tiny-semi StyledProps--font-align-center"
                   >
-                    (CPU: 4 Mem: 4)
+                    (CPU: 4 Mem: 15)
                   </p>
                 </div>
               </div>
@@ -388,7 +388,7 @@ exports[`test cases for node recommendations details should be able to render no
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-tiny-semi StyledProps--font-align-center"
                   >
-                    (CPU: 4 Mem: 4)
+                    (CPU: 4 Mem: 15)
                   </p>
                 </div>
               </div>
@@ -2351,7 +2351,7 @@ exports[`test cases for node recommendations details should be able to render no
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-tiny-semi StyledProps--font-align-center"
                   >
-                    (CPU: 4 Mem: 4)
+                    (CPU: 4 Mem: 15)
                   </p>
                 </div>
               </div>
@@ -2463,7 +2463,7 @@ exports[`test cases for node recommendations details should be able to render no
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-tiny-semi StyledProps--font-align-center"
                   >
-                    (CPU: 4 Mem: 4)
+                    (CPU: 4 Mem: 15)
                   </p>
                 </div>
               </div>
@@ -2544,7 +2544,7 @@ exports[`test cases for node recommendations details should be able to render no
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-tiny-semi StyledProps--font-align-center"
                   >
-                    (CPU: 4 Mem: 4)
+                    (CPU: 4 Mem: 15)
                   </p>
                 </div>
               </div>
@@ -3434,7 +3434,7 @@ exports[`test cases for node recommendations details should be able to render no
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-tiny-semi StyledProps--font-align-center"
                   >
-                    (CPU: 4 Mem: 4)
+                    (CPU: 4 Mem: 15)
                   </p>
                 </div>
               </div>
@@ -3546,7 +3546,7 @@ exports[`test cases for node recommendations details should be able to render no
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-tiny-semi StyledProps--font-align-center"
                   >
-                    (CPU: 4 Mem: 4)
+                    (CPU: 4 Mem: 15)
                   </p>
                 </div>
               </div>
@@ -3627,7 +3627,7 @@ exports[`test cases for node recommendations details should be able to render no
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-variation-tiny-semi StyledProps--font-align-center"
                   >
-                    (CPU: 4 Mem: 4)
+                    (CPU: 4 Mem: 15)
                   </p>
                 </div>
               </div>

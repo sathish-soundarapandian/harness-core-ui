@@ -33,6 +33,7 @@ jest.mock('services/pipeline-ng', () => ({
 
 const updateConnector = jest.fn()
 const createConnector = jest.fn()
+const cancelRepositoriesFetch = jest.fn()
 let repoFetchError: GetDataError<Failure | Error> | null = null
 jest.mock('services/cd-ng', () => ({
   useProvisionResourcesForCI: jest.fn().mockImplementation(() =>
@@ -46,7 +47,13 @@ jest.mock('services/cd-ng', () => ({
     })
   ),
   useGetListOfAllReposByRefConnector: jest.fn().mockImplementation(() => {
-    return { data: { data: repos, status: 'SUCCESS' }, refetch: jest.fn(), error: repoFetchError, loading: false }
+    return {
+      data: { data: repos, status: 'SUCCESS' },
+      refetch: jest.fn(),
+      error: repoFetchError,
+      loading: false,
+      cancel: cancelRepositoriesFetch
+    }
   }),
   useUpdateConnector: jest.fn().mockImplementation(() => ({ mutate: updateConnector })),
   useCreateConnector: jest.fn().mockImplementation(() => ({ mutate: createConnector }))
@@ -139,5 +146,21 @@ describe('Test SelectRepository component', () => {
     )
     expect(getByText('Failed to fetch')).toBeInTheDocument()
     expect(routesToPipelineStudio).not.toHaveBeenCalled()
+  })
+
+  test('Should show Clone codebase switch on by default', async () => {
+    const { container, getByText } = render(
+      <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
+        <InfraProvisioningWizard lastConfiguredWizardStepId={InfraProvisiongWizardStepId.SelectRepository} />
+      </TestWrapper>
+    )
+
+    const cloneCodebaseToggle = container.querySelector('input[data-id="enable-clone-codebase-switch"]') as HTMLElement
+    expect(cloneCodebaseToggle).toBeChecked()
+    fireEvent.click(cloneCodebaseToggle)
+    expect(cloneCodebaseToggle).not.toBeChecked()
+    expect(cancelRepositoriesFetch).toBeCalled()
+    const calloutElement = getByText('ci.getStartedWithCI.createPipelineWithOtherOption')
+    expect(calloutElement).toBeInTheDocument()
   })
 })

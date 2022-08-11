@@ -155,6 +155,17 @@ export const getJiraApprovalInputVariableModeProps = () => ({
           localName: 'step.approval.name'
         }
       },
+      'step-identifier': {
+        yamlExtraProperties: {
+          properties: [
+            {
+              fqn: 'pipeline.stages.qaStage.execution.steps.approval.identifier',
+              localName: 'step.approval.identifier',
+              variableName: 'identifier'
+            }
+          ]
+        }
+      },
       'step-timeout': {
         yamlProperties: {
           fqn: 'pipeline.stages.qaStage.execution.steps.approval.timeout',
@@ -188,6 +199,7 @@ export const getJiraApprovalInputVariableModeProps = () => ({
     },
     variablesData: {
       type: StepType.JiraApproval,
+      __uuid: 'step-identifier',
       identifier: 'jira_approval',
       name: 'step-name',
       description: 'Description',

@@ -79,7 +79,7 @@ export function ScriptCommandEdit(props: ScriptCommandEditProps): React.ReactEle
       <div className={cx(stepCss.formGroup, css.scriptField)}>
         <MultiTypeFieldSelector
           name="spec.source.spec.script"
-          label={getString('script')}
+          label={getString('commandLabel')}
           defaultValueToReset=""
           disabled={readonly}
           allowedTypes={allowableTypes}
@@ -101,6 +101,7 @@ export function ScriptCommandEdit(props: ScriptCommandEditProps): React.ReactEle
             scriptType={scriptType}
             disabled={readonly}
             expressions={expressions}
+            title={getString('commandLabel')}
           />
         </MultiTypeFieldSelector>
         {getMultiTypeFromValue((formik.values as CustomScriptCommandUnit).spec.source?.spec?.script) ===

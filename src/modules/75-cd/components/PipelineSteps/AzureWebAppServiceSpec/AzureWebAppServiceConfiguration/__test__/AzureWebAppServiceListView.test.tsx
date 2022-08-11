@@ -31,12 +31,14 @@ jest.mock('@harness/uicore', () => ({
 }))
 
 const connectionStrings = {
-  type: 'Github',
-  spec: {
-    connectorRef: 'GithubConnection',
-    gitFetchType: 'Branch',
-    paths: ['filePath'],
-    branch: 'branch'
+  store: {
+    type: 'Github',
+    spec: {
+      connectorRef: 'GithubConnection',
+      gitFetchType: 'Branch',
+      paths: ['filePath'],
+      branch: 'branch'
+    }
   }
 }
 

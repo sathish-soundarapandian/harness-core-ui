@@ -45,7 +45,8 @@ import {
   ManifestIconByType,
   ManifestStoreTitle,
   ManifestToConnectorLabelMap,
-  ManifestToConnectorMap
+  ManifestToConnectorMap,
+  ManifestStoreMap
 } from '../Manifesthelper'
 import css from './ManifestWizardSteps.module.scss'
 
@@ -76,11 +77,11 @@ function ManifestStore({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
-  const [isLoadingConnectors, setIsLoadingConnectors] = React.useState<boolean>(true)
+  const isCustomRemoteEnabled = useFeatureFlag(FeatureFlag.NG_CUSTOM_REMOTE_MANIFEST)
+
+  const [isLoadingConnectors, setIsLoadingConnectors] = useState<boolean>(true)
   const [selectedStore, setSelectedStore] = useState(prevStepData?.store ?? initialValues.store)
   const [multitypeInputValue, setMultiTypeValue] = useState<MultiTypeInputType | undefined>(undefined)
-
-  const isOciHelmEnabled = useFeatureFlag(FeatureFlag.HELM_OCI_SUPPORT)
 
   function isValidConnectorStore(): boolean {
     return !!selectedStore && !doesStorehasConnector(selectedStore)
@@ -146,13 +147,13 @@ function ManifestStore({
   const supportedManifestStores = useMemo(
     () =>
       manifestStoreTypes
-        .filter(store => store !== 'OciHelmChart' || isOciHelmEnabled)
+        .filter(store => store !== ManifestStoreMap.CustomRemote || isCustomRemoteEnabled)
         .map(store => ({
           label: getString(ManifestStoreTitle[store]),
           icon: ManifestIconByType[store] as IconName,
           value: store
         })),
-    [getString, isOciHelmEnabled, manifestStoreTypes]
+    [manifestStoreTypes, isCustomRemoteEnabled, getString]
   )
 
   return (

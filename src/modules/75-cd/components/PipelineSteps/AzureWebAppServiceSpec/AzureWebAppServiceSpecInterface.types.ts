@@ -9,7 +9,12 @@ import type { AllowedTypes } from '@harness/uicore'
 import type { AzureWebAppConfigBaseFactory } from '@cd/factory/AzureWebAppConfigFactory/AzureWebAppConfigFactory'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { AzureWebAppServiceSpec, ServiceDefinition, StoreConfigWrapper } from 'services/cd-ng'
+import type {
+  ApplicationSettingsConfiguration,
+  AzureWebAppServiceSpec,
+  ConnectionStringsConfiguration,
+  ServiceDefinition
+} from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 
 export interface AzureWebAppServiceStep extends AzureWebAppServiceSpec {
@@ -53,7 +58,7 @@ export interface AzureWebAppConfigProps {
   formik?: any
   fromTrigger?: boolean
   allowableTypes: AllowedTypes
-  azureWebAppConfig?: StoreConfigWrapper
+  azureWebAppConfig?: ApplicationSettingsConfiguration | ConnectionStringsConfiguration
   azureWebAppConfigPath?: string
   type?: AzureWebAppConfigType
   pathLabel?: string

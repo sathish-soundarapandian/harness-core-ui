@@ -21,7 +21,6 @@ import { usePolling } from '@pipeline/hooks/usePolling'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipeline-ng'
-import useTabVisible from '@common/hooks/useTabVisible'
 import routes from '@common/RouteDefinitions'
 import { ExecutionListEmpty } from './ExecutionListEmpty/ExecutionListEmpty'
 import {
@@ -106,8 +105,9 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
           filterType: 'PipelineExecution'
         }
   })
-  const tabVisible = useTabVisible()
-  usePolling(fetchExecutions, page === 1 && !initLoading && tabVisible)
+
+  // Only do polling on first page and not initial default loading
+  usePolling(fetchExecutions, page === 1 && !initLoading)
 
   const isCommunity = useGetCommunity()
   const isCommunityAndCDModule = module === 'cd' && isCommunity

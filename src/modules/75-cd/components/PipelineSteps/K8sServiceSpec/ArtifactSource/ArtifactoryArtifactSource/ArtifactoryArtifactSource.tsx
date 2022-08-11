@@ -263,6 +263,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
   const artifactoryTagsDataCallMetadataQueryParams = React.useMemo(() => {
     if (isGenericArtifactory) {
       return {
+        // API is expecting artifacthPath query param to have artifactDirectory field value for generic artifactory
         artifactPath: getFinalQueryParamValue(
           getDefaultQueryParam(
             artifact?.spec?.artifactDirectory,
@@ -285,9 +286,11 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     }
 
     return {
-      artifactPath: getImagePath(
-        artifact?.spec?.artifactPath,
-        get(initialValues, `artifacts.${artifactPath}.spec.artifactPath`, '')
+      artifactPath: getFinalQueryParamValue(
+        getImagePath(
+          artifact?.spec?.artifactPath,
+          get(initialValues, `artifacts.${artifactPath}.spec.artifactPath`, '')
+        )
       ),
       connectorRef: getFinalQueryParamValue(connectorRefValue),
       repository: getFinalQueryParamValue(repositoryValue),

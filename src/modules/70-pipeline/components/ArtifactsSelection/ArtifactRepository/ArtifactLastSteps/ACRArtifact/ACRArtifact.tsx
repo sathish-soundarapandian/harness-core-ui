@@ -507,6 +507,7 @@ export function ACRArtifact({
                         }
 
                         resetTagList(formik)
+                        formik.setFieldValue('subscriptionId', value)
                       },
                       selectProps: {
                         defaultSelectedItem: formik.values.subscriptionId as SelectOption,
@@ -587,6 +588,7 @@ export function ACRArtifact({
                           setRepositories([])
                         }
                         resetTagList(formik)
+                        formik.setFieldValue('registry', value)
                       },
                       selectProps: {
                         defaultSelectedItem: formik.values.registry as SelectOption,
@@ -635,7 +637,10 @@ export function ACRArtifact({
                     multiTypeInputProps={{
                       expressions,
                       disabled: isReadonly,
-                      onChange: /* istanbul ignore next */ () => resetTagList(formik),
+                      onChange: /* istanbul ignore next */ value => {
+                        resetTagList(formik)
+                        formik.setFieldValue('repository', value)
+                      },
                       selectProps: {
                         items: repositories,
                         allowCreatingNewItems: true,

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import {
   Button,
   FlexExpander,
@@ -328,12 +328,16 @@ const Budgets: () => JSX.Element = () => {
     }
   }, [data])
 
-  const filteredBudgetData = budgetData.filter(budget => {
-    if (!budget || !budget.name) {
-      return false
-    }
-    return budget.name?.toLocaleLowerCase().indexOf(searchParam.toLowerCase()) < 0 ? false : true
-  })
+  const filteredBudgetData = useMemo(
+    () =>
+      budgetData.filter(budget => {
+        if (!budget || !budget.name) {
+          return false
+        }
+        return budget.name?.toLocaleLowerCase().indexOf(searchParam.toLowerCase()) < 0 ? false : true
+      }),
+    [budgetData, searchParam]
+  )
 
   const HeaderComponent = <Page.Header title={getString('ce.budgets.listPage.title')} breadcrumbs={<NGBreadcrumbs />} />
 
@@ -386,7 +390,7 @@ const Budgets: () => JSX.Element = () => {
     </Layout.Horizontal>
   )
 
-  if (!fetching && !filteredBudgetData.length && !error) {
+  if (!fetching && !budgetData.length && !error) {
     return (
       <>
         {HeaderComponent}

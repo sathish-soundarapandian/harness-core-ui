@@ -21,17 +21,33 @@ interface StyledTrapazoidTitleContainerInterface {
 export const StyledTrapazoidTitleContainer = styled.div`
   position: relative;
   padding: 0px 18px;
+  ${(props: StyledTrapazoidTitleContainerInterface) =>
+    props.width
+      ? `  
+  -webkit-perspective: ${props.width}px;
+  -moz-perspective: ${props.width}px;
+  -ms-perspective: ${props.width}px;
+  -o-perspective: ${props.width}px;`
+      : ''}
   &::before {
     content: '';
     position: absolute;
-    top: -5px;
-    bottom: -5px;
+    top: -10px;
+    bottom: -2px;
     left: 0;
     right: 0;
     border: 1px solid ${(props: StyledTrapazoidTitleContainerInterface) => props.stroke};
     background: ${(props: StyledTrapazoidTitleContainerInterface) => props.fill};
     border-radius: 5px 5px 0 0;
-    transform: perspective(${(props: StyledTrapazoidTitleContainerInterface) => props.width}) rotateX(45deg);
+    transform: rotateX(45deg);
+    -webkit-transform: rotateX(45deg);
+    -moz-transform: rotateX(45deg);
+    -ms-transform: rotateX(45deg);
+    -o-transform: rotateX(45deg);
+    -webkit-transform-origin: center bottom;
+    -moz-transform-origin: center bottom;
+    -ms-transform-origin: center bottom;
+    -o-transform-origin: center bottom;
   }
   p {
     position: relative;

@@ -51,12 +51,12 @@ const GitAzureWebAppConfigContent = ({
   return (
     <Layout.Vertical data-name={`azureWebAppConfig-${type}`} className={cx(css.inputWidth, css.layoutVerticalSpacing)}>
       <>
-        {isFieldRuntime(`${azureWebAppConfigPath}.spec.connectorRef`, template) && (
+        {isFieldRuntime(`${azureWebAppConfigPath}.store.spec.connectorRef`, template) && (
           <div data-name="connectorRefContainer" className={css.verticalSpacingInput}>
             <FormMultiTypeConnectorField
               disabled={readonly}
-              name={`${path}.${azureWebAppConfigPath}.spec.connectorRef`}
-              selected={get(initialValues, `${azureWebAppConfigPath}.spec.connectorRef`, '')}
+              name={`${path}.${azureWebAppConfigPath}.store.spec.connectorRef`}
+              selected={get(initialValues, `${azureWebAppConfigPath}.store.spec.connectorRef`, '')}
               label={getString('connector')}
               placeholder={''}
               setRefValue
@@ -69,7 +69,7 @@ const GitAzureWebAppConfigContent = ({
               projectIdentifier={projectIdentifier}
               orgIdentifier={orgIdentifier}
               setConnector={setConnector}
-              type={ManifestToConnectorMap[defaultTo(azureWebAppConfig?.type, '')]}
+              type={ManifestToConnectorMap[defaultTo(azureWebAppConfig?.store?.type, '')]}
               onChange={
                 /* istanbul ignore next */ (selected, _itemType, multiType) => {
                   const item = selected as unknown as { record?: GitConfigDTO; scope: Scope }
@@ -91,11 +91,11 @@ const GitAzureWebAppConfigContent = ({
           </div>
         )}
 
-        {isFieldRuntime(`${azureWebAppConfigPath}.spec.repoName`, template) && showRepoName && (
+        {isFieldRuntime(`${azureWebAppConfigPath}.store.spec.repoName`, template) && showRepoName && (
           <div className={css.verticalSpacingInput}>
             <FormInput.MultiTextInput
               disabled={readonly}
-              name={`${path}.${azureWebAppConfigPath}.spec.repoName`}
+              name={`${path}.${azureWebAppConfigPath}.store.spec.repoName`}
               multiTextInputProps={{
                 expressions,
                 allowableTypes
@@ -105,11 +105,11 @@ const GitAzureWebAppConfigContent = ({
           </div>
         )}
 
-        {isFieldRuntime(`${azureWebAppConfigPath}.spec.branch`, template) && (
+        {isFieldRuntime(`${azureWebAppConfigPath}.store.spec.branch`, template) && (
           <div className={css.verticalSpacingInput}>
             <FormInput.MultiTextInput
               disabled={readonly}
-              name={`${path}.${azureWebAppConfigPath}.spec.branch`}
+              name={`${path}.${azureWebAppConfigPath}.store.spec.branch`}
               multiTextInputProps={{
                 expressions,
                 allowableTypes
@@ -118,11 +118,11 @@ const GitAzureWebAppConfigContent = ({
             />
           </div>
         )}
-        {isFieldRuntime(`${azureWebAppConfigPath}.spec.commitId`, template) && (
+        {isFieldRuntime(`${azureWebAppConfigPath}.store.spec.commitId`, template) && (
           <div className={css.verticalSpacingInput}>
             <FormInput.MultiTextInput
               disabled={readonly}
-              name={`${path}.${azureWebAppConfigPath}.spec.commitId`}
+              name={`${path}.${azureWebAppConfigPath}.store.spec.commitId`}
               multiTextInputProps={{
                 expressions,
                 allowableTypes
@@ -131,11 +131,11 @@ const GitAzureWebAppConfigContent = ({
             />
           </div>
         )}
-        {isFieldRuntime(`${azureWebAppConfigPath}.spec.paths`, template) && (
+        {isFieldRuntime(`${azureWebAppConfigPath}.store.spec.paths`, template) && (
           <div className={css.verticalSpacingInput}>
             <FormInput.MultiTextInput
               disabled={readonly}
-              name={`${path}.${azureWebAppConfigPath}.spec.paths[0]`}
+              name={`${path}.${azureWebAppConfigPath}.store.spec.paths[0]`}
               multiTextInputProps={{
                 expressions,
                 allowableTypes

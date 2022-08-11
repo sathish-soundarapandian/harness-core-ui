@@ -22,12 +22,12 @@ import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import routes from '@common/RouteDefinitions'
 import { projectPathProps, accountPathProps, pipelineModuleParams } from '@common/utils/routeUtils'
 import { branchStatusMock, sourceCodeManagers } from '@connectors/mocks/mock'
+import filters from '@pipeline/pages/pipeline-list/__tests__/mocks/filters.json'
+import deploymentTypes from '@pipeline/pages/pipeline-list/__tests__/mocks/deploymentTypes.json'
+import services from '@pipeline/pages/pipeline-list/__tests__/mocks/services.json'
+import environments from '@pipeline/pages/pipeline-list/__tests__/mocks/environments.json'
+import pipelines from '@pipeline/pages/pipeline-list/__tests__/mocks/pipelines.json'
 import CDPipelinesPage from '../PipelinesPage'
-import filters from './mocks/filters.json'
-import deploymentTypes from './mocks/deploymentTypes.json'
-import services from './mocks/services.json'
-import environments from './mocks/environments.json'
-import pipelines from './mocks/pipelines.json'
 
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))
 const getListGitSync = jest.fn(() => Promise.resolve(gitSyncListResponse))

@@ -181,6 +181,9 @@ getStartedWithCI:
   startProvisioning: Start Provisioning
   provisioningHelpText: Provision the '{{ $.ci.getStartedWithCI.hostedByHarness }}' Infrastructure (~2 mins)
   settingUpCIPipeline: Just a moment while we set up a CI pipeline for you...
+  nonGitCloneOption: Use this option if your Git provider is not supported by Harness or if you have nothing to clone.
+  cloneCodebaseHelpText: Unless disabled, Harness automatically clones your codebase repository before executing the Pipeline.
+  createPipelineWithOtherOption: Please click on "Create Pipeline" below to complete the pipeline setup.
   carousel:
     labels:
       harnessCIFeatures: Harness CI

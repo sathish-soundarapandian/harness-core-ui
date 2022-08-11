@@ -9,6 +9,7 @@ import type { SelectOption } from '@harness/uicore'
 import type { PipelineInfrastructure } from 'services/cd-ng'
 
 export enum StepType {
+  StageRuntimeInput = 'StageRuntimeInput', // UI level step, only used in execution view
   HTTP = 'Http',
   SHELLSCRIPT = 'ShellScript',
   Command = 'Command',

@@ -55,8 +55,6 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [subscriptions, setSubscriptions] = useState<SelectOption[]>([])
   const [resourceGroups, setResourceGroups] = useState<SelectOption[]>([])
-  // const [webApps, setWebApps] = useState<SelectOption[]>([])
-  // const [deploymentSlots, setDeploymentSlots] = useState<SelectOption[]>([])
   const [connector, setConnector] = useState<string | undefined>(
     defaultTo(initialValues.connectorRef, allValues?.connectorRef)
   )

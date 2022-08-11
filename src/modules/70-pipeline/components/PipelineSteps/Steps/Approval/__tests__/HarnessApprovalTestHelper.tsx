@@ -151,6 +151,17 @@ export const getHarnessApprovalInputVariableModeProps = () => ({
   customStepProps: {
     stageIdentifier: 'qaStage',
     metadataMap: {
+      'step-identifier': {
+        yamlExtraProperties: {
+          properties: [
+            {
+              fqn: 'pipeline.stages.qaStage.execution.steps.approval.identifier',
+              localName: 'step.approval.identifier',
+              variableName: 'identifier'
+            }
+          ]
+        }
+      },
       'step-name': {
         yamlProperties: {
           fqn: 'pipeline.stages.qaStage.execution.steps.approval.name',
@@ -208,6 +219,7 @@ export const getHarnessApprovalInputVariableModeProps = () => ({
     },
     variablesData: {
       type: StepType.HarnessApproval,
+      __uuid: 'step-identifier',
       identifier: 'harness_approval',
       name: 'step-name',
       description: 'Description',

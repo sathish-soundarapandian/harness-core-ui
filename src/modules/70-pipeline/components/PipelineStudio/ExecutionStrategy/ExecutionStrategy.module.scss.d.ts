@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly active: string
+  readonly addBtn: string
   readonly card: string
   readonly cvEnableSwitch: string
   readonly enableVerification: string
@@ -19,11 +20,19 @@ declare const styles: {
   readonly image: string
   readonly info: string
   readonly patterns: string
+  readonly phaseContainer: string
+  readonly phaseForm: string
+  readonly phaseFormWrapper: string
+  readonly phaseLabel: string
+  readonly phaseName: string
+  readonly phasesSubmit: string
   readonly playButton: string
   readonly player: string
   readonly playerControls: string
   readonly preview: string
   readonly previewContainer: string
+  readonly removePhase: string
+  readonly selectPackageType: string
   readonly strategies: string
   readonly strategyDetailsBody: string
   readonly strategyDetailsFooter: string

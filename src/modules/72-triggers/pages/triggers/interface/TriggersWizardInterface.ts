@@ -12,6 +12,7 @@ import type {
   NGTriggerSourceV2,
   PipelineInfoConfig
 } from 'services/pipeline-ng'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { AddConditionInterface } from '../views/AddConditionsSection'
 
 export interface ConnectorRefInterface {
@@ -69,7 +70,6 @@ export interface FlatOnEditValuesInterface {
   event?: string
   actions?: string[]
   anyAction?: boolean // required for onEdit to show checked
-  secureToken?: string
   sourceBranchOperator?: string
   sourceBranchValue?: string
   targetBranchOperator?: string
@@ -118,7 +118,6 @@ export interface FlatValidWebhookFormikValuesInterface {
   autoAbortPreviousExecutions: boolean
   event?: string
   actions?: string[]
-  secureToken?: string
   sourceBranchOperator?: string
   sourceBranchValue?: string
   targetBranchOperator?: string
@@ -165,15 +164,16 @@ export interface FlatValidArtifactFormikValuesInterface {
   pipeline: PipelineInfoConfig
   resolvedPipeline?: PipelineInfoConfig
 }
-export interface TriggerTypeSourceInterface {
-  triggerType: NGTriggerSourceV2['type']
-  sourceRepo?: string
-  manifestType?: string
-  artifactType?: string
-}
 
 export interface TriggerConfigDTO extends Omit<NGTriggerConfigV2, 'identifier'> {
   identifier?: string
+}
+
+export interface TriggerGitQueryParams extends GitQueryParams {
+  triggerType?: NGTriggerSourceV2['type']
+  sourceRepo?: string
+  manifestType?: string
+  artifactType?: string
 }
 
 export interface artifactManifestData {

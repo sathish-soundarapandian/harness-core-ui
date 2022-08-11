@@ -67,7 +67,7 @@ describe('Test SelectGitProvider component', () => {
       </TestWrapper>
     )
     const gitProviderCards = Array.from(container.querySelectorAll('div[class*="bp3-card"]')) as HTMLElement[]
-    expect(gitProviderCards.length).toBe(AllBuildLocationsForSaaS.length)
+    expect(gitProviderCards.length).toBe(AllBuildLocationsForSaaS.length + 1)
   })
 
   test('User clicks on Github Provider card', async () => {
@@ -475,5 +475,30 @@ describe('Test SelectGitProvider component', () => {
     })
 
     expect(gitAuthenticationMethodValidationError).not.toBeInTheDocument()
+  })
+
+  test('User selects "Other" option', async () => {
+    const { container, getByText } = render(
+      <TestWrapper
+        path={routes.toGetStartedWithCI({
+          ...pathParams,
+          module: 'ci'
+        })}
+        pathParams={{
+          ...pathParams,
+          module: 'ci'
+        }}
+      >
+        <SelectGitProvider enableNextBtn={jest.fn()} disableNextBtn={jest.fn()} selectedHosting={Hosting.SaaS} />
+      </TestWrapper>
+    )
+    await act(async () => {
+      fireEvent.click((Array.from(container.querySelectorAll('div[class*="bp3-card"]')) as HTMLElement[])[3])
+    })
+    try {
+      expect(getByText('common.getStarted.authMethod')).not.toBeInTheDocument()
+    } catch (e) {
+      // Ignore error
+    }
   })
 })

@@ -308,6 +308,10 @@ export interface Feature {
    * The results shows which variations have been evaluated, and how many times each of these have been evaluated.
    */
   results?: Results[]
+  /**
+   * A list of services linked to this Feature Flag
+   */
+  services?: Service[]
   status?: FeatureStatus
   /**
    * A list of tags for this Feature Flag
@@ -540,6 +544,19 @@ export interface FeatureResponseMetadata {
      * Summary of governance checks including any warnings
      */
     governanceMetadata?: { [key: string]: any }
+    /**
+     * Info about the pipeline whether a pipeline was triggered
+     */
+    pipelineMetadata?: {
+      /**
+       * The ID of the pipeline execution
+       */
+      pipelineExecutionId?: string
+      /**
+       * Whether a pipeline was triggered
+       */
+      pipelineTriggered?: boolean
+    }
   }
 }
 
@@ -925,6 +942,20 @@ export interface Serve {
 }
 
 /**
+ * A Harness service linked to a flag
+ */
+export interface Service {
+  /**
+   * The identifier of the service
+   */
+  identifier: string
+  /**
+   * The name of the service
+   */
+  name: string
+}
+
+/**
  * The rule used to determine what variation to serve to a target
  */
 export interface ServingRule {
@@ -1198,6 +1229,7 @@ export type FeatureFlagRequestRequestBody = {
   permanent: boolean
   prerequisites?: Prerequisite[]
   project: string
+  services?: Service[]
   tags?: Tag[]
   variations: Variation[]
 }

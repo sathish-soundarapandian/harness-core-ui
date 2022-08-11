@@ -90,6 +90,34 @@ const mockMetricInfosMap: Map<string, DynatraceMetricInfo> = new Map([
 ])
 
 export const MockConnectorName = 'dynatraceConnector'
+
+const templateCustomMetric = new Map()
+const templateCustomMetricValue = {
+  metricSelector: '<+input>',
+  identifier: 'Dynatrace_metric',
+  metricName: 'Dynatrace metric',
+  riskCategory: 'Infrastructure/INFRA',
+  lowerBaselineDeviation: false,
+  higherBaselineDeviation: true,
+  groupName: { label: 'Group 1', value: 'Group 1' },
+  continuousVerification: true,
+  healthScore: true,
+  sli: true
+}
+templateCustomMetric.set('Dynatrace metric', templateCustomMetricValue)
+export const MockTemplateMetricData: DynatraceFormDataInterface = {
+  product: { label: 'dynatrace_apm', value: 'dynatrace_apm' },
+  healthSourceName: 'Dynatrace Runtime',
+  healthSourceIdentifier: 'Dynatrace_Runtime',
+  connectorRef: '<+input>',
+  isEdit: true,
+  selectedService: '<+input>',
+  metricPacks: [{ identifier: 'Infrastructure' }, { identifier: 'Performance' }],
+  metricData: { Infrastructure: true, Performance: true },
+  serviceMethods: [],
+  customMetrics: templateCustomMetric
+}
+
 export const MockDynatraceMetricData: DynatraceFormDataInterface = {
   connectorRef: MockConnectorName,
   isEdit: true,

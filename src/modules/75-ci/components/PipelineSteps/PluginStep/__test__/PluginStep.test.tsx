@@ -305,6 +305,17 @@ describe('Plugin Step', () => {
                   localName: 'step.plugin.name'
                 }
               },
+              'step-identifier': {
+                yamlExtraProperties: {
+                  properties: [
+                    {
+                      fqn: 'pipeline.stages.qaStage.execution.steps.plugin.identifier',
+                      localName: 'step.plugin.identifier',
+                      variableName: 'identifier'
+                    }
+                  ]
+                }
+              },
               'step-description': {
                 yamlProperties: {
                   fqn: 'pipeline.stages.qaStage.execution.steps.plugin.description',
@@ -357,6 +368,7 @@ describe('Plugin Step', () => {
             },
             variablesData: {
               type: StepType.Plugin,
+              __uuid: 'step-identifier',
               identifier: 'plugin',
               name: 'step-name',
               description: 'step-description',

@@ -12,6 +12,7 @@ import { Container, FlexExpander, Heading, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import routes from '@common/RouteDefinitions'
 import type { StringKeys } from 'framework/strings'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 import {
@@ -35,6 +36,7 @@ import { VariationTypeIcon } from '../VariationTypeIcon/VariationTypeIcon'
 import { IdentifierText } from '../IdentifierText/IdentifierText'
 import { EditVariationsModal } from '../EditVariationsModal/EditVariationsModal'
 import { FlagPrerequisites } from './FlagPrerequisites'
+import ServicesList from './ServicesList'
 import FlagDetailsOptionsMenuButton from '../FlagDetailsOptionsMenuButton/FlagDetailsOptionsMenuButton'
 import css from './FlagActivationDetails.module.scss'
 
@@ -130,6 +132,7 @@ const FlagActivationDetails: React.FC<FlagActivationDetailsProps> = props => {
   const { getString } = useStrings()
   const { orgIdentifier, accountId: accountIdentifier, projectIdentifier } = useParams<Record<string, string>>()
   const { withActiveEnvironment } = useActiveEnvironment()
+  const { FFM_4117_INTEGRATE_SRM } = useFeatureFlags()
   const breadcrumbs = [
     {
       label: getString('cf.continuous'),
@@ -241,6 +244,8 @@ const FlagActivationDetails: React.FC<FlagActivationDetailsProps> = props => {
           gitSync={gitSync}
           setGovernanceMetadata={setGovernanceMetadata}
         />
+
+        {FFM_4117_INTEGRATE_SRM && <ServicesList featureFlag={featureFlag} refetchFlag={refetchFlag} />}
       </Container>
     </>
   )

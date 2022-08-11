@@ -13,6 +13,7 @@ declare const styles: {
   readonly card: string
   readonly comingSoonPill: string
   readonly connectorSelect: string
+  readonly divider: string
   readonly footer: string
   readonly genericGitIcon: string
   readonly gitProviderCard: string
@@ -20,9 +21,12 @@ declare const styles: {
   readonly gitlabIcon: string
   readonly hostingToggle: string
   readonly icons: string
+  readonly infoIcon: string
   readonly learnMore: string
   readonly listIcon: string
   readonly main: string
+  readonly noCodebaseHelpText: string
+  readonly otherOptionCard: string
   readonly provisioningFailed: string
   readonly provisioningSuccessful: string
   readonly repositories: string
@@ -31,6 +35,7 @@ declare const styles: {
   readonly repositorySearch: string
   readonly repositoryTable: string
   readonly selectedCard: string
+  readonly separator: string
   readonly testConnectionBtn: string
   readonly wizard: string
 }

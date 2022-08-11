@@ -12,7 +12,11 @@ import { get, merge } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'
 import type { StepDetailProps } from '@pipeline/factories/ExecutionFactory/types'
-import { isExecutionWaiting, isExecutionWaitingForIntervention } from '@pipeline/utils/statusHelpers'
+import {
+  isExecutionWaitingForApproval,
+  isExecutionWaitingForInput,
+  isExecutionWaitingForIntervention
+} from '@pipeline/utils/statusHelpers'
 
 import { HarnessApprovalTab } from '@pipeline/components/execution/StepDetails/tabs/HarnessApprovalTab/HarnessApprovalTab'
 import { PipelineDetailsTab } from '@pipeline/components/execution/StepDetails/tabs/PipelineDetailsTab/PipelineDetailsTab'
@@ -27,6 +31,8 @@ import { StepMode } from '@pipeline/utils/stepUtils'
 import { allowedStrategiesAsPerStep } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/StrategySelection/StrategyConfig'
 import { Strategy } from '@pipeline/utils/FailureStrategyUtils'
 import { StageType } from '@pipeline/utils/stageHelpers'
+import { ExecutionInputs } from '@pipeline/components/execution/StepDetails/tabs/ExecutionInputs/ExecutionInputs'
+
 import tabCss from '../DefaultView/DefaultView.module.scss'
 
 export interface HarnessApprovalViewProps extends StepDetailProps {
@@ -39,7 +45,8 @@ enum ApprovalStepTab {
   PIPELINE_DETAILS = 'PIPELINE_DETAILS',
   INPUT = 'INPUT',
   OUTPUT = 'OUTPUT',
-  MANUAL_INTERVENTION = 'MANUAL_INTERVENTION'
+  MANUAL_INTERVENTION = 'MANUAL_INTERVENTION',
+  STEP_EXECUTION_INPUTS = 'STEP_EXECUTION_INPUTS'
 }
 
 export function HarnessApprovalView(props: HarnessApprovalViewProps): React.ReactElement {
@@ -47,7 +54,9 @@ export function HarnessApprovalView(props: HarnessApprovalViewProps): React.Reac
   const approvalInstanceId = get(step, 'executableResponses[0].async.callbackIds[0]') || ''
   const manuallySelected = React.useRef(false)
   const [activeTab, setActiveTab] = React.useState(ApprovalStepTab.APPROVAL)
-  const isWaiting = isExecutionWaiting(step.status)
+  const isWaitingOnApproval = isExecutionWaitingForApproval(step.status)
+  const isWaitingOnExecInputs = isExecutionWaitingForInput(step.status)
+  const shouldShowExecutionInputs = !!step.executionInputConfigured
   const isManualInterruption = isExecutionWaitingForIntervention(step.status)
   const failureStrategies = allowedStrategiesAsPerStep(stageType)[StepMode.STEP].filter(
     st => st !== Strategy.ManualIntervention
@@ -56,12 +65,14 @@ export function HarnessApprovalView(props: HarnessApprovalViewProps): React.Reac
   useEffect(() => {
     if (!manuallySelected.current) {
       let tab = ApprovalStepTab.APPROVAL
-      if (isManualInterruption) {
+      if (isWaitingOnExecInputs) {
+        tab = ApprovalStepTab.STEP_EXECUTION_INPUTS
+      } else if (isManualInterruption) {
         tab = ApprovalStepTab.MANUAL_INTERVENTION
       }
       setActiveTab(tab)
     }
-  }, [step.identifier, isManualInterruption])
+  }, [step.identifier, isManualInterruption, isWaitingOnExecInputs])
 
   const { getString } = useStrings()
 
@@ -85,7 +96,16 @@ export function HarnessApprovalView(props: HarnessApprovalViewProps): React.Reac
     )
   }
 
-  if (loadingApprovalData || loadingAuthData || !shouldFetchData) {
+  // When approvalInstanceId is missing - show error
+  if (!approvalInstanceId && !loadingApprovalData && !loadingAuthData && step?.failureInfo?.message) {
+    return (
+      <Layout.Vertical height="100%">
+        <PageError message={step.failureInfo.message} />
+      </Layout.Vertical>
+    )
+  }
+
+  if (loadingApprovalData || loadingAuthData || (!shouldFetchData && !isWaitingOnExecInputs)) {
     return (
       <Layout.Vertical height="100%" flex={{ alignItems: 'center', justifyContent: 'center' }}>
         <Spinner />
@@ -104,15 +124,23 @@ export function HarnessApprovalView(props: HarnessApprovalViewProps): React.Reac
         setActiveTab(newTab as ApprovalStepTab)
       }}
     >
+      {shouldShowExecutionInputs ? (
+        <Tabs.Tab
+          id={ApprovalStepTab.STEP_EXECUTION_INPUTS}
+          title={getString('pipeline.runtimeInputs')}
+          panel={<ExecutionInputs step={step} />}
+        />
+      ) : null}
       <Tabs.Tab
         key={ApprovalStepTab.APPROVAL}
         id={ApprovalStepTab.APPROVAL}
         title={getString('approvalStage.title')}
+        disabled={isWaitingOnExecInputs}
         panel={
           <HarnessApprovalTab
             approvalInstanceId={approvalInstanceId}
             approvalData={approvalData}
-            isWaiting={isWaiting}
+            isWaiting={isWaitingOnApproval}
             authData={authData}
             updateState={updatedData => {
               setApprovalData(updatedData)
@@ -129,6 +157,7 @@ export function HarnessApprovalView(props: HarnessApprovalViewProps): React.Reac
         key={ApprovalStepTab.PIPELINE_DETAILS}
         title={getString('common.pipelineDetails')}
         panel={<PipelineDetailsTab />}
+        disabled={isWaitingOnExecInputs}
       />
       <Tabs.Tab
         id={ApprovalStepTab.INPUT}
@@ -140,6 +169,7 @@ export function HarnessApprovalView(props: HarnessApprovalViewProps): React.Reac
         id={ApprovalStepTab.OUTPUT}
         key={ApprovalStepTab.OUTPUT}
         title={getString('outputLabel')}
+        disabled={isWaitingOnExecInputs}
         panel={
           <InputOutputTab
             baseFqn={step.baseFqn}

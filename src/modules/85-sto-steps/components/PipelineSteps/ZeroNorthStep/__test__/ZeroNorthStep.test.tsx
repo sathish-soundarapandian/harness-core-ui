@@ -261,6 +261,17 @@ describe('ZeroNorth Step', () => {
                   localName: 'step.zeronorth.name'
                 }
               },
+              'step-identifier': {
+                yamlExtraProperties: {
+                  properties: [
+                    {
+                      fqn: 'pipeline.stages.qaStage.execution.steps.zeronorth.identifier',
+                      localName: 'step.zeronorth.identifier',
+                      variableName: 'identifier'
+                    }
+                  ]
+                }
+              },
               'step-description': {
                 yamlProperties: {
                   fqn: 'pipeline.stages.qaStage.execution.steps.zeronorth.description',
@@ -301,6 +312,7 @@ describe('ZeroNorth Step', () => {
             },
             variablesData: {
               type: StepType.ZeroNorth,
+              __uuid: 'step-identifier',
               identifier: 'ZeroNorth',
               name: 'step-name',
               description: 'step-description',

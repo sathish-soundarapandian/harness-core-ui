@@ -7,10 +7,12 @@
 
 import React, { useState } from 'react'
 import { Layout, Button, ButtonVariation, useToaster } from '@harness/uicore'
+import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { usePayInvoice } from 'services/cd-ng/index'
 import { SubscribeViews } from '@common/constants/SubscriptionTypes'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 
 interface FooterProps {
   setView: (view: SubscribeViews) => void
@@ -21,10 +23,12 @@ export const Footer: React.FC<FooterProps> = ({ setView, invoiceId = '' }) => {
   const { getString } = useStrings()
   const { showError } = useToaster()
   const [loading, setLoading] = useState<boolean>(false)
+  const { accountId } = useParams<AccountPathProps>()
 
   const { mutate: payInvoice } = usePayInvoice({
     queryParams: {
-      invoiceId
+      invoiceId,
+      accountIdentifier: accountId
     },
     requestOptions: {
       headers: {

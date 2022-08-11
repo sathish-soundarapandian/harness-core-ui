@@ -89,8 +89,8 @@ export default function StartupScriptSelection({
     return !isEmpty(startupCommand)
       ? [
           {
-            scope: getScopeFromValue(startupCommand?.spec?.connectorRef),
-            identifier: getIdentifierFromValue(startupCommand?.spec?.connectorRef)
+            scope: getScopeFromValue(startupCommand?.store?.spec?.connectorRef),
+            identifier: getIdentifierFromValue(startupCommand?.store?.spec?.connectorRef)
           }
         ]
       : []

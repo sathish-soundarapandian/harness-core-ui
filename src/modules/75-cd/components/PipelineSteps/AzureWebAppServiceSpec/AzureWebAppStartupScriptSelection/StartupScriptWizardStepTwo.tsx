@@ -53,7 +53,7 @@ function StartupScriptWizardStepTwo({
 }: StepProps<ConnectorConfigDTO> & StartupScriptWizardStepTwoProps): React.ReactElement {
   const { getString } = useStrings()
 
-  const gitConnectionType: string = prevStepData?.store === Connectors.GIT ? 'connectionType' : 'type'
+  const gitConnectionType: string = prevStepData?.selectedStore === Connectors.GIT ? 'connectionType' : 'type'
   const connectionType =
     prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
     prevStepData?.urlType === GitRepoName.Repo
@@ -61,9 +61,8 @@ function StartupScriptWizardStepTwo({
       : GitRepoName.Account
 
   const getInitialValues = useCallback((): StartupScriptDataType => {
-    const specValues = get(initialValues, 'spec', null)
-
-    if (specValues) {
+    const specValues = get(initialValues, 'store.spec', null)
+    if (specValues && get(initialValues, 'store.type') !== 'Harness') {
       return {
         ...specValues,
         branch: specValues.branch,
@@ -83,38 +82,42 @@ function StartupScriptWizardStepTwo({
     }
   }, [])
 
-  const submitFormData = (formData: StartupScriptDataType & { store?: string; connectorRef?: string }): void => {
+  const submitFormData = (
+    formData: StartupScriptDataType & { selectedStore?: string; connectorRef?: string }
+  ): void => {
     const startupCommand = {
-      type: formData?.store as ConnectorTypes,
-      spec: {
-        connectorRef: formData?.connectorRef,
-        gitFetchType: formData?.gitFetchType,
-        paths:
-          /* istanbul ignore next */ getMultiTypeFromValue(formData.paths) === MultiTypeInputType.RUNTIME
-            ? formData?.paths
-            : [formData?.paths]
+      store: {
+        type: formData?.selectedStore as ConnectorTypes,
+        spec: {
+          connectorRef: formData?.connectorRef,
+          gitFetchType: formData?.gitFetchType,
+          paths:
+            /* istanbul ignore next */ getMultiTypeFromValue(formData.paths) === MultiTypeInputType.RUNTIME
+              ? formData?.paths
+              : [formData?.paths]
+        }
       }
     }
 
     if (connectionType === GitRepoName.Account) {
-      set(startupCommand, 'spec.repoName', formData?.repoName)
+      set(startupCommand, 'store.spec.repoName', formData?.repoName)
     }
 
-    if (startupCommand?.spec) {
+    if (startupCommand?.store?.spec) {
       if (formData?.gitFetchType === 'Branch') {
-        set(startupCommand, 'spec.branch', formData?.branch)
+        set(startupCommand, 'store.spec.branch', formData?.branch)
       } else if (formData?.gitFetchType === 'Commit') {
-        set(startupCommand, 'spec.commitId', formData?.commitId)
+        set(startupCommand, 'store.spec.commitId', formData?.commitId)
       }
     }
 
     handleSubmit(startupCommand)
   }
 
-  if (prevStepData?.store === 'Harness') {
+  if (prevStepData?.selectedStore === 'Harness') {
     return (
       <HarnessOption
-        initialValues={initialValues}
+        initialValues={initialValues?.store?.type === 'Harness' ? initialValues?.store : undefined}
         stepName={stepName}
         handleSubmit={handleSubmit}
         formName="startupScriptDetails"

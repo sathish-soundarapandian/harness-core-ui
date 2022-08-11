@@ -21,6 +21,7 @@ import { useStrings } from 'framework/strings'
 import factory from '@pipeline/factories/ExecutionFactory'
 import { isCDStage, isCIStage, StageType } from '@pipeline/utils/stageHelpers'
 import { isExecutionCompletedWithBadState, isExecutionRunning, isExecutionSuccess } from '@pipeline/utils/statusHelpers'
+import { NodeType, NonSelectableNodes } from '@pipeline/utils/executionUtils'
 
 import type { StepType } from '../PipelineSteps/PipelineStepInterface'
 import css from './ExecutionStepDetails.module.scss'
@@ -96,11 +97,14 @@ export default function ExecutionStepDetails(): React.ReactElement {
   }
 
   const StepDetails = stepDetails.component
+  const isStage = NonSelectableNodes.includes(selectedStep?.stepType as NodeType)
 
   return (
     <div className={css.main}>
       <div className={css.header}>
-        <div className={css.title}>{selectedStep.name}</div>
+        <div className={css.title} data-name={selectedStep.name}>
+          {getString(isStage ? 'common.stageName' : 'common.stepName', selectedStep)}
+        </div>
         <div className={css.actions}>
           {interruptHistories.length > 0 ? (
             <Popover
@@ -145,7 +149,16 @@ export default function ExecutionStepDetails(): React.ReactElement {
           <ExecutionLayoutToggle />
         </div>
       </div>
-      {loading ? <Spinner /> : <StepDetails step={selectedStep} stageType={stageType} />}
+      {loading ? (
+        <Spinner />
+      ) : (
+        <StepDetails
+          key={selectedStep.uuid}
+          step={selectedStep}
+          stageType={stageType}
+          isStageExecutionInputConfigured={isStage && selectedStep.executionInputConfigured}
+        />
+      )}
     </div>
   )
 }

@@ -6,315 +6,391 @@ exports[`WebhookConditionsPanel Triggers tests Renders/snapshots Initial Render 
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
         <div
           class="Layout--vertical Layout--layout-spacing-large StyledProps--main webhookConditionsContainer StyledProps--padding-xxlarge"
         >
-          <h2
-            class="heading"
+          <span
+            class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--inline StyledProps--color StyledProps--color-grey800"
+            style="font-size: 16px;"
           >
             conditions
-             
             <p
-              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey400"
-              style="display: inline-block;"
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500"
+              style="display: inline-block; font-size: 16px;"
             >
               titleOptional
             </p>
-          </h2>
+          </span>
           <p
-            class="StyledProps--font StyledProps--main"
+            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black"
+            data-tooltip-id="conditionsSubtitle"
           >
-            pipeline.triggers.conditionsPanel.subtitle
+            triggers.conditionsPanel.subtitle
           </p>
-          <section>
-            <div
-              class="conditionsRow"
-            >
-              <div>
-                <p
-                  class="StyledProps--font StyledProps--main"
-                  style="font-size: 16px;"
-                >
-                  pipeline.triggers.conditionsPanel.sourceBranch
-                </p>
-              </div>
-              <div
-                class="bp3-form-group"
-                data-id="sourceBranchOperator-0"
-                style="align-self: center;"
-              >
-                <label
-                  class="bp3-label"
-                  for="sourceBranchOperator"
-                >
-                  pipeline.triggers.conditionsPanel.operator
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
-                <div
-                  class="bp3-form-content"
-                >
-                  <div
-                    class="bp3-popover-wrapper Select--main bp3-fill"
-                  >
-                    <div
-                      class="bp3-popover-target"
-                    >
-                      <div
-                        class="bp3-input-group"
-                      >
-                        <input
-                          autocomplete="off"
-                          class="bp3-input"
-                          name="sourceBranchOperator"
-                          placeholder="Search..."
-                          style="padding-right: 0px;"
-                          type="text"
-                          value=""
-                        />
-                        <span
-                          class="bp3-input-action"
-                        >
-                          <span
-                            class="bp3-icon bp3-icon-caret-down StyledProps--main StyledProps--padding-small"
-                            icon="caret-down"
-                          >
-                            <svg
-                              data-icon="caret-down"
-                              height="14"
-                              viewBox="0 0 16 16"
-                              width="14"
-                            >
-                              <desc>
-                                caret-down
-                              </desc>
-                              <path
-                                d="M12 6.5c0-.28-.22-.5-.5-.5h-7a.495.495 0 00-.37.83l3.5 4c.09.1.22.17.37.17s.28-.07.37-.17l3.5-4c.08-.09.13-.2.13-.33z"
-                                fill-rule="evenodd"
-                              />
-                            </svg>
-                          </span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="bp3-form-group"
-                data-id="sourceBranchValue-1"
-                style="align-self: center;"
-              >
-                <label
-                  class="bp3-label"
-                  for="sourceBranchValue"
-                >
-                  pipeline.triggers.conditionsPanel.matchesValue
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
-                <div
-                  class="bp3-form-content"
-                >
-                  <div
-                    class="bp3-input-group"
-                  >
-                    <input
-                      autocomplete="off"
-                      class="bp3-input"
-                      name="sourceBranchValue"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="conditionsRow"
-            >
-              <div>
-                <p
-                  class="StyledProps--font StyledProps--main"
-                  style="font-size: 16px;"
-                >
-                  pipeline.triggers.conditionsPanel.targetBranch
-                </p>
-              </div>
-              <div
-                class="bp3-form-group"
-                data-id="targetBranchOperator-2"
-                style="align-self: center;"
-              >
-                <label
-                  class="bp3-label"
-                  for="targetBranchOperator"
-                >
-                  pipeline.triggers.conditionsPanel.operator
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
-                <div
-                  class="bp3-form-content"
-                >
-                  <div
-                    class="bp3-popover-wrapper Select--main bp3-fill"
-                  >
-                    <div
-                      class="bp3-popover-target"
-                    >
-                      <div
-                        class="bp3-input-group"
-                      >
-                        <input
-                          autocomplete="off"
-                          class="bp3-input"
-                          name="targetBranchOperator"
-                          placeholder="Search..."
-                          style="padding-right: 0px;"
-                          type="text"
-                          value=""
-                        />
-                        <span
-                          class="bp3-input-action"
-                        >
-                          <span
-                            class="bp3-icon bp3-icon-caret-down StyledProps--main StyledProps--padding-small"
-                            icon="caret-down"
-                          >
-                            <svg
-                              data-icon="caret-down"
-                              height="14"
-                              viewBox="0 0 16 16"
-                              width="14"
-                            >
-                              <desc>
-                                caret-down
-                              </desc>
-                              <path
-                                d="M12 6.5c0-.28-.22-.5-.5-.5h-7a.495.495 0 00-.37.83l3.5 4c.09.1.22.17.37.17s.28-.07.37-.17l3.5-4c.08-.09.13-.2.13-.33z"
-                                fill-rule="evenodd"
-                              />
-                            </svg>
-                          </span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="bp3-form-group"
-                data-id="targetBranchValue-3"
-                style="align-self: center;"
-              >
-                <label
-                  class="bp3-label"
-                  for="targetBranchValue"
-                >
-                  pipeline.triggers.conditionsPanel.matchesValue
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
-                <div
-                  class="bp3-form-content"
-                >
-                  <div
-                    class="bp3-input-group"
-                  >
-                    <input
-                      autocomplete="off"
-                      class="bp3-input"
-                      name="targetBranchValue"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-          <section
-            data-name="headerConditions"
-          >
-            <h2
-              class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--font-weight-bold"
-              level="2"
-            >
-              pipeline.triggers.conditionsPanel.headerConditions
-            </h2>
-            <div
-              style="margin-top: 20px;"
-            />
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--intent-primary"
-              data-name="plusAdd"
-              style="cursor: pointer; width: 70px;"
-            >
-              plusAdd
-            </p>
-          </section>
-          <section
-            data-name="payloadConditions"
-          >
-            <h2
-              class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--font-weight-bold"
-              level="2"
-            >
-              pipeline.triggers.conditionsPanel.payloadConditions
-            </h2>
-            <div
-              style="margin-top: 20px;"
-            />
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--intent-primary"
-              data-name="plusAdd"
-              style="cursor: pointer; width: 70px;"
-            >
-              plusAdd
-            </p>
-          </section>
           <div
-            class="bp3-form-group"
-            data-id="jexlCondition-4"
-            style="width: 100%;"
+            class="Layout--vertical StyledProps--main formContent"
           >
-            <label
-              class="bp3-label"
-              for="jexlCondition"
-            >
-              pipeline.triggers.conditionsPanel.jexlCondition
-               
-              <span
-                class="bp3-text-muted"
-              />
-            </label>
-            <div
-              class="bp3-form-content"
-            >
+            <section>
               <div
-                class="bp3-input-group"
+                class="StyledProps--font StyledProps--main conditionsRowHeaders"
               >
-                <input
-                  autocomplete="off"
-                  class="bp3-input"
-                  name="jexlCondition"
-                  type="text"
-                  value=""
-                />
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--font-weight-bold"
+                >
+                  TRIGGERS.CONDITIONSPANEL.ATTRIBUTE
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--font-weight-bold"
+                >
+                  TRIGGERS.CONDITIONSPANEL.OPERATOR
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--font-weight-bold"
+                >
+                  TRIGGERS.CONDITIONSPANEL.MATCHESVALUE
+                </p>
+              </div>
+              <div
+                class="conditionsRow predefinedRows"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800"
+                  data-tooltip-id="sourceBranch"
+                >
+                  triggers.conditionsPanel.sourceBranch
+                </p>
+                <div
+                  class="bp3-form-group operatorContainer"
+                  data-id="sourceBranchOperator-0"
+                  style="align-self: center;"
+                >
+                  
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <div
+                      class="bp3-popover-wrapper Select--main bp3-fill"
+                    >
+                      <div
+                        class="bp3-popover-target"
+                      >
+                        <div
+                          class="bp3-input-group"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="sourceBranchOperator"
+                            placeholder="- pipeline.operatorPlaceholder -"
+                            style="padding-right: 0px;"
+                            type="text"
+                            value=""
+                          />
+                          <span
+                            class="bp3-input-action"
+                          >
+                            <span
+                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                              icon="chevron-down"
+                            >
+                              <svg
+                                data-icon="chevron-down"
+                                height="14"
+                                viewBox="0 0 16 16"
+                                width="14"
+                              >
+                                <desc>
+                                  chevron-down
+                                </desc>
+                                <path
+                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="bp3-form-group textContainer"
+                  data-id="sourceBranchValue-1"
+                  style="align-self: center;"
+                >
+                  
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <div
+                      class="bp3-input-group"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="sourceBranchValue"
+                        placeholder="triggers.conditionsPanel.matchesValuePlaceholder"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="conditionsRow predefinedRows"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800"
+                  data-tooltip-id="targetBranch"
+                >
+                  triggers.conditionsPanel.targetBranch
+                </p>
+                <div
+                  class="bp3-form-group operatorContainer"
+                  data-id="targetBranchOperator-2"
+                  style="align-self: center;"
+                >
+                  
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <div
+                      class="bp3-popover-wrapper Select--main bp3-fill"
+                    >
+                      <div
+                        class="bp3-popover-target"
+                      >
+                        <div
+                          class="bp3-input-group"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="targetBranchOperator"
+                            placeholder="- pipeline.operatorPlaceholder -"
+                            style="padding-right: 0px;"
+                            type="text"
+                            value=""
+                          />
+                          <span
+                            class="bp3-input-action"
+                          >
+                            <span
+                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                              icon="chevron-down"
+                            >
+                              <svg
+                                data-icon="chevron-down"
+                                height="14"
+                                viewBox="0 0 16 16"
+                                width="14"
+                              >
+                                <desc>
+                                  chevron-down
+                                </desc>
+                                <path
+                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="bp3-form-group textContainer"
+                  data-id="targetBranchValue-3"
+                  style="align-self: center;"
+                >
+                  
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <div
+                      class="bp3-input-group"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="targetBranchValue"
+                        placeholder="triggers.conditionsPanel.matchesValuePlaceholder"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="conditionsRow predefinedRows"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800"
+                  data-tooltip-id="changedFiles"
+                >
+                  triggers.conditionsPanel.changedFiles
+                </p>
+                <div
+                  class="bp3-form-group operatorContainer"
+                  data-id="changedFilesOperator-4"
+                  style="align-self: center;"
+                >
+                  
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <div
+                      class="bp3-popover-wrapper Select--main bp3-fill"
+                    >
+                      <div
+                        class="bp3-popover-target"
+                      >
+                        <div
+                          class="bp3-input-group"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="changedFilesOperator"
+                            placeholder="- pipeline.operatorPlaceholder -"
+                            style="padding-right: 0px;"
+                            type="text"
+                            value=""
+                          />
+                          <span
+                            class="bp3-input-action"
+                          >
+                            <span
+                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                              icon="chevron-down"
+                            >
+                              <svg
+                                data-icon="chevron-down"
+                                height="14"
+                                viewBox="0 0 16 16"
+                                width="14"
+                              >
+                                <desc>
+                                  chevron-down
+                                </desc>
+                                <path
+                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="bp3-form-group textContainer"
+                  data-id="changedFilesValue-5"
+                  style="align-self: center;"
+                >
+                  
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <div
+                      class="bp3-input-group"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="changedFilesValue"
+                        placeholder="triggers.conditionsPanel.matchesValuePlaceholder"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+          <div
+            class="Layout--vertical StyledProps--main formContent"
+          >
+            <section
+              data-name="headerConditions"
+            >
+              <p
+                class="StyledProps--font StyledProps--main sectionHeader"
+                data-tooltip-id="headerConditions"
+              >
+                triggers.conditionsPanel.headerConditions
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7"
+                data-name="plusAdd"
+                style="cursor: pointer; width: 43px;"
+              >
+                plusAdd
+              </p>
+            </section>
+          </div>
+          <div
+            class="Layout--vertical StyledProps--main formContent"
+          >
+            <section
+              data-name="payloadConditions"
+            >
+              <p
+                class="StyledProps--font StyledProps--main sectionHeader"
+                data-tooltip-id="payloadConditions"
+              >
+                triggers.conditionsPanel.payloadConditions
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7"
+                data-name="plusAdd"
+                style="cursor: pointer; width: 43px;"
+              >
+                plusAdd
+              </p>
+            </section>
+          </div>
+          <div
+            class="Layout--vertical StyledProps--main formContent"
+          >
+            <p
+              class="StyledProps--font StyledProps--main sectionHeader"
+            >
+              triggers.conditionsPanel.jexlCondition
+            </p>
+            <div
+              class="bp3-form-group"
+              data-id="jexlCondition-6"
+              style="width: 100%; margin-bottom: 0px;"
+            >
+              
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="bp3-input-group"
+                >
+                  <input
+                    autocomplete="off"
+                    class="bp3-input"
+                    name="jexlCondition"
+                    placeholder="triggers.conditionsPanel.jexlConditionPlaceholder"
+                    type="text"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -341,315 +417,391 @@ exports[`WebhookConditionsPanel Triggers tests Renders/snapshots Initial Render 
     class="OverlaySpinner--overlaySpinner"
   >
     <form
+      action="#"
       class="FormikForm--main"
     >
       <div>
         <div
           class="Layout--vertical Layout--layout-spacing-large StyledProps--main webhookConditionsContainer StyledProps--padding-xxlarge"
         >
-          <h2
-            class="heading"
+          <span
+            class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--inline StyledProps--color StyledProps--color-grey800"
+            style="font-size: 16px;"
           >
             conditions
-             
             <p
-              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey400"
-              style="display: inline-block;"
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500"
+              style="display: inline-block; font-size: 16px;"
             >
               titleOptional
             </p>
-          </h2>
+          </span>
           <p
-            class="StyledProps--font StyledProps--main"
+            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black"
+            data-tooltip-id="conditionsSubtitle"
           >
-            pipeline.triggers.conditionsPanel.subtitle
+            triggers.conditionsPanel.subtitle
           </p>
-          <section>
-            <div
-              class="conditionsRow"
-            >
-              <div>
-                <p
-                  class="StyledProps--font StyledProps--main"
-                  style="font-size: 16px;"
-                >
-                  pipeline.triggers.conditionsPanel.sourceBranch
-                </p>
-              </div>
-              <div
-                class="bp3-form-group"
-                data-id="sourceBranchOperator-0"
-                style="align-self: center;"
-              >
-                <label
-                  class="bp3-label"
-                  for="sourceBranchOperator"
-                >
-                  pipeline.triggers.conditionsPanel.operator
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
-                <div
-                  class="bp3-form-content"
-                >
-                  <div
-                    class="bp3-popover-wrapper Select--main bp3-fill"
-                  >
-                    <div
-                      class="bp3-popover-target"
-                    >
-                      <div
-                        class="bp3-input-group"
-                      >
-                        <input
-                          autocomplete="off"
-                          class="bp3-input"
-                          name="sourceBranchOperator"
-                          placeholder="Search..."
-                          style="padding-right: 0px;"
-                          type="text"
-                          value=""
-                        />
-                        <span
-                          class="bp3-input-action"
-                        >
-                          <span
-                            class="bp3-icon bp3-icon-caret-down StyledProps--main StyledProps--padding-small"
-                            icon="caret-down"
-                          >
-                            <svg
-                              data-icon="caret-down"
-                              height="14"
-                              viewBox="0 0 16 16"
-                              width="14"
-                            >
-                              <desc>
-                                caret-down
-                              </desc>
-                              <path
-                                d="M12 6.5c0-.28-.22-.5-.5-.5h-7a.495.495 0 00-.37.83l3.5 4c.09.1.22.17.37.17s.28-.07.37-.17l3.5-4c.08-.09.13-.2.13-.33z"
-                                fill-rule="evenodd"
-                              />
-                            </svg>
-                          </span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="bp3-form-group"
-                data-id="sourceBranchValue-1"
-                style="align-self: center;"
-              >
-                <label
-                  class="bp3-label"
-                  for="sourceBranchValue"
-                >
-                  pipeline.triggers.conditionsPanel.matchesValue
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
-                <div
-                  class="bp3-form-content"
-                >
-                  <div
-                    class="bp3-input-group"
-                  >
-                    <input
-                      autocomplete="off"
-                      class="bp3-input"
-                      name="sourceBranchValue"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="conditionsRow"
-            >
-              <div>
-                <p
-                  class="StyledProps--font StyledProps--main"
-                  style="font-size: 16px;"
-                >
-                  pipeline.triggers.conditionsPanel.targetBranch
-                </p>
-              </div>
-              <div
-                class="bp3-form-group"
-                data-id="targetBranchOperator-2"
-                style="align-self: center;"
-              >
-                <label
-                  class="bp3-label"
-                  for="targetBranchOperator"
-                >
-                  pipeline.triggers.conditionsPanel.operator
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
-                <div
-                  class="bp3-form-content"
-                >
-                  <div
-                    class="bp3-popover-wrapper Select--main bp3-fill"
-                  >
-                    <div
-                      class="bp3-popover-target"
-                    >
-                      <div
-                        class="bp3-input-group"
-                      >
-                        <input
-                          autocomplete="off"
-                          class="bp3-input"
-                          name="targetBranchOperator"
-                          placeholder="Search..."
-                          style="padding-right: 0px;"
-                          type="text"
-                          value=""
-                        />
-                        <span
-                          class="bp3-input-action"
-                        >
-                          <span
-                            class="bp3-icon bp3-icon-caret-down StyledProps--main StyledProps--padding-small"
-                            icon="caret-down"
-                          >
-                            <svg
-                              data-icon="caret-down"
-                              height="14"
-                              viewBox="0 0 16 16"
-                              width="14"
-                            >
-                              <desc>
-                                caret-down
-                              </desc>
-                              <path
-                                d="M12 6.5c0-.28-.22-.5-.5-.5h-7a.495.495 0 00-.37.83l3.5 4c.09.1.22.17.37.17s.28-.07.37-.17l3.5-4c.08-.09.13-.2.13-.33z"
-                                fill-rule="evenodd"
-                              />
-                            </svg>
-                          </span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="bp3-form-group"
-                data-id="targetBranchValue-3"
-                style="align-self: center;"
-              >
-                <label
-                  class="bp3-label"
-                  for="targetBranchValue"
-                >
-                  pipeline.triggers.conditionsPanel.matchesValue
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
-                <div
-                  class="bp3-form-content"
-                >
-                  <div
-                    class="bp3-input-group"
-                  >
-                    <input
-                      autocomplete="off"
-                      class="bp3-input"
-                      name="targetBranchValue"
-                      placeholder=""
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-          <section
-            data-name="headerConditions"
-          >
-            <h2
-              class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--font-weight-bold"
-              level="2"
-            >
-              pipeline.triggers.conditionsPanel.headerConditions
-            </h2>
-            <div
-              style="margin-top: 20px;"
-            />
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--intent-primary"
-              data-name="plusAdd"
-              style="cursor: pointer; width: 70px;"
-            >
-              plusAdd
-            </p>
-          </section>
-          <section
-            data-name="payloadConditions"
-          >
-            <h2
-              class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--font-weight-bold"
-              level="2"
-            >
-              pipeline.triggers.conditionsPanel.payloadConditions
-            </h2>
-            <div
-              style="margin-top: 20px;"
-            />
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--intent-primary"
-              data-name="plusAdd"
-              style="cursor: pointer; width: 70px;"
-            >
-              plusAdd
-            </p>
-          </section>
           <div
-            class="bp3-form-group"
-            data-id="jexlCondition-4"
-            style="width: 100%;"
+            class="Layout--vertical StyledProps--main formContent"
           >
-            <label
-              class="bp3-label"
-              for="jexlCondition"
-            >
-              pipeline.triggers.conditionsPanel.jexlCondition
-               
-              <span
-                class="bp3-text-muted"
-              />
-            </label>
-            <div
-              class="bp3-form-content"
-            >
+            <section>
               <div
-                class="bp3-input-group"
+                class="StyledProps--font StyledProps--main conditionsRowHeaders"
               >
-                <input
-                  autocomplete="off"
-                  class="bp3-input"
-                  name="jexlCondition"
-                  type="text"
-                  value=""
-                />
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--font-weight-bold"
+                >
+                  TRIGGERS.CONDITIONSPANEL.ATTRIBUTE
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--font-weight-bold"
+                >
+                  TRIGGERS.CONDITIONSPANEL.OPERATOR
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--font-weight-bold"
+                >
+                  TRIGGERS.CONDITIONSPANEL.MATCHESVALUE
+                </p>
+              </div>
+              <div
+                class="conditionsRow predefinedRows"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800"
+                  data-tooltip-id="sourceBranch"
+                >
+                  triggers.conditionsPanel.sourceBranch
+                </p>
+                <div
+                  class="bp3-form-group operatorContainer"
+                  data-id="sourceBranchOperator-0"
+                  style="align-self: center;"
+                >
+                  
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <div
+                      class="bp3-popover-wrapper Select--main bp3-fill"
+                    >
+                      <div
+                        class="bp3-popover-target"
+                      >
+                        <div
+                          class="bp3-input-group"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="sourceBranchOperator"
+                            placeholder="- pipeline.operatorPlaceholder -"
+                            style="padding-right: 0px;"
+                            type="text"
+                            value=""
+                          />
+                          <span
+                            class="bp3-input-action"
+                          >
+                            <span
+                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                              icon="chevron-down"
+                            >
+                              <svg
+                                data-icon="chevron-down"
+                                height="14"
+                                viewBox="0 0 16 16"
+                                width="14"
+                              >
+                                <desc>
+                                  chevron-down
+                                </desc>
+                                <path
+                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="bp3-form-group textContainer"
+                  data-id="sourceBranchValue-1"
+                  style="align-self: center;"
+                >
+                  
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <div
+                      class="bp3-input-group"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="sourceBranchValue"
+                        placeholder="triggers.conditionsPanel.matchesValuePlaceholder"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="conditionsRow predefinedRows"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800"
+                  data-tooltip-id="targetBranch"
+                >
+                  triggers.conditionsPanel.targetBranch
+                </p>
+                <div
+                  class="bp3-form-group operatorContainer"
+                  data-id="targetBranchOperator-2"
+                  style="align-self: center;"
+                >
+                  
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <div
+                      class="bp3-popover-wrapper Select--main bp3-fill"
+                    >
+                      <div
+                        class="bp3-popover-target"
+                      >
+                        <div
+                          class="bp3-input-group"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="targetBranchOperator"
+                            placeholder="- pipeline.operatorPlaceholder -"
+                            style="padding-right: 0px;"
+                            type="text"
+                            value=""
+                          />
+                          <span
+                            class="bp3-input-action"
+                          >
+                            <span
+                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                              icon="chevron-down"
+                            >
+                              <svg
+                                data-icon="chevron-down"
+                                height="14"
+                                viewBox="0 0 16 16"
+                                width="14"
+                              >
+                                <desc>
+                                  chevron-down
+                                </desc>
+                                <path
+                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="bp3-form-group textContainer"
+                  data-id="targetBranchValue-3"
+                  style="align-self: center;"
+                >
+                  
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <div
+                      class="bp3-input-group"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="targetBranchValue"
+                        placeholder="triggers.conditionsPanel.matchesValuePlaceholder"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="conditionsRow predefinedRows"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800"
+                  data-tooltip-id="changedFiles"
+                >
+                  triggers.conditionsPanel.changedFiles
+                </p>
+                <div
+                  class="bp3-form-group operatorContainer"
+                  data-id="changedFilesOperator-4"
+                  style="align-self: center;"
+                >
+                  
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <div
+                      class="bp3-popover-wrapper Select--main bp3-fill"
+                    >
+                      <div
+                        class="bp3-popover-target"
+                      >
+                        <div
+                          class="bp3-input-group"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="changedFilesOperator"
+                            placeholder="- pipeline.operatorPlaceholder -"
+                            style="padding-right: 0px;"
+                            type="text"
+                            value=""
+                          />
+                          <span
+                            class="bp3-input-action"
+                          >
+                            <span
+                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                              icon="chevron-down"
+                            >
+                              <svg
+                                data-icon="chevron-down"
+                                height="14"
+                                viewBox="0 0 16 16"
+                                width="14"
+                              >
+                                <desc>
+                                  chevron-down
+                                </desc>
+                                <path
+                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="bp3-form-group textContainer"
+                  data-id="changedFilesValue-5"
+                  style="align-self: center;"
+                >
+                  
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <div
+                      class="bp3-input-group"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="changedFilesValue"
+                        placeholder="triggers.conditionsPanel.matchesValuePlaceholder"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+          <div
+            class="Layout--vertical StyledProps--main formContent"
+          >
+            <section
+              data-name="headerConditions"
+            >
+              <p
+                class="StyledProps--font StyledProps--main sectionHeader"
+                data-tooltip-id="headerConditions"
+              >
+                triggers.conditionsPanel.headerConditions
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7"
+                data-name="plusAdd"
+                style="cursor: pointer; width: 43px;"
+              >
+                plusAdd
+              </p>
+            </section>
+          </div>
+          <div
+            class="Layout--vertical StyledProps--main formContent"
+          >
+            <section
+              data-name="payloadConditions"
+            >
+              <p
+                class="StyledProps--font StyledProps--main sectionHeader"
+                data-tooltip-id="payloadConditions"
+              >
+                triggers.conditionsPanel.payloadConditions
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7"
+                data-name="plusAdd"
+                style="cursor: pointer; width: 43px;"
+              >
+                plusAdd
+              </p>
+            </section>
+          </div>
+          <div
+            class="Layout--vertical StyledProps--main formContent"
+          >
+            <p
+              class="StyledProps--font StyledProps--main sectionHeader"
+            >
+              triggers.conditionsPanel.jexlCondition
+            </p>
+            <div
+              class="bp3-form-group"
+              data-id="jexlCondition-6"
+              style="width: 100%; margin-bottom: 0px;"
+            >
+              
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="bp3-input-group"
+                >
+                  <input
+                    autocomplete="off"
+                    class="bp3-input"
+                    name="jexlCondition"
+                    placeholder="triggers.conditionsPanel.jexlConditionPlaceholder"
+                    type="text"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
           </div>

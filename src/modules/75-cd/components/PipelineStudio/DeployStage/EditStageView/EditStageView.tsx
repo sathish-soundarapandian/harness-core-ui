@@ -270,19 +270,21 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                   {isContextTypeNotStageTemplate(contextType) && (
                     <>
                       {context ? (
-                        <Card className={stageCss.sectionCard}>
-                          <NameIdDescriptionTags
-                            formikProps={formikProps}
-                            identifierProps={{
-                              inputLabel: getString('stageNameLabel'),
-                              isIdentifierEditable: !context,
-                              inputGroupProps: { disabled: isReadonly }
-                            }}
-                            descriptionProps={{ disabled: isReadonly }}
-                            tagsProps={{ disabled: isReadonly }}
-                            className={css.nameIdDescriptionTags}
-                          />
-                        </Card>
+                        <div>
+                          <Card className={stageCss.sectionCard}>
+                            <NameIdDescriptionTags
+                              formikProps={formikProps}
+                              identifierProps={{
+                                inputLabel: getString('stageNameLabel'),
+                                isIdentifierEditable: !context,
+                                inputGroupProps: { disabled: isReadonly }
+                              }}
+                              descriptionProps={{ disabled: isReadonly }}
+                              tagsProps={{ disabled: isReadonly }}
+                              className={css.nameIdDescriptionTags}
+                            />
+                          </Card>
+                        </div>
                       ) : template ? (
                         <NameId
                           identifierProps={{
@@ -319,7 +321,9 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                   ) : !context ? (
                     whatToDeploy
                   ) : (
-                    <Card className={stageCss.sectionCard}>{whatToDeploy}</Card>
+                    <div>
+                      <Card className={stageCss.sectionCard}>{whatToDeploy}</Card>
+                    </div>
                   )}
 
                   {shouldRenderDeploymentType() && !template && (

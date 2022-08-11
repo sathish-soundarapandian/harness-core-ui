@@ -360,6 +360,17 @@ describe('GCR Step', () => {
                   localName: 'step.gcr.name'
                 }
               },
+              'step-identifier': {
+                yamlExtraProperties: {
+                  properties: [
+                    {
+                      fqn: 'pipeline.stages.qaStage.execution.steps.gcr.identifier',
+                      localName: 'step.gcr.identifier',
+                      variableName: 'identifier'
+                    }
+                  ]
+                }
+              },
               'step-timeout': {
                 yamlProperties: {
                   fqn: 'pipeline.stages.qaStage.execution.steps.gcr.timeout',
@@ -460,6 +471,7 @@ describe('GCR Step', () => {
             },
             variablesData: {
               type: StepType.GCR,
+              __uuid: 'step-identifier',
               identifier: 'gcr',
               name: 'step-name',
               timeout: 'step-timeout',

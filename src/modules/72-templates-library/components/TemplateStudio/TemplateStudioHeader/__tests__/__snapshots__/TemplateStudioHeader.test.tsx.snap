@@ -99,7 +99,7 @@ exports[`TemplateStudioHeader renders Stage templateType correctly 1`] = `
         class="StyledProps--font StyledProps--main"
       >
         <div
-          class="css-1cfgrbm"
+          class="css-1gx1swu"
           fill="#0BC8D6"
           stroke="#03C0CD"
           width="0"
@@ -218,7 +218,7 @@ exports[`TemplateStudioHeader renders Step templateType correctly 1`] = `
         class="StyledProps--font StyledProps--main"
       >
         <div
-          class="css-19tpg3y"
+          class="css-1utvf27"
           fill="#7D4DD3"
           stroke="#6938C0"
           width="0"
@@ -337,7 +337,7 @@ exports[`TemplateStudioHeader renders default title correctly 1`] = `
         class="StyledProps--font StyledProps--main"
       >
         <div
-          class="css-1xxlbl1"
+          class="css-ifmyfr"
           width="0"
         >
           <div>

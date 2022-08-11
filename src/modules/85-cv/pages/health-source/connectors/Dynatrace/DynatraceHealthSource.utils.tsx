@@ -6,7 +6,7 @@
  */
 
 import { cloneDeep, isEmpty } from 'lodash-es'
-import type { SelectOption } from '@wings-software/uicore'
+import { RUNTIME_INPUT_VALUE, SelectOption, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
 import type { UpdatedHealthSource } from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
 import type { DynatraceHealthSourceSpec, DynatraceServiceDTO, TimeSeriesMetricPackDTO } from 'services/cv'
@@ -31,10 +31,18 @@ import {
 import { validateCommonCustomMetricFields } from '@cv/pages/health-source/common/CustomMetric/CustomMetric.utils'
 
 export const mapDynatraceMetricDataToHealthSource = (dynatraceMetricData: DynatraceMetricData): UpdatedHealthSource => {
+  const dynatraceMetricDataSelectedServiceValue =
+    typeof dynatraceMetricData.selectedService !== 'string'
+      ? dynatraceMetricData?.selectedService?.value
+      : dynatraceMetricData.selectedService
+  const dynatraceMetricDataSelectedServiceLabel =
+    typeof dynatraceMetricData.selectedService !== 'string'
+      ? dynatraceMetricData.selectedService.label
+      : dynatraceMetricData.selectedService
   const specPayload: DynatraceHealthSourceSpec = {
     connectorRef: dynatraceMetricData.connectorRef,
-    serviceId: dynatraceMetricData.selectedService.value as string,
-    serviceName: dynatraceMetricData.selectedService.label as string,
+    serviceId: dynatraceMetricDataSelectedServiceValue as string,
+    serviceName: dynatraceMetricDataSelectedServiceLabel as string,
     feature: DynatraceProductNames.APM,
     metricPacks: Object.entries(dynatraceMetricData.metricData)
       .map(item => {
@@ -66,7 +74,7 @@ export const mapHealthSourceToDynatraceMetricData = (sourceData: any): Dynatrace
   )
   const dynatraceHealthSourceSpec = (healthSource?.spec as DynatraceHealthSourceSpec) || {}
   const { serviceName = '', serviceId = '', serviceMethodIds, metricPacks } = dynatraceHealthSourceSpec
-
+  const isServiceNameFixed = getMultiTypeFromValue(serviceName) === MultiTypeInputType.FIXED
   const metricDefinitions = dynatraceHealthSourceSpec.metricDefinitions || []
   const dynatraceMetricData: DynatraceMetricData = {
     product: sourceData.product,
@@ -74,7 +82,7 @@ export const mapHealthSourceToDynatraceMetricData = (sourceData: any): Dynatrace
     healthSourceIdentifier: sourceData.healthSourceIdentifier,
     connectorRef: sourceData.connectorRef,
     isEdit: sourceData.isEdit,
-    selectedService: { label: serviceName, value: serviceId },
+    selectedService: isServiceNameFixed ? { label: serviceName, value: serviceId } : serviceName,
     metricPacks,
     metricData: convertMetricPackToMetricData(metricPacks),
     serviceMethods: serviceMethodIds,
@@ -130,7 +138,11 @@ export const validateMapping = (
   if (!dynatraceMetricData.showCustomMetric) {
     errors = validateMetricPackData(dynatraceMetricData.metricData, getString, errors)
   }
-  if (!dynatraceMetricData.selectedService.value || dynatraceMetricData.selectedService.value === 'loading') {
+  const metricDataSelectedService =
+    typeof dynatraceMetricData.selectedService !== 'string'
+      ? dynatraceMetricData?.selectedService?.value
+      : dynatraceMetricData.selectedService
+  if (!metricDataSelectedService || metricDataSelectedService === 'loading') {
     errors[DynatraceHealthSourceFieldNames.DYNATRACE_SELECTED_SERVICE] = getString(
       'cv.healthSource.connectors.Dynatrace.validations.selectedService'
     )
@@ -158,8 +170,8 @@ export const validateDynatraceCustomMetricFields = (
   mappedMetrics?: Map<string, DynatraceMetricInfo>
 ): ((key: string) => string) => {
   const errorsToReturn = cloneDeep(errors)
-
-  if (!values.metricSelector) {
+  const isMetricSelectorFixed = getMultiTypeFromValue(values.metricSelector) === MultiTypeInputType.FIXED
+  if (!values.metricSelector && isMetricSelectorFixed) {
     if (values.isManualQuery) {
       errorsToReturn[DynatraceHealthSourceFieldNames.METRIC_SELECTOR] = getString(
         'cv.monitoringSources.gco.manualInputQueryModal.validation.query'
@@ -169,7 +181,7 @@ export const validateDynatraceCustomMetricFields = (
         'cv.monitoringSources.metricValidation'
       )
     }
-  } else if (!values.metricSelector.includes(QUERY_CONTAINS_SERVICE_VALIDATION_PARAM)) {
+  } else if (isMetricSelectorFixed && !values?.metricSelector?.includes(QUERY_CONTAINS_SERVICE_VALIDATION_PARAM)) {
     errorsToReturn[DynatraceHealthSourceFieldNames.METRIC_SELECTOR] = `${getString(
       'cv.monitoringSources.datadog.validation.queryContains'
     )}${QUERY_CONTAINS_SERVICE_VALIDATION_PARAM}`
@@ -233,5 +245,19 @@ export const defaultDynatraceCustomMetric = (
     metricName: getString('cv.healthSource.connectors.Dynatrace.defaultMetricName'),
     isNew: true,
     groupName: { label: '', value: '' }
+  }
+}
+
+export const setApplicationIfConnectorIsInput = (
+  isConnectorRuntimeOrExpression: boolean,
+  dynatraceMetricFormData: any,
+  setDynatraceMetricData: (data: any) => void
+): void => {
+  if (isConnectorRuntimeOrExpression) {
+    setDynatraceMetricData({
+      ...dynatraceMetricFormData,
+      selectedService: RUNTIME_INPUT_VALUE,
+      serviceMethods: []
+    })
   }
 }

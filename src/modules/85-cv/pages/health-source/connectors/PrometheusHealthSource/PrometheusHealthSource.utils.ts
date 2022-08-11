@@ -12,7 +12,7 @@ import {
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE
 } from '@wings-software/uicore'
-import { clone, defaultTo, isNumber } from 'lodash-es'
+import { clone, cloneDeep, defaultTo, isEmpty, isEqual, isNumber } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import type {
   PrometheusFilter,
@@ -44,7 +44,7 @@ import {
 } from '../../common/MetricThresholds/MetricThresholds.constants'
 import { validateCommonFieldsForMetricThreshold } from '../../common/MetricThresholds/MetricThresholds.utils'
 import type { AvailableThresholdTypes } from '../../common/MetricThresholds/MetricThresholds.types'
-import type { PrometheusMetricThresholdType } from './PrometheusHealthSource.types'
+import type { PersistMappedMetricsType, PrometheusMetricThresholdType } from './PrometheusHealthSource.types'
 
 type UpdateSelectedMetricsMap = {
   updatedMetric: string
@@ -516,4 +516,32 @@ export function transformPrometheusSetupSourceToHealthSource(
   }
 
   return dsConfig
+}
+
+export const persistCustomMetric = ({
+  mappedMetrics,
+  selectedMetric,
+  metricThresholds,
+  formikValues,
+  setMappedMetrics
+}: PersistMappedMetricsType): void => {
+  const mapValue = mappedMetrics.get(selectedMetric) as MapPrometheusQueryToService
+  if (!isEmpty(mapValue)) {
+    const nonCustomValuesFromSelectedMetric = {
+      ignoreThresholds: mapValue?.ignoreThresholds,
+      failFastThresholds: mapValue?.failFastThresholds
+    }
+
+    if (selectedMetric === formikValues?.metricName && !isEqual(metricThresholds, nonCustomValuesFromSelectedMetric)) {
+      const clonedMappedMetrics = cloneDeep(mappedMetrics)
+      clonedMappedMetrics.forEach((data, key) => {
+        if (selectedMetric === data.metricName) {
+          clonedMappedMetrics.set(selectedMetric, { ...formikValues, ...metricThresholds })
+        } else {
+          clonedMappedMetrics.set(key, { ...data, ...metricThresholds })
+        }
+      })
+      setMappedMetrics({ selectedMetric: selectedMetric, mappedMetrics: clonedMappedMetrics })
+    }
+  }
 }

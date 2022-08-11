@@ -9,7 +9,7 @@ import React from 'react'
 import { Provider } from 'urql'
 import { fromValue } from 'wonka'
 import type { DocumentNode } from 'graphql'
-import { render } from '@testing-library/react'
+import { queryByText, render } from '@testing-library/react'
 import { FetchBudgetDocument } from 'services/ce/services'
 import { TestWrapper } from '@common/utils/testUtils'
 import Budgets from '../Budgets'
@@ -59,5 +59,25 @@ describe('test cases for Budgets List Page', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
+  })
+
+  test('should be able to render empty page', async () => {
+    const responseState = {
+      executeQuery: ({ query }: { query: DocumentNode }) => {
+        if (query === FetchBudgetDocument) {
+          return fromValue({ data: { budgetList: [] } })
+        }
+      }
+    }
+
+    const { container } = render(
+      <TestWrapper pathParams={params}>
+        <Provider value={responseState as any}>
+          <Budgets />
+        </Provider>
+      </TestWrapper>
+    )
+
+    expect(queryByText(container, 'ce.pageErrorMsg.noBudgetMsg')).toBeInTheDocument()
   })
 })

@@ -222,13 +222,13 @@ export interface HelmHarnessFileStoreFormData extends HarnessFileStoreFormData {
   commandFlags: Array<CommandFlags>
 }
 export interface KustomizeWithHarnessStorePropTypeDataType extends HarnessFileStoreFormData {
-  patchesPaths: string[] | string
-  overlayConfiguration:
+  overlayConfiguration?:
     | string
     | {
         kustomizeYamlFolderPath: string
       }
-  pluginPath: string
+  pluginPath?: string
+  patchesPaths?: string[] | string
 }
 export interface CustomManifestManifestDataType {
   identifier: string

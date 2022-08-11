@@ -126,7 +126,7 @@ function ConfigFilesListView({
     const initValues = get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec', null)
     let files
     let fileType
-    if (get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.secretFiles', ['']).length > 0) {
+    if (get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.secretFiles', []).length > 0) {
       files = get(listOfConfigFiles[configFileIndex], 'configFile.spec.store.spec.secretFiles', [''])
       fileType = FILE_TYPE_VALUES.ENCRYPTED
     } else {
@@ -405,7 +405,6 @@ function ConfigFilesListView({
                 const filesLocation = configFile?.spec?.store?.spec?.files?.length
                   ? configFile?.spec?.store?.spec?.files
                   : configFile?.spec?.store?.spec?.secretFiles
-
                 return (
                   <div className={css.rowItem} key={`${configFile?.identifier}-${index}`}>
                     <section className={css.configFilesList}>
@@ -433,7 +432,18 @@ function ConfigFilesListView({
                         </Text>
                       </div>
                       <div className={css.columnLocation}>
-                        <Text color={Color.BLACK} lineClamp={1} inline>
+                        <Text
+                          color={Color.BLACK}
+                          lineClamp={1}
+                          inline
+                          tooltip={filesLocation.map((field: string, i: number) => {
+                            return (
+                              <Text padding="small" key={i}>
+                                {field}
+                              </Text>
+                            )
+                          })}
+                        >
                           {filesLocation}
                         </Text>
                       </div>

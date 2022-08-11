@@ -1,74 +1,34 @@
 /*
- * Copyright 2021 Harness Inc. All rights reserved.
+ * Copyright 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
 import React from 'react'
-import { act, fireEvent, render, waitFor, queryByAttribute } from '@testing-library/react'
-import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { act, fireEvent, getAllByText, getByText, queryByText, render, waitFor } from '@testing-library/react'
+import { MultiTypeInputType, MultiTypeInputValue, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
+import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { SshWinRmAzureInfrastructure } from 'services/cd-ng'
-import * as CDNG from 'services/cd-ng'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
-import {
-  SshWinRmAzureInfrastructureSpec,
-  AzureConnectorRegex,
-  AzureSubscriptionRegex,
-  AzureResourceGroupRegex
-} from '../SshWinRmAzureInfrastructureSpec'
+import { SshWinRmAzureInfrastructureSpec } from '../SshWinRmAzureInfrastructureSpec'
 import {
   connectorsResponse,
   connectorResponse,
   subscriptionsResponse,
   resourceGroupsResponse,
-  tagsResponse,
-  mockSecret,
-  mockListSecrets
+  tagsResponse
 } from './mocks'
+import type { SshWinRmAzureInfrastructureTemplate } from '../SshWinRmAzureInfrastructureInterface'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
-jest.mock('services/cd-ng', () => ({
-  useGetConnector: jest.fn(() => connectorResponse),
-  getConnectorListV2Promise: jest.fn(() => Promise.resolve(connectorsResponse.data)),
-  getAzureSubscriptionsPromise: jest.fn(() => Promise.resolve(subscriptionsResponse.data)),
-  getAzureResourceGroupsBySubscriptionPromise: jest.fn(() => Promise.resolve(resourceGroupsResponse.data)),
-  getSubscriptionTagsPromise: jest.fn(() => Promise.resolve(tagsResponse.data)),
-
-  getSecretV2Promise: jest.fn().mockImplementation(() => Promise.resolve(mockSecret)),
-  listSecretsV2Promise: jest.fn().mockImplementation(() => Promise.resolve(mockListSecrets))
-}))
-
-const infraDefPath = 'pipeline.stages[0].stage.spec.infrastructure.infrastructureDefinition'
-const accountIdParams = { accountId: 'accountId1' }
-
-const getInitialCredAndConn = (): Partial<SshWinRmAzureInfrastructure> => ({
-  credentialsRef: 'credentialsRef1',
-  sshKey: { identifier: 'credentialsRef1' },
-  connectorRef: 'connectorRef1'
-})
-
-const getInitialValues = (): SshWinRmAzureInfrastructure => ({
-  credentialsRef: 'credentialsRef1',
-  sshKey: { identifier: 'credentialsRef1' },
-  connectorRef: 'connectorRef1',
-  subscriptionId: 'subscriptionId',
-  resourceGroup: 'resourceGroup',
-  cluster: 'cluster',
-  tags: {}
-})
-
-const submitForm = async (getByText: any) =>
-  await act(async () => {
-    fireEvent.click(getByText('Submit'))
-  })
-
-/*const getInvalidYaml = (): string => `p ipe<>line:
+const getInvalidYaml = (): string => `p ipe<>line:
 sta ges:
    - st<>[]age:
-              s pe<> c: <> sad-~`*/
+              s pe<> c: <> sad-~`
 
 const getYaml = (): string => `pipeline:
     stages:
@@ -78,17 +38,139 @@ const getYaml = (): string => `pipeline:
                       infrastructureDefinition:
                           type: SshWinRmAzure
                           spec:
+                              credentialsRef: account.secrets
                               connectorRef: account.connectorRef
                               subscriptionId: subscriptionId
                               resourceGroup: resourceGroup
-                              cluster: cluster
-                              namespace: namespace
-                              releaseName: releaseName`
+                              `
 
-/*const connectorRefPath = 'pipeline.stages.0.stage.spec.infrastructure.infrastructureDefinition.spec.connectorRef'
+jest.mock('services/cd-ng', () => ({
+  useGetConnector: jest.fn(() => connectorResponse),
+  useGetAzureSubscriptions: jest.fn(() => subscriptionsResponse),
+  useGetAzureResourceGroupsBySubscription: jest.fn(() => resourceGroupsResponse),
+  getConnectorListV2Promise: jest.fn(() => Promise.resolve(connectorsResponse.data)),
+  getAzureSubscriptionsPromise: jest.fn(() => Promise.resolve(subscriptionsResponse.data)),
+  getAzureResourceGroupsBySubscriptionPromise: jest.fn(() => Promise.resolve(resourceGroupsResponse.data)),
+  useGetSubscriptionTags: jest.fn(() => tagsResponse)
+}))
+
+const getInitialValues = (): SshWinRmAzureInfrastructure => ({
+  credentialsRef: 'credentialsRef',
+  connectorRef: 'connectorRef',
+  subscriptionId: 'subscriptionId',
+  resourceGroup: 'resourceGroup',
+  tags: {
+    key: 'value'
+  }
+})
+
+const getRuntimeInputsValues = (): SshWinRmAzureInfrastructureTemplate => ({
+  credentialsRef: RUNTIME_INPUT_VALUE,
+  connectorRef: RUNTIME_INPUT_VALUE,
+  subscriptionId: RUNTIME_INPUT_VALUE,
+  resourceGroup: RUNTIME_INPUT_VALUE,
+  tags: RUNTIME_INPUT_VALUE
+})
+
+const getParams = () => ({
+  accountId: 'accountId',
+  module: 'cd',
+  orgIdentifier: 'default',
+  pipelineIdentifier: '-1',
+  projectIdentifier: 'projectIdentifier'
+})
+jest.mock('@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField', () => ({
+  ...(jest.requireActual('@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField') as any),
+  // eslint-disable-next-line react/display-name
+  FormMultiTypeConnectorField: (props: any) => {
+    return (
+      <div>
+        <button
+          name={'changeFormMultiTypeConnectorField'}
+          onClick={() => {
+            props.onChange('value', MultiTypeInputValue.STRING, MultiTypeInputType.RUNTIME)
+          }}
+        >
+          Form Multi Type Connector Field button
+        </button>
+      </div>
+    )
+  }
+}))
+// const credentialsRefPath = 'pipeline.stages.0.stage.spec.infrastructure.infrastructureDefinition.spec.credentialsRef'
+const connectorRefPath = 'pipeline.stages.0.stage.spec.infrastructure.infrastructureDefinition.spec.connectorRef'
 const subscriptionPath = 'pipeline.stages.0.stage.spec.infrastructure.infrastructureDefinition.spec.subscriptionId'
 const resourceGroupPath = 'pipeline.stages.0.stage.spec.infrastructure.infrastructureDefinition.spec.resourceGroup'
-const clusterPath = 'pipeline.stages.0.stage.spec.infrastructure.infrastructureDefinition.spec.cluster'*/
+
+describe('Test Azure Infrastructure Spec snapshot', () => {
+  beforeEach(() => {
+    factory.registerStep(new SshWinRmAzureInfrastructureSpec())
+  })
+
+  test('Should render edit view with empty initial values', () => {
+    const { container } = render(
+      <TestStepWidget initialValues={{}} type={StepType.SshWinRmAzure} stepViewType={StepViewType.Edit} />
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('Should render edit view with values', () => {
+    const { container } = render(
+      <TestStepWidget
+        initialValues={getInitialValues()}
+        type={StepType.SshWinRmAzure}
+        stepViewType={StepViewType.Edit}
+      />
+    )
+
+    expect(container).toMatchSnapshot()
+  })
+
+  test('Should render edit view with runtime values', () => {
+    const { container } = render(
+      <TestStepWidget
+        initialValues={getRuntimeInputsValues()}
+        type={StepType.SshWinRmAzure}
+        stepViewType={StepViewType.Edit}
+      />
+    )
+    expect(container).toMatchSnapshot()
+  })
+  test('Should render edit view for inputset view and fetch dropdowns on focus', async () => {
+    const { container, getByPlaceholderText } = render(
+      <TestStepWidget
+        initialValues={getInitialValues()}
+        template={getRuntimeInputsValues()}
+        allValues={getInitialValues()}
+        type={StepType.SshWinRmAzure}
+        stepViewType={StepViewType.InputSet}
+      />
+    )
+    expect(container).toMatchSnapshot()
+
+    const subscriptionInput = getByPlaceholderText('cd.steps.azureInfraStep.subscriptionPlaceholder') as HTMLElement
+    subscriptionInput.focus()
+    await waitFor(() => expect(subscriptionsResponse.refetch).toHaveBeenCalled())
+
+    const resourceGroupInput = getByPlaceholderText('cd.steps.azureInfraStep.resourceGroupPlaceholder') as HTMLElement
+    resourceGroupInput.focus()
+    await waitFor(() => expect(resourceGroupsResponse.refetch).toHaveBeenCalled())
+  })
+
+  test('Should render variable view', () => {
+    const { container } = render(
+      <TestStepWidget
+        initialValues={getInitialValues()}
+        template={getRuntimeInputsValues()}
+        allValues={getInitialValues()}
+        type={StepType.SshWinRmAzure}
+        stepViewType={StepViewType.InputVariable}
+      />
+    )
+
+    expect(container).toMatchSnapshot()
+  })
+})
 
 describe('Test Azure Infrastructure Spec behavior', () => {
   beforeEach(() => {
@@ -97,10 +179,10 @@ describe('Test Azure Infrastructure Spec behavior', () => {
 
   test('Should call onUpdate if valid values entered - inputset', async () => {
     const onUpdateHandler = jest.fn()
-    const { getByText } = render(
+    const { container, findByText, getByPlaceholderText } = render(
       <TestStepWidget
         initialValues={getInitialValues()}
-        template={getInitialValues()}
+        template={getRuntimeInputsValues()}
         allValues={getInitialValues()}
         type={StepType.SshWinRmAzure}
         stepViewType={StepViewType.InputSet}
@@ -108,109 +190,107 @@ describe('Test Azure Infrastructure Spec behavior', () => {
       />
     )
 
-    await submitForm(getByText)
-    await waitFor(() => {
-      expect(onUpdateHandler).toHaveBeenCalledWith(getInitialValues())
+    const button = await waitFor(() => findByText('Form Multi Type Connector Field button'))
+    act(() => {
+      fireEvent.click(button)
     })
+    const subscriptionInput = getByPlaceholderText('cd.steps.azureInfraStep.subscriptionPlaceholder') as HTMLElement
+    expect(subscriptionInput).not.toBeDisabled()
+    fireEvent.change(subscriptionInput!, { target: { label: 's1', value: 'subscription1' } })
+    const resourceGroupInput = getByPlaceholderText('cd.steps.azureInfraStep.resourceGroupPlaceholder') as HTMLElement
+    fireEvent.change(resourceGroupInput!, { target: { value: 'rg1' } })
+    const addTags = getAllByText(container, 'add')[1] as HTMLElement
+    fireEvent.click(addTags!)
+    expect(getByText(container, 'keyLabel')).toBeTruthy()
+    expect(container).toMatchSnapshot()
+    const tagEl = getByPlaceholderText('- Select -') as HTMLElement
+    fireEvent.change(tagEl!, { target: { value: 'newKey' } })
+    const tagValEl = container.querySelector('[name=".tags."]') as HTMLElement
+    fireEvent.change(tagValEl!, { target: { value: 'newValue' } })
+    const deleteTag = getByText(container, 'common.remove') as HTMLElement
+    fireEvent.click(deleteTag!)
+    expect(queryByText(container, 'keyLabel')).toBeNull()
+    await waitFor(() => expect(onUpdateHandler).toHaveBeenCalled())
   })
-
-  test('Should not call onUpdate if invalid values entered - inputset', async () => {
+  test('Should call onUpdate if valid values entered - edit view', async () => {
     const onUpdateHandler = jest.fn()
-    const { getByText } = render(
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    const { container, getByPlaceholderText } = render(
       <TestStepWidget
-        initialValues={{}}
+        initialValues={getInitialValues()}
         template={getInitialValues()}
-        allValues={{}}
+        allValues={getInitialValues()}
         type={StepType.SshWinRmAzure}
-        stepViewType={StepViewType.InputSet}
+        stepViewType={StepViewType.Edit}
         onUpdate={onUpdateHandler}
+        ref={ref}
       />
     )
 
-    await submitForm(getByText)
-    expect(onUpdateHandler).not.toHaveBeenCalled()
-  })
-
-  test('Test user flow', async () => {
-    const onUpdateHandler = jest.fn()
-    const { getByText, container } = render(
-      <TestStepWidget
-        initialValues={getInitialCredAndConn()}
-        template={getInitialCredAndConn()}
-        allValues={getInitialCredAndConn()}
-        type={StepType.SshWinRmAzure}
-        stepViewType={StepViewType.InputSet}
-        onUpdate={onUpdateHandler}
-      />
-    )
-
-    await waitFor(() => {
-      expect(CDNG.getAzureSubscriptionsPromise).toBeCalled()
-    })
-    await waitFor(() => {
-      expect(queryByAttribute('name', container, 'subscriptionId')).not.toBeDisabled()
-    })
-
-    fireEvent.click(
-      container.querySelector(`[class*="subscriptionId-select"] .bp3-input-action [data-icon="chevron-down"]`)!
-    )
-    fireEvent.click(getByText('subscription1'))
-    await waitFor(() => {
-      expect(CDNG.getAzureResourceGroupsBySubscriptionPromise).toBeCalled()
-    })
-
-    await waitFor(() => {
-      expect(queryByAttribute('name', container, 'resourceGroup')).not.toBeDisabled()
-    })
-    fireEvent.click(
-      container.querySelector(`[class*="resourceGroup-select"] .bp3-input-action [data-icon="chevron-down"]`)!
-    )
-    fireEvent.click(getByText('rg1'))
-
-    await submitForm(getByText)
-    await waitFor(() => {
-      expect(onUpdateHandler).toHaveBeenCalled()
-    })
+    expect(container).toMatchSnapshot()
+    const subscriptionInput = getByPlaceholderText('cd.steps.azureInfraStep.subscriptionPlaceholder') as HTMLElement
+    expect(subscriptionInput).not.toBeDisabled()
+    fireEvent.change(subscriptionInput!, { target: { label: 's1', value: 'subscription1' } })
+    const resourceGroupInput = getByPlaceholderText('cd.steps.azureInfraStep.resourceGroupPlaceholder') as HTMLElement
+    fireEvent.change(resourceGroupInput!, { target: { value: 'rg1' } })
+    const tagEl = getByPlaceholderText('- Select -') as HTMLElement
+    fireEvent.change(tagEl!, { target: { value: 'newKey' } })
+    const tagValEl = container.querySelector('[name="tags:key"]') as HTMLElement
+    fireEvent.change(tagValEl!, { target: { value: 'newValue' } })
+    expect(container).toMatchSnapshot()
+    const deleteTag = getByText(container, 'common.remove') as HTMLElement
+    fireEvent.click(deleteTag!)
+    expect(queryByText(container, 'keyLabel')).toBeNull()
+    const addTags = getAllByText(container, 'add')[1] as HTMLElement
+    fireEvent.click(addTags!)
+    expect(getByText(container, 'keyLabel')).toBeTruthy()
+    await waitFor(() => expect(onUpdateHandler).toHaveBeenCalled())
   })
 })
 
-describe('invocation map test', () => {
-  test('invocation map, empty yaml', () => {
-    const yaml = ''
-    const invocationMap = factory.getStep(StepType.SshWinRmAzure)?.getInvocationMap?.()
-    invocationMap?.get(AzureConnectorRegex)?.(infraDefPath, yaml, accountIdParams)
-    expect(CDNG.getConnectorListV2Promise).not.toBeCalled()
-    invocationMap?.get(AzureSubscriptionRegex)?.(infraDefPath, yaml, accountIdParams)
-    expect(CDNG.getAzureSubscriptionsPromise).toBeCalled()
-    invocationMap?.get(AzureResourceGroupRegex)?.(infraDefPath, yaml, accountIdParams)
-    expect(CDNG.getAzureResourceGroupsBySubscriptionPromise).toBeCalled()
+describe('Test Azure Infrastructure Spec autocomplete', () => {
+  test('Test connector autocomplete', async () => {
+    const step = new SshWinRmAzureInfrastructureSpec() as any
+    let list: CompletionItemInterface[]
+
+    list = await step.getConnectorsListForYaml(connectorRefPath, getYaml(), getParams())
+    expect(list).toHaveLength(1)
+    expect(list[0].insertText).toBe('azuretestconnector')
+
+    list = await step.getConnectorsListForYaml('invalid path', getYaml(), getParams())
+    expect(list).toHaveLength(0)
+
+    list = await step.getConnectorsListForYaml(connectorRefPath, getInvalidYaml(), getParams())
+    expect(list).toHaveLength(0)
   })
 
-  test('invocation map, wrong yaml', () => {
-    const yaml = {} as string
-    const invocationMap = factory.getStep(StepType.SshWinRmAzure)?.getInvocationMap?.()
-    invocationMap?.get(AzureConnectorRegex)?.(infraDefPath, yaml, accountIdParams)
-    expect(CDNG.getConnectorListV2Promise).not.toBeCalled()
-    invocationMap?.get(AzureSubscriptionRegex)?.(infraDefPath, yaml, accountIdParams)
-    expect(CDNG.getAzureSubscriptionsPromise).toBeCalled()
-    invocationMap?.get(AzureResourceGroupRegex)?.(infraDefPath, yaml, accountIdParams)
-    expect(CDNG.getAzureResourceGroupsBySubscriptionPromise).toBeCalled()
+  test('Test subscription names autocomplete', async () => {
+    const step = new SshWinRmAzureInfrastructureSpec() as any
+    let list: CompletionItemInterface[]
+
+    list = await step.getSubscriptionListForYaml(subscriptionPath, getYaml(), getParams())
+    expect(list).toHaveLength(2)
+    expect(list[0].insertText).toBe('12d2db62-5aa9-471d-84bb-faa489b3e319')
+
+    list = await step.getSubscriptionListForYaml('invalid path', getYaml(), getParams())
+    expect(list).toHaveLength(0)
+
+    list = await step.getSubscriptionListForYaml(subscriptionPath, getInvalidYaml(), getParams())
+    expect(list).toHaveLength(0)
   })
 
-  test('invocation map should call template list', () => {
-    jest.spyOn(CDNG, 'listSecretsV2Promise').mockImplementationOnce(() => Promise.resolve(mockListSecrets as any))
-    jest
-      .spyOn(CDNG, 'getConnectorListV2Promise')
-      .mockImplementationOnce(() => Promise.resolve(connectorsResponse.data as any))
+  test('Test resource groups names autocomplete', async () => {
+    const step = new SshWinRmAzureInfrastructureSpec() as any
+    let list: CompletionItemInterface[]
 
-    const yaml = getYaml()
+    list = await step.getResourceGroupListForYaml(resourceGroupPath, getYaml(), getParams())
+    expect(list).toHaveLength(2)
+    expect(list[0].insertText).toBe('NetworkWatcherRG')
 
-    const invocationMap = factory.getStep(StepType.SshWinRmAzure)?.getInvocationMap?.()
-    invocationMap?.get(AzureConnectorRegex)?.(infraDefPath, yaml, accountIdParams)
-    expect(CDNG.getConnectorListV2Promise).toBeCalled()
-    invocationMap?.get(AzureSubscriptionRegex)?.(infraDefPath, yaml, accountIdParams)
-    expect(CDNG.getAzureSubscriptionsPromise).toBeCalled()
-    invocationMap?.get(AzureResourceGroupRegex)?.(infraDefPath, yaml, accountIdParams)
-    expect(CDNG.getAzureResourceGroupsBySubscriptionPromise).toBeCalled()
+    list = await step.getResourceGroupListForYaml('invalid path', getYaml(), getParams())
+    expect(list).toHaveLength(0)
+
+    list = await step.getResourceGroupListForYaml(resourceGroupPath, getInvalidYaml(), getParams())
+    expect(list).toHaveLength(0)
   })
 })

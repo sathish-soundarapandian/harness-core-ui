@@ -30,7 +30,7 @@ import { useStrings } from 'framework/strings'
 import { Badge } from '@pipeline/pages/utils/Badge/Badge'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import type { PMSPipelineSummaryResponse, RecentExecutionInfoDTO } from 'services/pipeline-ng'
-import { ClonePipelineForm } from '@pipeline/pages/pipelines/views/ClonePipelineForm/ClonePipelineForm'
+import { ClonePipelineForm } from '@pipeline/components/ClonePipelineForm/ClonePipelineForm'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
@@ -324,8 +324,8 @@ export const RecentExecutionsCell: CellType = ({ row }) => {
     recentExecutions = [...recentExecutions, ...fillExecutions]
   }
 
-  const routeByExecutionId = (executionIdentifier: string) =>
-    routes.toExecutionPipelineView({
+  const getLinkProps = (executionIdentifier: string) => ({
+    to: routes.toExecutionPipelineView({
       orgIdentifier,
       pipelineIdentifier: data.identifier || '',
       projectIdentifier,
@@ -333,7 +333,9 @@ export const RecentExecutionsCell: CellType = ({ row }) => {
       accountId,
       module,
       source: source || 'deployments'
-    })
+    }),
+    'aria-label': `Execution ${executionIdentifier}`
+  })
 
   return (
     <StatusHeatMap
@@ -341,7 +343,7 @@ export const RecentExecutionsCell: CellType = ({ row }) => {
       data={recentExecutions}
       getId={(i, index) => defaultTo(i.planExecutionId, index)}
       getStatus={i => i.status as ExecutionStatus}
-      getRouteTo={i => (i.planExecutionId ? routeByExecutionId(i.planExecutionId) : undefined)}
+      getLinkProps={i => (i.planExecutionId ? getLinkProps(i.planExecutionId) : undefined)}
       getPopoverProps={i => ({
         position: Position.TOP,
         interactionKind: PopoverInteractionKind.HOVER,

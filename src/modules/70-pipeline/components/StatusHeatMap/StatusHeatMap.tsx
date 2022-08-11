@@ -7,7 +7,7 @@
 
 import { Color, Icon, IconName, Popover, PopoverProps } from '@harness/uicore'
 import cx from 'classnames'
-import React from 'react'
+import React, { ComponentProps } from 'react'
 import { Link } from 'react-router-dom'
 import {
   ExecutionStatus,
@@ -55,11 +55,10 @@ export interface StatusHeatMapProps<T> {
   data: T[]
   getId: (item: T, index: string) => string
   getStatus: (item: T) => ExecutionStatus
-  getRouteTo?: (item: T) => string | undefined
   className?: string
   getPopoverProps?: (item: T) => PopoverProps
   onClick?: (item: T, event: React.MouseEvent) => void
-  href?: string
+  getLinkProps?: (item: T) => ComponentProps<Link> | undefined
 }
 
 export interface StatusCell<T> {
@@ -68,7 +67,7 @@ export interface StatusCell<T> {
 }
 
 export function StatusHeatMap<T>(props: StatusHeatMapProps<T>): React.ReactElement {
-  const { data, getId, getStatus, className, getPopoverProps, onClick, getRouteTo } = props
+  const { data, getId, getStatus, className, getPopoverProps, onClick, getLinkProps } = props
 
   function StatusCell({ row, id }: StatusCell<T>) {
     const { primaryState, icon, iconColor } = getStatusMapping(getStatus(row))
@@ -88,11 +87,11 @@ export function StatusHeatMap<T>(props: StatusHeatMapProps<T>): React.ReactEleme
     <div className={cx(css.statusHeatMap, className)}>
       {data.map((row, index) => {
         const id = getId(row, index.toString())
-        const href = getRouteTo && getRouteTo(row)
+        const linkProps = getLinkProps && getLinkProps(row)
         return (
           <Popover disabled={!getPopoverProps} key={id} {...getPopoverProps?.(row)}>
-            {href ? (
-              <Link to={href}>
+            {linkProps ? (
+              <Link {...linkProps}>
                 <StatusCell row={row} id={id} />
               </Link>
             ) : (

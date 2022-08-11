@@ -117,6 +117,10 @@ export function Environments() {
             permission: PermissionIdentifier.EDIT_ENVIRONMENT,
             resource: {
               resourceType: ResourceType.ENVIRONMENT
+            },
+            attributeFilter: {
+              attributeName: 'type',
+              attributeValues: ['Production', 'PreProduction']
             }
           },
           onClick: showCreateModal

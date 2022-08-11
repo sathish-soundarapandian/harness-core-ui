@@ -8,7 +8,8 @@ if [ "$?" -ne 0 ]
 then
   exit 1
 fi
-IFS="|" read -r -a PROJSPLIT <<< "${PROJECTS}"
+# Get affected projects by this release
+KEYPROJS=$(git log --pretty=oneline --abbrev-commit | awk "1;/Branching to release\//{exit}" | grep -o -iE '('${PROJECTS}')' | tr '[:lower:]' '[:upper:]' | sort | uniq)
 # Set the release date of the version to the date that the build is being done.
 RELDATE=$(date +'%Y-%m-%d')
 # Set the next version number - this will be something like 0.335.0
@@ -17,7 +18,7 @@ echo "Creating $NEXT_VERSION in product Jira projects"
 # Exclude projects that have been archived, replaced, deleted, or non-product
 EXCLUDE_PROJECTS=",ART,OENG,OPS,SWAT,"
 # Iterate over projects
-for PROJ in "${PROJSPLIT[@]}"
+for PROJ in "${KEYPROJS}"
  do
     if [[ "$EXCLUDE_PROJECTS" == *",$PROJ,"* ]]; then
       echo "Skipping $PROJ - it has been archived or is not applicable"

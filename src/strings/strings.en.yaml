@@ -313,7 +313,6 @@ applications: Applications
 stageDetails: Stage Details
 stageOverview: Stage Overview
 stageNameLabel: Stage Name
-stageName: 'Stage: {{ name }}'
 tagsLabel: Tags
 tagLabel: Tag
 whatToDeploy: What would you like to deploy?
@@ -363,7 +362,6 @@ serviceAccount: Service Account
 usernamePassword: 'Username and Password'
 usernameToken: 'Username and Token'
 kerberos: 'Kerberos'
-secureToken: 'Secure Token'
 anonymous: 'Anonymous (no credentials required)'
 saveAndContinue: 'Save and Continue'
 errorWhileSaving: 'Error occurred when saving'

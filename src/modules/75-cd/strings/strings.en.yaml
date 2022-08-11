@@ -24,8 +24,8 @@ steps:
     destinationPathPlaceholder: Enter Destination Path
     scriptTypePlaceholder: Enter Script Type
     filesAndPatterns: Files and Patterns
-    fileToTail: FILE TO TAIL
-    patternToSearch: PATTERN TO SEARCH
+    fileToTail: File to Tail
+    patternToSearch: Pattern to Search
     fileToTailPlaceholder: Enter File to Tail
     patternToSearchPlaceholder: Enter Pattern to Search
     runOnDelegate: Run on Delegate
@@ -422,3 +422,8 @@ getStartedWithCD:
   delegateInfo: Delegates are worker processes that run on your infrastructure to execute tasks on behalf of the Harness platform.
   setupaNewDelegate: + Setup a New Delegate
 serviceName: Service Name
+credentialsRef: credentialsRef
+connectorRefText: connectorRef
+hosts: hosts
+hostFilters: hostFilters
+attributeFilters: attributeFilters

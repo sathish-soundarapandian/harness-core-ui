@@ -113,8 +113,8 @@ export function AzureWebAppServiceSpecVariablesForm(
               <>
                 <VariablesListTable
                   className={cx(css.manifestVariablesTable, pipelineVariableCss.variablePaddingL3)}
-                  data={startupScriptVariables?.spec}
-                  originalData={initialValues?.startupCommand?.spec}
+                  data={startupScriptVariables?.store?.spec}
+                  originalData={initialValues?.startupCommand?.store?.spec}
                   metadataMap={metadataMap}
                 />
               </>
@@ -143,8 +143,8 @@ export function AzureWebAppServiceSpecVariablesForm(
               <>
                 <VariablesListTable
                   className={cx(css.manifestVariablesTable, pipelineVariableCss.variablePaddingL3)}
-                  data={applicationSettingsVariables?.spec}
-                  originalData={initialValues?.applicationSettings?.spec}
+                  data={applicationSettingsVariables?.store?.spec}
+                  originalData={initialValues?.applicationSettings?.store?.spec}
                   metadataMap={metadataMap}
                 />
               </>
@@ -173,8 +173,8 @@ export function AzureWebAppServiceSpecVariablesForm(
               <>
                 <VariablesListTable
                   className={cx(css.manifestVariablesTable, pipelineVariableCss.variablePaddingL3)}
-                  data={connectionStringsVariables?.spec}
-                  originalData={initialValues?.connectionStrings?.spec}
+                  data={connectionStringsVariables?.store?.spec}
+                  originalData={initialValues?.connectionStrings?.store?.spec}
                   metadataMap={metadataMap}
                 />
               </>

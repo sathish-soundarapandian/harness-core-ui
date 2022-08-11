@@ -6,8 +6,18 @@
  */
 
 import React from 'react'
-import { fireEvent, render, act, getByTestId, getByText, getAllByTestId, waitFor } from '@testing-library/react'
+import {
+  fireEvent,
+  render,
+  act,
+  getByTestId,
+  getByText,
+  getAllByTestId,
+  waitFor,
+  findByTestId
+} from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import { clickSubmit } from '@common/utils/JestFormHelper'
 import type { StageElementWrapperConfig } from 'services/pipeline-ng'
 import * as cdngServices from 'services/cd-ng'
 import { ExecutionStrategy } from '../ExecutionStrategy'
@@ -21,10 +31,26 @@ import {
   defaultUpdateStageFnArg,
   canaryUpdateStageFnArg,
   blueGreenUpdateStageFnArg,
-  rollingUpdateStageFnArg
+  rollingUpdateStageFnArg,
+  rollingUpdateSshStageFnArg
 } from './mocks/mock'
 import { PipelineContext, PipelineContextInterface } from '../../PipelineContext/PipelineContext'
 
+jest
+  .spyOn(cdngServices, 'usePostExecutionStrategyYaml')
+  .mockImplementation((props: cdngServices.UsePostExecutionStrategyYamlProps): any => {
+    switch (props.queryParams?.strategyType) {
+      case 'Rolling':
+        return {
+          mutate: () =>
+            Promise.resolve({
+              status: 'SUCCESS',
+              data: rollingYaml
+            }),
+          loading: false
+        }
+    }
+  })
 jest
   .spyOn(cdngServices, 'useGetExecutionStrategyYaml')
   .mockImplementation((props: cdngServices.UseGetExecutionStrategyYamlProps) => {
@@ -347,9 +373,7 @@ describe('ExecutionStrategy test', () => {
   })
   test('isPropagating true and checkBox', () => {
     pipelineContextMockValue = getDummyPipelineContextValue()
-    jest.spyOn(cdngServices, 'useGetExecutionStrategyYaml').mockImplementation((): any => {
-      return { data: {}, error: false }
-    })
+
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={pipelineContextMockValue}>
@@ -428,7 +452,7 @@ describe('ExecutionStrategy test', () => {
     expect(getError(container)).toBeFalsy()
   })
 
-  test('should display error state', () => {
+  test('should display error state', async () => {
     jest.spyOn(cdngServices, 'useGetExecutionStrategyList').mockImplementation(() => {
       return { loading: false, error: true, data: [], refetch: jest.fn() } as any
     })
@@ -465,5 +489,130 @@ describe('ExecutionStrategy test', () => {
     )
     expect(getLoader(container)).toBeFalsy()
     expect(getError(container)).toBeTruthy()
+  })
+  test('should display use strategy btn', async () => {
+    pipelineContextMockValue = getDummyPipelineContextValue()
+
+    const { container } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={pipelineContextMockValue}>
+          <ExecutionStrategy
+            selectedStage={
+              {
+                stage: {
+                  identifier: 'stage_1',
+                  name: 'stage 1',
+                  spec: {
+                    serviceConfig: {
+                      serviceDefinition: { type: 'Kubernetes' },
+                      serviceRef: 'service_3',
+                      useFromStage: {
+                        stage: 'deploy'
+                      }
+                    },
+                    execution: {
+                      steps: [],
+                      rollbackSteps: []
+                    }
+                  },
+                  type: 'Deployment'
+                }
+              } as StageElementWrapperConfig
+            }
+            ref={jest.fn()}
+          />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    const useStrategyBtn = await findByTestId(container, 'execution-use-strategy')
+
+    expect(useStrategyBtn).toBeInTheDocument()
+  })
+  test('render phases, ssh/winrm type', async () => {
+    pipelineContextMockValue = getDummyPipelineContextValue()
+    const { container } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={pipelineContextMockValue}>
+          <ExecutionStrategy
+            selectedStage={
+              {
+                stage: {
+                  identifier: 'stage_1',
+                  name: 'stage 1',
+                  spec: {
+                    serviceConfig: {
+                      serviceDefinition: { type: 'Ssh' },
+                      serviceRef: 'service_3'
+                    },
+                    execution: {
+                      steps: [],
+                      rollbackSteps: []
+                    }
+                  },
+                  type: 'Deployment'
+                }
+              } as StageElementWrapperConfig
+            }
+            ref={jest.fn()}
+          />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const phases = await findByTestId(container, 'phases-container')
+    expect(phases).toBeInTheDocument()
+  })
+  test('render phases, update stage ssh type', async () => {
+    pipelineContextMockValue = getDummyPipelineContextValue()
+    const { container } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={pipelineContextMockValue}>
+          <ExecutionStrategy
+            selectedStage={
+              {
+                stage: {
+                  identifier: 'stage_1',
+                  name: 'stage 1',
+                  spec: {
+                    serviceConfig: {
+                      serviceDefinition: { type: 'Ssh' },
+                      serviceRef: 'service_3'
+                    },
+                    execution: {
+                      steps: [],
+                      rollbackSteps: []
+                    }
+                  },
+                  type: 'Deployment'
+                }
+              } as StageElementWrapperConfig
+            }
+            ref={jest.fn()}
+          />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const packageSelect = container.querySelector('input[name="packageType"]')
+    expect(packageSelect).toBeInTheDocument()
+
+    await act(async () => {
+      fireEvent.change(packageSelect!, {
+        target: { value: 'WAR' }
+      })
+    })
+    expect(packageSelect!).toHaveValue('WAR')
+
+    const submitBtnPhases = await findByTestId(container, 'execution-use-strategy-phases')
+    expect(submitBtnPhases).toBeInTheDocument()
+
+    const removeBtn = await findByTestId(container, 'remove-phases-[0]')
+    expect(removeBtn).toBeInTheDocument()
+
+    await act(async () => {
+      clickSubmit(container)
+    })
+    await waitFor(() => expect(pipelineContextMockValue.updateStage).toHaveBeenCalled())
+    expect(pipelineContextMockValue.updateStage).toHaveBeenCalledWith(rollingUpdateSshStageFnArg)
   })
 })

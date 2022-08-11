@@ -294,7 +294,7 @@ function DeployServiceWidget({
                   selectItems={selectOptions || []}
                 />
                 {type === MultiTypeInputType.FIXED && (
-                  <>
+                  <div className={css.serviceActionWrapper}>
                     {isEditService(values) && !loading ? (
                       <RbacButton
                         size={ButtonSize.SMALL}
@@ -336,7 +336,7 @@ function DeployServiceWidget({
                         }}
                       />
                     )}
-                  </>
+                  </div>
                 )}
               </Layout.Horizontal>
             </FormikForm>

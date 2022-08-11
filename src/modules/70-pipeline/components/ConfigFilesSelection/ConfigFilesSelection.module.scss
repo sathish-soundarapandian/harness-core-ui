@@ -82,22 +82,21 @@
       text-overflow: ellipsis;
     }
   }
+  .columnLocation {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    gap: var(--spacing-small);
+    align-items: start;
+    margin-top: 2px;
+    padding-left: var(--spacing-xsmall);
+    & :global(.bp3-popover-target) {
+      width: 180px;
+      margin: 0;
+      padding: var(--spacing-small) !important;
+    }
+  }
 }
 
 .noWrap {
   white-space: nowrap;
-}
-
-.columnLocation {
-  display: grid;
-  grid-template-columns: 20px 1fr;
-  gap: var(--spacing-small);
-  align-items: start;
-  margin-top: 2px;
-  padding-left: var(--spacing-xsmall);
-  & :global(.bp3-popover-target) {
-    width: 180px;
-    margin: 0;
-    padding: var(--spacing-xsmall);
-  }
 }

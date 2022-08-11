@@ -348,6 +348,17 @@ describe('ACR Step', () => {
                   localName: 'step.acr.name'
                 }
               },
+              'step-identifier': {
+                yamlExtraProperties: {
+                  properties: [
+                    {
+                      fqn: 'pipeline.stages.qaStage.execution.steps.acr.identifier',
+                      localName: 'step.acr.identifier',
+                      variableName: 'identifier'
+                    }
+                  ]
+                }
+              },
               'step-timeout': {
                 yamlProperties: {
                   fqn: 'pipeline.stages.qaStage.execution.steps.acr.timeout',
@@ -436,6 +447,7 @@ describe('ACR Step', () => {
             },
             variablesData: {
               type: StepType.ACR,
+              __uuid: 'step-identifier',
               identifier: 'acr',
               name: 'step-name',
               timeout: 'step-timeout',

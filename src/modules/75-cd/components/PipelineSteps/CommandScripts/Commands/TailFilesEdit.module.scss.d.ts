@@ -13,5 +13,6 @@ declare const styles: {
   readonly filesPatternsHeaderOptional: string
   readonly header: string
   readonly panel: string
+  readonly row: string
 }
 export default styles

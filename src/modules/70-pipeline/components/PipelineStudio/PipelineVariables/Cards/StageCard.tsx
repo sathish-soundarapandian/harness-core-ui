@@ -147,7 +147,7 @@ export default function StageCard(props: StageCardProps): React.ReactElement {
             summary={
               <VariableAccordionSummary>
                 <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.BLACK}>
-                  {getString('customVariables.title')}
+                  {getString('pipeline.stageVariables')}
                 </Text>
               </VariableAccordionSummary>
             }

@@ -19,12 +19,14 @@ export const props: StartupScriptSelectionProps = {
   readonly: false
 }
 export const startupCommand = {
-  type: 'Github',
-  spec: {
-    connectorRef: 'Github2',
-    gitFetchType: 'Branch',
-    paths: ['filePath'],
-    branch: 'branch'
+  store: {
+    type: 'Github',
+    spec: {
+      connectorRef: 'Github2',
+      gitFetchType: 'Branch',
+      paths: ['filePath'],
+      branch: 'branch'
+    }
   }
 }
 
@@ -35,14 +37,16 @@ export const onBack = jest.fn()
 export const onUpdate = jest.fn()
 
 export const prevStepData = {
-  type: 'Bitbucket',
-  spec: {
-    connectorRef: 'account.BBsaasAmit',
-    gitFetchType: 'Commit',
-    paths: 'filePath',
-    commitId: 'commitId'
+  store: {
+    type: 'Bitbucket',
+    spec: {
+      connectorRef: 'account.BBsaasAmit',
+      gitFetchType: 'Commit',
+      paths: 'filePath',
+      commitId: 'commitId'
+    }
   },
-  store: 'Bitbucket',
+  selectedStore: 'Bitbucket',
   connectorRef: {
     label: 'BBsaasAmit',
     value: 'account.BBsaasAmit',
@@ -110,8 +114,8 @@ export const propStepTwo = {
   stepName: 'pipeline.startupCommand.fileDetails',
   initialValues: {
     ...startupCommand,
-    store: startupCommand?.type,
-    connectorRef: startupCommand?.spec?.connectorRef
+    selectedStore: startupCommand?.store?.type,
+    connectorRef: startupCommand?.store?.spec?.connectorRef
   } as any,
   handleSubmit: jest.fn()
 }
@@ -126,7 +130,7 @@ export const propStepOne = {
   connectorTypes: ['Git', 'Github', 'GitLab', 'Bitbucket'] as Array<ConnectorTypes>,
   initialValues: {
     ...startupCommand,
-    store: startupCommand?.type,
+    selectedStore: startupCommand?.store?.type,
     connectorRef: '<+input>'
   } as any,
   expressions: [],
@@ -152,8 +156,8 @@ export const propWizard = {
   handleStoreChange: jest.fn(),
   initialValues: {
     ...startupCommand,
-    store: startupCommand?.type,
-    connectorRef: startupCommand?.spec?.connectorRef
+    selectedStore: startupCommand?.store?.type,
+    connectorRef: startupCommand?.store?.spec?.connectorRef
   },
   newConnectorSteps: jest.fn(),
   lastSteps: manifestDetailStep,
@@ -161,14 +165,16 @@ export const propWizard = {
 }
 
 export const prevStepDataRuntime = {
-  type: 'Bitbucket',
-  spec: {
-    connectorRef: '<+input>',
-    gitFetchType: 'Commit',
-    paths: ['<+input>'],
-    repoName: '<+input>',
-    commitId: '<+input>'
+  store: {
+    type: 'Bitbucket',
+    spec: {
+      connectorRef: '<+input>',
+      gitFetchType: 'Commit',
+      paths: ['<+input>'],
+      repoName: '<+input>',
+      commitId: '<+input>'
+    }
   },
-  store: 'Bitbucket',
+  selectedStore: 'Bitbucket',
   connectorRef: '<+input>'
 }

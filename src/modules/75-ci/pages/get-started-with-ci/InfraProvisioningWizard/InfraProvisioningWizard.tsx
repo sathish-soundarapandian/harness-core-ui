@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import set from 'lodash-es/set'
 import get from 'lodash-es/get'
@@ -54,15 +54,16 @@ import {
   InfraProvisiongWizardStepId,
   StepStatus,
   ACCOUNT_SCOPE_PREFIX,
-  DEFAULT_PIPELINE_PAYLOAD,
+  getPipelinePayloadWithoutCodebase,
   OAUTH2_USER_NAME,
   getFullRepoName,
   Hosting,
-  GitAuthenticationMethod
+  GitAuthenticationMethod,
+  getPipelinePayloadWithCodebase
 } from './Constants'
 import { SelectGitProvider, SelectGitProviderRef } from './SelectGitProvider'
 import { SelectRepository, SelectRepositoryRef } from './SelectRepository'
-import { getPRTriggerActions } from '../../../utils/HostedBuildsUtils'
+import { addDetailsToPipeline, getPRTriggerActions } from '../../../utils/HostedBuildsUtils'
 import css from './InfraProvisioningWizard.module.scss'
 
 export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = props => {
@@ -82,6 +83,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const selectRepositoryRef = React.useRef<SelectRepositoryRef | null>(null)
   const { setShowGetStartedTabInMainMenu } = useSideNavContext()
   const { showError: showErrorToaster } = useToaster()
+  const [buttonLabel, setButtonLabel] = useState<string>('')
 
   useEffect(() => {
     setCurrentWizardStepId(lastConfiguredWizardStepId)
@@ -112,30 +114,48 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     queryParams: { accountIdentifier: accountId }
   })
 
-  const constructPipelinePayload = React.useCallback(
-    (repository: UserRepoResponse): string | undefined => {
+  const constructPipelinePayloadWithCodebase = React.useCallback(
+    (repository: UserRepoResponse): string => {
       const UNIQUE_PIPELINE_ID = new Date().getTime().toString()
       const { name: repoName, namespace } = repository
       if (!repoName || !namespace || !configuredGitConnector?.identifier) {
-        return
+        return ''
       }
-
-      const payload = DEFAULT_PIPELINE_PAYLOAD
-      payload.pipeline.name = `${getString('buildText')} ${repoName}`
-      payload.pipeline.identifier = `${getString('buildText')}_${repoName.replace(/-/g, '_')}_${UNIQUE_PIPELINE_ID}` // pipeline identifier cannot have spaces
-      payload.pipeline.projectIdentifier = projectIdentifier
-      payload.pipeline.orgIdentifier = orgIdentifier
-      payload.pipeline.properties.ci.codebase.connectorRef = `${ACCOUNT_SCOPE_PREFIX}${configuredGitConnector?.identifier}`
-      payload.pipeline.properties.ci.codebase.repoName = getFullRepoName(repository)
-
+      const payload = addDetailsToPipeline({
+        originalPipeline: getPipelinePayloadWithCodebase(),
+        name: `${getString('buildText')} ${repoName}`,
+        identifier: `${getString('buildText')}_${repoName.replace(/-/g, '_')}_${UNIQUE_PIPELINE_ID}`,
+        projectIdentifier,
+        orgIdentifier,
+        connectorRef: `${ACCOUNT_SCOPE_PREFIX}${configuredGitConnector?.identifier}`,
+        repoName: getFullRepoName(repository)
+      })
       try {
         return yamlStringify(payload)
       } catch (e) {
         // Ignore error
       }
+      return ''
     },
     [projectIdentifier, orgIdentifier, configuredGitConnector?.identifier]
   )
+
+  const constructPipelinePayloadWithoutCodebase = React.useCallback((): string => {
+    const UNIQUE_PIPELINE_ID = new Date().getTime().toString()
+    const payload = addDetailsToPipeline({
+      originalPipeline: getPipelinePayloadWithoutCodebase(),
+      name: `${getString('buildText')} ${getString('common.pipeline').toLowerCase()}`,
+      identifier: `${getString('buildText')}_${getString('common.pipeline').toLowerCase()}_${UNIQUE_PIPELINE_ID}`,
+      projectIdentifier,
+      orgIdentifier
+    })
+    try {
+      return yamlStringify(payload)
+    } catch (e) {
+      // Ignore error
+    }
+    return ''
+  }, [projectIdentifier, orgIdentifier])
 
   const constructTriggerPayload = React.useCallback(
     ({
@@ -221,11 +241,11 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     }
   }, [])
 
-  const setupPipelineAndTriggers = React.useCallback((): void => {
+  const setupPipelineWithCodebaseAndTriggers = React.useCallback((): void => {
     if (selectRepositoryRef.current?.repository) {
       try {
         createPipelineV2Promise({
-          body: constructPipelinePayload(selectRepositoryRef.current.repository) || '',
+          body: constructPipelinePayloadWithCodebase(selectRepositoryRef.current.repository),
           queryParams: {
             accountIdentifier: accountId,
             orgIdentifier,
@@ -315,7 +335,38 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         setShowPageLoader(false)
       }
     }
-  }, [selectRepositoryRef.current?.repository, configuredGitConnector])
+  }, [selectRepositoryRef.current?.repository, configuredGitConnector, accountId, projectIdentifier, orgIdentifier])
+
+  const setupPipelineWithoutCodebase = useCallback(() => {
+    try {
+      setShowPageLoader(true)
+      createPipelineV2Promise({
+        body: constructPipelinePayloadWithoutCodebase(),
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier,
+          projectIdentifier
+        },
+        requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
+      }).then((createPipelineRes: ResponsePipelineSaveResponse) => {
+        if (createPipelineRes?.data?.identifier) {
+          setShowPageLoader(false)
+          history.push(
+            routes.toPipelineStudio({
+              accountId: accountId,
+              module: 'ci',
+              orgIdentifier,
+              projectIdentifier,
+              pipelineIdentifier: createPipelineRes?.data?.identifier,
+              stageId: getString('buildText')
+            })
+          )
+        }
+      })
+    } catch (e) {
+      setShowPageLoader(false)
+    }
+  }, [accountId, projectIdentifier, orgIdentifier])
 
   const WizardSteps: Map<InfraProvisiongWizardStepId, WizardStep> = new Map([
     [
@@ -327,6 +378,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             disableNextBtn={() => setDisableBtn(true)}
             enableNextBtn={() => setDisableBtn(false)}
             selectedHosting={Hosting.SaaS}
+            updateFooterLabel={setButtonLabel}
           />
         ),
         onClickNext: () => {
@@ -336,17 +388,21 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             setFieldTouched?.('gitProvider', true)
             return
           }
-          if (!gitAuthenticationMethod) {
-            setFieldTouched?.('gitAuthenticationMethod', true)
-            return
-          }
-          if ((gitAuthenticationMethod === GitAuthenticationMethod.OAuth && validatedConnector) || validate?.()) {
-            setCurrentWizardStepId(InfraProvisiongWizardStepId.SelectRepository)
-            updateStepStatus([InfraProvisiongWizardStepId.SelectGitProvider], StepStatus.Success)
-            updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.InProgress)
+          if (gitProvider.type === 'Other') {
+            setupPipelineWithoutCodebase()
+          } else {
+            if (!gitAuthenticationMethod) {
+              setFieldTouched?.('gitAuthenticationMethod', true)
+              return
+            }
+            if ((gitAuthenticationMethod === GitAuthenticationMethod.OAuth && validatedConnector) || validate?.()) {
+              setCurrentWizardStepId(InfraProvisiongWizardStepId.SelectRepository)
+              updateStepStatus([InfraProvisiongWizardStepId.SelectGitProvider], StepStatus.Success)
+              updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.InProgress)
+            }
           }
         },
-        stepFooterLabel: 'ci.getStartedWithCI.selectRepo'
+        stepFooterLabel: `${getString('next')}: ${getString('ci.getStartedWithCI.selectRepo')}`
       }
     ],
     [
@@ -372,8 +428,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.ToDo)
         },
         onClickNext: () => {
-          const selectedRepo = selectRepositoryRef.current?.repository
-          if (selectedRepo && configuredGitConnector?.spec) {
+          const { repository, enableCloneCodebase } = selectRepositoryRef.current || {}
+          if (enableCloneCodebase && repository && configuredGitConnector?.spec) {
             updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.Success)
             setDisableBtn(true)
             setShowPageLoader(true)
@@ -394,7 +450,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
               })
                 .then((scmConnectorResponse: ResponseScmConnectorResponse) => {
                   if (scmConnectorResponse.status === Status.SUCCESS) {
-                    setupPipelineAndTriggers()
+                    setupPipelineWithCodebaseAndTriggers()
                   }
                 })
                 .catch(scmCtrErr => {
@@ -412,7 +468,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
               })
                 .then((oAuthConnectoResponse: ResponseConnectorResponse) => {
                   if (oAuthConnectoResponse.status === Status.SUCCESS) {
-                    setupPipelineAndTriggers()
+                    setupPipelineWithCodebaseAndTriggers()
                   }
                 })
                 .catch(oAuthCtrErr => {
@@ -421,27 +477,24 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                   setShowPageLoader(false)
                 })
             }
+          } else if (!enableCloneCodebase) {
+            setupPipelineWithoutCodebase()
           } else {
             setShowError(true)
           }
         },
-        stepFooterLabel: 'ci.getStartedWithCI.createPipeline'
+        stepFooterLabel: getString('ci.getStartedWithCI.createPipeline')
       }
     ]
   ])
 
   const { stepRender, onClickBack, onClickNext, stepFooterLabel } = WizardSteps.get(currentWizardStepId) ?? {}
 
-  let buttonLabel: string
-  if (stepFooterLabel) {
-    if (currentWizardStepId === InfraProvisiongWizardStepId.SelectRepository) {
-      buttonLabel = getString(stepFooterLabel)
-    } else {
-      buttonLabel = `${getString('next')}: ${getString(stepFooterLabel)}`
+  useEffect(() => {
+    if (stepFooterLabel) {
+      setButtonLabel(stepFooterLabel)
     }
-  } else {
-    buttonLabel = getString('next')
-  }
+  }, [stepFooterLabel])
 
   const shouldRenderBackButton = useMemo((): boolean => {
     return !(

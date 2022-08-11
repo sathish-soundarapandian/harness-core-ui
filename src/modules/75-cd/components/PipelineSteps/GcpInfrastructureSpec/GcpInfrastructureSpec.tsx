@@ -231,26 +231,14 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                   enableConfigureOptions={false}
                   style={{ marginBottom: 'var(--spacing-large)' }}
                   type={'Gcp'}
-                  onChange={(value: any, _valueType, type) => {
-                    if (type === MultiTypeInputType.FIXED && value.record) {
-                      const { record, scope } = value as unknown as { record: ConnectorReferenceDTO; scope: Scope }
-                      const connectorRef =
-                        scope === Scope.ORG || scope === Scope.ACCOUNT
-                          ? `${scope}.${record.identifier}`
-                          : record.identifier
-                      refetchClusterNames({
-                        queryParams: {
-                          accountIdentifier: accountId,
-                          projectIdentifier,
-                          orgIdentifier,
-                          connectorRef
-                        }
-                      })
-                    } else {
+                  onChange={() => {
+                    if (
+                      getMultiTypeFromValue(formik.values.cluster) === MultiTypeInputType.FIXED &&
+                      formik.values.cluster?.value
+                    ) {
+                      formik.setFieldValue('cluster', '')
                       setClusterOptions([])
                     }
-
-                    formik.setFieldValue('cluster', '')
                   }}
                   gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                 />

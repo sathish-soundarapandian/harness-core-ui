@@ -729,11 +729,13 @@ export interface StringsMap {
   'common.specify': string
   'common.stable': string
   'common.stage': string
+  'common.stageName': string
   'common.start14dayTrial': string
   'common.startFree': string
   'common.startFreePlan': string
   'common.startTrial': string
   'common.state': string
+  'common.stepName': string
   'common.submittingRequest': string
   'common.submittingRequestToGitViaDelegate': string
   'common.subscribed': string
@@ -1350,6 +1352,9 @@ export interface StringsMap {
   'secrets.createSSHCredWizard.verifyStepOne': string
   'secrets.createSSHCredWizard.verifyStepTwo': string
   'secrets.createSecret': string
+  'secrets.createWinRmCredWizard.titleDetails': string
+  'secrets.createWinRmCredWizard.validateDomain': string
+  'secrets.createWinRmCredWizard.validatePassword': string
   'secrets.incompleteSecret': string
   'secrets.labelPath': string
   'secrets.labelSecretName': string
@@ -1386,6 +1391,7 @@ export interface StringsMap {
   'secrets.secret.validationIdentifier': string
   'secrets.secret.validationKms': string
   'secrets.secret.validationNameChars': string
+  'secrets.secret.winrmCredential': string
   'secrets.secretsTitle': string
   'secrets.selectSecret': string
   'secrets.sshAuthFormFields.labelFile': string
@@ -1406,6 +1412,13 @@ export interface StringsMap {
   'secrets.titleCreate': string
   'secrets.titleSelect': string
   'secrets.typeSSH': string
+  'secrets.typeWinRM': string
+  'secrets.winRmAuthFormFields.domain': string
+  'secrets.winRmAuthFormFields.labelWinRmPort': string
+  'secrets.winRmAuthFormFields.ntlm': string
+  'secrets.winRmAuthFormFields.skipCertCheck': string
+  'secrets.winRmAuthFormFields.useNoProfile': string
+  'secrets.winRmAuthFormFields.useSSL': string
   'filestore.cantDeleteFile': string
   'filestore.confirmDeleteFile': string
   'filestore.deletedSuccessMessage': string
@@ -2973,6 +2986,7 @@ export interface StringsMap {
   'pipeline.depth': string
   'pipeline.discard': string
   'pipeline.draft': string
+  'pipeline.duplicateImport': string
   'pipeline.duplicateStepIdentifiers': string
   'pipeline.duration': string
   'pipeline.enableVerificationHelpText': string
@@ -3409,6 +3423,9 @@ export interface StringsMap {
   'pipeline.parallelSelectedStages': string
   'pipeline.parallelStages': string
   'pipeline.parentStageDeleteWarning': string
+  'pipeline.phasesForm.packageType': string
+  'pipeline.phasesForm.phase': string
+  'pipeline.phasesForm.phases': string
   'pipeline.pipelineInputPanel.automaticallyExtractedFromText': string
   'pipeline.pipelineInputPanel.existing': string
   'pipeline.pipelineInputPanel.noRuntimeInputs': string
@@ -3977,6 +3994,7 @@ export interface StringsMap {
   'cd.artifactName': string
   'cd.artifactPaths': string
   'cd.artifactRepoTooltip': string
+  'cd.attributeFilters': string
   'cd.azureWebAppRollbackDescription': string
   'cd.azureWebAppSwapSlotDescription': string
   'cd.backEndConfig': string
@@ -4046,11 +4064,13 @@ export interface StringsMap {
   'cd.confirmProviderDelete': string
   'cd.connectionIssueInfo': string
   'cd.connectionIssueSuggestion': string
+  'cd.connectorRefText': string
   'cd.continuous': string
   'cd.createdGitOpsServerSuccessfully': string
   'cd.createdSuccessfully': string
   'cd.creating': string
   'cd.creatingGitOpsServer': string
+  'cd.credentialsRef': string
   'cd.dashboard.createProject': string
   'cd.dashboard.orSelectExisting': string
   'cd.dashboard.subHeading': string
@@ -4111,6 +4131,8 @@ export interface StringsMap {
   'cd.gitOpsCluster': string
   'cd.gitOpsWizardTitle': string
   'cd.harnessManagedGitOpsWizardTitle': string
+  'cd.hostFilters': string
+  'cd.hosts': string
   'cd.infrastructure.createNew': string
   'cd.infrastructure.created': string
   'cd.infrastructure.delete': string
@@ -5427,6 +5449,8 @@ export interface StringsMap {
   'cf.environments.environmentID': string
   'cf.environments.modifiedBy': string
   'cf.environments.title': string
+  'cf.featureFlagDetail.serviceDescription': string
+  'cf.featureFlagDetail.serviceUpdateSuccess': string
   'cf.featureFlagDetail.variationCount': string
   'cf.featureFlags.activity': string
   'cf.featureFlags.andClause': string
@@ -5937,10 +5961,12 @@ export interface StringsMap {
   'ci.getStartedWithCI.carousel.labels.useCaching': string
   'ci.getStartedWithCI.carousel.labels.usePlugins': string
   'ci.getStartedWithCI.chooseDiffInfra': string
+  'ci.getStartedWithCI.cloneCodebaseHelpText': string
   'ci.getStartedWithCI.codeRepo': string
   'ci.getStartedWithCI.configInfra': string
   'ci.getStartedWithCI.connectRepo': string
   'ci.getStartedWithCI.createPipeline': string
+  'ci.getStartedWithCI.createPipelineWithOtherOption': string
   'ci.getStartedWithCI.devFriendly': string
   'ci.getStartedWithCI.devFriendlyHelpText': string
   'ci.getStartedWithCI.dockerRunner': string
@@ -5961,6 +5987,7 @@ export interface StringsMap {
   'ci.getStartedWithCI.languageAgnostic': string
   'ci.getStartedWithCI.languageAgnosticHelpText': string
   'ci.getStartedWithCI.learnMoreAboutCI': string
+  'ci.getStartedWithCI.nonGitCloneOption': string
   'ci.getStartedWithCI.onCloudLabel': string
   'ci.getStartedWithCI.onPremLabel': string
   'ci.getStartedWithCI.parallelization': string
@@ -6298,11 +6325,13 @@ export interface StringsMap {
   'cv.metricIsRequired': string
   'cv.metricThresholds.validations.countValue': string
   'cv.metricThresholds.validations.criteria': string
+  'cv.metricThresholds.validations.duplicateThreshold': string
   'cv.metricThresholds.validations.greaterThanSmaller': string
   'cv.metricThresholds.validations.groupTransaction': string
   'cv.metricThresholds.validations.lessThanBigger': string
   'cv.metricThresholds.validations.metricName': string
   'cv.metricThresholds.validations.metricType': string
+  'cv.metricThresholds.validations.percentageValidation': string
   'cv.metricVerificationModal.modalTitle': string
   'cv.metricVerificationModal.viewCalls': string
   'cv.minValueN': string
@@ -9910,10 +9939,6 @@ export interface StringsMap {
   /**
    * @deprecated migrate this string to module level file
    */
-  secureToken: string
-  /**
-   * @deprecated migrate this string to module level file
-   */
   seeAll: string
   /**
    * @deprecated migrate this string to module level file
@@ -10151,10 +10176,6 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   stageDetails: string
-  /**
-   * @deprecated migrate this string to module level file
-   */
-  stageName: string
   /**
    * @deprecated migrate this string to module level file
    */

@@ -62,11 +62,15 @@ function AzureWebAppServiceConfigWizardStepOne({
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const [isLoadingConnectors, setIsLoadingConnectors] = React.useState<boolean>(true)
-  const [selectedStore, setSelectedStore] = useState(prevStepData?.store ?? initialValues.store)
+  const [selectedStore, setSelectedStore] = useState(prevStepData?.selectedStore ?? initialValues.selectedStore)
   const [multitypeInputValue, setMultiTypeValue] = useState<MultiTypeInputType | undefined>(undefined)
 
-  function isValidConnectorStore(): string {
-    return selectedStore
+  const isHarness = (store?: string): boolean => {
+    return store === 'Harness'
+  }
+
+  const isValidConnectorStore = (): boolean => {
+    return selectedStore && !isHarness(selectedStore)
   }
 
   const newConnectorLabel =
@@ -87,11 +91,11 @@ function AzureWebAppServiceConfigWizardStepOne({
 
   function shouldGotoNextStep(connectorRefValue: ConnectorSelectedValue | string): boolean {
     return (
-      !isLoadingConnectors &&
-      !!selectedStore &&
-      ((getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED &&
-        !isEmpty((connectorRefValue as ConnectorSelectedValue)?.connector)) ||
-        !isEmpty(connectorRefValue))
+      !isLoadingConnectors ||
+      (!!selectedStore &&
+        ((getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED &&
+          !isEmpty((connectorRefValue as ConnectorSelectedValue)?.connector)) ||
+          !isEmpty(connectorRefValue)))
     )
   }
   const handleOptionSelection = /* istanbul ignore next */ (formikData: any, storeSelected: ConnectorTypes): void => {
@@ -114,10 +118,10 @@ function AzureWebAppServiceConfigWizardStepOne({
       initValues.connectorRef = prevStepData.connectorRef
       handleStoreChange(selectedStore)
     }
-    if (selectedStore !== initValues.store && selectedStore !== prevStepData?.store) {
+    if (selectedStore !== initValues.selectedStore && selectedStore !== prevStepData?.selectedStore) {
       initValues.connectorRef = ''
     }
-    return { ...initValues, store: selectedStore }
+    return { ...initValues, selectedStore: selectedStore }
   }, [selectedStore])
 
   const connectorTypesOptions = useMemo(
@@ -130,7 +134,7 @@ function AzureWebAppServiceConfigWizardStepOne({
     [connectorTypes]
   )
   const validationSchema = () => {
-    if (selectedStore === 'Harness') return
+    if (isHarness(selectedStore)) return
     return Yup.object().shape({
       connectorRef: Yup.mixed().required(getString('pipelineSteps.build.create.connectorRequiredError'))
     })
@@ -165,7 +169,7 @@ function AzureWebAppServiceConfigWizardStepOne({
                 <Layout.Horizontal spacing="large">
                   <ThumbnailSelect
                     className={css.thumbnailSelect}
-                    name={'store'}
+                    name={'selectedStore'}
                     items={connectorTypesOptions}
                     isReadonly={isReadonly}
                     onChange={storeSelected => {
@@ -174,18 +178,18 @@ function AzureWebAppServiceConfigWizardStepOne({
                   />
                 </Layout.Horizontal>
 
-                {!isEmpty(formik.values.store) && formik.values.store !== 'Harness' ? (
+                {!isEmpty(formik.values.selectedStore) && !isHarness(formik.values.selectedStore) ? (
                   <Layout.Horizontal
                     spacing={'medium'}
                     flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
                     className={css.connectorContainer}
                   >
                     <FormMultiTypeConnectorField
-                      key={formik.values.store}
+                      key={formik.values.selectedStore}
                       onLoadingFinish={() => {
                         setIsLoadingConnectors(false)
                       }}
-                      name="connectorRef"
+                      name={'connectorRef'}
                       label={`${getString('connector')}`}
                       placeholder={`${getString('select')} ${getString('connector')}`}
                       accountIdentifier={accountId}
@@ -199,8 +203,8 @@ function AzureWebAppServiceConfigWizardStepOne({
                           (isReadonly || !canCreate)
                         )
                       }
-                      createNewLabel={newConnectorLabel}
-                      type={ConnectorMap[formik.values.store]}
+                      createNewLabel={newConnectorLabel as string}
+                      type={ConnectorMap[formik.values.selectedStore]}
                       enableConfigureOptions={false}
                       multitypeInputValue={multitypeInputValue}
                       gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
@@ -209,7 +213,7 @@ function AzureWebAppServiceConfigWizardStepOne({
                       <ConfigureOptions
                         className={css.configureOptions}
                         value={formik.values.connectorRef as unknown as string}
-                        type={ConnectorMap[formik.values.store]}
+                        type={ConnectorMap[formik.values.selectedStore]}
                         variableName="connectorRef"
                         showRequiredField={false}
                         showDefaultField={false}
@@ -233,7 +237,7 @@ function AzureWebAppServiceConfigWizardStepOne({
                         iconProps={{ size: 12 }}
                         onClick={() => {
                           handleConnectorViewChange()
-                          nextStep?.({ ...prevStepData, store: selectedStore })
+                          nextStep?.({ ...prevStepData, selectedStore: selectedStore })
                         }}
                       />
                     )}

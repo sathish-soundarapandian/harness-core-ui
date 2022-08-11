@@ -632,7 +632,10 @@ export const YamlBuilderMemo = React.memo(YAMLBuilder, (prevProps, nextProps) =>
     return false
   }
   return isEqualWith(nextProps, prevProps, (_arg1, _arg2, key) => {
-    if (['existingJSON', 'onExpressionTrigger', 'schema', 'onEnableEditMode'].indexOf(key as string) > -1) {
+    if (
+      ['existingJSON', 'onExpressionTrigger', 'schema', 'onEnableEditMode', 'openDialogProp'].indexOf(key as string) >
+      -1
+    ) {
       return true
     }
   })

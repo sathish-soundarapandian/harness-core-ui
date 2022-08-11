@@ -39,7 +39,8 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
     if (errorMap.size > 0) {
       submitFormsForTab(DeployTabs.ENVIRONMENT)
     }
-  }, [errorMap, submitFormsForTab])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [errorMap])
 
   const {
     state: {

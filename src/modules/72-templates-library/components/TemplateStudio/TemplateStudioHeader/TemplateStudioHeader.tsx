@@ -28,18 +28,34 @@ interface StyledTemplateStudioTitleInterface {
 export const StyledTemplateStudioTitle = styled.div`
   position: relative;
   padding: 0px 18px;
+  ${(props: StyledTemplateStudioTitleInterface) =>
+    props.width
+      ? `
+  -webkit-perspective: ${props.width}px;
+  -moz-perspective: ${props.width}px;
+  -ms-perspective: ${props.width}px;
+  -o-perspective: ${props.width}px;
+  `
+      : ``}
   &::before {
     content: '';
     position: absolute;
-    top: -5px;
-    bottom: -5px;
+    top: -10px;
+    bottom: 0;
     left: 0;
     right: 0;
     height: 40px;
     border: 1px solid ${(props: StyledTemplateStudioTitleInterface) => props?.stroke};
     background: ${(props: StyledTemplateStudioTitleInterface) => (props.width > 0 ? props?.fill : 'transparent')};
     border-radius: 0 0 5px 5px;
-    transform: perspective(${(props: StyledTemplateStudioTitleInterface) => props.width}) rotateX(-45deg);
+    -webkit-transform: perspective(${(props: StyledTemplateStudioTitleInterface) => props.width}) rotateX(-45deg);
+    -webkit-transform: rotateX(-45deg);
+    -moz-transform: rotateX(-45deg);
+    -webkit-transform: rotateX(-45deg);
+    -webkit-transform-origin: center bottom;
+    -moz-transform-origin: center bottom;
+    -ms-transform-origin: center bottom;
+    -o-transform-origin: center bottom;
   }
   p {
     position: relative;

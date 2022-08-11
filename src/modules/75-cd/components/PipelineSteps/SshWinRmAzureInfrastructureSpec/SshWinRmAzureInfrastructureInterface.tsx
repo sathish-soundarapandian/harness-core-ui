@@ -28,7 +28,7 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
   return Yup.object().shape({
     connectorRef: getConnectorSchema(getString),
     subscriptionId: Yup.lazy((value): Yup.Schema<unknown> => {
-      /* istanbul ignore else */ if (typeof value === 'string') {
+      /* istanbul ignore next */ if (typeof value === 'string') {
         return Yup.string().required(
           getString('common.validation.fieldIsRequired', { name: getString('pipeline.ACR.subscription') })
         )
@@ -36,7 +36,7 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
       return Yup.object().test({
         test(valueObj: SelectOption): boolean | Yup.ValidationError {
           if (isEmpty(valueObj) || isEmpty(valueObj.value)) {
-            return this.createError({
+            /* istanbul ignore next */ return this.createError({
               message: getString('common.validation.fieldIsRequired', { name: getString(subscriptionLabel) })
             })
           }
@@ -45,7 +45,7 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
       })
     }),
     resourceGroup: Yup.lazy((value): Yup.Schema<unknown> => {
-      /* istanbul ignore else */ if (typeof value === 'string') {
+      /* istanbul ignore next */ if (typeof value === 'string') {
         return Yup.string().required(
           getString('common.validation.fieldIsRequired', { name: getString(resourceGroupLabel) })
         )
@@ -53,7 +53,7 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
       return Yup.object().test({
         test(valueObj: SelectOption): boolean | Yup.ValidationError {
           if (isEmpty(valueObj) || isEmpty(valueObj.value)) {
-            return this.createError({
+            /* istanbul ignore next */ return this.createError({
               message: getString('common.validation.fieldIsRequired', { name: getString(resourceGroupLabel) })
             })
           }

@@ -219,7 +219,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot 1`] = `
                     class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--padding-top-medium"
                   >
                     <div
-                      class="css-130a1s3"
+                      class="css-1f8h5t3"
                       fill="#EADEFF"
                       stroke="#E1D0FF"
                       width="100"
@@ -603,7 +603,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot when error occurs i
                     class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--padding-top-medium"
                   >
                     <div
-                      class="css-130a1s3"
+                      class="css-1f8h5t3"
                       fill="#EADEFF"
                       stroke="#E1D0FF"
                       width="100"
@@ -993,7 +993,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot when status is fail
                     class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--padding-top-medium"
                   >
                     <div
-                      class="css-130a1s3"
+                      class="css-1f8h5t3"
                       fill="#EADEFF"
                       stroke="#E1D0FF"
                       width="100"

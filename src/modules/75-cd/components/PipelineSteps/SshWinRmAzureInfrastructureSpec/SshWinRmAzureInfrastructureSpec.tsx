@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { IconName } from '@wings-software/uicore'
+import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@wings-software/uicore'
 import type { FormikErrors } from 'formik'
 import { get, isEmpty } from 'lodash-es'
 import { parse } from 'yaml'
@@ -36,6 +36,7 @@ import {
   resourceGroupLabel
 } from './SshWinRmAzureInfrastructureInterface'
 import { AzureInfrastructureSpecForm } from './SshWinRmAzureInfrastructureForm'
+import { SshWinRmAzureInfrastructureSpecInputForm } from './SshWimRmAzureInfrastructureSpecInputForm'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 const logger = loggerFor(ModuleName.CD)
@@ -229,20 +230,47 @@ export class SshWinRmAzureInfrastructureSpec extends PipelineStep<AzureInfrastru
 
   validateInputSet({
     data,
-    getString
+    getString,
+    viewType,
+    template
   }: ValidateInputSetProps<SshWinRmAzureInfrastructure>): FormikErrors<SshWinRmAzureInfrastructure> {
     const errors: Partial<SshWinRmAzureInfrastructureTemplate> = {}
-    if (isEmpty(data.credentialsRef)) {
-      errors.credentialsRef = getString?.('common.validation.fieldIsRequired', { name: getString('connector') })
+    const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
+    if (
+      isEmpty(data.credentialsRef) &&
+      isRequired &&
+      getMultiTypeFromValue(template?.credentialsRef) === MultiTypeInputType.RUNTIME
+    ) {
+      /* istanbul ignore next */ errors.credentialsRef = getString?.('common.validation.fieldIsRequired', {
+        name: getString('credentials')
+      })
     }
-    if (isEmpty(data.connectorRef)) {
-      errors.connectorRef = getString?.('common.validation.fieldIsRequired', { name: getString('connector') })
+    if (
+      isEmpty(data.connectorRef) &&
+      isRequired &&
+      getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME
+    ) {
+      /* istanbul ignore next */ errors.connectorRef = getString?.('common.validation.fieldIsRequired', {
+        name: getString('connector')
+      })
     }
-    if (isEmpty(data.subscriptionId)) {
-      errors.subscriptionId = getString?.('common.validation.fieldIsRequired', { name: getString(subscriptionLabel) })
+    if (
+      isEmpty(data.subscriptionId) &&
+      isRequired &&
+      getMultiTypeFromValue(template?.subscriptionId) === MultiTypeInputType.RUNTIME
+    ) {
+      /* istanbul ignore next */ errors.subscriptionId = getString?.('common.validation.fieldIsRequired', {
+        name: getString(subscriptionLabel)
+      })
     }
-    if (isEmpty(data.resourceGroup)) {
-      errors.resourceGroup = getString?.('common.validation.fieldIsRequired', { name: getString(resourceGroupLabel) })
+    if (
+      isEmpty(data.resourceGroup) &&
+      isRequired &&
+      getMultiTypeFromValue(template?.resourceGroup) === MultiTypeInputType.RUNTIME
+    ) {
+      /* istanbul ignore next */ errors.resourceGroup = getString?.('common.validation.fieldIsRequired', {
+        name: getString(resourceGroupLabel)
+      })
     }
     return errors
   }
@@ -250,7 +278,21 @@ export class SshWinRmAzureInfrastructureSpec extends PipelineStep<AzureInfrastru
   renderStep(props: StepProps<SshWinRmAzureInfrastructure>): JSX.Element {
     const { initialValues, onUpdate, stepViewType, customStepProps, readonly, allowableTypes, inputSetData } = props
 
-    if (stepViewType === StepViewType.InputVariable) {
+    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+      return (
+        <SshWinRmAzureInfrastructureSpecInputForm
+          {...(customStepProps as AzureInfrastructureSpecEditableProps)}
+          initialValues={initialValues}
+          onUpdate={onUpdate}
+          stepViewType={stepViewType}
+          readonly={inputSetData?.readonly}
+          template={inputSetData?.template as SshWinRmAzureInfrastructureTemplate}
+          allValues={inputSetData?.allValues}
+          path={inputSetData?.path || ''}
+          allowableTypes={allowableTypes}
+        />
+      )
+    } else if (stepViewType === StepViewType.InputVariable) {
       return (
         <AzureInfrastructureSpecVariablesForm
           onUpdate={onUpdate}

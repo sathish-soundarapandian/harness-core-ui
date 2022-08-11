@@ -621,7 +621,7 @@ exports[`test cases for Budgets List Page should be able to render the budget li
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--color StyledProps--color-grey800"
                 >
-                  $10,000.00
+                  $0.00
                 </p>
               </div>
               <div
@@ -642,7 +642,7 @@ exports[`test cases for Budgets List Page should be able to render the budget li
                     style="width: 266px;"
                   >
                     <div
-                      class="actualCostBar"
+                      class="actualCostBar danger"
                       style="width: 3px;"
                     />
                     <div
@@ -651,10 +651,10 @@ exports[`test cases for Budgets List Page should be able to render the budget li
                     />
                     <div
                       class="budgetStatusBar"
-                      style="width: 44px;"
+                      style="width: 0px;"
                     />
                     <div
-                      class="actualCostMarker"
+                      class="actualCostMarker danger"
                       style="left: 3px;"
                     />
                     <p

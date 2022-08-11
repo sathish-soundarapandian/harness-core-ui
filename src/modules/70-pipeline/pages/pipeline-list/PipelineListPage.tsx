@@ -43,7 +43,7 @@ import {
 import { PipelineListEmpty } from './PipelineListEmpty/PipelineListEmpty'
 import { PipelineListFilter } from './PipelineListFilter/PipelineListFilter'
 import { PipelineListTable } from './PipelineListTable/PipelineListTable'
-import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE, getRouteProps } from './PipelineListUtils'
+import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE, DEFAULT_SORT, getRouteProps } from './PipelineListUtils'
 import type { PipelineListPagePathParams, PipelineListPageQueryParams } from './types'
 import css from './PipelineListPage.module.scss'
 
@@ -62,9 +62,9 @@ export function PipelineListPage(): React.ReactElement {
     processQueryParams(params: PipelineListPageQueryParams) {
       return {
         ...params,
-        page: params.page || DEFAULT_PAGE_NUMBER,
-        size: params.size || DEFAULT_PAGE_SIZE,
-        sort: params.sort
+        page: params.page ? +params.page : DEFAULT_PAGE_NUMBER,
+        size: params.size ? +params.size : DEFAULT_PAGE_SIZE,
+        sort: params.sort || DEFAULT_SORT
       }
     }
   })
@@ -193,7 +193,7 @@ export function PipelineListPage(): React.ReactElement {
   const createPipelineButton = (
     <CreatePipelineButton
       label={getString('common.createPipeline')}
-      onCreatePipelineClick={() => goToPipelineStudio()}
+      onCreatePipelineClick={() => goToPipelineStudio({ identifier: '-1' })}
       onImportPipelineClick={showImportResourceModal}
     />
   )

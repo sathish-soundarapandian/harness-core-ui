@@ -66,15 +66,17 @@ describe('AzureWebAppServiceConfigWizard & stepOne', () => {
 
   test('runtime stepOne', async () => {
     const initialValue = {
-      type: 'Git',
-      spec: {
-        connectorRef: '<+input>',
-        gitFetchType: 'Branch',
-        paths: ['file'],
-        repoName: 'repo',
-        branch: 'branch'
+      store: {
+        type: 'Git',
+        spec: {
+          connectorRef: '<+input>',
+          gitFetchType: 'Branch',
+          paths: ['file'],
+          repoName: 'repo',
+          branch: 'branch'
+        }
       },
-      store: 'Git',
+      selectedStore: 'Git',
       connectorRef: '<+input>'
     }
     const { container, getByText } = render(

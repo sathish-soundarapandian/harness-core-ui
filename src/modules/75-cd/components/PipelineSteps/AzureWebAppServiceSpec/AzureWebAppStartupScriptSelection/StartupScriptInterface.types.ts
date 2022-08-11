@@ -16,7 +16,7 @@ import type {
   PageConnectorResponse,
   ServiceDefinition,
   StageElementConfig,
-  StoreConfigWrapper
+  StartupCommandConfiguration
 } from 'services/cd-ng'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
@@ -77,7 +77,7 @@ export interface StepChangeData<SharedObject> {
 
 export interface StartupScriptWizardInitData {
   connectorRef: string | undefined | ConnectorSelectedValue
-  store: ConnectorTypes | string
+  selectedStore: ConnectorTypes | string
 }
 
 export interface StartupScriptWizardStepsProps<T> {
@@ -97,8 +97,8 @@ export interface StartupScriptWizardStepTwoProps {
   stepName: string
   expressions: string[]
   allowableTypes: MultiTypeAllowedTypes
-  initialValues: StoreConfigWrapper
-  handleSubmit: (data: StoreConfigWrapper) => void
+  initialValues: StartupCommandConfiguration
+  handleSubmit: (data: StartupCommandConfiguration) => void
   isReadonly?: boolean
 }
 
@@ -126,7 +126,7 @@ export interface StartupScriptListViewProps {
   refetchConnectors: () => void
   isReadonly: boolean
   allowableTypes: MultiTypeAllowedTypes
-  startupCommand: StoreConfigWrapper
+  startupCommand: StartupCommandConfiguration
 }
 
 export interface StartupScriptLastStepProps {
@@ -135,10 +135,10 @@ export interface StartupScriptLastStepProps {
   expressions: string[]
   allowableTypes: MultiTypeAllowedTypes
   stepName: string
-  initialValues: StoreConfigWrapper
-  handleSubmit: (data: StoreConfigWrapper) => void
+  initialValues: StartupCommandConfiguration
+  handleSubmit: (data: StartupCommandConfiguration) => void
   isReadonly?: boolean
-  startupCommand?: StoreConfigWrapper
+  startupCommand?: StartupCommandConfiguration
 }
 
 export interface StartupScriptPropType {

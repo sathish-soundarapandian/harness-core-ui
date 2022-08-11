@@ -6,35 +6,39 @@
  */
 
 import { useEffect, useRef, useState, useLayoutEffect } from 'react'
+import useTabVisible from '@common/hooks/useTabVisible'
 
 const POLLING_INTERVAL_IN_MS = 5_000
 
 export function usePolling(callback: () => Promise<void> | undefined, startPolling: boolean): boolean {
   const savedCallback = useRef(callback)
   const [isPolling, setIsPolling] = useState(false)
+  const tabVisible = useTabVisible()
 
   // Remember the latest callback if it changes.
   useLayoutEffect(() => {
     savedCallback.current = callback
   }, [callback])
 
-  /**
-   * At any moment of time, only one polling is done
-   * Only do polling on first page
-   * When component is loading, wait until loading is done
-   * When polling call (API) is being processed, wait until it's done then re-schedule
-   */
   useEffect(() => {
-    if (!startPolling) {
+    // Poll only if tab is visible and additional polling condition from component is met
+    if (!(tabVisible && startPolling)) {
+      // setIsPolling(false)
       return
     }
-    const timerId = setTimeout(() => {
-      setIsPolling(true)
-      savedCallback.current()?.finally(() => setIsPolling(false))
-    }, POLLING_INTERVAL_IN_MS)
 
-    return () => clearTimeout(timerId)
-  }, [isPolling, startPolling])
+    // Poll only when the current request is resolved
+    if (!isPolling) {
+      const timerId = setTimeout(() => {
+        setIsPolling(true)
+        savedCallback.current()?.finally(() => {
+          setIsPolling(false)
+        })
+      }, POLLING_INTERVAL_IN_MS)
+
+      return () => clearTimeout(timerId)
+    }
+  }, [isPolling, startPolling, tabVisible])
 
   return isPolling
 }

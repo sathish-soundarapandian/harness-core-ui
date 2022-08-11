@@ -8,7 +8,7 @@ exports[`Unit tests for InputWithDynamicModalForJsonMultiType component Verify t
   >
     <div>
       <div
-        class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+        class="Layout--vertical Layout--layout-spacing-small StyledProps--main fixedItemMultiType"
       >
         <p
           class="StyledProps--font StyledProps--main"

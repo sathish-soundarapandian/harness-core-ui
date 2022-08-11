@@ -16,7 +16,8 @@ import type {
   PageConnectorResponse,
   ServiceDefinition,
   StageElementConfig,
-  StoreConfigWrapper
+  ConnectionStringsConfiguration,
+  ApplicationSettingsConfiguration
 } from 'services/cd-ng'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
@@ -83,8 +84,8 @@ export interface LastStepProps {
   expressions: string[]
   allowableTypes: MultiTypeAllowedTypes
   stepName: string
-  initialValues: StoreConfigWrapper
-  handleSubmit: (data: StoreConfigWrapper) => void
+  initialValues: ApplicationSettingsConfiguration | ConnectionStringsConfiguration
+  handleSubmit: (data: ApplicationSettingsConfiguration | ConnectionStringsConfiguration) => void
   isReadonly?: boolean
   pathPlaceholder?: string
   title?: string
@@ -97,7 +98,7 @@ export interface AzureWebAppsServiceDefinition {
 
 export interface AzureWebAppWizardInitData {
   connectorRef: string | undefined | ConnectorSelectedValue
-  store: ConnectorTypes | string
+  selectedStore: ConnectorTypes | string
 }
 
 export interface AzureWebAppListViewProps {
@@ -112,8 +113,8 @@ export interface AzureWebAppListViewProps {
   refetchSettingsConnectors: () => void
   deploymentType?: ServiceDefinition['type']
   allowableTypes: MultiTypeAllowedTypes
-  applicationSettings?: StoreConfigWrapper
-  connectionStrings?: StoreConfigWrapper
+  applicationSettings?: ApplicationSettingsConfiguration | ConnectionStringsConfiguration
+  connectionStrings?: ApplicationSettingsConfiguration | ConnectionStringsConfiguration
   selectedOption: ModalViewOption | undefined
   setSelectedOption: (option: ModalViewOption | undefined) => void
 }
@@ -126,7 +127,7 @@ export interface StepChangeData<SharedObject> {
 
 export interface AzureWebAppServiceConfigWizardInitData {
   connectorRef: string | undefined | ConnectorSelectedValue
-  store: ConnectorTypes | string
+  selectedStore: ConnectorTypes | string
 }
 
 export interface AzureWebAppServiceConfigWizardStepsProps<T> {
@@ -160,8 +161,8 @@ export interface AzureWebAppServiceStepTwoProps {
   stepName: string
   expressions: string[]
   allowableTypes: MultiTypeAllowedTypes
-  initialValues: StoreConfigWrapper
-  handleSubmit: (data: StoreConfigWrapper) => void
+  initialValues: ApplicationSettingsConfiguration | ConnectionStringsConfiguration
+  handleSubmit: (data: ApplicationSettingsConfiguration | ConnectionStringsConfiguration) => void
   isReadonly?: boolean
   pathPlaceholder?: string
   title?: string

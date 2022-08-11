@@ -23,7 +23,7 @@ import { Form } from 'formik'
 import * as Yup from 'yup'
 
 import { get, set } from 'lodash-es'
-import type { ConnectorConfigDTO, StoreConfigWrapper } from 'services/cd-ng'
+import type { ConnectorConfigDTO, StartupCommandConfiguration, StoreConfigWrapper } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import {
@@ -35,8 +35,8 @@ import MultiConfigSelectField from './AzureWebAppStartupScriptSelection/MultiCon
 import css from './AzureWebAppStartupScriptSelection/StartupScriptSelection.module.scss'
 
 export interface HarnessOptionPropsInterfrace {
-  initialValues: StoreConfigWrapper
-  handleSubmit: (data: StoreConfigWrapper) => void
+  initialValues?: StoreConfigWrapper
+  handleSubmit: (data: StartupCommandConfiguration) => void
   stepName: string
   formName: string
   expressions: string[]
@@ -92,12 +92,14 @@ export function HarnessOption({
       file: ''
     }
   }
-  const submitHarnessFormData = (formData: HarnessFileStore & { store?: string }): void => {
+  const submitHarnessFormData = (formData: HarnessFileStore & { selectedStore?: string }): void => {
     if (formData.fileType === 'fileStore') {
       const startupScript = {
-        type: formData?.store as ConnectorTypes,
-        spec: {
-          files: [formData?.file]
+        store: {
+          type: formData?.selectedStore as ConnectorTypes,
+          spec: {
+            files: [formData?.file]
+          }
         }
       }
       if (
@@ -105,14 +107,16 @@ export function HarnessOption({
           getMultiTypeFromValue(formData.file, [MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED], true)
         )
       ) {
-        set(startupScript, 'spec.files', formData.file)
+        set(startupScript, 'store.spec.files', formData.file)
       }
       handleSubmit(startupScript)
     } else {
       const startupScript = {
-        type: formData?.store as ConnectorTypes,
-        spec: {
-          secretFiles: [formData?.file]
+        store: {
+          type: formData?.selectedStore as ConnectorTypes,
+          spec: {
+            secretFiles: [formData?.file]
+          }
         }
       }
       if (
@@ -120,7 +124,7 @@ export function HarnessOption({
           getMultiTypeFromValue(formData.file, [MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED], true)
         )
       ) {
-        set(startupScript, 'spec.secretFiles', formData.file)
+        set(startupScript, 'store.spec.secretFiles', formData.file)
       }
       handleSubmit(startupScript)
     }

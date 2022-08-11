@@ -98,14 +98,20 @@ const setStageIds = ({
 
   if (runningStage) {
     if (isNodeTypeMatrixOrFor(data.data?.pipelineExecutionSummary?.layoutNodeMap?.[runningStage]?.nodeType)) {
-      const nodeExecid =
-        data.data?.pipelineExecutionSummary?.layoutNodeMap?.[runningStage]?.edgeLayoutList?.currentNodeChildren?.[0] ||
-        runningStage // UNIQUE ID--> stageNodeExecutionID
-      const nodeId = data.data?.pipelineExecutionSummary?.layoutNodeMap?.[nodeExecid]?.nodeUuid // COMMMON--> stageNodeID
-      setAutoSelectedStageId(nodeId!)
-      setSelectedStageId(nodeId!)
-      setAutoStageNodeExecutionId(nodeExecid!)
-      setSelectedStageExecutionId(nodeExecid!)
+      const nodeExecid = get(
+        data,
+        ['data', 'pipelineExecutionSummary', 'layoutNodeMap', runningStage, 'edgeLayoutList', 'currentNodeChildren', 0],
+        runningStage
+      ) as string // UNIQUE ID--> stageNodeExecutionID
+      const nodeId = get(
+        data,
+        ['data', 'pipelineExecutionSummary', 'layoutNodeMap', nodeExecid, 'nodeUuid'],
+        ''
+      ) as string // COMMMON--> stageNodeID
+      setAutoSelectedStageId(nodeId)
+      setSelectedStageId(nodeId)
+      setAutoStageNodeExecutionId(nodeExecid)
+      setSelectedStageExecutionId(nodeExecid)
     } else {
       setAutoSelectedStageId(runningStage)
       setSelectedStageId(runningStage)

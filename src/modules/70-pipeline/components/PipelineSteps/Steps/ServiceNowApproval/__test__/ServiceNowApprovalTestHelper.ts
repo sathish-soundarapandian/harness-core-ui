@@ -127,6 +127,17 @@ export const getServiceNowApprovalInputVariableModeProps = () => ({
           localName: 'step.approval.name'
         }
       },
+      'step-identifier': {
+        yamlExtraProperties: {
+          properties: [
+            {
+              fqn: 'pipeline.stages.qaStage.execution.steps.approval.identifier',
+              localName: 'step.approval.identifier',
+              variableName: 'identifier'
+            }
+          ]
+        }
+      },
       'step-timeout': {
         yamlProperties: {
           fqn: 'pipeline.stages.qaStage.execution.steps.approval.timeout',
@@ -154,6 +165,7 @@ export const getServiceNowApprovalInputVariableModeProps = () => ({
     },
     variablesData: {
       type: StepType.ServiceNowApproval,
+      __uuid: 'step-identifier',
       identifier: 'serviceNow_approval',
       name: 'step-name',
       description: 'Description',

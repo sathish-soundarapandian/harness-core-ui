@@ -7,6 +7,7 @@
 
 import { set } from 'lodash-es'
 import type { ConnectorInfoDTO, ConnectorRequestBody, ConnectorResponse } from 'services/cd-ng'
+import type { PipelineConfig } from 'services/pipeline-ng'
 import { Connectors } from '@connectors/constants'
 import {
   BitbucketPRTriggerActions,
@@ -109,4 +110,33 @@ export const sortConnectorsByLastConnectedAtTsDescOrder = (
       ctr2?.status?.lastConnectedAt && !isNaN(ctr2.status.lastConnectedAt) ? ctr2.status.lastConnectedAt : 0
     return lastTestedAt2 - lastTestedAt1
   })
+}
+
+export const addDetailsToPipeline = ({
+  originalPipeline,
+  name,
+  identifier,
+  projectIdentifier,
+  orgIdentifier,
+  connectorRef,
+  repoName
+}: {
+  originalPipeline: PipelineConfig
+  name: string
+  identifier: string
+  projectIdentifier: string
+  orgIdentifier: string
+  connectorRef?: string
+  repoName?: string
+}): PipelineConfig => {
+  let updatedPipeline = { ...originalPipeline }
+  updatedPipeline = set(updatedPipeline, 'pipeline.name', name)
+  updatedPipeline = set(updatedPipeline, 'pipeline.identifier', identifier)
+  updatedPipeline = set(updatedPipeline, 'pipeline.projectIdentifier', projectIdentifier)
+  updatedPipeline = set(updatedPipeline, 'pipeline.orgIdentifier', orgIdentifier)
+  if (connectorRef && repoName) {
+    updatedPipeline = set(updatedPipeline, 'pipeline.properties.ci.codebase.connectorRef', connectorRef)
+    updatedPipeline = set(updatedPipeline, 'pipeline.repoName', repoName)
+  }
+  return updatedPipeline
 }

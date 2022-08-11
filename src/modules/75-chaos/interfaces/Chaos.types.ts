@@ -10,12 +10,21 @@ import type { Diagnostic } from 'vscode-languageserver-types'
 import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { OverviewChartsWithToggleProps } from '@common/components/OverviewChartsWithToggle/OverviewChartsWithToggle'
 import type { NavigationCheckProps } from '@common/components/NavigationCheck/NavigationCheck'
+import type {
+  UseCreateConnectorModalProps,
+  UseCreateConnectorModalReturn
+} from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 
 export interface ChaosCustomMicroFrontendProps {
   customComponents: {
     ConnectorReferenceField: React.ComponentType<ConnectorReferenceFieldProps>
     OverviewChartsWithToggle: React.ComponentType<OverviewChartsWithToggleProps>
-    validateYAMLWithSchema: (yamlString: string, schema: Record<string, any>) => Promise<Diagnostic[]>
     NavigationCheck: React.ComponentType<NavigationCheckProps>
+  }
+  customHooks: {
+    useCreateConnectorModal: (props: UseCreateConnectorModalProps) => UseCreateConnectorModalReturn
+  }
+  customFunctions: {
+    validateYAMLWithSchema: (yamlString: string, schema: Record<string, any>) => Promise<Diagnostic[]>
   }
 }

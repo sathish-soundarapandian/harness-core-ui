@@ -33,7 +33,11 @@ import { useStrings } from 'framework/strings'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
 import { PageSpinner } from '@common/components'
-import { getServiceDefinitionType, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import {
+  getServiceDefinitionType,
+  ServiceDeploymentType,
+  isSshOrWinrmDeploymentType
+} from '@pipeline/utils/stageHelpers'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { parse } from '@common/utils/YamlHelperMethods'
@@ -51,12 +55,14 @@ import BlueGreen from './resources/Blue-Green-deployment.png'
 import Canary from './resources/Canary-deployment.png'
 import { isNewServiceEnvEntity } from '../CommonUtils/DeployStageSetupShellUtils'
 import { cvLearnMoreHref } from './ExecutionStrategy.constant'
+import Phases from './Phases'
 import css from './ExecutionStrategy.module.scss'
 
-enum ExecutionType {
+export enum ExecutionType {
   BASIC = 'Basic',
   CANARY = 'Canary',
-  ROLLING = 'Rolling'
+  ROLLING = 'Rolling',
+  DEFAULT = 'Default'
 }
 
 export interface ExecutionStrategyProps {
@@ -219,6 +225,7 @@ function ExecutionStrategyRef(
   })
 
   const getServiceDefintionType = serviceDefinitionType()
+
   useEffect(() => {
     if (getServiceDefintionType) {
       refetchStrategyYaml?.()
@@ -434,31 +441,45 @@ function ExecutionStrategyRef(
                   )}
                 </section>
               </section>
+              <Container className={css.phaseContainer}>
+                {isSshOrWinrmDeploymentType(serviceDefinitionType()) && selectedStrategy !== ExecutionType.DEFAULT ? (
+                  <Phases
+                    selectedStrategy={selectedStrategy}
+                    isVerifyEnabled={isVerifyEnabled}
+                    serviceDefinitionType={serviceDefinitionType}
+                    selectedStage={selectedStage}
+                  />
+                ) : null}
+              </Container>
             </Container>
-            <Container className={css.strategyDetailsFooter}>
-              <Button
-                variation={ButtonVariation.PRIMARY}
-                text={getString('pipeline.executionStrategy.useStrategy')}
-                onClick={() => {
-                  const newStage = produce(selectedStage, draft => {
-                    const jsonFromYaml = parse(defaultTo(yamlSnippet?.data, '')) as StageElementConfig
-                    if (draft.stage && draft.stage.spec) {
-                      draft.stage.failureStrategies = jsonFromYaml?.failureStrategies
-                      ;(draft.stage.spec as DeploymentStageConfig).execution = (
-                        jsonFromYaml?.spec as DeploymentStageConfig
-                      )?.execution ?? { steps: [], rollbackSteps: [] }
-                    }
-                  }).stage
 
-                  if (newStage) {
-                    updateStage(newStage).then(() => {
-                      updatePipelineViewState()
-                    })
-                  }
-                }}
-                disabled={isSubmitDisabled}
-              />
-            </Container>
+            {selectedStrategy === ExecutionType.DEFAULT || !isSshOrWinrmDeploymentType(serviceDefinitionType()) ? (
+              <Container className={css.strategyDetailsFooter}>
+                <Button
+                  data-testid="execution-use-strategy"
+                  variation={ButtonVariation.PRIMARY}
+                  text={getString('pipeline.executionStrategy.useStrategy')}
+                  onClick={() => {
+                    const newStage = produce(selectedStage, draft => {
+                      const jsonFromYaml = parse(defaultTo(yamlSnippet?.data, '')) as StageElementConfig
+                      if (draft.stage && draft.stage.spec) {
+                        draft.stage.failureStrategies = jsonFromYaml?.failureStrategies
+                        ;(draft.stage.spec as DeploymentStageConfig).execution = (
+                          jsonFromYaml?.spec as DeploymentStageConfig
+                        )?.execution ?? { steps: [], rollbackSteps: [] }
+                      }
+                    }).stage
+
+                    if (newStage) {
+                      updateStage(newStage).then(() => {
+                        updatePipelineViewState()
+                      })
+                    }
+                  }}
+                  disabled={isSubmitDisabled}
+                />
+              </Container>
+            ) : null}
           </Layout.Vertical>
         </Layout.Horizontal>
       )}

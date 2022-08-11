@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { featureFlagsCall } from '../../../support/85-cv/common'
 import {
   dataforMS,
   monitoredServiceListCall,
@@ -380,7 +381,7 @@ describe('Create empty monitored service', () => {
     cy.contains('span', 'Add Metric').click({ force: true })
     cy.get('input[name="metricName"]').clear().type('appdMetric 101')
     cy.get('input[name="groupName"]').click()
-    cy.contains('span', 'Metric name must be unique').should('be.visible')
+    cy.contains('span', 'Metric name must be unique').scrollIntoView().should('be.visible')
     cy.contains('p', 'appdMetric 101').click()
     cy.get('input[name="groupName"]').should('have.value', 'Group 1')
     cy.contains('p', 'appdMetric 10').click()
@@ -389,5 +390,200 @@ describe('Create empty monitored service', () => {
     // Delete all custom metric
     cy.get('span[data-icon="main-delete"]').click({ multiple: true })
     cy.findByRole('button', { name: /Add Metric/i }).should('be.visible')
+  })
+})
+
+describe('Metric thresholds in AppDynamics', () => {
+  beforeEach(() => {
+    cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
+      cy.intercept('GET', featureFlagsCall, {
+        ...featureFlagsData,
+        resource: [
+          ...featureFlagsData.resource,
+          {
+            uuid: null,
+            name: 'CVNG_METRIC_THRESHOLD',
+            enabled: true,
+            lastUpdatedAt: 0
+          }
+        ]
+      })
+    })
+    cy.on('uncaught:exception', () => {
+      return false
+    })
+    cy.login('test', 'test')
+    cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
+    cy.intercept(
+      'GET',
+      '/cv/api/monitored-service/count-of-services?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1',
+      { allServicesCount: 1, servicesAtRiskCount: 0 }
+    )
+    cy.visitChangeIntelligence()
+    cy.visitSRMMonitoredServicePage()
+  })
+  it('should test metric thresholds renders correctly and should hide metric thresholds if no metric packs are selected', () => {
+    cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
+    cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
+    cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
+    cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')
+
+    cy.addNewMonitoredServiceWithServiceAndEnv()
+
+    // Fill Define HealthSource Tab with AppDynamics
+    cy.populateDefineHealthSource(Connectors.APP_DYNAMICS, 'appdtest', 'AppD')
+    cy.wait(1000)
+    cy.contains('span', 'Next').click({ force: true })
+
+    // Fill Customise HealthSource Tab for AppDynamics
+    cy.wait('@ApplicationCall')
+    cy.wait('@MetricPackCall')
+
+    cy.get('input[name="appdApplication"]').click()
+    cy.contains('p', 'cv-app').click({ force: true })
+
+    cy.wait('@TierCall')
+    cy.get('input[name="appDTier"]').click()
+    cy.contains('p', 'docker-tier').click({ force: true })
+
+    cy.contains('.Accordion--label', 'Advanced (Optional)').should('exist')
+
+    // If no metric pack is selected, metric thresholds should be hidden
+    cy.get('input[name="metricData.Errors"]').uncheck({ force: true })
+    cy.get('input[name="metricData.Performance"]').uncheck({ force: true })
+
+    cy.contains('.Accordion--label', 'Advanced (Optional)').should('not.exist')
+  })
+
+  it('should add thresholds and do all the operations as expected', () => {
+    cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
+    cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
+    cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
+    cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')
+
+    cy.addNewMonitoredServiceWithServiceAndEnv()
+
+    // Fill Define HealthSource Tab with AppDynamics
+    cy.populateDefineHealthSource(Connectors.APP_DYNAMICS, 'appdtest', 'AppD')
+    cy.wait(1000)
+    cy.contains('span', 'Next').click({ force: true })
+
+    // Fill Customise HealthSource Tab for AppDynamics
+    cy.wait('@ApplicationCall')
+    cy.wait('@MetricPackCall')
+
+    cy.get('input[name="appdApplication"]').click()
+    cy.contains('p', 'cv-app').click({ force: true })
+
+    cy.wait('@TierCall')
+    cy.get('input[name="appDTier"]').click()
+    cy.contains('p', 'docker-tier').click({ force: true })
+
+    cy.contains('.Accordion--label', 'Advanced (Optional)').should('exist')
+
+    cy.findByTestId('AddThresholdButton').click()
+
+    cy.contains('div', 'Ignore Thresholds (1)').should('exist')
+
+    cy.get("input[name='ignoreThresholds.0.metricType']").should('have.value', 'Performance')
+
+    // validations
+    cy.findByRole('button', { name: /Submit/i }).click()
+    cy.findByText('Group/Transaction is required').should('be.visible')
+    cy.findByText('Metric name is required').should('be.visible')
+    cy.findAllByText('Required').should('have.length', 2)
+
+    cy.get("input[name='ignoreThresholds.0.groupName']").type('*')
+    cy.get("input[name='ignoreThresholds.0.metricName']").click()
+
+    cy.get('.Select--menuItem:nth-child(3)').click()
+
+    cy.get("input[name='ignoreThresholds.0.metricName']").should('have.value', 'Calls per Minute')
+
+    // changing metric type should reset groupName and metric name
+    cy.get("input[name='ignoreThresholds.0.metricType']").click()
+
+    cy.get('.Select--menuItem:nth-child(1)').click()
+
+    cy.get("input[name='ignoreThresholds.0.metricType']").should('have.value', 'Errors')
+
+    cy.get("input[name='ignoreThresholds.0.metricName']").should('have.value', '')
+    cy.get("input[name='ignoreThresholds.0.groupName']").should('have.value', '')
+
+    // testing criteria
+
+    cy.get("input[name='ignoreThresholds.0.criteria.type']").should('have.value', 'Absolute Value')
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.greaterThan']").should('exist')
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.lessThan']").should('exist')
+
+    // greater than should be smaller than lesser than value
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.greaterThan']").type('12')
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.lessThan']").type('1')
+
+    cy.get("input[name='ignoreThresholds.0.criteria.type']").click()
+    cy.contains('p', 'Percentage Deviation').click()
+
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.greaterThan']").should('exist')
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.lessThan']").should('not.exist')
+
+    cy.get("input[name='ignoreThresholds.0.criteria.criteriaPercentageType']").click()
+    cy.contains('p', 'Lesser than').click()
+
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.greaterThan']").should('not.exist')
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.lessThan']").should('exist')
+
+    cy.get("input[name='ignoreThresholds.0.groupName']").type('*')
+    cy.get("input[name='ignoreThresholds.0.metricName']").click()
+
+    cy.get('.Select--menuItem:nth-child(1)').click()
+
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.lessThan']").type('12')
+
+    // Fail fast thresholds
+    cy.contains('div', 'Fail-Fast Thresholds (0)').click()
+
+    cy.findByTestId('AddThresholdButton').click()
+
+    cy.get("input[name='failFastThresholds.0.groupName']").type('*')
+
+    cy.get("input[name='failFastThresholds.0.metricName']").click()
+    cy.contains('p', 'Calls per Minute').click()
+
+    cy.get("input[name='failFastThresholds.0.spec.spec.count']").should('be.disabled')
+
+    cy.get("input[name='failFastThresholds.0.spec.action']").click()
+    cy.contains('p', 'Fail after multiple occurrences').click()
+    cy.get("input[name='failFastThresholds.0.spec.spec.count']").should('not.be.disabled')
+    cy.get("input[name='failFastThresholds.0.spec.spec.count']").type('4')
+
+    cy.get("input[name='failFastThresholds.0.criteria.spec.greaterThan']").type('21')
+    cy.get("input[name='failFastThresholds.0.criteria.spec.lessThan']").type('78')
+
+    // Adding custom metrics
+    cy.contains('span', 'Add Metric').click()
+
+    cy.contains('div', 'Assign').click({ force: true })
+
+    cy.get('input[name="groupName"]').click()
+    cy.contains('p', '+ Add New').click({ force: true })
+    cy.get('.bp3-overlay input[name="name"]').type('group 1')
+    cy.get('.bp3-overlay button[type="submit"]').click({ force: true })
+
+    cy.get("input[name='failFastThresholds.0.metricType']").click()
+
+    cy.get('.Select--menuItem:nth-child(3)').click()
+
+    // group name should have created group name option
+    cy.get("input[name='failFastThresholds.0.groupName']").click()
+
+    cy.get('.Select--menuItem:nth-child(1)').should('have.text', 'group 1')
+    cy.get('.Select--menuItem:nth-child(1)').click()
+
+    // Selected group's metric name must be listed
+    cy.get("input[name='failFastThresholds.0.metricName']").click()
+    cy.get('.Select--menuItem:nth-child(1)').should('have.text', 'appdMetric')
+    cy.get('.Select--menuItem:nth-child(1)').click()
   })
 })

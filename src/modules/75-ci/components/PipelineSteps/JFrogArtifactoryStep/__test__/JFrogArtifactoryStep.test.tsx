@@ -287,6 +287,17 @@ describe('JFrogArtifactory Step', () => {
                   localName: 'step.run.name'
                 }
               },
+              'step-identifier': {
+                yamlExtraProperties: {
+                  properties: [
+                    {
+                      fqn: 'pipeline.stages.qaStage.execution.steps.run.identifier',
+                      localName: 'step.run.identifier',
+                      variableName: 'identifier'
+                    }
+                  ]
+                }
+              },
               'step-description': {
                 yamlProperties: {
                   fqn: 'pipeline.stages.qaStage.execution.steps.run.description',
@@ -339,6 +350,7 @@ describe('JFrogArtifactory Step', () => {
             },
             variablesData: {
               type: StepType.JFrogArtifactory,
+              __uuid: 'step-identifier',
               identifier: 'run',
               name: 'step-name',
               description: 'step-description',

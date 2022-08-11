@@ -843,6 +843,7 @@ export function RightDrawer(): React.ReactElement {
       {type === DrawerTypes.ExecutionStrategy && (
         <ExecutionStrategy selectedStage={defaultTo(selectedStage, {})} ref={executionStrategyRef} />
       )}
+
       {type === DrawerTypes.FlowControl && <FlowControl ref={flowControlRef} onDiscard={onDiscard} />}
       {type === DrawerTypes.PipelineNotifications && <PipelineNotifications ref={notificationsRef} />}
       {type === DrawerTypes.AdvancedOptions && (

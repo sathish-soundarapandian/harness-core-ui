@@ -6,6 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { Switch } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { debounce } from 'lodash-es'
@@ -37,6 +38,7 @@ import css from './InfraProvisioningWizard.module.scss'
 
 export interface SelectRepositoryRef {
   repository?: UserRepoResponse
+  enableCloneCodebase: boolean
 }
 
 export type SelectRepositoryForwardRef =
@@ -86,6 +88,7 @@ const SelectRepositoryRef = (
     },
     lazy: true
   })
+  const [enableCloneCodebase, setEnableCloneCodebase] = useState<boolean>(true)
 
   const getIcon = useCallback((type: ConnectorInfoDTO['type']): IconName | undefined => {
     switch (type) {
@@ -126,6 +129,21 @@ const SelectRepositoryRef = (
     }
   }, [ConnectorSelectionItems, validatedConnector])
 
+  const fetchReposWithConnectorRef = useCallback((): void => {
+    const connectorRefForReposFetch = selectedConnectorOption?.value as string
+    if (connectorRefForReposFetch) {
+      cancelRepositoriesFetch()
+      fetchRepositories({
+        queryParams: {
+          accountIdentifier: accountId,
+          projectIdentifier,
+          orgIdentifier,
+          connectorRef: `${ACCOUNT_SCOPE_PREFIX}${connectorRefForReposFetch}`
+        }
+      })
+    }
+  }, [selectedConnectorOption])
+
   useEffect(() => {
     if (selectedConnectorOption) {
       const matchingConnector = connectorsEligibleForPreSelection?.find(
@@ -135,18 +153,7 @@ const SelectRepositoryRef = (
         onConnectorSelect?.(matchingConnector)
       }
       setRepository(undefined)
-      const connectorRefForReposFetch = selectedConnectorOption?.value as string
-      if (connectorRefForReposFetch) {
-        cancelRepositoriesFetch()
-        fetchRepositories({
-          queryParams: {
-            accountIdentifier: accountId,
-            projectIdentifier,
-            orgIdentifier,
-            connectorRef: `${ACCOUNT_SCOPE_PREFIX}${connectorRefForReposFetch}`
-          }
-        })
-      }
+      fetchReposWithConnectorRef()
     }
   }, [selectedConnectorOption, connectorsEligibleForPreSelection])
 
@@ -191,9 +198,10 @@ const SelectRepositoryRef = (
     }
 
     forwardRef.current = {
-      repository
+      repository,
+      enableCloneCodebase
     }
-  }, [repository])
+  }, [repository, enableCloneCodebase])
 
   const renderRepositories = useCallback((): JSX.Element => {
     if (fetchingRepositories) {
@@ -240,45 +248,90 @@ const SelectRepositoryRef = (
   }, [showError, repository?.name, fetchingRepositories])
 
   return (
-    <Layout.Vertical spacing="xsmall">
-      <Text font={{ variation: FontVariation.H4 }}>{getString('common.selectYourRepo')}</Text>
-      <Text font={{ variation: FontVariation.BODY2 }}>{getString('common.getStarted.codebaseHelptext')}</Text>
-      <Container padding={{ top: 'small' }} width="65%">
-        <Layout.Horizontal>
-          <TextInput
-            leftIcon="search"
-            placeholder={getString('common.getStarted.searchRepo')}
-            className={css.repositorySearch}
-            leftIconProps={{ name: 'search', size: 18, padding: 'xsmall' }}
-            onChange={e => {
-              debouncedRepositorySearch((e.currentTarget as HTMLInputElement).value)
-            }}
-            disabled={fetchingRepositories}
-          />
-          <Select
-            items={ConnectorSelectionItems}
-            value={selectedConnectorOption}
-            className={css.connectorSelect}
-            onChange={(item: SelectOption) => setSelectedConnectorOption(item)}
-            disabled={fetchingRepositories}
-          />
-        </Layout.Horizontal>
-      </Container>
-      <Container
-        className={cx(css.repositories, { [css.repositoriesWithError]: showValidationErrorForRepositoryNotSelected })}
+    <Layout.Vertical spacing="small">
+      <Text font={{ variation: FontVariation.H4 }} padding={{ bottom: 'xsmall' }}>
+        {getString('common.selectYourRepo')}
+      </Text>
+      <Layout.Horizontal
+        padding={{ bottom: 'xsmall' }}
+        spacing="small"
+        flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}
       >
-        {renderRepositories()}
-        {showValidationErrorForRepositoryNotSelected ? (
-          <Container padding={{ top: 'xsmall' }}>
-            <FormError
-              name={'repository'}
-              errorMessage={getString('common.getStarted.plsChoose', {
-                field: `a ${getString('repository').toLowerCase()}`
-              })}
-            />
+        <Text font={{ variation: FontVariation.BODY2 }}>{getString('cloneCodebaseLabel')}</Text>
+        <Switch
+          checked={enableCloneCodebase}
+          onChange={event => {
+            const isChecked = event.currentTarget.checked
+            if (isChecked) {
+              cancelRepositoriesFetch()
+              fetchReposWithConnectorRef()
+            } else {
+              cancelRepositoriesFetch()
+            }
+            setEnableCloneCodebase(isChecked)
+          }}
+          data-id="enable-clone-codebase-switch"
+        />
+      </Layout.Horizontal>
+      <Layout.Horizontal
+        flex={{ justifyContent: 'flex-start' }}
+        spacing="xsmall"
+        padding={{ bottom: enableCloneCodebase ? 'xsmall' : 'xlarge' }}
+      >
+        <Icon name="info" size={15} color={Color.PRIMARY_7} />
+        <Text font={{ variation: FontVariation.BODY }}>{getString('ci.getStartedWithCI.cloneCodebaseHelpText')}</Text>
+      </Layout.Horizontal>
+      {enableCloneCodebase ? (
+        <>
+          <Container padding={{ top: 'small' }} width="65%">
+            <Layout.Horizontal>
+              <TextInput
+                leftIcon="search"
+                placeholder={getString('common.getStarted.searchRepo')}
+                className={css.repositorySearch}
+                leftIconProps={{ name: 'search', size: 18, padding: 'xsmall' }}
+                onChange={e => {
+                  debouncedRepositorySearch((e.currentTarget as HTMLInputElement).value)
+                }}
+                disabled={fetchingRepositories}
+              />
+              <Select
+                items={ConnectorSelectionItems}
+                value={selectedConnectorOption}
+                className={css.connectorSelect}
+                onChange={(item: SelectOption) => setSelectedConnectorOption(item)}
+                disabled={fetchingRepositories}
+              />
+            </Layout.Horizontal>
           </Container>
-        ) : null}
-      </Container>
+          <Container
+            className={cx(css.repositories, {
+              [css.repositoriesWithError]: showValidationErrorForRepositoryNotSelected
+            })}
+          >
+            {renderRepositories()}
+            {showValidationErrorForRepositoryNotSelected ? (
+              <Container padding={{ top: 'xsmall' }}>
+                <FormError
+                  name={'repository'}
+                  errorMessage={getString('common.getStarted.plsChoose', {
+                    field: `a ${getString('repository').toLowerCase()}`
+                  })}
+                />
+              </Container>
+            ) : null}
+          </Container>
+        </>
+      ) : (
+        <Container
+          padding={{ top: 'small', bottom: 'small', left: 'medium', right: 'medium' }}
+          className={css.noCodebaseHelpText}
+        >
+          <Text font={{ variation: FontVariation.BODY }}>
+            {getString('ci.getStartedWithCI.createPipelineWithOtherOption')}
+          </Text>
+        </Container>
+      )}
     </Layout.Vertical>
   )
 }

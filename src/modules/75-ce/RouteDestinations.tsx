@@ -505,20 +505,22 @@ const CERoutes: React.FC = () => {
           </RouteWithLayout>
         ) : null}
 
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCERecommendationDetails({
-            ...accountPathProps,
-            ...projectPathProps,
-            recommendationName: ':recommendationName',
-            recommendation: ':recommendation'
-          })}
-          exact
-          pageName={PAGE_NAME.CERecommendationDetailsPage}
-        >
-          <RecommendationDetailsPage />
-        </RouteWithLayout>
+        {!enableMicroFrontend ? (
+          <RouteWithLayout
+            licenseRedirectData={licenseRedirectData}
+            sidebarProps={CESideNavProps}
+            path={routes.toCERecommendationDetails({
+              ...accountPathProps,
+              ...projectPathProps,
+              recommendationName: ':recommendationName',
+              recommendation: ':recommendation'
+            })}
+            exact
+            pageName={PAGE_NAME.CERecommendationDetailsPage}
+          >
+            <RecommendationDetailsPage />
+          </RouteWithLayout>
+        ) : null}
         <RouteWithLayout
           licenseRedirectData={licenseRedirectData}
           sidebarProps={CESideNavProps}
@@ -686,7 +688,13 @@ const CERoutes: React.FC = () => {
             path={[
               routes.toCEBudgets({ ...accountPathProps }),
               routes.toCEBudgetDetails({ ...accountPathProps, budgetId: ':budgetId', budgetName: ':budgetName' }),
-              routes.toCERecommendations({ ...accountPathProps, ...projectPathProps })
+              routes.toCERecommendations({ ...accountPathProps, ...projectPathProps }),
+              routes.toCERecommendationDetails({
+                ...accountPathProps,
+                ...projectPathProps,
+                recommendationName: ':recommendationName',
+                recommendation: ':recommendation'
+              })
             ]}
             sidebarProps={CESideNavProps}
           >

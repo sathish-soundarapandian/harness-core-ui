@@ -7,10 +7,12 @@
 
 import { isNull, isUndefined, omitBy, isEmpty, get, set, flatten, cloneDeep } from 'lodash-es'
 import { string, array, object, ObjectSchema } from 'yup'
+import { parse } from 'yaml'
 import type { ConnectorResponse, ManifestConfigWrapper } from 'services/cd-ng'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import type { NGTriggerSourceV2, PipelineInfoConfig, NGVariable } from 'services/pipeline-ng'
+import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import type { NGTriggerSourceV2, PipelineInfoConfig, NGVariable, NGTriggerConfigV2 } from 'services/pipeline-ng'
 import { connectorUrlType } from '@connectors/constants'
 import type { PanelInterface } from '@common/components/Wizard/Wizard'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
@@ -34,7 +36,6 @@ import type {
   artifactTableItem,
   ManifestInterface,
   TriggerConfigDTO,
-  TriggerTypeSourceInterface,
   FlatOnEditValuesInterface
 } from '../interface/TriggersWizardInterface'
 export const CUSTOM = 'Custom'
@@ -127,59 +128,6 @@ export const clearRuntimeInputValue = (template: PipelineInfoConfig): PipelineIn
   return JSON.parse(
     JSON.stringify(template || {}).replace(/"<\+input>.?(?:allowedValues\((.*?)\)|regex\((.*?)\))?"/g, '""')
   )
-}
-
-export const getQueryParamsOnNew = (searchStr: string): TriggerTypeSourceInterface => {
-  const triggerTypeParam = 'triggerType='
-  const triggerType = searchStr.replace(`?${triggerTypeParam}`, '')
-
-  if (triggerType.includes(TriggerTypes.WEBHOOK)) {
-    const sourceRepoParam = '&sourceRepo='
-    const sourceRepo = searchStr.substring(
-      searchStr.lastIndexOf(sourceRepoParam) + sourceRepoParam.length
-    ) as unknown as string
-    return {
-      triggerType: searchStr.substring(
-        searchStr.lastIndexOf(triggerTypeParam) + triggerTypeParam.length,
-        searchStr.lastIndexOf(sourceRepoParam)
-      ) as unknown as NGTriggerSourceV2['type'],
-      sourceRepo
-    }
-  } else if (triggerType.includes(TriggerTypes.ARTIFACT)) {
-    const artifactTypeParam = '&artifactType='
-    const artifactType = searchStr.substring(
-      searchStr.lastIndexOf(artifactTypeParam) + artifactTypeParam.length
-    ) as unknown as string
-    return {
-      triggerType: searchStr.substring(
-        searchStr.lastIndexOf(triggerTypeParam) + triggerTypeParam.length,
-        searchStr.lastIndexOf(artifactTypeParam)
-      ) as unknown as NGTriggerSourceV2['type'],
-      artifactType
-    }
-  } else if (triggerType.includes(TriggerTypes.MANIFEST)) {
-    const manifestTypeParam = '&manifestType='
-    const manifestType = searchStr.substring(
-      searchStr.lastIndexOf(manifestTypeParam) + manifestTypeParam.length
-    ) as unknown as string
-    return {
-      triggerType: searchStr.substring(
-        searchStr.lastIndexOf(triggerTypeParam) + triggerTypeParam.length,
-        searchStr.lastIndexOf(manifestTypeParam)
-      ) as unknown as NGTriggerSourceV2['type'],
-      manifestType
-    }
-  } else if (triggerType.includes(TriggerTypes.SCHEDULE)) {
-    // if modified for other schedule types, need to account for gitsync appended url params*
-    return {
-      triggerType: TriggerTypes.SCHEDULE as unknown as NGTriggerSourceV2['type']
-    }
-  } else {
-    //  unfound page
-    return {
-      triggerType: triggerType as unknown as NGTriggerSourceV2['type']
-    }
-  }
 }
 
 export const isUndefinedOrEmptyString = (str: string | undefined): boolean => isUndefined(str) || str?.trim() === ''
@@ -1988,7 +1936,7 @@ export const getOrderedPipelineVariableValues = ({
   return currentPipelineVariables
 }
 
-export const clearUndefinedArtifactId = (newPipelineObj = {}): any => {
+const clearUndefinedArtifactId = (newPipelineObj = {}): any => {
   // temporary fix, undefined artifact id gets injected somewhere and needs to be removed for submission
   const clearedNewPipeline: any = cloneDeep(newPipelineObj)
   const clearedNewPipelineObj = clearedNewPipeline.template
@@ -2087,3 +2035,271 @@ export const TriggerGitEventTypes: Readonly<string[]> = [
 ]
 
 export const isHarnessExpression = (str = ''): boolean => str.startsWith('<+') && str.endsWith('>')
+
+export const replaceRunTimeVariables = ({
+  manifestType,
+  artifactType,
+  selectedArtifact
+}: {
+  artifactType: string
+  selectedArtifact: any
+  manifestType?: string
+}) => {
+  if (manifestType) {
+    if (selectedArtifact?.spec?.chartVersion) {
+      // hardcode manifest chart version to default
+      selectedArtifact.spec.chartVersion = replaceTriggerDefaultBuild({
+        chartVersion: selectedArtifact?.spec?.chartVersion
+      })
+    } else if (!isEmpty(selectedArtifact) && selectedArtifact?.spec?.chartVersion === '') {
+      selectedArtifact.spec.chartVersion = TriggerDefaultFieldList.chartVersion
+    }
+  } else if (artifactType && selectedArtifact?.spec?.tag) {
+    selectedArtifact.spec.tag = TriggerDefaultFieldList.build
+  }
+}
+
+const replaceStageManifests = ({ filteredStage, selectedArtifact }: { filteredStage: any; selectedArtifact: any }) => {
+  const stageArtifacts = filteredStage?.stage?.template
+    ? filteredStage?.stage?.template?.templateInputs?.spec?.serviceConfig?.serviceDefinition?.spec?.manifests
+    : filteredStage?.stage?.spec?.serviceConfig?.serviceDefinition?.spec?.manifests
+  const stageArtifactIdx = stageArtifacts?.findIndex(
+    (item: any) => item.manifest?.identifier === selectedArtifact?.identifier
+  )
+
+  if (stageArtifactIdx >= 0) {
+    stageArtifacts[stageArtifactIdx].manifest = selectedArtifact
+  }
+}
+
+const replaceStageArtifacts = ({ filteredStage, selectedArtifact }: { filteredStage: any; selectedArtifact: any }) => {
+  const stageArtifacts = filteredStage?.stage?.spec?.serviceConfig?.serviceDefinition?.spec?.artifacts
+  const stageArtifactIdx =
+    filteredStage?.stage?.spec?.serviceConfig?.serviceDefinition?.spec?.artifacts?.sidecars?.findIndex(
+      (item: any) => item.sidecar?.identifier === selectedArtifact?.identifier
+    )
+
+  if (stageArtifactIdx >= 0) {
+    stageArtifacts['sidecars'][stageArtifactIdx].sidecar = selectedArtifact
+  }
+}
+
+const replaceEventConditions = ({
+  values,
+  persistIncomplete,
+  triggerYaml
+}: {
+  values: any
+  persistIncomplete: boolean
+  triggerYaml: any
+}) => {
+  const { versionOperator, versionValue, buildOperator, buildValue, eventConditions = [] } = values
+  if (
+    ((versionOperator && versionValue?.trim()) || (persistIncomplete && (versionOperator || versionValue?.trim()))) &&
+    !eventConditions.some((eventCondition: AddConditionInterface) => eventCondition.key === EventConditionTypes.VERSION)
+  ) {
+    eventConditions.unshift({
+      key: EventConditionTypes.VERSION,
+      operator: versionOperator || '',
+      value: versionValue || ''
+    })
+  } else if (
+    ((buildOperator && buildValue?.trim()) || (persistIncomplete && (buildOperator || buildValue?.trim()))) &&
+    !eventConditions.some((eventCondition: AddConditionInterface) => eventCondition.key === EventConditionTypes.BUILD)
+  ) {
+    eventConditions.unshift({
+      key: EventConditionTypes.BUILD,
+      operator: buildOperator || '',
+      value: buildValue || ''
+    })
+  }
+
+  if (triggerYaml.source?.spec) {
+    const sourceSpecSpec = { ...triggerYaml.source?.spec.spec }
+    sourceSpecSpec.eventConditions = persistIncomplete
+      ? eventConditions
+      : eventConditions.filter((eventCondition: AddConditionInterface) => isRowFilled(eventCondition))
+    triggerYaml.source.spec.spec = sourceSpecSpec
+  }
+}
+
+// @see https://github.com/lodash/lodash/issues/2240#issuecomment-995160298
+export const flattenKeys = (obj: any = {}, initialPathPrefix = 'pipeline'): Record<string, any> => {
+  if (!obj || typeof obj !== 'object') {
+    return [{ [initialPathPrefix]: obj }]
+  }
+
+  const prefix = initialPathPrefix ? (Array.isArray(object) ? initialPathPrefix : `${initialPathPrefix}.`) : ''
+
+  return Object.keys(obj)
+    .flatMap(key => flattenKeys(obj[key], Array.isArray(obj) ? `${prefix}[${key}]` : `${prefix}${key}`))
+    .reduce((acc, path) => ({ ...acc, ...path }), {})
+}
+
+export const getDefaultPipelineReferenceBranch = (triggerType = '', event = ''): string => {
+  if (triggerType === TriggerTypes.WEBHOOK) {
+    switch (event) {
+      case TriggerGitEvent.ISSUE_COMMENT:
+      case TriggerGitEvent.PULL_REQUEST:
+      default:
+        return ciCodebaseBuild.spec.branch
+    }
+  }
+
+  return ''
+}
+
+export const getArtifactManifestTriggerYaml = ({
+  values: val,
+  manifestType,
+  orgIdentifier,
+  enabledStatus,
+  projectIdentifier,
+  pipelineIdentifier,
+  persistIncomplete = false,
+  gitAwareForTriggerEnabled: _gitAwareForTriggerEnabled
+}: {
+  values: any
+  orgIdentifier: string
+  enabledStatus: boolean
+  projectIdentifier: string
+  pipelineIdentifier: string
+  manifestType?: string
+  persistIncomplete?: boolean
+  gitAwareForTriggerEnabled: boolean | undefined
+}): TriggerConfigDTO => {
+  const {
+    name,
+    identifier,
+    description,
+    tags,
+    pipeline: pipelineRuntimeInput,
+    triggerType: formikValueTriggerType,
+    event,
+    selectedArtifact,
+    stageId,
+    manifestType: onEditManifestType,
+    artifactType,
+    pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType, event),
+    inputSetRefs
+  } = val
+
+  replaceRunTimeVariables({ manifestType, artifactType, selectedArtifact })
+  let newPipeline = cloneDeep(pipelineRuntimeInput)
+  const newPipelineObj = newPipeline.template ? newPipeline.template.templateInputs : newPipeline
+  const filteredStage = newPipelineObj.stages?.find((item: any) => item.stage?.identifier === stageId)
+  if (manifestType) {
+    replaceStageManifests({ filteredStage, selectedArtifact })
+  } else if (artifactType) {
+    replaceStageArtifacts({ filteredStage, selectedArtifact })
+  }
+
+  // Manually clear null or undefined artifact identifier
+  newPipeline = clearUndefinedArtifactId(newPipeline)
+
+  // actions will be required thru validation
+  const stringifyPipelineRuntimeInput = yamlStringify({
+    pipeline: clearNullUndefined(newPipeline)
+  })
+
+  const filteredStagesforStore = val?.resolvedPipeline?.stages
+
+  //if manifest chosen is from stage
+  const filteredManifestforStore = filteredStagesforStore?.map((st: any) =>
+    get(st, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests' || [])?.find(
+      (mani: { manifest: { identifier: any } }) => mani?.manifest?.identifier === selectedArtifact?.identifier
+    )
+  )
+
+  const storeManifest = filteredManifestforStore?.find((mani: undefined) => mani != undefined)
+  let storeVal = storeManifest?.manifest?.spec?.store
+
+  //if manifest chosen is of parallel stage then to show store value in trigger yaml
+  const filteredParallelManifestforStore = filteredStagesforStore?.map((st: { parallel: any[] }) =>
+    st?.parallel
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      ?.map(st =>
+        get(st, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests' || [])?.find(
+          (mani: { manifest: { identifier: any } }) => mani?.manifest?.identifier === selectedArtifact?.identifier
+        )
+      )
+      ?.map(i => i?.manifest?.spec?.store)
+  )
+
+  //further finding storeVal in parallel stage
+  for (let i = 0; i < filteredParallelManifestforStore.length; i++) {
+    if (filteredParallelManifestforStore[i] !== undefined) {
+      for (let j = 0; j < filteredParallelManifestforStore[i].length; j++) {
+        if (filteredParallelManifestforStore[i][j] != undefined) {
+          storeVal = filteredParallelManifestforStore[i][j]
+        }
+      }
+    }
+  }
+
+  // clears any runtime inputs and set values in source->spec->spec
+  let artifactSourceSpec = clearRuntimeInputValue(
+    cloneDeep(
+      parse(
+        JSON.stringify({
+          spec: { ...selectedArtifact?.spec, store: storeVal }
+        }) || ''
+      )
+    )
+  )
+
+  //if connectorRef present in store is runtime then we need to fetch values from stringifyPipelineRuntimeInput
+  const filteredStageforRuntimeStore = parse(stringifyPipelineRuntimeInput)?.pipeline?.stages?.map((st: any) =>
+    get(st, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests' || [])?.find(
+      (mani: { manifest: { identifier: any } }) => mani?.manifest?.identifier === selectedArtifact?.identifier
+    )
+  )
+  const runtimeStoreManifest = filteredStageforRuntimeStore?.find((mani: undefined) => mani != undefined)
+  const newStoreVal = runtimeStoreManifest?.manifest?.spec?.store
+  if (storeVal?.spec?.connectorRef === '<+input>') {
+    artifactSourceSpec = cloneDeep(
+      parse(
+        JSON.stringify({
+          spec: { ...selectedArtifact?.spec, store: newStoreVal }
+        }) || ''
+      )
+    )
+  }
+
+  const triggerYaml: NGTriggerConfigV2 = {
+    name,
+    identifier,
+    enabled: enabledStatus,
+    description,
+    tags,
+    orgIdentifier,
+    projectIdentifier,
+    pipelineIdentifier,
+    source: {
+      type: formikValueTriggerType as unknown as NGTriggerSourceV2['type'],
+      spec: {
+        stageIdentifier: stageId,
+        manifestRef: selectedArtifact?.identifier,
+        type: onEditManifestType ? onEditManifestType : artifactType,
+        ...artifactSourceSpec
+      }
+    },
+    inputYaml: stringifyPipelineRuntimeInput,
+    pipelineBranchName: _gitAwareForTriggerEnabled ? pipelineBranchName : null,
+    inputSetRefs: _gitAwareForTriggerEnabled ? inputSetRefs : null
+  }
+  if (artifactType) {
+    if (triggerYaml?.source?.spec && Object.getOwnPropertyDescriptor(triggerYaml?.source?.spec, 'manifestRef')) {
+      delete triggerYaml.source.spec.manifestRef
+    }
+    if (triggerYaml?.source?.spec) {
+      triggerYaml.source.spec.artifactRef = selectedArtifact?.identifier
+        ? selectedArtifact?.identifier
+        : PRIMARY_ARTIFACT
+    }
+  }
+
+  replaceEventConditions({ values: val, persistIncomplete, triggerYaml })
+
+  return clearNullUndefined(triggerYaml)
+}

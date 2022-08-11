@@ -12,9 +12,9 @@ import routes from '@common/RouteDefinitions'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import filters from '@pipeline/pages/execution-list/__mocks__/filters.json'
 import { useGetListOfExecutions } from 'services/pipeline-ng'
-import services from '../../pipelines/__tests__/mocks/services.json'
-import environments from '../../pipelines/__tests__/mocks/environments.json'
-import deploymentTypes from '../../pipelines/__tests__/mocks/deploymentTypes.json'
+import services from '@pipeline/pages/pipeline-list/__tests__/mocks/services.json'
+import environments from '@pipeline/pages/pipeline-list/__tests__/mocks/environments.json'
+import deploymentTypes from '@pipeline/pages/pipeline-list/__tests__/mocks/deploymentTypes.json'
 import { ExecutionListPage } from '../ExecutionListPage'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')

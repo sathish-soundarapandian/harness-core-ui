@@ -5,13 +5,24 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, noop, omit } from 'lodash-es'
 import * as Yup from 'yup'
-import { Container, Formik, FormikForm, Button, ButtonVariation, useToaster, PageSpinner } from '@wings-software/uicore'
+import {
+  Container,
+  Formik,
+  FormikForm,
+  Button,
+  ButtonVariation,
+  useToaster,
+  PageSpinner,
+  useConfirmationDialog
+} from '@wings-software/uicore'
+import { Intent } from '@harness/design-system'
 import type { HideModal } from '@harness/use-modal'
 
+import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
 import { Error, importInputSetPromise, importPipelinePromise, ResponsePipelineSaveResponse } from 'services/pipeline-ng'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
@@ -54,6 +65,8 @@ export default function ImportResource({
   const { accountId, orgIdentifier, projectIdentifier, pipelineIdentifier } = useParams<PipelinePathProps>()
   const { showError, clear, showSuccess } = useToaster()
   const { getString } = useStrings()
+  const formikRef = useRef<FormikProps<ModifiedInitialValuesType>>(null)
+  const [isForceImport, setIsForceImport] = useState<boolean>()
 
   const getReourceTypeText = () => {
     if (resourceType === ResourceType.PIPELINES) {
@@ -72,6 +85,9 @@ export default function ImportResource({
       onSuccess?.()
     } else if (!isEmpty((response as Error).responseMessages)) {
       setErrorResponse((response as Error).responseMessages)
+      if ((response as Error).code === 'DUPLICATE_FILE_IMPORT' && resourceType === ResourceType.PIPELINES) {
+        openForceImportDialog()
+      }
       onFailure?.()
     } else {
       clear()
@@ -92,6 +108,21 @@ export default function ImportResource({
     }
   }
 
+  const { openDialog: openForceImportDialog } = useConfirmationDialog({
+    contentText: getString('pipeline.duplicateImport'),
+    titleText: getString('common.importFromGit'),
+    confirmButtonText: getString('common.import'),
+    cancelButtonText: getString('cancel'),
+    intent: Intent.PRIMARY,
+    buttonIntent: Intent.PRIMARY,
+    onCloseDialog: async (isConfirmed: boolean) => {
+      if (isConfirmed) {
+        setIsForceImport(true)
+        formikRef.current?.submitForm()
+      }
+    }
+  })
+
   const importPipeline = (formValues: ModifiedInitialValuesType): void => {
     const { identifier, name, description, connectorRef, repo, branch, filePath } = formValues
     setIsLoading(true)
@@ -104,7 +135,8 @@ export default function ImportResource({
         connectorRef: typeof connectorRef === 'string' ? connectorRef : (connectorRef as any).value,
         repoName: repo,
         branch,
-        filePath
+        filePath,
+        isForceImport
       },
       requestOptions: {
         headers: {
@@ -183,6 +215,7 @@ export default function ImportResource({
         formName="importResource"
         validationSchema={validationSchema}
         onSubmit={importEntity}
+        innerRef={formikRef}
       >
         {formikProps => (
           <FormikForm>
@@ -193,6 +226,9 @@ export default function ImportResource({
                 <NameIdDescriptionTags formikProps={formikProps} tooltipProps={{ dataTooltipId: 'createEntity' }} />
                 <GitSyncForm
                   formikProps={formikProps as any}
+                  initialValues={{
+                    filePath: formikProps.submitCount > 0 ? formikProps.values?.filePath : ''
+                  }}
                   handleSubmit={noop}
                   isEdit={false}
                   errorData={errorResponse}

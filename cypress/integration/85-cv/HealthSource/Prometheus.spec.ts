@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { featureFlagsCall } from '../../../support/85-cv/common'
 import {
   monitoredServiceListCall,
   monitoredServiceListResponse
@@ -263,5 +264,146 @@ describe('Health Source - Prometheus', () => {
     cy.findByRole('button', { name: /Submit/i }).click()
     cy.findByRole('button', { name: /Save/i }).click()
     cy.contains('span', 'Monitored Service updated').should('be.visible')
+  })
+})
+
+describe('Prometheus metric thresholds', () => {
+  beforeEach(() => {
+    cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
+      cy.intercept('GET', featureFlagsCall, {
+        ...featureFlagsData,
+        resource: [
+          ...featureFlagsData.resource,
+          {
+            uuid: null,
+            name: 'CVNG_METRIC_THRESHOLD',
+            enabled: true,
+            lastUpdatedAt: 0
+          }
+        ]
+      })
+    })
+
+    cy.on('uncaught:exception', () => {
+      return false
+    })
+    cy.login('test', 'test')
+    cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
+    cy.intercept(
+      'GET',
+      '/cv/api/monitored-service/count-of-services?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1',
+      { allServicesCount: 1, servicesAtRiskCount: 0 }
+    )
+    cy.visitChangeIntelligence()
+    cy.visitSRMMonitoredServicePage()
+  })
+
+  it('should render metric thresholds only if any group is created', () => {
+    cy.addNewMonitoredServiceWithServiceAndEnv()
+    cy.populateDefineHealthSource(Connectors.PROMETHEUS, 'prometheus-sale', 'Prometheus')
+
+    cy.get('input[name="product"]').should('be.disabled')
+
+    cy.intercept('GET', metricPackAPI, metricPackResponse)
+    cy.intercept('GET', labelNamesAPI, labelNamesResponse)
+    cy.intercept('GET', metricListAPI, metricListResponse)
+
+    cy.findByRole('button', { name: /Next/i }).click()
+
+    cy.contains('h2', 'Query Specifications and Mapping').should('be.visible')
+
+    cy.get('input[name="metricName"]').clear()
+
+    cy.fillField('metricName', 'Prometheus Metric')
+
+    cy.contains('.Accordion--label', 'Advanced (Optional)').should('not.exist')
+
+    cy.addingGroupName('Group 1')
+
+    cy.contains('.Accordion--label', 'Advanced (Optional)').should('exist')
+  })
+
+  it('should render metric thresholds and perform its features', () => {
+    cy.addNewMonitoredServiceWithServiceAndEnv()
+    cy.populateDefineHealthSource(Connectors.PROMETHEUS, 'prometheus-sale', 'Prometheus')
+
+    cy.get('input[name="product"]').should('be.disabled')
+
+    cy.intercept('GET', metricPackAPI, metricPackResponse)
+    cy.intercept('GET', labelNamesAPI, labelNamesResponse)
+    cy.intercept('GET', metricListAPI, metricListResponse)
+
+    cy.findByRole('button', { name: /Next/i }).click()
+
+    cy.contains('h2', 'Query Specifications and Mapping').should('be.visible')
+
+    cy.get('input[name="metricName"]').clear()
+
+    cy.fillField('metricName', 'Prometheus Metric')
+
+    cy.addingGroupName('Group 1')
+
+    cy.contains('.Accordion--label', 'Advanced (Optional)').should('exist')
+
+    cy.findByTestId('AddThresholdButton').click()
+
+    cy.contains('div', 'Ignore Thresholds (1)').should('exist')
+
+    cy.get("input[name='ignoreThresholds.0.metricType']").should('be.disabled')
+    cy.get("input[name='ignoreThresholds.0.metricType']").should('have.value', 'Custom')
+
+    // validations
+    cy.findByRole('button', { name: /Submit/i }).click()
+    cy.findByText('Metric name is required').should('be.visible')
+    cy.findAllByText('Required').should('have.length', 2)
+
+    cy.get("input[name='ignoreThresholds.0.metricName']").click()
+
+    cy.get('.Select--menuItem:nth-child(1)').should('have.text', 'Prometheus Metric')
+
+    cy.get('.Select--menuItem:nth-child(1)').click()
+
+    // testing criteria
+
+    cy.get("input[name='ignoreThresholds.0.criteria.type']").should('have.value', 'Absolute Value')
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.greaterThan']").should('exist')
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.lessThan']").should('exist')
+
+    // greater than should be smaller than lesser than value
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.greaterThan']").type('12')
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.lessThan']").type('1')
+
+    cy.get("input[name='ignoreThresholds.0.criteria.type']").click()
+    cy.contains('p', 'Percentage Deviation').click()
+
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.greaterThan']").should('exist')
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.lessThan']").should('not.exist')
+
+    cy.get("input[name='ignoreThresholds.0.criteria.criteriaPercentageType']").click()
+    cy.contains('p', 'Lesser than').click()
+
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.greaterThan']").should('not.exist')
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.lessThan']").should('exist')
+
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.lessThan']").type('12')
+
+    // Fail fast thresholds
+    cy.contains('div', 'Fail-Fast Thresholds (0)').click()
+
+    cy.findByTestId('AddThresholdButton').click()
+
+    cy.get("input[name='failFastThresholds.0.metricName']").click()
+
+    cy.get('.Select--menuItem:nth-child(1)').should('have.text', 'Prometheus Metric')
+
+    cy.get("input[name='failFastThresholds.0.spec.spec.count']").should('be.disabled')
+
+    cy.get("input[name='failFastThresholds.0.spec.action']").click()
+    cy.contains('p', 'Fail after multiple occurrences').click()
+    cy.get("input[name='failFastThresholds.0.spec.spec.count']").should('not.be.disabled')
+    cy.get("input[name='failFastThresholds.0.spec.spec.count']").type('4')
+
+    cy.get("input[name='failFastThresholds.0.criteria.spec.greaterThan']").type('21')
+    cy.get("input[name='failFastThresholds.0.criteria.spec.lessThan']").type('78')
   })
 })

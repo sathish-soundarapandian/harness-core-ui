@@ -54,7 +54,7 @@ function AzureWebAppServiceStepTwo({
 }: StepProps<ConnectorConfigDTO> & AzureWebAppServiceStepTwoProps): React.ReactElement {
   const { getString } = useStrings()
 
-  const gitConnectionType: string = prevStepData?.store === Connectors.GIT ? 'connectionType' : 'type'
+  const gitConnectionType: string = prevStepData?.selectedStore === Connectors.GIT ? 'connectionType' : 'type'
   const connectionType =
     prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
     prevStepData?.urlType === GitRepoName.Repo
@@ -62,9 +62,9 @@ function AzureWebAppServiceStepTwo({
       : GitRepoName.Account
 
   const getInitialValues = useCallback((): AppServiceConfigDataType => {
-    const specValues = get(initialValues, 'spec', null)
+    const specValues = get(initialValues, 'store.spec', null)
 
-    if (specValues) {
+    if (specValues && get(initialValues, 'store.type') !== 'Harness') {
       return {
         ...specValues,
         branch: specValues.branch,
@@ -84,36 +84,40 @@ function AzureWebAppServiceStepTwo({
     }
   }, [])
 
-  const submitFormData = (formData: AppServiceConfigDataType & { store?: string; connectorRef?: string }): void => {
+  const submitFormData = (
+    formData: AppServiceConfigDataType & { selectedStore?: string; connectorRef?: string }
+  ): void => {
     const applicationSettings = {
-      type: formData?.store as ConnectorTypes,
-      spec: {
-        connectorRef: formData?.connectorRef,
-        gitFetchType: formData?.gitFetchType,
-        paths:
-          getMultiTypeFromValue(formData.paths) === MultiTypeInputType.RUNTIME ? formData?.paths : [formData?.paths]
+      store: {
+        type: formData?.selectedStore as ConnectorTypes,
+        spec: {
+          connectorRef: formData?.connectorRef,
+          gitFetchType: formData?.gitFetchType,
+          paths:
+            getMultiTypeFromValue(formData.paths) === MultiTypeInputType.RUNTIME ? formData?.paths : [formData?.paths]
+        }
       }
     }
 
     if (connectionType === GitRepoName.Account) {
-      set(applicationSettings, 'spec.repoName', formData?.repoName)
+      set(applicationSettings, 'store.spec.repoName', formData?.repoName)
     }
 
-    if (applicationSettings?.spec) {
+    if (applicationSettings?.store?.spec) {
       if (formData?.gitFetchType === 'Branch') {
-        set(applicationSettings, 'spec.branch', formData?.branch)
+        set(applicationSettings, 'store.spec.branch', formData?.branch)
       } else if (formData?.gitFetchType === 'Commit') {
-        set(applicationSettings, 'spec.commitId', formData?.commitId)
+        set(applicationSettings, 'store.spec.commitId', formData?.commitId)
       }
     }
 
     handleSubmit(applicationSettings)
   }
 
-  if (prevStepData?.store === 'Harness') {
+  if (prevStepData?.selectedStore === 'Harness') {
     return (
       <HarnessOption
-        initialValues={initialValues}
+        initialValues={initialValues?.store?.type === 'Harness' ? initialValues?.store : undefined}
         stepName={title as string}
         handleSubmit={handleSubmit}
         formName="applicationConfigDetails"

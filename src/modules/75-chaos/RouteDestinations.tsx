@@ -68,6 +68,7 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTrailFactory'
 import type { ResourceDTO } from 'services/audit'
+import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 import ChaosHomePage from './pages/home/ChaosHomePage'
 import type { ChaosCustomMicroFrontendProps } from './interfaces/Chaos.types'
 import ChaosSideNav from './components/ChaosSideNav/ChaosSideNav'
@@ -546,9 +547,10 @@ export default function ChaosRoutes(): React.ReactElement {
           customComponents={{
             ConnectorReferenceField,
             OverviewChartsWithToggle,
-            validateYAMLWithSchema,
             NavigationCheck
           }}
+          customFunctions={{ validateYAMLWithSchema }}
+          customHooks={{ useCreateConnectorModal }}
         />
       </RouteWithLayout>
     </>

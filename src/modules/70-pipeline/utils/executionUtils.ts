@@ -17,7 +17,8 @@ import {
   isExecutionRunning,
   isExecutionWaiting,
   isExecutionSkipped,
-  isExecutionNotStarted
+  isExecutionNotStarted,
+  isExecutionWaitingForInput
 } from '@pipeline/utils/statusHelpers'
 import type {
   GraphLayoutNode,
@@ -78,7 +79,8 @@ export enum NodeType {
   NG_EXECUTION = 'NG_EXECUTION',
   StepGroupNode = 'StepGroupNode',
   'GITOPS_CLUSTERS' = 'GITOPS CLUSTERS',
-  STRATEGY = 'STRATEGY'
+  STRATEGY = 'STRATEGY',
+  RUNTIME_INPUT = 'RUNTIME_INPUT' // virtual node
 }
 
 export const NonSelectableNodes: NodeType[] = [
@@ -113,7 +115,8 @@ export const StepTypeIconsMap: { [key in NodeType]: IconName } = {
   APPROVAL_STAGE: 'approval-stage-icon',
   StepGroupNode: 'step-group',
   'GITOPS CLUSTERS': 'gitops-clusters',
-  STRATEGY: 'step-group'
+  STRATEGY: 'step-group',
+  RUNTIME_INPUT: 'runtime-input'
 }
 
 export const ExecutionStatusIconMap: Record<ExecutionStatus, IconName> = {
@@ -340,8 +343,19 @@ export function getActiveStep(
   const { rootNodeId, nodeMap, nodeAdjacencyListMap } = graph
   const { status: pipelineStatus, layoutNodeMap } = pipelineExecutionSummary
 
-  if (!nodeMap || !nodeAdjacencyListMap) {
+  if (!nodeMap || !nodeAdjacencyListMap || !rootNodeId) {
     return null
+  }
+
+  const rootNode = nodeMap[rootNodeId]
+
+  // handling for stage level execution inputs
+  if (isEmpty(nodeAdjacencyListMap[rootNodeId]?.children) && isExecutionWaitingForInput(rootNode.status)) {
+    return {
+      node: rootNodeId,
+      interrupted: true,
+      success: false
+    }
   }
 
   const currentNodeId = nodeId || rootNodeId

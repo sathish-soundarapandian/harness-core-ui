@@ -296,7 +296,8 @@ function FileDetails({ handleError }: FileDetailsProps): React.ReactElement {
                           disabled={
                             !get(formikProps.values, 'fileEditor') ||
                             saveLoading ||
-                            initialContent === get(formikProps.values, 'fileEditor')
+                            (initialContent === get(formikProps.values, 'fileEditor') &&
+                              !isCachedNode(currentNode.identifier))
                           }
                           loading={saveLoading}
                         />

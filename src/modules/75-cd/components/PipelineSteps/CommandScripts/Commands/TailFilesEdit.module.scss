@@ -55,6 +55,11 @@
   }
 }
 
+.row {
+  font-weight: normal;
+  align-items: baseline;
+}
+
 .addButton {
   margin-top: var(--spacing-xsmall);
   padding-left: 0 !important;

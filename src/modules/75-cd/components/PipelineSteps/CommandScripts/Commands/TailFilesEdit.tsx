@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
 import { FieldArray, FormikProps } from 'formik'
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
@@ -65,7 +66,7 @@ export function TailFilesEdit(props: TailFilesEditProps): React.ReactElement {
                                 ref={providedDrag.innerRef}
                                 {...providedDrag.draggableProps}
                                 {...providedDrag.dragHandleProps}
-                                className={css.header}
+                                className={cx(css.header, css.row)}
                               >
                                 <Container flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
                                   <Icon name="drag-handle-vertical" margin={{ right: 'small' }} />

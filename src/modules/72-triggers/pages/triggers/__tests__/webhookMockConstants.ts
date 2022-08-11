@@ -82,23 +82,19 @@ export const originalPipeline = {
 }
 
 export const getTriggerConfigInitialValues = ({
-  sourceRepo,
-  secureToken
+  sourceRepo
 }: {
   sourceRepo?: string
-  secureToken?: string
 }): {
   identifier: string
   sourceRepo: string
   triggerType: string
   originalPipeline: PipelineInfoConfig
-  secureToken?: string
 } => ({
   identifier: '',
   sourceRepo: sourceRepo || 'Github',
   triggerType: 'Webhook',
-  originalPipeline,
-  secureToken
+  originalPipeline
 })
 
 export const pipelineInputInitialValues = {

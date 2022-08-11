@@ -156,6 +156,17 @@ describe('Azure Slot Deployment step', () => {
                 localName: 'step.AzureSlot_test.timeout'
               }
             },
+            'step-identifier': {
+              yamlExtraProperties: {
+                properties: [
+                  {
+                    fqn: 'pipeline.stages.qaStage.execution.steps.AzureSlot_test.identifier',
+                    localName: 'step.AzureSlot_test.identifier',
+                    variableName: 'identifier'
+                  }
+                ]
+              }
+            },
             'step-name': {
               yamlProperties: {
                 fqn: 'pipeline.stages.qaStage.execution.steps.AzureSlot_test.name',
@@ -165,6 +176,7 @@ describe('Azure Slot Deployment step', () => {
           },
           variablesData: {
             name: 'step-name',
+            __uuid: 'step-identifier',
             identifier: 'AzureSlot_test',
             type: 'AzureSlotDeployment',
             timeout: 'step-timeout'

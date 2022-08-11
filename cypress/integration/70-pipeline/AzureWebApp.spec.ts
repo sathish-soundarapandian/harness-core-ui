@@ -3,11 +3,12 @@ import {
   newPipelineRoute,
   servicesV2,
   postServiceCall,
-  cdFailureStrategiesYaml
+  cdFailureStrategiesYaml,
+  azureStrategiesYamlSnippets
 } from '../../support/70-pipeline/constants'
 import { environmentFetchCall, environmentSaveCall } from '../../support/75-cd/constants'
 
-describe.skip('Azure web app end to end test', () => {
+describe('Azure web app end to end test', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -31,6 +32,9 @@ describe.skip('Azure web app end to end test', () => {
     cy.intercept('POST', environmentSaveCall, {
       fixture: 'ng/api/environmentsV2.post.json'
     }).as('environmentCreationCall')
+    cy.intercept('GET', azureStrategiesYamlSnippets, { fixture: 'ng/api/pipelines/kubernetesYamlSnippet' }).as(
+      'azureYamlSnippet'
+    )
   })
   const yamlValidations = function (connectorRef: string, subscriptionId: string): void {
     // Toggle to YAML view
@@ -61,6 +65,9 @@ describe.skip('Azure web app end to end test', () => {
     cy.get('button[data-id="service-save"]').click()
     cy.wait(2000)
     cy.get('span[data-icon="azurewebapp"]').click()
+    cy.findByDisplayValue('AzureWebApp').should('be.checked')
+    cy.wait('@azureYamlSnippet')
+
     // adding a startup command
     cy.contains('span', 'Add Startup Command').should('be.visible').click()
     cy.contains('p', 'Startup Command File Source').should('be.visible')
@@ -85,17 +92,19 @@ describe.skip('Azure web app end to end test', () => {
     cy.get('[class*=StepWizard--stepDetails]').within(() => {
       cy.contains('span', 'Submit').click()
     })
-    cy.wait(1000)
     cy.get('span[data-icon="service-github"]').should('be.visible')
-    cy.contains('span', 'Infrastructure').click({ force: true })
+    cy.wait(2000)
+    cy.contains('span', 'Continue').click({ force: true })
     cy.wait(1000)
     // creating a new environment
     cy.wait('@environmentListCall')
 
     cy.contains('span', 'Environment').should('be.visible')
     cy.contains('span', 'New Environment').should('be.visible').click()
-    cy.wait(3000)
-    cy.get('input[name="name"]').should('be.visible').type('testEnvConfig').should('have.value', 'testEnvConfig')
+    cy.get('input[name="name"]')
+      .should('be.visible', { timeout: 2000 })
+      .type('testEnvConfig')
+      .should('have.value', 'testEnvConfig')
     cy.contains('p', 'Production').click()
     cy.get('[class*=bp3-dialog]').within(() => {
       cy.contains('span', 'Save').click()

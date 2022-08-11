@@ -18,11 +18,10 @@ import {
   Failure,
   GitBranchDetailsDTO,
   ResponseGitBranchesResponseDTO,
-  ResponseMessage,
   useGetListOfBranchesByRefConnectorV2
 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { ErrorHandler } from '../ErrorHandler/ErrorHandler'
+import { ErrorHandler, ResponseMessage } from '../ErrorHandler/ErrorHandler'
 import css from './RepoBranchSelectV2.module.scss'
 
 export interface RepoBranchSelectProps {

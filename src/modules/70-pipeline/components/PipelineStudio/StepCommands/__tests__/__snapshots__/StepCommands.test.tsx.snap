@@ -9,7 +9,8 @@ exports[`<StepCommands /> tests able to switch tab 1`] = `
       class="helpPanelGrid"
     >
       <div
-        class="stepTabs"
+        class="StyledProps--font StyledProps--main stepTabs"
+        style="width: 100%;"
       >
         <div
           class="bp3-tabs Tabs--main Tabs--horizontal"
@@ -83,7 +84,8 @@ exports[`<StepCommands /> tests renders ok 1`] = `
       class="helpPanelGrid"
     >
       <div
-        class="stepTabs"
+        class="StyledProps--font StyledProps--main stepTabs"
+        style="width: 100%;"
       >
         <div
           class="bp3-tabs Tabs--main Tabs--horizontal"

@@ -60,6 +60,30 @@ export const GetTriggerResponse: UseGetReturnData<ResponseNGTriggerResponse> = {
   }
 }
 
+export const GetCustomWebhookTriggerResponse: UseGetReturnData<ResponseNGTriggerResponse> = {
+  loading: false,
+  refetch: jest.fn(),
+  error: null,
+  data: {
+    status: 'SUCCESS',
+    data: {
+      name: 'custom-webhook',
+      identifier: 'customwebhook',
+      description: '',
+      type: 'Webhook',
+      accountIdentifier: 'cdGvQ7f_Quqe9JaDIoHbEw',
+      orgIdentifier: 'default',
+      projectIdentifier: 'mtran',
+      targetIdentifier: 'pipelinenoruntimeinputs',
+      yaml: 'trigger:\n  name: custom-webhook\n  identifier: customwebhook\n  enabled: true\n  description: ""\n  tags: {}\n  orgIdentifier: default\n  projectIdentifier: mtran\n  pipelineIdentifier: pipelinenoruntimeinputs\n  source:\n    type: Webhook\n    spec:\n      type: Custom\n      spec:\n        payloadConditions:\n          - key: attr\n            operator: NotEquals\n            value: val1\n        headerConditions:\n          - key: attr\n            operator: NotEquals\n            value: var1\n        jexlCondition: "true"\n  inputYaml: |\n    pipeline: {}\n',
+      enabled: true,
+      errorResponse: false
+    },
+    metaData: null as unknown as undefined,
+    correlationId: '25df5700-e9a4-49c4-98eb-dea4c371fd6e'
+  }
+}
+
 export const GetParseableManifestTriggerResponse: UseGetReturnData<ResponseNGTriggerResponse> = {
   loading: false,
   refetch: jest.fn(),
@@ -461,6 +485,8 @@ export const CreateTriggerResponse = {}
 // double space instead of 4 and removed 3 org, project, pipeline identifiers
 export const updateTriggerMockResponseYaml =
   'trigger:\n  name: All Values\n  identifier: All_Values\n  enabled: true\n  description: desc\n  tags:\n    tag1: value1\n  source:\n    type: Webhook\n    spec:\n      type: Github\n      spec:\n        type: IssueComment\n        spec:\n          connectorRef: test\n          autoAbortPreviousExecutions: true\n          payloadConditions:\n            - key: changedFiles\n              operator: NotEquals\n              value: x\n            - key: sourceBranch\n              operator: Equals\n              value: sourceBranch\n            - key: targetBranch\n              operator: In\n              value: val1, val2\n            - key: <+trigger.payload.path>\n              operator: StartsWith\n              value: "1"\n          headerConditions:\n            - key: <+trigger.header["key-name"]>\n              operator: EndsWith\n              value: release\n          jexlCondition: jexlCondition\n          repoName: reponame\n          actions:\n            - Create\n            - Edit\n            - Delete\n  inputYaml: |\n    pipeline:\n      properties:\n        ci:\n          codebase:\n            build:\n              type: branch\n              spec:\n                branch: <+trigger.branch>\n'
+export const updateCustomTriggerMockResponseYaml =
+  'trigger:\n  name: custom-webhook\n  identifier: customwebhook\n  enabled: true\n  description: ""\n  tags: {}\n  source:\n    type: Webhook\n    spec:\n      type: Custom\n      spec:\n        payloadConditions:\n          - key: attr\n            operator: NotEquals\n            value: val1\n        headerConditions:\n          - key: attr\n            operator: NotEquals\n            value: var1\n        jexlCondition: "true"\n  inputYaml: |\n    pipeline:\n      identifier: noinputspipeline1\n      variables:\n        - name: newVar\n          type: String\n          value: ""\n'
 export const enabledFalseUpdateTriggerMockResponseYaml =
   'trigger:\n  name: All Values\n  identifier: All_Values\n  enabled: false\n  description: desc\n  tags:\n    tag1: value1\n  source:\n    type: Webhook\n    spec:\n      type: Github\n      spec:\n        type: IssueComment\n        spec:\n          connectorRef: test\n          autoAbortPreviousExecutions: true\n          payloadConditions:\n            - key: changedFiles\n              operator: NotEquals\n              value: x\n            - key: sourceBranch\n              operator: Equals\n              value: sourceBranch\n            - key: targetBranch\n              operator: In\n              value: val1, val2\n            - key: <+trigger.payload.path>\n              operator: StartsWith\n              value: "1"\n          headerConditions:\n            - key: <+trigger.header["key-name"]>\n              operator: EndsWith\n              value: release\n          jexlCondition: jexlCondition\n          repoName: reponame\n          actions:\n            - Create\n            - Edit\n            - Delete\n  inputYaml: |\n    pipeline:\n      identifier: noinputspipeline1\n      variables:\n        - name: newVar\n          type: String\n          value: ""\n'
 

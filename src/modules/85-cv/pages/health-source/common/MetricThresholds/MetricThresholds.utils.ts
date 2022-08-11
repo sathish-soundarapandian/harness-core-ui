@@ -172,6 +172,83 @@ export function getIsShowLessThan(
   return false
 }
 
+function getAreAllRequiredValuesPresent(thresholdValueToCompare: MetricThresholdType): boolean {
+  return [
+    thresholdValueToCompare.metricType,
+    thresholdValueToCompare.metricName,
+    thresholdValueToCompare.spec.action,
+    thresholdValueToCompare.criteria.type
+  ].every(value => Boolean(value))
+}
+
+function getAreAllRequiredValuesPresentWithGroup(thresholdValueToCompare: MetricThresholdType): boolean {
+  return getAreAllRequiredValuesPresent(thresholdValueToCompare) && thresholdValueToCompare.groupName !== undefined
+}
+
+function checkForDuplicateThresholds(
+  thresholdName: string,
+  thresholdValueToCompare: MetricThresholdType,
+  currentIndex: number,
+  slicedThresholdValues: MetricThresholdType[],
+  errors: Record<string, string>,
+  isValidateGroup: boolean,
+  getString: UseStringsReturn['getString']
+): boolean {
+  const areAllRequiredValuesPresent = isValidateGroup
+    ? getAreAllRequiredValuesPresentWithGroup(thresholdValueToCompare)
+    : getAreAllRequiredValuesPresent(thresholdValueToCompare)
+
+  if (!areAllRequiredValuesPresent) {
+    return false
+  }
+
+  const foundDuplicates = slicedThresholdValues.some(slicedThresholdValue => {
+    let isDuplicateFound =
+      slicedThresholdValue.metricType === thresholdValueToCompare.metricType &&
+      slicedThresholdValue.metricName === thresholdValueToCompare.metricName &&
+      slicedThresholdValue.spec.action === thresholdValueToCompare.spec.action &&
+      slicedThresholdValue.criteria.type === thresholdValueToCompare.criteria.type
+
+    if (isValidateGroup) {
+      isDuplicateFound = isDuplicateFound && slicedThresholdValue.groupName === thresholdValueToCompare.groupName
+    }
+
+    return isDuplicateFound
+  })
+
+  if (foundDuplicates) {
+    errors[`${thresholdName}.${currentIndex}.metricType`] = getString(
+      'cv.metricThresholds.validations.duplicateThreshold'
+    )
+  }
+
+  return foundDuplicates
+}
+
+export function checkDuplicate(
+  thresholdName: string,
+  thresholdValues: MetricThresholdType[],
+  errors: Record<string, string>,
+  isValidateGroup: boolean,
+  getString: UseStringsReturn['getString']
+): void {
+  if (thresholdValues.length < 2) {
+    return void 0
+  }
+
+  thresholdValues.some((thresholdValue, index) => {
+    return checkForDuplicateThresholds(
+      thresholdName,
+      thresholdValue,
+      index,
+      thresholdValues.slice(index + 1),
+      errors,
+      isValidateGroup,
+      getString
+    )
+  })
+}
+
 /**
  *  Common validation for thresholds
  *
@@ -231,6 +308,7 @@ export function validateCommonFieldsForMetricThreshold(
       )
     }
 
+    // Percentage value is required for selected criteria percentage type
     if (
       value.criteria?.type === MetricCriteriaValues.Percentage &&
       value?.criteria?.spec &&
@@ -238,6 +316,17 @@ export function validateCommonFieldsForMetricThreshold(
     ) {
       errors[`${thresholdName}.${index}.criteria.spec.${value.criteria.criteriaPercentageType}`] =
         getString('cv.required')
+    }
+
+    // Percentage value must not be greater than 100
+    if (
+      value.criteria?.type === MetricCriteriaValues.Percentage &&
+      value?.criteria?.spec &&
+      (value?.criteria?.spec[value?.criteria?.criteriaPercentageType as CriteriaThresholdValues] as number) > 100
+    ) {
+      errors[`${thresholdName}.${index}.criteria.spec.${value.criteria.criteriaPercentageType}`] = getString(
+        'cv.metricThresholds.validations.percentageValidation'
+      )
     }
 
     if (thresholdName === MetricThresholdPropertyName.FailFastThresholds) {
@@ -250,4 +339,6 @@ export function validateCommonFieldsForMetricThreshold(
       }
     }
   })
+
+  checkDuplicate(thresholdName, thresholdValues, errors, isValidateGroup, getString)
 }

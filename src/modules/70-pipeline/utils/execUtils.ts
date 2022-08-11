@@ -12,6 +12,7 @@ import type { ExecutionGraph, ExecutionNode, NodeRunInfo } from 'services/pipeli
 import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { Event } from '@pipeline/components/Diagram'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import {
   StepGroupRollbackIdentifier,
   NodeType,
@@ -24,7 +25,8 @@ import {
   StepTypeIconsMap,
   ServiceDependency,
   STATIC_SERVICE_GROUP_NAME,
-  isNodeTypeMatrixOrFor
+  isNodeTypeMatrixOrFor,
+  NonSelectableNodes
 } from './executionUtils'
 import type { ExecutionStatus } from './statusHelpers'
 interface ProcessParalellNodeArgs {
@@ -715,12 +717,31 @@ export const processExecutionDataV1 = (graph?: ExecutionGraph): any => {
   /* istanbul ignore else */
   if (graph?.nodeAdjacencyListMap && graph?.rootNodeId) {
     const nodeAdjacencyListMap = graph.nodeAdjacencyListMap
-    const rootNode = graph.rootNodeId
+    const rootNodeId = graph.rootNodeId
+    const rootNode = graph?.nodeMap?.[rootNodeId]
     // Ignore the graph when its fqn is pipeline, as this doesn't render pipeline graph
-    if (graph?.nodeMap?.[rootNode].baseFqn === 'pipeline') {
+    if (rootNode?.baseFqn === 'pipeline') {
       return items
     }
-    let nodeId = nodeAdjacencyListMap[rootNode].children?.[0]
+
+    let nodeId = nodeAdjacencyListMap[rootNodeId].children?.[0]
+
+    // handling for stage level execution inputs
+    if (rootNode?.executionInputConfigured && NonSelectableNodes.includes(rootNode.stepType as NodeType)) {
+      items.push({
+        name: 'Runtime Inputs',
+        identifier: rootNodeId,
+        id: rootNode?.uuid as string,
+        icon: StepTypeIconsMap.RUNTIME_INPUT,
+        type: StepType.StageRuntimeInput,
+        nodeType: NodeType.RUNTIME_INPUT,
+        status: rootNode?.status as ExecutionStatus,
+        data: {
+          ...rootNode
+        }
+      })
+    }
+
     while (nodeId && nodeAdjacencyListMap[nodeId]) {
       const nodeData = graph?.nodeMap?.[nodeId]
 
@@ -819,6 +840,7 @@ export const processExecutionDataV1 = (graph?: ExecutionGraph): any => {
       nodeId = nodeAdjacencyListMap[nodeId].nextIds?.[0]
     }
   }
+
   return items
 }
 

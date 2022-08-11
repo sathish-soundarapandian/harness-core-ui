@@ -5,9 +5,19 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, FormInput, Layout, Text, Utils } from '@wings-software/uicore'
+import {
+  Container,
+  FormInput,
+  getMultiTypeFromValue,
+  Layout,
+  MultiTypeInput,
+  MultiTypeInputType,
+  SelectOption,
+  Text,
+  Utils
+} from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import CardWithOuterTitle from '@cv/pages/health-source/common/CardWithOuterTitle/CardWithOuterTitle'
@@ -32,15 +42,25 @@ import {
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { DynatraceMetricPacksToServiceProps } from './DynatraceMetricPacksToService.types'
 import { extractServiceMethods } from './DynatraceMetricPacksToService.utils'
+import { getTypeOfInput } from '../../../AppDynamics/AppDHealthSource.utils'
 import css from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.module.scss'
 
 export default function DynatraceMetricPacksToService(props: DynatraceMetricPacksToServiceProps): JSX.Element {
-  const { connectorIdentifier, dynatraceMetricData, setDynatraceMetricData, metricValues } = props
+  const { connectorIdentifier, dynatraceMetricData, setDynatraceMetricData, metricValues, isTemplate, expressions } =
+    props
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [servicesTracingId, validationTracingId] = useMemo(() => [Utils.randomId(), Utils.randomId()], [])
   const [validationResultData, setValidationResultData] = useState<MetricPackValidationResponse[]>()
   const [selectedMetricPacks, setSelectedMetricPacks] = useState<MetricPackDTO[]>([])
+  const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED
+  const metricDataSelectedService =
+    typeof dynatraceMetricData.selectedService !== 'string'
+      ? dynatraceMetricData?.selectedService?.value
+      : dynatraceMetricData.selectedService
+  const [inputType, setInputType] = React.useState<MultiTypeInputType | undefined>(() =>
+    getTypeOfInput(metricDataSelectedService as string)
+  )
 
   const [dynatraceValidation, setDynatraceValidation] = useState<{
     status: string
@@ -50,7 +70,12 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
     result: []
   })
 
-  const { data: servicesListData, loading: servicesListLoading } = useGetDynatraceServices({
+  const {
+    data: servicesListData,
+    loading: servicesListLoading,
+    refetch: refetchServiceList
+  } = useGetDynatraceServices({
+    lazy: true,
     queryParams: {
       accountId,
       connectorIdentifier,
@@ -59,9 +84,25 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
       tracingId: servicesTracingId
     }
   })
+
   const dynatraceServiceOptions = useMemo(() => {
     return mapServiceListToOptions(servicesListData?.data || [])
   }, [servicesListData?.data])
+
+  useEffect(() => {
+    if (!isConnectorRuntimeOrExpression) {
+      refetchServiceList()
+    }
+  }, [isConnectorRuntimeOrExpression])
+
+  useEffect(() => {
+    if (
+      getTypeOfInput(connectorIdentifier) !== MultiTypeInputType.FIXED &&
+      getTypeOfInput(metricDataSelectedService as string) !== MultiTypeInputType.FIXED
+    ) {
+      setInputType(getTypeOfInput(metricDataSelectedService as string))
+    }
+  }, [connectorIdentifier, dynatraceMetricData.selectedService])
 
   const onValidate = async (serviceMethods: string[], metricObject: { [key: string]: any }): Promise<void> => {
     setDynatraceValidation({ status: StatusOfValidation.IN_PROGRESS, result: [] })
@@ -84,54 +125,120 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
   }
   useEffect(() => {
     if (
-      dynatraceMetricData.selectedService.value &&
+      !isConnectorRuntimeOrExpression &&
+      metricDataSelectedService &&
       selectedMetricPacks.length &&
       dynatraceValidation.status !== StatusOfValidation.IN_PROGRESS
     ) {
       onValidate(dynatraceMetricData.serviceMethods || [], createMetricDataFormik(selectedMetricPacks))
     }
   }, [selectedMetricPacks, dynatraceMetricData.selectedService, dynatraceMetricData.serviceMethods])
+
+  const onChangeDynatraceService = useCallback(
+    item => {
+      setDynatraceMetricData({
+        ...metricValues,
+        selectedService: { ...item },
+        serviceMethods: extractServiceMethods(servicesListData?.data || [], item.value as string)
+      })
+    },
+    [metricValues]
+  )
+
+  const onChangeMultiTypeDynatraceService = useCallback(
+    (item, _valueType, type) => {
+      if (type === MultiTypeInputType.FIXED) {
+        const selectedItem = item as SelectOption
+        setDynatraceMetricData({
+          ...metricValues,
+          selectedService: { ...selectedItem },
+          serviceMethods: extractServiceMethods(servicesListData?.data || [], selectedItem.value as string)
+        })
+      } else {
+        setDynatraceMetricData({
+          ...metricValues,
+          selectedService: item as string,
+          serviceMethods: []
+        })
+      }
+    },
+    [metricValues]
+  )
+
+  const onChangeMetricPack = useCallback(
+    async metricValue => {
+      setDynatraceMetricData({
+        ...metricValues,
+        metricData: metricValue
+      })
+      await onValidate(metricValues.serviceMethods || [], metricValue)
+    },
+    [metricValues]
+  )
+
   return (
     <>
       <CardWithOuterTitle title={'Services'}>
         <Layout.Horizontal spacing={'large'} className={css.horizontalCenterAlign}>
           <Container margin={{ bottom: 'small' }} width={'400px'} color={Color.BLACK}>
-            <FormInput.Select
-              className={css.applicationDropdown}
-              onChange={item => {
-                setDynatraceMetricData({
-                  ...metricValues,
-                  selectedService: { ...item },
-                  serviceMethods: extractServiceMethods(servicesListData?.data || [], item.value as string)
-                })
-              }}
-              value={dynatraceMetricData.selectedService}
-              name={'dynatraceService'}
-              placeholder={
-                servicesListLoading
-                  ? getString('loading')
-                  : getString('cv.healthSource.connectors.Dynatrace.servicePlaceholder')
-              }
-              items={dynatraceServiceOptions}
-              label={getString('cv.healthSource.connectors.Dynatrace.servicesLabel')}
-              {...getInputGroupProps(() =>
-                setDynatraceMetricData({ ...metricValues, selectedService: { label: '', value: '' } })
-              )}
-            />
-          </Container>
-          <Container width={'300px'} color={Color.BLACK}>
-            {metricValues.selectedService?.value && (
-              <ValidationStatus
-                validationStatus={dynatraceValidation?.status as StatusOfValidation}
-                onClick={
-                  dynatraceValidation.result?.length
-                    ? () => setValidationResultData(dynatraceValidation.result)
-                    : undefined
+            {isTemplate ? (
+              <>
+                <Text color={Color.BLACK} margin={{ bottom: 'small' }}>
+                  {getString('cv.healthSource.connectors.Dynatrace.servicesLabel')}
+                </Text>
+                <MultiTypeInput
+                  key={inputType}
+                  name={'dynatraceService'}
+                  selectProps={{
+                    items: dynatraceServiceOptions
+                  }}
+                  expressions={expressions}
+                  allowableTypes={
+                    isConnectorRuntimeOrExpression
+                      ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+                      : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+                  }
+                  multitypeInputValue={inputType}
+                  value={dynatraceMetricData.selectedService}
+                  onChange={onChangeMultiTypeDynatraceService}
+                />
+              </>
+            ) : (
+              <FormInput.Select
+                className={css.applicationDropdown}
+                onChange={onChangeDynatraceService}
+                value={dynatraceMetricData.selectedService as SelectOption}
+                name={'dynatraceService'}
+                placeholder={
+                  servicesListLoading
+                    ? getString('loading')
+                    : getString('cv.healthSource.connectors.Dynatrace.servicePlaceholder')
                 }
-                onRetry={() => onValidate(metricValues.serviceMethods || [], metricValues.metricData)}
+                items={dynatraceServiceOptions}
+                label={getString('cv.healthSource.connectors.Dynatrace.servicesLabel')}
+                {...getInputGroupProps(() =>
+                  setDynatraceMetricData({ ...metricValues, selectedService: { label: '', value: '' } })
+                )}
               />
             )}
           </Container>
+          {!isConnectorRuntimeOrExpression && (
+            <Container width={'300px'} color={Color.BLACK}>
+              {typeof metricValues.selectedService === 'string'
+                ? metricValues.selectedService
+                : metricValues.selectedService?.value && (
+                    <ValidationStatus
+                      validationStatus={dynatraceValidation?.status as StatusOfValidation}
+                      onClick={
+                        dynatraceValidation.result?.length
+                          ? () => setValidationResultData(dynatraceValidation.result)
+                          : undefined
+                      }
+                      onRetry={() => onValidate(metricValues.serviceMethods || [], metricValues.metricData)}
+                    />
+                  )}
+            </Container>
+          )}
         </Layout.Horizontal>
         <Container>
           <Text icon="warning-sign" iconProps={{ size: 14 }}>
@@ -156,13 +263,7 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
                 setSelectedMetricPacks as React.Dispatch<React.SetStateAction<TimeSeriesMetricPackDTO[]>>
               }
               connector={HealthSoureSupportedConnectorTypes.DYNATRACE}
-              onChange={async metricValue => {
-                setDynatraceMetricData({
-                  ...metricValues,
-                  metricData: metricValue
-                })
-                await onValidate(metricValues.serviceMethods || [], metricValue)
-              }}
+              onChange={onChangeMetricPack}
             />
             {validationResultData && (
               <MetricsVerificationModal

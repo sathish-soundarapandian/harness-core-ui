@@ -8,6 +8,7 @@
 import type { MetricThresholdType } from '@cv/pages/health-source/connectors/AppDynamics/AppDHealthSource.types'
 import { MetricCriteriaValues, PercentageCriteriaDropdownValues } from '../MetricThresholds.constants'
 import {
+  checkDuplicate,
   getActionItems,
   getCriterialItems,
   getCriteriaPercentageDropdownOptions,
@@ -20,7 +21,8 @@ import {
 import {
   exceptionalGroupedCreatedMetrics,
   groupedCreatedMetrics,
-  groupedCreatedMetricsDefault
+  groupedCreatedMetricsDefault,
+  mockThresholdValue
 } from './MetricThresholds.utils.mock'
 
 describe('AppDIgnoreThresholdTabContent', () => {
@@ -296,6 +298,121 @@ describe('AppDIgnoreThresholdTabContent', () => {
     }
     validateCommonFieldsForMetricThreshold('failFastThresholds', errors, [testValue], key => key, true)
     expect(errors).toEqual({ 'failFastThresholds.0.spec.spec.count': 'cv.metricThresholds.validations.countValue' })
+  })
+
+  test('checkDuplicate function should show error if there are duplicate thresholds', () => {
+    const errors = {}
+
+    const testValue: MetricThresholdType[] = [
+      { ...(mockThresholdValue as MetricThresholdType) },
+      { ...(mockThresholdValue as MetricThresholdType) }
+    ]
+
+    checkDuplicate('ignoreThresholds', testValue, errors, true, key => key)
+
+    expect(errors).toEqual({ 'ignoreThresholds.0.metricType': 'cv.metricThresholds.validations.duplicateThreshold' })
+  })
+
+  test('checkDuplicate function should not show error if there are no duplicate thresholds', () => {
+    const errors = {}
+
+    const updatedValue: MetricThresholdType = { ...mockThresholdValue, groupName: 'G1' } as MetricThresholdType
+
+    const testValue: MetricThresholdType[] = [{ ...(mockThresholdValue as MetricThresholdType) }, { ...updatedValue }]
+
+    checkDuplicate('ignoreThresholds', testValue, errors, true, key => key)
+
+    expect(errors).toEqual({})
+  })
+
+  test('checkDuplicate function should show error at first found correct duplicate threshold', () => {
+    const errors = {}
+
+    const updatedValue: MetricThresholdType = { ...mockThresholdValue, groupName: 'G1' } as MetricThresholdType
+
+    const testValue: MetricThresholdType[] = [
+      { ...(mockThresholdValue as MetricThresholdType) },
+      { ...updatedValue },
+      { ...updatedValue }
+    ]
+
+    checkDuplicate('ignoreThresholds', testValue, errors, true, key => key)
+
+    expect(errors).toEqual({ 'ignoreThresholds.1.metricType': 'cv.metricThresholds.validations.duplicateThreshold' })
+  })
+
+  test('checkDuplicate function should show error if any of the value is undefined', () => {
+    const errors = {}
+
+    const updatedValue: MetricThresholdType = { ...mockThresholdValue, metricName: undefined } as MetricThresholdType
+
+    const testValue: MetricThresholdType[] = [{ ...updatedValue }, { ...updatedValue }]
+
+    checkDuplicate('ignoreThresholds', testValue, errors, true, key => key)
+
+    expect(errors).toEqual({})
+  })
+
+  test('checkDuplicate function should not consider groupName is undefined if isValidateGroup flag is false', () => {
+    const errors = {}
+
+    const updatedValue: MetricThresholdType = { ...mockThresholdValue, groupName: undefined } as MetricThresholdType
+
+    const testValue: MetricThresholdType[] = [{ ...(mockThresholdValue as MetricThresholdType) }, { ...updatedValue }]
+
+    checkDuplicate('ignoreThresholds', testValue, errors, false, key => key)
+
+    expect(errors).toEqual({ 'ignoreThresholds.0.metricType': 'cv.metricThresholds.validations.duplicateThreshold' })
+  })
+
+  test('checkDuplicate function should not consider different groupName if isValidateGroup flag is false', () => {
+    const errors = {}
+
+    const updatedValue: MetricThresholdType = { ...mockThresholdValue, groupName: 'G1' } as MetricThresholdType
+    const updatedValue2: MetricThresholdType = { ...mockThresholdValue, groupName: 'G2' } as MetricThresholdType
+
+    const testValue: MetricThresholdType[] = [{ ...updatedValue2 }, { ...updatedValue }]
+
+    checkDuplicate('ignoreThresholds', testValue, errors, false, key => key)
+
+    expect(errors).toEqual({ 'ignoreThresholds.0.metricType': 'cv.metricThresholds.validations.duplicateThreshold' })
+  })
+
+  test('checkDuplicate function should not show error if we have only one threshold', () => {
+    const errors = {}
+
+    const testValue: MetricThresholdType[] = [{ ...(mockThresholdValue as MetricThresholdType) }]
+
+    checkDuplicate('ignoreThresholds', testValue, errors, true, key => key)
+
+    expect(errors).toEqual({})
+  })
+
+  test('should check percentage validation', () => {
+    const errors = {}
+    const testValue: MetricThresholdType = {
+      metricType: 'test',
+      groupName: 'test',
+      metricName: 'test',
+      type: 'FailImmediately',
+      spec: {
+        action: 'FailAfterOccurrence',
+        spec: {
+          count: 4
+        }
+      },
+      criteria: {
+        type: MetricCriteriaValues.Percentage,
+        criteriaPercentageType: PercentageCriteriaDropdownValues.LessThan,
+        spec: {
+          lessThan: 101
+        }
+      }
+    }
+    validateCommonFieldsForMetricThreshold('failFastThresholds', errors, [testValue], key => key, true)
+    expect(errors).toEqual({
+      'failFastThresholds.0.criteria.spec.lessThan': 'cv.metricThresholds.validations.percentageValidation'
+    })
   })
 
   test('getIsShowGreaterThan function returns correct values', () => {

@@ -80,7 +80,7 @@ export const BIDashboardData: React.FC = () => {
     return filterDashboardData(data, searchParam, quickFilters)
   }, [data, searchParam, quickFilters])
 
-  if (!data.length) {
+  if (!data.length && !loading) {
     return <NoConnectorDataHandling showConnectorModal />
   }
 

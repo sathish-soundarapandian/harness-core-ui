@@ -1133,7 +1133,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                     <p
                                       class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-black"
                                     >
-                                      customVariables.title
+                                      pipeline.stageVariables
                                     </p>
                                   </p>
                                 </div>
@@ -2754,7 +2754,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                     <p
                                       class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-black"
                                     >
-                                      customVariables.title
+                                      pipeline.stageVariables
                                     </p>
                                   </p>
                                 </div>
@@ -3634,7 +3634,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                     <p
                                       class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-black"
                                     >
-                                      customVariables.title
+                                      pipeline.stageVariables
                                     </p>
                                   </p>
                                 </div>
@@ -4514,7 +4514,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                     <p
                                       class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-black"
                                     >
-                                      customVariables.title
+                                      pipeline.stageVariables
                                     </p>
                                   </p>
                                 </div>

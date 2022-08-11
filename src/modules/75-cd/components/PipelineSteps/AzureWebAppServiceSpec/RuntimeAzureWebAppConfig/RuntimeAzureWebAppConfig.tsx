@@ -8,6 +8,7 @@
 import React from 'react'
 import { defaultTo, get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import { Layout } from '@harness/uicore'
 import cx from 'classnames'
 import azureWebAppConfigBaseFactory from '@cd/factory/AzureWebAppConfigFactory/AzureWebAppConfigFactory'
 import { useStrings } from 'framework/strings'
@@ -41,24 +42,28 @@ const AzureWebAppConfigInputField = (props: AzureWebAppConfigProps): React.React
     return null
   }
 
-  if (props.azureWebAppConfig?.type === 'Harness') {
-    if (props.azureWebAppConfig.spec.secretFiles) {
+  if (props.azureWebAppConfig?.store?.type === 'Harness') {
+    if (props.azureWebAppConfig?.store.spec.secretFiles) {
       return (
-        <FileStoreList
-          name={`${props.path}.${props.type}.spec.secretFiles`}
-          type={fileTypes.ENCRYPTED}
-          allowOnlyOne={true}
-          formik={props.formik}
-        />
+        <Layout.Vertical className={cx(css.inputWidth, css.layoutVerticalSpacing)}>
+          <FileStoreList
+            name={`${props.path}.${props.type}.spec.secretFiles`}
+            type={fileTypes.ENCRYPTED}
+            allowOnlyOne={true}
+            formik={props.formik}
+          />
+        </Layout.Vertical>
       )
     }
     return (
-      <FileStoreList
-        name={`${props.path}.${props.type}.spec.files`}
-        type={fileTypes.FILE_STORE}
-        allowOnlyOne={true}
-        formik={props.formik}
-      />
+      <Layout.Vertical className={cx(css.inputWidth, css.layoutVerticalSpacing)}>
+        <FileStoreList
+          name={`${props.path}.${props.type}.spec.files`}
+          type={fileTypes.FILE_STORE}
+          allowOnlyOne={true}
+          formik={props.formik}
+        />
+      </Layout.Vertical>
     )
   }
   return (

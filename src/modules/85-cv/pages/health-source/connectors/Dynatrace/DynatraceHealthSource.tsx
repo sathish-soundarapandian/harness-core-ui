@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
-import { Button, Formik, FormikForm } from '@wings-software/uicore'
+import React, { useMemo, useState, useEffect } from 'react'
+import { Button, Formik, FormikForm, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
 import { PopoverInteractionKind } from '@blueprintjs/core'
 import { noop } from 'lodash-es'
 import type {
@@ -21,7 +21,8 @@ import {
   defaultDynatraceCustomMetric,
   mapDynatraceDataToDynatraceForm,
   onSubmitDynatraceData,
-  validateMapping
+  validateMapping,
+  setApplicationIfConnectorIsInput
 } from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.utils'
 import DynatraceCustomMetrics from '@cv/pages/health-source/connectors/Dynatrace/components/DynatraceCustomMetrics/DynatraceCustomMetrics'
 import DynatraceMetricPacksToService from './components/DynatraceMetricPacksToService/DynatraceMetricPacksToService'
@@ -30,11 +31,18 @@ import CustomMetric from '../../common/CustomMetric/CustomMetric'
 import css from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.module.scss'
 
 export default function DynatraceHealthSource(props: DynatraceHealthSourceProps): JSX.Element {
-  const { dynatraceFormData: initialPayload, connectorIdentifier, onPrevious, onSubmit } = props
+  const {
+    dynatraceFormData: initialPayload,
+    connectorIdentifier,
+    onPrevious,
+    onSubmit,
+    isTemplate,
+    expressions
+  } = props
   const { getString } = useStrings()
   const [dynatraceMetricData, setDynatraceMetricData] = useState<DynatraceFormDataInterface>(initialPayload)
   const [showCustomMetric, setShowCustomMetric] = useState<boolean>(!!dynatraceMetricData.customMetrics.size)
-
+  const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED
   const {
     createdMetrics,
     mappedMetrics,
@@ -54,6 +62,13 @@ export default function DynatraceHealthSource(props: DynatraceHealthSourceProps)
     () => mapDynatraceDataToDynatraceForm(dynatraceMetricData, mappedMetrics, selectedMetric, showCustomMetric),
     [dynatraceMetricData, mappedMetrics, selectedMetric, showCustomMetric]
   )
+
+  useEffect(() => {
+    if (!dynatraceMetricFormData.isEdit) {
+      setApplicationIfConnectorIsInput(isConnectorRuntimeOrExpression, dynatraceMetricFormData, setDynatraceMetricData)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <Formik<DynatraceFormDataInterface>
@@ -83,6 +98,15 @@ export default function DynatraceHealthSource(props: DynatraceHealthSourceProps)
       initialValues={dynatraceMetricFormData}
     >
       {formik => {
+        const selectedServiceValue =
+          typeof formik.values.selectedService !== 'string'
+            ? formik.values.selectedService.value
+            : formik.values.selectedService
+
+        if (isTemplate) {
+          formik.values['isManualQuery'] = isTemplate
+        }
+
         return (
           <FormikForm className={css.formFullheight}>
             <DynatraceMetricPacksToService
@@ -90,6 +114,8 @@ export default function DynatraceHealthSource(props: DynatraceHealthSourceProps)
               dynatraceMetricData={dynatraceMetricData}
               setDynatraceMetricData={setDynatraceMetricData}
               metricValues={formik.values}
+              isTemplate={isTemplate}
+              expressions={expressions}
             />
             {showCustomMetric ? (
               <CustomMetric
@@ -113,11 +139,13 @@ export default function DynatraceHealthSource(props: DynatraceHealthSourceProps)
                   mappedMetrics={mappedMetrics}
                   selectedMetric={selectedMetric}
                   connectorIdentifier={connectorIdentifier}
-                  selectedServiceId={(formik.values.selectedService.value as string) || ''}
+                  selectedServiceId={(selectedServiceValue as string) || ''}
+                  isTemplate={isTemplate}
+                  expressions={expressions}
                 />
               </CustomMetric>
             ) : (
-              formik.values.selectedService.value && (
+              selectedServiceValue && (
                 <CardWithOuterTitle
                   title={getString('cv.healthSource.connectors.customMetrics')}
                   dataTooltipId={'customMetricsTitle'}

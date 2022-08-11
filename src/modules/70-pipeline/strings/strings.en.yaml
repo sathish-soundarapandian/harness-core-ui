@@ -1205,6 +1205,7 @@ OverviewEmptyStates:
   runPipelineHeaderMsg: You haven’t tried running your pipelines yet.
   runPipelineInfo: Click the button below to select a pipeline and get your {{executionsLabel}} started.
 importSuccessMessage: '{{resourceType}} has been imported successfully'
+duplicateImport: This file has been imported previously. Do you still want to import?
 MatrixNode:
   maxConcurrency: 'Max Concurrency:'
 fieldLabels:
@@ -1239,13 +1240,17 @@ appServiceConfig:
     subtitle: 'Specify {{$.pipeline.appServiceConfig.connectionStrings.name}} Script File Type'
 startupCommand:
   name: Startup Command
-  subtitle: 'Specify Azure Web App Startup Script Type'
+  subtitle: 'Specify Azure Web App Startup Command Store Type'
   fileDetails: '{{$.pipeline.startupCommand.name}} File Details'
   fileSource: '{{$.pipeline.startupCommand.name}} File Source'
   scriptFilePath: 'Script File Path'
   fileValidation: 'file is required'
   plainText: 'Plain Text'
 triggerInfo: 'Trigger Info'
+phasesForm:
+  phases: 'Phases'
+  phase: 'Phase'
+  packageType: 'Package Type'
 draft: 'Draft'
 duplicateStepIdentifiers: 'Duplicate identifiers found: {{duplicateIdString}}'
 alwaysEditModeYAML: Enable read/write mode always

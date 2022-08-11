@@ -213,7 +213,9 @@ export const setApplicationIfConnectorIsInput = (
   if (isConnectorRuntimeOrExpression) {
     setNonCustomFeilds({
       ...nonCustomFeilds,
-      newRelicApplication: RUNTIME_INPUT_VALUE
+      newRelicApplication: RUNTIME_INPUT_VALUE,
+      metricValue: RUNTIME_INPUT_VALUE,
+      timestamp: RUNTIME_INPUT_VALUE
     })
   }
 }

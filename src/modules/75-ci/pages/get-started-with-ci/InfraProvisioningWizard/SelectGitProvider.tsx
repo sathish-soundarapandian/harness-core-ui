@@ -10,6 +10,7 @@ import set from 'lodash-es/set'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import type { FormikContextType, FormikProps } from 'formik'
+import { PopoverInteractionKind, Classes, Position } from '@blueprintjs/core'
 import cx from 'classnames'
 import {
   Text,
@@ -26,7 +27,8 @@ import {
   ButtonSize,
   Color,
   FormError,
-  PageSpinner
+  PageSpinner,
+  Popover
 } from '@harness/uicore'
 import { getRequestOptions } from 'framework/app/App'
 import { useStrings } from 'framework/strings'
@@ -57,7 +59,6 @@ import {
 import { getGitUrl } from '@pipeline/utils/CIUtils'
 import {
   AllSaaSGitProviders,
-  AllOnPremGitProviders,
   GitAuthenticationMethod,
   GitProvider,
   GitProviderTypeToAuthenticationMethodMapping,
@@ -66,7 +67,10 @@ import {
   GitProviderPermissions,
   ACCOUNT_SCOPE_PREFIX,
   DEFAULT_HARNESS_KMS,
-  AccessTokenPermissionsDocLinks
+  AccessTokenPermissionsDocLinks,
+  OtherProviderOption,
+  GitProviderIcons,
+  NonGitOption
 } from './Constants'
 import {
   DELEGATE_SELECTOR_FOR_HARNESS_PROVISIONED_DELEGATE,
@@ -93,6 +97,7 @@ interface SelectGitProviderProps {
   selectedHosting?: Hosting
   disableNextBtn: () => void
   enableNextBtn: () => void
+  updateFooterLabel?: React.Dispatch<React.SetStateAction<string>>
 }
 
 export interface SelectGitProviderInterface {
@@ -109,7 +114,7 @@ const SelectGitProviderRef = (
   props: SelectGitProviderProps,
   forwardRef: SelectGitProviderForwardRef
 ): React.ReactElement => {
-  const { selectedHosting, disableNextBtn, enableNextBtn } = props
+  const { selectedHosting, disableNextBtn, enableNextBtn, updateFooterLabel } = props
   const { getString } = useStrings()
   const [gitProvider, setGitProvider] = useState<GitProvider | undefined>()
   const [authMethod, setAuthMethod] = useState<GitAuthenticationMethod>()
@@ -142,10 +147,10 @@ const SelectGitProviderRef = (
               getOAuthConnectorPayload({
                 tokenRef: ACCOUNT_SCOPE_PREFIX.concat(tokenRef),
                 refreshTokenRef: refreshTokenRef ? ACCOUNT_SCOPE_PREFIX.concat(refreshTokenRef) : '',
-                gitProviderType: gitProvider.type
+                gitProviderType: gitProvider.type as ConnectorInfoDTO['type']
               }),
               'connector.spec.url',
-              getGitUrl(getString, gitProvider?.type)
+              getGitUrl(getString, gitProvider?.type as ConnectorInfoDTO['type'])
             )
           )
             .then((createOAuthCtrResponse: ResponseConnectorResponse) => {
@@ -314,14 +319,27 @@ const SelectGitProviderRef = (
 
   useEffect(() => {
     if (formikRef.current?.values && formikRef.current?.setFieldTouched) {
+      const existingValues = { ...formikRef.current?.values }
+      let updatedValues = set(existingValues, 'gitProvider', gitProvider)
+      updatedValues = set(updatedValues, 'gitAuthenticationMethod', authMethod)
+      formikRef.current?.setValues(updatedValues)
+
       setForwardRef({
-        values: formikRef.current.values,
+        values: updatedValues,
         setFieldTouched: formikRef.current.setFieldTouched,
         validatedConnector: connector,
         validatedSecret: secret
       })
     }
-  }, [formikRef.current?.values, formikRef.current?.setFieldTouched, connector, secret])
+  }, [formikRef, connector, secret, authMethod, gitProvider])
+
+  useEffect(() => {
+    if (gitProvider?.type === NonGitOption.OTHER) {
+      updateFooterLabel?.(getString('ci.getStartedWithCI.createPipeline'))
+    } else {
+      updateFooterLabel?.(`${getString('next')}: ${getString('ci.getStartedWithCI.selectRepo')}`)
+    }
+  }, [gitProvider])
 
   //#region scm validation
 
@@ -351,14 +369,14 @@ const SelectGitProviderRef = (
 
   const getSCMConnectorPayload = React.useCallback(
     (secretId: string, type: GitProvider['type']): ConnectorInfoDTO => {
-      const commonConnectorPayload = {
+      const commonConnectorPayload: ConnectorInfoDTO = {
         name: type,
         identifier: type,
-        type,
+        type: type as ConnectorInfoDTO['type'],
         spec: {
           executeOnDelegate: true,
           type: 'Account',
-          url: getGitUrl(getString, gitProvider?.type),
+          url: getGitUrl(getString, gitProvider?.type as ConnectorInfoDTO['type']),
           authentication: {
             type: 'Http',
             spec: {}
@@ -705,8 +723,9 @@ const SelectGitProviderRef = (
         )
       } else if (selectedHosting === Hosting.OnPrem) {
         return (
-          [Connectors.GITHUB, Connectors.GITLAB, Connectors.BITBUCKET].includes(gitProvider.type) &&
-          selectedHosting === Hosting.OnPrem
+          [Connectors.GITHUB, Connectors.GITLAB, Connectors.BITBUCKET].includes(
+            gitProvider.type as ConnectorInfoDTO['type']
+          ) && selectedHosting === Hosting.OnPrem
         )
       }
     }
@@ -805,6 +824,17 @@ const SelectGitProviderRef = (
     }
   }, [gitProvider, authMethod])
 
+  const handleGitProviderSelection = useCallback(
+    (item: GitProvider) => {
+      setGitProvider(item)
+      setTestConnectionStatus(TestStatus.NOT_INITIATED)
+      resetFormFields()
+      setAuthMethod(undefined)
+      setOAuthStatus(Status.TO_DO)
+    },
+    [formikRef]
+  )
+
   //#endregion
 
   return (
@@ -830,41 +860,79 @@ const SelectGitProviderRef = (
             <Form>
               <Container
                 padding={{ top: 'xxlarge', bottom: 'xxxlarge' }}
-                className={cx({ [css.borderBottom]: gitProvider })}
+                className={cx({ [css.borderBottom]: gitProvider && gitProvider.type !== NonGitOption.OTHER })}
               >
-                <CardSelect
-                  data={selectedHosting === Hosting.SaaS ? AllSaaSGitProviders : AllOnPremGitProviders}
-                  cornerSelected={true}
-                  className={css.icons}
-                  cardClassName={css.gitProviderCard}
-                  renderItem={(item: GitProvider) => (
-                    <Layout.Vertical flex>
-                      <Icon
-                        name={item.icon}
-                        size={30}
-                        flex
-                        className={cx(
-                          { [css.githubIcon]: item.icon === 'github' },
-                          { [css.gitlabIcon]: item.icon === 'gitlab' },
-                          { [css.bitbucketIcon]: item.icon === 'bitbucket-blue' },
-                          { [css.genericGitIcon]: item.icon === 'service-github' }
-                        )}
-                      />
-                      <Text font={{ variation: FontVariation.SMALL_SEMI }} padding={{ top: 'small' }}>
-                        {getString(item.label)}
-                      </Text>
-                    </Layout.Vertical>
-                  )}
-                  selected={gitProvider}
-                  onChange={(item: GitProvider) => {
-                    formikProps.setFieldValue('gitProvider', item)
-                    setGitProvider(item)
-                    setTestConnectionStatus(TestStatus.NOT_INITIATED)
-                    resetFormFields()
-                    setAuthMethod(undefined)
-                    setOAuthStatus(Status.TO_DO)
-                  }}
-                />
+                <Layout.Horizontal spacing="large">
+                  <CardSelect
+                    data={AllSaaSGitProviders}
+                    selected={gitProvider}
+                    cornerSelected={true}
+                    className={css.icons}
+                    cardClassName={css.gitProviderCard}
+                    renderItem={(item: GitProvider) => (
+                      <Layout.Vertical flex>
+                        <Icon
+                          name={item.icon}
+                          size={30}
+                          flex
+                          className={cx(
+                            { [css.githubIcon]: item.icon === GitProviderIcons.get(Connectors.GITHUB) },
+                            { [css.gitlabIcon]: item.icon === GitProviderIcons.get(Connectors.GITLAB) },
+                            { [css.bitbucketIcon]: item.icon === GitProviderIcons.get(Connectors.BITBUCKET) },
+                            { [css.genericGitIcon]: item.icon === GitProviderIcons.get(Connectors.GIT) }
+                          )}
+                        />
+                        <Text font={{ variation: FontVariation.SMALL_SEMI }} padding={{ top: 'small' }}>
+                          {getString(item.label)}
+                        </Text>
+                      </Layout.Vertical>
+                    )}
+                    onChange={handleGitProviderSelection}
+                  />
+                  <Container className={css.separator} />
+                  <CardSelect
+                    data={[OtherProviderOption]}
+                    selected={gitProvider}
+                    cornerSelected={true}
+                    className={css.icons}
+                    cardClassName={css.otherOptionCard}
+                    renderItem={(item: GitProvider, selected: boolean) => (
+                      <Layout.Vertical>
+                        <Popover
+                          fill
+                          openOnTargetFocus={true}
+                          interactionKind={PopoverInteractionKind.HOVER}
+                          content={
+                            <Container padding="small">
+                              <Text color={Color.WHITE} font={{ variation: FontVariation.BODY }}>
+                                {getString('ci.getStartedWithCI.nonGitCloneOption')}
+                              </Text>
+                            </Container>
+                          }
+                          position={Position.LEFT}
+                          className={Classes.DARK}
+                        >
+                          <Icon
+                            name="info"
+                            size={18}
+                            flex={{ justifyContent: 'flex-end' }}
+                            className={cx({ [css.infoIcon]: selected })}
+                          />
+                        </Popover>
+                        <Layout.Vertical flex>
+                          <Icon name={item.icon} size={35} flex />
+                          <Text
+                            font={{ variation: FontVariation.SMALL_SEMI }}
+                            padding={selected ? {} : { top: 'small' }}
+                          >
+                            {getString(item.label)}
+                          </Text>
+                        </Layout.Vertical>
+                      </Layout.Vertical>
+                    )}
+                    onChange={handleGitProviderSelection}
+                  />
+                </Layout.Horizontal>
                 {formikProps.touched.gitProvider && !formikProps.values.gitProvider ? (
                   <Container padding={{ top: 'xsmall' }}>
                     <FormError
@@ -876,10 +944,12 @@ const SelectGitProviderRef = (
                   </Container>
                 ) : null}
               </Container>
-              {gitProvider ? (
+              {gitProvider && gitProvider.type !== NonGitOption.OTHER ? (
                 <Layout.Vertical>
                   <Container
-                    className={cx({ [css.borderBottom]: shouldRenderAuthFormFields() })}
+                    className={cx({
+                      [css.borderBottom]: shouldRenderAuthFormFields()
+                    })}
                     padding={{ bottom: 'xxlarge' }}
                   >
                     <Text font={{ variation: FontVariation.H5 }} padding={{ top: 'xlarge', bottom: 'small' }}>
@@ -903,7 +973,6 @@ const SelectGitProviderRef = (
                                   setOAuthStatus(Status.FAILURE)
                                 }
                               }, MAX_TIMEOUT_OAUTH)
-                              formikProps.setFieldValue('gitAuthenticationMethod', GitAuthenticationMethod.OAuth)
                               oAuthSecretIntercepted.current = false
                               setAuthMethod(GitAuthenticationMethod.OAuth)
                               if (gitProvider?.type) {
@@ -926,7 +995,9 @@ const SelectGitProviderRef = (
                             disabled={
                               disableOAuthForGitProvider ||
                               (gitProvider?.type &&
-                                [Connectors.GITHUB, Connectors.GITLAB].includes(gitProvider.type) &&
+                                [Connectors.GITHUB, Connectors.GITLAB].includes(
+                                  gitProvider.type as ConnectorInfoDTO['type']
+                                ) &&
                                 oAuthStatus === Status.IN_PROGRESS)
                             }
                             tooltipProps={
@@ -954,8 +1025,9 @@ const SelectGitProviderRef = (
                               oAuthSecretIntercepted.current = false
                               resetFormFields()
                               if (gitProvider?.type) {
-                                const gitAuthMethod = GitProviderTypeToAuthenticationMethodMapping.get(gitProvider.type)
-                                formikProps.setFieldValue('gitAuthenticationMethod', gitAuthMethod)
+                                const gitAuthMethod = GitProviderTypeToAuthenticationMethodMapping.get(
+                                  gitProvider.type as ConnectorInfoDTO['type']
+                                )
                                 setAuthMethod(gitAuthMethod)
                               }
                             }}
@@ -988,7 +1060,10 @@ const SelectGitProviderRef = (
                           rightIcon="link"
                           onClick={(event: React.MouseEvent<Element, MouseEvent>) => {
                             event.preventDefault()
-                            window.open(AccessTokenPermissionsDocLinks.get(gitProvider?.type), '_blank')
+                            window.open(
+                              AccessTokenPermissionsDocLinks.get(gitProvider?.type as ConnectorInfoDTO['type']),
+                              '_blank'
+                            )
                           }}
                         />
                         <Layout.Horizontal>

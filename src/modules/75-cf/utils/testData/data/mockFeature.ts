@@ -56,6 +56,10 @@ const mockFeature: Feature = {
   project: 'chrisgit2',
   results: undefined,
   status: { lastAccess: -6795364578871, status: 'never-requested' },
+  services: [
+    { name: 'My Service 1', identifier: 'service1Id' },
+    { name: 'My Service 2', identifier: 'service2Id' }
+  ],
   tags: [],
   variations: [
     { identifier: 'true', name: 'True', value: 'true' },

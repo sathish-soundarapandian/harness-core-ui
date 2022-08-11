@@ -63,6 +63,21 @@ describe('TriggersPage Triggers tests', () => {
       // eslint-disable-next-line no-document-body-snapshot
       expect(document.body).toMatchSnapshot()
     })
+    test('Initial Render - New Triggers Drawer', async () => {
+      const { container } = render(
+        <TestWrapper>
+          <TriggersPage />
+        </TestWrapper>
+      )
+      await waitFor(() => expect(result.current.getString('common.triggerLabel').toUpperCase()).not.toBeNull())
+      const addTriggerButton = queryByText(container, result.current.getString('triggers.newTrigger'))
+      if (!addTriggerButton) {
+        throw Error('No action button')
+      }
+      fireEvent.click(addTriggerButton)
+      // eslint-disable-next-line no-document-body-snapshot
+      expect(document.body).toMatchSnapshot()
+    })
   })
   describe('Interactivity', () => {
     test('Delete a trigger', async () => {

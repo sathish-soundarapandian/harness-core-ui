@@ -35,7 +35,8 @@ import { PrometheusQueryBuilder } from './components/PrometheusQueryBuilder/Prom
 import {
   validateMappings,
   transformPrometheusSetupSourceToHealthSource,
-  transformPrometheusHealthSourceToSetupSource
+  transformPrometheusHealthSourceToSetupSource,
+  persistCustomMetric
 } from './PrometheusHealthSource.utils'
 import {
   PrometheusMonitoringSourceFieldNames,
@@ -158,6 +159,14 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
       }}
     >
       {formikProps => {
+        // This is a temporary fix to persist data
+        persistCustomMetric({
+          mappedMetrics,
+          selectedMetric,
+          metricThresholds,
+          formikValues: formikProps.values,
+          setMappedMetrics
+        })
         const currentSelectedMetricDetail = metricDefinitions?.find(
           (metricDefinition: StackdriverDefinition) =>
             metricDefinition.metricName === mappedMetrics.get(selectedMetric || '')?.metricName

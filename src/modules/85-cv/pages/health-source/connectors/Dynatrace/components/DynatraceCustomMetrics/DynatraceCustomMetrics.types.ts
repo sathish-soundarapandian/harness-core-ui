@@ -21,6 +21,8 @@ export interface DynatraceCustomMetricsProps {
   selectedMetric: string
   connectorIdentifier: string
   selectedServiceId: string
+  isTemplate?: boolean
+  expressions?: string[]
 }
 
 export type SelectedAndMappedMetrics = {

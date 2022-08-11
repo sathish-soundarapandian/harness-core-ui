@@ -18,6 +18,7 @@ import type { UseActionCreatorReturn } from '@pipeline/components/LogsContent/Lo
 export interface StepDetailProps {
   step: ExecutionNode
   stageType?: StageType
+  isStageExecutionInputConfigured?: boolean
 }
 
 export interface StepDetailsRegister {

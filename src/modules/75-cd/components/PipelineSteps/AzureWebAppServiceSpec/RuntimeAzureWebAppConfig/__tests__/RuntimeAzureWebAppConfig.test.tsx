@@ -9,7 +9,12 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
-import type { ServiceSpec, StoreConfigWrapper } from 'services/cd-ng'
+import type {
+  ApplicationSettingsConfiguration,
+  ConnectionStringsConfiguration,
+  ServiceSpec,
+  StartupCommandConfiguration
+} from 'services/cd-ng'
 import { AzureWebAppConfigBaseFactory } from '@cd/factory/AzureWebAppConfigFactory/AzureWebAppConfigFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { template, startupCommand, applicationSettings, connectionStrings } from './mocks'
@@ -21,9 +26,9 @@ describe('Azure Web App config tests', () => {
     const { container } = render(
       <TestWrapper>
         <AzureWebAppConfig
-          initialValues={{ startupCommand: startupCommand as StoreConfigWrapper }}
+          initialValues={{ startupCommand: startupCommand as StartupCommandConfiguration }}
           template={template as ServiceSpec}
-          azureWebAppConfig={startupCommand as StoreConfigWrapper}
+          azureWebAppConfig={startupCommand as StartupCommandConfiguration}
           readonly
           stageIdentifier="stage-0"
           azureWebAppConfigBaseFactory={new AzureWebAppConfigBaseFactory()}
@@ -40,9 +45,9 @@ describe('Azure Web App config tests', () => {
     const { container } = render(
       <TestWrapper>
         <AzureWebAppConfig
-          initialValues={{ applicationSettings: applicationSettings as StoreConfigWrapper }}
+          initialValues={{ applicationSettings: applicationSettings as ApplicationSettingsConfiguration }}
           template={template as ServiceSpec}
-          azureWebAppConfig={applicationSettings as StoreConfigWrapper}
+          azureWebAppConfig={applicationSettings as ApplicationSettingsConfiguration}
           readonly
           stageIdentifier="stage-0"
           azureWebAppConfigBaseFactory={new AzureWebAppConfigBaseFactory()}
@@ -59,9 +64,9 @@ describe('Azure Web App config tests', () => {
     const { container } = render(
       <TestWrapper>
         <AzureWebAppConfig
-          initialValues={{ connectionStrings: connectionStrings as StoreConfigWrapper }}
+          initialValues={{ connectionStrings: connectionStrings as ConnectionStringsConfiguration }}
           template={template as ServiceSpec}
-          azureWebAppConfig={connectionStrings as StoreConfigWrapper}
+          azureWebAppConfig={connectionStrings as ConnectionStringsConfiguration}
           readonly
           stageIdentifier="stage-0"
           azureWebAppConfigBaseFactory={new AzureWebAppConfigBaseFactory()}

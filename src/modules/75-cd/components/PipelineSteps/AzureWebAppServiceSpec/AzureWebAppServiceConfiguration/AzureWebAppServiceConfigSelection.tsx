@@ -110,8 +110,8 @@ export default function AzureWebAppConfigSelection({
   }, [stage, connectionStrings, selectedOption])
 
   const getConnectorList = (option: ModalViewOption): Array<{ scope: Scope; identifier: string }> => {
-    const applicationConnectorRef = applicationSettings?.spec?.connectorRef
-    const connectionStringsConnectorRef = connectionStrings?.spec?.connectorRef
+    const applicationConnectorRef = applicationSettings?.store?.spec?.connectorRef
+    const connectionStringsConnectorRef = connectionStrings?.store?.spec?.connectorRef
     switch (option) {
       case ModalViewOption.APPLICATIONSETTING:
         return !isEmpty(applicationSettings)

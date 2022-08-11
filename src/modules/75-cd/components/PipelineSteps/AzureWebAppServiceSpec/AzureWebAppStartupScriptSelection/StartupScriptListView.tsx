@@ -21,11 +21,16 @@ import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonS
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
 import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
-import type { ConnectorConfigDTO, ConnectorInfoDTO, StageElementConfig, StoreConfigWrapper } from 'services/cd-ng'
+import type {
+  ConnectorConfigDTO,
+  ConnectorInfoDTO,
+  StageElementConfig,
+  StartupCommandConfiguration
+} from 'services/cd-ng'
 import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
 import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
 import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
-import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
+import { Connectors } from '@connectors/constants'
 import {
   buildBitbucketPayload,
   buildGithubPayload,
@@ -115,19 +120,19 @@ function StartupScriptListView({
     if (startupCommand) {
       const values = {
         ...startupCommand,
-        store: get(startupCommand, 'type'),
-        connectorRef: get(startupCommand, 'spec.connectorRef')
+        selectedStore: get(startupCommand, 'store.type'),
+        connectorRef: get(startupCommand, 'store.spec.connectorRef')
       }
       return values
     }
     return {
-      store: '',
+      selectedStore: '',
       connectorRef: undefined
     }
   }
 
   /* istanbul ignore next */
-  const updateStageData = (script: StoreConfigWrapper): void => {
+  const updateStageData = (script: StartupCommandConfiguration): void => {
     const path = isPropagating
       ? 'stage.spec.serviceConfig.stageOverrides.startupCommand'
       : 'stage.spec.serviceConfig.serviceDefinition.spec.startupCommand'
@@ -142,10 +147,10 @@ function StartupScriptListView({
   }
 
   /* istanbul ignore next */
-  const handleSubmit = (script: StoreConfigWrapper): void => {
+  const handleSubmit = (script: StartupCommandConfiguration): void => {
     updateStageData(script)
 
-    trackEvent(StartupScriptActions.SaveStartupScriptOnPipelinePage, { startupCommand: startupCommand?.type })
+    trackEvent(StartupScriptActions.SaveStartupScriptOnPipelinePage, { startupCommand: startupCommand?.store?.type })
 
     hideConnectorModal()
     setConnectorView(false)
@@ -193,11 +198,11 @@ function StartupScriptListView({
     return () => ({})
   }
 
-  const getLastStepInitialData = (): StoreConfigWrapper => {
+  const getLastStepInitialData = (): StartupCommandConfiguration => {
     const initValues = startupCommand
     /* istanbul ignore next */
-    if (get(initValues, 'type') && get(initValues, 'type') !== connectorType) {
-      return null as unknown as StoreConfigWrapper
+    if (get(initValues, 'store.type') && get(initValues, 'store.type') !== connectorType) {
+      return null as unknown as StartupCommandConfiguration
     }
     return initValues
   }
@@ -219,10 +224,8 @@ function StartupScriptListView({
             isEditMode={isEditMode}
             gitDetails={{ repoIdentifier, branch, getDefaultFromOtherRepo: true }}
           />
-          {connectorType !== Connectors.ARTIFACTORY ? (
-            <GitDetailsStep type={type} name={getString('details')} isEditMode={isEditMode} connectorInfo={undefined} />
-          ) : null}
-          {connectorType === Connectors.GIT ? (
+          <GitDetailsStep type={type} name={getString('details')} isEditMode={isEditMode} connectorInfo={undefined} />
+          {type === Connectors.GIT ? (
             <StepGitAuthentication
               name={getString('credentials')}
               onConnectorCreated={() => {
@@ -236,7 +239,7 @@ function StartupScriptListView({
               projectIdentifier={projectIdentifier}
             />
           ) : null}
-          {connectorType === Connectors.GITHUB ? (
+          {type === Connectors.GITHUB ? (
             <StepGithubAuthentication
               name={getString('credentials')}
               onConnectorCreated={() => {
@@ -250,7 +253,7 @@ function StartupScriptListView({
               projectIdentifier={projectIdentifier}
             />
           ) : null}
-          {connectorType === Connectors.BITBUCKET ? (
+          {type === Connectors.BITBUCKET ? (
             <StepBitbucketAuthentication
               name={getString('credentials')}
               onConnectorCreated={() => {
@@ -264,10 +267,9 @@ function StartupScriptListView({
               projectIdentifier={projectIdentifier}
             />
           ) : null}
-          {connectorType === Connectors.GITLAB ? (
+          {type === Connectors.GITLAB ? (
             <StepGitlabAuthentication
               name={getString('credentials')}
-              identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
               onConnectorCreated={() => {
                 // Handle on success
               }}
@@ -299,40 +301,40 @@ function StartupScriptListView({
   }, [connectorView, connectorType, isEditMode])
 
   const renderStartupScriptList = React.useCallback(
-    (script: StoreConfigWrapper): React.ReactElement => {
-      const { color } = getStatus(get(script, 'spec.connectorRef'), connectors, accountId)
-      const connectorName = getConnectorNameFromValue(get(script, 'spec.connectorRef'), connectors)
+    (script: StartupCommandConfiguration): React.ReactElement => {
+      const { color } = getStatus(get(script, 'store.spec.connectorRef'), connectors, accountId)
+      const connectorName = getConnectorNameFromValue(get(script, 'store.spec.connectorRef'), connectors)
       return (
         <div className={css.rowItem}>
           <section className={css.startupScriptList}>
             <div className={css.columnId}>
-              <Icon inline name={ConnectorIcons[get(script, 'type') as ConnectorTypes]} size={20} />
-              {get(script, 'type') === 'Harness'
+              <Icon inline name={ConnectorIcons[get(script, 'store.type') as ConnectorTypes]} size={20} />
+              {get(script, 'store.type') === 'Harness'
                 ? getString('harness')
-                : renderConnectorField(get(script, 'spec.connectorRef'), connectorName, color)}
+                : renderConnectorField(get(script, 'store.spec.connectorRef'), connectorName, color)}
             </div>
-            {!!get(script, 'spec.paths')?.length && (
+            {!!get(script, 'store.spec.paths')?.length && (
               <div className={css.columnId}>
                 <Text lineClamp={1} width={300}>
                   <span className={css.noWrap}>
-                    {typeof get(script, 'spec.paths') === 'string'
-                      ? /* istanbul ignore next */ get(script, 'spec.paths')
-                      : get(script, 'spec.paths').join(', ')}
+                    {typeof get(script, 'store.spec.paths') === 'string'
+                      ? /* istanbul ignore next */ get(script, 'store.spec.paths')
+                      : get(script, 'store.spec.paths').join(', ')}
                   </span>
                 </Text>
               </div>
             )}
-            {get(script, 'spec.files')?.length && (
+            {get(script, 'store.spec.files')?.length && (
               <div className={css.columnId}>
                 <Text lineClamp={1} width={300}>
-                  <span className={css.noWrap}>{get(script, 'spec.files')}</span>
+                  <span className={css.noWrap}>{get(script, 'store.spec.files')}</span>
                 </Text>
               </div>
             )}
-            {get(script, 'spec.secretFiles')?.length && (
+            {get(script, 'store.spec.secretFiles')?.length && (
               <div className={css.columnId}>
                 <Text lineClamp={1} width={300}>
-                  <span className={css.noWrap}>{get(script, 'spec.secretFiles')}</span>
+                  <span className={css.noWrap}>{get(script, 'store.spec.secretFiles')}</span>
                 </Text>
               </div>
             )}
@@ -343,7 +345,7 @@ function StartupScriptListView({
                   <Button
                     icon="Edit"
                     iconProps={{ size: 18 }}
-                    onClick={() => editStartupScript(script?.type as ConnectorTypes)}
+                    onClick={() => editStartupScript(script?.store?.type as ConnectorTypes)}
                     minimal
                   />
 

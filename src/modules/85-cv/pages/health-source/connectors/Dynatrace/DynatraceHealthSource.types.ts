@@ -15,6 +15,8 @@ import type { MetricPackDTO } from 'services/cv'
 export interface DynatraceHealthSourceContainerProps {
   data: SourceDataInterface
   onSubmit: (formdata: SourceDataInterface, UpdatedHealthSource: UpdatedHealthSource) => Promise<void>
+  isTemplate?: boolean
+  expressions?: string[]
 }
 
 export interface DynatraceHealthSourceProps {
@@ -22,6 +24,8 @@ export interface DynatraceHealthSourceProps {
   onSubmit: (dynatraceMetricData: DynatraceMetricData) => Promise<void>
   onPrevious: () => void
   connectorIdentifier: string
+  isTemplate?: boolean
+  expressions?: string[]
 }
 
 export interface DynatraceMetricInfo {
@@ -45,7 +49,7 @@ export interface DynatraceMetricData {
   healthSourceIdentifier: string
   healthSourceName: string
   product: SelectOption
-  selectedService: SelectOption
+  selectedService: SelectOption | string
   serviceMethods?: string[]
   metricPacks?: MetricPackDTO[]
   metricData: { [key: string]: boolean }

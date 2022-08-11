@@ -41,12 +41,14 @@ jest.mock('@harness/uicore', () => ({
 describe('AzureWebAppServiceStepTwo', () => {
   test('move to stepTwo', async () => {
     const initialValues = {
-      type: 'Bitbucket',
-      spec: {
-        connectorRef: 'account.BBsaasAmit',
-        gitFetchType: 'Commit',
-        paths: 'filePath',
-        commitId: 'commitId'
+      store: {
+        type: 'Bitbucket',
+        spec: {
+          connectorRef: 'account.BBsaasAmit',
+          gitFetchType: 'Commit',
+          paths: 'filePath',
+          commitId: 'commitId'
+        }
       }
     } as any
     const { container } = render(
@@ -70,13 +72,14 @@ describe('AzureWebAppServiceStepTwo', () => {
 
   test('runtime inputs', async () => {
     const initialValues = {
-      type: 'Bitbucket',
-      spec: {
-        connectorRef: '<+input>',
-        gitFetchType: 'Commit',
-        paths: ['<+input>'],
-        repoName: '<+input>',
-        commitId: '<+input>'
+      store: {
+        type: 'Bitbucket',
+        spec: {
+          connectorRef: 'account.BBsaasAmit',
+          gitFetchType: 'Commit',
+          paths: 'filePath',
+          commitId: 'commitId'
+        }
       }
     } as any
 
@@ -101,13 +104,15 @@ describe('AzureWebAppServiceStepTwo', () => {
 
   test('git fetch type branch as runtime', async () => {
     const initialValues = {
-      type: 'Bitbucket',
-      spec: {
-        connectorRef: '<+input>',
-        gitFetchType: 'Branch',
-        paths: ['<+input>'],
-        repoName: '<+input>',
-        branch: '<+input>'
+      store: {
+        type: 'Bitbucket',
+        spec: {
+          connectorRef: '<+input>',
+          gitFetchType: 'Branch',
+          paths: ['<+input>'],
+          repoName: '<+input>',
+          branch: '<+input>'
+        }
       }
     } as any
 

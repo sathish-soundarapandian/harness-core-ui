@@ -68,6 +68,7 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
   const [resourceGroups, setResourceGroups] = React.useState<SelectOption[]>([])
   const delayedOnUpdate = React.useRef(debounce(onUpdate || noop, 300)).current
   const { expressions } = useVariablesExpression()
+  const [renderCount, setRenderCount] = React.useState<boolean>(true)
   const { getString } = useStrings()
 
   const formikRef = React.useRef<FormikProps<AzureWebAppInfrastructureUI> | null>(null)
@@ -130,7 +131,14 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
   }
   useEffect(() => {
     if (getMultiTypeFromValue(formikRef?.current?.values.subscriptionId) === MultiTypeInputType.FIXED) {
-      formikRef?.current?.setFieldValue('subscriptionId', getSubscription(initialValues))
+      if (initialValues?.subscriptionId) {
+        if (renderCount) {
+          formikRef?.current?.setFieldValue('subscriptionId', getSubscription(initialValues))
+          subscriptions?.length && setRenderCount(false)
+        }
+      } else {
+        setRenderCount(false)
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subscriptions])

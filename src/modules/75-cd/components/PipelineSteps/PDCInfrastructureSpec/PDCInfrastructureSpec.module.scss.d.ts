@@ -11,6 +11,7 @@ declare const styles: {
   readonly accordionPanel: string
   readonly clusterInputWrapper: string
   readonly connectorRef: string
+  readonly credRefWidth: string
   readonly formRow: string
   readonly hostSelect: string
   readonly hostsControls: string

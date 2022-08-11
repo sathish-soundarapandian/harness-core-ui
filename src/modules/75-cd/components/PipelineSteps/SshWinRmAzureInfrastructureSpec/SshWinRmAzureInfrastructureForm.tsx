@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react'
+import React, { useState, useRef, useMemo } from 'react'
 import {
   Layout,
   FormInput,
@@ -19,26 +19,25 @@ import {
   ButtonSize,
   ButtonVariation,
   Select,
-  Text
+  Text,
+  Icon
 } from '@wings-software/uicore'
+import { FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import { debounce, noop, get, set } from 'lodash-es'
-import { useToaster } from '@common/exports'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import {
-  getAzureResourceGroupsBySubscriptionPromise,
-  getAzureSubscriptionsPromise,
+  AzureTagDTO,
   SshWinRmAzureInfrastructure,
-  getSubscriptionTagsPromise,
-  AzureResourceGroupDTO
+  useGetAzureResourceGroupsBySubscription,
+  useGetAzureSubscriptions,
+  useGetSubscriptionTags
 } from 'services/cd-ng'
-import type { AzureSubscriptionDTO, AzureTagDTO } from 'services/cd-ng'
+import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { Connectors } from '@connectors/constants'
-import { Scope } from '@common/interfaces/SecretsInterface'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
-import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 import { MultiTypeFieldSelector } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import {
   ConnectorReferenceDTO,
@@ -47,6 +46,11 @@ import {
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
+import { StageErrorContext } from '@pipeline/context/StageErrorContext'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import {
   AzureInfrastructureSpecEditableProps,
   getValue,
@@ -55,6 +59,8 @@ import {
   resourceGroupLabel
 } from './SshWinRmAzureInfrastructureInterface'
 import css from './SshWinRmAzureInfrastructureSpec.module.scss'
+
+const errorMessage = 'data.message'
 
 interface AzureInfrastructureUI extends Omit<SshWinRmAzureInfrastructure, 'subscriptionId' | 'resourceGroup'> {
   subscriptionId?: any
@@ -77,15 +83,11 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
     orgIdentifier: string
     accountId: string
   }>()
-  const { showError } = useToaster()
-  const { expressions } = useVariablesExpression()
+
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-
-  const [subscriptions, setSubscriptions] = useState<SelectOption[]>([])
-  const [isSubsLoading, setIsSubsLoading] = useState(false)
-
-  const [resourceGroups, setResourceGroups] = useState<SelectOption[]>([])
-  const [isResGroupLoading, setIsResGroupLoading] = useState(false)
+  const [subscriptions, setSubscriptions] = React.useState<SelectOption[]>([])
+  const [resourceGroups, setResourceGroups] = React.useState<SelectOption[]>([])
+  const { expressions } = useVariablesExpression()
 
   const [azureTags, setAzureTags] = useState([])
   const [selectedTags, setSelectedTags] = useState([] as SelectedTagsType[])
@@ -95,150 +97,150 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
 
   const formikRef = useRef<FormikProps<AzureInfrastructureUI> | null>(null)
 
-  const fetchSubscriptions = async (connectorRef: string) => {
-    setIsSubsLoading(true)
-    try {
-      const response = await getAzureSubscriptionsPromise({
-        queryParams: {
-          connectorRef: connectorRef,
-          accountIdentifier: accountId,
-          orgIdentifier,
-          projectIdentifier
-        }
-      })
-      if (response.status === 'SUCCESS') {
-        const subs = get(response, 'data.subscriptions', []).map((sub: AzureSubscriptionDTO) => ({
-          label: sub.subscriptionName,
-          value: sub.subscriptionId
-        }))
-        setSubscriptions(subs)
-      } else {
-        /* istanbul ignore next */
-        showError(get(response, 'message', response))
-      }
-    } catch (e) {
-      /* istanbul ignore next */
-      showError(e.message || e.responseMessage[0])
-    } finally {
-      setIsSubsLoading(false)
+  const queryParams = {
+    connectorRef: initialValues?.connectorRef,
+    accountIdentifier: accountId,
+    orgIdentifier,
+    projectIdentifier
+  }
+  const {
+    data: subscriptionsData,
+    loading: loadingSubscriptions,
+    refetch: refetchSubscriptions,
+    error: subscriptionsError
+  } = useGetAzureSubscriptions({
+    queryParams,
+    lazy: true
+  })
+  React.useEffect(() => {
+    const subscriptionValues =
+      subscriptionsData?.data?.subscriptions?.map(sub => ({ label: sub.subscriptionId, value: sub.subscriptionId })) ||
+      []
+
+    setSubscriptions(subscriptionValues)
+  }, [subscriptionsData])
+
+  const {
+    data: resourceGroupData,
+    refetch: refetchResourceGroups,
+    loading: loadingResourceGroups,
+    error: resourceGroupsError
+  } = useGetAzureResourceGroupsBySubscription({
+    queryParams,
+    subscriptionId: initialValues?.subscriptionId,
+    lazy: true
+  })
+  const {
+    data: subscriptionTagsData,
+    refetch: refetchSubscriptionTags,
+    loading: loadingSubscriptionTags,
+    error: subscriptionTagsError
+  } = useGetSubscriptionTags({
+    queryParams,
+    subscriptionId: initialValues?.subscriptionId,
+    lazy: true
+  })
+
+  React.useEffect(() => {
+    setAzureTags(
+      get(subscriptionTagsData, 'data.tags', []).map((azureTag: AzureTagDTO) => ({
+        label: azureTag.tag,
+        value: azureTag.tag
+      }))
+    )
+  }, [subscriptionTagsData])
+
+  React.useEffect(() => {
+    const options =
+      resourceGroupData?.data?.resourceGroups?.map(rg => ({ label: rg.resourceGroup, value: rg.resourceGroup })) ||
+      /* istanbul ignore next */ []
+    setResourceGroups(options)
+  }, [resourceGroupData])
+
+  const getInitialValues = (): AzureInfrastructureUI => {
+    const currentValues: AzureInfrastructureUI = {
+      ...initialValues
     }
+
+    /* istanbul ignore else */
+    if (initialValues) {
+      if (getMultiTypeFromValue(initialValues?.resourceGroup) === MultiTypeInputType.FIXED) {
+        currentValues.subscriptionId = { label: initialValues.subscriptionId, value: initialValues.subscriptionId }
+      }
+
+      if (getMultiTypeFromValue(initialValues?.resourceGroup) === MultiTypeInputType.FIXED) {
+        currentValues.resourceGroup = { label: initialValues.resourceGroup, value: initialValues.resourceGroup }
+      }
+    }
+
+    return currentValues
   }
 
-  const fetchSubscriptionTags = async (connectorRef: string, subscriptionId: string) => {
-    try {
-      const response = await getSubscriptionTagsPromise({
-        subscriptionId,
+  const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
+
+  React.useEffect(() => {
+    subscribeForm({
+      tab: DeployTabs.INFRASTRUCTURE,
+      form: formikRef as React.MutableRefObject<FormikProps<unknown> | null>
+    })
+    if (
+      initialValues?.connectorRef &&
+      getMultiTypeFromValue(initialValues?.connectorRef) === MultiTypeInputType.FIXED
+    ) {
+      refetchSubscriptions({
         queryParams: {
-          connectorRef,
           accountIdentifier: accountId,
+          projectIdentifier,
           orgIdentifier,
-          projectIdentifier
+          connectorRef: initialValues.connectorRef
         }
       })
-      if (response.status === 'SUCCESS') {
-        setAzureTags(
-          get(response, 'data.tags', []).map((azureTag: AzureTagDTO) => ({ label: azureTag.tag, value: azureTag.tag }))
-        )
-      } else {
-        /* istanbul ignore next */
-        showError(get(response, 'message', response))
-      }
-    } catch (e) {
-      /* istanbul ignore next */
-      showError(e.message || e.errorMessage)
     }
-  }
-
-  const fetchResourceGroups = async (connectorRef: string, subscriptionId: string) => {
-    setIsResGroupLoading(true)
-    try {
-      const response = await getAzureResourceGroupsBySubscriptionPromise({
+    if (
+      initialValues?.connectorRef &&
+      getMultiTypeFromValue(initialValues?.connectorRef) === MultiTypeInputType.FIXED &&
+      initialValues.subscriptionId &&
+      getMultiTypeFromValue(initialValues?.subscriptionId) === MultiTypeInputType.FIXED
+    ) {
+      refetchResourceGroups({
         queryParams: {
-          connectorRef: connectorRef,
           accountIdentifier: accountId,
+          projectIdentifier,
           orgIdentifier,
-          projectIdentifier
+          connectorRef: initialValues?.connectorRef
         },
-        subscriptionId: subscriptionId
-      })
-      if (response.status === 'SUCCESS') {
-        const resGroups = get(response, 'data.resourceGroups', []).map((rg: AzureResourceGroupDTO) => ({
-          label: rg.resourceGroup,
-          value: rg.resourceGroup
-        }))
-        setResourceGroups(resGroups)
-      } else {
-        /* istanbul ignore next */
-        showError(get(response, 'message', response))
-      }
-    } catch (e) {
-      /* istanbul ignore next */
-      showError(e.message || e.errorMessage)
-    } finally {
-      setIsResGroupLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    if (initialValues.connectorRef) {
-      const { connectorRef } = initialValues
-      const connectorRefValueType = getMultiTypeFromValue(connectorRef)
-      if (connectorRefValueType === MultiTypeInputType.FIXED) {
-        fetchSubscriptions(connectorRef)
-      }
-      if (initialValues.subscriptionId) {
-        const { subscriptionId } = initialValues
-        const subscriptionIdValueType = getMultiTypeFromValue(subscriptionId)
-        if (subscriptionIdValueType === MultiTypeInputType.FIXED) {
-          fetchResourceGroups(connectorRef, subscriptionId)
-          fetchSubscriptionTags(connectorRef, subscriptionId)
+        pathParams: {
+          subscriptionId: initialValues?.subscriptionId
         }
-      }
+      })
+      refetchSubscriptionTags({
+        queryParams: {
+          accountIdentifier: accountId,
+          projectIdentifier,
+          orgIdentifier,
+          connectorRef: initialValues?.connectorRef
+        },
+        pathParams: {
+          subscriptionId: initialValues?.subscriptionId
+        }
+      })
     }
-    if (initialValues.credentialsRef) {
-      const { credentialsRef } = initialValues
-      /* istanbul ignore next */
-      formikRef.current?.setFieldValue('sshKey', credentialsRef)
-    }
-    if (typeof initialValues.tags === 'object') {
-      const tags = Object.entries(initialValues.tags || {}).map(entry => ({ key: entry[0], value: entry[1] }))
+    if (typeof initialValues?.tags === 'object') {
+      const tags = Object.entries(initialValues?.tags || {}).map(entry => ({ key: entry[0], value: entry[1] }))
       tags.forEach(tag => {
         formikRef.current?.setFieldValue(`tags:${tag.key}`, tag.value)
       })
       setSelectedTags(tags)
     }
+    return () =>
+      unSubscribeForm({
+        tab: DeployTabs.INFRASTRUCTURE,
+        form: formikRef as React.MutableRefObject<FormikProps<unknown> | null>
+      })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const getInitialValues = useCallback((): AzureInfrastructureUI => {
-    const currentValues: AzureInfrastructureUI = {
-      ...initialValues,
-      tags: typeof initialValues.tags === 'string' ? initialValues.tags : '',
-      sshKey: initialValues.credentialsRef
-    }
-    return currentValues
-  }, [])
-
-  const clearTags = () => {
-    /* istanbul ignore next */
-    formikRef.current?.setFieldValue('tags', [])
-    setAzureTags([])
-  }
-
-  const clearResourceGroup = () => {
-    /* istanbul ignore next */
-    formikRef.current?.setFieldValue('resourceGroup', '')
-    setResourceGroups([])
-    clearTags()
-  }
-
-  const clearSubscriptionId = () => {
-    /* istanbul ignore next */
-    formikRef.current?.setFieldValue('subscriptionId', '')
-    /* istanbul ignore next */
-    setSubscriptions([])
-    /* istanbul ignore next */
-    clearResourceGroup()
-  }
+  const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
 
   const usedTagKeys = useMemo(
     () =>
@@ -267,9 +269,8 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                 }, {})
               : value.tags
           const data: Partial<SshWinRmAzureInfrastructure> = {
-            connectorRef: typeof value.connectorRef === 'string' ? value.connectorRef : value.connectorRef.value,
-            sshKey: value.sshKey,
-            credentialsRef: value.credentialsRef || value.sshKey,
+            credentialsRef: value.credentialsRef,
+            connectorRef: undefined,
             subscriptionId:
               getValue(value.subscriptionId) === ''
                 ? /* istanbul ignore next */ undefined
@@ -282,6 +283,9 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
             usePublicDns: value.usePublicDns,
             allowSimultaneousDeployments: value.allowSimultaneousDeployments
           }
+          if (value.connectorRef) {
+            data.connectorRef = value.connectorRef?.value || /* istanbul ignore next */ value.connectorRef
+          }
           delayedOnUpdate(data)
         }}
         validationSchema={getValidationSchema(getString)}
@@ -292,10 +296,13 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
           formikRef.current = formik
           return (
             <FormikForm>
+              <Layout.Vertical flex={{ alignItems: 'flex-start' }} margin={{ bottom: 'medium' }} spacing="medium">
+                <Text font={{ variation: FontVariation.H6 }}>{isSvcEnvEnabled ? 'Cluster Details' : ''}</Text>
+              </Layout.Vertical>
               <Layout.Vertical spacing="medium">
                 <Layout.Vertical className={css.inputWidth}>
                   <MultiTypeSecretInput
-                    name="sshKey"
+                    name="credentialsRef"
                     type="SSHKey"
                     label={getString('cd.steps.common.specifyCredentials')}
                     onSuccess={secret => {
@@ -305,79 +312,218 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                     }}
                   />
                 </Layout.Vertical>
-                <Layout.Vertical className={css.inputWidth}>
+                <Layout.Horizontal className={css.formRow} spacing="medium">
                   <FormMultiTypeConnectorField
                     name="connectorRef"
                     label={getString('connector')}
                     placeholder={getString('connectors.selectConnector')}
                     disabled={readonly}
                     accountIdentifier={accountId}
+                    multiTypeProps={{ expressions, allowableTypes }}
                     projectIdentifier={projectIdentifier}
                     orgIdentifier={orgIdentifier}
+                    width={400}
+                    connectorLabelClass={css.connectorRef}
+                    enableConfigureOptions={false}
+                    style={{ marginBottom: 'var(--spacing-large)' }}
                     type={Connectors.AZURE}
-                    selected={formik.values.connectorRef}
-                    multiTypeProps={{ allowableTypes, expressions }}
-                    onChange={(selected, _typeValue, type) => {
-                      if (type === MultiTypeInputType.FIXED) {
-                        /* istanbul ignore next */
-                        const item = selected as unknown as { record?: ConnectorReferenceDTO; scope: Scope }
-                        const connectorValue =
-                          item.scope === Scope.ORG || item.scope === Scope.ACCOUNT
-                            ? `${item.scope}.${item?.record?.identifier}`
-                            : item.record?.identifier
-                        formik.setFieldValue('connectorRef', {
-                          label: item.record?.identifier || '',
-                          value: connectorValue,
-                          scope: item.scope,
-                          live: get(item.record, 'status.status', '') === 'SUCCESS',
-                          connector: item.record?.identifier
-                        })
-                        fetchSubscriptions(connectorValue as string)
-                      }
-                      clearSubscriptionId()
-                    }}
                     gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+                    onChange={
+                      /* istanbul ignore next */ (selected, _typeValue, type) => {
+                        const item = selected as unknown as { record?: ConnectorReferenceDTO; scope: Scope }
+                        if (type === MultiTypeInputType.FIXED) {
+                          const connectorRef =
+                            item.scope === Scope.ORG || item.scope === Scope.ACCOUNT
+                              ? `${item.scope}.${item?.record?.identifier}`
+                              : item.record?.identifier
+
+                          formik.setFieldValue('connectorRef', connectorRef)
+                        }
+                        getMultiTypeFromValue(formik.values?.subscriptionId) !== MultiTypeInputType.RUNTIME &&
+                          formik.setFieldValue('subscriptionId', '')
+                        getMultiTypeFromValue(formik.values?.resourceGroup) !== MultiTypeInputType.RUNTIME &&
+                          formik.setFieldValue('resourceGroup', '')
+                        getMultiTypeFromValue(formik.values?.tags) !== MultiTypeInputType.RUNTIME &&
+                          formik.setFieldValue('tags', [])
+                        setSubscriptions([])
+                        setResourceGroups([])
+                        setAzureTags([])
+                        setSelectedTags([] as SelectedTagsType[])
+                      }
+                    }
                   />
-                </Layout.Vertical>
-                <MultiTypeSelectField
-                  label={getString(subscriptionLabel)}
-                  name={'subscriptionId'}
-                  className={`subscriptionId-select ${css.inputWidth}`}
-                  useValue
-                  multiTypeInputProps={{
-                    placeholder: isSubsLoading ? getString('loading') : undefined,
-                    selectItems: subscriptions,
-                    multiTypeInputProps: {
-                      value: formik.values.subscriptionId,
-                      allowableTypes,
-                      onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
-                        if (value) {
-                          if (type === MultiTypeInputType.FIXED) {
-                            clearResourceGroup()
-                            const connectorRefIdentifier = getValue(get(formik, 'values.connectorRef', ''))
-                            const subsId = getValue(value)
-                            fetchResourceGroups(connectorRefIdentifier, subsId)
-                            fetchSubscriptionTags(connectorRefIdentifier, subsId)
-                          }
+                  {getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME && !readonly && (
+                    <ConfigureOptions
+                      value={formik.values?.connectorRef as string}
+                      type={
+                        <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
+                          <Icon name={getIconByType(Connectors.AZURE)}></Icon>
+                          <Text>{getString('common.azureConnector')}</Text>
+                        </Layout.Horizontal>
+                      }
+                      variableName="connectorRef"
+                      showRequiredField={false}
+                      showDefaultField={false}
+                      showAdvanced={true}
+                      onChange={
+                        /* istanbul ignore next */ value => {
+                          formik.setFieldValue('connectorRef', value)
                         }
                       }
+                      isReadonly={readonly}
+                      className={css.marginTop}
+                    />
+                  )}
+                </Layout.Horizontal>
+                <Layout.Horizontal className={css.formRow} spacing="medium">
+                  <FormInput.MultiTypeInput
+                    name="subscriptionId"
+                    className={css.inputWidth}
+                    selectItems={subscriptions}
+                    disabled={readonly}
+                    placeholder={
+                      loadingSubscriptions
+                        ? /* istanbul ignore next */ getString('loading')
+                        : getString('cd.steps.azureInfraStep.subscriptionPlaceholder')
                     }
-                  }}
-                />
-                <MultiTypeSelectField
-                  label={getString(resourceGroupLabel)}
-                  name={'resourceGroup'}
-                  className={`resourceGroup-select ${css.inputWidth}`}
-                  useValue
-                  multiTypeInputProps={{
-                    placeholder: isResGroupLoading ? getString('loading') : undefined,
-                    selectItems: resourceGroups,
-                    multiTypeInputProps: {
-                      value: formik.values.resourceGroup,
+                    multiTypeInputProps={{
+                      onChange: /* istanbul ignore next */ () => {
+                        getMultiTypeFromValue(formik.values?.resourceGroup) !== MultiTypeInputType.RUNTIME &&
+                          formik.setFieldValue('resourceGroup', '')
+                        getMultiTypeFromValue(formik.values?.tags) !== MultiTypeInputType.RUNTIME &&
+                          formik.setFieldValue('tags', [])
+
+                        setResourceGroups([])
+                        setAzureTags([])
+                        setSelectedTags([] as SelectedTagsType[])
+                      },
+                      expressions,
+                      disabled: readonly,
+                      onFocus: /* istanbul ignore next */ () => {
+                        const connectorValue = getValue(formik.values?.connectorRef)
+                        if (getMultiTypeFromValue(formik.values?.subscriptionId) === MultiTypeInputType.FIXED) {
+                          refetchSubscriptions({
+                            queryParams: {
+                              accountIdentifier: accountId,
+                              projectIdentifier,
+                              orgIdentifier,
+                              connectorRef: connectorValue
+                            }
+                          })
+                        }
+                      },
+                      selectProps: {
+                        items: subscriptions,
+                        allowCreatingNewItems: true,
+                        addClearBtn: !(loadingSubscriptions || readonly),
+                        noResults: (
+                          <Text padding={'small'}>
+                            {loadingSubscriptions
+                              ? getString('loading')
+                              : get(subscriptionsError, errorMessage, null) ||
+                                getString('pipeline.ACR.subscriptionError')}
+                          </Text>
+                        )
+                      },
                       allowableTypes
+                    }}
+                    label={getString(subscriptionLabel)}
+                  />
+                  {getMultiTypeFromValue(getValue(formik.values?.subscriptionId)) === MultiTypeInputType.RUNTIME &&
+                    !readonly && (
+                      <ConfigureOptions
+                        value={!loadingSubscriptions && formik.values?.subscriptionId}
+                        type="String"
+                        variableName="subscriptionId"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        showAdvanced={true}
+                        onChange={
+                          /* istanbul ignore next */ value => {
+                            formik.setFieldValue('subscriptionId', value)
+                          }
+                        }
+                        isReadonly={readonly}
+                        className={css.marginTop}
+                      />
+                    )}
+                </Layout.Horizontal>
+                <Layout.Horizontal className={css.formRow} spacing="medium">
+                  <FormInput.MultiTypeInput
+                    name="resourceGroup"
+                    className={css.inputWidth}
+                    selectItems={resourceGroups}
+                    disabled={readonly}
+                    placeholder={
+                      loadingResourceGroups
+                        ? /* istanbul ignore next */ getString('loading')
+                        : getString('cd.steps.azureInfraStep.resourceGroupPlaceholder')
                     }
-                  }}
-                />
+                    multiTypeInputProps={{
+                      expressions,
+                      disabled: readonly,
+                      onFocus: /* istanbul ignore next */ () => {
+                        if (getMultiTypeFromValue(formik.values?.resourceGroup) === MultiTypeInputType.FIXED) {
+                          refetchResourceGroups({
+                            queryParams: {
+                              accountIdentifier: accountId,
+                              projectIdentifier,
+                              orgIdentifier,
+                              connectorRef: getValue(formik.values?.connectorRef)
+                            },
+                            pathParams: {
+                              subscriptionId: getValue(formik.values?.subscriptionId)
+                            }
+                          })
+                          refetchSubscriptionTags({
+                            queryParams: {
+                              accountIdentifier: accountId,
+                              projectIdentifier,
+                              orgIdentifier,
+                              connectorRef: getValue(formik.values?.connectorRef)
+                            },
+                            pathParams: {
+                              subscriptionId: getValue(formik.values?.subscriptionId)
+                            }
+                          })
+                        }
+                      },
+                      selectProps: {
+                        items: resourceGroups,
+                        allowCreatingNewItems: true,
+                        addClearBtn: !(loadingResourceGroups || readonly),
+                        noResults: (
+                          <Text padding={'small'}>
+                            {loadingResourceGroups
+                              ? getString('loading')
+                              : get(resourceGroupsError, errorMessage, null) ||
+                                getString('cd.steps.azureInfraStep.resourceGroupError')}
+                          </Text>
+                        )
+                      },
+                      allowableTypes
+                    }}
+                    label={getString(resourceGroupLabel)}
+                  />
+                  {getMultiTypeFromValue(getValue(formik.values?.resourceGroup)) === MultiTypeInputType.RUNTIME &&
+                    !readonly && (
+                      <ConfigureOptions
+                        value={!loadingResourceGroups && formik.values?.resourceGroup}
+                        type="String"
+                        variableName="resourceGroup"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        showAdvanced={true}
+                        onChange={
+                          /* istanbul ignore next */ value => {
+                            formik.setFieldValue('resourceGroup', value)
+                          }
+                        }
+                        isReadonly={readonly}
+                        className={css.marginTop}
+                      />
+                    )}
+                </Layout.Horizontal>
                 <Layout.Vertical className={`tags-select ${css.inputWidth}`} spacing={'large'}>
                   <MultiTypeFieldSelector
                     name={'tags'}
@@ -409,6 +555,15 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                             value={{ label: tag.key, value: tag.key }}
                             items={availableTags}
                             className={css.tagsSelect}
+                            allowCreatingNewItems={true}
+                            noResults={
+                              <Text padding={'small'}>
+                                {loadingSubscriptionTags
+                                  ? getString('loading')
+                                  : get(subscriptionTagsError, errorMessage, null) ||
+                                    getString('pipeline.ACR.subscriptionError')}
+                              </Text>
+                            }
                             onChange={option => {
                               const newSelTags = [...selectedTags]
                               newSelTags[index].key = option.value as string

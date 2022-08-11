@@ -416,8 +416,9 @@ exports[`<ExecutionGraphView /> tests step details are shown when step is select
                 >
                   <div
                     class="title"
+                    data-name="Rollout Deployment"
                   >
-                    Rollout Deployment
+                    common.stepName
                   </div>
                   <div
                     class="actions"

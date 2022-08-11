@@ -26,14 +26,13 @@ import { Color } from '@harness/design-system'
 import type { Column } from 'react-table'
 import { Radio, RadioGroup } from '@blueprintjs/core'
 import { parse } from 'yaml'
-import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
-import { debounce, noop, set, get } from 'lodash-es'
+import { debounce, noop, set, get, isEmpty } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import { useStrings } from 'framework/strings'
 import {
   PdcInfrastructure,
   getConnectorListV2Promise,
@@ -52,7 +51,6 @@ import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProp
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import { Connectors } from '@connectors/constants'
 import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
@@ -66,20 +64,23 @@ import { FormMultiTypeTextAreaField } from '@common/components'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import ConnectivityStatus from './connectivityStatus/ConnectivityStatus'
+import { getAttributeFilters, PDCInfrastructureSpecInputForm } from './PDCInfrastructureSpecInputForm'
+import {
+  getValidationSchema,
+  HostScope,
+  parseAttributes,
+  parseHosts,
+  PdcInfrastructureTemplate,
+  PDCInfrastructureUI,
+  PDCInfrastructureYAML,
+  PreconfiguredHosts
+} from './PDCInfrastructureInterface'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 import css from './PDCInfrastructureSpec.module.scss'
 
 const logger = loggerFor(ModuleName.CD)
 
-type PdcInfrastructureTemplate = { [key in keyof PdcInfrastructure]: string }
-
 const PdcType = 'Pdc'
-
-function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
-  return Yup.object().shape({
-    credentialsRef: Yup.object().required(getString('validation.password'))
-  })
-}
 interface PDCInfrastructureSpecEditableProps {
   initialValues: PdcInfrastructure
   allValues?: PdcInfrastructure
@@ -91,47 +92,6 @@ interface PDCInfrastructureSpecEditableProps {
   variablesData: PdcInfrastructure
   allowableTypes: AllowedTypes
 }
-
-interface PDCInfrastructureUI {
-  hostsType: number
-  allowSimultaneousDeployments: boolean
-  attributeFilters?: string
-  hosts: string
-  connectorRef?: string
-  delegateSelectors?: string[] | undefined
-  hostFilters: string
-  sshKey: SecretReferenceInterface | void
-  credentialsRef: string
-}
-
-const PreconfiguredHosts = {
-  TRUE: 'true',
-  FALSE: 'false'
-}
-
-const HostScope = {
-  ALL: 'allHosts',
-  HOST_NAME: 'hostName',
-  HOST_ATTRIBUTES: 'hostAttributes'
-}
-
-const parseByComma = (data: string) =>
-  data
-    ?.replace(/,/g, '\n')
-    .split('\n')
-    .filter(part => part.length)
-    .map(part => part.trim()) || []
-
-const parseHosts = (hosts: string) => parseByComma(hosts)
-
-export const parseAttributes = (attributes: string) =>
-  parseByComma(attributes).reduce((prev, current) => {
-    const [key, value] = current.split(':')
-    if (key && value) {
-      set(prev, key, value)
-    }
-    return prev
-  }, {})
 
 const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps> = ({
   initialValues,
@@ -192,11 +152,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
         ...initialValues,
         hosts: initialValues.hosts ? initialValues.hosts.join('\n') : '',
         hostFilters: initialValues.hostFilters ? initialValues.hostFilters.join('\n') : '',
-        attributeFilters: initialValues.attributeFilters
-          ? Object.entries(initialValues.attributeFilters)
-              .map(group => `${group[0]}:${group[1]}`)
-              .join('\n')
-          : ''
+        attributeFilters: getAttributeFilters(initialValues)
       }
       if (initialValues.connectorRef) {
         const multiValueType = getMultiTypeFromValue(initialValues.connectorRef)
@@ -414,21 +370,30 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
             initialValues={formikInitialValues}
             validationSchema={getValidationSchema(getString) as Partial<PDCInfrastructureUI>}
             validate={value => {
-              const data: Partial<PdcInfrastructure> = {
+              const data: Partial<PDCInfrastructureYAML> = {
                 allowSimultaneousDeployments: value.allowSimultaneousDeployments,
                 delegateSelectors: value.delegateSelectors,
                 sshKey: value.sshKey,
                 credentialsRef: (value.credentialsRef || value.sshKey) as string
               }
               if (isPreconfiguredHosts === PreconfiguredHosts.FALSE) {
-                data.hosts = parseHosts(value.hosts)
+                data.hosts =
+                  getMultiTypeFromValue(value.hosts) === MultiTypeInputType.RUNTIME
+                    ? value.hosts
+                    : parseHosts(value.hosts)
               } else {
                 data.connectorRef = value.connectorRef
                 if (hostsScope === HostScope.HOST_NAME) {
-                  data.hostFilters = parseHosts(value.hostFilters || '')
+                  data.hostFilters =
+                    getMultiTypeFromValue(value.hostFilters) === MultiTypeInputType.RUNTIME
+                      ? value.hostFilters
+                      : parseHosts(value.hostFilters || '')
                 } else if (hostsScope === HostScope.HOST_ATTRIBUTES) {
                   /* istanbul ignore next */
-                  data.attributeFilters = parseAttributes(value.attributeFilters || '')
+                  data.attributeFilters =
+                    getMultiTypeFromValue(value.attributeFilters) === MultiTypeInputType.RUNTIME
+                      ? value.attributeFilters
+                      : parseAttributes(value.attributeFilters || '')
                 }
               }
               delayedOnUpdate(data)
@@ -464,7 +429,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                           projectIdentifier={projectIdentifier}
                           orgIdentifier={orgIdentifier}
                           type={Connectors.PDC}
-                          width={490}
+                          width={433}
                           selected={formik.values.connectorRef}
                           multiTypeProps={{ allowableTypes, expressions }}
                           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
@@ -529,10 +494,12 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                         </Layout.Vertical>
                       </Layout.Vertical>
                     )}
-                    <div className={css.inputWidth}>
+                    <div className={css.credRefWidth}>
                       <MultiTypeSecretInput
-                        name="sshKey"
+                        name="credentialsRef"
                         type="SSHKey"
+                        expressions={expressions}
+                        allowableTypes={allowableTypes}
                         label={getString('cd.steps.common.specifyCredentials')}
                         onSuccess={secret => {
                           if (secret) {
@@ -812,7 +779,14 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
       isRequired &&
       getMultiTypeFromValue(get(template, 'credentialsRef', undefined)) === MultiTypeInputType.RUNTIME
     ) {
-      errors.credentialsRef = getString?.('fieldRequired', { field: getString('connector') })
+      errors.credentialsRef = getString?.('fieldRequired', { field: getString('cd.credentialsRef') })
+    }
+    if (
+      isEmpty(data.connectorRef) &&
+      isRequired &&
+      getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME
+    ) {
+      errors.connectorRef = getString?.('common.validation.fieldIsRequired', { name: getString('connector') })
     }
     return errors
   }
@@ -820,7 +794,21 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
   renderStep(props: StepProps<PdcInfrastructure>): JSX.Element {
     const { initialValues, onUpdate, stepViewType, customStepProps, readonly, allowableTypes, inputSetData } = props
 
-    if (stepViewType === StepViewType.InputVariable) {
+    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+      return (
+        <PDCInfrastructureSpecInputForm
+          {...(customStepProps as PDCInfrastructureSpecEditableProps)}
+          initialValues={initialValues}
+          onUpdate={onUpdate}
+          stepViewType={stepViewType}
+          readonly={readonly}
+          template={inputSetData?.template as PdcInfrastructureTemplate}
+          allValues={inputSetData?.allValues}
+          allowableTypes={allowableTypes}
+          path={inputSetData?.path || ''}
+        />
+      )
+    } else if (stepViewType === StepViewType.InputVariable) {
       return (
         <PDCInfrastructureSpecVariablesForm
           onUpdate={onUpdate}

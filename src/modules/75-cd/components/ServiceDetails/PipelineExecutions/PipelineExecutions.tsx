@@ -19,7 +19,7 @@ import { DeploymentsTimeRangeContext } from '@cd/components/Services/common'
 import { DashboardSelected } from '@pipeline/components/ServiceExecutionsCard/ServiceExecutionsCard'
 import { useStrings } from 'framework/strings'
 import { PageSpinner } from '@common/components'
-import pipelineIllustration from '@pipeline/pages/pipelines/images/deploypipeline-illustration.svg'
+import pipelineIllustration from '@pipeline/pages/pipeline-list/images/cd-pipeline-illustration.svg'
 import css from '@cd/components/ServiceDetails/PipelineExecutions/PipelineExecutions.module.scss'
 
 export const PipelineExecutions: React.FC = () => {

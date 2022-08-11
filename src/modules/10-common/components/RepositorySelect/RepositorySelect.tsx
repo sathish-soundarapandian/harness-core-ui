@@ -12,8 +12,9 @@ import { FormInput, Icon, Layout, SelectOption } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import { Error, GitRepositoryResponseDTO, ResponseMessage, useGetListOfReposByRefConnector } from 'services/cd-ng'
+import { Error, GitRepositoryResponseDTO, useGetListOfReposByRefConnector } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ResponseMessage } from '../ErrorHandler/ErrorHandler'
 import css from '../RepoBranchSelectV2/RepoBranchSelectV2.module.scss'
 
 export interface RepositorySelectProps<T> {

@@ -1,5 +1,13 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import { debounce } from 'lodash-es'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useContext } from 'react'
+import GraphConfigStore from '../PipelineGraph/GraphConfigStore'
 import { getComputedPosition } from '../PipelineGraph/PipelineGraphUtils'
 import type { NodeCollapsibleProps } from '../types'
 
@@ -12,6 +20,7 @@ export const useNodeResizeObserver = (
   options: NodeCollapsibleProps = {} as NodeCollapsibleProps,
   parentSelector = ''
 ): ResizeObserverResult => {
+  const { graphScale } = useContext(GraphConfigStore)
   const { percentageNodeVisible = 0.8, bottomMarginInPixels = 120 } = options
   const [element, setElement] = useState<Element | null>(null)
   const [refElement, setRefElement] = useState<Element | null>(null)
@@ -53,7 +62,8 @@ export const useNodeResizeObserver = (
     return () => {
       cleanup()
     }
-  }, [element, refElement])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [element, refElement, graphScale])
 
   return state
 }

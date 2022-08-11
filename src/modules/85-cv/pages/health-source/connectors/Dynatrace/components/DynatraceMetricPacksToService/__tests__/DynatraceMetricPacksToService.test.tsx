@@ -218,7 +218,7 @@ describe('Validate DynatraceCustomMetricPacksToService', () => {
     })
   })
   test('should show Loading when service retrieving is in progress', async () => {
-    jest.spyOn(cvService, 'useGetDynatraceServices').mockReturnValue({ loading: true } as any)
+    jest.spyOn(cvService, 'useGetDynatraceServices').mockReturnValue({ loading: true, refetch: jest.fn() } as any)
     const { getByText } = render(<WrapperComponent {...DynatraceMetricPacksToServicePropsMock} />)
     expect(() => getByText('Loading')).toBeTruthy()
   })

@@ -18,7 +18,6 @@ declare const styles: {
   readonly formContentTitle: string
   readonly multiSelect: string
   readonly nameIdDescriptionTags: string
-  readonly secureTokenLoader: string
   readonly webhookConfigurationContainer: string
 }
 export default styles

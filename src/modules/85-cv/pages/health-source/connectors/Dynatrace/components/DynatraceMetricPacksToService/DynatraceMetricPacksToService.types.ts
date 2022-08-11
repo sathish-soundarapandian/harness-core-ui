@@ -12,4 +12,6 @@ export interface DynatraceMetricPacksToServiceProps {
   dynatraceMetricData: DynatraceMetricData
   setDynatraceMetricData: React.Dispatch<React.SetStateAction<DynatraceMetricData>>
   metricValues: DynatraceMetricData
+  isTemplate?: boolean
+  expressions?: string[]
 }

@@ -18,11 +18,10 @@ import {
   getMultiSelectFormOptions,
   PipelineExecutionFormType
 } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
-
+import services from '@pipeline/pages/pipeline-list/__tests__/mocks/services.json'
+import deploymentTypes from '@pipeline/pages/pipeline-list/__tests__/mocks/deploymentTypes.json'
+import environments from '@pipeline/pages/pipeline-list/__tests__/mocks/environments.json'
 import { ExecutionListFilterForm } from '../ExecutionListFilterForm'
-import services from '../../../pipelines/__tests__/mocks/services.json'
-import deploymentTypes from '../../../pipelines/__tests__/mocks/deploymentTypes.json'
-import environments from '../../../pipelines/__tests__/mocks/environments.json'
 
 const params = {
   accountId: 'testAcc',

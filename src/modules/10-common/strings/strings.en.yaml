@@ -967,3 +967,5 @@ getStarted:
   authMethodLabel: Authentication method
   specificDelegate: Use from a specific harness Delegate
 selectYourRepo: Select your Repository
+stageName: 'Stage: {{ name }}'
+stepName: 'Step: {{ name }}'

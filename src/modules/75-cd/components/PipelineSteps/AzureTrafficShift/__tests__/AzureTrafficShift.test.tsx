@@ -155,6 +155,17 @@ describe('Azure Traffic Shift step', () => {
                 localName: 'step.AzureTrafficShift_test.name'
               }
             },
+            'step-identifier': {
+              yamlExtraProperties: {
+                properties: [
+                  {
+                    fqn: 'pipeline.stages.qaStage.execution.steps.AzureTrafficShift_test.identifier',
+                    localName: 'step.AzureTrafficShift_test.identifier',
+                    variableName: 'identifier'
+                  }
+                ]
+              }
+            },
             'step-traffic': {
               yamlProperties: {
                 fqn: 'pipeline.stages.qaStage.execution.steps.AzureTrafficShift_test.spec.traffic',
@@ -164,6 +175,7 @@ describe('Azure Traffic Shift step', () => {
           },
           variablesData: {
             name: 'step-name',
+            __uuid: 'step-identifier',
             identifier: 'AzureTrafficShift_test',
             type: 'AzureTrafficShift',
             timeout: 'step-timeout',

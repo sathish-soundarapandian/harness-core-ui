@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Create WinRm Cred Wizard Step Verify Test for winrm step verify 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main"
+    style="width: 300px;"
+  >
+    <div
+      class="OverlaySpinner--overlaySpinner"
+    >
+      <form
+        action="#"
+        class="FormikForm--main"
+      >
+        <div>
+          <div
+            class="bp3-form-group"
+            data-id="host-0"
+          >
+            <label
+              class="bp3-label"
+              for="host"
+            >
+              <span
+                class="Tooltip--acenter"
+                data-tooltip-id="sshVerifyConnectionForm_host"
+              >
+                secrets.createSSHCredWizard.labelHostname
+              </span>
+               
+              <span
+                class="bp3-text-muted"
+              />
+            </label>
+            <div
+              class="bp3-form-content"
+            >
+              <div
+                class="bp3-input-group"
+              >
+                <input
+                  autocomplete="off"
+                  class="bp3-input"
+                  name="host"
+                  type="text"
+                  value="host"
+                />
+              </div>
+            </div>
+          </div>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--font-weight-bold"
+          >
+            SECRETS.CREATESSHCREDWIZARD.HOSTNAMEINFO
+          </p>
+          <button
+            class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-top-medium Button--with-current-color"
+            style="font-size: smaller;"
+            type="submit"
+          >
+            <span
+              class="bp3-button-text"
+            >
+              secrets.createSSHCredWizard.btnVerifyConnection
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+`;

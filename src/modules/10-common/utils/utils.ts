@@ -131,13 +131,3 @@ export function isValueRuntimeInput(
 
   return isMultiTypeRuntime(type)
 }
-
-// Utility to check if duplicate identifiers/id are present
-export const hasDuplicateIdentifier = (idMap: string[]): { value: boolean; duplicateIds: string[] } => {
-  const idMapWithoutDuplicates = new Set(idMap)
-  const duplicateIdentifiers = idMap.filter((element, position, arr) => arr.indexOf(element) !== position)
-  return {
-    value: idMap.length !== idMapWithoutDuplicates.size,
-    duplicateIds: duplicateIdentifiers
-  }
-}

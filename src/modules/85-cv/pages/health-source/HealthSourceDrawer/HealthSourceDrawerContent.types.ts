@@ -56,7 +56,7 @@ export interface SourceDataInterface {
   createHeader?: () => JSX.Element
   onClose?: (val: any) => void
   sourceType?: string
-  connectorRef?: string
+  connectorRef?: string | { value: string }
   healthSourceName?: string
   healthSourceIdentifier?: string
   healthSourceList?: Array<RowData>

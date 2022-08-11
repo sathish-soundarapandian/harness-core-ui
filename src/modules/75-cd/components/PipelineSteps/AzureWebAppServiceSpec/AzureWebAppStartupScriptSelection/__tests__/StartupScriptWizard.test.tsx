@@ -79,7 +79,7 @@ describe('StartupScriptWizard & stepOne', () => {
           }
         }
       },
-      store: 'Git',
+      selectedStore: 'Git',
       connectorRef: '<+input>'
     }
     const { container, getByText } = render(

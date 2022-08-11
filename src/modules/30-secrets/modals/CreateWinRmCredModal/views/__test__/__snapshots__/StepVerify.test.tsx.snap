@@ -1,0 +1,114 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Create WinRm Cred Wizard Step Verify Test for winrm step verify 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main StyledProps--padding-small"
+    style="height: 500px;"
+  >
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xlarge StyledProps--font-size-medium StyledProps--color StyledProps--color-black"
+    >
+      secrets.stepTitleVerify
+    </p>
+    <div
+      class="StyledProps--font StyledProps--main"
+      style="width: 300px;"
+    >
+      <div
+        class="OverlaySpinner--overlaySpinner"
+      >
+        <form
+          action="#"
+          class="FormikForm--main"
+        >
+          <div>
+            <div
+              class="bp3-form-group bp3-intent-danger"
+              data-id="host-0"
+            >
+              <label
+                class="bp3-label"
+                for="host"
+              >
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="sshVerifyConnectionForm_host"
+                >
+                  secrets.createSSHCredWizard.labelHostname
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="bp3-input-group bp3-intent-danger"
+                >
+                  <input
+                    autocomplete="off"
+                    class="bp3-input"
+                    name="host"
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <div
+                  class="bp3-form-helper-text"
+                >
+                  <div
+                    class="FormError--errorDiv"
+                    data-name="host"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main FormError--errorTextIcon StyledProps--intent-danger"
+                      data-icon="circle-cross"
+                    >
+                      <svg
+                        height="12"
+                        viewBox="0 0 13 13"
+                        width="12"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M.167 6.501a6.333 6.333 0 1012.666 0 6.333 6.333 0 00-12.666 0zm4.071-3.003l2.26 2.263 2.264-2.263c.495-.495 1.236.248.741.743L7.24 6.504l2.254 2.258c.495.495-.247 1.238-.742.743L6.497 7.246 4.238 9.505c-.495.495-1.236-.249-.741-.744l2.258-2.258-2.259-2.262c-.494-.495.248-1.238.742-.743z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                    <span
+                      class="FormError--error"
+                    >
+                      host is a required field
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--font-weight-bold"
+            >
+              SECRETS.CREATESSHCREDWIZARD.HOSTNAMEINFO
+            </p>
+            <button
+              class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-top-medium Button--with-current-color"
+              style="font-size: smaller;"
+              type="submit"
+            >
+              <span
+                class="bp3-button-text"
+              >
+                secrets.createSSHCredWizard.btnVerifyConnection
+              </span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+`;

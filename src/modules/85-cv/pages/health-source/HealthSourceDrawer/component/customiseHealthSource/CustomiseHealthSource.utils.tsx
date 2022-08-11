@@ -97,7 +97,14 @@ export const LoadSourceByType = ({
         />
       )
     case Connectors.DYNATRACE:
-      return <DynatraceHealthSourceContainer data={data} onSubmit={onSubmit} />
+      return (
+        <DynatraceHealthSourceContainer
+          isTemplate={isTemplate}
+          expressions={expressions}
+          data={data}
+          onSubmit={onSubmit}
+        />
+      )
     case Connectors.SPLUNK:
       if (data?.product?.value === SplunkProduct.SPLUNK_METRICS) {
         if (!isSplunkMetricEnabled) {

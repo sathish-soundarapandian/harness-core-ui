@@ -448,6 +448,17 @@ describe('RunTests Step', () => {
                   localName: 'step.runTests.name'
                 }
               },
+              'step-identifier': {
+                yamlExtraProperties: {
+                  properties: [
+                    {
+                      fqn: 'pipeline.stages.qaStage.execution.steps.runTests.identifier',
+                      localName: 'step.runTests.identifier',
+                      variableName: 'identifier'
+                    }
+                  ]
+                }
+              },
               'step-description': {
                 yamlProperties: {
                   fqn: 'pipeline.stages.qaStage.execution.steps.runTests.description',
@@ -560,6 +571,7 @@ describe('RunTests Step', () => {
             },
             variablesData: {
               type: StepType.RunTests,
+              __uuid: 'step-identifier',
               identifier: 'runTests',
               name: 'step-name',
               description: 'step-description',

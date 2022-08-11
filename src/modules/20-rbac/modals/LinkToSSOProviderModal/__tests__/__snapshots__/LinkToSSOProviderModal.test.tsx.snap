@@ -139,7 +139,7 @@ exports[`Create LinkToSSOProviderModal should render the form with ssoLinked fal
                               autocomplete="off"
                               class="bp3-input"
                               name="sso"
-                              placeholder="- rbac.userDetails.linkToSSOProviderModal.selectSSOSetting -"
+                              placeholder="- noData -"
                               style="padding-right: 0px;"
                               type="text"
                               value=""

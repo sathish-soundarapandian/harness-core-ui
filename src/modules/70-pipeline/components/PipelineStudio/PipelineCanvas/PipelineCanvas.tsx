@@ -72,7 +72,6 @@ import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetai
 import { OutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import type { Pipeline } from '@pipeline/utils/types'
-import { hasDuplicateIdentifier } from '@common/utils/utils'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import CreatePipelines from '../CreateModal/PipelineCreate'
 import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
@@ -80,7 +79,7 @@ import PipelineYamlView from '../PipelineYamlView/PipelineYamlView'
 import { RightBar } from '../RightBar/RightBar'
 import StudioGitPopover from '../StudioGitPopover'
 import usePipelineErrors from './PipelineErrors/usePipelineErrors'
-import { getStageIdDetailsMapping } from './PipelineCanvasUtils'
+import { getDuplicateStepIdentifierList } from './PipelineCanvasUtils'
 import css from './PipelineCanvas.module.scss'
 
 interface OtherModalProps {
@@ -531,11 +530,21 @@ export function PipelineCanvas({
 
   function handleViewChange(newView: SelectedView): boolean {
     if (newView === view) return false
-    if (newView === SelectedView.VISUAL && !hasDuplicateIdentifiersInYAML()) {
-      return false
-    }
-    if (newView === SelectedView.VISUAL && yamlHandler && isYamlEditable) {
-      if (!isValidYaml()) return false
+    if (newView === SelectedView.VISUAL) {
+      const duplicateStepIdentifiersList = pipeline?.stages ? getDuplicateStepIdentifierList(pipeline?.stages) : []
+      if (duplicateStepIdentifiersList.length) {
+        clear()
+        showError(
+          getString('pipeline.duplicateStepIdentifiers', {
+            duplicateIdString: duplicateStepIdentifiersList.join(', ')
+          }),
+          5000
+        )
+        return false
+      }
+      if (yamlHandler && isYamlEditable) {
+        if (!isValidYaml()) return false
+      }
     }
     setView(newView)
     updatePipelineView({
@@ -718,29 +727,6 @@ export function PipelineCanvas({
       storeType
     ]
   )
-
-  const hasDuplicateIdentifiersInYAML = React.useCallback((): boolean => {
-    const stagesData = pipeline?.stages
-    if (stagesData) {
-      const stepsIdMap = getStageIdDetailsMapping(stagesData)
-      const duplicateStepIdentifiersList = [] as string[]
-      Object.values(stepsIdMap).forEach(stepIdMap => {
-        const duplicateSteps = hasDuplicateIdentifier(stepIdMap.steps)
-        const duplicateRollbackSteps = hasDuplicateIdentifier(stepIdMap.rollbackSteps)
-        duplicateSteps.value && duplicateStepIdentifiersList.push(...duplicateSteps.duplicateIds)
-        duplicateRollbackSteps.value && duplicateStepIdentifiersList.push(...duplicateRollbackSteps.duplicateIds)
-      })
-      duplicateStepIdentifiersList.length &&
-        showError(
-          getString('pipeline.duplicateStepIdentifiers', {
-            duplicateIdString: duplicateStepIdentifiersList.join(', ')
-          }),
-          5000
-        )
-      return !(duplicateStepIdentifiersList.length > 0)
-    }
-    return false
-  }, [getString, pipeline?.stages, showError])
 
   if (isLoading) {
     return (

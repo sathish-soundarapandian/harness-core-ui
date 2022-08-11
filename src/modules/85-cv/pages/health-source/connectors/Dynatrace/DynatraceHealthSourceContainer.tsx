@@ -18,7 +18,7 @@ import {
 } from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.utils'
 
 export default function DynatraceHealthSourceContainer(props: DynatraceHealthSourceContainerProps): JSX.Element {
-  const { data: sourceData, onSubmit } = props
+  const { data: sourceData, onSubmit, isTemplate, expressions } = props
   const { onPrevious } = useContext(SetupSourceTabsContext)
 
   const handleSubmit = useCallback(
@@ -36,7 +36,12 @@ export default function DynatraceHealthSourceContainer(props: DynatraceHealthSou
       dynatraceFormData={dynatraceMetricData}
       onSubmit={handleSubmit}
       onPrevious={() => onPrevious(sourceData)}
-      connectorIdentifier={sourceData?.connectorRef || ''}
+      connectorIdentifier={
+        (typeof sourceData?.connectorRef === 'string' ? sourceData?.connectorRef : sourceData?.connectorRef?.value) ||
+        ''
+      }
+      isTemplate={isTemplate}
+      expressions={expressions}
     />
   )
 }
