@@ -8,7 +8,6 @@
 .modal {
   width: 800px;
   min-height: 200px;
-  position: relative;
 
   .container {
     max-height: 500px;
@@ -25,15 +24,4 @@
   .noDataCardContainer {
     max-height: 500px !important;
   }
-}
-
-.table {
-  max-height: 350px;
-  margin-top: var(--spacing-medium);
-  overflow: scroll;
-}
-
-.pagination {
-  padding-left: var(--spacing-medium) !important;
-  padding-right: var(--spacing-medium) !important;
 }
