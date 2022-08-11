@@ -1267,7 +1267,7 @@ export interface NGTemplateInfoConfig {
   tags?: {
     [key: string]: string
   }
-  type: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager'
+  type: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager' | 'CustomDeployment'
   versionLabel: string
 }
 
@@ -1981,13 +1981,13 @@ export interface TemplateFilterProperties {
   tags?: {
     [key: string]: string
   }
-  templateEntityTypes?: ('Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager')[]
+  templateEntityTypes?: ('Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager' | 'CustomDeployment')[]
   templateIdentifiers?: string[]
   templateNames?: string[]
 }
 
 export interface TemplateInfo {
-  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager'
+  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager' | 'CustomDeployment'
   templateIdentifier?: string
   versionLabel?: string
 }
@@ -2064,7 +2064,7 @@ export interface TemplateResponse {
   tags?: {
     [key: string]: string
   }
-  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager'
+  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager' | 'CustomDeployment'
   templateScope?: 'account' | 'org' | 'project' | 'unknown'
   version?: number
   versionLabel?: string
@@ -2096,7 +2096,7 @@ export interface TemplateSummaryResponse {
   tags?: {
     [key: string]: string
   }
-  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager'
+  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager' | 'CustomDeployment'
   templateScope?: 'account' | 'org' | 'project' | 'unknown'
   version?: number
   versionLabel?: string
@@ -3312,7 +3312,7 @@ export const getsMergedTemplateInputYamlPromise = (
   >('POST', getConfig('template/api'), `/templates/mergeTemplateInputs`, props, signal)
 
 export interface GetTemplateSchemaQueryParams {
-  templateEntityType: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager'
+  templateEntityType: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager' | 'CustomDeployment'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
