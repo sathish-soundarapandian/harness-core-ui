@@ -40,12 +40,7 @@ export default function L1Nav(): React.ReactElement {
     NG_DASHBOARDS
   } = useFeatureFlags()
 
-  const { currentUserInfo: user, selectedProject } = useAppStore()
-  const common = {
-    accountId: params.accountId,
-    projectIdentifier: selectedProject?.identifier ? selectedProject?.identifier : '',
-    orgIdentifier: selectedProject?.orgIdentifier ? selectedProject?.orgIdentifier : ''
-  }
+  const { currentUserInfo: user } = useAppStore()
 
   useLayoutEffect(() => {
     // main nav consists of two UL sections with classname "css.navList"
@@ -79,7 +74,7 @@ export default function L1Nav(): React.ReactElement {
           </Link>
         </li>
         <li className={css.navItem}>
-          <Link {...commonLinkProps} to={selectedProject ? paths.toProjectDetails(params) : paths.toProjects(params)}>
+          <Link {...commonLinkProps} to={paths.toProjects(params)}>
             <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
               <Icon name="nav-project" size={30} color={Color.PRIMARY_4} />
               <Text

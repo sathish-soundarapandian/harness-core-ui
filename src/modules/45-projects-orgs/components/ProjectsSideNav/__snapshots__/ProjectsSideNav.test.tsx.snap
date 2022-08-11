@@ -8,7 +8,6 @@ exports[`Projects Side Nav render 1`] = `
     <a
       class="link iconColor"
       href="/account/account/projects"
-      id="project1"
     >
       <p
         class="StyledProps--font StyledProps--main text"
