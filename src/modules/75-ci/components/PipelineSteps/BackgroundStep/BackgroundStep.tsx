@@ -54,6 +54,7 @@ export interface BackgroundStepSpec {
     }
   }
   envVariables?: MultiTypeMapType
+  entrypoint?: MultiTypeListUIType
   imagePullPolicy?: MultiTypeSelectOption
   shell?: MultiTypeSelectOption
   runAsUser?: string
@@ -70,10 +71,11 @@ export interface BackgroundStepData {
 }
 
 export interface BackgroundStepSpecUI
-  extends Omit<BackgroundStepSpec, 'connectorRef' | 'reports' | 'envVariables' | 'resources'> {
+  extends Omit<BackgroundStepSpec, 'connectorRef' | 'reports' | 'envVariables' | 'entrypoint' | 'resources'> {
   connectorRef: MultiTypeConnectorRef
   reportPaths?: MultiTypeListUIType
   envVariables?: MultiTypeMapUIType
+  entrypoint?: MultiTypeListUIType
   imagePullPolicy?: MultiTypeSelectOption
   shell?: MultiTypeSelectOption
   limitMemory?: string

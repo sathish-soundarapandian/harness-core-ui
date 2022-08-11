@@ -7,26 +7,29 @@
 
 import React from 'react'
 import { connect } from 'formik'
-import { Text, getMultiTypeFromValue, MultiTypeInputType, FormikForm, Container } from '@wings-software/uicore'
+import { Text, getMultiTypeFromValue, MultiTypeInputType, FormikForm, Container, Layout } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import { isEmpty, startCase } from 'lodash-es'
+import { isEmpty } from 'lodash-es'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import { FormMultiTypeCheckboxField } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
+import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
 import type { BackgroundStepProps } from './BackgroundStep'
 import { CIStep } from '../CIStep/CIStep'
 import { ConnectorRefWithImage } from '../CIStep/ConnectorRefWithImage'
-import { renderMultiTypeInputWithAllowedValues } from '../CIStep/CIStepOptionalConfig'
-import { RunAndRunTestStepInputCommonFields } from '../CIStep/RunAndRunTestStepInputCommonFields'
+import {
+  renderMultiTypeInputWithAllowedValues,
+  getOptionalSubLabel,
+  CIStepOptionalConfig
+} from '../CIStep/CIStepOptionalConfig'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const BackgroundStepInputSetBasic: React.FC<BackgroundStepProps> = props => {
-  const { template, path, readonly, stepViewType, allowableTypes } = props
+  const { template, path, readonly, stepViewType, allowableTypes, formik } = props
   const { getString } = useStrings()
   const prefix = isEmpty(path) ? '' : `${path}.`
 
@@ -72,15 +75,19 @@ export const BackgroundStepInputSetBasic: React.FC<BackgroundStepProps> = props 
             <MultiTypeFieldSelector
               name={`${prefix}spec.command`}
               label={
-                <Text
-                  color={Color.GREY_800}
-                  font={{ size: 'normal', weight: 'bold' }}
-                  className={css.inpLabel}
-                  style={{ display: 'flex', alignItems: 'center' }}
-                  tooltipProps={{ dataTooltipId: 'runCommand' }}
-                >
-                  {getString('commandLabel')}
-                </Text>
+                <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}>
+                  <Text
+                    color={Color.GREY_800}
+                    font={{ size: 'normal', weight: 'bold' }}
+                    className={css.inpLabel}
+                    style={{ display: 'flex', alignItems: 'center' }}
+                    tooltipProps={{ dataTooltipId: 'runCommand' }}
+                  >
+                    {getString('commandLabel')}
+                  </Text>
+                  &nbsp;
+                  {getOptionalSubLabel(getString, 'command')}
+                </Layout.Horizontal>
               }
               defaultValueToReset=""
               skipRenderValueInExpressionLabel
@@ -110,7 +117,7 @@ export const BackgroundStepInputSetBasic: React.FC<BackgroundStepProps> = props 
           )}
         </div>
       )}
-      {getMultiTypeFromValue(template?.spec?.privileged) === MultiTypeInputType.RUNTIME && (
+      {/* {getMultiTypeFromValue(template?.spec?.privileged) === MultiTypeInputType.RUNTIME && (
         <div className={cx(css.formGroup, css.sm, css.topMargin4, css.bottomMargin5)}>
           <FormMultiTypeCheckboxField
             name={`${prefix}spec.privileged`}
@@ -126,8 +133,35 @@ export const BackgroundStepInputSetBasic: React.FC<BackgroundStepProps> = props 
             setToFalseWhenEmpty={true}
           />
         </div>
-      )}
-      <RunAndRunTestStepInputCommonFields {...props} />
+      )} */}
+
+      <CIStepOptionalConfig
+        stepViewType={stepViewType}
+        readonly={readonly}
+        enableFields={{
+          ...(getMultiTypeFromValue(template?.spec?.privileged) === MultiTypeInputType.RUNTIME && {
+            'spec.privileged': {}
+          }),
+          ...(getMultiTypeFromValue(template?.spec?.envVariables as string) === MultiTypeInputType.RUNTIME && {
+            'spec.envVariables': { tooltipId: 'dependencyEnvironmentVariables' }
+          }),
+          ...(getMultiTypeFromValue(template?.spec?.entrypoint as string) === MultiTypeInputType.RUNTIME && {
+            'spec.entrypoint': {}
+          })
+        }}
+        path={path || ''}
+        formik={formik}
+        isInputSetView={true}
+        template={template}
+      />
+      <StepCommonFieldsInputSet
+        path={path}
+        readonly={readonly}
+        template={template}
+        withoutTimeout
+        stepViewType={stepViewType}
+      />
+      {/* <RunAndRunTestStepInputCommonFields {...props} /> */}
     </FormikForm>
   )
 }
