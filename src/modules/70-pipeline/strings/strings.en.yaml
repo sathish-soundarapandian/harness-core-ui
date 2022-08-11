@@ -962,6 +962,7 @@ stepDescription:
   CustomApproval: Custom Approval
   AzureTrafficShift: Shift network traffic to the new Web App version in the deployment slot.
   GitClone: Clone a Git repository to a directory in addition to the codebase Git clone
+  Background: Set commands to run in the background. The execution will immediately proceed to the subsequent step rather than waiting for the background commands to finish.
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy

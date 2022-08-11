@@ -100,6 +100,12 @@ export function StepPalette({ onSelect, stepsFactory, stepPaletteModuleInfos }: 
     })
 
     if (toShow) {
+      toShow?.[1]?.stepsData?.push({
+        name: 'Background',
+        type: 'Background',
+        disabled: false,
+        featureRestrictionName: null
+      })
       setStepsCategories(toShow)
       setOriginalCategories(toShow)
     }

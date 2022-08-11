@@ -3627,6 +3627,7 @@ export interface StringsMap {
   'pipeline.stepDescription.ACR': string
   'pipeline.stepDescription.AzureSlotDeployment': string
   'pipeline.stepDescription.AzureTrafficShift': string
+  'pipeline.stepDescription.Background': string
   'pipeline.stepDescription.Barrier': string
   'pipeline.stepDescription.CustomApproval': string
   'pipeline.stepDescription.DockerHub': string

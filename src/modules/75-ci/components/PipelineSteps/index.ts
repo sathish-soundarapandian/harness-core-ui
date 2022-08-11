@@ -8,6 +8,7 @@
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 
 import { RunStep } from './RunStep/RunStep'
+import { BackgroundStep } from './BackgroundStep/BackgroundStep'
 import { PluginStep } from './PluginStep/PluginStep'
 import { ACRStep } from './ACRStep/ACRStep'
 import { GitCloneStep } from './GitCloneStep/GitCloneStep'
@@ -25,6 +26,7 @@ import { Dependency } from './Dependency/Dependency'
 import { RunTestsStep } from './RunTestsStep/RunTestsStep'
 
 factory.registerStep(new RunStep())
+factory.registerStep(new BackgroundStep())
 factory.registerStep(new PluginStep())
 factory.registerStep(new ACRStep())
 factory.registerStep(new GCRStep())
