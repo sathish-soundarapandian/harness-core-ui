@@ -11,7 +11,7 @@ import type { AllowedTypes } from '@harness/uicore'
 import { parse } from 'yaml'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
-import { debounce, noop, isEmpty, get } from 'lodash-es'
+import { noop, isEmpty, get } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { loggerFor } from 'framework/logging/logging'
@@ -44,6 +44,7 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { InfraDeploymentType } from '../PipelineStepsUtil'
+import { getValue } from '../SshWinRmAzureInfrastructureSpec/SshWinRmAzureInfrastructureInterface'
 import css from './SshWinRmAwsInfrastructureSpec.module.scss'
 
 const logger = loggerFor(ModuleName.CD)
@@ -74,7 +75,6 @@ interface SshWinRmAwsInfrastructureUI extends SshWinRmAwsInfrastructure {
 const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureSpecEditableProps> = ({
   initialValues,
   onUpdate,
-  readonly,
   allowableTypes
 }): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
@@ -82,8 +82,6 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
     orgIdentifier: string
     accountId: string
   }>()
-  /* istanbul ignore next */
-  const delayedOnUpdate = React.useRef(debounce(onUpdate || noop, 300)).current
   const formikRef = React.useRef<FormikProps<SshWinRmAwsInfrastructureUI> | null>(null)
 
   const { expressions } = useVariablesExpression()
@@ -94,18 +92,10 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
   const [isRegionsLoading, setIsRegionsLoading] = useState(false)
 
   const [tags, setTags] = useState<SelectOption[]>([])
-  const [isTagsLoading, setIsTagsLoading] = useState(false)
 
   useEffect(() => {
-    const { connectorRef, region, awsInstanceFilter } = initialValues
-    if (connectorRef) {
-      fetchRegions()
-      if (region) {
-        fetchTags(region)
-        /* istanbul ignore next */
-        formikRef.current?.setFieldValue('region', region)
-      }
-      /* istanbul ignore next */
+    const { awsInstanceFilter } = initialValues
+    if (awsInstanceFilter?.tags) {
       formikRef.current?.setFieldValue('tags', awsInstanceFilter?.tags)
     }
   }, [])
@@ -133,7 +123,6 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
   }
 
   const fetchTags = async (region: string) => {
-    setIsTagsLoading(true)
     try {
       const response = await tagsPromise({
         queryParams: {
@@ -159,8 +148,6 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
     } catch (e) {
       /* istanbul ignore next */
       showError(get(e, 'message', '') || get(e, 'responseMessage[0]', ''))
-    } finally {
-      setIsTagsLoading(false)
     }
   }
 
@@ -172,22 +159,14 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
           initialValues={{ ...initialValues } as SshWinRmAwsInfrastructureUI}
           validationSchema={getValidationSchema(getString) as Partial<SshWinRmAwsInfrastructureUI>}
           validate={value => {
-            /* istanbul ignore next */
-            const credentialsRef = `${
-              get(value, 'sshKey.projectIdentifier', '')
-                ? ''
-                : get(value, 'sshKey.orgIdentifier', '')
-                ? 'org.'
-                : 'account.'
-            }${value.identifier}`
             const data: Partial<SshWinRmAwsInfrastructure> = {
               connectorRef: get(value, 'connectorRef.value', ''),
-              credentialsRef,
-              steps: [],
-              region: value.region
+              credentialsRef:
+                typeof value?.sshKey === 'string' ? value?.sshKey : get(value, 'sshKey.referenceString', ''),
+              region: typeof value.region === 'string' ? value.region : get(value, 'region.value', '')
             }
             data.tags = value.tags
-            delayedOnUpdate(data)
+            onUpdate?.(data as SshWinRmAwsInfrastructure)
           }}
           onSubmit={noop}
         >
@@ -242,7 +221,6 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                             })
                             /* istanbul ignore next */
                             formikRef.current?.setFieldValue('region', undefined)
-                            fetchRegions()
                           }
                         }
                       }
@@ -258,12 +236,12 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                   multiTypeInputProps={{
                     allowableTypes,
                     expressions,
+                    onFocus: () => fetchRegions(),
                     onChange: /* istanbul ignore next */ option => {
                       const { value } = option as SelectOption
                       if (value) {
                         formik.setFieldValue('region', option)
                         formik.setFieldValue('tags', {})
-                        fetchTags(value as string)
                       }
                     }
                   }}
@@ -276,6 +254,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                       selectItems={tags}
                       className={css.inputWidth}
                       multiTypeInputProps={{
+                        onFocus: () => fetchTags(getValue(formik.values.region)),
                         allowableTypes,
                         expressions,
                         onChange: /* istanbul ignore next */ option => {
