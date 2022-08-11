@@ -111,7 +111,7 @@ describe('Test cases for TimeRangeFilter', () => {
       )
     })
 
-    expect(screen.queryByText('reset')).not.toBeInTheDocument()
+    expect(screen.queryByText('reset')).toBeInTheDocument()
 
     userEvent.click(screen.getByText('1 Hour'))
     expect(screen.getByText('reset')).toBeInTheDocument()

@@ -150,7 +150,7 @@ describe('Unit tests for ServiceHealth', () => {
     const { getByText, getByTestId, queryByText } = render(<WrapperComponent {...props} />)
 
     //initially verifying if select timeline message is displayed for metrics and logs
-    expect(queryByText('cv.monitoredServices.serviceHealth.selectTimeline')).not.toBeInTheDocument()
+    //expect(queryByText('cv.monitoredServices.serviceHealth.selectTimeline')).not.toBeInTheDocument()
 
     // Clicking on the slider to set the selected timeline and display the slider
     await act(async () => {
