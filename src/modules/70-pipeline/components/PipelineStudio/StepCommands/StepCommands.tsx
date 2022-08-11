@@ -213,7 +213,6 @@ export function StepCommands(
       return step as StepElementConfig
     }
   }
-
   return (
     <div className={cx(css.stepCommand, className)}>
       {stepType === StepType.Template && onUseTemplate && onRemoveTemplate ? (
