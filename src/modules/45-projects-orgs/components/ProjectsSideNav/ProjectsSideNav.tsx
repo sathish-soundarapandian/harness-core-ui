@@ -25,11 +25,17 @@ export default function ProjectsSideNav(): React.ReactElement {
   const { selectedProject, updateAppStore } = useAppStore()
   const { getString } = useStrings()
 
-  const common = {
+  const projectDetailsParams = {
     accountId: params.accountId,
-    projectIdentifier: selectedProject?.identifier ? selectedProject?.identifier : '',
-    orgIdentifier: selectedProject?.orgIdentifier ? selectedProject?.orgIdentifier : ''
+    projectIdentifier: selectedProject?.identifier ? selectedProject.identifier : '',
+    orgIdentifier: selectedProject?.orgIdentifier ? selectedProject.orgIdentifier : ''
   }
+
+  React.useEffect(() => {
+    if (selectedProject) {
+      history.push(routes.toProjectDetails(projectDetailsParams))
+    }
+  }, [])
 
   return (
     <Layout.Vertical spacing="small">
@@ -45,25 +51,25 @@ export default function ProjectsSideNav(): React.ReactElement {
         <div className={css.divStyle} />
       </>
 
-      {/* {selectedProject && ( */}
-      <>
-        <ProjectSelector
-          onSelect={data => {
-            updateAppStore({ selectedProject: data })
-            // changing project
-            history.push(
-              compile(routeMatch.path)({
-                ...routeMatch.params,
-                projectIdentifier: data.identifier,
-                orgIdentifier: data.orgIdentifier
-              })
-            )
-          }}
-        />
-        <SidebarLink label={getString('overview')} to={routes.toProjectDetails({ ...common })} />
-        <ProjectSetupMenu />
-      </>
-      {/* )} */}
+      {selectedProject && (
+        <>
+          <ProjectSelector
+            onSelect={data => {
+              updateAppStore({ selectedProject: data })
+              // changing project
+              history.push(
+                compile(routeMatch.path)({
+                  ...routeMatch.params,
+                  projectIdentifier: data.identifier,
+                  orgIdentifier: data.orgIdentifier
+                })
+              )
+            }}
+          />
+          <SidebarLink label={getString('overview')} to={routes.toProjectDetails(projectDetailsParams)} />
+          <ProjectSetupMenu />
+        </>
+      )}
     </Layout.Vertical>
   )
 }

@@ -341,7 +341,7 @@ exports[`LandingDashboard At a Glance LandingDashboard rendering 1`] = `
                         >
                           <a
                             class=""
-                            href="/account/undefined/home/orgs/default/projects/dev_test/details"
+                            href="/account/undefined/projects/orgs/default/projects/dev_test/details"
                             tabindex="0"
                           >
                             <label
@@ -439,7 +439,7 @@ exports[`LandingDashboard At a Glance LandingDashboard rendering 1`] = `
                         >
                           <a
                             class=""
-                            href="/account/undefined/home/orgs/default/projects/test18/details"
+                            href="/account/undefined/projects/orgs/default/projects/test18/details"
                             tabindex="0"
                           >
                             <label
@@ -537,7 +537,7 @@ exports[`LandingDashboard At a Glance LandingDashboard rendering 1`] = `
                         >
                           <a
                             class=""
-                            href="/account/undefined/home/orgs/default/projects/test19/details"
+                            href="/account/undefined/projects/orgs/default/projects/test19/details"
                             tabindex="0"
                           >
                             <label
@@ -635,7 +635,7 @@ exports[`LandingDashboard At a Glance LandingDashboard rendering 1`] = `
                         >
                           <a
                             class=""
-                            href="/account/undefined/home/orgs/default/projects/locust/details"
+                            href="/account/undefined/projects/orgs/default/projects/locust/details"
                             tabindex="0"
                           >
                             <label

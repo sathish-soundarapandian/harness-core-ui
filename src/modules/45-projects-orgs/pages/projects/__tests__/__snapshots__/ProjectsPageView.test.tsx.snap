@@ -23,28 +23,30 @@ exports[`Project Page List Create Project and Close 1`] = `
             >
               <a
                 class="Breadcrumbs--breadcrumb"
-                href="/account/testAcc/home"
+                href="/account/testAcc/projects"
               >
                 <span
                   class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
-                  data-icon="harness"
+                  data-icon="nav-project"
                 >
                   <svg
                     height="16"
-                    viewBox="0 0 25 25"
+                    viewBox="0 0 16 16"
                     width="16"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      d="M22.974 8.186L16.708 1.88a7.023 7.023 0 00-2.59-1.572C11.98-.409 9.858.154 8.135 1.88L1.868 8.186a7.081 7.081 0 00-1.562 2.606c-.713 2.153-.153 4.289 1.562 6.023l6.266 6.306a7.113 7.113 0 002.589 1.58 5.663 5.663 0 001.808.308c1.503 0 2.946-.64 4.177-1.88l6.266-6.305a7.08 7.08 0 001.562-2.606c.713-2.162.153-4.298-1.562-6.032zm-10.07-4.477c.706.213 1.232.7 1.274.735l1.851 1.862-3.608 3.631-3.608-3.63 1.859-1.872c.5-.496 1.197-1.034 2.233-.726zm-9.219 8.305c.212-.71.696-1.24.73-1.282l1.85-1.863 3.609 3.632-3.608 3.63-1.86-1.87c-.492-.504-1.027-1.214-.721-2.247zm8.252 9.279c-.705-.214-1.231-.701-1.273-.735l-1.851-1.863 3.608-3.631 3.608 3.631-1.86 1.871c-.5.496-1.205 1.034-2.232.726zm9.22-8.305c-.212.709-.696 1.239-.73 1.281l-1.851 1.863-3.608-3.631 3.608-3.632 1.86 1.872c.492.504 1.027 1.204.72 2.247z"
-                      fill="#4facdf"
+                      clip-rule="evenodd"
+                      d="M8.163 1.126a.5.5 0 00-.5 0L2.056 4.36a.5.5 0 00-.25.433v6.234a.5.5 0 00.248.432l5.87 3.415a.5.5 0 00.501 0l5.631-3.259a.5.5 0 00.25-.433V7.478a.5.5 0 00-1 0v3.417l-4.625 2.677.035-5.07 5.34-3.091a.5.5 0 000-.865l-5.894-3.42zM7.717 8.5l-.035 5.077-4.875-2.837V5.66l4.91 2.84zm.502-.865l-4.913-2.84 4.606-2.659 4.897 2.842-4.59 2.657zm-3.864-.068a.5.5 0 10-.5.866l2.165 1.25a.5.5 0 10.5-.866l-2.165-1.25z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
                     />
                   </svg>
                 </span>
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
                 >
-                  common.home
+                  projectsText
                 </p>
               </a>
               <span
@@ -3316,28 +3318,30 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
             >
               <a
                 class="Breadcrumbs--breadcrumb"
-                href="/account/testAcc/home"
+                href="/account/testAcc/projects"
               >
                 <span
                   class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
-                  data-icon="harness"
+                  data-icon="nav-project"
                 >
                   <svg
                     height="16"
-                    viewBox="0 0 25 25"
+                    viewBox="0 0 16 16"
                     width="16"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      d="M22.974 8.186L16.708 1.88a7.023 7.023 0 00-2.59-1.572C11.98-.409 9.858.154 8.135 1.88L1.868 8.186a7.081 7.081 0 00-1.562 2.606c-.713 2.153-.153 4.289 1.562 6.023l6.266 6.306a7.113 7.113 0 002.589 1.58 5.663 5.663 0 001.808.308c1.503 0 2.946-.64 4.177-1.88l6.266-6.305a7.08 7.08 0 001.562-2.606c.713-2.162.153-4.298-1.562-6.032zm-10.07-4.477c.706.213 1.232.7 1.274.735l1.851 1.862-3.608 3.631-3.608-3.63 1.859-1.872c.5-.496 1.197-1.034 2.233-.726zm-9.219 8.305c.212-.71.696-1.24.73-1.282l1.85-1.863 3.609 3.632-3.608 3.63-1.86-1.87c-.492-.504-1.027-1.214-.721-2.247zm8.252 9.279c-.705-.214-1.231-.701-1.273-.735l-1.851-1.863 3.608-3.631 3.608 3.631-1.86 1.871c-.5.496-1.205 1.034-2.232.726zm9.22-8.305c-.212.709-.696 1.239-.73 1.281l-1.851 1.863-3.608-3.631 3.608-3.632 1.86 1.872c.492.504 1.027 1.204.72 2.247z"
-                      fill="#4facdf"
+                      clip-rule="evenodd"
+                      d="M8.163 1.126a.5.5 0 00-.5 0L2.056 4.36a.5.5 0 00-.25.433v6.234a.5.5 0 00.248.432l5.87 3.415a.5.5 0 00.501 0l5.631-3.259a.5.5 0 00.25-.433V7.478a.5.5 0 00-1 0v3.417l-4.625 2.677.035-5.07 5.34-3.091a.5.5 0 000-.865l-5.894-3.42zM7.717 8.5l-.035 5.077-4.875-2.837V5.66l4.91 2.84zm.502-.865l-4.913-2.84 4.606-2.659 4.897 2.842-4.59 2.657zm-3.864-.068a.5.5 0 10-.5.866l2.165 1.25a.5.5 0 10.5-.866l-2.165-1.25z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
                     />
                   </svg>
                 </span>
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
                 >
-                  common.home
+                  projectsText
                 </p>
               </a>
               <span
@@ -6609,28 +6613,30 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
             >
               <a
                 class="Breadcrumbs--breadcrumb"
-                href="/account/testAcc/home"
+                href="/account/testAcc/projects"
               >
                 <span
                   class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
-                  data-icon="harness"
+                  data-icon="nav-project"
                 >
                   <svg
                     height="16"
-                    viewBox="0 0 25 25"
+                    viewBox="0 0 16 16"
                     width="16"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      d="M22.974 8.186L16.708 1.88a7.023 7.023 0 00-2.59-1.572C11.98-.409 9.858.154 8.135 1.88L1.868 8.186a7.081 7.081 0 00-1.562 2.606c-.713 2.153-.153 4.289 1.562 6.023l6.266 6.306a7.113 7.113 0 002.589 1.58 5.663 5.663 0 001.808.308c1.503 0 2.946-.64 4.177-1.88l6.266-6.305a7.08 7.08 0 001.562-2.606c.713-2.162.153-4.298-1.562-6.032zm-10.07-4.477c.706.213 1.232.7 1.274.735l1.851 1.862-3.608 3.631-3.608-3.63 1.859-1.872c.5-.496 1.197-1.034 2.233-.726zm-9.219 8.305c.212-.71.696-1.24.73-1.282l1.85-1.863 3.609 3.632-3.608 3.63-1.86-1.87c-.492-.504-1.027-1.214-.721-2.247zm8.252 9.279c-.705-.214-1.231-.701-1.273-.735l-1.851-1.863 3.608-3.631 3.608 3.631-1.86 1.871c-.5.496-1.205 1.034-2.232.726zm9.22-8.305c-.212.709-.696 1.239-.73 1.281l-1.851 1.863-3.608-3.631 3.608-3.632 1.86 1.872c.492.504 1.027 1.204.72 2.247z"
-                      fill="#4facdf"
+                      clip-rule="evenodd"
+                      d="M8.163 1.126a.5.5 0 00-.5 0L2.056 4.36a.5.5 0 00-.25.433v6.234a.5.5 0 00.248.432l5.87 3.415a.5.5 0 00.501 0l5.631-3.259a.5.5 0 00.25-.433V7.478a.5.5 0 00-1 0v3.417l-4.625 2.677.035-5.07 5.34-3.091a.5.5 0 000-.865l-5.894-3.42zM7.717 8.5l-.035 5.077-4.875-2.837V5.66l4.91 2.84zm.502-.865l-4.913-2.84 4.606-2.659 4.897 2.842-4.59 2.657zm-3.864-.068a.5.5 0 10-.5.866l2.165 1.25a.5.5 0 10.5-.866l-2.165-1.25z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
                     />
                   </svg>
                 </span>
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
                 >
-                  common.home
+                  projectsText
                 </p>
               </a>
               <span
@@ -9902,28 +9908,30 @@ exports[`Project Page List Whole Modal Test 1`] = `
             >
               <a
                 class="Breadcrumbs--breadcrumb"
-                href="/account/testAcc/home"
+                href="/account/testAcc/projects"
               >
                 <span
                   class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
-                  data-icon="harness"
+                  data-icon="nav-project"
                 >
                   <svg
                     height="16"
-                    viewBox="0 0 25 25"
+                    viewBox="0 0 16 16"
                     width="16"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      d="M22.974 8.186L16.708 1.88a7.023 7.023 0 00-2.59-1.572C11.98-.409 9.858.154 8.135 1.88L1.868 8.186a7.081 7.081 0 00-1.562 2.606c-.713 2.153-.153 4.289 1.562 6.023l6.266 6.306a7.113 7.113 0 002.589 1.58 5.663 5.663 0 001.808.308c1.503 0 2.946-.64 4.177-1.88l6.266-6.305a7.08 7.08 0 001.562-2.606c.713-2.162.153-4.298-1.562-6.032zm-10.07-4.477c.706.213 1.232.7 1.274.735l1.851 1.862-3.608 3.631-3.608-3.63 1.859-1.872c.5-.496 1.197-1.034 2.233-.726zm-9.219 8.305c.212-.71.696-1.24.73-1.282l1.85-1.863 3.609 3.632-3.608 3.63-1.86-1.87c-.492-.504-1.027-1.214-.721-2.247zm8.252 9.279c-.705-.214-1.231-.701-1.273-.735l-1.851-1.863 3.608-3.631 3.608 3.631-1.86 1.871c-.5.496-1.205 1.034-2.232.726zm9.22-8.305c-.212.709-.696 1.239-.73 1.281l-1.851 1.863-3.608-3.631 3.608-3.632 1.86 1.872c.492.504 1.027 1.204.72 2.247z"
-                      fill="#4facdf"
+                      clip-rule="evenodd"
+                      d="M8.163 1.126a.5.5 0 00-.5 0L2.056 4.36a.5.5 0 00-.25.433v6.234a.5.5 0 00.248.432l5.87 3.415a.5.5 0 00.501 0l5.631-3.259a.5.5 0 00.25-.433V7.478a.5.5 0 00-1 0v3.417l-4.625 2.677.035-5.07 5.34-3.091a.5.5 0 000-.865l-5.894-3.42zM7.717 8.5l-.035 5.077-4.875-2.837V5.66l4.91 2.84zm.502-.865l-4.913-2.84 4.606-2.659 4.897 2.842-4.59 2.657zm-3.864-.068a.5.5 0 10-.5.866l2.165 1.25a.5.5 0 10.5-.866l-2.165-1.25z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
                     />
                   </svg>
                 </span>
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
                 >
-                  common.home
+                  projectsText
                 </p>
               </a>
               <span

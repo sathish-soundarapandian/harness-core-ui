@@ -91,7 +91,7 @@ describe('<TemplateDetails /> tests', () => {
       <div
         data-testid="location"
       >
-        /account/kmpySmUISimoRrJL6NL73w/home/orgs/default/projects/Templateproject/setup/resources/template-studio/Step/template/manjutesttemplate/?versionLabel=v4
+        /account/kmpySmUISimoRrJL6NL73w/projects/orgs/default/projects/Templateproject/setup/resources/template-studio/Step/template/manjutesttemplate/?versionLabel=v4
       </div>
     `)
   })
