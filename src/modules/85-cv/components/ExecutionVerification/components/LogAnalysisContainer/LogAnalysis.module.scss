@@ -82,3 +82,15 @@
   margin-bottom: var(--spacing-small);
   flex-wrap: wrap;
 }
+
+.logAnalysisDescription {
+  white-space: nowrap !important;
+  overflow: hidden;
+  // -webkit-line-clamp: 2;
+  // display: -webkit-box;
+  text-overflow: ellipsis;
+  width: 90%;
+  //max-width: 200ch;
+  -webkit-line-clamp: 3 !important;
+  -webkit-box-orient: vertical !important;
+}

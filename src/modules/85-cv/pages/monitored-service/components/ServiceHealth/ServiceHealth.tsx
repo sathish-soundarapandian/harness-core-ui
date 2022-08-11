@@ -60,22 +60,15 @@ export default function ServiceHealth({
   const [healthScoreData, setHealthScoreData] = useState<RiskData[]>()
   const containerRef = useRef<HTMLElement>(null)
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.ERROR_TRACKING_ENABLED)
-
-  useEffect(() => {
-    //changing timeperiod in dropdown should reset the timerange and remove the slider.
-    if (showTimelineSlider) {
-      resetSlider()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTimePeriod?.value])
-
+  // useEffect(() => {
+  //   //changing timeperiod in dropdown should reset the timerange and remove the slider.
+  //   if (showTimelineSlider) {
+  //     resetSlider()
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [selectedTimePeriod?.value])
   useEffect(() => {
     if (selectedTimePeriod?.value) {
-      const { endTimeRoundedOffToNearest30min } = getStartAndEndTime(selectedTimePeriod.value as string)
-      setTimeRange({
-        startTime: endTimeRoundedOffToNearest30min - getHoursByTimePeriod(selectedTimePeriod.value as TimePeriodEnum),
-        endTime: endTimeRoundedOffToNearest30min
-      })
       setShowTimelineSlider(true)
     }
   }, [selectedTimePeriod.value, timestamps])
@@ -206,7 +199,7 @@ export default function ServiceHealth({
                 maxSliderWidth={sliderDimensions.maxWidth}
                 infoCard={renderInfoCard()}
                 onSliderDragEnd={onSliderDragEnd}
-                selectedTimePeriod={selectedTimePeriod.value as string}
+                setDefaultSlider
               />
               <ChangeTimeline
                 duration={selectedTimePeriod}

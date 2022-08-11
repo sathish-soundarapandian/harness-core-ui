@@ -17,6 +17,7 @@ import { getDataPointsWithMinMaxXLimit } from '../components/SLOTargetChart/SLOT
 import { SLOTargetChartWithChangeTimelineProps, SLOCardToggleViews } from '../CVSLOsListingPage.types'
 import { getSLOAndErrorBudgetGraphOptions, getTimeFormatForAnomaliesCard } from '../CVSLOListingPage.utils'
 import css from '../CVSLOsListingPage.module.scss'
+import { TimePeriodEnum } from '@cv/pages/monitored-service/components/ServiceHealth/ServiceHealth.constants'
 
 const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelineProps> = ({
   type,
@@ -109,6 +110,8 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
           resetFocus={resetSlider}
           hideSlider={!showTimelineSlider}
           className={css.timelineSlider}
+          //setDefaultSlider={!!changeTimelineSummary}
+          setDefaultSlider={true}
           infoCard={
             <AnomaliesCard
               showOnlyChanges

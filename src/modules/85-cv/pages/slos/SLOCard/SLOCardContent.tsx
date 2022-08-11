@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Layout, Container, Heading, PillToggle, PillToggleProps, Text, Card } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { PageSpinner } from '@common/components'
@@ -17,6 +17,8 @@ import TimeRangeFilter from './TimeRangeFilter'
 import ErrorBudgetGauge from './ErrorBudgetGauge'
 import SLOTargetChartWithChangeTimeline from './SLOTargetChartWithChangeTimeline'
 import css from '../CVSLOsListingPage.module.scss'
+import { getStartAndEndTime } from '@cv/components/ChangeTimeline/ChangeTimeline.utils'
+import { TimePeriodEnum } from '@cv/pages/monitored-service/components/ServiceHealth/ServiceHealth.constants'
 
 const SLOCardContent: React.FC<SLOCardContentProps> = props => {
   const { getString } = useStrings()
@@ -51,6 +53,19 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
     className: css.pillToggle
   }
 
+  useEffect(() => {
+      // const { endTimeRoundedOffToNearest30min } = getStartAndEndTime(TimePeriodEnum.TWENTY_FOUR_HOURS)
+      // setSliderTimeRange?.({
+      //   startTime: endTimeRoundedOffToNearest30min - 4 * 60 * 60 * 1000,
+      //   endTime: endTimeRoundedOffToNearest30min
+      // })
+      // console.log('end time issssss', endTimeRoundedOffToNearest30min)
+      // console.log('start time issssss', endTimeRoundedOffToNearest30min - 4 * 60 * 60 * 1000)
+      setShowTimelineSlider(true)
+    
+  }, [setSliderTimeRange])
+
+  
   const SLOAndErrorBudgetChartContainer = isCardView ? Card : Container
   const stylesSLOAndSLICard = isCardView ? css.cardSloAndSliForCardView : css.cardSloAndSli
   const headingVariation = isCardView ? FontVariation.SMALL_BOLD : FontVariation.FORM_LABEL

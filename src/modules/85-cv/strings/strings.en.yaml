@@ -901,7 +901,7 @@ logs:
   eventPriorityUpdate: This event was marked with priority
   notARisk: Not a Risk
   reportedBy: Reported by
-  radarChartInfo: The 360° on the circular chart represents the attribute. Use the slider below to narrow down the clusters view on the radar chart. You can click on a cluster to explore more details.
+  radarChartInfo: Each point in the graph above represents a log message. The region inside innermost circle represents logs from baseline/control nodes. The region between outermost circle and second circle is used for unknown logs seen in canary nodes while  the region between second circle and innermost circle is used for logs with unexpected frequency. The points that are related (logs observed in both canary and baseline nodes) will be shown on the same radii.The circle is divided into several sectors with each sector having several log messages. Use the slider to narrow down to the specific sector.
 externalAPICalls: External API Calls
 somethingWentWrongWhileParsingTheData: Something went wrong while parsing the data
 fetchingDataFrom: Fetching data from

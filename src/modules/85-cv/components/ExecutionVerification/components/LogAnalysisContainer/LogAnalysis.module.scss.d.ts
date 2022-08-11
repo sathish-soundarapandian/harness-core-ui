@@ -11,6 +11,7 @@ declare const styles: {
   readonly clusterTypeFilter: string
   readonly filters: string
   readonly loading: string
+  readonly logAnalysisDescription: string
   readonly logAnalysisRow: string
   readonly logCountsDetail: string
   readonly logsAnalysisFilters: string

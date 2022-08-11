@@ -93,7 +93,7 @@ const LogAnalysisRadarChart: React.FC<LogAnalysisRadarChartProps> = ({
         <MultiRangeSlider min={0} max={360} step={30} onChange={handleAngleChange} />
         <Layout.Horizontal>
           <Icon margin={{ right: 'small' }} name="main-issue" color={Color.PRIMARY_7} />
-          <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }}>
+          <Text className = {styles.logAnalysisDescription} title={getString('cv.logs.radarChartInfo')} color={Color.GREY_600} font={{ variation: FontVariation.SMALL }}>
             {getString('cv.logs.radarChartInfo')}
           </Text>
         </Layout.Horizontal>
