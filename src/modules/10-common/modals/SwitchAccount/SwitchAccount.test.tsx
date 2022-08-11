@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect } from 'react'
-import { findByTestId, findByText, fireEvent, render, waitFor, findAllByText } from '@testing-library/react'
+import { findByTestId, findByText, fireEvent, render, waitFor } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 
@@ -18,9 +18,9 @@ const switchAccountMock = jest.fn(() => mocks.switchAccount)
 
 jest.mock('services/portal', () => ({
   ...(jest.requireActual('services/portal') as any),
-  useGetUserAccounts: () => {
+  useGetUser: () => {
     return {
-      data: mocks,
+      ...mocks.user,
       refetch: jest.fn()
     }
   },
@@ -32,15 +32,6 @@ jest.mock('services/portal', () => ({
   useRestrictedSwitchAccount: () => {
     return {
       mutate: switchAccountMock
-    }
-  }
-}))
-
-jest.mock('services/cd-ng', () => ({
-  ...(jest.requireActual('services/cd-ng') as any),
-  useGetCurrentUserInfo: () => {
-    return {
-      refetch: jest.fn()
     }
   }
 }))
@@ -75,7 +66,7 @@ describe('Switch Account', () => {
 
     await waitFor(() => expect(getByText('common.switchAccount')).toBeDefined())
     const container = findDialogContainer()
-    const setAsDefaultBtn = await findByTestId(container!, 'set-default-account-PROD_WhitelistIP')
+    const setAsDefaultBtn = await findByTestId(container!, 'set-default-account-AutomationOne')
     expect(setAsDefaultBtn).toBeDefined()
 
     act(() => {
@@ -89,7 +80,7 @@ describe('Switch Account', () => {
       fireEvent.click(continueBtn)
     })
     expect(setDefaultAccountMock).toHaveBeenCalledWith(undefined, {
-      pathParams: { accountId: 'jme9EUgeT3uIk0cDZZMS4Q' }
+      pathParams: { accountId: 'XICOBc_qRa2PJmVaWOx-cQ' }
     })
   })
 
@@ -102,13 +93,13 @@ describe('Switch Account', () => {
 
     await waitFor(() => expect(getByText('common.switchAccount')).toBeDefined())
     const container = findDialogContainer()
-    const switchAccountBtn = await findAllByText(container!, 'PROD_WhitelistIP')
+    const switchAccountBtn = await findByText(container!, 'AutomationOne')
     expect(switchAccountBtn).toBeDefined()
 
     act(() => {
-      fireEvent.click(switchAccountBtn[0])
+      fireEvent.click(switchAccountBtn)
     })
 
-    expect(switchAccountMock).toHaveBeenCalledWith({ accountId: 'jme9EUgeT3uIk0cDZZMS4Q' })
+    expect(switchAccountMock).toHaveBeenCalledWith({ accountId: 'XICOBc_qRa2PJmVaWOx-cQ' })
   })
 })
