@@ -95,7 +95,7 @@ const useCreateConnectorModal = (props: UseCreateConnectorModalProps): UseCreate
             props.onClose?.()
             hideModal()
           }}
-          getTemplat={getTemplate}
+          getTemplate={getTemplate}
         />
         <Button
           minimal

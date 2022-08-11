@@ -29,10 +29,10 @@ import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
 
-import {
+import type {
   GetTemplateProps,
-  GetTemplateResponse,
-  useTemplateSelector
+  GetTemplateResponse
+  // useTemplateSelector
 } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import RbacButton from '@rbac/components/Button/Button'
 import { getTemplateInputSetYamlPromise } from 'services/template-ng'
@@ -58,7 +58,7 @@ interface StepCustomSMConfigProps {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
-  // getTemplate: (data: GetTemplateProps) => Promise<GetTemplateResponse>
+  getTemplate: (data: GetTemplateProps) => Promise<GetTemplateResponse>
 }
 
 const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & StepCustomSMConfigProps> = ({
@@ -67,11 +67,11 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
   nextStep,
   isEditMode,
   connectorInfo,
-  accountId
-  // getTemplate
+  accountId,
+  getTemplate
 }) => {
   const { getString } = useStrings()
-  const { getTemplate } = useTemplateSelector()
+  // const { getTemplate } = useTemplateSelector()
 
   const defaultInitialFormData: CustomSMFormInterface = {
     template: {},
