@@ -517,7 +517,7 @@ exports[`Landing Dashboard Page render landing page and welcome page by swtich 1
                             >
                               <a
                                 class=""
-                                href="/account/dummy/home/orgs/default/projects/dev_test/details"
+                                href="/account/dummy/projects/orgs/default/projects/dev_test/details"
                                 tabindex="0"
                               >
                                 <label
@@ -615,7 +615,7 @@ exports[`Landing Dashboard Page render landing page and welcome page by swtich 1
                             >
                               <a
                                 class=""
-                                href="/account/dummy/home/orgs/default/projects/test18/details"
+                                href="/account/dummy/projects/orgs/default/projects/test18/details"
                                 tabindex="0"
                               >
                                 <label
@@ -713,7 +713,7 @@ exports[`Landing Dashboard Page render landing page and welcome page by swtich 1
                             >
                               <a
                                 class=""
-                                href="/account/dummy/home/orgs/default/projects/test19/details"
+                                href="/account/dummy/projects/orgs/default/projects/test19/details"
                                 tabindex="0"
                               >
                                 <label
@@ -811,7 +811,7 @@ exports[`Landing Dashboard Page render landing page and welcome page by swtich 1
                             >
                               <a
                                 class=""
-                                href="/account/dummy/home/orgs/default/projects/locust/details"
+                                href="/account/dummy/projects/orgs/default/projects/locust/details"
                                 tabindex="0"
                               >
                                 <label
