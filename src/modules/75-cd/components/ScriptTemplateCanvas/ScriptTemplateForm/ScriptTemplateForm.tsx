@@ -34,7 +34,7 @@ export default function ScriptTemplateForm(
   const [selectedTabID, setselectedTabID] = useState<TabId>(getString('script'))
 
   return (
-    <Container>
+    <Container className={css.configurationTabs}>
       <Tabs id="configurationTabs" selectedTabId={selectedTabID} onChange={nextTab => setselectedTabID(nextTab)}>
         <Tab
           id={getString('script')}
@@ -53,8 +53,8 @@ export default function ScriptTemplateForm(
           }
         />
         <Tab
-          id={getString('pipelineSteps.optionalConfiguration')}
-          title={getString('pipelineSteps.optionalConfiguration')}
+          id={getString('configuration')}
+          title={getString('configuration')}
           className={css.scriptTab}
           panel={
             <OptionalConfigurationWithRef

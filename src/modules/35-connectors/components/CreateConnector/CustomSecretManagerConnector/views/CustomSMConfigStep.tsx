@@ -32,7 +32,6 @@ import { Connectors } from '@connectors/constants'
 import type {
   GetTemplateProps,
   GetTemplateResponse
-  // useTemplateSelector
 } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import RbacButton from '@rbac/components/Button/Button'
 import { getTemplateInputSetYamlPromise } from 'services/template-ng'
@@ -71,10 +70,9 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
   getTemplate
 }) => {
   const { getString } = useStrings()
-  // const { getTemplate } = useTemplateSelector()
 
   const defaultInitialFormData: CustomSMFormInterface = {
-    template: {},
+    template: undefined,
     templateInputs: {},
     onDelegate: true,
     executionTarget: {},

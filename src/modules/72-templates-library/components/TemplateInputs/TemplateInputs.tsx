@@ -114,7 +114,7 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = props => {
       case TemplateType.Pipeline:
         return inputSetTemplate as PipelineInfoConfig
       case TemplateType.SecretManager:
-        return { spec: inputSetTemplate }
+        return inputSetTemplate
       default:
         return {}
     }

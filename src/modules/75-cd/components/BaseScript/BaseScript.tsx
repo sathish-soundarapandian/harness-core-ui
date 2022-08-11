@@ -8,7 +8,13 @@
 import React from 'react'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
-import { FormInput, getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
+import {
+  FormInput,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  SelectOption,
+  AllowedTypes
+} from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -26,7 +32,7 @@ export const shellScriptType: SelectOption[] = [
 export default function BaseScript(props: {
   formik: FormikProps<ShellScriptFormData>
   readonly?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }): React.ReactElement {
   const {
     formik: { values: formValues, setFieldValue },
@@ -80,7 +86,6 @@ export default function BaseScript(props: {
             value={formValues.spec?.source?.spec?.script as string}
             type="String"
             variableName="spec.source.spec.script"
-            // className={css.minConfigBtn}
             showRequiredField={false}
             showDefaultField={false}
             showAdvanced={true}

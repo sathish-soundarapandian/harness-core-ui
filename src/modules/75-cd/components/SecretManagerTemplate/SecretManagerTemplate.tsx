@@ -15,7 +15,7 @@ export class SecretManagerTemplate extends Template<NGTemplateInfoConfig> {
   protected isEnabled = true
 
   protected defaultValues: NGTemplateInfoConfig = {
-    name: 'Template name',
+    name: 'Template Name',
     identifier: 'Template_name',
     versionLabel: '',
     type: 'SecretManager'

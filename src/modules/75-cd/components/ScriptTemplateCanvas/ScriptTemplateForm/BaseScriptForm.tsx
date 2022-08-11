@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Formik, MultiTypeInputType } from '@wings-software/uicore'
+import { Formik, AllowedTypes } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 
@@ -26,14 +26,14 @@ interface ShellScriptWidgetProps {
   initialValues: ShellScriptFormData
   updateTemplate?: (data: ShellScriptFormData) => void
   onChange?: (data: ShellScriptFormData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   readonly?: boolean
   stepViewType?: StepViewType
   isNewStep?: boolean
 }
 
 export function BaseScriptForm(
-  { initialValues, updateTemplate, onChange }: ShellScriptWidgetProps,
+  { initialValues, updateTemplate, onChange, allowableTypes }: ShellScriptWidgetProps,
   formikRef: StepFormikFowardRef
 ): JSX.Element {
   const { getString } = useStrings()
@@ -71,7 +71,6 @@ export function BaseScriptForm(
       onSubmit={submit => {
         updateTemplate?.(submit)
       }}
-      //   onSubmit={noop}
       validate={formValues => {
         onChange?.(formValues)
       }}
@@ -85,7 +84,7 @@ export function BaseScriptForm(
           updateTemplate?.(formik.values)
         }
 
-        return <BaseScript formik={formik} readonly={false} allowableTypes={[]} />
+        return <BaseScript formik={formik} readonly={false} allowableTypes={allowableTypes} />
       }}
     </Formik>
   )

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Formik, MultiTypeInputType } from '@wings-software/uicore'
+import { Formik, AllowedTypes } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import { setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
@@ -19,7 +19,7 @@ interface ShellScriptWidgetProps {
   initialValues: ShellScriptFormData
   updateTemplate?: (data: ShellScriptFormData) => void
   onChange?: (data: ShellScriptFormData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   readonly?: boolean
 }
 
