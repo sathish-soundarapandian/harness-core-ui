@@ -213,6 +213,7 @@ export function StepCommands(
       return step as StepElementConfig
     }
   }
+  const width = props.helpPanelVisible ? '600px' : '100%'
   return (
     <div className={cx(css.stepCommand, className)}>
       {stepType === StepType.Template && onUseTemplate && onRemoveTemplate ? (
@@ -226,7 +227,10 @@ export function StepCommands(
         </Layout.Vertical>
       ) : (
         <div className={css.helpPanelGrid}>
-          <div className={cx(css.stepTabs, { stepTabsAdvanced: activeTab === StepCommandTabs.Advanced })}>
+          <Container
+            width={width}
+            className={cx(css.stepTabs, { stepTabsAdvanced: activeTab === StepCommandTabs.Advanced })}
+          >
             <Tabs id="step-commands" selectedTabId={activeTab} onChange={handleTabChange}>
               <Tab
                 id={StepCommandTabs.StepConfiguration}
@@ -264,7 +268,7 @@ export function StepCommands(
                 </>
               ) : null}
             </Tabs>
-          </div>
+          </Container>
           {props.helpPanelVisible ? (
             <div className={css.helpPanelStyleOpen}>
               <HelpPanel referenceId={referenceId || ''} type={HelpPanelType.CONTENT_ONLY}></HelpPanel>
