@@ -111,6 +111,10 @@ export const getCategoryItems = (_stageType: string, _selectedStage: StageElemen
   //   }
 }
 
+export const getDuplicateIdentifiers = (idMap: string[]): string[] => {
+  return idMap.filter((element, position, arr) => arr.indexOf(element) !== position)
+}
+
 interface StageStepsIdMap {
   [key: string]: { steps: string[]; rollbackSteps: string[] }
 }
@@ -162,4 +166,15 @@ export const getStageIdDetailsMapping = (stagesData: StageElementWrapperConfig[]
     }
   })
   return stageStepsMapping
+}
+
+export const getDuplicateStepIdentifierList = (stagesData: StageElementWrapperConfig[]): string[] => {
+  const duplicateStepIdentifiersList = [] as string[]
+  const stepsIdMap = getStageIdDetailsMapping(stagesData)
+  Object.values(stepsIdMap).forEach(stepIdMap => {
+    const duplicateSteps = getDuplicateIdentifiers(stepIdMap.steps)
+    const duplicateRollbackSteps = getDuplicateIdentifiers(stepIdMap.rollbackSteps)
+    duplicateStepIdentifiersList.push(...duplicateSteps, ...duplicateRollbackSteps)
+  })
+  return duplicateStepIdentifiersList
 }
