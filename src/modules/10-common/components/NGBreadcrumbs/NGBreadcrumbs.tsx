@@ -130,8 +130,9 @@ export const NGBreadcrumbs: React.FC<Partial<NGBreadcrumbsProps>> = ({
       url: resolveUrl(paths.toOrganizationDetails(params))
     }
     breadCrumbsList.push(orgBreadCrumb)
-  } else if (!isProjects) {
-    breadCrumbsList.push(...links)
   }
+
+  breadCrumbsList.push(...links)
+
   return <UiCoreBreadcrumbs links={breadCrumbsList} className={className} />
 }

@@ -123,16 +123,7 @@ const ProjectDetails: React.FC = () => {
     <>
       <Page.Header
         size={projectData.description || !isEmpty(projectData.tags) ? 'xxlarge' : 'xlarge'}
-        breadcrumbs={
-          <NGBreadcrumbs
-            links={[
-              {
-                url: routes.toProjects({ accountId }),
-                label: getString('projectsText')
-              }
-            ]}
-          />
-        }
+        breadcrumbs={<NGBreadcrumbs links={[]} />}
         title={
           <Layout.Vertical spacing="small" padding={{ top: 'small' }} className={css.title}>
             <Layout.Horizontal
