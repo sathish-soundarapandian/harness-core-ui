@@ -9,7 +9,7 @@ import React, { useLayoutEffect } from 'react'
 import cx from 'classnames'
 import { NavLink as Link, useParams } from 'react-router-dom'
 import type { NavLinkProps } from 'react-router-dom'
-import { Text, Icon, Layout, Avatar, Button, Container, useToggleOpen } from '@wings-software/uicore'
+import { Text, Icon, Layout, Avatar, Container, useToggleOpen } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import ModuleList from '@common/navigation/ModuleList/ModuleList'
 import { String } from 'framework/strings'
@@ -38,8 +38,8 @@ import {
   SRMNavItem,
   STONavItem
 } from './ModuleLinks'
-import css from './MainNav.module.scss'
 import { DEFAULT_MODULES_ORDER } from '../ModuleConfigurationScreen/util'
+import css from './MainNav.module.scss'
 
 const commonLinkProps: Partial<NavLinkProps> = {
   activeClassName: css.active,
@@ -102,7 +102,7 @@ export default function L1Nav(): React.ReactElement {
 
   return (
     <>
-      <nav className={css.main}>
+      <nav className={cx(css.main, { [css.recessed]: isModuleListOpen })}>
         <ul className={css.navList}>
           <li className={css.navItem}>
             <Link {...commonLinkProps} to={paths.toHome(params)}>
@@ -129,15 +129,14 @@ export default function L1Nav(): React.ReactElement {
           {NEW_LEFT_NAVBAR_SETTINGS && (
             <li>
               <Container flex={{ justifyContent: 'center' }}>
-                <Button
-                  minimal
-                  icon={'layout-grid'}
-                  iconProps={{ size: 12 }}
-                  tooltip={'Select Modules'}
-                  tooltipProps={{ isDark: true, position: 'right' }}
-                  className={css.allModulesButton}
+                <button
+                  className={cx(css.allModulesButton, {
+                    [css.allModulesOpen]: isModuleListOpen
+                  })}
                   onClick={toggleModuleList}
-                />
+                >
+                  <Icon name="grid" size={isModuleListOpen ? 26 : 16} />
+                </button>
               </Container>
             </li>
           )}

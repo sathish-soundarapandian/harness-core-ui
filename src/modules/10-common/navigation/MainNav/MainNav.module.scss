@@ -7,11 +7,13 @@
 
 .main {
   /* stylelint-disable  color-no-hex */
-  --module-list-bg: #0a2c54;
-  --module-list-border: #2a578c;
+  --modules-container-bg: #0a2c54;
+  --modules-container-border: #2a578c;
+  --main-nav-bg: var(--primary-9);
+  --all-modules-btn-bg: var(--modules-container-bg);
   /* stylelint-enable  color-no-hex */
 
-  background: var(--primary-9);
+  background: var(--main-nav-bg);
   box-shadow: var(--panel-shadow);
   display: flex;
   flex-direction: column;
@@ -23,6 +25,19 @@
   bottom: 0;
   align-self: flex-end;
 
+  &.recessed {
+    /* stylelint-disable  color-no-hex */
+    --main-nav-bg: #071c34;
+    --modules-container-bg: #07182b;
+    --modules-container-border: #0c213a;
+    --all-modules-btn-bg: #041121;
+    /* stylelint-enable  color-no-hex */
+
+    .navItem {
+      opacity: 0.08;
+    }
+  }
+
   .navList {
     list-style: none;
     padding: 0;
@@ -30,9 +45,9 @@
 
     .modulesContainer {
       overflow-y: scroll;
-      background: var(--module-list-bg);
-      border-bottom: 1px solid var(--module-list-border);
-      border-top: 1px solid var(--module-list-border);
+      background: var(--modules-container-bg);
+      border-bottom: 1px solid var(--modules-container-border);
+      border-top: 1px solid var(--modules-container-border);
     }
   }
 
@@ -105,17 +120,33 @@
   }
 
   .allModulesButton {
-    border: 1px solid var(--module-list-border) !important;
-    border-top: none !important;
-    border-top-left-radius: 0 !important;
-    border-top-right-radius: 0 !important;
-    background-color: var(--module-list-bg) !important;
-    color: var(--grey-300) !important;
+    border: 1px solid var(--modules-container-border);
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    background-color: var(--all-modules-btn-bg);
+    color: var(--grey-300);
+    padding: 6px 10px;
+    cursor: pointer;
 
     &:hover {
-      box-shadow: none !important;
-      border: 1px solid var(--primary-4) !important;
-      color: var(--primary-4) !important;
+      box-shadow: none;
+      border-color: var(--primary-4);
+      color: var(--primary-4);
+
+      & svg path {
+        fill: var(--primary-4);
+      }
+    }
+
+    &.allModulesOpen {
+      width: 88px;
+      height: 54px;
+      border: none;
+      border-radius: 0;
+
+      & svg path {
+        fill: var(--white);
+      }
     }
   }
 

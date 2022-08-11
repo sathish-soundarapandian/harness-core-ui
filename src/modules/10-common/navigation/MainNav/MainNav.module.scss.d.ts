@@ -9,6 +9,7 @@
 declare const styles: {
   readonly active: string
   readonly allModulesButton: string
+  readonly allModulesOpen: string
   readonly hiddenText: string
   readonly hoverNavLink: string
   readonly hoverText: string
@@ -17,6 +18,7 @@ declare const styles: {
   readonly navItem: string
   readonly navLink: string
   readonly navList: string
+  readonly recessed: string
   readonly settings: string
   readonly text: string
   readonly userLink: string

@@ -27,6 +27,7 @@ interface ItemConfig {
   icon: IconName
   label: StringKeys
   link: string
+  className: string
 }
 
 interface GroupConfig {
@@ -48,11 +49,11 @@ const Item: React.FC<ItemProps> = ({ data }) => {
       <Link to={data.link} className={css.itemLink}>
         <Text
           icon={data.icon}
-          iconProps={{ size: 30 }}
+          iconProps={{ size: 30, margin: { right: 'small' } }}
           color={Color.WHITE}
           background={Color.PRIMARY_9}
           padding={'small'}
-          className={css.itemLabel}
+          className={cx(css.itemLabel, data.className)}
           font={{ size: 'small', weight: 'semi-bold' }}
         >
           <String stringID={data.label} />
@@ -89,7 +90,8 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
         {
           icon: 'ci-main',
           label: 'common.purpose.ci.continuous',
-          link: routes.toCI({ accountId })
+          link: routes.toCI({ accountId }),
+          className: css.ci
         }
       ]
     },
@@ -99,7 +101,8 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
         {
           icon: 'cd-main',
           label: 'common.purpose.cd.continuous',
-          link: routes.toCD({ accountId })
+          link: routes.toCD({ accountId }),
+          className: css.cd
         }
       ]
     },
@@ -109,12 +112,14 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
         {
           icon: 'sto-color-filled',
           label: 'common.purpose.sto.continuous',
-          link: routes.toSTO({ accountId })
+          link: routes.toSTO({ accountId }),
+          className: css.sto
         },
         {
           icon: 'ff-solid',
           label: 'common.purpose.cf.continuous',
-          link: routes.toCF({ accountId })
+          link: routes.toCF({ accountId }),
+          className: css.ff
         }
       ]
     },
@@ -124,12 +129,14 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
         {
           icon: 'ce-main',
           label: 'common.purpose.ce.continuous',
-          link: routes.toCE({ accountId })
+          link: routes.toCE({ accountId }),
+          className: css.ccm
         },
         {
           icon: 'cv-main',
           label: 'common.purpose.cv.continuous',
-          link: routes.toCV({ accountId })
+          link: routes.toCV({ accountId }),
+          className: css.srm
         }
       ]
     }
