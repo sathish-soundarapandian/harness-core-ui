@@ -260,10 +260,14 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                     /* istanbul ignore next */
                     if (type !== MultiTypeInputType.FIXED) {
                       getMultiTypeFromValue(formik.values?.subscriptionId) !== MultiTypeInputType.RUNTIME &&
+                        formik.values.subscriptionId?.value &&
                         formik.setFieldValue('subscriptionId', '')
                       getMultiTypeFromValue(formik.values?.resourceGroup) !== MultiTypeInputType.RUNTIME &&
+                        formik.values.resourceGroup?.value &&
                         formik.setFieldValue('resourceGroup', '')
                     }
+                    setSubscriptions([])
+                    setResourceGroups([])
                   }}
                 />
                 {getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME && !readonly && (
@@ -303,6 +307,7 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                   multiTypeInputProps={{
                     onChange: /* istanbul ignore next */ () => {
                       getMultiTypeFromValue(formik.values?.resourceGroup) !== MultiTypeInputType.RUNTIME &&
+                        formik.values.resourceGroup?.value &&
                         formik.setFieldValue('resourceGroup', '')
 
                       setResourceGroups([])
