@@ -103,7 +103,7 @@ const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
           <Button
             variation={ButtonVariation.LINK}
             text={getString('projectsOrgs.viewAllProjects')}
-            onClick={() => history.push(routes.toProjects({ accountId }))}
+            onClick={() => history.push(routes.toAllProjects({ accountId }))}
           />
         </Layout.Horizontal>
         <Layout.Vertical>

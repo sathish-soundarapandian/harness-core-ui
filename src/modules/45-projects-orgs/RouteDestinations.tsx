@@ -76,6 +76,7 @@ import GitSyncConfigTab from '@gitsync/pages/config/GitSyncConfigTab'
 import VariablesPage from '@variables/pages/variables/VariablesPage'
 import FileStorePage from '@filestore/pages/filestore/FileStorePage'
 import SettingsList from '@default-settings/pages/SettingsList'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import LandingDashboardPage from './pages/LandingDashboardPage/LandingDashboardPage'
 
 const ProjectDetailsSideNavProps: SidebarContext = {
@@ -158,10 +159,35 @@ const RedirectToDelegatesHome = (): React.ReactElement => {
   return <Redirect to={routes.toDelegateList({ accountId, projectIdentifier, orgIdentifier })} />
 }
 
+const ProjectsRedirect = (): React.ReactElement => {
+  const { accountId } = useParams<ProjectPathProps>()
+  const { selectedProject } = useAppStore()
+  if (selectedProject && selectedProject.orgIdentifier) {
+    return (
+      <Redirect
+        to={routes.toProjectDetails({
+          accountId,
+          projectIdentifier: selectedProject.identifier,
+          orgIdentifier: selectedProject.orgIdentifier
+        })}
+      />
+    )
+  }
+  return <ProjectsPage />
+}
+
 export default (
   <>
-    <RouteWithLayout sidebarProps={ProjectDetailsSideNavProps} path={routes.toProjects({ ...accountPathProps })} exact>
+    <RouteWithLayout
+      sidebarProps={ProjectDetailsSideNavProps}
+      path={routes.toAllProjects({ ...accountPathProps })}
+      exact
+    >
       <ProjectsPage />
+    </RouteWithLayout>
+
+    <RouteWithLayout sidebarProps={ProjectDetailsSideNavProps} path={routes.toProjects({ ...accountPathProps })} exact>
+      <ProjectsRedirect />
     </RouteWithLayout>
 
     <RouteWithLayout sidebarProps={HomeSideNavProps} path={routes.toLandingDashboard({ ...accountPathProps })} exact>

@@ -80,7 +80,7 @@ const ProjectDetails: React.FC = () => {
 
   const history = useHistory()
   const onDeleted = (): void => {
-    history.push(routes.toProjects({ accountId }))
+    history.push(routes.toAllProjects({ accountId }))
   }
   const { openDialog } = useDeleteProjectDialog(projectData || { identifier: '', name: '' }, onDeleted)
   useDocumentTitle(getString('projectsText'))
