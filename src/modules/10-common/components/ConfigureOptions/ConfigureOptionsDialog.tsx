@@ -204,15 +204,15 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
             </div>
             <Layout.Horizontal spacing="small" margin={{ top: 'xxlarge' }}>
               <Button
-                variation={ButtonVariation.SECONDARY}
-                text={<String stringID="cancel" />}
-                onClick={() => closeModal()}
-              />
-              <Button
                 variation={ButtonVariation.PRIMARY}
                 text={<String stringID="submit" />}
                 onClick={submitForm}
                 disabled={isReadonly}
+              />
+              <Button
+                variation={ButtonVariation.SECONDARY}
+                text={<String stringID="cancel" />}
+                onClick={() => closeModal()}
               />
             </Layout.Horizontal>
           </>

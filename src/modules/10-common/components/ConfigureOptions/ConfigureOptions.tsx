@@ -83,6 +83,7 @@ export function ConfigureOptions(props: ConfigureOptionsProps): JSX.Element {
         title={getString('common.configureOptions.configureOptions')}
         enforceFocus={false}
         className={cx(css.dialog, Classes.DIALOG, 'padded-dialog')}
+        chidrenClassName={css.dialogContent}
         onClose={() => closeModal()}
         lazy
       >

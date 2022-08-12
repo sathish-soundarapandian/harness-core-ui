@@ -86,7 +86,6 @@ function FormContent({
           <ConfigureOptions
             value={formik.values.timeout || ''}
             type="String"
-            // allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
             variableName="timeout"
             showRequiredField={false}
             showDefaultField={false}
