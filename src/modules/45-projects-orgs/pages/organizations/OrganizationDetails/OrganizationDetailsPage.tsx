@@ -205,7 +205,7 @@ const OrganizationDetailsPage: React.FC = () => {
                       text={getString('projectsOrgs.viewProjects')}
                       onClick={() => {
                         history.push({
-                          pathname: routes.toProjects({ accountId }),
+                          pathname: routes.toAllProjects({ accountId }),
                           search: `?orgIdentifier=${orgIdentifier}`
                         })
                       }}
