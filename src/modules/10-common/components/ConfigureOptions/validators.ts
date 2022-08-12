@@ -13,7 +13,7 @@ import {
 } from '@common/components/MultiTypeDuration/helper'
 
 export const VALIDATORS = {
-  [ALLOWED_VALUES_TYPE.TIME]: (props: GetDurationValidationSchemaProps) => {
+  [ALLOWED_VALUES_TYPE.TIME]: (props?: GetDurationValidationSchemaProps) => {
     return Yup.object().shape({
       timeout: getDurationValidationSchema(props).required()
     })
