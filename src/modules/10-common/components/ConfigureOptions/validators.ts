@@ -10,7 +10,7 @@ import { ALLOWED_VALUES_TYPE } from '@common/components/ConfigureOptions/constan
 import {
   getDurationValidationSchema,
   GetDurationValidationSchemaProps
-} from '@common/components/MultiTypeDuration/MultiTypeDuration'
+} from '@common/components/MultiTypeDuration/helper'
 
 export const VALIDATORS = {
   [ALLOWED_VALUES_TYPE.TIME]: (props: GetDurationValidationSchemaProps) => {
