@@ -109,7 +109,7 @@ const RenderColumnInputSet: Renderer<CellProps<InputSetLocal>> = ({ row }) => {
             <Badge
               text={'common.invalid'}
               iconName="error-outline"
-              showTooltip={true}
+              showTooltip={false}
               entityName={data.name}
               entityType={data.inputSetType === 'INPUT_SET' ? 'Input Set' : 'Overlay Input Set'}
               uuidToErrorResponseMap={data.inputSetErrorDetails?.uuidToErrorResponseMap}

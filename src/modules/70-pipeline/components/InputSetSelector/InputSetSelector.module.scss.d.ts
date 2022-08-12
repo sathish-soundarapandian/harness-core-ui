@@ -19,6 +19,7 @@ declare const styles: {
   readonly inputSetGitDetails: string
   readonly inputSetName: string
   readonly inputSetNumber: string
+  readonly invalidEntity: string
   readonly isPopoverParent: string
   readonly item: string
   readonly list: string

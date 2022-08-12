@@ -478,6 +478,7 @@ inputSets:
   selectInputSets: Select Input Sets
   selectInputSetsHelp: Multiple Input Sets can be overlaid together. They are applied in the order specified. The first set is applied first, and subsequent sets are layered in their order and override any previously specified values.
   overlayInputSetSaved: 'Overlay Input Set saved'
+  overlayInputSetUpdated: 'Removed Invalid References from Overlay Input Set'
   inputSetSavedError: Error while saving Input Set
   searchInputSet: Search Input Set
   addInputSet: Add Input Set

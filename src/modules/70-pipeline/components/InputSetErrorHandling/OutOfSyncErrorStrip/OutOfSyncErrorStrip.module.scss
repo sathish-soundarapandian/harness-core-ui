@@ -1,0 +1,25 @@
+.mainContainer {
+  background: var(--red-50) !important;
+  padding: var(--spacing-small) var(--spacing-xlarge) var(--spacing-small) var(--spacing-xlarge) !important;
+}
+
+.reconcileButton {
+  position: absolute !important;
+  right: 20px;
+}
+
+.reconcileDialog {
+  width: 1320px;
+  overflow: hidden;
+  position: relative;
+  padding: 0px;
+  min-height: 500px;
+}
+
+:global(.ConfirmationDialog--dialog) {
+  width: auto !important;
+}
+
+:global(.ConfirmationDialog--body) {
+  width: 570px !important;
+}

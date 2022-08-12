@@ -24,7 +24,8 @@ import type {
   PipelineInfoConfig,
   ResponsePMSPipelineResponseDTO,
   EntityGitDetails,
-  ResponseInputSetTemplateWithReplacedExpressionsResponse
+  ResponseInputSetTemplateWithReplacedExpressionsResponse,
+  InputSetResponse
 } from 'services/pipeline-ng'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import type { InputSetGitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
@@ -39,7 +40,7 @@ import { useQueryParams } from '@common/hooks'
 import GitContextForm, { GitContextProps } from '@common/components/GitContextForm/GitContextForm'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
-import type { InputSetDTO, InputSetType, Pipeline } from '@pipeline/utils/types'
+import type { InputSetDTO, Pipeline } from '@pipeline/utils/types'
 import {
   isCloneCodebaseEnabledAtLeastOneStage,
   isCodebaseFieldsRuntimeInputs,
@@ -49,6 +50,8 @@ import { mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { getYamlFileName } from '@pipeline/utils/yamlUtils'
 import { parse } from '@common/utils/YamlHelperMethods'
+import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
+import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import { factory } from '../PipelineSteps/Steps/__tests__/StepTestUtil'
@@ -76,7 +79,7 @@ export const isYamlPresent = (
 
 type InputSetDTOGitDetails = InputSetDTO & GitContextProps & StoreMetadata
 interface FormikInputSetFormProps {
-  inputSet: InputSetDTO | InputSetType
+  inputSet: InputSetDTO
   template: ResponseInputSetTemplateWithReplacedExpressionsResponse | null
   pipeline: ResponsePMSPipelineResponseDTO | null
   resolvedTemplatesPipelineYaml?: string
@@ -98,6 +101,9 @@ interface FormikInputSetFormProps {
   className?: string
   onCancel?: () => void
   filePath?: string
+  inputSetUpdateHandler: (updatedInputSet: InputSetDTO) => void
+  updateLoading: boolean
+  inputSetUpdateResponseHandler: (responseData: InputSetResponse) => void
 }
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -220,8 +226,12 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     setYamlHandler,
     className,
     onCancel,
-    filePath
+    filePath,
+    inputSetUpdateHandler,
+    updateLoading,
+    inputSetUpdateResponseHandler
   } = props
+  console.log(inputSet)
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
     PipelineType<InputSetPathProps> & { accountId: string }
@@ -285,7 +295,13 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
   })
   const formRefDom = React.useRef<HTMLElement | undefined>()
   const init = React.useMemo(() => {
-    const omittedPipeline = omit(inputSet, 'gitDetails', 'entityValidityDetails', 'outdated') as Pipeline
+    const omittedPipeline = omit(
+      inputSet,
+      'gitDetails',
+      'entityValidityDetails',
+      'outdated',
+      'inputSetErrorWrapper'
+    ) as Pipeline
     return mergeTemplateWithInputSetData({
       templatePipeline: omittedPipeline,
       inputSetPortion: omittedPipeline,
@@ -307,6 +323,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
   }
 
   const isPipelineRemote = isGitSimplificationEnabled && storeType === StoreType.REMOTE
+  console.log('Validation ->', isInputSetInvalid(inputSet))
 
   return (
     <Container className={cx(css.inputSetForm, className, hasError ? css.withError : '')}>
@@ -438,7 +455,17 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                   </div>
                 ) : (
                   <div className={css.editor}>
+                    {/* Handle for collision */}
                     <ErrorsStrip formErrors={formErrors} />
+                    {isInputSetInvalid(inputSet) && (
+                      <OutOfSyncErrorStrip
+                        inputSet={inputSet}
+                        inputSetUpdateHandler={inputSetUpdateHandler}
+                        pipeline={pipeline}
+                        updateLoading={updateLoading}
+                        inputSetUpdateResponseHandler={inputSetUpdateResponseHandler}
+                      />
+                    )}
                     <Layout.Vertical className={css.content} padding="xlarge">
                       <YamlBuilderMemo
                         {...yamlBuilderReadOnlyModeProps}
@@ -452,7 +479,8 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                             'connectorRef',
                             'repoName',
                             'filePath',
-                            'storeType'
+                            'storeType',
+                            'inputSetErrorWrapper'
                           )
                         }}
                         bind={setYamlHandler}

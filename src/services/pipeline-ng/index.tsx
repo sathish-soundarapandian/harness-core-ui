@@ -6348,6 +6348,8 @@ export interface GetOverlayInputSetForPipelineQueryParams {
   orgIdentifier: string
   projectIdentifier: string
   pipelineIdentifier: string
+  pipelineBranch?: string
+  pipelineRepoID?: string
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -6695,6 +6697,8 @@ export interface GetInputSetForPipelineQueryParams {
   orgIdentifier: string
   projectIdentifier: string
   pipelineIdentifier: string
+  pipelineBranch?: string
+  pipelineRepoID?: string
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean

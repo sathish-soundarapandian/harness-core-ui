@@ -764,6 +764,7 @@ function RetryPipeline({
                                 setSelectedInputSets(inputsets)
                               }}
                               value={selectedInputSets}
+                              pipeline={pipelineResponse}
                             />
                           </GitSyncStoreProvider>
                         )}

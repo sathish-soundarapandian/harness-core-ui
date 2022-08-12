@@ -144,6 +144,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
 
                     {showInputSetSelector() ? (
                       <GitSyncStoreProvider>
+                        {/* Update */}
                         <InputSetSelector
                           pipelineIdentifier={pipelineIdentifier}
                           onChange={inputsets => {

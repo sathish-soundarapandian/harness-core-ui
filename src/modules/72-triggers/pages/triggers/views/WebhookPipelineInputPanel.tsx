@@ -556,6 +556,7 @@ function WebhookPipelineInputPanelForm({
                 </Text>
 
                 <GitSyncStoreProvider>
+                  {/* Update */}
                   <InputSetSelector
                     pipelineIdentifier={pipelineIdentifier}
                     onChange={value => {

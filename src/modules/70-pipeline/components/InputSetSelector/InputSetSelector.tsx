@@ -25,6 +25,7 @@ import {
   EntityGitDetails,
   InputSetErrorWrapper,
   InputSetSummaryResponse,
+  ResponsePMSPipelineResponseDTO,
   useGetInputSetsListForPipeline
 } from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -49,6 +50,8 @@ export interface InputSetSelectorProps {
   isOverlayInputSet?: boolean
   showNewInputSet?: boolean
   onNewInputSetClick?: () => void
+  pipeline?: ResponsePMSPipelineResponseDTO | null
+  showGoToInpSetBtn?: boolean
 }
 
 export function InputSetSelector({
@@ -60,10 +63,13 @@ export function InputSetSelector({
   selectedBranch,
   isOverlayInputSet,
   showNewInputSet,
-  onNewInputSetClick
+  onNewInputSetClick,
+  pipeline,
+  showGoToInpSetBtn
 }: InputSetSelectorProps): React.ReactElement {
   const [searchParam, setSearchParam] = React.useState('')
   const [selectedInputSets, setSelectedInputSets] = React.useState<InputSetValue[]>(value || [])
+  // const [inputSets, setInputSets] = React.useState<InputSetSummaryResponse[]>([])
   const { getString } = useStrings()
 
   const { projectIdentifier, orgIdentifier, accountId } = useParams<{
@@ -149,7 +155,18 @@ export function InputSetSelector({
     showError(getRBACErrorMessage(error), undefined, 'pipeline.get.inputsetlist')
   }
 
+  // React.useEffect(() => {
+  //   setInputSets(defaultTo(inputSetResponse?.data?.content, []))
+  // }, [inputSetResponse])
+
   const inputSets = inputSetResponse?.data?.content
+  // const inputSetReconcileHandler = (inputSetIdentifier: string, updatedInputSet: InputSetSummaryResponse): void => {
+  // const invalidInpSetIndex = findIndex(inputSets, { identifier: inputSetIdentifier })
+  // inputSets?.splice(invalidInpSetIndex, 1, updatedInputSet)
+  // const updatedInputSets = assign([], inputSets)
+  // setInputSets(updatedInputSets)
+  //   refetch()
+  // }
 
   const multipleInputSetList =
     inputSets &&
@@ -165,7 +182,15 @@ export function InputSetSelector({
       })
       .filter(set => defaultTo(set.identifier, '').toLowerCase().indexOf(searchParam.toLowerCase()) > -1)
       .map(inputSet => (
-        <MultipleInputSetList key={inputSet.identifier} inputSet={inputSet} onCheckBoxHandler={onCheckBoxHandler} />
+        <MultipleInputSetList
+          key={inputSet.identifier}
+          inputSet={inputSet}
+          onCheckBoxHandler={onCheckBoxHandler}
+          pipeline={pipeline}
+          refetch={refetch}
+          isOverlayInputSet={isOverlayInputSet}
+          showGoToInpSetBtn={showGoToInpSetBtn}
+        />
       ))
 
   const [openInputSetsList, setOpenInputSetsList] = useState(false)

@@ -8390,6 +8390,10 @@ export interface StringsMap {
   /**
    * @deprecated migrate this string to module level file
    */
+  'inputSets.overlayInputSetUpdated': string
+  /**
+   * @deprecated migrate this string to module level file
+   */
   'inputSets.saveAsInputSet': string
   /**
    * @deprecated migrate this string to module level file

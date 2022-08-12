@@ -25,7 +25,6 @@ import {
 } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import type { PipelineInfoConfig } from 'services/pipeline-ng'
 
 import {
   OverlayInputSetResponse,
@@ -68,6 +67,9 @@ import type { CreateUpdateInputSetsReturnType, InputSetDTO } from '@pipeline/uti
 import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { getOverlayErrors } from '@pipeline/utils/runPipelineUtils'
 import { getYamlFileName } from '@pipeline/utils/yamlUtils'
+import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
+import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 import { InputSetSelector, InputSetSelectorProps } from '../InputSetSelector/InputSetSelector'
 import {
@@ -374,6 +376,7 @@ export function OverlayInputSetForm({
 
   const createUpdateOverlayInputSet = async (
     inputSetObj: InputSetDTO,
+    reconcile = false,
     gitDetails?: SaveToGitFormInterface,
     objectId = ''
   ): CreateUpdateInputSetsReturnType => {
@@ -411,7 +414,9 @@ export function OverlayInputSetForm({
             showError(getString('inputSets.overlayInputSetSavedError'), undefined, 'pipeline.overlayinputset.error')
           } else {
             clear()
-            showSuccess(getString('inputSets.overlayInputSetSaved'))
+            showSuccess(
+              reconcile ? getString('inputSets.overlayInputSetUpdated') : getString('inputSets.overlayInputSetSaved')
+            )
           }
         }
       }
@@ -548,6 +553,11 @@ export function OverlayInputSetForm({
     loadingOverlayInputSet
   ])
 
+  const overlayInputSetUpdateHandler = (updatedInputSet: InputSetDTO): void => {
+    setIsEdit(true)
+    createUpdateOverlayInputSet(updatedInputSet, true)
+  }
+
   return (
     <Dialog
       title={
@@ -569,6 +579,8 @@ export function OverlayInputSetForm({
                 handleModeSwitch(nextMode)
               }}
               disableToggle={disableVisualView}
+              disableToggleReasonIcon={'danger-icon'}
+              showDisableToggleReason={true}
             />
           </div>
 
@@ -682,6 +694,8 @@ export function OverlayInputSetForm({
                                   selectedBranch={selectedBranch}
                                   isOverlayInputSet={true}
                                   selectedValueClass={css.selectedInputSetsContainer}
+                                  pipeline={pipeline}
+                                  showGoToInpSetBtn={false}
                                 />
                               </GitSyncStoreProvider>
                             )}
@@ -705,35 +719,49 @@ export function OverlayInputSetForm({
                       {loading ? (
                         <PageSpinner />
                       ) : (
-                        <YAMLBuilder
-                          {...yamlBuilderReadOnlyModeProps}
-                          existingJSON={{
-                            overlayInputSet: {
-                              ...omit(
-                                formikProps?.values,
-                                'pipeline',
-                                'repo',
-                                'branch',
-                                'connectorRef',
-                                'repoName',
-                                'filePath',
-                                'storeType'
-                              ),
-                              inputSetReferences: selectedInputSetReferences
-                            }
-                          }}
-                          invocationMap={invocationMap}
-                          bind={setYamlHandler}
-                          schema={pipelineSchema?.data}
-                          isReadOnlyMode={isReadOnly}
-                          showSnippetSection={false}
-                          isEditModeSupported={!isReadOnly}
-                          fileName={getYamlFileName({
-                            isPipelineRemote,
-                            filePath: inputSet?.gitDetails?.filePath,
-                            defaultName: yamlBuilderReadOnlyModeProps.fileName
-                          })}
-                        />
+                        <>
+                          {isInputSetInvalid(inputSet) && (
+                            <OutOfSyncErrorStrip
+                              inputSet={inputSet}
+                              inputSetUpdateHandler={overlayInputSetUpdateHandler}
+                              overlayInputSetRepoIdentifier={overlayInputSetRepoIdentifier}
+                              overlayInputSetBranch={overlayInputSetBranch}
+                              overlayInputSetIdentifier={identifier}
+                              pipeline={pipeline}
+                              updateLoading={updateOverlayInputSetLoading}
+                              hideForm={hideForm}
+                            />
+                          )}
+                          <YAMLBuilder
+                            {...yamlBuilderReadOnlyModeProps}
+                            existingJSON={{
+                              overlayInputSet: {
+                                ...omit(
+                                  formikProps?.values,
+                                  'pipeline',
+                                  'repo',
+                                  'branch',
+                                  'connectorRef',
+                                  'repoName',
+                                  'filePath',
+                                  'storeType'
+                                ),
+                                inputSetReferences: selectedInputSetReferences
+                              }
+                            }}
+                            invocationMap={invocationMap}
+                            bind={setYamlHandler}
+                            schema={pipelineSchema?.data}
+                            isReadOnlyMode={isReadOnly}
+                            showSnippetSection={false}
+                            isEditModeSupported={!isReadOnly}
+                            fileName={getYamlFileName({
+                              isPipelineRemote,
+                              filePath: inputSet?.gitDetails?.filePath,
+                              defaultName: yamlBuilderReadOnlyModeProps.fileName
+                            })}
+                          />
+                        </>
                       )}
                       <Layout.Horizontal padding={{ top: 'medium' }}>
                         <Button
