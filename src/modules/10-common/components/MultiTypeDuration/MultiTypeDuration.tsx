@@ -27,7 +27,7 @@ import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { errorCheck } from '@common/utils/formikHelpers'
-import { getDurationValidationSchema, GetDurationValidationSchemaProps, isValidTimeString } from './helper'
+import { getDurationValidationSchema, isValidTimeString } from './helper'
 import css from './MultiTypeDuration.module.scss'
 
 function MultiTypeDurationFixedTypeComponent(
@@ -205,7 +205,7 @@ export function FormMultiTypeDuration(props: FormMultiTypeDurationProps): React.
 
 export const FormMultiTypeDurationField = connect(FormMultiTypeDuration)
 
-export { getDurationValidationSchema, GetDurationValidationSchemaProps, isValidTimeString }
+export { getDurationValidationSchema, isValidTimeString }
 
 export interface DurationInputForInputSetProps extends Omit<IFormGroupProps, 'label' | 'placeholder'> {
   onChange?(str: string): void
