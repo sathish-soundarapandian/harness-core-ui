@@ -173,7 +173,13 @@ const ProjectsRedirect = (): React.ReactElement => {
       />
     )
   }
-  return <ProjectsPage />
+  return (
+    <Redirect
+      to={routes.toAllProjects({
+        accountId
+      })}
+    />
+  )
 }
 
 export default (
