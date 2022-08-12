@@ -11,6 +11,7 @@ import { Intent } from '@harness/design-system'
 import cx from 'classnames'
 import { cloneDeep, debounce, isNil, isEmpty } from 'lodash-es'
 import type { NodeModelListener, LinkModelListener } from '@projectstorm/react-diagrams-core'
+import { useParams } from 'react-router-dom'
 import SplitPane from 'react-split-pane'
 import produce from 'immer'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
@@ -38,6 +39,7 @@ import EndNodeStage from '@pipeline/components/PipelineDiagram/Nodes/EndNode/End
 import StartNodeStage from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNodeStage'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { FeatureFlag } from '@common/featureFlags'
 import type { DeploymentStageConfig } from 'services/cd-ng'
 import {
@@ -231,7 +233,7 @@ function StageBuilder(): JSX.Element {
     setSelection
   } = usePipelineContext()
   const { sectionId, storeType } = useQueryParams<PipelineSelectionState>()
-
+  const { module } = useParams<ModulePathParams>()
   // NOTE: we are using ref as setSelection is getting cached somewhere
   const setSelectionRef = React.useRef(setSelection)
   setSelectionRef.current = setSelection
@@ -860,7 +862,7 @@ function StageBuilder(): JSX.Element {
           </div>
         </SplitPane>
       </div>
-      {!isEmpty(sectionId) || (storeType === 'INLINE' && isEmpty(sectionId)) ? (
+      {module === 'cd' && (!isEmpty(sectionId) || (storeType === 'INLINE' && isEmpty(sectionId))) ? (
         <HelpPanel referenceId={referenceId(sectionId)} type={HelpPanelType.FLOATING_CONTAINER} />
       ) : null}
     </Layout.Horizontal>
