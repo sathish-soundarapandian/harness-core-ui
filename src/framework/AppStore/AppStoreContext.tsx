@@ -151,7 +151,7 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
       showError(getProjectResponse?.message)
 
       // send the user to Projects Listing
-      history.push(routes.toProjects({ accountId }))
+      history.push(routes.toAllProjects({ accountId }))
     }
   }
 

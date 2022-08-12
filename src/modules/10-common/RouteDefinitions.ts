@@ -1484,6 +1484,7 @@ const routes = {
       `/projects/orgs/${orgIdentifier}/projects/${projectIdentifier}/details`
   ),
   toProjects: withAccountId(() => '/projects'),
+  toAllProjects: withAccountId(() => '/projects/all'),
   toLandingDashboard: withAccountId(() => '/home/get-started'),
   /********************************************************************************************************************/
   toCE: withAccountId(() => `/ce`),

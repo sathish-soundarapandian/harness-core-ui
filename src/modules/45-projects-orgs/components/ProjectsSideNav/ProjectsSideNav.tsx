@@ -31,18 +31,12 @@ export default function ProjectsSideNav(): React.ReactElement {
     orgIdentifier: selectedProject?.orgIdentifier ? selectedProject.orgIdentifier : ''
   }
 
-  React.useEffect(() => {
-    if (selectedProject) {
-      history.push(routes.toProjectDetails(projectDetailsParams))
-    }
-  }, [])
-
   return (
     <Layout.Vertical spacing="small">
       <>
         <SidebarLink
           label={getString('rbac.scopeItems.allProjects')}
-          to={routes.toProjects(params)}
+          to={routes.toAllProjects(params)}
           icon="nav-project"
           style={{ marginTop: 'var(--spacing-medium)', marginBottom: 'var(--spacing-small)' }}
           className={css.iconColor}
