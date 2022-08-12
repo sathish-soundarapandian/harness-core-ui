@@ -1,7 +1,7 @@
 {
   "name": "nextgenui",
   "description": "Harness Inc",
-  "version": "0.315.5",
+  "version": "0.315.6",
   "author": "Harness Inc",
   "license": "Harness Inc",
   "homepage": "http://app.harness.io/",
@@ -57,7 +57,7 @@
     "@emotion/core": "^10.0.28",
     "@emotion/styled": "^10.0.27",
     "@harness/design-system": "1.0.0",
-    "@harness/help-panel": "1.8.0",
+    "@harness/help-panel": "1.12.0",
     "@harness/icons": "^1.43.0",
     "@harness/monaco-yaml": "^1.0.0",
     "@harness/ng-tooltip": "^1.31.2",

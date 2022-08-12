@@ -793,6 +793,8 @@ function StageBuilder(): JSX.Element {
         return 'ExecutionPipelineStudio'
       case 'ADVANCED':
         return 'AdvancedStagePipelineStudio'
+      case 'OVERVIEW':
+        return 'stageOverview'
       default:
         return 'PipelineStudio'
     }

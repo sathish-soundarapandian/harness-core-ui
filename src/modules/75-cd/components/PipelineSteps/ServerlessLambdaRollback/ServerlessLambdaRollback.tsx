@@ -305,6 +305,7 @@ export class ServerlessLambdaRollbackStep extends PipelineStep<ServerlessLambdaR
   protected stepName = 'Serverless Lambda Rollback Step'
   protected stepIcon: IconName = 'main-rollback'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ServerlessLambdaRollback'
+  protected referenceId = 'serverlessRollbackStep'
 
   protected defaultValues: ServerlessLambdaRollbackData = {
     identifier: '',

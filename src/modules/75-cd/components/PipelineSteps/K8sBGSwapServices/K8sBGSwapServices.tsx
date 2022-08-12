@@ -255,6 +255,7 @@ export class K8sBGSwapServices extends PipelineStep<K8sBGSwapServicesData> {
   protected stepIconColor = Color.GREY_700
   protected stepIcon: IconName = 'command-swap'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.K8sBGSwapServices'
+  protected referenceId = 'BGSwapStep'
 
   validateInputSet({
     data,

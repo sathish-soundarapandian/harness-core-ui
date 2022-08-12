@@ -236,6 +236,7 @@ export class HelmDeploy extends PipelineStep<StepElementConfig> {
   protected stepName = 'Helm Deploy'
   protected stepIcon: IconName = 'service-helm'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.HelmDeploy'
+  protected referenceId = 'helmDeployStep'
 
   validateInputSet({
     data,

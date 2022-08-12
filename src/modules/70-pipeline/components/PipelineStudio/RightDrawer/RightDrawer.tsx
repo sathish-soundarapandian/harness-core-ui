@@ -7,7 +7,7 @@
 
 import React, { SyntheticEvent, useState } from 'react'
 import { Drawer, Intent, Position } from '@blueprintjs/core'
-import { Button, useConfirmationDialog, ButtonVariation, ButtonSize } from '@wings-software/uicore'
+import { Button, useConfirmationDialog } from '@wings-software/uicore'
 import { cloneDeep, defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import cx from 'classnames'
 import produce from 'immer'
@@ -41,7 +41,6 @@ import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerData, DrawerSizes, DrawerTypes, PipelineViewData } from '../PipelineContext/PipelineActions'
 import { StepCommandsWithRef as StepCommands, StepFormikRef } from '../StepCommands/StepCommands'
-
 import {
   StepCommandsViews,
   StepOrStepGroupOrTemplateStepData,
@@ -791,6 +790,7 @@ export function RightDrawer(): React.ReactElement {
 
       {type === DrawerTypes.StepConfig && data?.stepConfig?.node && (
         <StepCommands
+          showHelpPanel={showHelpPanel}
           helpPanelVisible={helpPanelVisible}
           step={data.stepConfig.node as StepElementConfig | StepGroupElementConfig}
           isReadonly={isReadonly}
@@ -865,6 +865,7 @@ export function RightDrawer(): React.ReactElement {
       {type === DrawerTypes.PolicySets && <PipelineGovernanceView pipelineName={pipeline.name} />}
       {type === DrawerTypes.ConfigureService && selectedStageId && data?.stepConfig && data?.stepConfig.node && (
         <StepCommands
+          showHelpPanel={showHelpPanel}
           helpPanelVisible={helpPanelVisible}
           key={`step-form-${data.stepConfig.node.identifier}`}
           step={data.stepConfig.node as StepElementConfig}
@@ -960,6 +961,7 @@ export function RightDrawer(): React.ReactElement {
       )}
       {type === DrawerTypes.ProvisionerStepConfig && data?.stepConfig?.node && (
         <StepCommands
+          showHelpPanel={showHelpPanel}
           helpPanelVisible={helpPanelVisible}
           step={data.stepConfig.node as StepElementConfig}
           ref={formikRef}
@@ -991,16 +993,6 @@ export function RightDrawer(): React.ReactElement {
           onRemoveTemplate={() => removeTemplate(type, Boolean(isRollbackToggled))}
         />
       )}
-      {type === DrawerTypes.StepConfig && !isEmpty(stepData?.referenceId) ? (
-        <Button
-          variation={ButtonVariation.SECONDARY}
-          size={ButtonSize.SMALL}
-          className={css.helpPanel}
-          style={helpPanelVisible ? { marginLeft: '920px' } : {}}
-          text={helpPanelVisible ? 'Hide' : 'Help Panel'}
-          onClick={showHelpPanel}
-        />
-      ) : null}
     </Drawer>
   )
 }
