@@ -5,7 +5,7 @@
       { "category": "CLOUD_PROVIDER", "connectors": ["Azure", "Gcp", "K8sCluster", "Aws"] },
       {
         "category": "SECRET_MANAGER",
-        "connectors": ["GcpKms", "Local", "Vault", "AzureKeyVault", "AwsKms", "AwsSecretManager"]
+        "connectors": ["GcpKms", "Local", "Vault", "AzureKeyVault", "AwsKms", "AwsSecretManager", "CustomSecretManager"]
       },
       { "category": "CLOUD_COST", "connectors": ["GcpCloudCost", "CEAws", "CEAzure", "CEK8sCluster"] },
       {

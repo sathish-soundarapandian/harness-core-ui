@@ -146,6 +146,8 @@ export const getConnectorTitleIdByType = (type: string): StringKeys => {
       return 'common.purpose.errorTracking.title'
     case Connectors.AZURE:
       return 'connectors.title.azure'
+    case Connectors.CUSTOM_SECRET_MANAGER:
+      return 'connectors.title.customSecretManager'
     default:
       return 'connector'
   }
