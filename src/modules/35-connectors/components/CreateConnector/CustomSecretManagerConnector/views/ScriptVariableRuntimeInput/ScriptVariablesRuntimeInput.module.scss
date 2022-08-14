@@ -14,10 +14,10 @@
 
 .environmentVarHeader {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 2fr 30px;
+  grid-template-columns: 1.5fr 1fr 2fr 0.5fr;
   column-gap: var(--spacing-small);
   margin-bottom: var(--spacing-small);
-  align-items: start;
+  align-items: center;
 
   :global(.bp3-form-group) {
     margin: 0;
@@ -59,59 +59,5 @@
 }
 
 .formGroup {
-  display: grid;
-  grid-template-columns: 1fr 30px;
-  align-items: center;
   width: 100%;
-
-  > button {
-    margin-bottom: 5px !important;
-  }
-  &.sm {
-    width: 45%;
-  }
-
-  &.md {
-    width: 55%;
-  }
-
-  &.lg {
-    width: 75%;
-  }
-
-  &.xlg {
-    width: 85%;
-  }
-
-  &.lgOverride {
-    width: 75% !important;
-  }
-
-  &.kvpairLg {
-    width: 70%;
-  }
-
-  &.alignStart {
-    align-items: start;
-  }
-
-  textarea.code {
-    min-height: 200px;
-    font-family: var(--font-family-mono);
-  }
-
-  :global {
-    .bp3-label {
-      color: var(--grey-600);
-    }
-
-    .InputWithIdentifier--txtNameContainer {
-      // Overwriting the 12px margin added by nameid field
-      margin-bottom: 0;
-    }
-
-    #configureOptions {
-      margin-bottom: var(--spacing-3);
-    }
-  }
 }

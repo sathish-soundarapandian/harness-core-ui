@@ -152,6 +152,11 @@ export const getConnectorDisplaySummary = (connector: ConnectorInfoDTO): JSX.Ele
       return getAWSSecretManagerSummary(connector)
     case Connectors.DYNATRACE:
       return getConnectorDisplaySummaryLabel('UrlLabel', linkRenderer(connector?.spec?.url))
+    case Connectors.CUSTOM_SECRET_MANAGER:
+      return getConnectorDisplaySummaryLabel(
+        'common.template.label',
+        textRenderer(`${connector?.spec?.template?.templateRef}(${connector?.spec?.template?.versionLabel})`)
+      )
     default:
       return ''
   }

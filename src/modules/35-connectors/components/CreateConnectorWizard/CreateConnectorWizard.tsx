@@ -7,6 +7,10 @@
 
 import React from 'react'
 import { pick } from 'lodash-es'
+import type {
+  GetTemplateProps,
+  GetTemplateResponse
+} from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { Connectors } from '@connectors/constants'
 import type { ConnectorRequestBody, ConnectorInfoDTO, ConnectorConnectivityDetails } from 'services/cd-ng'
 import type { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
@@ -54,8 +58,6 @@ import { ConnectorWizardContextProvider } from './ConnectorWizardContext'
 import CreateJenkinsConnector from '../CreateConnector/JenkinsConnector/CreateJenkinsConnector'
 import OCIHelmConnector from '../CreateConnector/OCIHelmConnector.tsx/OCIHelmConnector'
 import CreateCustomSMConnector from '../CreateConnector/CustomSecretManagerConnector/CreateCustomSMConnector'
-import { TemplateSelectorContextProvider } from 'framework/Templates/TemplateSelectorContext/TemplateSelectorContext'
-import { TemplateSelectorDrawer } from 'framework/Templates/TemplateSelectorDrawer/TemplateSelectorDrawer'
 
 interface CreateConnectorWizardProps {
   accountId: string
@@ -71,6 +73,7 @@ interface CreateConnectorWizardProps {
   status?: ConnectorConnectivityDetails
   onClose: () => void
   onSuccess: (data?: ConnectorRequestBody) => void | Promise<void>
+  getTemplate: (data: GetTemplateProps) => Promise<GetTemplateResponse>
 }
 
 export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
@@ -95,14 +98,15 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     'orgIdentifier',
     'projectIdentifier',
     'connectivityMode',
-    'setConnectivityMode'
+    'setConnectivityMode',
+    'getTemplate'
   ])
   commonProps = {
     ...commonProps,
     onSuccess: onSuccessWithEventTracking
   }
 
-  const { ERROR_TRACKING_ENABLED, NG_AZURE } = useFeatureFlags()
+  const { ERROR_TRACKING_ENABLED, NG_AZURE, HELM_OCI_SUPPORT } = useFeatureFlags()
 
   useTrackEvent(ConnectorActions.StartCreateConnector, {
     category: Category.CONNECTOR,
@@ -141,7 +145,7 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     case Connectors.HttpHelmRepo:
       return <HelmRepoConnector {...commonProps} />
     case Connectors.OciHelmRepo:
-      return <OCIHelmConnector {...commonProps} />
+      return HELM_OCI_SUPPORT ? <OCIHelmConnector {...commonProps} /> : null
     case Connectors.AWS:
       return <CreateAWSConnector {...commonProps} />
     case Connectors.AWS_CODECOMMIT:
@@ -196,10 +200,7 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
 export const CreateConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
   return (
     <ConnectorWizardContextProvider>
-      <TemplateSelectorContextProvider>
-        <ConnectorWizard {...props} />
-        <TemplateSelectorDrawer />
-      </TemplateSelectorContextProvider>
+      <ConnectorWizard {...props} />
     </ConnectorWizardContextProvider>
   )
 }

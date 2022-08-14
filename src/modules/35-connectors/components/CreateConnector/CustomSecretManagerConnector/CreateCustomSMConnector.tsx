@@ -11,7 +11,7 @@ import { pick } from 'lodash-es'
 import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
 import { Connectors, CreateConnectorModalProps, TESTCONNECTION_STEP_INDEX } from '@connectors/constants'
 import { getConnectorTitleIdByType, getConnectorIconByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
-import { buildKubPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { buildCustomSMPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useStrings } from 'framework/strings'
 import ConnectorDetailsStep from '../commonSteps/ConnectorDetailsStep'
 import DelegateSelectorStep from '../commonSteps/DelegateSelectorStep/DelegateSelectorStep'
@@ -26,14 +26,15 @@ const CreateCustomSMConnector: React.FC<CreateConnectorModalProps> = props => {
     'setIsEditMode',
     'accountId',
     'orgIdentifier',
-    'projectIdentifier'
+    'projectIdentifier',
+    'getTemplate'
   ])
 
   return (
     <StepWizard
-      icon={getConnectorIconByType(Connectors.KUBERNETES_CLUSTER)}
+      icon={getConnectorIconByType(Connectors.CUSTOM_SECRET_MANAGER)}
       iconProps={{ size: 50 }}
-      title={getString(getConnectorTitleIdByType(Connectors.KUBERNETES_CLUSTER))}
+      title={getString(getConnectorTitleIdByType(Connectors.CUSTOM_SECRET_MANAGER))}
     >
       <ConnectorDetailsStep
         type={Connectors.CUSTOM_SECRET_MANAGER}
@@ -46,6 +47,7 @@ const CreateCustomSMConnector: React.FC<CreateConnectorModalProps> = props => {
       />
       <CustomSMConfigStep
         name={getString('details')}
+        isEditMode={props.isEditMode}
         onConnectorCreated={props.onSuccess}
         hideModal={props.onClose}
         {...commonProps}
@@ -55,7 +57,7 @@ const CreateCustomSMConnector: React.FC<CreateConnectorModalProps> = props => {
         name={getString('delegate.DelegateselectionLabel')}
         isEditMode={props.isEditMode}
         setIsEditMode={props.setIsEditMode}
-        buildPayload={buildKubPayload}
+        buildPayload={buildCustomSMPayload}
         onConnectorCreated={props.onSuccess}
         connectorInfo={props.connectorInfo}
         gitDetails={props.gitDetails}
@@ -67,7 +69,7 @@ const CreateCustomSMConnector: React.FC<CreateConnectorModalProps> = props => {
         connectorInfo={props.connectorInfo}
         isStep
         isLastStep={true}
-        type={Connectors.KUBERNETES_CLUSTER}
+        type={Connectors.CUSTOM_SECRET_MANAGER}
         onClose={props.onClose}
         setIsEditMode={props.setIsEditMode}
         stepIndex={TESTCONNECTION_STEP_INDEX}

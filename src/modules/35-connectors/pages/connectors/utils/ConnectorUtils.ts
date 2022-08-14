@@ -96,6 +96,23 @@ export const AppDynamicsAuthType = {
   API_CLIENT_TOKEN: 'ApiClientToken'
 }
 
+export const getRefFromIdAndScopeParams = (
+  id: string,
+  accountId: string,
+  orgIdentifier?: string,
+  projectIdentifier?: string
+) => {
+  let ref = ''
+  if (projectIdentifier) {
+    ref = id
+  } else if (orgIdentifier) {
+    ref = `org.` + id
+  } else {
+    ref = 'account.' + id
+  }
+  return ref
+}
+
 export const getExecuteOnDelegateValue = (type: ConnectivityModeType) => {
   return type === undefined ? true : type === ConnectivityModeType.Delegate
 }
@@ -174,6 +191,47 @@ export const buildKubPayload = (formData: FormData) => {
     }
   }
   return { connector: savedData }
+}
+
+export const buildCustomSMPayload = (formData: FormData) => {
+  const savedData = {
+    name: formData?.name,
+    description: formData?.description,
+    projectIdentifier: formData?.projectIdentifier,
+    orgIdentifier: formData?.orgIdentifier,
+    identifier: formData?.identifier,
+    tags: formData?.tags,
+    type: Connectors.CUSTOM_SECRET_MANAGER,
+    spec: {
+      onDelegate: formData.onDelegate,
+      ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      host: !formData.onDelegate ? formData.executionTarget.host : undefined,
+      workingDirectory: !formData.onDelegate ? formData.executionTarget.workingDirectory : undefined,
+      connectorRef: !formData.onDelegate ? formData.executionTarget.connectorRef : undefined,
+      template: {
+        templateRef: formData.template.templateRef,
+        versionLabel: formData.template.versionLabel,
+        templateInputs: formData.templateInputs
+      }
+    }
+  }
+  return { connector: savedData }
+}
+
+export const setupCustomSMFormData = async (connectorInfo: ConnectorInfoDTO, accountId: string): Promise<FormData> => {
+  const connectorInfoSpec = connectorInfo?.spec
+
+  return {
+    template: connectorInfoSpec.template,
+    templateInputs: connectorInfoSpec.template.templateInputs,
+    executionTarget: {
+      host: connectorInfoSpec?.host || '',
+      workingDirectory: connectorInfoSpec?.workingDirectory || '',
+      connectorRef: connectorInfoSpec?.connectorRef
+    },
+    templateJson: {},
+    onDelegate: connectorInfoSpec?.onDelegate || ''
+  }
 }
 
 export const useGetHelpPanel = (refernceId: string, width: number) => {
@@ -1992,6 +2050,8 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'microsoft-azure'
     case Connectors.JENKINS:
       return 'service-jenkins'
+    case Connectors.CUSTOM_SECRET_MANAGER:
+      return 'secret-manager'
     default:
       return 'cog'
   }
@@ -2067,6 +2127,8 @@ export const getConnectorDisplayName = (type: string): string => {
       return 'Azure'
     case Connectors.ERROR_TRACKING:
       return 'Error Tracking'
+    case Connectors.CUSTOM_SECRET_MANAGER:
+      return 'Custom Secret Manager'
     default:
       return ''
   }
