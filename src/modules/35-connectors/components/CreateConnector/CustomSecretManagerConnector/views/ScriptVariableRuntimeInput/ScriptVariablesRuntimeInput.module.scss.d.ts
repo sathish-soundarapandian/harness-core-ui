@@ -8,20 +8,12 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly addButton: string
-  readonly alignStart: string
-  readonly code: string
   readonly environmentVarHeader: string
   readonly formGroup: string
-  readonly kvpairLg: string
   readonly label: string
-  readonly lg: string
-  readonly lgOverride: string
-  readonly md: string
   readonly minConfigBtn: string
   readonly outputVarHeader: string
   readonly panel: string
-  readonly sm: string
   readonly variablesList: string
-  readonly xlg: string
 }
 export default styles
