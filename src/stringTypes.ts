@@ -2134,7 +2134,13 @@ export interface StringsMap {
   'connectors.customHealth.valueRequired': string
   'connectors.customLabel': string
   'connectors.customSM.details': string
+  'connectors.customSM.executeOnDelegate': string
+  'connectors.customSM.host': string
   'connectors.customSM.selectTemplate': string
+  'connectors.customSM.sshKey': string
+  'connectors.customSM.templateRef': string
+  'connectors.customSM.templateVersion': string
+  'connectors.customSM.workingDirectory': string
   'connectors.datadog.encryptedAPPKeyLabel': string
   'connectors.datadog.encryptedAPPKeyValidation': string
   'connectors.datadog.urlValidation': string
@@ -2401,6 +2407,7 @@ export interface StringsMap {
   'connectors.title.bitbucketConnector': string
   'connectors.title.ceAws': string
   'connectors.title.ceAzureConnector': string
+  'connectors.title.customSecretManager': string
   'connectors.title.datadog': string
   'connectors.title.delegateSelection': string
   'connectors.title.gcpConnector': string

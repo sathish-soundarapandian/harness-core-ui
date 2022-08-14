@@ -10,6 +10,7 @@ import { Button } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
+import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { CreateConnectorWizard } from '@connectors/components/CreateConnectorWizard/CreateConnectorWizard'
 import { Connectors, CONNECTOR_MODAL_MIN_WIDTH } from '@connectors/constants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
@@ -70,6 +71,7 @@ const useCreateConnectorModal = (props: UseCreateConnectorModalProps): UseCreate
     props.onSuccess?.(data)
   }
   const { trackEvent } = useTelemetry()
+  const { getTemplate } = useTemplateSelector()
 
   const [showModal, hideModal] = useModalHook(
     () => (
@@ -93,6 +95,7 @@ const useCreateConnectorModal = (props: UseCreateConnectorModalProps): UseCreate
             props.onClose?.()
             hideModal()
           }}
+          getTemplate={getTemplate}
         />
         <Button
           minimal

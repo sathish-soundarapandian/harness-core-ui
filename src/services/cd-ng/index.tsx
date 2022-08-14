@@ -1796,6 +1796,7 @@ export interface ConnectorCatalogueItem {
     | 'AzureRepo'
     | 'Jenkins'
     | 'OciHelmRepo'
+    | 'CustomSecretManager'
   )[]
 }
 
@@ -1872,6 +1873,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'AzureRepo'
     | 'Jenkins'
     | 'OciHelmRepo'
+    | 'CustomSecretManager'
   )[]
 }
 
@@ -20097,6 +20099,7 @@ export interface GetConnectorListQueryParams {
     | 'AzureRepo'
     | 'Jenkins'
     | 'OciHelmRepo'
+    | 'CustomSecretManager'
   category?:
     | 'CLOUD_PROVIDER'
     | 'SECRET_MANAGER'
@@ -20482,6 +20485,7 @@ export interface GetAllAllowedFieldValuesQueryParams {
     | 'AzureRepo'
     | 'Jenkins'
     | 'OciHelmRepo'
+    | 'CustomSecretManager'
 }
 
 export type GetAllAllowedFieldValuesProps = Omit<
@@ -45886,6 +45890,7 @@ export interface GetYamlSchemaQueryParams {
     | 'AzureRepo'
     | 'Jenkins'
     | 'OciHelmRepo'
+    | 'CustomSecretManager'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'

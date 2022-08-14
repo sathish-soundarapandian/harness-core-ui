@@ -82,6 +82,7 @@ connectivityMode:
   connectToProvider: 'Connect to the provider'
   selectText: 'Select how you would like to connect to the provider'
 title:
+  customSecretManager: 'Custom Secret Manager'
   k8sCluster: 'Kubernetes Cluster'
   gcpConnector: 'Google Cloud Provider'
   pdcConnector: 'Physical Data Center'
@@ -915,3 +916,10 @@ gitProviderURLs:
 customSM:
   details: Custom Secret Manager Details
   selectTemplate: Select Template
+  executeOnDelegate: Execute on Delegate
+  templateRef: Template Reference
+  templateVersion: Template Version
+  host: Host
+  sshKey: SSH Key Reference
+  workingDirectory: Working Directory
+  inputVariables: Input Variables

@@ -150,6 +150,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
   const isCustomHealthEnabled = useFeatureFlag(FeatureFlag.CHI_CUSTOM_HEALTH)
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.ERROR_TRACKING_ENABLED)
   const isAzureEnabled = useFeatureFlag(FeatureFlag.NG_AZURE)
+  const isOciHelmEnabled = useFeatureFlag(FeatureFlag.HELM_OCI_SUPPORT)
   const { trackEvent } = useTelemetry()
   const { checkPermission } = usePermissionsContext()
 
@@ -312,7 +313,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
     const originalData = catalogueData?.data?.catalogue || []
     originalData.forEach(value => {
       if (value.category === 'SECRET_MANAGER') {
-        value.connectors = ['Vault', 'AwsKms', 'AzureKeyVault', 'AwsSecretManager', 'GcpKms']
+        value.connectors = ['Vault', 'AwsKms', 'AzureKeyVault', 'AwsSecretManager', 'GcpKms', 'CustomSecretManager']
       }
     })
     const orderedCatalogue: ConnectorCatalogueItem[] | { category: string; connectors: string[] } = []
@@ -372,6 +373,8 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
           return isErrorTrackingEnabled
         case Connectors.AZURE:
           return isAzureEnabled
+        case Connectors.OciHelmRepo:
+          return isOciHelmEnabled
         default:
           return true
       }
@@ -494,7 +497,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
           page: CONNECTORS_PAGE
         })
       }
-      openConnectorModal(false, Connectors.CUSTOM_SECRET_MANAGER as ConnectorInfoDTO['type'], undefined)
+      openConnectorModal(false, val?.value as ConnectorInfoDTO['type'], undefined)
       hideDrawer()
     }
 
