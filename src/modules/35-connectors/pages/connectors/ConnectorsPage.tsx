@@ -150,7 +150,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
   const isCustomHealthEnabled = useFeatureFlag(FeatureFlag.CHI_CUSTOM_HEALTH)
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.ERROR_TRACKING_ENABLED)
   const isAzureEnabled = useFeatureFlag(FeatureFlag.NG_AZURE)
-  const isOciHelmEnabled = useFeatureFlag(FeatureFlag.HELM_OCI_SUPPORT)
+  const isCustomSMEnabled = useFeatureFlag(FeatureFlag.CUSTOM_SECRET_MANAGER_NG)
   const { trackEvent } = useTelemetry()
   const { checkPermission } = usePermissionsContext()
 
@@ -373,8 +373,8 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
           return isErrorTrackingEnabled
         case Connectors.AZURE:
           return isAzureEnabled
-        case Connectors.OciHelmRepo:
-          return isOciHelmEnabled
+        case Connectors.CUSTOM_SECRET_MANAGER:
+          return isCustomSMEnabled
         default:
           return true
       }
@@ -417,8 +417,12 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
                   .sort((a, b) => (getConnectorDisplayName(a) < getConnectorDisplayName(b) ? -1 : 1))
                   .filter(entry => {
                     const name = entry.valueOf() || ''
-                    if (name !== 'CustomHealth') return true
-                    return isCustomHealthEnabled !== false
+                    if (name === 'CustomHealth') {
+                      return isCustomHealthEnabled !== false
+                    } else if (name === 'CustomSecretManager') {
+                      return isCustomSMEnabled
+                    }
+                    return true
                   })
                   .map(entry => {
                     const name = entry.valueOf() || ''
