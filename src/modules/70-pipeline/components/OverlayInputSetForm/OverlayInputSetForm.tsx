@@ -447,7 +447,7 @@ export function OverlayInputSetForm({
       payload?: SaveOverlayInputSetDTO,
       objectId?: string
     ): Promise<UseSaveSuccessResponse> =>
-      createUpdateOverlayInputSet(defaultTo(payload?.overlayInputSet, savedInputSetObj), gitData, objectId)
+      createUpdateOverlayInputSet(defaultTo(payload?.overlayInputSet, savedInputSetObj), false, gitData, objectId)
   })
 
   const handleSubmit = React.useCallback(
@@ -695,7 +695,7 @@ export function OverlayInputSetForm({
                                   isOverlayInputSet={true}
                                   selectedValueClass={css.selectedInputSetsContainer}
                                   pipeline={pipeline}
-                                  showGoToInpSetBtn={false}
+                                  hideInpSetBtn={true}
                                 />
                               </GitSyncStoreProvider>
                             )}

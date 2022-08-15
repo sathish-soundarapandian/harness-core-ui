@@ -200,7 +200,6 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
     inputSetIdentifier: defaultTo(inputSetIdentifier, ''),
     lazy: true
   })
-  console.log(inputSetResponse)
 
   const [mergeTemplate, setMergeTemplate] = React.useState<string>()
   const { mutate: mergeInputSet, loading: loadingMerge } = useGetMergeInputSetFromPipelineTemplateWithListInput({
@@ -460,7 +459,7 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
         onCancel={onCancel}
         filePath={filePath}
         inputSetUpdateHandler={inputSetUpdateHandler}
-        updateLoading={updateInputSetLoading}
+        updateInputSetLoading={updateInputSetLoading}
         inputSetUpdateResponseHandler={inputSetUpdateResponseHandler}
       />
     ),

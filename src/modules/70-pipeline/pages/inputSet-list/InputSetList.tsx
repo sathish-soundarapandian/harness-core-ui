@@ -56,7 +56,6 @@ function InputSetList(): React.ReactElement {
   const [inputSetToDelete, setInputSetToDelete] = useState<InputSetSummaryResponse>()
   const { isGitSimplificationEnabled } = useAppStore()
   const isImportFlowEnabled = useFeatureFlag(FeatureFlag.NG_GIT_EXPERIENCE_IMPORT_FLOW)
-  console.log(inputSetToDelete)
 
   const {
     data: inputSet,
@@ -82,7 +81,6 @@ function InputSetList(): React.ReactElement {
     },
     debounce: 300
   })
-  console.log(inputSet)
 
   const { showImportResourceModal } = useImportResource({
     resourceType: ImportResourceType.INPUT_SETS,

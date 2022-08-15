@@ -1,8 +1,15 @@
-import React, { useCallback } from 'react'
-import { Container, Layout, Text } from '@wings-software/uicore'
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+import React, { useEffect, useState } from 'react'
+import { Container, Layout, PageSpinner, Text } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
 import { Color } from '@wings-software/design-system'
-import { debounce, get } from 'lodash-es'
+import { get } from 'lodash-es'
 import { YamlDiffView } from '@pipeline/components/InputSetErrorHandling/YamlDiffView/YamlDiffView'
 import { useStrings } from 'framework/strings'
 import RbacButton from '@rbac/components/Button/Button'
@@ -17,7 +24,7 @@ interface ReconcileDialogProps {
   newYaml: string
   error: any
   refetchYamlDiff: () => void
-  updateLoading?: boolean
+  updateLoading: boolean
   onClose: () => void
   isOverlayInputSet?: boolean
 }
@@ -36,14 +43,19 @@ export function ReconcileDialog({
 }: ReconcileDialogProps): React.ReactElement {
   const { getString } = useStrings()
   const updatedObj: any = yamlParse(newYaml)
+  const [renderCount, setRenderCount] = useState<boolean>(true)
 
-  const debouncedClose = useCallback(
-    debounce(() => onClose(), 1000),
-    []
-  )
+  useEffect(() => {
+    setRenderCount(false)
+  }, [])
+
+  useEffect(() => {
+    if (!renderCount && !updateLoading) onClose()
+  }, [updateLoading])
 
   return (
     <Container>
+      {updateLoading && <PageSpinner />}
       <Layout.Vertical>
         <Container
           border={{ bottom: true }}
@@ -70,14 +82,13 @@ export function ReconcileDialog({
             width={232}
             intent="danger"
             disabled={!canUpdateInputSet}
-            onClick={() => {
+            onClick={() =>
               inputSetUpdateHandler?.(
                 overlayInputSetIdentifier || isOverlayInputSet
                   ? get(updatedObj, 'overlayInputSet', {})
                   : get(updatedObj, 'inputSet', {})
               )
-              debouncedClose()
-            }}
+            }
             loading={updateLoading}
           />
         </Container>

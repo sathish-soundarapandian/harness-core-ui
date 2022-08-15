@@ -248,7 +248,7 @@ const RenderColumnActions: Renderer<CellProps<InputSetLocal>> = ({ row, column }
 
   return (
     <RbacButton
-      disabled={!(column as any)?.pipelineHasRuntimeInputs || isPipelineInvalid}
+      disabled={!(column as any)?.pipelineHasRuntimeInputs || isPipelineInvalid || isInputSetInvalid(row.original)}
       tooltip={isPipelineInvalid ? getString('pipeline.cannotRunInvalidPipeline') : ''}
       icon="run-pipeline"
       variation={ButtonVariation.PRIMARY}

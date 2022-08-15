@@ -51,7 +51,7 @@ export interface InputSetSelectorProps {
   showNewInputSet?: boolean
   onNewInputSetClick?: () => void
   pipeline?: ResponsePMSPipelineResponseDTO | null
-  showGoToInpSetBtn?: boolean
+  hideInpSetBtn?: boolean
 }
 
 export function InputSetSelector({
@@ -65,11 +65,10 @@ export function InputSetSelector({
   showNewInputSet,
   onNewInputSetClick,
   pipeline,
-  showGoToInpSetBtn
+  hideInpSetBtn
 }: InputSetSelectorProps): React.ReactElement {
   const [searchParam, setSearchParam] = React.useState('')
   const [selectedInputSets, setSelectedInputSets] = React.useState<InputSetValue[]>(value || [])
-  // const [inputSets, setInputSets] = React.useState<InputSetSummaryResponse[]>([])
   const { getString } = useStrings()
 
   const { projectIdentifier, orgIdentifier, accountId } = useParams<{
@@ -101,7 +100,8 @@ export function InputSetSelector({
   const {
     data: inputSetResponse,
     refetch,
-    error
+    error,
+    loading: loadingInpSets
   } = useGetInputSetsListForPipeline({
     queryParams: {
       accountIdentifier: accountId,
@@ -155,18 +155,7 @@ export function InputSetSelector({
     showError(getRBACErrorMessage(error), undefined, 'pipeline.get.inputsetlist')
   }
 
-  // React.useEffect(() => {
-  //   setInputSets(defaultTo(inputSetResponse?.data?.content, []))
-  // }, [inputSetResponse])
-
   const inputSets = inputSetResponse?.data?.content
-  // const inputSetReconcileHandler = (inputSetIdentifier: string, updatedInputSet: InputSetSummaryResponse): void => {
-  // const invalidInpSetIndex = findIndex(inputSets, { identifier: inputSetIdentifier })
-  // inputSets?.splice(invalidInpSetIndex, 1, updatedInputSet)
-  // const updatedInputSets = assign([], inputSets)
-  // setInputSets(updatedInputSets)
-  //   refetch()
-  // }
 
   const multipleInputSetList =
     inputSets &&
@@ -188,8 +177,7 @@ export function InputSetSelector({
           onCheckBoxHandler={onCheckBoxHandler}
           pipeline={pipeline}
           refetch={refetch}
-          isOverlayInputSet={isOverlayInputSet}
-          showGoToInpSetBtn={showGoToInpSetBtn}
+          hideInpSetBtn={hideInpSetBtn}
         />
       ))
 
@@ -203,7 +191,6 @@ export function InputSetSelector({
       minimal={true}
       className={css.isPopoverParent}
       onOpening={() => {
-        refetch()
         setOpenInputSetsList(true)
       }}
       onInteraction={interaction => {
@@ -245,6 +232,7 @@ export function InputSetSelector({
             <PageSpinner className={css.spinner} />
           ) : (
             <Layout.Vertical padding={{ bottom: 'medium' }}>
+              {loadingInpSets && <PageSpinner />}
               {inputSets && inputSets.length > 0 ? (
                 <>
                   <ul className={cx(Classes.MENU, css.list, { [css.multiple]: inputSets.length > 0 })}>

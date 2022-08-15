@@ -102,7 +102,7 @@ interface FormikInputSetFormProps {
   onCancel?: () => void
   filePath?: string
   inputSetUpdateHandler: (updatedInputSet: InputSetDTO) => void
-  updateLoading: boolean
+  updateInputSetLoading: boolean
   inputSetUpdateResponseHandler: (responseData: InputSetResponse) => void
 }
 
@@ -228,10 +228,9 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     onCancel,
     filePath,
     inputSetUpdateHandler,
-    updateLoading,
+    updateInputSetLoading,
     inputSetUpdateResponseHandler
   } = props
-  console.log(inputSet)
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
     PipelineType<InputSetPathProps> & { accountId: string }
@@ -323,7 +322,6 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
   }
 
   const isPipelineRemote = isGitSimplificationEnabled && storeType === StoreType.REMOTE
-  console.log('Validation ->', isInputSetInvalid(inputSet))
 
   return (
     <Container className={cx(css.inputSetForm, className, hasError ? css.withError : '')}>
@@ -462,7 +460,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                         inputSet={inputSet}
                         inputSetUpdateHandler={inputSetUpdateHandler}
                         pipeline={pipeline}
-                        updateLoading={updateLoading}
+                        updateLoading={updateInputSetLoading}
                         inputSetUpdateResponseHandler={inputSetUpdateResponseHandler}
                       />
                     )}

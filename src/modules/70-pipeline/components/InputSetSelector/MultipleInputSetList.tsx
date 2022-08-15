@@ -44,13 +44,12 @@ interface MultipleInputSetListProps {
     overlaySetErrorDetails?: { [key: string]: string }
   ) => void
   pipeline?: ResponsePMSPipelineResponseDTO | null
-  refetch?: () => Promise<void>
-  isOverlayInputSet?: boolean
-  showGoToInpSetBtn?: boolean
+  refetch: () => Promise<void>
+  hideInpSetBtn?: boolean
 }
 
 export function MultipleInputSetList(props: MultipleInputSetListProps): JSX.Element {
-  const { inputSet, onCheckBoxHandler, pipeline, refetch, showGoToInpSetBtn } = props
+  const { inputSet, onCheckBoxHandler, pipeline, refetch, hideInpSetBtn } = props
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
     PipelineType<InputSetPathProps> & { accountId: string }
@@ -222,7 +221,7 @@ export function MultipleInputSetList(props: MultipleInputSetListProps): JSX.Elem
                 updateLoading={updateInputSetLoading || updateOverlayInputSetLoading}
                 onlyReconcileButton={true}
                 refetch={refetch}
-                showGoToInpSetBtn={showGoToInpSetBtn}
+                hideInpSetBtn={hideInpSetBtn}
                 isOverlayInputSet={inputSet.inputSetType === 'OVERLAY_INPUT_SET'}
               />
             </Container>
