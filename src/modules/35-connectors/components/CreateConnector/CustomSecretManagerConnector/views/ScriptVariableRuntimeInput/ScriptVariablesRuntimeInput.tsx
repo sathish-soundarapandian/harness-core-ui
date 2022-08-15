@@ -80,13 +80,13 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
                             disabled={readonly}
                             placeholder={getString('valueLabel')}
                           />
-                          <FormInput.CheckBox
+                          {/* <FormInput.CheckBox
                             label=""
                             name={`${prefix}templateInputs.environmentVariables[${i}].useAsDefault`}
                             placeholder={getString('typeLabel')}
                             disabled={false}
                             style={{ margin: 'auto' }}
-                          />
+                          /> */}
                         </div>
                       )
                     })}
