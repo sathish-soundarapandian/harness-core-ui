@@ -4290,6 +4290,7 @@ export interface StringsMap {
   'cd.steps.awsInfraStep.placeholders.hostName': string
   'cd.steps.awsInfraStep.placeholders.loadBalancer': string
   'cd.steps.awsInfraStep.placeholders.vpcs': string
+  'cd.steps.awsInfraStep.regionError': string
   'cd.steps.azureInfraStep.azure': string
   'cd.steps.azureInfraStep.clusterError': string
   'cd.steps.azureInfraStep.resourceGroupError': string

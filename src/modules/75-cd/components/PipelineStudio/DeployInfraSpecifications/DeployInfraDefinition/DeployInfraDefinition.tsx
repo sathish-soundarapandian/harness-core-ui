@@ -523,7 +523,16 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
             stepViewType={StepViewType.Edit}
             allowableTypes={allowableTypes}
             onUpdate={value => {
-              onUpdateInfrastructureDefinition(value, InfraDeploymentType.SshWinRmAws)
+              onUpdateInfrastructureDefinition(
+                {
+                  credentialsRef: value.credentialsRef,
+                  connectorRef: value.connectorRef,
+                  region: value.region,
+                  tags: value.tags,
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                },
+                InfraDeploymentType.SshWinRmAws
+              )
             }}
           />
         )

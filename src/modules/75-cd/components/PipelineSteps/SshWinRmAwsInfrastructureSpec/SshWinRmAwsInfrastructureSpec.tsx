@@ -5,13 +5,22 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
-import { IconName, Layout, Formik, FormikForm, FormInput, MultiTypeInputType, SelectOption } from '@harness/uicore'
+import React, { useCallback, useState, useRef } from 'react'
+import {
+  IconName,
+  Layout,
+  Formik,
+  FormikForm,
+  FormInput,
+  MultiTypeInputType,
+  SelectOption,
+  getMultiTypeFromValue
+} from '@harness/uicore'
 import type { AllowedTypes } from '@harness/uicore'
 import { parse } from 'yaml'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
-import { noop, isEmpty, get } from 'lodash-es'
+import { noop, isEmpty, get, debounce, set } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { loggerFor } from 'framework/logging/logging'
@@ -26,6 +35,7 @@ import {
   regionsForAwsPromise,
   tagsPromise
 } from 'services/cd-ng'
+import { Connectors } from '@connectors/constants'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { useToaster } from '@common/exports'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
@@ -44,12 +54,13 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { InfraDeploymentType } from '../PipelineStepsUtil'
+import { SshWimRmAwsInfrastructureSpecInputForm } from './SshWimRmAwsInfrastructureSpecInputForm'
 import { getValue } from '../SshWinRmAzureInfrastructureSpec/SshWinRmAzureInfrastructureInterface'
 import css from './SshWinRmAwsInfrastructureSpec.module.scss'
 
 const logger = loggerFor(ModuleName.CD)
 
-type SshWinRmAwsInfrastructureTemplate = { [key in keyof SshWinRmAwsInfrastructure]: string }
+export type SshWinRmAwsInfrastructureTemplate = { [key in keyof SshWinRmAwsInfrastructure]: string }
 
 function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({
@@ -82,7 +93,8 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
     orgIdentifier: string
     accountId: string
   }>()
-  const formikRef = React.useRef<FormikProps<SshWinRmAwsInfrastructureUI> | null>(null)
+  const formikRef = useRef<FormikProps<SshWinRmAwsInfrastructureUI> | null>(null)
+  const delayedOnUpdate = useRef(debounce(onUpdate || noop, 300)).current
 
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
@@ -93,12 +105,21 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
 
   const [tags, setTags] = useState<SelectOption[]>([])
 
-  useEffect(() => {
-    const { awsInstanceFilter } = initialValues
-    if (awsInstanceFilter?.tags) {
-      formikRef.current?.setFieldValue('tags', awsInstanceFilter?.tags)
+  const getInitialValues = useCallback(() => {
+    const initials = {
+      ...initialValues
     }
-  }, [])
+    if (initialValues.credentialsRef) {
+      set(initials, 'sshKey', initialValues?.credentialsRef)
+    }
+    if (initialValues.region) {
+      set(initials, 'region', { label: initialValues.region, value: initialValues.region })
+    }
+    if (initialValues?.awsInstanceFilter?.tags) {
+      set(initials, 'tags', initialValues?.awsInstanceFilter?.tags)
+    }
+    return initials
+  }, [initialValues])
 
   const fetchRegions = async () => {
     setIsRegionsLoading(true)
@@ -156,17 +177,18 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
       <>
         <Formik<SshWinRmAwsInfrastructureUI>
           formName="sshWinRmAWSInfra"
-          initialValues={{ ...initialValues } as SshWinRmAwsInfrastructureUI}
+          initialValues={getInitialValues() as SshWinRmAwsInfrastructureUI}
           validationSchema={getValidationSchema(getString) as Partial<SshWinRmAwsInfrastructureUI>}
           validate={value => {
             const data: Partial<SshWinRmAwsInfrastructure> = {
-              connectorRef: get(value, 'connectorRef.value', ''),
+              connectorRef:
+                typeof value?.sshKey === 'string' ? value.connectorRef : get(value, 'connectorRef.value', ''),
               credentialsRef:
                 typeof value?.sshKey === 'string' ? value?.sshKey : get(value, 'sshKey.referenceString', ''),
               region: typeof value.region === 'string' ? value.region : get(value, 'region.value', '')
             }
             data.tags = value.tags
-            onUpdate?.(data as SshWinRmAwsInfrastructure)
+            delayedOnUpdate(data as SshWinRmAwsInfrastructure)
           }}
           onSubmit={noop}
         >
@@ -192,7 +214,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                     <FormMultiTypeConnectorField
                       error={get(formik, 'errors.connectorRef', undefined)}
                       name="connectorRef"
-                      type={['Aws']}
+                      type={Connectors.AWS}
                       label={getString('connector')}
                       width={490}
                       placeholder={getString('connectors.selectConnector')}
@@ -240,8 +262,8 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                     onChange: /* istanbul ignore next */ option => {
                       const { value } = option as SelectOption
                       if (value) {
-                        formik.setFieldValue('region', option)
                         formik.setFieldValue('tags', {})
+                        formik.setFieldValue('region', option)
                       }
                     }
                   }}
@@ -254,7 +276,14 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                       selectItems={tags}
                       className={css.inputWidth}
                       multiTypeInputProps={{
-                        onFocus: () => fetchTags(getValue(formik.values.region)),
+                        onFocus: () => {
+                          if (
+                            getMultiTypeFromValue(formik.values.region) === MultiTypeInputType.FIXED &&
+                            getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.FIXED
+                          ) {
+                            fetchTags(getValue(formik.values.region))
+                          }
+                        },
                         allowableTypes,
                         expressions,
                         onChange: /* istanbul ignore next */ option => {
@@ -435,7 +464,21 @@ export class SshWinRmAwsInfrastructureSpec extends PipelineStep<SshWinRmAwsInfra
 
   renderStep(props: StepProps<SshWinRmAwsInfrastructure>): JSX.Element {
     const { initialValues, onUpdate, stepViewType, customStepProps, readonly, allowableTypes, inputSetData } = props
-    if (stepViewType === StepViewType.InputVariable) {
+    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+      return (
+        <SshWimRmAwsInfrastructureSpecInputForm
+          {...(customStepProps as SshWinRmAwsInfrastructureSpecEditableProps)}
+          initialValues={initialValues}
+          onUpdate={onUpdate}
+          stepViewType={stepViewType}
+          readonly={inputSetData?.readonly}
+          template={inputSetData?.template as SshWinRmAwsInfrastructureTemplate}
+          allValues={inputSetData?.allValues}
+          path={inputSetData?.path || ''}
+          allowableTypes={allowableTypes}
+        />
+      )
+    } else if (stepViewType === StepViewType.InputVariable) {
       return (
         <SshWinRmAwsInfraSpecVariablesForm
           onUpdate={onUpdate}
@@ -451,7 +494,6 @@ export class SshWinRmAwsInfrastructureSpec extends PipelineStep<SshWinRmAwsInfra
         onUpdate={onUpdate}
         readonly={readonly}
         stepViewType={stepViewType}
-        path={inputSetData?.path || ''}
         {...(customStepProps as SshWinRmAwsInfrastructureSpecEditableProps)}
         initialValues={initialValues}
         allowableTypes={allowableTypes}

@@ -72,6 +72,7 @@ steps:
     regionPlaceholder: Specify a region
     stagePlaceholder: Specify a stage
   awsInfraStep:
+    regionError: Error fetching regions
     placeholders:
       loadBalancer: Select Load Balancer
       connectionAttribute: Select Connection Attribute

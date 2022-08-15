@@ -159,6 +159,16 @@ export const getInfrastructureDefaultValue = (
         allowSimultaneousDeployments
       }
     }
+    case InfraDeploymentType.SshWinRmAws: {
+      const { credentialsRef, connectorRef, region, tags } = infrastructure?.spec || {}
+      return {
+        credentialsRef,
+        connectorRef,
+        region,
+        tags,
+        allowSimultaneousDeployments
+      }
+    }
     case InfraDeploymentType.ECS: {
       const { connectorRef, region, cluster } = infrastructure?.spec || {}
       return {
