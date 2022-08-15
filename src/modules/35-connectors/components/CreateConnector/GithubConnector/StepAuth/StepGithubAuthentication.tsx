@@ -72,6 +72,7 @@ interface GithubAuthenticationProps {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
+  helpPanelReferenceId?: string
 }
 
 interface GithubFormInterface {
@@ -195,7 +196,9 @@ const StepGithubAuthentication: React.FC<StepProps<StepGithubAuthenticationProps
     const [forceFailOAuthTimeoutId, setForceFailOAuthTimeoutId] = useState<NodeJS.Timeout>()
     const [oAuthResponse, setOAuthResponse] = useState<OAuthEventProcessingResponse>()
 
-    useConnectorWizard({ helpPanel: { referenceId: 'gitHubConnectorCredentials', contentWidth: 900 } })
+    useConnectorWizard({
+      helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
+    })
     const authOptions: Array<SelectOption> = [
       {
         label: getString('usernameToken'),

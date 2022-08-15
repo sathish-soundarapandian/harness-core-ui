@@ -23,9 +23,9 @@ import { useMutateAsGet } from '@common/hooks'
 import {
   SidecarArtifact,
   useGetBuildDetailsForAcrArtifactWithYaml,
-  useGetAzureSubscriptions,
-  useGetACRRegistriesBySubscription,
-  useGetACRRepositories
+  useGetAzureSubscriptionsForAcrArtifact,
+  useGetACRRegistriesForService,
+  useGetACRRepositoriesForService
 } from 'services/cd-ng'
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
@@ -38,6 +38,7 @@ import {
 import ExperimentalInput from '../../K8sServiceSpecForms/ExperimentalInput'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
+  getConnectorRefFqnPath,
   getDefaultQueryParam,
   getFinalQueryParamValue,
   getFqnPath,
@@ -98,6 +99,15 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     repository: ''
   })
 
+  const serviceId = isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined
+  const connectorRefFqnPath = getConnectorRefFqnPath(
+    path as string,
+    !!isPropagatedStage,
+    stageIdentifier,
+    defaultTo(artifactPath, ''),
+    'connectorRef'
+  )
+
   const connectorRefValue = getDefaultQueryParam(
     artifact?.spec?.connectorRef,
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
@@ -140,7 +150,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
       registry: getFinalQueryParamValue(registryValue),
       repository: getFinalQueryParamValue(repositoryValue),
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
-      serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+      serviceId,
       fqnPath: getFqnPath(path as string, !!isPropagatedStage, stageIdentifier, defaultTo(artifactPath, ''))
     },
     lazy: true
@@ -151,12 +161,14 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     refetch: refetchSubscriptions,
     loading: loadingSubscriptions,
     error: subscriptionsError
-  } = useGetAzureSubscriptions({
+  } = useGetAzureSubscriptionsForAcrArtifact({
     queryParams: {
       connectorRef: artifact?.spec?.connectorRef,
       accountIdentifier: accountId,
       orgIdentifier,
-      projectIdentifier
+      projectIdentifier,
+      serviceId,
+      fqnPath: connectorRefFqnPath
     },
     lazy: true,
     debounce: 300
@@ -169,7 +181,9 @@ const Content = (props: ACRRenderContent): JSX.Element => {
           connectorRef: artifact?.spec?.connectorRef,
           accountIdentifier: accountId,
           orgIdentifier,
-          projectIdentifier
+          projectIdentifier,
+          serviceId,
+          fqnPath: connectorRefFqnPath
         }
       })
     }
@@ -190,13 +204,15 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     refetch: refetchRegistries,
     loading: loadingRegistries,
     error: registriesError
-  } = useGetACRRegistriesBySubscription({
+  } = useGetACRRegistriesForService({
     queryParams: {
       connectorRef: artifact?.spec?.connectorRef,
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      subscriptionId: artifact?.spec?.subscriptionId
+      subscriptionId: artifact?.spec?.subscriptionId,
+      serviceId,
+      fqnPath: connectorRefFqnPath
     },
     lazy: true,
     debounce: 300
@@ -213,7 +229,9 @@ const Content = (props: ACRRenderContent): JSX.Element => {
           accountIdentifier: accountId,
           orgIdentifier,
           projectIdentifier,
-          subscriptionId: artifact?.spec?.subscriptionId
+          subscriptionId: artifact?.spec?.subscriptionId,
+          serviceId,
+          fqnPath: connectorRefFqnPath
         }
       })
     }
@@ -234,15 +252,17 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     refetch: refetchRepositories,
     loading: loadingRepositories,
     error: repositoriesError
-  } = useGetACRRepositories({
+  } = useGetACRRepositoriesForService({
     queryParams: {
       connectorRef: artifact?.spec?.connectorRef,
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      subscriptionId: artifact?.spec?.subscriptionId
+      subscriptionId: artifact?.spec?.subscriptionId,
+      registry: artifact?.spec?.registry,
+      serviceId,
+      fqnPath: connectorRefFqnPath
     },
-    registry: artifact?.spec?.registry,
     lazy: true,
     debounce: 300
   })
@@ -259,10 +279,10 @@ const Content = (props: ACRRenderContent): JSX.Element => {
           accountIdentifier: accountId,
           orgIdentifier,
           projectIdentifier,
-          subscriptionId: artifact?.spec?.subscriptionId
-        },
-        pathParams: {
-          registry: artifact?.spec?.registry
+          subscriptionId: artifact?.spec?.subscriptionId,
+          registry: artifact?.spec?.registry,
+          serviceId,
+          fqnPath: connectorRefFqnPath
         }
       })
     }
@@ -358,7 +378,9 @@ const Content = (props: ACRRenderContent): JSX.Element => {
                         connectorRef: record?.identifier,
                         accountIdentifier: accountId,
                         orgIdentifier,
-                        projectIdentifier
+                        projectIdentifier,
+                        serviceId,
+                        fqnPath: connectorRefFqnPath
                       }
                     })
                   } else {
@@ -399,7 +421,9 @@ const Content = (props: ACRRenderContent): JSX.Element => {
                         accountIdentifier: accountId,
                         orgIdentifier,
                         projectIdentifier,
-                        subscriptionId: getValue(value)
+                        subscriptionId: getValue(value),
+                        serviceId,
+                        fqnPath: connectorRefFqnPath
                       }
                     })
                   } else {
@@ -459,9 +483,9 @@ const Content = (props: ACRRenderContent): JSX.Element => {
                         accountIdentifier: accountId,
                         orgIdentifier,
                         projectIdentifier,
-                        subscriptionId
-                      },
-                      pathParams: {
+                        subscriptionId,
+                        serviceId,
+                        fqnPath: connectorRefFqnPath,
                         registry: getValue(value)
                       }
                     })

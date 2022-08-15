@@ -44,6 +44,8 @@ import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderPr
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
 import { PageHeaderTitle, PageHeaderToolbar } from './EnvironmentDetailsPageHeader'
@@ -54,7 +56,7 @@ import { EnvironmentDetailsTab } from '../utils'
 import GitOpsCluster from './GitOpsCluster/GitOpsCluster'
 import css from './EnvironmentDetails.module.scss'
 
-export default function EnvironmentDetails() {
+export default function EnvironmentDetails(): JSX.Element {
   const { accountId, orgIdentifier, projectIdentifier, environmentIdentifier } = useParams<
     ProjectPathProps & EnvironmentPathProps
   >()
@@ -63,6 +65,7 @@ export default function EnvironmentDetails() {
 
   const { getString } = useStrings()
   const { showSuccess, showError, clear } = useToaster()
+  const isArgoManaged = useFeatureFlag(FeatureFlag.ARGO_PHASE2_MANAGED)
 
   const formikRef = useRef<FormikProps<NGEnvironmentInfoConfig>>()
 
@@ -89,9 +92,10 @@ export default function EnvironmentDetails() {
     if (!loading && firstLoad) {
       setFirstLoad(false)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading])
 
-  const onUpdate = async (values: EnvironmentResponseDTO) => {
+  const onUpdate = async (values: EnvironmentResponseDTO): Promise<void> => {
     setUpdateLoading(true)
     clear()
     try {
@@ -132,14 +136,14 @@ export default function EnvironmentDetails() {
     lastModifiedAt
   } = defaultTo(data?.data, {}) as EnvironmentResponse
 
-  const handleTabChange = (tabId: EnvironmentDetailsTab) => {
+  const handleTabChange = (tabId: EnvironmentDetailsTab): void => {
     updateQueryParams({
       sectionId: EnvironmentDetailsTab[EnvironmentDetailsTab[tabId]]
     })
     setSelectedTabId(tabId)
   }
 
-  const validate = (values: NGEnvironmentInfoConfig) => {
+  const validate = (values: NGEnvironmentInfoConfig): void => {
     const { name: newName, description: newDescription, tags: newTags, type: newType, variables: newVariables } = values
 
     if (
@@ -258,7 +262,8 @@ export default function EnvironmentDetails() {
                             {getString('cd.gitOpsCluster')}
                           </Text>
                         ),
-                        panel: <GitOpsCluster envRef={identifier} />
+                        panel: <GitOpsCluster envRef={identifier} />,
+                        hidden: !isArgoManaged
                       }
                     ]}
                   >

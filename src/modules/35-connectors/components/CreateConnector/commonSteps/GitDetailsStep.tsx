@@ -51,6 +51,7 @@ interface ConnectorDetailsStepProps extends StepProps<ConnectorInfoDTO> {
   isEditMode?: boolean
   connectorInfo: ConnectorInfoDTO | void
   mock?: ResponseBoolean
+  helpPanelReferenceId?: string
 }
 
 interface DetailsStepInterface {
@@ -91,7 +92,9 @@ const GitDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDetailsS
   const [loading, setLoading] = useState(false)
   const isEdit = props.isEditMode || prevStepData?.isEdit
   const { getString } = useStrings()
-  useConnectorWizard({ helpPanel: { referenceId: 'gitHubConnectorDetails', contentWidth: 900 } })
+  useConnectorWizard({
+    helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
+  })
   const getUrlTypeOptions = (connectorType: ConnectorInfoDTO['type']): IOptionProps[] => {
     return [
       ...[

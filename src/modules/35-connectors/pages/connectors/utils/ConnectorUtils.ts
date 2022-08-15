@@ -594,7 +594,8 @@ export const setupGCPFormData = async (connectorInfo: ConnectorInfoDTO, accountI
 
   const formData = {
     delegateType: connectorInfo.spec.credential.type,
-    password: await setSecretField(connectorInfo.spec.credential?.spec?.secretKeyRef, scopeQueryParams)
+    password: await setSecretField(connectorInfo.spec.credential?.spec?.secretKeyRef, scopeQueryParams),
+    connectivityMode: getConnectivityMode(connectorInfo?.spec?.executeOnDelegate)
   }
 
   return formData
@@ -620,7 +621,8 @@ export const setupAWSFormData = async (connectorInfo: ConnectorInfoDTO, accountI
     secretKeyRef: await setSecretField(connectorInfo.spec.credential.spec?.secretKeyRef, scopeQueryParams),
     crossAccountAccess: !!connectorInfo.spec.credential?.crossAccountAccess,
     crossAccountRoleArn: connectorInfo.spec.credential.crossAccountAccess?.crossAccountRoleArn,
-    externalId: connectorInfo.spec.credential.crossAccountAccess?.externalId
+    externalId: connectorInfo.spec.credential.crossAccountAccess?.externalId,
+    connectivityMode: getConnectivityMode(connectorInfo?.spec?.executeOnDelegate)
   }
 
   return formData
@@ -649,7 +651,8 @@ export const setupDockerFormData = async (connectorInfo: ConnectorInfoDTO, accou
     password:
       connectorInfo.spec.auth.type === AuthTypes.USER_PASSWORD
         ? await setSecretField(connectorInfo.spec.auth.spec.passwordRef, scopeQueryParams)
-        : undefined
+        : undefined,
+    connectivityMode: getConnectivityMode(connectorInfo?.spec?.executeOnDelegate)
   }
   return formData
 }
@@ -764,7 +767,8 @@ export const setupArtifactoryFormData = async (
     password:
       connectorInfo.spec.auth.type === AuthTypes.USER_PASSWORD
         ? await setSecretField(connectorInfo.spec.auth.spec.passwordRef, scopeQueryParams)
-        : undefined
+        : undefined,
+    connectivityMode: getConnectivityMode(connectorInfo?.spec?.executeOnDelegate)
   }
 
   return formData
@@ -801,7 +805,8 @@ export const setupAzureFormData = async (connectorInfo: ConnectorInfoDTO, accoun
     clientId:
       delegateInCluster && authType === AzureManagedIdentityTypes.USER_MANAGED
         ? connectorInfoSpec.credential.spec.auth.spec.clientId
-        : undefined
+        : undefined,
+    connectivityMode: getConnectivityMode(connectorInfo?.spec?.executeOnDelegate)
   }
 }
 
@@ -885,6 +890,7 @@ export const buildAWSPayload = (formData: FormData) => {
     type: Connectors.AWS,
     spec: {
       ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      executeOnDelegate: getExecuteOnDelegateValue(formData.connectivityMode),
       credential: {
         type: formData.delegateType,
         spec:
@@ -1062,6 +1068,7 @@ export const buildDockerPayload = (formData: FormData) => {
     type: Connectors.DOCKER,
     spec: {
       ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      executeOnDelegate: getExecuteOnDelegateValue(formData.connectivityMode),
       dockerRegistryUrl: formData.dockerRegistryUrl.trim(),
       providerType: formData.dockerProviderType,
       auth:
@@ -1249,6 +1256,7 @@ export const buildGcpPayload = (formData: FormData) => {
     type: Connectors.GCP,
     spec: {
       ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      executeOnDelegate: getExecuteOnDelegateValue(formData.connectivityMode),
       credential: {
         type: formData?.delegateType,
         spec:
@@ -1275,6 +1283,7 @@ export const buildAzurePayload = (formData: FormData): ConnectorRequestBody => {
     type: Connectors.AZURE,
     spec: {
       ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      executeOnDelegate: getExecuteOnDelegateValue(formData.connectivityMode),
       credential:
         formData?.delegateType === DelegateTypes.DELEGATE_OUT_CLUSTER
           ? {
@@ -1501,6 +1510,7 @@ export const buildArtifactoryPayload = (formData: FormData) => {
     ...pick(formData, ['name', 'identifier', 'orgIdentifier', 'projectIdentifier', 'description', 'tags']),
     spec: {
       ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      executeOnDelegate: getExecuteOnDelegateValue(formData.connectivityMode),
       artifactoryServerUrl: formData?.artifactoryServerUrl,
       auth: {
         type: formData.authType,

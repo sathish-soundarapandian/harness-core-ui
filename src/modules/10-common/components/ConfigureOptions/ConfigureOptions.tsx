@@ -13,7 +13,8 @@ import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 
 import ConfigureOptionsDialog, { ConfigureOptionsDialogProps } from './ConfigureOptionsDialog'
-
+import { ALLOWED_VALUES_TYPE } from './constants'
+import { VALIDATORS } from './validators'
 import css from './ConfigureOptions.module.scss'
 
 export interface ConfigureOptionsProps extends Omit<ConfigureOptionsDialogProps, 'closeModal' | 'isOpen'> {
@@ -21,6 +22,8 @@ export interface ConfigureOptionsProps extends Omit<ConfigureOptionsDialogProps,
   className?: string
   style?: CSSProperties
 }
+
+export { ALLOWED_VALUES_TYPE, VALIDATORS }
 
 export function ConfigureOptions(props: ConfigureOptionsProps): JSX.Element {
   const {
@@ -35,6 +38,8 @@ export function ConfigureOptions(props: ConfigureOptionsProps): JSX.Element {
     showAdvanced = false,
     hideExecutionTimeField = false,
     fetchValues,
+    allowedValuesType,
+    allowedValuesValidator,
     className,
     isReadonly = false
   } = props
@@ -78,6 +83,7 @@ export function ConfigureOptions(props: ConfigureOptionsProps): JSX.Element {
         title={getString('common.configureOptions.configureOptions')}
         enforceFocus={false}
         className={cx(css.dialog, Classes.DIALOG, 'padded-dialog')}
+        chidrenClassName={css.dialogContent}
         onClose={() => closeModal()}
         lazy
       >
@@ -94,6 +100,8 @@ export function ConfigureOptions(props: ConfigureOptionsProps): JSX.Element {
           showRequiredField={showRequiredField}
           showAdvanced={showAdvanced}
           fetchValues={fetchValues}
+          allowedValuesType={allowedValuesType}
+          allowedValuesValidator={allowedValuesValidator}
         />
       </Dialog>
     </React.Fragment>

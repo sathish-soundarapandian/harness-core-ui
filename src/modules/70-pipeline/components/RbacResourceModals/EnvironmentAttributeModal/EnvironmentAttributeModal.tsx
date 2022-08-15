@@ -42,7 +42,7 @@ function EnvironmentAttributeModal({ onSelectChange, selectedData }: RbacAttribu
       identifier: 'Production'
     },
     {
-      label: getString('nonProduction'),
+      label: getString('pipeline.preProduction'),
       identifier: 'PreProduction'
     }
   ]

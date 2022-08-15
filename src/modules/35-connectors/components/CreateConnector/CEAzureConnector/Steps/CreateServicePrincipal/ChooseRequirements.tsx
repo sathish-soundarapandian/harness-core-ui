@@ -50,16 +50,40 @@ const useSelectedCards = (featuresEnabled: ICard['value'][]) => {
     {
       prefix: getString('common.azure'),
       title: getString('connectors.costVisibility'),
+      value: 'BILLING',
+      icon: 'ce-visibility',
+      features: [
+        getString('connectors.ceAzure.chooseRequirements.billing.feat1'),
+        getString('connectors.ceAzure.chooseRequirements.billing.feat2'),
+        getString('connectors.ceAzure.chooseRequirements.billing.feat3'),
+        getString('connectors.ceAzure.chooseRequirements.billing.feat4'),
+        getString('connectors.ceAzure.chooseRequirements.billing.feat5')
+      ],
+      footer: getString('connectors.ceAzure.chooseRequirements.billing.footer')
+    },
+    {
+      prefix: getString('common.azure'),
+      title: getString('connectors.ceAzure.chooseRequirements.visibility.heading'),
       value: 'VISIBILITY',
       icon: 'ce-visibility',
       features: [
         getString('connectors.ceAzure.chooseRequirements.visibility.feat1'),
-        getString('connectors.ceAzure.chooseRequirements.visibility.feat2'),
-        getString('connectors.ceAzure.chooseRequirements.visibility.feat3'),
-        getString('connectors.ceAzure.chooseRequirements.visibility.feat4'),
-        getString('connectors.ceAzure.chooseRequirements.visibility.feat5')
+        getString('connectors.ceAzure.chooseRequirements.visibility.feat2')
       ],
-      footer: getString('connectors.ceAzure.chooseRequirements.visibility.footer')
+      footer: (
+        <>
+          {getString('connectors.ceAzure.chooseRequirements.optimization.footer1')}{' '}
+          <a
+            href="https://docs.harness.io/article/v682mz6qfd-set-up-cost-visibility-for-azure#step_4_create_service_principal_and_assign_permissions"
+            target="_blank"
+            rel="noreferrer"
+            onClick={e => e.stopPropagation()}
+          >
+            {getString('permissions').toLowerCase()}
+          </a>{' '}
+          {getString('connectors.ceAzure.chooseRequirements.optimization.footer2')}
+        </>
+      )
     },
     {
       prefix: getString('connectors.ceAzure.chooseRequirements.optimization.prefix'),
@@ -93,8 +117,8 @@ const useSelectedCards = (featuresEnabled: ICard['value'][]) => {
     const initialSelectedCards = [FeatureCards[0]]
     for (const fe of featuresEnabled) {
       const card = FeatureCards.find(c => c.value === fe)
-      // VISIBILITY is selected by default and added above already
-      if (card && card.value !== 'VISIBILITY') {
+      // BILLING is selected by default and added above already
+      if (card && card.value !== 'BILLING') {
         initialSelectedCards.push(card)
       }
     }
@@ -109,7 +133,6 @@ const ChooseRequirements: React.FC<StepProps<CEAzureDTO>> = props => {
   const { previousStep, prevStepData, nextStep } = props
   const featuresEnabled = prevStepData?.spec?.featuresEnabled || []
   const { selectedCards, setSelectedCards, FeatureCards } = useSelectedCards(featuresEnabled)
-  const includesBilling = !!prevStepData?.spec?.featuresEnabled?.includes('BILLING')
 
   useStepLoadTelemetry(CE_AZURE_CONNECTOR_CREATION_EVENTS.LOAD_CHOOSE_REQUIREMENT)
 
@@ -120,9 +143,6 @@ const ChooseRequirements: React.FC<StepProps<CEAzureDTO>> = props => {
     })
 
     const features = selectedCards.map(c => c.value)
-    if (includesBilling) {
-      features.push('BILLING')
-    }
 
     const nextStepData: CEAzureDTO = {
       ...((prevStepData || {}) as CEAzureDTO),
@@ -136,8 +156,8 @@ const ChooseRequirements: React.FC<StepProps<CEAzureDTO>> = props => {
   }
 
   const handleCardSelection = (item: ICard) => {
-    // VISIBILITY is provided by default, and user cannot un-select it
-    if (item.value === 'VISIBILITY') return
+    // BILLING is provided by default, and user cannot un-select it
+    if (item.value === 'BILLING') return
 
     const sc = [...selectedCards]
     const index = sc.indexOf(item)

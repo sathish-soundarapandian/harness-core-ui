@@ -7,7 +7,7 @@
 
 import type { ConnectorInfoDTO, ResponseBoolean } from 'services/cd-ng'
 
-export const dockerMock: ConnectorInfoDTO = {
+export const delegateDockerMock: ConnectorInfoDTO = {
   name: 'docker3',
   description: 'devConnector description',
   identifier: 'devConnector',
@@ -19,7 +19,24 @@ export const dockerMock: ConnectorInfoDTO = {
     delegateSelectors: ['dummyDelegateSelector'],
     dockerRegistryUrl: 'url-v3',
     providerType: 'DockerHub',
-    auth: { type: 'UsernamePassword', spec: { username: 'dev', usernameRef: undefined, passwordRef: 'account.b13' } }
+    auth: { type: 'UsernamePassword', spec: { username: 'dev', usernameRef: undefined, passwordRef: 'account.b13' } },
+    executeOnDelegate: true
+  }
+}
+
+export const hostedDockerMock: ConnectorInfoDTO = {
+  name: 'docker3',
+  description: 'devConnector description',
+  identifier: 'devConnector',
+  orgIdentifier: undefined,
+  projectIdentifier: undefined,
+  tags: {},
+  type: 'DockerRegistry',
+  spec: {
+    dockerRegistryUrl: 'url-v3',
+    providerType: 'DockerHub',
+    auth: { type: 'UsernamePassword', spec: { username: 'dev', usernameRef: undefined, passwordRef: 'account.b13' } },
+    executeOnDelegate: false
   }
 }
 

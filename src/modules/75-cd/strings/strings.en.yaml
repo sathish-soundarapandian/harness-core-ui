@@ -46,7 +46,10 @@ steps:
     filterHostName: Filter by host name
     filterHostAttributes: Filter by host attributes
     specificHosts: Specific Hosts
+    specificHostsOptional: Specific Hosts (Optional)
     specificAttributes: Specific Attributes
+    specificAttributesOptional: Specific Attributes (Optional)
+    hostsOptional: Hosts (Optional)
     previewHosts: Preview Hosts
     noHosts: No hosts provided
   azureInfraStep:
@@ -96,7 +99,7 @@ serviceCreated: '{{ $.common.serviceCreated }}'
 serviceUpdated: '{{ $.common.serviceUpdated }}'
 environmentCreated: '{{ $.common.environmentCreated }}'
 environmentUpdated: '{{ $.common.environmentUpdated }}'
-preProduction: 'Pre-Production'
+preProduction: '{{ $.pipeline.preProduction }}'
 preProductionType: 'Pre-Prod'
 environmentDelete: '{{ $.common.deleteEnvironment.title }}'
 environmentDeleteMessage: 'Are you sure you want to delete environment <strong>{{name}}</strong>?'
@@ -423,6 +426,7 @@ getStartedWithCD:
   delegateInfo: Delegates are worker processes that run on your infrastructure to execute tasks on behalf of the Harness platform.
   setupaNewDelegate: + Setup a New Delegate
 serviceName: Service Name
+skipRendering: Skip K8s Manifest(s) Rendering
 credentialsRef: credentialsRef
 connectorRefText: connectorRef
 hosts: hosts

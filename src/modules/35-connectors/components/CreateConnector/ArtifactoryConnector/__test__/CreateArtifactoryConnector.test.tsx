@@ -10,9 +10,14 @@ import { noop } from 'lodash-es'
 import { render, fireEvent, queryByText } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 import { TestWrapper } from '@common/utils/testUtils'
-import { mockResponse, mockSecret, mockConnector, backButtonMock } from './mocks'
+import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
+import routes from '@common/RouteDefinitions'
+import { mockResponse, mockSecret, delegateMockConnector, hostedMockConnector, backButtonMock } from './mocks'
 import CreateArtifactoryConnector from '../CreateArtifactoryConnector'
 import { backButtonTest } from '../../commonTest'
+
+const testPath = routes.toConnectors({ accountId: ':accountId' })
+const testPathParams = { accountId: 'dummy' }
 
 const commonProps = {
   accountId: 'dummy',
@@ -42,9 +47,13 @@ jest.mock('services/cd-ng', () => ({
 }))
 
 describe('Create Artifactory connector Wizard', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
   test('Should render form', async () => {
     const { container } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+      <TestWrapper path={testPath} pathParams={testPathParams}>
         <CreateArtifactoryConnector {...commonProps} isEditMode={false} connectorInfo={undefined} />
       </TestWrapper>
     )
@@ -70,14 +79,15 @@ describe('Create Artifactory connector Wizard', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('Should be able to edit connector', async () => {
+  test('Should be able to edit connector when delegate', async () => {
     const { container } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+      <TestWrapper path={testPath} pathParams={testPathParams}>
         <CreateArtifactoryConnector
           {...commonProps}
           isEditMode={true}
-          connectorInfo={mockConnector}
+          connectorInfo={delegateMockConnector}
           mock={mockResponse}
+          connectivityMode={ConnectivityModeType.Delegate}
         />
       </TestWrapper>
     )
@@ -96,19 +106,75 @@ describe('Create Artifactory connector Wizard', () => {
     expect(queryByText(container, 'connectors.artifactory.artifactoryServerUrl')).not.toBeNull()
     expect(container).toMatchSnapshot()
 
-    //updating connector
+    //connectivity mode step
     await act(async () => {
       fireEvent.click(container.querySelector('button[type="submit"]')!)
     })
 
+    // delegate selector step
     await act(async () => {
       fireEvent.click(container.querySelector('button[type="submit"]')!)
     })
 
+    // test connection
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+
+    expect(updateConnector).toBeCalledTimes(1)
     expect(updateConnector).toBeCalledWith(
       {
         connector: {
-          ...mockConnector,
+          ...delegateMockConnector,
+          name: updatedName
+        }
+      },
+      { queryParams: {} }
+    )
+  })
+
+  test('Should be able to edit connector when hosted', async () => {
+    const { container } = render(
+      <TestWrapper path={testPath} pathParams={testPathParams}>
+        <CreateArtifactoryConnector
+          {...commonProps}
+          isEditMode={true}
+          connectorInfo={hostedMockConnector}
+          mock={mockResponse}
+          connectivityMode={ConnectivityModeType.Manager}
+        />
+      </TestWrapper>
+    )
+    const updatedName = 'dummy name'
+    // editing connector name
+    await act(async () => {
+      fireEvent.change(container.querySelector('input[name="name"]')!, {
+        target: { value: updatedName }
+      })
+    })
+
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+    // step 2
+    expect(queryByText(container, 'connectors.artifactory.artifactoryServerUrl')).not.toBeNull()
+    expect(container).toMatchSnapshot()
+
+    //connectivity mode step
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+
+    // test connection
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+
+    expect(updateConnector).toBeCalledTimes(1)
+    expect(updateConnector).toBeCalledWith(
+      {
+        connector: {
+          ...hostedMockConnector,
           name: updatedName
         }
       },
@@ -118,7 +184,7 @@ describe('Create Artifactory connector Wizard', () => {
 
   backButtonTest({
     Element: (
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+      <TestWrapper path={testPath} pathParams={testPathParams}>
         <CreateArtifactoryConnector
           {...commonProps}
           isEditMode={true}

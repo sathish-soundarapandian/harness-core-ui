@@ -72,7 +72,7 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
     },
     [orgIdentifier, projectIdentifier, accountId, pipelineIdentifier]
   )
-  const stageNode = find(allNodeMap, node => node.setupId === getNodeId)
+  const stageNode = find(allNodeMap, node => node.setupId === getNodeId || node?.uuid === getNodeId)
 
   const times = (
     <div className={css.times}>

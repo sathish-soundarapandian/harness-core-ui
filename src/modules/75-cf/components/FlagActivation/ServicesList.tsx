@@ -16,7 +16,8 @@ import {
   Layout,
   ModalDialog,
   Page,
-  Text
+  Text,
+  useToaster
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Tag } from '@blueprintjs/core'
@@ -24,9 +25,11 @@ import { clone } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
 import type { Failure } from 'services/cd-ng'
 import { getErrorMessage } from '@cf/utils/CFUtils'
+import useResponseError from '@cf/hooks/useResponseError'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { useStrings } from 'framework/strings'
 import { ServiceDetailsDTO, useGetServiceDetails } from 'services/cd-ng'
+import { usePatchFeature } from 'services/cf'
 import type { Feature } from 'services/cf'
 
 import css from './ServicesList.module.scss'
@@ -48,6 +51,7 @@ export interface EditServicesProps {
   editedServices: ServiceType[]
   refetchServices: () => Promise<void>
   serviceError: GetDataError<Failure | Error> | null
+  onSave: () => void
 }
 
 const EditServicesModal: FC<EditServicesProps> = ({
@@ -56,6 +60,7 @@ const EditServicesModal: FC<EditServicesProps> = ({
   loading,
   editedServices,
   onChange,
+  onSave,
   serviceError,
   refetchServices
 }) => {
@@ -78,6 +83,7 @@ const EditServicesModal: FC<EditServicesProps> = ({
             intent="primary"
             variation={ButtonVariation.PRIMARY}
             disabled={loading}
+            onClick={onSave}
           />
           <Button variation={ButtonVariation.TERTIARY} text={getString('cancel')} onClick={closeModal} />
         </Layout.Horizontal>
@@ -88,7 +94,7 @@ const EditServicesModal: FC<EditServicesProps> = ({
       {noServices && (
         <Container height="100%" flex={{ align: 'center-center' }}>
           <Text color={Color.GREY_600} font={{ variation: FontVariation.H4, weight: 'light' }}>
-            No Services available
+            {getString('cf.featureFlagDetail.noServices')}
           </Text>
         </Container>
       )}
@@ -129,9 +135,11 @@ export interface ServicesListProps {
 }
 
 const ServicesList: React.FC<ServicesListProps> = props => {
-  const { featureFlag } = props
+  const { featureFlag, refetchFlag } = props
   const { orgIdentifier, accountId: accountIdentifier, projectIdentifier } = useParams<Record<string, string>>()
 
+  const { handleResponseError } = useResponseError()
+  const { showSuccess } = useToaster()
   const { getString } = useStrings()
 
   const [showModal, setShowModal] = useState<boolean>(false)
@@ -176,6 +184,63 @@ const ServicesList: React.FC<ServicesListProps> = props => {
     setServices(updatedServices)
   }
 
+  const { mutate: patchServices, loading: patchLoading } = usePatchFeature({
+    identifier: featureFlag.identifier,
+    queryParams: {
+      projectIdentifier: featureFlag.project as string,
+      environmentIdentifier: featureFlag.envProperties?.environment as string,
+      accountIdentifier,
+      orgIdentifier
+    }
+  })
+
+  const handleSave = async (): Promise<void> => {
+    const add = services.filter(s => !initialServices.includes(s))
+
+    const removedAndReadded = initialServices.filter(s => {
+      return add.find(added => added.identifier === s.identifier)
+    })
+
+    // checks all newly added services weren't removed and readded
+    // and checks that removed and readded services doesn't get removed
+    const validateRemovedReaddedServices = (servs: ServiceType[]): ServiceType[] =>
+      servs.filter(added => {
+        return !removedAndReadded.find(readded => {
+          return added.identifier === readded.identifier
+        })
+      })
+
+    const addedServices = validateRemovedReaddedServices(add).map((s: ServiceType) => ({
+      kind: 'addService',
+      parameters: {
+        name: s.name,
+        identifier: s.identifier
+      }
+    }))
+
+    const remove = initialServices.filter(s => !services.includes(s))
+
+    const removedServices = validateRemovedReaddedServices(remove).map((s: ServiceType) => ({
+      kind: 'removeService',
+      parameters: {
+        identifier: s.identifier
+      }
+    }))
+
+    const patchPayload = {
+      instructions: [...removedServices, ...addedServices]
+    }
+
+    try {
+      await patchServices(patchPayload)
+      setShowModal(false)
+      refetchFlag()
+      showSuccess(getString('cf.featureFlagDetail.serviceUpdateSuccess'))
+    } catch (err) {
+      handleResponseError(err)
+    }
+  }
+
   return (
     <Layout.Vertical margin={{ bottom: 'xlarge' }}>
       <Layout.Horizontal flex={{ align: 'center-center' }} margin={{ bottom: 'small' }}>
@@ -197,8 +262,9 @@ const ServicesList: React.FC<ServicesListProps> = props => {
               setShowModal(false)
             }}
             allServices={serviceData?.data?.serviceDeploymentDetailsList}
-            loading={loading}
+            loading={loading || patchLoading}
             onChange={handleChange}
+            onSave={handleSave}
             editedServices={services}
             serviceError={error}
             refetchServices={refetch}

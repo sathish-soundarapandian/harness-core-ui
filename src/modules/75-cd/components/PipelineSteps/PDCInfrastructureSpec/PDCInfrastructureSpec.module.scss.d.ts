@@ -11,6 +11,7 @@ declare const styles: {
   readonly accordionPanel: string
   readonly clusterInputWrapper: string
   readonly connectorRef: string
+  readonly connectorRuntime: string
   readonly credRefWidth: string
   readonly formRow: string
   readonly hostSelect: string
@@ -20,6 +21,7 @@ declare const styles: {
   readonly lastRow: string
   readonly marginTop: string
   readonly previewHostsLabel: string
+  readonly runtimeWidth: string
   readonly simultaneousDeployment: string
   readonly specifyHostsRadioGroup: string
 }

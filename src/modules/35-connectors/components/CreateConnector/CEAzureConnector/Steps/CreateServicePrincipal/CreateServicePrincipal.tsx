@@ -147,6 +147,15 @@ const CreateServicePrincipal: React.FC<StepProps<CEAzureDTO>> = (props): JSX.Ele
     )
   }
 
+  if (ENABLED.BILLING && ENABLED.VISIBILITY) {
+    commands.push(
+      <Commands
+        comment={getString('connectors.ceAzure.servicePrincipal.inventoryMgtCmd')}
+        command={`az role assignment create --assignee ${appId} --role 'Reader' --scope /subscriptions/${subscriptionId}`}
+      />
+    )
+  }
+
   // If BILLING and OPTIMIZATION are selected, we need to show 1, 2, and 3.
   // 1 & 2 are added from above
   if (ENABLED.BILLING && ENABLED.OPTIMIZATION) {

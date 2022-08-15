@@ -51,7 +51,9 @@ const StepAWSAuthentication: React.FC<StepProps<StepAWSAuthenticationProps> & Co
   const { getString } = useStrings()
   const [initialValues, setInitialValues] = useState(defaultInitialFormData)
   const [loadingConnectorSecrets, setLoadingConnectorSecrets] = useState(props.isEditMode)
-  useConnectorWizard({ helpPanel: { referenceId: 'AwsConnectorCredentials', contentWidth: 900 } })
+  useConnectorWizard({
+    helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
+  })
   useEffect(() => {
     if (loadingConnectorSecrets) {
       if (props.isEditMode) {

@@ -32,7 +32,7 @@ exports[`Test ConfigureOptions default value via function 1`] = `
     </svg>
   </span>
   <div
-    class="StyledProps--font StyledProps--main Dialog--children StyledProps--padding-none"
+    class="StyledProps--font StyledProps--main Dialog--children dialogContent StyledProps--padding-none"
   >
     <div
       class="OverlaySpinner--overlaySpinner"
@@ -262,18 +262,6 @@ exports[`Test ConfigureOptions default value via function 1`] = `
         class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--margin-top-xxlarge"
       >
         <button
-          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
-          type="button"
-        >
-          <span
-            class="bp3-button-text"
-          >
-            <span>
-              cancel
-            </span>
-          </span>
-        </button>
-        <button
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
           type="button"
         >
@@ -282,6 +270,18 @@ exports[`Test ConfigureOptions default value via function 1`] = `
           >
             <span>
               submit
+            </span>
+          </span>
+        </button>
+        <button
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            <span>
+              cancel
             </span>
           </span>
         </button>
@@ -324,7 +324,7 @@ exports[`Test ConfigureOptions runtime execution input 1`] = `
     </svg>
   </span>
   <div
-    class="StyledProps--font StyledProps--main Dialog--children StyledProps--padding-none"
+    class="StyledProps--font StyledProps--main Dialog--children dialogContent StyledProps--padding-none"
   >
     <div
       class="OverlaySpinner--overlaySpinner"
@@ -555,18 +555,6 @@ exports[`Test ConfigureOptions runtime execution input 1`] = `
         class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--margin-top-xxlarge"
       >
         <button
-          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
-          type="button"
-        >
-          <span
-            class="bp3-button-text"
-          >
-            <span>
-              cancel
-            </span>
-          </span>
-        </button>
-        <button
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
           type="button"
         >
@@ -575,6 +563,18 @@ exports[`Test ConfigureOptions runtime execution input 1`] = `
           >
             <span>
               submit
+            </span>
+          </span>
+        </button>
+        <button
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            <span>
+              cancel
             </span>
           </span>
         </button>
@@ -617,7 +617,7 @@ exports[`Test ConfigureOptions should render configure options 1`] = `
     </svg>
   </span>
   <div
-    class="StyledProps--font StyledProps--main Dialog--children StyledProps--padding-none"
+    class="StyledProps--font StyledProps--main Dialog--children dialogContent StyledProps--padding-none"
   >
     <div
       class="OverlaySpinner--overlaySpinner"
@@ -822,18 +822,6 @@ exports[`Test ConfigureOptions should render configure options 1`] = `
         class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--margin-top-xxlarge"
       >
         <button
-          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
-          type="button"
-        >
-          <span
-            class="bp3-button-text"
-          >
-            <span>
-              cancel
-            </span>
-          </span>
-        </button>
-        <button
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
           type="button"
         >
@@ -842,6 +830,18 @@ exports[`Test ConfigureOptions should render configure options 1`] = `
           >
             <span>
               submit
+            </span>
+          </span>
+        </button>
+        <button
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            <span>
+              cancel
             </span>
           </span>
         </button>
@@ -884,7 +884,7 @@ exports[`Test ConfigureOptions test allowed advanced values 1`] = `
     </svg>
   </span>
   <div
-    class="StyledProps--font StyledProps--main Dialog--children StyledProps--padding-none"
+    class="StyledProps--font StyledProps--main Dialog--children dialogContent StyledProps--padding-none"
   >
     <div
       class="OverlaySpinner--overlaySpinner"
@@ -1070,18 +1070,6 @@ exports[`Test ConfigureOptions test allowed advanced values 1`] = `
         class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--margin-top-xxlarge"
       >
         <button
-          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
-          type="button"
-        >
-          <span
-            class="bp3-button-text"
-          >
-            <span>
-              cancel
-            </span>
-          </span>
-        </button>
-        <button
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
           type="button"
         >
@@ -1090,6 +1078,18 @@ exports[`Test ConfigureOptions test allowed advanced values 1`] = `
           >
             <span>
               submit
+            </span>
+          </span>
+        </button>
+        <button
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            <span>
+              cancel
             </span>
           </span>
         </button>
@@ -1132,7 +1132,7 @@ exports[`Test ConfigureOptions test allowed values 1`] = `
     </svg>
   </span>
   <div
-    class="StyledProps--font StyledProps--main Dialog--children StyledProps--padding-none"
+    class="StyledProps--font StyledProps--main Dialog--children dialogContent StyledProps--padding-none"
   >
     <div
       class="OverlaySpinner--overlaySpinner"
@@ -1440,18 +1440,6 @@ exports[`Test ConfigureOptions test allowed values 1`] = `
         class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--margin-top-xxlarge"
       >
         <button
-          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
-          type="button"
-        >
-          <span
-            class="bp3-button-text"
-          >
-            <span>
-              cancel
-            </span>
-          </span>
-        </button>
-        <button
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
           type="button"
         >
@@ -1460,6 +1448,18 @@ exports[`Test ConfigureOptions test allowed values 1`] = `
           >
             <span>
               submit
+            </span>
+          </span>
+        </button>
+        <button
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            <span>
+              cancel
             </span>
           </span>
         </button>
@@ -1502,7 +1502,7 @@ exports[`Test ConfigureOptions test regex expression 1`] = `
     </svg>
   </span>
   <div
-    class="StyledProps--font StyledProps--main Dialog--children StyledProps--padding-none"
+    class="StyledProps--font StyledProps--main Dialog--children dialogContent StyledProps--padding-none"
   >
     <div
       class="OverlaySpinner--overlaySpinner"
@@ -1738,18 +1738,6 @@ exports[`Test ConfigureOptions test regex expression 1`] = `
         class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--margin-top-xxlarge"
       >
         <button
-          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
-          type="button"
-        >
-          <span
-            class="bp3-button-text"
-          >
-            <span>
-              cancel
-            </span>
-          </span>
-        </button>
-        <button
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
           type="button"
         >
@@ -1758,6 +1746,18 @@ exports[`Test ConfigureOptions test regex expression 1`] = `
           >
             <span>
               submit
+            </span>
+          </span>
+        </button>
+        <button
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            <span>
+              cancel
             </span>
           </span>
         </button>

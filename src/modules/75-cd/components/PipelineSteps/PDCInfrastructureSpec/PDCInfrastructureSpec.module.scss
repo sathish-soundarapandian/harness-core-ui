@@ -57,6 +57,7 @@
 }
 
 .hostsTextArea {
+  width: 433px;
   textarea {
     min-height: var(--spacing-14) !important;
   }
@@ -85,5 +86,13 @@
 }
 
 .credRefWidth {
-  width: 433px;
+  width: 433px !important;
+}
+
+.connectorRuntime {
+  padding-bottom: var(--spacing-2);
+}
+
+.runtimeWidth {
+  width: 400px;
 }

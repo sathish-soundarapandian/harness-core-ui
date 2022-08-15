@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly floatingButton: string
   readonly form: string
   readonly helpPanelGrid: string
   readonly helpPanelStyleClose: string

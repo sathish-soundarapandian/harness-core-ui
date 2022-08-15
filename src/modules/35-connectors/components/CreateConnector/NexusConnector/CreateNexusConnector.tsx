@@ -54,6 +54,7 @@ const CreateNexusConnector: React.FC<CreateConnectorModalProps> = props => {
           identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
           {...commonProps}
           onConnectorCreated={props.onSuccess}
+          helpPanelReferenceId="NexusDetails"
         />
         <DelegateSelectorStep
           name={getString('delegate.DelegateselectionLabel')}

@@ -28,7 +28,14 @@ const getOverrideContextValue = (): PipelineContextInterface => {
           name: 'Stage 3',
           identifier: 's3',
           type: StageType.DEPLOY,
-          description: ''
+          description: '',
+          spec: {
+            serviceConfig: {
+              serviceDefinition: {
+                type: 'Kubernetes'
+              }
+            }
+          }
         }
       }
     }),

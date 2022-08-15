@@ -101,8 +101,8 @@
 
   .grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: var(--spacing-large);
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: var(--spacing-small);
     [class*='bp3-card'] {
       box-shadow: 0px 2px 4px rgba(40, 41, 61, 0.04), 0px 8px 16px rgba(96, 97, 112, 0.16) !important;
       padding: var(--spacing-large) 0 0 0;

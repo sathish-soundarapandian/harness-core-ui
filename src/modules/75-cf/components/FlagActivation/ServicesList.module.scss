@@ -7,13 +7,19 @@
 
 .displayTags {
   background: var(--primary-2);
-  margin: 4px 0;
-  color: var(--black);
+  margin: var(--spacing-xsmall) 0;
+  color: var(--grey-900);
 }
 
 .tags {
-  margin: 8px 0;
-  color: var(--black);
+  margin: var(--spacing-small) 0;
+  color: var(--grey-900);
   background: var(--grey-50);
-  outline-color: var(--grey-100);
+}
+:global {
+  .bp3-active,
+  .bp3-tag:hover {
+    background: var(--primary-6) !important;
+    color: var(--grey-0) !important;
+  }
 }

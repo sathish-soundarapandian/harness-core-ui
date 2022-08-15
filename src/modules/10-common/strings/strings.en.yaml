@@ -52,6 +52,7 @@ readOnly: Read Only
 editYaml: Edit YAML
 provisioner: Provisioner
 templates: Templates
+refreshDelegateLogs: Refresh Delegate Logs
 comments: Comments
 updating: 'Updating {{entity}} {{name}}'
 creating: 'Creating {{entity}} {{name}}'

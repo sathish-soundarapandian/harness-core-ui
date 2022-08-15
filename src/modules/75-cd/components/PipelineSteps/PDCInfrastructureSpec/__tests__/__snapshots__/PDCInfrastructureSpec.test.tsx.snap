@@ -285,7 +285,7 @@ exports[`test different stepViewType render runtimeview when no Preconfigured 1`
           class="formGroup md"
         >
           <div
-            class="bp3-form-group hostsTextArea inputWidth"
+            class="bp3-form-group hostsTextArea"
           >
             <label
               class="bp3-label"
@@ -295,7 +295,7 @@ exports[`test different stepViewType render runtimeview when no Preconfigured 1`
                 class="Tooltip--acenter"
                 data-tooltip-id="pdcInfraRuntime_cd.hosts"
               >
-                connectors.pdc.hosts
+                cd.steps.pdcStep.hostsOptional
               </span>
                
               <span
@@ -354,7 +354,7 @@ exports[`test different stepViewType render runtimeview when no Preconfigured 1`
           </div>
         </div>
         <div
-          class="formGroup md"
+          class="formGroup md credRefWidth"
         >
           <div
             class="bp3-form-group"

@@ -129,7 +129,10 @@ const ConnectorDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDe
 
   const getInitialValues = () => {
     if (isEdit) {
-      return { ...pick(props.connectorInfo, ['name', 'identifier', 'description', 'tags']) }
+      return {
+        ...pick(props.connectorInfo, ['name', 'identifier', 'description', 'tags']),
+        ...(prevStepData && pick(prevStepData, ['name', 'identifier', 'description', 'tags']))
+      }
     } else if (prevStepData) {
       return { ...pick(prevStepData, ['name', 'identifier', 'description', 'tags']) }
     } else {

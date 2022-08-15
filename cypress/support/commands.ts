@@ -134,6 +134,9 @@ Cypress.Commands.add('login', (emailValue: string, password: string) => {
   cy.clickSubmit()
 })
 
+/**
+ * Ensures the page has fully loaded by checking for existence of a className('optional')
+ */
 Cypress.Commands.add('visitPageAssertion', (className = activeTabClassName) => {
   cy.get(className, {
     timeout: 30000

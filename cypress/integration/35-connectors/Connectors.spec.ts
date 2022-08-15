@@ -76,6 +76,16 @@ describe('Connectors list', () => {
     cy.contains('span', 'Continue').click()
     cy.wait(1000)
 
+    // Connectivity mode step
+    cy.contains('p', 'Connect through a Harness Delegate').should('be.visible')
+
+    cy.contains('p', `Connect through a Harness Delegate`).click({
+      force: true
+    })
+
+    cy.contains('span', 'Continue').click()
+    cy.wait(1000)
+
     //Delegate step
     cy.contains('p', 'Delegates Setup').should('be.visible')
 

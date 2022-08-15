@@ -10,9 +10,12 @@ import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as useGetServiceDetailsMock from 'services/cd-ng'
+import * as cfServiceMock from 'services/cf'
 import mockFeature from '@cf/utils/testData/data/mockFeature'
 import mockService from './__data__/mockService'
 import ServicesList from '../ServicesList'
+
+const refetchFlagMock = jest.fn()
 
 const renderComponent = (): RenderResult => {
   return render(
@@ -20,7 +23,7 @@ const renderComponent = (): RenderResult => {
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
     >
-      <ServicesList featureFlag={mockFeature} refetchFlag={jest.fn()} />
+      <ServicesList featureFlag={mockFeature} refetchFlag={refetchFlagMock} />
     </TestWrapper>
   )
 }
@@ -30,16 +33,16 @@ beforeEach(() => {
 })
 
 const useGetServicesMock = jest.spyOn(useGetServiceDetailsMock, 'useGetServiceDetails')
+const usePatchServiceMock = jest.spyOn(cfServiceMock, 'usePatchFeature')
+
 describe('ServiceList', () => {
   test('it should display pre-existing services', async () => {
-    useGetServicesMock.mockImplementation((): any => {
-      return {
-        data: mockService,
-        error: null,
-        loading: false,
-        refetch: jest.fn()
-      }
-    })
+    useGetServicesMock.mockReturnValue({
+      loading: false,
+      data: mockService,
+      refetch: jest.fn(),
+      error: null
+    } as any)
 
     renderComponent()
 
@@ -47,18 +50,125 @@ describe('ServiceList', () => {
       expect(screen.getByText(service.name)).toBeInTheDocument()
     })
   })
+
+  test('it should send patch request correctly', async () => {
+    const patchMock = jest.fn()
+
+    useGetServicesMock.mockReturnValue({
+      loading: false,
+      data: mockService,
+      refetch: jest.fn(),
+      error: null
+    } as any)
+
+    usePatchServiceMock.mockReturnValue({ loading: false, mutate: patchMock } as any)
+
+    renderComponent()
+
+    userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
+
+    // add a new service
+    userEvent.click(screen.getByRole('generic', { name: 'Support-0' }))
+
+    // delete existing service
+    userEvent.click(screen.getByRole('generic', { name: 'My Service 1-3' }))
+
+    userEvent.click(screen.getByRole('button', { name: 'save' }))
+
+    await waitFor(() => {
+      expect(patchMock).toBeCalledWith({
+        instructions: [
+          {
+            kind: 'removeService',
+            parameters: {
+              identifier: 'service1Id'
+            }
+          },
+          {
+            kind: 'addService',
+            parameters: {
+              identifier: 'Support',
+              name: 'Support'
+            }
+          }
+        ]
+      })
+
+      expect(screen.queryByTestId('modaldialog-header')).not.toBeInTheDocument()
+      expect(screen.queryByTestId('modaldialog-body')).not.toBeInTheDocument()
+      expect(screen.queryByTestId('modaldialog-footer')).not.toBeInTheDocument()
+
+      expect(refetchFlagMock).toBeCalled()
+      expect(screen.getByText('cf.featureFlagDetail.serviceUpdateSuccess')).toBeInTheDocument()
+    })
+  })
+
+  test('it should show error if patch fails', async () => {
+    usePatchServiceMock.mockReturnValue({
+      loading: false,
+      mutate: jest.fn().mockRejectedValue({ message: 'failed to patch services' })
+    } as any)
+
+    renderComponent()
+
+    userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
+
+    // add a new service
+    userEvent.click(screen.getByRole('generic', { name: 'Support-0' }))
+
+    // delete existing service
+    userEvent.click(screen.getByRole('generic', { name: 'My Service 1-3' }))
+
+    userEvent.click(screen.getByRole('button', { name: 'save' }))
+    await waitFor(() => {
+      expect(screen.getByText('failed to patch services')).toBeInTheDocument()
+      expect(refetchFlagMock).not.toBeCalled()
+    })
+  })
+
+  test('it should check removed and readded logic', async () => {
+    const patchMock = jest.fn()
+
+    usePatchServiceMock.mockReturnValue({ loading: false, mutate: patchMock } as any)
+
+    renderComponent()
+
+    userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
+
+    // delete existing service
+    userEvent.click(screen.getByRole('generic', { name: 'My Service 1-3' }))
+    // re-add the deleted service
+    userEvent.click(screen.getByRole('generic', { name: 'My Service 1-3' }))
+
+    userEvent.click(screen.getByRole('button', { name: 'save' }))
+
+    await waitFor(() => {
+      expect(patchMock).toBeCalledWith({
+        instructions: []
+      })
+
+      expect(screen.queryByTestId('modaldialog-header')).not.toBeInTheDocument()
+      expect(screen.queryByTestId('modaldialog-body')).not.toBeInTheDocument()
+      expect(screen.queryByTestId('modaldialog-footer')).not.toBeInTheDocument()
+
+      expect(refetchFlagMock).toBeCalled()
+
+      expect(screen.getAllByText('cf.featureFlagDetail.serviceUpdateSuccess')[0]).toBeInTheDocument()
+    })
+  })
 })
 
 describe('EditServicesModal', () => {
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
   test('it should open, close and render EditServicesModal correctly', async () => {
-    useGetServicesMock.mockImplementation((): any => {
-      return {
-        data: mockService,
-        error: null,
-        loading: false,
-        refetch: jest.fn()
-      }
-    })
+    useGetServicesMock.mockReturnValue({
+      loading: false,
+      data: mockService,
+      refetch: jest.fn(),
+      error: null
+    } as any)
 
     renderComponent()
 
@@ -83,14 +193,12 @@ describe('EditServicesModal', () => {
   })
 
   test('it should show spinner when services are loading', async () => {
-    useGetServicesMock.mockImplementation((): any => {
-      return {
-        data: null,
-        error: null,
-        loading: true,
-        refetch: jest.fn()
-      }
-    })
+    useGetServicesMock.mockReturnValue({
+      loading: true,
+      data: null,
+      refetch: jest.fn(),
+      error: null
+    } as any)
 
     renderComponent()
     userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
@@ -100,37 +208,35 @@ describe('EditServicesModal', () => {
 
   test('it should display error message when fail to fetch Services', async () => {
     const refetch = jest.fn()
-    useGetServicesMock.mockImplementation((): any => {
-      return {
-        data: null,
-        error: true,
-        loading: false,
-        refetch
-      }
-    })
+
+    useGetServicesMock.mockReturnValue({
+      loading: false,
+      data: null,
+      refetch,
+      error: true
+    } as any)
 
     renderComponent()
+
     userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument()
-      expect(screen.getByText('error')).toBeInTheDocument()
+      expect(screen.getAllByText('error')[0]).toBeInTheDocument()
       expect(refetch).not.toBeCalled()
-
-      userEvent.click(screen.getByRole('button', { name: 'Retry' }))
-      expect(refetch).toBeCalled()
     })
+    userEvent.click(screen.getByRole('button', { name: 'Retry' }))
+
+    await waitFor(() => expect(refetch).toBeCalled())
   })
 
   test('it should already display existing services as selected in modal and can toggle to unselected', async () => {
-    useGetServicesMock.mockImplementation((): any => {
-      return {
-        data: mockService,
-        error: false,
-        loading: false,
-        refetch: jest.fn()
-      }
-    })
+    useGetServicesMock.mockReturnValue({
+      loading: false,
+      data: mockService,
+      refetch: jest.fn(),
+      error: false
+    } as any)
 
     renderComponent()
     userEvent.click(screen.getByRole('button', { name: 'edit-services' }))

@@ -779,6 +779,7 @@ perspectives:
       nameLengthError: The name must be between 1 and 80 characters.
       nameError: '{{$.validation.nameRequired}}'
       ruleError: 'values length should be greater than 1'
+      valuesError: Atleast one value is Required
     filters:
       operator: '{{$.common.operator}}'
       searchText: 'Search Here'

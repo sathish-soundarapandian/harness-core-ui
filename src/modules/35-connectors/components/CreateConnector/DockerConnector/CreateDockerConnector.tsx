@@ -17,8 +17,10 @@ import { buildDockerPayload } from '@connectors/pages/connectors/utils/Connector
 import { useStrings } from 'framework/strings'
 import type { ConnectorRequestBody, ConnectorInfoDTO, ResponseBoolean } from 'services/cd-ng'
 import type { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
+import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import StepDockerAuthentication from './StepAuth/StepDockerAuthentication'
 import DelegateSelectorStep from '../commonSteps/DelegateSelectorStep/DelegateSelectorStep'
+import ConnectivityModeStep from '../commonSteps/ConnectivityModeStep/ConnectivityModeStep'
 
 interface CreateDockerConnectorProps {
   onClose: () => void
@@ -31,10 +33,20 @@ interface CreateDockerConnectorProps {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
+  connectivityMode?: ConnectivityModeType
+  setConnectivityMode?: (val: ConnectivityModeType) => void
 }
 const CreateDockerConnector: React.FC<CreateDockerConnectorProps> = props => {
   const { getString } = useStrings()
-  const commonProps = pick(props, ['isEditMode', 'setIsEditMode', 'accountId', 'orgIdentifier', 'projectIdentifier'])
+  const commonProps = pick(props, [
+    'isEditMode',
+    'setIsEditMode',
+    'accountId',
+    'orgIdentifier',
+    'projectIdentifier',
+    'connectivityMode',
+    'setConnectivityMode'
+  ])
   return (
     <>
       <StepWizard
@@ -57,18 +69,34 @@ const CreateDockerConnector: React.FC<CreateDockerConnectorProps> = props => {
           {...commonProps}
           onConnectorCreated={props.onSuccess}
           connectorInfo={props.connectorInfo}
+          helpPanelReferenceId="DockerConnectorDetails"
         />
-        <DelegateSelectorStep
-          name={getString('delegate.DelegateselectionLabel')}
+        <ConnectivityModeStep
+          name={getString('connectors.selectConnectivityMode')}
+          type={Connectors.DOCKER}
+          gitDetails={props.gitDetails}
+          connectorInfo={props.connectorInfo}
           isEditMode={props.isEditMode}
           setIsEditMode={props.setIsEditMode}
           buildPayload={buildDockerPayload}
+          connectivityMode={props.connectivityMode}
+          setConnectivityMode={props.setConnectivityMode}
           hideModal={props.onClose}
           onConnectorCreated={props.onSuccess}
-          connectorInfo={props.connectorInfo}
-          gitDetails={props.gitDetails}
-          helpPanelReferenceId="ConnectorDelegatesSetup"
         />
+        {props.connectivityMode === ConnectivityModeType.Delegate ? (
+          <DelegateSelectorStep
+            name={getString('delegate.DelegateselectionLabel')}
+            isEditMode={props.isEditMode}
+            setIsEditMode={props.setIsEditMode}
+            buildPayload={buildDockerPayload}
+            hideModal={props.onClose}
+            onConnectorCreated={props.onSuccess}
+            connectorInfo={props.connectorInfo}
+            gitDetails={props.gitDetails}
+            helpPanelReferenceId="ConnectorDelegatesSetup"
+          />
+        ) : null}
         <VerifyOutOfClusterDelegate
           name={getString('connectors.stepThreeName')}
           connectorInfo={props.connectorInfo}

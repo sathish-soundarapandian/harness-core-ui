@@ -55,12 +55,8 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
     }
   }, [step.executableResponses])
 
-  const showDelegateRow = (
-    delegateList: DelegateInfo[] | undefined,
-    tasks: ExecutableResponse[],
-    status: string | undefined
-  ): boolean => {
-    return ((delegateList && delegateList?.length > 0) || tasks?.length > 0) && isExecutionComplete(status)
+  const showDelegateRow = (delegateList: DelegateInfo[] | undefined, tasks: ExecutableResponse[]): boolean => {
+    return (delegateList && delegateList?.length > 0) || tasks?.length > 0
   }
 
   const delegateListContainsTask = (delegateList: DelegateInfo[] | undefined, taskId: string): boolean => {
@@ -103,7 +99,7 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
             <td>{label.value}</td>
           </tr>
         ))}
-        {showDelegateRow(step.delegateInfoList, taskList, step.status) && (
+        {showDelegateRow(step.delegateInfoList, taskList) && (
           <tr className={css.delegateRow}>
             <th>
               {isExecutionCompletedWithBadState(step.status) && (
@@ -144,13 +140,26 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
                   ))}
                 {taskList &&
                   taskList.length > 0 &&
-                  isExecutionComplete(step.status) &&
                   taskList.map((item, index) =>
                     delegateListContainsTask(step.delegateInfoList, item.taskId) ? null : (
                       <div key={`${item.taskId}-${index}`}>
-                        <Text font={{ size: 'small', weight: 'bold' }} color={Color.ORANGE_500}>
-                          <String stringID="common.noDelegateForTask" vars={{ taskName: item.taskName }} useRichText />
-                        </Text>{' '}
+                        {isExecutionComplete(step.status) ? (
+                          <Text font={{ size: 'small', weight: 'bold' }} color={Color.ORANGE_500}>
+                            <String
+                              stringID="common.noDelegateForTask"
+                              vars={{ taskName: item.taskName }}
+                              useRichText
+                            />
+                          </Text>
+                        ) : (
+                          <Text font={{ size: 'small', weight: 'bold' }}>
+                            <String
+                              stringID="common.delegateForTask"
+                              vars={{ delegate: item.name, taskName: item.taskName }}
+                              useRichText
+                            />
+                          </Text>
+                        )}{' '}
                         (
                         <Text
                           font={{ size: 'small' }}

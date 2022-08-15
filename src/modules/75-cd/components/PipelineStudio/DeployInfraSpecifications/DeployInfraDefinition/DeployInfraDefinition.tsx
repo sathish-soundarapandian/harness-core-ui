@@ -28,7 +28,8 @@ import {
   K8sGcpInfrastructure,
   PdcInfrastructure,
   PipelineInfrastructure,
-  StageElementConfig
+  StageElementConfig,
+  GetExecutionStrategyYamlQueryParams
 } from 'services/cd-ng'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
@@ -68,7 +69,14 @@ import type { ServerlessAzureSpec } from '@cd/components/PipelineSteps/Serverles
 import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { isNewServiceEnvEntity } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
-import { cleanUpEmptyProvisioner, getInfraGroups, getInfrastructureDefaultValue } from '../deployInfraHelper'
+import {
+  cleanUpEmptyProvisioner,
+  getInfraGroups,
+  getInfrastructureDefaultValue,
+  InfrastructureGroup,
+  isAzureWebAppInfrastructureType,
+  isServerlessInfrastructureType
+} from '../deployInfraHelper'
 import stageCss from '../../DeployStageSetupShell/DeployStage.module.scss'
 
 export const deploymentTypeInfraTypeMap = {
@@ -130,7 +138,24 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
+  const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+
   const [selectedInfrastructureType, setSelectedInfrastructureType] = React.useState<string | undefined>()
+
+  const [selectedDeploymentType, setSelectedDeploymentType] = React.useState<
+    GetExecutionStrategyYamlQueryParams['serviceDefinitionType']
+  >(getServiceDefinitionType(stage, getStageFromPipeline, isNewServiceEnvEntity, isSvcEnvEnabled, templateServiceData))
+
+  const [infraGroups, setInfraGroups] = React.useState<InfrastructureGroup[]>(
+    getInfraGroups(
+      selectedDeploymentType,
+      getString,
+      {
+        NG_AZURE: defaultTo(NG_AZURE, false)
+      },
+      selectedInfrastructureType
+    )
+  )
 
   useEffect(() => {
     if (isEmpty(stage?.stage?.spec?.infrastructure) && stage?.stage?.type === StageType.DEPLOY) {
@@ -161,6 +186,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
         debounceUpdateStage(stageData?.stage)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const stageRef = React.useRef(stage)
@@ -185,41 +211,58 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
     debounceUpdateStage(stageData?.stage)
     setProvisionerEnabled(false)
   }
-  const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
 
-  const selectedDeploymentType = React.useMemo(() => {
-    return getServiceDefinitionType(
+  React.useEffect(() => {
+    const newDeploymentType = getServiceDefinitionType(
       stage,
       getStageFromPipeline,
       isNewServiceEnvEntity,
       isSvcEnvEnabled,
       templateServiceData
     )
-  }, [stage, getStageFromPipeline])
 
-  const infraGroups = React.useMemo(
-    () =>
-      getInfraGroups(selectedDeploymentType, getString, {
+    // This is used to not consider the value on infradefinition.type when switching between deployment types
+    let infraReset = false
+    if (newDeploymentType !== selectedDeploymentType) {
+      setSelectedDeploymentType(newDeploymentType)
+      infraReset = true
+    }
+
+    const initialInfraGroups = getInfraGroups(
+      newDeploymentType,
+      getString,
+      {
         NG_AZURE: defaultTo(NG_AZURE, false)
-      }),
-    [selectedDeploymentType, NG_AZURE]
-  )
+      },
+      selectedInfrastructureType
+    )
 
-  const filteredInfraGroups = infraGroups.map(group => ({
-    ...group,
-    items: group.items.filter(item => !item.disabled)
-  }))
+    const filteredInfraGroups = initialInfraGroups.map(group => ({
+      ...group,
+      items: group.items.filter(item => !item.disabled)
+    }))
 
-  React.useEffect(() => {
-    const type =
-      stage?.stage?.spec?.infrastructure?.infrastructureDefinition?.type ||
+    const infrastructureType =
+      (!infraReset && stage?.stage?.spec?.infrastructure?.infrastructureDefinition?.type) ||
       (filteredInfraGroups.length > 1 || filteredInfraGroups[0].items.length > 1
         ? undefined
-        : deploymentTypeInfraTypeMap[selectedDeploymentType])
+        : deploymentTypeInfraTypeMap[newDeploymentType])
 
-    setSelectedInfrastructureType(type)
-    const initialInfraDefValues = getInfrastructureDefaultValue(stage, type)
+    setSelectedInfrastructureType(infrastructureType)
+    setInfraGroups(
+      getInfraGroups(
+        newDeploymentType,
+        getString,
+        {
+          NG_AZURE: defaultTo(NG_AZURE, false)
+        },
+        infrastructureType
+      )
+    )
+
+    const initialInfraDefValues = getInfrastructureDefaultValue(stage, infrastructureType)
     setInitialInfrastructureDefinitionValues(initialInfraDefValues)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stage])
 
   const onUpdateInfrastructureDefinition = (extendedSpec: InfraTypes, type: string): void => {
@@ -625,9 +668,15 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
           </div>
         </>
       )}
-      {!isAzureWebAppDeploymentType(selectedDeploymentType) && (
+      {!(
+        isAzureWebAppDeploymentType(selectedDeploymentType) ||
+        isAzureWebAppInfrastructureType(selectedInfrastructureType)
+      ) && (
         <Card className={stageCss.sectionCard}>
-          {!isServerlessDeploymentType(selectedDeploymentType) && (
+          {!(
+            isServerlessDeploymentType(selectedDeploymentType) ||
+            isServerlessInfrastructureType(selectedInfrastructureType)
+          ) && (
             <Text margin={{ bottom: 'medium' }} className={stageCss.info}>
               <StringWithTooltip
                 tooltipId="pipelineStep.infrastructureDefinitionMethod"
@@ -638,7 +687,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
           )}
           <SelectInfrastructureType
             infraGroups={infraGroups}
-            isReadonly={isReadonly}
+            isReadonly={isReadonly || (!selectedDeploymentType && selectedInfrastructureType)}
             selectedInfrastructureType={selectedInfrastructureType}
             onChange={deploymentType => {
               setSelectedInfrastructureType(deploymentType)

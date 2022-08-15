@@ -448,30 +448,31 @@ describe('ServerlessAwsLambda as deployment type', () => {
     cy.get(`div[data-testid="pipeline-studio"]`, {
       timeout: 5000
     }).should('be.visible')
+    cy.wait('@pipelineDetails')
 
     // Select Stage
     cy.contains('p', 'Stage 1').click()
     cy.wait('@servicesCall')
-    cy.wait(1000)
     cy.wait('@stepLibrary')
-    cy.wait(1000)
 
     // Select Serverless Lambda as deployment type
     cy.contains('p', 'Serverless Lambda').click()
     cy.wait('@serverlessYamlSnippet')
+    cy.wait('@stepLibrary')
 
-    // Got to Execution tab, Serverless Aws Lambda Deploy should be added by default
+    // Go to Execution tab, Serverless Aws Lambda Deploy should be added by default
     // Switching between Rollback and Execution should work as expected
     cy.contains('span', 'Execution').click({ force: true })
-    cy.contains('p', 'Serverless Aws Lambda Deploy')
+    cy.contains('p', 'Serverless Aws Lambda Deploy').should('be.visible')
     cy.contains('p', 'Rollback').click({ force: true })
-    cy.contains('p', 'Serverless Aws Lambda Rollback')
+    cy.contains('p', 'Serverless Aws Lambda Rollback').should('be.visible')
     cy.contains('p', 'Execution').click({ force: true })
-    cy.contains('p', 'Serverless Aws Lambda Deploy')
+    cy.contains('p', 'Serverless Aws Lambda Deploy').should('be.visible')
 
     // Add another Serverless Lambda Deploy Step
-    cy.contains('p', 'Add step').click()
-    cy.contains('span', 'Add Step').parent().click()
+    cy.contains('p', 'Add step').click({ force: true })
+    cy.findByTestId('addStepPipeline').click()
+    cy.wait('@stepLibrary')
     cy.contains('section', 'Serverless Lambda Deploy').click()
     cy.contains('p', 'Serverless Lambda Deploy Step').should('be.visible')
     cy.get('input[name="name"]').type('Serverless Deploy Step 2')
@@ -481,8 +482,9 @@ describe('ServerlessAwsLambda as deployment type', () => {
     cy.contains('p', 'Serverless Deploy Step 2').should('be.visible')
 
     // Add Serverless Lambda Rollback Step
-    cy.contains('p', 'Add step').click()
-    cy.contains('span', 'Add Step').parent().click()
+    cy.contains('p', 'Add step').click({ force: true })
+    cy.findByTestId('addStepPipeline').click()
+    cy.wait('@stepLibrary')
     cy.contains('section', 'Serverless Lambda Rollback').click()
     cy.contains('p', 'Serverless Lambda Rollback Step').should('be.visible')
     cy.get('input[name="name"]').type('Serverless Rollback Step 1')
@@ -503,7 +505,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
       'kubernetesYamlSnippet'
     )
     cy.intercept('GET', executionStrategies, { fixture: 'pipeline/api/pipelines/strategies.json' }).as(
-      'executionStratergies'
+      'executionStrategies'
     )
 
     // Visit Pipeline Studio

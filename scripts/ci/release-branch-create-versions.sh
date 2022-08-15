@@ -18,7 +18,7 @@ echo "Creating $NEXT_VERSION in product Jira projects"
 # Exclude projects that have been archived, replaced, deleted, or non-product
 EXCLUDE_PROJECTS=",ART,OENG,OPS,SWAT,"
 # Iterate over projects
-for PROJ in "${KEYPROJS}"
+for PROJ in $KEYPROJS
  do
     if [[ "$EXCLUDE_PROJECTS" == *",$PROJ,"* ]]; then
       echo "Skipping $PROJ - it has been archived or is not applicable"

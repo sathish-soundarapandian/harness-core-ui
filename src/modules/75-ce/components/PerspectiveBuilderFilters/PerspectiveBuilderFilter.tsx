@@ -7,8 +7,10 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Icon, Container } from '@wings-software/uicore'
+import { Icon, Container, Layout, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
+import type { FormikProps } from 'formik'
+import type { CEView } from 'services/ce'
 import {
   QlceViewFieldIdentifierData,
   QlceViewFilterOperator,
@@ -52,6 +54,8 @@ interface FilterPillProps {
     to: string
     from: string
   }
+  formikProps?: FormikProps<CEView>
+  ruleIndex: number
 }
 
 const LIMIT = 100
@@ -64,7 +68,9 @@ const PerspectiveBuilderFilter: React.FC<FilterPillProps> = ({
   onChange,
   pillData,
   id,
-  timeRange
+  timeRange,
+  formikProps,
+  ruleIndex
 }) => {
   const provider: ProviderType = {
     id: pillData.viewField.identifier,
@@ -124,6 +130,7 @@ const PerspectiveBuilderFilter: React.FC<FilterPillProps> = ({
     }
   }
 
+  /* istanbul ignore next */
   const onValueChange: (val: string[]) => void = val => {
     const changedData = {
       ...pillData,
@@ -185,6 +192,8 @@ const PerspectiveBuilderFilter: React.FC<FilterPillProps> = ({
     }))
   }
 
+  const valueError = (formikProps?.errors?.viewRules?.[ruleIndex] as any)?.viewConditions?.[id]?.values
+
   return (
     <Container className={css.mainContainer}>
       <OperandSelector
@@ -195,27 +204,41 @@ const PerspectiveBuilderFilter: React.FC<FilterPillProps> = ({
         timeRange={timeRange}
       />
       <OperatorSelector isDisabled={!provider.id} operator={operator} onOperatorChange={onOperatorChange} />
-      <ValuesSelector
-        provider={provider}
-        service={service}
-        isDisabled={
-          !provider.id || operator === QlceViewFilterOperator.NotNull || operator === QlceViewFilterOperator.Null
-        }
-        operator={operator}
-        valueList={pageInfo.filtersValuesData}
-        fetchMore={e => {
-          if (e === pageInfo.page * LIMIT - 1) {
-            setPageInfo(prevInfo => ({ ...prevInfo, page: prevInfo.page + 1 }))
+      <Layout.Vertical>
+        <ValuesSelector
+          provider={provider}
+          service={service}
+          isDisabled={
+            !provider.id || operator === QlceViewFilterOperator.NotNull || operator === QlceViewFilterOperator.Null
           }
-        }}
-        onInputChange={onInputChange}
-        shouldFetchMore={pageInfo.loadMore}
-        fetching={fetching && pageInfo.page === 1}
-        selectedVal={selectedVal}
-        onValueChange={onValueChange}
-        searchText={pageInfo.searchValue}
-      />
-
+          operator={operator}
+          valueList={pageInfo.filtersValuesData}
+          fetchMore={
+            /* istanbul ignore next */
+            e => {
+              if (e === pageInfo.page * LIMIT - 1) {
+                setPageInfo(prevInfo => ({ ...prevInfo, page: prevInfo.page + 1 }))
+              }
+            }
+          }
+          onInputChange={onInputChange}
+          shouldFetchMore={pageInfo.loadMore}
+          fetching={fetching && pageInfo.page === 1}
+          selectedVal={selectedVal}
+          onValueChange={onValueChange}
+          searchText={pageInfo.searchValue}
+        />
+        {provider.id && valueError && (
+          <Text
+            color={Color.RED_600}
+            padding={{ top: 'small' }}
+            icon="circle-cross"
+            iconProps={{ size: 12, color: Color.RED_600 }}
+          >
+            {valueError}
+          </Text>
+        )}
+      </Layout.Vertical>
       <Icon key="delete" name="delete" size={18} color={Color.ORANGE_700} onClick={removePill} />
       {showAddButton ? <Icon key="add" name="add" size={18} color={Color.PRIMARY_7} onClick={onButtonClick} /> : null}
     </Container>

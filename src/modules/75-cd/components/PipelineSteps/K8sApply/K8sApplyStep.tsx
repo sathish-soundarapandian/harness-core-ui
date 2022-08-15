@@ -78,6 +78,7 @@ const formatData = (data: K8sApplyFormData): K8sApplyData => {
       ...data?.spec,
       skipDryRun: data?.spec?.skipDryRun,
       skipSteadyStateCheck: data?.spec?.skipSteadyStateCheck,
+      skipRendering: data?.spec?.skipRendering,
       filePaths:
         getMultiTypeFromValue(data?.spec?.filePaths as string) === MultiTypeInputType.RUNTIME
           ? data?.spec?.filePaths
@@ -125,6 +126,7 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
               ...values.spec,
               skipDryRun: defaultTo(values?.spec?.skipDryRun, false),
               skipSteadyStateCheck: defaultTo(values?.spec?.skipSteadyStateCheck, false),
+              skipRendering: defaultTo(values?.spec?.skipRendering, false),
               filePaths: values?.spec?.filePaths,
               overrides: values?.spec?.overrides
             }
@@ -138,6 +140,7 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
               ...values.spec,
               skipDryRun: defaultTo(values?.spec?.skipDryRun, false),
               skipSteadyStateCheck: defaultTo(values?.spec?.skipSteadyStateCheck, false),
+              skipRendering: defaultTo(values?.spec?.skipRendering, false),
               filePaths: values?.spec?.filePaths,
               overrides: values?.spec?.overrides
             }
@@ -300,6 +303,28 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
                   />
                 )}
               </div>
+              <div className={cx(stepCss.formGroup, stepCss.md)}>
+                <FormMultiTypeCheckboxField
+                  name="spec.skipRendering"
+                  label={getString('cd.skipRendering')}
+                  disabled={isDisabled}
+                  multiTypeTextbox={{ expressions, allowableTypes }}
+                />
+                {getMultiTypeFromValue(values.spec?.skipRendering) === MultiTypeInputType.RUNTIME && (
+                  <ConfigureOptions
+                    value={(values.spec.skipRendering || '') as string}
+                    type="String"
+                    variableName="spec.skipRendering"
+                    showRequiredField={false}
+                    showDefaultField={false}
+                    showAdvanced={true}
+                    onChange={value => {
+                      setFieldValue('spec.skipRendering', value)
+                    }}
+                    isReadonly={isDisabled}
+                  />
+                )}
+              </div>
               <div className={stepCss.divider} />
               <div>
                 <K8sOverrideValuesManifest deploymentType={selectedDeploymentType()} formik={formik} />
@@ -374,6 +399,22 @@ const K8sApplyInputStep: React.FC<K8sApplyProps> = ({ inputSetData, readonly, al
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.skipSteadyStateCheck`}
             className={stepCss.checkbox}
             label={getString('pipelineSteps.skipSteadyStateCheck')}
+            setToFalseWhenEmpty={true}
+          />
+        </div>
+      )}
+      {getMultiTypeFromValue(inputSetData?.template?.spec?.skipRendering) === MultiTypeInputType.RUNTIME && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormMultiTypeCheckboxField
+            multiTypeTextbox={{
+              expressions,
+              allowableTypes,
+              disabled: readonly
+            }}
+            disabled={readonly}
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.skipRendering`}
+            className={stepCss.checkbox}
+            label={getString('cd.skipRendering')}
             setToFalseWhenEmpty={true}
           />
         </div>
@@ -552,6 +593,7 @@ export class K8sApplyStep extends PipelineStep<K8sApplyData> {
         ...data.spec,
         skipDryRun: data?.spec?.skipDryRun,
         skipSteadyStateCheck: data?.spec?.skipSteadyStateCheck,
+        skipRendering: data?.spec?.skipRendering,
         filePaths:
           getMultiTypeFromValue(data?.spec?.filePaths) === MultiTypeInputType.RUNTIME
             ? data?.spec?.filePaths
@@ -575,6 +617,7 @@ export class K8sApplyStep extends PipelineStep<K8sApplyData> {
       filePaths: [],
       skipDryRun: false,
       skipSteadyStateCheck: false,
+      skipRendering: false,
       overrides: []
     }
   }

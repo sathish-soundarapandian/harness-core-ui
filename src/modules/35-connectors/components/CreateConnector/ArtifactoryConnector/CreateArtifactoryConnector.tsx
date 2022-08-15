@@ -19,8 +19,10 @@ import {
 import { getConnectorIconByType, getConnectorTitleIdByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { buildArtifactoryPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useStrings } from 'framework/strings'
+import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import StepArtifactoryAuthentication from './StepAuth/StepArtifactoryAuthentication'
 import DelegateSelectorStep from '../commonSteps/DelegateSelectorStep/DelegateSelectorStep'
+import ConnectivityModeStep from '../commonSteps/ConnectivityModeStep/ConnectivityModeStep'
 
 const CreateArtifactoryConnector: React.FC<CreateConnectorModalProps> = props => {
   const { getString } = useStrings()
@@ -31,7 +33,9 @@ const CreateArtifactoryConnector: React.FC<CreateConnectorModalProps> = props =>
     'gitDetails',
     'accountId',
     'orgIdentifier',
-    'projectIdentifier'
+    'projectIdentifier',
+    'connectivityMode',
+    'setConnectivityMode'
   ])
   return (
     <>
@@ -55,17 +59,32 @@ const CreateArtifactoryConnector: React.FC<CreateConnectorModalProps> = props =>
           {...commonProps}
           onConnectorCreated={props.onSuccess}
         />
-        <DelegateSelectorStep
-          name={getString('delegate.DelegateselectionLabel')}
+        <ConnectivityModeStep
+          name={getString('connectors.selectConnectivityMode')}
+          type={Connectors.ARTIFACTORY}
+          gitDetails={props.gitDetails}
+          connectorInfo={props.connectorInfo}
           isEditMode={props.isEditMode}
           setIsEditMode={props.setIsEditMode}
           buildPayload={buildArtifactoryPayload}
+          connectivityMode={props.connectivityMode}
+          setConnectivityMode={props.setConnectivityMode}
           hideModal={props.onClose}
           onConnectorCreated={props.onSuccess}
-          connectorInfo={props.connectorInfo}
-          gitDetails={props.gitDetails}
-          helpPanelReferenceId="ConnectorDelegatesSetup"
         />
+        {props.connectivityMode === ConnectivityModeType.Delegate ? (
+          <DelegateSelectorStep
+            name={getString('delegate.DelegateselectionLabel')}
+            isEditMode={props.isEditMode}
+            setIsEditMode={props.setIsEditMode}
+            buildPayload={buildArtifactoryPayload}
+            hideModal={props.onClose}
+            onConnectorCreated={props.onSuccess}
+            connectorInfo={props.connectorInfo}
+            gitDetails={props.gitDetails}
+            helpPanelReferenceId="ConnectorDelegatesSetup"
+          />
+        ) : null}
         <VerifyOutOfClusterDelegate
           name={getString('connectors.stepThreeName')}
           connectorInfo={props.connectorInfo}

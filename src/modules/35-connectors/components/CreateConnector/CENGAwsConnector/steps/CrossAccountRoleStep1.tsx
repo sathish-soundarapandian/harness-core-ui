@@ -257,10 +257,10 @@ const DefaultCard = () => {
     prefix: getString('common.aws'),
     features: [
       getString('connectors.ceAws.crossAccountRoleStep1.default.feat1'),
-      getString('connectors.ceAzure.chooseRequirements.visibility.feat2'),
-      getString('connectors.ceAzure.chooseRequirements.visibility.feat3'),
-      getString('connectors.ceAzure.chooseRequirements.visibility.feat4'),
-      getString('connectors.ceAzure.chooseRequirements.visibility.feat5')
+      getString('connectors.ceAzure.chooseRequirements.billing.feat2'),
+      getString('connectors.ceAzure.chooseRequirements.billing.feat3'),
+      getString('connectors.ceAzure.chooseRequirements.billing.feat4'),
+      getString('connectors.ceAzure.chooseRequirements.billing.feat5')
     ],
     footer: getString('connectors.ceAws.crossAccountRoleStep1.default.footer')
   }

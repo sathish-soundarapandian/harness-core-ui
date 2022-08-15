@@ -1396,6 +1396,209 @@ exports[`Create Azure connector Wizard should render feature cards, render servi
                                       />
                                     </svg>
                                   </span>
+                                  connectors.ceAzure.chooseRequirements.billing.feat1
+                                </p>
+                              </li>
+                              <li>
+                                <p
+                                  class="StyledProps--font StyledProps--main StyledProps--font-small"
+                                  style="line-height: 20px; display: flex; align-items: center;"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--color StyledProps--color-green600"
+                                    data-icon="main-tick"
+                                  >
+                                    <svg
+                                      height="12"
+                                      viewBox="0 0 11 8"
+                                      width="12"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        d="M9.219.894c.356-.38.982-.413 1.398-.072.391.32.457.857.167 1.236l-.06.07-5.138 5.486c-.362.386-.993.41-1.403.068l-.07-.064-3.2-3.214A.88.88 0 01.95 3.098a1.045 1.045 0 011.328-.003l.074.067 2.443 2.454L9.22.894z"
+                                        fill="currentColor"
+                                      />
+                                    </svg>
+                                  </span>
+                                  connectors.ceAzure.chooseRequirements.billing.feat2
+                                </p>
+                              </li>
+                              <li>
+                                <p
+                                  class="StyledProps--font StyledProps--main StyledProps--font-small"
+                                  style="line-height: 20px; display: flex; align-items: center;"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--color StyledProps--color-green600"
+                                    data-icon="main-tick"
+                                  >
+                                    <svg
+                                      height="12"
+                                      viewBox="0 0 11 8"
+                                      width="12"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        d="M9.219.894c.356-.38.982-.413 1.398-.072.391.32.457.857.167 1.236l-.06.07-5.138 5.486c-.362.386-.993.41-1.403.068l-.07-.064-3.2-3.214A.88.88 0 01.95 3.098a1.045 1.045 0 011.328-.003l.074.067 2.443 2.454L9.22.894z"
+                                        fill="currentColor"
+                                      />
+                                    </svg>
+                                  </span>
+                                  connectors.ceAzure.chooseRequirements.billing.feat3
+                                </p>
+                              </li>
+                              <li>
+                                <p
+                                  class="StyledProps--font StyledProps--main StyledProps--font-small"
+                                  style="line-height: 20px; display: flex; align-items: center;"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--color StyledProps--color-green600"
+                                    data-icon="main-tick"
+                                  >
+                                    <svg
+                                      height="12"
+                                      viewBox="0 0 11 8"
+                                      width="12"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        d="M9.219.894c.356-.38.982-.413 1.398-.072.391.32.457.857.167 1.236l-.06.07-5.138 5.486c-.362.386-.993.41-1.403.068l-.07-.064-3.2-3.214A.88.88 0 01.95 3.098a1.045 1.045 0 011.328-.003l.074.067 2.443 2.454L9.22.894z"
+                                        fill="currentColor"
+                                      />
+                                    </svg>
+                                  </span>
+                                  connectors.ceAzure.chooseRequirements.billing.feat4
+                                </p>
+                              </li>
+                              <li>
+                                <p
+                                  class="StyledProps--font StyledProps--main StyledProps--font-small"
+                                  style="line-height: 20px; display: flex; align-items: center;"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--color StyledProps--color-green600"
+                                    data-icon="main-tick"
+                                  >
+                                    <svg
+                                      height="12"
+                                      viewBox="0 0 11 8"
+                                      width="12"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        d="M9.219.894c.356-.38.982-.413 1.398-.072.391.32.457.857.167 1.236l-.06.07-5.138 5.486c-.362.386-.993.41-1.403.068l-.07-.064-3.2-3.214A.88.88 0 01.95 3.098a1.045 1.045 0 011.328-.003l.074.067 2.443 2.454L9.22.894z"
+                                        fill="currentColor"
+                                      />
+                                    </svg>
+                                  </span>
+                                  connectors.ceAzure.chooseRequirements.billing.feat5
+                                </p>
+                              </li>
+                            </ul>
+                          </div>
+                          <div
+                            class="StyledProps--font StyledProps--main footer"
+                          >
+                            <p
+                              class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-italic StyledProps--color StyledProps--color-grey400"
+                            >
+                              connectors.ceAzure.chooseRequirements.billing.footer
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="bp3-card bp3-interactive bp3-elevation-0 Card--card Card--interactive"
+                        data-index="1"
+                        tabindex="0"
+                      >
+                        <div
+                          class="StyledProps--font StyledProps--main featureCard"
+                        >
+                          <div
+                            class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--padding-left-large StyledProps--padding-right-large"
+                          >
+                            <div
+                              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main"
+                                data-icon="ce-visibility"
+                              >
+                                <svg
+                                  fill="none"
+                                  height="32"
+                                  width="32"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M0 24.99h3.99V0H0v24.99zm7.98 0h3.99V7.403H7.98V24.99zm7.98-10.181v10.18h3.99V14.81h-3.99z"
+                                    fill="#0278D5"
+                                    opacity="0.3"
+                                  />
+                                  <g
+                                    clip-path="url(#ce-visibility_svg__clip0)"
+                                  >
+                                    <path
+                                      d="M30.014 27.178l-4.198-3.895c1.008-1.409 1.598-3.096 1.598-4.91 0-4.914-4.31-8.912-9.606-8.912-5.297 0-9.606 3.998-9.606 8.912 0 4.915 4.31 8.913 9.606 8.913 1.955 0 3.773-.547 5.292-1.482l4.196 3.895c.376.348.984.348 1.359 0l1.358-1.26a.846.846 0 000-1.26zm-19.89-8.805c0-3.93 3.447-7.13 7.684-7.13s7.684 3.2 7.684 7.13c0 3.932-3.447 7.13-7.684 7.13s-7.685-3.198-7.685-7.13z"
+                                      fill="#0278D5"
+                                    />
+                                  </g>
+                                  <defs>
+                                    <clippath
+                                      id="ce-visibility_svg__clip0"
+                                    >
+                                      <path
+                                        d="M0 0h23.054v21.39H0z"
+                                        fill="#fff"
+                                        transform="translate(8.202 9.46)"
+                                      />
+                                    </clippath>
+                                  </defs>
+                                </svg>
+                              </span>
+                              <div
+                                class="StyledProps--font StyledProps--main"
+                              >
+                                <p
+                                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900"
+                                  style="font-size: 9px; font-weight: 500;"
+                                >
+                                  COMMON.AZURE
+                                </p>
+                                <p
+                                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900"
+                                  style="font-size: 16px; font-weight: 500;"
+                                >
+                                  connectors.ceAzure.chooseRequirements.visibility.heading
+                                </p>
+                              </div>
+                            </div>
+                            <ul
+                              class="features"
+                            >
+                              <li>
+                                <p
+                                  class="StyledProps--font StyledProps--main StyledProps--font-small"
+                                  style="line-height: 20px; display: flex; align-items: center;"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--color StyledProps--color-green600"
+                                    data-icon="main-tick"
+                                  >
+                                    <svg
+                                      height="12"
+                                      viewBox="0 0 11 8"
+                                      width="12"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        d="M9.219.894c.356-.38.982-.413 1.398-.072.391.32.457.857.167 1.236l-.06.07-5.138 5.486c-.362.386-.993.41-1.403.068l-.07-.064-3.2-3.214A.88.88 0 01.95 3.098a1.045 1.045 0 011.328-.003l.074.067 2.443 2.454L9.22.894z"
+                                        fill="currentColor"
+                                      />
+                                    </svg>
+                                  </span>
                                   connectors.ceAzure.chooseRequirements.visibility.feat1
                                 </p>
                               </li>
@@ -1423,78 +1626,6 @@ exports[`Create Azure connector Wizard should render feature cards, render servi
                                   connectors.ceAzure.chooseRequirements.visibility.feat2
                                 </p>
                               </li>
-                              <li>
-                                <p
-                                  class="StyledProps--font StyledProps--main StyledProps--font-small"
-                                  style="line-height: 20px; display: flex; align-items: center;"
-                                >
-                                  <span
-                                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--color StyledProps--color-green600"
-                                    data-icon="main-tick"
-                                  >
-                                    <svg
-                                      height="12"
-                                      viewBox="0 0 11 8"
-                                      width="12"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                        d="M9.219.894c.356-.38.982-.413 1.398-.072.391.32.457.857.167 1.236l-.06.07-5.138 5.486c-.362.386-.993.41-1.403.068l-.07-.064-3.2-3.214A.88.88 0 01.95 3.098a1.045 1.045 0 011.328-.003l.074.067 2.443 2.454L9.22.894z"
-                                        fill="currentColor"
-                                      />
-                                    </svg>
-                                  </span>
-                                  connectors.ceAzure.chooseRequirements.visibility.feat3
-                                </p>
-                              </li>
-                              <li>
-                                <p
-                                  class="StyledProps--font StyledProps--main StyledProps--font-small"
-                                  style="line-height: 20px; display: flex; align-items: center;"
-                                >
-                                  <span
-                                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--color StyledProps--color-green600"
-                                    data-icon="main-tick"
-                                  >
-                                    <svg
-                                      height="12"
-                                      viewBox="0 0 11 8"
-                                      width="12"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                        d="M9.219.894c.356-.38.982-.413 1.398-.072.391.32.457.857.167 1.236l-.06.07-5.138 5.486c-.362.386-.993.41-1.403.068l-.07-.064-3.2-3.214A.88.88 0 01.95 3.098a1.045 1.045 0 011.328-.003l.074.067 2.443 2.454L9.22.894z"
-                                        fill="currentColor"
-                                      />
-                                    </svg>
-                                  </span>
-                                  connectors.ceAzure.chooseRequirements.visibility.feat4
-                                </p>
-                              </li>
-                              <li>
-                                <p
-                                  class="StyledProps--font StyledProps--main StyledProps--font-small"
-                                  style="line-height: 20px; display: flex; align-items: center;"
-                                >
-                                  <span
-                                    class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--color StyledProps--color-green600"
-                                    data-icon="main-tick"
-                                  >
-                                    <svg
-                                      height="12"
-                                      viewBox="0 0 11 8"
-                                      width="12"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                        d="M9.219.894c.356-.38.982-.413 1.398-.072.391.32.457.857.167 1.236l-.06.07-5.138 5.486c-.362.386-.993.41-1.403.068l-.07-.064-3.2-3.214A.88.88 0 01.95 3.098a1.045 1.045 0 011.328-.003l.074.067 2.443 2.454L9.22.894z"
-                                        fill="currentColor"
-                                      />
-                                    </svg>
-                                  </span>
-                                  connectors.ceAzure.chooseRequirements.visibility.feat5
-                                </p>
-                              </li>
                             </ul>
                           </div>
                           <div
@@ -1503,14 +1634,24 @@ exports[`Create Azure connector Wizard should render feature cards, render servi
                             <p
                               class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-italic StyledProps--color StyledProps--color-grey400"
                             >
-                              connectors.ceAzure.chooseRequirements.visibility.footer
+                              connectors.ceAzure.chooseRequirements.optimization.footer1
+                               
+                              <a
+                                href="https://docs.harness.io/article/v682mz6qfd-set-up-cost-visibility-for-azure#step_4_create_service_principal_and_assign_permissions"
+                                rel="noreferrer"
+                                target="_blank"
+                              >
+                                permissions
+                              </a>
+                               
+                              connectors.ceAzure.chooseRequirements.optimization.footer2
                             </p>
                           </div>
                         </div>
                       </div>
                       <div
                         class="bp3-card bp3-interactive bp3-elevation-0 Card--card Card--interactive"
-                        data-index="1"
+                        data-index="2"
                         tabindex="0"
                       >
                         <div

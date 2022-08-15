@@ -238,6 +238,7 @@ export class HelmRollback extends PipelineStep<StepElementConfig> {
   protected stepName = 'Helm Rollback'
   protected stepIcon: IconName = 'helm-rollback'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.HelmRollback'
+  protected referenceId = 'helmRollbackStep'
 
   validateInputSet({
     data,

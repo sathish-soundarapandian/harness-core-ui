@@ -103,7 +103,13 @@ const getSpec = (type: string) => {
         }
       }
     default:
-      return {}
+      return {
+        serviceConfig: {
+          serviceDefinition: {
+            type: 'Kubernetes'
+          }
+        }
+      }
   }
 }
 

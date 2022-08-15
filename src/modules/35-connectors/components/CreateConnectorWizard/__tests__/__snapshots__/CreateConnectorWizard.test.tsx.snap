@@ -469,7 +469,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for Artifacto
               class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
               style="--text-line-clamp: 2; width: 200px;"
             >
-              delegate.DelegateselectionLabel
+              connectors.selectConnectivityMode
             </p>
           </div>
           <div
@@ -1255,7 +1255,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for DOCKER 1`
               class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
               style="--text-line-clamp: 2; width: 200px;"
             >
-              delegate.DelegateselectionLabel
+              connectors.selectConnectivityMode
             </p>
           </div>
           <div
@@ -1700,7 +1700,7 @@ exports[`Create connector Wizard should open CreateConnectorWizard for GCP 1`] =
               class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
               style="--text-line-clamp: 2; width: 200px;"
             >
-              delegate.DelegateselectionLabel
+              connectors.selectConnectivityMode
             </p>
           </div>
           <div

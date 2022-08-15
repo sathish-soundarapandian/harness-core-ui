@@ -79,8 +79,12 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
 
   const stepType = step.stepType as StepType
   const isStageForm = NonSelectableNodes.includes(step.stepType as NodeType)
-  const template = parse<{ step: StepElementConfig; stage: StageElementConfig }>(get(data, 'data.inputTemplate', '{}'))
-  const userInput = parse<{ step: StepElementConfig; stage: StageElementConfig }>(get(data, 'data.userInput', '{}'))
+  const template = parse<{ step: StepElementConfig; stage: StageElementConfig }>(
+    defaultTo(get(data, 'data.inputTemplate'), '{}')
+  )
+  const userInput = parse<{ step: StepElementConfig; stage: StageElementConfig }>(
+    defaultTo(get(data, 'data.userInput'), '{}')
+  )
   const finalUserInput = defaultTo(isStageForm ? userInput : userInput.step, {})
   const parsedStep = defaultTo(template.step, {})
   const parsedStage = defaultTo(template, {})

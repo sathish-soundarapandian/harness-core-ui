@@ -10,9 +10,14 @@ import { noop } from 'lodash-es'
 import { render, fireEvent, queryByText } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 import { TestWrapper } from '@common/utils/testUtils'
-import { mockResponse, mockSecret, encryptedKeyMock, backButtonMock } from './mocks'
+import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
+import routes from '@common/RouteDefinitions'
+import { mockResponse, mockSecret, encryptedKeyMock, backButtonMock, hostedEncryptedKeyMock } from './mocks'
 import CreateGcpConnector from '../CreateGcpConnector'
 import { backButtonTest } from '../../commonTest'
+
+const testPath = routes.toConnectors({ accountId: ':accountId' })
+const testPathParams = { accountId: 'dummy' }
 
 const commonProps = {
   accountId: 'dummy',
@@ -42,9 +47,13 @@ jest.mock('services/cd-ng', () => ({
 }))
 
 describe('Create GCP connector Wizard', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
   test('Should render form', async () => {
     const { container } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+      <TestWrapper path={testPath} pathParams={testPathParams}>
         <CreateGcpConnector {...commonProps} isEditMode={false} connectorInfo={undefined} />
       </TestWrapper>
     )
@@ -68,8 +77,14 @@ describe('Create GCP connector Wizard', () => {
 
   test('Should render form for edit authtype encryptedKey', async () => {
     const { container } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
-        <CreateGcpConnector {...commonProps} isEditMode={true} connectorInfo={encryptedKeyMock} mock={mockResponse} />
+      <TestWrapper path={testPath} pathParams={testPathParams}>
+        <CreateGcpConnector
+          {...commonProps}
+          isEditMode={true}
+          connectorInfo={encryptedKeyMock}
+          mock={mockResponse}
+          connectivityMode={ConnectivityModeType.Delegate}
+        />
       </TestWrapper>
     )
     // editing connector name
@@ -90,10 +105,17 @@ describe('Create GCP connector Wizard', () => {
       fireEvent.click(container.querySelector('button[type="submit"]')!)
     })
 
+    //connectivity mode step
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+
     // step 3 - delegate selection step
     await act(async () => {
       fireEvent.click(container.querySelector('button[type="submit"]')!)
     })
+
+    expect(updateConnector).toBeCalledTimes(1)
 
     expect(updateConnector).toBeCalledWith(
       {
@@ -106,9 +128,58 @@ describe('Create GCP connector Wizard', () => {
     )
   })
 
+  test('Should render form for edit authtype encryptedKey when hosted', async () => {
+    const { container } = render(
+      <TestWrapper path={testPath} pathParams={testPathParams}>
+        <CreateGcpConnector
+          {...commonProps}
+          isEditMode={true}
+          connectorInfo={hostedEncryptedKeyMock}
+          mock={mockResponse}
+          connectivityMode={ConnectivityModeType.Manager}
+        />
+      </TestWrapper>
+    )
+    // editing connector name
+    await act(async () => {
+      fireEvent.change(container.querySelector('input[name="name"]')!, {
+        target: { value: 'dummy name' }
+      })
+    })
+    expect(container).toMatchSnapshot()
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+    // step 2 - GCP auth step
+    expect(queryByText(container, 'connectors.GCP.delegateOutClusterInfo')).toBeTruthy()
+    expect(container).toMatchSnapshot()
+
+    //connectivity mode step
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+
+    // test connection
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+
+    expect(updateConnector).toBeCalledTimes(1)
+
+    expect(updateConnector).toBeCalledWith(
+      {
+        connector: {
+          ...hostedEncryptedKeyMock,
+          name: 'dummy name'
+        }
+      },
+      { queryParams: {} }
+    )
+  })
+
   backButtonTest({
     Element: (
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+      <TestWrapper path={testPath} pathParams={testPathParams}>
         <CreateGcpConnector {...commonProps} isEditMode={true} connectorInfo={backButtonMock} mock={mockResponse} />
       </TestWrapper>
     ),

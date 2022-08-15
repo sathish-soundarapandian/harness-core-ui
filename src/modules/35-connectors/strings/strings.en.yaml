@@ -756,13 +756,17 @@ ceAzure:
     info: Cost visibility of the resources for which you added the Billing Export in the previous step is enabled by default. Select the others as per your requirements.
     visibilityCardDesc: Cost insights, anomaly detection, service insights, creating budgets perspectives and alerts, utilised/wasted resources in clusters.
     optimizationCardDesc: Detection of orphaned resources, recommendations to save costs, scaling/tearing down, turning off in non-work hours, reserving instances.
-    visibility:
+    billing:
       feat1: Azure costs by services, accounts, etc.
       feat2: Cost perspective by various constructs
       feat3: Cost anomaly detection
       feat4: Budgets and forecasts
       feat5: Email and Slack alerts
       footer: from Billing export
+    visibility:
+      heading: Inventory Management
+      feat1: VM inventory dashboard
+      feat2: VM metrics dashboard
     optimization:
       feat1: Orchestrate VMs based on idleness
       feat2: Set dependencies between VMs
@@ -778,6 +782,7 @@ ceAzure:
     registerCommand: '# Register the Harness app'
     costVisibilityCmd: '# Role assignment for enabling Cost Visibility'
     assignRoleCmd: '# Assign role to the app on the scope fetched above'
+    inventoryMgtCmd: '# Role assignment for enabling Inventory Management'
     optimisationCmd: '# Role assignment for enabling Cost Optimization using Autostopping'
   testConnection:
     heading: '{{ $.common.labelTestConnection }}'
@@ -836,10 +841,10 @@ ceGcp:
     cardDetails:
       billing:
         feat1: 'GCP costs by product, project, etc.'
-        feat2: '{{$.connectors.ceAzure.chooseRequirements.visibility.feat2}}'
-        feat3: '{{$.connectors.ceAzure.chooseRequirements.visibility.feat3}}'
-        feat4: '{{$.connectors.ceAzure.chooseRequirements.visibility.feat4}}'
-        feat5: '{{$.connectors.ceAzure.chooseRequirements.visibility.feat5}}'
+        feat2: '{{$.connectors.ceAzure.chooseRequirements.billing.feat2}}'
+        feat3: '{{$.connectors.ceAzure.chooseRequirements.billing.feat3}}'
+        feat4: '{{$.connectors.ceAzure.chooseRequirements.billing.feat4}}'
+        feat5: '{{$.connectors.ceAzure.chooseRequirements.billing.feat5}}'
         footer: 'from Billing Export'
       visibility:
         feat1: 'GCE VMs'

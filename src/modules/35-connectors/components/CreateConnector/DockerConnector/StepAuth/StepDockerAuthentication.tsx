@@ -49,6 +49,7 @@ interface DockerAuthenticationProps {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
+  helpPanelReferenceId?: string
 }
 
 interface DockerFormInterface {
@@ -128,7 +129,9 @@ const StepDockerAuthentication: React.FC<StepProps<StepDockerAuthenticationProps
       })
       nextStep?.({ ...props.connectorInfo, ...prevStepData, ...formData } as StepDockerAuthenticationProps)
     }
-    useConnectorWizard({ helpPanel: { referenceId: 'DockerConnectorDetails', contentWidth: 900 } })
+    useConnectorWizard({
+      helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
+    })
 
     useTrackEvent(ConnectorActions.AuthenticationStepLoad, {
       category: Category.CONNECTOR,

@@ -19,8 +19,10 @@ import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDel
 import { getConnectorIconByType, getConnectorTitleIdByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { buildGcpPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useStrings } from 'framework/strings'
+import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import GcpAuthentication from './StepAuth/GcpAuthentication'
 import DelegateSelectorStep from '../commonSteps/DelegateSelectorStep/DelegateSelectorStep'
+import ConnectivityModeStep from '../commonSteps/ConnectivityModeStep/ConnectivityModeStep'
 
 const CreateGcpConnector: React.FC<CreateConnectorModalProps> = props => {
   const { getString } = useStrings()
@@ -31,7 +33,9 @@ const CreateGcpConnector: React.FC<CreateConnectorModalProps> = props => {
     'gitDetails',
     'accountId',
     'orgIdentifier',
-    'projectIdentifier'
+    'projectIdentifier',
+    'connectivityMode',
+    'setConnectivityMode'
   ])
 
   return (
@@ -56,18 +60,34 @@ const CreateGcpConnector: React.FC<CreateConnectorModalProps> = props => {
           {...commonProps}
           onConnectorCreated={props.onSuccess}
           connectorInfo={props.connectorInfo}
+          helpPanelReferenceId="GoogleCloudProviderDetails"
         />
-        <DelegateSelectorStep
-          name={getString('delegate.DelegateselectionLabel')}
+        <ConnectivityModeStep
+          name={getString('connectors.selectConnectivityMode')}
+          type={Connectors.GCP}
+          gitDetails={props.gitDetails}
+          connectorInfo={props.connectorInfo}
           isEditMode={props.isEditMode}
           setIsEditMode={props.setIsEditMode}
           buildPayload={buildGcpPayload}
+          connectivityMode={props.connectivityMode}
+          setConnectivityMode={props.setConnectivityMode}
           hideModal={props.onClose}
           onConnectorCreated={props.onSuccess}
-          connectorInfo={props.connectorInfo}
-          gitDetails={props.gitDetails}
-          helpPanelReferenceId="ConnectorDelegatesSetup"
         />
+        {props.connectivityMode === ConnectivityModeType.Delegate ? (
+          <DelegateSelectorStep
+            name={getString('delegate.DelegateselectionLabel')}
+            isEditMode={props.isEditMode}
+            setIsEditMode={props.setIsEditMode}
+            buildPayload={buildGcpPayload}
+            hideModal={props.onClose}
+            onConnectorCreated={props.onSuccess}
+            connectorInfo={props.connectorInfo}
+            gitDetails={props.gitDetails}
+            helpPanelReferenceId="ConnectorDelegatesSetup"
+          />
+        ) : null}
         <VerifyOutOfClusterDelegate
           name={getString('connectors.stepThreeName')}
           connectorInfo={props.connectorInfo}

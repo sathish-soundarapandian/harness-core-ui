@@ -86,7 +86,7 @@ exports[`Create Environment Atrribute Modal Body  renders all environment attrib
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800"
                 >
-                  nonProduction
+                  pipeline.preProduction
                 </p>
               </div>
             </div>

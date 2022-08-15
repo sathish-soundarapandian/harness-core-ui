@@ -269,10 +269,13 @@ featureFlags:
     flagState: Flag State
     to: to {{ target }}
     openExecution: Open Pipeline Execution
+    pipelineDeleted: The Pipeline in use has been deleted from the Pipelines library
 featureFlagDetail:
   variationCount: '{{ count }} variations'
   serviceDescription: Services this flag is associated with
   serviceUpdateSuccess: Services updated
+  noServices: 'No Monitored Service available'
+  newService: 'Add New Service'
 flagFilters:
   active: Active Flags
   allFlags: All Flags

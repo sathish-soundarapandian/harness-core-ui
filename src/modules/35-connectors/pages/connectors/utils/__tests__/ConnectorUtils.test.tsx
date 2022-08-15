@@ -71,7 +71,8 @@ describe('Connector Utils', () => {
             type: 'ManualConfig',
             spec: { accessKey: 'accesskey', accessKeyRef: undefined, secretKeyRef: 'account.mysecretappd' },
             crossAccountAccess: null
-          }
+          },
+          executeOnDelegate: true
         }
       }
     })
@@ -100,7 +101,8 @@ describe('Connector Utils', () => {
             auth: {
               type: 'UsernamePassword',
               spec: { username: 'dummyusername', usernameRef: undefined, passwordRef: 'account.jkdhkjdhk' }
-            }
+            },
+            executeOnDelegate: true
           }
         }
       })

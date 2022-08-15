@@ -10,9 +10,14 @@ import { noop } from 'lodash-es'
 import { render, fireEvent, queryByText } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 import { TestWrapper } from '@common/utils/testUtils'
-import { mockResponse, mockSecret, mockConnector, awsWithDelegate } from './mock'
+import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
+import routes from '@common/RouteDefinitions'
+import { mockResponse, mockSecret, mockConnector, awsWithDelegate, hostedMockConnector } from './mock'
 import CreateAWSConnector from '../CreateAWSConnector'
 import { backButtonTest } from '../../commonTest'
+
+const testPath = routes.toConnectors({ accountId: ':accountId' })
+const testPathParams = { accountId: 'dummy' }
 
 const commonProps = {
   accountId: 'dummy',
@@ -43,9 +48,13 @@ jest.mock('services/portal', () => ({
 }))
 
 describe('Create AWS connector Wizard', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
   test('Should render form', async () => {
     const { container } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+      <TestWrapper path={testPath} pathParams={testPathParams}>
         <CreateAWSConnector {...commonProps} isEditMode={false} connectorInfo={undefined} />
       </TestWrapper>
     )
@@ -66,14 +75,15 @@ describe('Create AWS connector Wizard', () => {
     // match step 2
     expect(container).toMatchSnapshot()
   })
-  test('Should render form for edit ', async () => {
+  test('Should render form for edit', async () => {
     const { container } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+      <TestWrapper path={testPath} pathParams={testPathParams}>
         <CreateAWSConnector
           {...commonProps}
           isEditMode={true}
           connectorInfo={mockConnector.data.connector as any}
           mock={mockResponse}
+          connectivityMode={ConnectivityModeType.Delegate}
         />
       </TestWrapper>
     )
@@ -92,17 +102,24 @@ describe('Create AWS connector Wizard', () => {
     expect(queryByText(container, 'AWS Access Key')).toBeDefined()
     expect(container).toMatchSnapshot()
 
-    //updating connector
+    //connectivity mode step
     await act(async () => {
       fireEvent.click(container.querySelector('button[type="submit"]')!)
     })
 
+    // delegate selector step
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
     const delegateSelector = container.querySelector('[data-name="DelegateSelectors"]')
     expect(delegateSelector).toBeTruthy()
 
+    // test connection
     await act(async () => {
       fireEvent.click(container.querySelector('button[type="submit"]')!)
     })
+
+    expect(updateConnector).toBeCalledTimes(1)
 
     expect(updateConnector).toBeCalledWith(
       {
@@ -115,9 +132,59 @@ describe('Create AWS connector Wizard', () => {
     )
   })
 
+  test('Should render form for edit for hosted', async () => {
+    const { container } = render(
+      <TestWrapper path={testPath} pathParams={testPathParams}>
+        <CreateAWSConnector
+          {...commonProps}
+          isEditMode={true}
+          connectorInfo={hostedMockConnector.data.connector as any}
+          mock={mockResponse}
+          connectivityMode={ConnectivityModeType.Manager}
+        />
+      </TestWrapper>
+    )
+    // editing connector name
+    const updatedName = 'dummy name'
+    await act(async () => {
+      fireEvent.change(container.querySelector('input[name="name"]')!, {
+        target: { value: updatedName }
+      })
+    })
+    expect(container).toMatchSnapshot()
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+    // step 2
+    expect(queryByText(container, 'AWS Access Key')).toBeDefined()
+    expect(container).toMatchSnapshot()
+
+    //connectivity mode step
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+
+    // test connection
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+
+    expect(updateConnector).toBeCalledTimes(1)
+
+    expect(updateConnector).toBeCalledWith(
+      {
+        connector: {
+          ...hostedMockConnector.data.connector,
+          name: updatedName
+        }
+      },
+      { queryParams: {} }
+    )
+  })
+
   backButtonTest({
     Element: (
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+      <TestWrapper path={testPath} pathParams={testPathParams}>
         <CreateAWSConnector
           {...commonProps}
           isEditMode={true}
@@ -132,12 +199,13 @@ describe('Create AWS connector Wizard', () => {
 
   test('Should edit a connector with delegates', async () => {
     const { container } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+      <TestWrapper path={testPath} pathParams={testPathParams}>
         <CreateAWSConnector
           {...commonProps}
           isEditMode={true}
           connectorInfo={awsWithDelegate.data.connector as any}
           mock={mockResponse}
+          connectivityMode={ConnectivityModeType.Delegate}
         />
       </TestWrapper>
     )
@@ -153,17 +221,24 @@ describe('Create AWS connector Wizard', () => {
       fireEvent.click(container.querySelector('button[type="submit"]')!)
     })
 
+    //connectivity mode step
     await act(async () => {
       fireEvent.click(container.querySelector('button[type="submit"]')!)
     })
 
+    // delegate selector step
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
     const tagElm = queryByText(container, 'dummyDelegateSelector')
     expect(tagElm).toBeTruthy()
 
-    //updating connector
+    // test connection
     await act(async () => {
       fireEvent.click(container.querySelector('button[type="submit"]')!)
     })
+
+    expect(updateConnector).toBeCalledTimes(1)
 
     expect(updateConnector).toBeCalledWith(
       {

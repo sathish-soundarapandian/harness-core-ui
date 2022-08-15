@@ -612,6 +612,7 @@ export interface StringsMap {
   'common.recommended': string
   'common.references': string
   'common.refresh': string
+  'common.refreshDelegateLogs': string
   'common.refreshPage': string
   'common.reject': string
   'common.releaseName': string
@@ -1932,6 +1933,12 @@ export interface StringsMap {
   'connectors.ceAzure.billing.subscriptionId': string
   'connectors.ceAzure.billing.tooltipBtn': string
   'connectors.ceAzure.billing.tooltipInstruction': string
+  'connectors.ceAzure.chooseRequirements.billing.feat1': string
+  'connectors.ceAzure.chooseRequirements.billing.feat2': string
+  'connectors.ceAzure.chooseRequirements.billing.feat3': string
+  'connectors.ceAzure.chooseRequirements.billing.feat4': string
+  'connectors.ceAzure.chooseRequirements.billing.feat5': string
+  'connectors.ceAzure.chooseRequirements.billing.footer': string
   'connectors.ceAzure.chooseRequirements.featureDesc': string
   'connectors.ceAzure.chooseRequirements.heading': string
   'connectors.ceAzure.chooseRequirements.info': string
@@ -1946,10 +1953,7 @@ export interface StringsMap {
   'connectors.ceAzure.chooseRequirements.subHeading': string
   'connectors.ceAzure.chooseRequirements.visibility.feat1': string
   'connectors.ceAzure.chooseRequirements.visibility.feat2': string
-  'connectors.ceAzure.chooseRequirements.visibility.feat3': string
-  'connectors.ceAzure.chooseRequirements.visibility.feat4': string
-  'connectors.ceAzure.chooseRequirements.visibility.feat5': string
-  'connectors.ceAzure.chooseRequirements.visibility.footer': string
+  'connectors.ceAzure.chooseRequirements.visibility.heading': string
   'connectors.ceAzure.chooseRequirements.visibilityCardDesc': string
   'connectors.ceAzure.existingExports.createNewExportBtn': string
   'connectors.ceAzure.existingExports.hints.nextStepHint1': string
@@ -1971,6 +1975,7 @@ export interface StringsMap {
   'connectors.ceAzure.servicePrincipal.assignRoleCmd': string
   'connectors.ceAzure.servicePrincipal.costVisibilityCmd': string
   'connectors.ceAzure.servicePrincipal.heading': string
+  'connectors.ceAzure.servicePrincipal.inventoryMgtCmd': string
   'connectors.ceAzure.servicePrincipal.optimisationCmd': string
   'connectors.ceAzure.servicePrincipal.registerCommand': string
   'connectors.ceAzure.servicePrincipal.subHeading1': string
@@ -3452,6 +3457,7 @@ export interface StringsMap {
   'pipeline.policyEvaluations.policySetsApplied': string
   'pipeline.policyEvaluations.title': string
   'pipeline.poweredByHarness': string
+  'pipeline.preProduction': string
   'pipeline.previewTemplateLabel': string
   'pipeline.progressPercentage': string
   'pipeline.provisionerSteps': string
@@ -4275,6 +4281,7 @@ export interface StringsMap {
   'cd.serviceUpdated': string
   'cd.setUpProvisionerBtnText': string
   'cd.setupGitOpsServerStep': string
+  'cd.skipRendering': string
   'cd.specifyTargetHost': string
   'cd.specifyTfVarStore': string
   'cd.stepName': string
@@ -4332,6 +4339,7 @@ export interface StringsMap {
   'cd.steps.pdcStep.attributesPlaceholder': string
   'cd.steps.pdcStep.filterHostAttributes': string
   'cd.steps.pdcStep.filterHostName': string
+  'cd.steps.pdcStep.hostsOptional': string
   'cd.steps.pdcStep.hostsPlaceholder': string
   'cd.steps.pdcStep.includeAllHosts': string
   'cd.steps.pdcStep.no': string
@@ -4340,7 +4348,9 @@ export interface StringsMap {
   'cd.steps.pdcStep.preconfiguredHostsOption': string
   'cd.steps.pdcStep.previewHosts': string
   'cd.steps.pdcStep.specificAttributes': string
+  'cd.steps.pdcStep.specificAttributesOptional': string
   'cd.steps.pdcStep.specificHosts': string
+  'cd.steps.pdcStep.specificHostsOptional': string
   'cd.steps.pdcStep.specificHostsPlaceholder': string
   'cd.steps.pdcStep.specifyHostsOption': string
   'cd.steps.serverless.regionPlaceholder': string
@@ -5119,6 +5129,7 @@ export interface StringsMap {
   'ce.perspectives.createPerspective.validationErrors.nameError': string
   'ce.perspectives.createPerspective.validationErrors.nameLengthError': string
   'ce.perspectives.createPerspective.validationErrors.ruleError': string
+  'ce.perspectives.createPerspective.validationErrors.valuesError': string
   'ce.perspectives.deleteDefaultPerspective': string
   'ce.perspectives.editDefaultPerspective': string
   'ce.perspectives.emptyStateDesc': string
@@ -5450,6 +5461,8 @@ export interface StringsMap {
   'cf.environments.environmentID': string
   'cf.environments.modifiedBy': string
   'cf.environments.title': string
+  'cf.featureFlagDetail.newService': string
+  'cf.featureFlagDetail.noServices': string
   'cf.featureFlagDetail.serviceDescription': string
   'cf.featureFlagDetail.serviceUpdateSuccess': string
   'cf.featureFlagDetail.variationCount': string
@@ -5514,6 +5527,7 @@ export interface StringsMap {
   'cf.featureFlags.flagPipeline.noExecutionDescription': string
   'cf.featureFlags.flagPipeline.noExecutionMessage': string
   'cf.featureFlags.flagPipeline.openExecution': string
+  'cf.featureFlags.flagPipeline.pipelineDeleted': string
   'cf.featureFlags.flagPipeline.saveSuccess': string
   'cf.featureFlags.flagPipeline.title': string
   'cf.featureFlags.flagPipeline.to': string

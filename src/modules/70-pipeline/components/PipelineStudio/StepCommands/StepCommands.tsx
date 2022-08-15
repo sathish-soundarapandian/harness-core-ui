@@ -12,7 +12,7 @@ import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import { isEmpty, noop, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { HelpPanel, HelpPanelType } from '@harness/help-panel'
+import { HelpPanel, HelpPanelType, FloatingButton } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
 import { StepWidgetWithFormikRef } from '@pipeline/components/AbstractSteps/StepWidget'
 import { AdvancedStepsWithRef } from '@pipeline/components/PipelineSteps/AdvancedSteps/AdvancedSteps'
@@ -269,6 +269,9 @@ export function StepCommands(
               ) : null}
             </Tabs>
           </Container>
+          {!isEmpty(referenceId) ? (
+            <FloatingButton className={css.floatingButton} onClick={props.showHelpPanel} />
+          ) : null}
           {props.helpPanelVisible ? (
             <div className={css.helpPanelStyleOpen}>
               <HelpPanel referenceId={referenceId || ''} type={HelpPanelType.CONTENT_ONLY}></HelpPanel>

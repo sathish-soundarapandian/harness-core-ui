@@ -139,7 +139,7 @@ const ValuesSelector: React.FC<ValuesSelectorProps> = ({
       }
     >
       <TagInput
-        values={selectedVal}
+        values={selectedVal || []}
         ref={input => (tagInputRef.current = input)}
         placeholder={getString('ce.perspectives.createPerspective.filters.selectValues')}
         onAdd={handleAddNewTag}

@@ -73,11 +73,34 @@ describe('FlagPipelineTab', () => {
     } as any)
   })
 
+  describe('Flag pipeline error banner', () => {
+    beforeEach(() => {
+      jest.spyOn(cfServicesMock, 'useGetFeaturePipeline').mockReturnValue({
+        data: {
+          pipelineConfigured: true,
+          pipelineErrorState: true
+        },
+        loading: false,
+        refetch: jest.fn()
+      } as any)
+    })
+
+    test('it should show error banner when pipelineErrorState = true', async () => {
+      renderComponent()
+
+      await waitFor(() => expect(screen.getByText('cf.featureFlags.flagPipeline.pipelineDeleted')).toBeInTheDocument())
+      userEvent.click(screen.getByTestId('close-banner-button'))
+      await waitFor(() =>
+        expect(screen.queryByText('cf.featureFlags.flagPipeline.pipelineDeleted')).not.toBeInTheDocument()
+      )
+    })
+  })
+
   describe('Flag pipeline fetching states', () => {
     beforeEach(() => {
       jest.spyOn(cfServicesMock, 'useGetFeaturePipeline').mockReturnValue({
         data: {
-          pipelineConfigured: false
+          pipelineConfigured: true
         },
         loading: true,
         refetch: jest.fn()

@@ -42,8 +42,17 @@ export const addLegendColorToRow = (data: QlceViewEntityStatsDataPoint[]): GridD
   return data.map(({ name, id, clusterData = {}, storageDetails = {}, instanceDetails = {}, ...rest }) => {
     const key = id
     if (!colors.has(key)) {
-      colors.set(key, CE_COLOR_CONST[idx % CE_COLOR_CONST.length])
-      idx++
+      switch (name) {
+        case 'Others':
+          colors.set(key, 'var(--blue-100)')
+          break
+        case 'Unallocated':
+          colors.set(key, 'var(--primary-2)')
+          break
+        default:
+          colors.set(key, CE_COLOR_CONST[idx % CE_COLOR_CONST.length])
+          idx++
+      }
     }
 
     return {

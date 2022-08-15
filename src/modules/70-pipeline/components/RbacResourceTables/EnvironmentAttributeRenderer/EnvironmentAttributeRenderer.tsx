@@ -38,7 +38,7 @@ function EnvironmentAttributeRenderer({
   const { getString } = useStrings()
   const EnvironmentNames = new Map<string, string>()
   EnvironmentNames.set('Production', getString('production'))
-  EnvironmentNames.set('PreProduction', getString('nonProduction'))
+  EnvironmentNames.set('PreProduction', getString('pipeline.preProduction'))
 
   const environmentAttrData: EnvironmentType[] = identifiers
     .filter(el => el)

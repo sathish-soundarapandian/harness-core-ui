@@ -296,6 +296,7 @@ export class ServerlessLambdaDeployStep extends PipelineStep<StepElementConfig> 
   protected stepIcon: IconName = 'serverless-deploy-step'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ServerlessLambdaDeploy'
   protected isHarnessSpecific = true
+  protected referenceId = 'serverlessDeployStep'
 
   protected defaultValues: StepElementConfig = {
     identifier: '',

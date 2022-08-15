@@ -89,6 +89,7 @@ export interface ConnectorDetailsProps {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
+  helpPanelReferenceId?: string
 }
 
 export interface AwsSecretManagerConfigFormData {

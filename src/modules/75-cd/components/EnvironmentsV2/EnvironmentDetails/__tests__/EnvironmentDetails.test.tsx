@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
@@ -31,12 +32,32 @@ jest.mock('services/cd-ng', () => ({
       },
       refetch: jest.fn()
     }
-  })
+  }),
+  useGetClusterList: jest.fn().mockImplementation(() => {
+    return {
+      data: {
+        data: {
+          content: [
+            {
+              clusterRef: 'test-cluster-a',
+              linkedAt: '123'
+            },
+            {
+              clusterRef: 'test-cluster-b',
+              linkedAt: '2'
+            }
+          ]
+        }
+      },
+      refetch: jest.fn()
+    }
+  }),
+  useDeleteCluster: jest.fn().mockResolvedValue({})
 }))
 
 describe('EnvironmentDetails tests', () => {
-  test('initial render', () => {
-    const { container } = render(
+  test('initial render', async () => {
+    render(
       <TestWrapper
         path={routes.toEnvironmentDetails({
           ...projectPathProps,
@@ -56,6 +77,38 @@ describe('EnvironmentDetails tests', () => {
       </TestWrapper>
     )
 
-    expect(container).toMatchSnapshot()
+    await waitFor(() => expect(screen.queryByText('cd.gitOpsCluster')).toBeNull())
+  })
+
+  test('is gitops tab visible', async () => {
+    render(
+      <TestWrapper
+        path={routes.toEnvironmentDetails({
+          ...projectPathProps,
+          ...modulePathProps,
+          ...environmentPathProps
+        })}
+        pathParams={{
+          accountId: 'dummy',
+          projectIdentifier: 'dummy',
+          orgIdentifier: 'dummy',
+          module: 'cd',
+          environmentIdentifier: 'Env_1',
+          sectionId: 'CONFIGURATION'
+        }}
+        defaultFeatureFlagValues={{
+          ARGO_PHASE2_MANAGED: true
+        }}
+      >
+        <EnvironmentDetails />
+      </TestWrapper>
+    )
+
+    await waitFor(() => expect(screen.queryByText('cd.gitOpsCluster')).toBeVisible())
+
+    const gitOpsTab = screen.getByText('cd.gitOpsCluster')
+    userEvent.click(gitOpsTab!)
+
+    await waitFor(() => expect(screen.queryByText('test-cluster-a')).toBeVisible())
   })
 })

@@ -29,7 +29,8 @@ import {
   QlceViewFieldInputInput,
   ViewChartType,
   ViewTimeRangeType,
-  QlceViewTimeGroupType
+  QlceViewTimeGroupType,
+  QlceViewFilterOperator
 } from 'services/ce/services'
 import { useStrings } from 'framework/strings'
 import type { ViewIdCondition } from 'services/ce/'
@@ -255,6 +256,17 @@ const PerspectiveBuilder: React.FC<PerspectiveBuilderProps> = props => {
               fieldName: Yup.string(),
               identifier: Yup.string().required(),
               identifierName: Yup.string().nullable()
+            }),
+            values: Yup.array().when('viewOperator', {
+              is: val =>
+                [QlceViewFilterOperator.In, QlceViewFilterOperator.NotIn, QlceViewFilterOperator.Like].includes(val),
+              then: Yup.array()
+                .of(
+                  Yup.string()
+                    .trim()
+                    .required(getString('ce.perspectives.createPerspective.validationErrors.valuesError'))
+                )
+                .min(1, getString('ce.perspectives.createPerspective.validationErrors.valuesError'))
             })
           })
         )

@@ -242,6 +242,7 @@ export class TerraformRollback extends PipelineStep<TFRollbackData> {
   }
   protected stepIcon: IconName = 'terraform-rollback'
   protected stepName = 'Terraform Rollback'
+  protected referenceId = 'terraformRollbackStep'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.TerraformRollback'
 
   validateInputSet({

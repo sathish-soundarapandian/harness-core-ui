@@ -1256,7 +1256,7 @@ exports[`Create Secret Manager Wizard should render form 3`] = `
                                     />
                                   </svg>
                                 </span>
-                                connectors.ceAzure.chooseRequirements.visibility.feat2
+                                connectors.ceAzure.chooseRequirements.billing.feat2
                               </p>
                             </li>
                             <li>
@@ -1280,7 +1280,7 @@ exports[`Create Secret Manager Wizard should render form 3`] = `
                                     />
                                   </svg>
                                 </span>
-                                connectors.ceAzure.chooseRequirements.visibility.feat3
+                                connectors.ceAzure.chooseRequirements.billing.feat3
                               </p>
                             </li>
                             <li>
@@ -1304,7 +1304,7 @@ exports[`Create Secret Manager Wizard should render form 3`] = `
                                     />
                                   </svg>
                                 </span>
-                                connectors.ceAzure.chooseRequirements.visibility.feat4
+                                connectors.ceAzure.chooseRequirements.billing.feat4
                               </p>
                             </li>
                             <li>
@@ -1328,7 +1328,7 @@ exports[`Create Secret Manager Wizard should render form 3`] = `
                                     />
                                   </svg>
                                 </span>
-                                connectors.ceAzure.chooseRequirements.visibility.feat5
+                                connectors.ceAzure.chooseRequirements.billing.feat5
                               </p>
                             </li>
                           </ul>

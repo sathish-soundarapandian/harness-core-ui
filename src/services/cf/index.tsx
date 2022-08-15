@@ -253,6 +253,8 @@ export interface Feature {
     offVariation: string
     pipelineConfigured: boolean
     pipelineDetails?: FeaturePipeline
+    pipelineErrorReason?: string
+    pipelineErrorState?: boolean
     /**
      * A list of rules to use when evaluating this flag in this environment
      */
@@ -533,6 +535,8 @@ export interface FeaturePipelineResp {
   executionHistory?: FeaturePipelineExecution[]
   pipelineConfigured: boolean
   pipelineDetails?: FeaturePipeline
+  pipelineErrorReason?: string
+  pipelineErrorState?: boolean
 }
 
 export interface FeatureResponseMetadata {

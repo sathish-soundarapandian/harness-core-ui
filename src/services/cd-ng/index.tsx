@@ -15266,6 +15266,173 @@ export const getBuildDetailsForAcrArtifactWithYamlPromise = (
     void
   >('POST', getConfig('ng/api'), `/artifacts/acr/getBuildDetailsV2`, props, signal)
 
+export interface GetAzureSubscriptionsForAcrArtifactQueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  fqnPath: string
+  serviceId?: string
+}
+
+export type GetAzureSubscriptionsForAcrArtifactProps = Omit<
+  GetProps<ResponseAzureSubscriptionsDTO, Failure | Error, GetAzureSubscriptionsForAcrArtifactQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets azure subscriptions for ACR artifact
+ */
+export const GetAzureSubscriptionsForAcrArtifact = (props: GetAzureSubscriptionsForAcrArtifactProps) => (
+  <Get<ResponseAzureSubscriptionsDTO, Failure | Error, GetAzureSubscriptionsForAcrArtifactQueryParams, void>
+    path={`/artifacts/acr/subscriptions`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetAzureSubscriptionsForAcrArtifactProps = Omit<
+  UseGetProps<ResponseAzureSubscriptionsDTO, Failure | Error, GetAzureSubscriptionsForAcrArtifactQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets azure subscriptions for ACR artifact
+ */
+export const useGetAzureSubscriptionsForAcrArtifact = (props: UseGetAzureSubscriptionsForAcrArtifactProps) =>
+  useGet<ResponseAzureSubscriptionsDTO, Failure | Error, GetAzureSubscriptionsForAcrArtifactQueryParams, void>(
+    `/artifacts/acr/subscriptions`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets azure subscriptions for ACR artifact
+ */
+export const getAzureSubscriptionsForAcrArtifactPromise = (
+  props: GetUsingFetchProps<
+    ResponseAzureSubscriptionsDTO,
+    Failure | Error,
+    GetAzureSubscriptionsForAcrArtifactQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseAzureSubscriptionsDTO, Failure | Error, GetAzureSubscriptionsForAcrArtifactQueryParams, void>(
+    getConfig('ng/api'),
+    `/artifacts/acr/subscriptions`,
+    props,
+    signal
+  )
+
+export interface GetACRRegistriesForServiceQueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  subscriptionId?: string
+  fqnPath: string
+  serviceId?: string
+}
+
+export type GetACRRegistriesForServiceProps = Omit<
+  GetProps<ResponseAcrRegistriesDTO, Failure | Error, GetACRRegistriesForServiceQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets ACR registries
+ */
+export const GetACRRegistriesForService = (props: GetACRRegistriesForServiceProps) => (
+  <Get<ResponseAcrRegistriesDTO, Failure | Error, GetACRRegistriesForServiceQueryParams, void>
+    path={`/artifacts/acr/v2/container-registries`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetACRRegistriesForServiceProps = Omit<
+  UseGetProps<ResponseAcrRegistriesDTO, Failure | Error, GetACRRegistriesForServiceQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets ACR registries
+ */
+export const useGetACRRegistriesForService = (props: UseGetACRRegistriesForServiceProps) =>
+  useGet<ResponseAcrRegistriesDTO, Failure | Error, GetACRRegistriesForServiceQueryParams, void>(
+    `/artifacts/acr/v2/container-registries`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets ACR registries
+ */
+export const getACRRegistriesForServicePromise = (
+  props: GetUsingFetchProps<ResponseAcrRegistriesDTO, Failure | Error, GetACRRegistriesForServiceQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseAcrRegistriesDTO, Failure | Error, GetACRRegistriesForServiceQueryParams, void>(
+    getConfig('ng/api'),
+    `/artifacts/acr/v2/container-registries`,
+    props,
+    signal
+  )
+
+export interface GetACRRepositoriesForServiceQueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  subscriptionId?: string
+  registry?: string
+  fqnPath: string
+  serviceId?: string
+}
+
+export type GetACRRepositoriesForServiceProps = Omit<
+  GetProps<ResponseAcrRepositoriesDTO, Failure | Error, GetACRRepositoriesForServiceQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets ACR repositories
+ */
+export const GetACRRepositoriesForService = (props: GetACRRepositoriesForServiceProps) => (
+  <Get<ResponseAcrRepositoriesDTO, Failure | Error, GetACRRepositoriesForServiceQueryParams, void>
+    path={`/artifacts/acr/v2/repositories`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetACRRepositoriesForServiceProps = Omit<
+  UseGetProps<ResponseAcrRepositoriesDTO, Failure | Error, GetACRRepositoriesForServiceQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets ACR repositories
+ */
+export const useGetACRRepositoriesForService = (props: UseGetACRRepositoriesForServiceProps) =>
+  useGet<ResponseAcrRepositoriesDTO, Failure | Error, GetACRRepositoriesForServiceQueryParams, void>(
+    `/artifacts/acr/v2/repositories`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets ACR repositories
+ */
+export const getACRRepositoriesForServicePromise = (
+  props: GetUsingFetchProps<ResponseAcrRepositoriesDTO, Failure | Error, GetACRRepositoriesForServiceQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseAcrRepositoriesDTO, Failure | Error, GetACRRepositoriesForServiceQueryParams, void>(
+    getConfig('ng/api'),
+    `/artifacts/acr/v2/repositories`,
+    props,
+    signal
+  )
+
 export interface GetArtifactsBuildsDetailsForArtifactoryQueryParams {
   connectorRef: string
   repositoryName: string

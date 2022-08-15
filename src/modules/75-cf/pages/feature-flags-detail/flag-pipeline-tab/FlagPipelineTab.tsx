@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { Container } from '@harness/uicore'
+import { Container, Layout } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { NoData } from '@cf/components/NoData/NoData'
 import imageUrl from '@cf/images/pipeline_flags_empty_state.svg'
@@ -16,6 +16,7 @@ import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import AvailablePipelinesDrawer from './components/available-pipelines-drawer/AvailablePipelinesDrawer'
 import ConfiguredPipelineView from './components/configured-pipeline-view/ConfiguredPipelineView'
+import PipelineErrorBanner from './components/pipeline-error-banner/PipelineErrorBanner'
 export interface FlagPipelineTabProps {
   flagIdentifier: string
   flagVariations: Variation[]
@@ -70,7 +71,7 @@ const FlagPipelineTab: React.FC<FlagPipelineTabProps> = ({ flagIdentifier, flagV
 
   return (
     <>
-      {featurePipeline?.pipelineConfigured ? (
+      {featurePipeline?.pipelineConfigured && !featurePipeline.pipelineErrorState ? (
         <ConfiguredPipelineView
           pipelineData={featurePipeline}
           flagIdentifier={flagIdentifier}
@@ -79,16 +80,22 @@ const FlagPipelineTab: React.FC<FlagPipelineTabProps> = ({ flagIdentifier, flagV
           refetchFeaturePipeline={async () => await refetchFeaturePipeline()}
         />
       ) : (
-        <Container height="100%" flex={{ align: 'center-center' }}>
-          <NoData
-            message={getString('cf.featureFlags.flagPipeline.noDataMessage')}
-            buttonText={getString('cf.featureFlags.flagPipeline.noDataButtonText')}
-            description={getString('cf.featureFlags.flagPipeline.noDataDescription')}
-            imageURL={imageUrl}
-            onClick={() => setIsDrawerOpen(true)}
-            imgWidth={650}
-          />
-        </Container>
+        <Layout.Vertical height="100%">
+          {featurePipeline?.pipelineErrorState && (
+            <PipelineErrorBanner message={getString('cf.featureFlags.flagPipeline.pipelineDeleted')} />
+          )}
+
+          <Container height="100%" flex={{ align: 'center-center' }}>
+            <NoData
+              message={getString('cf.featureFlags.flagPipeline.noDataMessage')}
+              buttonText={getString('cf.featureFlags.flagPipeline.noDataButtonText')}
+              description={getString('cf.featureFlags.flagPipeline.noDataDescription')}
+              imageURL={imageUrl}
+              onClick={() => setIsDrawerOpen(true)}
+              imgWidth={650}
+            />
+          </Container>
+        </Layout.Vertical>
       )}
 
       <AvailablePipelinesDrawer

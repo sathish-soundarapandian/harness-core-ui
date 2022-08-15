@@ -45,6 +45,7 @@ interface GcpAuthenticationProps {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
+  helpPanelReferenceId?: string
 }
 
 interface StepConfigureProps {
@@ -101,7 +102,9 @@ const GcpAuthentication: React.FC<StepProps<StepConfigureProps> & GcpAuthenticat
     })
     nextStep?.({ ...props.connectorInfo, ...prevStepData, ...formData } as StepConfigureProps)
   }
-  useConnectorWizard({ helpPanel: { referenceId: 'GoogleCloudProviderDetails', contentWidth: 1100 } })
+  useConnectorWizard({
+    helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 1100 } : undefined
+  })
 
   const { trackEvent } = useTelemetry()
 

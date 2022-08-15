@@ -6,10 +6,10 @@
  */
 
 import React from 'react'
-import { FieldArray } from 'formik'
+import { FieldArray, FormikProps } from 'formik'
 import cx from 'classnames'
 import { Color, FontVariation, Container, Text } from '@harness/uicore'
-import type { ViewCondition } from 'services/ce/'
+import type { CEView, ViewCondition } from 'services/ce/'
 import type { QlceViewFieldIdentifierData } from 'services/ce/services'
 import type { TimeRangeFilterType } from '@ce/types'
 import { useStrings } from 'framework/strings'
@@ -26,6 +26,7 @@ interface FiltersProps {
   setFieldValue: (id: number, data: Omit<PillData, 'type'>) => void
   timeRange: TimeRangeFilterType
   fieldName: string
+  formikProps?: FormikProps<CEView>
 }
 
 const Filters: React.FC<FiltersProps> = ({
@@ -36,7 +37,9 @@ const Filters: React.FC<FiltersProps> = ({
   setFieldValue,
   timeRange,
   fieldName,
-  showAndOperator
+  showAndOperator,
+  formikProps,
+  index
 }) => {
   const { getString } = useStrings()
   const onPillDataChange: (id: number, data: Omit<PillData, 'type'>) => void = (id, data) => {
@@ -80,6 +83,7 @@ const Filters: React.FC<FiltersProps> = ({
                       })
                     }}
                     key={`filter-pill-${innerIndex}`}
+                    ruleIndex={index}
                     id={innerIndex}
                     removePill={() => {
                       if (filters.length === 1) {
@@ -92,6 +96,7 @@ const Filters: React.FC<FiltersProps> = ({
                     fieldValuesList={fieldValuesList}
                     onChange={onPillDataChange}
                     pillData={data}
+                    formikProps={formikProps}
                   />
                   {showAndOperator && innerIndex === filters.length - 1 ? (
                     <Text
