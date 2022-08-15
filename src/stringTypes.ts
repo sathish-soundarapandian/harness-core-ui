@@ -2131,6 +2131,7 @@ export interface StringsMap {
   'connectors.customSM.details': string
   'connectors.customSM.executeOnDelegate': string
   'connectors.customSM.host': string
+  'connectors.customSM.inputVariables': string
   'connectors.customSM.selectTemplate': string
   'connectors.customSM.sshKey': string
   'connectors.customSM.templateRef': string

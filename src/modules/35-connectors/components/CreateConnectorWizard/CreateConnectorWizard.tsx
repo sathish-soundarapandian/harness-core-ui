@@ -145,7 +145,7 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     case Connectors.HttpHelmRepo:
       return <HelmRepoConnector {...commonProps} />
     case Connectors.OciHelmRepo:
-      return HELM_OCI_SUPPORT ? <OCIHelmConnector {...commonProps} /> : null
+      return <OCIHelmConnector {...commonProps} />
     case Connectors.AWS:
       return <CreateAWSConnector {...commonProps} />
     case Connectors.AWS_CODECOMMIT:
