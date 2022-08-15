@@ -9,7 +9,8 @@
 declare const styles: {
   readonly floatingButton: string
   readonly form: string
-  readonly helpPanelGrid: string
+  readonly helpPanelGridHidden: string
+  readonly helpPanelGridVisible: string
   readonly helpPanelStyleClose: string
   readonly helpPanelStyleOpen: string
   readonly saveButton: string

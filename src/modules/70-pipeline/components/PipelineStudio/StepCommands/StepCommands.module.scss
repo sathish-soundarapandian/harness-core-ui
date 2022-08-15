@@ -10,10 +10,14 @@
   flex-direction: column;
 }
 
-.helpPanelGrid {
+.helpPanelGridVisible {
   display: flex;
-  direction: row;
   height: 0px;
+  width: 88%;
+}
+.helpPanelGridHidden {
+  display: flex;
+  height: 100%;
 }
 .helpPanelStyleOpen {
   width: 500px;
@@ -44,7 +48,7 @@
 
   .step-tabs {
     height: 100%;
-    width: 600px;
+    width: 100%;
     :global(.bp3-tab-list) {
       border-bottom: 1px solid var(--grey-300);
       background-color: var(--white);
