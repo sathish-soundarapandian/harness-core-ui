@@ -10,6 +10,8 @@ declare const styles: {
   readonly addButton: string
   readonly environmentVarHeader: string
   readonly formGroup: string
+  readonly gridFourColumn: string
+  readonly gridThreeColumn: string
   readonly label: string
   readonly minConfigBtn: string
   readonly outputVarHeader: string

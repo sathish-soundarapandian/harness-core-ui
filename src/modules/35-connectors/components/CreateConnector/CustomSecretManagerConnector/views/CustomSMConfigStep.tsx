@@ -43,8 +43,7 @@ import { getTemplateInputSetYamlPromise } from 'services/template-ng'
 import { MultiTypeSecretInput } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { getRefFromIdAndScopeParams, setupCustomSMFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import type { CustomSMFormInterface } from '@connectors/interfaces/ConnectorInterface'
-
-import { ScriptVariablesRuntimeInput } from './ScriptVariableRuntimeInput/ScriptVariablesRuntimeInput'
+import { ScriptVariablesRuntimeInput } from '@common/components/ScriptVariableRuntimeInput/ScriptVariablesRuntimeInput'
 
 interface StepCustomSMConfigStepProps extends ConnectorInfoDTO {
   name: string
@@ -274,6 +273,7 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
                     allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
                     path={''}
                     template={templateInputSets || prevStepData?.templateInputs}
+                    enableDefault
                   />
                 ) : null}
 

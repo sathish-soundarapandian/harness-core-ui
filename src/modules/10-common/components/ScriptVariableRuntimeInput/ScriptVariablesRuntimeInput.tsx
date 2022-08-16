@@ -8,7 +8,8 @@
 import React from 'react'
 import { FieldArray } from 'formik'
 import { isArray, isEmpty } from 'lodash-es'
-import { AllowedTypes, FormInput, SelectOption } from '@harness/uicore'
+import { AllowedTypes, Container, FormInput, SelectOption } from '@harness/uicore'
+import cx from 'classnames'
 
 import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
@@ -19,6 +20,7 @@ interface InputOutputVariablesInputSetProps {
   template?: any
   path?: string
   readonly?: boolean
+  enableDefault?: boolean
 }
 
 export const scriptInputType: SelectOption[] = [
@@ -27,14 +29,13 @@ export const scriptInputType: SelectOption[] = [
 ]
 
 export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetProps): React.ReactElement {
-  const { allowableTypes, readonly, template, path } = props
+  const { allowableTypes, readonly, template, path, enableDefault = false } = props
 
   const { getString } = useStrings()
-  // const { expressions } = useVariablesExpression()
   const prefix = isEmpty(path) ? '' : `${path}.`
-
+  console.log(enableDefault)
   return (
-    <>
+    <Container>
       {isArray(template?.environmentVariables) && template?.environmentVariables ? (
         <div className={css.formGroup}>
           <MultiTypeFieldSelector
@@ -48,15 +49,26 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
               render={() => {
                 return (
                   <div className={css.panel}>
-                    <div className={css.environmentVarHeader}>
+                    <div
+                      className={cx(css.environmentVarHeader, {
+                        [css.gridFourColumn]: enableDefault,
+                        [css.gridThreeColumn]: !enableDefault
+                      })}
+                    >
                       <span className={css.label}>Name</span>
                       <span className={css.label}>Type</span>
                       <span className={css.label}>Value</span>
-                      <span className={css.label}>Default</span>
+                      {enableDefault ? <span className={css.label}>Default</span> : null}
                     </div>
                     {template?.environmentVariables?.map((type: any, i: number) => {
                       return (
-                        <div className={css.environmentVarHeader} key={type.value}>
+                        <div
+                          className={cx(css.environmentVarHeader, {
+                            [css.gridFourColumn]: enableDefault,
+                            [css.gridThreeColumn]: !enableDefault
+                          })}
+                          key={type.value}
+                        >
                           <FormInput.Text
                             name={`${prefix}templateInputs.environmentVariables[${i}].name`}
                             placeholder={getString('name')}
@@ -78,13 +90,15 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
                             label=""
                             disabled={readonly}
                           />
-                          <FormInput.CheckBox
-                            label=""
-                            name={`${prefix}templateInputs.environmentVariables[${i}].useAsDefault`}
-                            placeholder={getString('typeLabel')}
-                            disabled={false}
-                            style={{ margin: 'auto' }}
-                          />
+                          {enableDefault ? (
+                            <FormInput.CheckBox
+                              label=""
+                              name={`${prefix}templateInputs.environmentVariables[${i}].useAsDefault`}
+                              placeholder={getString('typeLabel')}
+                              disabled={false}
+                              style={{ margin: 'auto' }}
+                            />
+                          ) : null}
                         </div>
                       )
                     })}
@@ -95,6 +109,6 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
           </MultiTypeFieldSelector>
         </div>
       ) : null}
-    </>
+    </Container>
   )
 }

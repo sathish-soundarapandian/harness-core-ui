@@ -14,7 +14,6 @@
 
 .environmentVarHeader {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 2fr 0.5fr;
   column-gap: var(--spacing-small);
   margin-bottom: var(--spacing-small);
   align-items: center;
@@ -27,7 +26,12 @@
     color: var(--grey-400);
   }
 }
-
+.gridFourColumn {
+  grid-template-columns: 1.5fr 1fr 2fr 0.5fr;
+}
+.gridThreeColumn {
+  grid-template-columns: 1.5fr 1fr 2fr;
+}
 .outputVarHeader {
   display: grid;
   grid-template-columns: 1.5fr 1fr 2fr 30px;
