@@ -8,6 +8,10 @@
 import React from 'react'
 import { StepWizard } from '@wings-software/uicore'
 import { pick } from 'lodash-es'
+import type {
+  GetTemplateProps,
+  GetTemplateResponse
+} from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
 import { Connectors, CreateConnectorModalProps, TESTCONNECTION_STEP_INDEX } from '@connectors/constants'
 import { getConnectorTitleIdByType, getConnectorIconByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
@@ -26,8 +30,7 @@ const CreateCustomSMConnector: React.FC<CreateConnectorModalProps> = props => {
     'setIsEditMode',
     'accountId',
     'orgIdentifier',
-    'projectIdentifier',
-    'getTemplate'
+    'projectIdentifier'
   ])
 
   return (
@@ -47,9 +50,9 @@ const CreateCustomSMConnector: React.FC<CreateConnectorModalProps> = props => {
       />
       <CustomSMConfigStep
         name={getString('details')}
-        isEditMode={props.isEditMode}
         onConnectorCreated={props.onSuccess}
         hideModal={props.onClose}
+        getTemplate={props.getTemplate as (data: GetTemplateProps) => Promise<GetTemplateResponse>}
         {...commonProps}
       />
 
