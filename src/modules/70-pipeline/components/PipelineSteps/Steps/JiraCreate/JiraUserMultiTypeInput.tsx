@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { FormInput } from '@harness/uicore'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, noop } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import type {
@@ -17,14 +17,14 @@ import type {
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import { JiraFieldNG, useJiraUserSearch } from 'services/cd-ng'
+import { useJiraUserSearch } from 'services/cd-ng'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import { setUserValuesOptions } from '../JiraApproval/helper'
 import type { JiraFieldsRendererProps } from './JiraFieldsRenderer'
 import css from './JiraCreate.module.scss'
 
 interface JiraUserProps {
-  selectedField: JiraFieldNG
+  selectedField: any
   props: JiraFieldsRendererProps
   expressions: string[]
   formikFieldPath: string
@@ -32,10 +32,9 @@ interface JiraUserProps {
 
 export function JiraUserMultiTypeInput({ selectedField, props, expressions, formikFieldPath }: JiraUserProps) {
   const { getString } = useStrings()
-  const [searchTerm, setSearchTerm] = React.useState<string>('')
+  const [searchTerm, setSearchTerm] = React.useState<string>(selectedField?.value ? selectedField?.value : '')
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps & GitQueryParams>>()
-
   const { data: userData, loading: fetchUsers } = useJiraUserSearch({
     queryParams: {
       accountIdentifier: accountId,
@@ -66,7 +65,7 @@ export function JiraUserMultiTypeInput({ selectedField, props, expressions, form
         selectProps: {
           items: setUserValuesOptions(defaultTo(userData?.data, [])),
           onQueryChange: (query: string) => {
-            setSearchTerm(query)
+            query ? setSearchTerm(query) : noop
           }
         }
       }}
