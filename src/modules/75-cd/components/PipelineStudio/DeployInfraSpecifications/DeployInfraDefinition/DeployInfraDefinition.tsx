@@ -111,7 +111,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
     React.useState<Infrastructure>({})
 
   const { getString } = useStrings()
-  const { NG_AZURE, SSH_NG } = useFeatureFlags()
+  const { NG_AZURE } = useFeatureFlags()
 
   const {
     state: {

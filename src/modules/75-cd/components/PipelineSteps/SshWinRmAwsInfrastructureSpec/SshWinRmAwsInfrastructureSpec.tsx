@@ -447,7 +447,7 @@ export class SshWinRmAwsInfrastructureSpec extends PipelineStep<SshWinRmAwsInfra
     getString,
     viewType
   }: ValidateInputSetProps<SshWinRmAwsInfrastructure>): FormikErrors<SshWinRmAwsInfrastructure> {
-    const errors: Partial<SshWinRmAwsInfrastructureTemplate> = {}
+    const errors: FormikErrors<SshWinRmAwsInfrastructure> = {}
     /* istanbul ignore else */
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (isEmpty(data.credentialsRef) && isRequired) {
