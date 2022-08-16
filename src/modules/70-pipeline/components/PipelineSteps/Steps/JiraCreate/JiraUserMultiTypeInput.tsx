@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { FormInput } from '@harness/uicore'
-import { defaultTo, noop } from 'lodash-es'
+import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import type {
@@ -65,7 +65,7 @@ export function JiraUserMultiTypeInput({ selectedField, props, expressions, form
         selectProps: {
           items: setUserValuesOptions(defaultTo(userData?.data, [])),
           onQueryChange: (query: string) => {
-            query ? setSearchTerm(query) : noop
+            setSearchTerm(query)
           }
         }
       }}
