@@ -1073,6 +1073,12 @@ export type AwsSecretManagerDTO = ConnectorConfigDTO & {
   secretNamePrefix?: string
 }
 
+export type AwsSshWinrmInstanceInfoDTO = InstanceInfoDTO & {
+  host: string
+  infrastructureKey: string
+  serviceType: string
+}
+
 export interface AwsVPC {
   id?: string
   name?: string
@@ -1184,6 +1190,7 @@ export type AzureRepoConnector = ConnectorConfigDTO & {
   apiAccess?: AzureRepoApiAccess
   authentication: AzureRepoAuthentication
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
   type: 'Project' | 'Repo'
   url: string
   validationRepo?: string
@@ -1238,13 +1245,9 @@ export interface AzureResourceGroupsDTO {
   resourceGroups?: AzureResourceGroupDTO[]
 }
 
-export type AzureSshWinrmInfrastructureDetails = InfrastructureDetails & {
-  host?: string
-}
-
 export type AzureSshWinrmInstanceInfoDTO = InstanceInfoDTO & {
   host: string
-  infrastructureKey?: string
+  infrastructureKey: string
   serviceType: string
 }
 
@@ -1361,6 +1364,7 @@ export type BitbucketConnector = ConnectorConfigDTO & {
   apiAccess?: BitbucketApiAccess
   authentication: BitbucketAuthentication
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
   type: 'Account' | 'Repo' | 'Project'
   url: string
   validationRepo?: string
@@ -2226,6 +2230,7 @@ export interface DelegateGroup {
   sizeDetails?: DelegateSizeDetails
   status?: 'ENABLED' | 'DELETED'
   tags?: string[]
+  upgraderLastUpdated?: number
   uuid: string
   validUntil?: string
 }
@@ -2241,12 +2246,15 @@ export interface DelegateGroupDTO {
 
 export interface DelegateGroupDetails {
   activelyConnected?: boolean
+  autoUpgrade?: boolean
   connectivityStatus?: string
   delegateConfigurationId?: string
   delegateDescription?: string
   delegateGroupIdentifier?: string
   delegateInstanceDetails?: DelegateInner[]
   delegateType?: string
+  delegateVersion?: string
+  expirationTime?: string
   groupCustomSelectors?: string[]
   groupId?: string
   groupImplicitSelectors?: {
@@ -2262,6 +2270,7 @@ export interface DelegateGroupDetails {
   grpcActive?: boolean
   lastHeartBeat?: number
   tokenActive?: boolean
+  upgraderLastUpdated?: number
 }
 
 export interface DelegateGroupListing {
@@ -5660,6 +5669,7 @@ export type GitlabConnector = ConnectorConfigDTO & {
   apiAccess?: GitlabApiAccess
   authentication: GitlabAuthentication
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
   type: 'Account' | 'Repo' | 'Project'
   url: string
   validationRepo?: string
@@ -7896,13 +7906,9 @@ export type PdcInfrastructure = Infrastructure & {
   hosts?: string[]
 }
 
-export type PdcInfrastructureDetails = InfrastructureDetails & {
-  host?: string
-}
-
 export type PdcInstanceInfoDTO = InstanceInfoDTO & {
   host: string
-  infrastructureKey?: string
+  infrastructureKey: string
   serviceType: string
 }
 
@@ -11644,15 +11650,10 @@ export type SplunkConnectorDTO = ConnectorConfigDTO & {
 export type SshServiceSpec = ServiceSpec & {}
 
 export type SshWinRmAwsInfrastructure = Infrastructure & {
-  autoScalingGroupName?: string
-  awsInstanceFilter?: AwsInstanceFilter
+  awsInstanceFilter: AwsInstanceFilter
   connectorRef: string
   credentialsRef: string
-  delegateSelectors?: string[]
-  hostNameConvention: string
-  loadBalancer: string
   region: string
-  useAutoScalingGroup?: boolean
 }
 
 export type SshWinRmAzureInfrastructure = Infrastructure & {
@@ -11664,6 +11665,10 @@ export type SshWinRmAzureInfrastructure = Infrastructure & {
     [key: string]: string
   }
   usePublicDns?: boolean
+}
+
+export type SshWinrmInfrastructureDetails = InfrastructureDetails & {
+  host?: string
 }
 
 export interface StackTraceElement {
@@ -12727,9 +12732,9 @@ export type ScimUserRequestBody = ScimUser
 
 export type ScopingRuleDetailsNgArrayRequestBody = ScopingRuleDetailsNg[]
 
-export type SecretRequestWrapperRequestBody = void
+export type SecretRequestWrapperRequestBody = SecretRequestWrapper
 
-export type SecretRequestWrapper2RequestBody = SecretRequestWrapper
+export type SecretRequestWrapper2RequestBody = void
 
 export type ServiceAccountDTORequestBody = ServiceAccountDTO
 
@@ -19189,10 +19194,12 @@ export const vpcsPromise = (
   )
 
 export interface GetAzureSubscriptionsQueryParams {
-  connectorRef: string
+  connectorRef?: string
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  envId?: string
+  infraDefinitionId?: string
 }
 
 export type GetAzureSubscriptionsProps = Omit<
@@ -19643,6 +19650,169 @@ export const getSubscriptionTagsPromise = (
   getUsingFetch<ResponseAzureTagsDTO, Failure | Error, GetSubscriptionTagsQueryParams, GetSubscriptionTagsPathParams>(
     getConfig('ng/api'),
     `/azure/subscriptions/${subscriptionId}/tags`,
+    props,
+    signal
+  )
+
+export interface GetAzureClustersV2QueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  subscriptionId?: string
+  resourceGroup?: string
+  envId?: string
+  infraDefinitionId?: string
+}
+
+export type GetAzureClustersV2Props = Omit<
+  GetProps<ResponseAzureClustersDTO, Failure | Error, GetAzureClustersV2QueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets azure k8s clusters
+ */
+export const GetAzureClustersV2 = (props: GetAzureClustersV2Props) => (
+  <Get<ResponseAzureClustersDTO, Failure | Error, GetAzureClustersV2QueryParams, void>
+    path={`/azure/v2/clusters`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetAzureClustersV2Props = Omit<
+  UseGetProps<ResponseAzureClustersDTO, Failure | Error, GetAzureClustersV2QueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets azure k8s clusters
+ */
+export const useGetAzureClustersV2 = (props: UseGetAzureClustersV2Props) =>
+  useGet<ResponseAzureClustersDTO, Failure | Error, GetAzureClustersV2QueryParams, void>(`/azure/v2/clusters`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Gets azure k8s clusters
+ */
+export const getAzureClustersV2Promise = (
+  props: GetUsingFetchProps<ResponseAzureClustersDTO, Failure | Error, GetAzureClustersV2QueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseAzureClustersDTO, Failure | Error, GetAzureClustersV2QueryParams, void>(
+    getConfig('ng/api'),
+    `/azure/v2/clusters`,
+    props,
+    signal
+  )
+
+export interface GetAzureResourceGroupsV2QueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  subscriptionId?: string
+  envId?: string
+  infraDefinitionId?: string
+}
+
+export type GetAzureResourceGroupsV2Props = Omit<
+  GetProps<ResponseAzureResourceGroupsDTO, Failure | Error, GetAzureResourceGroupsV2QueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets azure resource groups V2
+ */
+export const GetAzureResourceGroupsV2 = (props: GetAzureResourceGroupsV2Props) => (
+  <Get<ResponseAzureResourceGroupsDTO, Failure | Error, GetAzureResourceGroupsV2QueryParams, void>
+    path={`/azure/v2/resourceGroups`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetAzureResourceGroupsV2Props = Omit<
+  UseGetProps<ResponseAzureResourceGroupsDTO, Failure | Error, GetAzureResourceGroupsV2QueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets azure resource groups V2
+ */
+export const useGetAzureResourceGroupsV2 = (props: UseGetAzureResourceGroupsV2Props) =>
+  useGet<ResponseAzureResourceGroupsDTO, Failure | Error, GetAzureResourceGroupsV2QueryParams, void>(
+    `/azure/v2/resourceGroups`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets azure resource groups V2
+ */
+export const getAzureResourceGroupsV2Promise = (
+  props: GetUsingFetchProps<ResponseAzureResourceGroupsDTO, Failure | Error, GetAzureResourceGroupsV2QueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseAzureResourceGroupsDTO, Failure | Error, GetAzureResourceGroupsV2QueryParams, void>(
+    getConfig('ng/api'),
+    `/azure/v2/resourceGroups`,
+    props,
+    signal
+  )
+
+export interface GetSubscriptionTagsV2QueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  subscriptionId?: string
+  envId?: string
+  infraDefinitionId?: string
+}
+
+export type GetSubscriptionTagsV2Props = Omit<
+  GetProps<ResponseAzureTagsDTO, Failure | Error, GetSubscriptionTagsV2QueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets azure tags by subscription
+ */
+export const GetSubscriptionTagsV2 = (props: GetSubscriptionTagsV2Props) => (
+  <Get<ResponseAzureTagsDTO, Failure | Error, GetSubscriptionTagsV2QueryParams, void>
+    path={`/azure/v2/tags`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetSubscriptionTagsV2Props = Omit<
+  UseGetProps<ResponseAzureTagsDTO, Failure | Error, GetSubscriptionTagsV2QueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets azure tags by subscription
+ */
+export const useGetSubscriptionTagsV2 = (props: UseGetSubscriptionTagsV2Props) =>
+  useGet<ResponseAzureTagsDTO, Failure | Error, GetSubscriptionTagsV2QueryParams, void>(`/azure/v2/tags`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Gets azure tags by subscription
+ */
+export const getSubscriptionTagsV2Promise = (
+  props: GetUsingFetchProps<ResponseAzureTagsDTO, Failure | Error, GetSubscriptionTagsV2QueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseAzureTagsDTO, Failure | Error, GetSubscriptionTagsV2QueryParams, void>(
+    getConfig('ng/api'),
+    `/azure/v2/tags`,
     props,
     signal
   )
@@ -44235,7 +44405,7 @@ export type PostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -44245,7 +44415,7 @@ export type PostSecretProps = Omit<
  * Create a secret
  */
 export const PostSecret = (props: PostSecretProps) => (
-  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapper2RequestBody, void>
+  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapperRequestBody, void>
     verb="POST"
     path={`/v2/secrets`}
     base={getConfig('ng/api')}
@@ -44258,7 +44428,7 @@ export type UsePostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -44272,7 +44442,7 @@ export const usePostSecret = (props: UsePostSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', `/v2/secrets`, { base: getConfig('ng/api'), ...props })
 
@@ -44284,7 +44454,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -44293,7 +44463,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets`, props, signal)
 
@@ -44686,7 +44856,7 @@ export type PostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -44700,7 +44870,7 @@ export const PostSecretViaYaml = (props: PostSecretViaYamlProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >
     verb="POST"
@@ -44715,7 +44885,7 @@ export type UsePostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -44729,7 +44899,7 @@ export const usePostSecretViaYaml = (props: UsePostSecretViaYamlProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', `/v2/secrets/yaml`, { base: getConfig('ng/api'), ...props })
 
@@ -44741,7 +44911,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -44750,7 +44920,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets/yaml`, props, signal)
 
@@ -44885,7 +45055,7 @@ export type PutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -44900,7 +45070,7 @@ export const PutSecret = ({ identifier, ...props }: PutSecretProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >
     verb="PUT"
@@ -44915,7 +45085,7 @@ export type UsePutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -44930,7 +45100,7 @@ export const usePutSecret = ({ identifier, ...props }: UsePutSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >('PUT', (paramsInPath: PutSecretPathParams) => `/v2/secrets/${paramsInPath.identifier}`, {
     base: getConfig('ng/api'),
@@ -44949,7 +45119,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -44958,7 +45128,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}`, props, signal)
 
@@ -44977,7 +45147,7 @@ export type PutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -44992,7 +45162,7 @@ export const PutSecretViaYaml = ({ identifier, ...props }: PutSecretViaYamlProps
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >
     verb="PUT"
@@ -45007,7 +45177,7 @@ export type UsePutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -45022,7 +45192,7 @@ export const usePutSecretViaYaml = ({ identifier, ...props }: UsePutSecretViaYam
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >('PUT', (paramsInPath: PutSecretViaYamlPathParams) => `/v2/secrets/${paramsInPath.identifier}/yaml`, {
     base: getConfig('ng/api'),
@@ -45041,7 +45211,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -45050,7 +45220,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
 
