@@ -96,12 +96,7 @@ export const AppDynamicsAuthType = {
   API_CLIENT_TOKEN: 'ApiClientToken'
 }
 
-export const getRefFromIdAndScopeParams = (
-  id: string,
-  accountId: string,
-  orgIdentifier?: string,
-  projectIdentifier?: string
-) => {
+export const getRefFromIdAndScopeParams = (id: string, orgIdentifier?: string, projectIdentifier?: string) => {
   let ref = ''
   if (projectIdentifier) {
     ref = id
@@ -218,7 +213,7 @@ export const buildCustomSMPayload = (formData: FormData) => {
   return { connector: savedData }
 }
 
-export const setupCustomSMFormData = async (connectorInfo: ConnectorInfoDTO, accountId: string): Promise<FormData> => {
+export const setupCustomSMFormData = async (connectorInfo: ConnectorInfoDTO): Promise<FormData> => {
   const connectorInfoSpec = connectorInfo?.spec
 
   return {

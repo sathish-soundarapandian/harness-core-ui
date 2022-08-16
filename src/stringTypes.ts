@@ -2131,13 +2131,12 @@ export interface StringsMap {
   'connectors.customLabel': string
   'connectors.customSM.details': string
   'connectors.customSM.executeOnDelegate': string
-  'connectors.customSM.host': string
   'connectors.customSM.inputVariables': string
   'connectors.customSM.selectTemplate': string
   'connectors.customSM.sshKey': string
   'connectors.customSM.templateRef': string
   'connectors.customSM.templateVersion': string
-  'connectors.customSM.workingDirectory': string
+  'connectors.customSM.validation.template': string
   'connectors.datadog.encryptedAPPKeyLabel': string
   'connectors.datadog.encryptedAPPKeyValidation': string
   'connectors.datadog.urlValidation': string

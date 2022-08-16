@@ -73,7 +73,7 @@ interface CreateConnectorWizardProps {
   status?: ConnectorConnectivityDetails
   onClose: () => void
   onSuccess: (data?: ConnectorRequestBody) => void | Promise<void>
-  getTemplate: (data: GetTemplateProps) => Promise<GetTemplateResponse>
+  getTemplate?: (data: GetTemplateProps) => Promise<GetTemplateResponse>
 }
 
 export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
@@ -106,7 +106,7 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     onSuccess: onSuccessWithEventTracking
   }
 
-  const { ERROR_TRACKING_ENABLED, NG_AZURE, HELM_OCI_SUPPORT } = useFeatureFlags()
+  const { ERROR_TRACKING_ENABLED, NG_AZURE } = useFeatureFlags()
 
   useTrackEvent(ConnectorActions.StartCreateConnector, {
     category: Category.CONNECTOR,
