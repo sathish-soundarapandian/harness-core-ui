@@ -19,7 +19,7 @@ exports[`Project Details render with modules and edit menu 1`] = `
           >
             <a
               class="Breadcrumbs--breadcrumb"
-              href="/account/testAcc/projects"
+              href="/account/testAcc/projects/all"
             >
               <span
                 class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
@@ -843,7 +843,7 @@ exports[`Project Details render with no modules and invite collaborators 1`] = `
           >
             <a
               class="Breadcrumbs--breadcrumb"
-              href="/account/testAcc/projects"
+              href="/account/testAcc/projects/all"
             >
               <span
                 class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"

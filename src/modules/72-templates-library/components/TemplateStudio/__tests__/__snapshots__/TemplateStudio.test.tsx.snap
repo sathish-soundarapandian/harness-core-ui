@@ -22,7 +22,7 @@ exports[`<TemplateStudio /> tests snapshot test for new template with git sync 1
             >
               <a
                 class="Breadcrumbs--breadcrumb"
-                href="/account/dummy/projects"
+                href="/account/dummy/projects/all"
               >
                 <span
                   class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
@@ -406,7 +406,7 @@ exports[`<TemplateStudio /> tests snapshot test for new template without git syn
             >
               <a
                 class="Breadcrumbs--breadcrumb"
-                href="/account/dummy/projects"
+                href="/account/dummy/projects/all"
               >
                 <span
                   class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
@@ -790,7 +790,7 @@ exports[`<TemplateStudio /> tests snapshot test for template studio in visual vi
             >
               <a
                 class="Breadcrumbs--breadcrumb"
-                href="/account/dummy/projects"
+                href="/account/dummy/projects/all"
               >
                 <span
                   class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
