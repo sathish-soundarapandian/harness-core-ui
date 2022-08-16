@@ -16,13 +16,7 @@ import { SshWinRmAwsInfrastructureSpec, ConnectorRefRegex, SshKeyRegex } from '.
 import { ConnectorsResponse } from './mock/ConnectorsResponse.mock'
 import { ConnectorResponse } from './mock/ConnectorResponse.mock'
 import { mockListSecrets, mockSecret } from './mock/Secrets.mock'
-import {
-  loadBalancersResponse,
-  regionsResponse,
-  tagsResponse,
-  autoScalingGroupsResponse,
-  vpcsResponse
-} from './mock/Aws.mock'
+import { regionsResponse, tagsResponse } from './mock/Aws.mock'
 
 const getYaml = (): string => `pipeline:
     stages:
@@ -37,6 +31,9 @@ const getYaml = (): string => `pipeline:
 const infraDefPath = 'pipeline.stages[0].stage.spec.infrastructure.infrastructureDefinition'
 const accountIdParams = { accountId: 'accountId1' }
 
+const mockFetchRegions = jest.fn().mockImplementation(() => Promise.resolve(regionsResponse))
+const mockFetchTags = jest.fn().mockImplementation(() => Promise.resolve(tagsResponse))
+
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 jest.mock('services/cd-ng', () => ({
@@ -44,11 +41,8 @@ jest.mock('services/cd-ng', () => ({
   getConnectorListV2Promise: jest.fn(() => Promise.resolve(ConnectorsResponse.data)),
   getSecretV2Promise: jest.fn().mockImplementation(() => Promise.resolve(mockSecret)),
   listSecretsV2Promise: jest.fn().mockImplementation(() => Promise.resolve(mockListSecrets)),
-  loadBalancersPromise: jest.fn(() => Promise.resolve(loadBalancersResponse)),
-  regionsForAwsPromise: jest.fn(() => Promise.resolve(regionsResponse)),
-  tagsPromise: jest.fn(() => Promise.resolve(tagsResponse)),
-  autoScalingGroupsPromise: jest.fn(() => Promise.resolve(autoScalingGroupsResponse)),
-  vpcsPromise: jest.fn(() => Promise.resolve(vpcsResponse))
+  useRegionsForAws: jest.fn().mockImplementation(() => ({ mutate: mockFetchRegions, refetch: mockFetchRegions })),
+  useTags: jest.fn().mockImplementation(() => ({ mutate: mockFetchTags, refetch: mockFetchTags }))
 }))
 
 jest.mock('services/portal', () => ({
