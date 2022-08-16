@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { FormInput } from '@harness/uicore'
-import { defaultTo, noop } from 'lodash-es'
+import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import type {
@@ -32,7 +32,7 @@ interface JiraUserProps {
 
 export function JiraUserMultiTypeInput({ selectedField, props, expressions, formikFieldPath }: JiraUserProps) {
   const { getString } = useStrings()
-  const [searchTerm, setSearchTerm] = React.useState<string>(selectedField?.value ? selectedField?.value : '')
+  const [searchTerm, setSearchTerm] = React.useState<string>(defaultTo(selectedField.value, ''))
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps & GitQueryParams>>()
 
@@ -65,8 +65,8 @@ export function JiraUserMultiTypeInput({ selectedField, props, expressions, form
         expressions,
         selectProps: {
           items: setUserValuesOptions(defaultTo(userData?.data, [])),
-          onQueryChange: (query: string) => {
-            query ? setSearchTerm(query) : noop
+          onQueryChange: (query: string) => /* istanbul ignore next */ {
+            query ? setSearchTerm(query) : searchTerm
           }
         }
       }}
