@@ -919,7 +919,7 @@ customSM:
   executeOnDelegate: Execute on Delegate
   templateRef: Template Reference
   templateVersion: Template Version
-  host: Host
   sshKey: SSH Key Reference
-  workingDirectory: Working Directory
   inputVariables: Input Variables
+  validation:
+    template: Please select a template

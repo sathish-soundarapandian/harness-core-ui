@@ -12,7 +12,6 @@ import { AllowedTypes, FormInput, SelectOption } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-// import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import css from './ScriptVariablesRuntimeInput.module.scss'
 
 interface InputOutputVariablesInputSetProps {
@@ -73,7 +72,7 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
                             name={`${prefix}templateInputs.environmentVariables[${i}].value`}
                             multiTextInputProps={{
                               allowableTypes,
-                              // expressions,
+
                               disabled: readonly
                             }}
                             label=""
