@@ -2046,7 +2046,7 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
     case Connectors.JENKINS:
       return 'service-jenkins'
     case Connectors.CUSTOM_SECRET_MANAGER:
-      return 'secret-manager'
+      return 'custom-sm'
     default:
       return 'cog'
   }

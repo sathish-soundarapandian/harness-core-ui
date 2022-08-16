@@ -39,7 +39,7 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
         <div className={css.formGroup}>
           <MultiTypeFieldSelector
             name="templateInputs.environmentVariables"
-            label={getString('connectors.customSm.inputVariables')}
+            label={getString('connectors.customSM.inputVariables')}
             defaultValueToReset={[]}
             disableTypeSelection
           >
@@ -77,7 +77,6 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
                             }}
                             label=""
                             disabled={readonly}
-                            placeholder={getString('valueLabel')}
                           />
                           <FormInput.CheckBox
                             label=""

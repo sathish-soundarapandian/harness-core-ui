@@ -36,7 +36,7 @@ const CreateCustomSMConnector: React.FC<CreateConnectorModalProps> = props => {
   return (
     <StepWizard
       icon={getConnectorIconByType(Connectors.CUSTOM_SECRET_MANAGER)}
-      iconProps={{ size: 50 }}
+      iconProps={{ size: 50, color: 'white' }}
       title={getString(getConnectorTitleIdByType(Connectors.CUSTOM_SECRET_MANAGER))}
     >
       <ConnectorDetailsStep
