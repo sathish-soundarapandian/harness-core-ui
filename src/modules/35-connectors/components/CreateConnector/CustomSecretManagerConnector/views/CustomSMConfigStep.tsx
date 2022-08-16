@@ -16,10 +16,13 @@ import {
   ButtonVariation,
   PageSpinner,
   FormikForm,
-  MultiTypeInputType
+  MultiTypeInputType,
+  ModalErrorHandler,
+  ModalErrorHandlerBinding,
+  getErrorInfoFromErrorObject
 } from '@wings-software/uicore'
 
-// import * as Yup from 'yup'
+import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { parse } from 'yaml'
 import type { FormikContextType } from 'formik'
@@ -83,11 +86,12 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
 
   const [initialValues, setInitialValues] = useState(defaultInitialFormData)
   const [loadingFormData, setLoadingFormData] = useState(isEditMode)
+  const [modalErrorHandler, setModalErrorHandler] = React.useState<ModalErrorHandlerBinding>()
 
   React.useEffect(() => {
-    if (isEditMode && connectorInfo) {
+    if (isEditMode) {
       if (connectorInfo) {
-        setupCustomSMFormData(connectorInfo, accountId).then(data => {
+        setupCustomSMFormData(connectorInfo).then(data => {
           setInitialValues(data as CustomSMFormInterface)
           setTemplateInputSets(data.templateInputs)
         })
@@ -105,13 +109,12 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
 
   const [templateInputSets, setTemplateInputSets] = React.useState<JsonNode>()
   const onUseTemplate = async (formikProps: FormikContextType<CustomSMFormInterface>) => {
-    const { template } = await getTemplate({ templateType: 'SecretManager' })
+    const { template } = await getTemplate?.({ templateType: 'SecretManager' })
     formikProps.setFieldValue('template', {
       ...template,
       versionLabel: template.versionLabel,
       templateRef: getRefFromIdAndScopeParams(
         template.identifier || '',
-        accountId,
         template.orgIdentifier,
         template.projectIdentifier
       )
@@ -132,9 +135,9 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
         }
       })
 
-      let inputSet
+      let inputSet: JsonNode = {}
       if (templateInputYaml && templateInputYaml?.data) {
-        inputSet = parse(templateInputYaml?.data?.replace(/"<\+input>"/g, '""')) as any
+        inputSet = parse(templateInputYaml?.data?.replace(/"<\+input>"/g, '""'))
         formikProps.setFieldValue('templateInputs', inputSet)
         setTemplateInputSets(inputSet)
       }
@@ -142,13 +145,16 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
       if (templateJSON.spec.onDelegate !== true && !inputSet.hasOwnProperty('executionTarget')) {
         formikProps.setFieldValue('executionTarget', templateJSON.spec.executionTarget)
       }
-    } catch (e) {}
+    } catch (e) {
+      modalErrorHandler?.showDanger(getErrorInfoFromErrorObject(e))
+    }
   }
 
   return loadingFormData ? (
     <PageSpinner />
   ) : (
     <Container padding={{ top: 'medium' }} height="100%">
+      <ModalErrorHandler bind={setModalErrorHandler} />
       <Text font={{ variation: FontVariation.H3 }} padding={{ bottom: 'xlarge' }}>
         {getString('connectors.customSM.details')}
       </Text>
@@ -156,79 +162,80 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
         enableReinitialize
         initialValues={{ ...initialValues, ...prevStepData }}
         formName="customSMForm"
-        // validationSchema={Yup.object().shape({
-        // //   vaultUrl: URLValidationSchema(),
-        // //   renewalIntervalMinutes: Yup.mixed().when('accessType', {
-        // //     is: val => val !== HashiCorpVaultAccessTypes.VAULT_AGENT && val !== HashiCorpVaultAccessTypes.AWS_IAM,
-        // //     then: Yup.number()
-        // //       .positive(getString('validation.renewalNumber'))
-        // //       .required(getString('validation.renewalInterval'))
-        //   }),
-        //   authToken: Yup.object()
-        //     .nullable()
-        //     .when('accessType', {
-        //       is: HashiCorpVaultAccessTypes.TOKEN,
-        //       then: Yup.object().test('authToken', getString('validation.authToken'), function (value) {
-        //         if ((prevStepData?.spec as VaultConnectorDTO)?.accessType === HashiCorpVaultAccessTypes.TOKEN)
-        //           return true
-        //         else if (value?.name?.length > 0) return true
-        //         return false
-        //       })
-        //     }),
-        //   appRoleId: Yup.string().when('accessType', {
-        //     is: HashiCorpVaultAccessTypes.APP_ROLE,
-        //     then: Yup.string().trim().required(getString('validation.appRole'))
-        //   }),
-        //   secretId: Yup.object().when('accessType', {
-        //     is: HashiCorpVaultAccessTypes.APP_ROLE,
-        //     then: Yup.object().test('secretId', getString('validation.secretId'), function (value) {
-        //       if ((prevStepData?.spec as VaultConnectorDTO)?.accessType === HashiCorpVaultAccessTypes.APP_ROLE)
-        //         return true
-        //       else if (value?.name?.length > 0) return true
-        //       return false
-        //     })
-        //   }),
-        //   sinkPath: Yup.string().when('accessType', {
-        //     is: HashiCorpVaultAccessTypes.VAULT_AGENT,
-        //     then: Yup.string().trim().required(getString('connectors.hashiCorpVault.sinkPathIsRequired'))
-        //   }),
-        //   xvaultAwsIamServerId: Yup.object().when('accessType', {
-        //     is: HashiCorpVaultAccessTypes.AWS_IAM,
-        //     then: Yup.object().test(
-        //       'secretId',
-        //       getString('connectors.hashiCorpVault.serverIdHeaderRequired'),
-        //       function (value) {
-        //         if (
-        //           (prevStepData?.spec as VaultConnectorDTO)?.accessType === HashiCorpVaultAccessTypes.AWS_IAM ||
-        //           value?.name?.length > 0
-        //         ) {
-        //           return true
-        //         }
-        //         return false
-        //       }
-        //     )
-        //   }),
-        //   vaultAwsIamRole: Yup.string().when('accessType', {
-        //     is: HashiCorpVaultAccessTypes.AWS_IAM,
-        //     then: Yup.string().trim().required(getString('common.banners.trial.contactSalesForm.roleValidation'))
-        //   }),
-        //   awsRegion: Yup.string().when('accessType', {
-        //     is: HashiCorpVaultAccessTypes.AWS_IAM,
-        //     then: Yup.string().trim().required(getString('validation.regionRequired'))
-        //   }),
-        //   vaultK8sAuthRole: Yup.string().when('accessType', {
-        //     is: HashiCorpVaultAccessTypes.K8s_AUTH,
-        //     then: Yup.string().trim().required(getString('connectors.hashiCorpVault.vaultK8sAuthRoleRequired'))
-        //   }),
-        //   serviceAccountTokenPath: Yup.string().when('accessType', {
-        //     is: HashiCorpVaultAccessTypes.K8s_AUTH,
-        //     then: Yup.string().trim().required(getString('connectors.hashiCorpVault.serviceAccountRequired'))
-        //   }),
-        //   default: Yup.boolean().when('readOnly', {
-        //     is: true,
-        //     then: Yup.boolean().equals([false], getString('connectors.hashiCorpVault.preventDefaultWhenReadOnly'))
-        //   })
-        // })}
+        validationSchema={Yup.object().shape({
+          template: Yup.object().required('Please seleact a template.')
+
+          // renewalIntervalMinutes: Yup.mixed().when('accessType', {
+          //   is: val => val !== HashiCorpVaultAccessTypes.VAULT_AGENT && val !== HashiCorpVaultAccessTypes.AWS_IAM,
+          //   then: Yup.number()
+          //     .positive(getString('validation.renewalNumber'))
+          //     .required(getString('validation.renewalInterval'))
+          // }),
+          //   authToken: Yup.object()
+          //     .nullable()
+          //     .when('accessType', {
+          //       is: HashiCorpVaultAccessTypes.TOKEN,
+          //       then: Yup.object().test('authToken', getString('validation.authToken'), function (value) {
+          //         if ((prevStepData?.spec as VaultConnectorDTO)?.accessType === HashiCorpVaultAccessTypes.TOKEN)
+          //           return true
+          //         else if (value?.name?.length > 0) return true
+          //         return false
+          //       })
+          //     }),
+          //   appRoleId: Yup.string().when('accessType', {
+          //     is: HashiCorpVaultAccessTypes.APP_ROLE,
+          //     then: Yup.string().trim().required(getString('validation.appRole'))
+          //   }),
+          //   secretId: Yup.object().when('accessType', {
+          //     is: HashiCorpVaultAccessTypes.APP_ROLE,
+          //     then: Yup.object().test('secretId', getString('validation.secretId'), function (value) {
+          //       if ((prevStepData?.spec as VaultConnectorDTO)?.accessType === HashiCorpVaultAccessTypes.APP_ROLE)
+          //         return true
+          //       else if (value?.name?.length > 0) return true
+          //       return false
+          //     })
+          //   }),
+          //   sinkPath: Yup.string().when('accessType', {
+          //     is: HashiCorpVaultAccessTypes.VAULT_AGENT,
+          //     then: Yup.string().trim().required(getString('connectors.hashiCorpVault.sinkPathIsRequired'))
+          //   }),
+          //   xvaultAwsIamServerId: Yup.object().when('accessType', {
+          //     is: HashiCorpVaultAccessTypes.AWS_IAM,
+          //     then: Yup.object().test(
+          //       'secretId',
+          //       getString('connectors.hashiCorpVault.serverIdHeaderRequired'),
+          //       function (value) {
+          //         if (
+          //           (prevStepData?.spec as VaultConnectorDTO)?.accessType === HashiCorpVaultAccessTypes.AWS_IAM ||
+          //           value?.name?.length > 0
+          //         ) {
+          //           return true
+          //         }
+          //         return false
+          //       }
+          //     )
+          //   }),
+          //   vaultAwsIamRole: Yup.string().when('accessType', {
+          //     is: HashiCorpVaultAccessTypes.AWS_IAM,
+          //     then: Yup.string().trim().required(getString('common.banners.trial.contactSalesForm.roleValidation'))
+          //   }),
+          //   awsRegion: Yup.string().when('accessType', {
+          //     is: HashiCorpVaultAccessTypes.AWS_IAM,
+          //     then: Yup.string().trim().required(getString('validation.regionRequired'))
+          //   }),
+          //   vaultK8sAuthRole: Yup.string().when('accessType', {
+          //     is: HashiCorpVaultAccessTypes.K8s_AUTH,
+          //     then: Yup.string().trim().required(getString('connectors.hashiCorpVault.vaultK8sAuthRoleRequired'))
+          //   }),
+          //   serviceAccountTokenPath: Yup.string().when('accessType', {
+          //     is: HashiCorpVaultAccessTypes.K8s_AUTH,
+          //     then: Yup.string().trim().required(getString('connectors.hashiCorpVault.serviceAccountRequired'))
+          //   }),
+          //   default: Yup.boolean().when('readOnly', {
+          //     is: true,
+          //     then: Yup.boolean().equals([false], getString('connectors.hashiCorpVault.preventDefaultWhenReadOnly'))
+          //   })
+        })}
         onSubmit={formData => {
           trackEvent(ConnectorActions.ConfigSubmit, {
             category: Category.CONNECTOR,
@@ -279,7 +286,7 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
                   <>
                     <FormInput.Text
                       name="executionTarget.host"
-                      placeholder={getString('connectors.customSM.host')}
+                      placeholder={getString('pipelineSteps.hostLabel')}
                       label={getString('targetHost')}
                       style={{ marginTop: 'var(--spacing-small)' }}
                       disabled={false}
@@ -296,7 +303,7 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
 
                     <FormInput.Text
                       name="executionTarget.workingDirectory"
-                      placeholder={getString('connectors.customSM.workingDirectory')}
+                      placeholder={getString('workingDirectory')}
                       label={getString('workingDirectory')}
                       style={{ marginTop: 'var(--spacing-medium)' }}
                       disabled={false}
