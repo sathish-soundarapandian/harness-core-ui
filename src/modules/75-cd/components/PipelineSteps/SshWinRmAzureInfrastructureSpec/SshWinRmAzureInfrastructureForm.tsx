@@ -37,7 +37,9 @@ import {
 import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { Connectors } from '@connectors/constants'
-import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
+import MultiTypeSecretInput, {
+  getMultiTypeSecretInputType
+} from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { MultiTypeFieldSelector } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import {
   ConnectorReferenceDTO,
@@ -303,7 +305,7 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                 <Layout.Vertical className={css.inputWidth}>
                   <MultiTypeSecretInput
                     name="credentialsRef"
-                    type="SSHKey"
+                    type={getMultiTypeSecretInputType(initialValues.serviceType)}
                     label={getString('cd.steps.common.specifyCredentials')}
                     onSuccess={secret => {
                       if (secret) {

@@ -284,7 +284,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     identifier: IdentifierSchema()
   })
   const formRefDom = React.useRef<HTMLElement | undefined>()
-  const init = React.useMemo(() => {
+  const getPipelineData = (): Pipeline => {
     const omittedPipeline = omit(inputSet, 'gitDetails', 'entityValidityDetails', 'outdated') as Pipeline
     return mergeTemplateWithInputSetData({
       templatePipeline: omittedPipeline,
@@ -292,7 +292,11 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
       allValues: { pipeline: resolvedPipeline },
       shouldUseDefaultValues: !isEdit
     })
+  }
+  const init = React.useMemo(() => {
+    return getPipelineData()
   }, [inputSet, isEdit, resolvedPipeline])
+
   const hasError = useMemo(() => {
     return formErrors && Object.keys(formErrors).length > 0
   }, [formErrors])
@@ -305,6 +309,11 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     storeType: defaultTo(storeType, StoreType.INLINE),
     filePath: defaultTo(inputSet.gitDetails?.filePath, filePath)
   }
+
+  React.useEffect(() => {
+    const initialValues = getPipelineData()
+    formikRef.current?.setFieldValue('pipeline', initialValues.pipeline)
+  }, [inputSet, isEdit, resolvedPipeline])
 
   const isPipelineRemote = isGitSimplificationEnabled && storeType === StoreType.REMOTE
 
@@ -321,7 +330,6 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
             ...init,
             ...storeMetadata
           }}
-          enableReinitialize={true}
           formName="inputSetForm"
           validationSchema={NameIdSchema}
           validate={validateValues}

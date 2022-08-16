@@ -85,7 +85,7 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
   }, [])
 
   const updateEnvStep = useCallback(
-    (value: DeployStageConfig) => {
+    /* istanbul ignore next */ (value: DeployStageConfig) => {
       const stageData = produce(stage, draft => {
         const specObject: DeployStageConfig = get(draft, 'stage.spec', {})
 
@@ -121,7 +121,7 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
               ...(get(stage, 'stage.spec.environment', false) && {
                 environment: get(stage, 'stage.spec.environment')
               }),
-              ...(scope === Scope.ACCOUNT && {
+              ...(scope !== Scope.PROJECT && {
                 environment: { environmentRef: RUNTIME_INPUT_VALUE }
               }),
               ...(get(stage, 'stage.spec.environmentGroup', false) && {

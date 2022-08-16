@@ -4,8 +4,7 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Layout, Container, Heading, PillToggle, PillToggleProps, Text, Card } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { PageSpinner } from '@common/components'
@@ -50,6 +49,10 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
     selectedView: toggle,
     className: css.pillToggle
   }
+
+  useEffect(() => {
+    setShowTimelineSlider(true)
+  }, [setSliderTimeRange])
 
   const SLOAndErrorBudgetChartContainer = isCardView ? Card : Container
   const stylesSLOAndSLICard = isCardView ? css.cardSloAndSliForCardView : css.cardSloAndSli

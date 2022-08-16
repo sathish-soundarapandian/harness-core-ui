@@ -16,6 +16,8 @@ import { getTemplateContextMock } from '@templates-library/components/TemplateSt
 import { MonitoredTemplateCanvasWithRef } from '../MonitoredServiceTemplateCanvas'
 import { MonitoredServiceTemplate } from '../MonitoredServiceTemplate'
 import { monitoredServiceDefaultTemplateMock } from './MonitoredServiceTemplateCanvas.mock'
+import { createdInitTemplateValue } from '../MonitoredServiceTemplateCanvas.utils'
+import { DefaultSpec } from '../MonitoredServiceTemplateCanvas.constants'
 
 const monitoredServiceTemplateContextMock = getTemplateContextMock(TemplateType.MonitoredService)
 
@@ -128,5 +130,17 @@ describe('Test MonitoredTemplateCanvasWithRef', () => {
       label: 'Monitored Service',
       type: 'MonitoredService'
     })
+  })
+
+  test('should validate createdInitTemplateValue', () => {
+    expect(createdInitTemplateValue(monitoredServiceDefaultTemplateMock)).toEqual(monitoredServiceDefaultTemplateMock)
+    monitoredServiceDefaultTemplateMock.name = 'MS Template'
+    expect(createdInitTemplateValue(monitoredServiceDefaultTemplateMock)).toEqual({
+      ...monitoredServiceDefaultTemplateMock,
+      spec: { ...DefaultSpec }
+    })
+    monitoredServiceDefaultTemplateMock.name = 'MS Template'
+    monitoredServiceDefaultTemplateMock.spec = { changeSource: [], healthSource: [] }
+    expect(createdInitTemplateValue(monitoredServiceDefaultTemplateMock)).toEqual(monitoredServiceDefaultTemplateMock)
   })
 })

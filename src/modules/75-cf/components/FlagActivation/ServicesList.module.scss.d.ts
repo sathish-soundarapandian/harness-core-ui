@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly displayTags: string
+  readonly servicesListModal: string
   readonly tags: string
 }
 export default styles

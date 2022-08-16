@@ -13,6 +13,7 @@ import type { FeatureFlagRequestRequestBody } from 'services/cf'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import { CreateAFlagInfoView } from './CreateAFlagInfoView'
+import css from './CreateAFlagView.module.scss'
 
 export interface CreateAFlagViewProps {
   setFlagName: React.Dispatch<React.SetStateAction<string>>
@@ -35,21 +36,17 @@ export const CreateAFlagView: React.FC<CreateAFlagViewProps> = ({ flagInfo, setF
 
   return (
     <Container height="100%">
-      <Container padding="xlarge" width="calc(100% - 765px)" height="calc(100vh - 140px)" style={{ overflow: 'auto' }}>
-        <Heading
-          level={2}
-          style={{
-            fontWeight: 600,
-            fontSize: '20px',
-            lineHeight: '28px',
-            color: '#22222A'
-          }}
-          padding={{ bottom: 'xxlarge' }}
-        >
+      <Container
+        className={css.container}
+        width="calc(100% - 765px)"
+        height="calc(100vh - 140px)"
+        style={{ overflow: 'auto' }}
+      >
+        <Heading level={2} className={css.letsStartHeading}>
           {getString('cf.onboarding.letsStart')}
         </Heading>
         <Layout.Vertical width={400} spacing="xsmall">
-          <Text color={Color.BLACK} font={{ weight: 'semi-bold' }}>
+          <Text color={Color.BLACK} className={css.inputLabel}>
             {getString('cf.onboarding.inputLabel')}
           </Text>
           <TextInput

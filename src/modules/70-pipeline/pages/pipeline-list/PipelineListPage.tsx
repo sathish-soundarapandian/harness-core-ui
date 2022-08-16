@@ -14,7 +14,8 @@ import {
   Layout,
   PageSpinner,
   shouldShowError,
-  Text
+  Text,
+  useToggleOpen
 } from '@wings-software/uicore'
 import { defaultTo, pick } from 'lodash-es'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
@@ -40,6 +41,7 @@ import {
   useGetPipelineList,
   useSoftDeletePipeline
 } from 'services/pipeline-ng'
+import { ClonePipelineForm } from '@pipeline/components/ClonePipelineForm/ClonePipelineForm'
 import { PipelineListEmpty } from './PipelineListEmpty/PipelineListEmpty'
 import { PipelineListFilter } from './PipelineListFilter/PipelineListFilter'
 import { PipelineListTable } from './PipelineListTable/PipelineListTable'
@@ -57,6 +59,12 @@ export function PipelineListPage(): React.ReactElement {
   const { showSuccess, showError } = useToaster()
   const { isGitSyncEnabled } = useAppStore()
   const [pipelineToDelete, setPipelineToDelete] = useState<PMSPipelineSummaryResponse>()
+  const [pipelineToClone, setPipelineToClone] = useState<PMSPipelineSummaryResponse>()
+  const {
+    open: openClonePipelineModal,
+    isOpen: isClonePipelineModalOpen,
+    close: closeClonePipelineModal
+  } = useToggleOpen()
 
   const queryParams = useQueryParams<PipelineListPageQueryParams>({
     processQueryParams(params: PipelineListPageQueryParams) {
@@ -160,6 +168,11 @@ export function PipelineListPage(): React.ReactElement {
     fetchPipelines()
   }, [fetchPipelines])
 
+  const onClonePipeline = (originalPipeline: PMSPipelineSummaryResponse): void => {
+    setPipelineToClone(originalPipeline)
+    openClonePipelineModal()
+  }
+
   const onDeletePipeline = async (commitMsg: string): Promise<void> => {
     try {
       const gitParams = pipelineToDelete?.gitDetails?.objectId
@@ -262,11 +275,19 @@ export function PipelineListPage(): React.ReactElement {
               data={pipelineList}
               onDelete={setPipelineToDelete}
               onDeletePipeline={onDeletePipeline}
+              onClonePipeline={onClonePipeline}
               setSortBy={sortArray => {
                 updateQueryParams({ sort: sortArray })
               }}
               sortBy={sort}
             />
+            {pipelineToClone && (
+              <ClonePipelineForm
+                isOpen={isClonePipelineModalOpen}
+                onClose={closeClonePipelineModal}
+                originalPipeline={pipelineToClone}
+              />
+            )}
           </>
         ) : (
           <PipelineListEmpty

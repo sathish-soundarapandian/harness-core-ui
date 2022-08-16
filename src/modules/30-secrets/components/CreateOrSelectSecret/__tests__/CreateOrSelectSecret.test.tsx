@@ -41,6 +41,7 @@ describe('CreateOrSelectSecret', () => {
           onSuccess={successCallback}
           secretsListMockData={secretsListMockData as any}
           handleInlineSSHSecretCreation={noop}
+          handleInlineWinRmSecretCreation={noop}
         />
       </TestWrapper>
     )

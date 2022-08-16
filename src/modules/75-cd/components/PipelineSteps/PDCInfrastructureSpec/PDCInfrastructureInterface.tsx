@@ -34,6 +34,7 @@ export interface PDCInfrastructureUI {
   hostFilters: string
   sshKey?: SecretReferenceInterface | void
   credentialsRef: string
+  serviceType: string
 }
 
 export const PreconfiguredHosts = {

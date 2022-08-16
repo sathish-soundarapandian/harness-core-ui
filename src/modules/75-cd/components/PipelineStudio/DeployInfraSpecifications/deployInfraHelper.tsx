@@ -57,6 +57,7 @@ export const getInfrastructureDefaultValue = (
 ): Infrastructure => {
   const infrastructure = get(stageData, 'stage.spec.infrastructure.infrastructureDefinition', null)
   const type = defaultTo(infrastructure?.type, infrastructureType)
+  const serviceType = get(stageData, 'stage.spec.serviceConfig.serviceDefinition.type', null)
   const allowSimultaneousDeployments = get(stageData, 'stage.spec.infrastructure.allowSimultaneousDeployments', false)
   switch (type) {
     case InfraDeploymentType.KubernetesDirect: {
@@ -148,7 +149,8 @@ export const getInfrastructureDefaultValue = (
         hosts,
         delegateSelectors,
         hostFilters,
-        attributeFilters
+        attributeFilters,
+        serviceType
       }
     }
     case InfraDeploymentType.SshWinRmAzure: {
@@ -159,7 +161,8 @@ export const getInfrastructureDefaultValue = (
         resourceGroup,
         tags,
         usePublicDns,
-        allowSimultaneousDeployments
+        allowSimultaneousDeployments,
+        serviceType
       }
     }
     case InfraDeploymentType.SshWinRmAws: {

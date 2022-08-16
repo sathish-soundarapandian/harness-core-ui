@@ -139,7 +139,7 @@ export function ShellScriptMonaco(props: ConnectedShellScriptMonacoProps): React
         isCloseButtonShown
         canOutsideClickClose={false}
         onClose={() => setFullScreen(false)}
-        title={title ? title : `${getString('script')} (${scriptType})`}
+        title={title ? title : `${getString('common.script')} (${scriptType})`}
         className={css.monacoDialog}
       >
         <div className={Classes.DIALOG_BODY}>{editor}</div>

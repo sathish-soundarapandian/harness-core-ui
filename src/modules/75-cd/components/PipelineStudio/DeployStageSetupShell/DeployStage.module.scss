@@ -5,6 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+.tabHeading {
+  font-size: 16px;
+  color: var(--black);
+  font-weight: 600;
+  line-height: 24px;
+}
+
 .deployStage {
   min-width: 464px;
   margin-top: 2px;
@@ -12,11 +19,7 @@
     background-color: var(--form-bg);
     height: 100%;
     > .tabHeading {
-      font-size: 16px;
-      color: var(--black);
       margin-top: var(--spacing-7);
-      font-weight: 600;
-      line-height: 24px;
       &:first-child {
         margin-top: 0;
       }
@@ -37,12 +40,8 @@
       padding: 0;
     }
     .tabHeading {
-      font-size: 16px;
-      color: var(--black);
-      font-weight: 600;
       margin-left: var(--spacing-small);
       margin-right: var(--spacing-small);
-      line-height: 24px;
     }
   }
 }

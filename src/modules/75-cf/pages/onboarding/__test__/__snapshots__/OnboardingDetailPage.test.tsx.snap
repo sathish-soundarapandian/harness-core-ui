@@ -7,13 +7,12 @@ exports[`OnboardingDetailPage CreateAFlagView 1`] = `
     style="height: 100%;"
   >
     <div
-      class="StyledProps--font StyledProps--main StyledProps--padding-xlarge"
+      class="StyledProps--font StyledProps--main container"
       style="overflow: auto; width: calc(100% - 765px); height: calc(100vh - 140px);"
     >
       <h2
-        class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--padding-bottom-xxlarge"
+        class="StyledProps--font StyledProps--font-h2 StyledProps--main letsStartHeading"
         level="2"
-        style="font-weight: 600; font-size: 20px; line-height: 28px; color: rgb(34, 34, 42);"
       >
         cf.onboarding.letsStart
       </h2>
@@ -22,7 +21,7 @@ exports[`OnboardingDetailPage CreateAFlagView 1`] = `
         style="width: 400px;"
       >
         <p
-          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold"
+          class="StyledProps--font StyledProps--main inputLabel StyledProps--color StyledProps--color-black"
         >
           cf.onboarding.inputLabel
         </p>
@@ -129,8 +128,8 @@ exports[`OnboardingDetailPage OnboardingDetailPage empty state should be rendere
     style="height: 100%;"
   >
     <div
-      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--padding-large"
-      style="background: rgb(248, 251, 254); border: 1px solid #e7e7e7; height: 40px;"
+      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main containerLayout StyledProps--flex"
+      style="height: 40px;"
     >
       <a
         href="/account/dummy/cf/orgs/dummy/projects/dummy/onboarding"
@@ -277,13 +276,12 @@ exports[`OnboardingDetailPage OnboardingDetailPage empty state should be rendere
             style="height: 100%;"
           >
             <div
-              class="StyledProps--font StyledProps--main StyledProps--padding-xlarge"
+              class="StyledProps--font StyledProps--main container"
               style="overflow: auto; width: calc(100% - 765px); height: calc(100vh - 140px);"
             >
               <h2
-                class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--padding-bottom-xxlarge"
+                class="StyledProps--font StyledProps--font-h2 StyledProps--main letsStartHeading"
                 level="2"
-                style="font-weight: 600; font-size: 20px; line-height: 28px; color: rgb(34, 34, 42);"
               >
                 cf.onboarding.letsStart
               </h2>
@@ -292,7 +290,7 @@ exports[`OnboardingDetailPage OnboardingDetailPage empty state should be rendere
                 style="width: 400px;"
               >
                 <p
-                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold"
+                  class="StyledProps--font StyledProps--main inputLabel StyledProps--color StyledProps--color-black"
                 >
                   cf.onboarding.inputLabel
                 </p>
@@ -511,21 +509,19 @@ exports[`OnboardingDetailPage SetUpYourApplicationView 1`] = `
     style="height: 100%;"
   >
     <div
-      class="StyledProps--font StyledProps--main StyledProps--padding-xlarge"
-      style="overflow: auto; width: calc(100% - 400px); height: calc(100vh - 140px);"
+      class="StyledProps--font StyledProps--main container"
+      style="width: calc(100% - 400px); height: calc(100vh - 140px);"
     >
       <span
-        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-black StyledProps--padding-top-xsmall StyledProps--padding-bottom-xsmall StyledProps--padding-left-small StyledProps--padding-right-small"
-        style="background: rgb(243, 243, 250); border-radius: 4px;"
+        class="StyledProps--font StyledProps--main successLabel StyledProps--inline StyledProps--color StyledProps--color-black"
       >
         <span>
           cf.onboarding.successLabel
         </span>
       </span>
       <h2
-        class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--padding-top-xlarge StyledProps--padding-bottom-xlarge"
+        class="StyledProps--font StyledProps--font-h2 StyledProps--main setUpLabel"
         level="2"
-        style="font-weight: 600; font-size: 20px; line-height: 28px; color: rgb(34, 34, 42);"
       >
         cf.onboarding.setupLabel
       </h2>
@@ -536,14 +532,12 @@ exports[`OnboardingDetailPage SetUpYourApplicationView 1`] = `
           class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
         >
           <p
-            class="StyledProps--font StyledProps--main"
-            style="font-weight: 600; font-size: 16px; color: rgb(34, 34, 42);"
+            class="StyledProps--font StyledProps--main selectLanguage"
           >
             cf.onboarding.selectLanguage
           </p>
           <div
-            class="StyledProps--font StyledProps--main StyledProps--padding-large"
-            style="background: rgb(250, 251, 252);"
+            class="StyledProps--font StyledProps--main languageSelectionContainer"
           >
             <ul
               class="list"
@@ -751,14 +745,12 @@ exports[`OnboardingDetailPage SetUpYourApplicationView 1`] = `
           class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
         >
           <p
-            class="StyledProps--font StyledProps--main"
-            style="font-weight: 600; font-size: 16px; color: rgb(34, 34, 42);"
+            class="StyledProps--font StyledProps--main selectEnvironment"
           >
             cf.onboarding.selectEnvironment
           </p>
           <div
-            class="StyledProps--font StyledProps--main StyledProps--padding-large"
-            style="background: rgb(250, 251, 252);"
+            class="StyledProps--font StyledProps--main environmentContainer"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -799,14 +791,12 @@ exports[`OnboardingDetailPage SetUpYourApplicationView 1`] = `
           class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
         >
           <p
-            class="StyledProps--font StyledProps--main"
-            style="font-weight: 600; font-size: 16px; color: rgb(34, 34, 42);"
+            class="StyledProps--font StyledProps--main setUpYourCode"
           >
             cf.onboarding.setUpYourCode
           </p>
           <div
-            class="StyledProps--font StyledProps--main StyledProps--padding-large"
-            style="padding-top: 0px;"
+            class="StyledProps--font StyledProps--main setUpYourCodeContainer"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -825,16 +815,15 @@ exports[`OnboardingDetailPage SetUpYourApplicationView 1`] = `
       </div>
     </div>
     <div
-      class="StyledProps--font StyledProps--main StyledProps--padding-xxlarge"
-      style="box-shadow: -8px 0 10px -5px rgb(96 97 112 / 16%); position: fixed; top: 90px; right: 0px; bottom: 60px; z-index: 0; width: 400px;"
+      class="StyledProps--font StyledProps--main container"
+      style="width: 400px;"
     >
       <div
         class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main"
       >
         <h2
-          class="StyledProps--font StyledProps--font-h2 StyledProps--main"
+          class="StyledProps--font StyledProps--font-h2 StyledProps--main heading"
           level="2"
-          style="font-weight: 500; color: rgb(34, 34, 42);"
         >
           cf.onboarding.help.heading1
         </h2>
@@ -845,27 +834,24 @@ exports[`OnboardingDetailPage SetUpYourApplicationView 1`] = `
           width="248"
         />
         <p
-          class="StyledProps--font StyledProps--main"
-          style="line-height: 20px; color: rgb(107, 109, 133);"
+          class="StyledProps--font StyledProps--main text"
         >
           cf.onboarding.help.text1
         </p>
         <h2
-          class="StyledProps--font StyledProps--font-h2 StyledProps--main"
+          class="StyledProps--font StyledProps--font-h2 StyledProps--main heading"
           level="2"
-          style="font-weight: 500; color: rgb(34, 34, 42);"
         >
           cf.onboarding.help.heading2
         </h2>
         <img
+          class="img"
           height="134"
           src="test-file-stub"
-          style="align-self: center;"
           width="180"
         />
         <p
-          class="StyledProps--font StyledProps--main"
-          style="line-height: 20px; color: rgb(107, 109, 133);"
+          class="StyledProps--font StyledProps--main text"
         >
           cf.onboarding.help.text2
         </p>
@@ -900,8 +886,8 @@ exports[`OnboardingDetailPage Should be able to create a flag 1`] = `
     style="height: 100%;"
   >
     <div
-      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--padding-large"
-      style="background: rgb(248, 251, 254); border: 1px solid #e7e7e7; height: 40px;"
+      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main containerLayout StyledProps--flex"
+      style="height: 40px;"
     >
       <a
         href="/account/dummy/cf/orgs/dummy/projects/dummy/onboarding"
@@ -1049,13 +1035,12 @@ exports[`OnboardingDetailPage Should be able to create a flag 1`] = `
             style="height: 100%;"
           >
             <div
-              class="StyledProps--font StyledProps--main StyledProps--padding-xlarge"
+              class="StyledProps--font StyledProps--main container"
               style="overflow: auto; width: calc(100% - 765px); height: calc(100vh - 140px);"
             >
               <h2
-                class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--padding-bottom-xxlarge"
+                class="StyledProps--font StyledProps--font-h2 StyledProps--main letsStartHeading"
                 level="2"
-                style="font-weight: 600; font-size: 20px; line-height: 28px; color: rgb(34, 34, 42);"
               >
                 cf.onboarding.letsStart
               </h2>
@@ -1064,7 +1049,7 @@ exports[`OnboardingDetailPage Should be able to create a flag 1`] = `
                 style="width: 400px;"
               >
                 <p
-                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold"
+                  class="StyledProps--font StyledProps--main inputLabel StyledProps--color StyledProps--color-black"
                 >
                   cf.onboarding.inputLabel
                 </p>
@@ -1241,25 +1226,22 @@ exports[`OnboardingDetailPage TestYourFlagViewView 1`] = `
     style="height: 100%;"
   >
     <div
-      class="StyledProps--font StyledProps--main StyledProps--padding-xlarge"
-      style="overflow: auto; width: calc(100% - 765px); height: calc(100vh - 140px);"
+      class="StyledProps--font StyledProps--main listenToEventContainer"
+      style="width: calc(100% - 765px); height: calc(100vh - 140px);"
     >
       <h2
-        class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--padding-bottom-medium"
+        class="StyledProps--font StyledProps--font-h2 StyledProps--main listenToEvenHeading"
         level="2"
-        style="font-weight: 600; font-size: 20px; line-height: 28px; color: rgb(34, 34, 42);"
       >
         cf.onboarding.listenToEvent
       </h2>
       <p
-        class="StyledProps--font StyledProps--main"
-        style="color: rgb(34, 34, 42);"
+        class="StyledProps--font StyledProps--main toggleLabel"
       >
         cf.onboarding.toggleLabel
       </p>
       <div
-        class="StyledProps--font StyledProps--main StyledProps--margin-top-xlarge StyledProps--margin-bottom-xlarge StyledProps--padding-top-xlarge"
-        style="border: 1px solid #d9dae5; border-radius: 8px;"
+        class="StyledProps--font StyledProps--main toggleContainer StyledProps--margin-top-xlarge StyledProps--margin-bottom-xlarge"
       >
         <div
           class="Layout--horizontal StyledProps--main StyledProps--padding-left-small StyledProps--padding-bottom-large"
@@ -1275,19 +1257,17 @@ exports[`OnboardingDetailPage TestYourFlagViewView 1`] = `
             />
           </label>
           <div
-            class="StyledProps--font StyledProps--main StyledProps--padding-left-large"
+            class="StyledProps--font StyledProps--main flagInfoNameContainer"
           >
             <p
-              class="StyledProps--font StyledProps--main"
-              style="font-weight: 600; font-size: 13px; line-height: 20px; color: rgb(11, 11, 13); align-self: baseline;"
+              class="StyledProps--font StyledProps--main flagInfoName"
             >
               test-flag
             </p>
           </div>
         </div>
         <div
-          class="Layout--horizontal StyledProps--main StyledProps--padding-top-large StyledProps--padding-left-large StyledProps--padding-bottom-large"
-          style="align-items: center; background: rgb(243, 243, 250); border-top: 1px solid #D9DAE5;"
+          class="Layout--horizontal StyledProps--main testDoneLayout"
         >
           <span
             class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-blue500"
@@ -1351,8 +1331,7 @@ exports[`OnboardingDetailPage TestYourFlagViewView 1`] = `
             </svg>
           </span>
           <p
-            class="StyledProps--font StyledProps--main StyledProps--padding-left-medium"
-            style="font-size: 14px;"
+            class="StyledProps--font StyledProps--main listeningToEvent"
           >
             cf.onboarding.listeningToEvent
           </p>
@@ -1360,12 +1339,11 @@ exports[`OnboardingDetailPage TestYourFlagViewView 1`] = `
       </div>
     </div>
     <div
-      class="StyledProps--font StyledProps--main StyledProps--padding-xxlarge"
-      style="box-shadow: -8px 0 10px -5px rgb(96 97 112 / 16%); position: fixed; top: 90px; right: 400px; bottom: 60px; z-index: 0;"
+      class="StyledProps--font StyledProps--main containerMain"
     >
       <div
-        class="StyledProps--font StyledProps--main StyledProps--padding-large StyledProps--background-black"
-        style="border-radius: 8px; border: 1px solid #d9dae6; width: 300px; height: 150px;"
+        class="StyledProps--font StyledProps--main containerSub"
+        style="width: 300px; height: 150px;"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-mono StyledProps--color StyledProps--color-white"
@@ -1385,37 +1363,34 @@ exports[`OnboardingDetailPage TestYourFlagViewView 1`] = `
       </p>
     </div>
     <div
-      class="StyledProps--font StyledProps--main StyledProps--padding-xxlarge"
-      style="box-shadow: -8px 0 10px -5px rgb(96 97 112 / 16%); position: fixed; top: 90px; right: 0px; bottom: 60px; z-index: 0; width: 400px;"
+      class="StyledProps--font StyledProps--main container"
+      style="width: 400px;"
     >
       <div
         class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main"
       >
         <h2
-          class="StyledProps--font StyledProps--font-h2 StyledProps--main"
+          class="StyledProps--font StyledProps--font-h2 StyledProps--main heading"
           level="2"
-          style="font-weight: 500; color: rgb(34, 34, 42);"
         >
           cf.onboarding.help.test.heading
         </h2>
         <img
+          class="img"
           height="163"
           src="test-file-stub"
-          style="align-self: center;"
           width="192"
         />
         <div
           class="StyledProps--font StyledProps--main"
         >
           <p
-            class="StyledProps--font StyledProps--main"
-            style="line-height: 20px; color: rgb(107, 109, 133);"
+            class="StyledProps--font StyledProps--main text"
           >
             cf.onboarding.help.test.text1
           </p>
           <p
-            class="StyledProps--font StyledProps--main StyledProps--margin-top-medium"
-            style="line-height: 20px; color: rgb(107, 109, 133);"
+            class="StyledProps--font StyledProps--main text StyledProps--margin-top-medium"
           >
             cf.onboarding.help.test.text2
           </p>

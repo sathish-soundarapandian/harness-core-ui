@@ -52,7 +52,7 @@ export function CommandEdit(props: CommandEditProps): React.ReactElement {
       otherwise: Yup.object().shape({
         shell: Yup.string()
           .trim()
-          .required(getString('common.validation.fieldIsRequired', { name: getString('scriptType') })),
+          .required(getString('common.validation.fieldIsRequired', { name: getString('common.scriptType') })),
         source: Yup.object().shape({
           type: Yup.string()
             .trim()
@@ -60,7 +60,7 @@ export function CommandEdit(props: CommandEditProps): React.ReactElement {
           spec: Yup.object().shape({
             script: Yup.string()
               .trim()
-              .required(getString('common.validation.fieldIsRequired', { name: getString('script') }))
+              .required(getString('common.validation.fieldIsRequired', { name: getString('common.script') }))
           })
         }),
         tailFiles: Yup.array().of(

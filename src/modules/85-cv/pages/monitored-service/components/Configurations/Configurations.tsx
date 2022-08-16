@@ -8,7 +8,7 @@
 import React, { useEffect, useMemo, useState, useCallback, useRef } from 'react'
 import { Container, Tab, Tabs, PageError, Views } from '@wings-software/uicore'
 import { useHistory, useParams, matchPath } from 'react-router-dom'
-import { defaultTo, isEmpty, isEqual, omit } from 'lodash-es'
+import { clone, defaultTo, isEmpty, isEqual, omit } from 'lodash-es'
 import { parse } from 'yaml'
 import type { FormikProps } from 'formik'
 import { useQueryParams } from '@common/hooks'
@@ -143,6 +143,22 @@ export default function Configurations(
     }
   }, [overrideBlockNavigation, redirectToSLO])
 
+  const [hasTemplateChangeSourceSet, sethasTemplateChangeSourceSet] = useState(false)
+  useEffect(() => {
+    const cloneTemplateValue = clone(templateValue)
+    if (
+      isTemplate &&
+      !hasTemplateChangeSourceSet &&
+      cloneTemplateValue?.name &&
+      cloneTemplateValue?.spec?.sources &&
+      isEmpty(cloneTemplateValue?.spec?.sources?.changeSources)
+    ) {
+      cloneTemplateValue.spec.sources['changeSources'] = defaultMonitoredService?.sources?.changeSources
+      updateTemplate?.(cloneTemplateValue?.spec as MonitoredServiceForm)
+      sethasTemplateChangeSourceSet(true)
+    }
+  }, [templateValue?.name, defaultMonitoredService])
+
   useEffect(() => {
     if (yamlMonitoredService && yamlMonitoredService?.resource) {
       // This only executed on creating new Monitored Service
@@ -154,26 +170,19 @@ export default function Configurations(
         changeSource['spec'] = {}
       })
 
-      if (isTemplate) {
-        if (templateValue?.spec?.sources && isEmpty(templateValue?.spec?.sources?.changeSources)) {
-          templateValue.spec.sources['changeSources'] = monitoredService.sources?.changeSources
+      setDefaultMonitoredService(prevService => {
+        if (!prevService) {
+          return monitoredService
         }
-        updateTemplate?.(templateValue?.spec as MonitoredServiceForm)
-      } else {
-        setDefaultMonitoredService(prevService => {
-          if (!prevService) {
-            return monitoredService
+        const currSources = prevService.sources?.changeSources || []
+        return {
+          ...prevService,
+          sources: {
+            changeSources: currSources.concat(monitoredService.sources?.changeSources || []),
+            healthSources: prevService.sources?.healthSources || []
           }
-          const currSources = prevService.sources?.changeSources || []
-          return {
-            ...prevService,
-            sources: {
-              changeSources: currSources.concat(monitoredService.sources?.changeSources || []),
-              healthSources: prevService.sources?.healthSources || []
-            }
-          }
-        })
-      }
+        }
+      })
     }
   }, [yamlMonitoredService])
 
@@ -320,7 +329,7 @@ export default function Configurations(
 
   if (identifier && errorFetchMonitoredService) {
     return <PageError message={getErrorMessage(errorFetchMonitoredService)} onClick={() => fetchMonitoredService()} />
-  } else if (!identifier && errorFetchMonitoredService) {
+  } else if (!identifier && errorFetchMonitoredServiceYAML) {
     return (
       <PageError
         message={getErrorMessage(errorFetchMonitoredServiceYAML)}

@@ -26,6 +26,7 @@ interface PipelineListTableProps {
   data?: PagePMSPipelineSummaryResponse
   gotoPage: (pageNumber: number) => void
   onDeletePipeline: (commitMsg: string) => Promise<void>
+  onClonePipeline: (pipeline: PMSPipelineSummaryResponse) => void
   onDelete: (pipeline: PMSPipelineSummaryResponse) => void
   setSortBy: (sortBy: string[]) => void
   sortBy?: string[]
@@ -35,6 +36,7 @@ export function PipelineListTable({
   data,
   gotoPage,
   onDeletePipeline,
+  onClonePipeline,
   onDelete,
   sortBy,
   setSortBy
@@ -103,6 +105,7 @@ export function PipelineListTable({
         Cell: MenuCell,
         disableSortBy: true,
         onDeletePipeline,
+        onClonePipeline,
         onDelete
       }
     ] as unknown as Column<PMSPipelineSummaryResponse>[]

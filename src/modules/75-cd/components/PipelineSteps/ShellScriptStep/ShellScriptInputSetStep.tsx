@@ -63,7 +63,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
         <div className={cx(stepCss.formGroup, stepCss.alignStart, stepCss.md)}>
           <MultiTypeFieldSelector
             name={`${prefix}spec.source.spec.script`}
-            label={getString('script')}
+            label={getString('common.script')}
             defaultValueToReset=""
             disabled={readonly}
             allowedTypes={allowableTypes}

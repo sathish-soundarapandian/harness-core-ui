@@ -4,7 +4,7 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
+//xxx
 import React from 'react'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -147,10 +147,7 @@ describe('Unit tests for ServiceHealth', () => {
   })
 
   test('Verify if reset functionality works correctly', async () => {
-    const { getByText, getByTestId, queryByText } = render(<WrapperComponent {...props} />)
-
-    //initially verifying if select timeline message is displayed for metrics and logs
-    expect(queryByText('cv.monitoredServices.serviceHealth.selectTimeline')).not.toBeInTheDocument()
+    const { getByText, getByTestId } = render(<WrapperComponent {...props} />)
 
     // Clicking on the slider to set the selected timeline and display the slider
     await act(async () => {

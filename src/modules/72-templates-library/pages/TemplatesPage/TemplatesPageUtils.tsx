@@ -57,8 +57,8 @@ export const templateColorStyleMap: { [keyof in TemplateType]: React.CSSProperti
     fill: '#E4F7E1'
   },
   [TemplateType.SecretManager]: {
-    color: '#CDF4FE',
-    stroke: '#A3E9FF',
+    color: '#06B7C3',
+    stroke: '#D4E7D1',
     fill: '#CDF4FE'
   }
 }
@@ -105,8 +105,8 @@ export const templateStudioColorStyleMap: { [keyof in TemplateType]: React.CSSPr
     fill: '#E4F7E1'
   },
   [TemplateType.SecretManager]: {
-    color: '#CDF4FE',
-    stroke: '#A3E9FF',
+    color: '#06B7C3',
+    stroke: '#D4E7D1',
     fill: '#CDF4FE'
   }
 }
@@ -145,6 +145,8 @@ export const getTypeForTemplate = (
       return stagesCollection.getStageAttributes(childType, getString)?.name
     case TemplateType.MonitoredService:
       return templateFactory.getTemplateLabel(TemplateType.MonitoredService)
+    case TemplateType.SecretManager:
+      return templateFactory.getTemplateLabel(TemplateType.SecretManager)
     default:
       return undefined
   }
@@ -154,20 +156,20 @@ export const getIconForTemplate = (
   getString: UseStringsReturn['getString'],
   template?: NGTemplateInfoConfigWithGitDetails | TemplateSummaryResponse
 ): IconName | undefined => {
-  const templateTye =
+  const templateType =
     (template as TemplateSummaryResponse)?.templateEntityType || (template as NGTemplateInfoConfigWithGitDetails)?.type
-  if (templateTye === TemplateType.SecretManager) {
+  if (templateType === TemplateType.SecretManager) {
     return 'script'
-  } else if (templateTye === TemplateType.Pipeline) {
+  } else if (templateType === TemplateType.Pipeline) {
     return 'pipeline'
-  } else if (templateTye === TemplateType.MonitoredService) {
+  } else if (templateType === TemplateType.MonitoredService) {
     return 'cv-main'
   } else {
     const childType =
       (template as TemplateSummaryResponse)?.childType ||
       get(template as NGTemplateInfoConfigWithGitDetails, 'spec.type')
     if (childType) {
-      switch (templateTye) {
+      switch (templateType) {
         case TemplateType.Step:
           return factory.getStepIcon(childType)
         case TemplateType.Stage:

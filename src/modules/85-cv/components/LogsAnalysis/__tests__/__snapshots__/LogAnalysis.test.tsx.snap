@@ -261,11 +261,12 @@ exports[`Unit tests for LogAnalysisContainer Verify if LogAnalysisContainer rend
           </button>
         </div>
       </div>
-      <div
-        class="Layout--horizontal StyledProps--main"
+      <p
+        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-small"
+        style="--text-line-clamp: 1; display: flex; align-items: center; width: 90%;"
       >
         <span
-          class="bp3-icon StyledProps--main StyledProps--margin-right-small StyledProps--color StyledProps--color-primary7"
+          class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
           data-icon="main-issue"
         >
           <svg
@@ -280,12 +281,8 @@ exports[`Unit tests for LogAnalysisContainer Verify if LogAnalysisContainer rend
             />
           </svg>
         </span>
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-small"
-        >
-          cv.logs.radarChartInfo
-        </p>
-      </div>
+        cv.logs.radarChartInfo
+      </p>
     </div>
     <div
       class="StyledProps--font StyledProps--main tableContent"

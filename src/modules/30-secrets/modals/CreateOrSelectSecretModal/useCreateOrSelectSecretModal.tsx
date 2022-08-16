@@ -13,10 +13,10 @@ import { pick } from 'lodash-es'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import { getReference } from '@common/utils/utils'
-import CreateOrSelectSecret from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'
 import type { SecretReference } from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'
+import CreateOrSelectSecret from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'
 import { SecretTypeEnum } from '@secrets/components/SecretReference/SecretReference'
-import type { SecretResponseWrapper, ResponsePageSecretResponseWrapper, ConnectorInfoDTO } from 'services/cd-ng'
+import type { ConnectorInfoDTO, ResponsePageSecretResponseWrapper, SecretResponseWrapper } from 'services/cd-ng'
 import { ReferenceSelectDialogTitle } from '@common/components/ReferenceSelect/ReferenceSelect'
 
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
@@ -30,6 +30,7 @@ export interface UseCreateOrSelectSecretModalProps {
   secretsListMockData?: ResponsePageSecretResponseWrapper
   connectorTypeContext?: ConnectorInfoDTO['type']
   handleInlineSSHSecretCreation?: () => void
+  handleInlineWinRmSecretCreation?: () => void
 }
 
 export interface UseCreateOrSelectSecretModalReturn {
@@ -77,6 +78,20 @@ const useCreateOrSelectSecretModal = (
     }
   })
 
+  const getLabelByType = (type: SecretTypeEnum): string => {
+    switch (true) {
+      case type === SecretTypeEnum.SSH_KEY:
+        return getString('secrets.secret.newSSHCredential')
+      case type === SecretTypeEnum.WINRM:
+        return getString('secrets.secret.newWinRmCredential')
+      case type === SecretTypeEnum.SECRET_TEXT:
+      case secretType.value === SecretTypeEnum.SECRET_TEXT:
+        return getString('secrets.secret.newSecretText')
+      default:
+        return getString('secrets.secret.newSecretFile')
+    }
+  }
+
   const [showModal, hideModal] = useModalHook(() => {
     return (
       <Dialog
@@ -87,15 +102,13 @@ const useCreateOrSelectSecretModal = (
         }}
         title={ReferenceSelectDialogTitle({
           componentName: getString('secretType'),
-          createNewLabel:
-            props.type === SecretTypeEnum.SSH_KEY
-              ? getString('secrets.secret.newSSHCredential')
-              : props.type === SecretTypeEnum.SECRET_TEXT || secretType.value === SecretTypeEnum.SECRET_TEXT
-              ? getString('secrets.secret.newSecretText')
-              : getString('secrets.secret.newSecretFile'),
+          createNewLabel: getLabelByType(props.type as SecretTypeEnum),
           createNewHandler: () => {
             if (props.type === SecretTypeEnum.SSH_KEY) {
               props.handleInlineSSHSecretCreation?.()
+              hideModal()
+            } else if (props.type === SecretTypeEnum.WINRM) {
+              props.handleInlineWinRmSecretCreation?.()
               hideModal()
             } else {
               openCreateSecretModal(
@@ -123,6 +136,10 @@ const useCreateOrSelectSecretModal = (
           connectorTypeContext={props.connectorTypeContext}
           handleInlineSSHSecretCreation={() => {
             props.handleInlineSSHSecretCreation?.()
+            hideModal()
+          }}
+          handleInlineWinRmSecretCreation={() => {
+            props.handleInlineWinRmSecretCreation?.()
             hideModal()
           }}
           secretType={secretType}

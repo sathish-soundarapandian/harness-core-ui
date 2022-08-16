@@ -261,7 +261,7 @@ exports[`Test CreatePRStep expand override config panel 1`] = `
                       class="Tooltip--acenter"
                       data-tooltip-id="createpr_spec.shell"
                     >
-                      scriptType
+                      common.scriptType
                     </span>
                      
                     <span
@@ -285,7 +285,7 @@ exports[`Test CreatePRStep expand override config panel 1`] = `
                             class="bp3-input"
                             disabled=""
                             name="spec.shell"
-                            placeholder="- scriptType -"
+                            placeholder="- common.scriptType -"
                             style="padding-right: 0px;"
                             type="text"
                             value="Bash"
@@ -336,7 +336,7 @@ exports[`Test CreatePRStep expand override config panel 1`] = `
                         class="Tooltip--acenter"
                         data-tooltip-id="createpr_spec.source.spec.updateConfigScript"
                       >
-                        script
+                        common.script
                       </span>
                       <div
                         class="bp3-popover-wrapper typeSelectorWrapper"
@@ -1045,7 +1045,7 @@ exports[`Test CreatePRStep should render edit view as inputset step 1`] = `
                   class="Tooltip--acenter"
                   data-tooltip-id="stepTestUtilForm_stagespec.source.spec.updateConfigScript"
                 >
-                  script
+                  common.script
                 </span>
                 <div
                   class="bp3-popover-wrapper typeSelectorWrapper"

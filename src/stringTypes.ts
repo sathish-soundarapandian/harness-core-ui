@@ -662,7 +662,9 @@ export interface StringsMap {
   'common.savedSuccessfully': string
   'common.saving': string
   'common.scope': string
+  'common.script': string
   'common.scriptRequired': string
+  'common.scriptType': string
   'common.searchByNamePlaceholder': string
   'common.searchOther': string
   'common.searchPlaceholder': string
@@ -1376,6 +1378,7 @@ export interface StringsMap {
   'secrets.secret.newSSHCredential': string
   'secrets.secret.newSecretFile': string
   'secrets.secret.newSecretText': string
+  'secrets.secret.newWinRmCredential': string
   'secrets.secret.noSecretsFound': string
   'secrets.secret.placeholderSecretReference': string
   'secrets.secret.placeholderSecretValue': string
@@ -9923,14 +9926,6 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   saveConnectorSuccess: string
-  /**
-   * @deprecated migrate this string to module level file
-   */
-  script: string
-  /**
-   * @deprecated migrate this string to module level file
-   */
-  scriptType: string
   /**
    * @deprecated migrate this string to module level file
    */

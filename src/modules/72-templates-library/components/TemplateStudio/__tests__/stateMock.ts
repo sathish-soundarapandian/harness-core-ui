@@ -27,6 +27,53 @@ export const stepTemplateMock: NGTemplateInfoConfig = {
   } as JsonNode
 }
 
+export const secretManagerTemplateMock: NGTemplateInfoConfig = {
+  name: 'Test Template Secret Manager',
+  identifier: 'Test_Template_SM',
+  versionLabel: 'v1',
+  type: 'SecretManager',
+  projectIdentifier: 'Yogesh_Test',
+  orgIdentifier: 'default',
+  tags: {},
+  spec: {
+    shell: 'Bash',
+    source: {
+      spec: {
+        script: 'echo hi',
+        type: 'Inline'
+      }
+    },
+    onDelegate: true,
+    environmentVariables: [{ name: 'key', type: 'String', value: 1 }]
+  } as JsonNode
+}
+export const secretManagerTemplateMockWithExecutionTarget: NGTemplateInfoConfig = {
+  name: 'Test Template Secret Manager',
+  identifier: 'Test_Template_SM',
+  versionLabel: 'v1',
+  type: 'SecretManager',
+  projectIdentifier: 'Yogesh_Test',
+  orgIdentifier: 'default',
+  tags: {},
+  spec: {
+    shell: 'Bash',
+    source: {
+      spec: {
+        script: 'echo hi',
+        type: 'Inline'
+      }
+    },
+    onDelegate: 'targethost',
+
+    outputVariables: [{ name: 'key', type: 'String', value: 1 }],
+    executionTarget: {
+      connectorRef: 'acc.connectorId',
+      workingDirectory: 'workingdirectory',
+      host: 'host'
+    }
+  } as JsonNode
+}
+
 export const approvalStageTemplateMock: NGTemplateInfoConfig = {
   name: 'Test Template',
   identifier: 'Test_Template',
@@ -532,6 +579,11 @@ export const getTemplateContextMock = (type: TemplateType): TemplateContextInter
       return produce(defaultTemplateContextMock, draft => {
         set(draft, 'state.template', monitoredServiceTemplateMock)
         set(draft, 'state.originalTemplate', monitoredServiceTemplateMock)
+      })
+    case TemplateType.SecretManager:
+      return produce(defaultTemplateContextMock, draft => {
+        set(draft, 'state.template', secretManagerTemplateMock)
+        set(draft, 'state.originalTemplate', secretManagerTemplateMock)
       })
     default:
       return defaultTemplateContextMock

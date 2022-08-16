@@ -3,17 +3,14 @@
 exports[`OnboardingPage OnboardingPage should be rendered properly 1`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main StyledProps--padding-huge StyledProps--background-white"
-    style="height: 100%;"
+    class="StyledProps--font StyledProps--main mainHeading StyledProps--background-white"
   >
     <h1
-      class="StyledProps--font StyledProps--font-h1 StyledProps--main"
-      style="font-size: 30px; font-weight: 700; color: rgb(34, 34, 42); line-height: 32px;"
+      class="StyledProps--font StyledProps--font-h1 StyledProps--main onboardingTitle"
     >
       cf.onboarding.title
       <p
-        class="StyledProps--font StyledProps--main"
-        style="font-weight: 400; font-size: 16px; line-height: 40px; color: rgb(79, 81, 98);"
+        class="StyledProps--font StyledProps--main onboardingSubTitle"
       >
         cf.onboarding.subTitle
       </p>
@@ -23,7 +20,6 @@ exports[`OnboardingPage OnboardingPage should be rendered properly 1`] = `
     >
       <div
         class="StyledProps--font StyledProps--main basicImageContainer"
-        style="display: grid; justify-content: center; padding: 0px;"
       >
         <img
           height="425"
@@ -44,25 +40,22 @@ exports[`OnboardingPage OnboardingPage should be rendered properly 1`] = `
       </h2>
       <div
         class="StyledProps--font StyledProps--main stepImageContainer"
-        style="display: grid; justify-content: center; padding: 20px 0px 40px;"
       >
         <img
           class="stepsImage"
           height="125"
           src="test-file-stub"
-          style="transform: scale(1.15);"
           title="featureFlagsText"
           width="1162"
         />
       </div>
     </div>
     <div
-      class="StyledProps--font StyledProps--main"
-      style="display: grid; justify-content: center;"
+      class="StyledProps--font StyledProps--main buttonConatiner"
     >
       <button
-        class="bp3-button bp3-large Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--variation Button--variation-primary"
-        style="font-weight: 700; width: 350px;"
+        class="bp3-button bp3-large Button--button StyledProps--font StyledProps--main getStartedButton StyledProps--intent-primary Button--with-current-color Button--variation Button--variation-primary"
+        style="width: 350px;"
         type="button"
       >
         <span

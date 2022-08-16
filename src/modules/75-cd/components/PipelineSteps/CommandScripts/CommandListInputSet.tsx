@@ -115,7 +115,7 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
                       <div className={cx(stepCss.formGroup, stepCss.alignStart, stepCss.md)}>
                         <MultiTypeFieldSelector
                           name={`${prefix}spec.commandUnits[${i}].spec.source.spec.script`}
-                          label={getString('script')}
+                          label={getString('common.script')}
                           defaultValueToReset=""
                           disabled={readonly}
                           allowedTypes={allowableTypes}

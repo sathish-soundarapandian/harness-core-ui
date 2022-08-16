@@ -19,7 +19,8 @@ import {
   DropDown,
   shouldShowError,
   PageSpinner,
-  ExpandingSearchInputHandle
+  ExpandingSearchInputHandle,
+  useToggleOpen
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
@@ -84,6 +85,7 @@ import CreatePipelineButton from '@pipeline/components/CreatePipelineButton/Crea
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import type { StoreType } from '@common/constants/GitSyncTypes'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
+import { ClonePipelineForm } from '@pipeline/components/ClonePipelineForm/ClonePipelineForm'
 import { PipelineGridView } from './views/PipelineGridView'
 import { PipelineListView } from './views/PipelineListView'
 import { ExecutionListFilterForm } from '../execution-list/ExecutionListFilterForm/ExecutionListFilterForm'
@@ -160,6 +162,12 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
   const [isReseting, setIsReseting] = useState<boolean>(false)
   const [isDeleting, setIsDeleting] = useState<boolean>(false)
   const [pipelineToDelete, setPipelineToDelete] = useState<PMSPipelineSummaryResponse>()
+  const [pipelineToClone, setPipelineToClone] = useState<PMSPipelineSummaryResponse>()
+  const {
+    open: openClonePipelineModal,
+    isOpen: isClonePipelineModalOpen,
+    close: closeClonePipelineModal
+  } = useToggleOpen()
   const defaultSort = useMemo(() => [SortFields.LastUpdatedAt, Sort.DESC], [])
   const queryParams = useQueryParams<QueryParams>({
     processQueryParams(params: StringQueryParams) {
@@ -685,6 +693,11 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
     return true
   }
 
+  const onClonePipeline = (originalPipeline: PMSPipelineSummaryResponse): void => {
+    setPipelineToClone(originalPipeline)
+    openClonePipelineModal()
+  }
+
   const onDeletePipeline = async (commitMsg: string): Promise<void> => {
     try {
       setIsDeleting(true)
@@ -875,6 +888,7 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
                 onDelete={(pipeline: PMSPipelineSummaryResponse) => {
                   setPipelineToDelete(pipeline)
                 }}
+                onClonePipeline={onClonePipeline}
               />
             ) : (
               <PipelineListView
@@ -887,6 +901,14 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
                   setPipelineToDelete(pipeline)
                 }}
                 onDeletePipeline={onDeletePipeline}
+                onClonePipeline={onClonePipeline}
+              />
+            )}
+            {pipelineToClone && (
+              <ClonePipelineForm
+                isOpen={isClonePipelineModalOpen}
+                onClose={closeClonePipelineModal}
+                originalPipeline={pipelineToClone}
               />
             )}
           </GitSyncStoreProvider>

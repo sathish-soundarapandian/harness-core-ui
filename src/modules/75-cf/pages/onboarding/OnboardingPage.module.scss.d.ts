@@ -8,7 +8,12 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly basicImageContainer: string
+  readonly buttonConatiner: string
+  readonly getStartedButton: string
   readonly h2: string
+  readonly mainHeading: string
+  readonly onboardingSubTitle: string
+  readonly onboardingTitle: string
   readonly stepImageContainer: string
   readonly stepsImage: string
 }

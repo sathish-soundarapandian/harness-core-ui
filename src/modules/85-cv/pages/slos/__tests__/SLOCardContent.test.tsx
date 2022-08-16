@@ -4,7 +4,6 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
 import React from 'react'
 import userEvent from '@testing-library/user-event'
 import { render, screen } from '@testing-library/react'
@@ -158,16 +157,16 @@ describe('SLOCardContent', () => {
     )
 
     expect(screen.getByTestId('timeline-slider-container')).toBeInTheDocument()
-    userEvent.click(screen.getByTestId('timeline-slider-container'))
 
-    expect(setSliderTimeRange).toBeCalledTimes(1)
+    expect(setSliderTimeRange).toBeCalledTimes(0)
+    userEvent.click(screen.getByTestId('timeline-slider-container'))
 
     expect(screen.getByText('reset')).toBeInTheDocument()
 
     userEvent.click(screen.getByText('reset'))
 
     expect(screen.queryByText('reset')).not.toBeInTheDocument()
-    expect(setSliderTimeRange).toBeCalledTimes(2)
+    expect(setSliderTimeRange).toBeCalledTimes(1)
   })
 
   test('it should handle resetSlider for type Error Budget', () => {

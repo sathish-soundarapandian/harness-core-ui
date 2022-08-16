@@ -48,7 +48,7 @@ import CDPipelineDeploymentList from '@cd/pages/pipeline-deployment-list/CDPipel
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
 import { Services } from '@cd/components/Services/Services'
-
+import './components/SecretManagerTemplate'
 import './components/PipelineSteps'
 import './components/PipelineStudio/DeployStage'
 import executionFactory from '@pipeline/factories/ExecutionFactory'

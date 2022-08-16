@@ -213,7 +213,7 @@ export function StepCommands(
       return step as StepElementConfig
     }
   }
-  const width = props.helpPanelVisible ? '600px' : '100%'
+
   return (
     <div className={cx(css.stepCommand, className)}>
       {stepType === StepType.Template && onUseTemplate && onRemoveTemplate ? (
@@ -226,11 +226,8 @@ export function StepCommands(
           <Container>{getStepWidgetWithFormikRef()}</Container>
         </Layout.Vertical>
       ) : (
-        <div className={css.helpPanelGrid}>
-          <Container
-            width={width}
-            className={cx(css.stepTabs, { stepTabsAdvanced: activeTab === StepCommandTabs.Advanced })}
-          >
+        <div className={props.helpPanelVisible ? css.helpPanelGridVisible : css.helpPanelGridHidden}>
+          <Container className={cx(css.stepTabs, { stepTabsAdvanced: activeTab === StepCommandTabs.Advanced })}>
             <Tabs id="step-commands" selectedTabId={activeTab} onChange={handleTabChange}>
               <Tab
                 id={StepCommandTabs.StepConfiguration}

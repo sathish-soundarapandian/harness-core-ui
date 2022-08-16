@@ -104,16 +104,7 @@ export const OnboardingDetailPage: React.FC = () => {
   const { trackEvent } = useTelemetry()
   return (
     <Container height="100%" background={Color.WHITE} className={css.container}>
-      <Layout.Horizontal
-        spacing="xsmall"
-        flex
-        padding="large"
-        height={40}
-        style={{
-          background: '#F8FBFE',
-          border: '1px solid #E7E7E7'
-        }}
-      >
+      <Layout.Horizontal className={css.containerLayout} spacing="xsmall" flex height={40}>
         <Link to={routes.toCFOnboarding({ accountId: accountIdentifier, orgIdentifier, projectIdentifier })}>
           {getString('cf.shared.getStarted')}
         </Link>

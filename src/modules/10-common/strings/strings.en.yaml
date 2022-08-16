@@ -755,6 +755,8 @@ delete: Delete {{ name }}?
 suggestionsLabel: 'Suggestions:'
 refreshPage: refresh your page.
 files: Files
+scriptType: 'Script Type'
+script: 'Script'
 template:
   label: 'Template'
   saveAsNewTemplateHeading: Save as new Template

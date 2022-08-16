@@ -100,15 +100,15 @@ export default function BaseCustomApproval(props: {
         <FormInput.Select
           items={customApprovalType}
           name="spec.shell"
-          label={getString('scriptType')}
-          placeholder={getString('scriptType')}
+          label={getString('common.scriptType')}
+          placeholder={getString('common.scriptType')}
           disabled
         />
       </div>
       <div className={cx(stepCss.formGroup)}>
         <MultiTypeFieldSelector
           name="spec.source.spec.script"
-          label={getString('script')}
+          label={getString('common.script')}
           defaultValueToReset=""
           disabled={readonly}
           allowedTypes={allowableTypes}

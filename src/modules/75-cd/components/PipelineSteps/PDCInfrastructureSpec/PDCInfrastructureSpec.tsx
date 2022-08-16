@@ -61,7 +61,9 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { DelegateSelectors } from '@common/components/DelegateSelectors/DelegateSelectors'
 import { FormMultiTypeTextAreaField } from '@common/components'
-import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
+import MultiTypeSecretInput, {
+  getMultiTypeSecretInputType
+} from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import ConnectivityStatus from './connectivityStatus/ConnectivityStatus'
 import { getAttributeFilters, PDCInfrastructureSpecInputForm } from './PDCInfrastructureSpecInputForm'
@@ -497,7 +499,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                     <div className={css.credRefWidth}>
                       <MultiTypeSecretInput
                         name="credentialsRef"
-                        type="SSHKey"
+                        type={getMultiTypeSecretInputType(formikInitialValues.serviceType)}
                         expressions={expressions}
                         allowableTypes={allowableTypes}
                         label={getString('cd.steps.common.specifyCredentials')}

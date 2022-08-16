@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useMemo } from 'react'
-import { Container, Icon, NoDataCard, Layout, Text, PageError } from '@wings-software/uicore'
+import { Container, Icon, NoDataCard, Text, PageError } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
@@ -91,12 +91,16 @@ const LogAnalysisRadarChart: React.FC<LogAnalysisRadarChartProps> = ({
       <>
         <HighchartsReact highcharts={Highcharts} options={highchartsConfigOptions} />
         <MultiRangeSlider min={0} max={360} step={30} onChange={handleAngleChange} />
-        <Layout.Horizontal>
-          <Icon margin={{ right: 'small' }} name="main-issue" color={Color.PRIMARY_7} />
-          <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }}>
-            {getString('cv.logs.radarChartInfo')}
-          </Text>
-        </Layout.Horizontal>
+        <Text
+          width="90%"
+          icon="main-issue"
+          iconProps={{ color: Color.PRIMARY_7 }}
+          lineClamp={1}
+          color={Color.GREY_600}
+          font={{ variation: FontVariation.SMALL }}
+        >
+          {getString('cv.logs.radarChartInfo')}
+        </Text>
       </>
     )
   }

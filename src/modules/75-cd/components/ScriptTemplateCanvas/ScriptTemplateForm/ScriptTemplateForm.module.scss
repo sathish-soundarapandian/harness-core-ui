@@ -1,0 +1,12 @@
+.scriptTab {
+  padding: var(--spacing-xlarge);
+}
+
+.configurationTabs {
+  :global {
+    .bp3-tab-list {
+      background-color: var(--white);
+      padding: var(--spacing-none) var(--spacing-medium) !important;
+    }
+  }
+}

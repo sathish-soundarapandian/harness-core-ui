@@ -141,7 +141,7 @@ exports[`CustomApproval tests Basic snapshot - inputset mode but no runtime valu
                   class="Tooltip--acenter"
                   data-tooltip-id="stepTestUtilForm_spec.source.spec.script"
                 >
-                  script
+                  common.script
                 </span>
                 <div
                   class="bp3-popover-wrapper typeSelectorWrapper"
@@ -1005,7 +1005,7 @@ exports[`CustomApproval tests Edit stage - readonly with runtime values: edit st
               class="Tooltip--acenter"
               data-tooltip-id="CustomApprovalForm_spec.shell"
             >
-              scriptType
+              common.scriptType
             </span>
              
             <span
@@ -1029,7 +1029,7 @@ exports[`CustomApproval tests Edit stage - readonly with runtime values: edit st
                     class="bp3-input"
                     disabled=""
                     name="spec.shell"
-                    placeholder="- scriptType -"
+                    placeholder="- common.scriptType -"
                     style="padding-right: 0px;"
                     type="text"
                     value="Bash"
@@ -1080,7 +1080,7 @@ exports[`CustomApproval tests Edit stage - readonly with runtime values: edit st
                 class="Tooltip--acenter"
                 data-tooltip-id="CustomApprovalForm_spec.source.spec.script"
               >
-                script
+                common.script
               </span>
             </div>
              
@@ -2307,7 +2307,7 @@ exports[`CustomApproval tests Edit stage - readonly: edit stage view readonly 1`
               class="Tooltip--acenter"
               data-tooltip-id="CustomApprovalForm_spec.shell"
             >
-              scriptType
+              common.scriptType
             </span>
              
             <span
@@ -2331,7 +2331,7 @@ exports[`CustomApproval tests Edit stage - readonly: edit stage view readonly 1`
                     class="bp3-input"
                     disabled=""
                     name="spec.shell"
-                    placeholder="- scriptType -"
+                    placeholder="- common.scriptType -"
                     style="padding-right: 0px;"
                     type="text"
                     value="Bash"
@@ -2382,7 +2382,7 @@ exports[`CustomApproval tests Edit stage - readonly: edit stage view readonly 1`
                 class="Tooltip--acenter"
                 data-tooltip-id="CustomApprovalForm_spec.source.spec.script"
               >
-                script
+                common.script
               </span>
             </div>
              

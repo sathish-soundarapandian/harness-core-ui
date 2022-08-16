@@ -4,7 +4,6 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
 import React, { useCallback, useMemo, useState } from 'react'
 import { Container } from '@harness/uicore'
 import ChangeTimeline from '@cv/components/ChangeTimeline/ChangeTimeline'
@@ -109,6 +108,7 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
           resetFocus={resetSlider}
           hideSlider={!showTimelineSlider}
           className={css.timelineSlider}
+          setDefaultSlider={true}
           infoCard={
             <AnomaliesCard
               showOnlyChanges

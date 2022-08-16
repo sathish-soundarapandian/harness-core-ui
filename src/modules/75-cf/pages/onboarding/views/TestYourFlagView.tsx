@@ -16,6 +16,7 @@ import routes from '@common/RouteDefinitions'
 import { ApiKey, FeatureFlagRequestRequestBody, useGetAllFeatures } from 'services/cf'
 import { useToggleFeatureFlag } from '@cf/hooks/useToggleFeatureFlag'
 import { TestFlagInfoView } from './TestFlagInfoView'
+import css from './TestYourFlagView.module.scss'
 
 const POLLING_INTERVAL_IN_MS = 3000
 
@@ -95,28 +96,12 @@ export const TestYourFlagView: React.FC<TestYourFlagViewProps> = props => {
 
   return (
     <Container height="100%">
-      <Container padding="xlarge" width="calc(100% - 765px)" height="calc(100vh - 140px)" style={{ overflow: 'auto' }}>
-        <Heading
-          level={2}
-          style={{
-            fontWeight: 600,
-            fontSize: '20px',
-            lineHeight: '28px',
-            color: '#22222A'
-          }}
-          padding={{ bottom: 'medium' }}
-        >
+      <Container className={css.listenToEventContainer} width="calc(100% - 765px)" height="calc(100vh - 140px)">
+        <Heading level={2} className={css.listenToEvenHeading}>
           {getString('cf.onboarding.listenToEvent')}
         </Heading>
-        <Text style={{ color: '#22222A' }}>{getString('cf.onboarding.toggleLabel')}</Text>
-        <Container
-          margin={{ top: 'xlarge', bottom: 'xlarge' }}
-          padding={{ top: 'xlarge' }}
-          style={{
-            border: '1px solid #D9DAE5',
-            borderRadius: '8px'
-          }}
-        >
+        <Text className={css.toggleLabel}>{getString('cf.onboarding.toggleLabel')}</Text>
+        <Container margin={{ top: 'xlarge', bottom: 'xlarge' }} className={css.toggleContainer}>
           <Layout.Horizontal padding={{ left: 'small', bottom: 'large' }}>
             <Switch
               onChange={() => {
@@ -132,61 +117,28 @@ export const TestYourFlagView: React.FC<TestYourFlagViewProps> = props => {
               className={Classes.LARGE}
               checked={checked}
             />
-            <Container padding={{ left: 'large' }}>
-              <Text
-                style={{
-                  fontWeight: 600,
-                  fontSize: '13px',
-                  lineHeight: '20px',
-                  color: '#0B0B0D',
-                  alignSelf: 'baseline'
-                }}
-              >
-                {flagInfo.name}
-              </Text>
+            <Container className={css.flagInfoNameContainer}>
+              <Text className={css.flagInfoName}>{flagInfo.name}</Text>
             </Container>
           </Layout.Horizontal>
           {!props.testDone && (
-            <Layout.Horizontal
-              padding={{ top: 'large', left: 'large', bottom: 'large' }}
-              style={{ alignItems: 'center', background: '#F3F3FA', borderTop: '1px solid #D9DAE5' }}
-            >
+            <Layout.Horizontal className={css.testDoneLayout}>
               <Icon name="steps-spinner" size={24} color={Color.BLUE_500} />
-              <Text padding={{ left: 'medium' }} style={{ fontSize: '14px' }}>
-                {getString('cf.onboarding.listeningToEvent')}
-              </Text>
+              <Text className={css.listeningToEvent}>{getString('cf.onboarding.listeningToEvent')}</Text>
             </Layout.Horizontal>
           )}
         </Container>
         {props.testDone && (
           <>
-            <Text style={{ fontWeight: 600, fontSize: '16px', lineHeight: '24px', color: '#0B0B0D' }}>
-              {getString('cf.onboarding.allSet')}
-            </Text>
+            <Text className={css.allSet}>{getString('cf.onboarding.allSet')}</Text>
             <Text margin={{ top: 'small' }}>
               <String stringID="cf.onboarding.tryTarget" vars={{ link }} useRichText />
             </Text>
           </>
         )}
       </Container>
-      <Container
-        padding="xxlarge"
-        style={{
-          boxShadow: '-8px 0 10px -5px rgb(96 97 112 / 16%)',
-          position: 'fixed',
-          top: '90px',
-          right: '400px',
-          bottom: '60px',
-          zIndex: 0
-        }}
-      >
-        <Container
-          padding="large"
-          style={{ borderRadius: '8px', border: '1px solid #D9DAE6' }}
-          background={Color.BLACK}
-          width={300}
-          height={150}
-        >
+      <Container className={css.containerMain}>
+        <Container className={css.containerSub} width={300} height={150}>
           <Text font={{ mono: true }} color={Color.WHITE}>
             <pre style={{ margin: 0 }}>
               {getString('cf.onboarding.waitForConnect', {

@@ -19,8 +19,7 @@ import {
   TagsPopover,
   TableV2,
   Container,
-  ButtonSize,
-  useToggleOpen
+  ButtonSize
 } from '@harness/uicore'
 import { Classes, Menu, Position } from '@blueprintjs/core'
 import { FontVariation, Color } from '@harness/design-system'
@@ -41,7 +40,6 @@ import type { StoreType } from '@common/constants/GitSyncTypes'
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
 import { Badge } from '@pipeline/pages/utils/Badge/Badge'
 import { getFeaturePropsForRunPipelineButton } from '@pipeline/utils/runPipelineUtils'
-import { ClonePipelineForm } from '@pipeline/components/ClonePipelineForm/ClonePipelineForm'
 import { getIconsForPipeline, getStatusColor } from '../PipelineListUtils'
 import css from '../PipelinesPage.module.scss'
 
@@ -53,6 +51,7 @@ interface PipelineListViewProps {
   refetchPipeline: () => void
   onDeletePipeline: (commitMsg: string) => Promise<void>
   onDelete: (pipeline: PMSPipelineSummaryResponse) => void
+  onClonePipeline: (pipeline: PMSPipelineSummaryResponse) => void
 }
 
 // Todo: Remove this when BE updated
@@ -109,17 +108,6 @@ const RenderColumnMenu: Renderer<CellProps<PipelineDTO>> = ({ row, column }) => 
     storeType: data.storeType as StoreType
   })
 
-  const {
-    open: openClonePipelineModal,
-    isOpen: isClonePipelineModalOpen,
-    close: closeClonePipelineModal
-  } = useToggleOpen()
-
-  function handleCloseClonePipelineModal(e?: React.SyntheticEvent): void {
-    e?.stopPropagation()
-    closeClonePipelineModal()
-  }
-
   return (
     <Layout.Horizontal style={{ justifyContent: 'flex-end' }}>
       <Popover
@@ -175,7 +163,8 @@ const RenderColumnMenu: Renderer<CellProps<PipelineDTO>> = ({ row, column }) => 
             text={getString('projectCard.clone')}
             onClick={(e: React.MouseEvent) => {
               e.stopPropagation()
-              openClonePipelineModal()
+              ;(column as any).onClonePipeline(data)
+              setMenuOpen(false)
             }}
           />
           <Menu.Item
@@ -191,11 +180,6 @@ const RenderColumnMenu: Renderer<CellProps<PipelineDTO>> = ({ row, column }) => 
           />
         </Menu>
       </Popover>
-      <ClonePipelineForm
-        isOpen={isClonePipelineModalOpen}
-        onClose={handleCloseClonePipelineModal}
-        originalPipeline={data}
-      />
     </Layout.Horizontal>
   )
 }
@@ -379,10 +363,12 @@ export function PipelineListView({
   refetchPipeline,
   goToPipelineStudio,
   onDeletePipeline,
-  onDelete
+  onDelete,
+  onClonePipeline
 }: PipelineListViewProps): React.ReactElement {
   const { getString } = useStrings()
   const { isGitSyncEnabled } = useAppStore()
+
   const columns: CustomColumn<PipelineDTO>[] = React.useMemo(
     () => [
       {
@@ -432,7 +418,8 @@ export function PipelineListView({
         goToPipelineStudio,
         goToPipelineDetail,
         onDeletePipeline,
-        onDelete
+        onDelete,
+        onClonePipeline
       }
     ],
     [refetchPipeline, goToPipelineStudio, isGitSyncEnabled]

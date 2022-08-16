@@ -28,7 +28,7 @@ import { Divider } from '@blueprintjs/core'
 
 import { useStrings } from 'framework/strings'
 import { NameIdDescriptionTags } from '@common/components'
-import { useClonePipeline } from 'services/pipeline-ng'
+import { PMSPipelineSummaryResponse, useClonePipeline } from 'services/pipeline-ng'
 import {
   OrganizationResponse,
   ProjectAggregateDTO,
@@ -46,20 +46,14 @@ import { InlineRemoteSelect } from '@common/components/InlineRemoteSelect/Inline
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
 
-import {
-  getValidationSchema,
-  OriginalPipeline,
-  FormState,
-  getInitialValues,
-  processFormData
-} from './ClonePipelineFormUtils'
+import { getValidationSchema, FormState, getInitialValues, processFormData } from './ClonePipelineFormUtils'
 
 import css from './ClonePipelineForm.module.scss'
 
 export interface ClonePipelineFormProps {
   isOpen: boolean
   onClose(e?: React.SyntheticEvent): void
-  originalPipeline: OriginalPipeline
+  originalPipeline: PMSPipelineSummaryResponse
 }
 
 export function ClonePipelineForm(props: ClonePipelineFormProps): React.ReactElement {
@@ -199,7 +193,7 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
   )
 
   return (
-    <div data-testid="clone-pipeline-form" onClick={e => e.stopPropagation()}>
+    <div data-testid="clone-pipeline-form">
       <Formik<FormState>
         formName="clone-pipeline"
         initialValues={initialvalues}

@@ -76,7 +76,8 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
     credentialsRef: '',
     hostFilters: '',
     hosts: '',
-    connectorRef: ''
+    connectorRef: '',
+    serviceType: ''
   }
 
   useDeepCompareEffect(() => {
@@ -86,7 +87,8 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
       hostFilters: isArray(initialValues.hostFilters)
         ? initialValues.hostFilters.join(', ')
         : defaultTo(initialValues.hostFilters, ''),
-      attributeFilters: getAttributeFilters(initialValues)
+      attributeFilters: getAttributeFilters(initialValues),
+      serviceType: defaultTo(initialValues.serviceType, '')
     })
   }, [initialValues])
 

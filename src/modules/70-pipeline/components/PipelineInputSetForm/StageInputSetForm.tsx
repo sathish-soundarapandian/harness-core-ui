@@ -20,7 +20,7 @@ import {
 } from '@harness/uicore'
 import { connect, FormikProps } from 'formik'
 import { Color, FontVariation } from '@harness/design-system'
-import { defaultTo, get, identity, isEmpty, isNil, pickBy, set } from 'lodash-es'
+import { defaultTo, get, identity, isEmpty, isNil, pickBy, set, unset } from 'lodash-es'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -944,7 +944,7 @@ export function StageInputSetFormInternal({
                           factory={factory}
                           template={infrastructureDefinition.inputs?.spec}
                           initialValues={{
-                            ...deploymentStage?.environment?.infrastructureDefinitions?.[index]?.inputs,
+                            ...deploymentStageInputSet?.environment?.infrastructureDefinitions?.[index]?.inputs?.spec,
                             environmentRef: deploymentStage?.environment?.environmentRef,
                             infrastructureRef: infrastructureDefinition.identifier
                           }}
@@ -969,6 +969,17 @@ export function StageInputSetFormInternal({
                             (deploymentStage?.deploymentType as StepType) || '',
                             getString
                           )}
+                          onUpdate={data => {
+                            /* istanbul ignore next */
+                            if (
+                              deploymentStageInputSet?.environment?.infrastructureDefinitions?.[index]?.inputs?.spec
+                            ) {
+                              unset(data, 'environmentRef')
+                              unset(data, 'infrastructureRef')
+                              deploymentStageInputSet.environment.infrastructureDefinitions[index].inputs.spec = data
+                              formik?.setValues(set(formik?.values, path, deploymentStageInputSet))
+                            }
+                          }}
                         />
                       </>
                     )

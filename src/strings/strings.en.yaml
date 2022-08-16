@@ -565,7 +565,6 @@ somethingWentWrong: Something went wrong
 saveChanges: Save Changes
 projectSelector:
   placeholder: 'Start typing to search'
-script: 'Script'
 inline: 'Inline'
 upload: Upload
 remote: 'Remote'
@@ -577,7 +576,6 @@ resourcePage:
   templates: '{{$.common.templates}}'
   fileStore: File Store
 stepType: 'Step Type'
-scriptType: 'Script Type'
 shellScriptStep: 'Shell Script'
 targetHost: 'Target Host'
 workingDirectory: 'Working Directory'

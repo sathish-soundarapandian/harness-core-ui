@@ -27,7 +27,17 @@ import { useStrings } from 'framework/strings'
 import { errorCheck } from '@common/utils/formikHelpers'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { getReference } from '@common/utils/utils'
+import { useCreateWinRmCredModal } from '@secrets/modals/CreateWinRmCredModal/useCreateWinRmCredModal'
 import css from './MultiTypeSecretInput.module.scss'
+
+export function getMultiTypeSecretInputType(serviceType: string): SecretResponseWrapper['secret']['type'] {
+  switch (serviceType) {
+    case 'WinRm':
+      return 'WinRmCredentials'
+    default:
+      return 'SSHKey'
+  }
+}
 
 export interface MultiTypeSecretInputFixedTypeComponentProps
   extends FixedTypeComponentProps,
@@ -98,6 +108,18 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
     }
   })
 
+  const { openCreateWinRmCredModal } = useCreateWinRmCredModal({
+    onSuccess: data => {
+      const secret = {
+        ...pick(data, ['name', 'identifier', 'orgIdentifier', 'projectIdentifier', 'type']),
+        referenceString: getReference(getScopeFromDTO(data), data.identifier) as string
+      }
+      formik.setFieldValue(name, secret.referenceString)
+      /* istanbul ignore next */
+      onSuccess?.(secret)
+    }
+  })
+
   const { openCreateOrSelectSecretModal } = useCreateOrSelectSecretModal(
     {
       type,
@@ -107,7 +129,8 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
         onSuccess?.(secret)
       },
       secretsListMockData,
-      handleInlineSSHSecretCreation: () => openCreateSSHCredModal()
+      handleInlineSSHSecretCreation: () => openCreateSSHCredModal(),
+      handleInlineWinRmSecretCreation: () => openCreateWinRmCredModal()
     },
     [name, onSuccess]
   )

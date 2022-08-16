@@ -25,3 +25,9 @@
     }
   }
 }
+
+.containerLayout {
+  padding: var(--spacing-large) !important;
+  background-color: var(--grey-0);
+  border: 1px solid var(--white);
+}

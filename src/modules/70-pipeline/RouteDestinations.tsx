@@ -243,6 +243,14 @@ AuditTrailFactory.registerResourceHandler(ResourceType.ENVIRONMENT, {
   resourceLabel: 'environment'
 })
 
+AuditTrailFactory.registerResourceHandler(ResourceType.TRIGGER, {
+  moduleIcon: {
+    name: 'pipeline'
+  },
+  moduleLabel: 'common.pipeline',
+  resourceLabel: 'common.triggerLabel'
+})
+
 export function RedirectToPipelineDetailHome(): React.ReactElement {
   const params = useParams<PipelineType<PipelinePathProps>>()
 

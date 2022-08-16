@@ -17,7 +17,7 @@ exports[`Create Delegate Config Script step render data 1`] = `
       <p
         class="StyledProps--font StyledProps--main"
       >
-        script
+        common.script
       </p>
       <textarea
         class="scriptTextarea"

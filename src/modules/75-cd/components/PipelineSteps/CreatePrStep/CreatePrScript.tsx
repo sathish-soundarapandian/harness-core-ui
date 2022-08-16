@@ -107,15 +107,15 @@ export default function CreatePRScript(props: {
                 <FormInput.Select
                   items={shellScriptType}
                   name="spec.shell"
-                  label={getString('scriptType')}
-                  placeholder={getString('scriptType')}
+                  label={getString('common.scriptType')}
+                  placeholder={getString('common.scriptType')}
                   disabled
                 />
               </div>
               <div className={cx(stepCss.formGroup)}>
                 <MultiTypeFieldSelector
                   name="spec.source.spec.updateConfigScript"
-                  label={getString('script')}
+                  label={getString('common.script')}
                   defaultValueToReset=""
                   disabled={readonly}
                   allowedTypes={allowableTypes}

@@ -8,7 +8,7 @@
 
 import { Classes, Menu, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
-import { Button, Icon, Layout, Popover, Text, useToggleOpen, Container, TagsPopover } from '@harness/uicore'
+import { Button, Icon, Layout, Popover, Text, Container, TagsPopover } from '@harness/uicore'
 import defaultTo from 'lodash-es/defaultTo'
 import { useParams, Link } from 'react-router-dom'
 import type { CellProps, Renderer } from 'react-table'
@@ -30,7 +30,6 @@ import { useStrings } from 'framework/strings'
 import { Badge } from '@pipeline/pages/utils/Badge/Badge'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import type { PMSPipelineSummaryResponse, RecentExecutionInfoDTO } from 'services/pipeline-ng'
-import { ClonePipelineForm } from '@pipeline/components/ClonePipelineForm/ClonePipelineForm'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
@@ -238,12 +237,6 @@ export const MenuCell: CellType = ({ row, column }) => {
     storeType: data.storeType as StoreType
   })
 
-  const {
-    open: openClonePipelineModal,
-    isOpen: isClonePipelineModalOpen,
-    close: closeClonePipelineModal
-  } = useToggleOpen()
-
   return (
     <Layout.Horizontal style={{ justifyContent: 'flex-end' }}>
       <Popover
@@ -292,7 +285,10 @@ export const MenuCell: CellType = ({ row, column }) => {
             icon="duplicate"
             text={getString('projectCard.clone')}
             disabled={isGitSyncEnabled || isGitSimplificationEnabled}
-            onClick={openClonePipelineModal}
+            onClick={() => {
+              ;(column as any).onClonePipeline(data)
+              setMenuOpen(false)
+            }}
           />
           <Menu.Item
             icon="trash"
@@ -306,7 +302,6 @@ export const MenuCell: CellType = ({ row, column }) => {
           />
         </Menu>
       </Popover>
-      <ClonePipelineForm isOpen={isClonePipelineModalOpen} onClose={closeClonePipelineModal} originalPipeline={data} />
     </Layout.Horizontal>
   )
 }

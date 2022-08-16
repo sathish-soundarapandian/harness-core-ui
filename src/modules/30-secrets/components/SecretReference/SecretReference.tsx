@@ -40,6 +40,7 @@ export interface SecretRef extends SecretDTOV2 {
 export const enum SecretTypeEnum {
   SECRET_TEXT = 'SecretText',
   SSH_KEY = 'SSHKey',
+  WINRM = 'WinRmCredentials',
   SECRET_FILE = 'SecretFile'
 }
 
@@ -58,6 +59,7 @@ export interface SecretReferenceProps extends SceretTypeDropDownProps {
   connectorTypeContext?: ConnectorInfoDTO['type']
   onCancel?: () => void
   handleInlineSSHSecretCreation?: () => void
+  handleInlineWinRmSecretCreation?: () => void
 }
 
 const fetchRecords = (

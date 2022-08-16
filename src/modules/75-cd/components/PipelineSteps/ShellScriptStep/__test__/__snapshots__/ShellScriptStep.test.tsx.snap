@@ -170,7 +170,7 @@ exports[`Test Shell Script Step renders input sets 1`] = `
                   class="Tooltip--acenter"
                   data-tooltip-id="stepTestUtilForm_spec.source.spec.script"
                 >
-                  script
+                  common.script
                 </span>
                 <div
                   class="bp3-popover-wrapper typeSelectorWrapper"
@@ -1358,7 +1358,7 @@ exports[`Test Shell Script Step renders runtime inputs 1`] = `
             class="Tooltip--acenter"
             data-tooltip-id="shellScriptForm_spec.shell"
           >
-            scriptType
+            common.scriptType
           </span>
            
           <span
@@ -1382,7 +1382,7 @@ exports[`Test Shell Script Step renders runtime inputs 1`] = `
                   class="bp3-input"
                   disabled=""
                   name="spec.shell"
-                  placeholder="- scriptType -"
+                  placeholder="- common.scriptType -"
                   style="padding-right: 0px;"
                   type="text"
                   value="Bash"
@@ -1433,7 +1433,7 @@ exports[`Test Shell Script Step renders runtime inputs 1`] = `
               class="Tooltip--acenter"
               data-tooltip-id="shellScriptForm_spec.source.spec.script"
             >
-              script
+              common.script
             </span>
             <div
               class="bp3-popover-wrapper typeSelectorWrapper"
@@ -1765,7 +1765,7 @@ exports[`Test Shell Script Step should render edit view 1`] = `
             class="Tooltip--acenter"
             data-tooltip-id="shellScriptForm_spec.shell"
           >
-            scriptType
+            common.scriptType
           </span>
            
           <span
@@ -1789,7 +1789,7 @@ exports[`Test Shell Script Step should render edit view 1`] = `
                   class="bp3-input"
                   disabled=""
                   name="spec.shell"
-                  placeholder="- scriptType -"
+                  placeholder="- common.scriptType -"
                   style="padding-right: 0px;"
                   type="text"
                   value="Bash"
@@ -1840,7 +1840,7 @@ exports[`Test Shell Script Step should render edit view 1`] = `
               class="Tooltip--acenter"
               data-tooltip-id="shellScriptForm_spec.source.spec.script"
             >
-              script
+              common.script
             </span>
             <div
               class="bp3-popover-wrapper typeSelectorWrapper"
@@ -2156,7 +2156,7 @@ exports[`Test Shell Script Step should render edit view 2`] = `
             class="Tooltip--acenter"
             data-tooltip-id="shellScriptForm_spec.shell"
           >
-            scriptType
+            common.scriptType
           </span>
            
           <span
@@ -2180,7 +2180,7 @@ exports[`Test Shell Script Step should render edit view 2`] = `
                   class="bp3-input"
                   disabled=""
                   name="spec.shell"
-                  placeholder="- scriptType -"
+                  placeholder="- common.scriptType -"
                   style="padding-right: 0px;"
                   type="text"
                   value="Bash"
@@ -2231,7 +2231,7 @@ exports[`Test Shell Script Step should render edit view 2`] = `
               class="Tooltip--acenter"
               data-tooltip-id="shellScriptForm_spec.source.spec.script"
             >
-              script
+              common.script
             </span>
             <div
               class="bp3-popover-wrapper typeSelectorWrapper"
@@ -2547,7 +2547,7 @@ exports[`Test Shell Script Step should render edit view as edit step 1`] = `
             class="Tooltip--acenter"
             data-tooltip-id="shellScriptForm_spec.shell"
           >
-            scriptType
+            common.scriptType
           </span>
            
           <span
@@ -2571,7 +2571,7 @@ exports[`Test Shell Script Step should render edit view as edit step 1`] = `
                   class="bp3-input"
                   disabled=""
                   name="spec.shell"
-                  placeholder="- scriptType -"
+                  placeholder="- common.scriptType -"
                   style="padding-right: 0px;"
                   type="text"
                   value="Bash"
@@ -2622,7 +2622,7 @@ exports[`Test Shell Script Step should render edit view as edit step 1`] = `
               class="Tooltip--acenter"
               data-tooltip-id="shellScriptForm_spec.source.spec.script"
             >
-              script
+              common.script
             </span>
             <div
               class="bp3-popover-wrapper typeSelectorWrapper"
@@ -2934,7 +2934,7 @@ exports[`Test Shell Script Step should render edit view as new step 1`] = `
             class="Tooltip--acenter"
             data-tooltip-id="shellScriptForm_spec.shell"
           >
-            scriptType
+            common.scriptType
           </span>
            
           <span
@@ -2958,7 +2958,7 @@ exports[`Test Shell Script Step should render edit view as new step 1`] = `
                   class="bp3-input"
                   disabled=""
                   name="spec.shell"
-                  placeholder="- scriptType -"
+                  placeholder="- common.scriptType -"
                   style="padding-right: 0px;"
                   type="text"
                   value="Bash"
@@ -3009,7 +3009,7 @@ exports[`Test Shell Script Step should render edit view as new step 1`] = `
               class="Tooltip--acenter"
               data-tooltip-id="shellScriptForm_spec.source.spec.script"
             >
-              script
+              common.script
             </span>
             <div
               class="bp3-popover-wrapper typeSelectorWrapper"

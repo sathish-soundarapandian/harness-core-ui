@@ -1,0 +1,88 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.listenToEventContainer {
+  padding: var(--spacing-xlarge) !important;
+  overflow: auto !important;
+}
+
+.listenToEvenHeading {
+  font-weight: 600 !important;
+  font-size: var(--font-size-medium) !important;
+  line-height: var(--spacing-xxlarge) !important;
+  color: var(--grey-800) !important;
+  padding-bottom: var(--spacing-medium) !important;
+}
+
+.toggleLabel {
+  color: var(--grey-800) !important;
+}
+
+.toggleContainer {
+  padding-top: var(--spacing-xlarge) !important;
+  border: 1px solid var(--grey-200) !important;
+  border-radius: var(--spacing-small) !important;
+}
+
+.flagToggle {
+  padding-left: var(--spacing-small) !important;
+  padding-bottom: var(--spacing-large) !important;
+}
+
+.flagInfoNameContainer {
+  padding-left: var(--spacing-large) !important;
+}
+
+.flagInfoName {
+  font-weight: 600 !important;
+  font-size: var(--font-size-small) !important;
+  line-height: var(--spacing-large) !important;
+  color: var(--grey-900) !important;
+  align-self: baseline !important;
+}
+
+.testDoneLayout {
+  padding-top: var(--spacing-large) !important;
+  padding-left: var(--spacing-large) !important;
+  padding-bottom: var(--spacing-large) !important;
+  align-items: center !important;
+  background: var(--grey-100) !important;
+  border-top: 1px solid var(--grey-200);
+}
+
+.listeningToEvent {
+  padding-left: var(--spacing-medium) !important;
+  font-size: var(--font-size-normal) !important;
+}
+
+.allSet {
+  font-weight: 600;
+  font-size: var(--font-size-medium) !important;
+  line-height: var(--spacing-xlarge) !important;
+  color: var(--grey-900) !important;
+}
+
+.containerMain {
+  padding: var(--spacing-xxlarge) !important;
+  box-shadow: -8px 0 10px -5px rgb(96 97 112 / 16%) !important;
+  position: fixed !important;
+  top: 90px !important;
+  right: 400px !important;
+  bottom: 60px !important;
+  z-index: 0 !important;
+}
+
+.containerSub {
+  padding: var(--spacing-large) !important;
+  border-radius: var(--spacing-small) !important;
+  border: 1px solid var(--grey-200) !important;
+  background-color: var(--grey-1000) !important;
+}
+
+.pendingConnection {
+  margin: 0 !important;
+}

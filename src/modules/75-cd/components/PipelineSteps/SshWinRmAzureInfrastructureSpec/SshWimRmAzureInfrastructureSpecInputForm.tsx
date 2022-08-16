@@ -40,7 +40,9 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
+import MultiTypeSecretInput, {
+  getMultiTypeSecretInputType
+} from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import {
   AzureInfrastructureSpecEditableProps,
@@ -234,7 +236,7 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
           <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
             <MultiTypeSecretInput
               name={`${path}.credentialsRef`}
-              type="SSHKey"
+              type={getMultiTypeSecretInputType(initialValues.serviceType)}
               label={getString('cd.steps.common.specifyCredentials')}
             />
           </div>
@@ -364,7 +366,6 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
                     })
                   }
                 },
-
                 selectProps: {
                   items: resourceGroups,
                   allowCreatingNewItems: true,

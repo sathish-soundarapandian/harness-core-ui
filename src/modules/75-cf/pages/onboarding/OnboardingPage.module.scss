@@ -5,19 +5,40 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+.mainHeading {
+  padding: var(--spacing-huge) !important;
+  height: 100%;
+  align-items: flex-start;
+}
+
+.onboardingTitle {
+  font-size: var(--font-size-large) !important;
+  font-weight: 700 !important;
+  color: var(--grey-800) !important;
+  line-height: var(--spacing-xxlarge) !important;
+}
+
+.onboardingSubTitle {
+  padding-top: var(--spacing-xsmall) !important;
+  font-weight: 400 !important;
+  font-size: var(--font-size-medium) !important;
+  line-height: var(--spacing-xxxlarge) !important;
+  color: var(--grey-600) !important;
+}
+
 .h2 {
   display: flex;
   flex-direction: row;
   font-weight: 600 !important;
-  font-size: 20px !important;
-  line-height: 28px !important;
-  color: #0b0b0d !important;
+  font-size: var(--font-size-medium) !important;
+  line-height: var(--spacing-xxlarge) !important;
+  color: var(--grey-900) !important;
 }
 
 .h2:after {
   content: '';
   flex: 1 1;
-  border-bottom: 1px solid #d8d8d8;
+  border-bottom: 1px solid var(--grey-100);
   margin: auto;
   margin-left: var(--spacing-large);
 }
@@ -25,7 +46,7 @@
 .h2:before {
   content: '';
   flex: 1 1;
-  border-bottom: 1px solid #d8d8d8;
+  border-bottom: 1px solid var(--grey-100);
   margin: auto;
   margin-right: var(--spacing-large);
 }
@@ -34,16 +55,34 @@
   @media (min-height: 950px) {
     padding-top: 60px !important;
   }
+  display: grid !important;
+  justify-content: center;
+  padding: 0 !important;
 }
 
 .stepImageContainer {
   @media (min-height: 950px) {
     padding: 60px 0 70px !important;
   }
+  display: grid !important;
+  justify-content: center;
+  padding-top: var(--spacing-large) !important;
+  padding-right: '0' !important;
+  padding-bottom: var(--spacing-xxxlarge) !important;
 
   .stepsImage {
     @media (max-width: 1700px) {
       transform: scale(1) !important;
     }
+    transform: 'scale(1.15)' !important;
   }
+}
+
+.buttonConatiner {
+  display: grid !important;
+  justify-content: center;
+}
+
+.getStartedButton {
+  font-weight: 700 !important;
 }

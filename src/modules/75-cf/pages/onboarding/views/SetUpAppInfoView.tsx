@@ -10,34 +10,24 @@ import { Container, Heading, Layout, Link, Text } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import flagId from './flag-id.svg'
 import sdk from './sdk.svg'
+import css from './SetUpAppInfoView.module.scss'
 
 export const SetUpAppInfoView: React.FC = () => {
   const { getString } = useStrings()
   return (
-    <Container
-      width={400}
-      padding="xxlarge"
-      style={{
-        boxShadow: '-8px 0 10px -5px rgb(96 97 112 / 16%)',
-        position: 'fixed',
-        top: '90px',
-        right: 0,
-        bottom: '60px',
-        zIndex: 0
-      }}
-    >
+    <Container width={400} className={css.container}>
       <Layout.Vertical spacing="xxlarge">
-        <Heading level={2} style={{ fontWeight: 500, color: '#22222A' }}>
+        <Heading level={2} className={css.heading}>
           {getString('cf.onboarding.help.heading1')}
         </Heading>
         <img width="248" height="101" src={flagId} style={{ alignSelf: 'center' }} />
-        <Text style={{ lineHeight: '20px', color: '#6B6D85' }}>{getString('cf.onboarding.help.text1')}</Text>
+        <Text className={css.text}>{getString('cf.onboarding.help.text1')}</Text>
 
-        <Heading level={2} style={{ fontWeight: 500, color: '#22222A' }}>
+        <Heading level={2} className={css.heading}>
           {getString('cf.onboarding.help.heading2')}
         </Heading>
-        <img width="180" height="134" src={sdk} style={{ alignSelf: 'center' }} />
-        <Text style={{ lineHeight: '20px', color: '#6B6D85' }}>{getString('cf.onboarding.help.text2')}</Text>
+        <img width="180" height="134" src={sdk} className={css.img} />
+        <Text className={css.text}>{getString('cf.onboarding.help.text2')}</Text>
 
         <Container>
           <Link

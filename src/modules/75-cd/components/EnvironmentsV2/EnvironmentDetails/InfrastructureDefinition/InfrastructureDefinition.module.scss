@@ -44,5 +44,6 @@
     display: flex;
     column-gap: var(--spacing-large);
     align-items: center;
+    z-index: 2;
   }
 }

@@ -17,11 +17,11 @@ export enum TemplateType {
   Stage = 'Stage',
   Pipeline = 'Pipeline',
   MonitoredService = 'MonitoredService',
+  SecretManager = 'SecretManager',
   Service = 'Service',
   Infrastructure = 'Infrastructure',
   StepGroup = 'StepGroup',
-  Execution = 'Execution',
-  SecretManager = 'SecretManager'
+  Execution = 'Execution'
 }
 
 interface AllowedTemplate {

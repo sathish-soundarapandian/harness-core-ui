@@ -24,32 +24,13 @@ export const OnboardingPage = () => {
   const { trackEvent } = useTelemetry()
 
   return (
-    <Container padding="huge" height="100%" background={Color.WHITE}>
-      <Heading
-        style={{
-          fontSize: '30px',
-          fontWeight: 700,
-          color: '#22222A',
-          lineHeight: '32px'
-        }}
-      >
+    <Container className={css.mainHeading} background={Color.WHITE}>
+      <Heading className={css.onboardingTitle}>
         {getString('cf.onboarding.title')}
-        <Text
-          style={{
-            fontWeight: 400,
-            fontSize: '16px',
-            lineHeight: '40px',
-            color: '#4F5162'
-          }}
-        >
-          {getString('cf.onboarding.subTitle')}
-        </Text>
+        <Text className={css.onboardingSubTitle}>{getString('cf.onboarding.subTitle')}</Text>
       </Heading>
       <Container margin={{ top: 'xxxlarge' }}>
-        <Container
-          style={{ display: 'grid', justifyContent: 'center', padding: '0' }}
-          className={css.basicImageContainer}
-        >
+        <Container className={css.basicImageContainer}>
           <img src={theBasicsImage} width={1154} height={425} title={getString('featureFlagsText')} />
         </Container>
       </Container>
@@ -58,13 +39,9 @@ export const OnboardingPage = () => {
         <Heading level={2} className={css.h2}>
           {getString('cf.onboarding.upAndRunning')}
         </Heading>
-        <Container
-          style={{ display: 'grid', justifyContent: 'center', padding: '20px 0 40px' }}
-          className={css.stepImageContainer}
-        >
+        <Container className={css.stepImageContainer}>
           <img
             src={upAndRunningImage}
-            style={{ transform: 'scale(1.15)' }}
             className={css.stepsImage}
             width={1162}
             height={125}
@@ -73,13 +50,13 @@ export const OnboardingPage = () => {
         </Container>
       </Container>
 
-      <Container style={{ display: 'grid', justifyContent: 'center' }}>
+      <Container className={css.buttonConatiner}>
         <Button
           intent={Intent.PRIMARY}
           variation={ButtonVariation.PRIMARY}
           text={getString('cf.onboarding.tryItOut')}
           large
-          style={{ fontWeight: 700 }}
+          className={css.getStartedButton}
           width={350}
           onClick={() => {
             trackEvent(FeatureActions.GetStartedClick, {

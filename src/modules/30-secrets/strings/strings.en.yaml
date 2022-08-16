@@ -85,6 +85,7 @@ secret:
   configureSecret: 'Configure Secret'
   updateSuccess: 'Secret updated successfully'
   newSSHCredential: New SSH Credential
+  newWinRmCredential: New WinRm Credential
   newSecretText: New Secret Text
   newSecretFile: New Secret File
   secretNotFound: 'Secret not found'

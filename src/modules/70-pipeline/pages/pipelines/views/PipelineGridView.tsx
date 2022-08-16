@@ -19,6 +19,7 @@ interface PipelineGridViewProps {
   refetchPipeline: () => void
   onDeletePipeline: (commitMsg: string) => Promise<void>
   onDelete: (pipeline: PMSPipelineSummaryResponse) => void
+  onClonePipeline: (pipeline: PMSPipelineSummaryResponse) => void
 }
 
 export function PipelineGridView({
@@ -28,7 +29,8 @@ export function PipelineGridView({
   goToPipelineStudio,
   refetchPipeline,
   onDeletePipeline,
-  onDelete
+  onDelete,
+  onClonePipeline
 }: PipelineGridViewProps): React.ReactElement {
   return (
     <>
@@ -45,6 +47,7 @@ export function PipelineGridView({
               refetchPipeline={refetchPipeline}
               onDeletePipeline={onDeletePipeline}
               onDelete={onDelete}
+              onClonePipeline={onClonePipeline}
             />
           )}
           keyOf={(item: PMSPipelineSummaryResponse) => item.identifier}

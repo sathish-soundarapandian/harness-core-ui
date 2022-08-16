@@ -67,7 +67,7 @@ export function ScriptCommandEdit(props: ScriptCommandEditProps): React.ReactEle
       </Container>
       <FormInput.Select
         name="spec.shell"
-        label={getString('scriptType')}
+        label={getString('common.scriptType')}
         placeholder={getString('cd.steps.commands.scriptTypePlaceholder')}
         disabled={readonly}
         items={scriptTypeOptions}

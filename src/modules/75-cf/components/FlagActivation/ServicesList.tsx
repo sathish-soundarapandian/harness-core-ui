@@ -69,6 +69,7 @@ const EditServicesModal: FC<EditServicesProps> = ({
 
   return (
     <ModalDialog
+      className={css.servicesListModal}
       width={835}
       height={560}
       enforceFocus={false}

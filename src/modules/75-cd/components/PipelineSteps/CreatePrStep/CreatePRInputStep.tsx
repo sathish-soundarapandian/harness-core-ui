@@ -61,7 +61,7 @@ export default function CreatePRInputStep(props: CreatePrInputStepProps): React.
         <div className={cx(stepCss.formGroup, stepCss.alignStart, stepCss.md)}>
           <MultiTypeFieldSelector
             name={`${prefix}spec.source.spec.updateConfigScript`}
-            label={getString('script')}
+            label={getString('common.script')}
             defaultValueToReset=""
             disabled={readonly}
             allowedTypes={allowableTypes}
