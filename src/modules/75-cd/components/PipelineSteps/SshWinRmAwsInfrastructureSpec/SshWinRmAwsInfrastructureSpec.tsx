@@ -327,20 +327,15 @@ interface SshWinRmAwsInfrastructureStep extends SshWinRmAwsInfrastructure {
 
 export const ConnectorRefRegex = /^.+stage\.spec\.infrastructure\.infrastructureDefinition\.spec\.connectorRef$/
 export const SshKeyRegex = /^.+stage\.spec\.infrastructure\.infrastructureDefinition\.spec\.sshKeyRef$/
-export class SshWinRmAwsInfrastructureSpec extends PipelineStep<SshWinRmAwsInfrastructureStep> {
+export class SshWinRmAwsInfrastructureSpec extends PipelineStep<Partial<SshWinRmAwsInfrastructureStep>> {
   /* istanbul ignore next */
   protected type = StepType.SshWinRmAws
   /* istanbul ignore next */
-  protected defaultValues: SshWinRmAwsInfrastructure = {
-    autoScalingGroupName: '',
+  protected defaultValues: Partial<SshWinRmAwsInfrastructure> = {
     awsInstanceFilter: { tags: {}, vpcs: [] },
     connectorRef: '',
     credentialsRef: '',
-    delegateSelectors: [],
-    hostNameConvention: '',
-    loadBalancer: '',
-    region: '',
-    useAutoScalingGroup: true
+    region: ''
   }
 
   /* istanbul ignore next */

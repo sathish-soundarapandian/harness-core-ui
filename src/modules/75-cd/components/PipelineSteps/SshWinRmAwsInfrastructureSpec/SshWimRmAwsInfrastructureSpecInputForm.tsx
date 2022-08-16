@@ -44,11 +44,11 @@ interface AwsInfrastructureSpecEditableProps {
   path: string
 }
 
-const errorMessage = 'data.message'
-interface SelectedTagsType {
-  key: string
-  value: string
+interface AwsTagDTO {
+  tag: string
 }
+
+const errorMessage = 'data.message'
 
 export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureSpecEditableProps> = ({
   initialValues,
@@ -67,7 +67,6 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [regions, setRegions] = useState<SelectOption[]>([])
   const [tags, setTags] = useState<SelectOption[]>([])
-  const [selectedTags, setSelectedTags] = useState([] as SelectedTagsType[])
   const { expressions } = useVariablesExpression()
 
   const [renderCount, setRenderCount] = useState<number>(0)
@@ -116,9 +115,8 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
   })
 
   useEffect(() => {
-    debugger
     setRegions(
-      defaultTo(regionsData?.data?.regions, []).reduce((subscriptionValues: SelectOption[], region: string) => {
+      Object.keys(regionsData?.data || {})?.reduce?.((subscriptionValues: SelectOption[], region: string) => {
         subscriptionValues.push({
           label: region,
           value: region
@@ -143,7 +141,7 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
 
   React.useEffect(() => {
     setTags(
-      get(tagsData, 'data.tags', []).map(tag => ({
+      get(tagsData, 'data.tags', []).map((tag: AwsTagDTO) => ({
         label: tag.tag,
         value: tag.tag
       }))
@@ -197,11 +195,6 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
             multiTypeProps={{ allowableTypes, expressions }}
             type={Connectors.AWS}
             setRefValue
-            onChange={
-              /* istanbul ignore next */ () => {
-                setSelectedTags([])
-              }
-            }
             gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
           />
         </div>
@@ -257,7 +250,7 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
             disabled={readonly}
             placeholder={loadingTags ? /* istanbul ignore next */ getString('loading') : getString('tagsLabel')}
             useValue
-            selectItems={regions}
+            selectItems={tags}
             label={getString('tagsLabel')}
             multiSelectTypeInputProps={{
               onFocus: () => {
