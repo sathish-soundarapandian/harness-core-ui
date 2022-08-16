@@ -236,6 +236,8 @@ export const getConnectorIconByType = (type: string): IconName => {
       return 'error-tracking'
     case Connectors.AZURE:
       return 'microsoft-azure'
+    case Connectors.CUSTOM_SECRET_MANAGER:
+      return 'custom-sm'
     default:
       return 'placeholder'
   }
