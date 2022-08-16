@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { isEmpty, get } from 'lodash-es'
+import { isEmpty, get, defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Dialog, Intent } from '@blueprintjs/core'
 import cx from 'classnames'
@@ -556,6 +556,7 @@ function FormContent({
                       const customFields = formik.values.spec.fields?.filter(field => field.name !== selectedField.name)
                       formik.setFieldValue('spec.fields', customFields)
                     }}
+                    connectorRef={defaultTo(connectorRefFixedValue, '')}
                   />
 
                   {!isEmpty(formik.values.spec.fields) ? (

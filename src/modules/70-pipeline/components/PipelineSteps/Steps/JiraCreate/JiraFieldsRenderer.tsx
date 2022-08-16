@@ -11,9 +11,11 @@ import { isEmpty } from 'lodash-es'
 import { Button, FormInput, Layout } from '@wings-software/uicore'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { JiraFieldNG } from 'services/cd-ng'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import { setAllowedValuesOptions } from '../JiraApproval/helper'
 import type { JiraFieldNGWithValue } from './types'
+import { JiraUserMultiTypeInput } from './JiraUserMultiTypeInput'
 import css from './JiraCreate.module.scss'
 
 export interface JiraFieldsRendererProps {
@@ -22,6 +24,7 @@ export interface JiraFieldsRendererProps {
   selectedRequiredFields?: JiraFieldNGWithValue[]
   readonly?: boolean
   onDelete?: (index: number, selectedField: JiraFieldNG) => void
+  connectorRef?: string
 }
 
 interface MappedComponentInterface {
@@ -53,6 +56,8 @@ export const shouldShowMultiSelectField = (selectedField: JiraFieldNG) =>
 export const shouldShowMultiTypeField = (selectedField: JiraFieldNG) =>
   selectedField.allowedValues && selectedField.schema.type === 'option'
 
+export const shouldShowJiraUserField = (selectedField: JiraFieldNG) => selectedField.schema.type === 'user'
+
 function GetMappedFieldComponent({
   selectedField,
   props,
@@ -60,6 +65,7 @@ function GetMappedFieldComponent({
   index,
   renderRequiredFields
 }: MappedComponentInterface) {
+  const { ALLOW_USER_TYPE_FIELDS_JIRA } = useFeatureFlags()
   const formikFieldPath = renderRequiredFields
     ? `spec.selectedRequiredFields[${index}].value`
     : `spec.selectedOptionalFields[${index}].value`
@@ -101,6 +107,15 @@ function GetMappedFieldComponent({
         disabled={isApprovalStepFieldDisabled(props.readonly)}
         className={cx(css.multiSelect, css.md)}
         multiTypeInputProps={{ expressions }}
+      />
+    )
+  } else if (ALLOW_USER_TYPE_FIELDS_JIRA && shouldShowJiraUserField(selectedField)) {
+    return (
+      <JiraUserMultiTypeInput
+        selectedField={selectedField}
+        props={props}
+        expressions={expressions}
+        formikFieldPath={formikFieldPath}
       />
     )
   }

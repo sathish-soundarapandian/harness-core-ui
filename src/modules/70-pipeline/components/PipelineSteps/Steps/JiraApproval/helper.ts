@@ -8,7 +8,7 @@
 import { getMultiTypeFromValue, MultiSelectOption, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
 import { isEmpty } from 'lodash-es'
-import type { JiraFieldAllowedValueNG, JiraFieldNG, JiraIssueTypeNG, JiraStatusNG } from 'services/cd-ng'
+import type { JiraFieldAllowedValueNG, JiraFieldNG, JiraIssueTypeNG, JiraStatusNG, JiraUserData } from 'services/cd-ng'
 import {
   ApprovalRejectionCriteria,
   ApprovalRejectionCriteriaCondition,
@@ -237,4 +237,11 @@ export const handleOperatorChange = (
       onChange({ ...values, spec: { ...values.spec, conditions: tobeUpdatedConditions } })
     }
   }
+}
+
+export const setUserValuesOptions = (userOptions: JiraUserData[]): MultiSelectOption[] => {
+  return userOptions.map(userOption => ({
+    label: userOption.displayName || '',
+    value: userOption.displayName || ''
+  }))
 }
