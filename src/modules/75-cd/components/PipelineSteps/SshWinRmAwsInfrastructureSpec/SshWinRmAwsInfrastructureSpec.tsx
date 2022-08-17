@@ -175,8 +175,6 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
     setTags(tagOptions)
   }, [tagsData])
 
-  console.log('RENDERED COMPONENT')
-
   return (
     <Layout.Vertical spacing="medium">
       <>
@@ -275,7 +273,6 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                     expressions,
                     className: 'regionId-select',
                     onFocus: () => {
-                      console.log('REFETCH REGIONS ON FOCUS')
                       refetchRegions()
                     },
                     onChange: /* istanbul ignore next */ option => {
@@ -307,7 +304,6 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                       placeholder={isTagsLoading ? getString('loading') : getString('tagsLabel')}
                       multiSelectTypeInputProps={{
                         onFocus: () => {
-                          console.log('REFETCH TAGS ON FOCUS')
                           if (
                             getMultiTypeFromValue(formik.values.region) === MultiTypeInputType.FIXED &&
                             getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.FIXED
