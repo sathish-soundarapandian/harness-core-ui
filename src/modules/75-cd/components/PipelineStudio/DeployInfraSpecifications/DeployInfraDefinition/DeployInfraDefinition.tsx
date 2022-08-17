@@ -571,8 +571,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   credentialsRef: value.credentialsRef,
                   connectorRef: value.connectorRef,
                   region: value.region,
-                  tags: value.tags,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                  awsInstanceFilter: value.awsInstanceFilter
                 },
                 InfraDeploymentType.SshWinRmAws
               )

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useState, useRef } from 'react'
+import React, { useMemo, useState, useRef } from 'react'
 import {
   IconName,
   Layout,
@@ -104,8 +104,9 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
   const [isRegionsLoading, setIsRegionsLoading] = useState(false)
 
   const [tags, setTags] = useState<SelectOption[]>([])
+  const [isTagsLoading, setIsTagsLoading] = useState(false)
 
-  const getInitialValues = useCallback(() => {
+  const parsedInitialValues = useMemo(() => {
     const initials = {
       ...initialValues
     }
@@ -116,10 +117,22 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
       set(initials, 'region', { label: initialValues.region, value: initialValues.region })
     }
     if (initialValues?.awsInstanceFilter?.tags) {
-      set(initials, 'tags', initialValues?.awsInstanceFilter?.tags)
+      set(
+        initials,
+        'tags',
+        Object.entries(initialValues?.awsInstanceFilter?.tags).map(entry => ({
+          value: entry[0],
+          label: entry[1]
+        }))
+      )
     }
     return initials
-  }, [initialValues])
+  }, [
+    initialValues.credentialsRef,
+    initialValues.connectorRef,
+    initialValues.region,
+    initialValues.awsInstanceFilter?.tags
+  ])
 
   const fetchRegions = async () => {
     setIsRegionsLoading(true)
@@ -145,6 +158,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
 
   const fetchTags = async (region: string) => {
     try {
+      setIsTagsLoading(true)
       const response = await tagsPromise({
         queryParams: {
           accountIdentifier: accountId,
@@ -155,13 +169,11 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
         }
       })
       if (response.status === 'SUCCESS') {
-        const tagOptions = Object.entries(get(response, 'data', {})).map(tagEntry => ({
-          value: tagEntry[0],
-          label: tagEntry[1]
+        const tagOptions = get(response, 'data', []).map(tagItem => ({
+          value: tagItem,
+          label: tagItem
         }))
         setTags(tagOptions)
-        /* istanbul ignore next */
-        formikRef.current?.setFieldValue('tags', undefined)
       } else {
         /* istanbul ignore next */
         showError(get(response, 'message', response))
@@ -169,6 +181,8 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
     } catch (e) {
       /* istanbul ignore next */
       showError(get(e, 'message', '') || get(e, 'responseMessage[0]', ''))
+    } finally {
+      setIsTagsLoading(false)
     }
   }
 
@@ -177,17 +191,27 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
       <>
         <Formik<SshWinRmAwsInfrastructureUI>
           formName="sshWinRmAWSInfra"
-          initialValues={getInitialValues() as SshWinRmAwsInfrastructureUI}
+          initialValues={parsedInitialValues as SshWinRmAwsInfrastructureUI}
           validationSchema={getValidationSchema(getString) as Partial<SshWinRmAwsInfrastructureUI>}
           validate={value => {
             const data: Partial<SshWinRmAwsInfrastructure> = {
               connectorRef:
-                typeof value?.sshKey === 'string' ? value.connectorRef : get(value, 'connectorRef.value', ''),
+                typeof value.connectorRef === 'string' ? value.connectorRef : get(value, 'connectorRef.value', ''),
               credentialsRef:
                 typeof value?.sshKey === 'string' ? value?.sshKey : get(value, 'sshKey.referenceString', ''),
-              region: typeof value.region === 'string' ? value.region : get(value, 'region.value', '')
+              region: typeof value.region === 'string' ? value.region : get(value, 'region.value', ''),
+              tags: value.tags
             }
-            data.tags = value.tags
+            const awsTags = (value.tags || value.awsInstanceFilter.tags).reduce(
+              (prevValue: object, tag: { label: string; value: string }) => {
+                return {
+                  ...prevValue,
+                  [tag.value]: tag.label
+                }
+              },
+              {}
+            )
+            set(data, 'awsInstanceFilter.tags', awsTags)
             delayedOnUpdate(data as SshWinRmAwsInfrastructure)
           }}
           onSubmit={noop}
@@ -262,7 +286,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                     onChange: /* istanbul ignore next */ option => {
                       const { value } = option as SelectOption
                       if (value) {
-                        formik.setFieldValue('tags', {})
+                        formik.setFieldValue('tags', [])
                         formik.setFieldValue('region', option)
                       }
                     }
@@ -270,12 +294,13 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                 />
                 <>
                   <Layout.Horizontal>
-                    <FormInput.MultiTypeInput
+                    <FormInput.MultiSelectTypeInput
                       name="tags"
                       label={getString('tagLabel')}
                       selectItems={tags}
                       className={css.inputWidth}
-                      multiTypeInputProps={{
+                      placeholder={isTagsLoading ? getString('loading') : undefined}
+                      multiSelectTypeInputProps={{
                         onFocus: () => {
                           if (
                             getMultiTypeFromValue(formik.values.region) === MultiTypeInputType.FIXED &&
@@ -286,11 +311,8 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                         },
                         allowableTypes,
                         expressions,
-                        onChange: /* istanbul ignore next */ option => {
-                          const { value } = option as SelectOption
-                          if (value) {
-                            formik.setFieldValue('tags', value)
-                          }
+                        onChange: /* istanbul ignore next */ selectedOptions => {
+                          formik.setFieldValue('tags', selectedOptions)
                         }
                       }}
                     />

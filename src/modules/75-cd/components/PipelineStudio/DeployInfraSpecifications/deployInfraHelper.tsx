@@ -166,13 +166,12 @@ export const getInfrastructureDefaultValue = (
       }
     }
     case InfraDeploymentType.SshWinRmAws: {
-      const { credentialsRef, connectorRef, region, tags } = infrastructure?.spec || {}
+      const { credentialsRef, connectorRef, region, awsInstanceFilter } = infrastructure?.spec || {}
       return {
         credentialsRef,
         connectorRef,
         region,
-        tags,
-        allowSimultaneousDeployments
+        awsInstanceFilter
       }
     }
     case InfraDeploymentType.ECS: {
