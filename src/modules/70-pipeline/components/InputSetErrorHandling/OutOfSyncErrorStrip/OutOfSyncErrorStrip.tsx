@@ -22,7 +22,7 @@ import { Color, FontVariation } from '@wings-software/design-system'
 import { Button } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { useHistory, useParams } from 'react-router-dom'
-import { defaultTo, isNil, omit, pick } from 'lodash-es'
+import { defaultTo, isNil, pick } from 'lodash-es'
 import type { InputSetDTO } from '@pipeline/utils/types'
 import { ReconcileDialog } from '@pipeline/components/InputSetErrorHandling/ReconcileDialog/ReconcileDialog'
 import {
@@ -71,7 +71,6 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
     overlayInputSetIdentifier,
     onlyReconcileButton,
     refetch,
-    inputSetUpdateResponseHandler,
     hideInpSetBtn,
     hideForm,
     isOverlayInputSet
@@ -198,12 +197,12 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
             }
           }}
         />
-        {/* Update */}
-        {!yamlDiffResponse?.data?.noUpdatePossible && !onlyReconcileButton && isNil(overlayInputSetIdentifier) && (
+        {/* Will be added as a Future Enhancement */}
+        {/* {!yamlDiffResponse?.data?.noUpdatePossible && !onlyReconcileButton && isNil(overlayInputSetIdentifier) && (
           <Button
             variation={ButtonVariation.TERTIARY}
             style={{ marginLeft: 'var(--spacing-8)' }}
-            text={'Update Runtime Fields'} // Update
+            text={'Update Runtime Fields'} 
             onClick={() => {
               const omittedInputSet = omit(
                 inputSet,
@@ -217,7 +216,7 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
               closeDeleteInputSetModal()
             }}
           />
-        )}
+        )} */}
         {!hideInpSetBtn && (
           <Button
             variation={ButtonVariation.TERTIARY}

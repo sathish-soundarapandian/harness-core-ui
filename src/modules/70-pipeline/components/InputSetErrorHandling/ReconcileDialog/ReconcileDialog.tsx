@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Container, Layout, PageSpinner, Text } from '@wings-software/uicore'
+import { Container, Layout, Text } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
 import { Color } from '@wings-software/design-system'
 import { get } from 'lodash-es'
@@ -55,7 +55,6 @@ export function ReconcileDialog({
 
   return (
     <Container>
-      {updateLoading && <PageSpinner />}
       <Layout.Vertical>
         <Container
           border={{ bottom: true }}

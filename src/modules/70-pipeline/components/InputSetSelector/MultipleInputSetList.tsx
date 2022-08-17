@@ -46,10 +46,11 @@ interface MultipleInputSetListProps {
   pipeline?: ResponsePMSPipelineResponseDTO | null
   refetch: () => Promise<void>
   hideInpSetBtn?: boolean
+  showReconcile: boolean
 }
 
 export function MultipleInputSetList(props: MultipleInputSetListProps): JSX.Element {
-  const { inputSet, onCheckBoxHandler, pipeline, refetch, hideInpSetBtn } = props
+  const { inputSet, onCheckBoxHandler, pipeline, refetch, hideInpSetBtn, showReconcile } = props
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
     PipelineType<InputSetPathProps> & { accountId: string }
@@ -163,7 +164,7 @@ export function MultipleInputSetList(props: MultipleInputSetListProps): JSX.Elem
     <li
       className={cx(css.item)}
       onClick={() => {
-        if (isInputSetInvalid(inputSet)) {
+        if (isInputSetInvalid(inputSet) || showReconcile) {
           return
         }
         onCheckBoxHandler(
@@ -181,7 +182,7 @@ export function MultipleInputSetList(props: MultipleInputSetListProps): JSX.Elem
         <Layout.Horizontal flex={{ alignItems: 'center' }}>
           <Checkbox
             className={css.checkbox}
-            disabled={isInputSetInvalid(inputSet)}
+            disabled={isInputSetInvalid(inputSet) || showReconcile}
             labelElement={
               <Layout.Horizontal flex={{ alignItems: 'center' }} padding={{ left: true }}>
                 <Icon name={getIconByType(inputSet.inputSetType)}></Icon>
@@ -201,7 +202,7 @@ export function MultipleInputSetList(props: MultipleInputSetListProps): JSX.Elem
               </Layout.Horizontal>
             }
           />
-          {isInputSetInvalid(inputSet) && (
+          {(isInputSetInvalid(inputSet) || showReconcile) && (
             <Container padding={{ left: 'large' }} className={css.invalidEntity}>
               <Badge
                 text={'common.invalid'}

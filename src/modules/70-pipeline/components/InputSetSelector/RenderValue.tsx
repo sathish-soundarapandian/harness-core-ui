@@ -6,7 +6,7 @@
  */
 
 import React, { Dispatch, SetStateAction } from 'react'
-import { clone } from 'lodash-es'
+import { clone, isEmpty, isNil } from 'lodash-es'
 import cx from 'classnames'
 
 import { Button, ButtonVariation, Layout, Text } from '@harness/uicore'
@@ -22,7 +22,9 @@ export function RenderValue({
   setOpenInputSetsList,
   selectedValueClass,
   showNewInputSet,
-  onNewInputSetClick
+  onNewInputSetClick,
+  invalidInputSetReferences,
+  loadingMergeInputSets
 }: {
   value: InputSetValue[]
   onChange?: (value?: InputSetValue[]) => void
@@ -31,6 +33,8 @@ export function RenderValue({
   selectedValueClass?: string
   showNewInputSet?: boolean
   onNewInputSetClick?: () => void
+  invalidInputSetReferences?: string[]
+  loadingMergeInputSets?: boolean
 }): JSX.Element {
   const onDrop = React.useCallback(
     (event: React.DragEvent<HTMLLIElement>, droppedLocation: InputSetValue) => {
@@ -90,63 +94,65 @@ export function RenderValue({
       )}
 
       <div className={cx(css.renderSelectedValue, selectedValueClass)}>
-        {value?.map((item, index) => (
-          <li
-            key={index + item.label}
-            data-testid={item.value}
-            className={css.selectedInputSetLi}
-            draggable={true}
-            onDragStart={event => {
-              onDragStart(event, item)
-            }}
-            onDragEnd={onDragEnd}
-            onDragOver={onDragOver}
-            onDragLeave={onDragLeave}
-            onDrop={event => onDrop(event, item)}
-          >
-            <Button
-              data-testid={`button-${item.label}`}
-              round={true}
-              rightIcon="cross"
-              iconProps={{
-                onClick: event => {
-                  event.stopPropagation()
-                  const valuesAfterRemoval = value.filter(inputset => inputset.value !== item.value)
-                  setSelectedInputSets(valuesAfterRemoval)
-                  onChange?.(valuesAfterRemoval)
-                },
-                style: {
-                  cursor: 'pointer'
-                }
+        {(isEmpty(invalidInputSetReferences) || isNil(invalidInputSetReferences)) &&
+          !loadingMergeInputSets &&
+          value?.map((item, index) => (
+            <li
+              key={index + item.label}
+              data-testid={item.value}
+              className={css.selectedInputSetLi}
+              draggable={true}
+              onDragStart={event => {
+                onDragStart(event, item)
               }}
-              text={
-                <Layout.Horizontal flex={{ alignItems: 'center' }} spacing="small">
-                  <Button
-                    round={true}
-                    withoutBoxShadow={true}
-                    font={{ weight: 'semi-bold' }}
-                    width={20}
-                    height={20}
-                    className={css.selectedInputSetOrder}
-                  >
-                    {index + 1}
-                  </Button>
-                  <Text
-                    color={Color.PRIMARY_8}
-                    icon={getIconByType(item.type)}
-                    className={css.selectedInputSetLabel}
-                    iconProps={{ className: css.selectedInputSetTypeIcon }}
-                  >
-                    {item.label}
-                  </Text>
-                </Layout.Horizontal>
-              }
-              margin={{ top: 'small', bottom: 'small', left: 0, right: 'small' }}
-              className={css.selectedInputSetCard}
-              color={Color.PRIMARY_7}
-            />
-          </li>
-        ))}
+              onDragEnd={onDragEnd}
+              onDragOver={onDragOver}
+              onDragLeave={onDragLeave}
+              onDrop={event => onDrop(event, item)}
+            >
+              <Button
+                data-testid={`button-${item.label}`}
+                round={true}
+                rightIcon="cross"
+                iconProps={{
+                  onClick: event => {
+                    event.stopPropagation()
+                    const valuesAfterRemoval = value.filter(inputset => inputset.value !== item.value)
+                    setSelectedInputSets(valuesAfterRemoval)
+                    onChange?.(valuesAfterRemoval)
+                  },
+                  style: {
+                    cursor: 'pointer'
+                  }
+                }}
+                text={
+                  <Layout.Horizontal flex={{ alignItems: 'center' }} spacing="small">
+                    <Button
+                      round={true}
+                      withoutBoxShadow={true}
+                      font={{ weight: 'semi-bold' }}
+                      width={20}
+                      height={20}
+                      className={css.selectedInputSetOrder}
+                    >
+                      {index + 1}
+                    </Button>
+                    <Text
+                      color={Color.PRIMARY_8}
+                      icon={getIconByType(item.type)}
+                      className={css.selectedInputSetLabel}
+                      iconProps={{ className: css.selectedInputSetTypeIcon }}
+                    >
+                      {item.label}
+                    </Text>
+                  </Layout.Horizontal>
+                }
+                margin={{ top: 'small', bottom: 'small', left: 0, right: 'small' }}
+                className={css.selectedInputSetCard}
+                color={Color.PRIMARY_7}
+              />
+            </li>
+          ))}
         {!showNewInputSet && (
           <Button
             icon="small-plus"

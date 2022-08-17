@@ -293,7 +293,6 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
     setInputSetUpdateResponse({
       data: {
         ...responseData,
-        // Usecase ? ->
         inputSetYaml: responseData?.inputSetYaml
       }
     })
@@ -302,12 +301,10 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
   const inputSetUpdateHandler = async (tempInputSet: InputSetDTO): Promise<void> => {
     if (tempInputSet.identifier) {
       try {
-        const gitParams = tempInputSet?.gitDetails?.objectId
+        const gitParams = inputSet?.gitDetails?.objectId
           ? {
-              ...pick(tempInputSet?.gitDetails, ['branch', 'repoIdentifier', 'filePath', 'rootFolder']),
-              lastObjectId: tempInputSet?.gitDetails?.objectId,
-              pipelineRepoID: repoIdentifier,
-              pipelineBranch: branch
+              ...pick(inputSet?.gitDetails, ['branch', 'repoIdentifier', 'filePath', 'rootFolder']),
+              lastObjectId: inputSet?.gitDetails?.objectId
             }
           : {}
         const response = await updateInputSet(yamlStringify({ inputSet: clearNullUndefined(tempInputSet) }), {
@@ -319,17 +316,17 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
             orgIdentifier,
             projectIdentifier,
             pipelineIdentifier,
+            ...(isGitSyncEnabled
+              ? {
+                  pipelineRepoID: repoIdentifier,
+                  pipelineBranch: branch
+                }
+              : {}),
             ...gitParams
           }
         })
         if (response?.data) {
           inputSetUpdateResponseHandler(response?.data)
-          // setInputSetUpdateResponse({
-          //   data: {
-          //     ...response?.data,
-          //     inputSetYaml: response?.data?.inputSetYaml
-          //   }
-          // })
         }
       } catch (error) {
         showError(getRBACErrorMessage(error), undefined, 'pipeline.refresh.all.error')
