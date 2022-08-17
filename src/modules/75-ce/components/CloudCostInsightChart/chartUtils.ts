@@ -7,19 +7,18 @@
 
 import type { DataPoint, TimeSeriesDataPoints } from 'services/ce/services'
 
-type appMapType = Record<string, Array<[number, Array<DataPoint>, string]>>
+type appMapType = Record<string, Array<[number, Array<DataPoint>]>>
 type idMapType = Record<string, { id: string; name: string }>
 
 export interface ChartConfigType {
   name: string
   nodeId: string
-  data: Array<[number, Array<DataPoint>, string]>
+  data: Array<[number, Array<DataPoint>]>
   showInLegend: boolean
   marker: {
     symbol: string
   }
   color: string
-  keys: Array<string>
 }
 
 export function transformTimeSeriesData(
@@ -44,7 +43,7 @@ export function transformTimeSeriesData(
             name: value?.key?.name
           }
         }
-        appMap[key].push([+item.time, value.value, `${item.time}`])
+        appMap[key].push([+item.time, value.value])
       }
     })
   })
@@ -65,8 +64,7 @@ function getChartConfig(appMap: appMapType, idMap: idMapType): ChartConfigType[]
       marker: {
         symbol: 'circle'
       },
-      color: '',
-      keys: ['x', 'y', 'id']
+      color: ''
     }
   })
 }
