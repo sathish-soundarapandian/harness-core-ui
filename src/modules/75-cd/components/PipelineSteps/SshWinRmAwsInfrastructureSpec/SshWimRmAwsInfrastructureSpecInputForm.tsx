@@ -115,15 +115,11 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
   })
 
   useEffect(() => {
-    setRegions(
-      Object.keys(regionsData?.data || {})?.reduce?.((subscriptionValues: SelectOption[], region: string) => {
-        subscriptionValues.push({
-          label: region,
-          value: region
-        })
-        return subscriptionValues
-      }, [])
-    )
+    const regionOptions = Object.entries(get(regionsData, 'data', {})).map(regEntry => ({
+      value: regEntry[0],
+      label: regEntry[1]
+    }))
+    setRegions(regionOptions)
   }, [regionsData])
 
   const {
@@ -140,12 +136,11 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
   })
 
   React.useEffect(() => {
-    setTags(
-      get(tagsData, 'data.tags', []).map((tag: AwsTagDTO) => ({
-        label: tag.tag,
-        value: tag.tag
-      }))
-    )
+    const tagOptions = get(tagsData, 'data', []).map((tagItem: string) => ({
+      value: tagItem,
+      label: tagItem
+    }))
+    setTags(tagOptions)
   }, [tagsData])
 
   useEffect(() => {

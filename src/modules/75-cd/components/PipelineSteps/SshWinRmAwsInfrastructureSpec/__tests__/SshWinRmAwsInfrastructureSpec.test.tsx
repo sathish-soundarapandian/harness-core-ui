@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, waitFor, queryByAttribute } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -31,9 +31,6 @@ const getYaml = (): string => `pipeline:
 const infraDefPath = 'pipeline.stages[0].stage.spec.infrastructure.infrastructureDefinition'
 const accountIdParams = { accountId: 'accountId1' }
 
-const mockFetchRegions = jest.fn().mockImplementation(() => Promise.resolve(regionsResponse))
-const mockFetchTags = jest.fn().mockImplementation(() => Promise.resolve(tagsResponse))
-
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 jest.mock('services/cd-ng', () => ({
@@ -41,8 +38,8 @@ jest.mock('services/cd-ng', () => ({
   getConnectorListV2Promise: jest.fn(() => Promise.resolve(ConnectorsResponse.data)),
   getSecretV2Promise: jest.fn().mockImplementation(() => Promise.resolve(mockSecret)),
   listSecretsV2Promise: jest.fn().mockImplementation(() => Promise.resolve(mockListSecrets)),
-  useRegionsForAws: jest.fn().mockImplementation(() => ({ mutate: mockFetchRegions, refetch: mockFetchRegions })),
-  useTags: jest.fn().mockImplementation(() => ({ mutate: mockFetchTags, refetch: mockFetchTags }))
+  useRegionsForAws: jest.fn(() => regionsResponse),
+  useTags: jest.fn(() => tagsResponse)
 }))
 
 jest.mock('services/portal', () => ({
@@ -125,9 +122,9 @@ describe('Test SshWinRmAwsEdit form', () => {
     factory.registerStep(new SshWinRmAwsInfrastructureSpec())
   })
 
-  test('should call onUpdate if valid values entered - edit form', async () => {
+  test('Render and basic flow on edit form', async () => {
     const onUpdateHandler = jest.fn()
-    const { container } = render(
+    const { container, getByPlaceholderText } = render(
       <TestStepWidget
         initialValues={getInitialValues()}
         template={getRuntimeInputsValues()}
@@ -138,7 +135,13 @@ describe('Test SshWinRmAwsEdit form', () => {
       />
     )
 
-    expect(container).toMatchSnapshot()
+    const regionIdSelect = getByPlaceholderText('pipeline.regionPlaceholder')
+    regionIdSelect.focus()
+    await waitFor(() => expect(regionsResponse.refetch).toBeCalled())
+
+    const tagsSelect = queryByAttribute('name', container, 'tags')
+    tagsSelect!.focus()
+    await waitFor(() => expect(tagsResponse.refetch).toBeCalled())
   })
 })
 
@@ -157,6 +160,15 @@ describe('Test SshWinRmAws InputVariable component', () => {
         type={StepType.SshWinRmAws}
         stepViewType={StepViewType.InputVariable}
         onUpdate={onUpdateHandler}
+        customStepProps={{
+          variablesData: {
+            infrastructureDefinition: {
+              spec: {
+                credentialsRef: 'credRef1'
+              }
+            }
+          }
+        }}
       />
     )
 

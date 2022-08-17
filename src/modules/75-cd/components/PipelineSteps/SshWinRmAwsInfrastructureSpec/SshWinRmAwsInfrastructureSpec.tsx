@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState, useRef } from 'react'
+import React, { useMemo, useState, useRef, useEffect } from 'react'
 import {
   IconName,
   Layout,
@@ -14,7 +14,8 @@ import {
   FormInput,
   MultiTypeInputType,
   SelectOption,
-  getMultiTypeFromValue
+  getMultiTypeFromValue,
+  Text
 } from '@harness/uicore'
 import type { AllowedTypes } from '@harness/uicore'
 import { parse } from 'yaml'
@@ -32,12 +33,11 @@ import {
   ConnectorResponse,
   SecretResponseWrapper,
   SshWinRmAwsInfrastructure,
-  regionsForAwsPromise,
-  tagsPromise
+  useRegionsForAws,
+  useTags
 } from 'services/cd-ng'
 import { Connectors } from '@connectors/constants'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
-import { useToaster } from '@common/exports'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
@@ -59,6 +59,8 @@ import { getValue } from '../SshWinRmAzureInfrastructureSpec/SshWinRmAzureInfras
 import css from './SshWinRmAwsInfrastructureSpec.module.scss'
 
 const logger = loggerFor(ModuleName.CD)
+
+const errorMessage = 'data.message'
 
 export type SshWinRmAwsInfrastructureTemplate = { [key in keyof SshWinRmAwsInfrastructure]: string }
 
@@ -100,13 +102,10 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
 
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
-  const { showError } = useToaster()
 
   const [regions, setRegions] = useState<SelectOption[]>([])
-  const [isRegionsLoading, setIsRegionsLoading] = useState(false)
 
   const [tags, setTags] = useState<SelectOption[]>([])
-  const [isTagsLoading, setIsTagsLoading] = useState(false)
 
   const parsedInitialValues = useMemo(() => {
     const initials = {
@@ -136,57 +135,47 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
     initialValues.awsInstanceFilter?.tags
   ])
 
-  const fetchRegions = async () => {
-    setIsRegionsLoading(true)
-    try {
-      const response = await regionsForAwsPromise({})
-      if (response.status === 'SUCCESS') {
-        const regionOptions = Object.entries(get(response, 'data', {})).map(regEntry => ({
-          value: regEntry[0],
-          label: regEntry[1]
-        }))
-        setRegions(regionOptions)
-      } else {
-        /* istanbul ignore next */
-        showError(get(response, 'message', response))
-      }
-    } catch (e) {
-      /* istanbul ignore next */
-      showError(get(e, 'message', '') || get(e, 'responseMessage[0]', ''))
-    } finally {
-      setIsRegionsLoading(false)
-    }
-  }
+  const {
+    data: regionsData,
+    loading: isRegionsLoading,
+    refetch: refetchRegions,
+    error: regionsError
+  } = useRegionsForAws({
+    lazy: true
+  })
 
-  const fetchTags = async (region: string) => {
-    try {
-      setIsTagsLoading(true)
-      const response = await tagsPromise({
-        queryParams: {
-          accountIdentifier: accountId,
-          projectIdentifier,
-          orgIdentifier,
-          awsConnectorRef: get(formikRef, 'current.values.connectorRef.value', ''),
-          region
-        }
-      })
-      if (response.status === 'SUCCESS') {
-        const tagOptions = get(response, 'data', []).map((tagItem: string) => ({
-          value: tagItem,
-          label: tagItem
-        }))
-        setTags(tagOptions)
-      } else {
-        /* istanbul ignore next */
-        showError(get(response, 'message', response))
-      }
-    } catch (e) {
-      /* istanbul ignore next */
-      showError(get(e, 'message', '') || get(e, 'responseMessage[0]', ''))
-    } finally {
-      setIsTagsLoading(false)
-    }
-  }
+  useEffect(() => {
+    const regionOptions = Object.entries(get(regionsData, 'data', {})).map(regEntry => ({
+      value: regEntry[0],
+      label: regEntry[1]
+    }))
+    setRegions(regionOptions)
+  }, [regionsData])
+
+  const {
+    data: tagsData,
+    refetch: refetchTags,
+    loading: isTagsLoading
+  } = useTags({
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier,
+      region: initialValues?.region,
+      awsConnectorRef: initialValues?.connectorRef
+    },
+    lazy: true
+  })
+
+  React.useEffect(() => {
+    const tagOptions = get(tagsData, 'data', []).map((tagItem: string) => ({
+      value: tagItem,
+      label: tagItem
+    }))
+    setTags(tagOptions)
+  }, [tagsData])
+
+  console.log('RENDERED COMPONENT')
 
   return (
     <Layout.Vertical spacing="medium">
@@ -277,20 +266,34 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                 </Layout.Vertical>
                 <FormInput.MultiTypeInput
                   name="region"
-                  className={`regionId-select ${css.inputWidth}`}
+                  className={`${css.inputWidth}`}
                   selectItems={regions}
                   placeholder={isRegionsLoading ? getString('loading') : getString('pipeline.regionPlaceholder')}
                   label={getString('regionLabel')}
                   multiTypeInputProps={{
                     allowableTypes,
                     expressions,
-                    onFocus: () => fetchRegions(),
+                    className: 'regionId-select',
+                    onFocus: () => {
+                      console.log('REFETCH REGIONS ON FOCUS')
+                      refetchRegions()
+                    },
                     onChange: /* istanbul ignore next */ option => {
                       const { value } = option as SelectOption
                       if (value) {
                         formik.setFieldValue('tags', [])
                         formik.setFieldValue('region', option)
                       }
+                    },
+                    selectProps: {
+                      items: regions,
+                      noResults: (
+                        <Text padding={'small'}>
+                          {isRegionsLoading
+                            ? getString('loading')
+                            : get(regionsError, errorMessage, null) || getString('pipeline.ACR.subscriptionError')}
+                        </Text>
+                      )
                     }
                   }}
                 />
@@ -300,15 +303,23 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                       name="tags"
                       label={getString('tagLabel')}
                       selectItems={tags}
-                      className={css.inputWidth}
-                      placeholder={isTagsLoading ? getString('loading') : undefined}
+                      className={`tags-select ${css.inputWidth}`}
+                      placeholder={isTagsLoading ? getString('loading') : getString('tagsLabel')}
                       multiSelectTypeInputProps={{
                         onFocus: () => {
+                          console.log('REFETCH TAGS ON FOCUS')
                           if (
                             getMultiTypeFromValue(formik.values.region) === MultiTypeInputType.FIXED &&
                             getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.FIXED
                           ) {
-                            fetchTags(getValue(formik.values.region))
+                            const queryParams = {
+                              accountIdentifier: accountId,
+                              projectIdentifier,
+                              orgIdentifier,
+                              region: getValue(formik.values.region),
+                              awsConnectorRef: getValue(formik.values.connectorRef)
+                            }
+                            refetchTags({ queryParams })
                           }
                         },
                         allowableTypes,
