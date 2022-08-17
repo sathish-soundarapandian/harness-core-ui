@@ -493,7 +493,6 @@ export interface TemplateContextInterface {
   updateTemplate: (template: NGTemplateInfoConfig) => Promise<void>
   updateTemplateView: (data: TemplateViewData) => void
   deleteTemplateCache: (gitDetails?: EntityGitDetails) => Promise<void>
-  setLoading: (loading: boolean) => void
   updateGitDetails: (gitDetails: EntityGitDetails) => Promise<void>
   renderPipelineStage?: PipelineContextInterface['renderPipelineStage']
 }
@@ -580,7 +579,6 @@ export const TemplateContext = React.createContext<TemplateContextInterface>({
   setYamlHandler: /* istanbul ignore next */ () => undefined,
   updateTemplate: /* istanbul ignore next */ () => new Promise<void>(() => undefined),
   deleteTemplateCache: /* istanbul ignore next */ () => new Promise<void>(() => undefined),
-  setLoading: /* istanbul ignore next */ () => void 0,
   updateGitDetails: /* istanbul ignore next */ () => new Promise<void>(() => undefined),
   renderPipelineStage: () => <div />
 })
@@ -649,10 +647,6 @@ export const TemplateProvider: React.FC<{
     versions: state.versions,
     stableVersion: state.stableVersion
   })
-
-  const setLoading = (isLoading: boolean) => {
-    dispatch(TemplateContextActions.loading({ isLoading }))
-  }
 
   const [isEdit] = usePermission(
     {
@@ -743,7 +737,6 @@ export const TemplateProvider: React.FC<{
         updateTemplateView,
         deleteTemplateCache,
         setYamlHandler,
-        setLoading,
         updateGitDetails,
         renderPipelineStage
       }}

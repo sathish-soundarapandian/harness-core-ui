@@ -16,6 +16,11 @@ import { AllBuildLocationsForSaaS, Hosting, InfraProvisiongWizardStepId } from '
 
 const pathParams = { accountId: 'accountId', orgIdentifier: 'orgId', projectIdentifier: 'projectId' }
 
+const trackEventMock = jest.fn()
+jest.mock('@common/hooks/useTelemetry', () => ({
+  useTelemetry: () => ({ trackEvent: trackEventMock })
+}))
+
 const updateConnector = jest.fn()
 const createConnector = jest.fn()
 jest.mock('services/cd-ng', () => ({
@@ -92,6 +97,8 @@ describe('Test SelectGitProvider component', () => {
     await act(async () => {
       fireEvent.click(gitProviderCards[0])
     })
+    // should send an event on git provider select
+    expect(trackEventMock).toBeCalled()
     expect(gitProviderCards[0].classList.contains('Card--selected')).toBe(true)
 
     expect(getByText('common.oAuthLabel')).toBeInTheDocument()

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
   Text,
   Layout,
@@ -18,7 +18,12 @@ import {
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { get, defaultTo, isEqual, set } from 'lodash-es'
-import { AzureSubscriptionDTO, useGetAzureResourceGroupsBySubscription, useGetAzureSubscriptions } from 'services/cd-ng'
+import {
+  AzureSubscriptionDTO,
+  useGetAzureResourceGroupsBySubscription,
+  useGetAzureSubscriptions,
+  useGetAzureResourceGroupsV2
+} from 'services/cd-ng'
 
 import { Connectors } from '@connectors/constants'
 
@@ -64,6 +69,15 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
   const [resourceGroupValue, setResourceGroupValue] = useState<string | undefined>(
     defaultTo(initialValues.resourceGroup, allValues?.resourceGroup)
   )
+  const environmentRef = useMemo(
+    () => defaultTo(initialValues.environmentRef, allValues?.environmentRef),
+    [initialValues.environmentRef, allValues?.environmentRef]
+  )
+
+  const infrastructureRef = useMemo(
+    () => defaultTo(initialValues.infrastructureRef, allValues?.infrastructureRef),
+    [initialValues.infrastructureRef, allValues?.infrastructureRef]
+  )
 
   const { expressions } = useVariablesExpression()
 
@@ -90,7 +104,9 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
     connectorRef: connector as string,
     accountIdentifier: accountId,
     orgIdentifier,
-    projectIdentifier
+    projectIdentifier,
+    envId: environmentRef,
+    infraDefinitionId: infrastructureRef
   }
 
   const {
@@ -128,6 +144,26 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
     subscriptionId: subscriptionId as string,
     lazy: true
   })
+  const {
+    data: resourceGroupDataV2,
+    refetch: refetchResourceGroupsV2,
+    loading: loadingResourceGroupsV2,
+    error: resourceGroupsErrorV2
+  } = useGetAzureResourceGroupsV2({
+    queryParams,
+    lazy: true
+  })
+
+  const fetchResourceUsingEnvId = (): boolean => {
+    return (
+      getMultiTypeFromValue(connector) !== MultiTypeInputType.RUNTIME &&
+      getMultiTypeFromValue(subscriptionId) !== MultiTypeInputType.RUNTIME &&
+      environmentRef &&
+      getMultiTypeFromValue(environmentRef) === MultiTypeInputType.FIXED &&
+      infrastructureRef &&
+      getMultiTypeFromValue(infrastructureRef) === MultiTypeInputType.FIXED
+    )
+  }
 
   useEffect(() => {
     const options =
@@ -135,29 +171,12 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
       /* istanbul ignore next */ []
     setResourceGroups(options)
   }, [resourceGroupData])
-
   useEffect(() => {
-    if (connector && getMultiTypeFromValue(connector) === MultiTypeInputType.FIXED) {
-      refetchSubscriptions({
-        queryParams
-      })
-    }
-    if (
-      connector &&
-      getMultiTypeFromValue(connector) === MultiTypeInputType.FIXED &&
-      subscriptionId &&
-      getMultiTypeFromValue(subscriptionId) === MultiTypeInputType.FIXED
-    ) {
-      refetchResourceGroups({
-        queryParams,
-        pathParams: {
-          subscriptionId: subscriptionId
-        }
-      })
-      /* istanbul ignore else */
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    const options =
+      resourceGroupDataV2?.data?.resourceGroups?.map(rg => ({ label: rg.resourceGroup, value: rg.resourceGroup })) ||
+      /* istanbul ignore next */ []
+    setResourceGroups(options)
+  }, [resourceGroupDataV2])
 
   useEffect(() => {
     resetForm('connectorRef')
@@ -248,14 +267,9 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
                 setResourceGroups([])
               },
               onFocus: () => {
-                if (connector) {
+                if (getMultiTypeFromValue(connector) !== MultiTypeInputType.RUNTIME) {
                   refetchSubscriptions({
-                    queryParams: {
-                      accountIdentifier: accountId,
-                      projectIdentifier,
-                      orgIdentifier,
-                      connectorRef: connector
-                    }
+                    queryParams
                   })
                 }
               },
@@ -289,7 +303,7 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
             }}
             disabled={readonly}
             placeholder={
-              loadingResourceGroups
+              loadingResourceGroups || loadingResourceGroupsV2
                 ? /* istanbul ignore next */ getString('loading')
                 : getString('cd.steps.azureInfraStep.resourceGroupPlaceholder')
             }
@@ -317,6 +331,18 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
                       subscriptionId: subscriptionId
                     }
                   })
+                } else if (fetchResourceUsingEnvId()) {
+                  refetchResourceGroupsV2({
+                    queryParams: {
+                      connectorRef: connector as string,
+                      accountIdentifier: accountId,
+                      orgIdentifier,
+                      projectIdentifier,
+                      envId: environmentRef,
+                      infraDefinitionId: infrastructureRef,
+                      subscriptionId: subscriptionId
+                    }
+                  })
                 }
               },
 
@@ -326,10 +352,13 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
                 addClearBtn: !(loadingResourceGroups || readonly),
                 noResults: (
                   <Text padding={'small'}>
-                    {loadingResourceGroups
+                    {loadingResourceGroups || loadingResourceGroupsV2
                       ? getString('loading')
                       : defaultTo(
-                          get(resourceGroupsError, errorMessage, resourceGroupsError?.message),
+                          defaultTo(
+                            get(resourceGroupsError, errorMessage, resourceGroupsError?.message),
+                            get(resourceGroupsErrorV2, errorMessage, resourceGroupsErrorV2?.message)
+                          ),
                           getString('cd.steps.azureInfraStep.resourceGroupError')
                         )}
                   </Text>

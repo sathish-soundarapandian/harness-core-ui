@@ -1,4 +1,4 @@
-import { executionListRoute, executionSummaryApi, pageHeaderClassName } from '../../support/70-pipeline/constants'
+import { executionListRoute, executionSummaryAPI, pageHeaderClassName } from '../../support/70-pipeline/constants'
 
 describe('RETRY FAILED PIPELINE', () => {
   const gitSyncCall =
@@ -16,7 +16,7 @@ describe('RETRY FAILED PIPELINE', () => {
     cy.visit(executionListRoute, {
       timeout: 30000
     })
-    cy.intercept('POST', executionSummaryApi, {
+    cy.intercept('POST', executionSummaryAPI, {
       fixture: '/pipeline/api/pipelineExecution/pipelineExecutionSummary'
     }).as('pipelineExecutionSummary')
     cy.wait(2000)

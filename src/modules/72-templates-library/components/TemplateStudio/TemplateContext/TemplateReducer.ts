@@ -102,12 +102,6 @@ export const TemplateReducer = (state: TemplateReducerState, data: ActionReturnT
         ...state,
         yamlHandler: data.response?.yamlHandler
       }
-    case TemplateActions.Loading: {
-      return {
-        ...state,
-        isLoading: !!response?.isLoading
-      }
-    }
     case TemplateActions.UpdateTemplateView:
       return {
         ...state,

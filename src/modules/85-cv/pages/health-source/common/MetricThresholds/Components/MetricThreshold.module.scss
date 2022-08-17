@@ -1,4 +1,60 @@
-.metricThreshold {
+.metricThresholdContent {
+  &Card {
+    width: 100%;
+  }
+
+  &Tabs {
+    color: var(--black);
+  }
+
+  &IgnoreTableHeader,
+  &IgnoreTableRow {
+    display: grid;
+    grid-gap: 4px;
+    align-items: center;
+  }
+
+  &FailFastTableHeader {
+    grid-template-columns: 13% 13% 13% 15% 5% 1fr !important;
+  }
+
+  &IgnoreTableHeader {
+    grid-template-columns: 20% 20% 20% 1fr;
+    margin: var(--spacing-5) 0 !important;
+    > p,
+    .criteriaHeader {
+      color: var(--black) !important;
+      text-transform: uppercase;
+      font-size: var(--font-size-small) !important;
+      font-weight: bold !important;
+    }
+  }
+
+  &FailFastTableRow {
+    grid-template-columns: 13% 13% 13% 15% 5% 1fr 50px !important;
+  }
+
+  &IgnoreTableRow {
+    grid-template-columns: 20% 20% 20% 1fr 50px;
+    padding: var(--spacing-3) 0 !important;
+    border-bottom: 1px solid var(--grey-200) !important;
+
+    :global(.bp3-form-group) {
+      margin-bottom: var(--spacing-0) !important;
+    }
+
+    :global(input) {
+      border: 1px solid var(--grey-100);
+    }
+
+    &:hover {
+      background-color: var(--grey-50);
+      :global(input) {
+        border: 1px solid var(--grey-300) !important;
+      }
+    }
+  }
+
   &Select {
     margin-bottom: var(--spacing-0) !important;
 
@@ -6,10 +62,6 @@
       width: 150px !important;
       border-color: transparent;
     }
-  }
-
-  &Criteria {
-    margin-right: var(--spacing-3);
   }
 
   &Input {
@@ -29,5 +81,9 @@
     &Wrapper {
       margin-bottom: 0 !important;
     }
+  }
+
+  &Criteria {
+    margin-right: var(--spacing-3);
   }
 }

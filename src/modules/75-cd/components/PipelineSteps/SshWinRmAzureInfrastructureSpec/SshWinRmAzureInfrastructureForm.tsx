@@ -166,7 +166,7 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
 
     /* istanbul ignore else */
     if (initialValues) {
-      if (getMultiTypeFromValue(initialValues?.resourceGroup) === MultiTypeInputType.FIXED) {
+      if (getMultiTypeFromValue(initialValues?.subscriptionId) === MultiTypeInputType.FIXED) {
         currentValues.subscriptionId = { label: initialValues.subscriptionId, value: initialValues.subscriptionId }
       }
 
@@ -341,11 +341,14 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
 
                           formik.setFieldValue('connectorRef', connectorRef)
                         }
-                        getMultiTypeFromValue(formik.values?.subscriptionId) !== MultiTypeInputType.RUNTIME &&
+                        getMultiTypeFromValue(formik.values?.subscriptionId) === MultiTypeInputType.FIXED &&
+                          formik.values?.subscriptionId?.value &&
                           formik.setFieldValue('subscriptionId', '')
-                        getMultiTypeFromValue(formik.values?.resourceGroup) !== MultiTypeInputType.RUNTIME &&
+                        getMultiTypeFromValue(formik.values?.resourceGroup) === MultiTypeInputType.FIXED &&
+                          formik.values?.resourceGroup?.value &&
                           formik.setFieldValue('resourceGroup', '')
-                        getMultiTypeFromValue(formik.values?.tags) !== MultiTypeInputType.RUNTIME &&
+                        getMultiTypeFromValue(formik.values?.tags) === MultiTypeInputType.FIXED &&
+                          formik.values?.tags?.value &&
                           formik.setFieldValue('tags', [])
                         setSubscriptions([])
                         setResourceGroups([])
@@ -390,9 +393,11 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                     }
                     multiTypeInputProps={{
                       onChange: /* istanbul ignore next */ () => {
-                        getMultiTypeFromValue(formik.values?.resourceGroup) !== MultiTypeInputType.RUNTIME &&
+                        getMultiTypeFromValue(formik.values?.resourceGroup) === MultiTypeInputType.FIXED &&
+                          formik.values?.resourceGroup?.value &&
                           formik.setFieldValue('resourceGroup', '')
-                        getMultiTypeFromValue(formik.values?.tags) !== MultiTypeInputType.RUNTIME &&
+                        getMultiTypeFromValue(formik.values?.tags) === MultiTypeInputType.FIXED &&
+                          formik.values?.tags?.value &&
                           formik.setFieldValue('tags', [])
 
                         setResourceGroups([])

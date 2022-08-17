@@ -1393,7 +1393,7 @@ exports[`Unit tests for createAppd monitoring source Component renders in edit m
                                       style="min-height: 300px;"
                                     >
                                       <div
-                                        class="StyledProps--font StyledProps--main appDMetricThresholdContentIgnoreTableHeader"
+                                        class="StyledProps--font StyledProps--main metricThresholdContentIgnoreTableHeader"
                                       >
                                         <p
                                           class="StyledProps--font StyledProps--main"
@@ -2015,7 +2015,7 @@ exports[`Unit tests for createAppd monitoring source should render in  when conn
                                 style="min-height: 300px;"
                               >
                                 <div
-                                  class="StyledProps--font StyledProps--main appDMetricThresholdContentIgnoreTableHeader"
+                                  class="StyledProps--font StyledProps--main metricThresholdContentIgnoreTableHeader"
                                 >
                                   <p
                                     class="StyledProps--font StyledProps--main"
@@ -2634,7 +2634,7 @@ exports[`Unit tests for createAppd monitoring source should render in  when conn
                                 style="min-height: 300px;"
                               >
                                 <div
-                                  class="StyledProps--font StyledProps--main appDMetricThresholdContentIgnoreTableHeader"
+                                  class="StyledProps--font StyledProps--main metricThresholdContentIgnoreTableHeader"
                                 >
                                   <p
                                     class="StyledProps--font StyledProps--main"

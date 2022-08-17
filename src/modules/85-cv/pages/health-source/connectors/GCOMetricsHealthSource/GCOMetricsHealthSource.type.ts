@@ -42,6 +42,8 @@ export interface GCOMetricSetupSource {
 export interface GCOMetricsHealthSourceProps {
   data: any
   onSubmit: (formdata: GCOMetricSetupSource, UpdatedHealthSource: UpdatedHealthSource) => Promise<void>
+  isTemplate?: boolean
+  expressions?: string[]
 }
 
 export interface ValidationChartProps {

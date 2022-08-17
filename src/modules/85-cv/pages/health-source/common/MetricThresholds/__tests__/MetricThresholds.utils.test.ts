@@ -6,22 +6,32 @@
  */
 
 import type { MetricThresholdType } from '@cv/pages/health-source/connectors/AppDynamics/AppDHealthSource.types'
+import type { TimeSeriesMetricPackDTO } from 'services/cv'
+
 import { MetricCriteriaValues, PercentageCriteriaDropdownValues } from '../MetricThresholds.constants'
 import {
   checkDuplicate,
   getActionItems,
   getCriterialItems,
   getCriteriaPercentageDropdownOptions,
+  getDefaultMetricTypeValue,
+  getFilteredMetricThresholdValues,
   getGroupDropdownOptions,
+  getIsMetricPacksSelected,
   getIsShowGreaterThan,
   getIsShowLessThan,
+  getMetricItems,
+  getMetricPacksForPayload,
   isGroupTransationTextField,
   validateCommonFieldsForMetricThreshold
 } from '../MetricThresholds.utils'
 import {
   exceptionalGroupedCreatedMetrics,
+  formDataMock,
   groupedCreatedMetrics,
   groupedCreatedMetricsDefault,
+  metricPacksMock,
+  metricThresholdsPayloadMockData,
   mockThresholdValue
 } from './MetricThresholds.utils.mock'
 
@@ -455,6 +465,87 @@ describe('AppDIgnoreThresholdTabContent', () => {
 
     // False for greaterThan selection it should be false
     result = getIsShowLessThan('Percentage', 'greaterThan', { greaterThan: 44, lessThan: undefined })
+
+    expect(result).toBe(false)
+  })
+
+  test('getMetricItems should return correct values', () => {
+    const result = getMetricItems(metricPacksMock, 'Performance')
+    expect(result).toEqual([{ label: 'Performance test name', value: 'Performance test name' }])
+  })
+
+  test('getMetricItems should return correct values for custom type', () => {
+    const result = getMetricItems(metricPacksMock, 'Custom', 'group 1', groupedCreatedMetrics)
+    expect(result).toEqual([{ label: 'test metric', value: 'test metric' }])
+  })
+
+  test('getMetricItems should return empty array for custom type whose group is not present', () => {
+    const result = getMetricItems(metricPacksMock, 'Custom', 'group 2', groupedCreatedMetrics)
+    expect(result).toEqual([])
+  })
+
+  test('getDefaultMetricTypeValue should return correct value', () => {
+    let result = getDefaultMetricTypeValue({ Performance: false, Errors: true })
+
+    expect(result).toBe(undefined)
+
+    result = getDefaultMetricTypeValue({ Performance: false, Errors: true }, metricPacksMock)
+    expect(result).toBe('Errors')
+
+    result = getDefaultMetricTypeValue({ Performance: true, Errors: false }, metricPacksMock)
+    expect(result).toBe('Performance')
+
+    result = getDefaultMetricTypeValue({ Performance: false, Errors: false }, metricPacksMock)
+    expect(result).toBe(undefined)
+  })
+
+  test('should test getFilteredMetricThresholdValues', () => {
+    const result = getFilteredMetricThresholdValues(
+      'IgnoreThreshold',
+      metricThresholdsPayloadMockData as TimeSeriesMetricPackDTO[]
+    )
+
+    expect(result).toEqual([
+      {
+        criteria: { criteriaPercentageType: 'lessThan', spec: { lessThan: 1 }, type: 'Percentage' },
+        groupName: 'testP2',
+        metricName: 'average_wait_time_ms',
+        metricType: 'Performance',
+        spec: { action: 'Ignore' },
+        type: 'IgnoreThreshold'
+      },
+      {
+        criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 12 }, type: 'Percentage' },
+        groupName: 'testP',
+        metricName: 'stall_count',
+        metricType: 'Performance',
+        spec: { action: 'Ignore' },
+        type: 'IgnoreThreshold'
+      },
+      {
+        criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 12 }, type: 'Percentage' },
+        groupName: 'testP',
+        metricName: 'stall_count',
+        metricType: 'Custom',
+        spec: { action: 'Ignore' },
+        type: 'IgnoreThreshold'
+      }
+    ])
+  })
+
+  test('should create correct payload for AppD health source', () => {
+    const result = getMetricPacksForPayload(formDataMock, true)
+    expect(result).toEqual(metricThresholdsPayloadMockData)
+  })
+
+  test('getIsMetricPacksSelected returns true if atleast one metric pack is selected', () => {
+    const result = getIsMetricPacksSelected({ Performance: true })
+
+    expect(result).toBe(true)
+  })
+
+  test('getIsMetricPacksSelected returns true if atleast one metric pack is selected', () => {
+    const result = getIsMetricPacksSelected({ Performance: false, Errors: false })
 
     expect(result).toBe(false)
   })

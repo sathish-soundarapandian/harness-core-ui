@@ -62,11 +62,6 @@ describe('TemplateActions test', () => {
     expect(newState).toEqual({ ...initialState, template: stageTemplateMock, isUpdated: false })
   })
 
-  test('TemplateActions Loading', () => {
-    const newState = TemplateReducer(initialState, { ...TemplateContextActions.loading({ isLoading: true }) })
-    expect(newState).toEqual({ ...initialState, isLoading: true })
-  })
-
   test('TemplateActions Fetching', () => {
     const newState = TemplateReducer(initialState, { ...TemplateContextActions.fetching() })
     expect(newState).toEqual({ ...initialState, isLoading: true, isBETemplateUpdated: false, isUpdated: false })

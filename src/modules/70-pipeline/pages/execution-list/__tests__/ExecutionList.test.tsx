@@ -249,7 +249,7 @@ describe('Test Pipeline Deployment list', () => {
       <div
         data-testid="location"
       >
-        /account/testAcc/cd/orgs/testOrg/projects/testProject/deployments?status%5B0%5D=Failed&status%5B1%5D=Expired&page=1
+        /account/testAcc/cd/orgs/testOrg/projects/testProject/deployments?status%5B0%5D=Failed&status%5B1%5D=Expired&page=0
       </div>
     `)
 
@@ -266,9 +266,10 @@ describe('Test Pipeline Deployment list', () => {
         pipelineIdentifier: undefined,
         projectIdentifier: 'testProject',
         status: ['Failed', 'Expired'],
+        sort: 'startTs,DESC',
         filterIdentifier: undefined,
         module: 'cd',
-        myDeployments: false,
+        myDeployments: undefined,
         repoIdentifier: undefined,
         searchTerm: undefined,
         branch: undefined
@@ -287,7 +288,7 @@ describe('Test Pipeline Deployment list', () => {
       <div
         data-testid="location"
       >
-        /account/testAcc/cd/orgs/testOrg/projects/testProject/deployments?page=1
+        /account/testAcc/cd/orgs/testOrg/projects/testProject/deployments?page=0
       </div>
     `)
 
@@ -305,10 +306,11 @@ describe('Test Pipeline Deployment list', () => {
         projectIdentifier: 'testProject',
         filterIdentifier: undefined,
         module: 'cd',
-        myDeployments: false,
+        myDeployments: undefined,
         repoIdentifier: undefined,
         searchTerm: undefined,
-        status: [],
+        status: undefined,
+        sort: 'startTs,DESC',
         branch: undefined
       }
     })
@@ -339,7 +341,7 @@ describe('Test Pipeline Deployment list', () => {
       <div
         data-testid="location"
       >
-        /account/testAcc/cd/orgs/testOrg/projects/testProject/deployments?pipelineIdentifier=pipeline1&page=1
+        /account/testAcc/cd/orgs/testOrg/projects/testProject/deployments?pipelineIdentifier=pipeline1&page=0
       </div>
     `)
 
@@ -355,10 +357,11 @@ describe('Test Pipeline Deployment list', () => {
         size: 20,
         pipelineIdentifier: 'pipeline1',
         projectIdentifier: 'testProject',
-        status: [],
+        status: undefined,
+        sort: 'startTs,DESC',
         filterIdentifier: undefined,
         module: 'cd',
-        myDeployments: false,
+        myDeployments: undefined,
         repoIdentifier: undefined,
         searchTerm: undefined,
         branch: undefined
@@ -377,7 +380,7 @@ describe('Test Pipeline Deployment list', () => {
       <div
         data-testid="location"
       >
-        /account/testAcc/cd/orgs/testOrg/projects/testProject/deployments?page=1
+        /account/testAcc/cd/orgs/testOrg/projects/testProject/deployments?page=0
       </div>
     `)
 
@@ -392,10 +395,11 @@ describe('Test Pipeline Deployment list', () => {
         page: 0,
         pipelineIdentifier: undefined,
         projectIdentifier: 'testProject',
-        status: [],
+        status: undefined,
+        sort: 'startTs,DESC',
         filterIdentifier: undefined,
         module: 'cd',
-        myDeployments: false,
+        myDeployments: undefined,
         repoIdentifier: undefined,
         searchTerm: undefined,
         size: 20,

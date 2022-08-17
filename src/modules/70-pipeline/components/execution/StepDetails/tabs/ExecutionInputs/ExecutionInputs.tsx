@@ -148,67 +148,69 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
 
   // https://github.com/harness/harness-core-ui/blob/8b2acdbdb7b6ca71f79fc2e3f76c4b55734b392e/src/modules/70-pipeline/components/PipelineStudio/StepUtil.ts#L184
 
-  return (
-    <div className={css.main}>
-      {loading ? (
-        <Spinner />
-      ) : hasSubmitted ? (
-        <Text>{getString('pipeline.runtimeInputsSubmittedMsg')}</Text>
-      ) : (
-        <Formik<Partial<StepElementConfig>>
-          formName="execution-input"
-          validate={handleValidation}
-          initialValues={initialValues}
-          onSubmit={handleSubmit}
-        >
-          <FormikForm>
-            {isStageForm ? (
-              <StageFormInternal
-                template={parsedStage}
-                path="stage"
-                readonly={isDone}
-                viewType={StepViewType.DeploymentForm}
-                allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
-                stageClassName={css.stage}
+  let content: React.ReactElement | null = null
+
+  if (loading) {
+    content = <Spinner />
+  } else if (hasSubmitted) {
+    content = <Text>{getString('pipeline.runtimeInputsSubmittedMsg')}</Text>
+  } else {
+    content = (
+      <Formik<Partial<StepElementConfig>>
+        formName="execution-input"
+        validate={handleValidation}
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+      >
+        <FormikForm>
+          {isStageForm ? (
+            <StageFormInternal
+              template={parsedStage}
+              path="stage"
+              readonly={isDone}
+              viewType={StepViewType.DeploymentForm}
+              allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
+              stageClassName={css.stage}
+            />
+          ) : (
+            <StepWidget<Partial<StepElementConfig>>
+              factory={factory}
+              type={stepType}
+              allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
+              stepViewType={StepViewType.DeploymentForm}
+              initialValues={initialValues}
+              template={parsedStep}
+              readonly={isDone}
+            />
+          )}
+          {isDone ? null : (
+            <Layout.Horizontal spacing="medium">
+              <Button type="submit" data-testid="submit" variation={ButtonVariation.PRIMARY}>
+                {getString('submit')}
+              </Button>
+              <Button
+                intent="danger"
+                data-testid="abort"
+                variation={ButtonVariation.PRIMARY}
+                onClick={openAbortConfirmation}
+              >
+                {getString('pipeline.execution.actions.abortPipeline')}
+              </Button>
+              <ConfirmationDialog
+                isOpen={isAbortConfirmationOpen}
+                cancelButtonText={getString('cancel')}
+                contentText={getString('pipeline.execution.dialogMessages.abortExecution')}
+                titleText={getString('pipeline.execution.dialogMessages.abortTitle')}
+                confirmButtonText={getString('confirm')}
+                intent={Intent.WARNING}
+                onClose={onAbortConfirmationClose}
               />
-            ) : (
-              <StepWidget<Partial<StepElementConfig>>
-                factory={factory}
-                type={stepType}
-                allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
-                stepViewType={StepViewType.DeploymentForm}
-                initialValues={initialValues}
-                template={parsedStep}
-                readonly={isDone}
-              />
-            )}
-            {isDone ? null : (
-              <Layout.Horizontal spacing="medium">
-                <Button type="submit" data-testid="submit" variation={ButtonVariation.PRIMARY}>
-                  {getString('submit')}
-                </Button>
-                <Button
-                  intent="danger"
-                  data-testid="abort"
-                  variation={ButtonVariation.PRIMARY}
-                  onClick={openAbortConfirmation}
-                >
-                  {getString('pipeline.execution.actions.abortPipeline')}
-                </Button>
-                <ConfirmationDialog
-                  isOpen={isAbortConfirmationOpen}
-                  cancelButtonText={getString('cancel')}
-                  contentText={getString('pipeline.execution.dialogMessages.abortExecution')}
-                  titleText={getString('pipeline.execution.dialogMessages.abortTitle')}
-                  confirmButtonText={getString('confirm')}
-                  intent={Intent.WARNING}
-                  onClose={onAbortConfirmationClose}
-                />
-              </Layout.Horizontal>
-            )}
-          </FormikForm>
-        </Formik>
-      )}
-    </div>
-  )
+            </Layout.Horizontal>
+          )}
+        </FormikForm>
+      </Formik>
+    )
+  }
+
+  return <div className={css.main}>{content}</div>
 }

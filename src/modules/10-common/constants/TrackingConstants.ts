@@ -256,3 +256,7 @@ export enum CCMActions {
   CCMStartPlanModal = 'CCM Start Plan Modal Loaded',
   CCMStartPlanContinue = 'CCM Start Plan Modal Continue Clicked'
 }
+
+export enum CIOnboardingActions {
+  SelectGitProvider = 'Git Provider Selected'
+}

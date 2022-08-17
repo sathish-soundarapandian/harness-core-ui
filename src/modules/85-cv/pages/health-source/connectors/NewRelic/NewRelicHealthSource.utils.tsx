@@ -5,26 +5,60 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { cloneDeep } from 'lodash-es'
+import { cloneDeep, isEmpty, isEqual, omit } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@wings-software/uicore'
-import type { StringKeys } from 'framework/strings'
+import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import type { MetricPackDTO } from 'services/cv'
 import { StatusOfValidation } from '@cv/pages/components/ValidationStatus/ValidationStatus.constants'
 import type {
   CreatedMetricsWithSelectedIndex,
   MapNewRelicMetric,
   NewRelicData,
+  NonCustomMetricFields,
+  PersistCustomMetricInterface,
   SelectedAndMappedMetrics
 } from './NewRelicHealthSource.types'
-import { NewRelicHealthSourceFieldNames } from './NewRelicHealthSource.constants'
 import type { CustomMappedMetric } from '../../common/CustomMetric/CustomMetric.types'
+import {
+  getFilteredMetricThresholdValues,
+  validateCommonFieldsForMetricThreshold
+} from '../../common/MetricThresholds/MetricThresholds.utils'
+import {
+  MetricThresholdPropertyName,
+  MetricThresholdTypes
+} from '../../common/MetricThresholds/MetricThresholds.constants'
+
+const validateMetricThresholds = (
+  errors: Record<string, string>,
+  values: any,
+  getString: UseStringsReturn['getString']
+): void => {
+  // ignoreThresholds Validation
+  validateCommonFieldsForMetricThreshold(
+    MetricThresholdPropertyName.IgnoreThreshold,
+    errors,
+    values[MetricThresholdPropertyName.IgnoreThreshold],
+    getString,
+    true
+  )
+
+  // failFastThresholds Validation
+  validateCommonFieldsForMetricThreshold(
+    MetricThresholdPropertyName.FailFastThresholds,
+    errors,
+    values[MetricThresholdPropertyName.FailFastThresholds],
+    getString,
+    true
+  )
+}
 
 export const validateMapping = (
   values: any,
   createdMetrics: string[],
   selectedMetricIndex: number,
-  getString: (key: StringKeys) => string
+  getString: (key: StringKeys) => string,
+  isMetricThresholdEnabled: boolean
 ): ((key: string | boolean | string[]) => string) => {
   let errors = {} as any
 
@@ -44,6 +78,10 @@ export const validateMapping = (
   // if custom metrics are present then validate custom metrics form
   if (values?.showCustomMetric) {
     errors = validateCustomMetricFields(values, createdMetrics, selectedMetricIndex, errors, getString)
+  }
+
+  if (isMetricThresholdEnabled) {
+    validateMetricThresholds(errors, values, getString)
   }
 
   return errors
@@ -165,14 +203,27 @@ export const convertMetricPackToMetricData = (value?: MetricPackDTO[]) => {
   return dataObject
 }
 
-export const initializeNonCustomFields = (newRelicData: NewRelicData) => {
+export const initializeNonCustomFields = (
+  newRelicData: NewRelicData,
+  isMetricThresholdEnabled: boolean
+): NonCustomMetricFields => {
+  const ignoreThresholds = isMetricThresholdEnabled
+    ? getFilteredMetricThresholdValues(MetricThresholdTypes.IgnoreThreshold, newRelicData?.metricPacks)
+    : []
+
+  const failFastThresholds = isMetricThresholdEnabled
+    ? getFilteredMetricThresholdValues(MetricThresholdTypes.FailImmediately, newRelicData?.metricPacks)
+    : []
+
   return {
     newRelicApplication:
       getMultiTypeFromValue(newRelicData?.applicationName) === MultiTypeInputType.FIXED
         ? { label: newRelicData?.applicationName, value: newRelicData?.applicationId }
         : newRelicData?.applicationName,
     metricPacks: newRelicData?.metricPacks || undefined,
-    metricData: convertMetricPackToMetricData(newRelicData?.metricPacks)
+    metricData: convertMetricPackToMetricData(newRelicData?.metricPacks),
+    ignoreThresholds,
+    failFastThresholds
   }
 }
 
@@ -224,35 +275,8 @@ export const createNewRelicPayloadBeforeSubmission = (
   formik: FormikProps<CustomMappedMetric>,
   mappedMetrics: Map<string, CustomMappedMetric>,
   selectedMetric: string,
-  selectedMetricIndex: number,
-  createdMetrics: string[],
-  getString: (key: StringKeys) => string,
   onSubmit: (healthSourcePayload: any) => void
 ): void => {
-  formik.setTouched({
-    ...formik.touched,
-    [NewRelicHealthSourceFieldNames.NEWRELIC_APPLICATION]: true,
-    [NewRelicHealthSourceFieldNames.METRIC_DATA]: { Performance: true },
-
-    [NewRelicHealthSourceFieldNames.METRIC_NAME]: true,
-    [NewRelicHealthSourceFieldNames.GROUP_NAME]: true,
-
-    [NewRelicHealthSourceFieldNames.NEWRELIC_QUERY]: true,
-
-    [NewRelicHealthSourceFieldNames.METRIC_VALUE]: true,
-    [NewRelicHealthSourceFieldNames.TIMESTAMP_LOCATOR]: true,
-    [NewRelicHealthSourceFieldNames.TIMESTAMP_FORMAT]: true,
-
-    [NewRelicHealthSourceFieldNames.SLI]: true,
-    [NewRelicHealthSourceFieldNames.CONTINUOUS_VERIFICATION]: true,
-    [NewRelicHealthSourceFieldNames.LOWER_BASELINE_DEVIATION]: true,
-    [NewRelicHealthSourceFieldNames.RISK_CATEGORY]: true
-  })
-  const errors = validateMapping(formik.values, createdMetrics, selectedMetricIndex, getString)
-  if (Object.keys(errors || {})?.length > 0) {
-    formik.validateForm()
-    return
-  }
   const updatedMetric = formik.values
   if (updatedMetric) {
     mappedMetrics.set(selectedMetric, updatedMetric)
@@ -286,3 +310,40 @@ export const shouldFetchApplication = (query?: string, isConnectorRuntimeOrExpre
   query?.trim().length &&
   !isConnectorRuntimeOrExpression &&
   getMultiTypeFromValue(query?.trim().length) === MultiTypeInputType.FIXED
+
+export const persistCustomMetric = ({
+  mappedMetrics,
+  selectedMetric,
+  nonCustomFeilds,
+  formikValues,
+  setMappedMetrics
+}: PersistCustomMetricInterface): void => {
+  const mapValue = mappedMetrics.get(selectedMetric) as unknown as NonCustomMetricFields
+  if (!isEmpty(mapValue)) {
+    const nonCustomValuesFromSelectedMetric = {
+      newRelicApplication: mapValue?.newRelicApplication,
+      metricPacks: mapValue?.metricPacks,
+      metricData: mapValue?.metricData,
+      ignoreThresholds: mapValue?.ignoreThresholds,
+      failFastThresholds: mapValue?.failFastThresholds
+    }
+
+    const areAllFilled =
+      nonCustomValuesFromSelectedMetric.newRelicApplication && nonCustomValuesFromSelectedMetric.metricData
+    if (
+      areAllFilled &&
+      selectedMetric === formikValues?.metricName &&
+      !isEqual(omit(nonCustomFeilds, ['metricValue', 'timestamp']), nonCustomValuesFromSelectedMetric)
+    ) {
+      const clonedMappedMetrics = cloneDeep(mappedMetrics)
+      clonedMappedMetrics.forEach((data, key) => {
+        if (selectedMetric === data.metricName) {
+          clonedMappedMetrics.set(selectedMetric, { ...formikValues, ...nonCustomFeilds })
+        } else {
+          clonedMappedMetrics.set(key, { ...data, ...nonCustomFeilds })
+        }
+      })
+      setMappedMetrics({ selectedMetric: selectedMetric, mappedMetrics: clonedMappedMetrics })
+    }
+  }
+}

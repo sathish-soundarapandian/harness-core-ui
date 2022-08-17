@@ -18,6 +18,7 @@ import {
   useToaster,
   MultiTypeInputType
 } from '@harness/uicore'
+import { Switch } from '@blueprintjs/core'
 
 import { Form, FieldArray } from 'formik'
 import produce from 'immer'
@@ -89,10 +90,9 @@ interface StrategyPayload extends StrategyParameters {
   instances?: number
 }
 
-type StrategyType = GetExecutionStrategyYamlQueryParams['strategyType'] | 'BlankCanvas'
+export type StrategyType = GetExecutionStrategyYamlQueryParams['strategyType'] | 'BlankCanvas'
 
 interface PhasesProps {
-  isVerifyEnabled: boolean
   selectedStrategy: StrategyType
   serviceDefinitionType: () => GetExecutionStrategyYamlQueryParams['serviceDefinitionType']
   selectedStage: StageElementWrapperConfig
@@ -144,14 +144,11 @@ const generatePayloadByStrategyType = (strategyType: StrategyType, values: Phase
   }
 }
 
-function Phases({
-  isVerifyEnabled,
-  selectedStrategy,
-  serviceDefinitionType,
-  selectedStage
-}: PhasesProps): React.ReactElement {
+function Phases({ selectedStrategy, serviceDefinitionType, selectedStage }: PhasesProps): React.ReactElement {
   const { getString } = useStrings()
   const { showError } = useToaster()
+  const [isVerifyEnabled, setIsVerifyEnabled] = React.useState(false)
+
   const [initialValues, setInitialValues] = React.useState<PhasesValues>({
     packageType: PackageTypeItems.WAR,
     phases: [
@@ -199,10 +196,14 @@ function Phases({
   const { mutate, loading } = usePostExecutionStrategyYaml({
     queryParams: {
       serviceDefinitionType: serviceDefinitionType(),
-      strategyType: selectedStrategy !== 'BlankCanvas' ? selectedStrategy : 'Rolling',
+      strategyType: selectedStrategy !== 'BlankCanvas' ? selectedStrategy : ExecutionType.ROLLING,
       ...(isVerifyEnabled && { includeVerify: true })
     }
   })
+
+  const isCanary = React.useMemo(() => {
+    return selectedStrategy === ExecutionType.CANARY
+  }, [selectedStrategy])
 
   const handleSubmit = async (values: PhasesValues): Promise<void> => {
     try {
@@ -230,9 +231,10 @@ function Phases({
   }
 
   return (
-    <Container className={css.phaseForm} data-testid="phases-container">
+    <Layout.Vertical className={css.phaseForm} data-testid="phases-container">
       <Formik<any>
         enableReinitialize
+        formLoading={false}
         onSubmit={values => handleSubmit(values)}
         initialValues={initialValues}
         formName="phasesForm"
@@ -245,25 +247,43 @@ function Phases({
                   const currentIndex = +this.path.slice(7, this.path.length - 1)
                   const previousIndex = currentIndex - 1
                   if (currentIndex === 0 && phases[0].type === InstanceTypes.Instances) return true
+
                   if (phases[0].type === InstanceTypes.Percentage && phase?.spec?.percentage) {
                     if (currentIndex === 0 && phase?.spec?.percentage <= 100) {
                       return true
                     }
+                    if (phase?.spec?.percentage <= 100 && phases[previousIndex].spec.percentage >= 100) {
+                      return this.createError({
+                        message: `${getString('pipeline.phasesForm.errors.wrongPercentageFormat')}`
+                      })
+                    }
                     if (phase?.spec?.percentage > 100) {
                       return this.createError({
-                        message: `This field can not be more than 100`
+                        message: `${getString('pipeline.phasesForm.errors.limitError')} 100`
+                      })
+                    }
+                    if (
+                      phase?.spec?.percentage === 100 &&
+                      phase?.spec?.percentage === phases[previousIndex].spec.percentage
+                    ) {
+                      return this.createError({
+                        message: `${getString('pipeline.phasesForm.errors.duplicationValue')}`
                       })
                     }
                     if (phase?.spec?.percentage <= phases[previousIndex].spec.percentage) {
                       return this.createError({
-                        message: `This field should be more than ${phases[previousIndex].spec.percentage}`
+                        message: `${getString('pipeline.phasesForm.errors.prevLimitError')} ${
+                          phases[previousIndex].spec.percentage
+                        }`
                       })
                     }
                   }
                   if (phases[0].type === InstanceTypes.Instances && phase?.spec?.count && currentIndex !== 0) {
                     if (phase?.spec?.count <= phases[previousIndex].spec.count) {
                       return this.createError({
-                        message: `This field should be more than ${phases[previousIndex].spec.count}`
+                        message: `${getString('pipeline.phasesForm.errors.prevLimitError')} ${
+                          phases[previousIndex].spec.count
+                        }`
                       })
                     }
                   }
@@ -322,7 +342,7 @@ function Phases({
                                         font={{ align: 'center' }}
                                         width={95}
                                       >
-                                        {getString('pipeline.phasesForm.phase')} {index}
+                                        {getString('pipeline.phasesForm.phase')} {isCanary ? index + 1 : null}
                                       </Text>
                                     </Layout.Vertical>
                                     <FormInstanceDropdown
@@ -354,16 +374,18 @@ function Phases({
                                       expressions={expressions}
                                       allowableTypes={[MultiTypeInputType.FIXED]}
                                     />
-                                    <Container className={css.removePhase}>
-                                      <Button
-                                        icon="main-trash"
-                                        iconProps={{ size: 20 }}
-                                        minimal
-                                        data-testid={`remove-phases-[${index}]`}
-                                        onClick={() => remove(index)}
-                                        disabled={loading || formikProps.values.phases.length <= 1}
-                                      />
-                                    </Container>
+                                    {isCanary ? (
+                                      <Container className={css.removePhase}>
+                                        <Button
+                                          icon="main-trash"
+                                          iconProps={{ size: 20 }}
+                                          minimal
+                                          data-testid={`remove-phases-[${index}]`}
+                                          onClick={() => remove(index)}
+                                          disabled={loading || formikProps.values.phases.length <= 1}
+                                        />
+                                      </Container>
+                                    ) : null}
                                   </Layout.Horizontal>
                                   {get(formikProps?.errors, `phases[${index}]`) ? (
                                     <>
@@ -377,29 +399,26 @@ function Phases({
                               )
                             })}
 
-                          {selectedStrategy === ExecutionType.CANARY ? (
+                          {isCanary ? (
                             <Button
                               intent="primary"
                               minimal
                               className={css.addBtn}
-                              text={`+ ${getString('pipeline.phasesForm.phases')}`}
+                              text={`${getString('pipeline.phasesForm.addPhase')}`}
                               data-testid={`add-phase`}
                               onClick={() => {
                                 if (formikProps.values.phases[0].type === InstanceTypes.Instances) {
                                   push({
                                     type: InstanceTypes.Instances,
                                     spec: {
-                                      count:
-                                        formikProps.values.phases[formikProps.values.phases.length - 1].spec.count + 1
+                                      count: 1
                                     }
                                   })
                                 } else {
                                   push({
                                     type: InstanceTypes.Percentage,
                                     spec: {
-                                      percentage:
-                                        formikProps.values.phases[formikProps.values.phases.length - 1].spec
-                                          .percentage + 1
+                                      percentage: 100
                                     }
                                   })
                                 }
@@ -407,6 +426,17 @@ function Phases({
                               disabled={loading}
                             />
                           ) : null}
+                          <Switch
+                            checked={isVerifyEnabled}
+                            onChange={() => setIsVerifyEnabled(prevIsVerifyEnabled => !prevIsVerifyEnabled)}
+                            data-testid="enable-verification-options-switch"
+                            className={css.cvEnableSwitch}
+                            labelElement={
+                              <Text style={{ fontWeight: 500 }}>
+                                {getString('pipeline.phasesForm.useVerification')}
+                              </Text>
+                            }
+                          />
                         </>
                       )
                     }}
@@ -420,12 +450,13 @@ function Phases({
                 text={getString('pipeline.executionStrategy.useStrategy')}
                 disabled={loading || !formikProps.isValid}
                 className={css.phasesSubmit}
+                loading={loading}
               />
             </Form>
           )
         }}
       </Formik>
-    </Container>
+    </Layout.Vertical>
   )
 }
 

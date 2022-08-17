@@ -87,6 +87,14 @@ jest.mock('resize-observer-polyfill', () => {
   return ResizeObserver
 })
 
+const mockIntersectionObserver = jest.fn()
+mockIntersectionObserver.mockReturnValue({
+  observe: () => null,
+  unobserve: () => null,
+  disconnect: () => null
+})
+window.IntersectionObserver = mockIntersectionObserver
+
 const TEST_PATH = routes.toPipelineStudio({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })
 
 function PipelineCanvasTestWrapper({

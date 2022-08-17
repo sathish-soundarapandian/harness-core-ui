@@ -118,7 +118,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     disabled,
     ...rest
   } = restProps
-  const selected = get(formik?.values, name, '')
+  const selected = get(formik?.values, name, '') ?? ''
   const [selectedValue, setSelectedValue] = React.useState(selected)
   const [inlineSelection, setInlineSelection] = React.useState<InlineSelectionInterface>({
     selected: false,

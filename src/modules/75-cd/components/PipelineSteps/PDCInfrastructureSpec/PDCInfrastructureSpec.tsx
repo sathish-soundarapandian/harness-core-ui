@@ -27,7 +27,7 @@ import type { Column } from 'react-table'
 import { Radio, RadioGroup } from '@blueprintjs/core'
 import { parse } from 'yaml'
 import { useParams } from 'react-router-dom'
-import { debounce, noop, set, get, isEmpty } from 'lodash-es'
+import { debounce, noop, set, get, isEmpty, defaultTo, isString } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { loggerFor } from 'framework/logging/logging'
@@ -152,8 +152,14 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
     const setInitial = async () => {
       const values = {
         ...initialValues,
-        hosts: initialValues.hosts ? initialValues.hosts.join('\n') : '',
-        hostFilters: initialValues.hostFilters ? initialValues.hostFilters.join('\n') : '',
+        hosts:
+          getMultiTypeFromValue(initialValues?.hosts) !== MultiTypeInputType.RUNTIME
+            ? initialValues?.hosts?.join('\n')
+            : defaultTo(initialValues?.hosts, ''),
+        hostFilters:
+          getMultiTypeFromValue(initialValues?.hostFilters) !== MultiTypeInputType.RUNTIME
+            ? initialValues?.hostFilters?.join('\n')
+            : defaultTo(initialValues?.hostFilters, ''),
         attributeFilters: getAttributeFilters(initialValues)
       }
       if (initialValues.connectorRef) {
@@ -352,6 +358,27 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
     }
   }
 
+  const isPreviewDisable = (value: PDCInfrastructureUI | PdcInfrastructure): boolean => {
+    if (isEmpty(value)) return false
+    if (getMultiTypeFromValue(value.credentialsRef) === MultiTypeInputType.RUNTIME) return true
+    if (isPreconfiguredHosts === PreconfiguredHosts.FALSE) {
+      return isString(value.hosts) && getMultiTypeFromValue(value.hosts) === MultiTypeInputType.RUNTIME
+    } else {
+      let returnBool = getMultiTypeFromValue(value.connectorRef) === MultiTypeInputType.RUNTIME
+      if (hostsScope === HostScope.HOST_NAME) {
+        returnBool =
+          returnBool ||
+          (isString(value.hostFilters) && getMultiTypeFromValue(value.hostFilters) === MultiTypeInputType.RUNTIME)
+      } else if (hostsScope === HostScope.HOST_ATTRIBUTES) {
+        returnBool =
+          returnBool ||
+          (isString(value.attributeFilters) &&
+            getMultiTypeFromValue(value.attributeFilters) === MultiTypeInputType.RUNTIME)
+      }
+      return returnBool
+    }
+  }
+
   return (
     <Layout.Vertical spacing="medium">
       {formikInitialValues && (
@@ -520,6 +547,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                         variation={ButtonVariation.SECONDARY}
                         width={140}
                         style={{ marginTop: 0 }}
+                        disabled={isPreviewDisable(formik.values)}
                       >
                         {getString('cd.steps.pdcStep.previewHosts')}
                       </Button>

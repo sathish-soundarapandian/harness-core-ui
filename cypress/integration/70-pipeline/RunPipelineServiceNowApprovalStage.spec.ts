@@ -32,6 +32,10 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
       return false
     })
     cy.intercept('GET', gitSyncCall, { connectivityMode: null, gitSyncEnabled: false })
+    cy.intercept('GET', serviceNowYamlSnippetCall, { fixture: 'pipeline/api/serviceNowStage/stageYamlSnippet' }).as(
+      'stageYaml'
+    )
+    cy.intercept('POST', stepsCall, { fixture: 'pipeline/api/approvals/steps' })
     cy.login('test', 'test')
 
     cy.visitCreatePipeline()
@@ -44,10 +48,6 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
     cy.fillName('ServiceNowStageTest')
     cy.contains('p', 'ServiceNow').click({ multiple: true })
     cy.clickSubmit()
-    cy.intercept('GET', serviceNowYamlSnippetCall, { fixture: 'pipeline/api/serviceNowStage/stageYamlSnippet' }).as(
-      'stageYaml'
-    )
-    cy.intercept('POST', stepsCall, { fixture: 'pipeline/api/approvals/steps' })
   })
 
   //After adding Approval stage, add ServiceNow

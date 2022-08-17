@@ -34,8 +34,6 @@ import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
 import { createTemplate } from '@pipeline/utils/templateUtils'
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import type { StringsMap } from 'stringTypes'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
@@ -445,7 +443,6 @@ export function RightDrawer(): React.ReactElement {
   if (data?.stepConfig?.isStepGroup) {
     stepData = stepsFactory.getStepData(StepType.StepGroup)
   }
-  const newPipelineStudioEnabled: boolean = useFeatureFlag(FeatureFlag.NEW_PIPELINE_STUDIO)
 
   const discardChanges = (): void => {
     updatePipelineView({
@@ -631,8 +628,7 @@ export function RightDrawer(): React.ReactElement {
         pipelineStage?.stage?.spec?.execution as any,
         newStepData,
         paletteData.isParallelNodeClicked,
-        paletteData.isRollback,
-        newPipelineStudioEnabled
+        paletteData.isRollback
       )
 
       if (pipelineStage?.stage) {
@@ -927,8 +923,7 @@ export function RightDrawer(): React.ReactElement {
                 provisioner,
                 newStepData,
                 paletteData.isParallelNodeClicked,
-                paletteData.isRollback,
-                newPipelineStudioEnabled
+                paletteData.isRollback
               )
 
               if (pipelineStage?.stage) {

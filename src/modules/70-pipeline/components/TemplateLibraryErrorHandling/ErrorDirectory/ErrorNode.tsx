@@ -12,25 +12,31 @@ import { Intent, Radio } from '@blueprintjs/core'
 import { defaultTo, isEqual, noop } from 'lodash-es'
 import cx from 'classnames'
 import type { ErrorNodeSummary, TemplateResponse } from 'services/template-ng'
+import type { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/ReconcileDialog/ReconcileDialog'
+import { getTitleFromErrorNodeSummary } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import css from './ErrorNode.module.scss'
 
 export interface ErrorDirectoryProps {
-  templateInputsErrorNodeSummary: ErrorNodeSummary
+  entity: TemplateErrorEntity
+  errorNodeSummary: ErrorNodeSummary
   resolvedTemplateResponses?: TemplateResponse[]
   selectedErrorNodeSummary?: ErrorNodeSummary
   setSelectedErrorNodeSummary: (errorNodeSummary: ErrorNodeSummary) => void
+  originalEntityYaml?: string
 }
 
 export function ErrorNode({
-  templateInputsErrorNodeSummary,
+  entity,
+  errorNodeSummary,
   resolvedTemplateResponses = [],
   selectedErrorNodeSummary,
-  setSelectedErrorNodeSummary
+  setSelectedErrorNodeSummary,
+  originalEntityYaml
 }: ErrorDirectoryProps) {
-  const { childrenErrorNodes, nodeInfo, templateResponse } = templateInputsErrorNodeSummary
+  const { childrenErrorNodes, nodeInfo, templateResponse } = errorNodeSummary
 
   const isEnabled = React.useMemo(() => {
-    const childNodes = defaultTo(templateInputsErrorNodeSummary.childrenErrorNodes, [])
+    const childNodes = defaultTo(errorNodeSummary.childrenErrorNodes, [])
     for (const child of childNodes) {
       if (!resolvedTemplateResponses.find(item => isEqual(item, child.templateResponse))) {
         return false
@@ -40,12 +46,17 @@ export function ErrorNode({
   }, [resolvedTemplateResponses])
 
   const onNodeClick = React.useCallback(() => {
-    setSelectedErrorNodeSummary(templateInputsErrorNodeSummary)
+    setSelectedErrorNodeSummary(errorNodeSummary)
   }, [])
 
   const isTemplateResolved = React.useMemo(
-    () => !!resolvedTemplateResponses.find(item => isEqual(item, templateInputsErrorNodeSummary?.templateResponse)),
+    () => !!resolvedTemplateResponses.find(item => isEqual(item, errorNodeSummary?.templateResponse)),
     [resolvedTemplateResponses]
+  )
+
+  const title = React.useMemo(
+    () => getTitleFromErrorNodeSummary(errorNodeSummary, entity, originalEntityYaml),
+    [errorNodeSummary, entity, originalEntityYaml]
   )
 
   return (
@@ -64,10 +75,7 @@ export function ErrorNode({
             <Container className={css.label} margin={{ right: 'medium' }}>
               <Layout.Horizontal spacing={'xsmall'}>
                 <Text lineClamp={1} font={{ variation: FontVariation.SMALL }}>
-                  {templateResponse
-                    ? `${templateResponse?.templateEntityType}: ${nodeInfo?.name}: ${templateResponse?.identifier} (
-                  ${templateResponse?.versionLabel})`
-                    : `Pipeline: ${nodeInfo?.name}`}
+                  {title}
                 </Text>
                 {templateResponse && <Icon name="template-library" size={8} />}
               </Layout.Horizontal>
@@ -90,7 +98,8 @@ export function ErrorNode({
                   <Container className={css.borderedContainer}></Container>
                   <Container className={css.childrenContainer}>
                     <ErrorNode
-                      templateInputsErrorNodeSummary={item}
+                      entity={entity}
+                      errorNodeSummary={item}
                       resolvedTemplateResponses={resolvedTemplateResponses}
                       selectedErrorNodeSummary={selectedErrorNodeSummary}
                       setSelectedErrorNodeSummary={setSelectedErrorNodeSummary}

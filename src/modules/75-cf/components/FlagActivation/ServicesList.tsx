@@ -23,12 +23,12 @@ import { Color, FontVariation } from '@harness/design-system'
 import { Tag } from '@blueprintjs/core'
 import { clone } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
-import type { Failure } from 'services/cd-ng'
+import type { Failure, ServiceResponseDTO } from 'services/cd-ng'
 import { getErrorMessage } from '@cf/utils/CFUtils'
 import useResponseError from '@cf/hooks/useResponseError'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { useStrings } from 'framework/strings'
-import { ServiceDetailsDTO, useGetServiceDetails } from 'services/cd-ng'
+import { useGetServiceList } from 'services/cd-ng'
 import { usePatchFeature } from 'services/cf'
 import type { Feature } from 'services/cf'
 
@@ -38,15 +38,10 @@ export type ServiceType = {
   name?: string
   identifier?: string
 }
-
-export type ServiceDataType = {
-  serviceName: string
-  serviceIdentifier: string
-}
 export interface EditServicesProps {
   closeModal: () => void
   loading: boolean
-  allServices?: ServiceDetailsDTO[]
+  allServices?: ServiceResponseDTO[]
   onChange: (service: ServiceType) => void
   editedServices: ServiceType[]
   refetchServices: () => Promise<void>
@@ -56,7 +51,7 @@ export interface EditServicesProps {
 
 const EditServicesModal: FC<EditServicesProps> = ({
   closeModal,
-  allServices,
+  allServices = [],
   loading,
   editedServices,
   onChange,
@@ -111,16 +106,16 @@ const EditServicesModal: FC<EditServicesProps> = ({
           {allServices.map((service, idx) => {
             return (
               <Tag
-                aria-label={`${service.serviceName}-${idx}`}
+                aria-label={`${service.name}-${idx}`}
                 round
                 interactive
-                onClick={() => onChange({ name: service.serviceName, identifier: service.serviceIdentifier })}
+                onClick={() => onChange({ name: service.name, identifier: service.identifier })}
                 className={css.tags}
                 key={idx}
                 large
-                active={editedServices.some((serv: ServiceType) => serv.identifier === service.serviceIdentifier)}
+                active={editedServices.some((serv: ServiceType) => serv.identifier === service.identifier)}
               >
-                {service.serviceName}
+                {service.name}
               </Tag>
             )
           })}
@@ -150,9 +145,7 @@ const ServicesList: React.FC<ServicesListProps> = props => {
   const queryParams = {
     accountIdentifier,
     orgIdentifier,
-    projectIdentifier,
-    startTime: 0,
-    endTime: 0
+    projectIdentifier
   }
 
   useEffect(() => {
@@ -163,13 +156,17 @@ const ServicesList: React.FC<ServicesListProps> = props => {
   }, [featureFlag])
 
   const {
-    data: serviceData,
+    data: servicesResponse,
     loading,
     error,
     refetch
-  } = useGetServiceDetails({
+  } = useGetServiceList({
     queryParams
   })
+
+  const serviceData = servicesResponse?.data?.content
+    ?.filter(serviceContent => serviceContent.service !== undefined)
+    .map(serviceContent => serviceContent.service as ServiceResponseDTO)
 
   const handleChange = (service: ServiceType): void => {
     const { name, identifier } = service
@@ -188,8 +185,8 @@ const ServicesList: React.FC<ServicesListProps> = props => {
   const { mutate: patchServices, loading: patchLoading } = usePatchFeature({
     identifier: featureFlag.identifier,
     queryParams: {
-      projectIdentifier: featureFlag.project as string,
-      environmentIdentifier: featureFlag.envProperties?.environment as string,
+      projectIdentifier: featureFlag.project,
+      environmentIdentifier: featureFlag.envProperties?.environment,
       accountIdentifier,
       orgIdentifier
     }
@@ -262,7 +259,7 @@ const ServicesList: React.FC<ServicesListProps> = props => {
               setServices(initialServices)
               setShowModal(false)
             }}
-            allServices={serviceData?.data?.serviceDeploymentDetailsList}
+            allServices={serviceData}
             loading={loading || patchLoading}
             onChange={handleChange}
             onSave={handleSave}

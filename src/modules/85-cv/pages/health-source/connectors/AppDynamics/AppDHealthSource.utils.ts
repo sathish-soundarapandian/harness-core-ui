@@ -15,9 +15,7 @@ import type {
   AppDynamicsHealthSourceSpec,
   AppdynamicsValidationResponse,
   MetricPackDTO,
-  MetricThreshold,
-  RiskProfile,
-  TimeSeriesMetricPackDTO
+  RiskProfile
 } from 'services/cv'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import { isMultiTypeRuntime } from '@common/utils/utils'
@@ -27,7 +25,6 @@ import type {
   AppDynamicsData,
   AppDynamicsFomikFormInterface,
   MapAppDynamicsMetric,
-  MetricThresholdType,
   NonCustomFeildsInterface,
   PersistCustomMetricInterface,
   ValidateMappingInterface
@@ -38,7 +35,11 @@ import { AppDynamicsMonitoringSourceFieldNames, initCustomForm, ThresholdTypes }
 import { PATHTYPE } from './Components/AppDCustomMetricForm/AppDCustomMetricForm.constants'
 import type { CustomMappedMetric } from '../../common/CustomMetric/CustomMetric.types'
 import { MetricThresholdPropertyName, MetricTypeValues } from '../../common/MetricThresholds/MetricThresholds.constants'
-import { validateCommonFieldsForMetricThreshold } from '../../common/MetricThresholds/MetricThresholds.utils'
+import {
+  getFilteredMetricThresholdValues,
+  getMetricPacksForPayload,
+  validateCommonFieldsForMetricThreshold
+} from '../../common/MetricThresholds/MetricThresholds.utils'
 
 export const convertStringBasePathToObject = (baseFolder: string | BasePathData): BasePathData => {
   let basePathObj = {} as any
@@ -408,70 +409,6 @@ export const convertFullPathToBaseAndMetric = (
   return { derivedBasePath, derivedMetricPath }
 }
 
-const getMetricPacksOfCustomMetrics = (
-  ignoreThresholds: MetricThresholdType[],
-  failFastThresholds: MetricThresholdType[]
-): TimeSeriesMetricPackDTO | null => {
-  const metricThresholds = [...ignoreThresholds, ...failFastThresholds]
-
-  const customMetricThresholdTypes = metricThresholds.filter(
-    metricThreshold => metricThreshold.metricType === MetricTypeValues.Custom
-  )
-
-  if (!customMetricThresholdTypes.length) {
-    return null
-  }
-
-  return {
-    identifier: MetricTypeValues.Custom,
-    metricThresholds: customMetricThresholdTypes
-  }
-}
-
-const getMetricThresholdsForPayload = (
-  metricPacksIdentifier: string,
-  ignoreThresholds: MetricThresholdType[],
-  failFastThresholds: MetricThresholdType[]
-): MetricThreshold[] => {
-  if (!metricPacksIdentifier) {
-    return []
-  }
-
-  const metricThresholds = [...ignoreThresholds, ...failFastThresholds]
-
-  return metricThresholds.filter(metricThreshold => metricThreshold.metricType === metricPacksIdentifier)
-}
-
-export const getMetricPacksForPayload = (
-  formData: AppDynamicsFomikFormInterface,
-  isMetricThresholdEnabled: boolean
-): TimeSeriesMetricPackDTO[] => {
-  const { metricData, ignoreThresholds, failFastThresholds } = formData
-
-  const metricPacks = Object.entries(metricData).map(item => {
-    return item[1]
-      ? {
-          identifier: item[0] as string,
-          metricThresholds: isMetricThresholdEnabled
-            ? getMetricThresholdsForPayload(item[0], ignoreThresholds, failFastThresholds)
-            : undefined
-        }
-      : {}
-  })
-
-  const filteredMetricPacks = metricPacks.filter(item => !isEmpty(item)) as TimeSeriesMetricPackDTO[]
-
-  if (filteredMetricPacks.length && isMetricThresholdEnabled) {
-    const customMetricThresholds = getMetricPacksOfCustomMetrics(ignoreThresholds, failFastThresholds)
-
-    if (customMetricThresholds) {
-      filteredMetricPacks.push(customMetricThresholds)
-    }
-  }
-
-  return filteredMetricPacks
-}
-
 export const createAppDynamicsPayload = (
   formData: any,
   isMetricThresholdEnabled: boolean
@@ -561,38 +498,8 @@ export const submitData = (
   formik: FormikProps<AppDynamicsFomikFormInterface>,
   mappedMetrics: Map<string, CustomMappedMetric>,
   selectedMetric: string,
-  selectedMetricIndex: number,
-  createdMetrics: string[],
-  getString: (key: StringKeys) => string,
-  onSubmit: (healthSourcePayload: any) => void,
-  isMetricThresholdEnabled: boolean
+  onSubmit: (healthSourcePayload: any) => void
 ): void => {
-  formik.setTouched({
-    ...formik.touched,
-    [AppDynamicsMonitoringSourceFieldNames.APPDYNAMICS_TIER]: true,
-    [AppDynamicsMonitoringSourceFieldNames.APPDYNAMICS_APPLICATION]: true,
-    [AppDynamicsMonitoringSourceFieldNames.SLI]: true,
-    [AppDynamicsMonitoringSourceFieldNames.CONTINUOUS_VERIFICATION]: true,
-    [AppDynamicsMonitoringSourceFieldNames.GROUP_NAME]: true,
-    [AppDynamicsMonitoringSourceFieldNames.METRIC_NAME]: true,
-    [AppDynamicsMonitoringSourceFieldNames.LOWER_BASELINE_DEVIATION]: true,
-    [AppDynamicsMonitoringSourceFieldNames.RISK_CATEGORY]: true,
-    [AppDynamicsMonitoringSourceFieldNames.BASE_PATH]: { basePathDropdown_0: { value: true, path: true } },
-    [AppDynamicsMonitoringSourceFieldNames.METRIC_PATH]: { metricPathDropdown_0: { value: true, path: true } },
-    [AppDynamicsMonitoringSourceFieldNames.METRIC_DATA]: { Errors: true, Performance: true },
-    [PATHTYPE.FullPath]: true
-  })
-  const errors = validateMapping({
-    values: formik.values,
-    createdMetrics,
-    selectedMetricIndex,
-    getString,
-    isMetricThresholdEnabled
-  })
-  if (Object.keys(errors || {})?.length > 0) {
-    formik.validateForm()
-    return
-  }
   const updatedMetric = formik.values
   if (updatedMetric) {
     mappedMetrics.set(selectedMetric, updatedMetric)
@@ -611,35 +518,6 @@ export const convertMetricPackToMetricData = (value?: MetricPackDTO[]) => {
     }
   })
   return dataObject
-}
-
-export const getIsMetricPacksSelected = (metricData: { [key: string]: boolean }): boolean => {
-  return Object.keys(metricData).some(metricPackKey => metricData[metricPackKey])
-}
-
-export const getAllMetricThresholds = (metricPacks?: TimeSeriesMetricPackDTO[]): MetricThresholdType[] => {
-  const availableMetricPacks: MetricThresholdType[] = []
-
-  metricPacks?.forEach((metricPack: TimeSeriesMetricPackDTO) =>
-    availableMetricPacks.push(
-      ...(metricPack?.metricThresholds ? (metricPack.metricThresholds as MetricThresholdType[]) : [])
-    )
-  )
-
-  return availableMetricPacks
-}
-
-export const getFilteredMetricThresholdValues = (
-  thresholdName: string,
-  metricPacks?: TimeSeriesMetricPackDTO[]
-): MetricThresholdType[] => {
-  if (!metricPacks?.length) {
-    return []
-  }
-
-  const metricThresholds = getAllMetricThresholds(metricPacks)
-
-  return metricThresholds.filter(metricThreshold => metricThreshold.type === thresholdName)
 }
 
 export const createAppDFormData = (

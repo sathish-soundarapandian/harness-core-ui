@@ -103,6 +103,14 @@ jest.mock('@wings-software/uicore', () => ({
   useToaster: jest.fn(() => ({ showError, showSuccess, clear: toasterClear }))
 }))
 
+const mockIntersectionObserver = jest.fn()
+mockIntersectionObserver.mockReturnValue({
+  observe: () => null,
+  unobserve: () => null,
+  disconnect: () => null
+})
+window.IntersectionObserver = mockIntersectionObserver
+
 describe('Git simplication', () => {
   beforeEach(() => {
     // eslint-disable-next-line

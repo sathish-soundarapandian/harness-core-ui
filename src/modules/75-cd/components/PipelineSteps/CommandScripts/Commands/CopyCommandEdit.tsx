@@ -36,7 +36,7 @@ export function CopyCommandEdit(props: CopyCommandEditProps): React.ReactElement
         label={getString('cd.steps.commands.sourceTypeLabel')}
         disabled={readonly}
         onChange={(event: React.FormEvent<HTMLInputElement>) => {
-          const currentValue = event.currentTarget?.value
+          const currentValue = event.currentTarget.value
           formik.setFieldValue('spec.sourceType', currentValue)
         }}
       />

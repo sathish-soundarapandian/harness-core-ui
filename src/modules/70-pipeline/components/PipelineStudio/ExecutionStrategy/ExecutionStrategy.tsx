@@ -402,7 +402,7 @@ function ExecutionStrategyRef(
                       <img src={imageByType[selectedStrategy]} data-testid="blank-canvas-image" />
                     </section>
                   )}
-                  {selectedStrategy !== 'Default' && (
+                  {selectedStrategy !== 'Default' && !isSshOrWinrmDeploymentType(serviceDefinitionType()) && (
                     <>
                       <Steps strategy={selectedStrategy} />
 
@@ -445,7 +445,6 @@ function ExecutionStrategyRef(
                 {isSshOrWinrmDeploymentType(serviceDefinitionType()) && selectedStrategy !== ExecutionType.DEFAULT ? (
                   <Phases
                     selectedStrategy={selectedStrategy}
-                    isVerifyEnabled={isVerifyEnabled}
                     serviceDefinitionType={serviceDefinitionType}
                     selectedStage={selectedStage}
                   />

@@ -115,7 +115,9 @@ export function HarnessConfigStep({
           validationSchema={Yup.object().shape({
             identifier: identifierValidation,
             files: Yup.lazy(value =>
-              Array.isArray(value) ? Yup.array().of(Yup.string().required()) : Yup.string().required()
+              Array.isArray(value)
+                ? Yup.array().of(Yup.string().required(getString('pipeline.configFiles.error.fileSelection')))
+                : Yup.string().required()
             )
           })}
           onSubmit={formData => {

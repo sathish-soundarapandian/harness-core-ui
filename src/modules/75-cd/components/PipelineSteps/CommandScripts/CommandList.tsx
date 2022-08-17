@@ -136,10 +136,8 @@ export function CommandList(props: CommandListProps): React.ReactElement {
         data-testid="add-command-unit"
         disabled={readonly}
         onClick={() => {
-          if (!arrayHelpersRef.current) return
-
           openCommandModal({
-            arrayHelpers: arrayHelpersRef.current,
+            arrayHelpers: arrayHelpersRef.current as FieldArrayRenderProps,
             isUpdate: false
           })
         }}

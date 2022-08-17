@@ -46,6 +46,7 @@ jest.mock('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs', (
   }
 }))
 
+// eslint-disable-next-line jest/no-disabled-tests
 describe('Unit tests for NewRelic health source', () => {
   beforeAll(() => {
     jest

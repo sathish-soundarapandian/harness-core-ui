@@ -55,39 +55,40 @@ export default function STOExecutionCardSummary(
         )
       }
     } else {
-      // Determine if an informational message should be shown, instead of Security Issue counts
-      let message: JSX.Element | undefined = undefined
-      if (error?.status === 404 || (issueCounts && Object.keys(issueCounts).length === 0)) {
-        message = <Text font={{ size: 'small' }}>{getString(`stoSteps.noSecurityResults`)}</Text>
-      } else if (!issueCounts || error) {
-        message = (
-          <Text icon="error" intent="danger" font={{ size: 'small' }}>
-            {getString('stoSteps.failedToGetIssueCounts')}
-          </Text>
-        )
-      } else if (
-        !(issueCounts?.critical || issueCounts?.high || issueCounts?.medium || issueCounts?.low || issueCounts?.info)
-      ) {
-        message = (
-          <Text icon={'tick-circle'} iconProps={{ intent: 'success' }} font={{ size: 'small' }}>
-            {getString('stoSteps.noSecurityIssues')}
-          </Text>
+      if (!issueCounts || error) {
+        return (
+          <div className={css.main}>
+            <Text icon="error" intent="danger" font={{ size: 'small' }}>
+              {getString('stoSteps.failedToGetIssueCounts')}
+            </Text>
+          </div>
         )
       }
-
-      // Render the message or display issue counts
-      if (message) {
-        return <div className={css.main}>{message}</div>
+      const counts = issueCounts[executionId]
+      if (issueCounts && Object.keys(issueCounts).length === 0) {
+        return (
+          <div className={css.main}>
+            <Text font={{ size: 'small' }}>{getString(`stoSteps.noSecurityResults`)}</Text>
+          </div>
+        )
+      } else if (
+        !(counts?.critical > 0 || counts?.high > 0 || counts?.medium > 0 || counts?.low > 0 || counts?.info > 0)
+      ) {
+        return (
+          <div className={css.main}>
+            <Text icon={'tick-circle'} iconProps={{ intent: 'success' }} font={{ size: 'small' }}>
+              {getString('stoSteps.noSecurityIssues')}
+            </Text>
+          </div>
+        )
       } else {
         return (
           <div className={css.main}>
-            {issueCounts?.critical ? (
-              <SeverityPill severity={SeverityCode.Critical} value={issueCounts.critical} />
-            ) : null}
-            {issueCounts?.high ? <SeverityPill severity={SeverityCode.High} value={issueCounts.high} /> : null}
-            {issueCounts?.medium ? <SeverityPill severity={SeverityCode.Medium} value={issueCounts.medium} /> : null}
-            {issueCounts?.low ? <SeverityPill severity={SeverityCode.Low} value={issueCounts.low} /> : null}
-            {issueCounts?.info ? <SeverityPill severity={SeverityCode.Info} value={issueCounts.info} /> : null}
+            {counts?.critical ? <SeverityPill severity={SeverityCode.Critical} value={counts.critical} /> : null}
+            {counts?.high ? <SeverityPill severity={SeverityCode.High} value={counts.high} /> : null}
+            {counts?.medium ? <SeverityPill severity={SeverityCode.Medium} value={counts.medium} /> : null}
+            {counts?.low ? <SeverityPill severity={SeverityCode.Low} value={counts.low} /> : null}
+            {counts?.info ? <SeverityPill severity={SeverityCode.Info} value={counts.info} /> : null}
           </div>
         )
       }

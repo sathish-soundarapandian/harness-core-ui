@@ -173,8 +173,11 @@ function FileDetails({ handleError }: FileDetailsProps): React.ReactElement {
         }
       } else {
         const response = await createNode(formData as any)
-
         if (response.status === 'SUCCESS') {
+          updateCurrentNode({
+            ...currentNode,
+            path: response?.data?.path
+          })
           setTempNodes([])
           setUnsavedNodes([])
           showSuccess(getString('filestore.fileSuccessCreated', { name: currentNode.name }))
@@ -294,7 +297,7 @@ function FileDetails({ handleError }: FileDetailsProps): React.ReactElement {
                             }
                           }}
                           disabled={
-                            !get(formikProps.values, 'fileEditor') ||
+                            (!get(formikProps.values, 'fileEditor') && !isCachedNode(currentNode.identifier)) ||
                             saveLoading ||
                             (initialContent === get(formikProps.values, 'fileEditor') &&
                               !isCachedNode(currentNode.identifier))

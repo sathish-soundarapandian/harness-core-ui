@@ -66,7 +66,6 @@ export interface TemplateContextMetadata {
   deleteTemplateCache?: (gitDetails?: EntityGitDetails) => Promise<void>
   view?: string
   isTemplateStudio?: boolean
-  stableVersion?: string
 }
 
 export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata): UseSaveTemplateReturnType {
@@ -76,8 +75,7 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
     fetchTemplate,
     deleteTemplateCache,
     view,
-    isTemplateStudio = true,
-    stableVersion
+    isTemplateStudio = true
   } = TemplateContextMetadata
   const { isGitSyncEnabled } = React.useContext(AppStoreContext)
   const { templateIdentifier, templateType, projectIdentifier, orgIdentifier, accountId, module } = useParams<
@@ -156,13 +154,11 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
         throw response
       }
     } catch (error) {
-      clear()
       if (!isGitSyncEnabled) {
+        clear()
         showError(getRBACErrorMessage(error), undefined, 'template.update.template.error')
-        return { status: 'FAILURE' }
-      } else {
-        throw error
       }
+      throw error
     }
   }
 
@@ -213,13 +209,11 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
           throw response
         }
       } catch (error) {
-        clear()
         if (!isGitExperienceEnabled) {
+          clear()
           showError(getRBACErrorMessage(error), undefined, 'template.save.template.error')
-          return { status: 'FAILURE' }
-        } else {
-          throw error
         }
+        throw error
       }
     }
   }
@@ -295,7 +289,7 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
         return saveAndPublishTemplate(updatedTemplate, comment, isEdit)
       }
     },
-    [templateIdentifier, isGitSyncEnabled, isYaml, yamlHandler, showError, showSuccess, stableVersion]
+    [templateIdentifier, isGitSyncEnabled, isYaml, yamlHandler, showError, showSuccess, saveAndPublishTemplate]
   )
 
   return {

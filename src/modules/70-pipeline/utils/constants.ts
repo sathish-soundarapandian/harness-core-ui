@@ -74,3 +74,8 @@ export enum OsTypes {
   Windows = 'Windows',
   MacOS = 'MacOS'
 }
+
+export const DEFAULT_PAGE_INDEX = 0
+export const DEFAULT_PAGE_SIZE = 20
+export const DEFAULT_PIPELINE_LIST_TABLE_SORT = ['lastUpdatedAt', 'DESC']
+export const DEFAULT_EXECUTION_LIST_TABLE_SORT = ['startTs', 'DESC']

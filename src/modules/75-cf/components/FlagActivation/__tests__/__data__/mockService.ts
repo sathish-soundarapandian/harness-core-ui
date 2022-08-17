@@ -5,82 +5,79 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-const mockService = {
-  status: 'SUCCESS',
+const mockServiceList = {
+  loading: false,
   data: {
-    serviceDeploymentDetailsList: [
+    totalPages: 1,
+    totalItems: 4,
+    pageItemCount: 2,
+    pageSize: 10,
+    content: [
       {
-        serviceName: 'Support',
-        serviceIdentifier: 'Support',
-        description: null,
-        tags: {},
-        deploymentTypeList: null,
-        totalDeployments: 0,
-        totalDeploymentChangeRate: 0,
-        successRate: 0,
-        successRateChangeRate: 0,
-        failureRate: 0,
-        failureRateChangeRate: 0,
-        frequency: 0,
-        frequencyChangeRate: 0,
-        instanceCountDetails: null,
-        lastPipelineExecuted: null
+        service: {
+          accountId: 'zEaak-FLS425IEO7OLzMUg',
+          identifier: 'Support',
+          orgIdentifier: 'default',
+          projectIdentifier: 'crystalfongtest',
+          name: 'Support',
+          description: null,
+          deleted: false,
+          tags: {},
+          yaml: 'service:\n  name: "Support"\n  identifier: "Support"\n  tags: {}\n'
+        },
+        createdAt: 1659516298640,
+        lastModifiedAt: 1659516298640
       },
       {
-        serviceName: 'Messages',
-        serviceIdentifier: 'Messages',
-        description: null,
-        tags: {},
-        deploymentTypeList: null,
-        totalDeployments: 0,
-        totalDeploymentChangeRate: 0,
-        successRate: 0,
-        successRateChangeRate: 0,
-        failureRate: 0,
-        failureRateChangeRate: 0,
-        frequency: 0,
-        frequencyChangeRate: 0,
-        instanceCountDetails: null,
-        lastPipelineExecuted: null
+        service: {
+          accountId: 'zEaak-FLS425IEO7OLzMUg',
+          identifier: 'Messages',
+          orgIdentifier: 'default',
+          projectIdentifier: 'crystalfongtest',
+          name: 'Messages',
+          description: null,
+          deleted: false,
+          tags: {},
+          yaml: 'service:\n  name: "Messages"\n  identifier: "Messages"\n  tags: {}\n'
+        },
+        createdAt: 1659516293339,
+        lastModifiedAt: 1659516293339
       },
       {
-        serviceName: 'Account',
-        serviceIdentifier: 'Account',
-        description: null,
-        tags: {},
-        deploymentTypeList: null,
-        totalDeployments: 0,
-        totalDeploymentChangeRate: 0,
-        successRate: 0,
-        successRateChangeRate: 0,
-        failureRate: 0,
-        failureRateChangeRate: 0,
-        frequency: 0,
-        frequencyChangeRate: 0,
-        instanceCountDetails: null,
-        lastPipelineExecuted: null
+        service: {
+          accountId: 'zEaak-FLS425IEO7OLzMUg',
+          identifier: 'Account',
+          orgIdentifier: 'default',
+          projectIdentifier: 'crystalfongtest',
+          name: 'Account',
+          description: null,
+          deleted: false,
+          tags: {},
+          yaml: 'service:\n  name: "Account"\n  identifier: "Account"\n  tags: {}\n'
+        },
+        createdAt: 1659516285757,
+        lastModifiedAt: 1659516285757
       },
       {
-        serviceName: 'My Service 1',
-        serviceIdentifier: 'service1Id',
-        description: null,
-        tags: {},
-        deploymentTypeList: null,
-        totalDeployments: 0,
-        totalDeploymentChangeRate: 0,
-        successRate: 0,
-        successRateChangeRate: 0,
-        failureRate: 0,
-        failureRateChangeRate: 0,
-        frequency: 0,
-        frequencyChangeRate: 0,
-        instanceCountDetails: null,
-        lastPipelineExecuted: null
+        service: {
+          accountId: 'zEaak-FLS425IEO7OLzMUg',
+          identifier: 'service1Id',
+          orgIdentifier: 'default',
+          projectIdentifier: 'crystalfongtest',
+          name: 'My Service 1',
+          description: null,
+          deleted: false,
+          tags: {},
+          yaml: 'service:\n  name: "Account"\n  identifier: "Account"\n  tags: {}\n'
+        },
+        createdAt: 1659516285757,
+        lastModifiedAt: 1659516285757
       }
-    ]
-  },
-  metaData: null,
-  correlationId: 'de60792f-ba3d-4297-958e-f58e3e336928'
+    ],
+
+    pageIndex: 0,
+    empty: false
+  }
 }
 
-export default mockService
+export default mockServiceList

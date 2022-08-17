@@ -125,6 +125,7 @@ configureOptions:
   values: 'Values'
   enterTags: 'Enter values'
   askDuringExecution: Request input value when the stage/step is being executed
+  selectAllowedValuesPlaceholder: Select Allowed Values
   validationErrors:
     regExIsRequired: 'Regex value is required'
     defaultRegExValid: Default value should validate with regex provided
@@ -916,6 +917,7 @@ editName: Edit {{name}}
 selectName: Select {{name}}
 override: Override
 plusNewName: + New {{name}}
+newName: New {{name}}
 fetchingBranches: Fetching branches
 download: Download
 gitOps: GitOps

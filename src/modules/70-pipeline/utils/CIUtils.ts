@@ -5,13 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { get, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 import moment from 'moment'
 import { RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { RegExAllowedInputExpression } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
+import { parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
@@ -76,15 +76,12 @@ export const getAllowedValuesFromTemplate = (template: Record<string, any>, fiel
     return []
   }
   const value = get(template, fieldPath, '')
-  const items: SelectOption[] = []
-  if (RegExAllowedInputExpression.test(value as string)) {
-    // This separates out "<+input>.allowedValues(a, b, c)" to ["<+input>", ["a", "b", "c"]]
-    const match = (value as string).match(RegExAllowedInputExpression)
-    if (match && match?.length > 1) {
-      const allowedValues = match[1]
-      items.push(...allowedValues.split(',').map(item => ({ label: item, value: item })))
-    }
-  }
+  const parsedInput = parseInput(value)
+  const items: SelectOption[] = defaultTo(parsedInput?.allowedValues?.values, []).map(item => ({
+    label: item,
+    value: item
+  }))
+
   return items
 }
 
@@ -107,7 +104,8 @@ export const shouldRenderRunTimeInputViewWithAllowedValues = (
     return false
   }
   const allowedValues = get(template, fieldPath, '')
-  return shouldRenderRunTimeInputView(allowedValues) && RegExAllowedInputExpression.test(allowedValues)
+  const parsedInput = parseInput(allowedValues)
+  return shouldRenderRunTimeInputView(allowedValues) && !!parsedInput?.allowedValues?.values
 }
 
 export const getConnectorRefWidth = (viewType: StepViewType | string): number =>

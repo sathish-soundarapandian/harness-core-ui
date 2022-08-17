@@ -213,12 +213,13 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                   })}
                   {values.canAddVariable && (
                     <Button
+                      icon="plus"
                       className={css.addVariable}
                       disabled={readonly}
                       size={ButtonSize.SMALL}
                       variation={ButtonVariation.LINK}
                       onClick={addNew}
-                      text={'+ ' + getString('common.addVariable')}
+                      text={getString('common.addVariable')}
                     />
                   )}
                 </div>

@@ -17,7 +17,7 @@ export const GCOProduct = {
 export interface GCOMonitoringSourceInfo {
   name?: string
   identifier?: string
-  connectorRef?: string
+  connectorRef?: string | { value?: string }
   isEdit?: boolean
   product: string
   type: string
@@ -32,7 +32,7 @@ export function buildGCOMonitoringSourceInfo(
     ...params,
     name: data?.healthSourceName,
     identifier: data?.healthSourceIdentifier,
-    connectorRef: data?.connectorRef,
+    connectorRef: typeof data?.connectorRef === 'string' ? data?.connectorRef : data?.connectorRef?.value,
     isEdit: data?.isEdit,
     product: data?.product,
     type: HealthSourceTypes.StackdriverLog,

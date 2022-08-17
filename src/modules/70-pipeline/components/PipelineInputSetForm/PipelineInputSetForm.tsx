@@ -111,7 +111,11 @@ export function StageFormInternal({
                 variables: (allValues?.stage?.variables || []) as AllNGVariables[],
                 canAddVariable: true
               }}
-              allowableTypes={allowableTypes}
+              allowableTypes={
+                (allowableTypes as MultiTypeInputType[]).filter(
+                  allowedType => !isMultiTypeRuntime(allowedType)
+                ) as AllowedTypes
+              }
               type={StepType.CustomVariable}
               readonly={readonly}
               stepViewType={viewType}

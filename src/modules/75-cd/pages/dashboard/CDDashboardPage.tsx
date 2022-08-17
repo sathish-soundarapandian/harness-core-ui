@@ -12,6 +12,7 @@ import { defaultTo, get } from 'lodash-es'
 import moment from 'moment'
 import { useModalHook } from '@harness/use-modal'
 import type { IDialogProps } from '@blueprintjs/core'
+import qs from 'qs'
 import routes from '@common/RouteDefinitions'
 import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'
@@ -41,10 +42,10 @@ import { useLocalStorage, useMutateAsGet, useQueryParams } from '@common/hooks'
 import PipelineModalListView from '@pipeline/components/PipelineModalListView/PipelineModalListView'
 import { TitleWithToolTipId } from '@common/components/Title/TitleWithToolTipId'
 import { DashboardSelected } from '@pipeline/components/ServiceExecutionsCard/ServiceExecutionsCard'
-import type { QueryParams } from '@pipeline/pages/execution-list/types'
 import {
   ExecutionListFilterContextProvider,
-  processQueryParams
+  ProcessedExecutionListPageQueryParams,
+  queryParamOptions
 } from '@pipeline/pages/execution-list/ExecutionListFilterContext/ExecutionListFilterContext'
 import { OverviewExecutionListEmpty } from '@pipeline/pages/execution-list/ExecutionListEmpty/OverviewExecutionListEmpty'
 import DeploymentsHealthCards from './DeploymentsHealthCards'
@@ -153,7 +154,7 @@ export function executionStatusInfoToExecutionSummary(
 
 export const CDDashboardPage: React.FC = () => {
   const { getString } = useStrings()
-  const queryParams = useQueryParams<QueryParams>({ processQueryParams })
+  const queryParams = useQueryParams<ProcessedExecutionListPageQueryParams>(queryParamOptions)
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
 
   const [timeRange, setTimeRange] = useLocalStorage<TimeRangeSelectorProps>(
@@ -280,10 +281,10 @@ export const CDDashboardPage: React.FC = () => {
                 contentType="FAILED_DEPLOYMENT"
                 isLoading={loading && !refetchingDeployments}
                 onShowAll={() =>
-                  history.push(
-                    routes.toDeployments({ projectIdentifier, orgIdentifier, accountId, module: 'cd' }) +
-                      `?filters=${JSON.stringify({ status: Object.keys(FailedStatus) })}`
-                  )
+                  history.push({
+                    pathname: routes.toDeployments({ projectIdentifier, orgIdentifier, accountId, module: 'cd' }),
+                    search: qs.stringify({ filters: { status: Object.keys(FailedStatus) } })
+                  })
                 }
               >
                 {data?.data?.failure?.map(d => (
@@ -298,10 +299,10 @@ export const CDDashboardPage: React.FC = () => {
                 contentType="ACTIVE_DEPLOYMENT"
                 isLoading={loading && !refetchingDeployments}
                 onShowAll={() =>
-                  history.push(
-                    routes.toDeployments({ projectIdentifier, orgIdentifier, accountId, module: 'cd' }) +
-                      `?filters=${JSON.stringify({ status: Object.keys(ActiveStatus) })}`
-                  )
+                  history.push({
+                    pathname: routes.toDeployments({ projectIdentifier, orgIdentifier, accountId, module: 'cd' }),
+                    search: qs.stringify({ filters: { status: Object.keys(ActiveStatus) } })
+                  })
                 }
               >
                 {activeDeployments.map(d => (

@@ -207,17 +207,18 @@ export function ServiceOverrides(): React.ReactElement {
   return servicesLoading || serviceOverridesLoading ? (
     <ContainerSpinner />
   ) : (
-    <Container padding={{ left: 'medium', right: 'medium' }}>
+    <Container padding={{ left: 'xxlarge', right: 'medium' }}>
       <Card className={css.serviceOverridesContainer}>
         <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
           <Text color={Color.GREY_700} margin={{ bottom: 'small' }} font={{ weight: 'bold' }}>
             {getString('common.serviceOverrides')}
           </Text>
           <RbacButton
+            icon="plus"
             size={ButtonSize.SMALL}
             variation={ButtonVariation.LINK}
             onClick={createNewOverride}
-            text={getString('common.plusNewName', { name: getString('common.override') })}
+            text={getString('common.newName', { name: getString('common.override') })}
             permission={{
               resource: {
                 resourceType: ResourceType.ENVIRONMENT
@@ -341,6 +342,7 @@ export function ServiceOverrides(): React.ReactElement {
                     )
                   })}
                   <RbacButton
+                    icon="plus"
                     size={ButtonSize.SMALL}
                     variation={ButtonVariation.LINK}
                     onClick={() => {
@@ -351,7 +353,7 @@ export function ServiceOverrides(): React.ReactElement {
                       setIsEdit(false)
                       showModal()
                     }}
-                    text={getString('common.plusAddName', { name: getString('common.override') })}
+                    text={getString('common.addName', { name: getString('common.override') })}
                     permission={{
                       resource: {
                         resourceType: ResourceType.ENVIRONMENT

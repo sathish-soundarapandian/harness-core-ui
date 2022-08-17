@@ -42,7 +42,8 @@ jest.mock('services/cd-ng', () => ({
   useGetAzureResourceGroupsBySubscription: jest.fn(() => resourceGroupsResponse),
   getConnectorListV2Promise: jest.fn(() => Promise.resolve(connectorsResponse.data)),
   getAzureSubscriptionsPromise: jest.fn(() => Promise.resolve(subscriptionsResponse.data)),
-  getAzureResourceGroupsBySubscriptionPromise: jest.fn(() => Promise.resolve(resourceGroupsResponse.data))
+  getAzureResourceGroupsBySubscriptionPromise: jest.fn(() => Promise.resolve(resourceGroupsResponse.data)),
+  useGetAzureResourceGroupsV2: jest.fn(() => Promise.resolve(resourceGroupsResponse.data))
 }))
 
 const getInitialValues = (): AzureWebAppInfrastructure => ({

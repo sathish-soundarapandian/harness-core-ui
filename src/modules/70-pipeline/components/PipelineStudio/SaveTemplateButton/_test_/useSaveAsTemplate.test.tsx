@@ -9,9 +9,17 @@ import React from 'react'
 import { act, fireEvent, render } from '@testing-library/react'
 import { useSaveAsTemplate } from '@pipeline/components/PipelineStudio/SaveTemplateButton/useSaveAsTemplate'
 import { TestWrapper } from '@common/utils/testUtils'
-import * as hooks from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
+import type { ConfigModalProps } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 
-const TemplateConfigMock = jest.spyOn(hooks, 'TemplateConfigModal')
+const mockFunction = jest.fn()
+
+jest.mock('framework/Templates/TemplateConfigModal/TemplateConfigModal', () => ({
+  ...jest.requireActual('framework/Templates/TemplateConfigModal/TemplateConfigModal'),
+  TemplateConfigModalWithRef: React.forwardRef((props: ConfigModalProps, _ref) => {
+    mockFunction(props)
+    return <div className={'template-config-modal-mock'} />
+  })
+}))
 
 function Wrapped(): React.ReactElement {
   const { save } = useSaveAsTemplate({
@@ -46,30 +54,28 @@ describe('useSaveAsTemplate tests', () => {
     await act(async () => {
       fireEvent.click(saveAsTemplateBtn)
     })
-    expect(TemplateConfigMock).toBeCalledWith(
-      {
-        allowScopeChange: true,
-        initialValues: {
-          identifier: '-1',
-          name: '',
+    expect(mockFunction).toBeCalledWith({
+      allowScopeChange: true,
+      initialValues: {
+        identifier: '-1',
+        name: '',
+        spec: {
+          type: 'Run',
           spec: {
-            type: 'Run',
-            spec: {
-              connectorRef: 'harnessImage',
-              image: 'alpine',
-              command: "echo 'run'",
-              privileged: false
-            }
-          },
-          type: 'Step',
-          versionLabel: '-1'
+            connectorRef: 'harnessImage',
+            image: 'alpine',
+            command: "echo 'run'",
+            privileged: false
+          }
         },
-        intent: 'SAVE',
-        onClose: expect.anything(),
-        promise: expect.anything(),
-        title: 'common.template.saveAsNewTemplateHeading'
+        type: 'Step',
+        versionLabel: '-1'
       },
-      {}
-    )
+      intent: 'SAVE',
+      onClose: expect.any(Function),
+      onFailure: expect.any(Function),
+      promise: expect.any(Function),
+      title: 'common.template.saveAsNewTemplateHeading'
+    })
   })
 })

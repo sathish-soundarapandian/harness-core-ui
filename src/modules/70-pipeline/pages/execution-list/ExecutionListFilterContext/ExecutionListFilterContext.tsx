@@ -7,36 +7,29 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import type { PipelineType, PipelinePathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import type { PipelineType, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { FilterDTO, GetListOfExecutionsQueryParams, useGetFilterList } from 'services/pipeline-ng'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { StringUtils } from '@common/exports'
 import { UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
-import type { QueryParams, QuickStatusParam, StringQueryParams } from '../types'
+import { DEFAULT_EXECUTION_LIST_TABLE_SORT, DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
+import type { PartiallyRequired } from '@pipeline/utils/types'
+import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
+import type { ExecutionListPageQueryParams } from '../types'
 
-export function processQueryParams(params: StringQueryParams & GitQueryParams) {
-  let filters = {}
-
-  try {
-    filters = params.filters ? JSON.parse(params.filters) : undefined
-  } catch (_e) {
-    // do nothing
-  }
-
-  return {
-    ...params,
-    page: parseInt(params.page || '1', 10),
-    size: parseInt(params.size || '20', 10),
-    sort: [],
-    status: ((Array.isArray(params.status) ? params.status : [params.status]) as QuickStatusParam)?.filter(p => p),
-    myDeployments: !!params.myDeployments,
-    searchTerm: params.searchTerm,
-    filters,
-    repoIdentifier: params.repoIdentifier,
-    repoName: params.repoName,
-    branch: params.branch,
-    connectorRef: params.connectorRef,
-    storeType: params.storeType
+export type ProcessedExecutionListPageQueryParams = PartiallyRequired<
+  ExecutionListPageQueryParams,
+  'page' | 'size' | 'sort'
+>
+export const queryParamOptions = {
+  decoder: queryParamDecodeAll(),
+  processQueryParams(params: ExecutionListPageQueryParams): ProcessedExecutionListPageQueryParams {
+    return {
+      ...params,
+      page: params.page ?? DEFAULT_PAGE_INDEX,
+      size: params.size ?? DEFAULT_PAGE_SIZE,
+      sort: params.sort ?? DEFAULT_EXECUTION_LIST_TABLE_SORT
+    }
   }
 }
 
@@ -56,14 +49,14 @@ interface ExecutionListFilterContext {
   /**
    *  processed query params. Ex tranform to boolean and number types
    */
-  queryParams: QueryParams
+  queryParams: ProcessedExecutionListPageQueryParams
 }
 
 const ExecutionListFilterContext = React.createContext({} as ExecutionListFilterContext)
 
 export function ExecutionListFilterContextProvider({ children }: { children: React.ReactNode }): React.ReactElement {
   const { orgIdentifier, projectIdentifier, accountId } = useParams<PipelineType<PipelinePathProps>>()
-  const queryParams = useQueryParams<QueryParams & GitQueryParams>({ processQueryParams })
+  const queryParams = useQueryParams<ProcessedExecutionListPageQueryParams>(queryParamOptions)
   const { filterIdentifier, myDeployments, status, searchTerm } = queryParams
   const { replaceQueryParams } = useUpdateQueryParams<Partial<GetListOfExecutionsQueryParams>>()
 
@@ -87,7 +80,7 @@ export function ExecutionListFilterContextProvider({ children }: { children: Rea
     }
   })
 
-  const clearFilter = () => replaceQueryParams({})
+  const clearFilter = (): void => replaceQueryParams({})
 
   return (
     <ExecutionListFilterContext.Provider

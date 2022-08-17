@@ -41,13 +41,30 @@ import {
   useGetPipelineList,
   useSoftDeletePipeline
 } from 'services/pipeline-ng'
+import { DEFAULT_PIPELINE_LIST_TABLE_SORT, DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
+import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
+import type { PartiallyRequired } from '@pipeline/utils/types'
 import { ClonePipelineForm } from '@pipeline/components/ClonePipelineForm/ClonePipelineForm'
 import { PipelineListEmpty } from './PipelineListEmpty/PipelineListEmpty'
 import { PipelineListFilter } from './PipelineListFilter/PipelineListFilter'
 import { PipelineListTable } from './PipelineListTable/PipelineListTable'
-import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE, DEFAULT_SORT, getRouteProps } from './PipelineListUtils'
+import { getRouteProps } from './PipelineListUtils'
 import type { PipelineListPagePathParams, PipelineListPageQueryParams } from './types'
 import css from './PipelineListPage.module.scss'
+
+type ProcessedPipelineListPageQueryParams = PartiallyRequired<PipelineListPageQueryParams, 'page' | 'size' | 'sort'>
+const queryParamOptions = {
+  parseArrays: true,
+  decoder: queryParamDecodeAll(),
+  processQueryParams(params: PipelineListPageQueryParams): ProcessedPipelineListPageQueryParams {
+    return {
+      ...params,
+      page: params.page ?? DEFAULT_PAGE_INDEX,
+      size: params.size ?? DEFAULT_PAGE_SIZE,
+      sort: params.sort ?? DEFAULT_PIPELINE_LIST_TABLE_SORT
+    }
+  }
+}
 
 export function PipelineListPage(): React.ReactElement {
   const { getString } = useStrings()
@@ -66,22 +83,13 @@ export function PipelineListPage(): React.ReactElement {
     close: closeClonePipelineModal
   } = useToggleOpen()
 
-  const queryParams = useQueryParams<PipelineListPageQueryParams>({
-    processQueryParams(params: PipelineListPageQueryParams) {
-      return {
-        ...params,
-        page: params.page ? +params.page : DEFAULT_PAGE_NUMBER,
-        size: params.size ? +params.size : DEFAULT_PAGE_SIZE,
-        sort: params.sort || DEFAULT_SORT
-      }
-    }
-  })
+  const queryParams = useQueryParams<ProcessedPipelineListPageQueryParams>(queryParamOptions)
   const { searchTerm, repoIdentifier, branch, page, size, sort } = queryParams
   const pathParams = useParams<PipelineListPagePathParams>()
   const { projectIdentifier, orgIdentifier, accountId } = pathParams
   const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<Partial<PipelineListPageQueryParams>>()
 
-  const handleRepoChange = (filter: GitFilterScope) => {
+  const handleRepoChange = (filter: GitFilterScope): void => {
     updateQueryParams({
       repoIdentifier: filter.repo || undefined,
       branch: filter.branch || undefined,
@@ -89,7 +97,7 @@ export function PipelineListPage(): React.ReactElement {
     })
   }
 
-  const goToPipelineStudio = (pipeline?: PMSPipelineSummaryResponse) =>
+  const goToPipelineStudio = (pipeline?: PMSPipelineSummaryResponse): void =>
     history.push(routes.toPipelineStudio(getRouteProps(pathParams, pipeline)))
 
   const {
@@ -242,7 +250,7 @@ export function PipelineListPage(): React.ReactElement {
             width={200}
             placeholder={getString('search')}
             onChange={text => {
-              updateQueryParams({ searchTerm: text ?? undefined, page: DEFAULT_PAGE_NUMBER })
+              updateQueryParams({ searchTerm: text ?? undefined, page: DEFAULT_PAGE_INDEX })
             }}
             defaultValue={searchTerm}
             ref={searchRef}

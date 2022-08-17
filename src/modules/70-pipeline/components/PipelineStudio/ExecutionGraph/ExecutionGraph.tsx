@@ -30,8 +30,6 @@ import type {
   StepElementConfig
 } from 'services/cd-ng'
 import type { DependencyElement } from 'services/ci'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import {
   DiagramFactory,
   DiagramNodes,
@@ -76,7 +74,6 @@ import {
 } from './ExecutionGraphUtil'
 import { EmptyStageName } from '../PipelineConstants'
 import {
-  CanvasWidget,
   createEngine,
   DefaultLinkEvent,
   DefaultNodeEvent,
@@ -89,7 +86,6 @@ import {
   StepGroupNodeLayerOptions,
   StepsType
 } from '../../Diagram'
-import { CanvasButtons } from '../../CanvasButtons/CanvasButtons'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import css from './ExecutionGraph.module.scss'
 
@@ -261,7 +257,6 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     rollBackPropsStyle = {},
     rollBackBannerStyle = {},
     canvasButtonsLayout,
-    canvasButtonsTooltipPosition,
     pathToStage,
     templateTypes
   } = props
@@ -270,7 +265,6 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     getStagePathFromPipeline,
     updatePipelineView
   } = usePipelineContext()
-  const newPipelineStudioEnabled: boolean = useFeatureFlag(FeatureFlag.NEW_PIPELINE_STUDIO)
   // NOTE: we are using ref as DynamicPopover use memo
   const stageCloneRef = React.useRef<StageElementWrapper<T>>({})
   stageCloneRef.current = cloneDeep(stage)
@@ -343,8 +337,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
           stepGroup: node
         },
         isParallelNodeClicked,
-        state.isRollback,
-        newPipelineStudioEnabled
+        state.isRollback
       )
       editStep({
         node,
@@ -422,7 +415,6 @@ function ExecutionGraphRef<T extends StageElementConfig>(
               state,
               entity: dropEntity,
               skipFlatten: skipFlattenIfSameParallel,
-              newPipelineStudioEnabled: newPipelineStudioEnabled,
               isRollback: state.isRollback
             })
             if (isRemove) {
@@ -439,14 +431,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
                   updateStageWithNewData(state)
                 }
               } else {
-                addStepOrGroup(
-                  eventTemp.entity,
-                  state.stepsData,
-                  dropNode,
-                  false,
-                  state.isRollback,
-                  newPipelineStudioEnabled
-                )
+                addStepOrGroup(eventTemp.entity, state.stepsData, dropNode, false, state.isRollback)
                 updateStageWithNewData(state)
               }
             }
@@ -490,7 +475,6 @@ function ExecutionGraphRef<T extends StageElementConfig>(
             state,
             entity: event,
             skipFlatten: skipFlattenIfSameParallel,
-            newPipelineStudioEnabled: newPipelineStudioEnabled,
             isRollback: state.isRollback
           })
           if (isRemove) {
@@ -530,8 +514,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
                 state.stepsData,
                 dropNode,
                 false,
-                state.isRollback,
-                newPipelineStudioEnabled
+                state.isRollback
               )
               updateStageWithNewData(state)
             }
@@ -648,7 +631,6 @@ function ExecutionGraphRef<T extends StageElementConfig>(
       const isRemoved = removeStepOrGroup({
         state,
         entity: eventTemp.entity,
-        newPipelineStudioEnabled: newPipelineStudioEnabled,
         isRollback: state.isRollback
       })
       if (isRemoved) {
@@ -748,7 +730,6 @@ function ExecutionGraphRef<T extends StageElementConfig>(
       const isRemoved = removeStepOrGroup({
         state,
         entity: event,
-        newPipelineStudioEnabled: newPipelineStudioEnabled,
         isRollback: state.isRollback
       })
       if (isRemoved) {
@@ -828,18 +809,10 @@ function ExecutionGraphRef<T extends StageElementConfig>(
             const isRemove = removeStepOrGroup({
               state,
               entity: dropEntity,
-              newPipelineStudioEnabled: newPipelineStudioEnabled,
               isRollback: state.isRollback
             })
             if (isRemove && dropNode) {
-              addStepOrGroup(
-                eventTemp.entity,
-                state.stepsData,
-                dropNode,
-                false,
-                state.isRollback,
-                newPipelineStudioEnabled
-              )
+              addStepOrGroup(eventTemp.entity, state.stepsData, dropNode, false, state.isRollback)
               updateStageWithNewData(state)
             }
           }
@@ -881,7 +854,6 @@ function ExecutionGraphRef<T extends StageElementConfig>(
       const isRemove = removeStepOrGroup({
         state,
         entity: event,
-        newPipelineStudioEnabled: newPipelineStudioEnabled,
         isRollback: state.isRollback
       })
       if (isRemove) {
@@ -890,8 +862,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
           state.stepsData,
           stepDetails,
           false,
-          state.isRollback,
-          newPipelineStudioEnabled
+          state.isRollback
         )
         updateStageWithNewData(state)
       }
@@ -1203,45 +1174,28 @@ function ExecutionGraphRef<T extends StageElementConfig>(
             {getString('rollbackLabel')}
           </Text>
         )}
-        {newPipelineStudioEnabled ? (
-          <>
-            <NodeDimensionProvider>
-              <CDPipelineStudioNew
-                parentSelector=".Pane2"
-                selectedNodeId={selectedStepId}
-                loaderComponent={DiagramLoader}
-                data={stepsData}
-                createNodeTitle={getString('addStep')}
-                graphActionsLayout={canvasButtonsLayout}
-                graphLinkClassname={css.graphLink}
+
+        <>
+          <NodeDimensionProvider>
+            <CDPipelineStudioNew
+              parentSelector=".Pane2"
+              selectedNodeId={selectedStepId}
+              loaderComponent={DiagramLoader}
+              data={stepsData}
+              createNodeTitle={getString('addStep')}
+              graphActionsLayout={canvasButtonsLayout}
+              graphLinkClassname={css.graphLink}
+            />
+            {hasRollback && (
+              <RollbackToggleSwitch
+                style={{ top: 62, ...rollBackPropsStyle, background: Color.WHITE }}
+                active={state.isRollback ? StepsType.Rollback : StepsType.Normal}
+                onChange={type => onRollbackToggleSwitchClick(type)}
               />
-              {hasRollback && (
-                <RollbackToggleSwitch
-                  style={{ top: 62, ...rollBackPropsStyle, background: Color.WHITE }}
-                  active={state.isRollback ? StepsType.Rollback : StepsType.Normal}
-                  onChange={type => onRollbackToggleSwitchClick(type)}
-                />
-              )}
-            </NodeDimensionProvider>
-          </>
-        ) : (
-          <>
-            <CanvasWidget
-              engine={engine}
-              isRollback={hasRollback}
-              rollBackProps={{
-                style: { top: 62, ...rollBackPropsStyle },
-                active: state.isRollback ? StepsType.Rollback : StepsType.Normal
-              }}
-            />
-            <CanvasButtons
-              engine={engine}
-              tooltipPosition={canvasButtonsTooltipPosition}
-              layout={canvasButtonsLayout}
-              className={css.canvasButtons}
-            />
-          </>
-        )}
+            )}
+          </NodeDimensionProvider>
+        </>
+
         <DynamicPopover
           className={css.addStepPopover}
           darkMode={true}

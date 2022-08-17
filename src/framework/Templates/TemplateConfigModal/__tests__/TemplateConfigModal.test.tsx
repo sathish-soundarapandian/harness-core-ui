@@ -8,7 +8,7 @@
 import React from 'react'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import { ConfigModalProps, TemplateConfigModal, Intent } from '../TemplateConfigModal'
+import { ConfigModalProps, Intent, TemplateConfigModalWithRef } from '../TemplateConfigModal'
 
 const getProps = (): ConfigModalProps => ({
   onClose: jest.fn(),
@@ -32,7 +32,7 @@ describe('CREATE MODE', () => {
     const props = getProps()
     const { container, getByText, queryByText } = render(
       <TestWrapper>
-        <TemplateConfigModal {...props} />
+        <TemplateConfigModalWithRef {...props} />
       </TestWrapper>
     )
     act(() => {
@@ -48,7 +48,7 @@ describe('CREATE MODE', () => {
     const props = getProps()
     const { container } = render(
       <TestWrapper>
-        <TemplateConfigModal {...props} />
+        <TemplateConfigModalWithRef {...props} />
       </TestWrapper>
     )
     act(() => {
@@ -61,7 +61,7 @@ describe('CREATE MODE', () => {
     const props = getProps()
     const { container, getByText } = render(
       <TestWrapper>
-        <TemplateConfigModal {...props} />
+        <TemplateConfigModalWithRef {...props} />
       </TestWrapper>
     )
     act(() => {

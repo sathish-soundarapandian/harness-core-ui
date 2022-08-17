@@ -31,8 +31,9 @@ import {
 } from '@common/Redirects'
 import routes from '@common/RouteDefinitions'
 import { RouteWithLayout } from '@common/router'
-import { accountPathProps, executionPathProps, projectPathProps, pipelineModuleParams } from '@common/utils/routeUtils'
+import { accountPathProps, executionPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { ConnectorRouteDestinations } from '@connectors/RouteDestinations'
+import { FileStoreRouteDestinations } from '@filestore/RouteDestinations'
 import { DelegateRouteDestinations } from '@delegates/RouteDestinations'
 import { GitSyncRouteDestinations } from '@gitsync/RouteDestinations'
 import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
@@ -46,7 +47,6 @@ import { SecretRouteDestinations } from '@secrets/RouteDestinations'
 import { TemplateRouteDestinations } from '@templates-library/RouteDestinations'
 import { TriggersRouteDestinations } from '@triggers/RouteDestinations'
 import { VariableRouteDestinations } from '@variables/RouteDestinations'
-import FileStorePage from '@filestore/pages/filestore/FileStorePage'
 import CIPipelineStudio from '@ci/pages/pipeline-studio/CIPipelineStudio'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
@@ -310,15 +310,6 @@ export default (
         <BuildCommits />
       </ExecutionLandingPage>
     </RouteWithLayout>
-    <RouteWithLayout
-      exact
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={CISideNavProps}
-      path={routes.toFileStore({ ...accountPathProps, ...projectPathProps, ...pipelineModuleParams })}
-      pageName={PAGE_NAME.FileStorePage}
-    >
-      <FileStorePage />
-    </RouteWithLayout>
 
     {
       PipelineRouteDestinations({
@@ -409,6 +400,13 @@ export default (
       GovernanceRouteDestinations({
         sidebarProps: CISideNavProps,
         pathProps: { ...accountPathProps, ...projectPathProps, ...moduleParams }
+      })?.props.children
+    }
+    {
+      FileStoreRouteDestinations({
+        moduleParams,
+        licenseRedirectData,
+        sidebarProps: CISideNavProps
       })?.props.children
     }
   </>

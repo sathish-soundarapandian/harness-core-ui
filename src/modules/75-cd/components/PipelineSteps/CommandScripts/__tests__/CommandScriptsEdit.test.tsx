@@ -6,9 +6,9 @@
  */
 
 import React from 'react'
-import { render, RenderResult, waitFor, within } from '@testing-library/react'
+import { queryByAttribute, render, RenderResult, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { MultiTypeInputType } from '@harness/uicore'
+import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -126,6 +126,24 @@ describe('test <CommandScriptsEdit />', () => {
         expect(queryByText(commandUnits[commandUnitIndex].name)).toBeNull()
       })
     })
+
+    test('should close command unit form on clicking cancel/submit', async () => {
+      const { getByTestId, findByTestId, queryByTestId } = renderResult
+      const editButton = getByTestId('edit-command-unit-1')
+
+      userEvent.click(editButton)
+      expect(await findByTestId('command-unit-form-container')).toBeInTheDocument()
+
+      userEvent.click(getByTestId('command-unit-form-cancel'))
+      await waitFor(() => expect(queryByTestId('command-unit-form-container')).not.toBeInTheDocument())
+
+      userEvent.click(editButton)
+      expect(await findByTestId('command-unit-form-container')).toBeInTheDocument()
+
+      const submitButton = await findByTestId('command-unit-form-submit')
+      userEvent.click(submitButton)
+      await waitFor(() => expect(queryByTestId('command-unit-form-container')).not.toBeInTheDocument())
+    })
   })
 
   describe('test Optional Configuration', () => {
@@ -224,5 +242,58 @@ describe('test <CommandScriptsEdit />', () => {
         })
       })
     })
+
+    test('should render a checkbox for onDelegate field', async () => {
+      const { getByTestId, findByTestId } = renderResult
+      const optionalConfiguration = getByTestId('optional-config-summary')
+      userEvent.click(optionalConfiguration)
+
+      const delegateCheckbox = await findByTestId('runOnDelegate')
+      expect(delegateCheckbox).toBeInTheDocument()
+
+      userEvent.click(delegateCheckbox)
+      await waitFor(() => expect(delegateCheckbox).toBeChecked())
+    })
+  })
+
+  test('interacting with <ConfigureOptions /> when timeout is runtime input', async () => {
+    const { container, findByText, getByText } = render(
+      <TestWrapper>
+        <CommandScriptsEdit
+          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+          initialValues={{
+            type: StepType.Command,
+            name: name,
+            identifier: getIdentifierFromName(name),
+            spec: {
+              onDelegate: false
+            },
+            timeout: RUNTIME_INPUT_VALUE
+          }}
+          stepViewType={StepViewType.Edit}
+          readonly={false}
+        />
+      </TestWrapper>
+    )
+
+    expect(queryByNameAttribute('timeout', container)).toHaveDisplayValue(RUNTIME_INPUT_VALUE)
+
+    const configureOptionsButton = queryByAttribute('id', container, 'configureOptions_step.timeout')
+    expect(configureOptionsButton).toBeInTheDocument()
+    userEvent.click(configureOptionsButton!)
+
+    expect(await findByText('common.configureOptions.configureOptions')).toBeInTheDocument()
+
+    userEvent.click(getByText('common.configureOptions.regex'))
+    const regexField = queryByNameAttribute('regExValues', document.body)
+    await waitFor(() => expect(regexField).toBeInTheDocument())
+    const regex = '.*'
+    userEvent.type(regexField!, regex)
+
+    userEvent.click(getByText(/submit/i))
+
+    await waitFor(() =>
+      expect(queryByNameAttribute('timeout', container)).toHaveDisplayValue(`${RUNTIME_INPUT_VALUE}.regex(${regex})`)
+    )
   })
 })

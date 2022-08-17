@@ -6,5 +6,6 @@
  */
 
 export enum ALLOWED_VALUES_TYPE {
-  TIME = 'TIME'
+  TIME = 'TIME',
+  MULTI_SELECT = 'MULTI_SELECT'
 }

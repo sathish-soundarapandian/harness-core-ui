@@ -48,6 +48,8 @@ import { joinAsASentence } from '@common/utils/StringUtils'
 import { TestStatus } from '@common/components/TestConnectionWidget/TestConnectionWidget'
 import { Status } from '@common/utils/Constants'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { CIOnboardingActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
 import {
   getBackendServerUrl,
@@ -134,6 +136,7 @@ const SelectGitProviderRef = (
     queryParams: { accountIdentifier: accountId }
   })
   let timerId: NodeJS.Timeout
+  const { trackEvent } = useTelemetry()
 
   //#region OAuth validation and integration
   const disableOAuthForGitProvider = gitProvider?.type === Connectors.BITBUCKET
@@ -826,13 +829,14 @@ const SelectGitProviderRef = (
 
   const handleGitProviderSelection = useCallback(
     (item: GitProvider) => {
+      trackEvent(CIOnboardingActions.SelectGitProvider, { gitProvider: item.type, ...(authMethod && { authMethod }) })
       setGitProvider(item)
       setTestConnectionStatus(TestStatus.NOT_INITIATED)
       resetFormFields()
       setAuthMethod(undefined)
       setOAuthStatus(Status.TO_DO)
     },
-    [formikRef]
+    [formikRef, trackEvent]
   )
 
   //#endregion

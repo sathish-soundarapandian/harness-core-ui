@@ -349,7 +349,7 @@ export const RecentExecutionsCell: CellType = ({ row }) => {
             </div>
             {i.startTs && (
               <>
-                <LabeValue label={getString('pipeline.executionId')} value={i.planExecutionId} />
+                <LabeValue label={getString('pipeline.executionId')} value={i.runSequence || i.planExecutionId} />
                 <LabeValue
                   label={getString('common.executedBy')}
                   value={

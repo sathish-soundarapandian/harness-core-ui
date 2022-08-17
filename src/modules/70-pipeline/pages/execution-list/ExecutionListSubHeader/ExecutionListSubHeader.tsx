@@ -24,9 +24,9 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ExecutionCompareYaml } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareYaml'
 import { useExecutionCompareContext } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
+import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
 import { useExecutionListFilterContext } from '../ExecutionListFilterContext/ExecutionListFilterContext'
 import { ExecutionListFilter } from '../ExecutionListFilter/ExecutionListFilter'
-import type { QuickStatusParam } from '../types'
 import type { ExecutionListProps } from '../ExecutionList'
 import css from './ExecutionListSubHeader.module.scss'
 
@@ -35,8 +35,6 @@ export interface FilterQueryParams {
   pipeline?: string
   status?: ExecutionStatus | null
 }
-
-const defaultPageNumber = 1
 
 export function ExecutionListSubHeader(
   props: Pick<ExecutionListProps, 'isPipelineInvalid' | 'onRunPipeline'>
@@ -49,38 +47,14 @@ export function ExecutionListSubHeader(
   const { isCompareMode, cancelCompareMode, compareItems } = useExecutionCompareContext()
   const { state: showCompareExecutionDrawer, close, open } = useBooleanStatus(false)
 
-  function handleQueryChange(query: string): void {
-    if (query) {
-      updateQueryParams({ searchTerm: query, page: defaultPageNumber })
+  const changeQueryParam = <T extends keyof GetListOfExecutionsQueryParams>(
+    key: T,
+    value: GetListOfExecutionsQueryParams[T]
+  ): void => {
+    if (value) {
+      updateQueryParams({ [key]: value, page: DEFAULT_PAGE_INDEX })
     } else {
-      updateQueryParams({ searchTerm: [] as any }) // removes the param
-    }
-  }
-
-  function handleMyDeployments(isChecked: boolean): void {
-    if (isChecked) {
-      updateQueryParams({ myDeployments: true })
-    } else {
-      updateQueryParams({ myDeployments: [] as any }) // removes the param
-    }
-  }
-
-  function handleStatusChange(status?: QuickStatusParam | null): void {
-    if (status) {
-      updateQueryParams({ status, page: defaultPageNumber })
-    } else {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      updateQueryParams({ status: [] as any }) // removes the param
-    }
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-shadow
-  function handlePipelineChange(pipelineIdentifier?: string): void {
-    if (pipelineIdentifier) {
-      updateQueryParams({ pipelineIdentifier, page: defaultPageNumber })
-    } else {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      updateQueryParams({ pipelineIdentifier: [] as any }) // removes the param
+      updateQueryParams({ [key]: undefined }) // removes the specific param
     }
   }
 
@@ -157,14 +131,17 @@ export function ExecutionListSubHeader(
             })()
           )}
           checked={queryParams.myDeployments}
-          onChange={e => handleMyDeployments(e.currentTarget.checked)}
+          onChange={e => changeQueryParam('myDeployments', e.currentTarget.checked)}
           className={cx(css.myDeploymentsCheckbox, { [css.selected]: queryParams.myDeployments })}
         />
-        <StatusSelect value={queryParams.status as ExecutionStatus[]} onSelect={handleStatusChange} />
+        <StatusSelect
+          value={queryParams.status as ExecutionStatus[]}
+          onSelect={value => changeQueryParam('status', value as GetListOfExecutionsQueryParams['status'])}
+        />
         {pipelineIdentifier ? null : (
           <NewPipelineSelect
             selectedPipeline={queryParams.pipelineIdentifier}
-            onPipelineSelect={handlePipelineChange}
+            onPipelineSelect={value => changeQueryParam('pipelineIdentifier', value)}
           />
         )}
       </div>
@@ -172,7 +149,7 @@ export function ExecutionListSubHeader(
         <ExpandingSearchInput
           defaultValue={queryParams.searchTerm}
           alwaysExpanded
-          onChange={handleQueryChange}
+          onChange={value => changeQueryParam('searchTerm', value)}
           width={200}
           className={css.expandSearch}
         />

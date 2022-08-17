@@ -136,7 +136,7 @@ export const addDetailsToPipeline = ({
   updatedPipeline = set(updatedPipeline, 'pipeline.orgIdentifier', orgIdentifier)
   if (connectorRef && repoName) {
     updatedPipeline = set(updatedPipeline, 'pipeline.properties.ci.codebase.connectorRef', connectorRef)
-    updatedPipeline = set(updatedPipeline, 'pipeline.repoName', repoName)
+    updatedPipeline = set(updatedPipeline, 'pipeline.properties.ci.codebase.repoName', repoName)
   }
   return updatedPipeline
 }

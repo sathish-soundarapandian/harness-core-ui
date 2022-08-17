@@ -51,7 +51,9 @@ jest.mock('services/cd-ng', () => ({
   getConnectorListV2Promise: jest.fn(() => Promise.resolve(connectorsResponse.data)),
   getAzureSubscriptionsPromise: jest.fn(() => Promise.resolve(subscriptionsResponse.data)),
   getAzureResourceGroupsBySubscriptionPromise: jest.fn(() => Promise.resolve(resourceGroupsResponse.data)),
-  useGetSubscriptionTags: jest.fn(() => tagsResponse)
+  useGetSubscriptionTags: jest.fn(() => tagsResponse),
+  useGetAzureResourceGroupsV2: jest.fn(() => resourceGroupsResponse),
+  useGetSubscriptionTagsV2: jest.fn(() => tagsResponse)
 }))
 
 const getInitialValues = (): SshWinRmAzureInfrastructure => ({

@@ -606,9 +606,6 @@ describe('ExecutionStrategy test', () => {
     const submitBtnPhases = await findByTestId(container, 'execution-use-strategy-phases')
     expect(submitBtnPhases).toBeInTheDocument()
 
-    const removeBtn = await findByTestId(container, 'remove-phases-[0]')
-    expect(removeBtn).toBeInTheDocument()
-
     await act(async () => {
       clickSubmit(container)
     })

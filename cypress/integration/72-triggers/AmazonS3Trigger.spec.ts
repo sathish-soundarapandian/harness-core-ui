@@ -7,7 +7,7 @@ import {
   triggersList
 } from '../../support/70-pipeline/constants'
 
-describe.skip('AmazonS3 Trigger', () => {
+describe('AmazonS3 Trigger', () => {
   const visitTriggersPageWithAssertion = (): void => {
     cy.visit(pipelineStudioRoute, {
       timeout: 30000
@@ -33,8 +33,8 @@ describe.skip('AmazonS3 Trigger', () => {
     }).as('inputSetsTemplateCall')
 
     cy.intercept('GET', pipelineDetailsWithRoutingIdCall, {
-      fixture: 'pipeline/api/triggers/amazonS3PipelineDetailsWithRoutingIdCall.json'
-    }).as('pipelineDetailsWithRoutingIdCall')
+      fixture: 'pipeline/api/triggers/amazonS3PipelineDetailWithRoutingIdCall.json'
+    }).as('pipelineDetailWithRoutingIdCall')
 
     cy.intercept('GET', s3bucketData, {
       fixture: 'pipeline/api/triggers/s3BucketResponse.json'
@@ -81,8 +81,8 @@ describe.skip('AmazonS3 Trigger', () => {
     }).as('inputSetsTemplateCall')
 
     cy.intercept('GET', pipelineDetailsWithRoutingIdCall, {
-      fixture: 'pipeline/api/triggers/amazonS3pipelineDetailsWithRoutingIdCallWithFilePathRegexFixed.json'
-    }).as('pipelineDetailsWithRoutingIdCall')
+      fixture: 'pipeline/api/triggers/amazonS3PipelineDetailWithRoutingIdCallWithFilePathRegexFixed.json'
+    }).as('pipelineDetailWithRoutingIdCall')
 
     cy.contains('a', 'Triggers').click()
     cy.wait(1000)

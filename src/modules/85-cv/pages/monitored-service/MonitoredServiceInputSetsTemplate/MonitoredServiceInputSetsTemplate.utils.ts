@@ -8,6 +8,7 @@
 import { cloneDeep, defaultTo, isEmpty } from 'lodash-es'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
+import { Connectors } from '@connectors/constants'
 import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import type { ConnectorInfoDTO } from 'services/cv'
 import { getValidationLabelByNameForTemplateInputs } from '../CVMonitoredService/MonitoredServiceInputSetsTemplate.utils'
@@ -94,6 +95,8 @@ export const healthSourceTypeMapping = (type: ConnectorInfoDTO['type']): Connect
     case HealthSourceTypes.DatadogLog as ConnectorInfoDTO['type']:
     case HealthSourceTypes.DatadogMetrics as ConnectorInfoDTO['type']:
       return HealthSourceTypes.Datadog
+    case HealthSourceTypes.StackdriverLog as ConnectorInfoDTO['type']:
+      return Connectors.GCP
     default:
       return type
   }

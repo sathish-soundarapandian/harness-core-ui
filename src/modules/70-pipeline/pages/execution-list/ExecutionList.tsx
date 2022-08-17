@@ -18,10 +18,10 @@ import PipelineSummaryCards from '@pipeline/components/Dashboards/PipelineSummar
 import { ExecutionCompareProvider } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
 import { ExecutionCompiledYaml } from '@pipeline/components/ExecutionCompiledYaml/ExecutionCompiledYaml'
 import { usePolling } from '@pipeline/hooks/usePolling'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipeline-ng'
 import routes from '@common/RouteDefinitions'
+import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
 import { ExecutionListEmpty } from './ExecutionListEmpty/ExecutionListEmpty'
 import {
   ExecutionListFilterContextProvider,
@@ -45,6 +45,8 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   const { isAnyFilterApplied, isSavedFilterApplied, queryParams } = useExecutionListFilterContext()
   const {
     page,
+    size,
+    sort,
     filterIdentifier,
     myDeployments,
     status,
@@ -53,14 +55,15 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
     searchTerm,
     pipelineIdentifier: pipelineIdentifierFromQueryParam
   } = queryParams
-  const { isGitSyncEnabled } = useAppStore()
   const { module = 'cd' } = useModuleInfo()
   const [viewCompiledYaml, setViewCompiledYaml] = React.useState<PipelineExecutionSummary | undefined>(undefined)
 
   const location = useLocation()
+
   const isExecutionListPage = !!matchPath(location.pathname, {
     path: routes.toExecutions({ projectIdentifier, orgIdentifier, accountId, module })
   })
+  const Executions = isExecutionListPage ? ExecutionListTable : ExecutionListCards
 
   const isExecutionHistoryView = !!matchPath(location.pathname, {
     path: routes.toPipelineDeploymentList({
@@ -76,6 +79,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
 
   const {
     data,
+    loading,
     initLoading,
     refetch: fetchExecutions,
     error
@@ -84,15 +88,16 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
-      size: 20,
       pipelineIdentifier: pipelineIdentifier || pipelineIdentifierFromQueryParam,
-      page: page ? page - 1 : 0,
       filterIdentifier: isSavedFilterApplied ? filterIdentifier : undefined,
+      page,
+      size,
+      sort: sort.join(','), // TODO: this is temporary until BE supports common format for all. Currently BE supports status in  arrayFormat: 'repeat' and sort in  arrayFormat: 'comma'
       myDeployments,
       status,
       branch,
+      repoIdentifier,
       searchTerm,
-      ...(isGitSyncEnabled ? { repoIdentifier } : {}),
       ...(!isExecutionHistoryView ? { module } : {})
     },
     queryParamStringifyOptions: {
@@ -107,16 +112,18 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   })
 
   // Only do polling on first page and not initial default loading
-  usePolling(fetchExecutions, page === 1 && !initLoading)
+  const isPolling = usePolling(fetchExecutions, page === DEFAULT_PAGE_INDEX && !loading)
 
   const isCommunity = useGetCommunity()
   const isCommunityAndCDModule = module === 'cd' && isCommunity
   const executionList = data?.data
   const hasExecutions = executionList?.totalElements && executionList?.totalElements > 0
+  const showSpinner = initLoading || (loading && !isPolling)
+  const showSubHeader = hasExecutions || isAnyFilterApplied || (loading && !initLoading)
 
   return (
     <>
-      {(hasExecutions || isAnyFilterApplied) && <ExecutionListSubHeader {...rest} />}
+      {showSubHeader && <ExecutionListSubHeader {...rest} />}
 
       <Page.Body error={(error?.data as Error)?.message || error?.message} retryOnError={fetchExecutions}>
         {showHealthAndExecution && !isCommunityAndCDModule && (
@@ -127,14 +134,10 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
         )}
 
         <ExecutionCompiledYaml onClose={() => setViewCompiledYaml(undefined)} executionSummary={viewCompiledYaml} />
-        {initLoading ? (
+        {showSpinner ? (
           <PageSpinner />
-        ) : hasExecutions ? (
-          isExecutionListPage ? (
-            <ExecutionListTable executionList={executionList} onViewCompiledYaml={setViewCompiledYaml} {...rest} />
-          ) : (
-            <ExecutionListCards executionList={executionList} onViewCompiledYaml={setViewCompiledYaml} {...rest} />
-          )
+        ) : executionList && hasExecutions ? (
+          <Executions executionList={executionList} onViewCompiledYaml={setViewCompiledYaml} {...rest} />
         ) : (
           <ExecutionListEmpty {...rest} />
         )}

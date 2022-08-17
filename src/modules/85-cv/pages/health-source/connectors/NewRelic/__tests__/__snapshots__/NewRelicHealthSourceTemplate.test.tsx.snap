@@ -668,6 +668,10 @@ exports[`Unit tests for NewRelic health source Template should work with custom 
           </div>
         </div>
         <div
+          class="StyledProps--font StyledProps--main"
+          style="margin-bottom: 120px;"
+        />
+        <div
           class="StyledProps--font StyledProps--main footerCta footer"
         >
           <button

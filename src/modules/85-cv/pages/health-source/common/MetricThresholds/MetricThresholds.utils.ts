@@ -5,20 +5,28 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { isEmpty } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
-import type { MetricThresholdCriteriaSpec } from 'services/cv'
+import type { MetricPackDTO, MetricThreshold, MetricThresholdCriteriaSpec, TimeSeriesMetricPackDTO } from 'services/cv'
 import type { MetricThresholdType } from '../../connectors/AppDynamics/AppDHealthSource.types'
 import type { GroupedCreatedMetrics } from '../CustomMetric/CustomMetric.types'
 import {
+  CustomMetricDropdownOption,
   DefaultCustomMetricGroupName,
   ExceptionGroupName,
   FailFastActionValues,
   MetricCriteriaValues,
   MetricThresholdPropertyName,
   MetricTypesForTransactionTextField,
+  MetricTypeValues,
   PercentageCriteriaDropdownValues
 } from './MetricThresholds.constants'
-import type { CriteriaThresholdValues, SelectItem, ThresholdCriteriaPropsType } from './MetricThresholds.types'
+import type {
+  AvailableThresholdTypes,
+  CriteriaThresholdValues,
+  SelectItem,
+  ThresholdCriteriaPropsType
+} from './MetricThresholds.types'
 
 export const getCriterialItems = (getString: UseStringsReturn['getString']): SelectItem[] => {
   return [
@@ -341,4 +349,185 @@ export function validateCommonFieldsForMetricThreshold(
   })
 
   checkDuplicate(thresholdName, thresholdValues, errors, isValidateGroup, getString)
+}
+
+export const getIsMetricPacksSelected = (metricData: { [key: string]: boolean }): boolean => {
+  return Object.keys(metricData).some(metricPackKey => metricData[metricPackKey])
+}
+
+export function getMetricTypeItems(
+  metricPacks: MetricPackDTO[],
+  metricData: Record<string, boolean>,
+  groupedCreatedMetrics: GroupedCreatedMetrics
+): SelectItem[] {
+  if (!metricPacks || !metricPacks.length) return []
+
+  const options: SelectItem[] = []
+
+  metricPacks.forEach(metricPack => {
+    // Adding only the Metric type options which are checked in metric packs
+    if (metricData[metricPack.identifier as string]) {
+      options.push({
+        label: metricPack.identifier as string,
+        value: metricPack.identifier as string
+      })
+    }
+  })
+
+  // Adding Custom metric option only if there are any custom metric is present
+  const isCustomMetricPresent = Boolean(getCustomMetricGroupNames(groupedCreatedMetrics).length)
+
+  if (isCustomMetricPresent) {
+    options.push(CustomMetricDropdownOption)
+  }
+
+  return options
+}
+
+function getMetricsNameOptionsFromGroupName(
+  selectedGroup: string,
+  groupedCreatedMetrics: GroupedCreatedMetrics
+): SelectItem[] {
+  const selectedGroupDetails = groupedCreatedMetrics[selectedGroup]
+
+  if (!selectedGroupDetails) {
+    return []
+  }
+
+  return selectedGroupDetails.map(selectedGroupDetail => {
+    return {
+      label: selectedGroupDetail.metricName as string,
+      value: selectedGroupDetail.metricName as string
+    }
+  })
+}
+
+export function getMetricItems(
+  metricPacks: MetricPackDTO[],
+  selectedMetricType?: string,
+  selectedGroup?: string,
+  groupedCreatedMetrics?: GroupedCreatedMetrics
+): SelectItem[] {
+  if (selectedMetricType === MetricTypeValues.Custom) {
+    if (!selectedGroup || !groupedCreatedMetrics) {
+      return []
+    }
+
+    return getMetricsNameOptionsFromGroupName(selectedGroup, groupedCreatedMetrics)
+  }
+
+  const selectedMetricPackDetails = metricPacks.find(metricPack => metricPack.identifier === selectedMetricType)
+
+  return (
+    selectedMetricPackDetails?.metrics?.map(metric => {
+      return { label: metric.name as string, value: metric.name as string }
+    }) || []
+  )
+}
+
+export function getDefaultMetricTypeValue(
+  metricData: Record<string, boolean>,
+  metricPacks?: MetricPackDTO[]
+): string | undefined {
+  if (!metricData || !metricPacks || !metricPacks.length) {
+    return undefined
+  }
+  if (metricData[MetricTypeValues.Performance]) {
+    return MetricTypeValues.Performance
+  } else if (metricData[MetricTypeValues.Errors]) {
+    return MetricTypeValues.Errors
+  }
+
+  return undefined
+}
+
+// Populate initial metric thresholds data for formik
+export const getAllMetricThresholds = (metricPacks?: TimeSeriesMetricPackDTO[]): MetricThresholdType[] => {
+  const availableMetricPacks: MetricThresholdType[] = []
+
+  metricPacks?.forEach((metricPack: TimeSeriesMetricPackDTO) =>
+    availableMetricPacks.push(
+      ...(metricPack?.metricThresholds ? (metricPack.metricThresholds as MetricThresholdType[]) : [])
+    )
+  )
+
+  return availableMetricPacks
+}
+
+export const getFilteredMetricThresholdValues = (
+  thresholdType: AvailableThresholdTypes,
+  metricPacks?: TimeSeriesMetricPackDTO[]
+): MetricThresholdType[] => {
+  if (!metricPacks?.length) {
+    return []
+  }
+
+  const metricThresholds = getAllMetricThresholds(metricPacks)
+
+  return metricThresholds.filter(metricThreshold => metricThreshold.type === thresholdType)
+}
+
+// Payload utils
+const getMetricPacksOfCustomMetrics = (
+  ignoreThresholds: MetricThresholdType[],
+  failFastThresholds: MetricThresholdType[]
+): TimeSeriesMetricPackDTO | null => {
+  const metricThresholds = [...ignoreThresholds, ...failFastThresholds]
+
+  const customMetricThresholdTypes = metricThresholds.filter(
+    metricThreshold => metricThreshold.metricType === MetricTypeValues.Custom
+  )
+
+  if (!customMetricThresholdTypes.length) {
+    return null
+  }
+
+  return {
+    identifier: MetricTypeValues.Custom,
+    metricThresholds: customMetricThresholdTypes
+  }
+}
+
+const getMetricThresholdsForPayload = (
+  metricPacksIdentifier: string,
+  ignoreThresholds: MetricThresholdType[],
+  failFastThresholds: MetricThresholdType[]
+): MetricThreshold[] => {
+  if (!metricPacksIdentifier) {
+    return []
+  }
+
+  const metricThresholds = [...ignoreThresholds, ...failFastThresholds]
+
+  return metricThresholds.filter(metricThreshold => metricThreshold.metricType === metricPacksIdentifier)
+}
+
+export const getMetricPacksForPayload = (
+  formData: any,
+  isMetricThresholdEnabled: boolean
+): TimeSeriesMetricPackDTO[] => {
+  const { metricData, ignoreThresholds, failFastThresholds } = formData
+
+  const metricPacks = Object.entries(metricData).map(item => {
+    return item[1]
+      ? {
+          identifier: item[0] as string,
+          metricThresholds: isMetricThresholdEnabled
+            ? getMetricThresholdsForPayload(item[0], ignoreThresholds, failFastThresholds)
+            : undefined
+        }
+      : {}
+  })
+
+  const filteredMetricPacks = metricPacks.filter(item => !isEmpty(item)) as TimeSeriesMetricPackDTO[]
+
+  if (filteredMetricPacks.length && isMetricThresholdEnabled) {
+    const customMetricThresholds = getMetricPacksOfCustomMetrics(ignoreThresholds, failFastThresholds)
+
+    if (customMetricThresholds) {
+      filteredMetricPacks.push(customMetricThresholds)
+    }
+  }
+
+  return filteredMetricPacks
 }

@@ -149,6 +149,7 @@ export interface StringsMap {
   'common.configureOptions.regex': string
   'common.configureOptions.requiredDuringExecution': string
   'common.configureOptions.returnToBasic': string
+  'common.configureOptions.selectAllowedValuesPlaceholder': string
   'common.configureOptions.validation': string
   'common.configureOptions.validationErrors.defaultAllowedValid': string
   'common.configureOptions.validationErrors.defaultRegExValid': string
@@ -472,6 +473,7 @@ export interface StringsMap {
   'common.namespace': string
   'common.new': string
   'common.newLines': string
+  'common.newName': string
   'common.newVersion': string
   'common.noAPIKeys': string
   'common.noConnectorAvailable': string
@@ -2923,6 +2925,7 @@ export interface StringsMap {
   'pipeline.configFiles.encryptedFiles': string
   'pipeline.configFiles.encryptedLocation': string
   'pipeline.configFiles.error.file': string
+  'pipeline.configFiles.error.fileSelection': string
   'pipeline.configFiles.error.fileType': string
   'pipeline.configFiles.error.files': string
   'pipeline.configFiles.error.identifier': string
@@ -3431,9 +3434,15 @@ export interface StringsMap {
   'pipeline.parallelSelectedStages': string
   'pipeline.parallelStages': string
   'pipeline.parentStageDeleteWarning': string
+  'pipeline.phasesForm.addPhase': string
+  'pipeline.phasesForm.errors.duplicationValue': string
+  'pipeline.phasesForm.errors.limitError': string
+  'pipeline.phasesForm.errors.prevLimitError': string
+  'pipeline.phasesForm.errors.wrongPercentageFormat': string
   'pipeline.phasesForm.packageType': string
   'pipeline.phasesForm.phase': string
   'pipeline.phasesForm.phases': string
+  'pipeline.phasesForm.useVerification': string
   'pipeline.pipelineInputPanel.automaticallyExtractedFromText': string
   'pipeline.pipelineInputPanel.existing': string
   'pipeline.pipelineInputPanel.noRuntimeInputs': string

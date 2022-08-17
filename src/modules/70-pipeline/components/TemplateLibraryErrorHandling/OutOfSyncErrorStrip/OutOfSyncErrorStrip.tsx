@@ -13,25 +13,30 @@ import { useModalHook } from '@harness/use-modal'
 import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ErrorNodeSummary, TemplateResponse } from 'services/template-ng'
-import { ReconcileDialog } from '@pipeline/components/TemplateLibraryErrorHandling/ReconcileDialog/ReconcileDialog'
+import {
+  ReconcileDialog,
+  TemplateErrorEntity
+} from '@pipeline/components/TemplateLibraryErrorHandling/ReconcileDialog/ReconcileDialog'
 import css from './OutOfSyncErrorStrip.module.scss'
 
 export interface OutOfSyncErrorStripProps {
-  templateInputsErrorNodeSummary: ErrorNodeSummary
-  entity: 'Pipeline' | 'Template'
+  errorNodeSummary: ErrorNodeSummary
+  entity: TemplateErrorEntity
   isReadOnly: boolean
   onRefreshEntity: () => void
+  updateRootEntity: (entityYaml: string) => Promise<void>
 }
 
 export function OutOfSyncErrorStrip({
-  templateInputsErrorNodeSummary,
+  errorNodeSummary,
   entity,
   isReadOnly,
-  onRefreshEntity
+  onRefreshEntity,
+  updateRootEntity
 }: OutOfSyncErrorStripProps) {
   const { getString } = useStrings()
   const [resolvedTemplateResponses, setResolvedTemplateResponses] = React.useState<TemplateResponse[]>([])
-  const hasChildren = !isEmpty(templateInputsErrorNodeSummary.childrenErrorNodes)
+  const hasChildren = !isEmpty(errorNodeSummary.childrenErrorNodes)
 
   const [showReconcileDialog, hideReconcileDialog] = useModalHook(() => {
     const onClose = () => {
@@ -44,14 +49,18 @@ export function OutOfSyncErrorStrip({
     return (
       <Dialog enforceFocus={false} isOpen={true} onClose={onClose} className={css.reconcileDialog}>
         <ReconcileDialog
-          templateInputsErrorNodeSummary={templateInputsErrorNodeSummary}
+          errorNodeSummary={errorNodeSummary}
           entity={entity}
           setResolvedTemplateResponses={setResolvedTemplateResponses}
-          reload={onRefreshEntity}
+          onRefreshEntity={onRefreshEntity}
+          updateRootEntity={async (entityYaml: string) => {
+            hideReconcileDialog()
+            await updateRootEntity(entityYaml)
+          }}
         />
       </Dialog>
     )
-  }, [resolvedTemplateResponses])
+  }, [resolvedTemplateResponses, entity, onRefreshEntity, updateRootEntity])
 
   return (
     <Container className={css.mainContainer}>

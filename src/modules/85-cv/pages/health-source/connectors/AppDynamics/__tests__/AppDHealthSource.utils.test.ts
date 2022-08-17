@@ -24,9 +24,7 @@ import {
   convertStringMetricPathToObject,
   convertStringBasePathToObject,
   convertFullPathToBaseAndMetric,
-  initAppDCustomFormValue,
-  getMetricPacksForPayload,
-  getIsMetricPacksSelected
+  initAppDCustomFormValue
 } from '../AppDHealthSource.utils'
 import {
   appDMetricValue,
@@ -34,9 +32,7 @@ import {
   expectedThresholdsInitialData,
   formData,
   formDataExpectedOutput,
-  formDataMock,
   formikInitialData,
-  metricThresholdsPayloadMockData,
   nonCustomFeilds,
   payloadWithThreshold,
   validateMappingNoError,
@@ -46,7 +42,6 @@ import {
 import { PATHTYPE } from '../Components/AppDCustomMetricForm/AppDCustomMetricForm.constants'
 import { ThresholdTypes } from '../AppDHealthSource.constants'
 import { CriteriaValues } from '../Components/AppDMetricThreshold/AppDMetricThresholdConstants'
-import type { AppDynamicsFomikFormInterface } from '../AppDHealthSource.types'
 
 jest.mock('uuid')
 describe('Test Util funcitons', () => {
@@ -313,22 +308,5 @@ describe('Test Util funcitons', () => {
       derivedBasePath: 'Overall Application Performance',
       derivedMetricPath: 'Exceptions per Minute'
     })
-  })
-
-  test('should create correct payload for AppD health source', () => {
-    const result = getMetricPacksForPayload(formDataMock as unknown as AppDynamicsFomikFormInterface, true)
-    expect(result).toEqual(metricThresholdsPayloadMockData)
-  })
-
-  test('getIsMetricPacksSelected returns true if atleast one metric pack is selected', () => {
-    const result = getIsMetricPacksSelected({ Performance: true })
-
-    expect(result).toBe(true)
-  })
-
-  test('getIsMetricPacksSelected returns true if atleast one metric pack is selected', () => {
-    const result = getIsMetricPacksSelected({ Performance: false, Errors: false })
-
-    expect(result).toBe(false)
   })
 })

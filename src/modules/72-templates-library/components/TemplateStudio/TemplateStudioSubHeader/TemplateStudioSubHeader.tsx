@@ -24,7 +24,8 @@ import { TemplateContext } from '@templates-library/components/TemplateStudio/Te
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import {
   GetErrorResponse,
-  SaveTemplatePopover
+  SaveTemplateHandle,
+  SaveTemplatePopoverWithRef
 } from '@templates-library/components/TemplateStudio/SaveTemplatePopover/SaveTemplatePopover'
 import { DefaultNewTemplateId } from 'framework/Templates/templates'
 import { TemplateStudioSubHeaderLeftView } from '@templates-library/components/TemplateStudio/TemplateStudioSubHeader/views/TemplateStudioSubHeaderLeftView/TemplateStudioSubHeaderLeftView'
@@ -36,17 +37,31 @@ export interface TemplateStudioSubHeaderProps {
   onGitBranchChange: (selectedFilter: GitFilterScope) => void
 }
 
-export const TemplateStudioSubHeader: (props: TemplateStudioSubHeaderProps) => JSX.Element = ({
-  onViewChange,
-  getErrors,
-  onGitBranchChange
-}) => {
+export type TemplateStudioSubHeaderHandle = {
+  updateTemplate: (templateYaml: string) => Promise<void>
+}
+
+const TemplateStudioSubHeader: (
+  props: TemplateStudioSubHeaderProps,
+  ref: React.ForwardedRef<TemplateStudioSubHeaderHandle>
+) => JSX.Element = ({ onViewChange, getErrors, onGitBranchChange }, ref) => {
   const { state, fetchTemplate, view, isReadonly } = React.useContext(TemplateContext)
   const { isUpdated, entityValidityDetails } = state
   const { getString } = useStrings()
   const { templateIdentifier } = useParams<TemplateStudioPathProps>()
   const isYaml = view === SelectedView.YAML
   const isVisualViewDisabled = React.useMemo(() => entityValidityDetails.valid === false, [entityValidityDetails.valid])
+  const saveTemplateHandleRef = React.useRef<SaveTemplateHandle | null>(null)
+
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      updateTemplate: async (templateYaml: string) => {
+        await saveTemplateHandleRef.current?.updateTemplate(templateYaml)
+      }
+    }),
+    [saveTemplateHandleRef.current]
+  )
 
   return (
     <Container
@@ -88,7 +103,7 @@ export const TemplateStudioSubHeader: (props: TemplateStudioSubHeaderProps) => J
             {!isReadonly && (
               <Container>
                 <Layout.Horizontal spacing={'small'} flex={{ alignItems: 'center' }}>
-                  <SaveTemplatePopover getErrors={getErrors} />
+                  <SaveTemplatePopoverWithRef getErrors={getErrors} ref={saveTemplateHandleRef} />
                   {templateIdentifier !== DefaultNewTemplateId && (
                     <Button
                       disabled={!isUpdated}
@@ -108,3 +123,5 @@ export const TemplateStudioSubHeader: (props: TemplateStudioSubHeaderProps) => J
     </Container>
   )
 }
+
+export const TemplateStudioSubHeaderWithRef = React.forwardRef(TemplateStudioSubHeader)

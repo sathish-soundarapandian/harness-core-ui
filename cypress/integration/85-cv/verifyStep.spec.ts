@@ -29,9 +29,9 @@ describe.skip('Verify step', () => {
     cy.intercept('GET', pipelineDetailsAPI, { fixture: '/pipeline/api/pipelines/getPipelineDetails' }).as(
       'pipelineDetails'
     )
-    cy.intercept('POST', pipelineExecutionSummaryAPI, { fixture: '/pipeline/api/pipelines/getExecutionSummary' }).as(
-      'pipelineExecutionSumary'
-    )
+    cy.intercept('POST', pipelineExecutionSummaryAPI, {
+      fixture: '/pipeline/api/pipelines/getExecutionSummary'
+    }).as('pipelineExecutionSumary')
     cy.intercept('GET', pipelineExecutionAPI, { fixture: '/pipeline/api/pipelines/getExecutionDetails' }).as(
       'pipelineExecution'
     )

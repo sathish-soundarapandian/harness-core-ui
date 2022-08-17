@@ -46,7 +46,7 @@ import {
 import { dispatchCustomEvent } from '@pipeline/components/PipelineDiagram/PipelineGraph/PipelineGraphUtils'
 import { FORM_CLICK_EVENT } from '@common/components/InputDatePicker/InputDatePicker'
 import { deploymentTypeLabel } from '@pipeline/utils/DeploymentTypeUtils'
-import type { StringQueryParams } from '../types'
+import type { ExecutionListPageQueryParams } from '../types'
 import { ExecutionListFilterForm } from '../ExecutionListFilterForm/ExecutionListFilterForm'
 import { useExecutionListFilterContext } from '../ExecutionListFilterContext/ExecutionListFilterContext'
 import css from './ExecutionListFilter.module.scss'
@@ -61,7 +61,7 @@ export function ExecutionListFilter(): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelineType<PipelinePathProps>>()
   const { state: isFiltersDrawerOpen, open: openFilterDrawer, close: hideFilterDrawer } = useBooleanStatus()
   const { getString } = useStrings()
-  const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<StringQueryParams>()
+  const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<Partial<ExecutionListPageQueryParams>>()
   const { selectedProject } = useAppStore()
   const isCDEnabled = (selectedProject?.modules && selectedProject.modules?.indexOf('CD') > -1) || false
   const isCIEnabled = (selectedProject?.modules && selectedProject.modules?.indexOf('CI') > -1) || false
@@ -177,12 +177,12 @@ export function ExecutionListFilter(): React.ReactElement {
     if (option.value) {
       updateQueryParams({
         filterIdentifier: option.value.toString(),
-        filters: [] as any /* this will remove the param */
+        filters: undefined
       })
     } else {
       updateQueryParams({
-        filterIdentifier: [] as any /* this will remove the param */,
-        filters: [] as any /* this will remove the param */
+        filterIdentifier: undefined,
+        filters: undefined
       })
     }
   }
@@ -190,7 +190,7 @@ export function ExecutionListFilter(): React.ReactElement {
   function onApply(inputFormData: FormikProps<PipelineExecutionFormType>['values']): void {
     if (!isObjectEmpty(inputFormData)) {
       const filterFromFormData = getValidFilterArguments({ ...inputFormData })
-      updateQueryParams({ page: [] as any, filters: JSON.stringify({ ...(filterFromFormData || {}) }) })
+      updateQueryParams({ page: undefined, filters: filterFromFormData || {} })
       hideFilterDrawer()
     } else {
       // showError(getString('filters.invalidCriteria'))
@@ -212,7 +212,7 @@ export function ExecutionListFilter(): React.ReactElement {
     const saveOrUpdateHandler = filterRef.current?.saveOrUpdateFilterHandler
     if (saveOrUpdateHandler && typeof saveOrUpdateHandler === 'function') {
       const updatedFilter = await saveOrUpdateHandler(isUpdate, requestBodyPayload)
-      updateQueryParams({ filters: JSON.stringify({ ...(updatedFilter || {}) }) })
+      updateQueryParams({ filters: updatedFilter?.filterProperties || {} })
     }
 
     setLoading(false)
@@ -238,7 +238,7 @@ export function ExecutionListFilter(): React.ReactElement {
     if (filterIdentifier !== UNSAVED_FILTER_IDENTIFIER) {
       updateQueryParams({
         filterIdentifier,
-        filters: [] as any /* this will remove the param */
+        filters: undefined
       })
     }
   }

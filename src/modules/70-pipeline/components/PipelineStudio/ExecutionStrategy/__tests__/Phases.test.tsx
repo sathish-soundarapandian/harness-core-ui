@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, act, waitFor } from '@testing-library/react'
+import { render, act, waitFor, findByTestId } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { clickSubmit } from '@common/utils/JestFormHelper'
 import type { StageElementWrapperConfig } from 'services/pipeline-ng'
@@ -61,7 +61,6 @@ describe('Phases test', () => {
       <TestWrapper>
         <PipelineContext.Provider value={pipelineContextMockValue}>
           <Phases
-            isVerifyEnabled={false}
             serviceDefinitionType={jest.fn().mockReturnValue('Ssh')}
             selectedStrategy={'Rolling'}
             selectedStage={
@@ -107,7 +106,6 @@ describe('Phases test', () => {
       <TestWrapper>
         <PipelineContext.Provider value={pipelineContextMockValue}>
           <Phases
-            isVerifyEnabled={false}
             serviceDefinitionType={jest.fn().mockReturnValue('Ssh')}
             selectedStrategy={'Canary'}
             initialValues={{
@@ -156,5 +154,49 @@ describe('Phases test', () => {
     })
     await waitFor(() => expect(pipelineContextMockValue.updateStage).toHaveBeenCalled())
     expect(pipelineContextMockValue.updateStage).toHaveBeenCalledWith(canaryUpdateSshStageFnArg)
+  })
+  test('render Canary', async () => {
+    pipelineContextMockValue = getDummyPipelineContextValue()
+
+    const { container } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={pipelineContextMockValue}>
+          <Phases
+            serviceDefinitionType={jest.fn().mockReturnValue('Ssh')}
+            selectedStrategy={'Canary'}
+            selectedStage={
+              {
+                stage: {
+                  identifier: 'stage_1',
+                  name: 'stage 1',
+                  spec: {
+                    serviceConfig: { serviceDefinition: { type: 'Ssh' }, serviceRef: 'service_3' },
+                    execution: {
+                      steps: [
+                        {
+                          step: {
+                            identifier: 'rolloutDeployment',
+                            name: 'Rollout Deployment',
+                            spec: { skipDryRun: false },
+                            type: 'SshRollingDeploy'
+                          }
+                        }
+                      ],
+                      rollbackSteps: []
+                    }
+                  },
+                  type: 'Deployment'
+                }
+              } as StageElementWrapperConfig
+            }
+          />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const removeBtn = await findByTestId(container, 'remove-phases-[0]')
+    expect(removeBtn).toBeInTheDocument()
+    const addBtn = await findByTestId(container, 'add-phase')
+    expect(addBtn).toBeInTheDocument()
   })
 })

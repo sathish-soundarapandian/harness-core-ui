@@ -5,19 +5,29 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useRef } from 'react'
 import { useModalHook } from '@harness/use-modal'
 import produce from 'immer'
-import { omit } from 'lodash-es'
+import { isEmpty, omit } from 'lodash-es'
 import { Dialog } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import { DefaultTemplate } from 'framework/Templates/templates'
-import { ModalProps, TemplateConfigModal, Intent } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
+import {
+  ModalProps,
+  Intent,
+  TemplateConfigModalWithRef,
+  TemplateConfigModalHandle
+} from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useSaveTemplate } from '@pipeline/utils/useSaveTemplate'
 import type { JsonNode } from 'services/cd-ng'
 import type { SaveTemplateButtonProps } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
 import { useStrings } from 'framework/strings'
+import useTemplateErrors from '@pipeline/components/TemplateErrors/useTemplateErrors'
+import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/ReconcileDialog/ReconcileDialog'
+import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { sanitize } from '@common/utils/JSONUtils'
+import type { NGTemplateInfoConfig } from 'services/template-ng'
 import css from './SaveAsTemplate.module.scss'
 
 interface TemplateActionsReturnType {
@@ -30,15 +40,37 @@ export function useSaveAsTemplate({ data, type, gitDetails }: SaveAsTemplateProp
   const { orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [modalProps, setModalProps] = React.useState<ModalProps>()
   const { getString } = useStrings()
+  const templateConfigDialogHandler = useRef<TemplateConfigModalHandle>(null)
+  const { saveAndPublish } = useSaveTemplate({ isTemplateStudio: false })
+  const { openTemplateErrorsModal } = useTemplateErrors({ entity: TemplateErrorEntity.TEMPLATE })
+
   const [showConfigModal, hideConfigModal] = useModalHook(
     () => (
       <Dialog enforceFocus={false} isOpen={true} className={css.configDialog}>
-        {modalProps && <TemplateConfigModal {...modalProps} onClose={hideConfigModal} />}
+        {modalProps && (
+          <TemplateConfigModalWithRef {...modalProps} onClose={hideConfigModal} ref={templateConfigDialogHandler} />
+        )}
       </Dialog>
     ),
-    [modalProps]
+    [modalProps, templateConfigDialogHandler.current]
   )
-  const { saveAndPublish } = useSaveTemplate({ isTemplateStudio: false })
+
+  const onFailure = (error: any, latestTemplate: NGTemplateInfoConfig) => {
+    if (!isEmpty((error as any)?.metadata?.errorNodeSummary)) {
+      openTemplateErrorsModal({
+        error: (error as any)?.metadata?.errorNodeSummary,
+        originalYaml: yamlStringify(
+          sanitize(
+            { template: latestTemplate },
+            { removeEmptyArray: false, removeEmptyObject: false, removeEmptyString: false }
+          )
+        ),
+        onSave: async (refreshedYaml: string) => {
+          await templateConfigDialogHandler.current?.updateTemplate(refreshedYaml)
+        }
+      })
+    }
+  }
 
   const onSaveAsTemplate = async () => {
     try {
@@ -62,7 +94,8 @@ export function useSaveAsTemplate({ data, type, gitDetails }: SaveAsTemplateProp
         gitDetails,
         title: getString('common.template.saveAsNewTemplateHeading'),
         allowScopeChange: true,
-        intent: Intent.SAVE
+        intent: Intent.SAVE,
+        onFailure
       })
       showConfigModal()
     } catch (_error) {

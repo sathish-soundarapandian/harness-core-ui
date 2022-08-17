@@ -75,7 +75,6 @@ export interface PopoverData {
   renderPipelineStage: PipelineContextInterface['renderPipelineStage']
   isHoverView?: boolean
   templateTypes: { [key: string]: string }
-  newPipelineStudioEnabled?: boolean
 }
 
 export const getStageIndexByIdentifier = (
@@ -438,8 +437,7 @@ export const getLinkEventListeners = (
   ) => void,
   updateMoveStageDetails: (moveStageDetails: MoveStageDetailsType) => void,
   confirmMoveStage: () => void,
-  stageMap: Map<string, StageState>,
-  newPipelineStudioEnabled?: boolean
+  stageMap: Map<string, StageState>
 ): LinkModelListener => {
   const {
     state: { pipeline, templateTypes },
@@ -468,8 +466,7 @@ export const getLinkEventListeners = (
             stagesMap,
             renderPipelineStage,
             contextType,
-            templateTypes,
-            newPipelineStudioEnabled
+            templateTypes
           },
           { useArrows: false, darkMode: false, fixedPosition: false }
         )
@@ -563,7 +560,6 @@ export const getNodeEventListerner = (
   updateMoveStageDetails: (moveStageDetails: MoveStageDetailsType) => void,
   confirmMoveStage: () => void,
   stageMap: Map<string, StageState>,
-  newPipelineStudioEnabled?: boolean,
   sectionId?: string | null
 ): NodeModelListener => {
   const {
@@ -598,8 +594,7 @@ export const getNodeEventListerner = (
               renderPipelineStage,
               stagesMap,
               contextType,
-              templateTypes,
-              newPipelineStudioEnabled
+              templateTypes
             },
             { useArrows: true, darkMode: false, fixedPosition: false }
           )
@@ -624,8 +619,7 @@ export const getNodeEventListerner = (
                   stagesMap,
                   renderPipelineStage,
                   contextType,
-                  templateTypes,
-                  newPipelineStudioEnabled
+                  templateTypes
                 },
                 { useArrows: false, darkMode: false, fixedPosition: false }
               )
@@ -652,8 +646,7 @@ export const getNodeEventListerner = (
                   stagesMap,
                   renderPipelineStage,
                   contextType,
-                  templateTypes,
-                  newPipelineStudioEnabled
+                  templateTypes
                 },
                 { useArrows: false, darkMode: false, fixedPosition: false }
               )
@@ -690,8 +683,7 @@ export const getNodeEventListerner = (
             stagesMap,
             renderPipelineStage,
             contextType,
-            templateTypes,
-            newPipelineStudioEnabled
+            templateTypes
           },
           { useArrows: false, darkMode: false, fixedPosition: false },
           event.callback
@@ -789,8 +781,7 @@ export const getNodeEventListerner = (
             stagesMap,
             renderPipelineStage,
             contextType,
-            templateTypes,
-            newPipelineStudioEnabled
+            templateTypes
           },
           { useArrows: true, darkMode: false, fixedPosition: false, placement: 'top' },
           noop,
@@ -821,18 +812,14 @@ interface MoveStageParams {
   stageMap: Map<string, StageState>
   addStage: AddStage
   addStageNew: AddStageNew
-  newPipelineStudioEnabled: boolean
 }
 export const moveStage = ({
   moveStageDetails,
   pipelineContext,
-  updateStageOnAddLink,
   updateStageOnAddLinkNew,
   resetPipelineStages,
-  addStage,
   stageMap,
-  addStageNew,
-  newPipelineStudioEnabled
+  addStageNew
 }: MoveStageParams): void => {
   const {
     event,
@@ -849,18 +836,8 @@ export const moveStage = ({
   const dropNode = getStageFromPipelineData(nodeIdentifier).stage
 
   if (currentStage?.parent?.parallel || isLastAddLink) {
-    if (newPipelineStudioEnabled) {
-      if (dropNode && event.node.identifier !== event?.destination?.identifier) {
-        updateStageOnAddLinkNew(event, dropNode, currentStage)
-
-        const updatedStages = resetServiceSelectionForStages(
-          dependentStages.length ? dependentStages : [nodeIdentifier],
-          pipeline
-        )
-        resetPipelineStages(updatedStages)
-      }
-    } else if (dropNode && event.node.identifier !== event?.entity.getIdentifier()) {
-      updateStageOnAddLink(event, dropNode, currentStage)
+    if (dropNode && event.node.identifier !== event?.destination?.identifier) {
+      updateStageOnAddLinkNew(event, dropNode, currentStage)
 
       const updatedStages = resetServiceSelectionForStages(
         dependentStages.length ? dependentStages : [nodeIdentifier],
@@ -871,9 +848,7 @@ export const moveStage = ({
   } else {
     const isRemove = removeNodeFromPipeline(getStageFromPipelineData(nodeIdentifier), pipeline, stageMap, false)
     if (isRemove && dropNode) {
-      newPipelineStudioEnabled
-        ? addStageNew(dropNode, !!currentStage, !currentStage, undefined, undefined, undefined, event.destination)
-        : addStage(dropNode, !!currentStage, event as any)
+      addStageNew(dropNode, !!currentStage, !currentStage, undefined, undefined, undefined, event.destination)
       const updatedStages = resetServiceSelectionForStages(
         dependentStages.length ? dependentStages : [nodeIdentifier],
         pipeline

@@ -93,7 +93,9 @@ export function HarnessApprovalLogsView(props: ConsoleViewStepDetailProps): Reac
   } else if (isWaitingAll && isCurrentUserAuthorized) {
     approveButtonNode = (
       <div className={css.approvalRow}>
-        <div>{getString('pipeline.approvalStage.approvalStageLogsViewMessage')}</div>
+        <div>
+          {approvalData?.details?.approvalMessage || getString('pipeline.approvalStage.approvalStageLogsViewMessage')}
+        </div>
         <Button
           margin={{ left: 'xlarge' }}
           withoutBoxShadow

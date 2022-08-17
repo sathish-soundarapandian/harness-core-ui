@@ -37,9 +37,9 @@ export function ConfigureOptions(props: ConfigureOptionsProps): JSX.Element {
     showRequiredField = false,
     showAdvanced = false,
     hideExecutionTimeField = false,
-    fetchValues,
     allowedValuesType,
     allowedValuesValidator,
+    getAllowedValuesCustomComponent,
     className,
     isReadonly = false
   } = props
@@ -99,9 +99,9 @@ export function ConfigureOptions(props: ConfigureOptionsProps): JSX.Element {
           hideExecutionTimeField={hideExecutionTimeField}
           showRequiredField={showRequiredField}
           showAdvanced={showAdvanced}
-          fetchValues={fetchValues}
           allowedValuesType={allowedValuesType}
           allowedValuesValidator={allowedValuesValidator}
+          getAllowedValuesCustomComponent={getAllowedValuesCustomComponent}
         />
       </Dialog>
     </React.Fragment>

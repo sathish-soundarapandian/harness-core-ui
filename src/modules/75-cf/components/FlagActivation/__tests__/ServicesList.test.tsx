@@ -12,7 +12,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import * as useGetServiceDetailsMock from 'services/cd-ng'
 import * as cfServiceMock from 'services/cf'
 import mockFeature from '@cf/utils/testData/data/mockFeature'
-import mockService from './__data__/mockService'
+import mockServiceList from './__data__/mockService'
 import ServicesList from '../ServicesList'
 
 const refetchFlagMock = jest.fn()
@@ -32,14 +32,14 @@ beforeEach(() => {
   jest.clearAllMocks()
 })
 
-const useGetServicesMock = jest.spyOn(useGetServiceDetailsMock, 'useGetServiceDetails')
+const useGetServiceListMock = jest.spyOn(useGetServiceDetailsMock, 'useGetServiceList')
 const usePatchServiceMock = jest.spyOn(cfServiceMock, 'usePatchFeature')
 
 describe('ServiceList', () => {
   test('it should display pre-existing services', async () => {
-    useGetServicesMock.mockReturnValue({
+    useGetServiceListMock.mockReturnValue({
       loading: false,
-      data: mockService,
+      data: mockServiceList,
       refetch: jest.fn(),
       error: null
     } as any)
@@ -54,9 +54,9 @@ describe('ServiceList', () => {
   test('it should send patch request correctly', async () => {
     const patchMock = jest.fn()
 
-    useGetServicesMock.mockReturnValue({
+    useGetServiceListMock.mockReturnValue({
       loading: false,
-      data: mockService,
+      data: mockServiceList,
       refetch: jest.fn(),
       error: null
     } as any)
@@ -163,9 +163,9 @@ describe('EditServicesModal', () => {
     jest.clearAllMocks()
   })
   test('it should open, close and render EditServicesModal correctly', async () => {
-    useGetServicesMock.mockReturnValue({
+    useGetServiceListMock.mockReturnValue({
       loading: false,
-      data: mockService,
+      data: mockServiceList,
       refetch: jest.fn(),
       error: null
     } as any)
@@ -193,7 +193,7 @@ describe('EditServicesModal', () => {
   })
 
   test('it should show spinner when services are loading', async () => {
-    useGetServicesMock.mockReturnValue({
+    useGetServiceListMock.mockReturnValue({
       loading: true,
       data: null,
       refetch: jest.fn(),
@@ -209,7 +209,7 @@ describe('EditServicesModal', () => {
   test('it should display error message when fail to fetch Services', async () => {
     const refetch = jest.fn()
 
-    useGetServicesMock.mockReturnValue({
+    useGetServiceListMock.mockReturnValue({
       loading: false,
       data: null,
       refetch,
@@ -231,9 +231,9 @@ describe('EditServicesModal', () => {
   })
 
   test('it should already display existing services as selected in modal and can toggle to unselected', async () => {
-    useGetServicesMock.mockReturnValue({
+    useGetServiceListMock.mockReturnValue({
       loading: false,
-      data: mockService,
+      data: mockServiceList,
       refetch: jest.fn(),
       error: false
     } as any)

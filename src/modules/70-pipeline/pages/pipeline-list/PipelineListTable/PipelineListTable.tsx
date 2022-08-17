@@ -10,6 +10,7 @@ import React from 'react'
 import type { Column } from 'react-table'
 import { useStrings } from 'framework/strings'
 import type { PagePMSPipelineSummaryResponse, PMSPipelineSummaryResponse } from 'services/pipeline-ng'
+import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
 import type { SortBy } from '../types'
 import {
   CodeSourceCell,
@@ -19,17 +20,16 @@ import {
   RecentExecutionsCell,
   LastModifiedCell
 } from './PipelineListCells'
-import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE } from '../PipelineListUtils'
 import css from './PipelineListTable.module.scss'
 
 interface PipelineListTableProps {
-  data?: PagePMSPipelineSummaryResponse
+  data: PagePMSPipelineSummaryResponse
   gotoPage: (pageNumber: number) => void
   onDeletePipeline: (commitMsg: string) => Promise<void>
   onClonePipeline: (pipeline: PMSPipelineSummaryResponse) => void
   onDelete: (pipeline: PMSPipelineSummaryResponse) => void
   setSortBy: (sortBy: string[]) => void
-  sortBy?: string[]
+  sortBy: string[]
 }
 
 export function PipelineListTable({
@@ -46,10 +46,10 @@ export function PipelineListTable({
     content = [],
     totalElements = 0,
     totalPages = 0,
-    number = DEFAULT_PAGE_NUMBER,
+    number = DEFAULT_PAGE_INDEX,
     size = DEFAULT_PAGE_SIZE
-  } = data || ({} as PagePMSPipelineSummaryResponse)
-  const [currentSort, currentOrder] = sortBy || []
+  } = data
+  const [currentSort, currentOrder] = sortBy
 
   const columns: Column<PMSPipelineSummaryResponse>[] = React.useMemo(() => {
     const getServerSortProps = (id: string) => {

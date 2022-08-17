@@ -9,36 +9,42 @@ import React from 'react'
 import { Classes, Dialog, IDialogProps, Intent } from '@blueprintjs/core'
 import cx from 'classnames'
 import {
-  Text,
+  Button,
+  ButtonVariation,
+  Container,
   Icon,
   Layout,
-  Button,
-  SelectOption,
-  Container,
-  ButtonVariation,
-  useToaster,
   PageSpinner,
+  SelectOption,
+  Text,
+  useConfirmationDialog,
+  useToaster,
   VisualYamlSelectedView as SelectedView,
-  VisualYamlToggle,
-  useConfirmationDialog
+  VisualYamlToggle
 } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { useHistory, useParams, matchPath } from 'react-router-dom'
+import { matchPath, useHistory, useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, isEqual, merge, omit } from 'lodash-es'
 import produce from 'immer'
 import { parse } from '@common/utils/YamlHelperMethods'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
+import {
+  EntityGitDetails,
+  InputSetSummaryResponse,
+  useGetInputsetYaml,
+  useGetTemplateFromPipeline
+} from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { AppStoreContext, useAppStore } from 'framework/AppStore/AppStoreContext'
 import { NavigationCheck } from '@common/components/NavigationCheck/NavigationCheck'
-import { accountPathProps, pipelinePathProps, pipelineModuleParams } from '@common/utils/routeUtils'
+import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import type {
-  PipelinePathProps,
-  ProjectPathProps,
-  PathFn,
-  PipelineType,
   GitQueryParams,
+  PathFn,
+  PipelinePathProps,
   PipelineStudioQueryParams,
+  PipelineType,
+  ProjectPathProps,
   RunPipelineQueryParams
 } from '@common/interfaces/RouteInterfaces'
 import RbacButton from '@rbac/components/Button/Button'
@@ -46,12 +52,6 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { usePermission } from '@rbac/hooks/usePermission'
 import routes from '@common/RouteDefinitions'
-import {
-  EntityGitDetails,
-  useGetTemplateFromPipeline,
-  InputSetSummaryResponse,
-  useGetInputsetYaml
-} from 'services/pipeline-ng'
 import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { TagsPopover } from '@common/components'
@@ -65,13 +65,17 @@ import { RunPipelineForm } from '@pipeline/components/RunPipelineModal/RunPipeli
 import { createTemplate } from '@pipeline/utils/templateUtils'
 import StageBuilder from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilder'
 import { TemplatePipelineBuilder } from '@pipeline/components/PipelineStudio/PipelineTemplateBuilder/TemplatePipelineBuilder/TemplatePipelineBuilder'
-import { SavePipelinePopover } from '@pipeline/components/PipelineStudio/SavePipelinePopover/SavePipelinePopover'
+import {
+  SavePipelineHandle,
+  SavePipelinePopoverWithRef
+} from '@pipeline/components/PipelineStudio/SavePipelinePopover/SavePipelinePopover'
 import { useSaveTemplateListener } from '@pipeline/components/PipelineStudio/hooks/useSaveTemplateListener'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { OutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import type { Pipeline } from '@pipeline/utils/types'
+import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/ReconcileDialog/ReconcileDialog'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import CreatePipelines from '../CreateModal/PipelineCreate'
 import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
@@ -232,6 +236,7 @@ export function PipelineCanvas({
   const [disableVisualView, setDisableVisualView] = React.useState(entityValidityDetails?.valid === false)
   const [useTemplate, setUseTemplate] = React.useState<boolean>(false)
   const isPipelineRemote = isGitSimplificationEnabled && storeType === StoreType.REMOTE
+  const savePipelineHandleRef = React.useRef<SavePipelineHandle | null>(null)
 
   React.useEffect(() => {
     if (isGitSyncEnabled || isPipelineRemote) {
@@ -679,6 +684,13 @@ export function PipelineCanvas({
     ]
   )
 
+  const updateEntity = React.useCallback(
+    async (entityYaml: string) => {
+      await savePipelineHandleRef.current?.updatePipeline(entityYaml)
+    },
+    [savePipelineHandleRef.current]
+  )
+
   const onGitBranchChange = React.useMemo(
     () => (selectedFilter: GitFilterScope) => {
       setSelectedBranch(selectedFilter.branch as string)
@@ -904,7 +916,7 @@ export function PipelineCanvas({
                   </div>
                 )}
                 {isUpdated && !isReadonly && <div className={css.tagRender}>{getString('unsavedChanges')}</div>}
-                <SavePipelinePopover toPipelineStudio={toPipelineStudio} />
+                <SavePipelinePopoverWithRef toPipelineStudio={toPipelineStudio} ref={savePipelineHandleRef} />
                 {pipelineIdentifier !== DefaultNewPipelineId && !isReadonly && (
                   <Button
                     disabled={!isUpdated}
@@ -957,12 +969,13 @@ export function PipelineCanvas({
           </div>
           {templateInputsErrorNodeSummary && (
             <OutOfSyncErrorStrip
-              templateInputsErrorNodeSummary={templateInputsErrorNodeSummary}
-              entity={'Pipeline'}
+              errorNodeSummary={templateInputsErrorNodeSummary}
+              entity={TemplateErrorEntity.PIPELINE}
               isReadOnly={isReadonly}
               onRefreshEntity={() => {
                 fetchPipeline({ forceFetch: true, forceUpdate: true })
               }}
+              updateRootEntity={updateEntity}
             />
           )}
           <Container className={css.builderContainer}>

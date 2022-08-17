@@ -6,8 +6,6 @@
  */
 
 import { createContext } from 'react'
-import { ThresholdTypes } from '../../AppDHealthSource.constants'
-import type { MetricThresholdType } from '../../AppDHealthSource.types'
 import type { AppDMetricThresholdContextType, SelectItem } from './AppDMetricThreshold.types'
 
 export const AppDMetricThresholdContext = createContext<AppDMetricThresholdContextType>(
@@ -41,34 +39,9 @@ export const PercentageCriteriaDropdownValues = {
   LessThan: 'lessThan'
 }
 
-const IgnoreThresholdType = 'Ignore'
-
 export const CustomMetricDropdownOption: SelectItem = {
   label: MetricTypeValues.Custom,
   value: MetricTypeValues.Custom
-}
-
-export const NewDefaultVauesForIgnoreThreshold: MetricThresholdType = {
-  type: ThresholdTypes.IgnoreThreshold,
-  spec: {
-    action: IgnoreThresholdType
-  },
-  criteria: {
-    type: CriteriaValues.Absolute,
-    spec: {}
-  }
-}
-
-export const NewDefaultVauesForFailFastThreshold: MetricThresholdType = {
-  type: ThresholdTypes.FailImmediately,
-  spec: {
-    action: FailFastActionValues.FailImmediately,
-    spec: {}
-  },
-  criteria: {
-    type: CriteriaValues.Absolute,
-    spec: {}
-  }
 }
 
 export const MetricTypesForTransactionTextField = [MetricTypeValues.Performance, MetricTypeValues.Errors]

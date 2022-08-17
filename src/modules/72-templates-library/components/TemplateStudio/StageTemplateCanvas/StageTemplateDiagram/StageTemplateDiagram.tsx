@@ -77,7 +77,7 @@ export const StageTemplateDiagram = (): JSX.Element => {
     dynamicPopoverHandler?.show(
       `[data-nodeid="${nodeId}"]`,
       {
-        addStage: async (newStage: StageElementWrapper) => {
+        addStageNew: async (newStage: StageElementWrapper) => {
           dynamicPopoverHandler?.hide()
           set(pipeline, 'stages[0].stage', { ...newStage.stage, identifier: DefaultNewStageId })
           await updatePipeline(pipeline)

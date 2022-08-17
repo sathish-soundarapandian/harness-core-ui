@@ -46,7 +46,6 @@ import {
   checkAppAndTierAreNotFixed,
   createAppDFormData,
   getAllowedTypes,
-  getIsMetricPacksSelected,
   initAppDCustomFormValue,
   initializeNonCustomFields,
   persistCustomMetric,
@@ -65,6 +64,7 @@ import AppDCustomMetricForm from './Components/AppDCustomMetricForm/AppDCustomMe
 import AppDApplications from './Components/AppDApplications/AppDApplications'
 import AppDynamicsTier from './Components/AppDynamicsTier/AppDynamicsTier'
 import AppDMetricThreshold from './Components/AppDMetricThreshold/AppDMetricThreshold'
+import { getIsMetricPacksSelected } from '../../common/MetricThresholds/MetricThresholds.utils'
 import css from './AppDHealthSource.module.scss'
 
 export default function AppDMonitoredSource({
@@ -451,16 +451,7 @@ export default function AppDMonitoredSource({
                 formik.submitForm()
 
                 if (formik.isValid) {
-                  submitData(
-                    formik,
-                    mappedMetrics,
-                    selectedMetric,
-                    groupedCreatedMetricsList.indexOf(selectedMetric),
-                    groupedCreatedMetricsList,
-                    getString,
-                    onSubmit,
-                    isMetricThresholdEnabled
-                  )
+                  submitData(formik, mappedMetrics, selectedMetric, onSubmit)
                 }
               }}
             />

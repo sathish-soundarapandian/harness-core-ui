@@ -316,7 +316,7 @@ describe('Execution Stages', () => {
       .should('be.visible')
       .within(() => {
         cy.get('span[data-icon="zoom-out"]').click({ force: true })
-        cy.get('p[data-name="node-name"]').contains('Add step').click({ force: true })
+        cy.get('p[data-name="node-name"]').contains('Add Step').click({ force: true })
         cy.wait(1000)
         cy.get('[class*="ExecutionGraph-module_add-step-popover"]', { withinSubject: null })
           .should('be.visible')
@@ -470,7 +470,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
     cy.contains('p', 'Serverless Aws Lambda Deploy').should('be.visible')
 
     // Add another Serverless Lambda Deploy Step
-    cy.contains('p', 'Add step').click({ force: true })
+    cy.contains('p', 'Add Step').click({ force: true })
     cy.findByTestId('addStepPipeline').click()
     cy.wait('@stepLibrary')
     cy.contains('section', 'Serverless Lambda Deploy').click()
@@ -482,7 +482,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
     cy.contains('p', 'Serverless Deploy Step 2').should('be.visible')
 
     // Add Serverless Lambda Rollback Step
-    cy.contains('p', 'Add step').click({ force: true })
+    cy.contains('p', 'Add Step').click({ force: true })
     cy.findByTestId('addStepPipeline').click()
     cy.wait('@stepLibrary')
     cy.contains('section', 'Serverless Lambda Rollback').click()

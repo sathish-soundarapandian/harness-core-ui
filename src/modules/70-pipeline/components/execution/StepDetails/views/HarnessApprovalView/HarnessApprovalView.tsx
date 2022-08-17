@@ -164,6 +164,7 @@ export function HarnessApprovalView(props: HarnessApprovalViewProps): React.Reac
         key={ApprovalStepTab.INPUT}
         title={getString('common.input')}
         panel={<InputOutputTab baseFqn={step.baseFqn} mode="input" data={step.stepParameters} />}
+        disabled={isWaitingOnExecInputs}
       />
       <Tabs.Tab
         id={ApprovalStepTab.OUTPUT}

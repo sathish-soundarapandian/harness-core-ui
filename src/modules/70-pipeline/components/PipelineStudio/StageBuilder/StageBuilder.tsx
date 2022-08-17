@@ -11,16 +11,15 @@ import { Intent } from '@harness/design-system'
 import cx from 'classnames'
 import { cloneDeep, debounce, isNil, isEmpty } from 'lodash-es'
 import type { NodeModelListener, LinkModelListener } from '@projectstorm/react-diagrams-core'
-import { useParams } from 'react-router-dom'
 import SplitPane from 'react-split-pane'
 import produce from 'immer'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
+import { useParams } from 'react-router-dom'
 import { DynamicPopover, DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { StageActions } from '@common/constants/TrackingConstants'
 import type { PipelineInfoConfig, StageElementConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
-import { CanvasButtons } from '@pipeline/components/CanvasButtons/CanvasButtons'
 import { moveStageToFocusDelayed } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import HoverCard from '@pipeline/components/HoverCard/HoverCard'
@@ -38,12 +37,9 @@ import CreateNodeStage from '@pipeline/components/PipelineDiagram/Nodes/CreateNo
 import EndNodeStage from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNodeStage'
 import StartNodeStage from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNodeStage'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
-import { FeatureFlag } from '@common/featureFlags'
 import type { DeploymentStageConfig } from 'services/cd-ng'
+import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import {
-  CanvasWidget,
   createEngine,
   DefaultLinkModel,
   DefaultNodeEvent,
@@ -118,7 +114,6 @@ export const initializeStageStateMap = (stages: StageElementWrapperConfig[], map
 
 export const renderPopover = ({
   data,
-  addStage,
   addStageNew,
   isParallel,
   isGroupStage,
@@ -132,8 +127,7 @@ export const renderPopover = ({
   renderPipelineStage,
   isHoverView,
   contextType,
-  templateTypes,
-  newPipelineStudioEnabled
+  templateTypes
 }: PopoverData): JSX.Element => {
   if (isStageView && data) {
     const stageData = {
@@ -177,22 +171,6 @@ export const renderPopover = ({
       </HoverCard>
     )
   }
-  if (newPipelineStudioEnabled) {
-    return renderPipelineStage({
-      isParallel,
-      showSelectMenu: true,
-      getNewStageFromType: getNewStageFromType as any,
-      getNewStageFromTemplate: getNewStageFromTemplate as any,
-      onSelectStage: (type, stage, pipelineTemp) => {
-        if (stage) {
-          addStageNew?.(stage, isParallel, !isParallel, undefined, true, pipelineTemp, event?.node)
-        } else {
-          addStageNew?.(getNewStageFromType(type as any), isParallel, !isParallel, event?.node)
-        }
-      },
-      contextType: contextType
-    })
-  }
   return renderPipelineStage({
     isParallel,
     showSelectMenu: true,
@@ -200,9 +178,9 @@ export const renderPopover = ({
     getNewStageFromTemplate: getNewStageFromTemplate as any,
     onSelectStage: (type, stage, pipelineTemp) => {
       if (stage) {
-        addStage?.(stage, isParallel, event, undefined, true, pipelineTemp)
+        addStageNew?.(stage, isParallel, !isParallel, undefined, true, pipelineTemp, event?.node)
       } else {
-        addStage?.(getNewStageFromType(type as any), isParallel, event)
+        addStageNew?.(getNewStageFromType(type as any), isParallel, !isParallel, event?.node)
       }
     },
     contextType: contextType
@@ -234,11 +212,10 @@ function StageBuilder(): JSX.Element {
   } = usePipelineContext()
   const { sectionId, storeType } = useQueryParams<PipelineSelectionState>()
   const { module } = useParams<ModulePathParams>()
+
   // NOTE: we are using ref as setSelection is getting cached somewhere
   const setSelectionRef = React.useRef(setSelection)
   setSelectionRef.current = setSelection
-
-  const newPipelineStudioEnabled: boolean = useFeatureFlag(FeatureFlag.NEW_PIPELINE_STUDIO)
 
   const { trackEvent } = useTelemetry()
 
@@ -620,8 +597,7 @@ function StageBuilder(): JSX.Element {
           pipelineContext,
           stageMap,
           resetPipelineStages,
-          addStageNew,
-          newPipelineStudioEnabled
+          addStageNew
         })
       }
     }
@@ -652,7 +628,6 @@ function StageBuilder(): JSX.Element {
     updateMoveStageDetails,
     confirmMoveStage,
     stageMap,
-    newPipelineStudioEnabled,
     sectionId
   )
 
@@ -686,8 +661,7 @@ function StageBuilder(): JSX.Element {
     addStageNew,
     updateMoveStageDetails,
     confirmMoveStage,
-    stageMap,
-    newPipelineStudioEnabled
+    stageMap
   )
 
   const canvasClick = (): void => {
@@ -740,31 +714,6 @@ function StageBuilder(): JSX.Element {
   // handle position and zoom of canvas
   useStageBuilderCanvasState(engine, [])
 
-  const StageCanvas = (
-    <div
-      className={css.canvas}
-      ref={canvasRef}
-      onClick={e => {
-        const div = e.target as HTMLDivElement
-        if (div === canvasRef.current?.children[0]) {
-          dynamicPopoverHandler?.hide()
-        }
-
-        if (isSplitViewOpen) {
-          setSelectionRef.current({ stageId: undefined, sectionId: undefined })
-        }
-      }}
-    >
-      <CanvasWidget engine={engine} />
-      <DynamicPopover
-        darkMode={false}
-        className={css.renderPopover}
-        render={renderPopover}
-        bind={setDynamicPopoverHandler}
-      />
-      <CanvasButtons tooltipPosition="left" engine={engine} callback={() => dynamicPopoverHandler?.hide()} />
-    </div>
-  )
   // eslint-disable-next-line
   const resizerStyle = !!navigator.userAgent.match(/firefox/i)
     ? { display: 'flow-root list-item' }
@@ -813,40 +762,36 @@ function StageBuilder(): JSX.Element {
           onChange={handleStageResize}
           allowResize={openSplitView}
         >
-          {newPipelineStudioEnabled ? (
-            <div
-              className={css.canvas}
-              ref={canvasRef}
-              onClick={e => {
-                const div = e.target as HTMLDivElement
-                if (div === canvasRef.current?.children[0]) {
-                  dynamicPopoverHandler?.hide()
-                }
+          <div
+            className={css.canvas}
+            ref={canvasRef}
+            onClick={e => {
+              const div = e.target as HTMLDivElement
+              if (div === canvasRef.current?.children[0]) {
+                dynamicPopoverHandler?.hide()
+              }
 
-                if (isSplitViewOpen) {
-                  setSelectionRef.current({ stageId: undefined, sectionId: undefined })
-                }
-              }}
-            >
-              <CDPipelineStudioNew
-                selectedNodeId={selectedStageId}
-                data={stageData}
-                loaderComponent={DiagramLoader}
-                parentSelector={'.Pane1'}
-                collapsibleProps={{ percentageNodeVisible: 0.8, bottomMarginInPixels: 80 }}
-                createNodeTitle={getString('addStage')}
-                graphLinkClassname={css.graphLink}
-              />
-              <DynamicPopover
-                darkMode={false}
-                className={css.renderPopover}
-                render={renderPopover}
-                bind={setDynamicPopoverHandler}
-              />
-            </div>
-          ) : (
-            StageCanvas
-          )}
+              if (isSplitViewOpen) {
+                setSelectionRef.current({ stageId: undefined, sectionId: undefined })
+              }
+            }}
+          >
+            <CDPipelineStudioNew
+              selectedNodeId={selectedStageId}
+              data={stageData}
+              loaderComponent={DiagramLoader}
+              parentSelector={'.Pane1'}
+              collapsibleProps={{ percentageNodeVisible: 0.8, bottomMarginInPixels: 80 }}
+              createNodeTitle={getString('addStage')}
+              graphLinkClassname={css.graphLink}
+            />
+            <DynamicPopover
+              darkMode={false}
+              className={css.renderPopover}
+              render={renderPopover}
+              bind={setDynamicPopoverHandler}
+            />
+          </div>
 
           <div
             style={{

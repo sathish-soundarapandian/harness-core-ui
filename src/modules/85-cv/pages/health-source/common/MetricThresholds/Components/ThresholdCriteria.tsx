@@ -118,7 +118,7 @@ export default function ThresholdCriteria(props: ThresholdCriteriaPropsType): JS
     <Layout.Horizontal style={{ alignItems: 'center' }}>
       <ThresholdSelect
         items={getCriterialItems(getString)}
-        className={cx(css.metricThresholdSelect, css.metricThresholdCriteria)}
+        className={cx(css.metricThresholdContentSelect, css.metricThresholdContentCriteria)}
         key={criteriaType || undefined}
         onChange={({ value }: SelectOption) => handleCriteriaUpdate(value as MetricThresholdCriteria['type'])}
         name={`${thresholdTypeName}.${index}.${FieldName.METRIC_THRESHOLD_CRITERIA}.type`}
@@ -126,7 +126,7 @@ export default function ThresholdCriteria(props: ThresholdCriteriaPropsType): JS
       {criteriaType === MetricCriteriaValues.Percentage && (
         <ThresholdSelect
           items={getCriteriaPercentageDropdownOptions(getString)}
-          className={cx(css.metricThresholdSelect, css.metricThresholdCriteria)}
+          className={cx(css.metricThresholdContentSelect, css.metricThresholdContentCriteria)}
           onChange={({ value }: SelectOption) => handleCriteriaPercentageUpdate(value as CriteriaThresholdValues)}
           name={`${thresholdTypeName}.${index}.${FieldName.METRIC_THRESHOLD_CRITERIA}.${FieldName.METRIC_THRESHOLD_CRITERIA_PERCENTAGE_TYPE}`}
         />
@@ -134,7 +134,7 @@ export default function ThresholdCriteria(props: ThresholdCriteriaPropsType): JS
       {showGreaterThan && (
         <FormInput.Text
           inline
-          className={css.metricThresholdInput}
+          className={css.metricThresholdContentInput}
           label={isAbsoluteSelected ? getString('cv.monitoringSources.appD.greaterThan') : null}
           inputGroup={{ type: 'number', min: 1 }}
           name={`${thresholdTypeName}.${index}.criteria.spec.${FieldName.METRIC_THRESHOLD_GREATER_THAN}`}
@@ -144,7 +144,7 @@ export default function ThresholdCriteria(props: ThresholdCriteriaPropsType): JS
       {showLessThan && (
         <FormInput.Text
           inline
-          className={css.metricThresholdInput}
+          className={css.metricThresholdContentInput}
           label={isAbsoluteSelected ? getString('cv.monitoringSources.appD.lesserThan') : null}
           inputGroup={{ type: 'number', min: 1 }}
           name={`${thresholdTypeName}.${index}.criteria.spec.${FieldName.METRIC_THRESHOLD_LESS_THAN}`}

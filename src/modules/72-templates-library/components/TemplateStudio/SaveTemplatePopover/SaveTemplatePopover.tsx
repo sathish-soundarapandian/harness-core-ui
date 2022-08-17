@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Dialog } from '@blueprintjs/core'
+import { Dialog, Spinner } from '@blueprintjs/core'
 import { parse } from 'yaml'
 import { Button, ButtonVariation, useToaster } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
@@ -14,13 +14,15 @@ import { defaultTo, get, isEmpty, noop, unset } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { FormikErrors } from 'formik'
 import produce from 'immer'
+import { Container } from '@harness/uicore'
 import { String, useStrings } from 'framework/strings'
 import type { ModulePathParams, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   Fields,
   ModalProps,
-  TemplateConfigModal,
-  Intent
+  Intent,
+  TemplateConfigModalWithRef,
+  TemplateConfigModalHandle
 } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import {
@@ -28,25 +30,36 @@ import {
   TemplatesActionPopover
 } from '@templates-library/components/TemplatesActionPopover/TemplatesActionPopover'
 import { useSaveTemplate } from '@pipeline/utils/useSaveTemplate'
-import type { EntityGitDetails, Failure } from 'services/template-ng'
+import type { EntityGitDetails, Failure, NGTemplateInfoConfig } from 'services/template-ng'
 import { DefaultNewTemplateId, DefaultNewVersionLabel } from 'framework/Templates/templates'
 import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 import useCommentModal from '@common/hooks/CommentModal/useCommentModal'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import { getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
+import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { sanitize } from '@common/utils/JSONUtils'
+import useTemplateErrors from '@pipeline/components/TemplateErrors/useTemplateErrors'
+import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/ReconcileDialog/ReconcileDialog'
 import css from './SaveTemplatePopover.module.scss'
 
 export interface GetErrorResponse extends Omit<Failure, 'errors'> {
   errors?: FormikErrors<unknown>
 }
+
 export interface SaveTemplatePopoverProps {
   getErrors: () => Promise<GetErrorResponse>
 }
 
-export function SaveTemplatePopover({ getErrors }: SaveTemplatePopoverProps): React.ReactElement {
+export type SaveTemplateHandle = {
+  updateTemplate: (templateYaml: string) => Promise<void>
+}
+
+function SaveTemplatePopover(
+  { getErrors }: SaveTemplatePopoverProps,
+  ref: React.ForwardedRef<SaveTemplateHandle>
+): React.ReactElement {
   const {
     state: { template, originalTemplate, yamlHandler, gitDetails, isUpdated, stableVersion, lastPublishedVersion },
-    setLoading,
     fetchTemplate,
     deleteTemplateCache,
     view,
@@ -60,14 +73,19 @@ export function SaveTemplatePopover({ getErrors }: SaveTemplatePopoverProps): Re
   const { isGitSyncEnabled } = React.useContext(AppStoreContext)
   const { getComments } = useCommentModal()
   const { showError, clear } = useToaster()
+  const { openTemplateErrorsModal } = useTemplateErrors({ entity: TemplateErrorEntity.TEMPLATE })
+  const [loading, setLoading] = React.useState<boolean>()
+  const templateConfigModalHandler = React.useRef<TemplateConfigModalHandle>(null)
 
   const [showConfigModal, hideConfigModal] = useModalHook(
     () => (
       <Dialog enforceFocus={false} isOpen={true} className={css.configDialog}>
-        {modalProps && <TemplateConfigModal {...modalProps} onClose={hideConfigModal} />}
+        {modalProps && (
+          <TemplateConfigModalWithRef {...modalProps} onClose={hideConfigModal} ref={templateConfigModalHandler} />
+        )}
       </Dialog>
     ),
-    [modalProps]
+    [modalProps, templateConfigModalHandler.current]
   )
 
   const { saveAndPublish } = useSaveTemplate({
@@ -86,9 +104,21 @@ export function SaveTemplatePopover({ getErrors }: SaveTemplatePopoverProps): Re
       }
       await deleteTemplateCache(details)
     },
-    view,
-    stableVersion
+    view
   })
+
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      updateTemplate: async (templateYaml: string) => {
+        await saveAndPublish(parse(templateYaml).template, {
+          isEdit: templateIdentifier !== DefaultNewTemplateId,
+          comment: 'Reconciling template'
+        })
+      }
+    }),
+    [saveAndPublish, templateIdentifier]
+  )
 
   const checkErrors = React.useCallback(
     (callback: () => void) => {
@@ -129,12 +159,27 @@ export function SaveTemplatePopover({ getErrors }: SaveTemplatePopoverProps): Re
               )
             : ''
           await saveAndPublish(template, { isEdit, comment, updatedGitDetails: gitDetails })
-        } catch (_err) {
-          // do nothing as user has cancelled the save operation
+        } catch (error) {
+          if (!isEmpty((error as any)?.metadata?.errorNodeSummary)) {
+            openTemplateErrorsModal({
+              error: (error as any)?.metadata?.errorNodeSummary,
+              originalYaml: yamlStringify(
+                sanitize({ template }, { removeEmptyArray: false, removeEmptyObject: false, removeEmptyString: false })
+              ),
+              onSave: async (refreshedYaml: string) => {
+                const refreshedTemplate = (parse(refreshedYaml) as { template: NGTemplateInfoConfig }).template
+                await saveAndPublish(refreshedTemplate, {
+                  isEdit,
+                  comment: 'Reconciling template',
+                  updatedGitDetails: gitDetails
+                })
+              }
+            })
+          }
         }
       })
     },
-    [checkErrors, isGitSyncEnabled, template, stableVersion, saveAndPublish, gitDetails]
+    [checkErrors, isGitSyncEnabled, template, stableVersion, saveAndPublish, gitDetails, openTemplateErrorsModal]
   )
 
   const onSave = React.useCallback(() => {
@@ -145,7 +190,24 @@ export function SaveTemplatePopover({ getErrors }: SaveTemplatePopoverProps): Re
     onSubmit(true)
   }, [onSubmit])
 
-  const onSaveAsNewLabel = React.useCallback(() => {
+  const onFailure = (error: any, latestTemplate: NGTemplateInfoConfig) => {
+    if (!isEmpty((error as any)?.metadata?.errorNodeSummary)) {
+      openTemplateErrorsModal({
+        error: (error as any)?.metadata?.errorNodeSummary,
+        originalYaml: yamlStringify(
+          sanitize(
+            { template: latestTemplate },
+            { removeEmptyArray: false, removeEmptyObject: false, removeEmptyString: false }
+          )
+        ),
+        onSave: async (refreshedYaml: string) => {
+          templateConfigModalHandler.current?.updateTemplate(refreshedYaml)
+        }
+      })
+    }
+  }
+
+  const onSaveAsNewLabel = () => {
     checkErrors(() => {
       setModalProps({
         initialValues: produce(template, draft => {
@@ -155,12 +217,13 @@ export function SaveTemplatePopover({ getErrors }: SaveTemplatePopoverProps): Re
         gitDetails,
         title: getString('templatesLibrary.saveAsNewLabelModal.heading'),
         intent: Intent.SAVE,
-        disabledFields: [Fields.Name, Fields.Identifier, Fields.Description, Fields.Tags],
-        lastPublishedVersion
+        disabledFields: [Fields.Name, Fields.Identifier],
+        lastPublishedVersion,
+        onFailure
       })
       showConfigModal()
     })
-  }, [checkErrors, setModalProps, saveAndPublish, template, gitDetails])
+  }
 
   const onSaveAsNewTemplate = () => {
     checkErrors(() => {
@@ -173,7 +236,8 @@ export function SaveTemplatePopover({ getErrors }: SaveTemplatePopoverProps): Re
         promise: saveAndPublish,
         title: getString('common.template.saveAsNewTemplateHeading'),
         intent: Intent.SAVE,
-        allowScopeChange: true
+        allowScopeChange: true,
+        onFailure
       })
       showConfigModal()
     })
@@ -218,6 +282,15 @@ export function SaveTemplatePopover({ getErrors }: SaveTemplatePopoverProps): Re
   React.useEffect(() => {
     setMenuOpen(false)
   }, [isUpdated])
+
+  if (loading) {
+    return (
+      <Container padding={{ right: 'large', left: 'large' }}>
+        <Spinner size={24} />
+      </Container>
+    )
+  }
+
   return (
     <TemplatesActionPopover
       open={menuOpen && saveOptions.length > 1}
@@ -237,3 +310,5 @@ export function SaveTemplatePopover({ getErrors }: SaveTemplatePopoverProps): Re
     </TemplatesActionPopover>
   )
 }
+
+export const SaveTemplatePopoverWithRef = React.forwardRef(SaveTemplatePopover)

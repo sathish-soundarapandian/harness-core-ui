@@ -21,14 +21,10 @@ import type {
 import type { DependencyElement } from 'services/ci'
 import { StepType as PipelineStepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StageType } from '@pipeline/utils/stageHelpers'
-import { EmptyNodeSeparator } from '../StageBuilder/StageBuilderUtil'
 import {
-  CreateNewModel,
   DefaultLinkModel,
   DefaultNodeModel,
   StepGroupNodeLayerModel,
-  StepGroupNodeLayerOptions,
-  StepsType,
   DiamondNodeModel,
   DiagramType
 } from '../../Diagram'
@@ -110,7 +106,6 @@ interface RemoveStepOrGroupProps {
   state: ExecutionGraphState
   entity: any
   skipFlatten?: boolean
-  newPipelineStudioEnabled?: boolean
   isRollback?: boolean
 }
 
@@ -463,67 +458,8 @@ export const removeStepOrGroup = ({
   state,
   entity,
   skipFlatten = false,
-  newPipelineStudioEnabled,
   isRollback = false
 }: RemoveStepOrGroupProps): boolean => {
-  if (newPipelineStudioEnabled) {
-    return removeStepOrGroupV2(state, entity, skipFlatten, isRollback)
-  }
-  // 1. services
-  const servicesData = state.dependenciesData
-  if (servicesData) {
-    let idx
-    servicesData.forEach((service, _idx) => {
-      if (service.identifier === entity.getOptions().identifier) {
-        idx = _idx
-      }
-    })
-    if (idx !== undefined) {
-      servicesData.splice(idx, 1)
-      return true
-    }
-  }
-
-  // 2. steps
-  let isRemoved = false
-  let data: ExecutionWrapper = state.stepsData
-  const layer = entity.getParent()
-  if (layer instanceof StepGroupNodeLayerModel) {
-    const node = getStepFromId(data, defaultTo(layer.getIdentifier(), ''), false, false, isRollback).node
-    if (node) {
-      data = node
-    }
-  }
-  const response = getStepFromId(data, entity.getIdentifier(), true, false, isRollback)
-  if (response.node) {
-    const index = response.parent.indexOf(response.node)
-    if (index > -1) {
-      response.parent.splice(index, 1)
-      // NOTE: if there is one item in parallel array, we are removing parallel array
-      if (
-        !skipFlatten &&
-        response.parallelParent &&
-        (response.parallelParent as ExecutionWrapperConfig).parallel?.length === 1
-      ) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const stepToReAttach = (response.parallelParent as ExecutionWrapperConfig).parallel![0]
-        // reattach step
-        if (response.parallelParentParent && response.parallelParentIdx !== undefined) {
-          response.parallelParentParent[response.parallelParentIdx] = stepToReAttach
-        }
-      }
-      isRemoved = true
-    }
-  }
-  return isRemoved
-}
-
-export const removeStepOrGroupV2 = (
-  state: ExecutionGraphState,
-  entity: any,
-  skipFlatten = false,
-  isRollback = false
-): boolean => {
   // 1. services
   const servicesData = state.dependenciesData
   if (servicesData) {
@@ -597,125 +533,6 @@ export const addService = (data: DependencyElement[], service: DependencyElement
 }
 
 export const addStepOrGroup = (
-  entity: any,
-  data: ExecutionWrapper,
-  step: ExecutionWrapperConfig,
-  isParallel: boolean,
-  isRollback: boolean,
-  newPipelineStudioEnabled?: boolean
-): void => {
-  if (newPipelineStudioEnabled) {
-    addStepOrGroupV2(entity, data, step, isParallel, isRollback)
-    return
-  }
-
-  if (entity instanceof DefaultLinkModel) {
-    const sourceNode = entity.getSourcePort().getNode() as DefaultNodeModel
-    const targetNode = entity.getTargetPort().getNode() as DefaultNodeModel
-    if (isLinkUnderStepGroup(entity)) {
-      const layer = sourceNode.getParent()
-      if (layer instanceof StepGroupNodeLayerModel) {
-        const node = getStepFromId(data, defaultTo(layer.getIdentifier(), ''), false, false, isRollback).node
-        if (node) {
-          data = node
-        }
-      }
-    }
-    let response = getStepFromId(data, sourceNode.getIdentifier(), true, false, isRollback)
-    let next = 1
-    if (!response.node) {
-      response = getStepFromId(data, targetNode.getIdentifier(), true, false, isRollback)
-      next = 0
-    }
-    if (response.node) {
-      const index = response.parent.indexOf(response.node)
-      if (index > -1) {
-        response.parent.splice(index + next, 0, step)
-      }
-    } else {
-      // parallel next parallel case
-      let nodeId = sourceNode.getIdentifier().split(EmptyNodeSeparator)[1]
-      response = getStepFromId(data, nodeId, true, true, isRollback)
-      next = 1
-      if (!response.node) {
-        nodeId = targetNode.getIdentifier().split(EmptyNodeSeparator)[2]
-        response = getStepFromId(data, nodeId, true, true, isRollback)
-        next = 0
-      }
-      if (response.node) {
-        const index = response.parent.indexOf(response.node)
-        if (index > -1) {
-          response.parent.splice(index + next, 0, step)
-        }
-      }
-    }
-  } else if (entity instanceof CreateNewModel) {
-    // Steps if you are under step group
-    const groupId = entity.getIdentifier().split(EmptyNodeSeparator)[1]
-    const node = getStepFromId(data, groupId, false, false, isRollback).node
-    const layer = entity.getParent()
-    if (layer instanceof StepGroupNodeLayerModel) {
-      const options = layer.getOptions() as StepGroupNodeLayerOptions
-      const isRollbackGroup = options.rollBackProps?.active === StepsType.Rollback
-      if (!isRollbackGroup && isExecutionElementConfig(node) && node?.steps) {
-        node.steps.push(step)
-      } else if (isRollbackGroup && isExecutionElementConfig(node) && node) {
-        if (isNil(node.rollbackSteps)) {
-          node.rollbackSteps = []
-        }
-        node.rollbackSteps.push(step)
-      }
-    } else {
-      if (isRollback) {
-        if (isExecutionElementConfig(data)) data.rollbackSteps?.push?.(step)
-      } else {
-        if (isExecutionElementConfig(data)) data.steps.push(step)
-      }
-    }
-  } else if (entity instanceof DefaultNodeModel) {
-    if (isParallel) {
-      const response = getStepFromId(data, entity.getIdentifier(), true, true, isRollback) as {
-        node: ExecutionWrapperConfig
-        parent: ExecutionWrapperConfig[]
-      }
-      if (response.node) {
-        if (response.node.parallel && response.node.parallel.length > 0) {
-          response.node.parallel.push(step)
-        } else {
-          const index = response.parent.indexOf(response.node)
-          if (index > -1) {
-            response.parent.splice(index, 1, { parallel: [response.node, step] })
-          }
-        }
-      }
-    } else {
-      if (isRollback) {
-        ;(data as ExecutionElementConfig).rollbackSteps?.push?.(step)
-      } else {
-        ;(data as ExecutionElementConfig).steps.push(step)
-      }
-    }
-  } else if (entity instanceof StepGroupNodeLayerModel) {
-    if (isParallel) {
-      const response = getStepFromId(data, defaultTo(entity.getIdentifier(), ''), true, true, isRollback) as {
-        node: ExecutionWrapperConfig
-        parent: ExecutionWrapperConfig[]
-      }
-      if (response.node) {
-        if (response.node.parallel && response.node.parallel.length > 0) {
-          response.node.parallel.push(step)
-        } else {
-          const index = response.parent.indexOf(response.node)
-          if (index > -1) {
-            response.parent.splice(index, 1, { parallel: [response.node, step] })
-          }
-        }
-      }
-    }
-  }
-}
-
-export const addStepOrGroupV2 = (
   entity: any,
   data: ExecutionWrapper,
   step: ExecutionWrapperConfig,

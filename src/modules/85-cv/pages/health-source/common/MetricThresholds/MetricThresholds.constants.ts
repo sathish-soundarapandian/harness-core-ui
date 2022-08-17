@@ -8,6 +8,7 @@
 import type {
   AvailableThresholdTypes,
   CriteriaThresholdValues,
+  MetricThresholdType,
   ThresholdsPropertyNames
 } from './MetricThresholds.types'
 
@@ -62,3 +63,26 @@ export const FailFastActionValues: Record<
 
 export const DefaultCustomMetricGroupName = 'Please Select Group Name'
 export const ExceptionGroupName = '+ Add New'
+
+export const NewDefaultVauesForIgnoreThreshold: MetricThresholdType = {
+  type: MetricThresholdTypes.IgnoreThreshold,
+  spec: {
+    action: IgnoreThresholdType
+  },
+  criteria: {
+    type: MetricCriteriaValues.Absolute,
+    spec: {}
+  }
+}
+
+export const NewDefaultVauesForFailFastThreshold: MetricThresholdType = {
+  type: MetricThresholdTypes.FailImmediately,
+  spec: {
+    action: FailFastActionValues.FailImmediately,
+    spec: {}
+  },
+  criteria: {
+    type: MetricCriteriaValues.Absolute,
+    spec: {}
+  }
+}

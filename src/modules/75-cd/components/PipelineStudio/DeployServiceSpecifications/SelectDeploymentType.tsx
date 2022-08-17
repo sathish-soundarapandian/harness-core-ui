@@ -42,10 +42,8 @@ import deployServiceCsss from './DeployServiceSpecifications.module.scss'
 
 export function getServiceDeploymentTypeSchema(
   getString: UseStringsReturn['getString']
-): Yup.StringSchema<string | undefined> {
-  return Yup.string()
-    .oneOf(Object.values(ServiceDeploymentType))
-    .required(getString('cd.pipelineSteps.serviceTab.deploymentTypeRequired'))
+): Yup.StringSchema<string | undefined | null> {
+  return Yup.string().nullable().required(getString('cd.pipelineSteps.serviceTab.deploymentTypeRequired'))
 }
 
 interface SelectServiceDeploymentTypeProps {

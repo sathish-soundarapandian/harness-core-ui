@@ -581,8 +581,9 @@ function CICodebaseInputSetFormInternal({
     }
   }
   const renderCodeBaseTypeInput = (type: CodeBaseType): JSX.Element => {
+    const shouldDisableBranchTextInput = type === CodebaseTypes.branch && isFetchingBranches
     return (
-      <Container>
+      <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'center' }} spacing="medium">
         <FormInput.MultiTextInput
           label={<Text font={{ variation: FontVariation.FORM_LABEL }}>{inputLabels[type]}</Text>}
           name={codeBaseInputFieldFormName[type]}
@@ -591,10 +592,12 @@ function CICodebaseInputSetFormInternal({
             allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED]
           }}
           placeholder={triggerIdentifier && isNotScheduledTrigger ? placeholderValues[type] : ''}
-          disabled={readonly || (type === CodebaseTypes.branch && isFetchingBranches)}
+          disabled={readonly || shouldDisableBranchTextInput}
           onChange={() => setIsInputTouched(true)}
+          className={shouldDisableBranchTextInput ? css.width90 : css.width100}
         />
-      </Container>
+        {shouldDisableBranchTextInput ? <Icon name="steps-spinner" size={20} padding={{ top: 'xsmall' }} /> : null}
+      </Layout.Horizontal>
     )
   }
 

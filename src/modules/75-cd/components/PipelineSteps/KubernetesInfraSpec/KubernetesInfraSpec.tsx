@@ -287,6 +287,7 @@ const KubernetesInfraSpecInputForm: React.FC<KubernetesInfraSpecEditableProps & 
             setRefValue
             className={css.connectorMargin}
             multiTypeProps={{ allowableTypes, expressions }}
+            enableConfigureOptions={false}
           />
         </div>
       )}

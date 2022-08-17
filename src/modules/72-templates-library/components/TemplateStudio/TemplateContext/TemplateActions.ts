@@ -20,7 +20,6 @@ export enum TemplateActions {
   DBInitialize = 'DBInitialize',
   Initialize = 'Initialize',
   Fetching = 'Fetching',
-  Loading = 'Loading',
   UpdateTemplateView = 'UpdateTemplateView',
   UpdateTemplate = 'UpdateTemplate',
   SetYamlHandler = 'SetYamlHandler',
@@ -64,7 +63,6 @@ export interface ActionReturnType {
 
 const dbInitialized = (): ActionReturnType => ({ type: TemplateActions.DBInitialize })
 const initialized = (): ActionReturnType => ({ type: TemplateActions.Initialize })
-const loading = (response: ActionResponse): ActionReturnType => ({ type: TemplateActions.Loading, response })
 const updateTemplateView = (response: ActionResponse): ActionReturnType => ({
   type: TemplateActions.UpdateTemplateView,
   response
@@ -81,7 +79,6 @@ const error = (response: ActionResponse): ActionReturnType => ({ type: TemplateA
 export const TemplateContextActions = {
   dbInitialized,
   initialized,
-  loading,
   updating,
   fetching,
   updateTemplateView,

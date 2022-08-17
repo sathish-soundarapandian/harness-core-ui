@@ -134,7 +134,7 @@ export class CommandScriptsStep extends PipelineStep<CommandScriptsData> {
             outputVariables: variableSchema(getString)
           })
         })
-        schema.validateSync(data)
+        schema.validateSync(data, { abortEarly: false })
       } catch (e) {
         /* istanbul ignore else */
         if (e instanceof Yup.ValidationError) {

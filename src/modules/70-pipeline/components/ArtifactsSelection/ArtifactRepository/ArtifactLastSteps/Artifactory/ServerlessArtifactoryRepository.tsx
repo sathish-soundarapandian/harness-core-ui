@@ -20,11 +20,12 @@ import {
   SelectOption,
   Text
 } from '@harness/uicore'
-import type { ImagePathTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+
+import { useStrings } from 'framework/strings'
 import { Failure, useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import type { ImagePathTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import css from '../../ArtifactConnector.module.scss'
 

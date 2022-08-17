@@ -13,15 +13,15 @@ import type { GetDataError } from 'restful-react'
 import type { IDialogProps } from '@blueprintjs/core'
 import moment from 'moment'
 import { useModalHook } from '@harness/use-modal'
+import qs from 'qs'
 import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
-import type { QueryParams } from '@pipeline/pages/execution-list/types'
-
 import {
   ExecutionListFilterContextProvider,
-  processQueryParams
+  ProcessedExecutionListPageQueryParams,
+  queryParamOptions
 } from '@pipeline/pages/execution-list/ExecutionListFilterContext/ExecutionListFilterContext'
 import type { Failure } from 'services/cd-ng'
 import { BuildActiveInfo, BuildFailureInfo, CIWebhookInfoDTO, useGetBuilds, useGetRepositoryBuild } from 'services/ci'
@@ -113,7 +113,7 @@ export const CIDashboardPage: React.FC = () => {
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const history = useHistory()
   const { getString } = useStrings()
-  const queryParams = useQueryParams<QueryParams>({ processQueryParams })
+  const queryParams = useQueryParams<ProcessedExecutionListPageQueryParams>(queryParamOptions)
 
   const [timeRange, setTimeRange] = useState<TimeRangeSelectorProps>({
     range: [startOfDay(moment().subtract(1, 'month').add(1, 'day')), startOfDay(moment())],
@@ -224,10 +224,10 @@ export const CIDashboardPage: React.FC = () => {
               contentType="FAILED_BUILD"
               isLoading={loading && !refetchingBuilds}
               onShowAll={() =>
-                history.push(
-                  routes.toDeployments({ projectIdentifier, orgIdentifier, accountId, module: 'ci' }) +
-                    `?filters=${JSON.stringify({ status: Object.keys(FailedStatus) })}`
-                )
+                history.push({
+                  pathname: routes.toDeployments({ projectIdentifier, orgIdentifier, accountId, module: 'ci' }),
+                  search: qs.stringify({ filters: { status: Object.keys(FailedStatus) } })
+                })
               }
             >
               {data?.data?.failed?.map((build, index) => (
@@ -244,10 +244,10 @@ export const CIDashboardPage: React.FC = () => {
               contentType="ACTIVE_BUILD"
               isLoading={loading && !refetchingBuilds}
               onShowAll={() =>
-                history.push(
-                  routes.toDeployments({ projectIdentifier, orgIdentifier, accountId, module: 'ci' }) +
-                    `?filters=${JSON.stringify({ status: Object.keys(ActiveStatus) })}`
-                )
+                history.push({
+                  pathname: routes.toDeployments({ projectIdentifier, orgIdentifier, accountId, module: 'ci' }),
+                  search: qs.stringify({ filters: { status: Object.keys(ActiveStatus) } })
+                })
               }
             >
               {data?.data?.active?.map((build, index) => (

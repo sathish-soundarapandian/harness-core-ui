@@ -28,7 +28,9 @@ import {
   AzureTagDTO,
   useGetAzureResourceGroupsBySubscription,
   useGetAzureSubscriptions,
-  useGetSubscriptionTags
+  useGetSubscriptionTags,
+  useGetAzureResourceGroupsV2,
+  useGetSubscriptionTagsV2
 } from 'services/cd-ng'
 
 import { Connectors } from '@connectors/constants'
@@ -74,6 +76,15 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
 
     const [renderCount, setRenderCount] = useState<number>(0)
 
+    const environmentRef = useMemo(
+      () => defaultTo(initialValues.environmentRef, allValues?.environmentRef),
+      [initialValues.environmentRef, allValues?.environmentRef]
+    )
+
+    const infrastructureRef = useMemo(
+      () => defaultTo(initialValues.infrastructureRef, allValues?.infrastructureRef),
+      [initialValues.infrastructureRef, allValues?.infrastructureRef]
+    )
     const { getString } = useStrings()
 
     const connectorRef = useMemo(
@@ -117,7 +128,10 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
       connectorRef: initialValues?.connectorRef as string,
       accountIdentifier: accountId,
       orgIdentifier,
-      projectIdentifier
+      projectIdentifier,
+      envId: environmentRef,
+      infraDefinitionId: infrastructureRef,
+      subscriptionId: initialValues?.subscriptionId
     }
 
     const {
@@ -156,6 +170,15 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
       lazy: true
     })
     const {
+      data: resourceGroupDataV2,
+      refetch: refetchResourceGroupsV2,
+      loading: loadingResourceGroupsV2,
+      error: resourceGroupsErrorV2
+    } = useGetAzureResourceGroupsV2({
+      queryParams,
+      lazy: true
+    })
+    const {
       data: subscriptionTagsData,
       refetch: refetchSubscriptionTags,
       loading: loadingSubscriptionTags,
@@ -163,6 +186,16 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
     } = useGetSubscriptionTags({
       queryParams,
       subscriptionId: initialValues?.subscriptionId as string,
+      lazy: true
+    })
+
+    const {
+      data: subscriptionTagsV2Data,
+      loading: loadingSubscriptionTagsV2,
+      refetch: refetchSubscriptionTagsV2,
+      error: subscriptionTagsV2Error
+    } = useGetSubscriptionTagsV2({
+      queryParams,
       lazy: true
     })
 
@@ -174,43 +207,45 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
         }))
       )
     }, [subscriptionTagsData])
+    React.useEffect(() => {
+      setAzureTags(
+        get(subscriptionTagsV2Data, 'data.tags', []).map((azureTag: AzureTagDTO) => ({
+          label: azureTag.tag,
+          value: azureTag.tag
+        }))
+      )
+    }, [subscriptionTagsV2Data])
 
     useEffect(() => {
-      const options =
-        resourceGroupData?.data?.resourceGroups?.map(rg => ({ label: rg.resourceGroup, value: rg.resourceGroup })) ||
-        /* istanbul ignore next */ []
-      setResourceGroups(options)
+      setResourceGroups(
+        get(resourceGroupData, 'data.resourceGroups', []).map((rg: { resourceGroup: string }) => ({
+          label: rg.resourceGroup,
+          value: rg.resourceGroup
+        }))
+      )
     }, [resourceGroupData])
+    useEffect(() => {
+      setResourceGroups(
+        get(resourceGroupDataV2, 'data.resourceGroups', []).map((rg: { resourceGroup: string }) => ({
+          label: rg.resourceGroup,
+          value: rg.resourceGroup
+        }))
+      )
+    }, [resourceGroupDataV2])
+
+    // this function is used to validate if the connector and subscription are set at studio level and to verify if not then they shouldn't be runtime wrt to deployment form
+    const fetchResourceUsingEnvId = (): boolean => {
+      return (
+        getMultiTypeFromValue(connectorRef) !== MultiTypeInputType.RUNTIME &&
+        getMultiTypeFromValue(subscriptionIdRef) !== MultiTypeInputType.RUNTIME &&
+        environmentRef &&
+        getMultiTypeFromValue(environmentRef) === MultiTypeInputType.FIXED &&
+        infrastructureRef &&
+        getMultiTypeFromValue(infrastructureRef) === MultiTypeInputType.FIXED
+      )
+    }
 
     useEffect(() => {
-      if (
-        initialValues?.connectorRef &&
-        getMultiTypeFromValue(initialValues?.connectorRef) === MultiTypeInputType.FIXED
-      ) {
-        refetchSubscriptions({
-          queryParams
-        })
-      }
-      if (
-        initialValues?.connectorRef &&
-        getMultiTypeFromValue(initialValues?.connectorRef) === MultiTypeInputType.FIXED &&
-        initialValues.subscriptionId &&
-        getMultiTypeFromValue(initialValues?.subscriptionId) === MultiTypeInputType.FIXED
-      ) {
-        refetchResourceGroups({
-          queryParams,
-          pathParams: {
-            subscriptionId: initialValues?.subscriptionId
-          }
-        })
-        refetchSubscriptionTags({
-          queryParams,
-          pathParams: {
-            subscriptionId: initialValues?.subscriptionId
-          }
-        })
-        /* istanbul ignore else */
-      }
       setRenderCount(renderCount + 1)
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -291,14 +326,9 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
                   setSelectedTags([])
                 },
                 onFocus: () => {
-                  if (initialValues.connectorRef) {
+                  if (getMultiTypeFromValue(initialValues?.connectorRef) !== MultiTypeInputType.RUNTIME) {
                     refetchSubscriptions({
-                      queryParams: {
-                        accountIdentifier: accountId,
-                        projectIdentifier,
-                        orgIdentifier,
-                        connectorRef: initialValues.connectorRef
-                      }
+                      queryParams
                     })
                   }
                 },
@@ -332,7 +362,7 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
               }}
               disabled={readonly}
               placeholder={
-                loadingResourceGroups
+                loadingResourceGroups || loadingResourceGroupsV2
                   ? /* istanbul ignore next */ getString('loading')
                   : getString('cd.steps.azureInfraStep.resourceGroupPlaceholder')
               }
@@ -341,7 +371,7 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
               label={getString(resourceGroupLabel)}
               multiTypeInputProps={{
                 onFocus: () => {
-                  if (initialValues?.connectorRef && initialValues?.subscriptionId) {
+                  if (connectorRef && subscriptionIdRef) {
                     refetchResourceGroups({
                       queryParams: {
                         accountIdentifier: accountId,
@@ -364,6 +394,13 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
                         subscriptionId: initialValues?.subscriptionId
                       }
                     })
+                  } else if (fetchResourceUsingEnvId()) {
+                    refetchResourceGroupsV2({
+                      queryParams
+                    })
+                    refetchSubscriptionTagsV2({
+                      queryParams
+                    })
                   }
                 },
                 selectProps: {
@@ -372,10 +409,13 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
                   addClearBtn: !(loadingResourceGroups || readonly),
                   noResults: (
                     <Text padding={'small'}>
-                      {loadingResourceGroups
+                      {loadingResourceGroups || loadingResourceGroupsV2
                         ? getString('loading')
                         : defaultTo(
-                            get(resourceGroupsError, errorMessage, resourceGroupsError?.message),
+                            defaultTo(
+                              get(resourceGroupsError, errorMessage, resourceGroupsError?.message),
+                              get(resourceGroupsErrorV2, errorMessage, resourceGroupsError?.message)
+                            ),
                             getString('cd.steps.azureInfraStep.resourceGroupError')
                           )}
                     </Text>
@@ -421,10 +461,12 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
                       allowCreatingNewItems={true}
                       noResults={
                         <Text padding={'small'}>
-                          {loadingSubscriptionTags
+                          {loadingSubscriptionTags || loadingSubscriptionTagsV2
                             ? getString('loading')
-                            : get(subscriptionTagsError, errorMessage, null) ||
-                              getString('pipeline.ACR.subscriptionError')}
+                            : defaultTo(
+                                get(subscriptionTagsError, errorMessage, null),
+                                get(subscriptionTagsV2Error, errorMessage, null)
+                              ) || getString('pipeline.ACR.subscriptionError')}
                         </Text>
                       }
                       onChange={option => {

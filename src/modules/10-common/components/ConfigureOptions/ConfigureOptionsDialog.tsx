@@ -13,19 +13,25 @@ import {
   Formik,
   Text,
   FormInput,
-  SelectOption,
-  MultiSelectOption,
   Layout,
   ButtonVariation,
-  useToaster
+  useToaster,
+  MultiSelectOption
 } from '@harness/uicore'
 import { FormGroup } from '@blueprintjs/core'
 
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useStrings, String } from 'framework/strings'
 import AllowedValuesFields from './AllowedValuesField'
-import type { ALLOWED_VALUES_TYPE } from './constants'
-import { Validation, ValidationSchema, FormValues, parseInput, getInputStr } from './ConfigureOptionsUtils'
+import { ALLOWED_VALUES_TYPE } from './constants'
+import {
+  Validation,
+  ValidationSchema,
+  FormValues,
+  parseInput,
+  getInputStr,
+  AllowedValuesCustomComponentProps
+} from './ConfigureOptionsUtils'
 
 import css from './ConfigureOptions.module.scss'
 
@@ -40,10 +46,12 @@ export interface ConfigureOptionsDialogProps {
   showRequiredField?: boolean
   hideExecutionTimeField?: boolean
   showAdvanced?: boolean
-  fetchValues?: (done: (response: SelectOption[] | MultiSelectOption[]) => void) => void
   isReadonly?: boolean
   allowedValuesType?: ALLOWED_VALUES_TYPE
   allowedValuesValidator?: Yup.Schema<unknown>
+  getAllowedValuesCustomComponent?: (
+    allowedValuesCustomComponentProps: AllowedValuesCustomComponentProps
+  ) => React.ReactElement
   closeModal: (
     str?: string | undefined,
     defaultStr?: string | number | undefined,
@@ -62,28 +70,17 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
     hideExecutionTimeField = false,
     showRequiredField = false,
     showAdvanced = false,
-    fetchValues,
     isReadonly = false,
     allowedValuesType,
     allowedValuesValidator,
+    getAllowedValuesCustomComponent,
     closeModal
   } = props
   const [input, setInput] = React.useState(value)
   const { showError } = useToaster()
-  const [options, setOptions] = React.useState<SelectOption[] | MultiSelectOption[]>([])
   const { getString } = useStrings()
   const { NG_EXECUTION_INPUT } = useFeatureFlags()
   const parsedValues = parseInput(input)
-
-  React.useEffect(
-    () => {
-      fetchValues?.(data => {
-        setOptions(data)
-      })
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  )
 
   // is not a valid input
   if (!parsedValues) {
@@ -95,10 +92,19 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
   const isAdvanced = !!parsedValues.allowedValues?.jexlExpression
   const advancedValue = defaultTo(parsedValues.allowedValues?.jexlExpression, '')
 
+  const getInitialAllowedValues = () => {
+    switch (allowedValuesType) {
+      case ALLOWED_VALUES_TYPE.MULTI_SELECT:
+        return allowedValues.map(currValue => ({ label: currValue, value: currValue }))
+      default:
+        return allowedValues
+    }
+  }
+
   const inputValues: FormValues = {
     isRequired,
     defaultValue: parsedValues?.default ?? defaultValue,
-    allowedValues,
+    allowedValues: getInitialAllowedValues(),
     regExValues,
     isAdvanced,
     advancedValue,
@@ -111,12 +117,24 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
         : Validation.None
   }
 
+  const getAllowedValuesToSubmit = (formAllowedValues: unknown): string[] => {
+    switch (allowedValuesType) {
+      case ALLOWED_VALUES_TYPE.MULTI_SELECT:
+        return (formAllowedValues as MultiSelectOption[]).map(
+          (currValue: MultiSelectOption) => currValue.value as string
+        )
+      default:
+        return formAllowedValues as string[]
+    }
+  }
+
   return (
     <Formik
       initialValues={inputValues}
       formName="configureOptionsForm"
       validationSchema={Yup.object().shape(ValidationSchema(getString))}
       onSubmit={data => {
+        data.allowedValues = getAllowedValuesToSubmit(data.allowedValues)
         const inputStr = getInputStr(data, !!NG_EXECUTION_INPUT)
         setInput(inputStr)
         closeModal(inputStr, data.defaultValue, data.isRequired)
@@ -167,11 +185,10 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
                   <AllowedValuesFields
                     showAdvanced={showAdvanced}
                     formik={formik}
-                    fetchValues={fetchValues}
                     isReadonly={isReadonly}
-                    options={options}
                     allowedValuesType={allowedValuesType}
                     allowedValuesValidator={allowedValuesValidator}
+                    getAllowedValuesCustomComponent={getAllowedValuesCustomComponent}
                   />
                 ) : null}
                 {values.validation === Validation.Regex ? (
@@ -183,23 +200,13 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
                 ) : null}
               </div>
               {showDefaultField || NG_EXECUTION_INPUT ? (
-                fetchValues ? (
-                  <FormInput.Select
-                    items={options}
-                    label={getString('common.configureOptions.defaultValue')}
-                    name="defaultValue"
-                    isOptional
-                    disabled={isReadonly}
-                  />
-                ) : (
-                  <FormInput.Text
-                    inputGroup={{ type: type === 'Number' ? 'number' : 'text' }}
-                    label={getString('common.configureOptions.defaultValue')}
-                    name="defaultValue"
-                    isOptional
-                    disabled={isReadonly}
-                  />
-                )
+                <FormInput.Text
+                  inputGroup={{ type: type === 'Number' ? 'number' : 'text' }}
+                  label={getString('common.configureOptions.defaultValue')}
+                  name="defaultValue"
+                  isOptional
+                  disabled={isReadonly}
+                />
               ) : null}
             </div>
             <Layout.Horizontal spacing="small" margin={{ top: 'xxlarge' }}>

@@ -40,6 +40,8 @@ interface UseFileStoreModalProps {
 
 const useFileStoreModal = ({ applySelected, fileUsage }: UseFileStoreModalProps): UseFileStoreModalReturn => {
   const [activeTab, setActiveTab] = useState<string>(Scope.ACCOUNT)
+  const [isUnsaved, setIsUnsaved] = useState<boolean>(false)
+
   const { getString } = useStrings()
 
   const {
@@ -78,7 +80,8 @@ const useFileStoreModal = ({ applySelected, fileUsage }: UseFileStoreModalProps)
   const commonProps = {
     isModalView: true,
     onNodeChange: handleSelectFile,
-    fileUsage
+    fileUsage,
+    handleSetIsUnsaved: setIsUnsaved
   }
 
   const renderTab = (
@@ -162,7 +165,7 @@ const useFileStoreModal = ({ applySelected, fileUsage }: UseFileStoreModalProps)
             variation={ButtonVariation.PRIMARY}
             text={getString('entityReference.apply')}
             onClick={handleApplySelectedFile}
-            disabled={!!(selectedFile?.name && selectedFile.name === FILE_STORE_ROOT)}
+            disabled={selectedFile?.name === FILE_STORE_ROOT || isUnsaved}
             className={cx(Classes.POPOVER_DISMISS)}
           />
           {
@@ -175,7 +178,7 @@ const useFileStoreModal = ({ applySelected, fileUsage }: UseFileStoreModalProps)
         </Layout.Horizontal>
       </Dialog>
     )
-  }, [activeTab, selectedFile])
+  }, [activeTab, selectedFile, isUnsaved])
 
   return {
     openFileStoreModal: () => {

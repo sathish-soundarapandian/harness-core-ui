@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction, useContext, useState } from 'react'
+import React, { Dispatch, SetStateAction, useContext, useRef, useState } from 'react'
 import * as Yup from 'yup'
 import { defaultTo, isEmpty, isEqual, omit, unset } from 'lodash-es'
 import type { FormikProps } from 'formik'
@@ -44,6 +44,7 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import { getScopeFromDTO, getScopeLabelfromScope } from '@common/components/EntityReference/EntityReference'
 import type { TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
+import { parse } from '@common/utils/YamlHelperMethods'
 import { DefaultNewTemplateId, DefaultNewVersionLabel } from '../templates'
 import css from './TemplateConfigModal.module.scss'
 
@@ -78,6 +79,7 @@ export interface ModalProps {
   disabledFields?: Fields[]
   allowScopeChange?: boolean
   lastPublishedVersion?: string
+  onFailure?: (error: any, latestTemplate: NGTemplateInfoConfig) => void
 }
 
 export interface TemplateConfigValues extends NGTemplateInfoConfigWithGitDetails {
@@ -97,7 +99,18 @@ interface BasicDetailsInterface extends ConfigModalProps {
   setPreviewValues: Dispatch<SetStateAction<NGTemplateInfoConfigWithGitDetails>>
 }
 
-const BasicTemplateDetails = (props: BasicDetailsInterface): JSX.Element => {
+export type TemplateConfigModalHandle = {
+  updateTemplate: (templateYaml: string) => Promise<void>
+}
+
+export type BasicTemplateDetailsHandle = {
+  updateTemplate: (templateYaml: string) => Promise<void>
+}
+
+const BasicTemplateDetails = (
+  props: BasicDetailsInterface,
+  ref: React.ForwardedRef<BasicTemplateDetailsHandle>
+): JSX.Element => {
   const { getString } = useStrings()
 
   const {
@@ -110,7 +123,8 @@ const BasicTemplateDetails = (props: BasicDetailsInterface): JSX.Element => {
     intent,
     disabledFields = [],
     promise,
-    lastPublishedVersion
+    lastPublishedVersion,
+    onFailure
   } = props
   const { isGitSyncEnabled } = useAppStore()
   const formName = `create${initialValues.type}Template`
@@ -120,6 +134,7 @@ const BasicTemplateDetails = (props: BasicDetailsInterface): JSX.Element => {
   const { orgIdentifier, projectIdentifier } = pathParams
   const scope = getScopeFromDTO(pathParams)
   const allowedScopes = templateFactory.getTemplateAllowedScopes(initialValues.type)
+  const formikRef = useRef<FormikProps<TemplateConfigValues>>()
   const scopeOptions = React.useMemo(
     () =>
       (allowedScopes || []).map(item => ({
@@ -127,6 +142,18 @@ const BasicTemplateDetails = (props: BasicDetailsInterface): JSX.Element => {
         label: getScopeLabelfromScope(item, getString)
       })),
     [allowedScopes]
+  )
+
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      updateTemplate: async (templateYaml: string) => {
+        const template = (parse(templateYaml) as { template: NGTemplateInfoConfig })?.template
+        formikRef.current?.setFieldValue('spec', template.spec)
+        await formikRef.current?.submitForm()
+      }
+    }),
+    [formikRef.current]
   )
 
   const formInitialValues = React.useMemo(
@@ -149,29 +176,27 @@ const BasicTemplateDetails = (props: BasicDetailsInterface): JSX.Element => {
     [initialValues, gitDetails]
   )
 
-  const getSubmitButtonLabel = React.useCallback(
-    (formik: FormikProps<TemplateConfigValues>) => {
-      if (intent === Intent.EDIT) {
-        return getString('continue')
+  const submitButtonLabel = React.useMemo(() => {
+    if (intent === Intent.EDIT) {
+      return getString('continue')
+    } else {
+      if (intent === Intent.START) {
+        return getString('start')
       } else {
-        if (intent === Intent.START) {
-          return getString('start')
+        if (isGitSyncEnabled && getScopeFromDTO(formikRef.current?.values || {}) === Scope.PROJECT) {
+          return getString('continue')
         } else {
-          if (isGitSyncEnabled && getScopeFromDTO(formik.values) === Scope.PROJECT) {
-            return getString('continue')
-          } else {
-            return getString('save')
-          }
+          return getString('save')
         }
       }
-    },
-    [intent, isGitSyncEnabled]
-  )
+    }
+  }, [intent, isGitSyncEnabled, formikRef.current])
 
   const onSubmit = React.useCallback(
     (values: TemplateConfigValues) => {
       setLoading(true)
-      promise(omit(values, 'repo', 'branch', 'comment'), {
+      const updateTemplate = omit(values, 'repo', 'branch', 'comment')
+      promise(updateTemplate, {
         ...(!isEmpty(values.repo) && {
           updatedGitDetails: { ...gitDetails, repoIdentifier: values.repo, branch: values.branch }
         }),
@@ -185,16 +210,17 @@ const BasicTemplateDetails = (props: BasicDetailsInterface): JSX.Element => {
             throw response
           }
         })
-        .catch(_error => {
+        .catch(error => {
           setLoading(false)
+          onFailure?.(error, updateTemplate)
         })
     },
     [setLoading, promise, gitDetails, onClose]
   )
 
-  const onScopeChange = ({ value }: SelectOption, formik: FormikProps<TemplateConfigValues>) => {
-    formik.setValues(
-      produce(formik.values, draft => {
+  const onScopeChange = ({ value }: SelectOption) => {
+    formikRef.current?.setValues(
+      produce(formikRef.current?.values, draft => {
         draft.projectIdentifier = value === Scope.PROJECT ? projectIdentifier : undefined
         draft.orgIdentifier = value === Scope.ACCOUNT ? undefined : orgIdentifier
         if (value === Scope.PROJECT) {
@@ -238,6 +264,7 @@ const BasicTemplateDetails = (props: BasicDetailsInterface): JSX.Element => {
         })}
       >
         {(formik: FormikProps<TemplateConfigValues>) => {
+          formikRef.current = formik
           return (
             <FormikForm>
               <Layout.Vertical spacing={'huge'}>
@@ -303,7 +330,7 @@ const BasicTemplateDetails = (props: BasicDetailsInterface): JSX.Element => {
                             <Select
                               value={scopeOptions.find(item => item.value === getScopeFromDTO(formik.values))}
                               items={scopeOptions}
-                              onChange={item => onScopeChange(item, formik)}
+                              onChange={onScopeChange}
                             />
                           </Container>
                         )}
@@ -330,7 +357,7 @@ const BasicTemplateDetails = (props: BasicDetailsInterface): JSX.Element => {
                 <Container>
                   <Layout.Horizontal spacing="small" flex={{ alignItems: 'flex-end', justifyContent: 'flex-start' }}>
                     <RbacButton
-                      text={getSubmitButtonLabel(formik)}
+                      text={submitButtonLabel}
                       type="submit"
                       variation={ButtonVariation.PRIMARY}
                       permission={{
@@ -352,7 +379,12 @@ const BasicTemplateDetails = (props: BasicDetailsInterface): JSX.Element => {
   )
 }
 
-export const TemplateConfigModal = (props: ConfigModalProps): JSX.Element => {
+export const BasicTemplateDetailsWithRef = React.forwardRef(BasicTemplateDetails)
+
+const TemplateConfigModal = (
+  props: ConfigModalProps,
+  ref: React.ForwardedRef<TemplateConfigModalHandle>
+): JSX.Element => {
   const { initialValues, ...rest } = props
   const [previewValues, setPreviewValues] = useState<NGTemplateInfoConfigWithGitDetails>({
     ...initialValues,
@@ -360,10 +392,26 @@ export const TemplateConfigModal = (props: ConfigModalProps): JSX.Element => {
     branch: rest.gitDetails?.branch
   })
   const { isGitSyncEnabled } = useAppStore()
+  const basicTemplateDetailsHandle = React.useRef<BasicTemplateDetailsHandle>(null)
+
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      updateTemplate: async (templateYaml: string) => {
+        await basicTemplateDetailsHandle.current?.updateTemplate(templateYaml)
+      }
+    }),
+    [basicTemplateDetailsHandle.current]
+  )
 
   const content = (
     <Layout.Horizontal>
-      <BasicTemplateDetails initialValues={initialValues} setPreviewValues={setPreviewValues} {...rest} />
+      <BasicTemplateDetailsWithRef
+        initialValues={initialValues}
+        setPreviewValues={setPreviewValues}
+        ref={basicTemplateDetailsHandle}
+        {...rest}
+      />
       <TemplatePreview previewValues={previewValues} />
       <Button
         className={css.closeIcon}
@@ -376,3 +424,5 @@ export const TemplateConfigModal = (props: ConfigModalProps): JSX.Element => {
   )
   return isGitSyncEnabled ? <GitSyncStoreProvider>{content}</GitSyncStoreProvider> : content
 }
+
+export const TemplateConfigModalWithRef = React.forwardRef(TemplateConfigModal)

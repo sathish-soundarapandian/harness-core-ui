@@ -1199,6 +1199,7 @@ configFiles:
     identifier: 'Config file identifier is required'
     files: 'File(s) is required'
     file: 'This field is required'
+    fileSelection: 'Select atleast one config file'
 OverviewEmptyStates:
   createPipelineHeaderMsg: Set up a Pipeline and run your first {{executionLabel}}!
   createPipelineInfo: A Harness Pipeline is a series of stages that performs operations like {{pipelineOperation1}} and {{pipelineOperation2}} software.
@@ -1251,6 +1252,13 @@ phasesForm:
   phases: 'Phases'
   phase: 'Phase'
   packageType: 'Package Type'
+  addPhase: '+ Add Phase'
+  useVerification: 'Use Verification'
+  errors:
+    limitError: 'This field can not be more than'
+    prevLimitError: 'This field should be more than'
+    wrongPercentageFormat: 'Wrong percentage format'
+    duplicationValue: 'Duplication of previous value'
 draft: 'Draft'
 duplicateStepIdentifiers: 'Duplicate identifiers found: {{duplicateIdString}}'
 alwaysEditModeYAML: Enable read/write mode always

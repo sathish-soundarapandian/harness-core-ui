@@ -22,13 +22,13 @@ import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import { isEmpty, isNil } from 'lodash-es'
-import { Dialog } from '@blueprintjs/core'
+import { Dialog, Spinner } from '@blueprintjs/core'
 import {
   Fields,
   ModalProps,
   PromiseExtraArgs,
-  TemplateConfigModal,
-  Intent
+  Intent,
+  TemplateConfigModalWithRef
 } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import { TagsPopover, useToaster } from '@common/components'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -62,7 +62,7 @@ export interface TemplateStudioSubHeaderLeftViewProps {
 export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLeftViewProps) => JSX.Element = ({
   onGitBranchChange
 }) => {
-  const { state, updateTemplate, deleteTemplateCache, fetchTemplate, view, isReadonly, setLoading, updateGitDetails } =
+  const { state, updateTemplate, deleteTemplateCache, fetchTemplate, view, isReadonly, updateGitDetails } =
     React.useContext(TemplateContext)
   const { template, versions, stableVersion, isUpdated, gitDetails } = state
   const { accountId, projectIdentifier, orgIdentifier, module, templateType, templateIdentifier } = useParams<
@@ -107,7 +107,7 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
 
     return (
       <Dialog enforceFocus={false} isOpen={true} className={css.createTemplateDialog}>
-        {modalProps && <TemplateConfigModal {...modalProps} onClose={onCloseCreate} />}
+        {modalProps && <TemplateConfigModalWithRef {...modalProps} onClose={onCloseCreate} />}
       </Dialog>
     )
   }, [template.identifier, navigateToTemplatesListPage, modalProps])
@@ -181,15 +181,8 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
         undefined,
         'template.save.template.error'
       )
-      setLoading(false)
     }
   }
-
-  React.useEffect(() => {
-    if (updateStableTemplateLoading) {
-      setLoading(true)
-    }
-  }, [updateStableTemplateLoading])
 
   React.useEffect(() => {
     const newVersionOption: SelectOption[] = versions.map(item => {
@@ -208,7 +201,9 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
       setModalProps({
         initialValues: template,
         promise: onSubmit,
-        title: getString('templatesLibrary.createNewModal.heading', { entity: template.type }),
+        title: getString('templatesLibrary.createNewModal.heading', {
+          entity: templateFactory.getTemplateLabel(template.type)
+        }),
         intent: Intent.START,
         allowScopeChange: true
       })
@@ -282,13 +277,21 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
             popoverClassName={css.dropdown}
           />
         )}
-        {template.versionLabel !== stableVersion && !isUpdated && !isReadonly && (
-          <Button
-            onClick={openConfirmationDialog}
-            variation={ButtonVariation.LINK}
-            size={ButtonSize.SMALL}
-            text={getString('common.setAsStable')}
-          />
+        {updateStableTemplateLoading ? (
+          <Container padding={{ right: 'large', left: 'large' }}>
+            <Spinner size={Spinner.SIZE_SMALL} />
+          </Container>
+        ) : (
+          template.versionLabel !== stableVersion &&
+          !isUpdated && (
+            <Button
+              onClick={openConfirmationDialog}
+              variation={ButtonVariation.LINK}
+              size={ButtonSize.SMALL}
+              disabled={isReadonly}
+              text={getString('common.setAsStable')}
+            />
+          )
         )}
       </Layout.Horizontal>
     </Container>

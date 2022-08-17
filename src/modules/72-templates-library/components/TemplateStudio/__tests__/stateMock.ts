@@ -555,7 +555,6 @@ export const getTemplateContextMock = (type: TemplateType): TemplateContextInter
     updateTemplate: jest.fn(),
     updateTemplateView: jest.fn(),
     deleteTemplateCache: jest.fn(),
-    setLoading: () => void 0,
     updateGitDetails: () => new Promise<void>(() => undefined)
   }
 

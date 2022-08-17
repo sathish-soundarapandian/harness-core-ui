@@ -9,16 +9,18 @@ import React from 'react'
 import {
   Button,
   ButtonVariation,
-  VisualYamlSelectedView as SelectedView,
-  useToaster,
+  Container,
+  PopoverProps,
   SplitButton,
   SplitButtonOption,
-  PopoverProps
+  useToaster,
+  VisualYamlSelectedView as SelectedView
 } from '@wings-software/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, noop, omit } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'
-import { parse } from '@common/utils/YamlHelperMethods'
+import { Spinner } from '@blueprintjs/core'
+import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useStrings } from 'framework/strings'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -42,7 +44,7 @@ import type {
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { useSaveAsTemplate } from '@pipeline/components/PipelineStudio/SaveTemplateButton/useSaveAsTemplate'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import type { PipelineInfoConfig, GovernanceMetadata } from 'services/pipeline-ng'
+import type { GovernanceMetadata, PipelineInfoConfig } from 'services/pipeline-ng'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { AccessControlCheckError } from 'services/rbac'
@@ -51,17 +53,28 @@ import { EvaluationModal } from '@governance/EvaluationModal'
 import type { SaveToGitFormV2Interface } from '@common/components/SaveToGitFormV2/SaveToGitFormV2'
 import { SCHEMA_VALIDATION_FAILED } from '@common/interfaces/GitSyncInterface'
 import type { Pipeline } from '@pipeline/utils/types'
+import useTemplateErrors from '@pipeline/components/TemplateErrors/useTemplateErrors'
+import { sanitize } from '@common/utils/JSONUtils'
+import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/ReconcileDialog/ReconcileDialog'
 import usePipelineErrors from '../PipelineCanvas/PipelineErrors/usePipelineErrors'
 
 export default interface SavePipelinePopoverProps extends PopoverProps {
   toPipelineStudio: PathFn<PipelineType<PipelinePathProps> & PipelineStudioQueryParams>
 }
 
+export type SavePipelineHandle = {
+  updatePipeline: (pipelineYaml: string) => Promise<void>
+}
+
 interface SavePipelineObj {
   pipeline: PipelineInfoConfig
 }
 
-export function SavePipelinePopover({ toPipelineStudio }: SavePipelinePopoverProps): React.ReactElement {
+function SavePipelinePopover(
+  props: SavePipelinePopoverProps,
+  ref: React.ForwardedRef<SavePipelineHandle>
+): React.ReactElement {
+  const { toPipelineStudio } = props
   const { isGitSyncEnabled, isGitSimplificationEnabled } = useAppStore()
 
   const {
@@ -83,8 +96,8 @@ export function SavePipelinePopover({ toPipelineStudio }: SavePipelinePopoverPro
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } =
     useParams<PipelineType<PipelinePathProps>>()
   const isYaml = view === SelectedView.YAML
+  const { openTemplateErrorsModal } = useTemplateErrors({ entity: TemplateErrorEntity.PIPELINE })
   const [governanceMetadata, setGovernanceMetadata] = React.useState<GovernanceMetadata>()
-
   const isPipelineRemote = isGitSimplificationEnabled && storeType === StoreType.REMOTE
 
   const [showOPAErrorModal, closeOPAErrorModal] = useModalHook(
@@ -223,14 +236,32 @@ export function SavePipelinePopover({ toPipelineStudio }: SavePipelinePopoverPro
           // isGitSyncEnabled true
           throw { code: SCHEMA_VALIDATION_FAILED }
         }
-      } else if (isGitSyncEnabled || currStoreMetadata?.storeType === StoreType.REMOTE) {
-        throw response
       } else {
-        showError(
-          getRBACErrorMessage({ data: response as AccessControlCheckError }) || getString('errorWhileSaving'),
-          undefined,
-          'pipeline.save.pipeline.error'
-        )
+        if (isGitSyncEnabled || currStoreMetadata?.storeType === StoreType.REMOTE) {
+          throw response
+        } else if (!isEmpty((response as any)?.metadata?.errorNodeSummary)) {
+          openTemplateErrorsModal({
+            error: (response as any)?.metadata?.errorNodeSummary,
+            originalYaml: yamlStringify(
+              sanitize(
+                { pipeline: latestPipeline },
+                { removeEmptyArray: false, removeEmptyObject: false, removeEmptyString: false }
+              )
+            ),
+            onSave: async (refreshedYaml: string) => {
+              await saveAndPublishPipeline(
+                (parse(refreshedYaml) as { pipeline: PipelineInfoConfig }).pipeline,
+                storeMetadata
+              )
+            }
+          })
+        } else {
+          showError(
+            getRBACErrorMessage({ data: response as AccessControlCheckError }) || getString('errorWhileSaving'),
+            undefined,
+            'pipeline.save.pipeline.error'
+          )
+        }
       }
     }
     return { status: response?.status, nextCallback: () => publishPipeline(newPipelineId, updatedGitDetails) }
@@ -341,15 +372,21 @@ export function SavePipelinePopover({ toPipelineStudio }: SavePipelinePopoverPro
     yamlHandler
   ])
 
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      updatePipeline: async (pipelineYaml: string) => {
+        await saveAndPublishPipeline((parse(pipelineYaml) as { pipeline: PipelineInfoConfig }).pipeline, storeMetadata)
+      }
+    }),
+    [saveAndPublishPipeline, storeMetadata]
+  )
+
   if (loading) {
     return (
-      <Button
-        variation={ButtonVariation.PRIMARY}
-        rightIcon="chevron-down"
-        text={getString('save')}
-        onClick={noop}
-        loading={true}
-      />
+      <Container padding={'medium'}>
+        <Spinner size={Spinner.SIZE_SMALL} />
+      </Container>
     )
   }
 
@@ -381,3 +418,5 @@ export function SavePipelinePopover({ toPipelineStudio }: SavePipelinePopoverPro
     </SplitButton>
   )
 }
+
+export const SavePipelinePopoverWithRef = React.forwardRef(SavePipelinePopover)

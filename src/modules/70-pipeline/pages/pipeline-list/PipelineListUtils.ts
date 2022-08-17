@@ -10,10 +10,6 @@ import type { StoreType } from '@common/constants/GitSyncTypes'
 import type { PMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import type { PipelineListPagePathParams } from './types'
 
-export const DEFAULT_PAGE_NUMBER = 0
-export const DEFAULT_PAGE_SIZE = 20
-export const DEFAULT_SORT = ['lastUpdatedAt', 'DESC']
-
 export const getStatusColor = (data: PMSPipelineSummaryResponse): string => {
   switch (data.executionSummaryInfo?.lastExecutionStatus) {
     case 'Success':

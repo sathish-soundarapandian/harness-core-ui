@@ -18,7 +18,6 @@ import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { ConfigureOptions, ConfigureOptionsProps } from '../ConfigureOptions'
 
 const onChange = jest.fn()
-const fetchValuesCalled = jest.fn()
 
 const getProps = (
   value: string,
@@ -36,11 +35,7 @@ const getProps = (
   type,
   showDefaultField,
   showAdvanced,
-  onChange,
-  fetchValues: jest.fn().mockImplementation(args => {
-    fetchValuesCalled(args)
-    return Promise.resolve({})
-  })
+  onChange
 })
 
 describe('Test ConfigureOptions', () => {
@@ -265,7 +260,7 @@ describe('Test ConfigureOptions', () => {
     onChange.mockReset()
     const { container } = render(
       <TestWrapper>
-        <ConfigureOptions {...getProps(RUNTIME_INPUT_VALUE, 'test', 'var-test')} fetchValues={undefined} />
+        <ConfigureOptions {...getProps(RUNTIME_INPUT_VALUE, 'test', 'var-test')} />
       </TestWrapper>
     )
     const btn = container.querySelector('#configureOptions_var-test')

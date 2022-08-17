@@ -13,6 +13,8 @@ export interface MapQueriesToHarnessServiceProps {
   onSubmit: (data: GCOMonitoringSourceInfo) => Promise<void>
   onPrevious: () => void
   data: GCOMonitoringSourceInfo
+  isTemplate?: boolean
+  expressions?: string[]
 }
 
 export type MapGCOLogsQueryToService = {
@@ -39,4 +41,12 @@ export interface GCOLogsHealthSourcePayload {
   type: HealthSourceTypes.StackdriverLog
   identifier: string
   spec: GCOLogsHealthSourceSpec
+}
+
+export interface InitialFormDataInterface {
+  metricName: string
+  query: string
+  recordCount: number
+  serviceInstance: string
+  messageIdentifier: string
 }

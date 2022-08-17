@@ -10,5 +10,7 @@ declare const styles: {
   readonly bottomMargin3: string
   readonly inpLabel: string
   readonly predefinedValue: string
+  readonly width100: string
+  readonly width90: string
 }
 export default styles

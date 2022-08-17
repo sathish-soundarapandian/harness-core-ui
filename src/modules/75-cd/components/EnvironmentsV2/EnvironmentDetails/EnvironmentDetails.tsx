@@ -218,11 +218,7 @@ export default function EnvironmentDetails(): JSX.Element {
                     tabList={[
                       {
                         id: EnvironmentDetailsTab.CONFIGURATION,
-                        title: (
-                          <Text font={{ size: 'normal' }} color={Color.BLACK}>
-                            {getString('configuration')}
-                          </Text>
-                        ),
+                        title: getString('configuration'),
                         panel: (
                           <EnvironmentConfiguration
                             formikProps={formikProps}
@@ -239,29 +235,17 @@ export default function EnvironmentDetails(): JSX.Element {
                       },
                       {
                         id: EnvironmentDetailsTab.SERVICE_OVERRIDES,
-                        title: (
-                          <Text font={{ size: 'normal' }} color={Color.BLACK}>
-                            {getString('common.serviceOverrides')}
-                          </Text>
-                        ),
+                        title: getString('common.serviceOverrides'),
                         panel: <ServiceOverrides />
                       },
                       {
                         id: EnvironmentDetailsTab.INFRASTRUCTURE,
-                        title: (
-                          <Text font={{ size: 'normal' }} color={Color.BLACK}>
-                            {getString('cd.infrastructure.infrastructureDefinitions')}
-                          </Text>
-                        ),
+                        title: getString('cd.infrastructure.infrastructureDefinitions'),
                         panel: <InfrastructureDefinition />
                       },
                       {
                         id: EnvironmentDetailsTab.GITOPS,
-                        title: (
-                          <Text font={{ size: 'normal' }} color={Color.BLACK}>
-                            {getString('cd.gitOpsCluster')}
-                          </Text>
-                        ),
+                        title: getString('cd.gitOpsCluster'),
                         panel: <GitOpsCluster envRef={identifier} />,
                         hidden: !isArgoManaged
                       }

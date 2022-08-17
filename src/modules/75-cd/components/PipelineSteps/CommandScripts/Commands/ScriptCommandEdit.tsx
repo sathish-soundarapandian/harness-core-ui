@@ -19,6 +19,7 @@ import {
   Text
 } from '@harness/uicore'
 
+import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { ShellScriptMonacoField, ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
@@ -42,7 +43,7 @@ export function ScriptCommandEdit(props: ScriptCommandEditProps): React.ReactEle
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
-  const scriptType: ScriptType = (formik.values as CustomScriptCommandUnit).spec?.shell || 'Bash'
+  const scriptType: ScriptType = defaultTo((formik.values as CustomScriptCommandUnit).spec?.shell, 'Bash')
 
   return (
     <>

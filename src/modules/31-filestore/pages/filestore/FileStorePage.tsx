@@ -94,6 +94,7 @@ interface FileStoreProps {
   scope?: string
   queryParams?: any
   fileUsage?: FileUsage
+  handleSetIsUnsaved?: (status: boolean) => void
 }
 
 export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreProps) => {
@@ -119,7 +120,8 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
     scope,
     tempNodes,
     unsavedNodes,
-    fileUsage: FILE_USAGE_CONTEXT
+    fileUsage: FILE_USAGE_CONTEXT,
+    handleSetIsUnsaved
   } = useContext(FileStoreContext)
   const { accountIdentifier: accountId, orgIdentifier, projectIdentifier } = queryParams
   const history = useHistory()
@@ -127,9 +129,10 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
   React.useEffect(() => {
     if (isModalView) {
       if (isCachedNode(currentNode?.identifier)) {
-        onNodeChange?.({})
+        handleSetIsUnsaved?.(true)
         return
       }
+      handleSetIsUnsaved?.(false)
       onNodeChange?.({
         ...currentNode,
         scope

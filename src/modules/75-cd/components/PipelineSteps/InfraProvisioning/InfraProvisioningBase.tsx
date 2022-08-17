@@ -32,8 +32,6 @@ import { useMutateAsGet } from '@common/hooks'
 import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getFlattenedStages } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import useChooseProvisioner from './ChooseProvisioner'
 import type { InfraProvisioningData, InfraProvisioningDataUI, InfraProvisioningProps } from './InfraProvisioning'
@@ -67,7 +65,6 @@ export const InfraProvisioningBase = (
   const { accountId } = useParams<ProjectPathProps>()
   const formikRef = useRef<FormikContextType<InfraProvisioningDataUI>>()
 
-  const newPipelineStudioEnabled: boolean = useFeatureFlag(FeatureFlag.NEW_PIPELINE_STUDIO)
   const { showModal } = useChooseProvisioner({
     onSubmit: (data: any) => {
       onUpdate?.(data)
@@ -147,14 +144,7 @@ export const InfraProvisioningBase = (
         provisioner.rollbackSteps = []
       }
 
-      addStepOrGroup(
-        event.entity,
-        provisioner,
-        newStepData,
-        event.isParallel,
-        event.isRollback,
-        newPipelineStudioEnabled
-      )
+      addStepOrGroup(event.entity, provisioner, newStepData, event.isParallel, event.isRollback)
       if (pipelineStage?.stage) {
         await updateStage(pipelineStage?.stage)
       }

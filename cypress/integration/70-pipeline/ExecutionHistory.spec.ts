@@ -11,7 +11,7 @@ import {
   executionMetadata,
   orgIdentifier,
   pipelineExecutionCall,
-  pipelineExecutionSummaryAPINoModuleInQuery,
+  pipelineExecutionSummaryAPI,
   pipelineHealthCall,
   pipelineIdentifier,
   pipelineSummaryCallAPI,
@@ -52,7 +52,7 @@ describe('Pipeline Execution History', () => {
       fixture: 'pipeline/api/executionHistory/executionSummary.json'
     }).as('executionSummary')
 
-    cy.intercept(pipelineExecutionSummaryAPINoModuleInQuery, {
+    cy.intercept(pipelineExecutionSummaryAPI, {
       fixture: 'pipeline/api/executionHistory/executionSummary.json'
     }).as('executionSummary')
     cy.visitPageAssertion()
@@ -225,7 +225,7 @@ describe('Pipeline Execution History', () => {
       fixture: 'pipeline/api/executionHistory/executionSummary.json'
     }).as('executionSummary')
 
-    cy.intercept('POST', pipelineExecutionSummaryAPINoModuleInQuery, {
+    cy.intercept('POST', pipelineExecutionSummaryAPI, {
       fixture: 'pipeline/api/executionHistory/executionSummary.json'
     }).as('executionSummary')
     cy.visitPageAssertion()
@@ -290,7 +290,7 @@ describe('Pipeline Execution History', () => {
     cy.intercept('GET', pipelineSummaryCallAPI, {
       fixture: 'pipeline/api/executionHistory/executionSummary.json'
     }).as('executionSummary')
-    cy.intercept('POST', pipelineExecutionSummaryAPINoModuleInQuery, {
+    cy.intercept('POST', pipelineExecutionSummaryAPI, {
       fixture: 'pipeline/api/executionHistory/executionSummary.json'
     }).as('executionListSummary')
     cy.intercept('GET', executionMetadata, {

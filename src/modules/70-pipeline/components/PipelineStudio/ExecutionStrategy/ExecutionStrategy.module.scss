@@ -236,9 +236,14 @@
 }
 .phaseContainer {
   max-height: 600px;
+  :global {
+    .OverlaySpinner--overlay {
+      background: transparent !important;
+    }
+  }
 }
 .phaseFormWrapper {
-  min-height: 300px;
+  min-height: 280px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -254,7 +259,11 @@
     width: 133px;
   }
   .addBtn {
-    margin: var(--spacing-xxlarge) 0px;
+    margin: var(--spacing-small) 0px;
     padding: none;
+  }
+  .cvEnableSwitch {
+    margin-top: var(--spacing-medium);
+    margin-bottom: var(--spacing-xxlarge);
   }
 }

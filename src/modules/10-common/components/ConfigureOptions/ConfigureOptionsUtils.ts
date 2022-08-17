@@ -7,7 +7,7 @@
 
 import { isEmpty } from 'lodash-es'
 import * as Yup from 'yup'
-import { EXECUTION_TIME_INPUT_VALUE, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import { EXECUTION_TIME_INPUT_VALUE, MultiSelectOption, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { StringKeys } from 'framework/strings'
 
 export enum Validation {
@@ -19,7 +19,7 @@ export enum Validation {
 export interface FormValues {
   isRequired?: boolean
   defaultValue?: string | number
-  allowedValues: string[]
+  allowedValues: string[] | MultiSelectOption[]
   regExValues: string
   validation: Validation
   isAdvanced: boolean
@@ -34,6 +34,10 @@ export interface ValidationSchemaReturnType {
   isAdvanced: Yup.BooleanSchema<boolean | undefined>
   advancedValue: Yup.StringSchema<string | undefined>
   allowedValues: Yup.NotRequiredArraySchema<string | undefined>
+}
+
+export interface AllowedValuesCustomComponentProps {
+  onChange?: (values: MultiSelectOption[]) => void
 }
 
 export const ValidationSchema = (
@@ -161,6 +165,10 @@ export function isExecutionInput(input: string): boolean {
 }
 
 export function parseInput(input: string): ParsedInput | null {
+  if (typeof input !== 'string') {
+    return null
+  }
+
   const INPUT_EXPRESSION_REGEX = new RegExp(`^${INPUT_EXPRESSION_REGEX_STRING}$`, 'g')
 
   const match = input.match(INPUT_EXPRESSION_REGEX)

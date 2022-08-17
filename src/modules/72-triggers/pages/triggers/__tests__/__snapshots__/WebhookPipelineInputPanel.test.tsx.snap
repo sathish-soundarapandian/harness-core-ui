@@ -158,10 +158,10 @@ exports[`WebhookPipelineInputPanel Triggers tests Renders/snapshots Initial Rend
                           style="width: 50%;"
                         >
                           <div
-                            class="StyledProps--font StyledProps--main"
+                            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-center"
                           >
                             <div
-                              class="bp3-form-group"
+                              class="bp3-form-group width100"
                             >
                               <label
                                 class="bp3-label"

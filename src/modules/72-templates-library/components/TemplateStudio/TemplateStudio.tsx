@@ -6,22 +6,24 @@
  */
 
 import React from 'react'
-import { matchPath, useParams, useHistory } from 'react-router-dom'
+import { matchPath, useHistory, useParams } from 'react-router-dom'
 import { parse } from 'yaml'
 import { defaultTo, isEmpty, merge } from 'lodash-es'
 import {
   Container,
   Layout,
-  VisualYamlSelectedView as SelectedView,
   useConfirmationDialog,
-  useToaster
+  useToaster,
+  VisualYamlSelectedView as SelectedView
 } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
-import { v4 as uuid } from 'uuid'
 import { useStrings } from 'framework/strings'
 import { NavigationCheck, Page } from '@common/exports'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { TemplateStudioSubHeader } from '@templates-library/components/TemplateStudio/TemplateStudioSubHeader/TemplateStudioSubHeader'
+import {
+  TemplateStudioSubHeaderHandle,
+  TemplateStudioSubHeaderWithRef
+} from '@templates-library/components/TemplateStudio/TemplateStudioSubHeader/TemplateStudioSubHeader'
 import { PageSpinner } from '@common/components'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { TemplateStudioHeader } from '@templates-library/components/TemplateStudio/TemplateStudioHeader/TemplateStudioHeader'
@@ -41,6 +43,7 @@ import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import { TemplateVariablesContextProvider } from '@pipeline/components/TemplateVariablesContext/TemplateVariablesContext'
 import { RightBar } from '@templates-library/components/TemplateStudio/RightBar/RightBar'
 import { OutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
+import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/ReconcileDialog/ReconcileDialog'
 import { TemplateContext } from './TemplateContext/TemplateContext'
 import { getContentAndTitleStringKeys, isValidYaml } from './TemplateStudioUtils'
 import css from './TemplateStudio.module.scss'
@@ -85,6 +88,7 @@ export function TemplateStudio(): React.ReactElement {
   const history = useHistory()
   const templateFormikRef = React.useRef<TemplateFormikRef | null>(null)
   const { isGitSyncEnabled } = useAppStore()
+  const templateStudioSubHeaderHandleRef = React.useRef<TemplateStudioSubHeaderHandle | null>(null)
 
   useDocumentTitle([parse(defaultTo(template?.name, getString('common.templates')))])
 
@@ -241,13 +245,12 @@ export function TemplateStudio(): React.ReactElement {
       : merge(pathParams, { ...accountPathProps })
   }, [projectIdentifier, orgIdentifier])
 
-  const [key, setKey] = React.useState<string>(uuid())
-
-  React.useEffect(() => {
-    if (!isLoading) {
-      setKey(uuid())
-    }
-  }, [isLoading])
+  const updateEntity = React.useCallback(
+    async (entityYaml: string) => {
+      await templateStudioSubHeaderHandleRef.current?.updateTemplate(entityYaml)
+    },
+    [templateStudioSubHeaderHandleRef.current]
+  )
 
   return (
     <TemplateVariablesContextProvider template={template}>
@@ -283,42 +286,47 @@ export function TemplateStudio(): React.ReactElement {
         size={'small'}
         title={<TemplateStudioHeader templateType={templateType as TemplateType} />}
       />
-      <Page.Body key={key} className={css.rightMargin}>
-        {isLoading && <PageSpinner />}
-        <Layout.Vertical height={'100%'}>
-          {!isLoading && isEmpty(template) && !isGitSyncEnabled && <GenericErrorHandler />}
-          {!isLoading && isEmpty(template) && isGitSyncEnabled && (
-            <NoEntityFound identifier={templateIdentifier} entityType="template" />
-          )}
-          {isInitialized && !isEmpty(template) && (
-            <>
-              <TemplateStudioSubHeader
-                onViewChange={onViewChange}
-                getErrors={getErrors}
-                onGitBranchChange={onGitBranchChange}
-              />
-              {templateInputsErrorNodeSummary && (
-                <OutOfSyncErrorStrip
-                  templateInputsErrorNodeSummary={templateInputsErrorNodeSummary}
-                  entity={'Template'}
-                  isReadOnly={isReadonly}
-                  onRefreshEntity={() => {
-                    fetchTemplate({ forceFetch: true, forceUpdate: true })
-                  }}
+      <Page.Body className={css.rightMargin}>
+        {isLoading ? (
+          <PageSpinner />
+        ) : (
+          <Layout.Vertical height={'100%'}>
+            {isEmpty(template) && !isGitSyncEnabled && <GenericErrorHandler />}
+            {isEmpty(template) && isGitSyncEnabled && (
+              <NoEntityFound identifier={templateIdentifier} entityType="template" />
+            )}
+            {isInitialized && !isEmpty(template) && (
+              <>
+                <TemplateStudioSubHeaderWithRef
+                  ref={templateStudioSubHeaderHandleRef}
+                  onViewChange={onViewChange}
+                  getErrors={getErrors}
+                  onGitBranchChange={onGitBranchChange}
                 />
-              )}
-              <Container className={css.canvasContainer}>
-                {view === SelectedView.VISUAL ? (
-                  /* istanbul ignore next */
-                  templateFactory.getTemplate(templateType)?.renderTemplateCanvas({ formikRef: templateFormikRef })
-                ) : (
-                  <TemplateYamlView />
+                {templateInputsErrorNodeSummary && (
+                  <OutOfSyncErrorStrip
+                    errorNodeSummary={templateInputsErrorNodeSummary}
+                    entity={TemplateErrorEntity.TEMPLATE}
+                    isReadOnly={isReadonly}
+                    onRefreshEntity={() => {
+                      fetchTemplate({ forceFetch: true, forceUpdate: true })
+                    }}
+                    updateRootEntity={updateEntity}
+                  />
                 )}
-              </Container>
-            </>
-          )}
-          {templateType !== TemplateType.Pipeline && <RightBar />}
-        </Layout.Vertical>
+                <Container className={css.canvasContainer}>
+                  {view === SelectedView.VISUAL ? (
+                    /* istanbul ignore next */
+                    templateFactory.getTemplate(templateType)?.renderTemplateCanvas({ formikRef: templateFormikRef })
+                  ) : (
+                    <TemplateYamlView />
+                  )}
+                </Container>
+              </>
+            )}
+            {templateType !== TemplateType.Pipeline && <RightBar />}
+          </Layout.Vertical>
+        )}
       </Page.Body>
     </TemplateVariablesContextProvider>
   )

@@ -46,7 +46,7 @@ describe('EnvironmentsV2 Configuration Page', () => {
     cy.visitPageAssertion(pageHeaderClassName)
     cy.get('[data-testid="advanced-panel"]').click()
     cy.contains('p', 'Variables').should('be.visible')
-    cy.contains('button[type="button"]', '+ Add Variable').should('be.visible').as('addVariable')
+    cy.contains('button[type="button"]', 'Add Variable').should('be.visible').as('addVariable')
 
     // Adding var1
     cy.get('@addVariable').click()

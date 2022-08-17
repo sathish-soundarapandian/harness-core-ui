@@ -16,6 +16,7 @@ import type {
 import { useUpdateQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
 import { useExecutionCompareContext } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
+import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
 import {
   DurationCell,
   LastExecutionCell,
@@ -27,13 +28,12 @@ import {
   TriggerInfoCell
 } from './ExecutionListCells'
 import { ExecutionStageList } from './ExecutionStageList'
+import type { SortBy } from '../types'
+import { useExecutionListFilterContext } from '../ExecutionListFilterContext/ExecutionListFilterContext'
 import css from './ExecutionListTable.module.scss'
 
-const DEFAULT_PAGE_NUMBER = 0
-const DEFAULT_PAGE_SIZE = 20
-
 export interface ExecutionListTableProps {
-  executionList: PagePipelineExecutionSummary | undefined
+  executionList: PagePipelineExecutionSummary
   isPipelineInvalid?: boolean
   onViewCompiledYaml: (pipelineExecutionSummary: PipelineExecutionSummary) => void
 }
@@ -44,18 +44,33 @@ export function ExecutionListTable({
   onViewCompiledYaml
 }: ExecutionListTableProps): React.ReactElement {
   const { updateQueryParams } = useUpdateQueryParams<Partial<GetListOfExecutionsQueryParams>>()
+  const {
+    queryParams: { sort }
+  } = useExecutionListFilterContext()
   const { getString } = useStrings()
   const { isCompareMode } = useExecutionCompareContext()
+  const [currentSort, currentOrder] = sort
 
   const {
     content = [],
     totalElements = 0,
     totalPages = 0,
-    number = DEFAULT_PAGE_NUMBER,
+    number = DEFAULT_PAGE_INDEX,
     size = DEFAULT_PAGE_SIZE
-  } = executionList || {}
+  } = executionList
 
   const columns: Column<PipelineExecutionSummary>[] = React.useMemo(() => {
+    const getServerSortProps = (id: string) => {
+      return {
+        enableServerSort: true,
+        isServerSorted: currentSort === id,
+        isServerSortedDesc: currentOrder === 'DESC',
+        getSortedColumn: ({ sort: sortedColumn }: SortBy) => {
+          updateQueryParams({ sort: [sortedColumn, currentOrder === 'DESC' ? 'ASC' : 'DESC'] })
+        }
+      }
+    }
+
     return [
       ...(isCompareMode
         ? [
@@ -63,7 +78,8 @@ export function ExecutionListTable({
               Header: '',
               id: 'rowSelect',
               width: '3%',
-              Cell: RowSelectCell
+              Cell: RowSelectCell,
+              disableSortBy: true
             }
           ]
         : []),
@@ -71,37 +87,43 @@ export function ExecutionListTable({
         Header: '',
         id: 'expander',
         width: '3%',
-        Cell: ToggleAccordionCell
+        Cell: ToggleAccordionCell,
+        disableSortBy: true
       },
       {
         Header: getString('filters.executions.pipelineName'),
         accessor: 'pipelineIdentifier',
         width: isCompareMode ? '12%' : '15%',
-        Cell: PipelineNameCell
+        Cell: PipelineNameCell,
+        serverSortProps: getServerSortProps('name')
       },
       {
         Header: 'status',
         accessor: 'status',
         width: '8%',
-        Cell: StatusCell
+        Cell: StatusCell,
+        serverSortProps: getServerSortProps('status')
       },
       {
         Header: '',
         accessor: 'moduleInfo',
         width: '45%',
-        Cell: TriggerInfoCell
+        Cell: TriggerInfoCell,
+        disableSortBy: true
       },
       {
         Header: getString('common.executedBy').toUpperCase(),
         accessor: 'startTs',
         width: '20%',
-        Cell: LastExecutionCell
+        Cell: LastExecutionCell,
+        serverSortProps: getServerSortProps('startTs')
       },
       {
         Header: '',
         id: 'endTs',
         width: '4%',
-        Cell: DurationCell
+        Cell: DurationCell,
+        disableSortBy: true
       },
       {
         Header: '',
@@ -109,10 +131,11 @@ export function ExecutionListTable({
         width: '5%',
         Cell: MenuCell,
         isPipelineInvalid,
-        onViewCompiledYaml
+        onViewCompiledYaml,
+        disableSortBy: true
       }
     ]
-  }, [getString, isCompareMode, isPipelineInvalid, onViewCompiledYaml])
+  }, [isCompareMode, isPipelineInvalid, onViewCompiledYaml, currentOrder, currentSort])
 
   const renderRowSubComponent = React.useCallback(({ row }) => <ExecutionStageList row={row} />, [])
 
@@ -128,10 +151,11 @@ export function ExecutionListTable({
               pageSize: size,
               pageCount: totalPages,
               pageIndex: number,
-              gotoPage: pageNumber => updateQueryParams({ page: pageNumber + 1 })
+              gotoPage: page => updateQueryParams({ page })
             }
           : undefined
       }
+      sortable
       renderRowSubComponent={renderRowSubComponent}
     />
   )

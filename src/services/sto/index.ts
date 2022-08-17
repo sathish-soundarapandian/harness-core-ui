@@ -9,7 +9,6 @@ import { useParams } from 'react-router-dom'
 import { useGet } from 'restful-react'
 import type { GetState } from 'restful-react/dist/Get'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getConfig } from 'services/config'
 
 export interface ErrorResponse {
@@ -29,29 +28,21 @@ export interface IssueCounts {
   unassigned: number
 }
 
-export function useIssueCounts(pipelineId: string, executionId: string): GetState<IssueCounts, ErrorResponse> {
+export function useIssueCounts(
+  pipelineId: string,
+  executionIds: string
+): GetState<Record<string, IssueCounts>, ErrorResponse> {
   const { projectIdentifier: projectId, orgIdentifier: orgId, accountId } = useParams<PipelinePathProps>()
-  const { STO_API_V2 } = useFeatureFlags()
 
-  let { data, ...rest } = useGet<IssueCounts | Record<string, IssueCounts>, ErrorResponse>({
+  return useGet<Record<string, IssueCounts>, ErrorResponse>({
     base: getConfig('sto/api'),
-    path: `/${STO_API_V2 ? 'v2/frontend' : 'v1'}/issue-counts`,
+    path: 'v2/frontend/issue-counts',
     queryParams: {
       accountId,
       orgId,
       projectId,
       pipelineId,
-      ...(STO_API_V2 ? { executionIds: executionId } : { executionId })
+      executionIds
     }
   })
-
-  if (STO_API_V2) {
-    if (data) {
-      data = ((data as Record<string, IssueCounts>)[executionId] as IssueCounts) || {}
-    }
-  } else {
-    data = data as IssueCounts
-  }
-
-  return { data, ...rest }
 }

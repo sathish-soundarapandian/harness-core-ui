@@ -14,4 +14,7 @@ export interface MapGCPLogsQueriesToServiceProps {
   loading: boolean
   serviceInstance: string
   messageIdentifier: string
+  isTemplate?: boolean
+  expressions?: string[]
+  isConnectorRuntimeOrExpression?: boolean
 }

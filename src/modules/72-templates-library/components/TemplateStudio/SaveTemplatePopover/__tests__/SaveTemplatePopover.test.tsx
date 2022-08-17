@@ -18,7 +18,7 @@ import { accountPathProps, pipelineModuleParams, templatePathProps } from '@comm
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import { getTemplateContextMock } from '@templates-library/components/TemplateStudio/__tests__/stateMock'
 import { useSaveTemplate } from '@pipeline/utils/useSaveTemplate'
-import { SaveTemplatePopover, SaveTemplatePopoverProps } from '../SaveTemplatePopover'
+import { SaveTemplatePopoverWithRef, SaveTemplatePopoverProps } from '../SaveTemplatePopover'
 
 jest.mock('@common/hooks/CommentModal/useCommentModal', () => ({
   __esModule: true,
@@ -60,7 +60,7 @@ describe('<SaveTemplatePopover /> tests', () => {
     const { container } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
         <TemplateContext.Provider value={stepTemplateContextMock}>
-          <SaveTemplatePopover {...baseProps} />
+          <SaveTemplatePopoverWithRef {...baseProps} />
         </TemplateContext.Provider>
       </TestWrapper>
     )
@@ -71,7 +71,7 @@ describe('<SaveTemplatePopover /> tests', () => {
     const { container } = render(
       <TestWrapper path={PATH} pathParams={{ ...PATH_PARAMS, templateIdentifier: DefaultNewTemplateId }}>
         <TemplateContext.Provider value={stepTemplateContextMock}>
-          <SaveTemplatePopover {...baseProps} />
+          <SaveTemplatePopoverWithRef {...baseProps} />
         </TemplateContext.Provider>
       </TestWrapper>
     )
@@ -106,7 +106,7 @@ describe('<SaveTemplatePopover /> tests', () => {
     const { container } = render(
       <TestWrapper path={PATH} pathParams={{ ...PATH_PARAMS, templateIdentifier: DefaultNewTemplateId }}>
         <TemplateContext.Provider value={updatedTemplateContextMock}>
-          <SaveTemplatePopover {...baseProps} />
+          <SaveTemplatePopoverWithRef {...baseProps} />
         </TemplateContext.Provider>
       </TestWrapper>
     )
@@ -127,7 +127,7 @@ describe('<SaveTemplatePopover /> tests', () => {
     const { container } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
         <TemplateContext.Provider value={updatedStepTemplateContextMock}>
-          <SaveTemplatePopover {...baseProps} />
+          <SaveTemplatePopoverWithRef {...baseProps} />
         </TemplateContext.Provider>
       </TestWrapper>
     )
@@ -160,7 +160,7 @@ describe('<SaveTemplatePopover /> tests', () => {
     const { container } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS} defaultAppStoreValues={{ isGitSyncEnabled: true }}>
         <TemplateContext.Provider value={updatedStepTemplateContextMock}>
-          <SaveTemplatePopover {...baseProps} />
+          <SaveTemplatePopoverWithRef {...baseProps} />
         </TemplateContext.Provider>
       </TestWrapper>
     )
@@ -189,7 +189,7 @@ describe('<SaveTemplatePopover /> tests', () => {
     const { container } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
         <TemplateContext.Provider value={stepTemplateContextMock}>
-          <SaveTemplatePopover {...baseProps} />
+          <SaveTemplatePopoverWithRef {...baseProps} />
         </TemplateContext.Provider>
       </TestWrapper>
     )
@@ -215,7 +215,7 @@ describe('<SaveTemplatePopover /> tests', () => {
     const { container } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
         <TemplateContext.Provider value={stepTemplateContextMock}>
-          <SaveTemplatePopover {...baseProps} />
+          <SaveTemplatePopoverWithRef {...baseProps} />
         </TemplateContext.Provider>
       </TestWrapper>
     )

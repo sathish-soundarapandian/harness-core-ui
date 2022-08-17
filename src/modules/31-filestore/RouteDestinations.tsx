@@ -13,7 +13,14 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { RouteWithLayout } from '@common/router'
 import { AccountSideNavProps } from '@common/RouteDestinations'
 import routes from '@common/RouteDefinitions'
-import { accountPathProps } from '@common/utils/routeUtils'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+
+import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import type { SidebarContext } from '@common/navigation/SidebarProvider'
+
+import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
+
+import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
 import FileStorePage from '@filestore/pages/filestore/FileStorePage'
 
 RbacFactory.registerResourceTypeHandler(ResourceType.FILE, {
@@ -31,6 +38,24 @@ RbacFactory.registerResourceTypeHandler(ResourceType.FILE, {
 export default (
   <>
     <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toFileStore({ ...accountPathProps })} exact>
+      <FileStorePage />
+    </RouteWithLayout>
+  </>
+)
+
+export const FileStoreRouteDestinations: React.FC<{
+  moduleParams: ModulePathParams
+  licenseRedirectData?: LicenseRedirectProps
+  sidebarProps?: SidebarContext
+}> = ({ moduleParams, licenseRedirectData, sidebarProps }) => (
+  <>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={sidebarProps}
+      path={routes.toFileStore({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
+      pageName={PAGE_NAME.FileStorePage}
+    >
       <FileStorePage />
     </RouteWithLayout>
   </>

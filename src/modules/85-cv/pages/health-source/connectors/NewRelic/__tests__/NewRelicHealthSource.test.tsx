@@ -6,12 +6,13 @@
  */
 
 import React from 'react'
-import { fireEvent, render, waitFor, act } from '@testing-library/react'
+import { fireEvent, render, waitFor, act, screen } from '@testing-library/react'
 import { Connectors } from '@connectors/constants'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import routes from '@common/RouteDefinitions'
 import * as cvServices from 'services/cv'
+import * as useFeatureFlagMock from '@common/hooks/useFeatureFlag'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
 import NewRelicHealthSourceContainer from '../NewRelicHealthSourceContainer'
 import NewRelicHealthSource from '../NewRelicHealthSource'
@@ -37,6 +38,8 @@ const createModeProps: TestWrapperProps = {
     orgIdentifier: '1234_org'
   }
 }
+
+jest.mock('@common/hooks/useFeatureFlag')
 
 const onNextMock = jest.fn().mockResolvedValue(jest.fn())
 const onPrevious = jest.fn().mockResolvedValue(jest.fn())
@@ -67,6 +70,7 @@ jest.mock('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs', (
 
 describe('Unit tests for NewRelic health source', () => {
   beforeAll(() => {
+    jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
     jest
       .spyOn(cvServices, 'useGetNewRelicApplications')
       .mockImplementation(() => ({ loading: false, error: null, data: applicationData, refetch: refetchMock } as any))
@@ -174,5 +178,60 @@ describe('Unit tests for NewRelic health source', () => {
     await waitFor(() =>
       expect(getByText('cv.monitoringSources.prometheus.querySpecificationsAndMappings')).toBeTruthy()
     )
+  })
+
+  describe('Metric thresholds', () => {
+    beforeEach(() => {
+      jest.mock('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs', () => ({
+        ...(jest.requireActual('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs') as any),
+        get SetupSourceTabsContext() {
+          return React.createContext({
+            tabsInfo: [],
+            sourceData: { sourceType: Connectors.NEW_RELIC },
+            onNext: onNextMock,
+            onPrevious: onPrevious
+          })
+        }
+      }))
+    })
+    test('should render metric thresholds', async () => {
+      const submitData = jest.fn()
+      const { container } = render(
+        <TestWrapper {...createModeProps}>
+          <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
+            <NewRelicHealthSourceContainer data={sourceData} onSubmit={submitData} />
+          </SetupSourceTabs>
+        </TestWrapper>
+      )
+
+      expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (0)')).toBeInTheDocument()
+      expect(screen.getByText('cv.monitoringSources.appD.failFastThresholds (0)')).toBeInTheDocument()
+
+      expect(container.querySelector("input[name='metricData.Performance']")).toBeChecked()
+
+      const addButton = screen.getByTestId('AddThresholdButton')
+
+      expect(addButton).toBeInTheDocument()
+
+      fireEvent.click(addButton)
+
+      expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (1)')).toBeInTheDocument()
+    })
+
+    test('should not render metric thresholds when feature flag is disabled', () => {
+      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(false)
+
+      const submitData = jest.fn()
+      render(
+        <TestWrapper {...createModeProps}>
+          <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
+            <NewRelicHealthSourceContainer data={sourceData} onSubmit={submitData} />
+          </SetupSourceTabs>
+        </TestWrapper>
+      )
+
+      expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).not.toBeInTheDocument()
+      expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).not.toBeInTheDocument()
+    })
   })
 })

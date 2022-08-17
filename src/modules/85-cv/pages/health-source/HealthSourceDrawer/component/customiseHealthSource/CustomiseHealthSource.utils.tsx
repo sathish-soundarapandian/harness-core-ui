@@ -52,14 +52,22 @@ export const LoadSourceByType = ({
       )
     case Connectors.GCP:
       if (data?.product?.value === GCOProduct.CLOUD_LOGS) {
-        return <GCOLogsMonitoringSource data={data} onSubmit={onSubmit} />
+        return (
+          <GCOLogsMonitoringSource isTemplate={isTemplate} expressions={expressions} data={data} onSubmit={onSubmit} />
+        )
       } else {
-        return <GCOMetricsHealthSource data={data} onSubmit={onSubmit} />
+        return (
+          <GCOMetricsHealthSource isTemplate={isTemplate} expressions={expressions} data={data} onSubmit={onSubmit} />
+        )
       }
     case HealthSourceTypes.StackdriverLog:
-      return <GCOLogsMonitoringSource data={data} onSubmit={onSubmit} />
+      return (
+        <GCOLogsMonitoringSource isTemplate={isTemplate} expressions={expressions} data={data} onSubmit={onSubmit} />
+      )
     case HealthSourceTypes.StackdriverMetrics:
-      return <GCOMetricsHealthSource data={data} onSubmit={onSubmit} />
+      return (
+        <GCOMetricsHealthSource isTemplate={isTemplate} expressions={expressions} data={data} onSubmit={onSubmit} />
+      )
     case Connectors.DATADOG:
       if (data?.product?.value === DatadogProduct.CLOUD_METRICS) {
         return (

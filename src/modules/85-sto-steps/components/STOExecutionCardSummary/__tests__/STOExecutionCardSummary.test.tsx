@@ -57,7 +57,7 @@ const failedPipelineExecutionSummary = {
 describe('STOExecutionCardSummary', () => {
   test('renders correctly', () => {
     jest.spyOn(stoService, 'useIssueCounts').mockReturnValue({
-      data: { critical: 1, high: 2, medium: 3, low: 4, info: 5, unassigned: 0 },
+      data: { 'execution-id': { critical: 1, high: 2, medium: 3, low: 4, info: 5, unassigned: 0 } },
       loading: false,
       response: null,
       error: null
@@ -78,7 +78,7 @@ describe('STOExecutionCardSummary', () => {
 
   test('only renders non-zero counts', () => {
     jest.spyOn(stoService, 'useIssueCounts').mockReturnValue({
-      data: { critical: 1, high: 0, medium: 0, low: 0, info: 0, unassigned: 0 },
+      data: { 'execution-id': { critical: 1, high: 0, medium: 0, low: 0, info: 0, unassigned: 0 } },
       loading: false,
       response: null,
       error: null
@@ -100,7 +100,7 @@ describe('STOExecutionCardSummary', () => {
     expect(queryByTestId('Low')).toBeNull()
 
     jest.spyOn(stoService, 'useIssueCounts').mockReturnValue({
-      data: { critical: 0, high: 11, medium: 0, low: 0, info: 0, unassigned: 0 },
+      data: { 'execution-id': { critical: 0, high: 11, medium: 0, low: 0, info: 0, unassigned: 0 } },
       loading: false,
       response: null,
       error: null
@@ -109,7 +109,7 @@ describe('STOExecutionCardSummary', () => {
 
   test("only renders non-zero counts (cont'd)", () => {
     jest.spyOn(stoService, 'useIssueCounts').mockReturnValue({
-      data: { critical: 0, high: 11, medium: 0, low: 0, info: 0, unassigned: 0 },
+      data: { 'execution-id': { critical: 0, high: 11, medium: 0, low: 0, info: 0, unassigned: 0 } },
       loading: false,
       response: null,
       error: null
@@ -175,10 +175,10 @@ describe('STOExecutionCardSummary', () => {
 
   test('shows no security tests message', () => {
     jest.spyOn(stoService, 'useIssueCounts').mockReturnValue({
-      data: null,
+      data: {},
       loading: false,
       response: null,
-      error: { data: 'Not Found', message: 'NotFound', status: 404 }
+      error: null
     })
 
     render(
@@ -196,7 +196,7 @@ describe('STOExecutionCardSummary', () => {
 
   test('shows issues on pipeline failure', () => {
     jest.spyOn(stoService, 'useIssueCounts').mockReturnValue({
-      data: { critical: 1, high: 2, medium: 3, low: 4, info: 5, unassigned: 0 },
+      data: { 'execution-id': { critical: 1, high: 2, medium: 3, low: 4, info: 5, unassigned: 0 } },
       loading: false,
       response: null,
       error: null
@@ -217,7 +217,7 @@ describe('STOExecutionCardSummary', () => {
 
   test('shows no issues message', () => {
     jest.spyOn(stoService, 'useIssueCounts').mockReturnValue({
-      data: { critical: 0, high: 0, medium: 0, low: 0, info: 0, unassigned: 0 },
+      data: { 'execution-id': { critical: 0, high: 0, medium: 0, low: 0, info: 0, unassigned: 0 } },
       loading: false,
       response: null,
       error: null

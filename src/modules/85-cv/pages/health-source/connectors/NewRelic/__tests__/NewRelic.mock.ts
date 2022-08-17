@@ -381,7 +381,7 @@ export const healthSourcePayload = {
     connectorRef: 'newrelic',
     feature: 'apm',
     metricData: { Performance: true },
-    metricPacks: [{ identifier: 'Performance' }],
+    metricPacks: [{ identifier: 'Performance', metricThresholds: [] }],
     newRelicMetricDefinitions: []
   },
   type: 'NewRelic'
@@ -589,7 +589,9 @@ export const newRelicPayload = {
   riskCategory: '',
   lowerBaselineDeviation: false,
   higherBaselineDeviation: false,
-  showCustomMetric: true
+  showCustomMetric: true,
+  ignoreThresholds: [],
+  failFastThresholds: []
 }
 
 export const newRelicExpectedPayload = {
@@ -605,7 +607,8 @@ export const newRelicExpectedPayload = {
     },
     metricPacks: [
       {
-        identifier: 'Performance'
+        identifier: 'Performance',
+        metricThresholds: []
       }
     ],
     newRelicMetricDefinitions: [

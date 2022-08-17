@@ -75,3 +75,5 @@ export interface Pipeline {
 export interface InputSet {
   inputSet: InputSetDTO
 }
+
+export type PartiallyRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>

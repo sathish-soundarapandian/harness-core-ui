@@ -57,6 +57,7 @@ export interface FileStoreContextState {
   scope: string
   queryParams: ScopedObjectDTO
   fileUsage?: FileUsage
+  handleSetIsUnsaved?: (status: boolean) => void
 }
 
 export interface GetNodeConfig {
@@ -75,10 +76,11 @@ interface FileStoreContextProps {
   isModalView?: boolean
   children?: any
   fileUsage?: FileUsage
+  handleSetIsUnsaved?: (status: boolean) => void
 }
 
 export const FileStoreContextProvider: React.FC<FileStoreContextProps> = (props: FileStoreContextProps) => {
-  const { scope = '', isModalView = false, fileUsage } = props
+  const { scope = '', isModalView = false, fileUsage, handleSetIsUnsaved } = props
   const queryParams = useFileStoreScope({
     scope,
     isModalView
@@ -243,7 +245,8 @@ export const FileStoreContextProvider: React.FC<FileStoreContextProps> = (props:
         addDeletedNode,
         unsavedNodes,
         setUnsavedNodes,
-        fileUsage
+        fileUsage,
+        handleSetIsUnsaved
       }}
     >
       {props.children}

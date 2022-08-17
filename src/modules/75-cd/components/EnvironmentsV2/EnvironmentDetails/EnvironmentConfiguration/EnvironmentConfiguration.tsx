@@ -24,7 +24,8 @@ import {
   Accordion,
   MultiTypeInputType,
   ButtonVariation,
-  Tag
+  Tag,
+  FormikForm
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import routes from '@common/RouteDefinitions'
@@ -190,7 +191,7 @@ export default function EnvironmentConfiguration({
   const invalidYaml = isInvalidYaml()
 
   return (
-    <Container padding={{ left: 'medium', right: 'medium' }}>
+    <Container padding={{ left: 'xxlarge', right: 'medium' }}>
       <NavigationCheck
         when={isModified || invalidYaml}
         shouldBlockNavigation={nextLocation => {
@@ -236,7 +237,7 @@ export default function EnvironmentConfiguration({
         />
       </Layout.Horizontal>
       {selectedView === SelectedView.VISUAL ? (
-        <>
+        <FormikForm>
           <Card
             className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
             id="variables"
@@ -303,7 +304,7 @@ export default function EnvironmentConfiguration({
             </Accordion>
           )}
           {/* #endregion */}
-        </>
+        </FormikForm>
       ) : (
         <div className={css.yamlBuilder}>
           <YAMLBuilder

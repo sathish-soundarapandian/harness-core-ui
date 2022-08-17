@@ -11,6 +11,7 @@ import {
   isEnvironmentAllowedForOAuth
 } from '@connectors/components/CreateConnector/CreateConnectorUtils'
 import {
+  addDetailsToPipeline,
   getOAuthConnectorPayload,
   getPRTriggerActions,
   sortConnectorsByLastConnectedAtTsDescOrder
@@ -153,5 +154,22 @@ describe('Test HostedBuildsUtils methods', () => {
       new Number(get(sortedItems[0], 'status.lastConnectedAt')) >
         new Number(get(sortedItems[1], 'status.lastConnectedAt'))
     ).toBe(false)
+  })
+
+  test('Test addDetailsToPipeline method', () => {
+    const updatedPipeline = addDetailsToPipeline({
+      originalPipeline: { pipeline: { identifier: '', name: '' } },
+      name: 'sample pipeline',
+      orgIdentifier: 'orgId',
+      projectIdentifier: 'projectId',
+      identifier: 'sample_pipeline_identifier',
+      connectorRef: 'account.github_connector',
+      repoName: 'test-repo'
+    })
+    expect(updatedPipeline.pipeline?.name).toBe('sample pipeline')
+    expect(updatedPipeline.pipeline?.orgIdentifier).toBe('orgId')
+    expect(updatedPipeline.pipeline?.projectIdentifier).toBe('projectId')
+    expect(updatedPipeline.pipeline?.properties?.ci?.codebase?.connectorRef).toBe('account.github_connector')
+    expect(updatedPipeline.pipeline?.properties?.ci?.codebase?.repoName).toBe('test-repo')
   })
 })

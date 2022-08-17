@@ -40,8 +40,8 @@ export function ExecutionListCards({
   >()
   const { updateQueryParams } = useUpdateQueryParams<{ page: number }>()
 
-  function gotoPage(index: number): void {
-    updateQueryParams({ page: index + 1 })
+  function gotoPage(page: number): void {
+    updateQueryParams({ page })
   }
 
   const isDeploymentsPage = !!matchPath(location.pathname, {
