@@ -57,24 +57,10 @@ const getInitialValues = () => ({
   connectorRef: 'connectorId1',
   credentialsRef: 'credentialsRef',
   region: 'region1',
-  loadBalancer: 'loadbalancer1',
-  sshKey: 'sshkey1',
   awsInstanceFilter: {
     vpcs: [],
     tags: {}
-  },
-  allowSimultaneousDeployments: true
-})
-
-const getInitialAutoScallingValues = () => ({
-  connectorRef: 'connectorId1',
-  credentialsRef: 'credentialsRef',
-  region: 'region1',
-  loadBalancer: 'loadbalancer1',
-  sshKey: 'sshkey1',
-  useAutoScalingGroup: true,
-  autoScalingGroupName: 'groupName1',
-  allowSimultaneousDeployments: true
+  }
 })
 
 const getEmptyInitialValues = () => ({
@@ -116,23 +102,6 @@ describe('Test SshWinRmAwsInfrastructureSpec behavior', () => {
     expect(onUpdateHandler).toHaveBeenCalledWith(getInitialValues())
   })
 
-  test('should call onUpdate if valid values entered / autoscalling true - inputset', async () => {
-    const onUpdateHandler = jest.fn()
-    const { getByText, container } = render(
-      <TestStepWidget
-        initialValues={getInitialAutoScallingValues()}
-        template={getRuntimeInputsValues()}
-        allValues={getInitialAutoScallingValues()}
-        type={StepType.SshWinRmAws}
-        stepViewType={StepViewType.InputSet}
-        onUpdate={onUpdateHandler}
-      />
-    )
-    await checkForFormInit(container)
-    await submitForm(getByText)
-    expect(onUpdateHandler).toHaveBeenCalledWith(getInitialAutoScallingValues())
-  })
-
   test('should not call onUpdate if invalid values entered - inputset', async () => {
     const onUpdateHandler = jest.fn()
     const { getByText, container } = render(
@@ -148,6 +117,50 @@ describe('Test SshWinRmAwsInfrastructureSpec behavior', () => {
     await checkForFormInit(container)
     await submitForm(getByText)
     expect(onUpdateHandler).not.toHaveBeenCalled()
+  })
+})
+
+describe('Test SshWinRmAwsEdit form', () => {
+  beforeEach(() => {
+    factory.registerStep(new SshWinRmAwsInfrastructureSpec())
+  })
+
+  test('should call onUpdate if valid values entered - edit form', async () => {
+    const onUpdateHandler = jest.fn()
+    const { container } = render(
+      <TestStepWidget
+        initialValues={getInitialValues()}
+        template={getRuntimeInputsValues()}
+        allValues={getInitialValues()}
+        type={StepType.SshWinRmAws}
+        stepViewType={StepViewType.Edit}
+        onUpdate={onUpdateHandler}
+      />
+    )
+
+    expect(container).toMatchSnapshot()
+  })
+})
+
+describe('Test SshWinRmAws InputVariable component', () => {
+  beforeEach(() => {
+    factory.registerStep(new SshWinRmAwsInfrastructureSpec())
+  })
+
+  test('Render component with as type InputVariable', async () => {
+    const onUpdateHandler = jest.fn()
+    const { container } = render(
+      <TestStepWidget
+        initialValues={getInitialValues()}
+        template={getRuntimeInputsValues()}
+        allValues={getInitialValues()}
+        type={StepType.SshWinRmAws}
+        stepViewType={StepViewType.InputVariable}
+        onUpdate={onUpdateHandler}
+      />
+    )
+
+    expect(container).toMatchSnapshot()
   })
 })
 

@@ -64,7 +64,9 @@ export type SshWinRmAwsInfrastructureTemplate = { [key in keyof SshWinRmAwsInfra
 
 function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({
-    sshKey: Yup.object().required(getString('validation.password'))
+    sshKey: Yup.object().required(getString('validation.password')),
+    connectorRef: Yup.object().required(getString('validation.password')),
+    region: Yup.object().required()
   })
 }
 interface SshWinRmAwsInfrastructureSpecEditableProps {

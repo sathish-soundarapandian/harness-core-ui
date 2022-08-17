@@ -8,8 +8,5 @@ export const regionsResponse = {
 
 export const tagsResponse = {
   status: 'SUCCESS',
-  data: [
-    ['tag1', 'tag1'],
-    ['tag2', 'tag2']
-  ]
+  data: ['tag1', 'tag1']
 }
