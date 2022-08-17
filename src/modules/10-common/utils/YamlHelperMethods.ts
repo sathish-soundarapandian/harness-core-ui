@@ -24,5 +24,5 @@ export function yamlParse<T = unknown>(input: string): T {
 export const memoizedParse = memoize(yamlParse)
 
 /* re-export to maintain API with yaml package */
-export const parse = memoizedParse
+export const parse = yamlParse
 export const stringify = yamlStringify
