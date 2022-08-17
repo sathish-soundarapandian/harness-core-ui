@@ -112,16 +112,17 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
       ...initialValues
     }
     if (initialValues.credentialsRef) {
-      set(initials, 'sshKey', initialValues?.credentialsRef)
+      set(initials, 'sshKey', get(initialValues, 'credentialsRef', ''))
     }
     if (initialValues.region) {
       set(initials, 'region', { label: initialValues.region, value: initialValues.region })
     }
-    if (initialValues?.awsInstanceFilter?.tags) {
+    const initialTags = get(initialValues, 'awsInstanceFilter.tags', false)
+    if (initialTags) {
       set(
         initials,
         'tags',
-        Object.entries(initialValues?.awsInstanceFilter?.tags).map(entry => ({
+        Object.entries(initialTags).map(entry => ({
           value: entry[0],
           label: entry[1]
         }))
@@ -132,7 +133,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
     initialValues.credentialsRef,
     initialValues.connectorRef,
     initialValues.region,
-    initialValues.awsInstanceFilter?.tags
+    initialValues.awsInstanceFilter.tags
   ])
 
   const {
@@ -161,8 +162,8 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
-      region: initialValues?.region,
-      awsConnectorRef: initialValues?.connectorRef
+      region: get(initialValues, 'region', ''),
+      awsConnectorRef: get(initialValues, 'connectorRef', '')
     },
     lazy: true
   })
@@ -187,7 +188,9 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
               connectorRef:
                 typeof value.connectorRef === 'string' ? value.connectorRef : get(value, 'connectorRef.value', ''),
               credentialsRef:
-                typeof value?.sshKey === 'string' ? value?.sshKey : get(value, 'sshKey.referenceString', ''),
+                typeof get(value, 'sshKey', '') === 'string'
+                  ? get(value, 'sshKey', '')
+                  : get(value, 'sshKey.referenceString', ''),
               region: typeof value.region === 'string' ? value.region : get(value, 'region.value', ''),
               tags: value.tags
             }
@@ -218,6 +221,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                       label={getString('cd.steps.common.specifyCredentials')}
                       onSuccess={secret => {
                         if (secret) {
+                          /* istanbul ignore next */
                           formikRef.current?.setFieldValue('credentialsRef', secret.referenceString)
                         }
                       }}
@@ -241,14 +245,14 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                           if (type === MultiTypeInputType.FIXED) {
                             const connectorRef =
                               item.scope === Scope.ORG || item.scope === Scope.ACCOUNT
-                                ? `${item.scope}.${item?.record?.identifier}`
-                                : item.record?.identifier
+                                ? `${item.scope}.${get(item, 'record.identifier', '')}`
+                                : get(item, 'record.identifier', '')
                             /* istanbul ignore next */
                             const connectorValue = `${
                               item.scope !== Scope.PROJECT ? `${item.scope}.` : ''
                             }${connectorRef}`
                             formik.setFieldValue('connectorRef', {
-                              label: item?.record?.name || '',
+                              label: get(item, 'record.name', ''),
                               value: connectorValue,
                               scope: item.scope,
                               live: get(item.record, 'status.status', '') === 'SUCCESS',
@@ -341,11 +345,11 @@ const SshWinRmAwsInfraSpecVariablesForm: React.FC<SshWinRmAwsInfrastructure> = (
   variablesData,
   initialValues
 }) => {
-  const infraVariables = variablesData?.infrastructureDefinition?.spec
+  const infraVariables = get(variablesData, 'infrastructureDefinition.spec', null)
   return infraVariables ? (
     <VariablesListTable
       data={infraVariables}
-      originalData={initialValues?.infrastructureDefinition?.spec || initialValues}
+      originalData={get(initialValues, 'infrastructureDefinition.spec', initialValues)}
       metadataMap={metadataMap}
     />
   ) : null
@@ -497,10 +501,10 @@ export class SshWinRmAwsInfrastructureSpec extends PipelineStep<SshWinRmAwsInfra
           initialValues={initialValues}
           onUpdate={onUpdate}
           stepViewType={stepViewType}
-          readonly={inputSetData?.readonly}
-          template={inputSetData?.template as SshWinRmAwsInfrastructureTemplate}
-          allValues={inputSetData?.allValues}
-          path={inputSetData?.path || ''}
+          readonly={get(inputSetData, 'readonly', undefined)}
+          template={get(inputSetData, 'template', undefined) as SshWinRmAwsInfrastructureTemplate}
+          allValues={get(inputSetData, 'allValues', undefined)}
+          path={get(inputSetData, 'path', '')}
           allowableTypes={allowableTypes}
         />
       )
@@ -509,7 +513,7 @@ export class SshWinRmAwsInfrastructureSpec extends PipelineStep<SshWinRmAwsInfra
         <SshWinRmAwsInfraSpecVariablesForm
           onUpdate={onUpdate}
           stepViewType={stepViewType}
-          template={inputSetData?.template}
+          template={get(inputSetData, 'template', undefined)}
           {...(customStepProps as SshWinRmAwsInfrastructure)}
           initialValues={initialValues}
         />
