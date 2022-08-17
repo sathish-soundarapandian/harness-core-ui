@@ -920,6 +920,5 @@ customSM:
   templateRef: Template Reference
   templateVersion: Template Version
   sshKey: SSH Key Reference
-  inputVariables: Input Variables
   validation:
     template: Please select a template

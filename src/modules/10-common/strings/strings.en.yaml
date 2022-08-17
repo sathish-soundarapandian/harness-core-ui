@@ -16,6 +16,7 @@ gpgkey: 'GPG Key'
 gnupgKeys: GnuPG Keys
 skip: Skip
 sync: Sync
+inputVariables: Input Variables
 accountSetup: Account Setup
 projectSetup: Project Setup
 orgSetup: Org Setup

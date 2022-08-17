@@ -28,7 +28,7 @@ import { parse } from 'yaml'
 import type { FormikContextType } from 'formik'
 import type { ConnectorInfoDTO, ConnectorRequestBody, ConnectorConfigDTO, JsonNode } from 'services/cd-ng'
 
-import { useStrings } from 'framework/strings'
+import { useStrings, UseStringsReturn } from 'framework/strings'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
@@ -39,12 +39,10 @@ import type {
 } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import RbacButton from '@rbac/components/Button/Button'
 import { getTemplateInputSetYamlPromise } from 'services/template-ng'
-
+import { ScriptVariablesRuntimeInput } from '@common/components/ScriptVariableRuntimeInput/ScriptVariablesRuntimeInput'
 import { MultiTypeSecretInput } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { getRefFromIdAndScopeParams, setupCustomSMFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import type { CustomSMFormInterface } from '@connectors/interfaces/ConnectorInterface'
-
-import { ScriptVariablesRuntimeInput } from './ScriptVariableRuntimeInput/ScriptVariablesRuntimeInput'
 
 interface StepCustomSMConfigStepProps extends ConnectorInfoDTO {
   name: string
@@ -65,6 +63,24 @@ interface StepCustomSMConfigProps {
   getTemplate: (data: GetTemplateProps) => Promise<GetTemplateResponse>
 }
 
+export const variableSchema = (
+  getString: UseStringsReturn['getString']
+): Yup.NotRequiredArraySchema<
+  | {
+      name: string
+      value: string
+      type: string
+    }
+  | undefined
+> =>
+  Yup.array().of(
+    Yup.object({
+      name: Yup.string().required(getString('common.validation.nameIsRequired')),
+      value: Yup.string().required(getString('common.validation.valueIsRequired')),
+      type: Yup.string().trim().required(getString('common.validation.typeIsRequired'))
+    })
+  )
+
 const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & StepCustomSMConfigProps> = ({
   prevStepData,
   previousStep,
@@ -80,7 +96,11 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
     template: undefined,
     templateInputs: {},
     onDelegate: true,
-    executionTarget: {},
+    executionTarget: {
+      host: '',
+      connectorRef: '',
+      workingDirectory: ''
+    },
     templateJson: {}
   }
 
@@ -109,44 +129,49 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
 
   const [templateInputSets, setTemplateInputSets] = React.useState<JsonNode>()
   const onUseTemplate = async (formikProps: FormikContextType<CustomSMFormInterface>) => {
-    const { template } = await getTemplate?.({ templateType: 'SecretManager' })
-    formikProps.setFieldValue('template', {
-      ...template,
-      versionLabel: template.versionLabel,
-      templateRef: getRefFromIdAndScopeParams(
-        template.identifier || '',
-        template.orgIdentifier,
-        template.projectIdentifier
-      )
-    })
-
-    const templateJSON = parse(template.yaml || '')?.template
-    formikProps.setFieldValue('templateJson', templateJSON)
-    formikProps.setFieldValue('onDelegate', templateJSON.spec.onDelegate)
-
-    try {
-      const templateInputYaml = await getTemplateInputSetYamlPromise({
-        templateIdentifier: template?.identifier || '',
-        queryParams: {
-          accountIdentifier: accountId || '',
-          orgIdentifier: template?.orgIdentifier,
-          projectIdentifier: template?.projectIdentifier,
-          versionLabel: template?.versionLabel || ''
-        }
+    if (getTemplate) {
+      const { template } = await getTemplate({ templateType: 'SecretManager' })
+      formikProps.setFieldValue('template', {
+        ...template,
+        versionLabel: template.versionLabel,
+        templateRef: getRefFromIdAndScopeParams(
+          template.identifier || '',
+          template.orgIdentifier,
+          template.projectIdentifier
+        )
       })
 
-      let inputSet: JsonNode = {}
-      if (templateInputYaml && templateInputYaml?.data) {
-        inputSet = parse(templateInputYaml?.data?.replace(/"<\+input>"/g, '""'))
-        formikProps.setFieldValue('templateInputs', inputSet)
-        setTemplateInputSets(inputSet)
-      }
+      const templateJSON = parse(template.yaml || '')?.template
+      formikProps.setFieldValue('templateJson', templateJSON)
+      formikProps.setFieldValue('onDelegate', templateJSON.spec.onDelegate)
 
-      if (templateJSON.spec.onDelegate !== true && !inputSet.hasOwnProperty('executionTarget')) {
-        formikProps.setFieldValue('executionTarget', templateJSON.spec.executionTarget)
+      try {
+        const templateInputYaml = await getTemplateInputSetYamlPromise({
+          templateIdentifier: template?.identifier || '',
+          queryParams: {
+            accountIdentifier: accountId || '',
+            orgIdentifier: template?.orgIdentifier,
+            projectIdentifier: template?.projectIdentifier,
+            versionLabel: template?.versionLabel || ''
+          }
+        })
+
+        let inputSet: JsonNode = {}
+        if (templateInputYaml && templateInputYaml?.data) {
+          inputSet = parse(templateInputYaml?.data?.replace(/"<\+input>"/g, '""'))
+          formikProps.setFieldValue('templateInputs', inputSet)
+          setTemplateInputSets(inputSet)
+        }
+
+        if (
+          templateJSON.spec.onDelegate !== true &&
+          Object.prototype.hasOwnProperty.call(inputSet, 'executionTarget')
+        ) {
+          formikProps.setFieldValue('executionTarget', inputSet.executionTarget)
+        }
+      } catch (e) {
+        modalErrorHandler?.showDanger(getErrorInfoFromErrorObject(e))
       }
-    } catch (e) {
-      modalErrorHandler?.showDanger(getErrorInfoFromErrorObject(e))
     }
   }
 
@@ -163,78 +188,19 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
         initialValues={{ ...initialValues, ...prevStepData }}
         formName="customSMForm"
         validationSchema={Yup.object().shape({
-          template: Yup.object().required('Please seleact a template.')
-
-          // renewalIntervalMinutes: Yup.mixed().when('accessType', {
-          //   is: val => val !== HashiCorpVaultAccessTypes.VAULT_AGENT && val !== HashiCorpVaultAccessTypes.AWS_IAM,
-          //   then: Yup.number()
-          //     .positive(getString('validation.renewalNumber'))
-          //     .required(getString('validation.renewalInterval'))
-          // }),
-          //   authToken: Yup.object()
-          //     .nullable()
-          //     .when('accessType', {
-          //       is: HashiCorpVaultAccessTypes.TOKEN,
-          //       then: Yup.object().test('authToken', getString('validation.authToken'), function (value) {
-          //         if ((prevStepData?.spec as VaultConnectorDTO)?.accessType === HashiCorpVaultAccessTypes.TOKEN)
-          //           return true
-          //         else if (value?.name?.length > 0) return true
-          //         return false
-          //       })
-          //     }),
-          //   appRoleId: Yup.string().when('accessType', {
-          //     is: HashiCorpVaultAccessTypes.APP_ROLE,
-          //     then: Yup.string().trim().required(getString('validation.appRole'))
-          //   }),
-          //   secretId: Yup.object().when('accessType', {
-          //     is: HashiCorpVaultAccessTypes.APP_ROLE,
-          //     then: Yup.object().test('secretId', getString('validation.secretId'), function (value) {
-          //       if ((prevStepData?.spec as VaultConnectorDTO)?.accessType === HashiCorpVaultAccessTypes.APP_ROLE)
-          //         return true
-          //       else if (value?.name?.length > 0) return true
-          //       return false
-          //     })
-          //   }),
-          //   sinkPath: Yup.string().when('accessType', {
-          //     is: HashiCorpVaultAccessTypes.VAULT_AGENT,
-          //     then: Yup.string().trim().required(getString('connectors.hashiCorpVault.sinkPathIsRequired'))
-          //   }),
-          //   xvaultAwsIamServerId: Yup.object().when('accessType', {
-          //     is: HashiCorpVaultAccessTypes.AWS_IAM,
-          //     then: Yup.object().test(
-          //       'secretId',
-          //       getString('connectors.hashiCorpVault.serverIdHeaderRequired'),
-          //       function (value) {
-          //         if (
-          //           (prevStepData?.spec as VaultConnectorDTO)?.accessType === HashiCorpVaultAccessTypes.AWS_IAM ||
-          //           value?.name?.length > 0
-          //         ) {
-          //           return true
-          //         }
-          //         return false
-          //       }
-          //     )
-          //   }),
-          //   vaultAwsIamRole: Yup.string().when('accessType', {
-          //     is: HashiCorpVaultAccessTypes.AWS_IAM,
-          //     then: Yup.string().trim().required(getString('common.banners.trial.contactSalesForm.roleValidation'))
-          //   }),
-          //   awsRegion: Yup.string().when('accessType', {
-          //     is: HashiCorpVaultAccessTypes.AWS_IAM,
-          //     then: Yup.string().trim().required(getString('validation.regionRequired'))
-          //   }),
-          //   vaultK8sAuthRole: Yup.string().when('accessType', {
-          //     is: HashiCorpVaultAccessTypes.K8s_AUTH,
-          //     then: Yup.string().trim().required(getString('connectors.hashiCorpVault.vaultK8sAuthRoleRequired'))
-          //   }),
-          //   serviceAccountTokenPath: Yup.string().when('accessType', {
-          //     is: HashiCorpVaultAccessTypes.K8s_AUTH,
-          //     then: Yup.string().trim().required(getString('connectors.hashiCorpVault.serviceAccountRequired'))
-          //   }),
-          //   default: Yup.boolean().when('readOnly', {
-          //     is: true,
-          //     then: Yup.boolean().equals([false], getString('connectors.hashiCorpVault.preventDefaultWhenReadOnly'))
-          //   })
+          template: Yup.object().required(getString('connectors.customSM.validation.template')),
+          onDelegate: Yup.boolean(),
+          executionTarget: Yup.mixed().when('onDelegate', (value: boolean) => {
+            if (value !== true)
+              return Yup.object().shape({
+                host: Yup.string().trim().required(getString('validation.targethostRequired')),
+                connectorRef: Yup.string().trim().required(getString('validation.sshConnectorRequired')),
+                workingDirectory: Yup.string().trim().required(getString('validation.workingDirRequired'))
+              })
+          }),
+          templateInputs: Yup.object().shape({
+            environmentVariables: variableSchema(getString)
+          })
         })}
         onSubmit={formData => {
           trackEvent(ConnectorActions.ConfigSubmit, {
@@ -279,7 +245,7 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
 
                 <FormInput.CheckBox
                   label="Execute on Delegate"
-                  name={`onDelegate`}
+                  name="onDelegate"
                   placeholder={getString('typeLabel')}
                 />
                 {formik.values.onDelegate !== true ? (

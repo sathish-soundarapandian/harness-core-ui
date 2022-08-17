@@ -419,6 +419,7 @@ export interface StringsMap {
   'common.importFromGit': string
   'common.in': string
   'common.input': string
+  'common.inputVariables': string
   'common.instanceLabel': string
   'common.instanceValidation.maximumCountInstance': string
   'common.instanceValidation.maximumCountPercentage': string
@@ -2130,7 +2131,6 @@ export interface StringsMap {
   'connectors.customLabel': string
   'connectors.customSM.details': string
   'connectors.customSM.executeOnDelegate': string
-  'connectors.customSM.inputVariables': string
   'connectors.customSM.selectTemplate': string
   'connectors.customSM.sshKey': string
   'connectors.customSM.templateRef': string
