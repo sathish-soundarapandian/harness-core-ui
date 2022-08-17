@@ -44,10 +44,6 @@ interface AwsInfrastructureSpecEditableProps {
   path: string
 }
 
-interface AwsTagDTO {
-  tag: string
-}
-
 const errorMessage = 'data.message'
 
 export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureSpecEditableProps> = ({
