@@ -11,7 +11,7 @@ import { AppDynamicsMonitoringSourceFieldNames as FieldName } from '@cv/pages/he
 import {
   getActionItems,
   getDefaultMetricTypeValue,
-  getMetricItems,
+  getMetricNameItems,
   getMetricTypeItems
 } from '@cv/pages/health-source/common/MetricThresholds/MetricThresholds.utils'
 import type { MetricThresholdType } from '@cv/pages/health-source/connectors/AppDynamics/AppDHealthSource.types'
@@ -19,6 +19,7 @@ import ThresholdSelect from '@cv/pages/health-source/common/MetricThresholds/Com
 import ThresholdCriteria from '@cv/pages/health-source/common/MetricThresholds/Components/ThresholdCriteria'
 import {
   FailFastActionValues,
+  MetricTypeValues,
   NewDefaultVauesForFailFastThreshold
 } from '@cv/pages/health-source/common/MetricThresholds/MetricThresholds.constants'
 import type { FailFasthresholdsFieldArrayInterface } from '../MetricThresholds.types'
@@ -27,7 +28,8 @@ import css from './MetricThreshold.module.scss'
 export default function FailFastThresholdsFieldArray<T>({
   formValues,
   groupedCreatedMetrics,
-  metricPacks
+  metricPacks,
+  isOnlyCustomMetricHealthSource
 }: FailFasthresholdsFieldArrayInterface<T>): JSX.Element {
   const { getString } = useStrings()
 
@@ -90,7 +92,9 @@ export default function FailFastThresholdsFieldArray<T>({
 
   const handleAddThreshold = (addFn: (addedRow: MetricThresholdType) => void): void => {
     const clonedDefaultValue = cloneDeep(NewDefaultVauesForFailFastThreshold)
-    const defaultValueForMetricType = getDefaultMetricTypeValue(formValues.metricData, metricPacks)
+    const defaultValueForMetricType = isOnlyCustomMetricHealthSource
+      ? MetricTypeValues.Custom
+      : getDefaultMetricTypeValue(formValues.metricData as Record<string, boolean>, metricPacks)
     const newIgnoreThresholdRow = { ...clonedDefaultValue, metricType: defaultValueForMetricType }
     addFn(newIgnoreThresholdRow)
   }
@@ -102,10 +106,18 @@ export default function FailFastThresholdsFieldArray<T>({
         return (
           <Container style={{ minHeight: 300 }}>
             <Container
-              className={cx(css.metricThresholdContentIgnoreTableHeader, css.metricThresholdContentFailFastTableHeader)}
+              className={cx(
+                css.metricThresholdContentIgnoreTableHeader,
+                css.metricThresholdContentFailFastTableHeader,
+                {
+                  [css.metricThresholdContentFailFastTableHeaderOnlyCustomMetric]: isOnlyCustomMetricHealthSource
+                }
+              )}
             >
               <Text>{getString('cv.monitoringSources.appD.metricType')}</Text>
-              <Text>{getString('cv.monitoringSources.appD.groupTransaction')}</Text>
+              {!isOnlyCustomMetricHealthSource && (
+                <Text>{getString('cv.monitoringSources.appD.groupTransaction')}</Text>
+              )}
               <Text>{getString('cv.monitoringSources.metricLabel')}</Text>
               <Text>{getString('action')}</Text>
               <Text>{getString('instanceFieldOptions.instanceHolder')}</Text>
@@ -127,13 +139,21 @@ export default function FailFastThresholdsFieldArray<T>({
               return (
                 <Container
                   key={index}
-                  className={cx(css.metricThresholdContentIgnoreTableRow, css.metricThresholdContentFailFastTableRow)}
+                  className={cx(css.metricThresholdContentIgnoreTableRow, css.metricThresholdContentFailFastTableRow, {
+                    [css.metricThresholdContentFailFastTableRowOnlyCustomMetric]: isOnlyCustomMetricHealthSource
+                  })}
                   data-testid="ThresholdRow"
                 >
                   {/* ==== ⭐️ Metric Type ==== */}
                   <ThresholdSelect
-                    items={getMetricTypeItems(metricPacks, formValues.metricData, groupedCreatedMetrics)}
+                    items={getMetricTypeItems(
+                      groupedCreatedMetrics,
+                      metricPacks,
+                      formValues.metricData,
+                      isOnlyCustomMetricHealthSource
+                    )}
                     key={`${data?.metricType}`}
+                    disabled={isOnlyCustomMetricHealthSource}
                     name={`failFastThresholds.${index}.${FieldName.METRIC_THRESHOLD_METRIC_TYPE}`}
                     onChange={({ value }: SelectOption) => {
                       handleMetricUpdate(index, value as string, props.replace.bind(null, index))
@@ -141,20 +161,28 @@ export default function FailFastThresholdsFieldArray<T>({
                   />
 
                   {/* ==== ⭐️ Group ==== */}
-                  <ThresholdGroup
-                    placeholder={getString('cv.monitoringSources.appD.groupTransaction')}
-                    index={index}
-                    name={`failFastThresholds.${index}.${FieldName.METRIC_THRESHOLD_GROUP_NAME}`}
-                    handleTransactionUpdate={handleTransactionUpdate}
-                    replaceFn={props.replace.bind(null, index)}
-                    metricType={data?.metricType}
-                    groupedCreatedMetrics={groupedCreatedMetrics}
-                  />
+                  {!isOnlyCustomMetricHealthSource && (
+                    <ThresholdGroup
+                      placeholder={getString('cv.monitoringSources.appD.groupTransaction')}
+                      index={index}
+                      name={`failFastThresholds.${index}.${FieldName.METRIC_THRESHOLD_GROUP_NAME}`}
+                      handleTransactionUpdate={handleTransactionUpdate}
+                      replaceFn={props.replace.bind(null, index)}
+                      metricType={data?.metricType}
+                      groupedCreatedMetrics={groupedCreatedMetrics}
+                    />
+                  )}
 
                   {/* ==== ⭐️ Metric ==== */}
                   <ThresholdSelect
                     disabled={!data?.metricType}
-                    items={getMetricItems(metricPacks, data.metricType, data.groupName, groupedCreatedMetrics)}
+                    items={getMetricNameItems(
+                      groupedCreatedMetrics,
+                      metricPacks,
+                      data.metricType,
+                      data.groupName,
+                      isOnlyCustomMetricHealthSource
+                    )}
                     key={`${data?.metricType}-${data.groupName}`}
                     name={`failFastThresholds.${index}.${FieldName.METRIC_THRESHOLD_METRIC_NAME}`}
                   />

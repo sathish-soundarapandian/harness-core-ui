@@ -12,7 +12,8 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   useToaster,
-  Utils
+  Utils,
+  Container
 } from '@wings-software/uicore'
 import { debounce, noop } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -32,9 +33,12 @@ import {
   mapDatadogDashboardDetailToMetricWidget,
   getSelectedDashboards,
   mapDatadogMetricSetupSourceToDatadogHealthSource,
-  getServiceIntance
+  getServiceIntance,
+  persistCustomMetric
 } from '@cv/pages/health-source/connectors/DatadogMetricsHealthSource/DatadogMetricsHealthSource.utils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import {
   DatadogDashboardDetail,
   TimeSeriesSampleDTO,
@@ -55,13 +59,25 @@ import { FieldNames } from '@cv/pages/health-source/connectors/GCOMetricsHealthS
 import { getPlaceholderForIdentifier } from '@cv/pages/health-source/connectors/GCOMetricsHealthSource/GCOMetricsHealthSource.utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { DatadogMetricsQueryExtractor } from './components/DatadogMetricsDetailsContent/DatadogMetricsDetailsContent.utils'
+import { initGroupedCreatedMetrics } from '../../common/CustomMetric/CustomMetric.utils'
+import type { MetricThresholdsState } from '../../common/MetricThresholds/MetricThresholds.types'
+import MetricThresholdProvider from './components/MetricThresholds/MetricThresholdProvider'
+import type { CustomMappedMetric } from '../../common/CustomMetric/CustomMetric.types'
 
 export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSourceProps): JSX.Element {
   const { data, isTemplate, expressions } = props
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const { showError } = useToaster()
-  const transformedData = useMemo(() => mapDatadogMetricHealthSourceToDatadogMetricSetupSource(data), [data])
+
+  // TODO: Remove this
+  // const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD)
+  const isMetricThresholdEnabled = true
+
+  const transformedData = useMemo(
+    () => mapDatadogMetricHealthSourceToDatadogMetricSetupSource(data, isMetricThresholdEnabled),
+    [data, isMetricThresholdEnabled]
+  )
   const [metricHealthDetailsData, setMetricHealthDetailsData] = useState(transformedData.metricDefinition)
   const [activeMetricsTracingId, metricTagsTracingId] = useMemo(() => [Utils.randomId(), Utils.randomId()], [])
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
@@ -70,6 +86,11 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
   const initialCustomCreatedMetrics = useMemo(() => {
     return getCustomCreatedMetrics(data?.selectedMetrics || transformedData.metricDefinition)
   }, [data?.selectedMetrics, transformedData.metricDefinition])
+
+  const [metricThresholds, setMetricThresholds] = useState<MetricThresholdsState>({
+    ignoreThresholds: transformedData.ignoreThresholds,
+    failFastThresholds: transformedData.failFastThresholds
+  })
 
   const connectorIdentifier = data?.connectorRef?.value || (data?.connectorRef as string)
   const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED
@@ -252,22 +273,12 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
   }
 
   const handleOnNext = async (formikProps: FormikProps<DatadogMetricInfo>): Promise<void> => {
-    formikProps.setTouched({
-      ...formikProps.touched,
-      [DatadogMetricsHealthSourceFieldNames.QUERY]: true,
-      [DatadogMetricsHealthSourceFieldNames.GROUP_NAME]: true,
-      [DatadogMetricsHealthSourceFieldNames.METRIC]: true,
-      [DatadogMetricsHealthSourceFieldNames.SLI]: true,
-      [DatadogMetricsHealthSourceFieldNames.RISK_CATEGORY]: true,
-      [DatadogMetricsHealthSourceFieldNames.HIGHER_BASELINE_DEVIATION]: true,
-      [DatadogMetricsHealthSourceFieldNames.LOWER_BASELINE_DEVIATION]: true,
-      [DatadogMetricsHealthSourceFieldNames.SERVICE_INSTANCE]: true
-    })
-    const errors = validate(formikProps.values, metricHealthDetailsData, getString)
-    if (!isEmpty(errors)) {
-      formikProps.setErrors({ ...errors })
+    formikProps.submitForm()
+
+    if (!formikProps.isValid) {
       return
     }
+
     if (selectedMetricId) {
       metricHealthDetailsData.set(selectedMetricId, { ...selectedMetricData, ...formikProps.values })
     }
@@ -280,10 +291,14 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
     }
     await props.onSubmit(
       data,
-      mapDatadogMetricSetupSourceToDatadogHealthSource({
-        ...transformedData,
-        metricDefinition: filteredData
-      })
+      mapDatadogMetricSetupSourceToDatadogHealthSource(
+        {
+          ...transformedData,
+          metricDefinition: filteredData,
+          ...metricThresholds
+        },
+        isMetricThresholdEnabled
+      )
     )
   }
   const dashboardRequest = useGetDatadogDashboardDetails({ lazy: true })
@@ -295,21 +310,32 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
   )
   const serviceInstanceList = useMemo(() => getServiceIntance(metricTags?.data?.tagKeys), [metricTags?.data?.tagKeys])
 
+  const selectedMetricDataForFormik = selectedMetricData || {}
+  const initialValues = { ...selectedMetricDataForFormik, ...metricThresholds }
+
   return (
     <Formik<DatadogMetricInfo>
       enableReinitialize={true}
       formName="mapDatadogMetrics"
-      initialValues={selectedMetricData || {}}
+      initialValues={{ ...initialValues }}
       onSubmit={noop}
       validate={values => {
         const newMap = new Map(metricHealthDetailsData)
         if (selectedMetricId) {
           newMap.set(selectedMetricId, { ...values })
         }
-        return validate(values, newMap, getString)
+        return validate(values, newMap, getString, isMetricThresholdEnabled)
       }}
     >
       {formikProps => {
+        persistCustomMetric({
+          mappedMetrics: metricHealthDetailsData,
+          selectedMetricId,
+          metricThresholds,
+          formikValues: formikProps.values,
+          setMappedMetrics: setMetricHealthDetailsData
+        })
+
         const shouldShowIdentifierPlaceholder = !selectedMetricData?.identifier && !formikProps.values?.identifier
         if (shouldShowIdentifierPlaceholder) {
           formikProps.setFieldValue(
@@ -363,6 +389,17 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
                 />
               }
             />
+            {isMetricThresholdEnabled && (
+              <MetricThresholdProvider
+                formikValues={formikProps.values}
+                setThresholdState={setMetricThresholds}
+                groupedCreatedMetrics={initGroupedCreatedMetrics(
+                  metricHealthDetailsData as Map<string, CustomMappedMetric>,
+                  getString
+                )}
+              />
+            )}
+            <Container style={{ marginBottom: '120px' }} />
           </FormikForm>
         )
       }}

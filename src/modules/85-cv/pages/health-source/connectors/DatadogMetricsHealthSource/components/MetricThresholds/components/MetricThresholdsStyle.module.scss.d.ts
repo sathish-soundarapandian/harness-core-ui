@@ -11,13 +11,9 @@ declare const styles: {
   readonly metricThresholdContentCard: string
   readonly metricThresholdContentCriteria: string
   readonly metricThresholdContentFailFastTableHeader: string
-  readonly metricThresholdContentFailFastTableHeaderOnlyCustomMetric: string
   readonly metricThresholdContentFailFastTableRow: string
-  readonly metricThresholdContentFailFastTableRowOnlyCustomMetric: string
   readonly metricThresholdContentIgnoreTableHeader: string
-  readonly metricThresholdContentIgnoreTableHeaderOnlyCustomMetric: string
   readonly metricThresholdContentIgnoreTableRow: string
-  readonly metricThresholdContentIgnoreTableRowOnlyCustomMetric: string
   readonly metricThresholdContentInput: string
   readonly metricThresholdContentInputWrapper: string
   readonly metricThresholdContentSelect: string

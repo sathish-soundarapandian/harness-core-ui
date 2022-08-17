@@ -11,8 +11,8 @@ export default function MetricThresholdTab<T>(props: MetricThresholdsTabProps): 
 
   const { values: formValues } = useFormikContext<T & CommonFormTypesForMetricThresholds>()
 
-  const ignoreThresholdsLength = formValues.ignoreThresholds.length
-  const failFastThresholdsLength = formValues.failFastThresholds.length
+  const ignoreThresholdsLength = formValues?.ignoreThresholds?.length
+  const failFastThresholdsLength = formValues?.failFastThresholds?.length
 
   return (
     <Tabs

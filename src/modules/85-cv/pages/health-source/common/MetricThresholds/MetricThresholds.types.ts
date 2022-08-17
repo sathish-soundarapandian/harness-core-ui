@@ -76,14 +76,20 @@ export interface MetricThresholdsTabProps {
 export interface BasicFormInterface {
   ignoreThresholds: MetricThresholdType[]
   failFastThresholds: MetricThresholdType[]
-  metricData: Record<string, boolean>
+  metricData?: Record<string, boolean>
 }
 
 interface ThresholdsCommonPropTypes<T> {
   formValues: T & BasicFormInterface
-  metricPacks: TimeSeriesMetricPackDTO[]
+  metricPacks?: TimeSeriesMetricPackDTO[]
   groupedCreatedMetrics: GroupedCreatedMetrics
+  isOnlyCustomMetricHealthSource?: boolean
 }
 
 export type IgnoreThresholdsFieldArrayInterface<T> = ThresholdsCommonPropTypes<T>
 export type FailFasthresholdsFieldArrayInterface<T> = ThresholdsCommonPropTypes<T>
+
+export interface MetricThresholdsState {
+  ignoreThresholds: MetricThresholdType[]
+  failFastThresholds: MetricThresholdType[]
+}
