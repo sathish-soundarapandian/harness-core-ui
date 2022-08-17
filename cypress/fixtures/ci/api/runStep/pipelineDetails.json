@@ -1,0 +1,13 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "yamlPipeline": "pipeline:\n  name: testPipeline_Cypress\n  identifier: testPipeline_Cypress\n  projectIdentifier: mtran2\n  orgIdentifier: default\n  tags: {}\n  stages:\n    - stage:\n        name: CI_Stage1\n        identifier: CI_Stage1\n        description: \"\"\n        type: CI\n        spec:\n          cloneCodebase: false\n          infrastructure:\n            type: KubernetesDirect\n            spec:\n              connectorRef: <+pipeline.variables.k8sCluster>\n              namespace: default\n              automountServiceAccountToken: true\n              nodeSelector: {}\n              os: Linux\n          execution:\n            steps:\n              - step:\n                  type: Run\n                  name: RunStep\n                  identifier: RunStep\n                  spec:\n                    connectorRef: <+input>\n                    image: <+input>\n                    shell: Sh\n                    command: <+input>\n                    privileged: <+input>\n                    reports:\n                      type: JUnit\n                      spec:\n                        paths: <+input>\n                    envVariables: <+input>\n                    outputVariables: <+input>\n                    runAsUser: <+input>\n                    resources:\n                      limits:\n                        memory: <+input>\n                        cpu: <+input>\n                  description: <+input>\n                  timeout: <+input>\n",
+    "entityValidityDetails": {
+      "valid": true,
+      "invalidYaml": null
+    },
+    "modules": ["ci", "pms"]
+  },
+  "metaData": null,
+  "correlationId": "e80ffac6-5db2-42d6-be8f-faab92c4b61d"
+}
