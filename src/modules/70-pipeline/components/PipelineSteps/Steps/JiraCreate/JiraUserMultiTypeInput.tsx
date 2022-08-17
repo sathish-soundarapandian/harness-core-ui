@@ -47,7 +47,9 @@ export function JiraUserMultiTypeInput({ selectedField, props, expressions, form
     },
     debounce: 300
   })
-
+  const handleQueryChange = (query: string) => {
+    return query ? setSearchTerm(query) : searchTerm
+  }
   return (
     <FormInput.MultiTypeInput
       selectItems={
@@ -65,9 +67,7 @@ export function JiraUserMultiTypeInput({ selectedField, props, expressions, form
         expressions,
         selectProps: {
           items: setUserValuesOptions(defaultTo(userData?.data, [])),
-          onQueryChange: (query: string) => /* istanbul ignore next */ {
-            query ? setSearchTerm(query) : searchTerm
-          }
+          onQueryChange: handleQueryChange
         }
       }}
     />
