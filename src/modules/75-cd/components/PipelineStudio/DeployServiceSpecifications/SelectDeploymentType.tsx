@@ -220,11 +220,6 @@ export default function SelectDeploymentType({
         value: ServiceDeploymentType.awsCodeDeploy
       },
       {
-        label: getString('pipeline.serviceDeploymentTypes.winrm'),
-        icon: 'command-winrm',
-        value: ServiceDeploymentType.winrm
-      },
-      {
         label: getString('pipeline.serviceDeploymentTypes.awsLambda'),
         icon: 'app-aws-lambda',
         value: ServiceDeploymentType.awsLambda

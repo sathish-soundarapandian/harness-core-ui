@@ -169,7 +169,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
         }
       })
       if (response.status === 'SUCCESS') {
-        const tagOptions = get(response, 'data', []).map(tagItem => ({
+        const tagOptions = get(response, 'data', []).map((tagItem: string) => ({
           value: tagItem,
           label: tagItem
         }))
