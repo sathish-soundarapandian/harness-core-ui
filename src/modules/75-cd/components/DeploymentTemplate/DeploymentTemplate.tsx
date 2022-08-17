@@ -7,25 +7,18 @@
 
 import React from 'react'
 import { Color } from '@harness/design-system'
+import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { Template, TemplateProps } from '@templates-library/components/AbstractTemplate/Template'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import type { NGTemplateInfoConfig } from 'services/template-ng'
-
-import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
-import { StepTemplateCanvasWithRef } from '@templates-library/components/TemplateStudio/StepTemplateCanvas/StepTemplateCanvas'
+import { DeploymentTemplateCanvasWrapperWithRef } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateCanvasWrapper'
 
 export class DeploymentTemplate extends Template<NGTemplateInfoConfig> {
   protected type = TemplateType.CustomDeployment
-  protected label = 'Deployment Type'
-  protected color = Color.GREEN_500
+  protected label = 'Deployment'
+  protected color = Color.LIME_500
 
-  protected defaultValues: NGTemplateInfoConfig = {
-    name: 'Template name',
-    identifier: 'Template_name',
-    versionLabel: '',
-    type: 'CustomDeployment'
-  }
   renderTemplateCanvas(props: TemplateProps<NGTemplateInfoConfig>): JSX.Element {
-    return <StepTemplateCanvasWithRef ref={props.formikRef as TemplateFormRef<unknown> | undefined} />
+    return <DeploymentTemplateCanvasWrapperWithRef ref={props.formikRef as TemplateFormRef<unknown> | undefined} />
   }
 }
