@@ -9,6 +9,7 @@
 declare const styles: {
   readonly addButton: string
   readonly environmentVarHeader: string
+  readonly fixed: string
   readonly formGroup: string
   readonly label: string
   readonly minConfigBtn: string

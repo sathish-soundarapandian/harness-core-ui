@@ -30,7 +30,6 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
   const { allowableTypes, readonly, template, path } = props
 
   const { getString } = useStrings()
-  // const { expressions } = useVariablesExpression()
   const prefix = isEmpty(path) ? '' : `${path}.`
 
   return (
@@ -39,7 +38,7 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
         <div className={css.formGroup}>
           <MultiTypeFieldSelector
             name="templateInputs.environmentVariables"
-            label={getString('connectors.customSM.inputVariables')}
+            label={getString('common.inputVariables')}
             defaultValueToReset={[]}
             disableTypeSelection
           >
@@ -52,7 +51,7 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
                       <span className={css.label}>Name</span>
                       <span className={css.label}>Type</span>
                       <span className={css.label}>Value</span>
-                      <span className={css.label}>Default</span>
+                      <span className={css.label}>Fixed</span>
                     </div>
                     {template?.environmentVariables?.map((type: any, i: number) => {
                       return (
@@ -83,7 +82,7 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
                             name={`${prefix}templateInputs.environmentVariables[${i}].useAsDefault`}
                             placeholder={getString('typeLabel')}
                             disabled={false}
-                            style={{ margin: 'auto' }}
+                            className={css.fixed}
                           />
                         </div>
                       )

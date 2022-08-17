@@ -17,7 +17,7 @@
   grid-template-columns: 1.5fr 1fr 2fr 0.5fr;
   column-gap: var(--spacing-small);
   margin-bottom: var(--spacing-small);
-  align-items: center;
+  align-items: start;
 
   :global(.bp3-form-group) {
     margin: 0;
@@ -60,4 +60,7 @@
 
 .formGroup {
   width: 100%;
+}
+.fixed {
+  margin: var(--spacing-xsmall) !important;
 }
