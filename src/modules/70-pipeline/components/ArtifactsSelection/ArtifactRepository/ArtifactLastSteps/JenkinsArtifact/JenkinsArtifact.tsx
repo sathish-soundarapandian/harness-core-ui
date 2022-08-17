@@ -77,7 +77,7 @@ function FormComponent({
     branch
   }
 
-  const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.label)
+  const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value || prevStepData?.identifier)
 
   const {
     refetch: refetchJobs,
@@ -85,7 +85,7 @@ function FormComponent({
     loading: fetchingJobs,
     error: fetchingJobsError
   } = useGetJobDetailsForJenkins({
-    lazy: true,
+    lazy: getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.RUNTIME,
     queryParams: {
       ...commonParams,
       connectorRef: connectorRefValue?.toString()

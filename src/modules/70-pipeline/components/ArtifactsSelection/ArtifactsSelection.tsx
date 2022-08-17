@@ -47,6 +47,7 @@ import {
   buildAzurePayload,
   buildDockerPayload,
   buildGcpPayload,
+  buildJenkinsPayload,
   buildNexusPayload
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
@@ -61,6 +62,7 @@ import StepArtifactoryAuthentication from '@connectors/components/CreateConnecto
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import AzureAuthentication from '@connectors/components/CreateConnector/AzureConnector/StepAuth/AzureAuthentication'
 import { useCache } from '@common/hooks/useCache'
+import StepJenkinsAuthentication from '@connectors/components/CreateConnector/JenkinsConnector/StepAuth/StepJenkinsAuthentication'
 import ArtifactWizard from './ArtifactWizard/ArtifactWizard'
 import { DockerRegistryArtifact } from './ArtifactRepository/ArtifactLastSteps/DockerRegistryArtifact/DockerRegistryArtifact'
 import { ECRArtifact } from './ArtifactRepository/ArtifactLastSteps/ECRArtifact/ECRArtifact'
@@ -597,6 +599,18 @@ export default function ArtifactsSelection({
             <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
             <AzureAuthentication name={getString('details')} {...authenticationStepProps} />
             <DelegateSelectorStep buildPayload={buildAzurePayload} {...delegateStepProps} />
+            <VerifyOutOfClusterDelegate
+              type={ArtifactToConnectorMap[selectedArtifact]}
+              {...verifyOutofClusterDelegateProps}
+            />
+          </StepWizard>
+        )
+      case ENABLED_ARTIFACT_TYPES.Jenkins:
+        return (
+          <StepWizard title={stepWizardTitle}>
+            <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
+            <StepJenkinsAuthentication name={getString('details')} {...authenticationStepProps} />
+            <DelegateSelectorStep buildPayload={buildJenkinsPayload} {...delegateStepProps} />
             <VerifyOutOfClusterDelegate
               type={ArtifactToConnectorMap[selectedArtifact]}
               {...verifyOutofClusterDelegateProps}
