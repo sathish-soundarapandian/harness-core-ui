@@ -106,6 +106,10 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
   const [regions, setRegions] = useState<SelectOption[]>([])
 
   const [tags, setTags] = useState<SelectOption[]>([])
+  const [canTagsHaveFixedValue, setCanTagsHaveFixedValue] = useState(
+    getMultiTypeFromValue(initialValues.region) === MultiTypeInputType.FIXED &&
+      getMultiTypeFromValue(initialValues.connectorRef) === MultiTypeInputType.FIXED
+  )
 
   const parsedInitialValues = useMemo(() => {
     const initials = {
@@ -115,18 +119,28 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
       set(initials, 'sshKey', get(initialValues, 'credentialsRef', ''))
     }
     if (initialValues.region) {
-      set(initials, 'region', { label: initialValues.region, value: initialValues.region })
+      if (getMultiTypeFromValue(initialValues.region) === MultiTypeInputType.FIXED) {
+        set(initials, 'region', { label: initialValues.region, value: initialValues.region })
+      } else {
+        set(initials, 'region', initialValues.region)
+      }
     }
     const initialTags = get(initialValues, 'awsInstanceFilter.tags', false)
-    if (initialTags) {
-      set(
-        initials,
-        'tags',
-        Object.entries(initialTags).map(entry => ({
-          value: entry[0],
-          label: entry[1]
-        }))
-      )
+    if (canTagsHaveFixedValue && initialTags) {
+      if (getMultiTypeFromValue(initialTags) === MultiTypeInputType.FIXED) {
+        set(
+          initials,
+          'tags',
+          Object.entries(initialTags).map(entry => ({
+            value: entry[0],
+            label: entry[1]
+          }))
+        )
+      } else {
+        set(initials, 'tags', initialTags)
+      }
+    } else {
+      set(initials, 'tags', '<+input>')
     }
     return initials
   }, [
@@ -136,14 +150,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
     initialValues.awsInstanceFilter.tags
   ])
 
-  const {
-    data: regionsData,
-    loading: isRegionsLoading,
-    refetch: refetchRegions,
-    error: regionsError
-  } = useRegionsForAws({
-    lazy: true
-  })
+  const { data: regionsData, loading: isRegionsLoading, error: regionsError } = useRegionsForAws({})
 
   useEffect(() => {
     const regionOptions = Object.entries(get(regionsData, 'data', {})).map(regEntry => ({
@@ -168,13 +175,37 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
     lazy: true
   })
 
-  React.useEffect(() => {
+  useEffect(() => {
     const tagOptions = get(tagsData, 'data', []).map((tagItem: string) => ({
       value: tagItem,
       label: tagItem
     }))
     setTags(tagOptions)
   }, [tagsData])
+
+  const refetchTagsValues = (values: SshWinRmAwsInfrastructure) => {
+    if (
+      values.region &&
+      getMultiTypeFromValue(values.region) === MultiTypeInputType.FIXED &&
+      values.connectorRef &&
+      getMultiTypeFromValue(getValue(values.connectorRef)) === MultiTypeInputType.FIXED
+    ) {
+      formikRef.current?.setFieldValue('tags', [])
+      refetchTags({
+        queryParams: {
+          accountIdentifier: accountId,
+          projectIdentifier,
+          orgIdentifier,
+          region: get(values, 'region', ''),
+          awsConnectorRef: getValue(values.connectorRef)
+        }
+      })
+    }
+  }
+
+  useEffect(() => {
+    refetchTagsValues(initialValues)
+  }, [])
 
   return (
     <Layout.Vertical spacing="medium">
@@ -194,16 +225,21 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
               region: typeof value.region === 'string' ? value.region : get(value, 'region.value', ''),
               tags: value.tags
             }
-            const awsTags = (value.tags || value.awsInstanceFilter.tags).reduce(
-              (prevValue: object, tag: { label: string; value: string }) => {
-                return {
-                  ...prevValue,
-                  [tag.value]: tag.label
-                }
-              },
-              {}
-            )
-            set(data, 'awsInstanceFilter.tags', awsTags)
+            if (value.tags && getMultiTypeFromValue(value.tags) === MultiTypeInputType.FIXED) {
+              const awsTags = (value.tags || value.awsInstanceFilter.tags).reduce(
+                (prevValue: object, tag: { label: string; value: string }) => {
+                  return {
+                    ...prevValue,
+                    [tag.value]: tag.label
+                  }
+                },
+                {}
+              )
+              set(data, 'awsInstanceFilter.tags', awsTags)
+            } else if (getMultiTypeFromValue(value.tags) === MultiTypeInputType.RUNTIME) {
+              set(data, 'awsInstanceFilter.tags', value.tags)
+            }
+
             delayedOnUpdate(data as SshWinRmAwsInfrastructure)
           }}
           onSubmit={noop}
@@ -260,44 +296,53 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                             })
                             /* istanbul ignore next */
                             formikRef.current?.setFieldValue('region', undefined)
+                            refetchTagsValues(formik.values)
                           }
+                          setCanTagsHaveFixedValue(
+                            getMultiTypeFromValue(formik.values.region) === MultiTypeInputType.FIXED &&
+                              getMultiTypeFromValue(item.record?.identifier) === MultiTypeInputType.FIXED
+                          )
                         }
                       }
                     />
                   </Layout.Vertical>
                 </Layout.Vertical>
-                <FormInput.MultiTypeInput
-                  name="region"
-                  className={`${css.inputWidth}`}
-                  selectItems={regions}
-                  placeholder={isRegionsLoading ? getString('loading') : getString('pipeline.regionPlaceholder')}
-                  label={getString('regionLabel')}
-                  multiTypeInputProps={{
-                    allowableTypes,
-                    expressions,
-                    className: 'regionId-select',
-                    onFocus: () => {
-                      refetchRegions()
-                    },
-                    onChange: /* istanbul ignore next */ option => {
-                      const { value } = option as SelectOption
-                      if (value) {
-                        formik.setFieldValue('tags', [])
-                        formik.setFieldValue('region', option)
+                <Layout.Vertical>
+                  <FormInput.MultiTypeInput
+                    name="region"
+                    className={`${css.inputWidth}`}
+                    selectItems={regions}
+                    placeholder={isRegionsLoading ? getString('loading') : getString('pipeline.regionPlaceholder')}
+                    label={getString('regionLabel')}
+                    multiTypeInputProps={{
+                      allowableTypes,
+                      expressions,
+                      className: 'regionId-select',
+                      onChange: /* istanbul ignore next */ option => {
+                        const { value } = option as SelectOption
+                        if (value) {
+                          formik.setFieldValue('tags', undefined)
+                          formik.setFieldValue('region', option)
+                          refetchTagsValues(formik.values)
+                        }
+                        setCanTagsHaveFixedValue(
+                          getMultiTypeFromValue(value as string) === MultiTypeInputType.FIXED &&
+                            getMultiTypeFromValue(getValue(formik.values.connectorRef)) === MultiTypeInputType.FIXED
+                        )
+                      },
+                      selectProps: {
+                        items: regions,
+                        noResults: (
+                          <Text padding={'small'}>
+                            {isRegionsLoading
+                              ? getString('loading')
+                              : get(regionsError, errorMessage, null) || getString('pipeline.ACR.subscriptionError')}
+                          </Text>
+                        )
                       }
-                    },
-                    selectProps: {
-                      items: regions,
-                      noResults: (
-                        <Text padding={'small'}>
-                          {isRegionsLoading
-                            ? getString('loading')
-                            : get(regionsError, errorMessage, null) || getString('pipeline.ACR.subscriptionError')}
-                        </Text>
-                      )
-                    }
-                  }}
-                />
+                    }}
+                  />
+                </Layout.Vertical>
                 <>
                   <Layout.Horizontal>
                     <FormInput.MultiSelectTypeInput
@@ -307,6 +352,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                       className={`tags-select ${css.inputWidth}`}
                       placeholder={isTagsLoading ? getString('loading') : getString('tagsLabel')}
                       multiSelectTypeInputProps={{
+                        placeholder: isTagsLoading ? getString('loading') : getString('tagsLabel'),
                         onFocus: () => {
                           if (
                             getMultiTypeFromValue(formik.values.region) === MultiTypeInputType.FIXED &&
@@ -322,7 +368,9 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                             refetchTags({ queryParams })
                           }
                         },
-                        allowableTypes,
+                        allowableTypes: canTagsHaveFixedValue
+                          ? [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+                          : [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
                         expressions,
                         onChange: /* istanbul ignore next */ selectedOptions => {
                           formik.setFieldValue('tags', selectedOptions)

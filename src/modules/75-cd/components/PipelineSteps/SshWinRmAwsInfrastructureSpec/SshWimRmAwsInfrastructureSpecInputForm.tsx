@@ -18,7 +18,7 @@ import {
 import { useParams } from 'react-router-dom'
 import { get, defaultTo, set } from 'lodash-es'
 import cx from 'classnames'
-import { SshWinRmAwsInfrastructure, useRegionsForAws, useTags } from 'services/cd-ng'
+import { SshWinRmAwsInfrastructure, useRegionsForAws, useTagsV2 } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'
 import { Connectors } from '@connectors/constants'
@@ -79,6 +79,16 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
     [initialValues.credentialsRef, allValues?.credentialsRef]
   )
 
+  const environmentRef = useMemo(
+    () => defaultTo(initialValues.environmentRef, allValues?.environmentRef),
+    [initialValues.environmentRef, allValues?.environmentRef]
+  )
+
+  const infrastructureRef = useMemo(
+    () => defaultTo(initialValues.infrastructureRef, allValues?.infrastructureRef),
+    [initialValues.infrastructureRef, allValues?.infrastructureRef]
+  )
+
   React.useEffect(() => {
     if (renderCount) {
       set(initialValues, 'region', '')
@@ -86,12 +96,6 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
       onUpdate?.(initialValues)
     }
   }, [connectorRef, credentialsRef])
-
-  const queryParams = {
-    accountIdentifier: accountId,
-    orgIdentifier,
-    projectIdentifier
-  }
 
   const {
     data: regionsData,
@@ -114,11 +118,15 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
     data: tagsData,
     refetch: refetchTags,
     loading: loadingTags
-  } = useTags({
+  } = useTagsV2({
     queryParams: {
-      ...queryParams,
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
       region: get(initialValues, 'region', ''),
-      awsConnectorRef: get(initialValues, 'connectorRef', '')
+      awsConnectorRef: get(initialValues, 'connectorRef', ''),
+      envId: environmentRef,
+      infraDefinitionId: infrastructureRef
     },
     lazy: true
   })
