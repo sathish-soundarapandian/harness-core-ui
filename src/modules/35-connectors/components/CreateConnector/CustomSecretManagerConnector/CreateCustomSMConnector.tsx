@@ -50,7 +50,6 @@ const CreateCustomSMConnector: React.FC<CreateConnectorModalProps> = props => {
       />
       <CustomSMConfigStep
         name={getString('details')}
-        onConnectorCreated={props.onSuccess}
         hideModal={props.onClose}
         getTemplate={props.getTemplate as (data: GetTemplateProps) => Promise<GetTemplateResponse>}
         {...commonProps}

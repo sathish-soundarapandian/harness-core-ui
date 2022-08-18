@@ -9,16 +9,18 @@ import React from 'react'
 import { FieldArray } from 'formik'
 import { isArray, isEmpty } from 'lodash-es'
 import { AllowedTypes, FormInput, SelectOption } from '@harness/uicore'
-
+import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import css from './ScriptVariablesRuntimeInput.module.scss'
 
 interface InputOutputVariablesInputSetProps {
   allowableTypes: AllowedTypes
+  // todo: to change with type in BE
   template?: any
   path?: string
   readonly?: boolean
+  enableFixed?: boolean
 }
 
 export const scriptInputType: SelectOption[] = [
@@ -27,7 +29,7 @@ export const scriptInputType: SelectOption[] = [
 ]
 
 export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetProps): React.ReactElement {
-  const { allowableTypes, readonly, template, path } = props
+  const { allowableTypes, readonly, template, path, enableFixed = false } = props
 
   const { getString } = useStrings()
   const prefix = isEmpty(path) ? '' : `${path}.`
@@ -47,15 +49,26 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
               render={() => {
                 return (
                   <div className={css.panel}>
-                    <div className={css.environmentVarHeader}>
+                    <div
+                      className={cx(css.environmentVarHeader, {
+                        [css.gridFourColumn]: enableFixed,
+                        [css.gridThreeColumn]: !enableFixed
+                      })}
+                    >
                       <span className={css.label}>Name</span>
                       <span className={css.label}>Type</span>
                       <span className={css.label}>Value</span>
-                      <span className={css.label}>Fixed</span>
+                      {enableFixed ? <span className={css.label}>Fixed</span> : null}
                     </div>
                     {template?.environmentVariables?.map((type: any, i: number) => {
                       return (
-                        <div className={css.environmentVarHeader} key={type.value}>
+                        <div
+                          className={cx(css.environmentVarHeader, {
+                            [css.gridFourColumn]: enableFixed,
+                            [css.gridThreeColumn]: !enableFixed
+                          })}
+                          key={type.value}
+                        >
                           <FormInput.Text
                             name={`${prefix}templateInputs.environmentVariables[${i}].name`}
                             placeholder={getString('name')}
@@ -77,13 +90,15 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
                             label=""
                             disabled={readonly}
                           />
-                          <FormInput.CheckBox
-                            label=""
-                            name={`${prefix}templateInputs.environmentVariables[${i}].useAsDefault`}
-                            placeholder={getString('typeLabel')}
-                            disabled={false}
-                            className={css.fixed}
-                          />
+                          {enableFixed ? (
+                            <FormInput.CheckBox
+                              label=""
+                              name={`${prefix}templateInputs.environmentVariables[${i}].useAsDefault`}
+                              placeholder={getString('typeLabel')}
+                              disabled={false}
+                              className={css.fixed}
+                            />
+                          ) : null}
                         </div>
                       )
                     })}

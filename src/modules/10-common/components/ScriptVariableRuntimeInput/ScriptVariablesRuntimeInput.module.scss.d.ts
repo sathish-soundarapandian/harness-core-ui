@@ -11,6 +11,8 @@ declare const styles: {
   readonly environmentVarHeader: string
   readonly fixed: string
   readonly formGroup: string
+  readonly gridFourColumn: string
+  readonly gridThreeColumn: string
   readonly label: string
   readonly minConfigBtn: string
   readonly outputVarHeader: string

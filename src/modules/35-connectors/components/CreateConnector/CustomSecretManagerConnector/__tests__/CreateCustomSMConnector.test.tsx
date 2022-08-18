@@ -46,11 +46,54 @@ jest.mock('services/cd-ng', () => ({
   useCreatePRV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() }))
 }))
 
+jest.mock('services/template-ng', () => ({
+  getTemplateInputSetYamlPromise: jest.fn().mockImplementation(() =>
+    Promise.resolve({
+      status: 'SUCCESS',
+      data: 'environmentVariables:\n- name: "key"\n  type: "String"\n  value: "<+input>"\n- name: "engine"\n  type: "String"\n  value: "<+input>"\n',
+      metaData: null,
+      correlationId: '9a4ce344-ac48-42e3-9466-ffdca5677d61'
+    })
+  )
+}))
+
+const getTemplateMock = () =>
+  Promise.resolve({
+    template: {
+      accountId: 'kmpySmUISimoRrJL6NL73w',
+      orgIdentifier: 'default',
+      projectIdentifier: 'Templates_Variable',
+      identifier: 'New_SecretManager_Template_Name_1',
+      name: 'Template Name 1',
+      description: '',
+      tags: {},
+      yaml: 'template:\n  name: Template Name 1\n  identifier: New_SecretManager_Template_Name_1\n  versionLabel: "2"\n  type: SecretManager\n  projectIdentifier: Templates_Variable\n  orgIdentifier: default\n  tags: {}\n  spec:\n    executionTarget: {}\n    shell: Bash\n    source:\n      spec:\n        script: |-\n          curl -o secret.json -X GET https://vaultqa.harness.io/v1/<+spec.environmentVariables.engine>/shreyas/<+spec.environmentVariables.secretName> -H \'X-Vault-Token: <+secrets.getValue("vaulttoken")>\'\n          secret=$(jq -r \'.data."<+spec.environmentVariables.key>"\' secret.json)\n        type: Inline\n    onDelegate: true\n    environmentVariables:\n      - name: key\n        type: String\n        value: <+input>\n      - name: engine\n        type: String\n        value: <+input>\n    outputVariables: []\n',
+      versionLabel: '2',
+      templateEntityType: 'SecretManager',
+      templateScope: 'project',
+      version: 4,
+      gitDetails: {
+        objectId: null,
+        branch: null,
+        repoIdentifier: null,
+        rootFolder: null,
+        filePath: null,
+        repoName: null,
+        commitId: null,
+        fileUrl: null
+      },
+      entityValidityDetails: { valid: true, invalidYaml: null },
+      lastUpdatedAt: 1660213211337,
+      createdAt: 1660211466634,
+      stableTemplate: true
+    }
+  })
+
 describe('CreateCustomSMConnector wizard', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
-  test('CreateCustomSMConnectorstep one', async () => {
+  test('CreateCustomSMConnector step one', async () => {
     const { container } = render(
       <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
         <CreateCustomSMConnector
@@ -69,14 +112,14 @@ describe('CreateCustomSMConnector wizard', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('Creating Github step one and step two for HTTPS', async () => {
+  test('CreateCustomSMConnector step two', async () => {
     const { container, getByText } = render(
       <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
         <CreateCustomSMConnector
           {...commonProps}
           isEditMode={false}
           connectorInfo={undefined}
-          getTemplate={jest.fn()}
+          getTemplate={getTemplateMock as any}
         />
       </TestWrapper>
     )
@@ -89,12 +132,26 @@ describe('CreateCustomSMConnector wizard', () => {
       clickSubmit(container)
     })
     await waitFor(() => getByText('Shell Script'))
-
-    await act(async () => {
+    // step 2 validation check
+    act(() => {
       clickSubmit(container)
     })
 
     await waitFor(() => getByText('connectors.customSM.validation.template'))
+    const selectTemplateBtn = getByText('connectors.customSM.selectTemplate')
+    act(() => {
+      fireEvent.click(selectTemplateBtn)
+    })
+    // step 2
+    await waitFor(() => getByText('common.inputVariables'))
+
+    expect(container.querySelector('input[value="engine"]')).toBeDefined()
+    expect(container.querySelector('input[value="key"]')).toBeDefined()
     expect(container).toMatchSnapshot()
+    const backButton = getByText('back')
+    act(() => {
+      fireEvent.click(backButton)
+    })
+    await waitFor(() => getByText('name'))
   })
 })

@@ -180,6 +180,7 @@ testConnectionStep:
     sumologic: Validating Sumologic authentication and permissions
     gcpKms: Validating GCP Key Management Service authentication and permissions
     testingURLReachability: Testing reachability to the URL
+    customSM: Validating Custom Secret Manager authentication and permissions
 validation:
   serviceNowUrl: 'ServiceNow URL is required.'
   personalAccessToken: Personal Access Token is required
