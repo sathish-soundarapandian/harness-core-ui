@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
 import type { GetDataError } from 'restful-react'
-import { defaultTo, isUndefined, memoize } from 'lodash-es'
+import { defaultTo, get, isUndefined, memoize } from 'lodash-es'
 
 import { parse } from '@common/utils/YamlHelperMethods'
 import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
@@ -44,6 +44,7 @@ export interface UseInputSetsProps {
   executionInputSetTemplateYaml: string
   executionView?: boolean
   executionIdentifier?: string
+  setSelectedInputSets: Dispatch<SetStateAction<InputSetValue[] | undefined>>
 }
 
 export interface UseInputSetsReturn {
@@ -57,6 +58,7 @@ export interface UseInputSetsReturn {
   modules?: string[]
   error: GetDataError<Failure | Error> | null
   refetch(): Promise<void> | undefined
+  invalidInputSetReferences: string[]
 }
 
 export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
@@ -73,7 +75,8 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     resolvedPipeline,
     executionInputSetTemplateYaml,
     executionView,
-    executionIdentifier
+    executionIdentifier,
+    setSelectedInputSets
   } = props
 
   const shouldFetchInputSets = !rerunInputSetYaml && Array.isArray(inputSetSelected) && inputSetSelected.length > 0
@@ -125,7 +128,15 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
   })
 
   const [isInputSetApplied, setIsInputSetApplied] = useState(false)
+  const [invalidInputSetReferences, setInvalidInputSetReferences] = useState<string[]>([])
   const hasRuntimeInputs = !!inputSetYamlResponse?.data?.inputSetTemplateYaml
+
+  useEffect(() => {
+    if (inputSetData?.data?.errorResponse) {
+      setSelectedInputSets([])
+    }
+    setInvalidInputSetReferences(get(inputSetData?.data, 'inputSetErrorWrapper.invalidInputSetReferences', []))
+  }, [inputSetData?.data, inputSetData?.data?.errorResponse])
 
   const inputSet = useMemo((): Pipeline => {
     const shouldUseDefaultValues = isUndefined(executionIdentifier)
@@ -204,6 +215,7 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     hasInputSets: !!inputSetYamlResponse?.data?.hasInputSets,
     isInputSetApplied,
     inputSetYamlResponse,
-    refetch
+    refetch,
+    invalidInputSetReferences
   }
 }

@@ -67,7 +67,8 @@ export function InputSetSelector({
   const [selectedInputSets, setSelectedInputSets] = React.useState<InputSetValue[]>(value || [])
   const [openInputSetsList, setOpenInputSetsList] = useState(false)
   const { getString } = useStrings()
-  const { showSuccess, showWarning } = useToaster()
+  const { showError, showSuccess } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
 
   const { projectIdentifier, orgIdentifier, accountId } = useParams<{
     projectIdentifier: string
@@ -122,12 +123,9 @@ export function InputSetSelector({
       setOpenInputSetsList(false)
       showSuccess('Input Set applied successfully')
     } else if (invalidInputSetReferences && invalidInputSetReferences.length > 0 && openInputSetsList) {
-      showWarning('Invalid Input Set found in Selected Input Sets')
+      showError('Invalid Input Set found in Selected Input Sets')
     }
   }, [invalidInputSetReferences])
-
-  const { showError } = useToaster()
-  const { getRBACErrorMessage } = useRBACError()
 
   const onCheckBoxHandler = React.useCallback(
     (

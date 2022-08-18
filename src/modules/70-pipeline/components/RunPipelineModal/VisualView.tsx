@@ -46,6 +46,8 @@ export interface VisualViewProps {
   loading?: boolean
   loadingMergeInputSetUpdate: boolean
   selectedStageData: StageSelectionData
+  invalidInputSetReferences: string[]
+  loadingInputSets: boolean
 }
 
 export default function VisualView(props: VisualViewProps): React.ReactElement {
@@ -68,7 +70,9 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
     setSelectedInputSets,
     loading,
     loadingMergeInputSetUpdate,
-    selectedStageData
+    selectedStageData,
+    invalidInputSetReferences,
+    loadingInputSets
   } = props
   const { getString } = useStrings()
 
@@ -90,7 +94,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
   }
 
   const showPipelineInputSetForm = (): boolean => {
-    return !!(existingProvide === 'provide' || selectedInputSets?.length || executionView)
+    return !!(existingProvide === 'provide' || selectedInputSets?.length || executionView) && !loadingInputSets
   }
 
   const showVoidPipelineInputSetForm = (): boolean => {
@@ -151,6 +155,8 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
                             setSelectedInputSets(inputsets)
                           }}
                           value={selectedInputSets}
+                          invalidInputSetReferences={invalidInputSetReferences}
+                          loadingMergeInputSets={loadingInputSets}
                         />
                       </GitSyncStoreProvider>
                     ) : null}

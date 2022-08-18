@@ -236,7 +236,8 @@ function RunPipelineFormBasic({
     error: inputSetsError,
     isInputSetApplied,
     refetch: getTemplateFromPipeline,
-    hasRuntimeInputs
+    hasRuntimeInputs,
+    invalidInputSetReferences
   } = useInputSets({
     accountId,
     projectIdentifier,
@@ -250,7 +251,8 @@ function RunPipelineFormBasic({
     inputSetSelected: selectedInputSets,
     resolvedPipeline,
     executionInputSetTemplateYaml,
-    executionView
+    executionView,
+    setSelectedInputSets
   })
 
   const { mutate: runPipeline, loading: runLoading } = usePostPipelineExecuteWithInputSetYaml({
@@ -654,7 +656,6 @@ function RunPipelineFormBasic({
       runStageLoading ||
       reRunLoading ||
       reRunStagesLoading ||
-      loadingInputSets ||
       loadingValidateTemplateInputs
     )
   }
@@ -779,6 +780,8 @@ function RunPipelineFormBasic({
                     loading={false}
                     loadingMergeInputSetUpdate={false}
                     selectedStageData={selectedStageData}
+                    invalidInputSetReferences={invalidInputSetReferences}
+                    loadingInputSets={loadingInputSets}
                   />
                 ) : (
                   <div className={css.editor}>
