@@ -36,7 +36,7 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
 
   return (
     <>
-      {isArray(template?.environmentVariables) && template?.environmentVariables ? (
+      {template?.environmentVariables && isArray(template.environmentVariables) ? (
         <div className={css.formGroup}>
           <MultiTypeFieldSelector
             name="templateInputs.environmentVariables"
@@ -60,7 +60,7 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
                       <span className={css.label}>Value</span>
                       {enableFixed ? <span className={css.label}>Fixed</span> : null}
                     </div>
-                    {template?.environmentVariables?.map((type: any, i: number) => {
+                    {template.environmentVariables.map((type: any, i: number) => {
                       return (
                         <div
                           className={cx(css.environmentVarHeader, {
