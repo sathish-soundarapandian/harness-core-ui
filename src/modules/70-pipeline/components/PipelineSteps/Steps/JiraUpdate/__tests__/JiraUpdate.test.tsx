@@ -346,7 +346,7 @@ describe('Jira Update process form data tests', () => {
             value: { label: 'vb2', value: 'vb2' }
           }
         ],
-        selectedFields: [
+        selectedOptionalFields: [
           {
             name: 'f2',
             value: { label: 'vb2', value: 'vb2' },
@@ -429,7 +429,7 @@ describe('Jira Update process form data tests', () => {
             value: '<+a.b>'
           }
         ],
-        selectedFields: [
+        selectedOptionalFields: [
           {
             name: 'f2',
             value: '<+x.y>',

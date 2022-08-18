@@ -11,7 +11,7 @@ import type { JiraUpdateData } from './types'
 
 export const processFieldsForSubmit = (values: JiraUpdateData): JiraCreateFieldType[] => {
   const toReturn: JiraCreateFieldType[] = []
-  values.spec.selectedFields?.forEach((field: JiraFieldNGWithValue) => {
+  values.spec.selectedOptionalFields?.forEach((field: JiraFieldNGWithValue) => {
     const name = field.name
     const value =
       typeof field.value === 'string' || typeof field.value === 'number'

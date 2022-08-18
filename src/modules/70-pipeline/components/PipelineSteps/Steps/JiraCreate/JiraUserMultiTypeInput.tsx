@@ -48,6 +48,7 @@ export function JiraUserMultiTypeInput({ selectedField, props, expressions, form
     debounce: 300
   })
   const handleQueryChange = (query: string) => {
+    /* istanbul ignore next */
     return query ? setSearchTerm(query) : searchTerm
   }
   return (

@@ -29,7 +29,7 @@ export interface JiraUpdateData extends StepElementConfig {
       transitionName: string
     }
     fields: JiraCreateFieldType[]
-    selectedFields?: JiraFieldNGWithValue[]
+    selectedOptionalFields?: JiraFieldNGWithValue[]
     delegateSelectors?: string[]
   }
 }

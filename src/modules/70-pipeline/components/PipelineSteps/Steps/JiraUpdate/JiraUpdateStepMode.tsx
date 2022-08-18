@@ -115,8 +115,8 @@ function FormContent({
     } else if (connectorRefFixedValue !== undefined) {
       // Undefined check is needed so that form is not set to dirty as soon as we open
       // This means we've cleared the value or marked runtime/expression
-      // Flush the selected additional fields, and move everything to key value fields
-      formik.setFieldValue('spec.selectedFields', [])
+      // Flush the selected optional fields, and move everything to key value fields
+      formik.setFieldValue('spec.selectedOptionalFields', [])
     }
   }, [connectorRefFixedValue])
 
@@ -160,16 +160,16 @@ function FormContent({
           selectedProjectKey={selectedProjectKey}
           selectedIssueTypeKey={selectedIssueTypeKey}
           projectOptions={projectOptions}
-          selectedFields={formik.values.spec.selectedFields}
+          selectedFields={formik.values.spec.selectedOptionalFields}
           jiraType={jiraType}
           addSelectedFields={(fieldsToBeAdded: JiraFieldNG[], selectedProjectKeyInForm, selectedIssueTypeKeyInForm) => {
             setSelectedProjectKey(selectedProjectKeyInForm)
             setSelectedIssueTypeKey(selectedIssueTypeKeyInForm)
             formik.setFieldValue(
-              'spec.selectedFields',
+              'spec.selectedOptionalFields',
               getSelectedFieldsToBeAddedInForm(
                 fieldsToBeAdded,
-                formik.values.spec.selectedFields,
+                formik.values.spec.selectedOptionalFields,
                 formik.values.spec.fields
               )
             )
@@ -178,7 +178,7 @@ function FormContent({
           provideFieldList={(fields: JiraCreateFieldType[]) => {
             formik.setFieldValue(
               'spec.fields',
-              getKVFieldsToBeAddedInForm(fields, formik.values.spec.fields, formik.values.spec.selectedFields)
+              getKVFieldsToBeAddedInForm(fields, formik.values.spec.fields, formik.values.spec.selectedOptionalFields)
             )
             hideDynamicFieldsModal()
           }}
@@ -187,7 +187,7 @@ function FormContent({
         />
       </Dialog>
     )
-  }, [projectOptions, connectorRefFixedValue, formik.values.spec.selectedFields, formik.values.spec.fields])
+  }, [projectOptions, connectorRefFixedValue, formik.values.spec.selectedOptionalFields, formik.values.spec.fields])
 
   function AddFieldsButton(): React.ReactElement {
     return (
@@ -392,13 +392,13 @@ function FormContent({
                 )}
               </div>
               <JiraFieldsRenderer
-                selectedFields={formik.values.spec.selectedFields}
+                selectedFields={formik.values.spec.selectedOptionalFields}
                 readonly={readonly}
                 onDelete={(index, selectedField) => {
-                  const selectedFieldsAfterRemoval = formik.values.spec.selectedFields?.filter(
+                  const selectedFieldsAfterRemoval = formik.values.spec.selectedOptionalFields?.filter(
                     (_unused, i) => i !== index
                   )
-                  formik.setFieldValue('spec.selectedFields', selectedFieldsAfterRemoval)
+                  formik.setFieldValue('spec.selectedOptionalFields', selectedFieldsAfterRemoval)
                   const customFields = formik.values.spec.fields?.filter(field => field.name !== selectedField.name)
                   formik.setFieldValue('spec.fields', customFields)
                 }}
