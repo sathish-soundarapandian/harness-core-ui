@@ -2375,6 +2375,7 @@ export interface StringsMap {
   'connectors.testConnectionStep.validationText.azureKeyVault': string
   'connectors.testConnectionStep.validationText.azureRepos': string
   'connectors.testConnectionStep.validationText.bitbucket': string
+  'connectors.testConnectionStep.validationText.customSM': string
   'connectors.testConnectionStep.validationText.datadog': string
   'connectors.testConnectionStep.validationText.docker': string
   'connectors.testConnectionStep.validationText.gcp': string

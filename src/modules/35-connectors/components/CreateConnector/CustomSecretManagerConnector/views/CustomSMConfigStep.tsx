@@ -26,7 +26,7 @@ import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { parse } from 'yaml'
 import type { FormikContextType } from 'formik'
-import type { ConnectorInfoDTO, ConnectorRequestBody, ConnectorConfigDTO, JsonNode } from 'services/cd-ng'
+import type { ConnectorInfoDTO, ConnectorConfigDTO, JsonNode } from 'services/cd-ng'
 
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
@@ -51,7 +51,6 @@ interface StepCustomSMConfigStepProps extends ConnectorInfoDTO {
 }
 
 interface StepCustomSMConfigProps {
-  onConnectorCreated: (data?: ConnectorRequestBody) => void | Promise<void>
   hideModal: () => void
   isEditMode: boolean
   setIsEditMode: (val: boolean) => void
@@ -110,7 +109,9 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
 
   React.useEffect(() => {
     if (isEditMode) {
-      if (connectorInfo) {
+      if (prevStepData?.templateInputs) {
+        setTemplateInputSets(prevStepData.templateInputs)
+      } else if (connectorInfo) {
         setupCustomSMFormData(connectorInfo).then(data => {
           setInitialValues(data as CustomSMFormInterface)
           setTemplateInputSets(data.templateInputs)
@@ -118,7 +119,7 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
       }
       setLoadingFormData(false)
     }
-  }, [isEditMode, connectorInfo])
+  }, [isEditMode, connectorInfo, prevStepData])
 
   const { trackEvent } = useTelemetry()
 
@@ -140,37 +141,40 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
           template.projectIdentifier
         )
       })
-
-      const templateJSON = parse(template.yaml || '')?.template
+      const templateJSON = parse(template.yaml || '').template
       formikProps.setFieldValue('templateJson', templateJSON)
       formikProps.setFieldValue('onDelegate', templateJSON.spec.onDelegate)
 
       try {
         const templateInputYaml = await getTemplateInputSetYamlPromise({
-          templateIdentifier: template?.identifier || '',
+          templateIdentifier: template.identifier || '',
           queryParams: {
-            accountIdentifier: accountId || '',
-            orgIdentifier: template?.orgIdentifier,
-            projectIdentifier: template?.projectIdentifier,
-            versionLabel: template?.versionLabel || ''
+            accountIdentifier: accountId,
+            orgIdentifier: template.orgIdentifier,
+            projectIdentifier: template.projectIdentifier,
+            versionLabel: template.versionLabel || ''
           }
         })
 
         let inputSet: JsonNode = {}
-        if (templateInputYaml && templateInputYaml?.data) {
-          inputSet = parse(templateInputYaml?.data?.replace(/"<\+input>"/g, '""'))
+        if (templateInputYaml.data) {
+          inputSet = parse(templateInputYaml.data?.replace(/"<\+input>"/g, '""'))
           formikProps.setFieldValue('templateInputs', inputSet)
           setTemplateInputSets(inputSet)
         }
 
-        if (
-          templateJSON.spec.onDelegate !== true &&
-          Object.prototype.hasOwnProperty.call(inputSet, 'executionTarget')
-        ) {
-          formikProps.setFieldValue('executionTarget', inputSet.executionTarget)
+        if (templateJSON.spec.onDelegate !== true) {
+          if (!Object.prototype.hasOwnProperty.call(inputSet, 'executionTarget')) {
+            formikProps.setFieldValue('executionTarget', templateJSON.spec.executionTarget)
+          } else {
+            formikProps.setFieldValue('executionTarget', {
+              ...templateJSON.spec.executionTarget,
+              ...inputSet.executionTarget
+            })
+          }
         }
       } catch (e) {
-        modalErrorHandler?.showDanger(getErrorInfoFromErrorObject(e))
+        /* istanbul ignore next */ modalErrorHandler?.showDanger(getErrorInfoFromErrorObject(e))
       }
     }
   }
@@ -222,9 +226,16 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
                       <Layout.Vertical spacing="medium">
                         <RbacButton
                           text={
-                            formikProps.values.template
-                              ? `Selected: ${formikProps.values.template.templateRef}(${formikProps.values.template.versionLabel})`
-                              : getString('connectors.customSM.selectTemplate')
+                            formikProps.values.template ? (
+                              <Layout.Horizontal>
+                                <Text color="white">Selected: </Text>
+                                <Text lineClamp={1} color="white">
+                                  {formikProps.values.template.templateRef}({formikProps.values.template.versionLabel})
+                                </Text>
+                              </Layout.Horizontal>
+                            ) : (
+                              getString('connectors.customSM.selectTemplate')
+                            )
                           }
                           variation={ButtonVariation.PRIMARY}
                           icon="template-library"
