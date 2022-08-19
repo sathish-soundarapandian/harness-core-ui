@@ -55,20 +55,12 @@ type CellType = Renderer<CellProps<PMSPipelineSummaryResponse>>
 export const PipelineNameCell: CellType = ({ row }) => {
   const data = row.original
   const { getString } = useStrings()
-  const { projectIdentifier, orgIdentifier, accountId, module } = useParams<PipelineListPagePathParams>()
-
-  const href = routes.toPipelineStudio({
-    orgIdentifier,
-    projectIdentifier,
-    pipelineIdentifier: data.identifier!,
-    accountId,
-    module
-  })
+  const pathParams = useParams<PipelineListPagePathParams>()
   return (
     <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'start' }}>
       <Layout.Vertical spacing="xsmall" data-testid={data.identifier}>
         <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
-          <Link to={href}>
+          <Link to={routes.toPipelineStudio(getRouteProps(pathParams, data))}>
             <Text
               font={{ size: 'normal' }}
               color={Color.PRIMARY_7}
