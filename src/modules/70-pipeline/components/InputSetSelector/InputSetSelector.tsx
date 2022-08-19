@@ -46,6 +46,7 @@ export interface InputSetSelectorProps {
   hideInpSetBtn?: boolean
   invalidInputSetReferences?: string[]
   loadingMergeInputSets?: boolean
+  isRetryPipelineForm?: boolean
 }
 
 export function InputSetSelector({
@@ -61,7 +62,8 @@ export function InputSetSelector({
   pipeline,
   hideInpSetBtn,
   invalidInputSetReferences,
-  loadingMergeInputSets
+  loadingMergeInputSets,
+  isRetryPipelineForm
 }: InputSetSelectorProps): React.ReactElement {
   const [searchParam, setSearchParam] = React.useState('')
   const [selectedInputSets, setSelectedInputSets] = React.useState<InputSetValue[]>(value || [])
@@ -244,7 +246,7 @@ export function InputSetSelector({
             <PageSpinner className={css.spinner} />
           ) : (
             <Layout.Vertical padding={{ bottom: 'medium' }}>
-              {(loadingInpSets || loadingMergeInputSets) && <PageSpinner />}
+              {(loadingInpSets || (loadingMergeInputSets && !isRetryPipelineForm)) && <PageSpinner />}
               {inputSets && inputSets.length > 0 ? (
                 <>
                   <ul className={cx(Classes.MENU, css.list, { [css.multiple]: inputSets.length > 0 })}>

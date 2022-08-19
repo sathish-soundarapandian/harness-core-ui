@@ -128,7 +128,7 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
   })
 
   const [isInputSetApplied, setIsInputSetApplied] = useState(false)
-  const [invalidInputSetReferences, setInvalidInputSetReferences] = useState<string[]>([])
+  const [invalidInputSetReferences, setInvalidInputSetReferences] = useState<Array<string>>([])
   const hasRuntimeInputs = !!inputSetYamlResponse?.data?.inputSetTemplateYaml
 
   useEffect(() => {

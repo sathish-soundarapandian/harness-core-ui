@@ -209,7 +209,7 @@ function WebhookPipelineInputPanelForm({
     typeof ciCodebaseBuildValue === 'object' && !isEmpty(ciCodebaseBuildValue)
   )
   const [mergingInputSets, setMergingInputSets] = useState<boolean>(false)
-  const [invalidInputSetIds, setInvalidInputSetIds] = useState<string[]>([])
+  const [invalidInputSetIds, setInvalidInputSetIds] = useState<Array<string>>([])
 
   const { orgIdentifier, accountId, projectIdentifier, pipelineIdentifier, triggerIdentifier } = useParams<{
     projectIdentifier: string
@@ -437,7 +437,7 @@ function WebhookPipelineInputPanelForm({
         } else if (data?.data?.errorResponse) {
           setSelectedInputSets([])
         }
-        setInvalidInputSetIds(defaultTo(data?.data?.inputSetErrorWrapper?.invalidInputSetReferences, []))
+        setInvalidInputSetIds(get(data?.data, 'inputSetErrorWrapper.invalidInputSetReferences', []))
       }
       setMergingInputSets(true)
       try {
