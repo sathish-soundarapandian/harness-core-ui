@@ -62,9 +62,9 @@ export function initializeSelectedMetricsMap(
             {
               identifier: defaultSelectedMetricName,
               metricSelector: '',
-              sli: false,
-              healthScore: false,
-              continuousVerification: false,
+              sli: true,
+              healthScore: true,
+              continuousVerification: true,
               metricName: defaultSelectedMetricName,
               isNew: true
             }
@@ -90,9 +90,9 @@ export function updateSelectedMetricsMap(
       metricName: updatedMetric,
       identifier: updatedMetric,
       isNew: true,
-      sli: false,
-      continuousVerification: false,
-      healthScore: false,
+      sli: true,
+      continuousVerification: true,
+      healthScore: true,
       groupName: { label: '', value: '' },
       metricSelector: ''
     })
