@@ -45,6 +45,7 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
             disableTypeSelection
           >
             <FieldArray
+              key="secretmanager-inputs"
               name="templateInputs.environmentVariables"
               render={() => {
                 return (
@@ -67,7 +68,7 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
                             [css.gridFourColumn]: enableFixed,
                             [css.gridThreeColumn]: !enableFixed
                           })}
-                          key={type.value}
+                          key={`${type.name}${type.type}${type.value}`}
                         >
                           <FormInput.Text
                             name={`${prefix}templateInputs.environmentVariables[${i}].name`}
