@@ -294,11 +294,12 @@ describe('Validate DynatraceHealthSource Utils', () => {
         value: 'mockGroupName'
       },
       query: 'avg:system.cpu.user{version}.rollup(avg, 60)',
-      sli: false,
+      sli: true,
       showCustomMetric: false,
       metricName: 'mapped_metric_1',
       failFastThresholds: [],
-      ignoreThresholds: []
+      ignoreThresholds: [],
+      healthScore: true
     })
 
     const selectedMetric = MAPPED_METRICS_LIST_MOCK.get('mapped_metric_2')
