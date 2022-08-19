@@ -157,7 +157,7 @@ export interface ExecutionTarget {
 }
 
 export interface CustomSMFormInterface {
-  template: TemplateSummaryResponse | undefined
+  template: (TemplateSummaryResponse & { templateRef: string }) | undefined
   templateInputs: JsonNode
   onDelegate: boolean
   executionTarget: ExecutionTarget

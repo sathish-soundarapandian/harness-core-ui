@@ -129,10 +129,10 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
   })
 
   const [templateInputSets, setTemplateInputSets] = React.useState<JsonNode>()
-  const onUseTemplate = async (formikProps: FormikContextType<CustomSMFormInterface>) => {
+  const onUseTemplate = async (formik: FormikContextType<CustomSMFormInterface>) => {
     if (getTemplate) {
       const { template } = await getTemplate({ templateType: 'SecretManager' })
-      formikProps.setFieldValue('template', {
+      formik.setFieldValue('template', {
         ...template,
         versionLabel: template.versionLabel,
         templateRef: getRefFromIdAndScopeParams(
@@ -142,8 +142,8 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
         )
       })
       const templateJSON = parse(template.yaml || '').template
-      formikProps.setFieldValue('templateJson', templateJSON)
-      formikProps.setFieldValue('onDelegate', templateJSON.spec.onDelegate)
+      formik.setFieldValue('templateJson', templateJSON)
+      formik.setFieldValue('onDelegate', templateJSON.spec.onDelegate)
 
       try {
         const templateInputYaml = await getTemplateInputSetYamlPromise({
@@ -159,15 +159,18 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
         let inputSet: JsonNode = {}
         if (templateInputYaml.data) {
           inputSet = parse(templateInputYaml.data.replace(/"<\+input>"/g, '""'))
-          formikProps.setFieldValue('templateInputs', inputSet)
+          formik.setFieldValue('templateInputs', inputSet)
           setTemplateInputSets(inputSet)
+        } else {
+          formik.setFieldValue('templateInputs', { environmentVariables: templateJSON.spec.environmentVariables })
+          setTemplateInputSets({ environmentVariables: templateJSON.spec.environmentVariables })
         }
 
         if (templateJSON.spec.onDelegate !== true) {
           if (!Object.prototype.hasOwnProperty.call(inputSet, 'executionTarget')) {
-            formikProps.setFieldValue('executionTarget', templateJSON.spec.executionTarget)
+            formik.setFieldValue('executionTarget', templateJSON.spec.executionTarget)
           } else {
-            formikProps.setFieldValue('executionTarget', {
+            formik.setFieldValue('executionTarget', {
               ...templateJSON.spec.executionTarget,
               ...inputSet.executionTarget
             })
@@ -221,16 +224,16 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
                 <FormInput.CustomRender
                   name="template"
                   label="Shell Script"
-                  render={formikProps => {
+                  render={() => {
                     return (
                       <Layout.Vertical spacing="medium">
                         <RbacButton
                           text={
-                            formikProps.values.template ? (
+                            formik.values.template ? (
                               <Layout.Horizontal>
                                 <Text color="white">Selected: </Text>
                                 <Text lineClamp={1} color="white">
-                                  {formikProps.values.template.templateRef}({formikProps.values.template.versionLabel})
+                                  {formik.values.template.templateRef}({formik.values.template.versionLabel})
                                 </Text>
                               </Layout.Horizontal>
                             ) : (
@@ -240,7 +243,7 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
                           variation={ButtonVariation.PRIMARY}
                           icon="template-library"
                           style={{ width: 'fit-content', maxWidth: '400px' }}
-                          onClick={() => onUseTemplate(formikProps)}
+                          onClick={() => onUseTemplate(formik)}
                         />
                       </Layout.Vertical>
                     )
@@ -249,7 +252,6 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
                 {formik.values.templateInputs ? (
                   <ScriptVariablesRuntimeInput
                     allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
-                    path={''}
                     template={templateInputSets}
                   />
                 ) : null}
