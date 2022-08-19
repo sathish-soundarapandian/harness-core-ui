@@ -590,7 +590,10 @@ export const createAppDFormData = (
     ...(mappedMetrics.get(selectedMetric) as MapAppDynamicsMetric),
     metricName: selectedMetric,
     showCustomMetric,
-    metricIdentifier
+    metricIdentifier,
+    sli:true,
+    healthScore:true,
+    continuousVerification:true
   }
 }
 

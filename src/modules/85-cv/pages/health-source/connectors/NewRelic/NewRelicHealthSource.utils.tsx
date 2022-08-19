@@ -252,7 +252,10 @@ export const createNewRelicFormData = (
     ...mappedMetrics.get(selectedMetric),
     metricName: selectedMetric,
     metricIdentifier: selectedMetric?.split(' ').join('_'),
-    showCustomMetric
+    showCustomMetric,
+    sli:true,
+    healthScore:true,
+    continuousVerification:true
   }
 }
 

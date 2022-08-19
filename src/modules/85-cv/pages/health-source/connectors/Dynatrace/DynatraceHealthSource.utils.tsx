@@ -116,7 +116,10 @@ export const mapDynatraceDataToDynatraceForm = (
     metricData: dynatraceMetricData.metricData,
     metricName: selectedMetric,
     showCustomMetric,
-    identifier: metricIdentifier
+    identifier: metricIdentifier,
+    sli:true,
+    healthScore:true,
+    continuousVerification:true
   }
 }
 
