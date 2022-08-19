@@ -11149,7 +11149,7 @@ export interface SecretSpecDTO {
 export type SecretTextSpecDTO = SecretSpecDTO & {
   secretManagerIdentifier: string
   value?: string
-  valueType: 'Inline' | 'Reference'
+  valueType: 'Inline' | 'Reference' | 'CustomSecretManagerValues'
 }
 
 export interface SecretValidationMetaData {
