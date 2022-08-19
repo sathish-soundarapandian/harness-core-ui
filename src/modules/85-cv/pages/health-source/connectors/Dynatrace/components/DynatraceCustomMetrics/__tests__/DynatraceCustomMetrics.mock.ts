@@ -25,9 +25,9 @@ export const MAPPED_METRICS_LIST_MOCK: Map<string, DynatraceMetricInfo> = new Ma
     {
       identifier: 'mapped_metric_1',
       metricSelector: 'metric_selector_mock',
-      sli: false,
-      healthScore: false,
-      continuousVerification: false,
+      sli: true,
+      healthScore: true,
+      continuousVerification: true,
       metricName: 'mapped_metric_1'
     }
   ],
@@ -36,9 +36,9 @@ export const MAPPED_METRICS_LIST_MOCK: Map<string, DynatraceMetricInfo> = new Ma
     {
       identifier: 'mapped_metric_2',
       metricSelector: '',
-      sli: false,
-      healthScore: false,
-      continuousVerification: false,
+      sli: true,
+      healthScore: true,
+      continuousVerification: true,
       metricName: 'mapped_metric_2'
     }
   ]
@@ -52,9 +52,9 @@ export const SELECTED_AND_MAPPED_METRICS_WITH_DEFAULT_MOCK: SelectedAndMappedMet
       {
         identifier: DEFAULT_METRIC_NAME,
         metricSelector: '',
-        sli: false,
-        healthScore: false,
-        continuousVerification: false,
+        sli: true,
+        healthScore: true,
+        continuousVerification: true,
         metricName: DEFAULT_METRIC_NAME,
         isNew: true
       }
@@ -67,9 +67,9 @@ export const DYNATRACE_CUSTOM_METRICS_PROPS_MOCK: DynatraceCustomMetricsProps = 
   metricValues: {
     identifier: 'mapped_metric_1',
     metricSelector: 'metric_selector_mock',
-    sli: false,
-    healthScore: false,
-    continuousVerification: false,
+    sli: true,
+    healthScore: true,
+    continuousVerification: true,
     metricName: 'mapped_metric_1'
   },
   mappedMetrics: MAPPED_METRICS_LIST_MOCK,
