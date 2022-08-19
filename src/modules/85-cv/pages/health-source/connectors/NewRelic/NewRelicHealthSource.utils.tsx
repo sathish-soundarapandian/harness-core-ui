@@ -253,9 +253,9 @@ export const createNewRelicFormData = (
     metricName: selectedMetric,
     metricIdentifier: selectedMetric?.split(' ').join('_'),
     showCustomMetric,
-    sli:true,
-    healthScore:true,
-    continuousVerification:true
+    sli: true,
+    healthScore: true,
+    continuousVerification: true
   }
 }
 

@@ -436,8 +436,8 @@ export const validationValidPayload = {
 
 export const mockedFormDataCreate = {
   connectorRef: 'account.new_relic',
-  "continuousVerification": true,
-  "healthScore": true,
+  continuousVerification: true,
+  healthScore: true,
   identifier: 'New_relic',
   isEdit: false,
   mappedServicesAndEnvs: new Map(),
@@ -455,7 +455,7 @@ export const mockedFormDataCreate = {
     value: 'apm'
   },
   showCustomMetric: false,
-  "sli": true,
+  sli: true,
   type: 'NewRelic'
 }
 

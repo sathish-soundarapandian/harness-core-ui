@@ -591,9 +591,9 @@ export const createAppDFormData = (
     metricName: selectedMetric,
     showCustomMetric,
     metricIdentifier,
-    sli:true,
-    healthScore:true,
-    continuousVerification:true
+    sli: true,
+    healthScore: true,
+    continuousVerification: true
   }
 }
 
