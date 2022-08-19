@@ -48,6 +48,13 @@ export const inputSet = {
   correlationId: '9a4ce344-ac48-42e3-9466-ffdca5677d61'
 }
 
+export const inputSetEmpty = {
+  status: 'SUCCESS',
+  data: null,
+  metaData: null,
+  correlationId: '9a4ce344-ac48-42e3-9466-ffdca5677d61'
+}
+
 export const CustomSMConnector = {
   name: 'hello',
   identifier: 'hello',
@@ -77,4 +84,58 @@ export const CustomSMConnector = {
     testVariables: null,
     default: false
   }
+}
+
+export const smConfigStepDataToSubmit = {
+  name: 'hello',
+  identifier: 'hello',
+  description: '',
+  orgIdentifier: 'default',
+  projectIdentifier: 'Templates_Variable',
+  tags: {},
+  type: 'CustomSecretManager',
+  spec: {
+    delegateSelectors: [],
+    onDelegate: false,
+    connectorRef: 'account.sds',
+    host: 'changes',
+    workingDirectory: 'working directory',
+    template: {
+      templateRef: 'Template_Name_3',
+      versionLabel: '1',
+      templateInputs: {
+        executionTarget: { host: '' },
+        environmentVariables: [
+          { name: 'key', type: 'String', value: 'dsf' },
+          { name: 'url', type: 'String', value: 'dsf' },
+          { name: 'namespace', type: 'String', value: 'dfsd' }
+        ]
+      }
+    },
+    testVariables: null,
+    default: false
+  },
+  template: {
+    templateRef: 'Template_Name_3',
+    versionLabel: '1',
+    templateInputs: {
+      executionTarget: { host: '' },
+      environmentVariables: [
+        { name: 'key', type: 'String', value: 'dsf' },
+        { name: 'url', type: 'String', value: 'dsf' },
+        { name: 'namespace', type: 'String', value: 'dfsd' }
+      ]
+    }
+  },
+  templateInputs: {
+    executionTarget: { host: '' },
+    environmentVariables: [
+      { name: 'key', type: 'String', value: 'dsf' },
+      { name: 'url', type: 'String', value: 'dsf' },
+      { name: 'namespace', type: 'String', value: 'dfsd' }
+    ]
+  },
+  executionTarget: { host: 'changes', workingDirectory: 'working directory', connectorRef: 'account.sds' },
+  templateJson: {},
+  onDelegate: ''
 }

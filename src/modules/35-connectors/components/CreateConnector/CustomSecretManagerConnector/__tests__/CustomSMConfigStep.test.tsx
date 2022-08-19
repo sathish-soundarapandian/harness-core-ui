@@ -14,7 +14,14 @@ import { clickSubmit } from '@common/utils/JestFormHelper'
 import * as templateServices from 'services/template-ng'
 import { mockResponse } from '../../__test__/commonMock'
 import CustomSMConfigStep from '../views/CustomSMConfigStep'
-import { CustomSMConnector, getTemplateMockWithDelegateFalse, inputSet, inputSetWithExecutionTarget } from './mock'
+import {
+  CustomSMConnector,
+  getTemplateMockWithDelegateFalse,
+  inputSet,
+  inputSetEmpty,
+  inputSetWithExecutionTarget,
+  smConfigStepDataToSubmit
+} from './mock'
 
 const commonProps = {
   accountId: 'dummy',
@@ -152,6 +159,100 @@ describe('CustomSMConfigStep', () => {
     expect(container.querySelector('input[value="hjgjj"]')).toBeDefined()
     expect(container.querySelector('input[value="host"]')).toBeNull()
 
+    expect(container).toMatchSnapshot()
+  })
+  test('CustomSMConfigStep in Edit mode - submit data', async () => {
+    const nextStepMock = jest.fn()
+    jest
+      .spyOn(templateServices, 'getTemplateInputSetYamlPromise')
+      .mockImplementation(() => Promise.resolve(inputSetWithExecutionTarget) as any)
+    const { container, getByText } = render(
+      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+        <CustomSMConfigStep
+          {...commonProps}
+          isEditMode={true}
+          connectorInfo={CustomSMConnector as any}
+          getTemplate={getTemplateMock as any}
+          nextStep={nextStepMock}
+        />
+      </TestWrapper>
+    )
+
+    await waitFor(() => getByText('Shell Script'))
+
+    await waitFor(() => getByText('targetHost'))
+    expect(getByText('workingDirectory')).toBeDefined()
+    expect(getByText('account.sds')).toBeDefined()
+
+    expect(container.querySelector('input[value="hjgjj"]')).toBeDefined()
+    expect(container.querySelector('input[value="host"]')).toBeNull()
+    expect(container).toMatchSnapshot()
+    act(() => {
+      clickSubmit(container)
+    })
+    await waitFor(() => expect(nextStepMock).toHaveBeenCalled())
+    expect(nextStepMock).toHaveBeenCalledWith(smConfigStepDataToSubmit)
+  })
+
+  test('CustomSMConfigStep in Edit mode - when coming back from next step', async () => {
+    const nextStepMock = jest.fn()
+    jest
+      .spyOn(templateServices, 'getTemplateInputSetYamlPromise')
+      .mockImplementation(() => Promise.resolve(inputSetWithExecutionTarget) as any)
+    const { container, getByText } = render(
+      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+        <CustomSMConfigStep
+          {...commonProps}
+          isEditMode={true}
+          connectorInfo={CustomSMConnector as any}
+          getTemplate={getTemplateMock as any}
+          nextStep={nextStepMock}
+          prevStepData={
+            {
+              templateInputs: {
+                executionTarget: { host: '' },
+                environmentVariables: [
+                  { name: 'key', type: 'String', value: 'dsf' },
+                  { name: 'url', type: 'String', value: 'dsf' },
+                  { name: 'namespace', type: 'String', value: 'namespace' }
+                ]
+              }
+            } as any
+          }
+        />
+      </TestWrapper>
+    )
+
+    await waitFor(() => getByText('Shell Script'))
+    await waitFor(() => getByText('common.inputVariables'))
+    // value of namespace in previousStepData
+    expect(container.querySelector('input[value="namespace"]')).toBeDefined()
+    // value of namespace in connectorInfo
+    expect(container.querySelector('input[value="dfsd"]')).toBeNull()
+  })
+
+  test('CustomSMConfigStep - input sets are empty', async () => {
+    jest
+      .spyOn(templateServices, 'getTemplateInputSetYamlPromise')
+      .mockImplementation(() => Promise.resolve(inputSetEmpty) as any)
+    const { container, getByText } = render(
+      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+        <CustomSMConfigStep
+          {...commonProps}
+          isEditMode={false}
+          connectorInfo={undefined}
+          getTemplate={getTemplateMock as any}
+        />
+      </TestWrapper>
+    )
+
+    await waitFor(() => getByText('Shell Script'))
+    const selectTemplateBtn = getByText('connectors.customSM.selectTemplate')
+    act(() => {
+      fireEvent.click(selectTemplateBtn)
+    })
+
+    await waitFor(() => getByText('targetHost'))
     expect(container).toMatchSnapshot()
   })
 })

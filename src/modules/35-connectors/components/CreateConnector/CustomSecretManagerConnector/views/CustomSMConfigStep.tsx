@@ -136,7 +136,7 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
         ...template,
         versionLabel: template.versionLabel,
         templateRef: getRefFromIdAndScopeParams(
-          template.identifier || '',
+          template.identifier as string,
           template.orgIdentifier,
           template.projectIdentifier
         )
@@ -147,7 +147,7 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
 
       try {
         const templateInputYaml = await getTemplateInputSetYamlPromise({
-          templateIdentifier: template.identifier || '',
+          templateIdentifier: template.identifier as string,
           queryParams: {
             accountIdentifier: accountId,
             orgIdentifier: template.orgIdentifier,
@@ -158,7 +158,7 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
 
         let inputSet: JsonNode = {}
         if (templateInputYaml.data) {
-          inputSet = parse(templateInputYaml.data?.replace(/"<\+input>"/g, '""'))
+          inputSet = parse(templateInputYaml.data.replace(/"<\+input>"/g, '""'))
           formikProps.setFieldValue('templateInputs', inputSet)
           setTemplateInputSets(inputSet)
         }
@@ -209,9 +209,9 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
         onSubmit={formData => {
           trackEvent(ConnectorActions.ConfigSubmit, {
             category: Category.CONNECTOR,
-            connector_type: Connectors.Vault
+            connector_type: Connectors.CUSTOM_SECRET_MANAGER
           })
-          nextStep?.({ ...connectorInfo, ...prevStepData, ...formData } as ConnectorInfoDTO)
+          /* istanbul ignore next */ nextStep?.({ ...connectorInfo, ...prevStepData, ...formData } as ConnectorInfoDTO)
         }}
       >
         {formik => {
@@ -250,7 +250,7 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
                   <ScriptVariablesRuntimeInput
                     allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
                     path={''}
-                    template={templateInputSets || prevStepData?.templateInputs}
+                    template={templateInputSets}
                   />
                 ) : null}
 
