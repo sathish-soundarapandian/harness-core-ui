@@ -21,6 +21,8 @@ import {
   getIsShowGreaterThan,
   getIsShowLessThan,
   getMetricItems,
+  getMetricItemsForOnlyCustomMetrics,
+  getMetricNameItems,
   getMetricPacksForPayload,
   isGroupTransationTextField,
   validateCommonFieldsForMetricThreshold
@@ -548,5 +550,23 @@ describe('AppDIgnoreThresholdTabContent', () => {
     const result = getIsMetricPacksSelected({ Performance: false, Errors: false })
 
     expect(result).toBe(false)
+  })
+
+  test('getMetricItemsForOnlyCustomMetrics should return correct output', () => {
+    const result = getMetricItemsForOnlyCustomMetrics(groupedCreatedMetrics)
+
+    expect(result).toEqual([{ label: 'test metric', value: 'test metric' }])
+  })
+
+  test('getMetricItemsForOnlyCustomMetrics should return empty array if no group is created', () => {
+    const result = getMetricItemsForOnlyCustomMetrics({})
+
+    expect(result).toEqual([])
+  })
+
+  test('getMetricNameItems should return all the metric names if the isOnlyCustomMetricHealthSource flag is true', () => {
+    const result = getMetricNameItems(groupedCreatedMetrics, [], '', '', true)
+
+    expect(result).toEqual([{ label: 'test metric', value: 'test metric' }])
   })
 })
