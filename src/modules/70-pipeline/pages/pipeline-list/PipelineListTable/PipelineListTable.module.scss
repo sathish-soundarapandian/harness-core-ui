@@ -14,15 +14,18 @@
 }
 
 .avatar {
+  background-color: var(--primary-2);
+  color: var(--primary-8);
+  text-transform: uppercase;
+}
+
+.trigger {
   width: var(--spacing-xxlarge);
   height: var(--spacing-xxlarge);
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--primary-2);
-  color: var(--primary-8);
-  text-transform: uppercase;
 }
 
 .storeTypeColumn {
@@ -92,4 +95,7 @@
   position: absolute;
   text-transform: lowercase;
   top: -16px;
+  p {
+    white-space: nowrap !important;
+  }
 }

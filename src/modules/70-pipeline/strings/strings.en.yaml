@@ -1223,7 +1223,7 @@ traffic: Traffic
 viewPipeline: View Pipeline
 codeSource: 'Code Source'
 recentExecutions: 'Recent Executions'
-mostRecentDirection: 'most recent on the right'
+mostRecentDirection: 'Latest one on right side'
 lastExecution: 'Last Execution'
 lastModified: 'Last Modified'
 executionId: Execution Id

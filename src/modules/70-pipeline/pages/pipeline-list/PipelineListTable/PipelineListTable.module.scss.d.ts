@@ -20,5 +20,6 @@ declare const styles: {
   readonly table: string
   readonly tableRow: string
   readonly tags: string
+  readonly trigger: string
 }
 export default styles
