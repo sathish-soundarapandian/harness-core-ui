@@ -436,6 +436,7 @@ serviceName: '{{ $.common.serviceName }}'
 skipRendering: Skip K8s Manifest(s) Rendering
 credentialsRef: credentialsRef
 connectorRefText: connectorRef
+loadingDelegate: Please Wait, Creating a Delegate...
 hosts: hosts
 hostFilters: hostFilters
 attributeFilters: attributeFilters
@@ -453,3 +454,21 @@ azureBlueprint:
   managementGroup: Management Group
 validation:
   specifyFilter: Specify the filter condition
+welcomeMessage: Welcome to Harness
+delegateInstallation: Install the Delegate to deploy your cluster
+delegateInstallBtnText: Install the Delegate
+learnMoreDelegate: Learn more about Delegates
+runDelegate: How do you want to run the Delegate
+installDelegate: Install Delegate
+instructionsDelegate: Instructions to Install the Delegate
+downloadYAML: DOWNLOAD THE YAML
+previewYAML: Preview Yaml
+installCluster: INSTALL ON YOUR CLUSTER
+checkCluster: Check if you can connect to your cluster
+delegateInstallCommand: Install the delegate by running the following command
+delegateConnectionWait: WAITING FOR DELEGATE TO CONNECT
+delegateFailed: Delegate Failed to connect to Harness
+delegateFailText1: Harness Delegate Failed to connect to our Harness SaaS. Please make sure the infrastructure the delegate is installed on can reach https://app.harness.io
+delegateFailText2: The Delegate failed to come up on the cluster, please check to see if the pods are healthy or could be scheduled on the cluster
+delegateSuccess: Great! You have successfully installed the Delegate.
+pipelineCreation: Please proceed to creating your first pipeline

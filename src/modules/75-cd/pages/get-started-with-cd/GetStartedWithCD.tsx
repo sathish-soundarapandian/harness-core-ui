@@ -6,46 +6,23 @@
  */
 
 import React, { useState } from 'react'
-import cx from 'classnames'
 import { Text, FontVariation, Icon, Layout, Button, ButtonVariation, Container, ButtonSize } from '@harness/uicore'
-import type { IconProps } from '@harness/icons'
-import { useParams } from 'react-router-dom'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import type { StringsMap } from 'stringTypes'
-import type { GitQueryParams, ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
-import { useQueryParams } from '@common/hooks'
-import { DeployProvisioningWizard } from './DeployProvisioningWizard/DeployProvisioningWizard'
 import bgImageURL from '../home/images/cd.svg'
-import bgBannerImageURL from '../home/images/cd-onboarding-banner.svg'
-import { CDOnboardingProvider } from './CDOnboardingStore'
+import delegateImageURL from '../home/images/cd-delegates-banner.svg'
+import { DelegateSelectorWizard } from './DelegateSelectorWizard/DelegateSelectorWizard'
 import css from './GetStartedWithCD.module.scss'
 
 export default function GetStartedWithCI(): React.ReactElement {
   const { getString } = useStrings()
   const [showWizard, setShowWizard] = useState<boolean>(false)
-  const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
-  const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
-  const renderBuildPipelineStep = React.useCallback(
-    ({ iconProps, label, isLastStep }: { iconProps: IconProps; label: keyof StringsMap; isLastStep?: boolean }) => (
-      <Layout.Horizontal flex padding={{ right: 'xsmall' }} spacing="small">
-        <Icon name={iconProps.name} size={iconProps.size} className={iconProps.className} />
-        <Text font={{ size: 'small' }} padding={{ left: 'xsmall', right: 'xsmall' }}>
-          {getString(label)}
-        </Text>
-        {!isLastStep ? <Icon name="arrow-right" size={12} className={css.arrow} /> : null}
-      </Layout.Horizontal>
-    ),
-    []
-  )
+  const closeWizard = (): void => {
+    setShowWizard(false)
+  }
 
   return showWizard ? (
-    <CDOnboardingProvider
-      queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier, repoIdentifier, branch }}
-      pipelineIdentifier=""
-      serviceIdentifier={serviceId}
-    >
-      <DeployProvisioningWizard />
-    </CDOnboardingProvider>
+    <DelegateSelectorWizard onClickBack={closeWizard} />
   ) : (
     <>
       <Layout.Vertical flex>
@@ -64,58 +41,45 @@ export default function GetStartedWithCI(): React.ReactElement {
                 </Layout.Vertical>
               </Layout.Horizontal>
             </Container>
-            <Layout.Vertical>
-              <Text font={{ variation: FontVariation.H2 }}>{getString('common.getStarted.firstPipeline')}</Text>
-              <Text font={{ variation: FontVariation.SMALL }} padding={{ top: 'small' }}>
-                {getString('common.getStarted.quicklyCreate')}
-              </Text>
-              <Layout.Horizontal padding={{ top: 'xxlarge', bottom: 'huge' }}>
-                {renderBuildPipelineStep({
-                  iconProps: { name: 'services', size: 18, className: cx(css.icon, css.paddingXSmall) },
-                  label: 'common.selectWorkload'
-                })}
-                {renderBuildPipelineStep({
-                  iconProps: {
-                    name: 'ci-infra',
-                    size: 14,
-                    className: cx(css.icon, css.iconPadding)
-                  },
-                  label: 'common.getStarted.selectArtifact'
-                })}
-                {renderBuildPipelineStep({
-                  iconProps: {
-                    name: 'infrastructure',
-                    size: 14,
-                    className: cx(css.icon, css.iconPadding)
-                  },
-                  label: 'common.getStarted.selectInfra'
-                })}
-                {renderBuildPipelineStep({
-                  iconProps: {
-                    name: 'ci-build-pipeline',
-                    size: 20,
-                    className: cx(css.icon, css.iconPaddingSmall)
-                  },
-                  label: 'common.getStarted.buildPipeline',
-                  isLastStep: true
-                })}
-              </Layout.Horizontal>
-              <Container className={css.buttonRow}>
-                <Button
-                  variation={ButtonVariation.PRIMARY}
-                  size={ButtonSize.LARGE}
-                  text={getString('getStarted')}
-                  onClick={() => setShowWizard(true)}
-                />
-              </Container>
-            </Layout.Vertical>
-            <img
-              className={css.buildImg}
-              title={getString('common.getStarted.buildPipeline')}
-              src={bgBannerImageURL}
-              width={413}
-              height={260}
-            />
+
+            <Text font={{ variation: FontVariation.H5, weight: 'light' }} padding={{ bottom: 'medium' }}>
+              {getString('cd.welcomeMessage')}
+            </Text>
+
+            <Layout.Horizontal>
+              <Layout.Vertical width="50%">
+                <Text font={{ variation: FontVariation.H3, weight: 'semi-bold' }} padding={{ bottom: 'large' }}>
+                  {getString('cd.delegateInstallation')}
+                </Text>
+                <Text font={{ variation: FontVariation.SMALL }} padding={{ top: 'small' }} width={'80%'}>
+                  {getString('cd.getStartedWithCD.delegateInfo')}
+                </Text>
+                <Layout.Horizontal className={css.buttonRow}>
+                  <Button
+                    variation={ButtonVariation.PRIMARY}
+                    size={ButtonSize.LARGE}
+                    text={getString('cd.delegateInstallBtnText')}
+                    onClick={() => setShowWizard(true)}
+                  />
+                  <a
+                    href="https://docs.harness.io/article/2k7lnc7lvl-delegates-overview"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    <Text font={{ variation: FontVariation.BODY2 }} color={Color.PRIMARY_6} className={css.linkText}>
+                      {getString('cd.learnMoreDelegate')}
+                    </Text>
+                  </a>
+                </Layout.Horizontal>
+              </Layout.Vertical>
+              <img
+                className={css.buildImg}
+                title={getString('common.getStarted.buildPipeline')}
+                src={delegateImageURL}
+                width="50%"
+                height={260}
+              />
+            </Layout.Horizontal>
           </Container>
         </Container>
       </Layout.Vertical>

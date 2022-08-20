@@ -52,7 +52,7 @@ import {
   getUniqueEntityIdentifier,
   newEnvironmentState,
   PipelineRefPayload
-} from '../cdOnboardingUtils'
+} from '../CDOnboardingUtils'
 import defaultCss from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 import css from './SelectInfrastructure.module.scss'
 

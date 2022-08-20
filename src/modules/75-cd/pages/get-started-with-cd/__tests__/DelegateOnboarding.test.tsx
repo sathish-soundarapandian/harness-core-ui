@@ -1,0 +1,176 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+import React from 'react'
+
+import { render, waitFor } from '@testing-library/react'
+import { TestWrapper } from '@common/utils/testUtils'
+import * as servicePortal from 'services/portal'
+import * as serviceCDNG from 'services/cd-ng'
+import GetStartedWithCD from '../GetStartedWithCD'
+import {
+  delegateSizeResponse,
+  delegateTokensFailedResponse,
+  delegateTokensResponse,
+  dockerYamlResponse,
+  heartbeatWaitingResponse,
+  onGenYamlResponse,
+  validateKubernetesYamlResponse
+} from './mocks'
+
+jest.useFakeTimers()
+const mockGetCallFunction = jest.fn()
+jest.mock('services/cd-ng', () => ({
+  getDelegateTokensPromise: jest.fn(() => delegateTokensResponse)
+}))
+jest.mock('services/portal', () => ({
+  useGetDelegateSizes: jest.fn().mockImplementation(args => {
+    mockGetCallFunction(args)
+    return { data: delegateSizeResponse, refetch: jest.fn(), error: null, loading: false }
+  }),
+  validateKubernetesYamlPromise: jest.fn(() =>
+    Promise.resolve({
+      responseMessages: [],
+      resource: validateKubernetesYamlResponse
+    })
+  ),
+  generateKubernetesYamlPromise: jest.fn(() => onGenYamlResponse),
+  useGetDelegatesHeartbeatDetailsV2: jest.fn().mockImplementation(args => {
+    mockGetCallFunction(args)
+    return { data: heartbeatWaitingResponse, refetch: jest.fn(), error: null, loading: false }
+  }),
+  validateDockerDelegatePromise: jest.fn().mockImplementation(() => Promise.resolve({ responseMessages: [] })),
+  generateDockerDelegateYAMLPromise: jest.fn(() => dockerYamlResponse)
+}))
+global.URL.createObjectURL = jest.fn()
+jest.mock('@common/components/YAMLBuilder/YamlBuilder')
+describe('Test the initial flow for kubernetes delegate Creation', () => {
+  test('initial render', async () => {
+    const { getByText } = render(
+      <TestWrapper
+        path="/account/:accountId/cd/orgs/:orgId/projects/:projectId/get-started"
+        pathParams={{ accountId: 'test_account_id', orgId: 'orgId', projectId: 'projId' }}
+        queryParams={{ experience: 'TRIAL' }}
+      >
+        <GetStartedWithCD />
+      </TestWrapper>
+    )
+    const createPipelineBtn = getByText('cd.delegateInstallBtnText')
+    expect(createPipelineBtn).toBeInTheDocument()
+    createPipelineBtn.click()
+    const kubernetesBtn = getByText('kubernetesText') as HTMLElement
+    expect(kubernetesBtn).toBeInTheDocument()
+    kubernetesBtn.click()
+    await waitFor(() => expect(getByText('cd.instructionsDelegate')).toBeInTheDocument())
+    const previewYAMLBtn = getByText('cd.previewYAML') as HTMLElement
+    previewYAMLBtn.click()
+    const downloadYAMLBtn = getByText('delegates.downloadYAMLFile') as HTMLElement
+    downloadYAMLBtn.click()
+    expect(global.URL.createObjectURL).toBeCalled()
+    const backBtn = getByText('back') as HTMLElement
+    backBtn.click()
+    const mainScreenBtn = getByText('cd.delegateInstallBtnText')
+    await waitFor(() => expect(mainScreenBtn).toBeInTheDocument())
+  })
+  test('failure API call', async () => {
+    jest
+      .spyOn(servicePortal, 'validateKubernetesYamlPromise')
+      .mockImplementation(() => Promise.resolve({ responseMessages: [{ message: 'Something Went Wrong' }] }))
+    const { getByText } = render(
+      <TestWrapper
+        path="/account/:accountId/cd/orgs/:orgId/projects/:projectId/get-started"
+        pathParams={{ accountId: 'test_account_id', orgId: 'orgId', projectId: 'projId' }}
+        queryParams={{ experience: 'TRIAL' }}
+      >
+        <GetStartedWithCD />
+      </TestWrapper>
+    )
+    const createPipelineBtn = getByText('cd.delegateInstallBtnText')
+    expect(createPipelineBtn).toBeInTheDocument()
+    createPipelineBtn.click()
+    const kubernetesBtn = getByText('kubernetesText') as HTMLElement
+    expect(kubernetesBtn).toBeInTheDocument()
+    kubernetesBtn.click()
+    await waitFor(() => expect(getByText('somethingWentWrong')).toBeInTheDocument())
+  })
+})
+
+describe('Test the initial flow for docker delegate Creation', () => {
+  test('initial render', async () => {
+    const { getByText } = render(
+      <TestWrapper
+        path="/account/:accountId/cd/orgs/:orgId/projects/:projectId/get-started"
+        pathParams={{ accountId: 'test_account_id', orgId: 'orgId', projectId: 'projId' }}
+        queryParams={{ experience: 'TRIAL' }}
+      >
+        <GetStartedWithCD />
+      </TestWrapper>
+    )
+    const createPipelineBtn = getByText('cd.delegateInstallBtnText')
+    expect(createPipelineBtn).toBeInTheDocument()
+    createPipelineBtn.click()
+    const dockerBtn = getByText('delegate.cardData.docker.name') as HTMLElement
+    expect(dockerBtn).toBeInTheDocument()
+    dockerBtn.click()
+    await waitFor(() => expect(getByText('cd.instructionsDelegate')).toBeInTheDocument())
+    const previewYAMLBtn = getByText('cd.previewYAML') as HTMLElement
+    previewYAMLBtn.click()
+    const downloadYAMLBtn = getByText('delegates.downloadYAMLFile') as HTMLElement
+    downloadYAMLBtn.click()
+    expect(global.URL.createObjectURL).toBeCalled()
+    jest.runAllTimers()
+    await waitFor(() => expect(getByText('cd.delegateFailText1')).toBeInTheDocument())
+    const troubleShootBtn = getByText('delegates.delegateNotInstalled.tabs.commonProblems.troubleshoot') as HTMLElement
+    troubleShootBtn.click()
+    await waitFor(() =>
+      expect(getByText('delegates.delegateNotInstalled.tabs.commonProblems.title')).toBeInTheDocument()
+    )
+  })
+  test('failure response for unique name delegate call ', async () => {
+    jest
+      .spyOn(servicePortal, 'validateDockerDelegatePromise')
+      .mockImplementation(() => Promise.resolve({ responseMessages: [{ message: 'Something Went Wrong' }] }))
+    const { getByText } = render(
+      <TestWrapper
+        path="/account/:accountId/cd/orgs/:orgId/projects/:projectId/get-started"
+        pathParams={{ accountId: 'test_account_id', orgId: 'orgId', projectId: 'projId' }}
+        queryParams={{ experience: 'TRIAL' }}
+      >
+        <GetStartedWithCD />
+      </TestWrapper>
+    )
+    const createPipelineBtn = getByText('cd.delegateInstallBtnText')
+    expect(createPipelineBtn).toBeInTheDocument()
+    createPipelineBtn.click()
+    const dockerBtn = getByText('delegate.cardData.docker.name') as HTMLElement
+    expect(dockerBtn).toBeInTheDocument()
+    dockerBtn.click()
+    await waitFor(() => expect(getByText('somethingWentWrong')).toBeInTheDocument())
+  })
+  test('failure response for tokens call ', async () => {
+    jest
+      .spyOn(serviceCDNG, 'getDelegateTokensPromise')
+      .mockImplementation(() => Promise.resolve({ ...delegateTokensFailedResponse }))
+
+    const { getByText } = render(
+      <TestWrapper
+        path="/account/:accountId/cd/orgs/:orgId/projects/:projectId/get-started"
+        pathParams={{ accountId: 'test_account_id', orgId: 'orgId', projectId: 'projId' }}
+        queryParams={{ experience: 'TRIAL' }}
+      >
+        <GetStartedWithCD />
+      </TestWrapper>
+    )
+    const createPipelineBtn = getByText('cd.delegateInstallBtnText')
+    expect(createPipelineBtn).toBeInTheDocument()
+    createPipelineBtn.click()
+    const dockerBtn = getByText('delegate.cardData.docker.name') as HTMLElement
+    expect(dockerBtn).toBeInTheDocument()
+    dockerBtn.click()
+    await waitFor(() => expect(getByText('somethingWentWrong')).toBeInTheDocument())
+  })
+})

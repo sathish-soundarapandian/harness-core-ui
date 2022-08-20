@@ -19,6 +19,7 @@ declare const styles: {
   readonly image: string
   readonly label: string
   readonly learnMore: string
+  readonly linkText: string
   readonly paddingXSmall: string
   readonly topPage: string
 }

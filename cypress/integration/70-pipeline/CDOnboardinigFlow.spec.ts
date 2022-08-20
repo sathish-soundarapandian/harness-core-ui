@@ -32,7 +32,7 @@ const fillManifestDetails = (): void => {
     })
 }
 
-describe('CD Onboarding Flow', () => {
+describe.skip('CD Onboarding Flow', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from

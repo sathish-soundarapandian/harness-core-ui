@@ -4209,6 +4209,7 @@ export interface StringsMap {
   'cd.cdSwitchToFirstGen.startWith14DayTrial': string
   'cd.cdTrialHomePage.startTrial.description': string
   'cd.cdTrialHomePage.startTrial.startBtn.description': string
+  'cd.checkCluster': string
   'cd.chooseProvisionerText': string
   'cd.cloudFormation.awsURL': string
   'cd.cloudFormation.cfTemplateFile': string
@@ -4276,9 +4277,18 @@ export interface StringsMap {
   'cd.dashboard.createProject': string
   'cd.dashboard.orSelectExisting': string
   'cd.dashboard.subHeading': string
+  'cd.delegateConnectionWait': string
+  'cd.delegateFailText1': string
+  'cd.delegateFailText2': string
+  'cd.delegateFailed': string
+  'cd.delegateInstallBtnText': string
+  'cd.delegateInstallCommand': string
+  'cd.delegateInstallation': string
+  'cd.delegateSuccess': string
   'cd.deleteSourceBranch': string
   'cd.deletedGitOpsServerSuccessfully': string
   'cd.deletedSuccessfully': string
+  'cd.downloadYAML': string
   'cd.duplicateGitOpsServerIdError': string
   'cd.duplicateIdError': string
   'cd.dynamicProvisioning': string
@@ -4350,9 +4360,14 @@ export interface StringsMap {
   'cd.infrastructure.sshWinRmAzure.usePublicDns': string
   'cd.infrastructure.updated': string
   'cd.installAdapterHelperText': string
+  'cd.installCluster': string
+  'cd.installDelegate': string
+  'cd.instructionsDelegate': string
   'cd.launchArgo': string
   'cd.learnMore': string
   'cd.learnMoreAboutHarnessAdapter': string
+  'cd.learnMoreDelegate': string
+  'cd.loadingDelegate': string
   'cd.manifestId': string
   'cd.manifestPathsCannotBeEmpty': string
   'cd.moreIssue': string
@@ -4371,6 +4386,7 @@ export interface StringsMap {
   'cd.overrideValue': string
   'cd.overrideYaml': string
   'cd.pathCannotBeEmpty': string
+  'cd.pipelineCreation': string
   'cd.pipelineSteps.environmentTab.allClustersSelected': string
   'cd.pipelineSteps.environmentTab.allEnvironmentsInEnvGroupSelected': string
   'cd.pipelineSteps.environmentTab.clusterIsRequired': string
@@ -4409,9 +4425,11 @@ export interface StringsMap {
   'cd.pipelineSteps.serviceTab.stageOverrides': string
   'cd.preProduction': string
   'cd.preProductionType': string
+  'cd.previewYAML': string
   'cd.releaseNameValidation': string
   'cd.requiredPermissions': string
   'cd.resourceCannotBeEmpty': string
+  'cd.runDelegate': string
   'cd.searchPlaceholder': string
   'cd.secretManagerRequired': string
   'cd.selectArtifact': string
@@ -4573,6 +4591,7 @@ export interface StringsMap {
   'cd.validation.specifyFilter': string
   'cd.varFile': string
   'cd.varFileDetails': string
+  'cd.welcomeMessage': string
   'cd.whatIsHarnessAdapter': string
   'cd.whatIsHarnessManagedGitOpsServer': string
   'cd.workloadRequired': string

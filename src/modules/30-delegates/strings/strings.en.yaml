@@ -46,7 +46,7 @@ delegateNotInstalled:
   removeDocker: 'docker rm [container_id]'
   title: 'Delegate not installed'
   verifyField2: 'kubectl logs -f <harnessDelegateName> -n <namespace>'
-  verifyField3: 'kubectl describe pod_name -n <namespace>'
+  verifyField3: 'kubectl describe <pod_name> -n <namespace>'
   statusOfCluster: 'Check the status of your Delegate on your cluster'
   podCommand: 'kubectl describe pods -n <namespace>'
   podComeUp: 'Did the pod come up?'
