@@ -296,7 +296,9 @@ describe('Validate DynatraceHealthSource Utils', () => {
       query: 'avg:system.cpu.user{version}.rollup(avg, 60)',
       sli: false,
       showCustomMetric: false,
-      metricName: 'mapped_metric_1'
+      metricName: 'mapped_metric_1',
+      failFastThresholds: [],
+      ignoreThresholds: []
     })
 
     const selectedMetric = MAPPED_METRICS_LIST_MOCK.get('mapped_metric_2')

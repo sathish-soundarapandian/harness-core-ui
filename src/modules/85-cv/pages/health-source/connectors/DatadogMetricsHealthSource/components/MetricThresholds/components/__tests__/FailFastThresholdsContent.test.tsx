@@ -6,10 +6,10 @@ import { formikInitialValues, MockContextValues, setThresholdStateMockFn } from 
 import FailFastThresholdContent from '../FailFastThresholdsContent'
 import { MetricThresholdContext } from '../../MetricThresholds.constants'
 
-const WrappingComponent = () => {
+const WrappingComponent = ({ formValues }: { formValues?: any }): JSX.Element => {
   return (
     <TestWrapper>
-      <Formik initialValues={formikInitialValues} onSubmit={jest.fn()} formName="appDHealthSourceform">
+      <Formik initialValues={formValues || formikInitialValues} onSubmit={jest.fn()} formName="appDHealthSourceform">
         <FormikForm>
           <MetricThresholdContext.Provider value={MockContextValues}>
             <FailFastThresholdContent />
@@ -28,7 +28,6 @@ describe('FailFastThresholdContent', () => {
     const { container } = render(<WrappingComponent />)
 
     expect(container.querySelector("[name='failFastThresholds.0.metricType']")).toBeInTheDocument()
-    expect(container.querySelector("[name='failFastThresholds.0.groupName']")).toBeInTheDocument()
     expect(container.querySelector("[name='failFastThresholds.0.spec.action']")).toBeInTheDocument()
     expect(container.querySelector("[name='failFastThresholds.0.spec.spec.count']")).toBeInTheDocument()
     expect(container.querySelector("[name='failFastThresholds.0.criteria.type']")).toBeInTheDocument()
@@ -39,49 +38,23 @@ describe('FailFastThresholdContent', () => {
   test('should render the metricType dropdown with correct options', async () => {
     const { container } = render(<WrappingComponent />)
 
-    const selectCaret = container
-      .querySelector(`[name="failFastThresholds.0.metricType"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-
-    expect(selectCaret).toBeInTheDocument()
-
-    fireEvent.click(selectCaret!)
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent('Performance')
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[1]).toHaveTextContent('Custom')
+    expect(container.querySelector(`[name="failFastThresholds.0.metricType"]`)).toBeDisabled()
+    expect(container.querySelector(`[name="failFastThresholds.0.metricType"]`)).toHaveValue('Custom')
   })
 
-  test('should render the Group based on metricType', async () => {
+  test('should render the metric name dropdown with all metric names', async () => {
     const { container } = render(<WrappingComponent />)
 
-    const selectCaret = container
-      .querySelector(`[name="failFastThresholds.0.metricType"] + [class*="bp3-input-action"]`)
+    expect(container.querySelector(`[name="failFastThresholds.0.metricName"]`)).not.toBeDisabled()
+
+    const selectCaretMetricName = container
+      .querySelector(`[name="failFastThresholds.0.metricName"] + [class*="bp3-input-action"]`)
       ?.querySelector('[data-icon="chevron-down"]')
 
-    expect(selectCaret).toBeInTheDocument()
-
-    fireEvent.click(selectCaret!)
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent('Performance')
-
-    act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[0])
-    })
-
-    expect(screen.getByPlaceholderText('cv.monitoringSources.appD.groupTransaction')).toBeInTheDocument()
-
-    const selectCaret2 = container
-      .querySelector(`[name="failFastThresholds.0.metricType"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-
-    fireEvent.click(selectCaret2!)
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
-    act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
-    })
-    expect(screen.queryByPlaceholderText('cv.monitoringSources.appD.groupTransaction')).not.toBeInTheDocument()
-
-    expect(setThresholdStateMockFn).toBeCalledWith(expect.any(Function))
+    expect(selectCaretMetricName).toBeInTheDocument()
+    fireEvent.click(selectCaretMetricName!)
+    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(1))
+    expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent('dataDogMetric')
   })
 
   test('should render action dropdown with correct options', async () => {
@@ -149,67 +122,6 @@ describe('FailFastThresholdContent', () => {
     expect(countInput3).not.toBeDisabled()
   })
 
-  test('should render the Groups dropdown with correct options', async () => {
-    const { container } = render(<WrappingComponent />)
-
-    const selectCaretMetricType = container
-      .querySelector(`[name="failFastThresholds.0.metricType"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-
-    expect(selectCaretMetricType).toBeInTheDocument()
-    fireEvent.click(selectCaretMetricType!)
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
-    act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
-    })
-
-    const selectCaretGroupName = container
-      .querySelector(`[name="failFastThresholds.0.groupName"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-
-    fireEvent.click(selectCaretGroupName!)
-
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(1))
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent('g1')
-  })
-
-  test('should render the metric name dropdown as disabled if no value is selected for metric type', async () => {
-    const { container } = render(<WrappingComponent />)
-
-    expect(container.querySelector(`[name="failFastThresholds.0.metricName"]`)).toBeDisabled()
-
-    const selectCaretMetricType = container
-      .querySelector(`[name="failFastThresholds.0.metricType"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-
-    expect(selectCaretMetricType).toBeInTheDocument()
-    fireEvent.click(selectCaretMetricType!)
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
-    act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
-    })
-
-    const selectCaretGroupName = container
-      .querySelector(`[name="failFastThresholds.0.groupName"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-
-    fireEvent.click(selectCaretGroupName!)
-
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(1))
-    act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[0])
-    })
-    expect(container.querySelector(`[name="failFastThresholds.0.metricName"]`)).not.toBeDisabled()
-
-    const selectCaretMetricName = container
-      .querySelector(`[name="failFastThresholds.0.metricName"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-
-    expect(selectCaretMetricName).toBeInTheDocument()
-    fireEvent.click(selectCaretMetricName!)
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(1))
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent('appdMetric')
-  })
   test('should render the criteria dropdown and other functionalities should work properly', async () => {
     const { container } = render(<WrappingComponent />)
 

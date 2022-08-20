@@ -137,3 +137,43 @@ export const formDataMock = {
   ignoreThresholds: ignoreThresholdsMockData,
   failFastThresholds: failFastThresholdsMockData
 }
+
+export const formikInitialValuesCriteriaMock = {
+  ignoreThresholds: [
+    {
+      metricType: 'Custom',
+      metricName: null,
+      type: 'IgnoreThreshold',
+      spec: {
+        action: 'Ignore'
+      },
+      criteria: {
+        type: 'Percentage',
+        spec: {
+          lessThan: 21
+        }
+      }
+    }
+  ],
+  failFastThresholds: []
+}
+
+export const formikInitialValuesCriteriaGreaterThanMock = {
+  ignoreThresholds: [
+    {
+      metricType: 'Custom',
+      metricName: null,
+      type: 'IgnoreThreshold',
+      spec: {
+        action: 'Ignore'
+      },
+      criteria: {
+        type: 'Percentage',
+        spec: {
+          greaterThan: 21
+        }
+      }
+    }
+  ],
+  failFastThresholds: []
+}

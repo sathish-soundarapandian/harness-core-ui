@@ -82,7 +82,7 @@ export const MockContextValues = {
           label: 'g1',
           value: 'g1'
         },
-        metricName: 'appdMetric'
+        metricName: 'dataDogMetric'
       }
     ]
   } as GroupedCreatedMetrics,
@@ -93,8 +93,7 @@ export const formikInitialValues = {
   ...mockedFormValues,
   ignoreThresholds: [
     {
-      metricType: null,
-      groupName: null,
+      metricType: 'Custom',
       metricName: null,
       type: 'IgnoreThreshold',
       spec: {
@@ -111,8 +110,7 @@ export const formikInitialValues = {
   ],
   failFastThresholds: [
     {
-      metricType: null,
-      groupName: null,
+      metricType: 'Custom',
       metricName: null,
       type: 'FailImmediately',
       spec: {

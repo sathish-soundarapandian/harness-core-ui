@@ -1,16 +1,21 @@
 import React from 'react'
-import { fireEvent, act, render, screen, waitFor } from '@testing-library/react'
 import { Formik, FormikForm } from '@wings-software/uicore'
+import { fireEvent, act, render, screen, waitFor } from '@testing-library/react'
+
 import { TestWrapper } from '@common/utils/testUtils'
 
+import {
+  formikInitialValuesCriteriaGreaterThanMock,
+  formikInitialValuesCriteriaMock
+} from '@cv/pages/health-source/common/MetricThresholds/__tests__/MetricThresholds.utils.mock'
 import { formikInitialValues, MockContextValues } from './IgnoreThresholdsContent.mock'
 import IgnoreThresholdContent from '../IgnoreThresholdsContent'
 import { MetricThresholdContext } from '../../MetricThresholds.constants'
 
-const WrappingComponent = () => {
+const WrappingComponent = ({ formValues }: { formValues?: any }): JSX.Element => {
   return (
     <TestWrapper>
-      <Formik initialValues={formikInitialValues} onSubmit={jest.fn()} formName="appDHealthSourceform">
+      <Formik initialValues={formValues || formikInitialValues} onSubmit={jest.fn()} formName="appDHealthSourceform">
         <FormikForm>
           {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
           {/* @ts-ignore */}
@@ -23,12 +28,11 @@ const WrappingComponent = () => {
   )
 }
 
-describe('AppDIgnoreThresholdTabContent', () => {
+describe('DataDogIgnoreThresholdTabContent', () => {
   test('should render the component with all input fields', () => {
     const { container } = render(<WrappingComponent />)
 
     expect(container.querySelector("[name='ignoreThresholds.0.metricType']")).toBeInTheDocument()
-    expect(container.querySelector("[name='ignoreThresholds.0.groupName']")).toBeInTheDocument()
     expect(container.querySelector("[name='ignoreThresholds.0.criteria.type']")).toBeInTheDocument()
     expect(container.querySelector("[name='ignoreThresholds.0.criteria.spec.greaterThan']")).toBeInTheDocument()
     expect(container.querySelector("[name='ignoreThresholds.0.criteria.spec.lessThan']")).toBeInTheDocument()
@@ -37,102 +41,15 @@ describe('AppDIgnoreThresholdTabContent', () => {
   test('should render the metricType dropdown with correct options', async () => {
     const { container } = render(<WrappingComponent />)
 
-    const selectCaret = container
-      .querySelector(`[name="ignoreThresholds.0.metricType"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-
-    expect(selectCaret).toBeInTheDocument()
-
-    fireEvent.click(selectCaret!)
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent('Performance')
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[1]).toHaveTextContent('Custom')
-  })
-
-  test('should render the Group based on metricType', async () => {
-    const { container } = render(<WrappingComponent />)
-
-    const selectCaret = container
-      .querySelector(`[name="ignoreThresholds.0.metricType"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-
-    expect(selectCaret).toBeInTheDocument()
-
-    fireEvent.click(selectCaret!)
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent('Performance')
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[1]).toHaveTextContent('Custom')
-
-    act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[0])
-    })
-
-    expect(screen.getByPlaceholderText('cv.monitoringSources.appD.groupTransaction')).toBeInTheDocument()
-
-    const selectCaret2 = container
-      .querySelector(`[name="ignoreThresholds.0.metricType"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-
-    fireEvent.click(selectCaret2!)
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
-    act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
-    })
-    expect(screen.queryByPlaceholderText('cv.monitoringSources.appD.groupTransaction')).not.toBeInTheDocument()
-  })
-
-  test('should render the Groups dropdown with correct options', async () => {
-    const { container } = render(<WrappingComponent />)
-
     screen.debug(container, 30000)
 
-    const selectCaretMetricType = container
-      .querySelector(`[name="ignoreThresholds.0.metricType"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-
-    expect(selectCaretMetricType).toBeInTheDocument()
-    fireEvent.click(selectCaretMetricType!)
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
-    act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
-    })
-
-    const selectCaretGroupName = container
-      .querySelector(`[name="ignoreThresholds.0.groupName"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-
-    fireEvent.click(selectCaretGroupName!)
-
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(1))
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent('g1')
+    expect(container.querySelector(`[name="ignoreThresholds.0.metricType"]`)).toBeDisabled()
+    expect(container.querySelector(`[name="ignoreThresholds.0.metricType"]`)).toHaveValue('Custom')
   })
 
-  test('should render the metric name dropdown as disabled if no value is selected for metric type', async () => {
+  test('should render the metric name dropdown with all metric names', async () => {
     const { container } = render(<WrappingComponent />)
 
-    expect(container.querySelector(`[name="ignoreThresholds.0.metricName"]`)).toBeDisabled()
-
-    const selectCaretMetricType = container
-      .querySelector(`[name="ignoreThresholds.0.metricType"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-
-    expect(selectCaretMetricType).toBeInTheDocument()
-    fireEvent.click(selectCaretMetricType!)
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
-    act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
-    })
-
-    const selectCaretGroupName = container
-      .querySelector(`[name="ignoreThresholds.0.groupName"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-
-    fireEvent.click(selectCaretGroupName!)
-
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(1))
-    act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[0])
-    })
     expect(container.querySelector(`[name="ignoreThresholds.0.metricName"]`)).not.toBeDisabled()
 
     const selectCaretMetricName = container
@@ -142,7 +59,7 @@ describe('AppDIgnoreThresholdTabContent', () => {
     expect(selectCaretMetricName).toBeInTheDocument()
     fireEvent.click(selectCaretMetricName!)
     await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(1))
-    expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent('appdMetric')
+    expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent('dataDogMetric')
   })
   test('should render the criteria dropdown and other functionalities should work properly', async () => {
     const { container } = render(<WrappingComponent />)
@@ -173,6 +90,9 @@ describe('AppDIgnoreThresholdTabContent', () => {
       fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
     })
 
+    expect(greaterThanInput).toBeInTheDocument()
+    expect(lessThanInput).not.toBeInTheDocument()
+
     const selectCaretPercentageType = container
       .querySelector(`[name="ignoreThresholds.0.criteria.criteriaPercentageType"] + [class*="bp3-input-action"]`)
       ?.querySelector('[data-icon="chevron-down"]')
@@ -191,25 +111,6 @@ describe('AppDIgnoreThresholdTabContent', () => {
 
     expect(greaterThanInput2).not.toBeInTheDocument()
     expect(lessThanInput2).toBeInTheDocument()
-
-    const selectCaretPercentageType2 = container
-      .querySelector(`[name="ignoreThresholds.0.criteria.criteriaPercentageType"] + [class*="bp3-input-action"]`)
-      ?.querySelector('[data-icon="chevron-down"]')
-
-    expect(selectCaretPercentageType2).toBeInTheDocument()
-    fireEvent.click(selectCaretPercentageType2!)
-
-    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
-
-    act(() => {
-      fireEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[0])
-    })
-
-    const greaterThanInput3 = container.querySelector(`[name="ignoreThresholds.0.criteria.spec.greaterThan"]`)
-    const lessThanInput3 = container.querySelector(`[name="ignoreThresholds.0.criteria.spec.lessThan"]`)
-
-    expect(greaterThanInput3).toBeInTheDocument()
-    expect(lessThanInput3).not.toBeInTheDocument()
   })
 
   test('should check whether a new row is added when Add Threshold button is clicked', () => {
@@ -230,5 +131,35 @@ describe('AppDIgnoreThresholdTabContent', () => {
     })
 
     expect(screen.getAllByTestId('ThresholdRow')).toHaveLength(1)
+  })
+
+  test('should check whether criteria section works correctly', () => {
+    const { container } = render(<WrappingComponent formValues={formikInitialValuesCriteriaMock} />)
+
+    const lessThanInput = container.querySelector('input[name="ignoreThresholds.0.criteria.spec.lessThan"]')
+    const greaterThanInput = container.querySelector('input[name="ignoreThresholds.0.criteria.spec.greaterThan"]')
+    const criteriaPercentageType = container.querySelector(
+      'input[name="ignoreThresholds.0.criteria.criteriaPercentageType"]'
+    )
+
+    expect(lessThanInput).toBeInTheDocument()
+    expect(lessThanInput).toHaveValue(21)
+    expect(criteriaPercentageType).toHaveValue('cv.monitoringSources.appD.lesserThan')
+    expect(greaterThanInput).toBeNull()
+  })
+
+  test('should check whether criteria section works correctly for greaterThan', () => {
+    const { container } = render(<WrappingComponent formValues={formikInitialValuesCriteriaGreaterThanMock} />)
+
+    const lessThanInput = container.querySelector('input[name="ignoreThresholds.0.criteria.spec.lessThan"]')
+    const greaterThanInput = container.querySelector('input[name="ignoreThresholds.0.criteria.spec.greaterThan"]')
+    const criteriaPercentageType = container.querySelector(
+      'input[name="ignoreThresholds.0.criteria.criteriaPercentageType"]'
+    )
+
+    expect(greaterThanInput).toBeInTheDocument()
+    expect(greaterThanInput).toHaveValue(21)
+    expect(criteriaPercentageType).toHaveValue('cv.monitoringSources.appD.greaterThan')
+    expect(lessThanInput).toBeNull()
   })
 })

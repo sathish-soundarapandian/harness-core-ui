@@ -314,26 +314,35 @@ describe('Datadog metric thresholds', () => {
     )
 
     cy.addNewMonitoredServiceWithServiceAndEnv()
-    cy.populateDefineHealthSource(Connectors.DATADOG, 'prometheus-sale', 'Prometheus')
+    cy.populateDefineHealthSource(Connectors.DATADOG, connectorIdentifier, 'Data dog')
 
-    cy.get('input[name="product"]').should('be.disabled')
+    // selecting feature
+    cy.selectFeature('Cloud Metrics')
 
-    cy.findByRole('button', { name: /Next/i }).click()
+    cy.intercept('GET', dashboards.dashboardsAPI, dashboards.dashboardsResponse).as('dashboardsResponse')
 
-    cy.contains('h2', 'Query Specifications and Mapping').should('be.visible')
+    cy.contains('span', 'Next').click()
 
+    cy.wait('@dashboardsResponse')
+    cy.contains('p', selectedDashboardName).click()
+
+    //intercepting calls
+    cy.intercept('GET', metrics.getMetricsCall, metrics.getMetricsResponse).as('getMetrics')
+    cy.intercept('GET', metricTags.getMetricsTags, metricTags.getMetricsTagsResponse).as('getMetricsTags')
+    cy.intercept('GET', activeMetrics.getActiveMetrics, activeMetrics.getActiveMetricsResponse).as('getActiveMetrics')
+    cy.intercept('GET', dashboardDetails.getDashboardDetails, dashboardDetails.getDashboardDetailsResponse).as(
+      'getDashboardDetails'
+    )
+
+    cy.findAllByRole('button', { name: /Next/i }).last().click()
     cy.get('input[name="metricName"]').clear()
 
     cy.fillField('metricName', 'Prometheus Metric')
 
-    cy.contains('.Accordion--label', 'Advanced (Optional)').should('not.exist')
-
-    cy.addingGroupName('Group 1')
-
-    cy.contains('.Accordion--label', 'Advanced (Optional)').should('exist')
+    cy.contains('.Accordion--label', 'Advanced (Optional)').scrollIntoView().should('exist')
   })
 
-  it('should render metric thresholds and perform its features', () => {
+  it.only('should render metric thresholds and perform its features', () => {
     //intercepting calls
     cy.intercept('GET', dataLogsIndexes.getDatadogLogsIndexes, dataLogsIndexes.getDatadogLogsIndexesResponse).as(
       'getLogsIndexes'
@@ -344,21 +353,30 @@ describe('Datadog metric thresholds', () => {
     cy.intercept('GET', '/cv/api/monitored-service/service1_env1?*', datadogLogsMonitoredService).as(
       'monitoredServiceCall'
     )
-
     cy.addNewMonitoredServiceWithServiceAndEnv()
-    cy.populateDefineHealthSource(Connectors.DATADOG, 'prometheus-sale', 'Prometheus')
+    cy.populateDefineHealthSource(Connectors.DATADOG, connectorIdentifier, 'Data dog')
 
-    cy.get('input[name="product"]').should('be.disabled')
+    // selecting feature
+    cy.selectFeature('Cloud Metrics')
 
-    cy.findByRole('button', { name: /Next/i }).click()
+    cy.intercept('GET', dashboards.dashboardsAPI, dashboards.dashboardsResponse).as('dashboardsResponse')
 
-    cy.contains('h2', 'Query Specifications and Mapping').should('be.visible')
+    cy.contains('span', 'Next').click()
 
-    cy.get('input[name="metricName"]').clear()
+    cy.wait('@dashboardsResponse')
+    cy.contains('p', selectedDashboardName).click()
 
-    cy.fillField('metricName', 'Prometheus Metric')
+    //intercepting calls
+    cy.intercept('GET', metrics.getMetricsCall, metrics.getMetricsResponse).as('getMetrics')
+    cy.intercept('GET', metricTags.getMetricsTags, metricTags.getMetricsTagsResponse).as('getMetricsTags')
+    cy.intercept('GET', activeMetrics.getActiveMetrics, activeMetrics.getActiveMetricsResponse).as('getActiveMetrics')
+    cy.intercept('GET', dashboardDetails.getDashboardDetails, dashboardDetails.getDashboardDetailsResponse).as(
+      'getDashboardDetails'
+    )
 
-    cy.addingGroupName('Group 1')
+    cy.findAllByRole('button', { name: /Next/i }).last().click()
+
+    cy.fillField('metricName', 'Datadog Metric')
 
     cy.contains('.Accordion--label', 'Advanced (Optional)').should('exist')
 
@@ -376,7 +394,7 @@ describe('Datadog metric thresholds', () => {
 
     cy.get("input[name='ignoreThresholds.0.metricName']").click()
 
-    cy.get('.Select--menuItem:nth-child(1)').should('have.text', 'Prometheus Metric')
+    cy.get('.Select--menuItem:nth-child(1)').should('have.text', 'Datadog Metric')
 
     cy.get('.Select--menuItem:nth-child(1)').click()
 
@@ -411,7 +429,7 @@ describe('Datadog metric thresholds', () => {
 
     cy.get("input[name='failFastThresholds.0.metricName']").click()
 
-    cy.get('.Select--menuItem:nth-child(1)').should('have.text', 'Prometheus Metric')
+    cy.get('.Select--menuItem:nth-child(1)').should('have.text', 'Datadog Metric')
 
     cy.get("input[name='failFastThresholds.0.spec.spec.count']").should('be.disabled')
 
