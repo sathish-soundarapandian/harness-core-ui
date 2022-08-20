@@ -6,46 +6,46 @@
  */
 
 import React, { useState } from 'react'
-import cx from 'classnames'
+// import cx from 'classnames'
 import { Text, FontVariation, Icon, Layout, Button, ButtonVariation, Container, ButtonSize } from '@harness/uicore'
-import type { IconProps } from '@harness/icons'
-import { useParams } from 'react-router-dom'
+// import type { IconProps } from '@harness/icons'
+// import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import type { StringsMap } from 'stringTypes'
-import type { GitQueryParams, ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
-import { useQueryParams } from '@common/hooks'
-import { DeployProvisioningWizard } from './DeployProvisioningWizard/DeployProvisioningWizard'
+// import type { StringsMap } from 'stringTypes'
+// import type { GitQueryParams, ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
+// import { useQueryParams } from '@common/hooks'
+// import { DeployProvisioningWizard } from './DeployProvisioningWizard/DeployProvisioningWizard'
 import bgImageURL from '../home/images/cd.svg'
-import bgBannerImageURL from '../home/images/cd-onboarding-banner.svg'
-import { CDOnboardingProvider } from './CDOnboardingStore'
+// import bgBannerImageURL from '../home/images/cd-onboarding-banner.svg'
+import delegateImageURL from '../home/images/cd-delegates-banner.svg'
+// import { CDOnboardingProvider } from './CDOnboardingStore'
+import { DelegateTypeSelector } from './DelegateTypeSelectorWizard/delegateTypeSelector'
 import css from './GetStartedWithCD.module.scss'
+// import { right } from '@popperjs/core'
 
 export default function GetStartedWithCI(): React.ReactElement {
   const { getString } = useStrings()
   const [showWizard, setShowWizard] = useState<boolean>(false)
-  const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
-  const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
-  const renderBuildPipelineStep = React.useCallback(
-    ({ iconProps, label, isLastStep }: { iconProps: IconProps; label: keyof StringsMap; isLastStep?: boolean }) => (
-      <Layout.Horizontal flex padding={{ right: 'xsmall' }} spacing="small">
-        <Icon name={iconProps.name} size={iconProps.size} className={iconProps.className} />
-        <Text font={{ size: 'small' }} padding={{ left: 'xsmall', right: 'xsmall' }}>
-          {getString(label)}
-        </Text>
-        {!isLastStep ? <Icon name="arrow-right" size={12} className={css.arrow} /> : null}
-      </Layout.Horizontal>
-    ),
-    []
-  )
+  // const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
+  // const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
+  // const renderBuildPipelineStep = React.useCallback(
+  //   ({ iconProps, label, isLastStep }: { iconProps: IconProps; label: keyof StringsMap; isLastStep?: boolean }) => (
+  //     <Layout.Horizontal flex padding={{ right: 'xsmall' }} spacing="small">
+  //       <Icon name={iconProps.name} size={iconProps.size} className={iconProps.className} />
+  //       <Text font={{ size: 'small' }} padding={{ left: 'xsmall', right: 'xsmall' }}>
+  //         {getString(label)}
+  //       </Text>
+  //       {!isLastStep ? <Icon name="arrow-right" size={12} className={css.arrow} /> : null}
+  //     </Layout.Horizontal>
+  //   ),
+  //   []
+  // )
+  const closeWizard = (): void => {
+    setShowWizard(false)
+  }
 
   return showWizard ? (
-    <CDOnboardingProvider
-      queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier, repoIdentifier, branch }}
-      pipelineIdentifier=""
-      serviceIdentifier={serviceId}
-    >
-      <DeployProvisioningWizard />
-    </CDOnboardingProvider>
+    <DelegateTypeSelector onClickBack={closeWizard} />
   ) : (
     <>
       <Layout.Vertical flex>
@@ -64,58 +64,39 @@ export default function GetStartedWithCI(): React.ReactElement {
                 </Layout.Vertical>
               </Layout.Horizontal>
             </Container>
-            <Layout.Vertical>
-              <Text font={{ variation: FontVariation.H2 }}>{getString('common.getStarted.firstPipeline')}</Text>
-              <Text font={{ variation: FontVariation.SMALL }} padding={{ top: 'small' }}>
-                {getString('common.getStarted.quicklyCreate')}
-              </Text>
-              <Layout.Horizontal padding={{ top: 'xxlarge', bottom: 'huge' }}>
-                {renderBuildPipelineStep({
-                  iconProps: { name: 'services', size: 18, className: cx(css.icon, css.paddingXSmall) },
-                  label: 'common.selectWorkload'
-                })}
-                {renderBuildPipelineStep({
-                  iconProps: {
-                    name: 'ci-infra',
-                    size: 14,
-                    className: cx(css.icon, css.iconPadding)
-                  },
-                  label: 'common.getStarted.selectArtifact'
-                })}
-                {renderBuildPipelineStep({
-                  iconProps: {
-                    name: 'infrastructure',
-                    size: 14,
-                    className: cx(css.icon, css.iconPadding)
-                  },
-                  label: 'common.getStarted.selectInfra'
-                })}
-                {renderBuildPipelineStep({
-                  iconProps: {
-                    name: 'ci-build-pipeline',
-                    size: 20,
-                    className: cx(css.icon, css.iconPaddingSmall)
-                  },
-                  label: 'common.getStarted.buildPipeline',
-                  isLastStep: true
-                })}
-              </Layout.Horizontal>
-              <Container className={css.buttonRow}>
-                <Button
-                  variation={ButtonVariation.PRIMARY}
-                  size={ButtonSize.LARGE}
-                  text={getString('getStarted')}
-                  onClick={() => setShowWizard(true)}
-                />
-              </Container>
-            </Layout.Vertical>
-            <img
-              className={css.buildImg}
-              title={getString('common.getStarted.buildPipeline')}
-              src={bgBannerImageURL}
-              width={413}
-              height={260}
-            />
+            <Layout.Horizontal>
+              <Layout.Vertical width="50%">
+                <Text font={{ variation: FontVariation.H6 }} padding={{ bottom: 'medium' }}>
+                  Welcome to Harness
+                </Text>
+                <Text font={{ variation: FontVariation.H3 }} padding={{ bottom: 'large' }}>
+                  Install the Delegate to deploy your cluster
+                </Text>
+                <Layout.Horizontal>
+                  <Text font={{ variation: FontVariation.SMALL }} padding={{ top: 'small' }} width={'85%'}>
+                    Harness Delegates are worker processes that runs on your infrastructure execute tasks on your
+                    infrastructure on behalf of Harness platform.
+                  </Text>
+                </Layout.Horizontal>
+                <Layout.Horizontal>
+                  <Container className={css.buttonRow}>
+                    <Button
+                      variation={ButtonVariation.PRIMARY}
+                      size={ButtonSize.LARGE}
+                      text="Install the Delegate"
+                      onClick={() => setShowWizard(true)}
+                    />
+                  </Container>
+                </Layout.Horizontal>
+              </Layout.Vertical>
+              <img
+                className={css.buildImg}
+                title={getString('common.getStarted.buildPipeline')}
+                src={delegateImageURL}
+                width="50%"
+                height={260}
+              />
+            </Layout.Horizontal>
           </Container>
         </Container>
       </Layout.Vertical>
