@@ -57,29 +57,6 @@ export const DatadogProduct = {
   CLOUD_LOGS: 'Datadog Cloud Logs'
 }
 
-const metricPacks = [
-  {
-    identifier: 'Custom',
-    metricThresholds: [
-      {
-        metricType: 'Custom',
-        metricName: 'test',
-        type: 'IgnoreThreshold',
-        spec: {
-          action: 'Ignore'
-        },
-        criteria: {
-          type: 'Absolute',
-          spec: {
-            greaterThan: 30,
-            lessThan: 0
-          }
-        }
-      }
-    ]
-  }
-]
-
 export function mapDatadogMetricHealthSourceToDatadogMetricSetupSource(
   sourceData: any,
   isMetricThresholdEnabled: boolean
@@ -156,16 +133,21 @@ export function mapDatadogMetricHealthSourceToDatadogMetricSetupSource(
       healthScore: Boolean(metricDefinition?.analysis?.liveMonitoring?.enabled),
       sli: Boolean(metricDefinition.sli?.enabled),
       // Update spec type from swagger
-      ignoreThresholds: isMetricThresholdEnabled
-        ? getFilteredMetricThresholdValues(MetricThresholdTypes.IgnoreThreshold, metricPacks)
-        : [],
-      failFastThresholds: isMetricThresholdEnabled
-        ? getFilteredMetricThresholdValues(
-            MetricThresholdTypes.FailImmediately,
-            (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks || []
-          )
-        : []
+      ignoreThresholds: [],
+      failFastThresholds: []
     })
+  }
+
+  if (isMetricThresholdEnabled) {
+    setupSource.ignoreThresholds = getFilteredMetricThresholdValues(
+      MetricThresholdTypes.IgnoreThreshold,
+      (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks
+    )
+
+    setupSource.failFastThresholds = getFilteredMetricThresholdValues(
+      MetricThresholdTypes.FailImmediately,
+      (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks
+    )
   }
 
   return setupSource

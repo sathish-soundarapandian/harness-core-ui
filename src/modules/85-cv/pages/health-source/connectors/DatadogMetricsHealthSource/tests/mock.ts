@@ -49,6 +49,7 @@ export const DatadogMetricsHealthSourceMock = {
   spec: {
     connectorRef: 'datadogConnector',
     feature: 'Datadog Cloud Metrics',
+    metricPacks: [],
     metricDefinitions: [
       {
         identifier: 'mock_identifier',
@@ -121,7 +122,9 @@ const mockMetricDefinitionsMap: Map<string, DatadogMetricInfo> = new Map([
       serviceInstanceIdentifierTag: '',
       continuousVerification: false,
       healthScore: false,
-      sli: false
+      sli: false,
+      ignoreThresholds: [],
+      failFastThresholds: []
     }
   ]
 ])
@@ -140,7 +143,9 @@ export const DatadogMetricsSetupSource: DatadogMetricSetupSource = {
       id: 'mock_dashboard_id',
       name: 'mock_dashboard_name'
     }
-  ]
+  ],
+  ignoreThresholds: [],
+  failFastThresholds: []
 }
 
 export const MOCK_CUSTOM_CREATED_METRICS_LIST = ['mock_metric_path']
@@ -176,7 +181,260 @@ export const EXPECTED_DATADOG_METRIC_INFO = {
   identifier: 'mock_metric_name',
   metric: 'datadog.agent.running',
   metricTags: [],
-  query: 'avg:datadog.agent.running{*} by {host}.rollup(avg, 60)'
+  query: 'avg:datadog.agent.running{*} by {host}.rollup(avg, 60)',
+  ignoreThresholds: [],
+  failFastThresholds: []
 }
 
 export const METRIC_VALIDATION_RESULT = { overall: undefined, sli: undefined }
+
+export const mockData = {
+  connectorRef: 'datadoglog',
+  isEdit: true,
+  healthSourceList: [
+    {
+      type: 'DatadogMetrics',
+      identifier: 'datadogmetric',
+      name: 'datadog-metric',
+      spec: {
+        connectorRef: 'org.datadog',
+        feature: 'Datadog Cloud Metrics',
+        metricDefinitions: [
+          {
+            identifier: 'CPU_Limit',
+            dashboardName: 'g1',
+            dashboardId: null,
+            metricPath: 'CPU Limit',
+            metricName: 'CPU Limit',
+            metric: 'kubernetes.cpu.limits',
+            metricTags: [],
+            isManualQuery: true,
+            isCustomCreatedMetric: true,
+            serviceInstanceIdentifierTag: 'pod_name',
+            groupingQuery: 'kubernetes.cpu.limits{*} by {pod_name}.rollup(avg, 60)',
+            query: 'kubernetes.cpu.limits{*}.rollup(avg, 60)',
+            sli: {
+              enabled: true
+            },
+            analysis: {
+              riskProfile: {
+                metricType: 'RESP_TIME',
+                category: 'Performance',
+                thresholdTypes: ['ACT_WHEN_HIGHER']
+              },
+              liveMonitoring: {
+                enabled: true
+              },
+              deploymentVerification: {
+                enabled: true,
+                serviceInstanceFieldName: 'pod_name'
+              }
+            }
+          }
+        ],
+        metricPacks: [
+          {
+            identifier: 'Custom',
+            metricThresholds: [
+              {
+                type: 'IgnoreThreshold',
+                spec: {
+                  action: 'Ignore'
+                },
+                criteria: {
+                  type: 'Percentage',
+                  spec: {
+                    greaterThan: 54
+                  },
+                  criteriaPercentageType: 'greaterThan'
+                },
+                metricType: 'Custom',
+                metricName: 'CPU Limit'
+              },
+              {
+                type: 'IgnoreThreshold',
+                spec: {
+                  action: 'Ignore'
+                },
+                criteria: {
+                  type: 'Absolute',
+                  spec: {
+                    greaterThan: 6,
+                    lessThan: 77
+                  }
+                },
+                metricType: 'Custom',
+                metricName: 'CPU Limit'
+              },
+              {
+                type: 'FailImmediately',
+                spec: {
+                  action: 'FailAfterOccurrence',
+                  spec: {
+                    count: 12
+                  }
+                },
+                criteria: {
+                  type: 'Percentage',
+                  spec: {
+                    greaterThan: 33
+                  },
+                  criteriaPercentageType: 'greaterThan'
+                },
+                metricType: 'Custom',
+                metricName: 'CPU Limit'
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      type: 'DatadogMetrics',
+      identifier: 'asda',
+      name: 'asda',
+      spec: {
+        connectorRef: 'datadoglog',
+        feature: 'Datadog Cloud Metrics',
+        metricDefinitions: [
+          {
+            identifier: 'test1',
+            dashboardName: 'G2',
+            metricPath: 'test1',
+            metricName: 'test1',
+            metric: 'No matching data.',
+            metricTags: [],
+            aggregation: 'avg',
+            isManualQuery: false,
+            isCustomCreatedMetric: true,
+            serviceInstanceIdentifierTag: '',
+            groupingQuery: 'avg:No matching data.{*}.rollup(avg, 60)',
+            query: 'avg:No matching data.{*}.rollup(avg, 60)',
+            sli: {
+              enabled: true
+            },
+            analysis: {
+              riskProfile: {
+                category: null,
+                thresholdTypes: []
+              },
+              liveMonitoring: {
+                enabled: false
+              },
+              deploymentVerification: {
+                enabled: false,
+                serviceInstanceFieldName: ''
+              }
+            }
+          }
+        ],
+        metricPacks: [
+          {
+            identifier: 'Custom',
+            metricThresholds: [
+              {
+                type: 'IgnoreThreshold',
+                spec: {
+                  action: 'Ignore'
+                },
+                criteria: {
+                  type: 'Absolute',
+                  spec: {
+                    greaterThan: 54
+                  }
+                },
+                metricType: 'Custom',
+                metricName: 'test1'
+              },
+              {
+                type: 'FailImmediately',
+                spec: {
+                  action: 'FailAfterOccurrence',
+                  spec: {
+                    count: 45
+                  }
+                },
+                criteria: {
+                  type: 'Percentage',
+                  spec: {
+                    greaterThan: 87
+                  },
+                  criteriaPercentageType: 'greaterThan'
+                },
+                metricType: 'Custom',
+                metricName: 'test1'
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  serviceRef: 'datadogmetric',
+  environmentRef: 'prod',
+  monitoredServiceRef: {
+    name: 'datadogmetric_prod',
+    identifier: 'datadogmetric_prod'
+  },
+  existingMetricDetails: {
+    name: 'asda',
+    identifier: 'asda',
+    type: 'DatadogMetrics',
+    spec: {
+      connectorRef: 'datadoglog',
+      feature: 'Datadog Cloud Metrics',
+      metricDefinitions: [
+        {
+          identifier: 'test1',
+          metricName: 'test1',
+          riskProfile: {
+            category: 'Errors',
+            metricType: null,
+            thresholdTypes: []
+          },
+          analysis: {
+            liveMonitoring: {
+              enabled: false
+            },
+            deploymentVerification: {
+              enabled: false,
+              serviceInstanceFieldName: '',
+              serviceInstanceMetricPath: null
+            },
+            riskProfile: {
+              category: 'Errors',
+              metricType: null,
+              thresholdTypes: []
+            }
+          },
+          sli: {
+            enabled: true
+          },
+          dashboardId: null,
+          dashboardName: 'G2',
+          metricPath: 'test1',
+          query: 'avg:No matching data.{*}.rollup(avg, 60)',
+          groupingQuery: 'avg:No matching data.{*}.rollup(avg, 60)',
+          metric: 'No matching data.',
+          aggregation: 'avg',
+          serviceInstanceIdentifierTag: '',
+          metricTags: null,
+          isManualQuery: false,
+          isCustomCreatedMetric: true
+        }
+      ]
+    }
+  },
+  healthSourceName: 'asda',
+  healthSourceIdentifier: 'asda',
+  sourceType: 'DatadogMetrics',
+  product: {
+    label: 'Datadog Cloud Metrics',
+    value: 'Datadog Cloud Metrics'
+  },
+  selectedDashboards: [
+    {
+      name: 'G2'
+    }
+  ]
+}

@@ -63,6 +63,7 @@ import { initGroupedCreatedMetrics } from '../../common/CustomMetric/CustomMetri
 import type { MetricThresholdsState } from '../../common/MetricThresholds/MetricThresholds.types'
 import MetricThresholdProvider from './components/MetricThresholds/MetricThresholdProvider'
 import type { CustomMappedMetric } from '../../common/CustomMetric/CustomMetric.types'
+import { getCustomMetricGroupNames } from '../../common/MetricThresholds/MetricThresholds.utils'
 
 export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSourceProps): JSX.Element {
   const { data, isTemplate, expressions } = props
@@ -70,14 +71,13 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
   const { getRBACErrorMessage } = useRBACError()
   const { showError } = useToaster()
 
-  // TODO: Remove this
-  // const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD)
-  const isMetricThresholdEnabled = true
+  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD)
 
   const transformedData = useMemo(
     () => mapDatadogMetricHealthSourceToDatadogMetricSetupSource(data, isMetricThresholdEnabled),
     [data, isMetricThresholdEnabled]
   )
+
   const [metricHealthDetailsData, setMetricHealthDetailsData] = useState(transformedData.metricDefinition)
   const [activeMetricsTracingId, metricTagsTracingId] = useMemo(() => [Utils.randomId(), Utils.randomId()], [])
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
@@ -313,6 +313,11 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
   const selectedMetricDataForFormik = selectedMetricData || {}
   const initialValues = { ...selectedMetricDataForFormik, ...metricThresholds }
 
+  const groupedCreatedMetrics = initGroupedCreatedMetrics(
+    metricHealthDetailsData as Map<string, CustomMappedMetric>,
+    getString
+  )
+
   return (
     <Formik<DatadogMetricInfo>
       enableReinitialize={true}
@@ -389,14 +394,11 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
                 />
               }
             />
-            {isMetricThresholdEnabled && (
+            {isMetricThresholdEnabled && Boolean(getCustomMetricGroupNames(groupedCreatedMetrics).length) && (
               <MetricThresholdProvider
                 formikValues={formikProps.values}
                 setThresholdState={setMetricThresholds}
-                groupedCreatedMetrics={initGroupedCreatedMetrics(
-                  metricHealthDetailsData as Map<string, CustomMappedMetric>,
-                  getString
-                )}
+                groupedCreatedMetrics={groupedCreatedMetrics}
               />
             )}
             <Container style={{ marginBottom: '120px' }} />

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { Container } from '@wings-software/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
@@ -14,11 +14,12 @@ import type { DatadogMetricsHealthSourceProps } from '@cv/pages/health-source/co
 import DatadogMetricsHealthSource from '@cv/pages/health-source/connectors/DatadogMetricsHealthSource/DatadogMetricsHealthSource'
 import type { CloudMetricsHealthSourceProps } from '@cv/components/CloudMetricsHealthSource/CloudMetricsHealthSource.type'
 import type { DatadogDashboardDetail } from 'services/cv'
+import * as useFeatureFlagMock from '@common/hooks/useFeatureFlag'
 import * as cvService from 'services/cv'
 import type { GroupNameProps } from '@cv/components/GroupName/GroupName'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
-import { MockSampleData, mockWidgetSelectedData, SourceTabsData } from './mock'
+import { mockData, MockSampleData, mockWidgetSelectedData, SourceTabsData } from './mock'
 
 jest.mock('@cv/hooks/IndexedDBHook/IndexedDBHook', () => ({
   useIndexedDBHook: jest.fn().mockReturnValue({ isInitializingDB: false, dbInstance: { get: jest.fn() } }),
@@ -163,5 +164,38 @@ describe('DatadogMetricsHealthSource unit tests', () => {
     const { getByText } = render(<WrapperComponent data={SourceTabsData} onSubmit={jest.fn()} />)
 
     await waitFor(() => expect(getByText('Mock error message')).not.toBeNull())
+  })
+
+  describe('Metric thresholds', () => {
+    test('should render metric thresholds', () => {
+      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
+      render(<WrapperComponent data={mockData} onSubmit={jest.fn()} />)
+
+      expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (1)')).toBeInTheDocument()
+      expect(screen.getByText('cv.monitoringSources.appD.failFastThresholds (1)')).toBeInTheDocument()
+      const addButton = screen.getByTestId('AddThresholdButton')
+
+      expect(addButton).toBeInTheDocument()
+
+      fireEvent.click(addButton)
+
+      expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (2)')).toBeInTheDocument()
+    })
+
+    test('should not render metric thresholds when feature flag is turned off', () => {
+      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(false)
+      render(<WrapperComponent data={SourceTabsData} onSubmit={jest.fn()} />)
+
+      expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).not.toBeInTheDocument()
+      expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).not.toBeInTheDocument()
+    })
+
+    test('should not render metric thresholds there is not custom metric', () => {
+      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
+      render(<WrapperComponent data={SourceTabsData} onSubmit={jest.fn()} />)
+
+      expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).not.toBeInTheDocument()
+      expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).not.toBeInTheDocument()
+    })
   })
 })

@@ -22,8 +22,6 @@ export default function MetricThresholdProvider(props: MetricThresholdCommonProp
                 <MetricThresholdTab
                   IgnoreThresholdTabContent={IgnoreThresholdContent}
                   FailFastThresholdTabContent={FailFastThresholdContent}
-                  // IgnoreThresholdTabContent={() => <h1>IgnoreThresholdTabContent</h1>}
-                  // FailFastThresholdTabContent={() => <h1>FailFastThresholdTabContent</h1>}
                 />
               </MetricThresholdContent>
             </MetricThresholdContext.Provider>
