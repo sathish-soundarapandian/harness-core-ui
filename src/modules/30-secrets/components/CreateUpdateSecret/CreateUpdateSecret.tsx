@@ -318,7 +318,7 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
       if (inputs) {
         const filteredInputs = {
           environmentVariables: inputs.map((item: InputSetSchema) => {
-            if (!item.fixed) {
+            if (!item.useAsDefault) {
               return { ...pick(item, ['name', 'type']), value: '' }
             }
           })

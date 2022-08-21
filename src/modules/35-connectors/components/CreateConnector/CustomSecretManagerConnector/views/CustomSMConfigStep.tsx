@@ -236,6 +236,7 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
                   <ScriptVariablesRuntimeInput
                     allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
                     template={templateInputSets}
+                    enableFixed
                   />
                 ) : null}
 

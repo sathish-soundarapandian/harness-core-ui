@@ -18,7 +18,7 @@ export interface InputSetSchema {
   name: string
   type: 'String' | 'Number'
   value: string
-  fixed?: boolean
+  useAsDefault?: boolean
 }
 
 interface InputOutputVariablesInputSetProps {
@@ -102,8 +102,7 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
                           {enableFixed ? (
                             <FormInput.CheckBox
                               label=""
-                              name={`${prefix}templateInputs.environmentVariables[${i}].fixed`}
-                              placeholder={getString('typeLabel')}
+                              name={`${prefix}templateInputs.environmentVariables[${i}].useAsDefault`}
                               disabled={false}
                               className={css.fixed}
                             />
