@@ -636,6 +636,15 @@ export interface AddUsersResponse {
   }
 }
 
+export interface AddressDto {
+  city?: string
+  country?: string
+  line1?: string
+  line2?: string
+  postalCode?: string
+  state?: string
+}
+
 export interface AgentMtlsEndpointDetails {
   accountId?: string
   caCertificates?: string
@@ -1118,6 +1127,34 @@ export type AzureConnector = ConnectorConfigDTO & {
   executeOnDelegate?: boolean
 }
 
+export interface AzureCreateARMResourceParameterFile {
+  store: StoreConfigWrapper
+}
+
+export interface AzureCreateARMResourceStepConfiguration {
+  connectorRef: string
+  parameters?: AzureCreateARMResourceParameterFile
+  scope: AzureCreateARMResourceStepScope
+  template: AzureCreateARMResourceTemplateFile
+  type?: string
+}
+
+export type AzureCreateARMResourceStepInfo = StepSpecType & {
+  configuration: AzureCreateARMResourceStepConfiguration
+  delegateSelectors?: string[]
+  metadata?: string
+  provisionerIdentifier: string
+}
+
+export interface AzureCreateARMResourceStepScope {
+  spec: AzureScopeType
+  type: string
+}
+
+export interface AzureCreateARMResourceTemplateFile {
+  store: StoreConfigWrapper
+}
+
 export interface AzureCredential {
   spec?: AzureCredentialSpec
   type: 'InheritFromDelegate' | 'ManualConfig'
@@ -1166,6 +1203,11 @@ export type AzureKeyVaultMetadataSpecDTO = SecretManagerMetadataSpecDTO & {
 
 export interface AzureMSIAuth {
   [key: string]: any
+}
+
+export type AzureManagementSpec = AzureScopeType & {
+  location: string
+  managementGroupId: string
 }
 
 export type AzureManualDetails = AzureCredentialSpec & {
@@ -1243,10 +1285,23 @@ export interface AzureResourceGroupDTO {
   resourceGroup: string
 }
 
+export type AzureResourceGroupSpec = AzureScopeType & {
+  mode?: 'Incremental' | 'Complete'
+  resourceGroup: string
+  subscription: string
+}
+
 export interface AzureResourceGroupsDTO {
   resourceGroups?: AzureResourceGroupDTO[]
 }
 
+<<<<<<< HEAD
+=======
+export interface AzureScopeType {
+  [key: string]: any
+}
+
+>>>>>>> e9c0294aad67 (feat: [PL-19818]: Updated services)
 export type AzureSshWinrmInstanceInfoDTO = InstanceInfoDTO & {
   host: string
   infrastructureKey: string
@@ -1256,6 +1311,11 @@ export type AzureSshWinrmInstanceInfoDTO = InstanceInfoDTO & {
 export interface AzureSubscriptionDTO {
   subscriptionId: string
   subscriptionName: string
+}
+
+export type AzureSubscriptionSpec = AzureScopeType & {
+  location: string
+  subscription: string
 }
 
 export interface AzureSubscriptionsDTO {
@@ -1270,6 +1330,10 @@ export interface AzureTagDTO {
 
 export interface AzureTagsDTO {
   tags?: AzureTagDTO[]
+}
+
+export type AzureTenantSpec = AzureScopeType & {
+  location: string
 }
 
 export type AzureUserAssignedMSIAuth = AzureAuthCredentialDTO & {
@@ -2144,7 +2208,18 @@ export type CustomRestrictionDTO = RestrictionDTO & { [key: string]: any }
 
 export type CustomRestrictionMetadataDTO = RestrictionMetadataDTO & {}
 
+export type CustomSecretManager = ConnectorConfigDTO & {
+  connectorRef?: string
+  default?: boolean
+  delegateSelectors?: string[]
+  host?: string
+  onDelegate?: boolean
+  template?: TemplateLinkConfig
+  workingDirectory?: string
+}
+
 export interface CustomerDTO {
+  address?: AddressDto
   billingEmail?: string
   companyName?: string
 }
@@ -2256,11 +2331,15 @@ export interface DelegateGroupDetails {
   connectivityStatus?: string
   delegateConfigurationId?: string
   delegateDescription?: string
+  delegateGroupExpirationTime?: number
   delegateGroupIdentifier?: string
   delegateInstanceDetails?: DelegateInner[]
   delegateType?: string
   delegateVersion?: string
+<<<<<<< HEAD
   expirationTime?: string
+=======
+>>>>>>> e9c0294aad67 (feat: [PL-19818]: Updated services)
   groupCustomSelectors?: string[]
   groupId?: string
   groupImplicitSelectors?: {
@@ -2274,6 +2353,7 @@ export interface DelegateGroupDetails {
   }
   groupName?: string
   grpcActive?: boolean
+  immutable?: boolean
   lastHeartBeat?: number
   tokenActive?: boolean
   upgraderLastUpdated?: number
@@ -2290,10 +2370,12 @@ export interface DelegateGroupTags {
 export interface DelegateInner {
   activelyConnected?: boolean
   connections?: DelegateConnectionDetails[]
+  delegateExpirationTime?: number
   hostName?: string
   lastHeartbeat?: number
   tokenActive?: boolean
   uuid?: string
+  version?: string
 }
 
 export interface DelegateMetaInfo {
@@ -2768,6 +2850,7 @@ export interface EntityDetail {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
     | 'S3Upload'
@@ -2788,6 +2871,7 @@ export interface EntityDetail {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
 }
 
@@ -4180,6 +4264,7 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'AZURE_SWAP_SLOT'
     | 'AZURE_WEBAPP_ROLLBACK'
     | 'JENKINS_BUILD'
+    | 'AZURE_CREATE_ARM_RESOURCE'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -4248,6 +4333,7 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'AZURE_SWAP_SLOT'
     | 'AZURE_WEBAPP_ROLLBACK'
     | 'JENKINS_BUILD'
+    | 'AZURE_CREATE_ARM_RESOURCE'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -4318,6 +4404,7 @@ export interface FeatureRestrictionDetailsDTO {
     | 'AZURE_SWAP_SLOT'
     | 'AZURE_WEBAPP_ROLLBACK'
     | 'JENKINS_BUILD'
+    | 'AZURE_CREATE_ARM_RESOURCE'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -4396,6 +4483,7 @@ export interface FeatureRestrictionMetadataDTO {
     | 'AZURE_SWAP_SLOT'
     | 'AZURE_WEBAPP_ROLLBACK'
     | 'JENKINS_BUILD'
+    | 'AZURE_CREATE_ARM_RESOURCE'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -4418,6 +4506,7 @@ export interface FeedbackFormDTO {
 
 export interface FfSubscriptionDTO {
   accountId?: string
+  customer?: CustomerDTO
   edition?: string
   numberOfDevelopers?: number
   numberOfMau?: number
@@ -4752,6 +4841,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
     | 'S3Upload'
@@ -4772,6 +4862,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
   )[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
@@ -4851,6 +4942,7 @@ export interface GitEntityFilterProperties {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
     | 'S3Upload'
@@ -4871,6 +4963,7 @@ export interface GitEntityFilterProperties {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
   )[]
   gitSyncConfigIdentifiers?: string[]
@@ -4983,6 +5076,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
     | 'S3Upload'
@@ -5003,6 +5097,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
   errorMessage?: string
   filePath?: string
@@ -5090,6 +5185,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
     | 'S3Upload'
@@ -5110,6 +5206,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
@@ -5305,6 +5402,7 @@ export interface GitSyncEntityDTO {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
     | 'S3Upload'
@@ -5325,6 +5423,7 @@ export interface GitSyncEntityDTO {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
   entityUrl?: string
   folderPath?: string
@@ -5406,6 +5505,7 @@ export interface GitSyncEntityListDTO {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
     | 'S3Upload'
@@ -5426,6 +5526,7 @@ export interface GitSyncEntityListDTO {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
@@ -5524,6 +5625,7 @@ export interface GitSyncErrorDTO {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
     | 'S3Upload'
@@ -5544,6 +5646,7 @@ export interface GitSyncErrorDTO {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
@@ -7988,10 +8091,6 @@ export interface PipelinesExecutionDashboardInfo {
   runningExecutions?: PipelineExecutionDashboardInfo[]
 }
 
-export interface PollingResponseDTO {
-  pollingResponse?: string[]
-}
-
 export interface PriceCollectionDTO {
   prices?: PriceDTO[]
 }
@@ -8103,6 +8202,13 @@ export type RateLimitRestrictionMetadataDTO = RestrictionMetadataDTO & {
   timeUnit?: TimeUnit
 }
 
+export interface RecommendationParams {
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  usage?: {
+    [key: string]: number
+  }
+}
+
 export interface ReferenceDTO {
   accountIdentifier?: string
   count?: number
@@ -8191,6 +8297,7 @@ export interface ReferencedByDTO {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
     | 'S3Upload'
@@ -8211,6 +8318,7 @@ export interface ReferencedByDTO {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
 }
 
@@ -8639,6 +8747,15 @@ export interface ResponseEcrResponseDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseEnumMapUsageKeyLong {
+  correlationId?: string
+  data?: {
+    [key: string]: number
+  }
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseEnvBuildIdAndInstanceCountInfoList {
   correlationId?: string
   data?: EnvBuildIdAndInstanceCountInfoList
@@ -9049,6 +9166,7 @@ export interface ResponseListEntityType {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
     | 'S3Upload'
@@ -9069,6 +9187,7 @@ export interface ResponseListEntityType {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
   )[]
   metaData?: { [key: string]: any }
@@ -10061,13 +10180,6 @@ export interface ResponsePaymentMethodCollectionDTO {
 export interface ResponsePipelinesExecutionDashboardInfo {
   correlationId?: string
   data?: PipelinesExecutionDashboardInfo
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponsePollingResponseDTO {
-  correlationId?: string
-  data?: PollingResponseDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -11088,6 +11200,7 @@ export interface SecretManagerMetadataDTO {
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   spec?: SecretManagerMetadataSpecDTO
 }
 
@@ -11103,6 +11216,7 @@ export interface SecretManagerMetadataRequestDTO {
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   identifier: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -11376,6 +11490,7 @@ export interface ServiceNowFieldAllowedValueNG {
 export interface ServiceNowFieldNG {
   allowedValues: ServiceNowFieldAllowedValueNG[]
   custom?: boolean
+  internalType?: string
   key: string
   name: string
   required?: boolean
@@ -11385,7 +11500,7 @@ export interface ServiceNowFieldNG {
 export interface ServiceNowFieldSchemaNG {
   array?: boolean
   customType?: string
-  type: 'glide_date_time' | 'integer' | 'boolean' | 'string' | 'option'
+  type: 'glide_date_time' | 'integer' | 'boolean' | 'string' | 'option' | 'unknown'
   typeStr: string
 }
 
@@ -11668,14 +11783,15 @@ export type SplunkConnectorDTO = ConnectorConfigDTO & {
 export type SshServiceSpec = ServiceSpec & {}
 
 export type SshWinRmAwsInfrastructure = Infrastructure & {
-  autoScalingGroupName?: string
-  awsInstanceFilter?: AwsInstanceFilter
+  awsInstanceFilter: AwsInstanceFilter
   connectorRef: string
   credentialsRef: string
+<<<<<<< HEAD
   hostNameConvention: string
   loadBalancer: string
+=======
+>>>>>>> e9c0294aad67 (feat: [PL-19818]: Updated services)
   region: string
-  useAutoScalingGroup?: boolean
 }
 
 export type SshWinRmAzureInfrastructure = Infrastructure & {
@@ -11801,6 +11917,7 @@ export interface StepData {
     | 'ServerlessAwsLambdaRollback'
     | 'Command'
     | 'JenkinsBuild'
+    | 'AzureCreateARMResource'
 }
 
 export interface StepElementConfig {
@@ -12000,7 +12117,9 @@ export type TemplateInputsErrorMetadataDTO = ErrorMetadataDTO & {
 }
 
 export interface TemplateLinkConfig {
-  templateInputs?: JsonNode
+  templateInputs?: {
+    [key: string]: { [key: string]: any }
+  }
   templateRef: string
   versionLabel?: string
 }
@@ -12516,6 +12635,7 @@ export type VaultConnectorDTO = ConnectorConfigDTO & {
   k8sAuthEndpoint?: string
   namespace?: string
   readOnly?: boolean
+  renewAppRoleToken?: boolean
   renewalIntervalMinutes: number
   secretEngineManuallyConfigured?: boolean
   secretEngineName?: string
@@ -12785,8 +12905,6 @@ export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody = string
-
-export type SubscribeBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -13338,6 +13456,7 @@ export interface ListActivitiesQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
     | 'S3Upload'
@@ -13358,6 +13477,7 @@ export interface ListActivitiesQueryParams {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
   referredByEntityType?:
     | 'CreatePR'
@@ -13431,6 +13551,7 @@ export interface ListActivitiesQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
     | 'S3Upload'
@@ -13451,6 +13572,7 @@ export interface ListActivitiesQueryParams {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
 }
 
@@ -13628,6 +13750,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
     | 'S3Upload'
@@ -13648,6 +13771,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
   referredByEntityType?:
     | 'CreatePR'
@@ -13721,6 +13845,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
     | 'S3Upload'
@@ -13741,6 +13866,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
 }
 
@@ -15156,7 +15282,8 @@ export interface GetBuildDetailsForACRRepositoryQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export type GetBuildDetailsForACRRepositoryProps = Omit<
@@ -15216,7 +15343,8 @@ export interface GetBuildDetailsForAcrArtifactWithYamlQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
   serviceId?: string
 }
 
@@ -15548,7 +15676,8 @@ export interface GetBuildDetailsForArtifactoryArtifactQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export type GetBuildDetailsForArtifactoryArtifactProps = Omit<
@@ -15614,7 +15743,8 @@ export interface GetBuildDetailsForArtifactoryArtifactWithYamlQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
   serviceId?: string
 }
 
@@ -15907,7 +16037,8 @@ export interface GetBuildDetailsForDockerQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export type GetBuildDetailsForDockerProps = Omit<
@@ -15965,7 +16096,8 @@ export interface GetBuildDetailsForDockerWithYamlQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
   serviceId?: string
 }
 
@@ -16384,7 +16516,8 @@ export interface GetBuildDetailsForEcrQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export type GetBuildDetailsForEcrProps = Omit<
@@ -16443,7 +16576,8 @@ export interface GetBuildDetailsForEcrWithYamlQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
   serviceId?: string
 }
 
@@ -16831,7 +16965,8 @@ export interface GetBuildDetailsForGcrQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export type GetBuildDetailsForGcrProps = Omit<
@@ -16890,7 +17025,8 @@ export interface GetBuildDetailsForGcrWithYamlQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
   serviceId?: string
 }
 
@@ -17225,7 +17361,8 @@ export interface GetBuildsForJenkinsQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export interface GetBuildsForJenkinsPathParams {
@@ -17294,7 +17431,8 @@ export interface GetJobParametersForJenkinsQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export interface GetJobParametersForJenkinsPathParams {
@@ -17384,7 +17522,8 @@ export interface GetArtifactPathForJenkinsQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export interface GetArtifactPathForJenkinsPathParams {
@@ -17470,7 +17609,8 @@ export interface GetJobDetailsForJenkinsQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export type GetJobDetailsForJenkinsProps = Omit<
@@ -17530,7 +17670,8 @@ export interface GetBuildDetailsForNexusArtifactQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export type GetBuildDetailsForNexusArtifactProps = Omit<
@@ -17597,7 +17738,8 @@ export interface GetBuildDetailsForNexusArtifactWithYamlQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
   serviceId?: string
 }
 
@@ -19169,6 +19311,54 @@ export const tagsPromise = (
     signal
   )
 
+export interface TagsV2QueryParams {
+  awsConnectorRef?: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  region?: string
+  envId?: string
+  infraDefinitionId?: string
+}
+
+export type TagsV2Props = Omit<GetProps<ResponseSetString, Failure | Error, TagsV2QueryParams, void>, 'path'>
+
+/**
+ * Get all the tags V2
+ */
+export const TagsV2 = (props: TagsV2Props) => (
+  <Get<ResponseSetString, Failure | Error, TagsV2QueryParams, void>
+    path={`/aws/aws-helper/v2/tags`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseTagsV2Props = Omit<UseGetProps<ResponseSetString, Failure | Error, TagsV2QueryParams, void>, 'path'>
+
+/**
+ * Get all the tags V2
+ */
+export const useTagsV2 = (props: UseTagsV2Props) =>
+  useGet<ResponseSetString, Failure | Error, TagsV2QueryParams, void>(`/aws/aws-helper/v2/tags`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Get all the tags V2
+ */
+export const tagsV2Promise = (
+  props: GetUsingFetchProps<ResponseSetString, Failure | Error, TagsV2QueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseSetString, Failure | Error, TagsV2QueryParams, void>(
+    getConfig('ng/api'),
+    `/aws/aws-helper/v2/tags`,
+    props,
+    signal
+  )
+
 export interface VpcsQueryParams {
   awsConnectorRef: string
   accountIdentifier: string
@@ -20119,7 +20309,8 @@ export interface GetConnectorListQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export type GetConnectorListProps = Omit<
@@ -20366,7 +20557,8 @@ export interface GetCCMK8SConnectorListQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
   getDistinctFromBranches?: boolean
 }
 
@@ -20597,7 +20789,8 @@ export interface GetConnectorListV2QueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
   getDistinctFromBranches?: boolean
 }
 
@@ -20738,7 +20931,8 @@ export interface GetConnectorStatisticsQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export type GetConnectorStatisticsProps = Omit<
@@ -20792,7 +20986,8 @@ export interface GetTestConnectionResultQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export interface GetTestConnectionResultPathParams {
@@ -21184,7 +21379,8 @@ export interface GetConnectorQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export interface GetConnectorPathParams {
@@ -24008,6 +24204,7 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'AZURE_SWAP_SLOT'
     | 'AZURE_WEBAPP_ROLLBACK'
     | 'JENKINS_BUILD'
+    | 'AZURE_CREATE_ARM_RESOURCE'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -24146,6 +24343,7 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'AZURE_SWAP_SLOT'
       | 'AZURE_WEBAPP_ROLLBACK'
       | 'JENKINS_BUILD'
+      | 'AZURE_CREATE_ARM_RESOURCE'
       | 'SECURITY'
       | 'DEVELOPERS'
       | 'MONTHLY_ACTIVE_USERS'
@@ -24242,6 +24440,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
     | 'S3Upload'
@@ -24262,12 +24461,14 @@ export interface ListReferredByEntitiesQueryParams {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export type ListReferredByEntitiesProps = Omit<
@@ -24391,6 +24592,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
     | 'S3Upload'
@@ -24411,6 +24613,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
   searchTerm?: string
 }
@@ -24464,7 +24667,8 @@ export interface CreateEnvironmentGroupQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export type CreateEnvironmentGroupProps = Omit<
@@ -24553,7 +24757,8 @@ export interface GetEnvironmentGroupListQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export type GetEnvironmentGroupListProps = Omit<
@@ -24708,7 +24913,8 @@ export interface GetEnvironmentGroupQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export interface GetEnvironmentGroupPathParams {
@@ -27292,6 +27498,7 @@ export interface GetReferencedByQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
     | 'S3Upload'
@@ -27312,6 +27519,7 @@ export interface GetReferencedByQueryParams {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
   searchTerm?: string
 }
@@ -28648,6 +28856,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
     | 'S3Upload'
@@ -28668,6 +28877,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
 }
 
@@ -28809,6 +29019,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'SaveCacheGCS'
       | 'SaveCacheS3'
       | 'Security'
+      | 'GitClone'
       | 'ArtifactoryUpload'
       | 'GCSUpload'
       | 'S3Upload'
@@ -28829,6 +29040,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'AzureSwapSlot'
       | 'AzureWebAppRollback'
       | 'JenkinsBuild'
+      | 'AzureCreateARMResource'
       | 'BuildAndPushACR'
   },
   signal?: RequestInit['signal']
@@ -28851,7 +29063,8 @@ export interface ListGitSyncErrorsQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
   gitToHarness?: boolean
 }
 
@@ -28910,7 +29123,8 @@ export interface ListGitToHarnessErrorsCommitsQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
   numberOfErrorsInSummary?: number
 }
 
@@ -28983,7 +29197,8 @@ export interface ListGitToHarnessErrorsForCommitQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export interface ListGitToHarnessErrorsForCommitPathParams {
@@ -29073,7 +29288,8 @@ export interface GetGitSyncErrorsCountQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export type GetGitSyncErrorsCountProps = Omit<
@@ -31665,7 +31881,8 @@ export interface GetJiraIssueCreateMetadataQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export type GetJiraIssueCreateMetadataProps = Omit<
@@ -31725,7 +31942,8 @@ export interface GetJiraProjectsQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export type GetJiraProjectsProps = Omit<
@@ -31782,7 +32000,8 @@ export interface GetJiraStatusesQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export type GetJiraStatusesProps = Omit<
@@ -31838,7 +32057,8 @@ export interface GetJiraIssueUpdateMetadataQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export type GetJiraIssueUpdateMetadataProps = Omit<
@@ -31898,7 +32118,8 @@ export interface ValidateJiraCredentialsQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export type ValidateJiraCredentialsProps = Omit<
@@ -32816,6 +33037,59 @@ export const getAccountLicensesPromise = (
   getUsingFetch<ResponseAccountLicenseDTO, Failure | Error, GetAccountLicensesQueryParams, void>(
     getConfig('ng/api'),
     `/licenses/account`,
+    props,
+    signal
+  )
+
+export interface GetAllAccountModuleLicensesQueryParams {
+  accountIdentifier?: string
+}
+
+export type GetAllAccountModuleLicensesProps = Omit<
+  GetProps<ResponseListModuleLicenseDTO, Failure | Error, GetAllAccountModuleLicensesQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets All Module Licenses for an Account
+ */
+export const GetAllAccountModuleLicenses = (props: GetAllAccountModuleLicensesProps) => (
+  <Get<ResponseListModuleLicenseDTO, Failure | Error, GetAllAccountModuleLicensesQueryParams, void>
+    path={`/licenses/account-license`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetAllAccountModuleLicensesProps = Omit<
+  UseGetProps<ResponseListModuleLicenseDTO, Failure | Error, GetAllAccountModuleLicensesQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets All Module Licenses for an Account
+ */
+export const useGetAllAccountModuleLicenses = (props: UseGetAllAccountModuleLicensesProps) =>
+  useGet<ResponseListModuleLicenseDTO, Failure | Error, GetAllAccountModuleLicensesQueryParams, void>(
+    `/licenses/account-license`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets All Module Licenses for an Account
+ */
+export const getAllAccountModuleLicensesPromise = (
+  props: GetUsingFetchProps<
+    ResponseListModuleLicenseDTO,
+    Failure | Error,
+    GetAllAccountModuleLicensesQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListModuleLicenseDTO, Failure | Error, GetAllAccountModuleLicensesQueryParams, void>(
+    getConfig('ng/api'),
+    `/licenses/account-license`,
     props,
     signal
   )
@@ -33939,6 +34213,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
     | 'S3Upload'
@@ -33959,6 +34234,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
   yamlGroup?: string
 }
@@ -34160,6 +34436,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
     | 'S3Upload'
@@ -34180,6 +34457,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
 }
 
@@ -34669,162 +34947,6 @@ export const postExecutionStrategyYamlPromise = (
     'POST',
     getConfig('ng/api'),
     `/pipelines/configuration/strategies/yaml-snippets`,
-    props,
-    signal
-  )
-
-export interface ProcessPollingResultNgQueryParams {
-  accountId?: string
-}
-
-export interface ProcessPollingResultNgPathParams {
-  perpetualTaskId: string
-}
-
-export type ProcessPollingResultNgProps = Omit<
-  MutateProps<
-    void,
-    Failure | Error,
-    ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
-    ProcessPollingResultNgPathParams
-  >,
-  'path' | 'verb'
-> &
-  ProcessPollingResultNgPathParams
-
-export const ProcessPollingResultNg = ({ perpetualTaskId, ...props }: ProcessPollingResultNgProps) => (
-  <Mutate<
-    void,
-    Failure | Error,
-    ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
-    ProcessPollingResultNgPathParams
-  >
-    verb="POST"
-    path={`/polling/delegate-response/${perpetualTaskId}`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseProcessPollingResultNgProps = Omit<
-  UseMutateProps<
-    void,
-    Failure | Error,
-    ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
-    ProcessPollingResultNgPathParams
-  >,
-  'path' | 'verb'
-> &
-  ProcessPollingResultNgPathParams
-
-export const useProcessPollingResultNg = ({ perpetualTaskId, ...props }: UseProcessPollingResultNgProps) =>
-  useMutate<
-    void,
-    Failure | Error,
-    ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
-    ProcessPollingResultNgPathParams
-  >(
-    'POST',
-    (paramsInPath: ProcessPollingResultNgPathParams) => `/polling/delegate-response/${paramsInPath.perpetualTaskId}`,
-    { base: getConfig('ng/api'), pathParams: { perpetualTaskId }, ...props }
-  )
-
-export const processPollingResultNgPromise = (
-  {
-    perpetualTaskId,
-    ...props
-  }: MutateUsingFetchProps<
-    void,
-    Failure | Error,
-    ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
-    ProcessPollingResultNgPathParams
-  > & { perpetualTaskId: string },
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    void,
-    Failure | Error,
-    ProcessPollingResultNgQueryParams,
-    SubscribeBodyRequestBody,
-    ProcessPollingResultNgPathParams
-  >('POST', getConfig('ng/api'), `/polling/delegate-response/${perpetualTaskId}`, props, signal)
-
-export type SubscribeProps = Omit<
-  MutateProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
-  'path' | 'verb'
->
-
-export const Subscribe = (props: SubscribeProps) => (
-  <Mutate<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>
-    verb="POST"
-    path={`/polling/subscribe`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseSubscribeProps = Omit<
-  UseMutateProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
-  'path' | 'verb'
->
-
-export const useSubscribe = (props: UseSubscribeProps) =>
-  useMutate<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>(
-    'POST',
-    `/polling/subscribe`,
-    { base: getConfig('ng/api'), ...props }
-  )
-
-export const subscribePromise = (
-  props: MutateUsingFetchProps<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<ResponsePollingResponseDTO, Failure | Error, void, SubscribeBodyRequestBody, void>(
-    'POST',
-    getConfig('ng/api'),
-    `/polling/subscribe`,
-    props,
-    signal
-  )
-
-export type UnsubscribeProps = Omit<
-  MutateProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
-  'path' | 'verb'
->
-
-export const Unsubscribe = (props: UnsubscribeProps) => (
-  <Mutate<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>
-    verb="POST"
-    path={`/polling/unsubscribe`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseUnsubscribeProps = Omit<
-  UseMutateProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
-  'path' | 'verb'
->
-
-export const useUnsubscribe = (props: UseUnsubscribeProps) =>
-  useMutate<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>('POST', `/polling/unsubscribe`, {
-    base: getConfig('ng/api'),
-    ...props
-  })
-
-export const unsubscribePromise = (
-  props: MutateUsingFetchProps<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<boolean, Failure | Error, void, SubscribeBodyRequestBody, void>(
-    'POST',
-    getConfig('ng/api'),
-    `/polling/unsubscribe`,
     props,
     signal
   )
@@ -37305,7 +37427,8 @@ export interface GetServiceNowIssueCreateMetadataQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export type GetServiceNowIssueCreateMetadataProps = Omit<
@@ -37369,7 +37492,8 @@ export interface GetServiceNowTemplateMetadataQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export type GetServiceNowTemplateMetadataProps = Omit<
@@ -37430,7 +37554,8 @@ export interface GetServiceNowIssueMetadataQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export type GetServiceNowIssueMetadataProps = Omit<
@@ -37490,7 +37615,8 @@ export interface GetServiceNowTicketTypesQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
-  parentEntityRepoURL?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
 }
 
 export type GetServiceNowTicketTypesProps = Omit<
@@ -40355,6 +40481,54 @@ export const retrieveProductPricesPromise = (
   getUsingFetch<ResponsePriceCollectionDTO, Failure | Error, RetrieveProductPricesQueryParams, void>(
     getConfig('ng/api'),
     `/subscriptions/prices`,
+    props,
+    signal
+  )
+
+export interface RetrieveRecommendationQueryParams {
+  accountIdentifier: string
+}
+
+export type RetrieveRecommendationProps = Omit<
+  GetProps<ResponseEnumMapUsageKeyLong, Failure | Error, RetrieveRecommendationQueryParams, void>,
+  'path'
+>
+
+/**
+ * Retrieves subscription recommendation
+ */
+export const RetrieveRecommendation = (props: RetrieveRecommendationProps) => (
+  <Get<ResponseEnumMapUsageKeyLong, Failure | Error, RetrieveRecommendationQueryParams, void>
+    path={`/subscriptions/recommendation`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseRetrieveRecommendationProps = Omit<
+  UseGetProps<ResponseEnumMapUsageKeyLong, Failure | Error, RetrieveRecommendationQueryParams, void>,
+  'path'
+>
+
+/**
+ * Retrieves subscription recommendation
+ */
+export const useRetrieveRecommendation = (props: UseRetrieveRecommendationProps) =>
+  useGet<ResponseEnumMapUsageKeyLong, Failure | Error, RetrieveRecommendationQueryParams, void>(
+    `/subscriptions/recommendation`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Retrieves subscription recommendation
+ */
+export const retrieveRecommendationPromise = (
+  props: GetUsingFetchProps<ResponseEnumMapUsageKeyLong, Failure | Error, RetrieveRecommendationQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseEnumMapUsageKeyLong, Failure | Error, RetrieveRecommendationQueryParams, void>(
+    getConfig('ng/api'),
+    `/subscriptions/recommendation`,
     props,
     signal
   )
@@ -45829,6 +46003,7 @@ export interface GetYamlSchemaQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
     | 'S3Upload'
@@ -45849,6 +46024,7 @@ export interface GetYamlSchemaQueryParams {
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
+    | 'AzureCreateARMResource'
     | 'BuildAndPushACR'
   subtype?:
     | 'K8sCluster'
