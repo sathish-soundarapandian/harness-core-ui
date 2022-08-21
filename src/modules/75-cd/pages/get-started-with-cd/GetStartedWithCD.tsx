@@ -10,6 +10,7 @@ import React, { useState } from 'react'
 import { Text, FontVariation, Icon, Layout, Button, ButtonVariation, Container, ButtonSize } from '@harness/uicore'
 // import type { IconProps } from '@harness/icons'
 // import { useParams } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 // import type { StringsMap } from 'stringTypes'
 // import type { GitQueryParams, ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
@@ -64,20 +65,20 @@ export default function GetStartedWithCI(): React.ReactElement {
                 </Layout.Vertical>
               </Layout.Horizontal>
             </Container>
+
+            <Text font={{ variation: FontVariation.H5, weight: 'light' }} padding={{ bottom: 'medium' }}>
+              Welcome to Harness!
+            </Text>
+
             <Layout.Horizontal>
               <Layout.Vertical width="50%">
-                <Text font={{ variation: FontVariation.H6 }} padding={{ bottom: 'medium' }}>
-                  Welcome to Harness
-                </Text>
-                <Text font={{ variation: FontVariation.H3 }} padding={{ bottom: 'large' }}>
+                <Text font={{ variation: FontVariation.H3, weight: 'semi-bold' }} padding={{ bottom: 'large' }}>
                   Install the Delegate to deploy your cluster
                 </Text>
-                <Layout.Horizontal>
-                  <Text font={{ variation: FontVariation.SMALL }} padding={{ top: 'small' }} width={'85%'}>
-                    Harness Delegates are worker processes that runs on your infrastructure execute tasks on your
-                    infrastructure on behalf of Harness platform.
-                  </Text>
-                </Layout.Horizontal>
+                <Text font={{ variation: FontVariation.SMALL }} padding={{ top: 'small' }} width={'80%'}>
+                  Harness Delegates are worker processes that runs on your infrastructure execute tasks on your
+                  infrastructure on behalf of Harness platform.
+                </Text>
                 <Layout.Horizontal>
                   <Container className={css.buttonRow}>
                     <Button
@@ -86,6 +87,9 @@ export default function GetStartedWithCI(): React.ReactElement {
                       text="Install the Delegate"
                       onClick={() => setShowWizard(true)}
                     />
+                    <NavLink to="#" className={css.linkText}>
+                      Learn more about Delegates
+                    </NavLink>
                   </Container>
                 </Layout.Horizontal>
               </Layout.Vertical>

@@ -21,9 +21,9 @@ import {
 import YamlBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import { useStrings } from 'framework/strings'
 import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
+import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import StepProcessing from '../CreateKubernetesDelegateWizard/StepProcessing'
 import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
-import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 
 export interface CreateDockerDelegate {
   onSuccessHandler: () => void

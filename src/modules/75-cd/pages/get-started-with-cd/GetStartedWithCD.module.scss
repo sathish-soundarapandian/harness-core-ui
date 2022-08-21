@@ -46,7 +46,7 @@
     bottom: 15px;
     right: 0px;
     padding-left: 10px;
-    padding-right: 10px;
+    padding-bottom: 70px !important;
   }
 
   .buttonRow {
@@ -96,4 +96,9 @@
   height: 60%;
   padding-left: 415px !important;
   padding-right: 10px !important;
+}
+
+.linkText {
+  margin-top: 65px !important;
+  margin-left: 47px !important;
 }
