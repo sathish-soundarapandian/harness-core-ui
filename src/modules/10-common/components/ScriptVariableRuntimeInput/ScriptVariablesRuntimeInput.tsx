@@ -14,6 +14,13 @@ import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import css from './ScriptVariablesRuntimeInput.module.scss'
 
+export interface InputSetSchema {
+  name: string
+  type: 'String' | 'Number'
+  value: string
+  useAsDefault?: boolean
+}
+
 interface InputOutputVariablesInputSetProps {
   allowableTypes: AllowedTypes
   // todo: to change with type in BE
@@ -21,6 +28,7 @@ interface InputOutputVariablesInputSetProps {
   path?: string
   readonly?: boolean
   enableFixed?: boolean
+  className?: string
 }
 
 export const scriptInputType: SelectOption[] = [
@@ -29,7 +37,7 @@ export const scriptInputType: SelectOption[] = [
 ]
 
 export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetProps): React.ReactElement {
-  const { allowableTypes, readonly, template, path, enableFixed = false } = props
+  const { allowableTypes, readonly, template, path, enableFixed = false, className } = props
 
   const { getString } = useStrings()
   const prefix = isEmpty(path) ? '' : `${path}.`
@@ -49,7 +57,7 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
               name="templateInputs.environmentVariables"
               render={() => {
                 return (
-                  <div className={css.panel}>
+                  <div className={cx(css.panel, className)}>
                     <div
                       className={cx(css.environmentVarHeader, {
                         [css.gridFourColumn]: enableFixed,
@@ -95,7 +103,6 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
                             <FormInput.CheckBox
                               label=""
                               name={`${prefix}templateInputs.environmentVariables[${i}].useAsDefault`}
-                              placeholder={getString('typeLabel')}
                               disabled={false}
                               className={css.fixed}
                             />

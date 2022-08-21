@@ -166,3 +166,40 @@ export function TemplateVersionLabelSchema() {
       })
     )
 }
+
+export const VariableSchema = (): Yup.NotRequiredArraySchema<
+  | {
+      name: string
+      value: string
+      type: string
+    }
+  | undefined
+> => {
+  const { getString } = useStrings()
+  return Yup.array().of(
+    Yup.object({
+      name: Yup.string().required(getString('common.validation.nameIsRequired')),
+      value: Yup.string().required(getString('common.validation.valueIsRequired')),
+      type: Yup.string().trim().required(getString('common.validation.typeIsRequired'))
+    })
+  )
+}
+
+export const VariableSchemaWithoutHook = (
+  getString: UseStringsReturn['getString']
+): Yup.NotRequiredArraySchema<
+  | {
+      name: string
+      value: string
+      type: string
+    }
+  | undefined
+> => {
+  return Yup.array().of(
+    Yup.object({
+      name: Yup.string().required(getString('common.validation.nameIsRequired')),
+      value: Yup.string().required(getString('common.validation.valueIsRequired')),
+      type: Yup.string().trim().required(getString('common.validation.typeIsRequired'))
+    })
+  )
+}

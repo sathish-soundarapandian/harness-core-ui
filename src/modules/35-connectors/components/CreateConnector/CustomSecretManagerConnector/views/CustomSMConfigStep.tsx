@@ -28,9 +28,10 @@ import { parse } from 'yaml'
 import type { FormikContextType } from 'formik'
 import type { ConnectorInfoDTO, ConnectorConfigDTO, JsonNode } from 'services/cd-ng'
 
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import { useStrings } from 'framework/strings'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
+import { VariableSchema } from '@common/utils/Validation'
 import { Connectors } from '@connectors/constants'
 
 import type {
@@ -61,24 +62,6 @@ interface StepCustomSMConfigProps {
   projectIdentifier: string
   getTemplate: (data: GetTemplateProps) => Promise<GetTemplateResponse>
 }
-
-export const variableSchema = (
-  getString: UseStringsReturn['getString']
-): Yup.NotRequiredArraySchema<
-  | {
-      name: string
-      value: string
-      type: string
-    }
-  | undefined
-> =>
-  Yup.array().of(
-    Yup.object({
-      name: Yup.string().required(getString('common.validation.nameIsRequired')),
-      value: Yup.string().required(getString('common.validation.valueIsRequired')),
-      type: Yup.string().trim().required(getString('common.validation.typeIsRequired'))
-    })
-  )
 
 const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & StepCustomSMConfigProps> = ({
   prevStepData,
@@ -206,7 +189,7 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
               })
           }),
           templateInputs: Yup.object().shape({
-            environmentVariables: variableSchema(getString)
+            environmentVariables: VariableSchema()
           })
         })}
         onSubmit={formData => {
@@ -253,6 +236,7 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
                   <ScriptVariablesRuntimeInput
                     allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
                     template={templateInputSets}
+                    enableFixed
                   />
                 ) : null}
 

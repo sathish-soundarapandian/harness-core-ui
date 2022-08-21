@@ -884,6 +884,7 @@ export interface ConnectorInfoDTO {
     | 'AzureRepo'
     | 'Jenkins'
     | 'OciHelmRepo'
+    | 'CustomSecretManager'
 }
 
 export interface ControlClusterSummary {

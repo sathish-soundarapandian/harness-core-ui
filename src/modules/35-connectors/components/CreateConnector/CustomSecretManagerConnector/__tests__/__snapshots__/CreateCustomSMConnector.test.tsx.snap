@@ -691,7 +691,7 @@ exports[`CreateCustomSMConnector wizard CreateCustomSMConnector step two 1`] = `
                         class="panel"
                       >
                         <div
-                          class="environmentVarHeader gridThreeColumn"
+                          class="environmentVarHeader gridFourColumn"
                         >
                           <span
                             class="label"
@@ -708,9 +708,14 @@ exports[`CreateCustomSMConnector wizard CreateCustomSMConnector step two 1`] = `
                           >
                             Value
                           </span>
+                          <span
+                            class="label"
+                          >
+                            Fixed
+                          </span>
                         </div>
                         <div
-                          class="environmentVarHeader gridThreeColumn"
+                          class="environmentVarHeader gridFourColumn"
                         >
                           <div
                             class="bp3-form-group bp3-disabled"
@@ -869,9 +874,29 @@ exports[`CreateCustomSMConnector wizard CreateCustomSMConnector step two 1`] = `
                               </div>
                             </div>
                           </div>
+                          <div
+                            class="bp3-form-group"
+                          >
+                            <div
+                              class="bp3-form-content"
+                            >
+                              <label
+                                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox fixed StyledProps--main StyledProps--inline"
+                              >
+                                <input
+                                  name="templateInputs.environmentVariables[0].useAsDefault"
+                                  type="checkbox"
+                                />
+                                <span
+                                  class="bp3-control-indicator"
+                                />
+                                
+                              </label>
+                            </div>
+                          </div>
                         </div>
                         <div
-                          class="environmentVarHeader gridThreeColumn"
+                          class="environmentVarHeader gridFourColumn"
                         >
                           <div
                             class="bp3-form-group bp3-disabled"
@@ -1028,6 +1053,26 @@ exports[`CreateCustomSMConnector wizard CreateCustomSMConnector step two 1`] = `
                                   </span>
                                 </div>
                               </div>
+                            </div>
+                          </div>
+                          <div
+                            class="bp3-form-group"
+                          >
+                            <div
+                              class="bp3-form-content"
+                            >
+                              <label
+                                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox fixed StyledProps--main StyledProps--inline"
+                              >
+                                <input
+                                  name="templateInputs.environmentVariables[1].useAsDefault"
+                                  type="checkbox"
+                                />
+                                <span
+                                  class="bp3-control-indicator"
+                                />
+                                
+                              </label>
                             </div>
                           </div>
                         </div>
