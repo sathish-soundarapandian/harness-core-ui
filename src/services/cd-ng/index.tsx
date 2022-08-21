@@ -7077,6 +7077,7 @@ export interface NGServiceOverrideConfig {
 
 export interface NGServiceOverrideInfoConfig {
   environmentRef: string
+  manifests?: ManifestConfigWrapper[]
   serviceRef: string
   variables?: NGVariable[]
 }
@@ -11510,10 +11511,10 @@ export interface ServiceNowTicketTypeDTO {
 }
 
 export interface ServiceOverrideRequestDTO {
-  environmentRef?: string
+  environmentIdentifier?: string
   orgIdentifier?: string
   projectIdentifier?: string
-  serviceRef?: string
+  serviceIdentifier?: string
   yaml?: string
 }
 
@@ -12099,9 +12100,7 @@ export type TemplateInputsErrorMetadataDTO = ErrorMetadataDTO & {
 }
 
 export interface TemplateLinkConfig {
-  templateInputs?: {
-    [key: string]: { [key: string]: any }
-  }
+  templateInputs?: JsonNode
   templateRef: string
   versionLabel?: string
 }
