@@ -9,15 +9,20 @@ import React, { useEffect, useState } from 'react'
 import { Container, Layout, Text } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
 import { Color } from '@wings-software/design-system'
-import { get } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 import { YamlDiffView } from '@pipeline/components/InputSetErrorHandling/YamlDiffView/YamlDiffView'
 import { useStrings } from 'framework/strings'
 import RbacButton from '@rbac/components/Button/Button'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
 import type { InputSetDTO } from '@pipeline/utils/types'
+import type { EntityGitDetails } from 'services/pipeline-ng'
+import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import type { InputSetGitQueryParams } from '@common/interfaces/RouteInterfaces'
+import { useQueryParams } from '@common/hooks'
+import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 
 interface ReconcileDialogProps {
-  inputSetUpdateHandler?: (updatedInputSet: InputSetDTO) => void
+  inputSet: InputSetDTO
   overlayInputSetIdentifier?: string
   canUpdateInputSet: boolean
   oldYaml: string
@@ -27,10 +32,15 @@ interface ReconcileDialogProps {
   updateLoading: boolean
   onClose: () => void
   isOverlayInputSet?: boolean
+  handleSubmit?: (
+    inputSetObjWithGitInfo: InputSetDTO,
+    gitDetails?: EntityGitDetails,
+    storeMetadata?: StoreMetadata
+  ) => Promise<void>
 }
 
 export function ReconcileDialog({
-  inputSetUpdateHandler,
+  inputSet,
   overlayInputSetIdentifier,
   canUpdateInputSet,
   oldYaml,
@@ -39,11 +49,25 @@ export function ReconcileDialog({
   refetchYamlDiff,
   updateLoading,
   onClose,
-  isOverlayInputSet
+  isOverlayInputSet,
+  handleSubmit
 }: ReconcileDialogProps): React.ReactElement {
   const { getString } = useStrings()
-  const updatedObj: any = yamlParse(newYaml)
   const [renderCount, setRenderCount] = useState<boolean>(true)
+  const { repoIdentifier, branch, connectorRef, repoName, storeType } = useQueryParams<InputSetGitQueryParams>()
+  const { isGitSyncEnabled } = React.useContext(AppStoreContext)
+
+  const updatedObj: any = yamlParse(newYaml)
+  const identifier = overlayInputSetIdentifier ?? inputSet?.identifier
+  const defaultFilePath = identifier ? `.harness/${identifier}.yaml` : ''
+  const storeMetadata = {
+    repo: isGitSyncEnabled ? defaultTo(repoIdentifier, '') : defaultTo(repoName, ''),
+    branch: defaultTo(branch, ''),
+    connectorRef: defaultTo(connectorRef, ''),
+    repoName: defaultTo(repoName, ''),
+    storeType: defaultTo(storeType, StoreType.INLINE),
+    filePath: defaultTo(inputSet.gitDetails?.filePath, defaultFilePath)
+  }
 
   useEffect(() => {
     setRenderCount(false)
@@ -52,6 +76,16 @@ export function ReconcileDialog({
   useEffect(() => {
     if (!renderCount && !updateLoading) onClose()
   }, [updateLoading])
+
+  const handleClick = (): void => {
+    handleSubmit?.(
+      overlayInputSetIdentifier || isOverlayInputSet
+        ? get(updatedObj, 'overlayInputSet', {})
+        : get(updatedObj, 'inputSet', {}),
+      { ...storeMetadata }
+    )
+    ;(isGitSyncEnabled || storeMetadata.storeType === StoreType.REMOTE) && onClose()
+  }
 
   return (
     <Container>
@@ -81,13 +115,7 @@ export function ReconcileDialog({
             width={232}
             intent="danger"
             disabled={!canUpdateInputSet}
-            onClick={() =>
-              inputSetUpdateHandler?.(
-                overlayInputSetIdentifier || isOverlayInputSet
-                  ? get(updatedObj, 'overlayInputSet', {})
-                  : get(updatedObj, 'inputSet', {})
-              )
-            }
+            onClick={handleClick}
             loading={updateLoading}
           />
         </Container>

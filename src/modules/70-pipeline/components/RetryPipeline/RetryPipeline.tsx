@@ -74,6 +74,7 @@ import { PipelineErrorView } from '@pipeline/components/RunPipelineModal/Pipelin
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { getErrorsList } from '@pipeline/utils/errorUtils'
+import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 import GitPopover from '../GitPopover/GitPopover'
 import SelectStagetoRetry from './SelectStagetoRetry'
@@ -406,7 +407,7 @@ function RetryPipeline({
               branch: selectedInputSets[0]?.gitDetails?.branch
             }
           })
-          if (!data?.data?.errorResponse && data?.data?.inputSetYaml) {
+          if (data?.data && !isInputSetInvalid(data?.data) && data?.data?.inputSetYaml) {
             if (selectedInputSets[0].type === 'INPUT_SET') {
               const inputSetPortion = pick(parse<InputSet>(data.data.inputSetYaml)?.inputSet, 'pipeline') as {
                 pipeline: PipelineInfoConfig
@@ -420,7 +421,7 @@ function RetryPipeline({
               setCurrentPipeline(toBeUpdated)
             }
             setInvalidInputSetIds([])
-          } else if (data?.data?.errorResponse) {
+          } else if (data?.data && isInputSetInvalid(data?.data)) {
             const invalidId: string = get(data, 'data.identifier', '')
             setSelectedInputSets([])
             setInvalidInputSetIds(isEmpty(invalidId) ? [] : [invalidId])

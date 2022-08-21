@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { defaultTo, merge, noop, omit, pick } from 'lodash-es'
+import { defaultTo, merge, noop, omit } from 'lodash-es'
 import {
   Layout,
   NestedAccordionProvider,
@@ -18,7 +18,6 @@ import {
 } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-// import { parse } from 'yaml'
 import type { FormikProps } from 'formik'
 import type { InputSetResponse, PipelineInfoConfig } from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -49,11 +48,11 @@ import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import type { GitContextProps } from '@common/components/GitContextForm/GitContextForm'
-import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
+import { parse } from '@common/utils/YamlHelperMethods'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { InputSetDTO, Pipeline, InputSet } from '@pipeline/utils/types'
-import { clearNullUndefined, isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
+import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import GitPopover from '../GitPopover/GitPopover'
@@ -298,44 +297,6 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
     })
   }
 
-  const inputSetUpdateHandler = async (tempInputSet: InputSetDTO): Promise<void> => {
-    if (tempInputSet.identifier) {
-      try {
-        const gitParams = inputSet?.gitDetails?.objectId
-          ? {
-              ...pick(inputSet?.gitDetails, ['branch', 'repoIdentifier', 'filePath', 'rootFolder']),
-              lastObjectId: inputSet?.gitDetails?.objectId
-            }
-          : {}
-        const response = await updateInputSet(yamlStringify({ inputSet: clearNullUndefined(tempInputSet) }), {
-          pathParams: {
-            inputSetIdentifier: tempInputSet.identifier
-          },
-          queryParams: {
-            accountIdentifier: accountId,
-            orgIdentifier,
-            projectIdentifier,
-            pipelineIdentifier,
-            ...(isGitSyncEnabled
-              ? {
-                  pipelineRepoID: repoIdentifier,
-                  pipelineBranch: branch
-                }
-              : {}),
-            ...gitParams
-          }
-        })
-        if (response?.data) {
-          inputSetUpdateResponseHandler(response?.data)
-        }
-      } catch (error) {
-        showError(getRBACErrorMessage(error), undefined, 'pipeline.refresh.all.error')
-      }
-    } else {
-      throw new Error(getString('common.validation.identifierIsRequired'))
-    }
-  }
-
   React.useEffect(() => {
     if (!isInputSetInvalid(inputSet)) {
       setSelectedView(SelectedView.VISUAL)
@@ -455,8 +416,6 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
         className={className}
         onCancel={onCancel}
         filePath={filePath}
-        inputSetUpdateHandler={inputSetUpdateHandler}
-        updateInputSetLoading={updateInputSetLoading}
         inputSetUpdateResponseHandler={inputSetUpdateResponseHandler}
       />
     ),

@@ -101,8 +101,6 @@ interface FormikInputSetFormProps {
   className?: string
   onCancel?: () => void
   filePath?: string
-  inputSetUpdateHandler: (updatedInputSet: InputSetDTO) => void
-  updateInputSetLoading: boolean
   inputSetUpdateResponseHandler: (responseData: InputSetResponse) => void
 }
 
@@ -227,8 +225,6 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     className,
     onCancel,
     filePath,
-    inputSetUpdateHandler,
-    updateInputSetLoading,
     inputSetUpdateResponseHandler
   } = props
   const { getString } = useStrings()
@@ -453,15 +449,13 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                   </div>
                 ) : (
                   <div className={css.editor}>
-                    {/* Handle for collision */}
                     <ErrorsStrip formErrors={formErrors} />
                     {isInputSetInvalid(inputSet) && (
                       <OutOfSyncErrorStrip
                         inputSet={inputSet}
-                        inputSetUpdateHandler={inputSetUpdateHandler}
                         pipeline={pipeline}
-                        updateLoading={updateInputSetLoading}
                         inputSetUpdateResponseHandler={inputSetUpdateResponseHandler}
+                        fromInputSetForm={true}
                       />
                     )}
                     <Layout.Vertical className={css.content} padding="xlarge">

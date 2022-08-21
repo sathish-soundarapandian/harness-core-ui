@@ -6,28 +6,20 @@
  */
 
 import React from 'react'
-import { defaultTo, pick } from 'lodash-es'
+import { defaultTo } from 'lodash-es'
 import cx from 'classnames'
-import { Checkbox, Container, Icon, Layout, Text, useToaster } from '@harness/uicore'
+import { Checkbox, Container, Icon, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { useParams } from 'react-router-dom'
-import { clearNullUndefined, isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
+import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import { Badge } from '@pipeline/pages/utils/Badge/Badge'
 import { useStrings } from 'framework/strings'
-import {
+import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
+import type {
   EntityGitDetails,
   InputSetErrorWrapper,
   InputSetSummaryResponse,
-  ResponsePMSPipelineResponseDTO,
-  useUpdateInputSetForPipeline,
-  useUpdateOverlayInputSetForPipeline
+  ResponsePMSPipelineResponseDTO
 } from 'services/pipeline-ng'
-import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
-import type { InputSetDTO } from '@pipeline/utils/types'
-import { useQueryParams } from '@common/hooks'
-import type { GitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { getIconByType } from './utils'
 import { InputSetGitDetails } from './InputSetGitDetails'
 import css from './InputSetSelector.module.scss'
@@ -52,113 +44,6 @@ interface MultipleInputSetListProps {
 export function MultipleInputSetList(props: MultipleInputSetListProps): JSX.Element {
   const { inputSet, onCheckBoxHandler, pipeline, refetch, hideInpSetBtn, showReconcile } = props
   const { getString } = useStrings()
-  const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
-    PipelineType<InputSetPathProps> & { accountId: string }
-  >()
-  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const { showError } = useToaster()
-  const { getRBACErrorMessage } = useRBACError()
-
-  const { mutate: updateInputSet, loading: updateInputSetLoading } = useUpdateInputSetForPipeline({
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      pipelineIdentifier,
-      projectIdentifier,
-      pipelineRepoID: repoIdentifier,
-      pipelineBranch: branch
-    },
-    inputSetIdentifier: '',
-    requestOptions: { headers: { 'content-type': 'application/yaml' } }
-  })
-
-  const { mutate: updateOverlayInputSet, loading: updateOverlayInputSetLoading } = useUpdateOverlayInputSetForPipeline({
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      pipelineIdentifier,
-      projectIdentifier,
-      repoIdentifier,
-      branch
-    },
-    inputSetIdentifier: '',
-    requestOptions: { headers: { 'content-type': 'application/yaml' } }
-  })
-
-  const inputSetUpdateHandler = async (tempInputSet: InputSetDTO): Promise<void> => {
-    if (tempInputSet.identifier) {
-      try {
-        const gitParams = tempInputSet?.gitDetails?.objectId
-          ? {
-              ...pick(tempInputSet?.gitDetails, ['branch', 'repoIdentifier', 'filePath', 'rootFolder']),
-              lastObjectId: tempInputSet?.gitDetails?.objectId,
-              pipelineRepoID: repoIdentifier,
-              pipelineBranch: branch
-            }
-          : {}
-        const response = await updateInputSet(yamlStringify({ inputSet: clearNullUndefined(tempInputSet) }), {
-          pathParams: {
-            inputSetIdentifier: tempInputSet.identifier
-          },
-          queryParams: {
-            accountIdentifier: accountId,
-            orgIdentifier,
-            projectIdentifier,
-            pipelineIdentifier,
-            ...gitParams
-          }
-        })
-        if (response?.data) {
-          refetch?.()
-        }
-      } catch (error) {
-        showError(getRBACErrorMessage(error), undefined, 'pipeline.refresh.all.error')
-      }
-    } else {
-      throw new Error(getString('common.validation.identifierIsRequired'))
-    }
-  }
-
-  const overlayInputSetUpdateHandler = async (tempInputSet: InputSetDTO): Promise<void> => {
-    if (tempInputSet.identifier) {
-      try {
-        const gitParams = tempInputSet?.gitDetails?.objectId // Update for Remote Case
-          ? {
-              ...pick(tempInputSet?.gitDetails, ['branch', 'repoIdentifier', 'filePath', 'rootFolder']),
-              lastObjectId: tempInputSet?.gitDetails?.objectId,
-              repoIdentifier,
-              branch
-            }
-          : {}
-        const response = await updateOverlayInputSet(
-          yamlStringify({ overlayInputSet: clearNullUndefined(tempInputSet) }) as unknown as void,
-          {
-            pathParams: {
-              inputSetIdentifier: tempInputSet.identifier
-            },
-            queryParams: {
-              accountIdentifier: accountId,
-              orgIdentifier,
-              projectIdentifier,
-              pipelineIdentifier,
-              ...gitParams
-            }
-          }
-        )
-        if (response) {
-          if (response.data?.errorResponse) {
-            showError(getString('inputSets.overlayInputSetSavedError'), undefined, 'pipeline.overlayinputset.error')
-          } else {
-            refetch?.()
-          }
-        }
-      } catch (error) {
-        showError(getRBACErrorMessage(error), undefined, 'pipeline.refresh.all.error')
-      }
-    } else {
-      throw new Error(getString('common.validation.identifierIsRequired'))
-    }
-  }
 
   return (
     <li
@@ -216,10 +101,6 @@ export function MultipleInputSetList(props: MultipleInputSetListProps): JSX.Elem
               <OutOfSyncErrorStrip
                 inputSet={inputSet}
                 pipeline={pipeline}
-                inputSetUpdateHandler={
-                  inputSet.inputSetType === 'INPUT_SET' ? inputSetUpdateHandler : overlayInputSetUpdateHandler
-                }
-                updateLoading={updateInputSetLoading || updateOverlayInputSetLoading}
                 onlyReconcileButton={true}
                 refetch={refetch}
                 hideInpSetBtn={hideInpSetBtn}

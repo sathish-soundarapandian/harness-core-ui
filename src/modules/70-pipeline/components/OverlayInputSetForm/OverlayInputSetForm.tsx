@@ -87,7 +87,7 @@ export interface OverlayInputSetDTO extends Omit<OverlayInputSetResponse, 'ident
   branch?: string
 }
 
-interface SaveOverlayInputSetDTO {
+export interface SaveOverlayInputSetDTO {
   overlayInputSet: OverlayInputSetDTO
 }
 
@@ -376,7 +376,6 @@ export function OverlayInputSetForm({
 
   const createUpdateOverlayInputSet = async (
     inputSetObj: InputSetDTO,
-    reconcile = false,
     gitDetails?: SaveToGitFormInterface,
     objectId = ''
   ): CreateUpdateInputSetsReturnType => {
@@ -414,9 +413,7 @@ export function OverlayInputSetForm({
             showError(getString('inputSets.overlayInputSetSavedError'), undefined, 'pipeline.overlayinputset.error')
           } else {
             clear()
-            showSuccess(
-              reconcile ? getString('inputSets.overlayInputSetUpdated') : getString('inputSets.overlayInputSetSaved')
-            )
+            showSuccess(getString('inputSets.overlayInputSetSaved'))
           }
         }
       }
@@ -447,7 +444,7 @@ export function OverlayInputSetForm({
       payload?: SaveOverlayInputSetDTO,
       objectId?: string
     ): Promise<UseSaveSuccessResponse> =>
-      createUpdateOverlayInputSet(defaultTo(payload?.overlayInputSet, savedInputSetObj), false, gitData, objectId)
+      createUpdateOverlayInputSet(defaultTo(payload?.overlayInputSet, savedInputSetObj), gitData, objectId)
   })
 
   const handleSubmit = React.useCallback(
@@ -552,11 +549,6 @@ export function OverlayInputSetForm({
     loadingInputSetList,
     loadingOverlayInputSet
   ])
-
-  const overlayInputSetUpdateHandler = (updatedInputSet: InputSetDTO): void => {
-    setIsEdit(true)
-    createUpdateOverlayInputSet(updatedInputSet, true)
-  }
 
   return (
     <Dialog
@@ -723,12 +715,10 @@ export function OverlayInputSetForm({
                           {isInputSetInvalid(inputSet) && (
                             <OutOfSyncErrorStrip
                               inputSet={inputSet}
-                              inputSetUpdateHandler={overlayInputSetUpdateHandler}
                               overlayInputSetRepoIdentifier={overlayInputSetRepoIdentifier}
                               overlayInputSetBranch={overlayInputSetBranch}
                               overlayInputSetIdentifier={identifier}
                               pipeline={pipeline}
-                              updateLoading={updateOverlayInputSetLoading}
                               hideForm={hideForm}
                             />
                           )}

@@ -29,6 +29,8 @@ import {
   InputSetResponse,
   ResponsePMSPipelineResponseDTO,
   useDeleteInputSetForPipeline,
+  useUpdateInputSetForPipeline,
+  useUpdateOverlayInputSetForPipeline,
   useYamlDiffForInputSet
 } from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -42,13 +44,13 @@ import routes from '@common/RouteDefinitions'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import type { OverlayInputSetDTO } from '@pipeline/components/OverlayInputSetForm/OverlayInputSetForm'
+import { useSaveInputSetOrOverlayInpSet } from '../utils'
 import css from './OutOfSyncErrorStrip.module.scss'
 
 interface OutOfSyncErrorStripProps {
-  inputSet: InputSetDTO
-  inputSetUpdateHandler?: (updatedInputSet: InputSetDTO) => void
+  inputSet: InputSetDTO | OverlayInputSetDTO
   pipeline?: ResponsePMSPipelineResponseDTO | null
-  updateLoading: boolean
   overlayInputSetRepoIdentifier?: string
   overlayInputSetBranch?: string
   overlayInputSetIdentifier?: string
@@ -58,14 +60,13 @@ interface OutOfSyncErrorStripProps {
   hideInpSetBtn?: boolean
   hideForm?: () => void
   isOverlayInputSet?: boolean
+  fromInputSetForm?: boolean
 }
 
 export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.ReactElement {
   const {
     inputSet,
-    inputSetUpdateHandler,
     pipeline,
-    updateLoading,
     overlayInputSetRepoIdentifier,
     overlayInputSetBranch,
     overlayInputSetIdentifier,
@@ -73,7 +74,8 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
     refetch,
     hideInpSetBtn,
     hideForm,
-    isOverlayInputSet
+    isOverlayInputSet,
+    fromInputSetForm
   } = props
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
@@ -125,6 +127,41 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
         lastObjectId: inputSet?.gitDetails?.objectId
       }
     : {}
+
+  const { mutate: updateInputSet, loading: updateInputSetLoading } = useUpdateInputSetForPipeline({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      pipelineIdentifier,
+      projectIdentifier,
+      pipelineRepoID: repoIdentifier,
+      pipelineBranch: branch
+    },
+    inputSetIdentifier: '',
+    requestOptions: { headers: { 'content-type': 'application/yaml' } }
+  })
+
+  const { mutate: updateOverlayInputSet, loading: updateOverlayInputSetLoading } = useUpdateOverlayInputSetForPipeline({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      pipelineIdentifier,
+      projectIdentifier,
+      repoIdentifier,
+      branch
+    },
+    inputSetIdentifier: '',
+    requestOptions: { headers: { 'content-type': 'application/yaml' } }
+  })
+  const _isOverlayInputSet: boolean = overlayInputSetIdentifier || isOverlayInputSet ? true : false
+  const { handleSubmit } = useSaveInputSetOrOverlayInpSet({
+    updateInputSet,
+    updateOverlayInputSet,
+    inputSet,
+    _isOverlayInputSet,
+    refetch,
+    fromInputSetForm
+  })
 
   const {
     data: yamlDiffResponse,
@@ -178,6 +215,7 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
                   orgIdentifier,
                   projectIdentifier,
                   pipelineIdentifier,
+                  commitMsg: inputSet?.gitDetails?.objectId ? `${getString('delete')} ${inputSet.name}` : '', // Check for overlay update
                   ...gitParams
                 },
                 headers: { 'content-type': 'application/json' }
@@ -241,20 +279,21 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
     return (
       <Dialog isOpen={true} onClose={onClose} enforceFocus={false} className={css.reconcileDialog}>
         <ReconcileDialog
-          inputSetUpdateHandler={inputSetUpdateHandler}
+          inputSet={inputSet}
           overlayInputSetIdentifier={overlayInputSetIdentifier}
           canUpdateInputSet={canUpdateInputSet}
           oldYaml={yamlStringify(yamlParse(defaultTo(yamlDiffResponse?.data?.oldYAML, '')))}
           newYaml={yamlStringify(yamlParse(defaultTo(yamlDiffResponse?.data?.newYAML, '')))}
           error={error}
           refetchYamlDiff={refetchYamlDiff}
-          updateLoading={updateLoading}
+          updateLoading={updateInputSetLoading || updateOverlayInputSetLoading}
           onClose={onClose}
           isOverlayInputSet={isOverlayInputSet}
+          handleSubmit={handleSubmit}
         />
       </Dialog>
     )
-  }, [yamlDiffResponse, updateLoading])
+  }, [yamlDiffResponse, updateInputSetLoading, updateOverlayInputSetLoading, handleSubmit])
 
   useEffect(() => {
     if (!yamlDiffResponse?.data?.inputSetEmpty && yamlDiffResponse?.data?.oldYAML && yamlDiffResponse?.data?.newYAML) {
