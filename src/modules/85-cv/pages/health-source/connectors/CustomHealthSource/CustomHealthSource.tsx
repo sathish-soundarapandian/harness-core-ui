@@ -105,8 +105,6 @@ export function CustomHealthSource(props: CustomHealthSourceProps): JSX.Element 
       }}
     >
       {formikProps => {
-        console.log('formikProps', formikProps.values)
-
         persistCustomMetric({
           mappedMetrics,
           selectedMetric,

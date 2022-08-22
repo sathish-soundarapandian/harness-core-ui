@@ -7,7 +7,6 @@
 
 import type { SelectOption } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
-import type { UseStringsReturn } from 'framework/strings'
 import type { CustomHealthRequestDefinition, CustomHealthMetricDefinition, TimestampInfo } from 'services/cv'
 import type {
   CustomMappedMetric,

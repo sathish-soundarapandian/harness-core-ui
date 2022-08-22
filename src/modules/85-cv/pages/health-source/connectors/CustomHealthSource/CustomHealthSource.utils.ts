@@ -32,9 +32,7 @@ import {
   MetricThresholdTypes,
   MetricTypeValues
 } from '../../common/MetricThresholds/MetricThresholds.constants'
-import type { MetricThresholdsState, MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
-import type { CustomMappedMetric, CustomSelectedAndMappedMetrics } from '../../common/CustomMetric/CustomMetric.types'
-import type { Dispatch, SetStateAction } from 'react'
+import type { MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
 
 const validateMetricThresholds = (
   errors: Record<string, string>,

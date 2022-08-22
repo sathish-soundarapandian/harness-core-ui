@@ -616,7 +616,9 @@ export const formikValue = {
   timestampFormat: '',
   serviceInstancePath: '',
   startTime: { placeholder: 'start_time_seconds', timestampFormat: 'SECONDS' as any, customTimestampFormat: '' },
-  endTime: { placeholder: 'end_time_seconds', timestampFormat: 'SECONDS' as any, customTimestampFormat: '' }
+  endTime: { placeholder: 'end_time_seconds', timestampFormat: 'SECONDS' as any, customTimestampFormat: '' },
+  ignoreThresholds: [],
+  failFastThresholds: []
 }
 
 export const recordsData = {
