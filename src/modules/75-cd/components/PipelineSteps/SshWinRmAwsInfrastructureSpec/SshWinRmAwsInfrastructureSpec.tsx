@@ -190,13 +190,14 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
       values.connectorRef &&
       getMultiTypeFromValue(getValue(values.connectorRef)) === MultiTypeInputType.FIXED
     ) {
-      formikRef.current?.setFieldValue('tags', [])
+      if (getMultiTypeFromValue(values.tags) === MultiTypeInputType.FIXED)
+        formikRef.current?.setFieldValue('tags', [], false)
       refetchTags({
         queryParams: {
           accountIdentifier: accountId,
           projectIdentifier,
           orgIdentifier,
-          region: get(values, 'region', ''),
+          region: getValue(get(values, 'region', '')),
           awsConnectorRef: getValue(values.connectorRef)
         }
       })
@@ -285,8 +286,6 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                                 : get(item, 'record.identifier', '')
                             /* istanbul ignore next */
                             formik.setFieldValue('connectorRef', connectorRef)
-                            /* istanbul ignore next */
-                            formik.setFieldValue('region', {})
                             refetchTagsValues(formik.values)
                           }
                           setCanTagsHaveFixedValue(
@@ -312,7 +311,6 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                       onChange: /* istanbul ignore next */ option => {
                         const { value } = option as SelectOption
                         if (value) {
-                          formik.setFieldValue('tags', undefined)
                           formik.setFieldValue('region', option)
                           refetchTagsValues(formik.values)
                         }
