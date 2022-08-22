@@ -6,6 +6,7 @@
  */
 
 import type { StringsMap } from 'stringTypes'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
 export enum LoopingStrategyEnum {
   Matrix = 'matrix',
@@ -18,25 +19,29 @@ export interface LoopingStrategy {
   defaultValue: unknown
   helperText: keyof StringsMap
   helperLink: string
+  disabled: boolean
 }
 
-export const AvailableStrategies: Record<LoopingStrategyEnum, LoopingStrategy> = {
+export const getAvailableStrategies = (stepType?: StepType): Record<LoopingStrategyEnum, LoopingStrategy> => ({
   [LoopingStrategyEnum.Matrix]: {
     label: 'pipeline.loopingStrategy.matrix.label',
     defaultValue: {},
     helperText: 'pipeline.loopingStrategy.matrix.helperText',
-    helperLink: 'https://docs.harness.io'
+    helperLink: 'https://docs.harness.io',
+    disabled: stepType === StepType.Command
   },
   [LoopingStrategyEnum.Repeat]: {
     label: 'pipeline.loopingStrategy.repeat.label',
     defaultValue: {},
     helperText: 'pipeline.loopingStrategy.repeat.helperText',
-    helperLink: 'https://docs.harness.io'
+    helperLink: 'https://docs.harness.io',
+    disabled: false
   },
   [LoopingStrategyEnum.Parallelism]: {
     label: 'pipeline.loopingStrategy.parallelism.label',
     defaultValue: 1,
     helperText: 'pipeline.loopingStrategy.parallelism.helperText',
-    helperLink: 'https://docs.harness.io'
+    helperLink: 'https://docs.harness.io',
+    disabled: stepType === StepType.Command
   }
-}
+})

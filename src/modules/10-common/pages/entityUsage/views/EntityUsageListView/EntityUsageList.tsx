@@ -106,7 +106,8 @@ export const RenderGitDetails: Renderer<CellProps<EntitySetupUsageDTO>> = ({ row
 const EntityUsageList: React.FC<EntityUsageListProps> = ({ entityData, gotoPage }) => {
   const data: EntitySetupUsageDTO[] = entityData?.data?.content || []
   const { getString } = useStrings()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const columns: Column<EntitySetupUsageDTO>[] = useMemo(
     () => [
       {

@@ -55,7 +55,7 @@ import { SCHEMA_VALIDATION_FAILED } from '@common/interfaces/GitSyncInterface'
 import type { Pipeline } from '@pipeline/utils/types'
 import useTemplateErrors from '@pipeline/components/TemplateErrors/useTemplateErrors'
 import { sanitize } from '@common/utils/JSONUtils'
-import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/ReconcileDialog/ReconcileDialog'
+import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import usePipelineErrors from '../PipelineCanvas/PipelineErrors/usePipelineErrors'
 
 export default interface SavePipelinePopoverProps extends PopoverProps {
@@ -75,8 +75,12 @@ function SavePipelinePopover(
   ref: React.ForwardedRef<SavePipelineHandle>
 ): React.ReactElement {
   const { toPipelineStudio } = props
-  const { isGitSyncEnabled, isGitSimplificationEnabled } = useAppStore()
-
+  const {
+    isGitSyncEnabled: isGitSyncEnabledForProject,
+    gitSyncEnabledOnlyForFF,
+    supportingGitSimplification
+  } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const {
     state: { pipeline, yamlHandler, storeMetadata, gitDetails, isUpdated },
     deletePipelineCache,
@@ -98,7 +102,7 @@ function SavePipelinePopover(
   const isYaml = view === SelectedView.YAML
   const { openTemplateErrorsModal } = useTemplateErrors({ entity: TemplateErrorEntity.PIPELINE })
   const [governanceMetadata, setGovernanceMetadata] = React.useState<GovernanceMetadata>()
-  const isPipelineRemote = isGitSimplificationEnabled && storeType === StoreType.REMOTE
+  const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
 
   const [showOPAErrorModal, closeOPAErrorModal] = useModalHook(
     () => (
@@ -253,7 +257,8 @@ function SavePipelinePopover(
                 (parse(refreshedYaml) as { pipeline: PipelineInfoConfig }).pipeline,
                 storeMetadata
               )
-            }
+            },
+            isEdit
           })
         } else {
           showError(

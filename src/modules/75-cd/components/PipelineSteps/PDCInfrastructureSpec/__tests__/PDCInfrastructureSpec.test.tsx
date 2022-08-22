@@ -469,7 +469,7 @@ describe('test different stepViewType', () => {
         onUpdate={jest.fn()}
       />
     )
-    expect(getByText('cd.steps.pdcStep.specificAttributesOptional')).toBeDefined()
+    expect(getByText('cd.steps.pdcStep.specificAttributes')).toBeDefined()
   })
 
   test('render runtimeview when Preconfigured with host filter', () => {
@@ -486,6 +486,6 @@ describe('test different stepViewType', () => {
         onUpdate={jest.fn()}
       />
     )
-    expect(getByText('cd.steps.pdcStep.specificHostsOptional')).toBeDefined()
+    expect(getByText('cd.steps.pdcStep.specificHosts')).toBeDefined()
   })
 })

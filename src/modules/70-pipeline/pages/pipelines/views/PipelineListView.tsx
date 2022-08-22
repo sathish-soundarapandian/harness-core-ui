@@ -79,7 +79,8 @@ const RenderColumnMenu: Renderer<CellProps<PipelineDTO>> = ({ row, column }) => 
   }>()
 
   const { confirmDelete } = useDeleteConfirmationDialog(data, 'pipeline', (column as any).onDeletePipeline)
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [canDelete, canRun] = usePermission(
     {
       resourceScope: {
@@ -314,7 +315,8 @@ const RenderRunPipeline: Renderer<CellProps<PipelineDTO>> = ({ row }): JSX.Eleme
   const rowdata = row.original
 
   const { getString } = useStrings()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
 
   const runPipeline = (): void => {
     openRunPipelineModal()
@@ -367,7 +369,8 @@ export function PipelineListView({
   onClonePipeline
 }: PipelineListViewProps): React.ReactElement {
   const { getString } = useStrings()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
 
   const columns: CustomColumn<PipelineDTO>[] = React.useMemo(
     () => [

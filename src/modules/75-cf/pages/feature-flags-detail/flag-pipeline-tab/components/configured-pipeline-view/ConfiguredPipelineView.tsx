@@ -24,6 +24,8 @@ import useResponseError from '@cf/hooks/useResponseError'
 import { showToaster } from '@cf/utils/CFUtils'
 import { useConfirmAction } from '@common/hooks/useConfirmAction'
 
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import ExecutionList from '../execution-list/ExecutionList'
 import css from './ConfiguredPipelineView.module.scss'
 
@@ -46,6 +48,7 @@ const ConfiguredPipelineView: React.FC<ConfiguredPipelineViewProps> = ({
   const { activeEnvironment: environmentIdentifier } = useActiveEnvironment()
   const { handleResponseError } = useResponseError()
   const { orgIdentifier, accountId: accountIdentifier, projectIdentifier } = useParams<Record<string, string>>()
+  const { trackEvent } = useTelemetry()
 
   const { mutate: deleteFeaturePipeline } = useDeleteFeaturePipeline({
     identifier: flagIdentifier as string,
@@ -58,6 +61,9 @@ const ConfiguredPipelineView: React.FC<ConfiguredPipelineViewProps> = ({
   })
 
   const onConfirmDeleteClick = async (): Promise<void> => {
+    trackEvent(FeatureActions.DeletedFlagPipeline, {
+      category: Category.FEATUREFLAG
+    })
     try {
       await deleteFeaturePipeline()
       refetchFeaturePipeline()
@@ -76,6 +82,13 @@ const ConfiguredPipelineView: React.FC<ConfiguredPipelineViewProps> = ({
     action: onConfirmDeleteClick
   })
 
+  const onEditButtonClick = (): void => {
+    trackEvent(FeatureActions.EditFlagPipeline, {
+      category: Category.FEATUREFLAG
+    })
+    onEdit()
+  }
+
   return (
     <>
       <Card elevation={0} className={css.configuredPipelineCard}>
@@ -93,7 +106,7 @@ const ConfiguredPipelineView: React.FC<ConfiguredPipelineViewProps> = ({
             {
               icon: 'edit',
               text: getString('edit'),
-              onClick: onEdit,
+              onClick: onEditButtonClick,
               permission: {
                 resource: { resourceType: ResourceType.FEATUREFLAG },
                 permission: PermissionIdentifier.EDIT_FF_FEATUREFLAG

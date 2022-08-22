@@ -300,7 +300,7 @@ const COGatewayAnalytics: React.FC<COGatewayAnalyticsProps> = props => {
                       >
                         {`${_defaultTo(serviceDescribeData?.response?.task_count, 0)} tasks`}
                       </Link>
-                      {getStateTag(serviceDescribeData?.response?.task_count ? 'active' : 'down')}
+                      {getStateTag()}
                     </>
                   ) : (
                     <>
@@ -328,7 +328,7 @@ const COGatewayAnalytics: React.FC<COGatewayAnalyticsProps> = props => {
                       {healthDataLoading ? (
                         <Icon name="spinner" size={12} color="blue500" />
                       ) : healthData?.response?.['state'] != null ? (
-                        getStateTag(healthData?.response?.['state'])
+                        getStateTag()
                       ) : null}
                     </>
                   )}

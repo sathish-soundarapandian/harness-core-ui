@@ -267,7 +267,7 @@ export default function EnvironmentConfiguration({
                 id="advanced"
                 addDomId={true}
                 summary={
-                  <Text color={Color.GREY_700} font={{ weight: 'bold' }} margin={{ left: 'small' }}>
+                  <Text color={Color.GREY_700} font={{ weight: 'bold' }} margin={{ left: 'small', right: 'small' }}>
                     {getString('common.advanced')}
                     {getString('titleOptional')}
                   </Text>

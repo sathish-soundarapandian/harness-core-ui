@@ -2847,6 +2847,12 @@
         "created_at": {
           "type": "string"
         },
+        "updated_at": {
+          "type": "string"
+        },
+        "created_by": {
+          "type": "string"
+        },
         "access_point_id": {
           "type": "string"
         },

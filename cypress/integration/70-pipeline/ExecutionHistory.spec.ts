@@ -47,17 +47,13 @@ describe('Pipeline Execution History', () => {
 
   // Toolbar
   it('interacts with page subheader toolbar', () => {
-    // Fixtures
-    cy.intercept(pipelineSummaryCallAPI, {
-      fixture: 'pipeline/api/executionHistory/executionSummary.json'
-    }).as('executionSummary')
-
     cy.intercept(pipelineExecutionSummaryAPI, {
       fixture: 'pipeline/api/executionHistory/executionSummary.json'
     }).as('executionSummary')
     cy.visitPageAssertion()
     // Check Run button in header
-    cy.wait(1000)
+    cy.wait('@executionSummary')
+
     cy.get('.PageSubHeader--container')
       .should('be.visible')
       .within(() => {
@@ -71,17 +67,13 @@ describe('Pipeline Execution History', () => {
 
     // Check my deployments
     cy.get('.PageSubHeader--container').within(() => {
-      cy.get('input[type=checkbox]').should('not.be.checked')
       cy.findByText('My Deployments').click()
-      cy.get('input[type=checkbox]').should('be.checked')
       cy.url().should('contain', 'myDeployments=true')
       cy.findByText('My Deployments').click()
       cy.url().should('not.contain', 'myDeployments=true')
-    })
 
-    // Check status
-    cy.get('.PageSubHeader--container').within(() => {
-      cy.findByText('Status').click()
+      cy.wait('@executionSummary')
+      cy.get('[data-testid="status-select"]').click()
     })
 
     cy.get('.bp3-menu > :nth-child(1)')
@@ -90,63 +82,12 @@ describe('Pipeline Execution History', () => {
       .url({ decode: true })
       .should('contain', 'status[0]=Aborted')
 
-    cy.get('.bp3-menu > :nth-child(2)')
-      .should('contain', 'Expired')
-      .click()
-      .url({ decode: true })
-      .should('contain', 'status[1]=Expired')
-
     cy.get('.bp3-menu > :nth-child(3)')
       .should('contain', 'Failed')
       .click()
       .url({ decode: true })
-      .should('contain', 'status[2]=Failed')
-
-    cy.get('.bp3-menu > :nth-child(4)')
-      .should('contain', 'Running')
-      .click()
-      .url({ decode: true })
-      .should('contain', 'status[3]=Running')
-
-    cy.get('.bp3-menu > :nth-child(5)')
-      .should('contain', 'Success')
-      .click()
-      .url({ decode: true })
-      .should('contain', 'status[4]=Success')
-
-    cy.get('.bp3-menu > :nth-child(6)')
-      .should('contain', 'Approval Rejected')
-      .click()
-      .url({ decode: true })
-      .should('contain', 'status[5]=ApprovalRejected')
-
-    cy.get('.MultiSelectDropDown--counter').should('contain', 6)
-
-    cy.get('.bp3-menu > :nth-child(7)')
-      .should('contain', 'Paused')
-      .click()
-      .url({ decode: true })
-      .should('contain', 'status[6]=Paused')
-
-    cy.get('.bp3-menu > :nth-child(8)')
-      .should('contain', 'Waiting on approval')
-      .click()
-      .url({ decode: true })
-      .should('contain', 'status[7]=ApprovalWaiting')
-
-    cy.get('.bp3-menu > :nth-child(9)')
-      .should('contain', 'Waiting on intervention')
-      .click()
-      .url({ decode: true })
-      .should('contain', 'status[8]=InterventionWaiting')
-
-    cy.get('.bp3-menu > :nth-child(10)')
-      .should('contain', 'Waiting for resources')
-      .click()
-      .url({ decode: true })
-      .should('contain', 'status[9]=ResourceWaiting')
-
-    cy.get('.MultiSelectDropDown--counter').should('contain', 10)
+      .should('contain', 'status[1]=Failed')
+    cy.get('.MultiSelectDropDown--counter').should('contain', 2)
     cy.get('body').click(0, 0)
 
     // Check search

@@ -10,9 +10,9 @@ declare const styles: {
   readonly deleteTemplateDialog: string
   readonly dropdownPopover: string
   readonly expandSearch: string
+  readonly featureWarningBanner: string
   readonly gitFilter: string
-  readonly loading: string
-  readonly pageBody: string
+  readonly templatesPageBody: string
   readonly templatesPageHeader: string
   readonly templatesPageSubHeader: string
   readonly updateTemplateSettingsDialog: string

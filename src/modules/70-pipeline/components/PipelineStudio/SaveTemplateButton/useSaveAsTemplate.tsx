@@ -11,6 +11,7 @@ import produce from 'immer'
 import { isEmpty, omit } from 'lodash-es'
 import { Dialog } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
+import { useToaster } from '@wings-software/uicore'
 import { DefaultTemplate } from 'framework/Templates/templates'
 import {
   ModalProps,
@@ -24,10 +25,11 @@ import type { JsonNode } from 'services/cd-ng'
 import type { SaveTemplateButtonProps } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
 import { useStrings } from 'framework/strings'
 import useTemplateErrors from '@pipeline/components/TemplateErrors/useTemplateErrors'
-import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/ReconcileDialog/ReconcileDialog'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { sanitize } from '@common/utils/JSONUtils'
 import type { NGTemplateInfoConfig } from 'services/template-ng'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import css from './SaveAsTemplate.module.scss'
 
 interface TemplateActionsReturnType {
@@ -43,6 +45,8 @@ export function useSaveAsTemplate({ data, type, gitDetails }: SaveAsTemplateProp
   const templateConfigDialogHandler = useRef<TemplateConfigModalHandle>(null)
   const { saveAndPublish } = useSaveTemplate({ isTemplateStudio: false })
   const { openTemplateErrorsModal } = useTemplateErrors({ entity: TemplateErrorEntity.TEMPLATE })
+  const { getRBACErrorMessage } = useRBACError()
+  const { showError, clear } = useToaster()
 
   const [showConfigModal, hideConfigModal] = useModalHook(
     () => (
@@ -67,8 +71,12 @@ export function useSaveAsTemplate({ data, type, gitDetails }: SaveAsTemplateProp
         ),
         onSave: async (refreshedYaml: string) => {
           await templateConfigDialogHandler.current?.updateTemplate(refreshedYaml)
-        }
+        },
+        isEdit: false
       })
+    } else {
+      clear()
+      showError(getRBACErrorMessage(error), undefined, 'template.save.template.error')
     }
   }
 

@@ -16,6 +16,8 @@ import type { TemplatesViewProps } from '@templates-library/pages/TemplatesPage/
 import type { GitFiltersProps } from '@common/components/GitFilters/GitFilters'
 import { gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import * as hooks from '@common/hooks/useMutateAsGet'
+import * as Feature from '@common/hooks/useFeatures'
+import * as FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarningBanner'
 import routes from '@common/RouteDefinitions'
 import { pipelineModuleParams, projectPathProps } from '@common/utils/routeUtils'
 import {
@@ -294,5 +296,20 @@ describe('<TemplatesPage /> tests', () => {
         queryParams: defaultQueryParams
       })
     )
+  })
+
+  test('should render feature banner correctly', () => {
+    const FeatureWarningBannerMock = jest.spyOn(FeatureWarningBanner, 'default')
+    jest.spyOn(Feature, 'useFeature').mockReturnValue({
+      enabled: false
+    })
+
+    render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
+        <TemplatesPage />
+      </TestWrapper>
+    )
+
+    expect(FeatureWarningBannerMock).toBeCalledWith(expect.objectContaining({ featureName: 'TEMPLATE_SERVICE' }), {})
   })
 })

@@ -9,7 +9,7 @@
 import { Checkbox } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { Icon, Layout, TagsPopover, Text } from '@harness/uicore'
-import { get, isEmpty } from 'lodash-es'
+import { get, isEmpty, omit } from 'lodash-es'
 import defaultTo from 'lodash-es/defaultTo'
 import React, { useRef } from 'react'
 import { Link, useParams } from 'react-router-dom'
@@ -48,6 +48,7 @@ import executionFactory from '@pipeline/factories/ExecutionFactory'
 import { CardVariant } from '@pipeline/utils/constants'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { getRouteProps } from '@pipeline/pages/pipeline-list/PipelineListUtils'
 import css from './ExecutionListTable.module.scss'
 
 type CellType = Renderer<CellProps<PipelineExecutionSummary>>
@@ -89,17 +90,19 @@ export const PipelineNameCell: CellType = ({ row }) => {
   const data = row.original
   const { runSequence, planExecutionId = '', name, pipelineIdentifier: rowDataPipelineIdentifier = '' } = data
   const { getString } = useStrings()
-  const { orgIdentifier, projectIdentifier, accountId, pipelineIdentifier, module } =
-    useParams<PipelineType<PipelinePathProps>>()
+  const pathParams = useParams<PipelineType<PipelinePathProps>>()
+  const { orgIdentifier, projectIdentifier, accountId, pipelineIdentifier, module } = pathParams
   const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
 
-  const toPipelineStudio = routes.toPipelineStudio({
-    orgIdentifier,
-    projectIdentifier,
-    pipelineIdentifier: pipelineIdentifier || rowDataPipelineIdentifier,
-    accountId,
-    module
-  })
+  const toPipelineStudio = routes.toPipelineStudio(
+    getRouteProps(
+      { ...pathParams, source },
+      {
+        ...omit(data, 'tags'),
+        identifier: pipelineIdentifier || rowDataPipelineIdentifier
+      }
+    )
+  )
 
   const toExecutionPipelineView = routes.toExecutionPipelineView({
     orgIdentifier,

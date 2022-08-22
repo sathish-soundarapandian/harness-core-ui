@@ -55,6 +55,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
     searchTerm,
     pipelineIdentifier: pipelineIdentifierFromQueryParam
   } = queryParams
+
   const { module = 'cd' } = useModuleInfo()
   const [viewCompiledYaml, setViewCompiledYaml] = React.useState<PipelineExecutionSummary | undefined>(undefined)
 

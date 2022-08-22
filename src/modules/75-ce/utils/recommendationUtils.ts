@@ -8,6 +8,8 @@
 import type { IconName } from '@harness/uicore'
 import type { IState } from '@ce/components/NodeRecommendation/constants'
 import type { RecommendClusterRequest } from 'services/ce/recommenderService'
+import { ResourceType } from 'services/ce/services'
+import routes from '@common/RouteDefinitions'
 
 export const getProviderIcon = (provider: string): IconName => {
   const iconMapping: Record<string, IconName> = {
@@ -116,3 +118,18 @@ export const getInstanceFamiliesFromState = (state: IState): InstanceFamilies =>
   excludeSeries: state.excludeSeries,
   excludeTypes: state.excludeTypes
 })
+
+export type RouteFn = (
+  params: {
+    recommendation: string
+    recommendationName: string
+  } & {
+    accountId: string
+  }
+) => string
+
+export const resourceTypeToRoute: Record<ResourceType, RouteFn> = {
+  [ResourceType.Workload]: routes.toCERecommendationDetails,
+  [ResourceType.NodePool]: routes.toCENodeRecommendationDetails,
+  [ResourceType.EcsService]: routes.toCEECSRecommendationDetails
+}

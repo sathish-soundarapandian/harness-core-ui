@@ -9,16 +9,15 @@ import React from 'react'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog } from '@wings-software/uicore'
 import type { ErrorNodeSummary } from 'services/pipeline-ng'
-import {
-  ReconcileDialog,
-  TemplateErrorEntity
-} from '@pipeline/components/TemplateLibraryErrorHandling/ReconcileDialog/ReconcileDialog'
+import { ReconcileDialog } from '@pipeline/components/TemplateLibraryErrorHandling/ReconcileDialog/ReconcileDialog'
+import type { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import css from '@pipeline/components/TemplateLibraryErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip.module.scss'
 
 interface OpenTemplateErrorsModalProps {
   error: ErrorNodeSummary
   originalYaml: string
   onSave: (refreshedYaml: string) => Promise<void>
+  isEdit: boolean
 }
 
 interface UseTemplateErrorsReturnType {
@@ -39,6 +38,7 @@ export default function useTemplateErrors({ entity }: TemplateErrors): UseTempla
           <ReconcileDialog
             errorNodeSummary={modalProps.error}
             entity={entity}
+            isEdit={modalProps.isEdit}
             originalEntityYaml={modalProps.originalYaml}
             updateRootEntity={async (refreshedYaml: string) => {
               hideReconcileDialog()
@@ -51,11 +51,12 @@ export default function useTemplateErrors({ entity }: TemplateErrors): UseTempla
   }, [entity, modalProps])
 
   const openTemplateErrorsModal = React.useCallback(
-    ({ error, originalYaml, onSave }) => {
+    ({ error, originalYaml, onSave, isEdit }) => {
       setModalPros({
         error,
         originalYaml,
-        onSave
+        onSave,
+        isEdit
       })
       showReconcileDialog()
     },

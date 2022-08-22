@@ -93,16 +93,12 @@ exports[`StartupScriptListView renders StartupListview 1`] = `
                   </span>
                 </div>
               </div>
-              <div
-                class="columnId"
-              >
+              <div>
                 <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main"
-                  style="--text-line-clamp: 1; width: 300px;"
+                  class="StyledProps--font Text--lineclamp StyledProps--main startupScriptLocation"
+                  style="--text-line-clamp: 1; width: 200px;"
                 >
-                  <span
-                    class="noWrap"
-                  >
+                  <span>
                     filePath
                   </span>
                 </p>

@@ -302,7 +302,7 @@ exports[`<TemplatesPage /> tests should match snapshot 1`] = `
     </div>
   </div>
   <div
-    class="StyledProps--font StyledProps--main PageBody--pageBody pageBody"
+    class="StyledProps--font StyledProps--main PageBody--pageBody templatesPageBody"
     data-name="page-body"
   >
     <div
@@ -696,7 +696,7 @@ exports[`<TemplatesPage /> tests should render error view correctly 1`] = `
     </div>
   </div>
   <div
-    class="StyledProps--font StyledProps--main PageBody--pageBody pageBody"
+    class="StyledProps--font StyledProps--main PageBody--pageBody templatesPageBody"
     data-name="page-body"
   >
     <div
@@ -1049,7 +1049,7 @@ exports[`<TemplatesPage /> tests should render loading view correctly 1`] = `
     </div>
   </div>
   <div
-    class="StyledProps--font StyledProps--main PageBody--pageBody pageBody"
+    class="StyledProps--font StyledProps--main PageBody--pageBody templatesPageBody"
     data-name="page-body"
   >
     <div
@@ -1433,7 +1433,7 @@ exports[`<TemplatesPage /> tests should render no results view correctly 1`] = `
     </div>
   </div>
   <div
-    class="StyledProps--font StyledProps--main PageBody--pageBody pageBody"
+    class="StyledProps--font StyledProps--main PageBody--pageBody templatesPageBody"
     data-name="page-body"
   >
     <div

@@ -61,7 +61,7 @@ function HealthSourceDrawerContent({
             expressions={expressions}
           />
         ) : (
-          <SelectGCODashboards key="selectGCODashboards" />
+          <SelectGCODashboards key="selectGCODashboards" isTemplate={isTemplate} expressions={expressions} />
         )
       return [
         [

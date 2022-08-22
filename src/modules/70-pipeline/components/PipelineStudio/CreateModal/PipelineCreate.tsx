@@ -32,6 +32,8 @@ import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { InlineRemoteSelect } from '@common/components/InlineRemoteSelect/InlineRemoteSelect'
 import { yamlPathRegex } from '@common/utils/StringUtils'
+import RbacButton from '@rbac/components/Button/Button'
+import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { DefaultNewPipelineId } from '../PipelineContext/PipelineActions'
 import css from './PipelineCreate.module.scss'
 
@@ -84,8 +86,10 @@ export default function CreatePipelines({
   const { pipelineIdentifier } = useParams<{ pipelineIdentifier: string }>()
   const { storeType: storeTypeParam = StoreType.INLINE } = useQueryParams<GitQueryParams>()
   const { updateQueryParams } = useUpdateQueryParams()
-  const { isGitSyncEnabled, isGitSimplificationEnabled } = useAppStore()
+  const { isGitSyncEnabled, gitSyncEnabledOnlyForFF, supportingGitSimplification } = useAppStore()
+  const oldGitSyncEnabled = isGitSyncEnabled && !gitSyncEnabledOnlyForFF
   const { trackEvent } = useTelemetry()
+
   const newInitialValues = React.useMemo(() => {
     return produce(initialValues, draft => {
       if (draft.identifier === DefaultNewPipelineId) {
@@ -94,37 +98,43 @@ export default function CreatePipelines({
     })
   }, [initialValues])
 
+  const getGitValidationSchema = () => {
+    if (supportingGitSimplification && storeTypeParam === StoreType.REMOTE) {
+      return {
+        repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
+        branch: Yup.string().trim().required(getString('common.git.validation.branchRequired')),
+        connectorRef: Yup.string().trim().required(getString('validation.sshConnectorRequired')),
+        filePath: Yup.string()
+          .trim()
+          .required(getString('gitsync.gitSyncForm.yamlPathRequired'))
+          .matches(yamlPathRegex, getString('gitsync.gitSyncForm.yamlPathInvalid'))
+      }
+    } else if (oldGitSyncEnabled) {
+      return {
+        repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
+        branch: Yup.string().trim().required(getString('common.git.validation.branchRequired'))
+      }
+    } else {
+      return {}
+    }
+  }
+
   const validationSchema = React.useMemo(
     () =>
       Yup.object().shape({
         name: NameSchema({ requiredErrorMsg: getString('createPipeline.pipelineNameRequired') }),
         identifier: IdentifierSchema(),
-        ...(isGitSimplificationEnabled && storeTypeParam === StoreType.REMOTE
-          ? {
-              repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
-              branch: Yup.string().trim().required(getString('common.git.validation.branchRequired')),
-              connectorRef: Yup.string().trim().required(getString('validation.sshConnectorRequired')),
-              filePath: Yup.string()
-                .trim()
-                .required(getString('gitsync.gitSyncForm.yamlPathRequired'))
-                .matches(yamlPathRegex, getString('gitsync.gitSyncForm.yamlPathInvalid'))
-            }
-          : isGitSyncEnabled
-          ? {
-              repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
-              branch: Yup.string().trim().required(getString('common.git.validation.branchRequired'))
-            }
-          : {})
+        ...getGitValidationSchema()
       }),
-    [getString, isGitSimplificationEnabled, isGitSyncEnabled, storeTypeParam]
+    [getString, supportingGitSimplification, oldGitSyncEnabled, storeTypeParam]
   )
 
   const isEdit = React.useMemo(
     () =>
-      isGitSimplificationEnabled
+      supportingGitSimplification
         ? pipelineIdentifier !== DefaultNewPipelineId
         : initialValues.identifier !== DefaultNewPipelineId,
-    [initialValues.identifier, isGitSimplificationEnabled, pipelineIdentifier]
+    [initialValues.identifier, supportingGitSimplification, pipelineIdentifier]
   )
 
   useEffect(() => {
@@ -138,7 +148,7 @@ export default function CreatePipelines({
   const handleSubmit = (values: CreatePipelinesValue): void => {
     logger.info(JSON.stringify(values))
     const formGitDetails =
-      isGitSimplificationEnabled && values.storeType === 'REMOTE'
+      supportingGitSimplification && values.storeType === StoreType.REMOTE
         ? { repoName: values.repo, branch: values.branch, filePath: values.filePath }
         : values.repo && values.repo.trim().length > 0
         ? { repoIdentifier: values.repo, branch: values.branch }
@@ -173,13 +183,13 @@ export default function CreatePipelines({
               }}
               tooltipProps={{ dataTooltipId: 'pipelineCreate' }}
             />
-            {isGitSyncEnabled && (
+            {oldGitSyncEnabled && (
               <GitSyncStoreProvider>
                 <GitContextForm formikProps={formikProps as any} gitDetails={gitDetails} />
               </GitSyncStoreProvider>
             )}
 
-            {isGitSimplificationEnabled ? (
+            {supportingGitSimplification ? (
               <>
                 <Divider />
                 <Text font={{ variation: FontVariation.H6 }} className={css.choosePipelineSetupHeader}>
@@ -209,13 +219,13 @@ export default function CreatePipelines({
               />
             ) : null}
 
-            {isGitSimplificationEnabled ? (
+            {supportingGitSimplification ? (
               <Divider className={cx({ [css.gitSimplificationDivider]: storeTypeParam === StoreType.INLINE })} />
             ) : null}
 
             {!isEdit && (
               <Container padding={{ top: 'large' }}>
-                <Button
+                <RbacButton
                   text={getString('common.templateStartLabel')}
                   icon={'template-library'}
                   iconProps={{
@@ -227,6 +237,11 @@ export default function CreatePipelines({
                     window.requestAnimationFrame(() => {
                       formikProps.submitForm()
                     })
+                  }}
+                  featuresProps={{
+                    featuresRequest: {
+                      featureNames: [FeatureIdentifier.TEMPLATE_SERVICE]
+                    }
                   }}
                 />
               </Container>

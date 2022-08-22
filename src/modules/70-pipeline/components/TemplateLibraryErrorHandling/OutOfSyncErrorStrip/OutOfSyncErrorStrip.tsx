@@ -13,15 +13,14 @@ import { useModalHook } from '@harness/use-modal'
 import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ErrorNodeSummary, TemplateResponse } from 'services/template-ng'
-import {
-  ReconcileDialog,
-  TemplateErrorEntity
-} from '@pipeline/components/TemplateLibraryErrorHandling/ReconcileDialog/ReconcileDialog'
+import { ReconcileDialog } from '@pipeline/components/TemplateLibraryErrorHandling/ReconcileDialog/ReconcileDialog'
+import type { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import css from './OutOfSyncErrorStrip.module.scss'
 
 export interface OutOfSyncErrorStripProps {
   errorNodeSummary: ErrorNodeSummary
   entity: TemplateErrorEntity
+  originalYaml: string
   isReadOnly: boolean
   onRefreshEntity: () => void
   updateRootEntity: (entityYaml: string) => Promise<void>
@@ -30,6 +29,7 @@ export interface OutOfSyncErrorStripProps {
 export function OutOfSyncErrorStrip({
   errorNodeSummary,
   entity,
+  originalYaml,
   isReadOnly,
   onRefreshEntity,
   updateRootEntity
@@ -51,6 +51,8 @@ export function OutOfSyncErrorStrip({
         <ReconcileDialog
           errorNodeSummary={errorNodeSummary}
           entity={entity}
+          isEdit={true}
+          originalEntityYaml={originalYaml}
           setResolvedTemplateResponses={setResolvedTemplateResponses}
           onRefreshEntity={onRefreshEntity}
           updateRootEntity={async (entityYaml: string) => {
@@ -60,7 +62,15 @@ export function OutOfSyncErrorStrip({
         />
       </Dialog>
     )
-  }, [resolvedTemplateResponses, entity, onRefreshEntity, updateRootEntity])
+  }, [
+    resolvedTemplateResponses,
+    errorNodeSummary,
+    originalYaml,
+    entity,
+    setResolvedTemplateResponses,
+    onRefreshEntity,
+    updateRootEntity
+  ])
 
   return (
     <Container className={css.mainContainer}>

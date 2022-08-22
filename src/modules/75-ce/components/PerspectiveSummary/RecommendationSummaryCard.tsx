@@ -20,6 +20,7 @@ import {
   RecommendationItemDto
 } from 'services/ce/services'
 import { CCM_PAGE_TYPE } from '@ce/types'
+import { resourceTypeToRoute } from '@ce/utils/recommendationUtils'
 import css from './PerspectiveSummary.module.scss'
 
 interface RecommendationSummaryCardProps {
@@ -42,7 +43,7 @@ const RecommendationSummaryCard: (props: RecommendationSummaryCardProps) => JSX.
     variables: {
       filter: {
         ...filters,
-        minSaving: 0,
+        minSaving: 1,
         offset: 0,
         limit: 10
       } as unknown as K8sRecommendationFilterDtoInput
@@ -75,15 +76,12 @@ const RecommendationSummaryCard: (props: RecommendationSummaryCardProps) => JSX.
     if (recommendationsDetails.length === 1 && recommendationData?.count === 1) {
       const recommendationId = recommendationsDetails[0].id
       const recommendationName = recommendationsDetails[0].resourceName || recommendationId
+      const resourceType = recommendationsDetails[0].resourceType
 
       recommendationId &&
-        history.push({
-          pathname: routes.toCERecommendationDetails({
-            accountId,
-            recommendation: recommendationId,
-            recommendationName: recommendationName
-          })
-        })
+        history.push(
+          resourceTypeToRoute[resourceType]({ accountId, recommendation: recommendationId, recommendationName })
+        )
     } else {
       history.push({
         pathname: routes.toCERecommendations({

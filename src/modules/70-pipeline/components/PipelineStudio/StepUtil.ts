@@ -479,7 +479,7 @@ export const validateCICodebase = ({
     }
 
     if (
-      pipeline?.properties?.ci?.codebase?.build?.type === CodebaseTypes.branch &&
+      pipeline?.properties?.ci?.codebase?.build?.type === CodebaseTypes.BRANCH &&
       isEmpty(pipeline?.properties?.ci?.codebase?.build?.spec?.branch) &&
       !isInputSetForm
     ) {
@@ -491,7 +491,7 @@ export const validateCICodebase = ({
     }
 
     if (
-      pipeline?.properties?.ci?.codebase?.build?.type === CodebaseTypes.tag &&
+      pipeline?.properties?.ci?.codebase?.build?.type === CodebaseTypes.TAG &&
       isEmpty(pipeline?.properties?.ci?.codebase?.build?.spec?.tag) &&
       !isInputSetForm
     ) {

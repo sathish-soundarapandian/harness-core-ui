@@ -68,7 +68,8 @@ const CreateConnectorFromYamlPage: React.FC = () => {
   const [editorContent, setEditorContent] = React.useState<Record<string, any>>()
   const { getString } = useStrings()
   const [hasConnectorChanged, setHasConnectorChanged] = useState<boolean>(false)
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [gitResourceDetails, setGitResourceDetails] = useState<GitResourceInterface>({
     gitDetails: {} as EntityGitDetails,
     type: Entities.CONNECTORS,

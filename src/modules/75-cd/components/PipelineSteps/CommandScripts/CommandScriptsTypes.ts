@@ -87,7 +87,10 @@ export const sourceTypeOptions: RadioButtonProps[] = [
   { label: 'Config', value: 'Config' }
 ]
 
-export const scriptTypeOptions: SelectOption[] = [{ label: 'Bash', value: 'Bash' }]
+export const scriptTypeOptions: SelectOption[] = [
+  { label: 'Bash', value: 'Bash' },
+  { label: 'PowerShell', value: 'PowerShell' }
+]
 
 export const variableSchema = (
   getString: UseStringsReturn['getString']

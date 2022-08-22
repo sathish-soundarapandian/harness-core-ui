@@ -71,19 +71,19 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
 
 export interface GetInitialValuesProps {
   originalPipeline: OriginalPipeline
-  isGitSimplificationEnabled?: boolean
+  supportingGitSimplification?: boolean
   orgIdentifier: string
   projectIdentifier: string
 }
 
 export function getInitialValues(props: GetInitialValuesProps): FormState {
-  const { originalPipeline, isGitSimplificationEnabled, orgIdentifier, projectIdentifier } = props
+  const { originalPipeline, supportingGitSimplification, orgIdentifier, projectIdentifier } = props
   return {
     name: `${originalPipeline.name} - Clone`,
     identifier: `${originalPipeline.identifier}_Clone`,
     tags: originalPipeline.tags,
     description: originalPipeline.description,
-    storeType: isGitSimplificationEnabled
+    storeType: supportingGitSimplification
       ? (defaultTo(originalPipeline.storeType, StoreType.INLINE) as StoreType)
       : StoreType.INLINE,
     sourceConfig: {

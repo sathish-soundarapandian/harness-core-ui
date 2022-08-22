@@ -41,6 +41,9 @@ import { getAllowedTemplateTypes, TemplateType } from '@templates-library/utils/
 import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeature } from '@common/hooks/useFeatures'
+import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
+import FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarningBanner'
 import css from './TemplatesPage.module.scss'
 
 export default function TemplatesPage(): React.ReactElement {
@@ -58,9 +61,15 @@ export default function TemplatesPage(): React.ReactElement {
   const [gitFilter, setGitFilter] = useState<GitFilterScope | null>(null)
   const searchRef = React.useRef<ExpandingSearchInputHandle>({} as ExpandingSearchInputHandle)
   const { projectIdentifier, orgIdentifier, accountId, module } = useParams<ProjectPathProps & ModulePathParams>()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const scope = getScopeFromDTO({ projectIdentifier, orgIdentifier, accountIdentifier: accountId })
   const { CUSTOM_SECRET_MANAGER_NG, CVNG_TEMPLATE_MONITORED_SERVICE } = useFeatureFlags()
+  const { enabled: templateFeatureEnabled } = useFeature({
+    featureRequest: {
+      featureName: FeatureIdentifier.TEMPLATE_SERVICE
+    }
+  })
   const allowedTemplateTypes = getAllowedTemplateTypes(scope, {
     [TemplateType.SecretManager]: !!CUSTOM_SECRET_MANAGER_NG,
     [TemplateType.MonitoredService]: !!CVNG_TEMPLATE_MONITORED_SERVICE
@@ -93,7 +102,8 @@ export default function TemplatesPage(): React.ReactElement {
           branch: gitFilter.branch
         })
     },
-    queryParamStringifyOptions: { arrayFormat: 'comma' }
+    queryParamStringifyOptions: { arrayFormat: 'comma' },
+    lazy: !templateFeatureEnabled
   })
 
   const reset = React.useCallback((): void => {
@@ -151,6 +161,10 @@ export default function TemplatesPage(): React.ReactElement {
       })
     )
   }
+
+  const onRetry = React.useCallback(() => {
+    reloadTemplates()
+  }, [reloadTemplates])
 
   return (
     <>
@@ -214,10 +228,13 @@ export default function TemplatesPage(): React.ReactElement {
       <Page.Body
         loading={loading}
         error={(error?.data as Error)?.message || error?.message}
-        className={css.pageBody}
-        retryOnError={reloadTemplates}
+        className={css.templatesPageBody}
+        retryOnError={onRetry}
       >
-        {!loading &&
+        {!templateFeatureEnabled ? (
+          <FeatureWarningBanner featureName={FeatureIdentifier.TEMPLATE_SERVICE} className={css.featureWarningBanner} />
+        ) : (
+          !loading &&
           (!templateData?.data?.content?.length ? (
             <NoResultsView
               hasSearchParam={!!searchParam || !!templateType}
@@ -245,7 +262,8 @@ export default function TemplatesPage(): React.ReactElement {
                 view={view}
               />
             </React.Fragment>
-          ))}
+          ))
+        )}
       </Page.Body>
       {selectedTemplate && (
         <TemplateDetailsDrawer

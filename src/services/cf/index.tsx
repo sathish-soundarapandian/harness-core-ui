@@ -499,6 +499,18 @@ export interface FeaturePipelineExecution {
    */
   failedStagesCount?: number
   /**
+   * The id of the pipeline sequence
+   */
+  runSequence?: number
+  /**
+   * The number of running stages in the pipeline execution
+   */
+  runningStagesCount?: number
+  /**
+   * timestamp of the start of the pipeline execution in milliseconds
+   */
+  startTs?: number
+  /**
    * The status of the pipeline execution
    */
   status: string
@@ -514,6 +526,7 @@ export interface FeaturePipelineExecution {
    * The trigger details of the pipeline execution
    */
   triggerDetails: {
+    defaultOffVariation?: Serve
     defaultServe?: Serve
     /**
      * A list of rules to use when evaluating this flag in this environment

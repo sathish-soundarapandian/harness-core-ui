@@ -30,7 +30,7 @@ export default function CreatePipelineButton({
   onImportPipelineClick
 }: CreatePipelineButtonProps): JSX.Element {
   const { getString } = useStrings()
-  const { isGitSimplificationEnabled } = useAppStore()
+  const { supportingGitSimplification } = useAppStore()
   const isImportFlowEnabled = useFeatureFlag(FeatureFlag.NG_GIT_EXPERIENCE_IMPORT_FLOW)
 
   const [canCreate] = usePermission({
@@ -40,7 +40,7 @@ export default function CreatePipelineButton({
     }
   })
 
-  if (isGitSimplificationEnabled && isImportFlowEnabled) {
+  if (supportingGitSimplification && isImportFlowEnabled) {
     return (
       <SplitButton
         variation={ButtonVariation.PRIMARY}

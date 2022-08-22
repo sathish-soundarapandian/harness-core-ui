@@ -12,11 +12,11 @@ import { TestWrapper } from '@common/utils/testUtils'
 import CreatePipelineButton from '../CreatePipelineButton'
 
 describe('CreatePipelineButton tests', () => {
-  test('when isGitSimplificationEnabled, NG_GIT_EXPERIENCE_IMPORT_FLOW are enabled SplitButton should be rendered', () => {
+  test('when supportingGitSimplification, NG_GIT_EXPERIENCE_IMPORT_FLOW are enabled SplitButton should be rendered', () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          isGitSimplificationEnabled: true,
+          supportingGitSimplification: true,
           featureFlags: { NG_GIT_EXPERIENCE_IMPORT_FLOW: true }
         }}
       >
@@ -26,11 +26,11 @@ describe('CreatePipelineButton tests', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('when isGitSimplificationEnabled, NG_GIT_EXPERIENCE_IMPORT_FLOW are enabled and label is passed', () => {
+  test('when supportingGitSimplification, NG_GIT_EXPERIENCE_IMPORT_FLOW are enabled and label is passed', () => {
     const { getByText } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          isGitSimplificationEnabled: true,
+          supportingGitSimplification: true,
           featureFlags: { NG_GIT_EXPERIENCE_IMPORT_FLOW: true }
         }}
       >
@@ -45,18 +45,18 @@ describe('CreatePipelineButton tests', () => {
     expect(addPipelineBtn).toBeDefined()
   })
 
-  test('when isGitSimplificationEnabled NOT enabled RbacButton should be rendered', () => {
+  test('when supportingGitSimplification is false RbacButton should be rendered', () => {
     const { container } = render(
-      <TestWrapper defaultAppStoreValues={{ isGitSimplificationEnabled: false }}>
+      <TestWrapper defaultAppStoreValues={{ supportingGitSimplification: false }}>
         <CreatePipelineButton onCreatePipelineClick={jest.fn()} onImportPipelineClick={jest.fn()} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
   })
 
-  test('when isGitSimplificationEnabled NOT enabled and label is passed', () => {
+  test('when supportingGitSimplification is false and label is passed', () => {
     const { getByText } = render(
-      <TestWrapper defaultAppStoreValues={{ isGitSimplificationEnabled: false }}>
+      <TestWrapper defaultAppStoreValues={{ supportingGitSimplification: false }}>
         <CreatePipelineButton
           onCreatePipelineClick={jest.fn()}
           onImportPipelineClick={jest.fn()}

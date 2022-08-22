@@ -39,7 +39,7 @@ export function ExecutionHeader(): React.ReactElement {
     useParams<PipelineType<ExecutionPathProps>>()
   const { refetch, pipelineExecutionDetail, selectedStageId, selectedStepId, allNodeMap, isPipelineInvalid } =
     useExecutionContext()
-  const { isGitSimplificationEnabled } = useAppStore()
+  const { supportingGitSimplification } = useAppStore()
   const { getString } = useStrings()
   const { pipelineExecutionSummary = {} } = pipelineExecutionDetail || {}
   const history = useHistory()
@@ -209,7 +209,7 @@ export function ExecutionHeader(): React.ReactElement {
           />
         ) : null}
         {pipelineExecutionSummary.gitDetails ? (
-          isGitSimplificationEnabled && pipelineExecutionSummary?.storeType === StoreType.REMOTE ? (
+          supportingGitSimplification && pipelineExecutionSummary?.storeType === StoreType.REMOTE ? (
             <div className={css.gitRemoteDetailsWrapper}>
               <GitRemoteDetails
                 repoName={pipelineExecutionSummary.gitDetails.repoName}

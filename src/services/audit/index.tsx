@@ -1347,6 +1347,7 @@ export interface ResourceDTO {
     | 'AUTOSTOPPING_RULE'
     | 'AUTOSTOPPING_LB'
     | 'AUTOSTOPPING_STARTSTOP'
+    | 'SETTING'
 }
 
 export interface ResourceGroupDTO {

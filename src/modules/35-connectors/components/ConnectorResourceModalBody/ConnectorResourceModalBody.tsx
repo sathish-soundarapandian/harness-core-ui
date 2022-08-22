@@ -30,7 +30,8 @@ const ConnectorResourceModalBody: React.FC<RbacResourceModalProps> = ({
   const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
   const [page, setPage] = useState(0)
   const { getString } = useStrings()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const defaultQueryParams = useMemo(
     () => ({
       accountIdentifier,

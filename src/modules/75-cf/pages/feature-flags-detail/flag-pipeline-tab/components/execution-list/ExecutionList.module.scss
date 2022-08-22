@@ -16,7 +16,7 @@
 
 .execution-card-header-right {
   display: grid;
-  grid-template-columns: 140px 130px 100px 150px min-content;
+  grid-template-columns: 120px 130px 100px min-content;
   align-items: center;
   gap: var(--spacing-small);
 }
@@ -28,8 +28,12 @@
 
 .collapse-body {
   display: grid;
-  grid-template-columns: 80px 1fr;
+  grid-template-columns: max-content 1fr;
   gap: var(--spacing-xsmall);
+}
+
+.collapse-body > span:nth-child(odd) {
+  margin-right: var(--spacing-xsmall);
 }
 
 .percentage-rollout-variations {

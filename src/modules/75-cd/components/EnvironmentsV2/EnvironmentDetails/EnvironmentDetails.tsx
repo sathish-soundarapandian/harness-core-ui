@@ -56,7 +56,7 @@ import { EnvironmentDetailsTab } from '../utils'
 import GitOpsCluster from './GitOpsCluster/GitOpsCluster'
 import css from './EnvironmentDetails.module.scss'
 
-export default function EnvironmentDetails(): JSX.Element {
+export default function EnvironmentDetails(): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier, environmentIdentifier } = useParams<
     ProjectPathProps & EnvironmentPathProps
   >()
@@ -124,7 +124,7 @@ export default function EnvironmentDetails(): JSX.Element {
       } else {
         throw response
       }
-    } catch (e: any) {
+    } catch (e) {
       showError(getErrorInfoFromErrorObject(e, true))
     }
     setUpdateLoading(false)

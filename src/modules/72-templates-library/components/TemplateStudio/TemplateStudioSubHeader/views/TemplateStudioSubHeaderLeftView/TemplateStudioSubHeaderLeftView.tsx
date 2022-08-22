@@ -70,7 +70,8 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
   >()
   const { updateQueryParams } = useUpdateQueryParams<TemplateStudioQueryParams>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const { isGitSyncEnabled } = React.useContext(AppStoreContext)
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = React.useContext(AppStoreContext)
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const iconColor = templateFactory.getTemplateColor(templateType) || Color.BLACK
   const [modalProps, setModalProps] = React.useState<ModalProps>()
   const isYaml = view === SelectedView.YAML

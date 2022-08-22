@@ -273,6 +273,7 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
               name={`${path}.credentialsRef`}
               type={getMultiTypeSecretInputType(initialValues.serviceType)}
               label={getString('cd.steps.common.specifyCredentials')}
+              expressions={expressions}
             />
           </div>
         )}

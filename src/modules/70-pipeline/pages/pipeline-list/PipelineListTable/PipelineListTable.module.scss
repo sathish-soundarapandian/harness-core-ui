@@ -14,19 +14,18 @@
 }
 
 .avatar {
+  background-color: var(--primary-2);
+  color: var(--primary-8);
+  text-transform: uppercase;
+}
+
+.trigger {
   width: var(--spacing-xxlarge);
   height: var(--spacing-xxlarge);
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--primary-2);
-  color: var(--primary-8);
-  text-transform: uppercase;
-}
-
-.actionButton {
-  transform: rotate(90deg);
 }
 
 .storeTypeColumn {
@@ -62,7 +61,7 @@
   background-color: var(--grey-100);
   top: -1px;
   bottom: -1px;
-  left: -1px;
+  left: -8px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -77,10 +76,26 @@
   }
 }
 
-.pipelineNameCell {
-  margin-left: var(--spacing-2) !important;
-}
-
 .statusLabel {
   margin-bottom: var(--spacing-small);
+}
+
+.tags {
+  p {
+    color: var(--grey-600) !important;
+    font-size: var(--font-size-small) !important;
+  }
+}
+
+.recentExecutionHeader {
+  position: relative;
+}
+
+.latestExecutionText {
+  position: absolute;
+  text-transform: lowercase;
+  top: -16px;
+  p {
+    white-space: nowrap !important;
+  }
 }

@@ -31,31 +31,27 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { useQueryParams } from '@common/hooks'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { getFirstLeafNode } from '@pipeline/components/TemplateLibraryErrorHandling/TemplateLibraryErrorHandlingUtils'
-import { getTitleFromErrorNodeSummary } from '../utils'
+import { getFirstLeafNode, getTitleFromErrorNodeSummary, TemplateErrorEntity } from '../utils'
 import css from './ReconcileDialog.module.scss'
-
-export enum TemplateErrorEntity {
-  PIPELINE = 'Pipeline',
-  TEMPLATE = 'Template'
-}
 
 export interface ReconcileDialogProps {
   errorNodeSummary: ErrorNodeSummary
   entity: TemplateErrorEntity
+  isEdit: boolean
+  originalEntityYaml: string
   setResolvedTemplateResponses?: (resolvedTemplateInfos: TemplateResponse[]) => void
   onRefreshEntity?: () => void
   updateRootEntity: (refreshedYaml: string) => Promise<void>
-  originalEntityYaml?: string
 }
 
 export function ReconcileDialog({
   errorNodeSummary,
   entity,
+  isEdit,
+  originalEntityYaml,
   setResolvedTemplateResponses: setResolvedTemplates,
   onRefreshEntity,
-  updateRootEntity,
-  originalEntityYaml
+  updateRootEntity
 }: ReconcileDialogProps) {
   const { nodeInfo, templateResponse, childrenErrorNodes } = errorNodeSummary
   const hasChildren = !isEmpty(childrenErrorNodes)
@@ -65,7 +61,8 @@ export function ReconcileDialog({
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
   const [loading, setLoading] = React.useState<boolean>(false)
   const { showError } = useToaster()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
 
@@ -172,6 +169,7 @@ export function ReconcileDialog({
       }
     } catch (error) {
       showError(getRBACErrorMessage(error), undefined, 'template.update.error')
+      throw error
     } finally {
       setLoading(false)
     }
@@ -185,10 +183,7 @@ export function ReconcileDialog({
     }
   }
 
-  const title = React.useMemo(
-    () => getTitleFromErrorNodeSummary(errorNodeSummary, entity, originalEntityYaml),
-    [errorNodeSummary, entity, originalEntityYaml]
-  )
+  const title = React.useMemo(() => getTitleFromErrorNodeSummary(errorNodeSummary, entity), [errorNodeSummary, entity])
 
   return (
     <Container className={css.mainContainer} height={'100%'}>
@@ -226,7 +221,7 @@ export function ReconcileDialog({
                     </Text>
                   </Layout.Vertical>
                 </Container>
-                {!isEmpty(nodeInfo) && (
+                {isEdit && (
                   <Button
                     text={
                       hasChildren
@@ -246,7 +241,6 @@ export function ReconcileDialog({
                     resolvedTemplateResponses={resolvedTemplateResponses}
                     selectedErrorNodeSummary={selectedErrorNodeSummary}
                     setSelectedErrorNodeSummary={setSelectedErrorNodeSummary}
-                    originalEntityYaml={originalEntityYaml}
                   />
                 )}
               </Layout.Vertical>
@@ -254,9 +248,10 @@ export function ReconcileDialog({
             <Container style={{ flex: 1 }}>
               <YamlDiffView
                 errorNodeSummary={selectedErrorNodeSummary}
+                rootErrorNodeSummary={errorNodeSummary}
+                originalEntityYaml={originalEntityYaml}
                 resolvedTemplateResponses={resolvedTemplateResponses}
                 onUpdate={onUpdateNode}
-                originalEntityYaml={originalEntityYaml}
               />
             </Container>
           </Layout.Horizontal>

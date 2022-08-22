@@ -20,6 +20,9 @@ exports[`Auto stopping rule logs should show logs 1`] = `
         >
           <span
             class=""
+          />
+          <span
+            class="ansi-black-fg"
           >
             2021-04-05T13:14:58.857084Z  Rule state changed to: coolingdown  
           </span>

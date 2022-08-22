@@ -62,7 +62,7 @@ const SettingCategorySectionContents: React.FC<SettingCategorySectionContentsPro
           onRestore={() => onRestoreLocal(settingTypeKey)}
           settingTypeHandler={settingTypeHandler}
           settingValue={allSettings.get(settingTypeKey)}
-          onSelectionChange={(val: string) => onSelectionChangeLocal(settingTypeKey, val)}
+          onSettingChange={(val: string) => onSelectionChangeLocal(settingTypeKey, val)}
           onAllowOverride={(checked: boolean) => {
             onAllowOverride(checked, settingTypeKey)
           }}

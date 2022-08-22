@@ -13,12 +13,12 @@ import type { TargetMap } from 'services/cf'
 import css from '../../ExecutionList.module.scss'
 
 interface TargetItemProps {
-  getVariationColorByName: (variationName: string) => string
+  getVariationColorById: (variationId: string) => string
   targets: TargetMap[]
   variation: string
 }
 
-const TargetItem: React.FC<TargetItemProps> = ({ targets, variation, getVariationColorByName }) => {
+const TargetItem: React.FC<TargetItemProps> = ({ targets, variation, getVariationColorById }) => {
   const { getString } = useStrings()
 
   return (
@@ -31,7 +31,7 @@ const TargetItem: React.FC<TargetItemProps> = ({ targets, variation, getVariatio
         iconProps={{
           size: 12,
           style: {
-            color: getVariationColorByName(variation)
+            color: getVariationColorById(variation)
           }
         }}
         font={{ variation: FontVariation.SMALL_BOLD }}

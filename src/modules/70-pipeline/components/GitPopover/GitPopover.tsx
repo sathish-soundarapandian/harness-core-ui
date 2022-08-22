@@ -33,7 +33,8 @@ export function RenderGitPopover(props: GitPopoverProps): React.ReactElement | n
   const { getString } = useStrings()
   const { data, iconProps, popoverProps, customUI } = props
   const { gitSyncRepos, loadingRepos } = useGitSyncStore()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
 
   const repoLabel = useMemo(() => {
     return isGitSyncEnabled ? data?.repoIdentifier : data?.repoName

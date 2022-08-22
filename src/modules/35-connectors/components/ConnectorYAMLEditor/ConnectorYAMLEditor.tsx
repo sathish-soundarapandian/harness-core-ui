@@ -145,7 +145,8 @@ const ConnectorYAMLEditor: React.FC<ConnectorYAMLEditorProp> = props => {
     setConnectorForYaml,
     refetchConnector
   } = props
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [yamlHandler, setYamlHandler] = React.useState<YamlBuilderHandlerBinding | undefined>()
   const [hasConnectorChanged, setHasConnectorChanged] = useState<boolean>(false)
 

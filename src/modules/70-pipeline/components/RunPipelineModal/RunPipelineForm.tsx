@@ -152,7 +152,12 @@ function RunPipelineFormBasic({
   const history = useHistory()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
-  const { isGitSyncEnabled, isGitSimplificationEnabled } = useAppStore()
+  const {
+    isGitSyncEnabled: isGitSyncEnabledForProject,
+    gitSyncEnabledOnlyForFF,
+    supportingGitSimplification
+  } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [runClicked, setRunClicked] = useState(false)
   const [expressionFormState, setExpressionFormState] = useState<KVPair>({})
   const [selectedStageData, setSelectedStageData] = useState<StageSelectionData>({
@@ -404,8 +409,8 @@ function RunPipelineFormBasic({
   }, [formikRef?.current?.values?.template?.templateInputs, resolvedPipeline])
 
   useEffect(() => {
-    setSkipPreFlightCheck(defaultTo(isGitSimplificationEnabled && storeType === StoreType.REMOTE, false))
-  }, [isGitSimplificationEnabled, storeType])
+    setSkipPreFlightCheck(defaultTo(supportingGitSimplification && storeType === StoreType.REMOTE, false))
+  }, [supportingGitSimplification, storeType])
 
   const [showPreflightCheckModal, hidePreflightCheckModal] = useModalHook(() => {
     return (
@@ -885,7 +890,7 @@ function RunPipelineFormBasic({
                       branch={branch || pipelineResponse?.data?.gitDetails?.branch}
                       storeType={storeType}
                       isGitSyncEnabled={isGitSyncEnabled}
-                      isGitSimplificationEnabled={isGitSimplificationEnabled}
+                      supportingGitSimplification={supportingGitSimplification}
                       setFormErrors={setFormErrors}
                       refetchParentData={handleInputSetSave}
                     />

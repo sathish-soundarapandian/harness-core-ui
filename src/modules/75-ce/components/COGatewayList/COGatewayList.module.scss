@@ -81,7 +81,16 @@
 }
 
 .gatewayLogView {
-  background: var(--grey-900) !important;
+  background: var(--primary-bg) !important;
+  border: 1px solid var(--grey-200);
+  pre > div {
+    > span:first-child {
+      color: var(--grey-900);
+    }
+    &:hover {
+      background-color: var(--grey-200) !important;
+    }
+  }
 }
 
 .serviceDetailsItemContainer {
@@ -99,6 +108,7 @@
 .serviceAccordionContainer {
   background: var(--primary-1);
   padding: 0 var(--spacing-medium);
+  border-radius: 5px;
 }
 
 .scheduleAccordion {
@@ -173,42 +183,6 @@
     padding: var(--spacing-small);
     line-height: 2;
     font-size: var(--font-size-small);
-  }
-  .stateLabel {
-    padding: 3px 6px;
-    border-radius: 4px;
-    font-weight: 600 !important;
-    max-height: 21px;
-    &.runningLabel {
-      color: var(--primary-7);
-      background: var(--primary-1);
-      :global {
-        svg path {
-          fill: var(--primary-7) !important;
-        }
-      }
-    }
-    &.stoppedLabel {
-      color: var(--red-800);
-      background: var(--red-50);
-      :global {
-        svg path {
-          fill: var(--red-800) !important;
-        }
-      }
-    }
-    &.disabledLabel {
-      color: var(--grey-700);
-      background: var(--grey-200);
-    }
-    &.loadingLabel {
-      color: var(--blue-700);
-      :global {
-        svg path {
-          fill: var(--blue-700) !important;
-        }
-      }
-    }
   }
 }
 

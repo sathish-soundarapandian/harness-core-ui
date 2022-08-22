@@ -1011,6 +1011,7 @@ export interface StringsMap {
   'rbac.org': string
   'rbac.pendingUsers': string
   'rbac.permissionLabels.access': string
+  'rbac.permissionLabels.approveReject': string
   'rbac.permissionLabels.create': string
   'rbac.permissionLabels.createEdit': string
   'rbac.permissionLabels.delete': string
@@ -1195,6 +1196,8 @@ export interface StringsMap {
   'rbac.youAreMissingTheFollowingPermission': string
   'rbac.youAreNotAuthorizedTo': string
   'defaultSettings.allowOverrides': string
+  'defaultSettings.harnessDefault': string
+  'defaultSettings.inheritedFrom': string
   'defaultSettings.noSettingToDisplay': string
   'defaultSettings.restoreToDefault': string
   'governance.permissions.governancePolicies': string
@@ -3189,6 +3192,8 @@ export interface StringsMap {
   'pipeline.filters.environmentPlaceholder': string
   'pipeline.filters.pipelineNamePlaceholder': string
   'pipeline.filters.servicePlaceholder': string
+  'pipeline.gitCloneStep.cloneDirectory': string
+  'pipeline.gitCloneStep.validation.associatedBuildInput': string
   'pipeline.gitDetails': string
   'pipeline.gitExperience.noEntityFound': string
   'pipeline.gitExperience.selectDiffBranch': string
@@ -3395,6 +3400,7 @@ export interface StringsMap {
   'pipeline.manifestTypeLabels.ServerlessAzure': string
   'pipeline.manifestTypeLabels.ServerlessGCP': string
   'pipeline.manifestTypeLabels.ValuesYaml': string
+  'pipeline.mostRecentDirection': string
   'pipeline.moveStage.description': string
   'pipeline.moveStage.title': string
   'pipeline.multiStageExecution': string
@@ -3616,6 +3622,7 @@ export interface StringsMap {
   'pipeline.stepCommonFields.validation.invalidLimitCPU': string
   'pipeline.stepCommonFields.validation.invalidLimitMemory': string
   'pipeline.stepCommonFields.validation.mustBeANumber': string
+  'pipeline.stepCommonFields.validation.notIn': string
   'pipeline.stepConfigHasChanges': string
   'pipeline.stepDescription.ACR': string
   'pipeline.stepDescription.AzureSlotDeployment': string
@@ -3627,6 +3634,7 @@ export interface StringsMap {
   'pipeline.stepDescription.FlagConfiguration': string
   'pipeline.stepDescription.GCR': string
   'pipeline.stepDescription.GCS': string
+  'pipeline.stepDescription.GitClone': string
   'pipeline.stepDescription.HTTP': string
   'pipeline.stepDescription.HarnessApproval': string
   'pipeline.stepDescription.HelmDeploy': string
@@ -4290,6 +4298,8 @@ export interface StringsMap {
   'cd.serviceOverrides.deleted': string
   'cd.serviceOverrides.deletedOneVariable': string
   'cd.serviceOverrides.helperText': string
+  'cd.serviceOverrides.manifestOverrides': string
+  'cd.serviceOverrides.variableOverrides': string
   'cd.serviceUpdated': string
   'cd.setUpProvisionerBtnText': string
   'cd.setupGitOpsServerStep': string
@@ -4856,6 +4866,28 @@ export interface StringsMap {
   'ce.co.resourcesManagedDescription.gcpVm': string
   'ce.co.resourcesManagedDescription.k8s': string
   'ce.co.resourcesManagedDescription.rds': string
+  'ce.co.ruleDetails.costGraphHeader': string
+  'ce.co.ruleDetails.detailsTab.label.delayInSec': string
+  'ce.co.ruleDetails.detailsTab.label.dependantRule': string
+  'ce.co.ruleDetails.detailsTab.label.ruleId': string
+  'ce.co.ruleDetails.detailsTab.label.vmsManaged': string
+  'ce.co.ruleDetails.detailsTab.managedVmTableHeaders.ip': string
+  'ce.co.ruleDetails.detailsTab.managedVmTableHeaders.name': string
+  'ce.co.ruleDetails.enableRuleMessage': string
+  'ce.co.ruleDetails.lastActiveMessage': string
+  'ce.co.ruleDetails.logsHeader': string
+  'ce.co.ruleDetails.potentialCost': string
+  'ce.co.ruleDetails.sshTab.cli': string
+  'ce.co.ruleDetails.sshTab.description': string
+  'ce.co.ruleDetails.sshTab.header': string
+  'ce.co.ruleDetails.sshTab.step1.indicator': string
+  'ce.co.ruleDetails.sshTab.step1.info': string
+  'ce.co.ruleDetails.sshTab.step2.indicator': string
+  'ce.co.ruleDetails.sshTab.step2.info': string
+  'ce.co.ruleDetails.sshTab.step2.title': string
+  'ce.co.ruleDetails.successfulResponse': string
+  'ce.co.ruleDetails.totalActualSpend': string
+  'ce.co.ruleDetails.totalSavings': string
   'ce.co.ruleDetailsHeader.computeType': string
   'ce.co.ruleDetailsHeader.customDomain': string
   'ce.co.ruleDetailsHeader.hostName': string
@@ -4900,10 +4932,59 @@ export interface StringsMap {
   'ce.co.summarySection.totalSavings': string
   'ce.co.summarySection.totalSpend': string
   'ce.co.totalEmissions': string
+  'ce.commitmentOrchestration.commitmentUtilisation': string
+  'ce.commitmentOrchestration.computeCoverage': string
+  'ce.commitmentOrchestration.computeSpend': string
+  'ce.commitmentOrchestration.coverage': string
+  'ce.commitmentOrchestration.enableBanner.finalText': string
+  'ce.commitmentOrchestration.enableBanner.initialText': string
+  'ce.commitmentOrchestration.exitSetupBtn': string
+  'ce.commitmentOrchestration.filterPanel.allAccounts': string
+  'ce.commitmentOrchestration.filterPanel.allInstanceFamilies': string
+  'ce.commitmentOrchestration.monthToDate': string
+  'ce.commitmentOrchestration.onDemandInstances': string
+  'ce.commitmentOrchestration.reservedInstances': string
+  'ce.commitmentOrchestration.savings': string
+  'ce.commitmentOrchestration.savingsPlans': string
+  'ce.commitmentOrchestration.setup.checkboxLabel': string
+  'ce.commitmentOrchestration.setup.step1.awsPayerAcs': string
+  'ce.commitmentOrchestration.setup.step1.description': string
+  'ce.commitmentOrchestration.setup.step1.heading': string
+  'ce.commitmentOrchestration.setup.step1.resetLabel': string
+  'ce.commitmentOrchestration.setup.step2.description': string
+  'ce.commitmentOrchestration.setup.step2.past30Days': string
+  'ce.commitmentOrchestration.setup.step2.proTipLabel': string
+  'ce.commitmentOrchestration.setup.step2.proTipText': string
+  'ce.commitmentOrchestration.setup.step2.searchPlaceholder': string
+  'ce.commitmentOrchestration.setup.step2.tableHeaders.coveragePerc': string
+  'ce.commitmentOrchestration.setup.step3.computeSavingsPlan': string
+  'ce.commitmentOrchestration.setup.step3.computeSpendForLast30Days': string
+  'ce.commitmentOrchestration.setup.step3.convertibleRI': string
+  'ce.commitmentOrchestration.setup.step3.description': string
+  'ce.commitmentOrchestration.setup.step3.heading': string
+  'ce.commitmentOrchestration.setup.step3.riCoverage': string
+  'ce.commitmentOrchestration.setup.step3.riPaymentStrategy': string
+  'ce.commitmentOrchestration.setup.step3.riTerm': string
+  'ce.commitmentOrchestration.setup.step3.savingsPlanCoverage': string
+  'ce.commitmentOrchestration.setup.step3.savingsPlanPaymentStrategy': string
+  'ce.commitmentOrchestration.setup.step3.savingsPlanTerm': string
+  'ce.commitmentOrchestration.setup.step4.actionPlan': string
+  'ce.commitmentOrchestration.setup.step4.afterPurchase': string
+  'ce.commitmentOrchestration.setup.step4.coveredByRI': string
+  'ce.commitmentOrchestration.setup.step4.coveredBySavigsPlan': string
+  'ce.commitmentOrchestration.setup.step4.description': string
+  'ce.commitmentOrchestration.setup.step4.remainOnDemand': string
+  'ce.commitmentOrchestration.setup.step4.targetComputeSpend': string
+  'ce.commitmentOrchestration.setup.step4.targetSavings': string
+  'ce.commitmentOrchestration.setup.steps.step1Label': string
+  'ce.commitmentOrchestration.setup.steps.step2Label': string
+  'ce.commitmentOrchestration.setup.steps.step3Label': string
+  'ce.commitmentOrchestration.sideNavLabel': string
   'ce.common.and': string
   'ce.common.budget': string
   'ce.common.collapse': string
   'ce.common.containerService': string
+  'ce.common.copied': string
   'ce.common.database': string
   'ce.common.disabled': string
   'ce.common.emissionUnitHTML': string
@@ -4911,7 +4992,9 @@ export interface StringsMap {
   'ce.common.newBudget': string
   'ce.common.or': string
   'ce.common.refresh': string
+  'ce.common.rule': string
   'ce.common.spendTillDate': string
+  'ce.common.toggleLabel': string
   'ce.common.totalCount': string
   'ce.connector.AWS.crossAccountRole.arn': string
   'ce.connector.AWS.crossAccountRole.externalID': string
@@ -5525,6 +5608,9 @@ export interface StringsMap {
   'cf.featureFlags.flagFilters.term': string
   'cf.featureFlags.flagOff': string
   'cf.featureFlags.flagOn': string
+  'cf.featureFlags.flagPipeline.buildID': string
+  'cf.featureFlags.flagPipeline.defaultOffVariation': string
+  'cf.featureFlags.flagPipeline.defaultServe': string
   'cf.featureFlags.flagPipeline.deleteModalText': string
   'cf.featureFlags.flagPipeline.deleteModalTitle': string
   'cf.featureFlags.flagPipeline.drawerButtonText': string
@@ -5541,6 +5627,7 @@ export interface StringsMap {
   'cf.featureFlags.flagPipeline.openExecution': string
   'cf.featureFlags.flagPipeline.pipelineDeleted': string
   'cf.featureFlags.flagPipeline.saveSuccess': string
+  'cf.featureFlags.flagPipeline.targeting': string
   'cf.featureFlags.flagPipeline.title': string
   'cf.featureFlags.flagPipeline.to': string
   'cf.featureFlags.flagPipeline.triggerDetails': string

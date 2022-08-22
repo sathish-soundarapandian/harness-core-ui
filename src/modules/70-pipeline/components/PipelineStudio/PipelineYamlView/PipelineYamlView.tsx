@@ -64,8 +64,13 @@ function PipelineYamlView(): React.ReactElement {
   )
   const userPreferenceEditMode = React.useMemo(() => defaultTo(Boolean(preference === 'true'), false), [preference])
   const { pipelineSchema } = usePipelineSchema()
-  const { isGitSyncEnabled, isGitSimplificationEnabled } = useAppStore()
-  const isPipelineRemote = isGitSimplificationEnabled && storeMetadata?.storeType === StoreType.REMOTE
+  const {
+    isGitSyncEnabled: isGitSyncEnabledForProject,
+    gitSyncEnabledOnlyForFF,
+    supportingGitSimplification
+  } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
+  const isPipelineRemote = supportingGitSimplification && storeMetadata?.storeType === StoreType.REMOTE
   const [yamlHandler, setYamlHandler] = React.useState<YamlBuilderHandlerBinding | undefined>()
   const [yamlFileName, setYamlFileName] = React.useState<string>(defaultFileName)
   const [isAlwaysEditMode, setIsAlwaysEditMode] = React.useState<boolean>(userPreferenceEditMode)

@@ -35,6 +35,11 @@ export type GridData = Omit<
 > &
   Omit<ClusterData, '__typename'> & { legendColor: string }
 
+interface FixedDecimalDataOptions {
+  decimalPoints?: number
+  returnValueType?: 'string' | 'number'
+}
+
 export const addLegendColorToRow = (data: QlceViewEntityStatsDataPoint[]): GridData[] => {
   let idx = 0
   const colors = new Map()
@@ -167,7 +172,7 @@ const GRID_EFFICIENCY_SCORE = {
 }
 
 // Cell Renderers
-const RenderNameCell = ({ row }: CellProps<GridData>): ReactNode => {
+export const RenderNameCell = ({ row }: CellProps<GridData>): ReactNode => {
   const { legendColor, name } = row.original
   const columns = row.cells.length
 
@@ -182,6 +187,8 @@ const RenderNameCell = ({ row }: CellProps<GridData>): ReactNode => {
     </div>
   )
 }
+
+export const RenderTextCell = (props: CellProps<GridData>): JSX.Element => <span>{props.value}</span>
 
 export const RenderCostCell = (props: CellProps<GridData>): JSX.Element => <span>{formatCost(+props.value)}</span>
 
@@ -215,6 +222,15 @@ const RenderEfficiencyScoreCell = (props: CellProps<GridData>) => {
       </div>
     </div>
   )
+}
+
+export const getFixedDecimalData = (data: Record<string, number>, opts?: FixedDecimalDataOptions) => {
+  const { decimalPoints = 2, returnValueType = 'string' } = opts || {}
+  const updatedData: Record<string, string | number> = {}
+  Object.entries(data).forEach(([key, val]) => {
+    updatedData[key] = returnValueType === 'string' ? val.toFixed(decimalPoints) : Number(val.toFixed(decimalPoints))
+  })
+  return updatedData
 }
 
 export type Column = {

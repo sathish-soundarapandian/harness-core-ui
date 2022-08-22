@@ -39,7 +39,12 @@ declare global {
 export default function PipelineDetails({ children }: React.PropsWithChildren<unknown>): React.ReactElement {
   const { orgIdentifier, projectIdentifier, pipelineIdentifier, accountId, module } =
     useParams<PipelineType<PipelinePathProps>>()
-  const { isGitSyncEnabled, isGitSimplificationEnabled } = useAppStore()
+  const {
+    isGitSyncEnabled: isGitSyncEnabledForProject,
+    gitSyncEnabledOnlyForFF,
+    supportingGitSimplification
+  } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const location = useLocation()
   const { trackEvent } = useTelemetry()
   const { branch, repoIdentifier, storeType, repoName, connectorRef } = useQueryParams<GitQueryParams>()
@@ -62,7 +67,7 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
   })
 
   const isPipelineRemote =
-    isGitSimplificationEnabled && storeType === StoreType.REMOTE && pipeline?.data?.gitDetails?.branch
+    supportingGitSimplification && storeType === StoreType.REMOTE && pipeline?.data?.gitDetails?.branch
 
   const { data: branchesWithStatusData, refetch: getDefaultBranchName } = useGetListOfBranchesWithStatus({
     queryParams: {
@@ -86,12 +91,12 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
   }, [repoIdentifier])
 
   React.useEffect(() => {
-    if (branch && branchesWithStatusData?.data?.defaultBranch?.branchName !== branch && !isGitSimplificationEnabled) {
+    if (branch && branchesWithStatusData?.data?.defaultBranch?.branchName !== branch && !supportingGitSimplification) {
       setTriggerTabDisabled(true)
     } else {
       setTriggerTabDisabled(false)
     }
-  }, [branchesWithStatusData, branch, isGitSimplificationEnabled])
+  }, [branchesWithStatusData, branch, supportingGitSimplification])
 
   React.useEffect(() => {
     pipeline?.data?.gitDetails?.branch && updateQueryParams({ branch: pipeline?.data?.gitDetails?.branch })
@@ -180,11 +185,11 @@ export default function PipelineDetails({ children }: React.PropsWithChildren<un
     })
   ) || { isExact: false }
 
-  if (error?.data && !isGitSyncEnabled && !isGitSimplificationEnabled) {
+  if (error?.data && !isGitSyncEnabled && !supportingGitSimplification) {
     return <GenericErrorHandler errStatusCode={error?.status} errorMessage={(error?.data as Error)?.message} />
   }
 
-  if (error?.data && isEmpty(pipeline) && (isGitSyncEnabled || isGitSimplificationEnabled)) {
+  if (error?.data && isEmpty(pipeline) && (isGitSyncEnabled || supportingGitSimplification)) {
     return <NoEntityFound identifier={pipelineIdentifier} entityType={'pipeline'} errorObj={error.data as Error} />
   }
 

@@ -10,6 +10,10 @@ import { act, render, fireEvent, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import CESideNav, { ProjectLevelFeedback } from '../CESideNav'
 
+jest.mock('@common/hooks/useFeatureFlag', () => ({
+  useFeatureFlag: jest.fn(() => true)
+}))
+
 const testpath = 'account/:accountId/ce/home'
 const testpathAS = '/account/:accountId/ce/orgs/:orgIdentifier/projects/:projectIdentifier/autostopping-rules/'
 const testpathAP = '/account/:accountId/ce/orgs/:orgIdentifier/projects/:projectIdentifier/access-points/'

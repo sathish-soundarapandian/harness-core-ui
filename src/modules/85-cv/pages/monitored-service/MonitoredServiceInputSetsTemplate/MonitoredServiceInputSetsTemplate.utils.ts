@@ -96,6 +96,7 @@ export const healthSourceTypeMapping = (type: ConnectorInfoDTO['type']): Connect
     case HealthSourceTypes.DatadogMetrics as ConnectorInfoDTO['type']:
       return HealthSourceTypes.Datadog
     case HealthSourceTypes.StackdriverLog as ConnectorInfoDTO['type']:
+    case HealthSourceTypes.StackdriverMetrics as ConnectorInfoDTO['type']:
       return Connectors.GCP
     default:
       return type

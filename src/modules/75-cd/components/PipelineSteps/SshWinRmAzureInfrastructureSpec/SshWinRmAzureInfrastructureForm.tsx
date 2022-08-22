@@ -312,6 +312,7 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                         formikRef.current?.setFieldValue('credentialsRef', secret.referenceString)
                       }
                     }}
+                    expressions={expressions}
                   />
                 </Layout.Vertical>
                 <Layout.Horizontal className={css.formRow} spacing="medium">

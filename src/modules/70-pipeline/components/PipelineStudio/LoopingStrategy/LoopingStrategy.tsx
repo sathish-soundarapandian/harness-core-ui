@@ -25,12 +25,13 @@ import { parse } from '@common/utils/YamlHelperMethods'
 import type { StrategyConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import {
-  AvailableStrategies,
+  getAvailableStrategies,
   LoopingStrategyEnum,
   LoopingStrategy as Strategy
 } from '@pipeline/components/PipelineStudio/LoopingStrategy/LoopingStrategyUtils'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
+import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { usePipelineSchema } from '../PipelineSchema/PipelineSchemaContext'
 
 import css from './LoopingStrategy.module.scss'
@@ -39,10 +40,10 @@ export interface LoopingStrategyProps {
   strategy?: StrategyConfig
   isReadonly?: boolean
   onUpdateStrategy?: (strategy: StrategyConfig) => void
+  stepType?: StepType
 }
 
 const DOCUMENT_URL = 'https://docs.harness.io/article/i36ibenkq2-step-skip-condition-settings'
-const strategyEntries = Object.entries(AvailableStrategies) as [LoopingStrategyEnum, Strategy][]
 
 const yamlSanityConfig = {
   removeEmptyObject: false,
@@ -54,7 +55,8 @@ const renderCustomHeader = (): null => null
 export function LoopingStrategy({
   strategy = {},
   isReadonly,
-  onUpdateStrategy = noop
+  onUpdateStrategy = noop,
+  stepType
 }: LoopingStrategyProps): React.ReactElement {
   const { getString } = useStrings()
   const { loopingStrategySchema } = usePipelineSchema()
@@ -73,6 +75,7 @@ export function LoopingStrategy({
   const timerRef = React.useRef<null | number>(null)
   const onUpdateStrategyRef = React.useRef(onUpdateStrategy)
   const initialSelectedStrategy = Object.keys(defaultTo(strategy, {}))[0] as LoopingStrategyEnum
+  const strategyEntries = Object.entries(getAvailableStrategies(stepType)) as [LoopingStrategyEnum, Strategy][]
 
   React.useEffect(() => {
     onUpdateStrategyRef.current = onUpdateStrategy
@@ -105,7 +108,7 @@ export function LoopingStrategy({
 
   const onChangeStrategy = (newStrategy: LoopingStrategyEnum, formikProps: FormikProps<StrategyConfig>): void => {
     const callback = (): void => {
-      const newValues: StrategyConfig = { [newStrategy]: clone(AvailableStrategies[newStrategy].defaultValue) }
+      const newValues: StrategyConfig = { [newStrategy]: clone(getAvailableStrategies()[newStrategy].defaultValue) }
       formikProps.setValues(newValues)
       onUpdateStrategy(newValues)
       callbackRef.current = null
@@ -154,7 +157,7 @@ export function LoopingStrategy({
         {(formikProps: FormikProps<StrategyConfig>) => {
           const values = defaultTo(formikProps.values, {})
           const selectedStrategy = Object.keys(values)[0] as LoopingStrategyEnum
-          const selectedStrategyMetaData = AvailableStrategies[selectedStrategy]
+          const selectedStrategyMetaData = getAvailableStrategies()[selectedStrategy]
 
           return (
             <Container className={css.mainContainer}>
@@ -174,14 +177,14 @@ export function LoopingStrategy({
                     {strategyEntries.map(([key, item]) => (
                       <Card
                         key={key}
-                        interactive={!isReadonly}
+                        interactive={!isReadonly && !item.disabled}
                         className={cx(css.strategyAnchor, {
-                          [css.disabled]: isReadonly,
+                          [css.disabled]: defaultTo(isReadonly, item.disabled),
                           [css.selected]: selectedStrategy === key
                         })}
                         selected={selectedStrategy === key}
                         cornerSelected={selectedStrategy === key}
-                        onClick={isReadonly ? noop : () => onChangeStrategy(key, formikProps)}
+                        onClick={isReadonly || item.disabled ? noop : () => onChangeStrategy(key, formikProps)}
                         data-testid={key}
                       >
                         <Text font={{ variation: FontVariation.BODY }} color={Color.PRIMARY_7}>

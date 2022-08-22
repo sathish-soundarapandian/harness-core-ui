@@ -10,6 +10,7 @@ declare const styles: {
   readonly basicDetails: string
   readonly closeIcon: string
   readonly comment: string
+  readonly lastPublishedVersionLabel: string
   readonly nameIdDescriptionTags: string
 }
 export default styles

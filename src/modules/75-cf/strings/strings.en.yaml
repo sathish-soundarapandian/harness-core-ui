@@ -267,9 +267,13 @@ featureFlags:
     noExecutionDescription: Once a pipeline has been triggered, the execution details will appear here
     triggerDetails: Trigger Details
     flagState: Flag State
+    defaultOffVariation: When Flag is Disabled - Default Rule
+    defaultServe: When Flag is Enabled - Default Rule
     to: to {{ target }}
+    buildID: Build ID
     openExecution: Open Pipeline Execution
     pipelineDeleted: The Pipeline in use has been deleted from the Pipelines library
+    targeting: When Flag is Enabled - Specific Targeting
 featureFlagDetail:
   variationCount: '{{ count }} variations'
   serviceDescription: Services this flag is associated with

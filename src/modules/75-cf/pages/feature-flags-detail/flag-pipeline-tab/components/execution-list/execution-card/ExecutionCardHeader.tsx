@@ -42,7 +42,7 @@ const ExecutionCardHeader: FC<ExecutionCardHeaderProps> = ({ executionHistoryIte
       <span className={css.executionCardHeaderLeft}>
         <ExecutionStatusLabel status={executionHistoryItem.status as ExecutionStatus} />
         <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_900}>
-          {getString('pipeline.executionId')}: {executionHistoryItem.executionId}
+          {getString('cf.featureFlags.flagPipeline.buildID')}: {executionHistoryItem.runSequence}
         </Text>
       </span>
       <span className={css.executionCardHeaderRight}>
@@ -63,16 +63,6 @@ const ExecutionCardHeader: FC<ExecutionCardHeaderProps> = ({ executionHistoryIte
           }}
           color={Color.GREY_900}
         />
-        <Text
-          icon="infrastructure"
-          iconProps={{
-            size: 14
-          }}
-          font={{ variation: FontVariation.SMALL }}
-          color={Color.GREY_900}
-        >
-          {executionHistoryItem.environment}
-        </Text>
         <Text
           icon="person"
           iconProps={{

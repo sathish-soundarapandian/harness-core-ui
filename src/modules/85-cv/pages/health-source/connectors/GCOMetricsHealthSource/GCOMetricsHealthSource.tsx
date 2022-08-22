@@ -17,7 +17,9 @@ import {
   Utils,
   FormError,
   PageError,
-  NoDataCard
+  NoDataCard,
+  getMultiTypeFromValue,
+  MultiTypeInputType
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
@@ -141,7 +143,7 @@ function ValidationChart(props: ValidationChartProps): JSX.Element {
 }
 
 export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.Element {
-  const { data, onSubmit } = props
+  const { data, onSubmit, isTemplate, expressions } = props
 
   const { onPrevious, sourceData } = useContext(SetupSourceTabsContext)
 
@@ -160,13 +162,15 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const [error, setError] = useState<string | undefined>()
   const [loading, setLoading] = useState(false)
+  const connectorIdentifier = typeof data?.connectorRef === 'string' ? data?.connectorRef : data?.connectorRef?.value
+  const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED
   const queryParams = useMemo(
     () => ({
       orgIdentifier,
       projectIdentifier,
       accountId,
       tracingId: Utils.randomId(),
-      connectorIdentifier: data.connectorRef as string
+      connectorIdentifier: connectorIdentifier
     }),
     [data?.connectorRef, projectIdentifier, orgIdentifier, accountId]
   )
@@ -312,20 +316,24 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
                     </Container>
 
                     <Container className={css.validationContainer}>
-                      <QueryContent
-                        handleFetchRecords={async () => {
-                          if (!shouldShowChart) {
-                            setShouldShowChart(true)
-                          }
-                          onQueryChange(formikProps.values.query)
-                        }}
-                        onClickExpand={setIsQueryExpanded}
-                        isDialogOpen={isQueryExpanded}
-                        query={formikProps.values.query}
-                        loading={loading}
-                        textAreaName={FieldNames.QUERY}
-                      />
-
+                      <Container width={'500px'}>
+                        <QueryContent
+                          handleFetchRecords={() => {
+                            if (!shouldShowChart) {
+                              setShouldShowChart(true)
+                            }
+                            onQueryChange(formikProps.values.query)
+                          }}
+                          onClickExpand={setIsQueryExpanded}
+                          isDialogOpen={isQueryExpanded}
+                          query={formikProps.values.query}
+                          loading={loading}
+                          textAreaName={FieldNames.QUERY}
+                          isTemplate={isTemplate}
+                          expressions={expressions}
+                          isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
+                        />
+                      </Container>
                       <ValidationChart
                         loading={loading}
                         error={error}
@@ -344,7 +352,6 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
                           onQueryChange(formikProps.values.query)
                         }}
                       />
-
                       {isQueryExpanded && (
                         <Drawer
                           {...DrawerOptions}
@@ -369,17 +376,24 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
                         </Drawer>
                       )}
                     </Container>
-                    <SelectHealthSourceServices
-                      values={{
-                        sli,
-                        healthScore,
-                        riskCategory,
-                        continuousVerification
-                      }}
-                      metricPackResponse={metricPackResponse}
-                      hideServiceIdentifier
-                    />
-                    {formikProps.values.continuousVerification && (
+                    <Container width={'500px'}>
+                      <SelectHealthSourceServices
+                        values={{
+                          sli,
+                          healthScore,
+                          riskCategory,
+                          continuousVerification,
+                          serviceInstanceMetricPath: formikProps.values?.serviceInstanceField
+                        }}
+                        hideServiceIdentifier
+                        metricPackResponse={metricPackResponse}
+                        isTemplate={isTemplate}
+                        expressions={expressions}
+                        customServiceInstanceName={FieldNames.SERVICE_INSTANCE_FIELD}
+                        isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
+                      />
+                    </Container>
+                    {!isTemplate && formikProps.values.continuousVerification && (
                       <FormInput.Text
                         name={FieldNames.SERVICE_INSTANCE_FIELD}
                         label={getString('cv.monitoringSources.serviceInstanceIdentifier')}
@@ -436,7 +450,7 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
                 dashboardWidgetMapper={mapstackdriverDashboardDetailToMetricWidget}
                 dashboardDetailsRequest={stackDriverDashBoardRequest}
                 addManualQueryTitle={'cv.monitoringSources.gco.manualInputQueryModal.modalTitle'}
-                connectorIdentifier={data.connectorRef as string}
+                connectorIdentifier={connectorIdentifier}
                 manuallyInputQueries={getManuallyCreatedQueries(updatedData)}
                 showSpinnerOnLoad={!selectedMetric}
                 onSelectMetric={(id, metricName, query, widget, dashboardId, dashboardTitle) => {

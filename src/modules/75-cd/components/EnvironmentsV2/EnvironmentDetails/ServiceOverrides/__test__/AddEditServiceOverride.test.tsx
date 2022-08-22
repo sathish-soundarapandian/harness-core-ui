@@ -8,15 +8,11 @@
 import React from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-
 import * as cdNgServices from 'services/cd-ng'
-
 import routes from '@common/RouteDefinitions'
 import { environmentPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { TestWrapper } from '@common/utils/testUtils'
-
 import AddEditServiceOverride from '../AddEditServiceOverride'
-
 import mockServicesListForOverride from './__mocks__/mockServicesListForOverrides.json'
 
 describe('Add Edit Service Override Test', () => {
@@ -42,12 +38,14 @@ describe('Add Edit Service Override Test', () => {
         pathParams={{ ...projectPathProps, ...environmentPathProps }}
       >
         <AddEditServiceOverride
+          defaultTab="variableoverride"
           closeModal={jest.fn()}
           selectedVariable={{
             serviceRef: '',
             variable: { name: '', type: 'String', value: '' }
           }}
-          services={mockServicesListForOverride as cdNgServices.ResponsePageServiceResponse}
+          isReadonly={false}
+          services={mockServicesListForOverride.data.content}
         />
       </TestWrapper>
     )
@@ -64,22 +62,25 @@ describe('Add Edit Service Override Test', () => {
     await waitFor(() => {
       expect(textboxes[0]).toHaveValue('svc_1')
       expect(screen.queryAllByRole('listitem').length).toBe(0)
+      expect(screen.getByText('variableLabel')).toBeInTheDocument()
     })
+    userEvent.click(screen.getByText('variableLabel'))
 
     // select variable
-    userEvent.click(textboxes[1])
+    const variableTextBox = screen.getAllByRole('textbox')
+    userEvent.click(variableTextBox[1])
     await waitFor(() => {
       expect(screen.getByText('var2')).toBeInTheDocument()
     })
 
     userEvent.click(screen.getAllByRole('listitem')[1])
     await waitFor(() => {
-      expect(textboxes[1]).toHaveValue('var2')
+      expect(variableTextBox[1]).toHaveValue('var2')
       expect(screen.queryAllByRole('listitem').length).toBe(0)
     })
 
     // change type to number
-    userEvent.click(textboxes[2])
+    userEvent.click(variableTextBox[2])
     await waitFor(() => {
       expect(screen.getByText('number')).toBeInTheDocument()
     })
@@ -87,7 +88,7 @@ describe('Add Edit Service Override Test', () => {
     userEvent.click(screen.getAllByRole('listitem')[2])
     await waitFor(() => {
       expect(screen.queryAllByRole('listitem').length).toBe(0)
-      expect(textboxes[2]).toHaveValue('number')
+      expect(variableTextBox[2]).toHaveValue('number')
     })
 
     // override with number

@@ -287,7 +287,8 @@ export function InputSetListView({
   template
 }: InputSetListViewProps): React.ReactElement {
   const { getString } = useStrings()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const columns: CustomColumn<InputSetLocal>[] = React.useMemo(
     () => [
       {

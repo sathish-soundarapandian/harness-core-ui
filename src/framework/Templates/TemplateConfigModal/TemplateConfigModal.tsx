@@ -159,13 +159,8 @@ const BasicTemplateDetails = (
   const formInitialValues = React.useMemo(
     () =>
       produce(initialValues as TemplateConfigValues, draft => {
-        if (isEmpty(initialValues.name)) {
-          draft.name = getString('templatesLibrary.createNewModal.namePlaceholder', { entity: initialValues.type })
-        }
         if (isEqual(initialValues.identifier, DefaultNewTemplateId)) {
-          draft.identifier = getString('templatesLibrary.createNewModal.identifierPlaceholder', {
-            entity: initialValues.type.toLowerCase()
-          })
+          unset(draft, 'identifier')
         }
         if (isEqual(initialValues.versionLabel, DefaultNewVersionLabel)) {
           unset(draft, 'versionLabel')
@@ -280,7 +275,7 @@ const BasicTemplateDetails = (
                             inputGroupProps: {
                               disabled: disabledFields.includes(Fields.Name) || isReadonly,
                               placeholder: getString('templatesLibrary.createNewModal.namePlaceholder', {
-                                entity: formik.values.type
+                                entity: templateFactory.getTemplateLabel(formik.values.type)
                               })
                             }
                           }}
@@ -306,9 +301,13 @@ const BasicTemplateDetails = (
                             padding={'small'}
                             margin={{ bottom: 'medium' }}
                           >
-                            <Layout.Horizontal spacing="small" flex={{ justifyContent: 'start' }}>
+                            <Layout.Horizontal spacing="small" flex={{ justifyContent: 'start' }} width={'100%'}>
                               <Icon name="info-messaging" size={18} />
-                              <Text color={Color.BLACK} font={{ weight: 'semi-bold', size: 'small' }}>
+                              <Text
+                                color={Color.BLACK}
+                                font={{ weight: 'semi-bold', size: 'small' }}
+                                className={css.lastPublishedVersionLabel}
+                              >
                                 {getString('templatesLibrary.createNewModal.lastPublishedVersion')}
                               </Text>
                               <Text

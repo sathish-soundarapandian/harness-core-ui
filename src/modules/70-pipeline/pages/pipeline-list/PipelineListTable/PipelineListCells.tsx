@@ -29,10 +29,11 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import { Badge } from '@pipeline/pages/utils/Badge/Badge'
 import { getReadableDateTime } from '@common/utils/dateUtils'
-import type { PMSPipelineSummaryResponse, RecentExecutionInfoDTO } from 'services/pipeline-ng'
+import type { ExecutorInfoDTO, PMSPipelineSummaryResponse, RecentExecutionInfoDTO } from 'services/pipeline-ng'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
+import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import { getRouteProps } from '../PipelineListUtils'
 import type { PipelineListPagePathParams } from '../types'
 import css from './PipelineListTable.module.scss'
@@ -55,23 +56,13 @@ type CellType = Renderer<CellProps<PMSPipelineSummaryResponse>>
 export const PipelineNameCell: CellType = ({ row }) => {
   const data = row.original
   const { getString } = useStrings()
-  const { projectIdentifier, orgIdentifier, accountId, module } = useParams<PipelineListPagePathParams>()
+  const pathParams = useParams<PipelineListPagePathParams>()
 
-  const href = routes.toPipelineStudio({
-    orgIdentifier,
-    projectIdentifier,
-    pipelineIdentifier: data.identifier!,
-    accountId,
-    module
-  })
   return (
-    <Layout.Horizontal
-      flex={{ alignItems: 'center', justifyContent: 'space-between' }}
-      className={css.pipelineNameCell}
-    >
+    <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'start' }}>
       <Layout.Vertical spacing="xsmall" data-testid={data.identifier}>
-        <Layout.Horizontal spacing="medium">
-          <Link to={href}>
+        <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
+          <Link to={routes.toPipelineStudio(getRouteProps(pathParams, data))}>
             <Text
               font={{ size: 'normal' }}
               color={Color.PRIMARY_7}
@@ -87,7 +78,14 @@ export const PipelineNameCell: CellType = ({ row }) => {
               {data.name}
             </Text>
           </Link>
-          {data.tags && Object.keys(data.tags || {}).length ? <TagsPopover tags={data.tags} /> : null}
+          {data.tags && Object.keys(data.tags || {}).length ? (
+            <TagsPopover
+              tags={data.tags}
+              iconProps={{ size: 12, color: Color.GREY_600 }}
+              popoverProps={{ className: Classes.DARK }}
+              className={css.tags}
+            />
+          ) : null}
         </Layout.Horizontal>
         <Text color={Color.GREY_600} font="xsmall">
           {getString('idLabel', { id: data.identifier })}
@@ -131,13 +129,13 @@ export const CodeSourceCell: CellType = ({ row }) => {
         className={Classes.DARK}
         content={
           <Layout.Vertical spacing="small" padding="large" style={{ maxWidth: 400 }}>
-            <Layout.Horizontal spacing="small">
+            <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'start' }}>
               <Icon name="github" size={14} color={Color.GREY_200} />
               <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }}>
                 {gitDetails?.repoName || gitDetails?.repoIdentifier}
               </Text>
             </Layout.Horizontal>
-            <Layout.Horizontal spacing="small">
+            <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'start' }}>
               <Icon name="remotefile" size={14} color={Color.GREY_200} />
               <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }}>
                 {gitDetails?.filePath}
@@ -147,7 +145,7 @@ export const CodeSourceCell: CellType = ({ row }) => {
         }
       >
         <div className={css.storeTypeColumn}>
-          <Icon name={isRemote ? 'remote-setup' : 'repository'} size={10} color={Color.GREY_600} />
+          <Icon name={isRemote ? 'remote-setup' : 'repository'} size={isRemote ? 12 : 10} color={Color.GREY_600} />
           <Text margin={{ left: 'xsmall' }} font={{ variation: FontVariation.TINY_SEMI }} color={Color.GREY_600}>
             {isRemote ? getString('repository') : getString('inline')}
           </Text>
@@ -159,14 +157,34 @@ export const CodeSourceCell: CellType = ({ row }) => {
 
 export const LastExecutionCell: CellType = ({ row }) => {
   const { getString } = useStrings()
+  const pathParams = useParams<PipelineType<PipelineListPagePathParams>>()
   const data = row.original
   const recentExecution: RecentExecutionInfoDTO = data.recentExecutionsInfo?.[0] || {}
   const { startTs, executorInfo } = recentExecution
   const executor = executorInfo?.email || executorInfo?.username
+  const autoTriggers: ExecutorInfoDTO['triggerType'][] = ['WEBHOOK_CUSTOM', 'SCHEDULER_CRON']
+  const isAutoTrigger = autoTriggers.includes(executorInfo?.triggerType)
 
   return (
     <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>
-      <div className={cx(css.avatar, !executor && css.hidden)}>{executor?.charAt(0)}</div>
+      <div className={cx(css.trigger, !isAutoTrigger && css.avatar, !executor && css.hidden)}>
+        {isAutoTrigger ? (
+          <Link
+            to={routes.toTriggersDetailPage({
+              ...getRouteProps(pathParams, data),
+              triggerIdentifier: executorInfo?.username || ''
+            })}
+          >
+            <Icon
+              size={16}
+              name={executorInfo?.triggerType === 'SCHEDULER_CRON' ? 'stopwatch' : 'trigger-execution'}
+              aria-label="trigger"
+            />
+          </Link>
+        ) : (
+          executor?.charAt(0)
+        )}
+      </div>
       <Layout.Vertical spacing="xsmall">
         {executor && (
           <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL }}>
@@ -208,7 +226,12 @@ export const MenuCell: CellType = ({ row, column }) => {
   }>()
 
   const { confirmDelete } = useDeleteConfirmationDialog(data, 'pipeline', (column as any).onDeletePipeline)
-  const { isGitSyncEnabled, isGitSimplificationEnabled } = useAppStore()
+  const {
+    isGitSyncEnabled: isGitSyncEnabledForProject,
+    gitSyncEnabledOnlyForFF,
+    supportingGitSimplification
+  } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [canDelete, canRun] = usePermission(
     {
       resourceScope: {
@@ -245,18 +268,10 @@ export const MenuCell: CellType = ({ row, column }) => {
           setMenuOpen(nextOpenState)
         }}
         className={Classes.DARK}
-        position={Position.BOTTOM_RIGHT}
+        position={Position.LEFT}
       >
-        <Button
-          minimal
-          className={css.actionButton}
-          icon="more"
-          onClick={e => {
-            e.stopPropagation()
-            setMenuOpen(true)
-          }}
-        />
-        <Menu style={{ minWidth: 'unset' }} onClick={e => e.stopPropagation()}>
+        <Button minimal icon="Options" onClick={() => setMenuOpen(true)} />
+        <Menu style={{ minWidth: 'unset', backgroundColor: 'unset' }}>
           <RbacMenuItem
             icon="play"
             text={getString('runPipelineText')}
@@ -277,14 +292,16 @@ export const MenuCell: CellType = ({ row, column }) => {
             className={css.link}
             icon="list-detail-view"
             text={
-              <Link to={routes.toPipelineDetail(getRouteProps(pathParams, data))}>{getString('viewExecutions')}</Link>
+              <Link to={routes.toPipelineDeploymentList(getRouteProps(pathParams, data))}>
+                {getString('viewExecutions')}
+              </Link>
             }
           />
           <Menu.Divider />
           <Menu.Item
             icon="duplicate"
             text={getString('projectCard.clone')}
-            disabled={isGitSyncEnabled || isGitSimplificationEnabled}
+            disabled={isGitSyncEnabled || supportingGitSimplification}
             onClick={() => {
               ;(column as any).onClonePipeline(data)
               setMenuOpen(false)
@@ -360,7 +377,10 @@ export const RecentExecutionsCell: CellType = ({ row }) => {
                     </Layout.Horizontal>
                   }
                 />
-                <LabeValue label={getString('common.triggerName')} value={i.executorInfo?.triggerType} />
+                <LabeValue
+                  label={getString('common.triggerName')}
+                  value={getString(mapTriggerTypeToStringID(i.executorInfo?.triggerType))}
+                />
               </>
             )}
           </Layout.Vertical>

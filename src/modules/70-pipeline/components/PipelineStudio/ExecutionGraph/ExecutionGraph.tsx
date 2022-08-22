@@ -46,6 +46,8 @@ import StartNodeStep from '@pipeline/components/PipelineDiagram/Nodes/StartNode/
 import { CIDependencyNode } from '@pipeline/components/PipelineDiagram/Nodes/StepGroupNode/CIDependencyNode'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import { NodeDimensionProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeDimensionStore'
+import RbacButton from '@rbac/components/Button/Button'
+import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { ExecutionStepModel, GridStyleInterface } from './ExecutionStepModel'
 import { StepType as PipelineStepType } from '../../PipelineSteps/PipelineStepInterface'
 import {
@@ -176,12 +178,17 @@ const renderPopover = ({
             />
           )}
           {labels.useTemplate && (
-            <Button
+            <RbacButton
               minimal
               variation={ButtonVariation.PRIMARY}
               icon="template-library"
               text={labels.useTemplate}
               onClick={() => onPopoverSelection?.(false, isParallelNodeClicked, event, true)}
+              featuresProps={{
+                featuresRequest: {
+                  featureNames: [FeatureIdentifier.TEMPLATE_SERVICE]
+                }
+              }}
             />
           )}
         </Layout.Vertical>

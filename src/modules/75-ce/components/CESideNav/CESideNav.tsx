@@ -20,6 +20,8 @@ import { returnLaunchUrl } from '@common/utils/routeUtils'
 import NavExpandable from '@common/navigation/NavExpandable/NavExpandable'
 import { LaunchButton } from '@common/components/LaunchButton/LaunchButton'
 import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import css from './CESideNav.module.scss'
 
 const feedbackOptions = [
@@ -131,6 +133,7 @@ const SideNavItems = () => {
   const { accountId } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
+  const showCO = useFeatureFlag(FeatureFlag.CCM_CommOrch)
 
   return (
     <Layout.Vertical spacing="small">
@@ -156,6 +159,12 @@ const SideNavItems = () => {
           label={getString('ce.recommendation.sideNavText')}
           to={routes.toCERecommendations({ accountId })}
         />
+        {showCO && (
+          <SidebarLink
+            label={getString('ce.commitmentOrchestration.sideNavLabel')}
+            to={routes.toCommitmentOrchestration({ accountId })}
+          />
+        )}
         <SidebarLink
           onClick={() => {
             trackEvent(USER_JOURNEY_EVENTS.AS_NAV_CLICK, {})

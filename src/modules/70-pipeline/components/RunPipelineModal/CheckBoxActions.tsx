@@ -27,7 +27,7 @@ export interface CheckBoxActionsProps {
 export default function CheckBoxActions(props: CheckBoxActionsProps): React.ReactElement | null {
   const { executionView, skipPreFlightCheck, setSkipPreFlightCheck, notifyOnlyMe, setNotifyOnlyMe, storeType } = props
   const { getString } = useStrings()
-  const { isGitSimplificationEnabled } = useAppStore()
+  const { supportingGitSimplification } = useAppStore()
 
   if (executionView) {
     return null
@@ -43,7 +43,7 @@ export default function CheckBoxActions(props: CheckBoxActionsProps): React.Reac
         padding={{ top: 'small', bottom: 'small', left: 'xxlarge', right: 'medium' }}
         checked={skipPreFlightCheck}
         onChange={e => setSkipPreFlightCheck(e.currentTarget.checked)}
-        disabled={isGitSimplificationEnabled && storeType === StoreType.REMOTE}
+        disabled={supportingGitSimplification && storeType === StoreType.REMOTE}
       />
       <Tooltip position="top" content={getString('featureNA')}>
         <Checkbox

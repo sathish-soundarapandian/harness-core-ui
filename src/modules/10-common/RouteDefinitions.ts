@@ -751,10 +751,6 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines`
   ),
-  toPipelineList: withAccountId(
-    ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipeline-list`
-  ),
   toGitOps: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/gitops`
@@ -1492,6 +1488,7 @@ const routes = {
   toCECORules: withAccountId(
     ({ params }: { params: string }) => `/ce/autostopping-rules` + (params ? `?${params}` : '')
   ),
+  toCECORuleDetails: withAccountId(({ id }: { id: string }) => `/ce/autostopping-rules/rule/${id}`),
   toCERecommendations: withAccountId(() => `/ce/recommendations`),
   toCERecommendationDetails: withAccountId(
     ({ recommendation, recommendationName }: { recommendation: string; recommendationName: string }) =>
@@ -1586,6 +1583,8 @@ const routes = {
       `/ce/recommendations/ecs/${recommendation}/name/${recommendationName}/details`
   ),
   toCEDashboards: withAccountId(() => '/ce/bi-dashboards'),
+  toCommitmentOrchestration: withAccountId(() => `/ce/commitment-orchestration`),
+  toCommitmentOrchestrationSetup: withAccountId(() => `/ce/commitment-orchestration/setup`),
   /********************************************************************************************************************/
   toSTO: withAccountId(() => `/sto`),
   toSTOHome: withAccountId(() => `/sto/home`),

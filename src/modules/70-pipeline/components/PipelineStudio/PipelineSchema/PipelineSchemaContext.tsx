@@ -17,7 +17,6 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useToaster } from '@common/exports'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 export interface PipelineSchemaData {
   pipelineSchema: ResponseJsonNode | null
@@ -38,7 +37,6 @@ export function PipelineSchemaContextProvider(props: React.PropsWithChildren<unk
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const { PIPELINE_MATRIX } = useFeatureFlags()
   const { data: pipelineSchema, error } = useGetSchemaYaml({
     queryParams: {
       entityType: 'Pipelines',
@@ -56,8 +54,7 @@ export function PipelineSchemaContextProvider(props: React.PropsWithChildren<unk
       accountIdentifier: accountId,
       scope: getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier }),
       yamlGroup: 'STEP'
-    },
-    lazy: !PIPELINE_MATRIX
+    }
   })
   if (error?.message) {
     showError(getRBACErrorMessage(error), undefined, 'pipeline.get.yaml.error')

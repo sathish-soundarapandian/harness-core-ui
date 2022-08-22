@@ -122,7 +122,7 @@ describe('Connector details step', () => {
           projectIdentifier: 'testProject',
           module: 'testModule'
         }}
-        defaultAppStoreValues={{ isGitSyncEnabled: true }}
+        defaultAppStoreValues={{ isGitSyncEnabled: true, featureFlags: { USE_OLD_GIT_SYNC: true } }}
       >
         <ConnectorDetailsStep name="sample-name" type="K8sCluster" />
       </TestWrapper>

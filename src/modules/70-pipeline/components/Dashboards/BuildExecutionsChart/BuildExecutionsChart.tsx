@@ -18,10 +18,12 @@ import { Spinner } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import type { GetDataError } from 'restful-react'
 import { useGetBuildExecution } from 'services/ci'
+import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { FailedStatus, useErrorHandler, useRefetchCall } from '@pipeline/components/Dashboards/shared'
 import type { Failure } from 'services/cd-ng'
+import NoDeployments from '@pipeline/components/Dashboards/images/NoDeployments.svg'
 import NoBuilds from '../images/NoBuilds.svg'
 import styles from './BuildExecutionsChart.module.scss'
 
@@ -103,6 +105,8 @@ export function ExecutionsChart({
       }
     })
   )
+  const { module = 'cd' } = useModuleInfo()
+
   const successful: number[] = []
   const failed: number[] = []
   const expired: number[] = []
@@ -188,7 +192,7 @@ export function ExecutionsChart({
 
   return (
     <Container className={styles.main}>
-      <Layout.Horizontal className={styles.marginBottom4}>
+      <Layout.Horizontal className={isCIPage ? styles.marginBottom4 : styles.marginBottom2}>
         <Text margin={{ right: 'small' }} className={titleCls} font={{ variation: FontVariation.H5 }}>
           {titleText}
         </Text>
@@ -203,8 +207,8 @@ export function ExecutionsChart({
         (failedCount && successCount && abortedCount && expiredCount) ? (
         <Container className={styles.emptyView}>
           <Container className={styles.emptyViewCard}>
-            <img src={NoBuilds} />
-            <Text>{getString('pipeline.noBuildsLabel')}</Text>
+            <img src={module === 'ci' ? NoBuilds : NoDeployments} />
+            <Text>{module === 'ci' ? getString('pipeline.noBuildsLabel') : getString('common.noDeployments')}</Text>
           </Container>
         </Container>
       ) : (

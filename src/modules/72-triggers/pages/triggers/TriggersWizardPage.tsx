@@ -189,11 +189,11 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
   })
 
   const isGitSyncEnabled = useMemo(() => !!pipelineResponse?.data?.gitDetails?.branch, [pipelineResponse])
-  const { isGitSimplificationEnabled } = useAppStore()
+  const { supportingGitSimplification } = useAppStore()
 
   const gitAwareForTriggerEnabled = useMemo(
-    () => isGitSyncEnabled && isGitSimplificationEnabled,
-    [isGitSyncEnabled, isGitSimplificationEnabled]
+    () => isGitSyncEnabled && supportingGitSimplification,
+    [isGitSyncEnabled, supportingGitSimplification]
   )
 
   const [connectorScopeParams, setConnectorScopeParams] = useState<GetConnectorQueryParams | undefined>(undefined)

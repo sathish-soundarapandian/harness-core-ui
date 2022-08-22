@@ -80,8 +80,11 @@ export default function ExecutionGraphView(): React.ReactElement {
       setSelectedStepId('')
     } else {
       const selectedStep = allNodeMap?.[step]
+      const errorMessage =
+        selectedStep?.failureInfo?.message || selectedStep?.executableResponses?.[0]?.skipTask?.message
 
-      if (isExecutionNotStarted(selectedStep?.status) || isExecutionSkipped(selectedStep?.status)) {
+      // Disable step selection for NotStarted, Skipped Step with no error message
+      if (isExecutionNotStarted(selectedStep?.status) || (isExecutionSkipped(selectedStep?.status) && !errorMessage)) {
         return
       }
 

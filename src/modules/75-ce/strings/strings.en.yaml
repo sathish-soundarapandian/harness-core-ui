@@ -16,6 +16,9 @@ common:
   expand: 'Expand'
   collapse: 'Collapse'
   disabled: 'disabled'
+  rule: 'Rule'
+  copied: 'Copied'
+  toggleLabel: 'Enable/Disable'
 allRegions: 'All Regions'
 allClusters: 'All Clusters'
 enforcementMessage:
@@ -102,7 +105,7 @@ co:
         description:
           info: 'With on-demand instances, you pay for computing capacity based on usage with no long-term commitments. AutoStopping will ensure that your on-demand resource is only running when in use, and stopped whenever idle so that you are only being charged for active usage of the resource.'
           additionalInfo: 'Further, AutoStopping also has a second (optional) level of optimization with orchestrated spot instances. A spot instance is an unused cloud excess capacity that is available for up to 90% cheaper rates than the On-Demand resources. This can lower your Amazon EC2 costs significantly. Typically, the limitation of spot instances is the lack of availability guarantees from the cloud provider as they may be taken away with just a 2-minute notice. However, AutoStopping has full spot orchestration built-in. Whenever there is a spot interruption, AutoStopping will automatically provision a new spot instance in its place. If there is no spot capacity available, it will fall back to on-demand to maintain availability. It will also continue to poll the spot market and perform a reverse fall-back from on-demand back to spot whenever spot capacity is available again. This is continuous cost optimization that enables you to leverage spot pricing seamlessly at every opportunity in a fully automated experience.'
-      readMore: 'Read More...'
+      readMore: 'Read More'
     providerSelector:
       description: 'Select the cloud account type'
       helpText:
@@ -468,7 +471,7 @@ co:
     mangedResources: 'RESOURCES MANAGED'
     savings: 'Cumulative Savings'
     lastActivity: 'LAST ACTIVITY'
-    status: 'RULE STATUS'
+    status: 'Rule Status'
   ruleDetailsHeader:
     idleTime: 'Idle time'
     resourcesManaged: 'Resources managed'
@@ -499,6 +502,35 @@ co:
     stopped: 'Stopped'
     warmingUp: 'Warming up'
     coolingDown: 'Cooling down'
+  ruleDetails:
+    lastActiveMessage: 'Last active on {{last_date}} at {{last_time}}'
+    enableRuleMessage: 'Switch the toggle to enable the rule and continue saving.'
+    costGraphHeader: 'Spend, Savings and Potential cost'
+    successfulResponse: 'Response is successfully saved'
+    totalSavings: 'Total Savings'
+    totalActualSpend: 'Total actual spend'
+    potentialCost: 'Potential cost w/o rule'
+    logsHeader: '{{$.pipeline.verification.analysisTab.logs}}'
+    detailsTab:
+      label:
+        ruleId: 'Rule ID'
+        vmsManaged: 'VMs Managed'
+        dependantRule: 'Dependant Rule'
+        delayInSec: 'Delay(secs)'
+      managedVmTableHeaders:
+        name: 'Name/ID'
+        ip: 'Public/Private IP'
+    sshTab:
+      header: 'You can access VMs/Instances via SSH/RDP'
+      cli: 'SSH/RDP via Harness CLI '
+      description: 'AutoStopping has first class support for accessing the resources managed by this rule via SSH/RDP.'
+      step1:
+        indicator: 'STEP 1'
+        info: 'Choose your Operating System and download the Harness CLI'
+      step2:
+        indicator: 'STEP 2'
+        title: 'Apply Commands'
+        info: 'Choose your requirements and apply commands using the downloaded CLI'
 
 learnMore: Learn more about Cloud Cost Management
 ceTrialHomePage:
@@ -1151,3 +1183,65 @@ biDashboard:
   sideNavText: BI Dashboards
   bannerText: 'These are dashboards created by Harness for you. You can head to the Dashboards section and create your own '
   bannerLinkText: '{{ $.dashboards.getStarted.title }}'
+commitmentOrchestration:
+  sideNavLabel: 'Commitment Orchestrator'
+  exitSetupBtn: 'Exit Setup'
+  coverage: 'Coverage'
+  filterPanel:
+    allAccounts: 'All Accounts'
+    allInstanceFamilies: 'All Instance Families'
+  computeSpend: 'Compute spend'
+  monthToDate: 'month-to-date'
+  computeCoverage: 'Compute coverage'
+  savings: 'Savings'
+  commitmentUtilisation: 'Commitment Utilisation'
+  savingsPlans: 'Savings Plans'
+  reservedInstances: 'Reserved Instances'
+  onDemandInstances: 'On-demand Instances'
+  enableBanner:
+    initialText: 'Enable Harness Commitment Orchestrator to save upto'
+    finalText: 'additionally {{savingsPercentage}} per month on your Compute Spend.'
+  setup:
+    checkboxLabel: 'I understand and approve the action plan based on my preferences'
+    steps:
+      step1Label: 'Coverage Percentage'
+      step2Label: 'Instance Types'
+      step3Label: 'Savings Plans v/s RIs'
+    step1:
+      heading: 'Specify Coverage Percentage'
+      description: Coverage % is the % of your compute spend that you want to be covered by RIs or Savings Plans. The remaining compute spend that is not covered by any commitments will continue to run as on-demand (or spot, if applicable). This will be the target Coverage % for AutoCUD's automation, and will apply across your linked
+      awsPayerAcs: 'AWS Payer Account(s)'
+      resetLabel: 'Reset to recommended'
+    step2:
+      description:
+        'Below is a table of all the EC2 instance types currently in use. All the selected rows will be used to calculate
+        the Total Compute Spend that has to be covered by RIs or Savings Plans. If you expect to stop using any of the
+        instance types listed below, please uncheck them. Excluded rows will not be calculated against the total compute
+        spend for coverage by RIs/Savings Plans.'
+      proTipLabel: 'Pro Tip: '
+      proTipText: 'You may exclude instance types individually or by region (filter) from the table.'
+      tableHeaders:
+        coveragePerc: 'coverage(%)'
+      searchPlaceholder: 'Search by name or region'
+      past30Days: 'past 30 days'
+    step3:
+      heading: 'Specify the split between Savings Plans and RIs'
+      description: 'Enter the target split between Convertible RIs and Compute Savings Plans that will cover your total compute spend.'
+      computeSpendForLast30Days: 'Compute Spend for Last 30 days'
+      computeSavingsPlan: 'Compute Savings Plan'
+      convertibleRI: 'Convertible RI'
+      savingsPlanTerm: 'Savings plan Term'
+      savingsPlanPaymentStrategy: 'Savings plan Payment Strategy'
+      riTerm: 'RI Term'
+      riPaymentStrategy: 'RI Payment Strategy'
+      savingsPlanCoverage: 'Savings plan coverage'
+      riCoverage: 'RI coverage'
+    step4:
+      description: 'Target Coverage based on your Preferences'
+      targetComputeSpend: 'Target Compute Spend'
+      afterPurchase: 'after Commitment purchases'
+      targetSavings: 'Target Savings'
+      actionPlan: 'Action Plan'
+      coveredBySavigsPlan: 'to be covered by Savings Plans'
+      coveredByRI: 'to be covered by Reserved instances'
+      remainOnDemand: 'to remain on On-demand instances'

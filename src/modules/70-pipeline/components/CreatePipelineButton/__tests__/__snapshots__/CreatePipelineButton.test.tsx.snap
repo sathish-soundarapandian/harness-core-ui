@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CreatePipelineButton tests when isGitSimplificationEnabled NOT enabled RbacButton should be rendered 1`] = `
+exports[`CreatePipelineButton tests when supportingGitSimplification is false RbacButton should be rendered 1`] = `
 <div>
   <div
     class="Button--withDocsTooltip"
@@ -40,7 +40,7 @@ exports[`CreatePipelineButton tests when isGitSimplificationEnabled NOT enabled 
 </div>
 `;
 
-exports[`CreatePipelineButton tests when isGitSimplificationEnabled, NG_GIT_EXPERIENCE_IMPORT_FLOW are enabled SplitButton should be rendered 1`] = `
+exports[`CreatePipelineButton tests when supportingGitSimplification, NG_GIT_EXPERIENCE_IMPORT_FLOW are enabled SplitButton should be rendered 1`] = `
 <div>
   <div
     class="SplitButton--splitButton"

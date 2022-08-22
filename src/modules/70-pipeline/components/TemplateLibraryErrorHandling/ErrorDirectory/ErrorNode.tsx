@@ -12,8 +12,10 @@ import { Intent, Radio } from '@blueprintjs/core'
 import { defaultTo, isEqual, noop } from 'lodash-es'
 import cx from 'classnames'
 import type { ErrorNodeSummary, TemplateResponse } from 'services/template-ng'
-import type { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/ReconcileDialog/ReconcileDialog'
-import { getTitleFromErrorNodeSummary } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
+import {
+  getTitleFromErrorNodeSummary,
+  TemplateErrorEntity
+} from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import css from './ErrorNode.module.scss'
 
 export interface ErrorDirectoryProps {
@@ -22,7 +24,6 @@ export interface ErrorDirectoryProps {
   resolvedTemplateResponses?: TemplateResponse[]
   selectedErrorNodeSummary?: ErrorNodeSummary
   setSelectedErrorNodeSummary: (errorNodeSummary: ErrorNodeSummary) => void
-  originalEntityYaml?: string
 }
 
 export function ErrorNode({
@@ -30,8 +31,7 @@ export function ErrorNode({
   errorNodeSummary,
   resolvedTemplateResponses = [],
   selectedErrorNodeSummary,
-  setSelectedErrorNodeSummary,
-  originalEntityYaml
+  setSelectedErrorNodeSummary
 }: ErrorDirectoryProps) {
   const { childrenErrorNodes, nodeInfo, templateResponse } = errorNodeSummary
 
@@ -54,10 +54,7 @@ export function ErrorNode({
     [resolvedTemplateResponses]
   )
 
-  const title = React.useMemo(
-    () => getTitleFromErrorNodeSummary(errorNodeSummary, entity, originalEntityYaml),
-    [errorNodeSummary, entity, originalEntityYaml]
-  )
+  const title = React.useMemo(() => getTitleFromErrorNodeSummary(errorNodeSummary, entity), [errorNodeSummary, entity])
 
   return (
     <Container className={css.mainContainer}>

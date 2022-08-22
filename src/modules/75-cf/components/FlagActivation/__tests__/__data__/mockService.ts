@@ -20,7 +20,7 @@ const mockServiceList = {
           orgIdentifier: 'default',
           projectIdentifier: 'crystalfongtest',
           name: 'Support',
-          description: null,
+          description: undefined,
           deleted: false,
           tags: {},
           yaml: 'service:\n  name: "Support"\n  identifier: "Support"\n  tags: {}\n'
@@ -35,7 +35,7 @@ const mockServiceList = {
           orgIdentifier: 'default',
           projectIdentifier: 'crystalfongtest',
           name: 'Messages',
-          description: null,
+          description: undefined,
           deleted: false,
           tags: {},
           yaml: 'service:\n  name: "Messages"\n  identifier: "Messages"\n  tags: {}\n'
@@ -50,7 +50,7 @@ const mockServiceList = {
           orgIdentifier: 'default',
           projectIdentifier: 'crystalfongtest',
           name: 'Account',
-          description: null,
+          description: undefined,
           deleted: false,
           tags: {},
           yaml: 'service:\n  name: "Account"\n  identifier: "Account"\n  tags: {}\n'
@@ -65,7 +65,7 @@ const mockServiceList = {
           orgIdentifier: 'default',
           projectIdentifier: 'crystalfongtest',
           name: 'My Service 1',
-          description: null,
+          description: undefined,
           deleted: false,
           tags: {},
           yaml: 'service:\n  name: "Account"\n  identifier: "Account"\n  tags: {}\n'

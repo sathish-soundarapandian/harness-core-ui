@@ -142,7 +142,7 @@ const renderExistingInputSet = () => {
       }}
       defaultAppStoreValues={{
         ...defaultAppStoreValues,
-        isGitSimplificationEnabled: true
+        supportingGitSimplification: true
       }}
     >
       <EnhancedInputSetForm />
@@ -250,7 +250,7 @@ describe('InputSetFrom testing - When Git Simplification is enabled', () => {
           }}
           defaultAppStoreValues={{
             ...defaultAppStoreValues,
-            isGitSimplificationEnabled: true
+            supportingGitSimplification: true
           }}
         >
           <EnhancedInputSetForm />

@@ -25,7 +25,7 @@ import { PAGE_NAMES, USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { CCM_PAGE_TYPE, CloudProvider } from '@ce/types'
-import { calculateSavingsPercentage, getProviderIcon } from '@ce/utils/recommendationUtils'
+import { calculateSavingsPercentage, getProviderIcon, resourceTypeToRoute } from '@ce/utils/recommendationUtils'
 import { generateFilters } from '@ce/utils/anomaliesUtils'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import {
@@ -50,15 +50,6 @@ import PermissionError from '@ce/images/permission-error.svg'
 import RecommendationSavingsCard from '../../components/RecommendationSavingsCard/RecommendationSavingsCard'
 import RecommendationFilters from '../../components/RecommendationFilters'
 import css from './RecommendationList.module.scss'
-
-type RouteFn = (
-  params: {
-    recommendation: string
-    recommendationName: string
-  } & {
-    accountId: string
-  }
-) => string
 
 interface RecommendationListProps {
   data: RecommendationItemDTO[]
@@ -88,13 +79,6 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
   const { accountId } = useParams<{ accountId: string }>()
 
   const { getString } = useStrings()
-  const resourceTypeToRoute: Record<ResourceType, RouteFn> = useMemo(() => {
-    return {
-      [ResourceType.Workload]: routes.toCERecommendationDetails,
-      [ResourceType.NodePool]: routes.toCENodeRecommendationDetails,
-      [ResourceType.EcsService]: routes.toCEECSRecommendationDetails
-    }
-  }, [])
 
   const resourceTypeMap: Record<ResourceType, string> = useMemo(
     () => ({

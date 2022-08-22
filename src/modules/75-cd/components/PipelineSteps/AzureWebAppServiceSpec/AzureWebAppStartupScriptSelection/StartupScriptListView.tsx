@@ -314,9 +314,9 @@ function StartupScriptListView({
                 : renderConnectorField(get(script, 'store.spec.connectorRef'), connectorName, color)}
             </div>
             {!!get(script, 'store.spec.paths')?.length && (
-              <div className={css.columnId}>
-                <Text lineClamp={1} width={300}>
-                  <span className={css.noWrap}>
+              <div>
+                <Text lineClamp={1} width={200} className={css.startupScriptLocation}>
+                  <span>
                     {typeof get(script, 'store.spec.paths') === 'string'
                       ? /* istanbul ignore next */ get(script, 'store.spec.paths')
                       : get(script, 'store.spec.paths').join(', ')}
@@ -325,16 +325,16 @@ function StartupScriptListView({
               </div>
             )}
             {get(script, 'store.spec.files')?.length && (
-              <div className={css.columnId}>
-                <Text lineClamp={1} width={300}>
-                  <span className={css.noWrap}>{get(script, 'store.spec.files')}</span>
+              <div>
+                <Text lineClamp={1} width={200} className={css.startupScriptLocation}>
+                  <span>{get(script, 'store.spec.files')}</span>
                 </Text>
               </div>
             )}
             {get(script, 'store.spec.secretFiles')?.length && (
-              <div className={css.columnId}>
-                <Text lineClamp={1} width={300}>
-                  <span className={css.noWrap}>{get(script, 'store.spec.secretFiles')}</span>
+              <div>
+                <Text lineClamp={1} width={200} className={css.startupScriptLocation}>
+                  <span>{get(script, 'store.spec.secretFiles')}</span>
                 </Text>
               </div>
             )}

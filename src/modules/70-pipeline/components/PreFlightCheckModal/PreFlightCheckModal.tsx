@@ -519,7 +519,8 @@ export function PreFlightCheckModal({
 
   const { showError } = useToaster()
   const { getString } = useStrings()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const processResponseError = (error?: { message?: string }) => {
     showError(error?.message ? error?.message : getString('somethingWentWrong'), undefined, 'pipeline.preflight.error')
     onCloseButtonClick()

@@ -8,7 +8,7 @@
 import React from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
-import { FormInput, SelectOption } from '@harness/uicore'
+import { FormInput, Intent, MultiSelectProps, SelectOption, Text } from '@harness/uicore'
 
 import type { Failure } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -53,7 +53,7 @@ export const SelectConfigureOptions = (props: SelectConfigureOptionsProps): Reac
     return errorMessage
   }, [error])
 
-  const multiSelectProps = {
+  const multiSelectProps: Omit<MultiSelectProps, 'value' | 'onChange' | 'items' | 'tagInputProps'> = {
     placeholder: loading ? getString('loading') : getString('common.configureOptions.selectAllowedValuesPlaceholder')
   }
 
@@ -72,7 +72,11 @@ export const SelectConfigureOptions = (props: SelectConfigureOptionsProps): Reac
           multiSelectProps={multiSelectProps}
           label={getString('allowedValues')}
         />
-        {!isEmpty(errorToShow) ? <span>{errorToShow}</span> : null}
+        {!isEmpty(errorToShow) ? (
+          <Text lineClamp={2} intent={Intent.DANGER}>
+            {errorToShow}
+          </Text>
+        ) : null}
       </>
     )
   }

@@ -243,7 +243,7 @@ describe('Test COGatewayList', () => {
           data
         } as any)
     )
-    const { container } = render(
+    const { container, getByTestId } = render(
       <TestWrapper path={testpath} pathParams={testparams}>
         <COGatewayList></COGatewayList>
       </TestWrapper>
@@ -255,7 +255,9 @@ describe('Test COGatewayList', () => {
     act(() => {
       fireEvent.click(row!)
     })
-    expect(container).toMatchSnapshot()
+    // expect(container).toMatchSnapshot()
+    await waitFor(() => getByTestId('location'))
+    expect(getByTestId('location')).toHaveTextContent('/account/accountId/ce/autostopping-rules/rule/282')
   })
 
   test('clicking on refresh button refetch all rules', async () => {

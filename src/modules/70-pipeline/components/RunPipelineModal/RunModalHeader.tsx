@@ -78,12 +78,17 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
     stageExecutionData,
     executionStageList
   } = props
-  const { isGitSyncEnabled, isGitSimplificationEnabled } = useAppStore()
+  const {
+    isGitSyncEnabled: isGitSyncEnabledForProject,
+    gitSyncEnabledOnlyForFF,
+    supportingGitSimplification
+  } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { getString } = useStrings()
   const stageSelectionRef = useRef(false)
   const [localSelectedStagesData, setLocalSelectedStagesData] = useState(selectedStageData)
   const isPipelineRemote =
-    isGitSimplificationEnabled &&
+    supportingGitSimplification &&
     pipelineResponse?.data?.gitDetails?.repoName &&
     pipelineResponse?.data?.gitDetails?.branch
 

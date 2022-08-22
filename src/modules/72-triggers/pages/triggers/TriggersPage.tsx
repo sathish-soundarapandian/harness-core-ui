@@ -80,11 +80,11 @@ const TriggersPage: React.FC = (): React.ReactElement => {
 
   const isPipelineInvalid = pipeline?.data?.entityValidityDetails?.valid === false
 
-  const { isGitSimplificationEnabled } = useAppStore()
+  const { supportingGitSimplification } = useAppStore()
   const isGitSyncEnabled = useMemo(() => !!pipeline?.data?.gitDetails?.branch, [pipeline])
   const gitAwareForTriggerEnabled = useMemo(
-    () => isGitSyncEnabled && isGitSimplificationEnabled,
-    [isGitSyncEnabled, isGitSimplificationEnabled]
+    () => isGitSyncEnabled && supportingGitSimplification,
+    [isGitSyncEnabled, supportingGitSimplification]
   )
 
   return (

@@ -9,17 +9,20 @@ import {
   Layout,
   Text
 } from '@harness/uicore'
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useFormikContext } from 'formik'
 import cx from 'classnames'
+import { useParams } from 'react-router-dom'
 import type { SettingHandler } from '@default-settings/factories/DefaultSettingsFactory'
 import type { SettingType } from '@default-settings/interfaces/SettingType.types'
 import { useStrings } from 'framework/strings'
 import type { SettingDTO, SettingRequestDTO } from 'services/cd-ng'
+import type { StringsMap } from 'stringTypes'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import css from './SettingsCategorySection.module.scss'
 interface SettingTypeRowProps {
   settingTypeHandler: SettingHandler
-  onSelectionChange: (val: string) => void
+  onSettingChange: (val: string) => void
   settingValue?: SettingDTO | undefined
   onRestore: () => void
   settingType: SettingType
@@ -31,9 +34,29 @@ interface SettingTypeRowProps {
   allSettings: Map<SettingType, SettingDTO>
   isSubCategory: boolean
 }
+const getSettingSourceLabel = (settingSource: SettingDTO['settingSource']) => {
+  switch (settingSource) {
+    case 'ACCOUNT':
+      return 'account'
+    case 'ORG':
+      return 'orgLabel'
+    case 'PROJECT':
+      return 'projectLabel'
+  }
+}
+const getCurrentScope = ({ orgIdentifier, projectIdentifier }: ProjectPathProps): SettingDTO['settingSource'] => {
+  if (projectIdentifier) {
+    return 'PROJECT'
+  }
+  if (orgIdentifier) {
+    return 'ORG'
+  }
+  return 'ACCOUNT'
+}
+type SettingChangedViaType = 'RESTORE' | 'UPDATE' | undefined
 const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
   settingTypeHandler,
-  onSelectionChange,
+  onSettingChange,
   settingValue,
   settingType,
   onRestore,
@@ -52,7 +75,19 @@ const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
       setFieldError(settingType, errorMessage)
     }
   }, [errorMessage])
-
+  const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
+  const currentScope = useMemo(() => {
+    return getCurrentScope({ projectIdentifier, orgIdentifier, accountId })
+  }, [projectIdentifier, orgIdentifier])
+  const [settingChangedVia, updateSettingChangedVia] = useState<SettingChangedViaType>()
+  const onRestoreLocal = () => {
+    onRestore()
+    updateSettingChangedVia('RESTORE')
+  }
+  const onSettingChangeLocal = (val: string) => {
+    onSettingChange(val)
+    updateSettingChangedVia('UPDATE')
+  }
   return (
     <Layout.Horizontal>
       <Container flex={{ alignItems: 'center' }} className={css.settingLabelContainer}>
@@ -63,8 +98,8 @@ const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
       <Container flex={{ alignItems: 'center' }} className={css.typeRenderer}>
         {settingRenderer({
           identifier: settingType,
-          onSettingSelectionChange: onSelectionChange,
-          onRestore,
+          onSettingSelectionChange: onSettingChangeLocal,
+          onRestore: onRestoreLocal,
           settingValue: settingValue || undefined,
           categoryAllSettings: allSettings,
           setFieldValue
@@ -74,7 +109,7 @@ const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
       <Container flex={{ alignItems: 'center' }} className={css.settingOverrideRestore}>
         <Layout.Horizontal flex={{ alignItems: 'center' }} spacing="large">
           {!settingValue?.isSettingEditable ? (
-            <span />
+            <span className={css.emptyCheckBoxSpace} />
           ) : (
             <Checkbox
               data-tooltip-id={'defaultSettingsFormOverrideAllow'}
@@ -85,20 +120,28 @@ const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
               }}
             />
           )}
-
-          {settingValue?.value === settingValue?.defaultValue || !settingValue?.isSettingEditable ? (
-            <span />
+          {(settingChangedVia !== 'UPDATE' && settingValue?.settingSource !== currentScope) ||
+          !settingValue?.isSettingEditable ? (
+            <Text icon="info" color={Color.BLUE_600} iconProps={{ color: Color.BLUE_600 }} padding={{ left: 'small' }}>
+              {settingValue?.settingSource !== 'DEFAULT'
+                ? getString('defaultSettings.inheritedFrom', {
+                    source: getString(getSettingSourceLabel(settingValue?.settingSource) as keyof StringsMap)
+                  })
+                : getString('common.configureOptions.defaultValue')}
+            </Text>
           ) : (
-            <Button
-              className={css.settingRestore}
-              size={ButtonSize.SMALL}
-              tooltipProps={{ dataTooltipId: 'defaultSettingsFormRestoreToDefault' }}
-              icon="reset"
-              iconProps={{ color: Color.BLUE_700 }}
-              onClick={onRestore}
-              text={getString('defaultSettings.restoreToDefault')}
-              variation={ButtonVariation.LINK}
-            />
+            settingChangedVia !== 'RESTORE' && (
+              <Button
+                className={css.settingRestore}
+                size={ButtonSize.SMALL}
+                tooltipProps={{ dataTooltipId: 'defaultSettingsFormRestoreToDefault' }}
+                icon="reset"
+                iconProps={{ color: Color.BLUE_700 }}
+                onClick={onRestoreLocal}
+                text={getString('defaultSettings.restoreToDefault')}
+                variation={ButtonVariation.LINK}
+              />
+            )
           )}
         </Layout.Horizontal>
       </Container>

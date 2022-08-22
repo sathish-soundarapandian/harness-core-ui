@@ -23,7 +23,6 @@ import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 import { LoopingStrategy } from '@pipeline/components/PipelineStudio/LoopingStrategy/LoopingStrategy'
 import type { StepElementConfig, StepGroupElementConfig } from 'services/cd-ng'
 import type { TemplateStepNode } from 'services/pipeline-ng'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import DelegateSelectorPanel from './DelegateSelectorPanel/DelegateSelectorPanel'
 import FailureStrategyPanel from './FailureStrategyPanel/FailureStrategyPanel'
 import type { AllFailureStrategyConfig } from './FailureStrategyPanel/utils'
@@ -111,7 +110,6 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
 
   const accordionRef = React.useRef<AccordionHandle>({} as AccordionHandle)
   const { getString } = useStrings()
-  const { PIPELINE_MATRIX } = useFeatureFlags()
 
   React.useEffect(() => {
     if (formikProps.isSubmitting) {
@@ -181,7 +179,7 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
               }
             />
           )}
-          {!PIPELINE_MATRIX || hiddenPanels.includes(AdvancedPanels.LoopingStrategy) ? null : (
+          {hiddenPanels.includes(AdvancedPanels.LoopingStrategy) ? null : (
             <Accordion.Panel
               id={AdvancedPanels.LoopingStrategy}
               summary={getString('pipeline.loopingStrategy.title')}
@@ -192,6 +190,7 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
                   onUpdateStrategy={strategy => {
                     formikProps.setValues({ ...formikProps.values, strategy })
                   }}
+                  stepType={stepType}
                 />
               }
             />

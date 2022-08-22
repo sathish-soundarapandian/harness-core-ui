@@ -162,7 +162,12 @@ export default function ExecutionStageDetails(props: ExecutionStageDetailsProps)
       event.target,
       {
         event,
-        data: { data: stageData, module: stage?.module, moduleInfo: stage?.moduleInfo }
+        data: {
+          data: stageData,
+          module: stage?.module,
+          moduleInfo: stage?.moduleInfo,
+          when: stageData?.when || stageData?.data?.when
+        }
       },
       { useArrows: true, darkMode: false, fixedPosition: false, placement: 'top' }
     )

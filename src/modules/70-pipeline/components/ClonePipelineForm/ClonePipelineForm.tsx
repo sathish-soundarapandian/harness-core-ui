@@ -83,7 +83,7 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const { isGitSimplificationEnabled, selectedProject } = useAppStore()
+  const { supportingGitSimplification, selectedProject } = useAppStore()
   const [projectsQuery, setProjectsQuery] = React.useState('')
   const [selectedOrg, setSelectedOrg] = React.useState(orgIdentifier)
 
@@ -188,8 +188,8 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
     return formData
   }
   const initialvalues: FormState = React.useMemo(
-    () => getInitialValues({ originalPipeline, orgIdentifier, projectIdentifier, isGitSimplificationEnabled }),
-    [originalPipeline, orgIdentifier, projectIdentifier, isGitSimplificationEnabled]
+    () => getInitialValues({ originalPipeline, orgIdentifier, projectIdentifier, supportingGitSimplification }),
+    [originalPipeline, orgIdentifier, projectIdentifier, supportingGitSimplification]
   )
 
   return (
@@ -213,7 +213,7 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
               <Text font={{ variation: FontVariation.H6 }} className={css.choosePipelineSetupHeader}>
                 {getString('pipeline.createPipeline.choosePipelineSetupHeader')}
               </Text>
-              {isGitSimplificationEnabled ? (
+              {supportingGitSimplification ? (
                 <InlineRemoteSelect
                   className={css.inlineRemoteSelect}
                   selected={formikProps.values.storeType}

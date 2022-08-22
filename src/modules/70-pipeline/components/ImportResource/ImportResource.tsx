@@ -85,7 +85,7 @@ export default function ImportResource({
       onSuccess?.()
     } else if (!isEmpty((response as Error).responseMessages)) {
       setErrorResponse((response as Error).responseMessages)
-      if ((response as Error).code === 'DUPLICATE_FILE_IMPORT' && resourceType === ResourceType.PIPELINES) {
+      if ((response as Error).code === 'DUPLICATE_FILE_IMPORT') {
         openForceImportDialog()
       }
       onFailure?.()
@@ -165,7 +165,8 @@ export default function ImportResource({
         connectorRef: typeof connectorRef === 'string' ? connectorRef : (connectorRef as any).value,
         repoName: repo,
         branch,
-        filePath
+        filePath,
+        isForceImport
       },
       requestOptions: {
         headers: {

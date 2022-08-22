@@ -23,7 +23,7 @@ interface ExecutionCardBodyProps {
 }
 
 const ExecutionCardBody: FC<ExecutionCardBodyProps> = ({ flagVariations, executionHistoryItem }) => {
-  const { getVariationColorByName } = useFlagVariation({
+  const { getVariationColorById } = useFlagVariation({
     flagVariations
   })
 
@@ -59,23 +59,71 @@ const ExecutionCardBody: FC<ExecutionCardBodyProps> = ({ flagVariations, executi
             </>
           )}
 
-          <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_500} inline>
-            {getString('cf.featureFlags.targeting')}:
-          </Text>
+          {executionHistoryItem.triggerDetails.defaultServe && (
+            <>
+              <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_500} inline>
+                {getString('cf.featureFlags.flagPipeline.defaultServe')}:
+              </Text>
+              <Text
+                icon="full-circle"
+                iconProps={{
+                  size: 12,
+                  style: {
+                    color: getVariationColorById(executionHistoryItem.triggerDetails.defaultServe.variation as string)
+                  }
+                }}
+                font={{ variation: FontVariation.SMALL_BOLD }}
+                color={Color.GREY_900}
+                data-testid="defaultServe"
+              >
+                {executionHistoryItem.triggerDetails.defaultServe.variation}
+              </Text>
+            </>
+          )}
+          {executionHistoryItem.triggerDetails.defaultOffVariation && (
+            <>
+              <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_500} inline>
+                {getString('cf.featureFlags.flagPipeline.defaultOffVariation')}:
+              </Text>
+              <Text
+                icon="full-circle"
+                iconProps={{
+                  size: 12,
+                  style: {
+                    color: getVariationColorById(
+                      executionHistoryItem.triggerDetails.defaultOffVariation.variation as string
+                    )
+                  }
+                }}
+                font={{ variation: FontVariation.SMALL_BOLD }}
+                color={Color.GREY_900}
+                data-testid="defaultOffVariation"
+              >
+                {executionHistoryItem.triggerDetails.defaultOffVariation.variation}
+              </Text>
+            </>
+          )}
+
+          {(executionHistoryItem.triggerDetails.variationMap || percentageRolloutRules.length > 0) && (
+            <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_500} inline>
+              {getString('cf.featureFlags.flagPipeline.targeting')}:
+            </Text>
+          )}
+
           {executionHistoryItem.triggerDetails.variationMap?.map(variationMapItem => (
             <>
               {variationMapItem.targets && (
                 <TargetItem
                   targets={variationMapItem.targets}
                   variation={variationMapItem.variation}
-                  getVariationColorByName={getVariationColorByName}
+                  getVariationColorById={getVariationColorById}
                 />
               )}
               {variationMapItem.targetSegments && (
                 <TargetGroupItem
                   targetSegments={variationMapItem.targetSegments}
                   variation={variationMapItem.variation}
-                  getVariationColorByName={getVariationColorByName}
+                  getVariationColorById={getVariationColorById}
                 />
               )}
             </>

@@ -12,9 +12,10 @@ import {
   ExpressionAndRuntimeType,
   ExpressionAndRuntimeTypeProps,
   FormikTooltipContext,
-  HarnessDocTooltip,
-  MultiTypeInputValue
+  MultiTypeInputValue,
+  Text
 } from '@wings-software/uicore'
+import { FontVariation } from '@harness/design-system'
 import { connect } from 'formik'
 import cx from 'classnames'
 import { get } from 'lodash-es'
@@ -26,7 +27,7 @@ export interface MultiTypeRadioGroupProps
   extends Omit<ExpressionAndRuntimeTypeProps, 'fixedTypeComponent' | 'fixedTypeComponentProps'> {
   radioGroupProps?: Omit<IRadioGroupProps, 'name' | 'selectedValue' | 'onChange' | 'options'>
   name: string
-  options: IOptionProps[]
+  options?: IOptionProps[]
 }
 
 export const MultiTypeRadioGroup: React.FC<MultiTypeRadioGroupProps> = ({
@@ -41,7 +42,11 @@ export const MultiTypeRadioGroup: React.FC<MultiTypeRadioGroupProps> = ({
       const { onChange } = props
       return (
         <RadioGroup
-          className={cx(css.input, className)}
+          className={cx(
+            css.input,
+            rest?.allowableTypes && rest.allowableTypes.length > 1 && css.multiTypeInputs,
+            className
+          )}
           {...restProps}
           options={options}
           selectedValue={value as string}
@@ -91,7 +96,14 @@ export const FormMultiTypeRadioGroup: React.FC<FormMultiTypeRadioGroupProps> = p
       helperText={helperText}
       intent={intent}
       disabled={disabled}
-      label={label ? <HarnessDocTooltip tooltipId={dataTooltipId} labelText={label} /> : label}
+      label={
+        <Text
+          font={{ variation: FontVariation.FORM_LABEL }}
+          tooltipProps={dataTooltipId ? { dataTooltipId: dataTooltipId } : {}}
+        >
+          {label}
+        </Text>
+      }
     >
       <MultiTypeRadioGroup
         radioGroupProps={radioGroupProps}

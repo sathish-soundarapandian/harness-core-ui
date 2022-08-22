@@ -570,7 +570,7 @@ exports[`EditStageView snapshot test should render properly without data 1`] = `
                   >
                     <span
                       class="Tooltip--acenter bp3-label"
-                      data-tooltip-id="ciEditStage_connectorRef"
+                      data-tooltip-id="rightBarForm_connectorRef"
                     >
                       connector
                     </span>
@@ -712,6 +712,7 @@ exports[`EditStageView snapshot test should render properly without data 1`] = `
               </div>
               <div
                 class="StyledProps--font StyledProps--main bottomMargin3"
+                style="width: 366px;"
               >
                 <div>
                   <div

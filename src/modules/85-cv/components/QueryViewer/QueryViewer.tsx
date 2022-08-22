@@ -46,7 +46,7 @@ export function QueryContent(props: QueryContentProps): JSX.Element {
   const { getString } = useStrings()
 
   useEffect(() => {
-    if (!isEmpty(query) && mandatoryFields.every(v => v) && isAutoFetch) {
+    if (!isEmpty(query) && mandatoryFields.every(v => v) && isAutoFetch && !isConnectorRuntimeOrExpression) {
       handleFetchRecords()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -156,9 +156,10 @@ describe('PipelineCreate test', () => {
     closeModal.mockReset()
     const { container, getByText } = render(
       <TestWrapper
-        path="/account/:accountId/ci/dashboard"
+        path="/account/:accountId/ci/orgs/default/projects/gitx/pipelines/:pipelineIdentifier/pipeline-studio/"
         pathParams={{
-          accountId: 'dummy'
+          accountId: 'dummy',
+          pipelineIdentifier: DefaultNewPipelineId // PipelineCreate is taking pipelineIdentifier from pathParam
         }}
       >
         <PipelineCreate {...getEditProps(DefaultNewPipelineId)} />

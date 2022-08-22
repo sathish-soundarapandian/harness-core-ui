@@ -49,7 +49,8 @@ DefaultSettingsFactory.registerCategory('CI', {
     SettingGroups.group_1,
     SettingGroups.group_2,
     SettingType.test_setting_CI_7
-  ]
+  ],
+  modulesWhereCategoryWillBeDisplayed: ['ci']
 })
 ```
 
@@ -138,6 +139,11 @@ export default function DefaultSettingsRoutes(): React.ReactElement {
   )
 }
 ```
+
+## Categories to be displayed in a Module
+
+We use `modulesWhereCategoryWillBeDisplayed` prop `SettingCategoryHandler` to decide one category should be displayed in any of the module.
+When DefaultSettings page loads in common places like account/Org (non specific Module) pages it displayes all the Categories since those pages does not belong to any of the module.
 
 ## UI Order of Settings/ Groupings
 

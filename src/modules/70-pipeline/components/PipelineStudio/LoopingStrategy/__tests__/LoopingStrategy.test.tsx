@@ -17,7 +17,7 @@ import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import MonacoEditorMock from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { LoopingStrategy } from '../LoopingStrategy'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder', () => ({
@@ -79,11 +79,16 @@ describe('<LoopingStrategy /> tests', () => {
   test('should have repeat selected with given content', async () => {
     const { findByTestId } = render(
       <TestWrapper>
-        <LoopingStrategy strategy={{ repeat: { items: '<+stage.output.hosts>' as any } }} />
+        <LoopingStrategy strategy={{ repeat: { items: '<+stage.output.hosts>' as any } }} stepType={StepType.Command} />
       </TestWrapper>
     )
 
+    const matrixStrategyPill = await findByTestId('matrix')
     const repeatStrategyPill = await findByTestId('repeat')
+    const parallelismStrategyPill = await findByTestId('parallelism')
+    expect(repeatStrategyPill).toHaveClass('Card--interactive')
+    expect(matrixStrategyPill).not.toHaveClass('Card--interactive')
+    expect(parallelismStrategyPill).not.toHaveClass('Card--interactive')
     expect(repeatStrategyPill).toHaveClass('selected')
     const editor = (await findByTestId('editor')) as HTMLTextAreaElement
 

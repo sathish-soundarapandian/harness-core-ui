@@ -443,10 +443,9 @@ describe('FlagPipelineTab', () => {
       // execution card header details
       expect(screen.getByText('tick-circle')).toBeInTheDocument()
       expect(screen.getByText('pipeline.executionStatus.Success')).toBeInTheDocument()
-      expect(screen.getByText('pipeline.executionId: 1996')).toBeInTheDocument()
+      expect(screen.getByText('cf.featureFlags.flagPipeline.buildID: 1996')).toBeInTheDocument()
       expect(screen.getByText(/common.durationPrefix/)).toBeInTheDocument()
       expect(screen.getByText('dummy date')).toBeInTheDocument()
-      expect(screen.getByText('Production')).toBeInTheDocument()
       expect(screen.getByText('Elenor Pena')).toBeInTheDocument()
       expect(screen.getByText('cf.featureFlags.flagPipeline.triggerDetails')).toBeInTheDocument()
 
@@ -458,6 +457,9 @@ describe('FlagPipelineTab', () => {
       await waitFor(() => {
         expect(screen.getByTestId('flag-state')).toHaveTextContent('on')
         expect(screen.getAllByTestId('target-variation')[0]).toHaveTextContent('True')
+
+        expect(screen.getByTestId('defaultServe')).toHaveTextContent('true')
+        expect(screen.getByTestId('defaultOffVariation')).toHaveTextContent('false')
 
         expect(screen.getAllByTestId('target')[0]).toHaveTextContent('Beta Target, Charlie Target')
         expect(screen.getAllByTestId('target-variation')[1]).toHaveTextContent('False')

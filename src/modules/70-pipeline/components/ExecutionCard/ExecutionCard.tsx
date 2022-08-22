@@ -163,7 +163,7 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
   const cdInfo = executionFactory.getCardInfo(StageType.DEPLOY)
   const ciInfo = executionFactory.getCardInfo(StageType.BUILD)
   const stoInfo = executionFactory.getCardInfo(StageType.SECURITY)
-  const { isGitSimplificationEnabled } = useAppStore()
+  const { supportingGitSimplification } = useAppStore()
   const { isCompareMode, compareItems, addToCompare, removeFromCompare } = useExecutionCompareContext()
 
   const checkboxRef = useRef<HTMLDivElement>(null)
@@ -262,7 +262,7 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
                   }, {} as { [key: string]: string })}
                 />
               ) : null}
-              {isGitSimplificationEnabled && pipelineExecution?.storeType === StoreType.REMOTE
+              {supportingGitSimplification && pipelineExecution?.storeType === StoreType.REMOTE
                 ? showGitDetails && (
                     <div className={css.gitRemoteDetailsWrapper}>
                       <GitRemoteDetails

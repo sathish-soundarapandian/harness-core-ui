@@ -295,7 +295,7 @@ exports[`test different stepViewType render runtimeview when no Preconfigured 1`
                 class="Tooltip--acenter"
                 data-tooltip-id="pdcInfraRuntime_cd.hosts"
               >
-                cd.steps.pdcStep.hostsOptional
+                connectors.pdc.hosts
               </span>
                
               <span

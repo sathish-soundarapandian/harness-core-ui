@@ -72,15 +72,20 @@ const ConnectivityModeStep: React.FC<StepProps<ConnectorConfigDTO> & Connectivit
     projectIdentifier: projectIdentifierFromUrl,
     orgIdentifier: orgIdentifierFromUrl
   } = useParams<ProjectPathProps>()
+
   useConnectorWizard({
     helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 1040 } : undefined
   })
   const projectIdentifier = connectorInfo ? connectorInfo.projectIdentifier : projectIdentifierFromUrl
   const orgIdentifier = connectorInfo ? connectorInfo.orgIdentifier : orgIdentifierFromUrl
-  const isGitSyncEnabled = (useAppStore().isGitSyncEnabled &&
-    !props.disableGitSync &&
-    orgIdentifier &&
-    projectIdentifier) as boolean
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = Boolean(
+    isGitSyncEnabledForProject &&
+      !gitSyncEnabledOnlyForFF &&
+      !props.disableGitSync &&
+      orgIdentifier &&
+      projectIdentifier
+  )
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding | undefined>()
 
   const afterSuccessHandler = (response: ResponseConnectorResponse): void => {

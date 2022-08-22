@@ -18,7 +18,6 @@ declare const styles: {
   readonly crossIcon: string
   readonly listHeader: string
   readonly modal: string
-  readonly noWrap: string
   readonly optionsViewContainer: string
   readonly rowItem: string
   readonly saveBtn: string

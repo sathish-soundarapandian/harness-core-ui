@@ -10,7 +10,7 @@ import type { FeaturePipelineExecution } from 'services/cf'
 /* 4 Executions:
   - 1. Waiting
   - 2. Success
-  - 3. Success (Complex trigger details - many targets/target groups/percentage rollouts)
+  - 3. Success (Complex trigger details - default serve/many targets/target groups/percentage rollouts)
   - 4. Failure (1 Stage failed)
 */
 const executionHistory: FeaturePipelineExecution[] = [
@@ -18,6 +18,7 @@ const executionHistory: FeaturePipelineExecution[] = [
     createdAt: 1659437602,
     environment: 'Production',
     executionId: '1998',
+    runSequence: 1998,
     failedStagesCount: 0,
     status: 'TaskWaiting',
     succeededStagesCount: 2,
@@ -38,6 +39,7 @@ const executionHistory: FeaturePipelineExecution[] = [
     endTs: 1643468556001,
     environment: 'Production',
     executionId: '1997',
+    runSequence: 1997,
     failedStagesCount: 0,
     status: 'Success',
     succeededStagesCount: 3,
@@ -80,11 +82,14 @@ const executionHistory: FeaturePipelineExecution[] = [
     endTs: 1643468556000,
     environment: 'Production',
     executionId: '1996',
+    runSequence: 1996,
     failedStagesCount: 0,
     status: 'Success',
     succeededStagesCount: 3,
     totalStagesCount: 3,
     triggerDetails: {
+      defaultOffVariation: { variation: 'false' },
+      defaultServe: { variation: 'true' },
       state: 'on',
       variationMap: [
         {
@@ -181,6 +186,7 @@ const executionHistory: FeaturePipelineExecution[] = [
     createdAt: 1643452356003,
     environment: 'Production',
     executionId: '1998',
+    runSequence: 1997,
     failedStagesCount: 1,
     status: 'Errored',
     succeededStagesCount: 2,

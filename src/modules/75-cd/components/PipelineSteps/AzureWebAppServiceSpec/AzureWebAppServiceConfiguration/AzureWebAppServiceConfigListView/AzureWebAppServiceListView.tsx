@@ -437,8 +437,8 @@ function AzureWebAppListView({
             </div>
             {!!get(currentOption, 'store.spec.paths')?.length && (
               <div>
-                <Text lineClamp={1} width={200}>
-                  <span className={css.noWrap}>
+                <Text lineClamp={1} width={200} className={css.serviceConfigLocation}>
+                  <span>
                     {typeof get(currentOption, 'store.spec.paths') === 'string'
                       ? get(currentOption, 'store.spec.paths')
                       : get(currentOption, 'store.spec.paths').join(', ')}
@@ -447,16 +447,16 @@ function AzureWebAppListView({
               </div>
             )}
             {get(currentOption, 'store.spec.files')?.length && (
-              <div className={css.columnId}>
-                <Text lineClamp={1} width={300}>
-                  <span className={css.noWrap}>{get(currentOption, 'store.spec.files')}</span>
+              <div>
+                <Text lineClamp={1} width={200} className={css.serviceConfigLocation}>
+                  <span>{get(currentOption, 'store.spec.files')}</span>
                 </Text>
               </div>
             )}
             {get(currentOption, 'store.spec.secretFiles')?.length && (
-              <div className={css.columnId}>
-                <Text lineClamp={1} width={300}>
-                  <span className={css.noWrap}>{get(currentOption, 'store.spec.secretFiles')}</span>
+              <div>
+                <Text lineClamp={1} width={200} className={css.serviceConfigLocation}>
+                  <span>{get(currentOption, 'store.spec.secretFiles')}</span>
                 </Text>
               </div>
             )}

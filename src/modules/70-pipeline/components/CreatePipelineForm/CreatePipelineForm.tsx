@@ -30,7 +30,8 @@ interface CreatePipelineFormProps {
 
 export function CreatePipelineForm(props: CreatePipelineFormProps): React.ReactElement {
   const { getString } = useStrings()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { handleSubmit, closeModal, learnMoreUrl } = props
   const { trackEvent } = useTelemetry()
   return (

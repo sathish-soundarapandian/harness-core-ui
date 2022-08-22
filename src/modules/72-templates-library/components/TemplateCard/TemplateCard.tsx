@@ -40,7 +40,8 @@ export interface TemplateCardProps {
 export function TemplateCard(props: TemplateCardProps): JSX.Element {
   const { getString } = useStrings()
   const { template, onSelect, isSelected, onPreview, onOpenEdit, onOpenSettings, onDelete } = props
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { gitSyncRepos, loadingRepos } = useGitSyncStore()
   const templateEntityType =
     (template as TemplateSummaryResponse)?.templateEntityType || (template as NGTemplateInfoConfig)?.type

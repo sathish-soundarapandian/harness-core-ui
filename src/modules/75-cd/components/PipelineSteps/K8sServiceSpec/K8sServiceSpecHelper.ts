@@ -9,7 +9,6 @@ import { get } from 'lodash-es'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
 import type { ServiceSpec } from 'services/cd-ng'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { PipelineInfoConfig } from 'services/pipeline-ng'
 
 export const getNonRuntimeFields = (spec: { [key: string]: any } = {}, template: { [key: string]: any }): string => {
   const fields: { [key: string]: any } = {}
@@ -20,12 +19,6 @@ export const getNonRuntimeFields = (spec: { [key: string]: any } = {}, template:
     }
   })
   return JSON.stringify(fields, null, 2)
-}
-
-export const clearRuntimeInputValue = (template: PipelineInfoConfig): PipelineInfoConfig => {
-  return JSON.parse(
-    JSON.stringify(template || {}).replace(/"<\+input>.?(?:allowedValues\((.*?)\)|regex\((.*?)\))?"/g, '""')
-  )
 }
 
 export const isFieldRuntime = (fieldPath: string, template?: ServiceSpec): boolean =>

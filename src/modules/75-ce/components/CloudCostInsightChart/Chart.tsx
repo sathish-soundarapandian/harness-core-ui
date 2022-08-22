@@ -212,12 +212,14 @@ const GetChart: React.FC<GetChartProps> = ({
   }
 
   const anomaliesLabels = () => {
+    const anomaliesPointMap = anomaliesCounts
     const labels = anomaliesCountData?.map(item => {
+      const yCoord = anomaliesPointMap[item.timestamp || 0]
       return {
-        point: `${item.timestamp}`,
+        point: { x: item.timestamp || 0, y: yCoord, xAxis: 0, yAxis: 0 },
         useHTML: true,
         text: labelsText(item),
-        y: -40
+        y: -20
       }
     })
 
@@ -238,6 +240,25 @@ const GetChart: React.FC<GetChartProps> = ({
       }),
     [chart]
   )
+
+  const anomaliesCounts = useMemo(() => {
+    const anomaliesPointMap: Record<number, number> = {}
+    chartData.map(chartItem => {
+      chartItem.data.map(dataItem => {
+        const xCoord = dataItem[0]
+        const yCoord = dataItem[1]
+        const item = anomaliesCountData?.filter(anomaliesPoint => anomaliesPoint.timestamp === xCoord) || []
+        if (item?.length > 0) {
+          if (xCoord in anomaliesPointMap) {
+            anomaliesPointMap[xCoord] = anomaliesPointMap[xCoord] + Number(yCoord)
+          } else {
+            anomaliesPointMap[xCoord] = Number(yCoord)
+          }
+        }
+      })
+    })
+    return anomaliesPointMap
+  }, [anomaliesCountData])
 
   return (
     <article key={idx} onClick={redirection}>

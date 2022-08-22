@@ -210,6 +210,34 @@ exports[`<AdvancedSteps /> tests snapshot test 1`] = `
                 />
               </div>
             </div>
+            <div
+              class="Accordion--panel"
+              data-open="false"
+              data-testid="loopingStrategy-panel"
+            >
+              <div
+                class="Accordion--summary"
+                data-testid="loopingStrategy-summary"
+              >
+                <div
+                  class="Accordion--label"
+                >
+                  pipeline.loopingStrategy.title
+                </div>
+                <div
+                  class="Accordion--chevron"
+                />
+              </div>
+              <div
+                class="bp3-collapse Accordion--collapse"
+              >
+                <div
+                  aria-hidden="false"
+                  class="bp3-collapse-body"
+                  style="transform: translateY(-undefinedpx);"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

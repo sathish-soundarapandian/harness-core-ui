@@ -8,6 +8,7 @@
 import React from 'react'
 import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { useToaster } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as useGetServiceDetailsMock from 'services/cd-ng'
 import * as cfServiceMock from 'services/cf'
@@ -29,13 +30,16 @@ const renderComponent = (): RenderResult => {
 }
 
 beforeEach(() => {
+  const { clear } = useToaster()
+  clear()
   jest.clearAllMocks()
 })
-
-const useGetServiceListMock = jest.spyOn(useGetServiceDetailsMock, 'useGetServiceList')
-const usePatchServiceMock = jest.spyOn(cfServiceMock, 'usePatchFeature')
-
 describe('ServiceList', () => {
+  const patchMock = jest.fn()
+
+  const useGetServiceListMock = jest.spyOn(useGetServiceDetailsMock, 'useGetServiceList')
+  const usePatchServicesMock = jest.spyOn(cfServiceMock, 'usePatchFeature')
+
   test('it should display pre-existing services', async () => {
     useGetServiceListMock.mockReturnValue({
       loading: false,
@@ -52,8 +56,6 @@ describe('ServiceList', () => {
   })
 
   test('it should send patch request correctly', async () => {
-    const patchMock = jest.fn()
-
     useGetServiceListMock.mockReturnValue({
       loading: false,
       data: mockServiceList,
@@ -61,7 +63,10 @@ describe('ServiceList', () => {
       error: null
     } as any)
 
-    usePatchServiceMock.mockReturnValue({ loading: false, mutate: patchMock } as any)
+    usePatchServicesMock.mockReturnValue({
+      loading: false,
+      mutate: patchMock
+    } as any)
 
     renderComponent()
 
@@ -104,9 +109,9 @@ describe('ServiceList', () => {
   })
 
   test('it should show error if patch fails', async () => {
-    usePatchServiceMock.mockReturnValue({
+    usePatchServicesMock.mockReturnValueOnce({
       loading: false,
-      mutate: jest.fn().mockRejectedValue({ message: 'failed to patch services' })
+      mutate: patchMock.mockRejectedValue({ message: 'failed to patch services' })
     } as any)
 
     renderComponent()
@@ -126,10 +131,34 @@ describe('ServiceList', () => {
     })
   })
 
-  test('it should check removed and readded logic', async () => {
-    const patchMock = jest.fn()
+  test('it should show spinner when patch request is sending', async () => {
+    usePatchServicesMock.mockReturnValue({
+      loading: true,
+      mutate: patchMock.mockResolvedValue(undefined)
+    } as any)
 
-    usePatchServiceMock.mockReturnValue({ loading: false, mutate: patchMock } as any)
+    renderComponent()
+    userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
+
+    userEvent.click(screen.getByRole('generic', { name: 'My Service 1-3' }))
+
+    userEvent.click(screen.getByRole('button', { name: 'save' }))
+
+    await waitFor(() => expect(screen.getByText('Loading, please wait...')).toBeInTheDocument())
+  })
+
+  test('it should check removed and readded logic', async () => {
+    usePatchServicesMock.mockReturnValue({
+      loading: false,
+      mutate: patchMock
+    } as any)
+
+    useGetServiceListMock.mockReturnValue({
+      loading: false,
+      data: mockServiceList,
+      refetch: jest.fn(),
+      error: null
+    } as any)
 
     renderComponent()
 
@@ -153,15 +182,14 @@ describe('ServiceList', () => {
 
       expect(refetchFlagMock).toBeCalled()
 
-      expect(screen.getAllByText('cf.featureFlagDetail.serviceUpdateSuccess')[0]).toBeInTheDocument()
+      expect(screen.getByText('cf.featureFlagDetail.serviceUpdateSuccess')).toBeInTheDocument()
     })
   })
 })
 
 describe('EditServicesModal', () => {
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
+  const useGetServiceListMock = jest.spyOn(useGetServiceDetailsMock, 'useGetServiceList')
+
   test('it should open, close and render EditServicesModal correctly', async () => {
     useGetServiceListMock.mockReturnValue({
       loading: false,
@@ -213,7 +241,7 @@ describe('EditServicesModal', () => {
       loading: false,
       data: null,
       refetch,
-      error: true
+      error: { message: 'failed to fetch services' }
     } as any)
 
     renderComponent()
@@ -222,7 +250,7 @@ describe('EditServicesModal', () => {
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument()
-      expect(screen.getAllByText('error')[0]).toBeInTheDocument()
+      expect(screen.getByText('failed to fetch services')).toBeInTheDocument()
       expect(refetch).not.toBeCalled()
     })
     userEvent.click(screen.getByRole('button', { name: 'Retry' }))
@@ -252,5 +280,60 @@ describe('EditServicesModal', () => {
 
     userEvent.click(service)
     expect(service).toHaveClass('bp3-active')
+  })
+
+  test('it should return searched options', async () => {
+    useGetServiceListMock.mockReturnValue({
+      loading: false,
+      data: mockServiceList,
+      refetch: jest.fn(),
+      error: null
+    } as any)
+
+    renderComponent()
+    userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
+
+    const searchbox = screen.getByRole('searchbox')
+
+    await waitFor(() => {
+      expect(searchbox).toBeInTheDocument()
+      expect(screen.getByRole('generic', { name: 'Support-0' })).toBeInTheDocument()
+      expect(screen.getByRole('generic', { name: 'Messages-1' })).toBeInTheDocument()
+      expect(screen.getByRole('generic', { name: 'Account-2' })).toBeInTheDocument()
+      expect(screen.getByRole('generic', { name: 'My Service 1-3' })).toBeInTheDocument()
+    })
+
+    userEvent.type(searchbox, 'Support', { allAtOnce: true })
+    expect(searchbox).toHaveValue('Support')
+
+    // expect only the searched service to be returned
+    await waitFor(() => {
+      expect(screen.getByRole('generic', { name: 'Support-0' })).toBeInTheDocument()
+
+      expect(screen.queryByRole('generic', { name: 'Messages-1' })).not.toBeInTheDocument()
+      expect(screen.queryByRole('generic', { name: 'Account-2' })).not.toBeInTheDocument()
+      expect(screen.queryByRole('generic', { name: 'My Service 1-3' })).not.toBeInTheDocument()
+    })
+  })
+
+  test('it should return no results message', async () => {
+    useGetServiceListMock.mockReturnValue({
+      loading: false,
+      data: mockServiceList,
+      refetch: jest.fn(),
+      error: false
+    } as any)
+
+    renderComponent()
+    userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
+
+    const searchbox = screen.getByRole('searchbox')
+    await waitFor(() => expect(searchbox).toBeInTheDocument())
+
+    userEvent.type(searchbox, 'Non existent Service Name', { allAtOnce: true })
+
+    await waitFor(() => {
+      expect(screen.getByText('cf.featureFlagDetail.noServices')).toBeInTheDocument()
+    })
   })
 })

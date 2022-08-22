@@ -17,7 +17,8 @@ interface COGatewayLogsProps {
 
 const logColorMap = {
   errored: '\u001b[31;1m', // red
-  active: '\u001b[32m' // green
+  active: '\u001b[32m', // green
+  normal: '\u001b[30m' // black
 }
 
 function getLogs(logs: ServiceLog[] | undefined): string {
@@ -36,7 +37,7 @@ function getLogs(logs: ServiceLog[] | undefined): string {
         l.message ? l.message : ''
       }\n`
     } else {
-      logLine += `${l.created_at}  Rule state changed to: ${l.state} ${l.error ? l.error : ''} ${
+      logLine += `${logColorMap.normal}${l.created_at}  Rule state changed to: ${l.state} ${l.error ? l.error : ''} ${
         l.message ? l.message : ''
       }\n`
     }

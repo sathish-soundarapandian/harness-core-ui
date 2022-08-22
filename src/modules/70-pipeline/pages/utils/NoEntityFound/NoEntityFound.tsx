@@ -46,10 +46,10 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
 
   const { getString } = useStrings()
   const history = useHistory()
-  const { isGitSimplificationEnabled } = useAppStore()
+  const { supportingGitSimplification } = useAppStore()
   const { replaceQueryParams } = useUpdateQueryParams<GitQueryParams>()
 
-  const isPipelineRemote = isGitSimplificationEnabled && storeType === StoreType.REMOTE
+  const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
 
   const { accountId, projectIdentifier, orgIdentifier, module, templateType } = useParams<
     PipelineType<{

@@ -201,25 +201,34 @@ exports[`RightBar Renders all ci codebase inputs as runtime inputs 1`] = `
               </div>
             </div>
           </div>
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
-          >
-            common.repositoryName
-          </p>
           <div
-            class="TextInput--main"
+            class="StyledProps--font StyledProps--main"
           >
             <div
-              class="bp3-input-group bp3-disabled"
+              class="Text--withDocsTooltip"
+              data-tooltip-id="rightBarForm_repoName"
             >
-              <input
-                class="bp3-input"
-                disabled=""
-                name="repoName"
-                style="flex-grow: 1;"
-                type="text"
-                value="https://github.com/devrepo"
-              />
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+              >
+                common.repositoryName
+              </p>
+            </div>
+            <div
+              class="TextInput--main"
+            >
+              <div
+                class="bp3-input-group bp3-disabled"
+              >
+                <input
+                  class="bp3-input"
+                  disabled=""
+                  name="repoName"
+                  style="flex-grow: 1;"
+                  type="text"
+                  value="https://github.com/devrepo"
+                />
+              </div>
             </div>
           </div>
           <div
@@ -1140,25 +1149,34 @@ exports[`RightBar Renders all ci codebase on edit values 1`] = `
               </div>
             </div>
           </div>
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
-          >
-            common.repositoryName
-          </p>
           <div
-            class="TextInput--main"
+            class="StyledProps--font StyledProps--main"
           >
             <div
-              class="bp3-input-group bp3-disabled"
+              class="Text--withDocsTooltip"
+              data-tooltip-id="rightBarForm_repoName"
             >
-              <input
-                class="bp3-input"
-                disabled=""
-                name="repoName"
-                style="flex-grow: 1;"
-                type="text"
-                value="https://github.com/devrepo"
-              />
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+              >
+                common.repositoryName
+              </p>
+            </div>
+            <div
+              class="TextInput--main"
+            >
+              <div
+                class="bp3-input-group bp3-disabled"
+              >
+                <input
+                  class="bp3-input"
+                  disabled=""
+                  name="repoName"
+                  style="flex-grow: 1;"
+                  type="text"
+                  value="https://github.com/devrepo"
+                />
+              </div>
             </div>
           </div>
           <div
@@ -1977,25 +1995,34 @@ exports[`RightBar Renders all ci codebase on edit values 2`] = `
               </div>
             </div>
           </div>
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
-          >
-            common.repositoryName
-          </p>
           <div
-            class="TextInput--main"
+            class="StyledProps--font StyledProps--main"
           >
             <div
-              class="bp3-input-group bp3-disabled"
+              class="Text--withDocsTooltip"
+              data-tooltip-id="rightBarForm_repoName"
             >
-              <input
-                class="bp3-input"
-                disabled=""
-                name="repoName"
-                style="flex-grow: 1;"
-                type="text"
-                value="https://github.com/devrepo"
-              />
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+              >
+                common.repositoryName
+              </p>
+            </div>
+            <div
+              class="TextInput--main"
+            >
+              <div
+                class="bp3-input-group bp3-disabled"
+              >
+                <input
+                  class="bp3-input"
+                  disabled=""
+                  name="repoName"
+                  style="flex-grow: 1;"
+                  type="text"
+                  value="https://github.com/devrepo"
+                />
+              </div>
             </div>
           </div>
           <div
@@ -2842,25 +2869,34 @@ exports[`RightBar Renders validation errors 1`] = `
               </div>
             </div>
           </div>
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
-          >
-            common.repositoryName
-          </p>
           <div
-            class="TextInput--main"
+            class="StyledProps--font StyledProps--main"
           >
             <div
-              class="bp3-input-group bp3-disabled"
+              class="Text--withDocsTooltip"
+              data-tooltip-id="rightBarForm_repoName"
             >
-              <input
-                class="bp3-input"
-                disabled=""
-                name="repoName"
-                style="flex-grow: 1;"
-                type="text"
-                value="https://github.com/devrepo"
-              />
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
+              >
+                common.repositoryName
+              </p>
+            </div>
+            <div
+              class="TextInput--main"
+            >
+              <div
+                class="bp3-input-group bp3-disabled"
+              >
+                <input
+                  class="bp3-input"
+                  disabled=""
+                  name="repoName"
+                  style="flex-grow: 1;"
+                  type="text"
+                  value="https://github.com/devrepo"
+                />
+              </div>
             </div>
           </div>
           <div

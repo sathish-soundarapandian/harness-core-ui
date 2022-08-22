@@ -174,6 +174,15 @@ module.exports = {
       base: `{getConfig("lw/api")}`
     }
   },
+  'lw-co': {
+    output: 'src/services/lw-co/index.tsx',
+    file: 'src/services/lw-co/swagger.json',
+    transformer: 'scripts/swagger-transform.js',
+    customImport: `import { getConfig } from "../config";`,
+    customProps: {
+      base: `{getConfig("lw/co/api")}`
+    }
+  },
   ccm: {
     output: 'src/services/ce/index.tsx',
     file: 'src/services/ce/swagger.json',

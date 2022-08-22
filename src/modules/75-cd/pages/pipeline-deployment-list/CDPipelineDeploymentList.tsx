@@ -22,7 +22,8 @@ export default function CDPipelineDeploymentList(): React.ReactElement {
     useParams<PipelineType<PipelinePathProps>>()
 
   const { branch, repoIdentifier, storeType, repoName, connectorRef } = useQueryParams<GitQueryParams>()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { getString } = useStrings()
   useDocumentTitle([getString('pipelines'), getString('executionsText')])
 

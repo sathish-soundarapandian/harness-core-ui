@@ -87,7 +87,8 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   const { getString } = useStrings()
   const history = useHistory()
   const [versionOptions, setVersionOptions] = React.useState<SelectOption[]>([])
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [templates, setTemplates] = React.useState<TemplateSummaryResponse[]>([])
   const [selectedTemplate, setSelectedTemplate] = React.useState<TemplateSummaryResponse>()
   const [selectedParentTab, setSelectedParentTab] = React.useState<ParentTemplateTabs>(ParentTemplateTabs.BASIC)

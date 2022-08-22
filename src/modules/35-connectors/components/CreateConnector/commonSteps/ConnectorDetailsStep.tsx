@@ -72,8 +72,8 @@ const ConnectorDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDe
   } = useParams<Params>()
   const projectIdentifier = connectorInfo ? connectorInfo.projectIdentifier : projectIdentifierFromUrl
   const orgIdentifier = connectorInfo ? connectorInfo.orgIdentifier : orgIdentifierFromUrl
-  const { isGitSyncEnabled: gitSyncAppStoreEnabled } = useAppStore()
-  const isGitSyncEnabled = gitSyncAppStoreEnabled && !disableGitSync
+  const { isGitSyncEnabled: gitSyncAppStoreEnabled, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = gitSyncAppStoreEnabled && !disableGitSync && !gitSyncEnabledOnlyForFF
   const showGitContextForm = isGitSyncEnabled && orgIdentifier && projectIdentifier
 
   const mounted = useRef(false)

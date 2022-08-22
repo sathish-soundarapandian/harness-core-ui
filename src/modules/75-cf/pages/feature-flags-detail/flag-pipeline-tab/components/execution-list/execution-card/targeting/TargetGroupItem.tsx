@@ -11,12 +11,12 @@ import { Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import css from '../../ExecutionList.module.scss'
 interface TargetGroupItemProps {
-  getVariationColorByName: (variationName: string) => string
+  getVariationColorById: (variationId: string) => string
   targetSegments: string[]
   variation: string
 }
 
-const TargetGroupItem: React.FC<TargetGroupItemProps> = ({ targetSegments, getVariationColorByName, variation }) => {
+const TargetGroupItem: React.FC<TargetGroupItemProps> = ({ targetSegments, getVariationColorById, variation }) => {
   const { getString } = useStrings()
 
   return (
@@ -29,7 +29,7 @@ const TargetGroupItem: React.FC<TargetGroupItemProps> = ({ targetSegments, getVa
         iconProps={{
           size: 12,
           style: {
-            color: getVariationColorByName(variation)
+            color: getVariationColorById(variation)
           }
         }}
         font={{ variation: FontVariation.SMALL_BOLD }}

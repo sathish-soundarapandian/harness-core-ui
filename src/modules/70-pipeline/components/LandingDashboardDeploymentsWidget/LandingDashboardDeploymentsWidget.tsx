@@ -24,6 +24,7 @@ import {
 import { useParams } from 'react-router-dom'
 import { FontVariation, Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
+import moment from 'moment'
 import type { TooltipFormatterContextObject } from 'highcharts'
 import type { GetDataError } from 'restful-react'
 import type { Error, Failure } from 'services/template-ng'
@@ -69,10 +70,7 @@ const sortByOptions: SelectOption[] = [
 const getTooltip = (currPoint: TooltipFormatterContextObject): string => {
   const custom = currPoint?.series?.userOptions?.custom
   const point: TimeBasedStats = custom?.[currPoint.key]
-  const time =
-    point && point?.time
-      ? new Date(point?.time).toLocaleDateString('en-US', { day: 'numeric', month: 'long' })
-      : currPoint.x
+  const time = point && point?.time ? moment(new Date(point?.time).getTime()).utc().format('MMM D') : currPoint.x
   let failureRate: string | number = 'N/A'
   if (point?.countWithSuccessFailureDetails?.failureCount && point.countWithSuccessFailureDetails?.count) {
     failureRate =
@@ -534,12 +532,12 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
                 },
                 labels: {
                   formatter: function (this) {
-                    let time = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short' })
+                    let time = new Date().getTime()
                     if (response?.deploymentsStatsSummary?.deploymentStats?.length) {
                       const val = response.deploymentsStatsSummary.deploymentStats[this.pos].time
-                      time = val ? new Date(val).toLocaleDateString('en-US', { day: 'numeric', month: 'short' }) : time
+                      time = val ? new Date(val).getTime() : time
                     }
-                    return time
+                    return moment(time).utc().format('MMM D')
                   }
                 }
               },

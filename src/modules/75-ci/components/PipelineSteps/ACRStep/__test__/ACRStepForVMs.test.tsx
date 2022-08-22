@@ -18,7 +18,14 @@ jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('../../CIStep/StepUtils', () => ({
   useGetPropagatedStageById: jest.fn(() => ({
     stage: { spec: { infrastructure: { type: CIBuildInfrastructureType.VM } } }
-  }))
+  })),
+  renderOptionalWrapper: ({ label, optional }: { label: JSX.Element; optional?: boolean }) => {
+    if (optional) {
+      return `${label} (optional)`
+    } else {
+      return label
+    }
+  }
 }))
 
 describe('ACR Step', () => {

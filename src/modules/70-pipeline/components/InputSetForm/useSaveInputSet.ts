@@ -108,7 +108,8 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
     storeType
   })
 
-  const { isGitSyncEnabled } = React.useContext(AppStoreContext)
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = React.useContext(AppStoreContext)
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
 
   const createUpdateInputSet = React.useCallback(
     async (

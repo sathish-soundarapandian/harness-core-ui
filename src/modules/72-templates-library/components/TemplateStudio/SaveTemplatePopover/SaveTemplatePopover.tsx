@@ -8,9 +8,9 @@
 import React from 'react'
 import { Dialog, Spinner } from '@blueprintjs/core'
 import { parse } from 'yaml'
-import { Button, ButtonVariation, useToaster } from '@wings-software/uicore'
+import { Button, ButtonVariation, SplitButton, SplitButtonOption, useToaster } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { defaultTo, get, isEmpty, noop, unset } from 'lodash-es'
+import { isEmpty, unset } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { FormikErrors } from 'formik'
 import produce from 'immer'
@@ -25,21 +25,17 @@ import {
   TemplateConfigModalHandle
 } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
-import {
-  TemplateMenuItem,
-  TemplatesActionPopover
-} from '@templates-library/components/TemplatesActionPopover/TemplatesActionPopover'
 import { useSaveTemplate } from '@pipeline/utils/useSaveTemplate'
 import type { EntityGitDetails, Failure, NGTemplateInfoConfig } from 'services/template-ng'
 import { DefaultNewTemplateId, DefaultNewVersionLabel } from 'framework/Templates/templates'
-import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 import useCommentModal from '@common/hooks/CommentModal/useCommentModal'
-import { TemplateType } from '@templates-library/utils/templatesUtils'
 import { getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { sanitize } from '@common/utils/JSONUtils'
 import useTemplateErrors from '@pipeline/components/TemplateErrors/useTemplateErrors'
-import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/ReconcileDialog/ReconcileDialog'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
+import { getErrorsList } from '@pipeline/utils/errorUtils'
 import css from './SaveTemplatePopover.module.scss'
 
 export interface GetErrorResponse extends Omit<Failure, 'errors'> {
@@ -59,7 +55,7 @@ function SaveTemplatePopover(
   ref: React.ForwardedRef<SaveTemplateHandle>
 ): React.ReactElement {
   const {
-    state: { template, originalTemplate, yamlHandler, gitDetails, isUpdated, stableVersion, lastPublishedVersion },
+    state: { template, originalTemplate, yamlHandler, gitDetails, isUpdated, lastPublishedVersion },
     fetchTemplate,
     deleteTemplateCache,
     view,
@@ -69,13 +65,12 @@ function SaveTemplatePopover(
   const { getString } = useStrings()
   const { templateIdentifier } = useParams<TemplateStudioPathProps & ModulePathParams>()
   const [modalProps, setModalProps] = React.useState<ModalProps>()
-  const [menuOpen, setMenuOpen] = React.useState(false)
-  const { isGitSyncEnabled } = React.useContext(AppStoreContext)
   const { getComments } = useCommentModal()
   const { showError, clear } = useToaster()
   const { openTemplateErrorsModal } = useTemplateErrors({ entity: TemplateErrorEntity.TEMPLATE })
   const [loading, setLoading] = React.useState<boolean>()
   const templateConfigModalHandler = React.useRef<TemplateConfigModalHandle>(null)
+  const { getRBACErrorMessage } = useRBACError()
 
   const [showConfigModal, hideConfigModal] = useModalHook(
     () => (
@@ -90,7 +85,6 @@ function SaveTemplatePopover(
 
   const { saveAndPublish } = useSaveTemplate({
     yamlHandler,
-    setLoading,
     fetchTemplate,
     deleteTemplateCache: async (details?: EntityGitDetails) => {
       if (templateIdentifier === DefaultNewTemplateId) {
@@ -107,90 +101,107 @@ function SaveTemplatePopover(
     view
   })
 
+  const triggerSave = async (latestTemplate: NGTemplateInfoConfig, comment?: string) => {
+    try {
+      if (isEmpty(gitDetails)) {
+        setLoading(true)
+      }
+      await saveAndPublish(latestTemplate, {
+        isEdit: templateIdentifier !== DefaultNewTemplateId,
+        comment,
+        updatedGitDetails: gitDetails
+      })
+      if (isEmpty(gitDetails)) {
+        setLoading(false)
+      }
+    } catch (error) {
+      onError(error, comment)
+    }
+  }
+
+  const onError = (error: any, comment?: string) => {
+    if (!isEmpty((error as any)?.metadata?.errorNodeSummary)) {
+      const isEdit = templateIdentifier !== DefaultNewTemplateId
+      openTemplateErrorsModal({
+        error: (error as any)?.metadata?.errorNodeSummary,
+        originalYaml: yamlStringify(
+          sanitize({ template }, { removeEmptyArray: false, removeEmptyObject: false, removeEmptyString: false })
+        ),
+        onSave: async (refreshedYaml: string) => {
+          const refreshedTemplate = (parse(refreshedYaml) as { template: NGTemplateInfoConfig }).template
+          await saveAndPublish(refreshedTemplate, {
+            isEdit,
+            comment,
+            updatedGitDetails: gitDetails
+          })
+        },
+        isEdit
+      })
+    } else {
+      clear()
+      showError(getRBACErrorMessage(error), undefined, 'template.save.template.error')
+    }
+  }
+
   React.useImperativeHandle(
     ref,
     () => ({
       updateTemplate: async (templateYaml: string) => {
-        await saveAndPublish(parse(templateYaml).template, {
-          isEdit: templateIdentifier !== DefaultNewTemplateId,
-          comment: 'Reconciling template'
-        })
+        await triggerSave(parse(templateYaml).template, 'Reconciling template')
       }
     }),
-    [saveAndPublish, templateIdentifier]
+    [triggerSave]
   )
 
-  const checkErrors = React.useCallback(
-    (callback: () => void) => {
-      const yamlValidationErrorMap = yamlHandler?.getYAMLValidationErrorMap()
-      const latestYaml = defaultTo(yamlHandler?.getLatestYaml(), '')
-      if (yamlHandler && (!parse(latestYaml) || (yamlValidationErrorMap && yamlValidationErrorMap.size > 0))) {
-        clear()
-        showError(getString('invalidYamlText'))
+  const checkErrors = async (): Promise<void> => {
+    if (isEmpty(yamlHandler?.getYAMLValidationErrorMap())) {
+      const response = await getErrors()
+      if (response.status === 'SUCCESS' && !isEmpty(response.errors)) {
+        throw `${getErrorsList(response.errors).errorStrings.length} error(s) found`
+      }
+    } else {
+      throw getString('invalidYamlText')
+    }
+  }
+
+  const getComment = (): Promise<string | undefined> => {
+    if (!isEmpty(gitDetails)) {
+      return Promise.resolve(undefined)
+    }
+    const templateName = getTemplateNameWithLabel(template)
+    return getComments(
+      getString('templatesLibrary.commentModal.heading', {
+        name: templateName
+      }),
+      templateIdentifier !== DefaultNewTemplateId ? (
+        <String
+          stringID="templatesLibrary.commentModal.info"
+          vars={{
+            name: templateName
+          }}
+          useRichText={true}
+        />
+      ) : undefined
+    )
+  }
+
+  const onSave = async () => {
+    try {
+      await checkErrors()
+      try {
+        const comment = await getComment()
+        await triggerSave(template, comment)
+      } catch (_error) {
+        // User cancelled save operation
         return
       }
-      getErrors().then(response => {
-        if (response.status === 'SUCCESS' && isEmpty(response.errors)) {
-          callback()
-        }
-      })
-    },
-    [getErrors, yamlHandler]
-  )
+    } catch (error) {
+      clear()
+      showError(error)
+    }
+  }
 
-  const onSubmit = React.useCallback(
-    (isEdit: boolean) => {
-      checkErrors(async () => {
-        try {
-          const comment = !isGitSyncEnabled
-            ? await getComments(
-                getString('templatesLibrary.commentModal.heading', {
-                  name: getTemplateNameWithLabel(template)
-                }),
-                isEdit ? (
-                  <String
-                    stringID="templatesLibrary.commentModal.info"
-                    vars={{
-                      name: getTemplateNameWithLabel(template)
-                    }}
-                    useRichText={true}
-                  />
-                ) : undefined
-              )
-            : ''
-          await saveAndPublish(template, { isEdit, comment, updatedGitDetails: gitDetails })
-        } catch (error) {
-          if (!isEmpty((error as any)?.metadata?.errorNodeSummary)) {
-            openTemplateErrorsModal({
-              error: (error as any)?.metadata?.errorNodeSummary,
-              originalYaml: yamlStringify(
-                sanitize({ template }, { removeEmptyArray: false, removeEmptyObject: false, removeEmptyString: false })
-              ),
-              onSave: async (refreshedYaml: string) => {
-                const refreshedTemplate = (parse(refreshedYaml) as { template: NGTemplateInfoConfig }).template
-                await saveAndPublish(refreshedTemplate, {
-                  isEdit,
-                  comment: 'Reconciling template',
-                  updatedGitDetails: gitDetails
-                })
-              }
-            })
-          }
-        }
-      })
-    },
-    [checkErrors, isGitSyncEnabled, template, stableVersion, saveAndPublish, gitDetails, openTemplateErrorsModal]
-  )
-
-  const onSave = React.useCallback(() => {
-    onSubmit(false)
-  }, [onSubmit])
-
-  const onUpdate = React.useCallback(() => {
-    onSubmit(true)
-  }, [onSubmit])
-
-  const onFailure = (error: any, latestTemplate: NGTemplateInfoConfig) => {
+  const onSaveAsNewFailure = (error: any, latestTemplate: NGTemplateInfoConfig) => {
     if (!isEmpty((error as any)?.metadata?.errorNodeSummary)) {
       openTemplateErrorsModal({
         error: (error as any)?.metadata?.errorNodeSummary,
@@ -202,13 +213,18 @@ function SaveTemplatePopover(
         ),
         onSave: async (refreshedYaml: string) => {
           templateConfigModalHandler.current?.updateTemplate(refreshedYaml)
-        }
+        },
+        isEdit: false
       })
+    } else {
+      clear()
+      showError(getRBACErrorMessage(error), undefined, 'template.save.template.error')
     }
   }
 
-  const onSaveAsNewLabel = () => {
-    checkErrors(() => {
+  const onSaveAsNewLabel = async () => {
+    try {
+      await checkErrors()
       setModalProps({
         initialValues: produce(template, draft => {
           draft.versionLabel = DefaultNewVersionLabel
@@ -219,14 +235,18 @@ function SaveTemplatePopover(
         intent: Intent.SAVE,
         disabledFields: [Fields.Name, Fields.Identifier],
         lastPublishedVersion,
-        onFailure
+        onFailure: onSaveAsNewFailure
       })
       showConfigModal()
-    })
+    } catch (error) {
+      clear()
+      showError(error)
+    }
   }
 
-  const onSaveAsNewTemplate = () => {
-    checkErrors(() => {
+  const onSaveAsNewTemplate = async () => {
+    try {
+      await checkErrors()
       setModalProps({
         initialValues: produce(template, draft => {
           draft.name = ''
@@ -237,51 +257,14 @@ function SaveTemplatePopover(
         title: getString('common.template.saveAsNewTemplateHeading'),
         intent: Intent.SAVE,
         allowScopeChange: true,
-        onFailure
+        onFailure: onSaveAsNewFailure
       })
       showConfigModal()
-    })
+    } catch (error) {
+      clear()
+      showError(error)
+    }
   }
-
-  const saveOptions = React.useMemo(
-    (): TemplateMenuItem[] =>
-      templateIdentifier === DefaultNewTemplateId
-        ? [
-            {
-              label: getString('save'),
-              disabled:
-                isEmpty(get(template.spec, 'type')) &&
-                template.type !== TemplateType.Pipeline &&
-                template.type !== TemplateType.SecretManager,
-
-              onClick: onSave
-            }
-          ]
-        : [
-            {
-              label: getString('save'),
-              disabled: !isUpdated || isReadonly,
-              onClick: onUpdate
-            },
-            {
-              label: getString('templatesLibrary.saveAsNewLabelModal.heading'),
-              onClick: onSaveAsNewLabel,
-              disabled: isReadonly
-            },
-            {
-              label: getString('common.template.saveAsNewTemplateHeading'),
-              onClick: onSaveAsNewTemplate,
-              disabled: isReadonly
-            }
-          ],
-    [templateIdentifier, template, onSave, isUpdated, isReadonly, onUpdate, onSaveAsNewLabel, onSaveAsNewTemplate]
-  )
-
-  const disabled = React.useMemo(() => (saveOptions || []).filter(item => !item.disabled).length === 0, [saveOptions])
-
-  React.useEffect(() => {
-    setMenuOpen(false)
-  }, [isUpdated])
 
   if (loading) {
     return (
@@ -291,23 +274,29 @@ function SaveTemplatePopover(
     )
   }
 
+  if (templateIdentifier === DefaultNewTemplateId) {
+    return <Button variation={ButtonVariation.PRIMARY} text={getString('save')} onClick={onSave} icon="send-data" />
+  }
+
   return (
-    <TemplatesActionPopover
-      open={menuOpen && saveOptions.length > 1}
-      disabled={disabled}
-      items={saveOptions}
-      setMenuOpen={setMenuOpen}
-      minimal={true}
+    <SplitButton
+      disabled={!isUpdated || isReadonly}
+      variation={ButtonVariation.PRIMARY}
+      text={getString('save')}
+      onClick={onSave}
+      icon="send-data"
     >
-      <Button
-        disabled={disabled}
-        variation={ButtonVariation.PRIMARY}
-        rightIcon={saveOptions.length > 1 ? 'chevron-down' : undefined}
-        text={getString('save')}
-        onClick={saveOptions.length === 1 ? () => saveOptions[0].onClick() : noop}
-        icon="send-data"
+      <SplitButtonOption
+        onClick={onSaveAsNewLabel}
+        text={getString('templatesLibrary.saveAsNewLabelModal.heading')}
+        disabled={isReadonly}
       />
-    </TemplatesActionPopover>
+      <SplitButtonOption
+        onClick={onSaveAsNewTemplate}
+        text={getString('common.template.saveAsNewTemplateHeading')}
+        disabled={isReadonly}
+      />
+    </SplitButton>
   )
 }
 

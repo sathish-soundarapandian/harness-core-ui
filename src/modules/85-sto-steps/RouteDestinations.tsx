@@ -74,7 +74,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.STO_EXEMPTION, {
   permissionLabels: {
     [PermissionIdentifier.VIEW_STO_EXEMPTION]: <LocaleString stringID="rbac.permissionLabels.view" />,
     [PermissionIdentifier.CREATE_STO_EXEMPTION]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-    [PermissionIdentifier.APPROVE_STO_EXEMPTION]: <LocaleString stringID="common.approve" />
+    [PermissionIdentifier.APPROVE_STO_EXEMPTION]: <LocaleString stringID="rbac.permissionLabels.approveReject" />
   }
 })
 RbacFactory.registerResourceTypeHandler(ResourceType.STO_SCAN, {

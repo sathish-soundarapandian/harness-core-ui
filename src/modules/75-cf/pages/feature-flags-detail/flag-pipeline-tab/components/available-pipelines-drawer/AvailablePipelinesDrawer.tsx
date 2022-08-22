@@ -31,6 +31,8 @@ import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { showToaster } from '@cf/utils/CFUtils'
 import useResponseError from '@cf/hooks/useResponseError'
+import { Category, FeatureActions } from '@common/constants/TrackingConstants'
+import { useTelemetry } from '@common/hooks/useTelemetry'
 import PipelineCard from '../pipeline-card/PipelineCard'
 import css from './AvailablePipelinesDrawer.module.scss'
 interface AvailablePipelinesDrawerProps {
@@ -52,6 +54,7 @@ const AvailablePipelinesDrawer: React.FC<AvailablePipelinesDrawerProps> = ({
   const { activeEnvironment: environmentIdentifier } = useActiveEnvironment()
   const { handleResponseError } = useResponseError()
   const { orgIdentifier, accountId: accountIdentifier, projectIdentifier } = useParams<Record<string, string>>()
+  const { trackEvent } = useTelemetry()
 
   const PAGE_SIZE = 50
 
@@ -91,6 +94,9 @@ const AvailablePipelinesDrawer: React.FC<AvailablePipelinesDrawerProps> = ({
   })
 
   const onSaveClick = useCallback(async () => {
+    trackEvent(FeatureActions.SavedFlagPipeline, {
+      category: Category.FEATUREFLAG
+    })
     try {
       if (configuredPipelineDetails) {
         await updateFeaturePipeline({
@@ -109,11 +115,13 @@ const AvailablePipelinesDrawer: React.FC<AvailablePipelinesDrawerProps> = ({
       handleResponseError(error)
     }
   }, [
+    trackEvent,
     configuredPipelineDetails,
     refetchFeaturePipeline,
     getString,
-    selectedPipeline,
     updateFeaturePipeline,
+    selectedPipeline?.identifier,
+    selectedPipeline?.name,
     createFeaturePipeline,
     handleResponseError
   ])

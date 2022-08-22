@@ -14,6 +14,8 @@ import { useStrings } from 'framework/strings'
 import { useGetFeaturePipeline, Variation } from 'services/cf'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import AvailablePipelinesDrawer from './components/available-pipelines-drawer/AvailablePipelinesDrawer'
 import ConfiguredPipelineView from './components/configured-pipeline-view/ConfiguredPipelineView'
 import PipelineErrorBanner from './components/pipeline-error-banner/PipelineErrorBanner'
@@ -26,6 +28,7 @@ const FlagPipelineTab: React.FC<FlagPipelineTabProps> = ({ flagIdentifier, flagV
   const { getString } = useStrings()
   const { activeEnvironment: environmentIdentifier } = useActiveEnvironment()
   const { orgIdentifier, accountId: accountIdentifier, projectIdentifier } = useParams<Record<string, string>>()
+  const { trackEvent } = useTelemetry()
 
   const queryParams = useMemo(
     () => ({
@@ -91,7 +94,12 @@ const FlagPipelineTab: React.FC<FlagPipelineTabProps> = ({ flagIdentifier, flagV
               buttonText={getString('cf.featureFlags.flagPipeline.noDataButtonText')}
               description={getString('cf.featureFlags.flagPipeline.noDataDescription')}
               imageURL={imageUrl}
-              onClick={() => setIsDrawerOpen(true)}
+              onClick={() => {
+                setIsDrawerOpen(true)
+                trackEvent(FeatureActions.AddFlagPipeline, {
+                  category: Category.FEATUREFLAG
+                })
+              }}
               imgWidth={650}
             />
           </Container>

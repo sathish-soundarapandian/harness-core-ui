@@ -16,7 +16,6 @@ import {
   TemplateSummaryResponse,
   updateExistingTemplateLabelPromise
 } from 'services/template-ng'
-import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useToaster } from '@common/exports'
@@ -30,8 +29,6 @@ import type { GitQueryParams, ModulePathParams, TemplateStudioPathProps } from '
 import { useQueryParams } from '@common/hooks'
 import type { PromiseExtraArgs } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
-import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
-import { Scope } from '@common/interfaces/SecretsInterface'
 import type { Pipeline } from './types'
 
 export interface FetchTemplateUnboundProps {
@@ -61,7 +58,6 @@ interface UseSaveTemplateReturnType {
 
 export interface TemplateContextMetadata {
   yamlHandler?: YamlBuilderHandlerBinding
-  setLoading?: (loading: boolean) => void
   fetchTemplate?: (args: FetchTemplateUnboundProps) => Promise<void>
   deleteTemplateCache?: (gitDetails?: EntityGitDetails) => Promise<void>
   view?: string
@@ -69,15 +65,7 @@ export interface TemplateContextMetadata {
 }
 
 export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata): UseSaveTemplateReturnType {
-  const {
-    yamlHandler,
-    setLoading,
-    fetchTemplate,
-    deleteTemplateCache,
-    view,
-    isTemplateStudio = true
-  } = TemplateContextMetadata
-  const { isGitSyncEnabled } = React.useContext(AppStoreContext)
+  const { yamlHandler, fetchTemplate, deleteTemplateCache, view, isTemplateStudio = true } = TemplateContextMetadata
   const { templateIdentifier, templateType, projectIdentifier, orgIdentifier, accountId, module } = useParams<
     TemplateStudioPathProps & ModulePathParams
   >()
@@ -123,42 +111,33 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
     updatedGitDetails?: SaveToGitFormInterface,
     lastObject?: { lastObjectId?: string }
   ): Promise<UseSaveSuccessResponse> => {
-    try {
-      const response = await updateExistingTemplateLabelPromise({
-        templateIdentifier: latestTemplate.identifier,
-        versionLabel: latestTemplate.versionLabel,
-        body: stringifyTemplate(latestTemplate),
-        queryParams: {
-          accountIdentifier: accountId,
-          projectIdentifier,
-          orgIdentifier,
-          comments,
-          ...(updatedGitDetails ?? {}),
-          ...(lastObject?.lastObjectId ? lastObject : {}),
-          ...(updatedGitDetails && updatedGitDetails.isNewBranch ? { baseBranch: branch } : {})
-        },
-        requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
-      })
-      setLoading?.(false)
-      if (response && response.status === 'SUCCESS') {
-        if (!isGitSyncEnabled) {
-          clear()
-          showSuccess(getString('common.template.updateTemplate.templateUpdated'))
-        }
-        await fetchTemplate?.({ forceFetch: true, forceUpdate: true })
-        if (updatedGitDetails?.isNewBranch) {
-          navigateToLocation(latestTemplate, updatedGitDetails)
-        }
-        return { status: response.status }
-      } else {
-        throw response
-      }
-    } catch (error) {
-      if (!isGitSyncEnabled) {
+    const response = await updateExistingTemplateLabelPromise({
+      templateIdentifier: latestTemplate.identifier,
+      versionLabel: latestTemplate.versionLabel,
+      body: stringifyTemplate(latestTemplate),
+      queryParams: {
+        accountIdentifier: accountId,
+        projectIdentifier,
+        orgIdentifier,
+        comments,
+        ...(updatedGitDetails ?? {}),
+        ...(lastObject?.lastObjectId ? lastObject : {}),
+        ...(updatedGitDetails && updatedGitDetails.isNewBranch ? { baseBranch: branch } : {})
+      },
+      requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
+    })
+    if (response && response.status === 'SUCCESS') {
+      if (isEmpty(updatedGitDetails)) {
         clear()
-        showError(getRBACErrorMessage(error), undefined, 'template.update.template.error')
+        showSuccess(getString('common.template.updateTemplate.templateUpdated'))
       }
-      throw error
+      await fetchTemplate?.({ forceFetch: true, forceUpdate: true })
+      if (updatedGitDetails?.isNewBranch) {
+        navigateToLocation(latestTemplate, updatedGitDetails)
+      }
+      return { status: response.status }
+    } else {
+      throw response
     }
   }
 
@@ -169,51 +148,36 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
     updatedGitDetails?: SaveToGitFormInterface,
     lastObject?: { lastObjectId?: string }
   ): Promise<UseSaveSuccessResponse> => {
-    const isGitExperienceEnabled = isGitSyncEnabled && getScopeFromDTO(latestTemplate) === Scope.PROJECT
-    if (!isGitExperienceEnabled) {
-      setLoading?.(true)
-    }
     if (isEdit) {
       return updateExistingLabel(latestTemplate, comments, updatedGitDetails, lastObject)
     } else {
-      try {
-        const response = await createTemplatePromise({
-          body: stringifyTemplate(omit(cloneDeep(latestTemplate), 'repo', 'branch')),
-          queryParams: {
-            accountIdentifier: accountId,
-            projectIdentifier: latestTemplate.projectIdentifier,
-            orgIdentifier: latestTemplate.orgIdentifier,
-            comments,
-            ...(updatedGitDetails ?? {}),
-            ...(updatedGitDetails && updatedGitDetails.isNewBranch ? { baseBranch: branch } : {})
-          },
-          requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
-        })
-        if (!isGitExperienceEnabled) {
-          setLoading?.(false)
+      const response = await createTemplatePromise({
+        body: stringifyTemplate(omit(cloneDeep(latestTemplate), 'repo', 'branch')),
+        queryParams: {
+          accountIdentifier: accountId,
+          projectIdentifier: latestTemplate.projectIdentifier,
+          orgIdentifier: latestTemplate.orgIdentifier,
+          comments,
+          ...(updatedGitDetails ?? {}),
+          ...(updatedGitDetails && updatedGitDetails.isNewBranch ? { baseBranch: branch } : {})
+        },
+        requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
+      })
+      if (response && response.status === 'SUCCESS') {
+        if (!isTemplateStudio && response.data?.templateResponseDTO) {
+          window.dispatchEvent(new CustomEvent('TEMPLATE_SAVED', { detail: response.data.templateResponseDTO }))
         }
-        if (response && response.status === 'SUCCESS') {
-          if (!isTemplateStudio && response.data?.templateResponseDTO) {
-            window.dispatchEvent(new CustomEvent('TEMPLATE_SAVED', { detail: response.data.templateResponseDTO }))
-          }
-          if (!isGitExperienceEnabled) {
-            clear()
-            showSuccess(getString('common.template.saveTemplate.publishTemplate'))
-          }
-          await deleteTemplateCache?.()
-          if (isTemplateStudio) {
-            navigateToLocation(latestTemplate, updatedGitDetails)
-          }
-          return { status: response.status }
-        } else {
-          throw response
-        }
-      } catch (error) {
-        if (!isGitExperienceEnabled) {
+        if (isEmpty(updatedGitDetails)) {
           clear()
-          showError(getRBACErrorMessage(error), undefined, 'template.save.template.error')
+          showSuccess(getString('common.template.saveTemplate.publishTemplate'))
         }
-        throw error
+        await deleteTemplateCache?.()
+        if (isTemplateStudio) {
+          navigateToLocation(latestTemplate, updatedGitDetails)
+        }
+        return { status: response.status }
+      } else {
+        throw response
       }
     }
   }
@@ -289,7 +253,7 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
         return saveAndPublishTemplate(updatedTemplate, comment, isEdit)
       }
     },
-    [templateIdentifier, isGitSyncEnabled, isYaml, yamlHandler, showError, showSuccess, saveAndPublishTemplate]
+    [templateIdentifier, isYaml, yamlHandler, showError, showSuccess, saveAndPublishTemplate]
   )
 
   return {

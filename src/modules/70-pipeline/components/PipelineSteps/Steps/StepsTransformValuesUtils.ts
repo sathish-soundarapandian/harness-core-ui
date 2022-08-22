@@ -5,10 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { SelectOption } from '@wings-software/uicore'
+import { RUNTIME_INPUT_VALUE, SelectOption, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { get, set, isEmpty, isObjectLike, isPlainObject, isBoolean } from 'lodash-es'
-import { getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { isRuntimeInput } from '@pipeline/utils/CIUtils'
 import type {
   MapType,
   MultiTypeConnectorRef,
@@ -36,7 +36,9 @@ export enum Types {
   Shell,
   BuildEnvironment,
   FrameworkVersion,
-  JobParameter
+  JobParameter,
+  Numeric,
+  BuildType
 }
 
 interface Field {
@@ -85,7 +87,7 @@ export function getInitialValuesInCorrectFormat<T, U>(
   fields.forEach(({ name, type }) => {
     const value = get(initialValues, name)
 
-    if (type === Types.Text || type === Types.ConnectorRef || type === Types.Boolean) {
+    if (type === Types.Text || type === Types.ConnectorRef || type === Types.Boolean || type === Types.Numeric) {
       set(values, name, value)
     }
 
@@ -226,6 +228,26 @@ export function getInitialValuesInCorrectFormat<T, U>(
       const provisioner = get(initialValues, 'provisioner')
       set(values, 'provisioner.stage.spec.execution', provisioner)
     }
+
+    if (type === Types.BuildType) {
+      const buildValue = get(initialValues, 'spec.build')
+      const buildTypeValue = get(initialValues, 'spec.build.type')
+      if (isRuntimeInput(buildValue) || isRuntimeInput(buildTypeValue)) {
+        set(values, 'spec.build.type', RUNTIME_INPUT_VALUE)
+      } else {
+        const buildType = get(initialValues, 'spec.build.type')
+        const branchValue = get(initialValues, 'spec.build.spec.branch')
+        const tagValue = get(initialValues, 'spec.build.spec.tag')
+        if (buildType) {
+          set(values, 'spec.build.type', buildType)
+        }
+        if (branchValue) {
+          set(values, 'spec.build.spec.branch', branchValue)
+        } else if (tagValue) {
+          set(values, 'spec.build.spec.tag', tagValue)
+        }
+      }
+    }
   })
 
   return values as U
@@ -285,16 +307,29 @@ export function getFormValuesInCorrectFormat<T, U>(formValues: T, fields: Field[
       const connectorRef = typeof value === 'string' ? value : value?.value
       set(values, name, connectorRef)
     }
+
+    if (type === Types.Numeric) {
+      const value = get(formValues, name)
+      if (isRuntimeInput(value)) {
+        set(values, name, value)
+      } else {
+        const numericValue = parseInt(value)
+        set(values, name, numericValue)
+      }
+    }
     // Set Select field values
     if (
-      type === Types.ArchiveFormat ||
-      type === Types.Pull ||
-      type === Types.BuildTool ||
-      type === Types.Language ||
-      type === Types.Shell ||
-      type === Types.ImagePullPolicy ||
-      type === Types.BuildEnvironment ||
-      type === Types.FrameworkVersion
+      [
+        Types.ArchiveFormat,
+        Types.Pull,
+        Types.BuildTool,
+        Types.Language,
+        Types.Shell,
+        Types.ImagePullPolicy,
+        Types.BuildEnvironment,
+        Types.FrameworkVersion,
+        Types.BuildType
+      ].includes(type)
     ) {
       const value = get(formValues, name) as MultiTypeSelectOption
 
@@ -327,6 +362,30 @@ export function getFormValuesInCorrectFormat<T, U>(formValues: T, fields: Field[
       set(values, 'spec.resources.limits.cpu', _value)
     }
 
+    if (type === Types.BuildType) {
+      const buildValue = get(formValues, 'spec.build')
+      const buildTypeValue = get(formValues, 'spec.build.type') // onEdit
+      if (isRuntimeInput(buildValue) || isRuntimeInput(buildTypeValue)) {
+        set(values, 'spec.build', RUNTIME_INPUT_VALUE)
+      } else {
+        const buildType = get(formValues, 'spec.build.type')
+        const branchValue = get(formValues, 'spec.build.spec.branch')
+        const tagValue = get(formValues, 'spec.build.spec.tag')
+        const numberValue = get(formValues, 'spec.build.spec.number')
+        if (buildType) {
+          set(values, 'spec.build.type', buildType)
+        }
+        if (branchValue) {
+          set(values, 'spec.build.spec.branch', branchValue)
+        } else if (tagValue) {
+          set(values, 'spec.build.spec.tag', tagValue)
+        } else if (numberValue) {
+          set(values, 'spec.build.spec.number', numberValue)
+        }
+
+        // set(values, 'spec.build.spec.branch', _value)
+      }
+    }
     if (type === Types.Provisioner) {
       const _value = get(formValues, 'provisioner.stage.spec.execution')
       set(values, 'provisioner', _value)

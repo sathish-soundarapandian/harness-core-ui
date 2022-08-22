@@ -14,6 +14,7 @@ import {
   getMultiTypeFromValue,
   RUNTIME_INPUT_VALUE
 } from '@wings-software/uicore'
+import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { HealthSourceServices } from './SelectHealthSourceServices.constant'
 import { RiskProfile } from './components/RiskProfile/RiskProfile'
@@ -31,7 +32,8 @@ export default function SelectHealthSourceServices({
   isTemplate,
   expressions,
   showOnlySLI = false,
-  isConnectorRuntimeOrExpression
+  isConnectorRuntimeOrExpression,
+  customServiceInstanceName
 }: SelectHealthSourceServicesProps): JSX.Element {
   const { getString } = useStrings()
 
@@ -71,7 +73,7 @@ export default function SelectHealthSourceServices({
         {isTemplate && values.continuousVerification && Boolean(labelNamesResponse) === false && (
           <FormInput.MultiTextInput
             key={metricPathMultiType}
-            name={'serviceInstanceMetricPath'}
+            name={defaultTo(customServiceInstanceName, 'serviceInstanceMetricPath')}
             label={getString('cv.monitoringSources.appD.serviceInstanceMetricPath')}
             onChange={(_value, _valueType, multiType) => {
               if (multiType !== metricPathMultiType) {
@@ -83,7 +85,9 @@ export default function SelectHealthSourceServices({
               value: values.serviceInstanceMetricPath,
               multitypeInputValue: metricPathMultiType,
               defaultValue: RUNTIME_INPUT_VALUE,
-              allowableTypes: [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+              allowableTypes: isConnectorRuntimeOrExpression
+                ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+                : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
             }}
           />
         )}

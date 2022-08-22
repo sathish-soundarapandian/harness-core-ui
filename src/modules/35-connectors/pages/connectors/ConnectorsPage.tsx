@@ -115,8 +115,9 @@ interface ConnectorsListProps {
 const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, statisticsMockData, filtersMockData }) => {
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [searchTerm, setSearchTerm] = useState('')
   const [page, setPage] = useState(0)
   const [filters, setFilters] = useState<FilterDTO[]>()

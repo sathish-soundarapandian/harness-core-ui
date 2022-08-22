@@ -62,7 +62,7 @@ import type { FeatureDetail } from 'framework/featureStore/featureStoreUtil'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { allProviders, ceConnectorTypes, ruleServiceStatusLabelMap, RulesMode } from '@ce/constants'
+import { allProviders, ceConnectorTypes, RulesMode } from '@ce/constants'
 import { Utils } from '@ce/common/Utils'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
@@ -70,6 +70,7 @@ import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import type { orderType, serverSortProps, sortType } from '@common/components/Table/react-table-config'
 import { UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import { InstanceStatusIndicatorV2 } from '@ce/common/InstanceStatusIndicator/InstanceStatusIndicator'
 import { useGetConnector } from 'services/cd-ng'
 import COGatewayAnalytics from './COGatewayAnalytics'
 import COGatewayCumulativeAnalytics from './COGatewayCumulativeAnalytics'
@@ -276,7 +277,6 @@ const ResourcesManagedCell = (tableProps: CellProps<Service>) => {
   const k8sJson = useMemo(() => {
     return isK8sRule ? JSON.parse(get(tableProps.row.original, 'routing.k8s.RuleJson', '{}')) : null
   }, [isK8sRule, tableProps.row.original])
-  const intervalId = useRef<number | undefined>()
 
   const { data: connectorData, loading: loadingConnectorData } = useGetConnector({
     identifier: tableProps.row.original.cloud_account_id,
@@ -396,18 +396,6 @@ const ResourcesManagedCell = (tableProps: CellProps<Service>) => {
     [tableProps.row.original, provider]
   )
   const loading = loadingConnectorData || resourcesLoading || healthLoading || describeServiceLoading
-  const serviceState = ruleServiceStatusLabelMap.get(get(healthState, 'response.state', ''))
-
-  useEffect(() => {
-    if (serviceState?.intent === 'load') {
-      if (!intervalId.current) {
-        intervalId.current = window.setInterval(() => refetchHealthState(), 5000)
-      }
-    } else if (intervalId.current) {
-      window.clearInterval(intervalId.current)
-    }
-    return () => window.clearInterval(intervalId.current)
-  }, [serviceState?.intent])
 
   if (!isK8sRule && loading) {
     return (
@@ -437,29 +425,11 @@ const ResourcesManagedCell = (tableProps: CellProps<Service>) => {
             </Text>
           </>
         ) : null}
-        {serviceState && !tableProps.row.original.disabled && (
-          <Text
-            font={{ variation: FontVariation.UPPERCASED }}
-            icon={serviceState.icon}
-            iconProps={{ size: 14 }}
-            className={cx(css.stateLabel, {
-              [css.runningLabel]: serviceState.intent === 'running',
-              [css.stoppedLabel]: serviceState.intent === 'stopped',
-              [css.loadingLabel]: serviceState.intent === 'load'
-            })}
-          >
-            {getString(serviceState.labelStringId)}
-          </Text>
-        )}
-        {tableProps.row.original.disabled && (
-          <Text
-            className={cx(css.stateLabel, css.disabledLabel)}
-            font={{ variation: FontVariation.UPPERCASED }}
-            icon="deployment-aborted-legacy"
-          >
-            {getString('ce.common.disabled')}
-          </Text>
-        )}
+        <InstanceStatusIndicatorV2
+          disabled={tableProps.row.original.disabled}
+          status={get(healthState, 'response.state', '')}
+          refetchStatus={refetchHealthState}
+        />
       </Layout.Horizontal>
       {renderLink(getClickableLink(true), tableProps.row.original.access_point_id)}
     </Layout.Vertical>
@@ -1304,9 +1274,8 @@ const COGatewayList: React.FC = () => {
           rules={tableData}
           setRules={setTableData}
           loading={loading}
-          onRowClick={(e, index) => {
-            setSelectedService({ data: e, index })
-            setIsDrawerOpen(true)
+          onRowClick={e => {
+            history.push(routes.toCECORuleDetails({ accountId, id: e.id?.toString() as string }))
           }}
           pageProps={{ ...paginationProps, pageIndex: page.value }}
           setPageProps={handlePageChange}

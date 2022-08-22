@@ -142,7 +142,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       ? [
           {
             label: <String stringID="common.variables" />,
-            icon: 'variable',
+            icon: 'runtime-input',
             colorClass: css.variables,
             route: routes.toVariables({ accountId, orgIdentifier })
           } as ResourceOption

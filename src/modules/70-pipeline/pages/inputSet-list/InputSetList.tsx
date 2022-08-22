@@ -54,7 +54,7 @@ function InputSetList(): React.ReactElement {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { getString } = useStrings()
   const [inputSetToDelete, setInputSetToDelete] = useState<InputSetSummaryResponse>()
-  const { isGitSimplificationEnabled } = useAppStore()
+  const { supportingGitSimplification } = useAppStore()
   const isImportFlowEnabled = useFeatureFlag(FeatureFlag.NG_GIT_EXPERIENCE_IMPORT_FLOW)
 
   const {
@@ -253,7 +253,9 @@ function InputSetList(): React.ReactElement {
                     showOverlayInputSetForm()
                   }}
                 />
-                {isGitSimplificationEnabled && isImportFlowEnabled && pipeline?.data?.storeType === StoreType.REMOTE ? (
+                {supportingGitSimplification &&
+                isImportFlowEnabled &&
+                pipeline?.data?.storeType === StoreType.REMOTE ? (
                   <MenuItem text={getString('common.importFromGit')} onClick={showImportResourceModal} />
                 ) : null}
               </Menu>

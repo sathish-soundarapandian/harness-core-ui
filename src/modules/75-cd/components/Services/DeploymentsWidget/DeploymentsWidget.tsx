@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom'
 import type { SeriesAreaOptions } from 'highcharts'
 import { Card, Container, Layout, Text, PageError } from '@wings-software/uicore'
 import { defaultTo } from 'lodash-es'
+import moment from 'moment'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { Ticker, TickerVerticalAlignment } from '@common/components/Ticker/Ticker'
@@ -197,12 +198,12 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
       allowDecimals: false,
       labels: {
         formatter: function (this) {
-          let time = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short' })
+          let time = new Date().getTime()
           if (dataList?.length) {
             const val = dataList?.[this.pos]?.time
-            time = val ? new Date(val).toLocaleDateString('en-US', { day: 'numeric', month: 'short' }) : time
+            time = val ? new Date(val).getTime() : time
           }
-          return time
+          return moment(time).utc().format('MMM D')
         }
       }
     },

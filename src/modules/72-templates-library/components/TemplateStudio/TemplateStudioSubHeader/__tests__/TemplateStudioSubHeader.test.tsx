@@ -30,6 +30,13 @@ jest.mock(
   })
 )
 
+jest.mock('@templates-library/components/TemplateStudio/SaveTemplatePopover/SaveTemplatePopover', () => ({
+  ...jest.requireActual('@templates-library/components/TemplateStudio/SaveTemplatePopover/SaveTemplatePopover'),
+  SaveTemplatePopoverWithRef: React.forwardRef(() => {
+    return <div className={'save-template-popover-mock'}></div>
+  })
+}))
+
 const stepTemplateContext = getTemplateContextMock(TemplateType.Step)
 
 const baseProps: TemplateStudioSubHeaderProps = {

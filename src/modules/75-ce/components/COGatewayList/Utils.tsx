@@ -9,11 +9,6 @@ import React from 'react'
 import { defaultTo as _defaultTo, isEmpty, get } from 'lodash-es'
 import moment from 'moment'
 import { getColorValue } from '@common/components/HeatMap/ColorUtils'
-import {
-  CreatedStatusIndicator,
-  RunningStatusIndicator,
-  StoppedStatusIndicator
-} from '@ce/common/InstanceStatusIndicator/InstanceStatusIndicator'
 import type { AllResourcesOfAccountResponse, Service } from 'services/lw'
 import { GatewayKindType, PROVIDER_TYPES, RulesMode } from '@ce/constants'
 import type { Provider } from '../COCreateGateway/models'
@@ -78,14 +73,8 @@ export function getInstancesLink(service: Service, resources?: AllResourcesOfAcc
   }
 }
 
-const gatewayStateMap: { [key: string]: JSX.Element } = {
-  down: <StoppedStatusIndicator />,
-  active: <RunningStatusIndicator />,
-  created: <CreatedStatusIndicator />
-}
-
-export function getStateTag(state: string): JSX.Element {
-  return gatewayStateMap[state]
+export function getStateTag(): JSX.Element {
+  return <></>
 }
 const PLOT_LINE_LOCATIONS = [11, 22, 33, 44, 55, 66, 77, 88].map(degree => ({
   color: 'white',

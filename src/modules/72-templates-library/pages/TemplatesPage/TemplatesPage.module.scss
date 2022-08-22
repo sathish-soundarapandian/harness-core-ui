@@ -14,6 +14,18 @@
   position: sticky;
   top: var(--page-header-height);
   z-index: 1;
+  .dropdownPopover {
+    :global(.bp3-menu) {
+      min-width: 130px !important;
+    }
+  }
+  .gitFilter {
+    height: 32px;
+    padding-left: var(--spacing-xlarge) !important;
+  }
+  .expandSearch {
+    margin-right: var(--spacing-medium);
+  }
 }
 
 .deleteTemplateDialog {
@@ -31,27 +43,10 @@
   min-height: 400px;
 }
 
-.expandSearch {
-  margin-right: var(--spacing-medium);
-}
-
-.loading {
-  margin: auto;
-  height: 100vh;
-}
-
-.gitFilter {
-  height: 32px;
-  padding-left: var(--spacing-xlarge) !important;
-}
-
-.dropdownPopover {
-  :global(.bp3-menu) {
-    min-width: 130px !important;
-  }
-}
-
-.pageBody {
+.templatesPageBody {
   --page-header-height: 138px;
   padding: var(--spacing-large) var(--spacing-xlarge) var(--spacing-small) var(--spacing-xlarge) !important;
+  .featureWarningBanner {
+    margin: auto;
+  }
 }

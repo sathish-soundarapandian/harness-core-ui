@@ -10,11 +10,19 @@ import cx from 'classnames'
 import { defaultTo, get, isArray, isString, noop } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
-import { AllowedTypes, Formik, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
+import {
+  AllowedTypes,
+  EXECUTION_TIME_INPUT_VALUE,
+  Formik,
+  getMultiTypeFromValue,
+  Layout,
+  MultiTypeInputType
+} from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import type { PdcInfrastructure } from 'services/cd-ng'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { Connectors } from '@connectors/constants'
@@ -23,7 +31,7 @@ import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import {
-  getValidationSchema,
+  getValidationSchemaAll,
   parseAttributes,
   parseHosts,
   PdcInfrastructureTemplate,
@@ -92,6 +100,14 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
     })
   }, [initialValues])
 
+  const multiTypeValueSelected = (value?: string): MultiTypeInputType => {
+    if (value === EXECUTION_TIME_INPUT_VALUE) {
+      return MultiTypeInputType.EXECUTION_TIME
+    }
+    const type = getMultiTypeFromValue(value)
+    return isMultiTypeRuntime(type) ? MultiTypeInputType.FIXED : type
+  }
+
   return (
     <Layout.Vertical spacing="small">
       {formikInitialValues && (
@@ -99,21 +115,33 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
           formName="pdcInfraRuntime"
           initialValues={formikInitialValues}
           enableReinitialize={true}
-          validationSchema={getValidationSchema(getString) as Partial<PDCInfrastructureYAML>}
+          validationSchema={getValidationSchemaAll(getString) as Partial<PDCInfrastructureYAML>}
           validate={
             /* istanbul ignore next */ value => {
               const data: Partial<PDCInfrastructureYAML> = {}
               if (getMultiTypeFromValue(template?.hosts) === MultiTypeInputType.RUNTIME) {
-                data.hosts = parseHosts(value.hosts)
+                if (getMultiTypeFromValue(value.hosts) === MultiTypeInputType.EXPRESSION) {
+                  data.hosts = value.hosts
+                } else {
+                  data.hosts = parseHosts(value.hosts)
+                }
               }
               if (getMultiTypeFromValue(template?.hostFilters) === MultiTypeInputType.RUNTIME) {
-                data.hostFilters = parseHosts(value.hostFilters || '')
+                if (getMultiTypeFromValue(value.hostFilters) === MultiTypeInputType.EXPRESSION) {
+                  data.hostFilters = value.hostFilters
+                } else {
+                  data.hostFilters = parseHosts(value.hostFilters || '')
+                }
               }
               if (getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME) {
                 data.connectorRef = value.connectorRef
               }
               if (getMultiTypeFromValue(template?.attributeFilters) === MultiTypeInputType.RUNTIME) {
-                data.attributeFilters = parseAttributes(value.attributeFilters || '')
+                if (getMultiTypeFromValue(value.attributeFilters) === MultiTypeInputType.EXPRESSION) {
+                  data.attributeFilters = value.attributeFilters
+                } else {
+                  data.attributeFilters = parseAttributes(value.attributeFilters || '')
+                }
               }
               if (getMultiTypeFromValue(template?.credentialsRef) === MultiTypeInputType.RUNTIME) {
                 data.credentialsRef = (value.credentialsRef || value.sshKey || '') as string
@@ -143,6 +171,7 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
                       gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                       setRefValue
                       className={css.runtimeWidth}
+                      multitypeInputValue={multiTypeValueSelected(formikRef.current.values.connectorRef)}
                     />
                   </div>
                 )}
@@ -152,10 +181,11 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
                       key={getString('cd.hosts')}
                       name={getString('cd.hosts')}
                       className={css.hostsTextArea}
-                      label={getString('cd.steps.pdcStep.hostsOptional')}
+                      label={getString('connectors.pdc.hosts')}
                       multiTypeTextArea={{
                         expressions,
-                        allowableTypes
+                        allowableTypes,
+                        multitypeInputValue: multiTypeValueSelected(formikRef.current.values.hosts)
                       }}
                     />
                   </div>
@@ -165,7 +195,7 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
                     <FormMultiTypeTextAreaField
                       key={getString('cd.hostFilters')}
                       name={getString('cd.hostFilters')}
-                      label={getString('cd.steps.pdcStep.specificHostsOptional')}
+                      label={getString('cd.steps.pdcStep.specificHosts')}
                       placeholder={getString('cd.steps.pdcStep.specificHostsPlaceholder')}
                       className={cx(css.hostsTextArea, css.runtimeWidth)}
                       tooltipProps={{
@@ -173,7 +203,8 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
                       }}
                       multiTypeTextArea={{
                         expressions,
-                        allowableTypes
+                        allowableTypes,
+                        multitypeInputValue: multiTypeValueSelected(formikRef.current.values.hostFilters)
                       }}
                     />
                   </div>
@@ -183,7 +214,7 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
                     <FormMultiTypeTextAreaField
                       key={getString('cd.attributeFilters')}
                       name={getString('cd.attributeFilters')}
-                      label={getString('cd.steps.pdcStep.specificAttributesOptional')}
+                      label={getString('cd.steps.pdcStep.specificAttributes')}
                       placeholder={getString('cd.steps.pdcStep.attributesPlaceholder')}
                       className={cx(css.hostsTextArea, css.runtimeWidth)}
                       tooltipProps={{
@@ -191,7 +222,8 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
                       }}
                       multiTypeTextArea={{
                         expressions,
-                        allowableTypes
+                        allowableTypes,
+                        multitypeInputValue: multiTypeValueSelected(formikRef.current.values.attributeFilters)
                       }}
                     />
                   </div>

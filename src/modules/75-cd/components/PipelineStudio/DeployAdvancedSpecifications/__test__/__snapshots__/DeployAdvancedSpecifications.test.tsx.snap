@@ -157,6 +157,86 @@ exports[`Deploy advanced specifications test Should match snapshot 1`] = `
         class="tabHeading"
       >
         <span
+          data-tooltip-id="loopingStrategyDeployStage"
+        >
+          pipeline.loopingStrategy.title
+        </span>
+      </div>
+      <div
+        class="bp3-card bp3-elevation-0 Card--card sectionCard"
+        id="loopingStrategy"
+      >
+        <div
+          class="OverlaySpinner--overlaySpinner"
+        >
+          <div
+            class="StyledProps--font StyledProps--main mainContainer"
+          >
+            <div
+              class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey700 StyledProps--font-size-small"
+              >
+                pipeline.loopingStrategy.subTitle
+                 
+                <a
+                  href="https://docs.harness.io/article/i36ibenkq2-step-skip-condition-settings"
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  pipeline.loopingStrategy.learnMore
+                </a>
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main"
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-large StyledProps--border StyledProps--border-top StyledProps--border-color-grey200"
+                >
+                  <div
+                    class="bp3-card bp3-interactive bp3-elevation-0 Card--card strategyAnchor Card--interactive"
+                    data-testid="matrix"
+                    tabindex="0"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-primary7"
+                    >
+                      pipeline.loopingStrategy.matrix.label
+                    </p>
+                  </div>
+                  <div
+                    class="bp3-card bp3-interactive bp3-elevation-0 Card--card strategyAnchor Card--interactive"
+                    data-testid="repeat"
+                    tabindex="0"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-primary7"
+                    >
+                      pipeline.loopingStrategy.repeat.label
+                    </p>
+                  </div>
+                  <div
+                    class="bp3-card bp3-interactive bp3-elevation-0 Card--card strategyAnchor Card--interactive"
+                    data-testid="parallelism"
+                    tabindex="0"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-primary7"
+                    >
+                      pipeline.loopingStrategy.parallelism.label
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="tabHeading"
+      >
+        <span
           data-tooltip-id="failureStrategyDeployStage"
         >
           pipeline.failureStrategies.title

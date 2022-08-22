@@ -27,7 +27,8 @@ export const TemplateSelector: React.FC = (): JSX.Element => {
   const { onSubmit, selectedTemplate: defaultTemplate } = selectorData || {}
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateSummaryResponse | undefined>()
   const { getString } = useStrings()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
 
   const getTemplateDetails: React.ReactElement = React.useMemo(() => {
     if (selectedTemplate) {

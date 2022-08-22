@@ -28,7 +28,8 @@ function PipelineResourceRenderer({
 }: RbacResourceRendererProps): React.ReactElement {
   const { accountIdentifier, orgIdentifier = '', projectIdentifier = '' } = resourceScope
   const { getString } = useStrings()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [pipelineData, setData] = React.useState<PagePMSPipelineSummaryResponse | undefined>()
 
   const {

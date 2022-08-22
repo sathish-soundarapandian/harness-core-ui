@@ -27,7 +27,8 @@ export default function ExecutionInputsView(props: ExecutionInputsViewInterface)
   const { projectIdentifier, orgIdentifier, pipelineIdentifier, accountId, module, executionIdentifier, source } =
     useParams<PipelineType<ExecutionPathProps>>()
 
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
 
   const { pipelineExecutionDetail } = useExecutionContext()
 

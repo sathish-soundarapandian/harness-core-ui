@@ -19,7 +19,6 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { StepActions } from '@common/constants/TrackingConstants'
 import type { BuildStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { LoopingStrategy } from '@pipeline/components/PipelineStudio/LoopingStrategy/LoopingStrategy'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './BuildAdvancedSpecifications.module.scss'
 
 export interface AdvancedSpecifications {
@@ -38,7 +37,6 @@ const BuildAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childre
     updateStage
   } = usePipelineContext()
   const { stage } = getStageFromPipeline(selectedStageId || '')
-  const { PIPELINE_MATRIX } = useFeatureFlags()
 
   const formikRef = React.useRef<StepFormikRef | null>(null)
   const scrollRef = React.useRef<HTMLDivElement | null>(null)
@@ -78,35 +76,31 @@ const BuildAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childre
             </Layout.Horizontal>
           </Card>
         )}
-        {PIPELINE_MATRIX ? (
-          <React.Fragment>
-            <div className={css.tabHeading}>
-              <span data-tooltip-id="loopingStrategyBuildStage">
-                {getString('pipeline.loopingStrategy.title')}
-                <HarnessDocTooltip tooltipId="loopingStrategyBuildStage" useStandAlone={true} />
-              </span>
-            </div>
-            <Card className={css.sectionCard} id="loopingStrategy">
-              <LoopingStrategy
-                strategy={stage?.stage?.strategy}
-                isReadonly={isReadonly}
-                onUpdateStrategy={strategy => {
-                  const { stage: pipelineStage } = getStageFromPipeline(selectedStageId || '')
-                  if (pipelineStage && pipelineStage.stage) {
-                    const stageData = produce(pipelineStage, draft => {
-                      if (isEmpty(strategy)) {
-                        unset(draft, 'stage.strategy')
-                      } else {
-                        set(draft, 'stage.strategy', strategy)
-                      }
-                    })
-                    if (stageData.stage) updateStage(stageData.stage)
+        <div className={css.tabHeading}>
+          <span data-tooltip-id="loopingStrategyBuildStage">
+            {getString('pipeline.loopingStrategy.title')}
+            <HarnessDocTooltip tooltipId="loopingStrategyBuildStage" useStandAlone={true} />
+          </span>
+        </div>
+        <Card className={css.sectionCard} id="loopingStrategy">
+          <LoopingStrategy
+            strategy={stage?.stage?.strategy}
+            isReadonly={isReadonly}
+            onUpdateStrategy={strategy => {
+              const { stage: pipelineStage } = getStageFromPipeline(selectedStageId || '')
+              if (pipelineStage && pipelineStage.stage) {
+                const stageData = produce(pipelineStage, draft => {
+                  if (isEmpty(strategy)) {
+                    unset(draft, 'stage.strategy')
+                  } else {
+                    set(draft, 'stage.strategy', strategy)
                   }
-                }}
-              />
-            </Card>
-          </React.Fragment>
-        ) : null}
+                })
+                if (stageData.stage) updateStage(stageData.stage)
+              }
+            }}
+          />
+        </Card>
         <div className={css.tabHeading}>
           <span data-tooltip-id="failureStrategyBuildStage">
             {getString('pipeline.failureStrategies.title')}

@@ -10,6 +10,7 @@ import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { RunStep } from './RunStep/RunStep'
 import { PluginStep } from './PluginStep/PluginStep'
 import { ACRStep } from './ACRStep/ACRStep'
+import { GitCloneStep } from './GitCloneStep/GitCloneStep'
 import { GCRStep } from './GCRStep/GCRStep'
 import { ECRStep } from './ECRStep/ECRStep'
 import { SaveCacheGCSStep } from './SaveCacheGCSStep/SaveCacheGCSStep'
@@ -38,3 +39,4 @@ factory.registerStep(new S3Step())
 factory.registerStep(new JFrogArtifactoryStep())
 factory.registerStep(new Dependency())
 factory.registerStep(new RunTestsStep())
+factory.registerStep(new GitCloneStep())

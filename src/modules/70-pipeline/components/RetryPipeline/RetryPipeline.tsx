@@ -105,7 +105,12 @@ function RetryPipeline({
   modules,
   onClose
 }: RetryPipelineProps): React.ReactElement {
-  const { isGitSyncEnabled, isGitSimplificationEnabled } = useAppStore()
+  const {
+    isGitSyncEnabled: isGitSyncEnabledForProject,
+    gitSyncEnabledOnlyForFF,
+    supportingGitSimplification
+  } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { getString } = useStrings()
   const { showSuccess, showWarning, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
@@ -129,7 +134,7 @@ function RetryPipeline({
   const branch = pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.branch
   const connectorRef = pipelineExecutionDetail?.pipelineExecutionSummary?.connectorRef
   const storeType = pipelineExecutionDetail?.pipelineExecutionSummary?.storeType as StoreType
-  const isPipelineRemote = isGitSimplificationEnabled && storeType === StoreType.REMOTE
+  const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
   const { inputSetType, inputSetValue, inputSetLabel, inputSetRepoIdentifier, inputSetBranch } = useQueryParams<
     GitQueryParams & RunPipelineQueryParams
   >()

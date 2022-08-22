@@ -170,7 +170,8 @@ export default function ExecutionActions(props: ExecutionActionsProps): React.Re
   const { showSuccess, showError, clear } = useToaster()
   const { getString } = useStrings()
   const location = useLocation()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { isCompareMode } = useExecutionCompareContext()
 
   const { openDialog: openAbortDialog } = useConfirmationDialog({

@@ -54,6 +54,7 @@ permissionLabels:
   manage: '{{$.common.manage}}'
   invite: Invite
   evaluate: Evaluate
+  approveReject: Approve / Reject
 categoryLabels:
   sharedResources: Shared Resources
 roleBinding: Role Bindings (Role - Resource Group)

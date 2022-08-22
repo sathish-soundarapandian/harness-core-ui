@@ -132,15 +132,7 @@ describe('<SaveTemplatePopover /> tests', () => {
       </TestWrapper>
     )
 
-    const saveButton = getByText(container, 'save')
-    act(() => {
-      fireEvent.click(saveButton)
-    })
-
-    const popover = findPopoverContainer() as HTMLElement
-    await waitFor(() => popover)
-
-    const updateButton = getByText(popover, 'save')
+    const updateButton = getByText(container, 'save')
     await act(async () => {
       fireEvent.click(updateButton)
     })
@@ -155,33 +147,29 @@ describe('<SaveTemplatePopover /> tests', () => {
   test('should call saveAndPublish with correct params when updating a template when git sync is enabled', async () => {
     const updatedStepTemplateContextMock = produce(stepTemplateContextMock, draft => {
       set(draft, 'state.isUpdated', true)
+      set(draft, 'state.gitDetails.repoIdentifier', 'repoIdentifier')
+      set(draft, 'state.gitDetails.branch', 'branch')
     })
 
     const { container } = render(
-      <TestWrapper path={PATH} pathParams={PATH_PARAMS} defaultAppStoreValues={{ isGitSyncEnabled: true }}>
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
         <TemplateContext.Provider value={updatedStepTemplateContextMock}>
           <SaveTemplatePopoverWithRef {...baseProps} />
         </TemplateContext.Provider>
       </TestWrapper>
     )
 
-    const saveButton = getByText(container, 'save')
-    act(() => {
-      fireEvent.click(saveButton)
-    })
-
-    const popover = findPopoverContainer() as HTMLElement
-    await waitFor(() => popover)
-
-    const updateButton = getByText(popover, 'save')
+    const updateButton = getByText(container, 'save')
     await act(async () => {
       fireEvent.click(updateButton)
     })
 
     expect(useSaveTemplate({}).saveAndPublish).toBeCalledWith(updatedStepTemplateContextMock.state.template, {
-      comment: '',
       isEdit: true,
-      updatedGitDetails: {}
+      updatedGitDetails: {
+        repoIdentifier: 'repoIdentifier',
+        branch: 'branch'
+      }
     })
   })
 
@@ -194,9 +182,9 @@ describe('<SaveTemplatePopover /> tests', () => {
       </TestWrapper>
     )
 
-    const saveButton = getByText(container, 'save')
+    const popoverButton = container.getElementsByClassName('SplitButton--dropdown')[0]
     act(() => {
-      fireEvent.click(saveButton)
+      fireEvent.click(popoverButton)
     })
 
     const popover = findPopoverContainer() as HTMLElement
@@ -220,9 +208,9 @@ describe('<SaveTemplatePopover /> tests', () => {
       </TestWrapper>
     )
 
-    const saveButton = getByText(container, 'save')
+    const popoverButton = container.getElementsByClassName('SplitButton--dropdown')[0]
     act(() => {
-      fireEvent.click(saveButton)
+      fireEvent.click(popoverButton)
     })
 
     const popover = findPopoverContainer() as HTMLElement

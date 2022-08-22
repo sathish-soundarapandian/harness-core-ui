@@ -235,7 +235,7 @@ const renderSwitch = ({
 )
 
 export default function TriggersDetailPage(): JSX.Element {
-  const { isGitSimplificationEnabled } = useAppStore()
+  const { supportingGitSimplification } = useAppStore()
   const { repoIdentifier, branch, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
 
   const [selectedView, setSelectedView] = React.useState<SelectedView>(SelectedView.VISUAL)
@@ -381,8 +381,8 @@ export default function TriggersDetailPage(): JSX.Element {
   const isGitSyncEnabled = useMemo(() => !!pipeline?.data?.gitDetails?.branch, [pipeline])
 
   const gitAwareForTriggerEnabled = useMemo(
-    () => isGitSyncEnabled && isGitSimplificationEnabled,
-    [isGitSyncEnabled, isGitSimplificationEnabled]
+    () => isGitSyncEnabled && supportingGitSimplification,
+    [isGitSyncEnabled, supportingGitSimplification]
   )
 
   let pipelineInputSet

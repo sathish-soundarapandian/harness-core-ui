@@ -96,6 +96,14 @@
       border-color: var(--diagram-selected) !important;
       background: var(--pipeline-selected-node) !important;
       border-width: 2px;
+
+      span[data-icon='slot-deployment'] {
+        svg > path {
+          fill: var(--white);
+          stroke: var(--white);
+        }
+      }
+
       &.failed {
         background: var(--execution-pipeline-color-red) !important;
         border: solid 2px var(--execution-pipeline-color-red) !important;

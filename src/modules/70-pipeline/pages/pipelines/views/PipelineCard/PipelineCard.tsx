@@ -249,8 +249,8 @@ export function PipelineCard({
   >()
   const { gitSyncRepos, loadingRepos } = useGitSyncStore()
   const { storeType, gitDetails: { repoName } = {} } = pipeline
-  const { isGitSimplificationEnabled, isGitSyncEnabled } = useAppStore()
-  const isPipelineRemote = isGitSimplificationEnabled && storeType === StoreType.REMOTE
+  const { supportingGitSimplification, isGitSyncEnabled } = useAppStore()
+  const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
   const history = useHistory()
   const goToExecutionPipelineView = (executionId: string | undefined): void => {
     if (executionId && pipeline.identifier) {
@@ -300,7 +300,7 @@ export function PipelineCard({
               projectIdentifier={projectIdentifier}
               accountIdentifier={accountId}
               orgIdentifier={orgIdentifier}
-              isGitSyncEnabled={!!(isGitSyncEnabled || isGitSimplificationEnabled)}
+              isGitSyncEnabled={!!(isGitSyncEnabled || supportingGitSimplification)}
               onDeletePipeline={onDeletePipeline}
               onDelete={onDelete}
               onClonePipeline={onClonePipeline}

@@ -42,6 +42,7 @@ rules:
   no-document-body-snapshot: 2
   aliased-module-imports: 2
   strings-restrict-modules: 2
+  no-only-tests: 'warn'
   duplicate-data-tooltip-id: 'warn'
   no-direct-runtime-comparision: 2
   jest-no-mock:

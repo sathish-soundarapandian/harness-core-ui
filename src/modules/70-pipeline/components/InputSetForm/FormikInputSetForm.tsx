@@ -48,7 +48,7 @@ import {
 import { mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { getYamlFileName } from '@pipeline/utils/yamlUtils'
-import { parse } from '@common/utils/YamlHelperMethods'
+import { memoizedParse, parse } from '@common/utils/YamlHelperMethods'
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import { factory } from '../PipelineSteps/Steps/__tests__/StepTestUtil'
@@ -92,7 +92,7 @@ interface FormikInputSetFormProps {
   executionView?: boolean
   isEdit: boolean
   isGitSyncEnabled?: boolean
-  isGitSimplificationEnabled?: boolean
+  supportingGitSimplification?: boolean
   yamlHandler?: YamlBuilderHandlerBinding
   setYamlHandler: React.Dispatch<React.SetStateAction<YamlBuilderHandlerBinding | undefined>>
   className?: string
@@ -215,7 +215,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     executionView,
     isEdit,
     isGitSyncEnabled,
-    isGitSimplificationEnabled,
+    supportingGitSimplification,
     yamlHandler,
     setYamlHandler,
     className,
@@ -229,7 +229,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
   const { repoIdentifier, branch, connectorRef, storeType, repoName } = useQueryParams<InputSetGitQueryParams>()
   const history = useHistory()
   const resolvedPipeline = defaultTo(
-    parse<Pipeline>(defaultTo(resolvedTemplatesPipelineYaml, ''))?.pipeline,
+    memoizedParse<Pipeline>(defaultTo(resolvedTemplatesPipelineYaml, ''))?.pipeline,
     {} as PipelineInfoConfig
   )
 
@@ -310,12 +310,11 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     filePath: defaultTo(inputSet.gitDetails?.filePath, filePath)
   }
 
+  const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
   React.useEffect(() => {
     const initialValues = getPipelineData()
-    formikRef.current?.setFieldValue('pipeline', initialValues.pipeline)
+    formikRef.current?.setValues({ ...initialValues, ...storeMetadata })
   }, [inputSet, isEdit, resolvedPipeline])
-
-  const isPipelineRemote = isGitSimplificationEnabled && storeType === StoreType.REMOTE
 
   return (
     <Container className={cx(css.inputSetForm, className, hasError ? css.withError : '')}>

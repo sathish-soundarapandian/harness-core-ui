@@ -107,15 +107,15 @@ const renderPipelinesListPage = (module = 'cd'): RenderResult =>
 describe('CD Pipeline List Page', () => {
   test('should render pipeline table and able to go to a pipeline', async () => {
     renderPipelinesListPage()
-    await screen.findByText(/total: 5/i)
-    const pipelineRow = screen.getAllByRole('row')[1]
+    const rows = await screen.findAllByRole('row')
+    const pipelineRow = rows[1]
     expect(
       within(pipelineRow).getByRole('link', {
         name: /Sonar Develop/i
       })
     ).toHaveAttribute(
       'href',
-      routes.toPipelineStudio({ ...getModuleParams(), pipelineIdentifier: 'Sonar_Develop' } as any)
+      routes.toPipelineStudio({ ...getModuleParams(), pipelineIdentifier: 'Sonar_Develop', storeType: 'INLINE' } as any)
     )
 
     expect(
@@ -163,10 +163,9 @@ describe('CD Pipeline List Page', () => {
 
   test('should be able to run pipeline from menu', async () => {
     renderPipelinesListPage()
-    const moreOptions = await screen.findAllByRole('button', {
-      name: /more/i
-    })
-    userEvent.click(moreOptions[0])
+    const row = await screen.findAllByRole('row')
+    const moreOptions = within(row[1]).getByRole('button')
+    userEvent.click(moreOptions)
     const menuContent = findPopoverContainer() as HTMLElement
     const runPipeline = await within(menuContent).findByText('runPipelineText')
     userEvent.click(runPipeline)
@@ -175,10 +174,9 @@ describe('CD Pipeline List Page', () => {
 
   test('should be able to view pipeline from menu', async () => {
     renderPipelinesListPage()
-    const moreOptions = await screen.findAllByRole('button', {
-      name: /more/i
-    })
-    userEvent.click(moreOptions[0])
+    const row = await screen.findAllByRole('row')
+    const moreOptions = within(row[1]).getByRole('button')
+    userEvent.click(moreOptions)
     const menuContent = findPopoverContainer() as HTMLElement
     const viewPipeline = await within(menuContent).findByText('pipeline.viewPipeline')
     userEvent.click(viewPipeline)
@@ -196,10 +194,9 @@ describe('CD Pipeline List Page', () => {
 
   test('should be able delete pipeline from the menu', async () => {
     renderPipelinesListPage()
-    const moreOptions = await screen.findAllByRole('button', {
-      name: /more/i
-    })
-    userEvent.click(moreOptions[0])
+    const row = await screen.findAllByRole('row')
+    const moreOptions = within(row[1]).getByRole('button')
+    userEvent.click(moreOptions)
     const menuContent = findPopoverContainer() as HTMLElement
     const deleteBtn = await within(menuContent).findByText('delete')
     userEvent.click(deleteBtn)
@@ -256,20 +253,24 @@ describe('CI Pipeline List Page', () => {
     })
 
     renderPipelinesListPage('ci')
-    await screen.findByText(/total: 5/i)
-    const pipelineRow = screen.getAllByRole('row')[1]
+    const rows = await screen.findAllByRole('row')
+    const pipelineRow = rows[1]
     expect(
       within(pipelineRow).getByRole('link', {
         name: /Sonar Develop/i
       })
     ).toHaveAttribute(
       'href',
-      routes.toPipelineStudio({ ...getModuleParams('ci'), pipelineIdentifier: 'Sonar_Develop' } as any)
+      routes.toPipelineStudio({
+        ...getModuleParams('ci'),
+        pipelineIdentifier: 'Sonar_Develop',
+        storeType: 'INLINE'
+      } as any)
     )
 
     // test sorting
     mutateListOfPipelines.mockReset()
-    userEvent.click(screen.getByText('PIPELINE.LASTEXECUTION'))
+    userEvent.click(screen.getByText('pipeline.lastExecution'))
     expect(mutateListOfPipelines).toHaveBeenCalledWith(
       { filterType: 'PipelineSetup' },
       {
@@ -283,6 +284,79 @@ describe('CI Pipeline List Page', () => {
           sort: ['executionSummaryInfo.lastExecutionTs', 'ASC']
         }
       }
+    )
+  })
+
+  test('should show trigger icons with appropriate links to navigate to triggers', async () => {
+    const useGetPipelineListMock = useGetPipelineList as jest.MockedFunction<any>
+    const mutateListOfPipelines = jest.fn().mockResolvedValue(pipelines)
+    useGetPipelineListMock.mockReturnValue({
+      mutate: mutateListOfPipelines,
+      loading: false,
+      cancel: jest.fn()
+    })
+
+    renderPipelinesListPage('ci')
+    const rows = await screen.findAllByRole('row')
+    const webhookPipeline = rows[7]
+    const cronPipeline = rows[8]
+
+    expect(
+      within(webhookPipeline).getByRole('link', {
+        name: /trigger/i
+      })
+    ).toHaveAttribute(
+      'href',
+      routes.toTriggersDetailPage({
+        ...getModuleParams('ci'),
+        pipelineIdentifier: 'Prod3NGSanity',
+        storeType: 'INLINE',
+        triggerIdentifier: 'CDPNGProd3_Sanity'
+      } as any)
+    )
+
+    expect(
+      within(cronPipeline).getByRole('link', {
+        name: /trigger/i
+      })
+    ).toHaveAttribute(
+      'href',
+      routes.toTriggersDetailPage({
+        ...getModuleParams('ci'),
+        pipelineIdentifier: 'DBAlertingPreQA',
+        storeType: 'INLINE',
+        triggerIdentifier: 'preqaeverymonday'
+      } as any)
+    )
+  })
+})
+
+describe('Pipeline List Page with git details', () => {
+  test('url contains git info', async () => {
+    const useGetPipelineListMock = useGetPipelineList as jest.MockedFunction<any>
+    const mutateListOfPipelines = jest.fn().mockResolvedValue(pipelines)
+    useGetPipelineListMock.mockReturnValue({
+      mutate: mutateListOfPipelines,
+      loading: false,
+      cancel: jest.fn()
+    })
+
+    renderPipelinesListPage('ci')
+    const rows = await screen.findAllByRole('row')
+    const remotePipeline = rows[6]
+    expect(
+      within(remotePipeline).getByRole('link', {
+        name: /mb-gh-work-abcd/i
+      })
+    ).toHaveAttribute(
+      'href',
+      routes.toPipelineStudio({
+        ...getModuleParams('ci'),
+        pipelineIdentifier: 'mbghworkabcd',
+        repoName: 'Repo1',
+        connectorRef: 'Connector1',
+        storeType: 'REMOTE'
+      } as any)
     )
   })
 })

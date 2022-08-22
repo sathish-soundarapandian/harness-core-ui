@@ -30,7 +30,7 @@ describe('Template Reference By', () => {
       timeout: 30000
     })
     cy.wait(2000)
-    cy.visitPageAssertion('[class*=TemplatesPage-module_pageBody]')
+    cy.visitPageAssertion('[class*=TemplatesPage-module_templatesPageBody]')
     cy.wait('@templatesListCall', { timeout: 10000 })
 
     cy.contains('p', 'Cypress Template Example 1').click()

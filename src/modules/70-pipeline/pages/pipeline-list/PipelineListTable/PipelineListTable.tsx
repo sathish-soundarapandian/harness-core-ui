@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { TableV2 } from '@harness/uicore'
 import React from 'react'
 import type { Column } from 'react-table'
+import { Text, TableV2, Color, FontVariation, Icon, Layout } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { PagePMSPipelineSummaryResponse, PMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
@@ -78,21 +78,32 @@ export function PipelineListTable({
         Cell: CodeSourceCell
       },
       {
-        Header: getString('pipeline.recentExecutions').toUpperCase(),
+        Header: (
+          <div className={css.recentExecutionHeader}>
+            <Layout.Horizontal spacing="xsmall" className={css.latestExecutionText} flex={{ alignItems: 'center' }}>
+              <Text color={Color.GREY_400} font={{ variation: FontVariation.TINY }}>
+                {`${getString('pipeline.mostRecentDirection')} `}
+              </Text>
+              <Icon size={10} name="arrow-right" color={Color.GREY_400} />
+            </Layout.Horizontal>
+
+            {getString('pipeline.recentExecutions')}
+          </div>
+        ),
         accessor: 'recentExecutions',
         width: '28%',
         Cell: RecentExecutionsCell,
         disableSortBy: true
       },
       {
-        Header: getString('pipeline.lastExecution').toUpperCase(),
+        Header: getString('pipeline.lastExecution'),
         accessor: 'executionSummaryInfo.lastExecutionTs',
         width: '20%',
         Cell: LastExecutionCell,
         serverSortProps: getServerSortProps('executionSummaryInfo.lastExecutionTs')
       },
       {
-        Header: getString('pipeline.lastModified').toUpperCase(),
+        Header: getString('pipeline.lastModified'),
         accessor: 'lastUpdatedAt',
         width: '12%',
         Cell: LastModifiedCell,

@@ -189,8 +189,10 @@ const RenderColumnMenu: Renderer<CellProps<ConnectorResponse>> = ({ row, column 
   const data = row.original
   const gitDetails = data?.gitDetails ?? {}
   const isHarnessManaged = data.harnessManaged
-  const { isGitSyncEnabled: gitSyncAppStoreEnabled } = useAppStore()
-  const isGitSyncEnabled = gitSyncAppStoreEnabled && !isSMConnector(row.original.connector?.type)
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled =
+    isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF && !isSMConnector(row.original.connector?.type)
+
   const [menuOpen, setMenuOpen] = useState(false)
   const { showSuccess, showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -372,7 +374,8 @@ const ConnectorsListView: React.FC<ConnectorListViewProps> = props => {
   const params = useParams<PipelineType<ProjectPathProps>>()
   const history = useHistory()
   const { getString } = useStrings()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const listData: ConnectorResponse[] = useMemo(() => data?.content || [], [data?.content])
   const columns: CustomColumn[] = useMemo(
     () => [

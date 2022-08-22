@@ -10,6 +10,7 @@ declare const styles: {
   readonly actionButtons: string
   readonly dialogStyles: string
   readonly headerRow: string
+  readonly serviceOverrideDialog: string
   readonly serviceOverridesContainer: string
   readonly tableRow: string
   readonly tooltip: string

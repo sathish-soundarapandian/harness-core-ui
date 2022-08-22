@@ -328,6 +328,8 @@ environment:
   filters:
     environmentNamePlaceholder: Enter Environment Name
 serviceOverrides:
+  variableOverrides: Variable Overrides
+  manifestOverrides: Manifest Overrides
   helperText: Override existing variables or define new variables based on the selected service
   deleted: Successfully deleted Service Override
   deletedOneVariable: Successfully deleted variable from service override

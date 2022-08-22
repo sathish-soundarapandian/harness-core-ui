@@ -7,6 +7,7 @@
 
 import type { TooltipFormatterContextObject } from 'highcharts'
 import { defaultTo, isUndefined } from 'lodash-es'
+import moment from 'moment'
 
 interface PointStats {
   deployments?: {
@@ -75,10 +76,7 @@ export const renderTooltipContent = ({
 export const getTooltip = (currPoint: TooltipFormatterContextObject): string => {
   const custom = currPoint?.series?.userOptions?.custom
   const point: PointStats = custom?.[currPoint.key]
-  const time =
-    point && point?.time
-      ? new Date(point?.time).toLocaleDateString('en-US', { day: 'numeric', month: 'long' })
-      : currPoint.x
+  const time = point && point?.time ? moment(new Date(point?.time).getTime()).utc().format('MMM D') : currPoint.x
   let failureRate: string | number = 'Infinity'
   if (point?.deployments?.failure && point.deployments?.total) {
     failureRate = ((point.deployments.failure / point.deployments.total) * 100).toFixed(1) + '%'

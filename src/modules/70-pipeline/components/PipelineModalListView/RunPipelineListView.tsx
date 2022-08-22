@@ -51,7 +51,8 @@ export default function RunPipelineListView({ data, refetch, gotoPage }: Pipelin
 
   const history = useHistory()
   const { getString } = useStrings()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
 
   const routeToPipelinesPage = (pipeline: PipelineDTO): void => {
     history.push(

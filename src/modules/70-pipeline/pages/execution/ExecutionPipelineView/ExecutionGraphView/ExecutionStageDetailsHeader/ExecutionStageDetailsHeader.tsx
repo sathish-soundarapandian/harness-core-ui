@@ -36,7 +36,8 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
   const { orgIdentifier, projectIdentifier, executionIdentifier, accountId, pipelineIdentifier, module, source } =
     useParams<PipelineType<ExecutionPathProps>>()
 
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const getNodeId =
     selectedStageExecutionId !== selectedStageId && !isEmpty(selectedStageExecutionId)
       ? selectedStageExecutionId

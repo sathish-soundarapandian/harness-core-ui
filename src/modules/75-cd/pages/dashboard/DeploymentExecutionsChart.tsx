@@ -10,6 +10,7 @@ import { Container, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
+import moment from 'moment'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getTooltip } from '@pipeline/utils/DashboardUtils'
@@ -107,12 +108,12 @@ export default function DeploymentExecutionsChart(props: any) {
                 },
                 labels: {
                   formatter: function (this) {
-                    let time = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short' })
+                    let time = new Date().getTime()
                     if (data?.data?.executionDeploymentList?.length) {
                       const val = data?.data?.executionDeploymentList?.[this.pos]?.time
-                      time = val ? new Date(val).toLocaleDateString('en-US', { day: 'numeric', month: 'short' }) : time
+                      time = val ? new Date(val).getTime() : time
                     }
-                    return time
+                    return moment(time).utc().format('MMM D')
                   }
                 }
               },

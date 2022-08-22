@@ -594,6 +594,7 @@ export interface Service {
   account_identifier?: string
   cloud_account_id: string
   created_at?: string
+  created_by?: string
   custom_domains?: string[]
   disabled?: boolean
   fulfilment?: string
@@ -610,6 +611,7 @@ export interface Service {
   project_id?: string
   routing?: RoutingData
   status?: string
+  updated_at?: string
 }
 
 export interface ServiceDefinitionByIDResponse {

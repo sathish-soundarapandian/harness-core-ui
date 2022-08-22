@@ -5,13 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import { defaultTo, get, isEmpty, isEqual } from 'lodash-es'
 import { parse } from 'yaml'
-import * as Yup from 'yup'
-
+import cx from 'classnames'
 import {
   Button,
   Formik,
@@ -20,61 +19,44 @@ import {
   ButtonVariation,
   SelectOption,
   Text,
-  ButtonSize,
   Container,
   VisualYamlToggle,
   VisualYamlSelectedView as SelectedView,
   useToaster,
-  getMultiTypeFromValue
+  Tabs,
+  Tab
 } from '@harness/uicore'
-
 import { useStrings } from 'framework/strings'
 import {
+  ManifestConfigWrapper,
   NGServiceConfig,
   NGServiceOverrideConfig,
   NGVariable,
-  ResponsePageServiceOverrideResponseDTO,
-  ResponsePageServiceResponse,
   ServiceOverrideResponseDTO,
+  ServiceResponse,
   useUpsertServiceOverride
 } from 'services/cd-ng'
-
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import type { EnvironmentPathProps, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
-
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-
-import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
-
 import type { AllNGVariables } from '@pipeline/utils/types'
-
-import { getVariableTypeOptions, VariableType } from './ServiceOverridesUtils'
-
-export interface VariableState {
-  variable: AllNGVariables
-  serviceRef: string
-}
-
-interface VariableOverride {
-  name?: string
-  type?: 'String' | 'Number' | 'Secret'
-  value?: string
-}
-
-interface AddEditServiceOverrideFormProps {
-  serviceRef?: string
-  environmentRef?: string
-  variableOverride?: VariableOverride
-  variables?: VariableOverride[]
-}
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import ServiceVariableOverride from './ServiceVariableOverride'
+import ServiceManifestOverride from './ServiceManifestOverride/ServiceManifestOverride'
+import { getValidationSchema, ServiceOverrideTab } from './ServiceOverridesUtils'
+import type { AddEditServiceOverrideFormProps, VariableState } from './ServiceOverridesInterface'
+import css from './ServiceOverrides.module.scss'
 
 export interface AddEditServiceOverrideProps {
   selectedVariable: VariableState | null
-  services: ResponsePageServiceResponse | null
-  serviceOverrides?: ResponsePageServiceOverrideResponseDTO | null
+  services: ServiceResponse[]
+  serviceOverrides?: ServiceOverrideResponseDTO[] | null
   closeModal: (updateServiceOverride?: boolean) => void
+  defaultTab: string
+  isReadonly: boolean
 }
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -94,7 +76,9 @@ export default function AddEditServiceOverride({
   selectedVariable,
   services,
   closeModal,
-  serviceOverrides
+  serviceOverrides,
+  defaultTab,
+  isReadonly
 }: AddEditServiceOverrideProps): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier, environmentIdentifier } = useParams<
     PipelinePathProps & EnvironmentPathProps
@@ -102,59 +86,59 @@ export default function AddEditServiceOverride({
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-
   const formikRef = useRef<FormikProps<AddEditServiceOverrideFormProps>>()
+  const isServiceManifestEnabled = useFeatureFlag(FeatureFlag.NG_SERVICE_MANIFEST_OVERRIDE)
 
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [isModified, setIsModified] = useState<boolean>(false)
-
-  const [servicesOptions, setServicesOptions] = useState<SelectOption[]>([])
   const [serviceVariables, setServiceVariables] = useState<NGVariable[]>([])
-  const [variablesOptions, setVariablesOptions] = useState<SelectOption[]>([])
+  const [selectedTab, setSelectedTab] = useState(defaultTo(defaultTab, ServiceOverrideTab.VARIABLE))
 
-  useEffect(() => {
-    // istanbul ignore else
-    if (services) {
-      if (selectedVariable?.serviceRef?.length) {
-        const serviceToBeSelected = services?.data?.content?.filter(
-          serviceObject => serviceObject.service?.identifier === selectedVariable.serviceRef
-        )?.[0]
-
-        const serviceAvailable = {
-          label: defaultTo(serviceToBeSelected?.service?.name, ''),
-          value: defaultTo(serviceToBeSelected?.service?.identifier, '')
+  const selectedServiceOverride = serviceOverrides?.find(
+    svcOverride =>
+      svcOverride.serviceRef === defaultTo(selectedVariable?.serviceRef, formikRef.current?.values.serviceRef)
+  )
+  const getVariableOptions = (): SelectOption[] => {
+    if (!isEmpty(selectedVariable?.serviceRef)) {
+      if (isEmpty(selectedVariable?.variable?.name)) {
+        if (!isEmpty(selectedServiceOverride)) {
+          const parsedServiceOverride = yamlParse<NGServiceOverrideConfig>(
+            defaultTo(selectedServiceOverride?.yaml, '')
+          ).serviceOverrides
+          const serviceVars = defaultTo(parsedServiceOverride?.variables, [])
+          return serviceVars?.map(variable => ({
+            label: defaultTo(variable.name, ''),
+            value: defaultTo(variable.name, '')
+          }))
         }
-
-        setServicesOptions([serviceAvailable])
-        formikRef.current?.setFieldValue('serviceRef', serviceAvailable.value)
-        handleServiceChange(serviceAvailable, Boolean(selectedVariable.variable.value))
-      } else {
-        setServicesOptions(
-          defaultTo(
-            services.data?.content?.map(item => {
-              try {
-                return {
-                  label: defaultTo(item.service?.name, ''),
-                  value: defaultTo(item.service?.identifier, '')
-                }
-              } catch (e: any) {
-                return {
-                  label: defaultTo(item?.service?.name, ''),
-                  value: ''
-                }
-              }
-            }),
-            []
-          )
-        )
       }
+      return [
+        {
+          label: defaultTo(selectedVariable?.variable?.name, ''),
+          value: defaultTo(selectedVariable?.variable?.name, '')
+        }
+      ]
     }
-  }, [selectedVariable?.serviceRef])
+    return []
+  }
+  const [variablesOptions, setVariablesOptions] = useState<SelectOption[]>(getVariableOptions())
 
-  const handleServiceChange = (item: SelectOption, isEdit: boolean) => {
-    const serviceSelected = services?.data?.content?.find(serviceObj => serviceObj.service?.identifier === item.value)
+  const servicesOptions = useMemo(() => {
+    return services.map(item => ({
+      label: defaultTo(item.service?.name, ''),
+      value: defaultTo(item.service?.identifier, '')
+    }))
+  }, [services])
 
+  const { mutate: upsertServiceOverride, loading: upsertServiceOverrideLoading } = useUpsertServiceOverride({
+    queryParams: {
+      accountIdentifier: accountId
+    }
+  })
+
+  const handleServiceChange = (item: SelectOption): void => {
+    const serviceSelected = services.find(serviceObj => serviceObj.service?.identifier === item.value)
     // istanbul ignore else
     if (serviceSelected) {
       const parsedServiceYaml = defaultTo(
@@ -163,28 +147,19 @@ export default function AddEditServiceOverride({
       ) as NGServiceConfig
       const serviceVars = defaultTo(parsedServiceYaml?.service?.serviceDefinition?.spec?.variables, [])
       setServiceVariables(serviceVars)
-      if (isEdit) {
-        setVariablesOptions([
-          {
-            label: defaultTo(selectedVariable?.variable?.name, ''),
-            value: defaultTo(selectedVariable?.variable?.name, '')
-          }
-        ])
-      } else {
-        setVariablesOptions(
-          defaultTo(
-            serviceVars?.map(variable => ({
-              label: defaultTo(variable.name, ''),
-              value: defaultTo(variable.name, '')
-            })),
-            []
-          )
+      setVariablesOptions(
+        defaultTo(
+          serviceVars?.map(variable => ({
+            label: defaultTo(variable.name, ''),
+            value: defaultTo(variable.name, '')
+          })),
+          []
         )
-      }
+      )
     }
   }
 
-  const handleVariableChange = (item: SelectOption) => {
+  const handleVariableChange = (item: SelectOption): void => {
     const variableSelected = serviceVariables?.find(serviceVariable => serviceVariable.name === item.value)
     if (variableSelected) {
       // istanbul ignore else
@@ -222,9 +197,9 @@ export default function AddEditServiceOverride({
         if (yamlVisual) {
           formikRef.current?.setValues({
             ...yamlVisual,
-            variables: null,
+            variables: undefined,
             variableOverride: yamlVisual.variables?.[defaultTo(yamlVisual.variables?.length, 1) - 1]
-          } as any)
+          })
         }
       } else {
         // istanbul ignore else
@@ -236,35 +211,54 @@ export default function AddEditServiceOverride({
 
       setSelectedView(view)
     },
-    [yamlHandler?.getLatestYaml]
+    [showError, yamlHandler]
   )
 
-  const formVariableOverrideObject = (serviceOverride?: ServiceOverrideResponseDTO, variableOverride?: NGVariable) => {
-    const parsedYaml = parse(defaultTo(serviceOverride?.yaml, '{}')) as NGServiceOverrideConfig
+  const formVariableOverrideObject = (
+    variableOverride?: NGVariable,
+    serviceOverride?: ServiceOverrideResponseDTO,
+    isSubmit?: boolean
+  ): Array<NGVariable | undefined> => {
+    const serviceOverrideData = defaultTo(serviceOverride, selectedServiceOverride)
+    const parsedYaml = parse(defaultTo(serviceOverrideData?.yaml, '{}')) as NGServiceOverrideConfig
     const otherVariables = defaultTo(
       parsedYaml.serviceOverrides?.variables
         ?.map(override => ({ name: get(override, 'name'), type: get(override, 'type'), value: get(override, 'value') }))
-
         ?.filter(override => {
           return override.name !== variableOverride?.name
         }),
       []
     )
-
+    if (isSubmit) {
+      if (!isEmpty(variableOverride?.name)) {
+        return [...otherVariables, variableOverride]
+      }
+      return [...otherVariables]
+    }
     return [...otherVariables, variableOverride]
   }
-
-  const { mutate: upsertServiceOverride, loading: upsertServiceOverrideLoading } = useUpsertServiceOverride({
-    queryParams: {
-      accountIdentifier: accountId
+  const getManifestOverrideObject = (): Array<ManifestConfigWrapper> => {
+    if (!isEmpty(selectedServiceOverride)) {
+      const parsedServiceOverride = yamlParse<NGServiceOverrideConfig>(
+        defaultTo(selectedServiceOverride?.yaml, '')
+      ).serviceOverrides
+      return defaultTo(parsedServiceOverride?.manifests, []) as ManifestConfigWrapper[]
     }
-  })
+    return []
+  }
+  const getManifestOverrideValues = (): Array<ManifestConfigWrapper> => {
+    const formikManifestOverrideData = formikRef.current?.values.manifests
+    if (formikManifestOverrideData?.length) {
+      return formikManifestOverrideData
+    }
+    return getManifestOverrideObject()
+  }
 
-  const onSubmit = async (values: AddEditServiceOverrideFormProps) => {
+  const onSubmit = async (values: AddEditServiceOverrideFormProps): Promise<void> => {
     try {
       const response = await upsertServiceOverride({
-        environmentRef: environmentIdentifier,
-        serviceRef: values.serviceRef,
+        environmentIdentifier,
+        serviceIdentifier: values.serviceRef,
         orgIdentifier,
         projectIdentifier,
         yaml: yamlStringify({
@@ -274,11 +268,11 @@ export default function AddEditServiceOverride({
             variables:
               values.variables ||
               formVariableOverrideObject(
-                serviceOverrides?.data?.content?.filter(
-                  serviceOverride => serviceOverride.serviceRef === values.serviceRef
-                )?.[0],
-                values.variableOverride
-              )
+                values.variableOverride,
+                serviceOverrides?.find(svcOverride => svcOverride.serviceRef === values.serviceRef),
+                true
+              ),
+            manifests: !isEmpty(formikRef.current?.values.manifests) ? formikRef.current?.values.manifests : undefined
           }
         } as NGServiceOverrideConfig)
       })
@@ -288,7 +282,7 @@ export default function AddEditServiceOverride({
       } else {
         throw response
       }
-    } catch (e: any) {
+    } catch (e) {
       showError(getRBACErrorMessage(e))
     }
   }
@@ -298,15 +292,12 @@ export default function AddEditServiceOverride({
       serviceOverrides: {
         environmentRef: environmentIdentifier,
         serviceRef: formikRef.current?.values.serviceRef,
-        variables: formVariableOverrideObject(
-          serviceOverrides?.data?.content?.filter(
-            serviceOverride => serviceOverride.serviceRef === formikRef.current?.values.serviceRef
-          )?.[0],
-          formikRef.current?.values.variableOverride
-        )
+        variables: formVariableOverrideObject(formikRef.current?.values.variableOverride),
+        manifests: getManifestOverrideValues()
       }
     }
-  }, [formikRef.current, environmentIdentifier, serviceOverrides?.data?.content])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formikRef.current])
 
   const handleYamlChange = useCallback((): void => {
     const parsedYaml = parse(defaultTo(yamlHandler?.getLatestYaml(), '{}'))
@@ -318,11 +309,36 @@ export default function AddEditServiceOverride({
     } else {
       setIsModified(true)
     }
-  }, [yamlHandler])
+  }, [existingJSON, yamlHandler])
+
+  const handleTabChange = (nextTab: ServiceOverrideTab): void => {
+    setSelectedTab(nextTab)
+  }
+
+  /**********************************************Service Manifest CRUD Operations ************************************************/
+  const handleManifestOverrideSubmit = useCallback(
+    (manifestObj: ManifestConfigWrapper, manifestIndex: number): void => {
+      const manifestDefaultValue = [...(formikRef.current?.values?.manifests as ManifestConfigWrapper[])]
+      if (manifestDefaultValue?.length) {
+        manifestDefaultValue.splice(manifestIndex, 1, manifestObj)
+      } else {
+        manifestDefaultValue.push(manifestObj)
+      }
+      formikRef.current?.setFieldValue('manifests', manifestDefaultValue)
+    },
+    []
+  )
+
+  const removeManifestConfig = useCallback((index: number): void => {
+    const manifestDefaultValue = [...(formikRef.current?.values?.manifests as ManifestConfigWrapper[])]
+    manifestDefaultValue.splice(index, 1)
+    formikRef.current?.setFieldValue('manifests', manifestDefaultValue)
+  }, [])
+  /**********************************************Service Manifest CRUD Operations ************************************************/
 
   return (
     <Formik<AddEditServiceOverrideFormProps>
-      formName={'addEditServiceOverrideForm'}
+      formName="addEditServiceOverrideForm"
       initialValues={{
         serviceRef: selectedVariable?.serviceRef,
         environmentRef: environmentIdentifier,
@@ -330,7 +346,8 @@ export default function AddEditServiceOverride({
           name: selectedVariable?.variable.name,
           type: selectedVariable?.variable.type,
           value: selectedVariable?.variable.value as string
-        }
+        },
+        manifests: getManifestOverrideObject()
       }}
       onSubmit={
         /* istanbul ignore next */ values => {
@@ -339,39 +356,17 @@ export default function AddEditServiceOverride({
           })
         }
       }
-      validationSchema={Yup.object().shape({
-        serviceRef: Yup.string().required(
-          getString('common.validation.fieldIsRequired', { name: getString('service') })
-        ),
-        variableOverride: Yup.object()
-          .required()
-          .shape({
-            name: Yup.string().required(getString('common.validation.fieldIsRequired', { name: getString('name') })),
-            type: Yup.string().oneOf(['String', 'Number', 'Secret']).required(),
-            value: Yup.mixed().test({
-              test(valueObj): boolean | Yup.ValidationError {
-                // istanbul ignore else
-                if (valueObj === undefined) {
-                  return this.createError({
-                    path: 'variableOverride.value',
-                    message: getString('common.validation.fieldIsRequired', { name: getString('valueLabel') })
-                  })
-                }
-                return true
-              }
-            })
-          })
-      })}
+      validationSchema={getValidationSchema(selectedTab, getString)}
     >
       {formikProps => {
         formikRef.current = formikProps
         return (
-          <Container margin={{ left: 'small', right: 'small' }}>
-            <Layout.Horizontal
-              flex={{ justifyContent: 'flex-start' }}
-              padding={{ top: 'medium', bottom: 'medium' }}
-              width={'320px'}
-            >
+          <div
+            className={cx({
+              [css.serviceOverrideDialog]: isEmpty(selectedVariable?.serviceRef)
+            })}
+          >
+            <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} padding={{ bottom: 'medium' }}>
               <VisualYamlToggle
                 selectedView={selectedView}
                 onChange={nextMode => {
@@ -386,56 +381,41 @@ export default function AddEditServiceOverride({
                   items={servicesOptions}
                   label={getString('service')}
                   placeholder={getString('common.selectName', { name: getString('service') })}
-                  onChange={item => handleServiceChange(item, false)}
+                  onChange={item => handleServiceChange(item)}
+                  disabled={!isEmpty(selectedVariable?.serviceRef)}
                 />
-                <Text>{getString('cd.overrideType')}</Text>
-                <Button
-                  disabled
-                  size={ButtonSize.SMALL}
-                  variation={ButtonVariation.SECONDARY}
-                  margin={{ top: 'small', bottom: 'medium' }}
-                >
-                  {getString('variableLabel')}
-                </Button>
-                <FormInput.Select
-                  name="variableOverride.name"
-                  selectProps={{
-                    allowCreatingNewItems: true
-                  }}
-                  items={variablesOptions}
-                  label={getString('variableNameLabel')}
-                  placeholder={getString('common.selectName', { name: getString('variableLabel') })}
-                  onChange={handleVariableChange}
-                />
-                <FormInput.Select
-                  name="variableOverride.type"
-                  items={getVariableTypeOptions(getString)}
-                  label={getString('typeLabel')}
-                  placeholder={getString('common.selectName', { name: getString('service') })}
-                  onChange={() => {
-                    formikProps.setFieldValue('variableOverride.value', '')
-                  }}
-                />
-                {formikProps.values.variableOverride?.type !== VariableType.Secret && (
-                  <FormInput.MultiTextInput
-                    className="variableInput"
-                    name={`variableOverride.value`}
-                    label={getString('cd.overrideValue')}
-                    multiTextInputProps={{
-                      defaultValueToReset: '',
-                      textProps: {
-                        type: formikProps.values.variableOverride?.type === VariableType.Number ? 'number' : 'text'
-                      },
-                      multitypeInputValue: getMultiTypeFromValue(formikProps.values.variableOverride?.value)
-                    }}
-                  />
-                )}
-                {formikProps.values.variableOverride?.type === VariableType.Secret && (
-                  <MultiTypeSecretInput
-                    name={`variableOverride.value`}
-                    label={getString('cd.overrideValue')}
-                    isMultiType
-                  />
+                {!isEmpty(formikProps.values?.serviceRef) && (
+                  <>
+                    <Text>{getString('cd.overrideType')}</Text>
+                    <Tabs id="serviceOverrideTab" selectedTabId={selectedTab} onChange={handleTabChange}>
+                      <Tab
+                        id={ServiceOverrideTab.VARIABLE}
+                        title={getString('variableLabel')}
+                        panel={
+                          <ServiceVariableOverride
+                            variablesOptions={variablesOptions}
+                            handleVariableChange={handleVariableChange}
+                          />
+                        }
+                      />
+                      {isServiceManifestEnabled && (
+                        <Tab
+                          id={ServiceOverrideTab.MANIFEST}
+                          title={getString('manifestsText')}
+                          panel={
+                            <ServiceManifestOverride
+                              manifestOverrides={
+                                defaultTo(formikProps.values?.manifests, []) as ManifestConfigWrapper[]
+                              }
+                              handleManifestOverrideSubmit={handleManifestOverrideSubmit}
+                              removeManifestConfig={removeManifestConfig}
+                              isReadonly={isReadonly}
+                            />
+                          }
+                        />
+                      )}
+                    </Tabs>
+                  </>
                 )}
               </Container>
             ) : (
@@ -447,7 +427,6 @@ export default function AddEditServiceOverride({
                 onChange={handleYamlChange}
               />
             )}
-
             <Layout.Horizontal spacing="medium" padding={{ top: 'medium' }}>
               <Button
                 variation={ButtonVariation.PRIMARY}
@@ -473,7 +452,7 @@ export default function AddEditServiceOverride({
                 disabled={upsertServiceOverrideLoading}
               />
             </Layout.Horizontal>
-          </Container>
+          </div>
         )
       }}
     </Formik>

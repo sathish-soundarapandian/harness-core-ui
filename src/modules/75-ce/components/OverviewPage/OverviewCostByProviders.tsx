@@ -19,7 +19,7 @@ import {
 } from 'services/ce/services'
 import { useStrings } from 'framework/strings'
 import { getGMTEndDateTime, getGMTStartDateTime } from '@ce/utils/momentUtils'
-import { ChartConfigType, transformTimeSeriesData } from '../CloudCostInsightChart/chartUtilsOld'
+import { ChartConfigType, transformTimeSeriesData } from '../CloudCostInsightChart/chartUtils'
 import CEChart from '../CEChart/CEChart'
 import { ChartTypes, Loader } from './OverviewPageLayout'
 import css from './OverviewPage.module.scss'

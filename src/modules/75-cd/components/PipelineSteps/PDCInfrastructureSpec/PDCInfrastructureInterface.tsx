@@ -72,9 +72,38 @@ export const parseAttributes = (attributes: string) =>
 
 export type PdcInfrastructureTemplate = { [key in keyof PdcInfrastructure]: string }
 
-export function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
+export function getValidationSchemaNoPreconfiguredHosts(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
+  return Yup.object().shape({
+    credentialsRef: Yup.string().required(getString('fieldRequired', { field: getString('cd.credentialsRef') })),
+    hosts: Yup.string().required(getString('common.validation.fieldIsRequired', { name: getString('cd.hosts') }))
+  })
+}
+
+export function getValidationSchemaHostFilters(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({
     connectorRef: getConnectorSchema(getString),
-    credentialsRef: Yup.object().required(getString('validation.password'))
+    credentialsRef: Yup.string().required(getString('fieldRequired', { field: getString('cd.credentialsRef') })),
+    hostFilters: Yup.string().required(
+      getString('common.validation.fieldIsRequired', { name: getString('cd.hostFilters') })
+    )
+  })
+}
+
+export function getValidationSchemaAttributeFilters(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
+  return Yup.object().shape({
+    connectorRef: getConnectorSchema(getString),
+    credentialsRef: Yup.string().required(getString('fieldRequired', { field: getString('cd.credentialsRef') })),
+    attributeFilters: Yup.string().required(
+      getString('common.validation.fieldIsRequired', {
+        name: getString('cd.attributeFilters')
+      })
+    )
+  })
+}
+
+export function getValidationSchemaAll(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
+  return Yup.object().shape({
+    connectorRef: getConnectorSchema(getString),
+    credentialsRef: Yup.string().required(getString('fieldRequired', { field: getString('cd.credentialsRef') }))
   })
 }

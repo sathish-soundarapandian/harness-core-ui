@@ -5,12 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import {
   Button,
   ButtonVariation,
   Container,
+  ExpandingSearchInput,
   FlexExpander,
   Heading,
   Layout,
@@ -41,8 +42,9 @@ export type ServiceType = {
 export interface EditServicesProps {
   closeModal: () => void
   loading: boolean
-  allServices?: ServiceResponseDTO[]
+  filteredServices: ServiceResponseDTO[]
   onChange: (service: ServiceType) => void
+  onSearch: (name: string) => void
   editedServices: ServiceType[]
   refetchServices: () => Promise<void>
   serviceError: GetDataError<Failure | Error> | null
@@ -51,16 +53,17 @@ export interface EditServicesProps {
 
 const EditServicesModal: FC<EditServicesProps> = ({
   closeModal,
-  allServices = [],
   loading,
   editedServices,
+  filteredServices = [],
   onChange,
   onSave,
+  onSearch,
   serviceError,
   refetchServices
 }) => {
   const { getString } = useStrings()
-  const noServices = Boolean(!allServices?.length && !loading)
+  const noServices = Boolean(!filteredServices?.length && !loading)
 
   return (
     <ModalDialog
@@ -71,6 +74,15 @@ const EditServicesModal: FC<EditServicesProps> = ({
       isOpen
       title={getString('common.monitoredServices')}
       onClose={closeModal}
+      toolbar={
+        <ExpandingSearchInput
+          name="serviceSearch"
+          alwaysExpanded
+          placeholder={getString('search')}
+          throttle={200}
+          onChange={onSearch}
+        />
+      }
       footer={
         <Layout.Horizontal spacing={'small'}>
           <Button
@@ -97,13 +109,13 @@ const EditServicesModal: FC<EditServicesProps> = ({
 
       {serviceError && <Page.Error message={getErrorMessage(serviceError)} onClick={refetchServices} />}
 
-      {allServices && !serviceError && (
+      {!serviceError && (
         <Layout.Horizontal
           style={{ flexWrap: 'wrap' }}
           flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
           spacing="small"
         >
-          {allServices.map((service, idx) => {
+          {filteredServices.map((service: ServiceResponseDTO, idx: number) => {
             return (
               <Tag
                 aria-label={`${service.name}-${idx}`}
@@ -141,11 +153,26 @@ const ServicesList: React.FC<ServicesListProps> = props => {
   const [showModal, setShowModal] = useState<boolean>(false)
   const [services, setServices] = useState<ServiceType[]>([])
   const [initialServices, setInitialServices] = useState<ServiceType[]>([])
+  const [filteredServices, setFilteredServices] = useState<ServiceType[]>([])
+  const [searchTerm, setSearchTerm] = useState('')
 
   const queryParams = {
     accountIdentifier,
     orgIdentifier,
     projectIdentifier
+  }
+
+  const applySearch = (allServices: ServiceResponseDTO[], searchedService: string): ServiceResponseDTO[] => {
+    if (!searchedService) {
+      return allServices
+    }
+    return allServices.filter(item => {
+      const term = searchedService.toLocaleLowerCase()
+      return (
+        (item?.identifier || '').toLocaleLowerCase().indexOf(term) !== -1 ||
+        (item?.name || '').toLocaleLowerCase().indexOf(term) !== -1
+      )
+    })
   }
 
   useEffect(() => {
@@ -164,9 +191,15 @@ const ServicesList: React.FC<ServicesListProps> = props => {
     queryParams
   })
 
-  const serviceData = servicesResponse?.data?.content
-    ?.filter(serviceContent => serviceContent.service !== undefined)
-    .map(serviceContent => serviceContent.service as ServiceResponseDTO)
+  useEffect(() => {
+    const serviceData = servicesResponse?.data?.content
+      ?.filter(serviceContent => serviceContent.service !== undefined)
+      .map(serviceContent => serviceContent.service as ServiceResponseDTO)
+
+    if (serviceData) {
+      setFilteredServices(applySearch(serviceData, searchTerm))
+    }
+  }, [servicesResponse?.data?.content, searchTerm])
 
   const handleChange = (service: ServiceType): void => {
     const { name, identifier } = service
@@ -181,6 +214,13 @@ const ServicesList: React.FC<ServicesListProps> = props => {
     }
     setServices(updatedServices)
   }
+
+  const onSearchInputChanged = useCallback(
+    (name: string) => {
+      setSearchTerm(name)
+    },
+    [setSearchTerm]
+  )
 
   const { mutate: patchServices, loading: patchLoading } = usePatchFeature({
     identifier: featureFlag.identifier,
@@ -259,11 +299,12 @@ const ServicesList: React.FC<ServicesListProps> = props => {
               setServices(initialServices)
               setShowModal(false)
             }}
-            allServices={serviceData}
             loading={loading || patchLoading}
             onChange={handleChange}
             onSave={handleSave}
+            onSearch={onSearchInputChanged}
             editedServices={services}
+            filteredServices={filteredServices}
             serviceError={error}
             refetchServices={refetch}
           />

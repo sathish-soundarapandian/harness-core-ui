@@ -79,8 +79,6 @@
   }
 
   .serviceConfigLocation {
-    max-width: 200px;
-    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
@@ -88,10 +86,6 @@
 
 .serviceConfigListButton {
   justify-content: flex-end;
-}
-
-.noWrap {
-  white-space: nowrap;
 }
 
 .createConnectorWizard {

@@ -47,7 +47,8 @@ export enum Types {
   KeyValue,
   BuildEnvironment,
   FrameworkVersion,
-  BuildTool
+  BuildTool,
+  NotIn
 }
 
 interface Field {
@@ -57,6 +58,7 @@ interface Field {
   isRequired?: boolean
   isInputSet?: boolean
   isActive?: boolean
+  notAllowed?: string[]
 }
 
 interface SchemaField {
@@ -71,6 +73,7 @@ interface GenerateSchemaDependencies extends Dependencies {
   getString: UseStringsReturn['getString']
 }
 
+const ENCODED_FORWARD_SLASH = '&#x2F;'
 function generateSchemaForIdentifier({
   initialValues,
   steps,
@@ -376,6 +379,22 @@ function generateSchemaForBoolean(): Lazy {
   )
 }
 
+function generateSchemaForNotIn({ notAllowed, label }: Field, { getString }: GenerateSchemaDependencies): any {
+  return yup
+    .string()
+    .trim()
+    .test(
+      'not in',
+      getString?.('pipeline.stepCommonFields.validation.notIn', {
+        label: getString?.(label as StringKeys),
+        notAllowedValues: notAllowed?.join(', ')
+      }).replace(ENCODED_FORWARD_SLASH, '/'),
+      (value: string): boolean => {
+        return Array.isArray(notAllowed) && !notAllowed.includes(value)
+      }
+    )
+}
+
 function generateSchemaForKeyValue(
   { label, isRequired, isInputSet }: Field,
   { getString }: GenerateSchemaDependencies
@@ -465,6 +484,10 @@ export function generateSchemaFields(
 
     if (type === Types.KeyValue) {
       validationRule = generateSchemaForKeyValue(field, { getString })
+    }
+
+    if (type === Types.NotIn) {
+      validationRule = generateSchemaForNotIn(field, { getString })
     }
 
     if ((type === Types.Identifier || type === Types.Name || type === Types.Text) && isRequired && label) {

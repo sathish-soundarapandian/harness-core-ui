@@ -156,7 +156,8 @@ const RenderColumnScope: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }
 export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Element => {
   const { getString } = useStrings()
   const { data, selectedTemplate, gotoPage, onPreview, onOpenEdit, onOpenSettings, onDelete, onSelect } = props
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const hideMenu = !onPreview && !onOpenEdit && !onOpenSettings && !onDelete
 
   const getTemplateNameWidth = (): string => {

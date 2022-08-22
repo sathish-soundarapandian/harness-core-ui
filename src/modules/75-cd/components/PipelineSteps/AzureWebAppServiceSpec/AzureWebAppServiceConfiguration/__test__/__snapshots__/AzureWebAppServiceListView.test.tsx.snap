@@ -108,12 +108,10 @@ exports[`AzureWebAppListView renders AzureWebAppListView 1`] = `
               </div>
               <div>
                 <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main"
+                  class="StyledProps--font Text--lineclamp StyledProps--main serviceConfigLocation"
                   style="--text-line-clamp: 1; width: 200px;"
                 >
-                  <span
-                    class="noWrap"
-                  >
+                  <span>
                     filePath
                   </span>
                 </p>
@@ -263,12 +261,10 @@ exports[`AzureWebAppListView renders AzureWebAppListView 1`] = `
               </div>
               <div>
                 <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main"
+                  class="StyledProps--font Text--lineclamp StyledProps--main serviceConfigLocation"
                   style="--text-line-clamp: 1; width: 200px;"
                 >
-                  <span
-                    class="noWrap"
-                  >
+                  <span>
                     filePath
                   </span>
                 </p>

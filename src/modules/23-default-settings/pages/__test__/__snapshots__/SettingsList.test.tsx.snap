@@ -1015,7 +1015,29 @@ exports[`Default Settings Page render data and save the changed data 2`] = `
                               />
                               defaultSettings.allowOverrides
                             </label>
-                            <span />
+                            <p
+                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-blue600 StyledProps--padding-left-small"
+                              style="display: flex; align-items: center;"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-blue600"
+                                data-icon="info"
+                              >
+                                <svg
+                                  height="16"
+                                  viewBox="0 0 12 12"
+                                  width="16"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    clip-rule="evenodd"
+                                    d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                                    fill-rule="evenodd"
+                                  />
+                                </svg>
+                              </span>
+                              common.configureOptions.defaultValue
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -1173,8 +1195,32 @@ exports[`Default Settings Page render data and save the changed data 2`] = `
                           <div
                             class="Layout--horizontal Layout--layout-spacing-large StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <span />
-                            <span />
+                            <span
+                              class="emptyCheckBoxSpace"
+                            />
+                            <p
+                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-blue600 StyledProps--padding-left-small"
+                              style="display: flex; align-items: center;"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-blue600"
+                                data-icon="info"
+                              >
+                                <svg
+                                  height="16"
+                                  viewBox="0 0 12 12"
+                                  width="16"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    clip-rule="evenodd"
+                                    d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                                    fill-rule="evenodd"
+                                  />
+                                </svg>
+                              </span>
+                              common.configureOptions.defaultValue
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -1239,7 +1285,40 @@ exports[`Default Settings Page render data and save the changed data 2`] = `
                               />
                               defaultSettings.allowOverrides
                             </label>
-                            <span />
+                            <div
+                              class="Button--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsFormRestoreToDefault"
+                            >
+                              <button
+                                class="bp3-button Button--button StyledProps--font StyledProps--main settingRestore Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
+                                type="button"
+                              >
+                                <span
+                                  class="bp3-icon bp3-icon-reset StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-blue700"
+                                  icon="reset"
+                                >
+                                  <svg
+                                    data-icon="reset"
+                                    height="16"
+                                    viewBox="0 0 16 16"
+                                    width="16"
+                                  >
+                                    <desc>
+                                      reset
+                                    </desc>
+                                    <path
+                                      d="M6 5c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V1c0-.55.45-1 1-1s1 .45 1 1v1.74A7.95 7.95 0 018 0c4.42 0 8 3.58 8 8 0 4.06-3.02 7.4-6.94 7.92-.02 0-.04.01-.06.01-.33.04-.66.07-1 .07-4.42 0-8-3.58-8-8 0-.55.45-1 1-1s1 .45 1 1c0 3.31 2.69 6 6 6 .71 0 1.37-.15 2-.38v.01c2.33-.82 4-3.02 4-5.63 0-3.31-2.69-6-6-6-1.77 0-3.36.78-4.46 2H5c.55 0 1 .45 1 1z"
+                                      fill-rule="evenodd"
+                                    />
+                                  </svg>
+                                </span>
+                                <span
+                                  class="bp3-button-text"
+                                >
+                                  defaultSettings.restoreToDefault
+                                </span>
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -1676,7 +1755,6 @@ exports[`Default Settings Page render data and save the changed data 3`] = `
                               />
                               defaultSettings.allowOverrides
                             </label>
-                            <span />
                           </div>
                         </div>
                       </div>
@@ -1945,7 +2023,29 @@ exports[`Default Settings Page render data and save the changed data 3`] = `
                               />
                               defaultSettings.allowOverrides
                             </label>
-                            <span />
+                            <p
+                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-blue600 StyledProps--padding-left-small"
+                              style="display: flex; align-items: center;"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-blue600"
+                                data-icon="info"
+                              >
+                                <svg
+                                  height="16"
+                                  viewBox="0 0 12 12"
+                                  width="16"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    clip-rule="evenodd"
+                                    d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                                    fill-rule="evenodd"
+                                  />
+                                </svg>
+                              </span>
+                              common.configureOptions.defaultValue
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -2103,8 +2203,32 @@ exports[`Default Settings Page render data and save the changed data 3`] = `
                           <div
                             class="Layout--horizontal Layout--layout-spacing-large StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <span />
-                            <span />
+                            <span
+                              class="emptyCheckBoxSpace"
+                            />
+                            <p
+                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-blue600 StyledProps--padding-left-small"
+                              style="display: flex; align-items: center;"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-blue600"
+                                data-icon="info"
+                              >
+                                <svg
+                                  height="16"
+                                  viewBox="0 0 12 12"
+                                  width="16"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    clip-rule="evenodd"
+                                    d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                                    fill-rule="evenodd"
+                                  />
+                                </svg>
+                              </span>
+                              common.configureOptions.defaultValue
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -2169,7 +2293,40 @@ exports[`Default Settings Page render data and save the changed data 3`] = `
                               />
                               defaultSettings.allowOverrides
                             </label>
-                            <span />
+                            <div
+                              class="Button--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsFormRestoreToDefault"
+                            >
+                              <button
+                                class="bp3-button Button--button StyledProps--font StyledProps--main settingRestore Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
+                                type="button"
+                              >
+                                <span
+                                  class="bp3-icon bp3-icon-reset StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-blue700"
+                                  icon="reset"
+                                >
+                                  <svg
+                                    data-icon="reset"
+                                    height="16"
+                                    viewBox="0 0 16 16"
+                                    width="16"
+                                  >
+                                    <desc>
+                                      reset
+                                    </desc>
+                                    <path
+                                      d="M6 5c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V1c0-.55.45-1 1-1s1 .45 1 1v1.74A7.95 7.95 0 018 0c4.42 0 8 3.58 8 8 0 4.06-3.02 7.4-6.94 7.92-.02 0-.04.01-.06.01-.33.04-.66.07-1 .07-4.42 0-8-3.58-8-8 0-.55.45-1 1-1s1 .45 1 1c0 3.31 2.69 6 6 6 .71 0 1.37-.15 2-.38v.01c2.33-.82 4-3.02 4-5.63 0-3.31-2.69-6-6-6-1.77 0-3.36.78-4.46 2H5c.55 0 1 .45 1 1z"
+                                      fill-rule="evenodd"
+                                    />
+                                  </svg>
+                                </span>
+                                <span
+                                  class="bp3-button-text"
+                                >
+                                  defaultSettings.restoreToDefault
+                                </span>
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -2606,7 +2763,6 @@ exports[`Default Settings Page render data and save the changed data 4`] = `
                               />
                               defaultSettings.allowOverrides
                             </label>
-                            <span />
                           </div>
                         </div>
                       </div>
@@ -2875,7 +3031,29 @@ exports[`Default Settings Page render data and save the changed data 4`] = `
                               />
                               defaultSettings.allowOverrides
                             </label>
-                            <span />
+                            <p
+                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-blue600 StyledProps--padding-left-small"
+                              style="display: flex; align-items: center;"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-blue600"
+                                data-icon="info"
+                              >
+                                <svg
+                                  height="16"
+                                  viewBox="0 0 12 12"
+                                  width="16"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    clip-rule="evenodd"
+                                    d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                                    fill-rule="evenodd"
+                                  />
+                                </svg>
+                              </span>
+                              common.configureOptions.defaultValue
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -3033,8 +3211,32 @@ exports[`Default Settings Page render data and save the changed data 4`] = `
                           <div
                             class="Layout--horizontal Layout--layout-spacing-large StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <span />
-                            <span />
+                            <span
+                              class="emptyCheckBoxSpace"
+                            />
+                            <p
+                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-blue600 StyledProps--padding-left-small"
+                              style="display: flex; align-items: center;"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-blue600"
+                                data-icon="info"
+                              >
+                                <svg
+                                  height="16"
+                                  viewBox="0 0 12 12"
+                                  width="16"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    clip-rule="evenodd"
+                                    d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                                    fill-rule="evenodd"
+                                  />
+                                </svg>
+                              </span>
+                              common.configureOptions.defaultValue
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -3099,7 +3301,40 @@ exports[`Default Settings Page render data and save the changed data 4`] = `
                               />
                               defaultSettings.allowOverrides
                             </label>
-                            <span />
+                            <div
+                              class="Button--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsFormRestoreToDefault"
+                            >
+                              <button
+                                class="bp3-button Button--button StyledProps--font StyledProps--main settingRestore Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
+                                type="button"
+                              >
+                                <span
+                                  class="bp3-icon bp3-icon-reset StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-blue700"
+                                  icon="reset"
+                                >
+                                  <svg
+                                    data-icon="reset"
+                                    height="16"
+                                    viewBox="0 0 16 16"
+                                    width="16"
+                                  >
+                                    <desc>
+                                      reset
+                                    </desc>
+                                    <path
+                                      d="M6 5c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V1c0-.55.45-1 1-1s1 .45 1 1v1.74A7.95 7.95 0 018 0c4.42 0 8 3.58 8 8 0 4.06-3.02 7.4-6.94 7.92-.02 0-.04.01-.06.01-.33.04-.66.07-1 .07-4.42 0-8-3.58-8-8 0-.55.45-1 1-1s1 .45 1 1c0 3.31 2.69 6 6 6 .71 0 1.37-.15 2-.38v.01c2.33-.82 4-3.02 4-5.63 0-3.31-2.69-6-6-6-1.77 0-3.36.78-4.46 2H5c.55 0 1 .45 1 1z"
+                                      fill-rule="evenodd"
+                                    />
+                                  </svg>
+                                </span>
+                                <span
+                                  class="bp3-button-text"
+                                >
+                                  defaultSettings.restoreToDefault
+                                </span>
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -3536,7 +3771,6 @@ exports[`Default Settings Page render data and save the changed data 5`] = `
                               />
                               defaultSettings.allowOverrides
                             </label>
-                            <span />
                           </div>
                         </div>
                       </div>
@@ -3805,7 +4039,29 @@ exports[`Default Settings Page render data and save the changed data 5`] = `
                               />
                               defaultSettings.allowOverrides
                             </label>
-                            <span />
+                            <p
+                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-blue600 StyledProps--padding-left-small"
+                              style="display: flex; align-items: center;"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-blue600"
+                                data-icon="info"
+                              >
+                                <svg
+                                  height="16"
+                                  viewBox="0 0 12 12"
+                                  width="16"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    clip-rule="evenodd"
+                                    d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                                    fill-rule="evenodd"
+                                  />
+                                </svg>
+                              </span>
+                              common.configureOptions.defaultValue
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -3963,8 +4219,32 @@ exports[`Default Settings Page render data and save the changed data 5`] = `
                           <div
                             class="Layout--horizontal Layout--layout-spacing-large StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                           >
-                            <span />
-                            <span />
+                            <span
+                              class="emptyCheckBoxSpace"
+                            />
+                            <p
+                              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-blue600 StyledProps--padding-left-small"
+                              style="display: flex; align-items: center;"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-blue600"
+                                data-icon="info"
+                              >
+                                <svg
+                                  height="16"
+                                  viewBox="0 0 12 12"
+                                  width="16"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    clip-rule="evenodd"
+                                    d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                                    fill-rule="evenodd"
+                                  />
+                                </svg>
+                              </span>
+                              common.configureOptions.defaultValue
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -4029,7 +4309,40 @@ exports[`Default Settings Page render data and save the changed data 5`] = `
                               />
                               defaultSettings.allowOverrides
                             </label>
-                            <span />
+                            <div
+                              class="Button--withDocsTooltip"
+                              data-tooltip-id="defaultSettingsFormRestoreToDefault"
+                            >
+                              <button
+                                class="bp3-button Button--button StyledProps--font StyledProps--main settingRestore Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
+                                type="button"
+                              >
+                                <span
+                                  class="bp3-icon bp3-icon-reset StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-blue700"
+                                  icon="reset"
+                                >
+                                  <svg
+                                    data-icon="reset"
+                                    height="16"
+                                    viewBox="0 0 16 16"
+                                    width="16"
+                                  >
+                                    <desc>
+                                      reset
+                                    </desc>
+                                    <path
+                                      d="M6 5c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V1c0-.55.45-1 1-1s1 .45 1 1v1.74A7.95 7.95 0 018 0c4.42 0 8 3.58 8 8 0 4.06-3.02 7.4-6.94 7.92-.02 0-.04.01-.06.01-.33.04-.66.07-1 .07-4.42 0-8-3.58-8-8 0-.55.45-1 1-1s1 .45 1 1c0 3.31 2.69 6 6 6 .71 0 1.37-.15 2-.38v.01c2.33-.82 4-3.02 4-5.63 0-3.31-2.69-6-6-6-1.77 0-3.36.78-4.46 2H5c.55 0 1 .45 1 1z"
+                                      fill-rule="evenodd"
+                                    />
+                                  </svg>
+                                </span>
+                                <span
+                                  class="bp3-button-text"
+                                >
+                                  defaultSettings.restoreToDefault
+                                </span>
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>

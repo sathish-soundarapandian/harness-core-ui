@@ -85,16 +85,21 @@ const getTooltipAnchorForHeading = (connectorType: ConnectorInfoDTO['type']): st
  * Function to GitDetailsStep
  */
 const GitDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDetailsStepProps> = props => {
-  const { prevStepData, nextStep } = props
+  const { prevStepData, nextStep, type } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const mounted = useRef(false)
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding | undefined>()
   const [loading, setLoading] = useState(false)
   const isEdit = props.isEditMode || prevStepData?.isEdit
   const { getString } = useStrings()
+  let helpPanelReferenceId = ''
+  if (type === 'Github') {
+    helpPanelReferenceId = props.helpPanelReferenceId || ''
+  }
   useConnectorWizard({
-    helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
+    helpPanel: helpPanelReferenceId ? { referenceId: helpPanelReferenceId, contentWidth: 900 } : undefined
   })
+
   const getUrlTypeOptions = (connectorType: ConnectorInfoDTO['type']): IOptionProps[] => {
     return [
       ...[

@@ -7,17 +7,19 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly actionButton: string
   readonly avatar: string
   readonly draft: string
   readonly hidden: string
+  readonly latestExecutionText: string
   readonly link: string
-  readonly pipelineNameCell: string
+  readonly recentExecutionHeader: string
   readonly recentExecutions: string
   readonly statusLabel: string
   readonly storeTypeColumn: string
   readonly storeTypeColumnContainer: string
   readonly table: string
   readonly tableRow: string
+  readonly tags: string
+  readonly trigger: string
 }
 export default styles

@@ -8,16 +8,16 @@
 import React, { useRef } from 'react'
 import { Button, ButtonSize, ButtonVariation, Container, Layout, Text, useIsMounted } from '@wings-software/uicore'
 import { Color } from '@wings-software/design-system'
-import { defaultTo, isEmpty, isEqual } from 'lodash-es'
+import { defaultTo, isEqual } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { MonacoDiffEditor } from 'react-monaco-editor'
 import { PageError, PageSpinner } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import {
-  getYamlDiffPromise as getYamlDiffPromiseForTemplate,
   ErrorNodeSummary,
-  TemplateResponse,
-  getRefreshedYamlPromise
+  getRefreshedYamlPromise,
+  getYamlDiffPromise as getYamlDiffPromiseForTemplate,
+  TemplateResponse
 } from 'services/template-ng'
 import {
   getIdentifierFromValue,
@@ -25,8 +25,6 @@ import {
   getScopeFromDTO
 } from '@common/components/EntityReference/EntityReference'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { getYamlDiffPromise as getYamlDiffPromiseForPipeline } from 'services/pipeline-ng'
-import { Scope } from '@common/interfaces/SecretsInterface'
 import { useStrings } from 'framework/strings'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useQueryParams } from '@common/hooks'
@@ -36,19 +34,22 @@ import css from './YamlDiffView.module.scss'
 
 export interface YamlDiffViewProps {
   errorNodeSummary?: ErrorNodeSummary
+  rootErrorNodeSummary: ErrorNodeSummary
+  originalEntityYaml: string
   resolvedTemplateResponses?: TemplateResponse[]
   onUpdate: (refreshedYaml: string) => Promise<void>
-  originalEntityYaml?: string
 }
 
 export function YamlDiffView({
   errorNodeSummary,
+  rootErrorNodeSummary,
+  originalEntityYaml,
   resolvedTemplateResponses = [],
-  onUpdate,
-  originalEntityYaml = ''
+  onUpdate
 }: YamlDiffViewProps) {
   const { getString } = useStrings()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const params = useParams<ProjectPathProps>()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
@@ -126,43 +127,23 @@ export function YamlDiffView({
     }
   }
 
-  const getYamlDiffForPipeline = async () => {
-    try {
-      const response = await getYamlDiffPromiseForPipeline({
-        queryParams: {
-          ...getScopeBasedProjectPathParams(params, Scope.PROJECT),
-          identifier: defaultTo(errorNodeSummary?.nodeInfo?.identifier, ''),
-          branch,
-          repoIdentifier,
-          getDefaultFromOtherRepo: true
-        }
-      })
-      if (response && response.status === 'SUCCESS') {
-        setOriginalYaml(yamlStringify(yamlParse(defaultTo(response.data?.originalYaml, ''))))
-        setRefreshedYaml(yamlStringify(yamlParse(defaultTo(response.data?.refreshedYaml, ''))))
-      } else {
-        throw response
-      }
-    } catch (err) {
-      setError(err)
-    } finally {
-      setLoading(false)
-    }
-  }
-
   const refetch = async () => {
     setLoading(true)
     setError(undefined)
-    if (errorNodeSummary?.nodeInfo) {
-      if (errorNodeSummary?.templateResponse) {
-        await getYamlDiffForTemplate()
-      } else {
-        await getYamlDiffForPipeline()
-      }
-    } else if (originalEntityYaml) {
+    if (isEqual(errorNodeSummary, rootErrorNodeSummary)) {
       await getYamlDiffFromYaml()
+    } else {
+      await getYamlDiffForTemplate()
     }
   }
+
+  const buttonLabel = React.useMemo(() => {
+    if (isEqual(errorNodeSummary, rootErrorNodeSummary)) {
+      return getString('save')
+    } else {
+      return getString('update')
+    }
+  }, [errorNodeSummary, rootErrorNodeSummary])
 
   React.useEffect(() => {
     if (errorNodeSummary) {
@@ -206,7 +187,7 @@ export function YamlDiffView({
                     ) : (
                       <Button
                         variation={ButtonVariation.PRIMARY}
-                        text={isEmpty(errorNodeSummary?.nodeInfo) ? getString('save') : getString('update')}
+                        text={buttonLabel}
                         onClick={onNodeUpdate}
                         size={ButtonSize.SMALL}
                       />

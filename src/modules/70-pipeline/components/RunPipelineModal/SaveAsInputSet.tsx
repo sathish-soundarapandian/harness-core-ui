@@ -153,7 +153,7 @@ interface SaveAsInputSetProps {
   branch?: string
   storeType?: StoreType
   isGitSyncEnabled?: boolean
-  isGitSimplificationEnabled?: boolean
+  supportingGitSimplification?: boolean
   setFormErrors: Dispatch<SetStateAction<FormikErrors<InputSetDTO>>>
   refetchParentData: (newId?: string) => void
 }
@@ -172,7 +172,7 @@ function SaveAsInputSet({
   branch,
   storeType,
   isGitSyncEnabled = false,
-  isGitSimplificationEnabled = false,
+  supportingGitSimplification = false,
   setFormErrors,
   refetchParentData
 }: SaveAsInputSetProps): JSX.Element | null {
@@ -331,7 +331,7 @@ function SaveAsInputSet({
                       </GitSyncStoreProvider>
                     )}
 
-                    {isGitSimplificationEnabled && storeType === StoreType.REMOTE && (
+                    {supportingGitSimplification && storeType === StoreType.REMOTE && (
                       <Container>
                         <GitSyncForm
                           formikProps={createInputSetFormikProps as any}

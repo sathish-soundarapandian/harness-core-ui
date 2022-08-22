@@ -23,7 +23,6 @@ export const ConnectorRefWidth = {
   InputSetView: 310,
   DefaultView: 385,
   EditStageView: 366,
-  EditStageViewInputSet: 308,
   RightBarView: 460,
   TemplateBuilder: 361,
   TemplateDetailDrawer: 313,

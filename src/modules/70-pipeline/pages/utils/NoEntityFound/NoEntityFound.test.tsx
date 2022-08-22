@@ -63,7 +63,7 @@ const renderComponent = (errorObj?: Failure | Error) => {
         connectorRef: 'connectorRef',
         storeType: StoreType.REMOTE
       }}
-      defaultAppStoreValues={{ isGitSimplificationEnabled: true }}
+      defaultAppStoreValues={{ supportingGitSimplification: true }}
     >
       <NoEntityFound entityType="pipeline" identifier="abc" errorObj={errorObj} />
     </GitSyncTestWrapper>

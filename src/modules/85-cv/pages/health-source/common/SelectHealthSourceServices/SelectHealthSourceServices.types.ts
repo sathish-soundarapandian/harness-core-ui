@@ -27,4 +27,5 @@ export type SelectHealthSourceServicesProps = {
   expressions?: string[]
   isConnectorRuntimeOrExpression?: boolean
   key?: string
+  customServiceInstanceName?: string
 }

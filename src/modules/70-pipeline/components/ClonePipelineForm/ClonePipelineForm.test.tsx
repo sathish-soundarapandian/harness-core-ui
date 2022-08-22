@@ -91,7 +91,7 @@ describe('<ClonePipelineForm /> tests', () => {
       loading: false
     })
   })
-  describe('isGitSimplificationEnabled = false', () => {
+  describe('supportingGitSimplification = false', () => {
     test('snapshot test', async () => {
       const { findByTestId } = render(
         <TestWrapper path={TEST_PATH} pathParams={PATH_PARAMS as any}>
@@ -289,7 +289,7 @@ describe('<ClonePipelineForm /> tests', () => {
     })
   })
 
-  describe('isGitSimplificationEnabled = true', () => {
+  describe('supportingGitSimplification = true', () => {
     function getCardTick(elem: HTMLElement): HTMLElement | null {
       return elem.closest('.bp3-card')!.querySelector('.Card--corner')
     }
@@ -299,7 +299,7 @@ describe('<ClonePipelineForm /> tests', () => {
         <TestWrapper
           path={TEST_PATH}
           pathParams={PATH_PARAMS as any}
-          defaultAppStoreValues={{ isGitSimplificationEnabled: true }}
+          defaultAppStoreValues={{ supportingGitSimplification: true }}
         >
           <ClonePipelineForm originalPipeline={originalPipeline} onClose={jest.fn()} isOpen />
         </TestWrapper>
@@ -332,7 +332,7 @@ describe('<ClonePipelineForm /> tests', () => {
         <TestWrapper
           path={TEST_PATH}
           pathParams={PATH_PARAMS as any}
-          defaultAppStoreValues={{ isGitSimplificationEnabled: true }}
+          defaultAppStoreValues={{ supportingGitSimplification: true }}
         >
           <ClonePipelineForm
             originalPipeline={{ ...originalPipeline, storeType: 'INLINE' }}
@@ -359,7 +359,7 @@ describe('<ClonePipelineForm /> tests', () => {
         <TestWrapper
           path={TEST_PATH}
           pathParams={PATH_PARAMS as any}
-          defaultAppStoreValues={{ isGitSimplificationEnabled: true }}
+          defaultAppStoreValues={{ supportingGitSimplification: true }}
         >
           <ClonePipelineForm
             originalPipeline={{ ...originalPipeline, storeType: 'REMOTE' }}
@@ -385,7 +385,7 @@ describe('<ClonePipelineForm /> tests', () => {
         <TestWrapper
           path={TEST_PATH}
           pathParams={PATH_PARAMS as any}
-          defaultAppStoreValues={{ isGitSimplificationEnabled: true }}
+          defaultAppStoreValues={{ supportingGitSimplification: true }}
         >
           <ClonePipelineForm
             originalPipeline={{ ...originalPipeline, storeType: 'INLINE' }}
@@ -416,7 +416,7 @@ describe('<ClonePipelineForm /> tests', () => {
         <TestWrapper
           path={TEST_PATH}
           pathParams={PATH_PARAMS as any}
-          defaultAppStoreValues={{ isGitSimplificationEnabled: true }}
+          defaultAppStoreValues={{ supportingGitSimplification: true }}
         >
           <ClonePipelineForm
             originalPipeline={{

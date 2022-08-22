@@ -157,7 +157,8 @@ function PipelinesPage({ mockData }: CDPipelinesPageProps): React.ReactElement {
   const history = useHistory()
   const { getRBACErrorMessage } = useRBACError()
   const { showSuccess, showError } = useToaster()
-  const { selectedProject, isGitSyncEnabled } = useAppStore()
+  const { selectedProject, isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isReseting, setIsReseting] = useState<boolean>(false)
   const [isDeleting, setIsDeleting] = useState<boolean>(false)

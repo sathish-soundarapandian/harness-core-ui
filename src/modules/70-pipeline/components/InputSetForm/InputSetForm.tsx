@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { defaultTo, merge, noop, omit, pick } from 'lodash-es'
+import { defaultTo, isEmpty, merge, noop, omit, pick } from 'lodash-es'
 import {
   Layout,
   NestedAccordionProvider,
@@ -162,7 +162,12 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
   >()
   const { repoIdentifier, branch, inputSetRepoIdentifier, inputSetBranch, connectorRef, repoName, storeType } =
     useQueryParams<InputSetGitQueryParams>()
-  const { isGitSyncEnabled, isGitSimplificationEnabled } = React.useContext(AppStoreContext)
+  const {
+    isGitSyncEnabled: isGitSyncEnabledForProject,
+    gitSyncEnabledOnlyForFF,
+    supportingGitSimplification
+  } = React.useContext(AppStoreContext)
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [inputSetUpdateResponse, setInputSetUpdateResponse] = React.useState<ResponseInputSetResponse>()
   const [filePath, setFilePath] = React.useState<string>()
   const {
@@ -442,6 +447,7 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
   })
 
   React.useEffect(() => {
+    if (!isEmpty(inputSet)) setFilePath(getFilePath(inputSet))
     if (isInputSetInvalid(inputSet) || selectedView === SelectedView.YAML) {
       setSelectedView(SelectedView.YAML)
     } else {
@@ -563,7 +569,7 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
         executionView={executionView}
         isEdit={isEdit}
         isGitSyncEnabled={isGitSyncEnabled}
-        isGitSimplificationEnabled={isGitSimplificationEnabled}
+        supportingGitSimplification={supportingGitSimplification}
         className={className}
         onCancel={onCancel}
         filePath={filePath}
@@ -593,7 +599,7 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
     return child()
   }
 
-  if (isGitSimplificationEnabled && !loadingInputSet && inputSetError) {
+  if (supportingGitSimplification && !loadingInputSet && inputSetError) {
     return (
       <NoEntityFound identifier={inputSetIdentifier} entityType={'inputSet'} errorObj={inputSetError.data as Error} />
     )

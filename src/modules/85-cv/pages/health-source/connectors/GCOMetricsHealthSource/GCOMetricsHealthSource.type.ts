@@ -36,7 +36,7 @@ export interface GCOMetricSetupSource {
   healthSourceIdentifier: string
   healthSourceName: string
   product: SelectOption
-  connectorRef?: string
+  connectorRef?: string | { value: string }
 }
 
 export interface GCOMetricsHealthSourceProps {

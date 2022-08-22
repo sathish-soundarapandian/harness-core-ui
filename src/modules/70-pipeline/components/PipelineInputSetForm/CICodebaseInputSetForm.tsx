@@ -74,8 +74,6 @@ export interface CICodebaseInputSetFormProps {
 
 type AcceptableValue = boolean | string | number | SelectOption | string[] | MultiSelectOption[]
 
-type CodeBaseType = 'branch' | 'tag' | 'PR'
-
 const TriggerTypes = {
   SCHEDULED: 'Scheduled'
 }
@@ -87,7 +85,7 @@ export enum ConnectionType {
   Project = 'Project' // Azure Repos
 }
 
-const inputNames = {
+export const buildTypeInputNames: Record<string, string> = {
   branch: 'branch',
   tag: 'tag',
   PR: 'number'
@@ -106,7 +104,7 @@ const placeholderValues = {
 }
 
 export interface ConnectorRefInterface {
-  record?: { spec?: { type?: string; url?: string; connectionType?: string } }
+  record?: ConnectorInfoDTO
 }
 
 const renderLabel = ({
@@ -139,7 +137,8 @@ export const handleCIConnectorRefOnChange = ({
   setIsConnectorExpression,
   setGitAuthProtocol,
   codeBaseInputFieldFormName,
-  viewType
+  viewType,
+  onConnectorChange
 }: {
   value: ConnectorRefInterface | undefined
   connectorRefType: MultiTypeInputType
@@ -150,8 +149,10 @@ export const handleCIConnectorRefOnChange = ({
   setIsConnectorExpression?: Dispatch<SetStateAction<boolean>> // used in inputset form
   codeBaseInputFieldFormName?: { [key: string]: string } // only used when setting nested values in input set
   viewType?: StepViewType
+  onConnectorChange?: (value?: ConnectorInfoDTO) => void
 }): void => {
   const newConnectorRef = value as ConnectorRefInterface
+  onConnectorChange?.(value?.record)
   setGitAuthProtocol?.(get(value, 'record.spec.authentication.type'))
   if (viewType === StepViewType.DeploymentForm) {
     setFieldValue(codeBaseInputFieldFormName?.branch || 'branch', '')
@@ -191,6 +192,31 @@ export const handleCIConnectorRefOnChange = ({
     )
   }
 }
+export const getBuildTypeLabels = (getString: UseStringsReturn['getString']) => ({
+  branch: getString('gitBranch'),
+  tag: getString('gitTag'),
+  PR: getString('pipeline.gitPullRequest')
+})
+
+export const getBuildTypeInputLabels = (getString: UseStringsReturn['getString']) => ({
+  branch: getString('common.branchName'),
+  tag: getString('common.tagName'),
+  PR: getString('pipeline.ciCodebase.pullRequestNumber')
+})
+
+export const getCodebaseInputFieldName = (formattedPath: string) => ({
+  branch: `${formattedPath}properties.ci.codebase.build.spec.branch`,
+  tag: `${formattedPath}properties.ci.codebase.build.spec.tag`,
+  PR: `${formattedPath}properties.ci.codebase.build.spec.number`,
+  connectorRef: `${formattedPath}properties.ci.codebase.connectorRef`,
+  repoName: `${formattedPath}properties.ci.codebase.repoName`,
+  depth: `${formattedPath}properties.ci.codebase.depth`,
+  sslVerify: `${formattedPath}properties.ci.codebase.sslVerify`,
+  prCloneStrategy: `${formattedPath}properties.ci.codebase.prCloneStrategy`,
+  memoryLimit: `${formattedPath}properties.ci.codebase.resources.limits.memory`,
+  cpuLimit: `${formattedPath}properties.ci.codebase.resources.limits.cpu`
+})
+
 const getViewType = ({
   viewType,
   viewTypeMetadata
@@ -257,7 +283,7 @@ function CICodebaseInputSetFormInternal({
   const buildSpecPath = `${formattedPath}properties.ci.codebase.build.spec`
   const codeBaseTypePath = `${formattedPath}properties.ci.codebase.build.type`
   const prCloneStrategyOptions = getPrCloneStrategyOptions(getString)
-  const [codeBaseType, setCodeBaseType] = useState<CodeBaseType | undefined>(get(formik?.values, codeBaseTypePath))
+  const [codeBaseType, setCodeBaseType] = useState<CodebaseTypes | undefined>(get(formik?.values, codeBaseTypePath))
   const [gitAuthProtocol, setGitAuthProtocol] = useState<GitAuthenticationProtocol>(GitAuthenticationProtocol.HTTPS)
   const { module } = useParams<Partial<PipelineType<PipelinePathProps>>>()
   const [codebaseConnector, setCodebaseConnector] = useState<ConnectorInfoDTO>()
@@ -266,38 +292,14 @@ function CICodebaseInputSetFormInternal({
   const isTemplatePipeline = !!template?.template
   const finalTemplate = isTemplatePipeline ? (template?.template?.templateInputs as PipelineInfoConfig) : template
 
-  const radioLabels = {
-    branch: getString('gitBranch'),
-    tag: getString('gitTag'),
-    PR: getString('pipeline.gitPullRequest')
-  }
+  const radioLabels = getBuildTypeLabels(getString)
   const codebaseTypeError = get(formik?.errors, codeBaseTypePath)
 
-  const inputLabels = {
-    branch: getString('common.branchName'),
-    tag: getString('common.tagName'),
-    PR: getString('pipeline.ciCodebase.pullRequestNumber')
-  }
-
-  const codeBaseInputFieldFormName = {
-    branch: `${formattedPath}properties.ci.codebase.build.spec.branch`,
-    tag: `${formattedPath}properties.ci.codebase.build.spec.tag`,
-    PR: `${formattedPath}properties.ci.codebase.build.spec.number`,
-    connectorRef: `${formattedPath}properties.ci.codebase.connectorRef`,
-    repoName: `${formattedPath}properties.ci.codebase.repoName`,
-    depth: `${formattedPath}properties.ci.codebase.depth`,
-    sslVerify: `${formattedPath}properties.ci.codebase.sslVerify`,
-    prCloneStrategy: `${formattedPath}properties.ci.codebase.prCloneStrategy`,
-    memoryLimit: `${formattedPath}properties.ci.codebase.resources.limits.memory`,
-    cpuLimit: `${formattedPath}properties.ci.codebase.resources.limits.cpu`
-  }
+  const inputLabels = getBuildTypeInputLabels(getString)
+  const codeBaseInputFieldFormName = getCodebaseInputFieldName(formattedPath)
 
   const showBuildAsDisabledTextField = useMemo(() => {
-    return (
-      (viewTypeMetadata?.isTemplateBuilder &&
-        get(formik?.values, codeBaseInputFieldFormName.connectorRef) === RUNTIME_INPUT_VALUE) ||
-      viewTypeMetadata?.isTemplateDetailDrawer
-    ) // should disable when template is applied to pipeline
+    return viewTypeMetadata?.isTemplateBuilder || viewTypeMetadata?.isTemplateDetailDrawer // should disable when template is applied to pipeline
   }, [viewTypeMetadata, formik?.values])
 
   useEffect(() => {
@@ -310,14 +312,14 @@ function CICodebaseInputSetFormInternal({
     if (get(formik?.values, buildPath) === RUNTIME_INPUT_VALUE) {
       setCodeBaseType(undefined)
     } else if (viewType === StepViewType.DeploymentForm && !get(formik?.values, buildPath)) {
-      setCodeBaseType(CodebaseTypes.branch)
+      setCodeBaseType(CodebaseTypes.BRANCH)
     }
   }, [get(formik?.values, buildPath), viewType])
 
   const debouncedFetchBranchesForRepo = React.useCallback(
     debounce((repoName?: AcceptableValue) => {
       formik.setFieldValue(codeBaseInputFieldFormName.repoName, repoName)
-      if (viewType === StepViewType.DeploymentForm && codeBaseType === CodebaseTypes.branch) {
+      if (viewType === StepViewType.DeploymentForm && codeBaseType === CodebaseTypes.BRANCH) {
         formik?.setFieldValue(codeBaseInputFieldFormName.branch, '')
         setIsDefaultBranchSet(false)
         if (repoName) {
@@ -338,7 +340,7 @@ function CICodebaseInputSetFormInternal({
   const shouldAllowRepoFetch = useMemo((): boolean => {
     return (
       viewType === StepViewType.DeploymentForm &&
-      codeBaseType === CodebaseTypes.branch &&
+      codeBaseType === CodebaseTypes.BRANCH &&
       !get(formik?.values, codeBaseInputFieldFormName.branch) &&
       !isDefaultBranchSet &&
       !isUndefined(codebaseConnector)
@@ -467,7 +469,7 @@ function CICodebaseInputSetFormInternal({
   }, [loadingConnectorDetails, connectorDetails])
 
   useEffect(() => {
-    const type = get(formik?.values, codeBaseTypePath) as CodeBaseType
+    const type = get(formik?.values, codeBaseTypePath) as CodebaseTypes
     if (type) {
       setCodeBaseType(type)
     }
@@ -558,30 +560,30 @@ function CICodebaseInputSetFormInternal({
       savedValues.current = Object.assign(savedValues.current, {
         [codeBaseType]: get(
           formik?.values,
-          `${formattedPath}properties.ci.codebase.build.spec.${inputNames[codeBaseType]}`,
+          `${formattedPath}properties.ci.codebase.build.spec.${buildTypeInputNames[codeBaseType]}`,
           ''
         )
       })
       const existingValues = { ...formik?.values }
       let updatedValues = set(existingValues, codeBaseTypePath, codeBaseType)
       updatedValues = set(existingValues, buildSpecPath, {
-        [inputNames[codeBaseType]]: savedValues.current[codeBaseType]
+        [buildTypeInputNames[codeBaseType]]: savedValues.current[codeBaseType]
       })
       formik?.setValues(updatedValues)
     }
   }, [pipelineHasCodebaseSection, codeBaseType])
 
-  const handleTypeChange = (newType: CodeBaseType): void => {
+  const handleTypeChange = (newType: CodebaseTypes): void => {
     formik?.setFieldValue(`${formattedPath}properties.ci.codebase.build`, '')
     formik?.setFieldValue(codeBaseTypePath, newType)
     if (!isInputTouched && triggerIdentifier && isNotScheduledTrigger) {
-      formik?.setFieldValue(buildSpecPath, { [inputNames[newType]]: defaultValues[newType] })
+      formik?.setFieldValue(buildSpecPath, { [buildTypeInputNames[newType]]: defaultValues[newType] })
     } else {
-      formik?.setFieldValue(buildSpecPath, { [inputNames[newType]]: savedValues.current[newType] })
+      formik?.setFieldValue(buildSpecPath, { [buildTypeInputNames[newType]]: savedValues.current[newType] })
     }
   }
-  const renderCodeBaseTypeInput = (type: CodeBaseType): JSX.Element => {
-    const shouldDisableBranchTextInput = type === CodebaseTypes.branch && isFetchingBranches
+  const renderCodeBaseTypeInput = (type: CodebaseTypes): JSX.Element => {
+    const shouldDisableBranchTextInput = type === CodebaseTypes.BRANCH && isFetchingBranches
     return (
       <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'center' }} spacing="medium">
         <FormInput.MultiTextInput
@@ -608,7 +610,7 @@ function CICodebaseInputSetFormInternal({
   }, [viewTypeMetadata?.isTemplateBuilder])
 
   const disableBuildRadioBtnSelection = useMemo(() => {
-    return readonly || (codeBaseType === CodebaseTypes.branch && isFetchingBranches)
+    return readonly || (codeBaseType === CodebaseTypes.BRANCH && isFetchingBranches)
   }, [readonly, codeBaseType, isFetchingBranches])
 
   return pipelineHasCodebaseSection ? (
@@ -736,19 +738,19 @@ function CICodebaseInputSetFormInternal({
                           />
                         </Container>
                         {!isRuntimeInput(formik?.values.connectorRef) &&
-                        !isRuntimeInput(formik?.values.repoName) &&
-                        connectorUrl?.length > 0 ? (
-                          <div className={css.predefinedValue}>
-                            <Text lineClamp={1}>
-                              {getCompleteConnectorUrl({
-                                partialUrl: connectorUrl,
-                                repoName: get(formik?.values, codeBaseInputFieldFormName.repoName, ''),
-                                connectorType,
-                                gitAuthProtocol
-                              })}
-                            </Text>
-                          </div>
-                        ) : null}
+                          !isRuntimeInput(formik?.values.repoName) &&
+                          connectorUrl?.length > 0 && (
+                            <div className={css.predefinedValue}>
+                              <Text lineClamp={1}>
+                                {getCompleteConnectorUrl({
+                                  partialUrl: connectorUrl,
+                                  repoName: get(formik?.values, codeBaseInputFieldFormName.repoName, ''),
+                                  connectorType,
+                                  gitAuthProtocol
+                                })}
+                              </Text>
+                            </div>
+                          )}
                       </>
                     ))}
                   {(!isConnectorRuntimeInput ||
@@ -786,8 +788,8 @@ function CICodebaseInputSetFormInternal({
                           <Radio
                             label={radioLabels['branch']}
                             width={110}
-                            onClick={() => handleTypeChange('branch')}
-                            checked={codeBaseType === CodebaseTypes.branch}
+                            onClick={() => handleTypeChange(CodebaseTypes.BRANCH)}
+                            checked={codeBaseType === CodebaseTypes.BRANCH}
                             disabled={disableBuildRadioBtnSelection}
                             font={{ variation: FontVariation.FORM_LABEL }}
                             key="branch-radio-option"
@@ -796,33 +798,33 @@ function CICodebaseInputSetFormInternal({
                             label={radioLabels['tag']}
                             width={90}
                             margin={{ left: 'huge' }}
-                            onClick={() => handleTypeChange('tag')}
-                            checked={codeBaseType === CodebaseTypes.tag}
+                            onClick={() => handleTypeChange(CodebaseTypes.TAG)}
+                            checked={codeBaseType === CodebaseTypes.TAG}
                             disabled={disableBuildRadioBtnSelection}
                             font={{ variation: FontVariation.FORM_LABEL }}
                             key="tag-radio-option"
                           />
-                          {connectorType !== 'Codecommit' ? (
+                          {connectorType !== 'Codecommit' && (
                             <Radio
                               label={radioLabels['PR']}
                               width={110}
                               margin={{ left: 'huge' }}
-                              onClick={() => handleTypeChange('PR')}
+                              onClick={() => handleTypeChange(CodebaseTypes.PR)}
                               checked={codeBaseType === CodebaseTypes.PR}
                               disabled={disableBuildRadioBtnSelection}
                               font={{ variation: FontVariation.FORM_LABEL }}
                               key="pr-radio-option"
                             />
-                          ) : null}
+                          )}
                         </Layout.Horizontal>
                       )}
                       {codebaseTypeError && (formik.submitCount > 0 || viewTypeMetadata?.isTrigger) && (
                         <Text color={Color.RED_600}>{codebaseTypeError}</Text>
                       )}
                       <Container width={containerWidth}>
-                        {codeBaseType === CodebaseTypes.branch ? renderCodeBaseTypeInput('branch') : null}
-                        {codeBaseType === CodebaseTypes.tag ? renderCodeBaseTypeInput('tag') : null}
-                        {codeBaseType === CodebaseTypes.PR ? renderCodeBaseTypeInput('PR') : null}
+                        {codeBaseType === CodebaseTypes.BRANCH && renderCodeBaseTypeInput(CodebaseTypes.BRANCH)}
+                        {codeBaseType === CodebaseTypes.TAG && renderCodeBaseTypeInput(CodebaseTypes.TAG)}
+                        {codeBaseType === CodebaseTypes.PR && renderCodeBaseTypeInput(CodebaseTypes.PR)}
                       </Container>
                     </>
                   )}

@@ -62,7 +62,8 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { mutate: deleteTemplates, loading: deleteLoading } = useDeleteTemplateVersionsOfIdentifier({})
   const [templateVersionsToDelete, setTemplateVersionsToDelete] = React.useState<string[]>([])
 

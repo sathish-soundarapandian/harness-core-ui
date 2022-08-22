@@ -1120,7 +1120,7 @@ exports[`Testing COGatewayAccess SSH checkbox checks succesfully and download os
                       href=" https://docs.harness.io/article/7025n9ml7z-create-autostopping-rules-aws#setup_access_using_ssh_rdp"
                       target="_blank"
                     >
-                      Read More
+                      ce.co.autoStoppingRule.helpText.readMore
                     </a>
                   </span>
                 </p>
@@ -1176,7 +1176,7 @@ exports[`Testing COGatewayAccess SSH checkbox checks succesfully and download os
                     </div>
                   </div>
                   <button
-                    class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main downloadBtn Button--with-current-color Button--iconOnly"
+                    class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main downloadBtn Button--with-current-color Button--iconOnly Button--variation Button--variation-secondary"
                     disabled=""
                     tabindex="-1"
                     type="button"
@@ -1184,7 +1184,7 @@ exports[`Testing COGatewayAccess SSH checkbox checks succesfully and download os
                     <span
                       class="bp3-button-text"
                     >
-                      Download CLI
+                      ce.co.autoStoppingRule.setupAccess.helpText.ssh.setup.download
                     </span>
                   </button>
                 </div>

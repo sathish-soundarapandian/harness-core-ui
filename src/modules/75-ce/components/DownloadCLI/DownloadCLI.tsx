@@ -8,7 +8,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty as _isEmpty } from 'lodash-es'
-import { Button, Layout, Select, SelectOption, Text } from '@wings-software/uicore'
+import { Button, ButtonVariation, Layout, Select, SelectOption, Text } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import css from './DownloadCLI.module.scss'
 
@@ -56,17 +56,22 @@ const dropdownOptions: SelectOption[] = [
   }
 ]
 
-const DownloadCLI: React.FC = () => {
+interface DownlaodCLIProps {
+  showInfoText?: boolean
+}
+
+const DownloadCLI: React.FC<DownlaodCLIProps> = props => {
+  const { showInfoText = true } = props
   const { getString } = useStrings()
   const { accountId } = useParams<{ accountId: string }>()
   const [assetLink, setAssetLink] = React.useState<SelectOption | null>(null)
 
   React.useEffect(() => {
-    const defaultOs = navigator.appVersion.includes(OS.Mac.valueOf())
+    const defaultOs = navigator.userAgent.includes(OS.Mac.valueOf())
       ? OS.Mac
-      : navigator.appVersion.includes(OS.Windows.valueOf())
+      : navigator.userAgent.includes(OS.Windows.valueOf())
       ? OS.Windows
-      : navigator.appVersion.includes(OS.Linux.valueOf())
+      : navigator.userAgent.includes(OS.Linux.valueOf())
       ? OS.Linux
       : null
 
@@ -87,23 +92,30 @@ const DownloadCLI: React.FC = () => {
   }
   return (
     <div>
-      <Text className={css.text}>
-        {getString('ce.co.sshSetup')}
-        <span>
-          <a
-            href=" https://docs.harness.io/article/7025n9ml7z-create-autostopping-rules-aws#setup_access_using_ssh_rdp"
-            target="_blank"
-          >
-            Read More
-          </a>
-        </span>
-      </Text>
+      {showInfoText && (
+        <Text className={css.text}>
+          {getString('ce.co.sshSetup')}
+          <span>
+            <a
+              href=" https://docs.harness.io/article/7025n9ml7z-create-autostopping-rules-aws#setup_access_using_ssh_rdp"
+              target="_blank"
+            >
+              {getString('ce.co.autoStoppingRule.helpText.readMore')}
+            </a>
+          </span>
+        </Text>
+      )}
       <Layout.Horizontal className={css.downloadCliContainer}>
         <div className={css.selectContainer}>
           <Select items={dropdownOptions} onChange={handleOsSelectChange} value={assetLink} name={'sshOs'} />
         </div>
-        <Button className={css.downloadBtn} onClick={downloadAsset} disabled={_isEmpty(assetLink)}>
-          {'Download CLI'}
+        <Button
+          variation={ButtonVariation.SECONDARY}
+          className={css.downloadBtn}
+          onClick={downloadAsset}
+          disabled={_isEmpty(assetLink)}
+        >
+          {getString('ce.co.autoStoppingRule.setupAccess.helpText.ssh.setup.download')}
         </Button>
       </Layout.Horizontal>
     </div>

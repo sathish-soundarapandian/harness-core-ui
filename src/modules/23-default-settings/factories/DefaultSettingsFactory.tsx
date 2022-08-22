@@ -15,6 +15,7 @@ import type {
 } from '@default-settings/interfaces/SettingType.types'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import type { SettingDTO } from 'services/cd-ng'
+import type { Module } from 'framework/types/ModuleName'
 
 export interface SettingRendererProps {
   identifier: string
@@ -27,7 +28,7 @@ export interface SettingRendererProps {
 export interface SettingHandler {
   label: keyof StringsMap
   settingRenderer: (props: SettingRendererProps) => React.ReactElement
-  yupValidation: YupValidation
+  yupValidation?: YupValidation
   settingCategory: SettingCategory
   groupId?: SettingGroups
 }
@@ -41,6 +42,7 @@ export interface SettingCategoryHandler {
   icon: IconName
   label: keyof StringsMap
   settingsAndGroupDisplayOrder?: SettingsAndGroupDisplayOrderType[]
+  modulesWhereCategoryWillBeDisplayed?: Module[]
 }
 
 class DefaultSettingsFactory {
@@ -51,7 +53,7 @@ class DefaultSettingsFactory {
   private groupToSettingMap: Map<SettingGroups, Set<SettingType>>
   private groupMap: Map<SettingGroups, GroupedSettingsHandler>
   private categoryToGroupMap: Map<SettingCategory, Set<SettingGroups>>
-
+  private categoriesToBeDisplayedInAModuleMap: Map<Module, Set<SettingCategory>>
   constructor() {
     this.settingMap = new Map()
     this.categoryMap = new Map()
@@ -59,10 +61,20 @@ class DefaultSettingsFactory {
     this.categoryToSettingMap = new Map()
     this.groupToSettingMap = new Map()
     this.categoryToGroupMap = new Map()
+    this.categoriesToBeDisplayedInAModuleMap = new Map()
   }
 
   registerCategory(settingCategory: SettingCategory, handler: SettingCategoryHandler): void {
     this.categoryMap.set(settingCategory, handler)
+    if (handler.modulesWhereCategoryWillBeDisplayed?.length) {
+      handler.modulesWhereCategoryWillBeDisplayed.forEach(module => {
+        if (this.categoriesToBeDisplayedInAModuleMap.get(module)) {
+          this.categoriesToBeDisplayedInAModuleMap.get(module)?.add(settingCategory)
+        } else {
+          this.categoriesToBeDisplayedInAModuleMap.set(module, new Set([settingCategory]))
+        }
+      })
+    }
   }
   registerGroupHandler(groupName: SettingGroups, handler: GroupedSettingsHandler): void {
     this.groupMap.set(groupName, handler)
@@ -156,6 +168,9 @@ class DefaultSettingsFactory {
   }
   getYupValidationForSetting(settingType: SettingType): YupValidation | undefined {
     return this.settingMap.get(settingType)?.yupValidation
+  }
+  getCategoriesToBeDisplayedInAModule(module: Module) {
+    return this.categoriesToBeDisplayedInAModuleMap.get(module)
   }
 }
 

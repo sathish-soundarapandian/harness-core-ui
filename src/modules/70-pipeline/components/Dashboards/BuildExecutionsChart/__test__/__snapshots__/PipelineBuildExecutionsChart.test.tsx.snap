@@ -6,7 +6,7 @@ exports[`PipelineBuildExecutionsChart shows data correctly 1`] = `
     class="StyledProps--font StyledProps--main main"
   >
     <div
-      class="Layout--horizontal StyledProps--main marginBottom4"
+      class="Layout--horizontal StyledProps--main marginBottom2"
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--margin-right-small StyledProps--font-variation-h5"

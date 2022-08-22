@@ -43,7 +43,8 @@ import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import { TemplateVariablesContextProvider } from '@pipeline/components/TemplateVariablesContext/TemplateVariablesContext'
 import { RightBar } from '@templates-library/components/TemplateStudio/RightBar/RightBar'
 import { OutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
-import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/ReconcileDialog/ReconcileDialog'
+import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
+import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { TemplateContext } from './TemplateContext/TemplateContext'
 import { getContentAndTitleStringKeys, isValidYaml } from './TemplateStudioUtils'
 import css from './TemplateStudio.module.scss'
@@ -68,6 +69,7 @@ export function TemplateStudio(): React.ReactElement {
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const {
     template,
+    originalTemplate,
     templateView,
     isLoading,
     isUpdated,
@@ -87,7 +89,8 @@ export function TemplateStudio(): React.ReactElement {
   const { showError } = useToaster()
   const history = useHistory()
   const templateFormikRef = React.useRef<TemplateFormikRef | null>(null)
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const templateStudioSubHeaderHandleRef = React.useRef<TemplateStudioSubHeaderHandle | null>(null)
 
   useDocumentTitle([parse(defaultTo(template?.name, getString('common.templates')))])
@@ -307,6 +310,7 @@ export function TemplateStudio(): React.ReactElement {
                   <OutOfSyncErrorStrip
                     errorNodeSummary={templateInputsErrorNodeSummary}
                     entity={TemplateErrorEntity.TEMPLATE}
+                    originalYaml={yamlStringify({ template: originalTemplate })}
                     isReadOnly={isReadonly}
                     onRefreshEntity={() => {
                       fetchTemplate({ forceFetch: true, forceUpdate: true })

@@ -85,7 +85,8 @@ export enum GatewayKindType {
 export enum CCM_CHART_TYPES {
   COLUMN = 'column',
   AREA = 'area',
-  LINE = 'line'
+  LINE = 'line',
+  SPLINE = 'spline'
 }
 
 export const portProtocolMap: { [key: number]: string } = {

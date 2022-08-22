@@ -22,6 +22,7 @@ import {
   Text,
   AllowedTypes
 } from '@wings-software/uicore'
+import type { ObjectSchema } from 'yup'
 import { Color } from '@harness/design-system'
 import type { Column } from 'react-table'
 import { Radio, RadioGroup } from '@blueprintjs/core'
@@ -65,10 +66,14 @@ import MultiTypeSecretInput, {
   getMultiTypeSecretInputType
 } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import ConnectivityStatus from './connectivityStatus/ConnectivityStatus'
 import { getAttributeFilters, PDCInfrastructureSpecInputForm } from './PDCInfrastructureSpecInputForm'
 import {
-  getValidationSchema,
+  getValidationSchemaAll,
+  getValidationSchemaNoPreconfiguredHosts,
+  getValidationSchemaHostFilters,
+  getValidationSchemaAttributeFilters,
   HostScope,
   parseAttributes,
   parseHosts,
@@ -114,7 +119,9 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
   const [showPreviewHostBtn, setShowPreviewHostBtn] = useState(true)
   const [formikInitialValues, setFormikInitialValues] = useState<PDCInfrastructureUI>()
   const [isPreconfiguredHosts, setIsPreconfiguredHosts] = useState(
-    initialValues.connectorRef ? PreconfiguredHosts.TRUE : PreconfiguredHosts.FALSE
+    initialValues.connectorRef || initialValues.attributeFilters || initialValues.hostFilters
+      ? PreconfiguredHosts.TRUE
+      : PreconfiguredHosts.FALSE
   )
   const [hostsScope, setHostsScope] = useState(
     initialValues.attributeFilters
@@ -123,6 +130,32 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
       ? HostScope.HOST_NAME
       : HostScope.ALL
   )
+
+  useEffect(() => {
+    if (isPreconfiguredHosts === PreconfiguredHosts.TRUE) {
+      set(initialValues, 'hosts', undefined)
+      set(initialValues, 'connectorRef', get(initialValues, 'connectorRef', ''))
+      if (hostsScope === HostScope.HOST_ATTRIBUTES) {
+        set(initialValues, 'hostFilters', undefined)
+        set(initialValues, 'attributeFilters', get(initialValues, 'attributeFilters', {}))
+        delayedOnUpdate(initialValues)
+      } else if (hostsScope === HostScope.HOST_NAME) {
+        set(initialValues, 'attributeFilters', undefined)
+        set(initialValues, 'hostFilters', get(initialValues, 'hostFilters', []))
+        delayedOnUpdate(initialValues)
+      } else {
+        set(initialValues, 'hostFilters', undefined)
+        set(initialValues, 'attributeFilters', undefined)
+        delayedOnUpdate(initialValues)
+      }
+    } else {
+      set(initialValues, 'hosts', get(initialValues, 'hosts', []))
+      set(initialValues, 'connectorRef', undefined)
+      set(initialValues, 'hostFilters', undefined)
+      set(initialValues, 'attributeFilters', undefined)
+      delayedOnUpdate(initialValues)
+    }
+  }, [hostsScope, isPreconfiguredHosts])
 
   //table states
   const [detailHosts, setDetailHosts] = useState<HostValidationDTO[]>([])
@@ -212,7 +245,14 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
     setInitial()
   }, [])
 
-  const formikRef = React.useRef<FormikProps<PDCInfrastructureUI> | null>(null)
+  const formikRef = React.useRef<FormikProps<unknown> | null>(null)
+
+  const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
+
+  React.useEffect(() => {
+    subscribeForm({ tab: DeployTabs.INFRASTRUCTURE, form: formikRef })
+    return () => unSubscribeForm({ tab: DeployTabs.INFRASTRUCTURE, form: formikRef })
+  }, [subscribeForm, unSubscribeForm])
 
   const fetchHosts = async () => {
     const formikValues = get(formikRef.current, 'values', {}) as PDCInfrastructureUI
@@ -379,6 +419,20 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
     }
   }
 
+  const getValidations = (isPreconfigured: string, hostScope: string): ObjectSchema<object | undefined> => {
+    let validationSchema = getValidationSchemaNoPreconfiguredHosts(getString)
+    if (isPreconfigured === PreconfiguredHosts.TRUE) {
+      if (hostScope === HostScope.HOST_NAME) {
+        validationSchema = getValidationSchemaHostFilters(getString)
+      } else if (hostScope === HostScope.HOST_ATTRIBUTES) {
+        validationSchema = getValidationSchemaAttributeFilters(getString)
+      } else {
+        validationSchema = getValidationSchemaAll(getString)
+      }
+    }
+    return validationSchema
+  }
+
   return (
     <Layout.Vertical spacing="medium">
       {formikInitialValues && (
@@ -397,7 +451,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
           <Formik<PDCInfrastructureUI>
             formName="pdcInfra"
             initialValues={formikInitialValues}
-            validationSchema={getValidationSchema(getString) as Partial<PDCInfrastructureUI>}
+            validationSchema={getValidations(isPreconfiguredHosts, hostsScope)}
             validate={value => {
               const data: Partial<PDCInfrastructureYAML> = {
                 allowSimultaneousDeployments: value.allowSimultaneousDeployments,
@@ -431,7 +485,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
           >
             {formik => {
               window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.INFRASTRUCTURE }))
-              formikRef.current = formik
+              formikRef.current = formik as FormikProps<unknown> | null
               return (
                 <FormikForm>
                   <Layout.Vertical className={css.formRow} spacing="medium" margin={{ bottom: 'large' }}>
@@ -817,6 +871,25 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
       getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME
     ) {
       errors.connectorRef = getString?.('common.validation.fieldIsRequired', { name: getString('connector') })
+    }
+    if (isEmpty(data.hosts) && isRequired && getMultiTypeFromValue(template?.hosts) === MultiTypeInputType.RUNTIME) {
+      errors.hosts = getString?.('common.validation.fieldIsRequired', { name: getString('cd.hosts') })
+    }
+    if (
+      isEmpty(data.hostFilters) &&
+      isRequired &&
+      getMultiTypeFromValue(template?.hostFilters) === MultiTypeInputType.RUNTIME
+    ) {
+      errors.hostFilters = getString?.('common.validation.fieldIsRequired', { name: getString('cd.hostFilters') })
+    }
+    if (
+      isEmpty(data.attributeFilters) &&
+      isRequired &&
+      getMultiTypeFromValue(template?.attributeFilters as any) === MultiTypeInputType.RUNTIME
+    ) {
+      errors.attributeFilters = getString?.('common.validation.fieldIsRequired', {
+        name: getString('cd.attributeFilters')
+      })
     }
     return errors
   }

@@ -16,6 +16,7 @@ interface UseToggleAutostoppingRuleProps {
   serviceData: Service
   onSuccess?: (updatedServiceData: Service) => void
   onFailure?: (error: any) => void
+  onCancel?: () => void
 }
 
 interface UseToggleAutostoppingRuleReturn {
@@ -44,6 +45,8 @@ const useToggleRuleState = (props: UseToggleAutostoppingRuleProps): UseToggleAut
       } catch (e) {
         props.onFailure?.(e)
       }
+    } else {
+      props.onCancel?.()
     }
   }
 

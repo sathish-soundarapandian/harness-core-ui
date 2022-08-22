@@ -9,6 +9,7 @@ import React, { useContext, useMemo, useRef } from 'react'
 import ReactDOM from 'react-dom'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
+import moment from 'moment'
 import { Color } from '@harness/design-system'
 import { Card, Container, Layout, Text, PageError } from '@wings-software/uicore'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
@@ -129,12 +130,12 @@ export const InstanceCountHistory: React.FC = () => {
         allowDecimals: false,
         labels: {
           formatter: function () {
-            let time = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short' })
+            let time = new Date().getTime()
             if (dataList?.length) {
               const val = dataList?.[this.pos]?.timestamp
-              time = val ? new Date(val).toLocaleDateString('en-US', { day: 'numeric', month: 'short' }) : time
+              time = val ? new Date(val).getTime() : time
             }
-            return time
+            return moment(time).utc().format('MMM D')
           }
         }
       },
