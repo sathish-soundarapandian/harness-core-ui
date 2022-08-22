@@ -86,9 +86,17 @@ describe('Run Step', () => {
     }).as('inputSetTemplateCall')
     cy.contains('p', 'CI_Stage1').should('be.visible')
     cy.contains('p', 'CI_Stage1').click()
-    cy.get('span[data-icon="run-step"]').click({ force: true })
-    cy.get('span[data-icon="ci-main"]').click({ force: true })
+    // cy.get('span[data-icon="run-step"]').click({ force: true })
+    cy.contains('p', 'Add step').click({ force: true })
+    cy.get('button[data-testid="addStepPipeline"]').click({ force: true })
+    // cy.get('[data-name="add-popover] span[data-icon="Edit"]').click({ force: true })
+    // cy.get('section[class*="StepPalette"]').scrollTo('0%', '30%', { ensureScrollable: false })
+    cy.get('[data-testid="step-card-Run"]').click({ force: true })
+    // cy.contains('section', 'Run').click({ force: true })
+
+    // cy.get('span[data-icon="ci-main"]').click({ force: true })
     cy.wait(1000)
+    cy.contains('div', 'Optional Configuration').should('be.visible')
 
     // cy.get('button[data-testid="cr-field-spec.connectorRef"]').click()
     cy.contains('div', 'Optional Configuration').click()
@@ -97,20 +105,28 @@ describe('Run Step', () => {
     // cy.contains('p', 'AutomationQA').click()
     // !we don't even need to do this and can manually add it in ourselves
     const multiTypeButton = Array.from(Array(10).keys()).filter((x: number) => !skipFieldIndexes.includes(x))
-    // console.log(multiTypeButton)
+    console.log(multiTypeButton)
+    // should click on all but it skips some
     multiTypeButton.forEach(i => {
-      cy.get('.MultiTypeInput--btn').eq(multiTypeButton[i]).click()
+      cy.get('span[data-icon="fixed-input"]').eq(multiTypeButton[i]).click()
+
+      console.log(i)
+      //   cy.get('.MultiTypeInput--btn').eq(multiTypeButton[i]).click()
+      //   if (cy.contains('span', 'Runtime input').should('be.visible')) {
       cy.contains('span', 'Runtime input').click()
+      cy.wait(200)
+
+      //   }
     })
-    for (var i = 0; i < numOfPossibleRuntimeInputs; i++) {
-      if (skipFieldIndexes.includes(i)) {
-        return
-      }
-      if (cy.contains('span', 'Runtime input')) {
-      } else {
-        cy.contains('span', 'Fixed Value').click()
-      }
-    }
+    // for (var i = 0; i < numOfPossibleRuntimeInputs; i++) {
+    //   if (skipFieldIndexes.includes(i)) {
+    //     return
+    //   }
+    //   if (cy.contains('span', 'Runtime input')) {
+    //   } else {
+    //     cy.contains('span', 'Fixed Value').click()
+    //   }
+    // }
     // cy.get('.MultiTypeInput--btn').eq(2).click()
     // cy.contains('span', 'Runtime input').click()
 
@@ -118,10 +134,10 @@ describe('Run Step', () => {
     // cy.wait(1000)
     // cy.contains('div', 'Optional Configuration').should('be.null')
 
-    // cy.intercept('GET', pipelineDetails, { fixture: 'ci/api/runStep/pipelineDetails.json' }).as(
-    //   'pipelineDetailsAPIRouteAfterSave'
-    // )
-    // cy.contains('span', 'Save').click()
+    cy.intercept('GET', pipelineDetails, { fixture: 'ci/api/runStep/pipelineDetails.json' }).as(
+      'pipelineDetailsAPIRouteAfterSave'
+    )
+    cy.contains('span', 'Save').click()
 
     // cy.contains('span', 'Apply Changes').click()
     // cy.wait(1000)
@@ -129,35 +145,35 @@ describe('Run Step', () => {
     //   fixture: 'ci/api/runStep/pipelineDetails.json'
     // }).as('pipelineDetailsAPIRouteAfterSave')
 
-    // cy.intercept('POST', runPipelineTemplateCall, {
-    //   fixture: 'ci/api/runStep/inputSetTemplateResponse.json'
-    // }).as('inputSetTemplateCall')
-    // cy.intercept('GET', inputSetTemplate, {
-    //   fixture: 'ci/api/runStep/inputSetPipelineDetails.json'
-    // }).as('inputSetTemplate')
-    cy.contains('span', 'Run').click()
-    cy.wait(1000)
-    // cy.get('.MultiTypeInput--btn').eq(numOfPossibleRuntimeInputs - skipFieldIndexes.length - 1)
+    // // cy.intercept('POST', runPipelineTemplateCall, {
+    // //   fixture: 'ci/api/runStep/inputSetTemplateResponse.json'
+    // // }).as('inputSetTemplateCall')
+    // // cy.intercept('GET', inputSetTemplate, {
+    // //   fixture: 'ci/api/runStep/inputSetPipelineDetails.json'
+    // // }).as('inputSetTemplate')
+    // cy.contains('span', 'Run').click()
+    // cy.wait(1000)
+    // // cy.get('.MultiTypeInput--btn').eq(numOfPossibleRuntimeInputs - skipFieldIndexes.length - 1)
 
-    console.log(templatesData)
-    // console.log(JSON.parse(templatesData.data.inputSetTemplateYaml))
-    console.log(parse(templatesData.data.inputSetTemplateYaml))
-    const arrayOfFieldNames = getRuntimeInputKeys(parse(templatesData.data.inputSetTemplateYaml))
-    //    cy.get('form > div').
-    cy.get('[class*="bp3-dialog"] [data-name="toggle-option-two"]').click()
-    // cy.contains('div', 'YAML').click()
-    cy.get('[class*="bp3-dialog"] [data-name="toggle-option-two"]').click()
+    // console.log(templatesData)
+    // // console.log(JSON.parse(templatesData.data.inputSetTemplateYaml))
+    // console.log(parse(templatesData.data.inputSetTemplateYaml))
+    // const arrayOfFieldNames = getRuntimeInputKeys(parse(templatesData.data.inputSetTemplateYaml))
+    // //    cy.get('form > div').
+    // cy.get('[class*="bp3-dialog"] [data-name="toggle-option-two"]').click()
+    // // cy.contains('div', 'YAML').click()
+    // cy.get('[class*="bp3-dialog"] [data-name="toggle-option-two"]').click()
 
-    cy.contains('span', 'run-pipeline.yaml').should('be.visible')
-    cy.get('.monaco-editor .overflow-guard').scrollTo('0%', '30%', { ensureScrollable: false })
+    // cy.contains('span', 'run-pipeline.yaml').should('be.visible')
+    // cy.get('.monaco-editor .overflow-guard').scrollTo('0%', '30%', { ensureScrollable: false })
 
-    arrayOfFieldNames.forEach(fieldName => {
-      cy.get('[class*="view-line"] [class*="mtk5"]').contains(fieldName)
-      //   cy.contains('span', fieldName).should('be.visible')
-    })
+    // arrayOfFieldNames.forEach(fieldName => {
+    //   cy.get('[class*="view-line"] [class*="mtk5"]').contains(fieldName)
+    //   //   cy.contains('span', fieldName).should('be.visible')
+    // })
   })
 
-  it.only('Run Pipeline with Run Step prompts for all possible runtime inputs', () => {
+  it('Run Pipeline with Run Step prompts for all possible runtime inputs', () => {
     const numOfPossibleRuntimeInputs = 11
     var skipFieldIndexes: number[] = [3, 8] // start index count at 0
     cy.intercept('POST', runPipelineTemplateCall, {
