@@ -8,7 +8,7 @@ import {
   formikInitialValuesCriteriaGreaterThanMock,
   formikInitialValuesCriteriaMock
 } from '@cv/pages/health-source/common/MetricThresholds/__tests__/MetricThresholds.utils.mock'
-import { formikInitialValues, MockContextValues } from './IgnoreThresholdsContent.mock'
+import { formikInitialValues, MockContextValues, setThresholdStateMockFn } from './IgnoreThresholdsContent.mock'
 import IgnoreThresholdContent from '../IgnoreThresholdsContent'
 import { MetricThresholdContext } from '../../MetricThresholds.constants'
 
@@ -29,6 +29,9 @@ const WrappingComponent = ({ formValues }: { formValues?: any }): JSX.Element =>
 }
 
 describe('DataDogIgnoreThresholdTabContent', () => {
+  afterEach(() => {
+    setThresholdStateMockFn.mockClear()
+  })
   test('should render the component with all input fields', () => {
     const { container } = render(<WrappingComponent />)
 
@@ -60,6 +63,7 @@ describe('DataDogIgnoreThresholdTabContent', () => {
     fireEvent.click(selectCaretMetricName!)
     await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(1))
     expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent('dataDogMetric')
+    expect(setThresholdStateMockFn).toBeCalledWith(expect.any(Function))
   })
   test('should render the criteria dropdown and other functionalities should work properly', async () => {
     const { container } = render(<WrappingComponent />)

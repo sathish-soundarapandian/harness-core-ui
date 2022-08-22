@@ -55,6 +55,7 @@ describe('FailFastThresholdContent', () => {
     fireEvent.click(selectCaretMetricName!)
     await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(1))
     expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent('dataDogMetric')
+    expect(setThresholdStateMockFn).toBeCalledWith(expect.any(Function))
   })
 
   test('should render action dropdown with correct options', async () => {

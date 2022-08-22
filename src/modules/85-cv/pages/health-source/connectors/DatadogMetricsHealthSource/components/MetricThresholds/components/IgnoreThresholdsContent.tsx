@@ -18,6 +18,7 @@ export default function IgnoreThresholdContent(): JSX.Element {
   const { groupedCreatedMetrics, setThresholdState } = useContext(MetricThresholdContext)
 
   useEffect(() => {
+    /* istanbul ignore next */
     setThresholdState(previousValues => ({
       ...previousValues,
       ignoreThresholds: formValues.ignoreThresholds

@@ -18,6 +18,7 @@ export default function FailFastThresholdContent(): JSX.Element {
   const { groupedCreatedMetrics, setThresholdState } = useContext(MetricThresholdContext)
 
   useEffect(() => {
+    /* istanbul ignore next */
     setThresholdState(oldValues => ({
       ...oldValues,
       failFastThresholds: formValues.failFastThresholds
