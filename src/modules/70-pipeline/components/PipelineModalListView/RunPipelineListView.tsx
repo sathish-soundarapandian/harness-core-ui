@@ -28,7 +28,7 @@ type CustomColumn<T extends Record<string, any>> = Column<T> & {
   reload?: () => Promise<void>
 }
 
-interface PipelineDTO extends PMSPipelineSummaryResponse {
+export interface PipelineDTO extends PMSPipelineSummaryResponse {
   admin?: string
   collaborators?: string
   status?: string

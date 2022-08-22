@@ -53,7 +53,7 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
 import { isExecutionNotStarted } from '@pipeline/utils/statusHelpers'
-import { Sort, SortFields } from '@pipeline/pages/pipelines/PipelinesPage'
+import { Sort, SortFields } from '@cd/utils/listUtils'
 import { ServiceTabs } from '../utils/ServiceUtils'
 import css from '@cd/components/Services/ServicesList/ServiceList.module.scss'
 
