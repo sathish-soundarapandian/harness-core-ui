@@ -6,7 +6,6 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { Switch } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { debounce } from 'lodash-es'
@@ -88,7 +87,7 @@ const SelectRepositoryRef = (
     },
     lazy: true
   })
-  const [enableCloneCodebase, setEnableCloneCodebase] = useState<boolean>(true)
+  const enableCloneCodebase = true
 
   const getIcon = useCallback((type: ConnectorInfoDTO['type']): IconName | undefined => {
     switch (type) {
@@ -253,33 +252,11 @@ const SelectRepositoryRef = (
         {getString('common.selectYourRepo')}
       </Text>
       <Layout.Horizontal
-        padding={{ bottom: 'xsmall' }}
-        spacing="small"
-        flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}
-      >
-        <Text font={{ variation: FontVariation.BODY2 }}>{getString('cloneCodebaseLabel')}</Text>
-        <Switch
-          checked={enableCloneCodebase}
-          onChange={event => {
-            const isChecked = event.currentTarget.checked
-            if (isChecked) {
-              cancelRepositoriesFetch()
-              fetchReposWithConnectorRef()
-            } else {
-              cancelRepositoriesFetch()
-            }
-            setEnableCloneCodebase(isChecked)
-          }}
-          data-id="enable-clone-codebase-switch"
-        />
-      </Layout.Horizontal>
-      <Layout.Horizontal
         flex={{ justifyContent: 'flex-start' }}
         spacing="xsmall"
         padding={{ bottom: enableCloneCodebase ? 'xsmall' : 'xlarge' }}
       >
-        <Icon name="info" size={15} color={Color.PRIMARY_7} />
-        <Text font={{ variation: FontVariation.BODY }}>{getString('ci.getStartedWithCI.cloneCodebaseHelpText')}</Text>
+        <Text font={{ variation: FontVariation.BODY }}>{getString('common.getStarted.codebaseHelptext')}</Text>
       </Layout.Horizontal>
       {enableCloneCodebase ? (
         <>

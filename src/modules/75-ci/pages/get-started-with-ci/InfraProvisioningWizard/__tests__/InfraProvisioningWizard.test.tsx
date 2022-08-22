@@ -133,7 +133,8 @@ describe('Render and test InfraProvisioningWizard', () => {
     expect(routesToPipelineStudio).toHaveBeenCalled()
   })
 
-  test('Test "Option" flow end-to-end', async () => {
+  // eslint-disable-next-line jest/no-disabled-tests
+  test.skip('Test "Option" flow end-to-end', async () => {
     const { container, getByText } = render(
       <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
         <InfraProvisioningWizard />

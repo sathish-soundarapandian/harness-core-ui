@@ -10,7 +10,6 @@ import set from 'lodash-es/set'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import type { FormikContextType, FormikProps } from 'formik'
-import { PopoverInteractionKind, Classes, Position } from '@blueprintjs/core'
 import cx from 'classnames'
 import {
   Text,
@@ -27,8 +26,7 @@ import {
   ButtonSize,
   Color,
   FormError,
-  PageSpinner,
-  Popover
+  PageSpinner
 } from '@harness/uicore'
 import { getRequestOptions } from 'framework/app/App'
 import { useStrings } from 'framework/strings'
@@ -70,7 +68,6 @@ import {
   ACCOUNT_SCOPE_PREFIX,
   DEFAULT_HARNESS_KMS,
   AccessTokenPermissionsDocLinks,
-  OtherProviderOption,
   GitProviderIcons,
   NonGitOption
 } from './Constants'
@@ -889,49 +886,6 @@ const SelectGitProviderRef = (
                         <Text font={{ variation: FontVariation.SMALL_SEMI }} padding={{ top: 'small' }}>
                           {getString(item.label)}
                         </Text>
-                      </Layout.Vertical>
-                    )}
-                    onChange={handleGitProviderSelection}
-                  />
-                  <Container className={css.separator} />
-                  <CardSelect
-                    data={[OtherProviderOption]}
-                    selected={gitProvider}
-                    cornerSelected={true}
-                    className={css.icons}
-                    cardClassName={css.otherOptionCard}
-                    renderItem={(item: GitProvider, selected: boolean) => (
-                      <Layout.Vertical>
-                        <Popover
-                          fill
-                          openOnTargetFocus={true}
-                          interactionKind={PopoverInteractionKind.HOVER}
-                          content={
-                            <Container padding="small">
-                              <Text color={Color.WHITE} font={{ variation: FontVariation.BODY }}>
-                                {getString('ci.getStartedWithCI.nonGitCloneOption')}
-                              </Text>
-                            </Container>
-                          }
-                          position={Position.LEFT}
-                          className={Classes.DARK}
-                        >
-                          <Icon
-                            name="info"
-                            size={18}
-                            flex={{ justifyContent: 'flex-end' }}
-                            className={cx({ [css.infoIcon]: selected })}
-                          />
-                        </Popover>
-                        <Layout.Vertical flex>
-                          <Icon name={item.icon} size={35} flex />
-                          <Text
-                            font={{ variation: FontVariation.SMALL_SEMI }}
-                            padding={selected ? {} : { top: 'small' }}
-                          >
-                            {getString(item.label)}
-                          </Text>
-                        </Layout.Vertical>
                       </Layout.Vertical>
                     )}
                     onChange={handleGitProviderSelection}

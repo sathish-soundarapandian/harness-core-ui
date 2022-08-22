@@ -72,7 +72,7 @@ describe('Test SelectGitProvider component', () => {
       </TestWrapper>
     )
     const gitProviderCards = Array.from(container.querySelectorAll('div[class*="bp3-card"]')) as HTMLElement[]
-    expect(gitProviderCards.length).toBe(AllBuildLocationsForSaaS.length + 1)
+    expect(gitProviderCards.length).toBe(AllBuildLocationsForSaaS.length)
   })
 
   test('User clicks on Github Provider card', async () => {
@@ -484,7 +484,8 @@ describe('Test SelectGitProvider component', () => {
     expect(gitAuthenticationMethodValidationError).not.toBeInTheDocument()
   })
 
-  test('User selects "Other" option', async () => {
+  // eslint-disable-next-line jest/no-disabled-tests
+  test.skip('User selects "Other" option', async () => {
     const { container, getByText } = render(
       <TestWrapper
         path={routes.toGetStartedWithCI({
