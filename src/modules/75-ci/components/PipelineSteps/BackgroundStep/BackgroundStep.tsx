@@ -59,6 +59,7 @@ export interface BackgroundStepSpec {
   shell?: MultiTypeSelectOption
   runAsUser?: string
   resources?: Resources
+  portBindings?: MultiTypeMapType
 }
 
 export interface BackgroundStepData {

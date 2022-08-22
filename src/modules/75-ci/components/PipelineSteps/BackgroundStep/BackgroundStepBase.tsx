@@ -237,7 +237,10 @@ export const BackgroundStepBase = (
                         },
                         'spec.reportPaths': {},
                         'spec.envVariables': {},
-                        'spec.entrypoint': {}
+                        'spec.entrypoint': {},
+                        ...(isBuildInfrastructureTypeVM && {
+                          'spec.portBindings': {}
+                        })
                       }}
                     />
                     <StepCommonFields

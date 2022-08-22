@@ -16,7 +16,7 @@ import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/She
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
+import { shouldRenderRunTimeInputViewWithAllowedValues, shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
 import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
 import type { BackgroundStepProps } from './BackgroundStep'
 import { CIStep } from '../CIStep/CIStep'
@@ -142,11 +142,17 @@ export const BackgroundStepInputSetBasic: React.FC<BackgroundStepProps> = props 
           ...(getMultiTypeFromValue(template?.spec?.privileged) === MultiTypeInputType.RUNTIME && {
             'spec.privileged': {}
           }),
+          ...(getMultiTypeFromValue(template?.spec?.reports?.spec?.paths as string) === MultiTypeInputType.RUNTIME && {
+            'spec.reportPaths': {}
+          }),
           ...(getMultiTypeFromValue(template?.spec?.envVariables as string) === MultiTypeInputType.RUNTIME && {
             'spec.envVariables': { tooltipId: 'dependencyEnvironmentVariables' }
           }),
           ...(getMultiTypeFromValue(template?.spec?.entrypoint as string) === MultiTypeInputType.RUNTIME && {
             'spec.entrypoint': {}
+          }),
+          ...(shouldRenderRunTimeInputView(template?.spec?.portBindings as string) && {
+            'spec.portBindings': {}
           })
         }}
         path={path || ''}

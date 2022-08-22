@@ -54,6 +54,10 @@ export const transformValuesFieldsConfig = [
     type: TransformValuesTypes.List
   },
   {
+    name: 'spec.portBindings',
+    type: TransformValuesTypes.Map
+  },
+  {
     name: 'spec.imagePullPolicy',
     type: TransformValuesTypes.ImagePullPolicy
   },
@@ -129,6 +133,11 @@ export const getEditViewValidateFieldsConfig = (isBuildInfrastructureTypeVM: boo
     type: ValidationFieldTypes.List
   },
   {
+    name: 'spec.portBindings',
+    type: ValidationFieldTypes.KeyValue,
+    label: 'ci.portBindings'
+  },
+  {
     label: 'pipeline.stepCommonFields.runAsUser',
     name: 'spec.runAsUser',
     type: ValidationFieldTypes.Numeric
@@ -184,6 +193,11 @@ export function getInputSetViewValidateFieldsConfig(
     {
       name: 'spec.entrypoint',
       type: ValidationFieldTypes.List
+    },
+    {
+      name: 'spec.portBindings',
+      label: 'ci.portBindings',
+      type: ValidationFieldTypes.Map
     },
     {
       name: 'spec.imagePullPolicy',
