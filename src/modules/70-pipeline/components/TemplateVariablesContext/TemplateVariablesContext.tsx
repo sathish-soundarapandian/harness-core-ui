@@ -23,6 +23,7 @@ import type { StageElementConfig, StepElementConfig } from 'services/cd-ng'
 import type { AllNGVariables } from '@pipeline/utils/types'
 
 const monitoredServiceYamlKey = 'monitoredService'
+const secretManagerYamlKey = 'secretManager'
 
 export interface MonitoredServiceConfig {
   environmentRef: string
@@ -111,6 +112,8 @@ export function TemplateVariablesContextProvider(
     const templateType =
       resolvedTemplate.type?.toLowerCase() === monitoredServiceYamlKey.toLowerCase()
         ? monitoredServiceYamlKey
+        : resolvedTemplate.type === 'SecretManager'
+        ? secretManagerYamlKey
         : resolvedTemplate.type?.toLowerCase()
     setTemplateVariablesData({
       metadataMap: defaultTo(data?.data?.metadataMap, {}),

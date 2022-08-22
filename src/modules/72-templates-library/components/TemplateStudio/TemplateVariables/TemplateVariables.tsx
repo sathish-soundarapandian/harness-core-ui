@@ -25,6 +25,7 @@ import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext
 import { sanitize } from '@common/utils/JSONUtils'
 import { VariablesHeader } from '@pipeline/components/PipelineStudio/PipelineVariables/VariablesHeader/VariablesHeader'
 import MonitoredServiceCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/MonitoredServiceCard'
+import SecretManagerVariableCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/SecretManagerVariableCard'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import { PipelineCardPanel } from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables'
 import css from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
@@ -110,6 +111,24 @@ const TemplateVariables: React.FC = (): JSX.Element => {
                   allowableTypes={allowableTypes}
                   stageIdentifier={DefaultNewStageId}
                   onUpdateStep={onUpdate}
+                  stepsFactory={factory}
+                />
+              )}
+              {originalTemplate.type === TemplateType.SecretManager && (
+                <SecretManagerVariableCard
+                  secretManager={variablesTemplate as any}
+                  unresolvedMonitoredService={{ ...template.spec, identifier: DefaultNewStageId } as any}
+                  originalSecretManager={
+                    {
+                      ...originalTemplate.spec,
+                      identifier: DefaultNewStageId
+                    } as any
+                  }
+                  metadataMap={metadataMap}
+                  readonly={true}
+                  path="template"
+                  allowableTypes={allowableTypes}
+                  updateSceretManager={onUpdate}
                   stepsFactory={factory}
                 />
               )}

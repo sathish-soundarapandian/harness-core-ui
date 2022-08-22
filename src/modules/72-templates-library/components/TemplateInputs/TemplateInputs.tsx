@@ -46,6 +46,10 @@ import { PipelineInputSetFormInternal, StageForm } from '@pipeline/components/Pi
 import { getTemplateRuntimeInputsCount, TemplateType } from '@templates-library/utils/templatesUtils'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import { getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
+import {
+  SceretManagerTemplateInputSet,
+  ScriptVariablesRuntimeInput
+} from '@common/components/ScriptVariableRuntimeInput/ScriptVariablesRuntimeInput'
 import { useMutateAsGet } from '@common/hooks'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import templateFactory from '../Templates/TemplatesFactory'
@@ -113,6 +117,8 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = props => {
         return { stage: inputSetTemplate } as StageElementWrapperConfig
       case TemplateType.Pipeline:
         return inputSetTemplate as PipelineInfoConfig
+      case TemplateType.SecretManager:
+        return { templateInputs: inputSetTemplate } as SceretManagerTemplateInputSet
       default:
         return {}
     }
@@ -201,7 +207,9 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = props => {
                     </Text>
                   </Layout.Horizontal>
                 </Container>
-                <Formik<StepElementConfig | StageElementWrapperConfig | PipelineInfoConfig>
+                <Formik<
+                  StepElementConfig | StageElementWrapperConfig | PipelineInfoConfig | SceretManagerTemplateInputSet
+                >
                   onSubmit={noop}
                   initialValues={initialValues}
                   formName="templateInputs"
@@ -270,6 +278,15 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = props => {
                           templateFactory
                             .getTemplate(templateEntityType)
                             ?.renderTemplateInputsForm({ template, accountId })}
+
+                        {templateEntityType === TemplateType.SecretManager && (
+                          <ScriptVariablesRuntimeInput
+                            template={(formikProps.values as SceretManagerTemplateInputSet).templateInputs}
+                            allowableTypes={[]}
+                            readonly
+                            enabledExecutionDetails
+                          />
+                        )}
                       </>
                     )
                   }}

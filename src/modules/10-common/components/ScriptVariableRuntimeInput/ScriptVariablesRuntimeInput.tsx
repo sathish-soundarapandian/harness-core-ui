@@ -12,6 +12,7 @@ import { AllowedTypes, FormInput, SelectOption } from '@harness/uicore'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import css from './ScriptVariablesRuntimeInput.module.scss'
 
 export interface InputSetSchema {
@@ -21,13 +22,29 @@ export interface InputSetSchema {
   useAsDefault?: boolean
 }
 
+export interface ExecutionTarget {
+  host: string
+  connectorRef: string
+  workingDirectory: string
+}
+
+export interface SceretManagerTemplateInputs {
+  environmentVariables?: Array<InputSetSchema>
+  outputVariables?: Array<InputSetSchema>
+  executionTarget?: ExecutionTarget
+}
+
+export interface SceretManagerTemplateInputSet {
+  templateInputs: SceretManagerTemplateInputs
+}
+
 interface InputOutputVariablesInputSetProps {
   allowableTypes: AllowedTypes
-  // todo: to change with type in BE
   template?: any
   path?: string
   readonly?: boolean
   enableFixed?: boolean
+  enabledExecutionDetails?: boolean
   className?: string
 }
 
@@ -37,10 +54,19 @@ export const scriptInputType: SelectOption[] = [
 ]
 
 export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetProps): React.ReactElement {
-  const { allowableTypes, readonly, template, path, enableFixed = false, className } = props
+  const {
+    allowableTypes,
+    readonly,
+    template,
+    path,
+    enableFixed = false,
+    className,
+    enabledExecutionDetails = false
+  } = props
 
   const { getString } = useStrings()
   const prefix = isEmpty(path) ? '' : `${path}.`
+  console.log(template)
 
   return (
     <>
@@ -115,6 +141,37 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
               }}
             />
           </MultiTypeFieldSelector>
+          {enabledExecutionDetails ? (
+            <>
+              {template.executionTarget.host ? (
+                <FormInput.Text
+                  name="templateInputs.executionTarget.host"
+                  placeholder={getString('pipelineSteps.hostLabel')}
+                  label={getString('targetHost')}
+                  style={{ marginTop: 'var(--spacing-small)' }}
+                  disabled={readonly}
+                />
+              ) : null}
+              {template.executionTarget.connectorRef ? (
+                <MultiTypeSecretInput
+                  type="SSHKey"
+                  name="templateInputs.executionTarget.connectorRef"
+                  label={getString('sshConnector')}
+                  disabled={readonly}
+                  allowableTypes={[]}
+                />
+              ) : null}
+              {template.executionTarget.workingDirectory ? (
+                <FormInput.Text
+                  name="templateInputs.executionTarget.workingDirectory"
+                  placeholder={getString('workingDirectory')}
+                  label={getString('workingDirectory')}
+                  style={{ marginTop: 'var(--spacing-medium)' }}
+                  disabled={readonly}
+                />
+              ) : null}
+            </>
+          ) : null}
         </div>
       ) : null}
     </>

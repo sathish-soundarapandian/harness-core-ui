@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useRef } from 'react'
-import { defaultTo, isEqual } from 'lodash-es'
+import React from 'react'
+import { isEqual } from 'lodash-es'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { ScriptTemplateFormWithRef } from './ScriptTemplateForm/ScriptTemplateForm'
@@ -15,18 +15,6 @@ import type { ShellScriptFormData } from '../PipelineSteps/ShellScriptStep/shell
 const ScriptTemplateCanvas = (_props: unknown, formikRef: TemplateFormRef) => {
   const { state, updateTemplate } = React.useContext(TemplateContext)
 
-  const scriptRef = useRef<any | null>(null)
-  /* istanbul ignore next */ React.useImperativeHandle(formikRef, () => ({
-    resetForm() {
-      return scriptRef?.current?.resetForm()
-    },
-    submitForm() {
-      return scriptRef?.current?.submitForm() || Promise.resolve()
-    },
-    getErrors() {
-      return defaultTo(scriptRef?.current?.getErrors?.(), {})
-    }
-  }))
   const onUpdate = (formikValue: ShellScriptFormData) => {
     if (!isEqual(state.template.spec, formikValue.spec)) {
       updateTemplate({
@@ -65,7 +53,7 @@ const ScriptTemplateCanvas = (_props: unknown, formikRef: TemplateFormRef) => {
     }
   }
 
-  return <ScriptTemplateFormWithRef template={state.template} ref={scriptRef} updateTemplate={onUpdate} />
+  return <ScriptTemplateFormWithRef template={state.template} ref={formikRef} updateTemplate={onUpdate} />
 }
 
 export const ScriptTemplateCanvasWithRef = React.forwardRef(ScriptTemplateCanvas)
