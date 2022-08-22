@@ -284,18 +284,9 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                                 ? `${item.scope}.${get(item, 'record.identifier', '')}`
                                 : get(item, 'record.identifier', '')
                             /* istanbul ignore next */
-                            const connectorValue = `${
-                              item.scope !== Scope.PROJECT ? `${item.scope}.` : ''
-                            }${connectorRef}`
-                            formik.setFieldValue('connectorRef', {
-                              label: get(item, 'record.name', ''),
-                              value: connectorValue,
-                              scope: item.scope,
-                              live: get(item.record, 'status.status', '') === 'SUCCESS',
-                              connector: item.record
-                            })
+                            formik.setFieldValue('connectorRef', connectorRef)
                             /* istanbul ignore next */
-                            formikRef.current?.setFieldValue('region', undefined)
+                            formik.setFieldValue('region', {})
                             refetchTagsValues(formik.values)
                           }
                           setCanTagsHaveFixedValue(
