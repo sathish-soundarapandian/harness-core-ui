@@ -162,7 +162,7 @@ export const LastExecutionCell: CellType = ({ row }) => {
   const recentExecution: RecentExecutionInfoDTO = data.recentExecutionsInfo?.[0] || {}
   const { startTs, executorInfo } = recentExecution
   const executor = executorInfo?.email || executorInfo?.username
-  const autoTriggers: ExecutorInfoDTO['triggerType'][] = ['WEBHOOK', 'WEBHOOK_CUSTOM', 'SCHEDULER_CRON']
+  const autoTriggers: ExecutorInfoDTO['triggerType'][] = ['WEBHOOK_CUSTOM', 'SCHEDULER_CRON']
   const isAutoTrigger = autoTriggers.includes(executorInfo?.triggerType)
 
   return (
@@ -175,7 +175,11 @@ export const LastExecutionCell: CellType = ({ row }) => {
               triggerIdentifier: executorInfo?.username || ''
             })}
           >
-            <Icon size={16} name={executorInfo?.triggerType === 'SCHEDULER_CRON' ? 'stopwatch' : 'trigger-execution'} />
+            <Icon
+              size={16}
+              name={executorInfo?.triggerType === 'SCHEDULER_CRON' ? 'stopwatch' : 'trigger-execution'}
+              aria-label="trigger"
+            />
           </Link>
         ) : (
           executor?.charAt(0)
@@ -288,7 +292,9 @@ export const MenuCell: CellType = ({ row, column }) => {
             className={css.link}
             icon="list-detail-view"
             text={
-              <Link to={routes.toPipelineDetail(getRouteProps(pathParams, data))}>{getString('viewExecutions')}</Link>
+              <Link to={routes.toPipelineDeploymentList(getRouteProps(pathParams, data))}>
+                {getString('viewExecutions')}
+              </Link>
             }
           />
           <Menu.Divider />

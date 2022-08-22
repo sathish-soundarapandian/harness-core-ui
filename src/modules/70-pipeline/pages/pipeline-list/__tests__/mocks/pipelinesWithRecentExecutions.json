@@ -495,6 +495,192 @@
         "gitDetails": {
           "repoName": "Repo1"
         }
+      },
+      {
+        "name": "CDP-NG-PROD-3 PostProd Sanity",
+        "identifier": "Prod3NGSanity",
+        "description": "",
+        "tags": {
+          "ngPipelines": ""
+        },
+        "version": 14,
+        "numOfStages": 5,
+        "createdAt": 1658919105239,
+        "lastUpdatedAt": 1660885226101,
+        "modules": ["ci", "pms"],
+        "executionSummaryInfo": {
+          "numOfErrors": [0, 0, 1, 0, 0, 0, 0],
+          "deployments": [0, 0, 1, 0, 0, 0, 0],
+          "lastExecutionTs": 1660866303458,
+          "lastExecutionStatus": "Failed",
+          "lastExecutionId": "K72MyTHBQ06Q7FPheF0ibw"
+        },
+        "recentExecutionsInfo": [
+          {
+            "executorInfo": {
+              "triggerType": "WEBHOOK_CUSTOM",
+              "username": "CDPNGProd3_Sanity",
+              "email": null
+            },
+            "planExecutionId": "K72MyTHBQ06Q7FPheF0ibw",
+            "status": "Failed",
+            "startTs": 1660866303431,
+            "endTs": 1660866690050
+          }
+        ],
+        "filters": {
+          "ci": {
+            "repoNames": ["Automation"]
+          },
+          "pms": {
+            "stageTypes": ["CI", "Approval"],
+            "featureFlagStepCount": 0
+          }
+        },
+        "stageNames": [
+          "Jira-Update-Execution",
+          "CDP-NG Post Prod Pass Notification",
+          "Stage1",
+          "CDP-NG Post Prod Fail Notification",
+          "Jira-Update-Status"
+        ],
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        },
+        "storeType": "INLINE",
+        "isDraft": false
+      },
+      {
+        "name": "DB-Alerting-Pre-QA",
+        "identifier": "DBAlertingPreQA",
+        "tags": {},
+        "version": 60,
+        "numOfStages": 1,
+        "createdAt": 1658726733161,
+        "lastUpdatedAt": 1660821469562,
+        "modules": ["pms"],
+        "executionSummaryInfo": {
+          "numOfErrors": [0, 0, 0, 0, 0, 0, 0],
+          "deployments": [0, 0, 0, 0, 0, 0, 1],
+          "lastExecutionTs": 1661133609963,
+          "lastExecutionStatus": "Success",
+          "lastExecutionId": "tO3g8bzlRMyaz0gF92FzpQ"
+        },
+        "recentExecutionsInfo": [
+          {
+            "executorInfo": {
+              "triggerType": "SCHEDULER_CRON",
+              "username": "preqaeverymonday",
+              "email": null
+            },
+            "planExecutionId": "tO3g8bzlRMyaz0gF92FzpQ",
+            "status": "Success",
+            "startTs": 1661133609940,
+            "endTs": 1661133639441
+          },
+          {
+            "executorInfo": {
+              "triggerType": "SCHEDULER_CRON",
+              "username": "preqaeverymonday",
+              "email": null
+            },
+            "planExecutionId": "i8SMVrogRR6wq8hca1ruaQ",
+            "status": "Success",
+            "startTs": 1660528823976,
+            "endTs": 1660528983965
+          },
+          {
+            "executorInfo": {
+              "triggerType": "SCHEDULER_CRON",
+              "username": "preqaeverymonday",
+              "email": null
+            },
+            "planExecutionId": "HDxgaY8NQG-Hd_CEugfabQ",
+            "status": "Success",
+            "startTs": 1659924012457,
+            "endTs": 1659924040452
+          },
+          {
+            "executorInfo": {
+              "triggerType": "MANUAL",
+              "username": "devesh.mishra@harness.io",
+              "email": "devesh.mishra@harness.io"
+            },
+            "planExecutionId": "u5HQSgr_Q86gW9cYwuJxQA",
+            "status": "Success",
+            "startTs": 1659516471172,
+            "endTs": 1659516489891
+          },
+          {
+            "executorInfo": {
+              "triggerType": "MANUAL",
+              "username": "devesh.mishra@harness.io",
+              "email": "devesh.mishra@harness.io"
+            },
+            "planExecutionId": "-GaSxWVcRM-d8K2Vg4EJCg",
+            "status": "Success",
+            "startTs": 1659516273630,
+            "endTs": 1659516295860
+          },
+          {
+            "executorInfo": {
+              "triggerType": "MANUAL",
+              "username": "devesh.mishra@harness.io",
+              "email": "devesh.mishra@harness.io"
+            },
+            "planExecutionId": "b0RzH0dyShe_9jCP39Yerw",
+            "status": "Success",
+            "startTs": 1659506290212,
+            "endTs": 1659506303998
+          },
+          {
+            "executorInfo": {
+              "triggerType": "MANUAL",
+              "username": "devesh.mishra@harness.io",
+              "email": "devesh.mishra@harness.io"
+            },
+            "planExecutionId": "PeMei3mgT5OsgNdNrRt3rg",
+            "status": "Success",
+            "startTs": 1659506157559,
+            "endTs": 1659506171883
+          },
+          {
+            "executorInfo": {
+              "triggerType": "MANUAL",
+              "username": "devesh.mishra@harness.io",
+              "email": "devesh.mishra@harness.io"
+            },
+            "planExecutionId": "DxxUPe5SQ5WnGfShbGjLMA",
+            "status": "Success",
+            "startTs": 1659505883708,
+            "endTs": 1659505891651
+          },
+          {
+            "executorInfo": {
+              "triggerType": "MANUAL",
+              "username": "devesh.mishra@harness.io",
+              "email": "devesh.mishra@harness.io"
+            },
+            "planExecutionId": "wZ8KOW5_RCiJEdEqBeaRLA",
+            "status": "Success",
+            "startTs": 1659505756599,
+            "endTs": 1659505775499
+          }
+        ],
+        "filters": {
+          "pms": {
+            "stageTypes": ["Approval"],
+            "featureFlagStepCount": 0
+          }
+        },
+        "stageNames": ["DB-Alert"],
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        },
+        "storeType": "INLINE",
+        "isDraft": false
       }
     ],
     "pageable": {
@@ -511,7 +697,7 @@
     },
     "last": false,
     "totalPages": 1,
-    "totalElements": 6,
+    "totalElements": 8,
     "first": true,
     "sort": {
       "sorted": true,
@@ -519,7 +705,7 @@
       "empty": false
     },
     "number": 0,
-    "numberOfElements": 4,
+    "numberOfElements": 8,
     "size": 20,
     "empty": false
   },
