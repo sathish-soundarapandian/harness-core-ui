@@ -77,11 +77,11 @@ describe('Test Get Started With CD', () => {
         <GetStartedWithCD />
       </TestWrapper>
     )
-    const createPipelineBtn = getByText('Install the Delegate') as HTMLElement
+    const createPipelineBtn = getByText('cd.delegateInstallBtnText') as HTMLElement
     expect(createPipelineBtn).toBeInTheDocument()
     createPipelineBtn.click()
     expect(container).toMatchSnapshot()
-    const KubernetesLabel = getByText('Kubernetes') as HTMLElement
+    const KubernetesLabel = getByText('kubernetesText') as HTMLElement
     expect(KubernetesLabel).toBeInTheDocument()
     fireEvent.click(KubernetesLabel)
     expect(container).toMatchSnapshot()
@@ -98,11 +98,11 @@ describe('Test Get Started With CD', () => {
         <GetStartedWithCD />
       </TestWrapper>
     )
-    const createPipelineBtn = getByText('Install the Delegate') as HTMLElement
+    const createPipelineBtn = getByText('cd.delegateInstallBtnText') as HTMLElement
     expect(createPipelineBtn).toBeInTheDocument()
     createPipelineBtn.click()
     expect(container).toMatchSnapshot()
-    const dockerLabel = getByText('Docker') as HTMLElement
+    const dockerLabel = getByText('delegate.cardData.docker.name') as HTMLElement
     expect(dockerLabel).toBeInTheDocument()
     fireEvent.click(dockerLabel)
     expect(container).toMatchSnapshot()
