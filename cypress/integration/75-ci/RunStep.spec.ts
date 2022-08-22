@@ -12,9 +12,11 @@ import {
   pipelineDetails,
   pipelineSaveCall,
   pipelineStudioRoute,
-  stepLibrary
+  stepLibrary,
+  pipelineVariablesCall,
+  stagesExecutionList
 } from '../../support/70-pipeline/constants'
-import { getRuntimeInputKeys } from '../../utils/step-utils'
+import { getRuntimeInputKeys, getTemplatesDataAsStepTemplate } from '../../utils/step-utils'
 import templatesData from '../../fixtures/ci/api/runStep/inputSetTemplateResponse.json'
 
 describe('Run Step', () => {
@@ -43,9 +45,23 @@ describe('Run Step', () => {
     })
     cy.intercept('POST', pipelineSaveCall, { fixture: 'pipeline/api/pipelines.post' })
     cy.intercept('POST', stepLibrary, { fixture: 'ci/api/common/stepLibraryResponse.json' }).as('stepLibrary')
+    cy.intercept('GET', stagesExecutionList, { fixture: 'ci/api/common/stagesExecutionListResponse.json' }).as(
+      'stagesExecutionList'
+    )
+    // ensure resolvedTemplatesPipelineYaml is in data
     cy.intercept('GET', pipelineDetails, { fixture: 'ci/api/runStep/pipelineDetails.json' }).as(
       'pipelineDetailsAPIRoute'
     )
+    cy.intercept('POST', pipelineVariablesCall, { fixture: 'pipeline/api/notifications/pipelines.variables' })
+    // ! we are missing templates call so it is not showing up that there are input sets . Trying to re-use here but we may ahve to create our own response
+    cy.intercept('POST', inputSetTemplate, {
+      fixture: 'ci/api/runStep/inputSetTemplateResponse.json'
+    }).as('inputSetTemplateCall')
+    cy.intercept('POST', runPipelineTemplateCall, {
+      fixture: 'ci/api/runStep/inputSetTemplateResponse.json'
+    }).as('inputSetTemplateCall')
+
+    //localhost:8181/pipeline/api/inputSets/template?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&pipelineIdentifier=testPipeline_Cypress&projectIdentifier=project1
     // cy.intercept('GET', connectorInfo, { fixture: 'pipeline/api/jenkinsStep/connectorInfo.json' }).as('connectorInfo')
     // cy.intercept('GET', jobDetailsCall, { fixture: 'pipeline/api/jenkinsStep/jobDetails.json' }).as('jobDetailsCall')
     // cy.intercept('GET', connectorsList, { fixture: 'pipeline/api/connector/connectorList.json' }).as(
@@ -60,13 +76,94 @@ describe('Run Step', () => {
     // cy.intercept('GET', jobParametersList, { fixture: 'pipeline/api/jenkinsStep/jobParameterResponse.json' }).as(
     //   'jobParametersList'
     // )
-    visitExecutionStageWithAssertion()
+    https: visitExecutionStageWithAssertion()
   })
-  it('Run Pipeline with Run Step prompts for all possible runtime inputs', () => {
+  it('Toggle all fields as Runtime Inputs and prompts for all possible runtime inputs', () => {
     const numOfPossibleRuntimeInputs = 11
     var skipFieldIndexes: number[] = [3, 8] // start index count at 0
-
+    cy.intercept('POST', runPipelineTemplateCall, {
+      fixture: 'ci/api/runStep/inputSetTemplateResponse.json'
+    }).as('inputSetTemplateCall')
     cy.contains('p', 'CI_Stage1').should('be.visible')
+    cy.contains('p', 'CI_Stage1').click()
+    cy.get('span[data-icon="run-step"]').click({ force: true })
+    cy.get('span[data-icon="ci-main"]').click({ force: true })
+    cy.wait(1000)
+
+    // cy.get('button[data-testid="cr-field-spec.connectorRef"]').click()
+    cy.contains('div', 'Optional Configuration').click()
+    // cy.contains('span', 'Apply Selected').click()
+    // cy.get('input[name="spec.jobName"]').click()
+    // cy.contains('p', 'AutomationQA').click()
+    // !we don't even need to do this and can manually add it in ourselves
+    const multiTypeButton = Array.from(Array(10).keys()).filter((x: number) => !skipFieldIndexes.includes(x))
+    // console.log(multiTypeButton)
+    multiTypeButton.forEach(i => {
+      cy.get('.MultiTypeInput--btn').eq(multiTypeButton[i]).click()
+      cy.contains('span', 'Runtime input').click()
+    })
+    for (var i = 0; i < numOfPossibleRuntimeInputs; i++) {
+      if (skipFieldIndexes.includes(i)) {
+        return
+      }
+      if (cy.contains('span', 'Runtime input')) {
+      } else {
+        cy.contains('span', 'Fixed Value').click()
+      }
+    }
+    // cy.get('.MultiTypeInput--btn').eq(2).click()
+    // cy.contains('span', 'Runtime input').click()
+
+    // cy.contains('span', 'Apply Changes').click()
+    // cy.wait(1000)
+    // cy.contains('div', 'Optional Configuration').should('be.null')
+
+    // cy.intercept('GET', pipelineDetails, { fixture: 'ci/api/runStep/pipelineDetails.json' }).as(
+    //   'pipelineDetailsAPIRouteAfterSave'
+    // )
+    // cy.contains('span', 'Save').click()
+
+    // cy.contains('span', 'Apply Changes').click()
+    // cy.wait(1000)
+    // cy.intercept('GET', pipelineDetails, {
+    //   fixture: 'ci/api/runStep/pipelineDetails.json'
+    // }).as('pipelineDetailsAPIRouteAfterSave')
+
+    // cy.intercept('POST', runPipelineTemplateCall, {
+    //   fixture: 'ci/api/runStep/inputSetTemplateResponse.json'
+    // }).as('inputSetTemplateCall')
+    // cy.intercept('GET', inputSetTemplate, {
+    //   fixture: 'ci/api/runStep/inputSetPipelineDetails.json'
+    // }).as('inputSetTemplate')
+    cy.contains('span', 'Run').click()
+    cy.wait(1000)
+    // cy.get('.MultiTypeInput--btn').eq(numOfPossibleRuntimeInputs - skipFieldIndexes.length - 1)
+
+    console.log(templatesData)
+    // console.log(JSON.parse(templatesData.data.inputSetTemplateYaml))
+    console.log(parse(templatesData.data.inputSetTemplateYaml))
+    const arrayOfFieldNames = getRuntimeInputKeys(parse(templatesData.data.inputSetTemplateYaml))
+    //    cy.get('form > div').
+    cy.get('[class*="bp3-dialog"] [data-name="toggle-option-two"]').click()
+    // cy.contains('div', 'YAML').click()
+    cy.get('[class*="bp3-dialog"] [data-name="toggle-option-two"]').click()
+
+    cy.contains('span', 'run-pipeline.yaml').should('be.visible')
+    cy.get('.monaco-editor .overflow-guard').scrollTo('0%', '30%', { ensureScrollable: false })
+
+    arrayOfFieldNames.forEach(fieldName => {
+      cy.get('[class*="view-line"] [class*="mtk5"]').contains(fieldName)
+      //   cy.contains('span', fieldName).should('be.visible')
+    })
+  })
+
+  it.only('Run Pipeline with Run Step prompts for all possible runtime inputs', () => {
+    const numOfPossibleRuntimeInputs = 11
+    var skipFieldIndexes: number[] = [3, 8] // start index count at 0
+    cy.intercept('POST', runPipelineTemplateCall, {
+      fixture: 'ci/api/runStep/inputSetTemplateResponse.json'
+    }).as('inputSetTemplateCall')
+    // cy.contains('p', 'CI_Stage1').should('be.visible')
     // cy.contains('p', 'CI_Stage1').click()
     // cy.get('span[data-icon="run-step"]').click({ force: true })
     // cy.get('span[data-icon="ci-main"]').click({ force: true })
@@ -128,20 +225,66 @@ describe('Run Step', () => {
     //    cy.get('form > div').
     cy.get('[class*="bp3-dialog"] [data-name="toggle-option-two"]').click()
     // cy.contains('div', 'YAML').click()
+    cy.get('[class*="bp3-dialog"] [data-name="toggle-option-two"]').click()
+
+    cy.contains('span', 'run-pipeline.yaml').should('be.visible')
+    cy.get('.monaco-editor .overflow-guard').scrollTo('0%', '30%', { ensureScrollable: false })
+
     arrayOfFieldNames.forEach(fieldName => {
       cy.get('[class*="view-line"] [class*="mtk5"]').contains(fieldName)
       //   cy.contains('span', fieldName).should('be.visible')
+    })
+  })
+
+  it('TEMPLATE: Run Pipeline with Run Step prompts for all possible runtime inputs', () => {
+    const fixture = getTemplatesDataAsStepTemplate(templatesData)
+    cy.intercept('POST', runPipelineTemplateCall, fixture).as('inputSetTemplateCall')
+    cy.contains('span', 'Run').click()
+    cy.wait(1000)
+    // cy.get('.MultiTypeInput--btn').eq(numOfPossibleRuntimeInputs - skipFieldIndexes.length - 1)
+
+    console.log(templatesData)
+    // console.log(JSON.parse(templatesData.data.inputSetTemplateYaml))
+    console.log(parse(templatesData.data.inputSetTemplateYaml))
+    const arrayOfFieldNames = getRuntimeInputKeys(parse(templatesData.data.inputSetTemplateYaml))
+    //    cy.get('form > div').
+    cy.get('[class*="bp3-dialog"] [data-name="toggle-option-two"]').click()
+    // cy.contains('div', 'YAML').click()
+    cy.get('[class*="bp3-dialog"] [data-name="toggle-option-two"]').click()
+
+    cy.contains('span', 'run-pipeline.yaml').should('be.visible')
+    cy.get('.monaco-editor .overflow-guard').scrollTo('0%', '30%', { ensureScrollable: false })
+
+    arrayOfFieldNames.forEach(fieldName => {
+      cy.get('[class*="view-line"] [class*="mtk5"]').contains(fieldName)
       //   cy.contains('span', fieldName).should('be.visible')
     })
-    // get step single step object and recursively go through again if there is a spec object for the other <+inputs>
+  })
 
-    // templatesData.forEach(i => {
-    //     cy.get('.MultiTypeInput--btn').eq(multiTypeButton[i]).click()
-    //     cy.contains('span', 'Runtime input').click()
-    //     cy.contains('p', 'Jenkins').should('be.visible')
+  // Don't need to fill input set since we have a jest tests that can do this
+  it('TRIGGER: Run Pipeline with Input Set prompts for all possible runtime inputs', () => {
+    const fixture = getTemplatesDataAsStepTemplate(templatesData)
+    cy.intercept('POST', runPipelineTemplateCall, fixture).as('inputSetTemplateCall')
+    cy.contains('span', 'Run').click()
+    cy.wait(1000)
+    // cy.get('.MultiTypeInput--btn').eq(numOfPossibleRuntimeInputs - skipFieldIndexes.length - 1)
 
-    //   })
-    // .eq(1).click()
+    console.log(templatesData)
+    // console.log(JSON.parse(templatesData.data.inputSetTemplateYaml))
+    console.log(parse(templatesData.data.inputSetTemplateYaml))
+    const arrayOfFieldNames = getRuntimeInputKeys(parse(templatesData.data.inputSetTemplateYaml))
+    //    cy.get('form > div').
+    cy.get('[class*="bp3-dialog"] [data-name="toggle-option-two"]').click()
+    // cy.contains('div', 'YAML').click()
+    cy.get('[class*="bp3-dialog"] [data-name="toggle-option-two"]').click()
+
+    cy.contains('span', 'run-pipeline.yaml').should('be.visible')
+    cy.get('.monaco-editor .overflow-guard').scrollTo('0%', '30%', { ensureScrollable: false })
+
+    arrayOfFieldNames.forEach(fieldName => {
+      cy.get('[class*="view-line"] [class*="mtk5"]').contains(fieldName)
+      //   cy.contains('span', fieldName).should('be.visible')
+    })
   })
 
   //   it('jenkins step addition, with all fixed values and jobName as subFolder value', () => {
