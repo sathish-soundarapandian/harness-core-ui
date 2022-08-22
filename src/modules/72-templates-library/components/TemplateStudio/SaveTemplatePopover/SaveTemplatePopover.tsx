@@ -111,11 +111,12 @@ function SaveTemplatePopover(
         comment,
         updatedGitDetails: gitDetails
       })
+    } catch (error) {
+      onError(error, comment)
+    } finally {
       if (isEmpty(gitDetails)) {
         setLoading(false)
       }
-    } catch (error) {
-      onError(error, comment)
     }
   }
 
