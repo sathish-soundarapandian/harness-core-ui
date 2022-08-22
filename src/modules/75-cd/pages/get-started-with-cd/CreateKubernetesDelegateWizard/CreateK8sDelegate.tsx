@@ -180,7 +180,7 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps) 
   return (
     <>
       <Layout.Vertical>
-        <Text font={{ variation: FontVariation.H4 }} className={css.subHeading}>
+        <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
           Instructions to Install the Delegate
         </Text>
         <ul className={css.progress}>

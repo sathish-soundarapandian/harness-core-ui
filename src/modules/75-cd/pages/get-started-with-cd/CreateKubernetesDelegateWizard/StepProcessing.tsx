@@ -110,7 +110,7 @@ const StepProcessing: FC<StepDelegateData> = props => {
                 onClick={() => setTroubleShootVisible(!isTroubleShootVisible)}
                 color={Color.BLUE_700}
               >
-                TroubleShoot
+                Troubleshoot
               </Text>
             </Layout.Vertical>
             <img className={css.buildImg} title={getString('common.getStarted.buildPipeline')} src={delegateErrorURL} />

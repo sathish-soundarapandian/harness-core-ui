@@ -143,13 +143,13 @@ export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegate)
   return (
     <>
       <Layout.Vertical>
-        <Text font={{ variation: FontVariation.H4 }} className={css.subHeading}>
+        <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
           Instructions to Install the Delegate
         </Text>
         <ul className={css.progress}>
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical>
-              <Text font={{ variation: FontVariation.H6 }} className={css.subHeading}>
+              <Text font={{ variation: FontVariation.H6, weight: 'semi-bold' }} className={css.subHeading}>
                 DOWNLOAD THE YAML
               </Text>
               <Layout.Horizontal className={css.spacing}>
@@ -194,7 +194,7 @@ export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegate)
           </li>
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical className={css.panelLeft}>
-              <Text font={{ variation: FontVariation.H6 }} className={css.subHeading}>
+              <Text font={{ variation: FontVariation.H6, weight: 'semi-bold' }} className={css.subHeading}>
                 INSTALL ON YOUR CLUSTER
               </Text>
               <Layout.Horizontal>
@@ -227,7 +227,7 @@ export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegate)
           </li>
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical>
-              <Text font={{ variation: FontVariation.H6 }} className={css.subHeading}>
+              <Text font={{ variation: FontVariation.H6, weight: 'semi-bold' }} className={css.subHeading}>
                 WAITING FOR DELEGATE TO CONNECT
               </Text>
               {!isEmpty(yaml) ? (

@@ -44,9 +44,9 @@ export const DelegateTypeSelector = ({ onClickBack }: DelegateTypeSelector) => {
   return (
     <Layout.Vertical width="50%">
       <Container className={css.header}>
-        <Text font={{ variation: FontVariation.H2, weight: 'bold' }}>Install Delegate</Text>
+        <Text font={{ variation: FontVariation.H2, weight: 'semi-bold' }}>Install Delegate</Text>
         <div className={css.borderBottom} />
-        <Text font={{ variation: FontVariation.H4 }} className={css.secondaryHeader}>
+        <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.secondaryHeader}>
           How do you want to run the Delegate
         </Text>
         <Button
@@ -65,7 +65,7 @@ export const DelegateTypeSelector = ({ onClickBack }: DelegateTypeSelector) => {
       </Container>
       <Layout.Vertical
         flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
-        height="68.5vh"
+        height="67.5vh"
         className={css.content}
       >
         <Layout.Vertical width="100%" height="90%" className={css.main}>
