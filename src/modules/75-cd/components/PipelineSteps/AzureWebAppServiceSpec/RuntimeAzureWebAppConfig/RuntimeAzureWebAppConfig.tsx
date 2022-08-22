@@ -47,7 +47,7 @@ const AzureWebAppConfigInputField = (props: AzureWebAppConfigProps): React.React
       return (
         <Layout.Vertical className={cx(css.inputWidth, css.layoutVerticalSpacing)}>
           <FileStoreList
-            name={`${props.path}.${props.type}.spec.secretFiles`}
+            name={`${props.path}.${props.type}.store.spec.secretFiles`}
             type={fileTypes.ENCRYPTED}
             allowOnlyOne={true}
             formik={props.formik}
@@ -58,7 +58,7 @@ const AzureWebAppConfigInputField = (props: AzureWebAppConfigProps): React.React
     return (
       <Layout.Vertical className={cx(css.inputWidth, css.layoutVerticalSpacing)}>
         <FileStoreList
-          name={`${props.path}.${props.type}.spec.files`}
+          name={`${props.path}.${props.type}.store.spec.files`}
           type={fileTypes.FILE_STORE}
           allowOnlyOne={true}
           formik={props.formik}
