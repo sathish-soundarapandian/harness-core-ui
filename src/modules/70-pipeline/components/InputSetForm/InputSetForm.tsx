@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { defaultTo, merge, noop, omit, pick } from 'lodash-es'
+import { defaultTo, isEmpty, merge, noop, omit, pick } from 'lodash-es'
 import {
   Layout,
   NestedAccordionProvider,
@@ -447,6 +447,7 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
   })
 
   React.useEffect(() => {
+    if (!isEmpty(inputSet)) setFilePath(getFilePath(inputSet))
     if (isInputSetInvalid(inputSet) || selectedView === SelectedView.YAML) {
       setSelectedView(SelectedView.YAML)
     } else {

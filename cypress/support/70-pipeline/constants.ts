@@ -29,7 +29,7 @@ export const pipelineListAPI = `/pipeline/api/pipelines/list?routingId=${account
 export const pipelineSummaryAPI = `/pipeline/api/pipelines/summary/appdtest?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
 export const pipelineDetailsAPI = `/pipeline/api/pipelines/appdtest?accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
 export const executionSummaryAPI = `/pipeline/api/pipelines/execution/summary?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&page=0&size=20&sort=startTs%2CDESC&module=cd`
-export const pipelineExecutionSummaryAPI = `/pipeline/api/pipelines/execution/summary?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&pipelineIdentifier=*&page=0&size=20&sort=startTs%2CDESC`
+export const pipelineExecutionSummaryAPI = `/pipeline/api/pipelines/execution/summary?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&pipelineIdentifier=*&*`
 export const executionMetadata = `/pipeline/api/pipelines/execution/*/metadata?routingId=${accountId}&accountIdentifier=${accountId}`
 export const pipelineExecutionAPI = `/pipeline/api/pipelines/execution/v2/C9mgNjxSS7-B-qQek27iuA?routingId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&accountIdentifier=${accountId}`
 export const pipelineExecutionForNodeAPI = `/pipeline/api/pipelines/execution/v2/C9mgNjxSS7-B-qQek27iuA?routingId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&accountIdentifier=${accountId}&stageNodeId=g_LkakmWRPm-wC6rfC2ufg`

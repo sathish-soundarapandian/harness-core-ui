@@ -29,10 +29,11 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import { Badge } from '@pipeline/pages/utils/Badge/Badge'
 import { getReadableDateTime } from '@common/utils/dateUtils'
-import type { PMSPipelineSummaryResponse, RecentExecutionInfoDTO } from 'services/pipeline-ng'
+import type { ExecutorInfoDTO, PMSPipelineSummaryResponse, RecentExecutionInfoDTO } from 'services/pipeline-ng'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
+import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import { getRouteProps } from '../PipelineListUtils'
 import type { PipelineListPagePathParams } from '../types'
 import css from './PipelineListTable.module.scss'
@@ -156,14 +157,34 @@ export const CodeSourceCell: CellType = ({ row }) => {
 
 export const LastExecutionCell: CellType = ({ row }) => {
   const { getString } = useStrings()
+  const pathParams = useParams<PipelineType<PipelineListPagePathParams>>()
   const data = row.original
   const recentExecution: RecentExecutionInfoDTO = data.recentExecutionsInfo?.[0] || {}
   const { startTs, executorInfo } = recentExecution
   const executor = executorInfo?.email || executorInfo?.username
+  const autoTriggers: ExecutorInfoDTO['triggerType'][] = ['WEBHOOK_CUSTOM', 'SCHEDULER_CRON']
+  const isAutoTrigger = autoTriggers.includes(executorInfo?.triggerType)
 
   return (
     <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>
-      <div className={cx(css.avatar, !executor && css.hidden)}>{executor?.charAt(0)}</div>
+      <div className={cx(css.trigger, !isAutoTrigger && css.avatar, !executor && css.hidden)}>
+        {isAutoTrigger ? (
+          <Link
+            to={routes.toTriggersDetailPage({
+              ...getRouteProps(pathParams, data),
+              triggerIdentifier: executorInfo?.username || ''
+            })}
+          >
+            <Icon
+              size={16}
+              name={executorInfo?.triggerType === 'SCHEDULER_CRON' ? 'stopwatch' : 'trigger-execution'}
+              aria-label="trigger"
+            />
+          </Link>
+        ) : (
+          executor?.charAt(0)
+        )}
+      </div>
       <Layout.Vertical spacing="xsmall">
         {executor && (
           <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL }}>
@@ -271,7 +292,9 @@ export const MenuCell: CellType = ({ row, column }) => {
             className={css.link}
             icon="list-detail-view"
             text={
-              <Link to={routes.toPipelineDetail(getRouteProps(pathParams, data))}>{getString('viewExecutions')}</Link>
+              <Link to={routes.toPipelineDeploymentList(getRouteProps(pathParams, data))}>
+                {getString('viewExecutions')}
+              </Link>
             }
           />
           <Menu.Divider />
@@ -354,7 +377,10 @@ export const RecentExecutionsCell: CellType = ({ row }) => {
                     </Layout.Horizontal>
                   }
                 />
-                <LabeValue label={getString('common.triggerName')} value={i.executorInfo?.triggerType} />
+                <LabeValue
+                  label={getString('common.triggerName')}
+                  value={getString(mapTriggerTypeToStringID(i.executorInfo?.triggerType))}
+                />
               </>
             )}
           </Layout.Vertical>

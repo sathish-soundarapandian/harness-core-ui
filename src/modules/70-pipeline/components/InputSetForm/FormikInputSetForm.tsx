@@ -313,7 +313,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
   const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
   React.useEffect(() => {
     const initialValues = getPipelineData()
-    formikRef.current?.setFieldValue('pipeline', initialValues.pipeline)
+    formikRef.current?.setValues({ ...initialValues, ...storeMetadata })
   }, [inputSet, isEdit, resolvedPipeline])
 
   return (

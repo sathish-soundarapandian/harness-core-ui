@@ -120,7 +120,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   const executionList = data?.data
   const hasExecutions = executionList?.totalElements && executionList?.totalElements > 0
   const showSpinner = initLoading || (loading && !isPolling)
-  const showSubHeader = hasExecutions || isAnyFilterApplied || (loading && !initLoading)
+  const showSubHeader = hasExecutions || isAnyFilterApplied
 
   return (
     <>

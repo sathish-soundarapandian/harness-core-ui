@@ -107,8 +107,8 @@ const renderPipelinesListPage = (module = 'cd'): RenderResult =>
 describe('CD Pipeline List Page', () => {
   test('should render pipeline table and able to go to a pipeline', async () => {
     renderPipelinesListPage()
-    await screen.findByText(/total: 6/i)
-    const pipelineRow = screen.getAllByRole('row')[1]
+    const rows = await screen.findAllByRole('row')
+    const pipelineRow = rows[1]
     expect(
       within(pipelineRow).getByRole('link', {
         name: /Sonar Develop/i
@@ -253,8 +253,8 @@ describe('CI Pipeline List Page', () => {
     })
 
     renderPipelinesListPage('ci')
-    await screen.findByText(/total: 6/i)
-    const pipelineRow = screen.getAllByRole('row')[1]
+    const rows = await screen.findAllByRole('row')
+    const pipelineRow = rows[1]
     expect(
       within(pipelineRow).getByRole('link', {
         name: /Sonar Develop/i
@@ -286,6 +286,49 @@ describe('CI Pipeline List Page', () => {
       }
     )
   })
+
+  test('should show trigger icons with appropriate links to navigate to triggers', async () => {
+    const useGetPipelineListMock = useGetPipelineList as jest.MockedFunction<any>
+    const mutateListOfPipelines = jest.fn().mockResolvedValue(pipelines)
+    useGetPipelineListMock.mockReturnValue({
+      mutate: mutateListOfPipelines,
+      loading: false,
+      cancel: jest.fn()
+    })
+
+    renderPipelinesListPage('ci')
+    const rows = await screen.findAllByRole('row')
+    const webhookPipeline = rows[7]
+    const cronPipeline = rows[8]
+
+    expect(
+      within(webhookPipeline).getByRole('link', {
+        name: /trigger/i
+      })
+    ).toHaveAttribute(
+      'href',
+      routes.toTriggersDetailPage({
+        ...getModuleParams('ci'),
+        pipelineIdentifier: 'Prod3NGSanity',
+        storeType: 'INLINE',
+        triggerIdentifier: 'CDPNGProd3_Sanity'
+      } as any)
+    )
+
+    expect(
+      within(cronPipeline).getByRole('link', {
+        name: /trigger/i
+      })
+    ).toHaveAttribute(
+      'href',
+      routes.toTriggersDetailPage({
+        ...getModuleParams('ci'),
+        pipelineIdentifier: 'DBAlertingPreQA',
+        storeType: 'INLINE',
+        triggerIdentifier: 'preqaeverymonday'
+      } as any)
+    )
+  })
 })
 
 describe('Pipeline List Page with git details', () => {
@@ -299,10 +342,10 @@ describe('Pipeline List Page with git details', () => {
     })
 
     renderPipelinesListPage('ci')
-    await screen.findByText(/total: 6/i)
-    const pipelineRow = screen.getAllByRole('row')[6]
+    const rows = await screen.findAllByRole('row')
+    const remotePipeline = rows[6]
     expect(
-      within(pipelineRow).getByRole('link', {
+      within(remotePipeline).getByRole('link', {
         name: /mb-gh-work-abcd/i
       })
     ).toHaveAttribute(
