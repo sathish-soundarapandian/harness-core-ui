@@ -288,7 +288,15 @@ describe('CI Pipeline List Page', () => {
   })
 
   test('should show trigger icons with appropriate links to navigate to triggers', async () => {
-    renderPipelinesListPage()
+    const useGetPipelineListMock = useGetPipelineList as jest.MockedFunction<any>
+    const mutateListOfPipelines = jest.fn().mockResolvedValue(pipelines)
+    useGetPipelineListMock.mockReturnValue({
+      mutate: mutateListOfPipelines,
+      loading: false,
+      cancel: jest.fn()
+    })
+
+    renderPipelinesListPage('ci')
     const rows = await screen.findAllByRole('row')
     const webhookPipeline = rows[7]
     const cronPipeline = rows[8]
@@ -300,7 +308,7 @@ describe('CI Pipeline List Page', () => {
     ).toHaveAttribute(
       'href',
       routes.toTriggersDetailPage({
-        ...getModuleParams(),
+        ...getModuleParams('ci'),
         pipelineIdentifier: 'Prod3NGSanity',
         storeType: 'INLINE',
         triggerIdentifier: 'CDPNGProd3_Sanity'
@@ -314,7 +322,7 @@ describe('CI Pipeline List Page', () => {
     ).toHaveAttribute(
       'href',
       routes.toTriggersDetailPage({
-        ...getModuleParams(),
+        ...getModuleParams('ci'),
         pipelineIdentifier: 'DBAlertingPreQA',
         storeType: 'INLINE',
         triggerIdentifier: 'preqaeverymonday'
