@@ -12,6 +12,8 @@ import { TemplatesGridView } from '@templates-library/pages/TemplatesPage/views/
 import { mockTemplates } from '@templates-library/TemplatesTestHelper'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { TemplatesViewProps } from '@templates-library/pages/TemplatesPage/views/TemplatesView/TemplatesView'
+import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
+import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
 
 const baseProps: TemplatesViewProps = {
   data: defaultTo(mockTemplates.data, {}),
@@ -20,6 +22,9 @@ const baseProps: TemplatesViewProps = {
 }
 
 describe('<TemplatesGridView /> tests', () => {
+  beforeAll(() => {
+    templateFactory.registerTemplate(new StepTemplate())
+  })
   test('should match snapshot', async () => {
     const { container } = render(
       <TestWrapper>

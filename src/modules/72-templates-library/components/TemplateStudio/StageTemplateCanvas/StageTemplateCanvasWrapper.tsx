@@ -14,16 +14,15 @@ import {
   DefaultNewStageName
 } from '@templates-library/components/TemplateStudio/StageTemplateCanvas/StageTemplateForm/StageTemplateForm'
 import { TemplatePipelineProvider } from '@templates-library/components/TemplatePipelineContext/TemplatePipelineContext'
-import { StageTemplateCanvasWithRef } from '@templates-library/components/TemplateStudio/StageTemplateCanvas/StageTemplateCanvas'
+import { StageTemplateCanvas } from '@templates-library/components/TemplateStudio/StageTemplateCanvas/StageTemplateCanvas'
 import type { PipelineInfoConfig, StageElementConfig } from 'services/pipeline-ng'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
-import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { DefaultPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { sanitize } from '@common/utils/JSONUtils'
 import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
-const StageTemplateCanvasWrapper = (_props: unknown, formikRef: TemplateFormRef) => {
+const StageTemplateCanvasWrapper = () => {
   const {
     state: { template, isLoading, isUpdated, gitDetails },
     updateTemplate,
@@ -70,7 +69,7 @@ const StageTemplateCanvasWrapper = (_props: unknown, formikRef: TemplateFormRef)
       isReadOnly={isReadonly}
       renderPipelineStage={renderPipelineStage}
     >
-      <StageTemplateCanvasWithRef ref={formikRef} />
+      <StageTemplateCanvas />
     </TemplatePipelineProvider>
   )
 }

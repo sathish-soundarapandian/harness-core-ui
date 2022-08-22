@@ -6,18 +6,30 @@
  */
 
 import React from 'react'
-import { Color } from '@harness/design-system'
-import { Template, TemplateProps } from '@templates-library/components/AbstractTemplate/Template'
+import type { IconName } from '@wings-software/uicore'
+import { Template } from '@templates-library/components/AbstractTemplate/Template'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
-import type { NGTemplateInfoConfig } from 'services/template-ng'
+import type { TemplateInputsProps } from '@templates-library/components/TemplateInputs/TemplateInputs'
+import { Scope } from '@common/interfaces/SecretsInterface'
+import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 
-export class ServiceTemplate extends Template<NGTemplateInfoConfig> {
-  protected type = TemplateType.Service
+export class ServiceTemplate extends Template {
   protected label = 'Service'
-  protected color = Color.PURPLE_700
+  protected type = TemplateType.Service
+  protected icon: IconName = 'disable'
+  protected allowedScopes = [Scope.PROJECT, Scope.ORG, Scope.ACCOUNT]
+  protected colorMap = {
+    color: '#299B2C',
+    stroke: '#D4E7D1',
+    fill: '#E4F7E1'
+  }
   protected isEnabled = false
 
-  renderTemplateCanvas(_props: TemplateProps<NGTemplateInfoConfig>): JSX.Element {
+  renderTemplateCanvas(_formikRef: TemplateFormRef): JSX.Element {
+    return <></>
+  }
+
+  renderTemplateInputsForm(_props: TemplateInputsProps & { accountId: string }): JSX.Element {
     return <></>
   }
 }

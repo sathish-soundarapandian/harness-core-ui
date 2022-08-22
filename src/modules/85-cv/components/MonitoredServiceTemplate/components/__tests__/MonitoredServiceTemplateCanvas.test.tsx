@@ -119,16 +119,15 @@ describe('Test MonitoredTemplateCanvasWithRef', () => {
     const monitoredServiceTemplate = new MonitoredServiceTemplate()
     expect(monitoredServiceTemplate).toEqual({
       allowedScopes: [Scope.PROJECT],
-      color: 'teal700',
-      defaultValues: {
-        identifier: 'Template_name',
-        name: 'Template name',
-        type: 'MonitoredService',
-        versionLabel: ''
-      },
       isEnabled: true,
       label: 'Monitored Service',
-      type: 'MonitoredService'
+      type: 'MonitoredService',
+      icon: 'cv-main',
+      colorMap: {
+        color: '#06B7C3',
+        fill: '#E4F7E1',
+        stroke: '#D4E7D1'
+      }
     })
   })
 

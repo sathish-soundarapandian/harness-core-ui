@@ -20,7 +20,7 @@ import {
   DefaultNewStageId,
   DefaultNewStageName
 } from '@templates-library/components/TemplateStudio/StageTemplateCanvas/StageTemplateForm/StageTemplateForm'
-import { StageTemplateCanvasWithRef } from '../StageTemplateCanvas'
+import { StageTemplateCanvas } from '../StageTemplateCanvas'
 
 jest.mock('@wings-software/monaco-yaml/lib/esm/languageservice/yamlLanguageService', () => ({
   getLanguageService: jest.fn()
@@ -30,7 +30,7 @@ jest.mock('@pipeline/components/PipelineStudio/RightDrawer/RightDrawer', () => (
   RightDrawer: () => <div />
 }))
 
-describe('<StageTemplateCanvasWithRef /> tests', () => {
+describe('<StageTemplateCanvas /> tests', () => {
   test('should match snapshot in empty state', async () => {
     const context = produce(pipelineContextMock, draft => {
       set(draft, 'state.pipeline.stages[0].stage', {
@@ -62,7 +62,7 @@ describe('<StageTemplateCanvasWithRef /> tests', () => {
             templateType: 'Stage'
           }}
         >
-          <StageTemplateCanvasWithRef />
+          <StageTemplateCanvas />
         </TestWrapper>
       </PipelineContext.Provider>
     )

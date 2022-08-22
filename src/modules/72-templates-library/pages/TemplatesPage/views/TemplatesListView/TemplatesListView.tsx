@@ -15,13 +15,12 @@ import { TemplateListCardContextMenu } from '@templates-library/pages/TemplatesP
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { TemplateSummaryResponse } from 'services/template-ng'
-import { templateColorStyleMap } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
 import type { TemplatesViewProps } from '@templates-library/pages/TemplatesPage/views/TemplatesView/TemplatesView'
 import { TagsPopover } from '@common/components'
 import { Badge } from '@pipeline/pages/utils/Badge/Badge'
 import GitDetailsColumn from '@common/components/Table/GitDetailsColumn/GitDetailsColumn'
-import { TemplateType } from '@templates-library/utils/templatesUtils'
 import { ScopeBadge } from '@common/components/ScopeBadge/ScopeBadge'
+import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import css from './TemplatesListView.module.scss'
 
 type CustomColumn<T extends Record<string, any>> = Column<T> & {
@@ -52,7 +51,7 @@ const RenderColumnMenu: Renderer<CellProps<TemplateSummaryResponse>> = ({ row, c
 const RenderColumnType: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
   const data = row.original
   const templateEntityType = data.templateEntityType
-  const style = templateColorStyleMap[defaultTo(templateEntityType, TemplateType.Step)]
+  const style = templateFactory.getTemplateColorMap(defaultTo(templateEntityType, ''))
 
   return (
     <Layout.Horizontal
@@ -64,12 +63,12 @@ const RenderColumnType: Renderer<CellProps<TemplateSummaryResponse>> = ({ row })
       <svg width="8" height="64" viewBox="0 0 8 64" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
           d="M7.5 63.5L7.5 0.5H5C2.51472 0.5 0.5 2.51472 0.5 5L0.5 59C0.5 61.4853 2.51472 63.5 5 63.5H7.5Z"
-          fill={style.fill}
-          stroke={style.stroke}
+          fill={style?.fill}
+          stroke={style?.stroke}
         />
       </svg>
       {templateEntityType && (
-        <Text font={{ size: 'xsmall', weight: 'bold' }} style={{ color: style.color, letterSpacing: 2 }}>
+        <Text font={{ size: 'xsmall', weight: 'bold' }} style={{ color: style?.color, letterSpacing: 2 }}>
           {templateEntityType.toUpperCase()}
         </Text>
       )}

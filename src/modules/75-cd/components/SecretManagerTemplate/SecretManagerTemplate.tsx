@@ -6,28 +6,30 @@
  */
 
 import React from 'react'
-import { Color } from '@harness/design-system'
-import { Template, TemplateProps } from '@templates-library/components/AbstractTemplate/Template'
+import type { IconName } from '@wings-software/uicore'
+import { Template } from '@templates-library/components/AbstractTemplate/Template'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
-import type { NGTemplateInfoConfig } from 'services/template-ng'
-
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { ScriptTemplateCanvasWithRef } from '@cd/components/ScriptTemplateCanvas/ScriptTemplateCanvas'
+import type { TemplateInputsProps } from '@templates-library/components/TemplateInputs/TemplateInputs'
+import { Scope } from '@common/interfaces/SecretsInterface'
 
-export class SecretManagerTemplate extends Template<NGTemplateInfoConfig> {
+export class SecretManagerTemplate extends Template {
   protected label = 'Secret Manager'
   protected type = TemplateType.SecretManager
-  protected name = 'Secret Manager Template'
-  protected color = Color.TEAL_700
-  protected isEnabled = true
-
-  protected defaultValues: NGTemplateInfoConfig = {
-    name: 'Template name',
-    identifier: 'Template_name',
-    versionLabel: '',
-    type: 'SecretManager'
+  protected icon: IconName = 'script'
+  protected allowedScopes = [Scope.PROJECT, Scope.ORG, Scope.ACCOUNT]
+  protected colorMap = {
+    color: '#06B7C3',
+    stroke: '#D4E7D1',
+    fill: '#CDF4FE'
   }
-  renderTemplateCanvas(props: TemplateProps<NGTemplateInfoConfig>): JSX.Element {
-    return <ScriptTemplateCanvasWithRef ref={props.formikRef as TemplateFormRef<unknown> | undefined} />
+
+  renderTemplateCanvas(formikRef: TemplateFormRef): JSX.Element {
+    return <ScriptTemplateCanvasWithRef ref={formikRef} />
+  }
+
+  renderTemplateInputsForm(_props: TemplateInputsProps & { accountId: string }): JSX.Element {
+    return <></>
   }
 }

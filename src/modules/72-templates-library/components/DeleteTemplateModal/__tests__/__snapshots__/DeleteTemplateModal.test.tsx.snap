@@ -229,7 +229,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot 1`] = `
                           class="StyledProps--font StyledProps--main text absolutePos"
                           style="color: rgb(89, 43, 170);"
                         >
-                          
+                          STEP
                         </p>
                       </div>
                     </div>
@@ -613,7 +613,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot when error occurs i
                           class="StyledProps--font StyledProps--main text absolutePos"
                           style="color: rgb(89, 43, 170);"
                         >
-                          
+                          STEP
                         </p>
                       </div>
                     </div>
@@ -1003,7 +1003,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot when status is fail
                           class="StyledProps--font StyledProps--main text absolutePos"
                           style="color: rgb(89, 43, 170);"
                         >
-                          
+                          STEP
                         </p>
                       </div>
                     </div>

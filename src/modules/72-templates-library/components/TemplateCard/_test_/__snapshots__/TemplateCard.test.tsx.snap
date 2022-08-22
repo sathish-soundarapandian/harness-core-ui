@@ -296,7 +296,7 @@ exports[`<TemplateCard /> tests snapshot test with git sync enabled 1`] = `
               class="StyledProps--font StyledProps--main text absolutePos"
               style="color: rgb(89, 43, 170);"
             >
-              
+              STEP
             </p>
           </div>
         </div>

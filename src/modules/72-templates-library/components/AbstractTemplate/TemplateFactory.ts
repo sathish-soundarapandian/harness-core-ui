@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { Color } from '@harness/design-system'
+import type { IconName } from '@wings-software/uicore'
+import type React from 'react'
 import type { Template } from '@templates-library/components/AbstractTemplate/Template'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 
@@ -13,33 +14,33 @@ export class TemplateFactory {
   /**
    * Couples the factory with the templates it generates
    */
-  protected templateBank: Map<string, Template<unknown>>
+  protected templateBank: Map<string, Template>
 
   constructor() {
     this.templateBank = new Map()
   }
 
-  registerTemplate<T>(template: Template<T>): void {
-    this.templateBank.set(template.getType(), template as Template<unknown>)
+  registerTemplate(template: Template): void {
+    this.templateBank.set(template.getType(), template as Template)
   }
 
-  getTemplate<T>(type: string): Template<T> | undefined {
-    return this.templateBank.get(type) as Template<T>
-  }
-
-  getTemplateIsEnabled(type: string): boolean | undefined {
-    return this.templateBank.get(type)?.getIsEnabled()
+  getTemplate(type: string): Template | undefined {
+    return this.templateBank.get(type) as Template
   }
 
   getTemplateLabel(type: string): string | undefined {
     return this.templateBank.get(type)?.getLabel()
   }
 
-  getTemplateAllowedScopes(type: string): Scope[] | undefined {
-    return this.templateBank.get(type)?.getAllowedScopes()
+  getTemplateIcon(type: string): IconName | undefined {
+    return this.templateBank.get(type)?.getIcon()
   }
 
-  getTemplateColor(type: string): Color | undefined {
-    return this.templateBank.get(type)?.getColor()
+  getTemplateColorMap(type: string): React.CSSProperties | undefined {
+    return this.templateBank.get(type)?.getColorMap()
+  }
+
+  getTemplateAllowedScopes(type: string): Scope[] | undefined {
+    return this.templateBank.get(type)?.getAllowedScopes()
   }
 }

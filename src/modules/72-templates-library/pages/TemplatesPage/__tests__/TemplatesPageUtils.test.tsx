@@ -19,6 +19,8 @@ import { getStageAttributes, getStageEditorImplementation } from '@cd/components
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 // eslint-disable-next-line no-restricted-imports
 import { HttpStep } from '@cd/components/PipelineSteps/HttpStep/HttpStep'
+import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
+import { PipelineTemplate } from '@templates-library/components/Templates/PipelineTemplate/PipelineTemplate'
 
 function getString(key: StringKeys): StringKeys {
   return key
@@ -28,6 +30,7 @@ describe('TemplatesPageUtils tests', () => {
   beforeAll(() => {
     stagesCollection.registerStageFactory(StageType.DEPLOY, getStageAttributes, getStageEditorImplementation)
     factory.registerStep(new HttpStep())
+    templateFactory.registerTemplate(new PipelineTemplate())
   })
   test('Test getIconForTemplate method', () => {
     expect(getIconForTemplate(getString, stepTemplateMock)).toEqual('http-step')
@@ -37,6 +40,6 @@ describe('TemplatesPageUtils tests', () => {
   test('Test getTypeForTemplate method', () => {
     expect(getTypeForTemplate(getString, stepTemplateMock)).toEqual('HTTP Step')
     expect(getTypeForTemplate(getString, stageTemplateMock)).toEqual('pipelineSteps.deploy.create.deployStageName')
-    expect(getTypeForTemplate(getString, pipelineTemplateMock)).toEqual(undefined)
+    expect(getTypeForTemplate(getString, pipelineTemplateMock)).toEqual('Pipeline')
   })
 })

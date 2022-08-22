@@ -18,6 +18,8 @@ import {
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import * as TemplateInputs from '@templates-library/components/TemplateInputs/TemplateInputs'
 import type { TemplateInputsProps } from '@templates-library/components/TemplateInputs/TemplateInputs'
+import templateFactory from '../../../Templates/TemplatesFactory'
+import { StepTemplate } from '../../../Templates/StepTemplate/StepTemplate'
 
 const TemplateInputsMock = jest
   .spyOn(TemplateInputs, 'TemplateInputs')
@@ -31,6 +33,9 @@ const templateContext = produce(getTemplateContextMock(TemplateType.Step), draft
 })
 
 describe('<TemplateInputsWrapper /> tests', () => {
+  beforeAll(() => {
+    templateFactory.registerTemplate(new StepTemplate())
+  })
   test('should call TemplateInputs with correct data', () => {
     render(
       <TestWrapper>

@@ -8,6 +8,8 @@
 import React from 'react'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
+import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
 import { ConfigModalProps, Intent, TemplateConfigModalWithRef } from '../TemplateConfigModal'
 
 const getProps = (): ConfigModalProps => ({
@@ -28,6 +30,9 @@ const getProps = (): ConfigModalProps => ({
 })
 
 describe('CREATE MODE', () => {
+  beforeAll(() => {
+    templateFactory.registerTemplate(new StepTemplate())
+  })
   test('VALIDATIONS', async () => {
     const props = getProps()
     const { container, getByText, queryByText } = render(

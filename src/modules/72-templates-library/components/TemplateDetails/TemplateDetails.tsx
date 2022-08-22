@@ -42,10 +42,10 @@ import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResult
 import templateDoesNotExistSvg from '@templates-library/pages/TemplatesPage/images/template-does-not-exist.svg'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getVersionLabelText } from '@templates-library/utils/templatesUtils'
-import { TemplateInputs } from '@templates-library/components/TemplateInputs/TemplateInputs'
 import EntitySetupUsage from '@common/pages/entityUsage/EntityUsage'
 import { EntityType } from '@common/pages/entityUsage/EntityConstants'
 import { VersionsDropDown } from '@templates-library/components/VersionsDropDown/VersionsDropDown'
+import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { TemplateActivityLog } from '../TemplateActivityLog/TemplateActivityLog'
 import css from './TemplateDetails.module.scss'
 
@@ -323,7 +323,12 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                             <Tab
                               id={TemplateTabs.INPUTS}
                               title={getString('pipeline.templateInputs')}
-                              panel={<TemplateInputs template={selectedTemplate} />}
+                              panel={templateFactory
+                                .getTemplate(selectedTemplate.templateEntityType || '')
+                                ?.renderTemplateInputsForm({
+                                  template: selectedTemplate,
+                                  accountId: defaultTo(template.accountId, '')
+                                })}
                             />
                             <Tab
                               id={TemplateTabs.YAML}

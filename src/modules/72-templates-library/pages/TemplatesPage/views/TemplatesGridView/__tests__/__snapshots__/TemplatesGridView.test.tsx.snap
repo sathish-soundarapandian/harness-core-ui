@@ -226,7 +226,7 @@ exports[`<TemplatesGridView /> tests should match snapshot 1`] = `
                       class="StyledProps--font StyledProps--main text absolutePos"
                       style="color: rgb(89, 43, 170);"
                     >
-                      
+                      STEP
                     </p>
                   </div>
                 </div>

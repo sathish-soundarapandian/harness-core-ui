@@ -9,10 +9,12 @@ import React from 'react'
 import { Container, Icon, Layout, Text } from '@wings-software/uicore'
 import { Color, FontVariation } from '@wings-software/design-system'
 import { defaultTo } from 'lodash-es'
+import { useParams } from 'react-router-dom'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
-import { TemplateInputs } from '@templates-library/components/TemplateInputs/TemplateInputs'
 import { useStrings } from 'framework/strings'
 import type { NGTemplateInfoConfigWithGitDetails } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
+import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import css from './TemplateInputsWrapper.module.scss'
 
 export const TemplateInputsWrapper: React.FC = (): JSX.Element => {
@@ -20,6 +22,7 @@ export const TemplateInputsWrapper: React.FC = (): JSX.Element => {
   const {
     state: { template, gitDetails }
   } = React.useContext(TemplateContext)
+  const { accountId } = useParams<AccountPathProps>()
 
   const templateWithGitDetails: NGTemplateInfoConfigWithGitDetails = React.useMemo(
     () => ({
@@ -40,7 +43,9 @@ export const TemplateInputsWrapper: React.FC = (): JSX.Element => {
           </Layout.Horizontal>
         </Container>
         <Container className={css.templateInputsContainer}>
-          <TemplateInputs template={templateWithGitDetails} />
+          {templateFactory
+            .getTemplate(templateWithGitDetails.type || '')
+            ?.renderTemplateInputsForm({ template: templateWithGitDetails, accountId: accountId })}
         </Container>
       </Layout.Vertical>
     </Container>

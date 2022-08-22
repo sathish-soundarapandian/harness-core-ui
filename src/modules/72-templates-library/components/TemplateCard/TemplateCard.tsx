@@ -12,7 +12,7 @@ import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { Position } from '@blueprintjs/core'
 import { TimeAgoPopover } from '@common/components'
-import { getIconForTemplate, templateColorStyleMap } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
+import { getIconForTemplate } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
 import { TemplateTags } from '@templates-library/components/TemplateTags/TemplateTags'
 import { useStrings } from 'framework/strings'
 import { getRepoDetailsByIndentifier } from '@common/utils/gitSyncUtils'
@@ -46,7 +46,7 @@ export function TemplateCard(props: TemplateCardProps): JSX.Element {
   const templateEntityType =
     (template as TemplateSummaryResponse)?.templateEntityType || (template as NGTemplateInfoConfig)?.type
   const templateEntityLabel = defaultTo(templateFactory.getTemplateLabel(templateEntityType), '')
-  const style = templateColorStyleMap[templateEntityType]
+  const style = templateFactory.getTemplateColorMap(templateEntityType)
   const showMenu = !onPreview && !onOpenEdit && !onOpenSettings && !onDelete
   const repoIdentifier =
     (template as TemplateSummaryResponse)?.gitDetails?.repoIdentifier ||
@@ -157,9 +157,9 @@ export function TemplateCard(props: TemplateCardProps): JSX.Element {
         )}
         <Container flex={{ justifyContent: 'center' }} padding={{ top: 'medium' }}>
           <TemplateColor
-            fill={style.fill as string}
-            stroke={style.stroke as string}
-            textColor={style.color as string}
+            fill={style?.fill as string}
+            stroke={style?.stroke as string}
+            textColor={style?.color as string}
             title={templateEntityLabel.toUpperCase()}
           />
         </Container>

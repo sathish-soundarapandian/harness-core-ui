@@ -16,7 +16,6 @@ import routes from '@common/RouteDefinitions'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import type { ProjectPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import { templateStudioColorStyleMap } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
 import css from './TemplateStudioHeader.module.scss'
 
 interface StyledTemplateStudioTitleInterface {
@@ -72,7 +71,7 @@ export const TemplateStudioHeader: React.FC<TemplateStudioHeaderProps> = props =
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
 
   const studioTitle = `${defaultTo(templateFactory.getTemplateLabel(templateType), '')} Template`
-  const style = templateStudioColorStyleMap[templateType || 'Step']
+  const style = templateFactory.getTemplateColorMap(templateType)
   const titleContainerRef: LegacyRef<HTMLDivElement> = useRef(null)
   const titleWidth = parseInt(defaultTo(titleContainerRef.current?.getClientRects()?.[0]?.width, 0).toFixed(0))
 

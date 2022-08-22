@@ -13,6 +13,8 @@ import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { mockTemplates, mockTemplatesSuccessResponse } from '@templates-library/TemplatesTestHelper'
 import * as commonHooks from '@common/hooks'
 import * as templateServices from 'services/template-ng'
+import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
+import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
 import { DeleteTemplateModal } from '../DeleteTemplateModal'
 
 jest.mock('@common/hooks', () => ({
@@ -35,6 +37,9 @@ jest.mock('services/template-ng', () => ({
 }))
 
 describe('<DeleteTemplateModal /> tests', () => {
+  beforeAll(() => {
+    templateFactory.registerTemplate(new StepTemplate())
+  })
   const baseProps = {
     template: defaultTo(mockTemplates.data?.content?.[0], ''),
     onSuccess: jest.fn(),

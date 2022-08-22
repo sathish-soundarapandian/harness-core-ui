@@ -12,6 +12,8 @@ import { defaultTo, unset } from 'lodash-es'
 import produce from 'immer'
 import { TestWrapper } from '@common/utils/testUtils'
 import { mockTemplates, mockTemplatesSuccessResponse } from '@templates-library/TemplatesTestHelper'
+import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
+import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
 import { TemplateDetails, TemplateDetailsProps } from '../TemplateDetails'
 
 jest.mock('@common/hooks', () => ({
@@ -37,6 +39,9 @@ function ComponentWrapper(props: TemplateDetailsProps): React.ReactElement {
 }
 
 describe('<TemplateDetails /> tests', () => {
+  beforeAll(() => {
+    templateFactory.registerTemplate(new StepTemplate())
+  })
   const baseProps = {
     template: defaultTo(mockTemplates?.data?.content?.[0], {})
   }

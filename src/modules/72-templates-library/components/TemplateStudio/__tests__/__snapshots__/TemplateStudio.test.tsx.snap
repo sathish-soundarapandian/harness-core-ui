@@ -147,7 +147,7 @@ exports[`<TemplateStudio /> tests snapshot test for new template with git sync 1
                   class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                 >
                   <span
-                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-black"
+                    class="bp3-icon StyledProps--main"
                     data-icon="template-library"
                   >
                     <svg
@@ -529,7 +529,7 @@ exports[`<TemplateStudio /> tests snapshot test for new template without git syn
                   class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                 >
                   <span
-                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-black"
+                    class="bp3-icon StyledProps--main"
                     data-icon="template-library"
                   >
                     <svg
@@ -911,7 +911,7 @@ exports[`<TemplateStudio /> tests snapshot test for template studio in visual vi
                   class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                 >
                   <span
-                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-black"
+                    class="bp3-icon StyledProps--main"
                     data-icon="template-library"
                   >
                     <svg

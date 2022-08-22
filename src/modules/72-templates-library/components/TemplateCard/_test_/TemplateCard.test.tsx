@@ -10,8 +10,13 @@ import { render } from '@testing-library/react'
 import { mockTemplates } from '@templates-library/TemplatesTestHelper'
 import { TestWrapper } from '@common/utils/testUtils'
 import { TemplateCard } from '@templates-library/components/TemplateCard/TemplateCard'
+import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
+import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
 
 describe('<TemplateCard /> tests', () => {
+  beforeAll(() => {
+    templateFactory.registerTemplate(new StepTemplate())
+  })
   test('snapshot test with git sync enabled', async () => {
     const template = {
       ...(mockTemplates.data?.content?.[0] || {}),

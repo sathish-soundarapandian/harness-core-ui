@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-
+import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { SecretManagerTemplate } from '../SecretManagerTemplate'
 
 jest.mock('@cd/components/ScriptTemplateCanvas/ScriptTemplateCanvas', () => ({
@@ -30,7 +30,7 @@ jest.mock('@cd/components/ScriptTemplateCanvas/ScriptTemplateCanvas', () => ({
 describe('Test SecretManagerTemplate', () => {
   test('call SecretManagerTemplate.renderTemplateCanvas', async () => {
     const smTemplate = new SecretManagerTemplate()
-    const formik = {}
+    const formik = {} as TemplateFormRef
 
     const { getByText } = render(smTemplate.renderTemplateCanvas(formik))
     expect(getByText('onChange Button')).toBeDefined()

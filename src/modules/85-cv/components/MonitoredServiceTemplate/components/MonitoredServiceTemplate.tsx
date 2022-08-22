@@ -6,31 +6,28 @@
  */
 
 import React from 'react'
-import { Color } from '@harness/design-system'
-import { Template, TemplateProps } from '@templates-library/components/AbstractTemplate/Template'
+import type { IconName } from '@wings-software/uicore'
+import { Template } from '@templates-library/components/AbstractTemplate/Template'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
-import type { NGTemplateInfoConfig } from 'services/template-ng'
 import type { TemplateInputsProps } from '@templates-library/components/TemplateInputs/TemplateInputs'
 import MonitoredServiceInputSetsTemplate from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { MonitoredTemplateCanvasWithRef } from './MonitoredServiceTemplateCanvas'
 
-export class MonitoredServiceTemplate extends Template<NGTemplateInfoConfig> {
-  protected type = TemplateType.MonitoredService
+export class MonitoredServiceTemplate extends Template {
   protected label = 'Monitored Service'
-  protected color = Color.TEAL_700
+  protected type = TemplateType.MonitoredService
+  protected icon: IconName = 'cv-main'
   protected allowedScopes = [Scope.PROJECT]
-
-  protected defaultValues: NGTemplateInfoConfig = {
-    name: 'Template name',
-    identifier: 'Template_name',
-    versionLabel: '',
-    type: 'MonitoredService'
+  protected colorMap = {
+    color: '#06B7C3',
+    stroke: '#D4E7D1',
+    fill: '#E4F7E1'
   }
 
-  renderTemplateCanvas(props: TemplateProps<NGTemplateInfoConfig>): JSX.Element {
-    const { formikRef } = props
-    return <MonitoredTemplateCanvasWithRef ref={formikRef as any} />
+  renderTemplateCanvas(formikRef: TemplateFormRef): JSX.Element {
+    return <MonitoredTemplateCanvasWithRef ref={formikRef} />
   }
 
   renderTemplateInputsForm(props: TemplateInputsProps & { accountId: string }): JSX.Element {

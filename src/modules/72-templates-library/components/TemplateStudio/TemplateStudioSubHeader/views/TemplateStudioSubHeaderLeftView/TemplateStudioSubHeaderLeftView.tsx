@@ -65,14 +65,13 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
   const { state, updateTemplate, deleteTemplateCache, fetchTemplate, view, isReadonly, updateGitDetails } =
     React.useContext(TemplateContext)
   const { template, versions, stableVersion, isUpdated, gitDetails } = state
-  const { accountId, projectIdentifier, orgIdentifier, module, templateType, templateIdentifier } = useParams<
+  const { accountId, projectIdentifier, orgIdentifier, module, templateIdentifier } = useParams<
     TemplateStudioPathProps & ModulePathParams
   >()
   const { updateQueryParams } = useUpdateQueryParams<TemplateStudioQueryParams>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = React.useContext(AppStoreContext)
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
-  const iconColor = templateFactory.getTemplateColor(templateType) || Color.BLACK
   const [modalProps, setModalProps] = React.useState<ModalProps>()
   const isYaml = view === SelectedView.YAML
   const history = useHistory()
@@ -217,7 +216,7 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
       <Layout.Horizontal spacing={'medium'} padding={{ right: 'medium' }} flex={{ alignItems: 'center' }}>
         <Container>
           <Layout.Horizontal spacing={'small'} flex={{ alignItems: 'center' }}>
-            <Icon color={iconColor} name="template-library" size={20} />
+            <Icon name="template-library" size={20} />
             <Text
               className={css.templateName}
               color={Color.GREY_700}

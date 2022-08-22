@@ -17,7 +17,7 @@ import pipelineContextMock from '@pipeline/components/PipelineStudio/RightDrawer
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import { getTemplateContextMock } from '@templates-library/components/TemplateStudio/__tests__/stateMock'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
-import { StageTemplateFormWithRef } from '../StageTemplateForm'
+import { StageTemplateForm } from '../StageTemplateForm'
 
 const pipelineContext = produce(pipelineContextMock, draft => {
   set(draft, 'contextType', 'Template')
@@ -26,7 +26,7 @@ const templateContext = produce(getTemplateContextMock(TemplateType.Step), draft
   set(draft, 'state.templateView.isDrawerOpened', true)
 })
 
-describe('<StageTemplateFormWithRef /> tests', () => {
+describe('<StageTemplateForm /> tests', () => {
   beforeEach(() => jest.clearAllMocks())
 
   test('should call renderPipelineStage with correct arguments', async () => {
@@ -43,7 +43,7 @@ describe('<StageTemplateFormWithRef /> tests', () => {
         }}
       >
         <PipelineContext.Provider value={pipelineContext}>
-          <StageTemplateFormWithRef />
+          <StageTemplateForm />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -69,7 +69,7 @@ describe('<StageTemplateFormWithRef /> tests', () => {
       >
         <PipelineContext.Provider value={pipelineContext}>
           <TemplateContext.Provider value={templateContext}>
-            <StageTemplateFormWithRef />
+            <StageTemplateForm />
           </TemplateContext.Provider>
         </PipelineContext.Provider>
       </TestWrapper>

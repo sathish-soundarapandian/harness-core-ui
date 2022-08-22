@@ -307,7 +307,27 @@ exports[`CREATE MODE if form changesupdate the preview card: changed value shoul
           >
             <div
               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--margin-bottom-small StyledProps--flex"
-            />
+            >
+              <span
+                class="bp3-icon bp3-icon-disable StyledProps--main"
+                icon="disable"
+              >
+                <svg
+                  data-icon="disable"
+                  height="24"
+                  viewBox="0 0 20 20"
+                  width="24"
+                >
+                  <desc>
+                    disable
+                  </desc>
+                  <path
+                    d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zM2 10c0-4.42 3.58-8 8-8 1.85 0 3.55.63 4.9 1.69L3.69 14.9A7.902 7.902 0 012 10zm8 8c-1.85 0-3.55-.63-4.9-1.69L16.31 5.1A7.902 7.902 0 0118 10c0 4.42-3.58 8-8 8z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+            </div>
           </div>
           <div
             class="StyledProps--font StyledProps--main"
@@ -378,7 +398,7 @@ exports[`CREATE MODE if form changesupdate the preview card: changed value shoul
                   class="StyledProps--font StyledProps--main text absolutePos"
                   style="color: rgb(89, 43, 170);"
                 >
-                  
+                  STEP
                 </p>
               </div>
             </div>

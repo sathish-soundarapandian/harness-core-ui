@@ -320,8 +320,7 @@ export function TemplateStudio(): React.ReactElement {
                 )}
                 <Container className={css.canvasContainer}>
                   {view === SelectedView.VISUAL ? (
-                    /* istanbul ignore next */
-                    templateFactory.getTemplate(templateType)?.renderTemplateCanvas({ formikRef: templateFormikRef })
+                    templateFactory.getTemplate(templateType)?.renderTemplateCanvas(templateFormikRef)
                   ) : (
                     <TemplateYamlView />
                   )}

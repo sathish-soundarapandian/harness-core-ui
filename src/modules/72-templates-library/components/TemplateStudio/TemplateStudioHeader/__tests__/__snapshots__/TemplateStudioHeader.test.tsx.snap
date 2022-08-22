@@ -99,15 +99,15 @@ exports[`TemplateStudioHeader renders Stage templateType correctly 1`] = `
         class="StyledProps--font StyledProps--main"
       >
         <div
-          class="css-1gx1swu"
-          fill="#0BC8D6"
-          stroke="#03C0CD"
+          class="css-rpm77g"
+          fill="#D3FCFE"
+          stroke="#C0FBFE"
           width="0"
         >
           <div>
             <p
               class="StyledProps--font StyledProps--main title StyledProps--font-size-xsmall StyledProps--font-weight-bold"
-              style="color: rgb(232, 232, 255);"
+              style="color: rgb(6, 183, 195);"
             >
               Stage Template
             </p>
@@ -218,15 +218,15 @@ exports[`TemplateStudioHeader renders Step templateType correctly 1`] = `
         class="StyledProps--font StyledProps--main"
       >
         <div
-          class="css-1utvf27"
-          fill="#7D4DD3"
-          stroke="#6938C0"
+          class="css-ou3t8u"
+          fill="#EADEFF"
+          stroke="#E1D0FF"
           width="0"
         >
           <div>
             <p
               class="StyledProps--font StyledProps--main title StyledProps--font-size-xsmall StyledProps--font-weight-bold"
-              style="color: rgb(234, 222, 255);"
+              style="color: rgb(89, 43, 170);"
             >
               Step Template
             </p>

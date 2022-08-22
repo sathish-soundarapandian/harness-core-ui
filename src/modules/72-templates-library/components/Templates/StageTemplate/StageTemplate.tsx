@@ -6,19 +6,30 @@
  */
 
 import React from 'react'
-import { Color } from '@harness/design-system'
+import type { IconName } from '@wings-software/uicore'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
-import { Template, TemplateProps } from '@templates-library/components/AbstractTemplate/Template'
+import { Template } from '@templates-library/components/AbstractTemplate/Template'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
-import type { NGTemplateInfoConfig } from 'services/template-ng'
 import { StageTemplateCanvasWrapperWithRef } from '@templates-library/components/TemplateStudio/StageTemplateCanvas/StageTemplateCanvasWrapper'
+import { Scope } from '@common/interfaces/SecretsInterface'
+import { TemplateInputs, TemplateInputsProps } from '@templates-library/components/TemplateInputs/TemplateInputs'
 
-export class StageTemplate extends Template<NGTemplateInfoConfig> {
-  protected type = TemplateType.Stage
+export class StageTemplate extends Template {
   protected label = 'Stage'
-  protected color = Color.TEAL_700
+  protected type = TemplateType.Stage
+  protected icon: IconName = 'disable'
+  protected allowedScopes = [Scope.PROJECT, Scope.ORG, Scope.ACCOUNT]
+  protected colorMap = {
+    color: '#06B7C3',
+    stroke: '#C0FBFE',
+    fill: '#D3FCFE'
+  }
 
-  renderTemplateCanvas(props: TemplateProps<NGTemplateInfoConfig>): JSX.Element {
-    return <StageTemplateCanvasWrapperWithRef ref={props.formikRef as TemplateFormRef<unknown> | undefined} />
+  renderTemplateCanvas(formikRef: TemplateFormRef): JSX.Element {
+    return <StageTemplateCanvasWrapperWithRef ref={formikRef} />
+  }
+
+  renderTemplateInputsForm(props: TemplateInputsProps & { accountId: string }): JSX.Element {
+    return <TemplateInputs template={props.template} />
   }
 }

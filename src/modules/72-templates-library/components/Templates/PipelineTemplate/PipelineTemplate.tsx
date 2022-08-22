@@ -6,18 +6,30 @@
  */
 
 import React from 'react'
-import { Color } from '@wings-software/design-system'
-import { Template, TemplateProps } from '@templates-library/components/AbstractTemplate/Template'
+import type { IconName } from '@wings-software/uicore'
+import { Template } from '@templates-library/components/AbstractTemplate/Template'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
-import type { NGTemplateInfoConfig } from 'services/template-ng'
 import { PipelineTemplateCanvasWrapperWithRef } from '@templates-library/components/TemplateStudio/PipelineTemplateCanvas/PipelineTemplateCanvasWrapper'
+import { Scope } from '@common/interfaces/SecretsInterface'
+import { TemplateInputs, TemplateInputsProps } from '@templates-library/components/TemplateInputs/TemplateInputs'
+import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 
-export class PipelineTemplate extends Template<NGTemplateInfoConfig> {
+export class PipelineTemplate extends Template {
   protected type = TemplateType.Pipeline
   protected label = 'Pipeline'
-  protected color = Color.BLUE_700
+  protected icon: IconName = 'pipeline'
+  protected allowedScopes = [Scope.PROJECT, Scope.ORG, Scope.ACCOUNT]
+  protected colorMap = {
+    color: '#004BA4',
+    stroke: '#CCCBFF',
+    fill: '#E8E8FF'
+  }
 
-  renderTemplateCanvas(props: TemplateProps<NGTemplateInfoConfig>): JSX.Element {
-    return <PipelineTemplateCanvasWrapperWithRef ref={props.formikRef} />
+  renderTemplateCanvas(formikRef: TemplateFormRef): JSX.Element {
+    return <PipelineTemplateCanvasWrapperWithRef ref={formikRef} />
+  }
+
+  renderTemplateInputsForm(props: TemplateInputsProps & { accountId: string }): JSX.Element {
+    return <TemplateInputs template={props.template} />
   }
 }

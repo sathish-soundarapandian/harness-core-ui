@@ -5,52 +5,46 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import type { Color } from '@harness/design-system'
+import type React from 'react'
+import type { IconName } from '@wings-software/uicore'
 import type { TemplateType } from '@templates-library/utils/templatesUtils'
+import type { Scope } from '@common/interfaces/SecretsInterface'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
-import { Scope } from '@common/interfaces/SecretsInterface'
 import type { TemplateInputsProps } from '../TemplateInputs/TemplateInputs'
 
-export interface TemplateProps<T, U = unknown> {
-  customTemplateProps?: U
-  formikRef?: TemplateFormRef<T>
-}
-
-export interface TemplateInputSet {
-  renderTemplateInputsForm: (_props: TemplateInputsProps & { accountId: string }) => JSX.Element
-}
-
-export abstract class Template<T> implements TemplateInputSet {
-  protected abstract type: TemplateType
+export abstract class Template {
   protected abstract label: string
-  protected abstract color: Color
+  protected abstract type: TemplateType
+  protected abstract icon: IconName
+  protected abstract allowedScopes: Scope[]
+  protected abstract colorMap: React.CSSProperties
   protected isEnabled = true
-  protected allowedScopes = [Scope.PROJECT, Scope.ORG, Scope.ACCOUNT]
-
-  getType(): TemplateType {
-    return this.type
-  }
 
   getLabel(): string {
     return this.label
   }
 
-  getIsEnabled(): boolean {
-    return this.isEnabled
+  getType(): TemplateType {
+    return this.type
+  }
+
+  getIcon(): IconName {
+    return this.icon
+  }
+
+  getColorMap(): React.CSSProperties {
+    return this.colorMap
   }
 
   getAllowedScopes(): Scope[] {
     return this.allowedScopes
   }
 
-  getColor(): Color {
-    return this.color
+  getIsEnabled(): boolean {
+    return this.isEnabled
   }
 
-  abstract renderTemplateCanvas(props: TemplateProps<T>): JSX.Element
+  abstract renderTemplateCanvas(formikRef?: TemplateFormRef): JSX.Element
 
-  renderTemplateInputsForm(_props: TemplateInputsProps & { accountId: string }) {
-    return <> </>
-  }
+  abstract renderTemplateInputsForm(props: TemplateInputsProps & { accountId: string }): JSX.Element
 }
