@@ -39,7 +39,8 @@ jest.mock('services/cd-ng', () => ({
   getSecretV2Promise: jest.fn().mockImplementation(() => Promise.resolve(mockSecret)),
   listSecretsV2Promise: jest.fn().mockImplementation(() => Promise.resolve(mockListSecrets)),
   useRegionsForAws: jest.fn(() => regionsResponse),
-  useTags: jest.fn(() => tagsResponse)
+  useTags: jest.fn(() => tagsResponse),
+  useTagsV2: jest.fn(() => tagsResponse)
 }))
 
 jest.mock('services/portal', () => ({
