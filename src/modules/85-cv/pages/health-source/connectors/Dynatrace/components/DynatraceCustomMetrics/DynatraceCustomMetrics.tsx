@@ -77,14 +77,14 @@ export default function DynatraceCustomMetrics(props: DynatraceCustomMetricsProp
   }, [error])
   const onFetchSampleData = useCallback(
     async metricSelector => {
-      if (!metricSelector.length) {
+      if (!metricSelector?.length) {
         return
       }
       const sampleData = await querySampleData(
         { metricSelector: metricSelector, serviceId: selectedServiceId },
         { queryParams: sampleDataQueryParams }
       )
-      setTimeseriesData(transformSampleDataIntoHighchartOptions(sampleData.data))
+      setTimeseriesData(transformSampleDataIntoHighchartOptions(sampleData?.data))
       setShouldShowChart(true)
     },
     [querySampleData, sampleDataQueryParams, selectedServiceId]

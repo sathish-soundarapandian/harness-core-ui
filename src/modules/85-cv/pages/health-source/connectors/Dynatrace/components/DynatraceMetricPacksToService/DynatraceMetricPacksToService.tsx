@@ -142,7 +142,7 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
         serviceMethods: extractServiceMethods(servicesListData?.data || [], item.value as string)
       })
     },
-    [metricValues]
+    [metricValues, servicesListData]
   )
 
   const onChangeMultiTypeDynatraceService = useCallback(
@@ -162,7 +162,7 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
         })
       }
     },
-    [metricValues]
+    [metricValues, servicesListData]
   )
 
   const onChangeMetricPack = useCallback(

@@ -100,7 +100,7 @@ export default function DynatraceHealthSource(props: DynatraceHealthSourceProps)
       {formik => {
         const selectedServiceValue =
           typeof formik.values.selectedService !== 'string'
-            ? formik.values.selectedService.value
+            ? formik.values.selectedService?.value
             : formik.values.selectedService
 
         if (isTemplate) {
