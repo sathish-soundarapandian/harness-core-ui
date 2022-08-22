@@ -78,7 +78,7 @@ const GroupByView: React.FC<GroupByViewProps> = ({
         } as unknown as QlceViewFilterWrapperInput
       ],
       offset: 0,
-      limit: 100
+      limit: 1000
     }
   })
 
