@@ -442,6 +442,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
             selectedValue={isPreconfiguredHosts}
             onChange={(e: any) => {
               setIsPreconfiguredHosts(e.target.value)
+              setShowPreviewHostBtn(true)
             }}
           >
             <Radio value={PreconfiguredHosts.FALSE} label={getString('cd.steps.pdcStep.specifyHostsOption')} />
@@ -520,6 +521,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                             if (isMultiTypeRuntime(connectorRefType)) {
                               formikRef.current?.setFieldValue('connectorRef', value)
                             }
+                            setShowPreviewHostBtn(true)
                           }}
                         />
                         <Layout.Vertical spacing="small">

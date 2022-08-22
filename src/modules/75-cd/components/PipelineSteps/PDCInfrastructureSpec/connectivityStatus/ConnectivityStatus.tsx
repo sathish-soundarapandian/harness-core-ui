@@ -78,7 +78,7 @@ const WarningTooltip: React.FC<WarningTooltipProps> = ({
 const ConnectivityStatus: React.FC<ConnectivityStatusProps> = data => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [testing, setTesting] = useState(false)
-  const [status, setStatus] = useState<ConnectorConnectivityDetails['status']>(data?.status?.status || 'UNKNOWN')
+  const [status, setStatus] = useState<ConnectorConnectivityDetails['status']>(data?.status || 'UNKNOWN')
 
   const [errorMessage, setErrorMessage] = useState<ErrorMessage>()
   const { getString } = useStrings()
