@@ -77,7 +77,7 @@ export default function DynatraceCustomMetrics(props: DynatraceCustomMetricsProp
   }, [error])
   const onFetchSampleData = useCallback(
     async metricSelector => {
-      if (!metricSelector.length) {
+      if (!metricSelector?.length) {
         return
       }
       const sampleData = await querySampleData(
