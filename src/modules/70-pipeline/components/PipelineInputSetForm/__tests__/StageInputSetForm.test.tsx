@@ -17,7 +17,8 @@ import { StageInputSetForm } from '../StageInputSetForm'
 jest.mock('@common/utils/YamlUtils', () => ({}))
 
 jest.mock('services/portal', () => ({
-  useGetDelegateSelectorsUpTheHierarchy: jest.fn().mockImplementation(() => ({ mutate: jest.fn() }))
+  useGetDelegateSelectorsUpTheHierarchy: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useGetDelegateSelectorsUpTheHierarchyV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() }))
 }))
 
 const props = (withNewProp = false): any => ({

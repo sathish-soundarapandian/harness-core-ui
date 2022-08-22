@@ -28,7 +28,12 @@ jest.mock('uuid')
 jest.mock('services/portal', () => ({
   useGetDelegateSelectorsUpTheHierarchy: jest
     .fn()
-    .mockImplementation(() => ['delegate-selector', 'delegate1', 'delegate2'])
+    .mockImplementation(() => ['delegate-selector', 'delegate1', 'delegate2']),
+  useGetDelegateSelectorsUpTheHierarchyV2: jest.fn().mockImplementation(() => [
+    { name: 'delegate-selector', connected: false },
+    { name: 'delegate1', connected: true },
+    { name: 'delegate2', connected: false }
+  ])
 }))
 
 const props = {

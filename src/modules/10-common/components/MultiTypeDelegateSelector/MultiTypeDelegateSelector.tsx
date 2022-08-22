@@ -21,7 +21,10 @@ import { useStrings } from 'framework/strings'
 import { errorCheck } from '@common/utils/formikHelpers'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ExpressionsListInput } from '@common/components/ExpressionsListInput/ExpressionsListInput'
-import { DelegateSelectors, DelegateSelectorsProps } from '@common/components/DelegateSelectors/DelegateSelectors'
+import {
+  DelegateSelectorsV2Container,
+  DelegateSelectorsV2ContainerProps
+} from '@common/components/DelegateSelectors/DelegateSelectorsV2Container'
 
 import css from './MultiTypeDelegateSelector.module.scss'
 
@@ -31,7 +34,7 @@ export interface MultiTypeDelegateSelectorProps extends IFormGroupProps {
   expressions?: string[]
   allowableTypes?: AllowedTypes
   tooltipProps?: DataTooltipInterface
-  inputProps: Omit<DelegateSelectorsProps, 'onChange'>
+  inputProps: Omit<DelegateSelectorsV2ContainerProps, 'onChange'>
 }
 
 export interface ConnectedMultiTypeDelegateSelectorProps extends MultiTypeDelegateSelectorProps {
@@ -92,7 +95,7 @@ export function MultiTypeDelegateSelector(props: ConnectedMultiTypeDelegateSelec
           )}
           style={{ flexGrow: 1, marginBottom: 0 }}
         >
-          <DelegateSelectors
+          <DelegateSelectorsV2Container
             {...inputProps}
             wrapperClassName={css.wrapper}
             selectedItems={value}

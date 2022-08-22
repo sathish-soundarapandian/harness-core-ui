@@ -18,6 +18,10 @@ jest.mock('services/portal', () => ({
   useGetDelegateSelectorsUpTheHierarchy: jest.fn().mockImplementation(args => {
     mockGetCallFunction(args)
     return []
+  }),
+  useGetDelegateSelectorsUpTheHierarchyV2: jest.fn().mockImplementation(args => {
+    mockGetCallFunction(args)
+    return []
   })
 }))
 const props = {

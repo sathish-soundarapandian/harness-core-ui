@@ -93,7 +93,7 @@ exports[`StageAdvancedInputSetForm tests viewType DeploymentForm initial render 
                       data-name="DelegateSelectors"
                     >
                       <div
-                        class="bp3-popover-wrapper delegateInput delegatePopover bp3-fill"
+                        class="bp3-popover-wrapper delegatePopover bp3-fill"
                       >
                         <div
                           class="bp3-popover-target"
@@ -102,7 +102,7 @@ exports[`StageAdvancedInputSetForm tests viewType DeploymentForm initial render 
                             class=""
                           >
                             <div
-                              class="bp3-input bp3-tag-input bp3-fill bp3-multi-select"
+                              class="bp3-input bp3-tag-input bp3-fill bp3-multi-select delegateInput"
                             >
                               <div
                                 class="bp3-tag-input-values"

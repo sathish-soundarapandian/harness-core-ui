@@ -305,7 +305,7 @@ exports[`Custom remote tests expand advanced section - when type is HelmChart 1`
                           data-name="DelegateSelectors"
                         >
                           <div
-                            class="bp3-popover-wrapper delegateInput delegatePopover bp3-fill"
+                            class="bp3-popover-wrapper delegatePopover bp3-fill"
                           >
                             <div
                               class="bp3-popover-target"
@@ -314,7 +314,7 @@ exports[`Custom remote tests expand advanced section - when type is HelmChart 1`
                                 class=""
                               >
                                 <div
-                                  class="bp3-input bp3-tag-input bp3-fill bp3-multi-select"
+                                  class="bp3-input bp3-tag-input bp3-fill bp3-multi-select delegateInput"
                                 >
                                   <div
                                     class="bp3-tag-input-values"
@@ -1015,7 +1015,7 @@ exports[`Custom remote tests initial rendering 1`] = `
                           data-name="DelegateSelectors"
                         >
                           <div
-                            class="bp3-popover-wrapper delegateInput delegatePopover bp3-fill"
+                            class="bp3-popover-wrapper delegatePopover bp3-fill"
                           >
                             <div
                               class="bp3-popover-target"
@@ -1024,7 +1024,7 @@ exports[`Custom remote tests initial rendering 1`] = `
                                 class=""
                               >
                                 <div
-                                  class="bp3-input bp3-tag-input bp3-fill bp3-multi-select"
+                                  class="bp3-input bp3-tag-input bp3-fill bp3-multi-select delegateInput"
                                 >
                                   <div
                                     class="bp3-tag-input-values"
@@ -1657,7 +1657,7 @@ exports[`Custom remote tests when fields are runtime input 1`] = `
                           data-name="DelegateSelectors"
                         >
                           <div
-                            class="bp3-popover-wrapper delegateInput delegatePopover bp3-fill"
+                            class="bp3-popover-wrapper delegatePopover bp3-fill"
                           >
                             <div
                               class="bp3-popover-target"
@@ -1666,7 +1666,7 @@ exports[`Custom remote tests when fields are runtime input 1`] = `
                                 class=""
                               >
                                 <div
-                                  class="bp3-input bp3-tag-input bp3-fill bp3-multi-select"
+                                  class="bp3-input bp3-tag-input bp3-fill bp3-multi-select delegateInput"
                                 >
                                   <div
                                     class="bp3-tag-input-values"

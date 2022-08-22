@@ -1748,6 +1748,7 @@ export type ArtifactoryConnector = ConnectorConfigDTO & {
   artifactoryServerUrl: string
   auth?: ArtifactoryAuthentication
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
 }
 
 export type ArtifactoryUsernamePasswordAuth = ArtifactoryAuthCredentials & {
@@ -1816,16 +1817,26 @@ export interface AuditHeaderYamlResponse {
   oldYamlPath?: string
 }
 
-export type AuditPreference = Preference & {
+export interface AuditPreference {
   accountAuditFilter?: AccountAuditFilter
+  accountId?: string
+  appId: string
   applicationAuditFilter?: ApplicationAuditFilter
+  createdAt?: number
+  createdBy?: EmbeddedUser
   createdByUserIds?: string[]
   endTime?: string
   includeAccountLevelResources?: boolean
   includeAppLevelResources?: boolean
   lastNDays?: number
+  lastUpdatedAt: number
+  lastUpdatedBy?: EmbeddedUser
+  name?: string
   operationTypes?: string[]
+  preferenceType?: string
   startTime?: string
+  userId?: string
+  uuid: string
 }
 
 export interface AuditPreferenceResponse {
@@ -1908,6 +1919,7 @@ export type AwsCodeCommitSecretKeyAccessKeyDTO = AwsCodeCommitHttpsCredentialsSp
 export type AwsConnector = ConnectorConfigDTO & {
   credential: AwsCredential
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
 }
 
 export interface AwsCredential {
@@ -2188,6 +2200,7 @@ export type AzureConnector = ConnectorConfigDTO & {
   azureEnvironmentType: 'AZURE' | 'AZURE_US_GOVERNMENT'
   credential: AzureCredential
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
 }
 
 export interface AzureContainerRegistry {
@@ -2294,6 +2307,7 @@ export type AzureRepoConnector = ConnectorConfigDTO & {
   apiAccess?: AzureRepoApiAccess
   authentication: AzureRepoAuthentication
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
   type: 'Project' | 'Repo'
   url: string
   validationRepo?: string
@@ -2464,6 +2478,7 @@ export type BitbucketConnector = ConnectorConfigDTO & {
   apiAccess?: BitbucketApiAccess
   authentication: BitbucketAuthentication
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
   type: 'Account' | 'Repo' | 'Project'
   url: string
   validationRepo?: string
@@ -5007,6 +5022,7 @@ export interface Delegate {
   excludeScopes?: DelegateScope[]
   heartbeatAsObject?: boolean
   hostName?: string
+  immutable?: boolean
   includeScopes?: DelegateScope[]
   ip?: string
   keepAlivePacket?: boolean
@@ -5201,6 +5217,7 @@ export interface DelegateGroup {
   sizeDetails?: DelegateSizeDetails
   status?: 'ENABLED' | 'DELETED'
   tags?: string[]
+  upgraderLastUpdated?: number
   uuid: string
   validUntil?: string
 }
@@ -5216,12 +5233,15 @@ export interface DelegateGroupDTO {
 
 export interface DelegateGroupDetails {
   activelyConnected?: boolean
+  autoUpgrade?: boolean
   connectivityStatus?: string
   delegateConfigurationId?: string
   delegateDescription?: string
   delegateGroupIdentifier?: string
   delegateInstanceDetails?: DelegateInner[]
   delegateType?: string
+  delegateVersion?: string
+  expirationTime?: string
   groupCustomSelectors?: string[]
   groupId?: string
   groupImplicitSelectors?: {
@@ -5237,6 +5257,7 @@ export interface DelegateGroupDetails {
   grpcActive?: boolean
   lastHeartBeat?: number
   tokenActive?: boolean
+  upgraderLastUpdated?: number
 }
 
 export interface DelegateGroupListing {
@@ -5304,6 +5325,7 @@ export interface DelegateParams {
   description?: string
   heartbeatAsObject?: boolean
   hostName?: string
+  immutable?: boolean
   ip?: string
   keepAlivePacket?: boolean
   lastHeartBeat?: number
@@ -5382,8 +5404,10 @@ export interface DelegateResponseData {
 }
 
 export interface DelegateScalingGroup {
+  autoUpgrade?: boolean
   delegates?: DelegateInner[]
   groupName?: string
+  upgraderLastUpdated?: number
 }
 
 export interface DelegateScope {
@@ -6822,6 +6846,7 @@ export type DockerConnectorDTO = ConnectorConfigDTO & {
   auth?: DockerAuthenticationDTO
   delegateSelectors?: string[]
   dockerRegistryUrl: string
+  executeOnDelegate?: boolean
   providerType: 'DockerHub' | 'Harbor' | 'Quay' | 'Other'
 }
 
@@ -8966,6 +8991,7 @@ export type GcpCloudCostConnector = ConnectorConfigDTO & {
 export type GcpConnector = ConnectorConfigDTO & {
   credential: GcpConnectorCredential
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
 }
 
 export interface GcpConnectorCredential {
@@ -9365,6 +9391,7 @@ export type GitlabConnector = ConnectorConfigDTO & {
   apiAccess?: GitlabApiAccess
   authentication: GitlabAuthentication
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
   type: 'Account' | 'Repo' | 'Project'
   url: string
   validationRepo?: string
@@ -11066,6 +11093,8 @@ export interface InstanceExecutionHistory {
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
     | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
   executionInterruptType?:
     | 'ABORT'
     | 'ABORT_ALL'
@@ -15228,6 +15257,8 @@ export interface ResponseMessage {
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
     | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -22838,6 +22869,7 @@ export interface YamlGitConfig {
     | 'GOVERNANCE_CONFIG'
     | 'EVENT_RULE'
   gitConnectorId?: string
+  gitPollingIterator?: number
   keyAuth?: boolean
   lastUpdatedAt?: number
   lastUpdatedBy?: EmbeddedUser
@@ -23244,9 +23276,9 @@ export type YamlPayloadRequestBody = YamlPayload
 
 export type GcpSignUpRequestBody = void
 
-export type GetDelegatePropertiesBodyRequestBody = string[]
-
 export type ImportAccountDataRequestBody = void
+
+export type SaveApiCallLogsBodyRequestBody = string[]
 
 export type SaveGcpSecretsManagerConfig1RequestBody = void
 
@@ -24158,6 +24190,52 @@ export const getDelegateSelectorsUpTheHierarchyPromise = (
   getUsingFetch<RestResponseSetString, unknown, GetDelegateSelectorsUpTheHierarchyQueryParams, void>(
     getConfig('api'),
     `/setup/delegates/delegate-selectors-up-the-hierarchy`,
+    props,
+    signal
+  )
+
+export interface GetDelegateSelectorsUpTheHierarchyV2QueryParams {
+  accountId?: string
+  orgId?: string
+  projectId?: string
+}
+
+export type GetDelegateSelectorsUpTheHierarchyV2Props = Omit<
+  GetProps<RestResponseListDelegateSelector, unknown, GetDelegateSelectorsUpTheHierarchyV2QueryParams, void>,
+  'path'
+>
+
+export const GetDelegateSelectorsUpTheHierarchyV2 = (props: GetDelegateSelectorsUpTheHierarchyV2Props) => (
+  <Get<RestResponseListDelegateSelector, unknown, GetDelegateSelectorsUpTheHierarchyV2QueryParams, void>
+    path={`/setup/delegates/delegate-selectors-up-the-hierarchy-v2`}
+    base={getConfig('api')}
+    {...props}
+  />
+)
+
+export type UseGetDelegateSelectorsUpTheHierarchyV2Props = Omit<
+  UseGetProps<RestResponseListDelegateSelector, unknown, GetDelegateSelectorsUpTheHierarchyV2QueryParams, void>,
+  'path'
+>
+
+export const useGetDelegateSelectorsUpTheHierarchyV2 = (props: UseGetDelegateSelectorsUpTheHierarchyV2Props) =>
+  useGet<RestResponseListDelegateSelector, unknown, GetDelegateSelectorsUpTheHierarchyV2QueryParams, void>(
+    `/setup/delegates/delegate-selectors-up-the-hierarchy-v2`,
+    { base: getConfig('api'), ...props }
+  )
+
+export const getDelegateSelectorsUpTheHierarchyV2Promise = (
+  props: GetUsingFetchProps<
+    RestResponseListDelegateSelector,
+    unknown,
+    GetDelegateSelectorsUpTheHierarchyV2QueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponseListDelegateSelector, unknown, GetDelegateSelectorsUpTheHierarchyV2QueryParams, void>(
+    getConfig('api'),
+    `/setup/delegates/delegate-selectors-up-the-hierarchy-v2`,
     props,
     signal
   )
@@ -25446,47 +25524,6 @@ export const getUserPromise = (
   props: GetUsingFetchProps<RestResponseUser, unknown, void, void>,
   signal?: RequestInit['signal']
 ) => getUsingFetch<RestResponseUser, unknown, void, void>(getConfig('api'), `/users/user`, props, signal)
-
-export interface GetUserAccountsQueryParams {
-  pageIndex?: number
-  pageSize?: number
-  searchTerm?: string
-}
-
-export type GetUserAccountsProps = Omit<
-  GetProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
-  'path'
->
-
-export const GetUserAccounts = (props: GetUserAccountsProps) => (
-  <Get<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>
-    path={`/users/userAccounts`}
-    base={getConfig('api')}
-    {...props}
-  />
-)
-
-export type UseGetUserAccountsProps = Omit<
-  UseGetProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
-  'path'
->
-
-export const useGetUserAccounts = (props: UseGetUserAccountsProps) =>
-  useGet<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>(`/users/userAccounts`, {
-    base: getConfig('api'),
-    ...props
-  })
-
-export const getUserAccountsPromise = (
-  props: GetUsingFetchProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>(
-    getConfig('api'),
-    `/users/userAccounts`,
-    props,
-    signal
-  )
 
 export interface Logout1PathParams {
   userId: string
