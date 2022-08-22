@@ -31,7 +31,9 @@ const emptyMappedValue = {
     timestampFormat: 'SECONDS'
   },
   timestamp: '',
-  timestampFormat: ''
+  timestampFormat: '',
+  failFastThresholds: [],
+  ignoreThresholds: []
 }
 mappedMetric.set('CustomHealth Metric', emptyMappedValue)
 
@@ -40,7 +42,9 @@ export const transformedSetupSource = {
   healthSourceIdentifier: undefined,
   healthSourceName: undefined,
   isEdit: false,
-  mappedServicesAndEnvs: mappedMetric
+  mappedServicesAndEnvs: mappedMetric,
+  failFastThresholds: [],
+  ignoreThresholds: []
 }
 
 export const mappedValue = {
@@ -375,6 +379,27 @@ export const mockedHealthSourcePayload = {
           enabled: false
         }
       }
+    ],
+    metricPacks: [
+      {
+        identifier: 'Custom',
+        metricThresholds: [
+          {
+            criteria: { spec: { greaterThan: 15, lessThan: 122 }, type: 'Absolute' },
+            metricName: 'Prometheus Metric',
+            metricType: 'Custom',
+            spec: { action: 'Ignore' },
+            type: 'IgnoreThreshold'
+          },
+          {
+            criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 1222 }, type: 'Percentage' },
+            metricName: 'Prometheus Metric',
+            metricType: 'Custom',
+            spec: { action: 'FailAfterOccurrence', spec: { count: 12 } },
+            type: 'FailImmediately'
+          }
+        ]
+      }
     ]
   },
   type: 'CustomHealthMetric'
@@ -495,6 +520,23 @@ export const sourceData = {
   sourceType: 'CustomHealth',
   connectorRef: 'customhealth',
   product: {}
+}
+
+export const emptyCustomMetricData = {
+  ...sourceData,
+  healthSourceList: [
+    {
+      name: 'New Custom',
+      identifier: 'New_Custom',
+      type: 'Custom Health',
+      spec: {
+        connectorRef: 'customhealth',
+        metricDefinitions: []
+      },
+      service: 'todolist',
+      environment: 'production'
+    }
+  ]
 }
 
 export const mappedMetricValues = [

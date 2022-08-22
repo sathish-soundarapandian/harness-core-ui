@@ -5,18 +5,21 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useContext, useMemo } from 'react'
-import { Formik, FormikForm } from '@wings-software/uicore'
+import React, { useContext, useMemo, useState } from 'react'
+import { Container, Formik, FormikForm } from '@wings-software/uicore'
 import { noop } from 'lodash-es'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
 import useGroupedSideNaveHook from '@cv/hooks/GroupedSideNaveHook/useGroupedSideNaveHook'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { useStrings } from 'framework/strings'
 import {
   transformCustomHealthSourceToSetupSource,
   validateMappings,
   onSubmitCustomHealthSource,
-  getInitCustomMetricData
+  getInitCustomMetricData,
+  persistCustomMetric
 } from './CustomHealthSource.utils'
 import type { CustomHealthSourceSetupSource, MapCustomHealthToService } from './CustomHealthSource.types'
 
@@ -26,6 +29,9 @@ import CustomMetric from '../../common/CustomMetric/CustomMetric'
 import type { CustomMappedMetric } from '../../common/CustomMetric/CustomMetric.types'
 import CustomHealthSourceForm from './CustomHealthSourceForm'
 import { defaultMetricName } from './CustomHealthSource.constants'
+import { getCustomMetricGroupNames } from '../../common/MetricThresholds/MetricThresholds.utils'
+import type { MetricThresholdsState } from '../../common/MetricThresholds/MetricThresholds.types'
+import MetricThresholdProvider from './components/MetricThresholds/MetricThresholdProvider'
 import css from './CustomHealthSource.module.scss'
 
 export interface CustomHealthSourceProps {
@@ -39,7 +45,17 @@ export function CustomHealthSource(props: CustomHealthSourceProps): JSX.Element 
 
   const { data: sourceData, onSubmit } = props
 
-  const transformedSourceData = useMemo(() => transformCustomHealthSourceToSetupSource(sourceData), [sourceData])
+  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD)
+
+  const transformedSourceData = useMemo(
+    () => transformCustomHealthSourceToSetupSource(sourceData, isMetricThresholdEnabled),
+    [isMetricThresholdEnabled, sourceData]
+  )
+
+  const [metricThresholds, setMetricThresholds] = useState<MetricThresholdsState>({
+    ignoreThresholds: transformedSourceData.ignoreThresholds,
+    failFastThresholds: transformedSourceData.failFastThresholds
+  })
 
   const {
     createdMetrics,
@@ -56,17 +72,23 @@ export function CustomHealthSource(props: CustomHealthSourceProps): JSX.Element 
     mappedServicesAndEnvs: transformedSourceData.mappedServicesAndEnvs as Map<string, CustomMappedMetric>
   })
 
+  const initialFormValues = {
+    ...mappedMetrics?.get(selectedMetric || ''),
+    ...metricThresholds
+  } as MapCustomHealthToService
+
   return (
     <Formik<MapCustomHealthToService>
       formName="mapCustomhealth"
-      initialValues={mappedMetrics.get(selectedMetric || '') as MapCustomHealthToService}
+      initialValues={initialFormValues}
       isInitialValid={(args: any) =>
         Object.keys(
           validateMappings(
             getString,
             groupedCreatedMetricsList,
             groupedCreatedMetricsList.indexOf(selectedMetric),
-            args.initialValues
+            args.initialValues,
+            isMetricThresholdEnabled
           )
         ).length === 0
       }
@@ -77,11 +99,21 @@ export function CustomHealthSource(props: CustomHealthSourceProps): JSX.Element 
           getString,
           groupedCreatedMetricsList,
           groupedCreatedMetricsList.indexOf(selectedMetric),
-          values
+          values,
+          isMetricThresholdEnabled
         )
       }}
     >
       {formikProps => {
+        console.log('formikProps', formikProps.values)
+
+        persistCustomMetric({
+          mappedMetrics,
+          selectedMetric,
+          metricThresholds,
+          formikValues: formikProps.values,
+          setMappedMetrics
+        })
         return (
           <FormikForm className={css.formFullheight}>
             <CustomMetric
@@ -111,18 +143,31 @@ export function CustomHealthSource(props: CustomHealthSourceProps): JSX.Element 
             <DrawerFooter
               isSubmit
               onPrevious={onPrevious}
-              onNext={onSubmitCustomHealthSource({
-                formikProps,
-                createdMetrics: groupedCreatedMetricsList,
-                selectedMetricIndex: groupedCreatedMetricsList.indexOf(selectedMetric),
-                mappedMetrics,
-                selectedMetric,
-                onSubmit,
-                sourceData,
-                transformedSourceData,
-                getString
-              })}
+              onNext={() => {
+                formikProps.submitForm()
+
+                if (formikProps.isValid) {
+                  onSubmitCustomHealthSource({
+                    formikProps,
+                    mappedMetrics,
+                    selectedMetric,
+                    onSubmit,
+                    sourceData,
+                    transformedSourceData,
+                    isMetricThresholdEnabled,
+                    metricThresholds
+                  })
+                }
+              }}
             />
+            {isMetricThresholdEnabled && Boolean(getCustomMetricGroupNames(groupedCreatedMetrics).length) && (
+              <MetricThresholdProvider
+                formikValues={formikProps.values}
+                setThresholdState={setMetricThresholds}
+                groupedCreatedMetrics={groupedCreatedMetrics}
+              />
+            )}
+            <Container style={{ marginBottom: '120px' }} />
           </FormikForm>
         )
       }}
