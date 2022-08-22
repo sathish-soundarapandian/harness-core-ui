@@ -68,12 +68,14 @@ import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTr
 import routes from '@common/RouteDefinitions'
 import { ServiceNowCreateUpdateView } from '@pipeline/components/execution/StepDetails/views/ServiceNowCreateUpdateView/ServiceNowCreateUpdateView'
 import { ModuleName } from 'framework/types/ModuleName'
+import PipelinesPage from '@pipeline/pages/pipelines/PipelinesPage'
 import PipelineResourceRenderer from './components/RbacResourceModals/PipelineResourceRenderer/PipelineResourceRenderer'
 import { JiraCreateUpdateView } from './components/execution/StepDetails/views/JiraCreateUpdateView/JiraCreateUpdateView'
 import ExecutionErrorTrackingView from './pages/execution/ExecutionErrorTrackingView/ExecutionErrorTrackingView'
 import { ExecutionListPage } from './pages/execution-list-page/ExecutionListPage'
 import EnvironmentResourceRenderer from './components/RbacResourceTables/EnvironmentAttributeRenderer/EnvironmentResourceRenderer'
 import EnvironmentAttributeRenderer from './components/RbacResourceTables/EnvironmentAttributeRenderer/EnvironmentAttributeRenderer'
+
 /**
  * Register RBAC resources
  */
@@ -315,6 +317,15 @@ export function PipelineRouteDestinations({
         licenseRedirectData={licenseRedirectData}
         sidebarProps={sidebarProps}
         path={routes.toPipelines({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
+        pageName={PAGE_NAME.PipelinesPage}
+      >
+        <PipelinesPage />
+      </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={sidebarProps}
+        path={routes.toPipelineList({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
         pageName={PAGE_NAME.PipelineListPage}
       >
         <PipelineListPage />

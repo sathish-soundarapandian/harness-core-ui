@@ -21,12 +21,6 @@ describe('Pipelines list view', () => {
       cy.visitPipelinesList()
       cy.wait('@pipelineList')
     })
-
-    it('should render pipeline list view', () => {
-      cy.contains('p', 'Total: 5').should('be.visible')
-      cy.get('[data-icon="Options"]').first().click()
-      cy.contains('div', 'View Pipeline').should('be.visible')
-    })
   })
 
   describe('Git Sync disabled', () => {
@@ -44,11 +38,6 @@ describe('Pipelines list view', () => {
       cy.intercept('GET', gitSyncBranchCall, { fixture: 'ng/api/git-sync-branches' })
       cy.login('test', 'test')
       cy.visitPipelinesList()
-    })
-
-    it('should render pipeline list view', () => {
-      cy.get('[data-testid="invalid-icon"]').should('be.visible')
-      cy.get('[data-icon="main-tags"]').should('be.visible')
     })
   })
 })

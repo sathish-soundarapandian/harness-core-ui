@@ -37,8 +37,7 @@ describe('Pipeline Execution', () => {
     cy.wait('@pipelineList', {
       timeout: 30000
     })
-    cy.get('[data-icon="Options"]').first().click()
-    cy.findByText('Run').click()
+    cy.contains('span', 'Run').click()
     cy.wait(1000)
     cy.get('*[class^="RunPipelineForm-module_run-form"')
       .should('be.visible')
@@ -156,8 +155,7 @@ describe('Pipeline Execution', () => {
     cy.wait('@pipelineList', {
       timeout: 30000
     })
-    cy.get('[data-icon="Options"]').first().click()
-    cy.findByText('Run').click()
+    cy.contains('span', 'Run').click()
     cy.get('*[class^="RunPipelineForm-module_run-form"')
       .should('be.visible')
       .within(() => {
@@ -247,8 +245,7 @@ describe('Pipeline Execution', () => {
       timeout: 30000
     })
 
-    cy.get('[data-icon="Options"]').first().click()
-    cy.findByText('Run').click()
+    cy.contains('span', 'Run').click()
     cy.wait(1000)
     cy.get('*[class^="RunPipelineForm-module_run-form"')
       .should('be.visible')
@@ -380,8 +377,7 @@ describe('Pipeline Execution', () => {
     })
 
     cy.intercept('PUT', abortPipelineCall, { fixture: 'pipeline/api/pipeline/execute/statusAbort' }).as('statusAbort')
-    cy.get('[data-icon="Options"]').first().click()
-    cy.findByText('Run').click()
+    cy.contains('span', 'Run').click()
     cy.wait(1000)
     cy.get('*[class^="RunPipelineForm-module_run-form"')
       .should('be.visible')
