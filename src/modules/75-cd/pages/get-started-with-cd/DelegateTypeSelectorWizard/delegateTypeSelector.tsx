@@ -16,11 +16,11 @@ import { CreateK8sDelegate } from '../CreateKubernetesDelegateWizard/CreateK8sDe
 import { CreateDockerDelegate } from '../CreateDockerDelegateWizard/createDockerDelegate'
 import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
 
-export interface DelegateTypeSelector {
+export interface DelegateTypeSelectorProps {
   onClickBack: () => void
 }
 
-export const DelegateTypeSelector = ({ onClickBack }: DelegateTypeSelector) => {
+export const DelegateTypeSelector = ({ onClickBack }: DelegateTypeSelectorProps) => {
   const history = useHistory()
   const [delegateType, setDelegateType] = React.useState<string>('')
   const [disableBtn, setDisableBtn] = React.useState(true)

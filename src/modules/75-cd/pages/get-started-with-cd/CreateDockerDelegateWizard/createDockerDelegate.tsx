@@ -25,11 +25,11 @@ import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerS
 import StepProcessing from '../CreateKubernetesDelegateWizard/StepProcessing'
 import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
 
-export interface CreateDockerDelegate {
+export interface CreateDockerDelegateProps {
   onSuccessHandler: () => void
 }
 
-export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegate) => {
+export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegateProps) => {
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<Record<string, string>>()

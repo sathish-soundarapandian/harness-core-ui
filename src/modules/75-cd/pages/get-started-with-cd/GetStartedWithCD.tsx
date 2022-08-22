@@ -6,41 +6,17 @@
  */
 
 import React, { useState } from 'react'
-// import cx from 'classnames'
 import { Text, FontVariation, Icon, Layout, Button, ButtonVariation, Container, ButtonSize } from '@harness/uicore'
-// import type { IconProps } from '@harness/icons'
-// import { useParams } from 'react-router-dom'
 import { NavLink } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-// import type { StringsMap } from 'stringTypes'
-// import type { GitQueryParams, ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
-// import { useQueryParams } from '@common/hooks'
-// import { DeployProvisioningWizard } from './DeployProvisioningWizard/DeployProvisioningWizard'
 import bgImageURL from '../home/images/cd.svg'
-// import bgBannerImageURL from '../home/images/cd-onboarding-banner.svg'
 import delegateImageURL from '../home/images/cd-delegates-banner.svg'
-// import { CDOnboardingProvider } from './CDOnboardingStore'
 import { DelegateTypeSelector } from './DelegateTypeSelectorWizard/delegateTypeSelector'
 import css from './GetStartedWithCD.module.scss'
-// import { right } from '@popperjs/core'
 
 export default function GetStartedWithCI(): React.ReactElement {
   const { getString } = useStrings()
   const [showWizard, setShowWizard] = useState<boolean>(false)
-  // const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
-  // const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
-  // const renderBuildPipelineStep = React.useCallback(
-  //   ({ iconProps, label, isLastStep }: { iconProps: IconProps; label: keyof StringsMap; isLastStep?: boolean }) => (
-  //     <Layout.Horizontal flex padding={{ right: 'xsmall' }} spacing="small">
-  //       <Icon name={iconProps.name} size={iconProps.size} className={iconProps.className} />
-  //       <Text font={{ size: 'small' }} padding={{ left: 'xsmall', right: 'xsmall' }}>
-  //         {getString(label)}
-  //       </Text>
-  //       {!isLastStep ? <Icon name="arrow-right" size={12} className={css.arrow} /> : null}
-  //     </Layout.Horizontal>
-  //   ),
-  //   []
-  // )
   const closeWizard = (): void => {
     setShowWizard(false)
   }
