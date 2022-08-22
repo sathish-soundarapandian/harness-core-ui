@@ -11,6 +11,7 @@ import { Button, ButtonVariation, Container, Layout, Text } from '@harness/uicor
 import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import routes from '@common/RouteDefinitions'
+import { useStrings } from 'framework/strings'
 import { CreateK8sDelegate } from '../CreateKubernetesDelegateWizard/CreateK8sDelegate'
 import { CreateDockerDelegate } from '../CreateDockerDelegateWizard/createDockerDelegate'
 import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
@@ -27,6 +28,7 @@ export const DelegateTypeSelector = ({ onClickBack }: DelegateTypeSelector) => {
   const onSuccessHandler = (): void => {
     setDisableBtn(false)
   }
+  const { getString } = useStrings()
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<Record<string, string>>()
 
@@ -44,22 +46,22 @@ export const DelegateTypeSelector = ({ onClickBack }: DelegateTypeSelector) => {
   return (
     <Layout.Vertical width="50%">
       <Container className={css.header}>
-        <Text font={{ variation: FontVariation.H2, weight: 'semi-bold' }}>Install Delegate</Text>
+        <Text font={{ variation: FontVariation.H2, weight: 'semi-bold' }}>{getString('cd.installDelegate')}</Text>
         <div className={css.borderBottom} />
         <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.secondaryHeader}>
-          How do you want to run the Delegate
+          {getString('cd.runDelegate')}
         </Text>
         <Button
           onClick={() => setDelegateType('kubernetes')}
           className={cx(css.kubernetes, delegateType === 'kubernetes' ? css.active : undefined)}
         >
-          Kubernetes
+          {getString('kubernetesText')}
         </Button>
         <Button
           onClick={() => setDelegateType('docker')}
           className={cx(css.docker, delegateType === 'docker' ? css.active : undefined)}
         >
-          Docker
+          {getString('delegate.cardData.docker.name')}
         </Button>
         <div className={css.borderTop} />
       </Container>
@@ -80,13 +82,13 @@ export const DelegateTypeSelector = ({ onClickBack }: DelegateTypeSelector) => {
         >
           <Button
             variation={ButtonVariation.SECONDARY}
-            text="Back"
+            text={getString('back')}
             icon="chevron-left"
             minimal
             onClick={() => onClickBack()}
           />
           <Button
-            text="Create Pipeline"
+            text={getString('common.createPipeline')}
             variation={ButtonVariation.PRIMARY}
             rightIcon="chevron-right"
             disabled={disableBtn}

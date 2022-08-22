@@ -67,28 +67,27 @@ export default function GetStartedWithCI(): React.ReactElement {
             </Container>
 
             <Text font={{ variation: FontVariation.H5, weight: 'light' }} padding={{ bottom: 'medium' }}>
-              Welcome to Harness!
+              {getString('cd.welcomeMessage')}
             </Text>
 
             <Layout.Horizontal>
               <Layout.Vertical width="50%">
                 <Text font={{ variation: FontVariation.H3, weight: 'semi-bold' }} padding={{ bottom: 'large' }}>
-                  Install the Delegate to deploy your cluster
+                  {getString('cd.delegateInstallation')}
                 </Text>
                 <Text font={{ variation: FontVariation.SMALL }} padding={{ top: 'small' }} width={'80%'}>
-                  Harness Delegates are worker processes that runs on your infrastructure execute tasks on your
-                  infrastructure on behalf of Harness platform.
+                  {getString('cd.delegateInfo')}
                 </Text>
                 <Layout.Horizontal>
                   <Container className={css.buttonRow}>
                     <Button
                       variation={ButtonVariation.PRIMARY}
                       size={ButtonSize.LARGE}
-                      text="Install the Delegate"
+                      text={getString('cd.delegateInstallBtnText')}
                       onClick={() => setShowWizard(true)}
                     />
                     <NavLink to="#" className={css.linkText}>
-                      Learn more about Delegates
+                      {getString('cd.learnMoreDelegate')}
                     </NavLink>
                   </Container>
                 </Layout.Horizontal>

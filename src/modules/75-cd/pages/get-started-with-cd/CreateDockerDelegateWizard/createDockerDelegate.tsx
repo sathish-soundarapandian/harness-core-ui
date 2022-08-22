@@ -144,13 +144,13 @@ export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegate)
     <>
       <Layout.Vertical>
         <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
-          Instructions to Install the Delegate
+          {getString('cd.instructionsDelegate')}
         </Text>
         <ul className={css.progress}>
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical>
               <Text font={{ variation: FontVariation.H6, weight: 'semi-bold' }} className={css.subHeading}>
-                DOWNLOAD THE YAML
+                {getString('cd.downloadYAML')}
               </Text>
               <Layout.Horizontal className={css.spacing}>
                 <Button
@@ -164,7 +164,7 @@ export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegate)
                   outlined
                 />
                 <Button
-                  text="Preview Yaml"
+                  text={getString('cd.previewYAML')}
                   className={cx(css.previewButton, isYamlVisible ? css.active : undefined)}
                   onClick={() => {
                     setYamlVisible(!isYamlVisible)
@@ -195,7 +195,7 @@ export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegate)
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical className={css.panelLeft}>
               <Text font={{ variation: FontVariation.H6, weight: 'semi-bold' }} className={css.subHeading}>
-                INSTALL ON YOUR CLUSTER
+                {getString('cd.installCluster')}
               </Text>
               <Layout.Horizontal>
                 <Text font="normal" width={408} color={Color.PRIMARY_7}>
@@ -228,7 +228,7 @@ export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegate)
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical>
               <Text font={{ variation: FontVariation.H6, weight: 'semi-bold' }} className={css.subHeading}>
-                WAITING FOR DELEGATE TO CONNECT
+                {getString('cd.delegateConnectionWait')}
               </Text>
               {!isEmpty(yaml) ? (
                 <StepProcessing name="sample-docker-delegate-t" delegateType="DOCKER" replicas={1} />

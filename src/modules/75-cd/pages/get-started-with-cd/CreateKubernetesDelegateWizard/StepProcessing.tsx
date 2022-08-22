@@ -92,25 +92,19 @@ const StepProcessing: FC<StepDelegateData> = props => {
           <Layout.Horizontal className={css.textPadding}>
             <Icon name="danger-icon" size={25} className={css.iconPadding} />
             <Text className={css.dangerColor} font={{ variation: FontVariation.H6 }} color={Color.RED_600}>
-              Delegate Failed to connect to Harness
+              {getString('cd.delegateFailed')}
             </Text>
           </Layout.Horizontal>
           <Layout.Horizontal width={'100%'}>
             <Layout.Vertical width={'83%'}>
-              <Text className={css.textPadding}>
-                Harness Delegate Failed to connect to our Harness SaaS. Please make sure the infrastructure the delegate
-                is installed on can reach https://app.harness.io
-              </Text>
-              <Text className={css.textPadding}>
-                The Delegate failed to come up on the cluster, please check to see if the pods are healthy or could be
-                scheduled on the cluster
-              </Text>
+              <Text className={css.textPadding}>{getString('cd.delegateFailText1')}</Text>
+              <Text className={css.textPadding}>{getString('cd.delegateFailText2')}</Text>
               <Text
                 className={css.textPadding}
                 onClick={() => setTroubleShootVisible(!isTroubleShootVisible)}
                 color={Color.BLUE_700}
               >
-                Troubleshoot
+                {getString('delegates.delegateNotInstalled.tabs.commonProblems.troubleshoot')}
               </Text>
             </Layout.Vertical>
             <img className={css.buildImg} title={getString('common.getStarted.buildPipeline')} src={delegateErrorURL} />
@@ -144,10 +138,10 @@ const StepProcessing: FC<StepDelegateData> = props => {
             />
             <Layout.Vertical width={'83%'}>
               <Text className={css.successPadding} color={Color.GREEN_900}>
-                Great! You have successfully installed the Delegate.
+                {getString('cd.delegateSuccess')}
               </Text>
               <Text className={css.textPadding} color={Color.GREEN_900}>
-                Please proceed to creating your first pipeline
+                {getString('cd.pipelineCreation')}
               </Text>
             </Layout.Vertical>
           </Layout.Horizontal>

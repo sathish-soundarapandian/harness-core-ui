@@ -124,7 +124,7 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps) 
       }
     } catch (e) {
       // showError(getString('delegates.delegateNameNotUnique'))
-      showError('Something went wrong at our end , Please contact Harness support')
+      showError(getString('somethingWentWrong'))
     }
   }
   const onGenYaml = async (): Promise<void> => {
@@ -146,7 +146,7 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps) 
   const delegateSizeMappings: DelegateSizeDetails[] | undefined = delegateSizes?.resource
 
   useEffect(() => {
-    if (tokensError || delegateSizeError) showError('Something went wrong at our end , Please contact Harness support')
+    if (tokensError || delegateSizeError) showError(getString('somethingWentWrong'))
   }, [tokensError, delegateSizeError])
 
   useEffect(() => {
@@ -181,13 +181,13 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps) 
     <>
       <Layout.Vertical>
         <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
-          Instructions to Install the Delegate
+          {getString('cd.instructionsDelegate')}
         </Text>
         <ul className={css.progress}>
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical>
               <Text font={{ variation: FontVariation.H6 }} className={css.subHeading}>
-                DOWNLOAD THE YAML
+                {getString('cd.downloadYAML')}
               </Text>
               <Layout.Horizontal className={css.spacing}>
                 <Button
@@ -201,7 +201,7 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps) 
                   outlined
                 />
                 <Button
-                  text="Preview Yaml"
+                  text={getString('cd.previewYAML')}
                   className={cx(css.previewButton, isYamlVisible ? css.active : undefined)}
                   onClick={() => {
                     setYamlVisible(!isYamlVisible)
@@ -232,16 +232,16 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps) 
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical className={css.panelLeft}>
               <Text font={{ variation: FontVariation.H6 }} className={css.subHeading}>
-                INSTALL ON YOUR CLUSTER
+                {getString('cd.installCluster')}
               </Text>
               <Layout.Horizontal>
                 <Text font="normal" width={408} color={Color.PRIMARY_7}>
-                  Check if you can connect to your cluster
+                  {getString('cd.checkCluster')}
                 </Text>
               </Layout.Horizontal>
               <Layout.Horizontal className={css.descriptionVerificationWrapper}>
                 <Text font="normal" width={408}>
-                  Install the delegate by running the following command
+                  {getString('cd.delegateInstallCommand')}
                 </Text>
               </Layout.Horizontal>
               <Layout.Horizontal className={css.verificationFieldWrapper}>
@@ -265,7 +265,7 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps) 
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical>
               <Text font={{ variation: FontVariation.H6 }} className={css.subHeading}>
-                WAITING FOR DELEGATE TO CONNECT
+                {getString('cd.delegateConnectionWait')}
               </Text>
               {!isEmpty(yaml) ? (
                 <StepProcessing name={delegateName} delegateType={delegateType} replicas={yaml?.replicas} />
