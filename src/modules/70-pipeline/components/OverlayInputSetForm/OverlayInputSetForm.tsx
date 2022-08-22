@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { defaultTo, isNull, isUndefined, noop, omit, omitBy } from 'lodash-es'
+import { defaultTo, get, isNull, isUndefined, noop, omit, omitBy } from 'lodash-es'
 import type { MutateRequestOptions } from 'restful-react/dist/Mutate'
 import { Classes, Dialog, IDialogProps } from '@blueprintjs/core'
 import * as Yup from 'yup'
@@ -39,7 +39,8 @@ import {
   EntityGitDetails,
   UpdateOverlayInputSetForPipelineQueryParams,
   UpdateOverlayInputSetForPipelinePathParams,
-  CreateOverlayInputSetForPipelineQueryParams
+  CreateOverlayInputSetForPipelineQueryParams,
+  useGetMergeInputSetFromPipelineTemplateWithListInput
 } from 'services/pipeline-ng'
 
 import { useToaster } from '@common/exports'
@@ -177,6 +178,8 @@ export function OverlayInputSetForm({
   const { showSuccess, showError, clear } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const [formErrors, setFormErrors] = React.useState<Record<string, any>>({})
+  const [invalidInputSetIds, setInvalidInputSetIds] = React.useState<Array<string>>([])
+  const [invokeMergeInp, setInvokeMergeInp] = React.useState<boolean>(false)
   const isPipelineRemote = gitSimplification && storeType === StoreType.REMOTE
   const commonQueryParams = useMemo(() => {
     return {
@@ -248,6 +251,20 @@ export function OverlayInputSetForm({
     }
   })
 
+  const { mutate: mergeInputSet, loading: loadingMergeInputSets } =
+    useGetMergeInputSetFromPipelineTemplateWithListInput({
+      queryParams: {
+        accountIdentifier: accountId,
+        projectIdentifier,
+        orgIdentifier,
+        pipelineIdentifier,
+        pipelineRepoID: repoIdentifier,
+        pipelineBranch: branch,
+        repoIdentifier,
+        branch
+      }
+    })
+
   const inputSet = React.useMemo(() => {
     if (!overlayInputSetResponse?.data) {
       return getDefaultInputSet(orgIdentifier, projectIdentifier, pipelineIdentifier)
@@ -290,10 +307,10 @@ export function OverlayInputSetForm({
   const [disableVisualView, setDisableVisualView] = React.useState(inputSet.entityValidityDetails?.valid === false)
 
   React.useEffect(() => {
-    if (inputSet.entityValidityDetails?.valid === false || selectedView === SelectedView.YAML) {
-      setSelectedView(SelectedView.YAML)
-    } else {
+    if (!isInputSetInvalid(inputSet)) {
       setSelectedView(SelectedView.VISUAL)
+    } else {
+      setSelectedView(SelectedView.YAML)
     }
   }, [inputSet, inputSet.entityValidityDetails?.valid])
 
@@ -325,6 +342,25 @@ export function OverlayInputSetForm({
     })
     setSelectedInputSets(inputSetsToSelect)
   }, [inputSetList?.data?.content, inputSet.inputSetReferences])
+
+  React.useEffect(() => {
+    if (invokeMergeInp && selectedInputSets?.length) {
+      const fetchData = async (): Promise<void> => {
+        const response = await mergeInputSet({
+          inputSetReferences: selectedInputSets?.map(item => item.value as string)
+        })
+        if (response.data?.errorResponse) {
+          setSelectedInputSets([])
+        }
+        setInvalidInputSetIds(get(response?.data, 'inputSetErrorWrapper.invalidInputSetReferences', []))
+      }
+      try {
+        fetchData()
+      } catch (e) {
+        setInvokeMergeInp(false)
+      }
+    }
+  }, [selectedInputSets, selectedInputSets?.length, invokeMergeInp])
 
   React.useEffect(() => {
     if (identifier) {
@@ -680,6 +716,7 @@ export function OverlayInputSetForm({
                                   pipelineIdentifier={pipelineIdentifier}
                                   onChange={inputsets => {
                                     setSelectedInputSets(inputsets)
+                                    setInvokeMergeInp(true)
                                   }}
                                   value={selectedInputSets}
                                   selectedRepo={selectedRepo}
@@ -688,6 +725,8 @@ export function OverlayInputSetForm({
                                   selectedValueClass={css.selectedInputSetsContainer}
                                   pipeline={pipeline}
                                   hideInpSetBtn={true}
+                                  invalidInputSetReferences={invalidInputSetIds}
+                                  loadingMergeInputSets={loadingMergeInputSets}
                                 />
                               </GitSyncStoreProvider>
                             )}

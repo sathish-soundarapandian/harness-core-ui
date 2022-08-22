@@ -151,7 +151,7 @@ export function useSaveInputSetOrOverlayInpSet(inputSetInfo: InputSetInfo): UseS
           throw new Error(getString('common.validation.identifierIsRequired'))
         }
         if (!isGitSyncEnabled && initialStoreMetadata.storeType !== StoreType.REMOTE) {
-          showSuccess(getString('inputSets.inputSetSaved'))
+          showSuccess('Input Set Updated')
           !!fromInputSetForm && history.goBack()
         }
       } catch (e) {

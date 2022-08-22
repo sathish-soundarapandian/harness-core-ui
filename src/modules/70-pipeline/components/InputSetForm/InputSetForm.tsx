@@ -51,7 +51,7 @@ import type { GitContextProps } from '@common/components/GitContextForm/GitConte
 import { parse } from '@common/utils/YamlHelperMethods'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
-import type { InputSetDTO, Pipeline, InputSet } from '@pipeline/utils/types'
+import type { InputSetDTO, InputSetType, Pipeline, InputSet } from '@pipeline/utils/types'
 import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
@@ -94,7 +94,7 @@ const getInputSet = (
   template: ResponseInputSetTemplateWithReplacedExpressionsResponse | null,
   mergeTemplate?: string,
   isGitSyncEnabled = false
-): InputSetDTO => {
+): InputSetDTO | InputSetType => {
   if (inputSetResponse?.data) {
     const inputSetObj = inputSetResponse?.data
 
@@ -264,7 +264,7 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
     onCreateSuccess
   })
 
-  const inputSet: InputSetDTO = React.useMemo(() => {
+  const inputSet: InputSetDTO | InputSetType = React.useMemo(() => {
     if (inputSetUpdateResponse) {
       return getInputSet(
         orgIdentifier,

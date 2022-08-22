@@ -40,7 +40,7 @@ import { useQueryParams } from '@common/hooks'
 import GitContextForm, { GitContextProps } from '@common/components/GitContextForm/GitContextForm'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
-import type { InputSetDTO, Pipeline } from '@pipeline/utils/types'
+import type { InputSetDTO, InputSetType, Pipeline } from '@pipeline/utils/types'
 import {
   isCloneCodebaseEnabledAtLeastOneStage,
   isCodebaseFieldsRuntimeInputs,
@@ -79,7 +79,7 @@ export const isYamlPresent = (
 
 type InputSetDTOGitDetails = InputSetDTO & GitContextProps & StoreMetadata
 interface FormikInputSetFormProps {
-  inputSet: InputSetDTO
+  inputSet: InputSetDTO | InputSetType
   template: ResponseInputSetTemplateWithReplacedExpressionsResponse | null
   pipeline: ResponsePMSPipelineResponseDTO | null
   resolvedTemplatesPipelineYaml?: string
