@@ -104,17 +104,17 @@ export const ResourceCenter = (): React.ReactElement => {
 
   if (!show) {
     return (
-      <Layout.Vertical flex spacing="xsmall" className={css.helpCenterIcon}>
-        <Icon
-          name={'nav-help'}
-          onClick={e => {
-            e.stopPropagation()
-            e.preventDefault()
-            setShow(true)
-          }}
-          size={20}
-          data-testid="question"
-        />
+      <Layout.Vertical
+        flex
+        spacing="xsmall"
+        className={css.helpCenterIcon}
+        onClick={e => {
+          e.stopPropagation()
+          e.preventDefault()
+          setShow(true)
+        }}
+      >
+        <Icon name={'nav-help'} size={20} data-testid="question" />
         <Text font={{ size: 'xsmall', align: 'center' }} color={Color.WHITE}>
           <String stringID="common.help" />
         </Text>
