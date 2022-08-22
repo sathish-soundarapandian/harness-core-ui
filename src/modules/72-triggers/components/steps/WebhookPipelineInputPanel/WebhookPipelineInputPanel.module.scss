@@ -1,0 +1,82 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.webhookPipelineInputContainer {
+  min-width: 800px;
+  padding: var(--spacing-4) var(--spacing-7) !important;
+  .heading {
+    margin: 0;
+  }
+
+  .pipelineInputSetForm {
+    position: relative;
+    margin-left: -20px !important;
+  }
+}
+
+.formContentTitle {
+  font-weight: bold !important;
+  font-size: medium !important;
+  color: var(--grey-800) !important;
+  margin-bottom: var(--spacing-4) !important;
+}
+
+.formContent {
+  background-color: var(--white) !important;
+  padding: var(--spacing-large) !important;
+  box-shadow: 0px 0px 1px rgb(40 41 61 / 8%), 0px 0.5px 2px rgb(96 97 112 / 16%);
+  margin-bottom: var(--spacing-xlarge);
+}
+
+.pipelineInputRow {
+  display: grid;
+  h2 {
+    font-size: 1.5em !important;
+    font-weight: bold !important;
+    padding-left: var(--spacing-medium) !important;
+  }
+}
+
+.inputsetGrid {
+  background-color: var(--form-bg);
+  .input-set-content {
+    height: calc(100vh - 236px);
+    overflow: auto;
+  }
+  .Card--card {
+    box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16);
+  }
+  .inputSetcard {
+    margin: var(--spacing-large);
+  }
+  .errorHeader {
+    background: var(--yellow-100);
+    color: var(--black);
+    :global {
+      .bp3-icon {
+        padding-right: var(--spacing-large);
+      }
+    }
+  }
+}
+
+.inputSetSelectedValue {
+  margin-top: var(--spacing-medium);
+}
+
+.divider {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  margin-top: var(--spacing-4);
+}
+
+.refBranchOuter {
+  margin: var(--spacing-large) var(--spacing-large) var(--spacing-xlarge) 0 !important;
+}
+
+.halfWidth {
+  width: 50%;
+}

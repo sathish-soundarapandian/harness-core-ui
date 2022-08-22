@@ -1,0 +1,65 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.conditionsRow {
+  display: flex;
+  align-items: center;
+
+  .textContainer {
+    margin: var(--spacing-small) var(--spacing-small) var(--spacing-small) 0 !important;
+    div {
+      width: 300px;
+    }
+  }
+  .operatorContainer {
+    margin: var(--spacing-small) var(--spacing-small) var(--spacing-small) 0 !important;
+
+    div {
+      width: 240px;
+    }
+  }
+}
+
+.conditionsRowHeaders {
+  padding-bottom: var(--spacing-small) !important;
+  border-bottom: 1px solid var(--grey-100);
+  display: flex;
+  p:nth-child(1),
+  p:nth-child(3) {
+    width: 308px;
+  }
+  p:nth-child(2) {
+    width: 248px;
+  }
+}
+
+.sectionHeader {
+  margin-bottom: var(--spacing-large);
+  color: var(--grey-800);
+  font-weight: 600 !important;
+}
+
+.rowContainer {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--grey-100);
+}
+
+.rowTrashIcon {
+  position: absolute;
+  left: 930px;
+  cursor: pointer;
+}
+
+.predefinedRows {
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--grey-100);
+  }
+  > p {
+    width: 308px;
+  }
+}

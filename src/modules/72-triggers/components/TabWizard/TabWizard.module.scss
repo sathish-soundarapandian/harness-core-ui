@@ -1,0 +1,105 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.wizardShell {
+  justify-content: space-between;
+  flex-direction: column;
+  position: relative;
+  height: 100%;
+  background: var(--form-bg);
+
+  [class*='OverlaySpinner'] {
+    width: 100%;
+  }
+
+  .tabsContainer {
+    display: flex;
+    justify-content: flex-start;
+
+    :global {
+      [class*='FormikForm'] > div > [class*='bp3-tabs'] {
+        .bp3-tab {
+          margin: var(--spacing-small) 0 !important;
+          min-width: 105px; // see trigger Schedule tab
+          padding: 0 var(--spacing-medium) 0 0;
+          text-align: center;
+        }
+        > .bp3-tab-list {
+          position: sticky;
+          top: 58px;
+          z-index: 1;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.13);
+          background-color: var(--white);
+          padding-bottom: 3px;
+          padding-left: 0;
+
+          [class*='bp3-tab-indicator-wrapper'] {
+            width: 154px !important;
+            left: 23px;
+          }
+        }
+        > .bp3-tab-panel {
+          width: 1000px;
+        }
+
+        &:hover {
+          [data-name='chevron-right-tab'] svg path {
+            fill: var(--grey-400) !important;
+          }
+        }
+      }
+
+      .bp3-tab-panel > div {
+        margin-top: 24px !important;
+      }
+    }
+    .tab {
+      span[class*='bp3-icon'] {
+        margin-right: var(--spacing-small);
+      }
+      &:hover {
+        .panelIndexCircle {
+          border-color: var(--primary-7);
+        }
+        .panelIndexNumber {
+          color: var(--primary-7);
+        }
+      }
+    }
+    .tabPanel {
+      width: 1000px;
+    }
+  }
+}
+
+.transparentBlock {
+  height: 20px;
+  width: 100%;
+  background: var(--red-500);
+}
+
+.panelIndexCircle {
+  color: var(--grey-500);
+  border: 1px solid var(--grey-500);
+  border-radius: 100%;
+  display: inline-block;
+  margin-right: var(--spacing-small);
+  width: 21px;
+}
+.panelIndexNumber {
+  color: var(--grey-700);
+}
+
+.activeIndex {
+  border-color: var(--grey-800);
+}
+
+.tab-right-chevron {
+  cursor: pointer;
+  position: absolute;
+  left: 178px;
+}

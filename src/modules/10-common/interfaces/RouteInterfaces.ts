@@ -97,6 +97,14 @@ export interface TriggerPathProps extends PipelinePathProps {
   manifestType?: string
 }
 
+export interface TriggerQueryParams {
+  triggerIdentifier: string
+  triggerType?: string
+  sourceRepo?: string
+  artifactType?: string
+  manifestType?: string
+}
+
 export interface ExecutionPathProps extends PipelinePathProps {
   executionIdentifier: string
   source: 'deployments' | 'executions' | 'builds' | ':source(deployments|executions|builds)'

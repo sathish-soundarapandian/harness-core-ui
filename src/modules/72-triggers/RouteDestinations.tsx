@@ -6,18 +6,21 @@
  */
 
 import React from 'react'
+
+import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
+
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import routes from '@common/RouteDefinitions'
 import { RouteWithLayout } from '@common/router'
 import { accountPathProps, pipelinePathProps, triggerPathProps } from '@common/utils/routeUtils'
-import PipelineDetails from '@pipeline/pages/pipeline-details/PipelineDetails'
-import TriggerDetails from '@triggers/pages/trigger-details/TriggerDetails'
-import TriggersDetailPage from '@triggers/pages/triggers/TriggersDetailPage'
-import TriggersPage from '@triggers/pages/triggers/TriggersPage'
-import TriggersWizardPage from '@triggers/pages/triggers/TriggersWizardPage'
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
-import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
+
+import PipelineDetails from '@pipeline/pages/pipeline-details/PipelineDetails'
+import TriggersPage from '@triggers/pages/triggers/TriggersPage'
+import TriggersDetailPage from '@triggers/pages/triggers/TriggersDetailPage'
+
+import TriggersWizardPage from '@triggers/components/pages/TriggersWizardPage/TriggersWizardPage'
 
 export const TriggersRouteDestinations: React.FC<{
   moduleParams: ModulePathParams
@@ -52,9 +55,7 @@ export const TriggersRouteDestinations: React.FC<{
       path={routes.toTriggersWizardPage({ ...accountPathProps, ...triggerPathProps, ...moduleParams })}
       pageName={PAGE_NAME.TriggersWizardPage}
     >
-      <TriggerDetails wizard={true}>
-        <TriggersWizardPage />
-      </TriggerDetails>
+      <TriggersWizardPage />
     </RouteWithLayout>
   </>
 )
