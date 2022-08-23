@@ -15,7 +15,12 @@ import {
   DelegateType,
   k8sPermissionType
 } from '@delegates/components/CreateDelegate/K8sDelegate/DelegateSetupStep/DelegateSetupStep.types'
-import { DelegateSetupDetails, GetDelegateTokensQueryParams, useGetDelegateTokens } from 'services/cd-ng'
+import {
+  DelegateSetupDetails,
+  DelegateTokenDetails,
+  GetDelegateTokensQueryParams,
+  useGetDelegateTokens
+} from 'services/cd-ng'
 import {
   DelegateSizeDetails,
   GenerateKubernetesYamlQueryParams,
@@ -36,16 +41,16 @@ export interface CreateK8sDelegateProps {
   onSuccessHandler: () => void
 }
 
-export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps) => {
-  const delegateName = 'sample-vikrant-dsa'
-  const delegateIdentifier = 'samplevikrantdsa'
+export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps): JSX.Element => {
+  const delegateName = `sample-${Math.floor(Math.random() * 100)}-delegate`
+  const delegateIdentifier = `sample${Math.floor(Math.random() * 100)}delegate`
   const { accountId, projectIdentifier, orgIdentifier } = useParams<Record<string, string>>()
   const delegateType = DelegateType.KUBERNETES
-  const [token, setToken] = React.useState<any>()
+  const [token, setToken] = React.useState<DelegateTokenDetails>()
   const [yaml, setYaml] = React.useState<any>()
   const [generatedYaml, setGeneratedYaml] = React.useState<string>()
-  const [isYamlVisible, setYamlVisible] = React.useState(false)
-  const [showPageLoader, setLoader] = React.useState(true)
+  const [isYamlVisible, setYamlVisible] = React.useState<boolean>(false)
+  const [showPageLoader, setLoader] = React.useState<boolean>(true)
   const delegateFileName = DelegateFileName.k8sFileName
 
   const linkRef = React.useRef<HTMLAnchorElement>(null)
@@ -98,7 +103,7 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps) 
     } as GenerateKubernetesYamlQueryParams
   })
 
-  const fetchYaml = async () => {
+  const fetchYaml = async (): Promise<void> => {
     try {
       const response = await createKubernetesYaml({
         ...(createParams as DelegateSetupDetails)
@@ -147,7 +152,7 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps) 
 
   useEffect(() => {
     if (tokensError || delegateSizeError) showError(getString('somethingWentWrong'))
-  }, [tokensError, delegateSizeError])
+  }, [tokensError, delegateSizeError, showError, getString])
 
   useEffect(() => {
     getTokens()
@@ -172,7 +177,7 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps) 
       setLoader(false)
       onSuccessHandler()
     }
-  }, [generatedYaml])
+  }, [generatedYaml, onSuccessHandler])
 
   if (showPageLoader) {
     return <ContainerSpinner className={css.spinner} />
@@ -186,7 +191,7 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps) 
         <ul className={css.progress}>
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical>
-              <Text font={{ variation: FontVariation.H6 }} className={css.subHeading}>
+              <Text font={{ variation: FontVariation.H6, weight: 'semi-bold' }} className={css.subHeading}>
                 {getString('cd.downloadYAML')}
               </Text>
               <Layout.Horizontal className={css.spacing}>
@@ -231,7 +236,7 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps) 
           </li>
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical className={css.panelLeft}>
-              <Text font={{ variation: FontVariation.H6 }} className={css.subHeading}>
+              <Text font={{ variation: FontVariation.H6, weight: 'semi-bold' }} className={css.subHeading}>
                 {getString('cd.installCluster')}
               </Text>
               <Layout.Horizontal>
@@ -264,7 +269,7 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps) 
           </li>
           <li className={`${css.progressItem} ${css.progressItemActive}`}>
             <Layout.Vertical>
-              <Text font={{ variation: FontVariation.H6 }} className={css.subHeading}>
+              <Text font={{ variation: FontVariation.H6, weight: 'semi-bold' }} className={css.subHeading}>
                 {getString('cd.delegateConnectionWait')}
               </Text>
               {!isEmpty(yaml) ? (

@@ -11,7 +11,12 @@ import { Button, Container, Layout, Text, useToaster } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { isEmpty, set } from 'lodash-es'
-import { DelegateSetupDetails, GetDelegateTokensQueryParams, useGetDelegateTokens } from 'services/cd-ng'
+import {
+  DelegateSetupDetails,
+  DelegateTokenDetails,
+  GetDelegateTokensQueryParams,
+  useGetDelegateTokens
+} from 'services/cd-ng'
 import {
   useGenerateDockerDelegateYAML,
   validateDockerDelegatePromise,
@@ -29,14 +34,18 @@ export interface CreateDockerDelegateProps {
   onSuccessHandler: () => void
 }
 
-export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegateProps) => {
+export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegateProps): JSX.Element => {
+  const [token, setToken] = React.useState<DelegateTokenDetails>()
+  const [yaml, setYaml] = React.useState<any>('')
+  const [isNameVerified, setNameVerified] = React.useState<boolean>(false)
+  const [isYamlVisible, setYamlVisible] = React.useState<boolean>(false)
+  const [showPageLoader, setLoader] = React.useState<boolean>(true)
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<Record<string, string>>()
-
-  const [token, setToken] = React.useState<any>()
-
-  const [yaml, setYaml] = React.useState<any>('')
+  const linkRef = React.useRef<HTMLAnchorElement>(null)
+  const dockerFileName = 'docker-compose.yml'
+  const dockerComposeCommand = `docker-compose -f ${dockerFileName} up -d`
 
   const { data: tokensResponse, refetch: getTokens } = useGetDelegateTokens({
     queryParams: {
@@ -48,16 +57,20 @@ export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegateP
     lazy: true
   })
 
-  const [isNameVerified, setNameVerified] = React.useState(false)
+  const { mutate: getDockerYaml } = useGenerateDockerDelegateYAML({
+    queryParams: {
+      accountId
+    }
+  })
 
-  const prevStepData = {
-    name: 'sample-docker-delegate-t',
-    identifier: 'sampledockerdelegatet',
+  const delegateDetails = {
+    name: 'sample-docker-delegate',
+    identifier: 'sampledockerdelegate',
     description: '',
     tokenName: token?.name
   }
 
-  const validateName = async () => {
+  const validateName = async (): Promise<void> => {
     const response = (await validateDockerDelegatePromise({
       queryParams: {
         accountId,
@@ -76,14 +89,8 @@ export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegateP
     }
   }
 
-  const { mutate: getDockerYaml } = useGenerateDockerDelegateYAML({
-    queryParams: {
-      accountId
-    }
-  })
-
-  const fetchDockerYaml = async () => {
-    const createParams = { ...prevStepData } as DelegateSetupDetails
+  const fetchDockerYaml = async (): Promise<void> => {
+    const createParams = { ...delegateDetails } as DelegateSetupDetails
 
     if (projectIdentifier) {
       set(createParams, 'projectIdentifier', projectIdentifier)
@@ -96,7 +103,16 @@ export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegateP
     setYaml(dockerYaml)
   }
 
-  React.useEffect(() => {
+  const onDownload = (): void => {
+    const content = new Blob([yaml as BlobPart], { type: 'data:text/plain;charset=utf-8' })
+    if (linkRef?.current) {
+      linkRef.current.href = window.URL.createObjectURL(content)
+      linkRef.current.download = dockerFileName
+      linkRef.current.click()
+    }
+  }
+
+  useEffect(() => {
     if (isNameVerified) fetchDockerYaml()
   }, [isNameVerified])
 
@@ -114,22 +130,7 @@ export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegateP
     }
   }, [token])
 
-  const linkRef = React.useRef<HTMLAnchorElement>(null)
-  const dockerFileName = 'docker-compose.yml'
-  const dockerComposeCommand = `docker-compose -f ${dockerFileName} up -d`
-  const [isYamlVisible, setYamlVisible] = React.useState(false)
-
-  const onDownload = () => {
-    const content = new Blob([yaml as BlobPart], { type: 'data:text/plain;charset=utf-8' })
-    if (linkRef?.current) {
-      linkRef.current.href = window.URL.createObjectURL(content)
-      linkRef.current.download = dockerFileName
-      linkRef.current.click()
-    }
-  }
-  const [showPageLoader, setLoader] = React.useState(true)
-
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isEmpty(yaml)) {
       setLoader(false)
       onSuccessHandler()

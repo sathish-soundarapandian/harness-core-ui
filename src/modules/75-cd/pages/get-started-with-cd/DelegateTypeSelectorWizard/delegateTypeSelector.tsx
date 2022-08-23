@@ -20,26 +20,25 @@ export interface DelegateTypeSelectorProps {
   onClickBack: () => void
 }
 
-export const DelegateTypeSelector = ({ onClickBack }: DelegateTypeSelectorProps) => {
-  const history = useHistory()
+export const DelegateTypeSelector = ({ onClickBack }: DelegateTypeSelectorProps): JSX.Element => {
   const [delegateType, setDelegateType] = React.useState<string>('')
-  const [disableBtn, setDisableBtn] = React.useState(true)
+  const [disableBtn, setDisableBtn] = React.useState<boolean>(true)
+  const { getString } = useStrings()
+  const history = useHistory()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<Record<string, string>>()
 
   const onSuccessHandler = (): void => {
     setDisableBtn(false)
   }
-  const { getString } = useStrings()
 
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<Record<string, string>>()
-
-  const conditionalContent = (): any => {
+  const conditionalContent = (): JSX.Element => {
     switch (delegateType) {
       case 'kubernetes':
         return <CreateK8sDelegate onSuccessHandler={onSuccessHandler} />
       case 'docker':
         return <CreateDockerDelegate onSuccessHandler={onSuccessHandler} />
       default:
-        break
+        return <></>
     }
   }
 
