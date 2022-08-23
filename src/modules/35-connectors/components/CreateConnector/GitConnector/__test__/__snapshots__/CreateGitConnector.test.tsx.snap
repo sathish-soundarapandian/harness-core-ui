@@ -1898,6 +1898,7 @@ exports[`Create Git connector Wizard should be able to edit form for http and au
        
       <div
         class="Layout--vertical StyledProps--main secondStep connectorModalMinHeight stepContainer"
+        style="width: 60%;"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
