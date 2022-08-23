@@ -1801,10 +1801,10 @@
   resolved "https://npm.pkg.github.com/download/@harness/telemetry/1.0.42/60bc34c133bb40f0e0aa08f80620a1b23f3f089070e8550767e9d3fce8ca6e25#4d3f71026a03c898992d902f13a6c6d9cb0edac6"
   integrity sha512-pwjPYnQ8du1UswlX7A/apewGVDmbmaKKWTQSXtSHhKf9ekZ8WCwVvFcrM8ZIq/QbTn7Z8BXFYtMJdSG25oNtOg==
 
-"@harness/uicore@3.75.0":
-  version "3.75.0"
-  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.75.0/9912262acc459f7c05295b03c645443d8ef4220d031ed89a1fffe650a208e520#fecb45629a1d55783bf6088424957bbdf81af743"
-  integrity sha512-j61mbRnfkJAWuBrVXBDaio+MR+lS//klVY277EiGb4iWRo0opX9nyBmRhd4hD+rtfux9JSS7BhqUHdG1pzCQ/A==
+"@harness/uicore@3.76.0":
+  version "3.76.0"
+  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.76.0/a9cf80eadc9614187d8e2adf0d26192cc28486b9c5817745036cb6de5d2e1cff#817a030b45d183ca704827e8c21c34554be4befd"
+  integrity sha512-z2VpZkJdmSLTeueWQ7cmADtImgUM6zCbi4eVBOW8sMRoWrsXKy5oJMvtjrUv4zMAhBlxakBnX1JCBgSF75ANtw==
 
 "@harness/use-modal@1.1.0":
   version "1.1.0"

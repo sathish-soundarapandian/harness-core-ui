@@ -41,10 +41,13 @@ import { FeaturesProvider } from 'framework/featureStore/FeaturesContext'
 import { ThirdPartyIntegrations } from '3rd-party/ThirdPartyIntegrations'
 import { useGlobalEventListener } from '@common/hooks'
 import HelpPanelProvider from 'framework/utils/HelpPanelProvider'
+import Contentful, { ContentfulEnvironment } from '@common/Contentful'
 
 const RouteDestinations = React.lazy(() => import('modules/RouteDestinations'))
 
 const TOO_MANY_REQUESTS_MESSAGE = 'Too many requests received, please try again later'
+
+Contentful.initialise('W0sCqe1jFV_3Ch3voln0ciABY-1o9XxfZCdD2lSimgM', 'uu5c47kz2byk', ContentfulEnvironment.PRODUCTION)
 
 FocusStyleManager.onlyShowFocusOnTabs()
 SecureStorage.registerCleanupException(PREFERENCES_TOP_LEVEL_KEY)

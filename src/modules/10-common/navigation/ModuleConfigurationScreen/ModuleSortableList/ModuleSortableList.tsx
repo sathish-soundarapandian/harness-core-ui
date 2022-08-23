@@ -7,24 +7,24 @@
 
 import React, { useEffect } from 'react'
 import { Droppable, DragDropContext } from 'react-beautiful-dnd'
-import type { ModuleName } from 'framework/types/ModuleName'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
-import { DEFAULT_MODULES_ORDER } from '../util'
+import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
 import DraggableModuleItem from './DraggableModuleItem/DraggableModuleItem'
+import { DEFAULT_MODULES_ORDER } from '../util'
 
 interface ModuleSortableListProps {
-  activeModule: ModuleName
-  onSelect: (module: ModuleName) => void
+  activeModule: NavModuleName
+  onSelect: (module: NavModuleName) => void
 }
 
 export interface ModulesPreferenceStoreData {
-  orderedModules: ModuleName[]
-  selectedModules: ModuleName[]
+  orderedModules: NavModuleName[]
+  selectedModules: NavModuleName[]
 }
 
 export const MODULES_CONFIG_PREFERENCE_STORE_KEY = 'modulesConfiguration'
 
-const reorder = (list: ModuleName[], startIndex: number, endIndex: number) => {
+const reorder = (list: NavModuleName[], startIndex: number, endIndex: number) => {
   const result = Array.from(list)
   const [removed] = result.splice(startIndex, 1)
   result.splice(endIndex, 0, removed)
@@ -37,6 +37,7 @@ const ModuleSortableList: React.FC<ModuleSortableListProps> = ({ onSelect, activ
     usePreferenceStore<ModulesPreferenceStoreData>(PreferenceScope.USER, MODULES_CONFIG_PREFERENCE_STORE_KEY)
 
   useEffect(() => {
+    // Handle case when new module is added
     if (!orderedModules || orderedModules.length === 0) {
       setModuleConfigPreference({
         selectedModules,

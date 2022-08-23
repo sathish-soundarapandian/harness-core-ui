@@ -10,4 +10,40 @@
   box-shadow: 0px 2px 4px rgba(40, 41, 61, 0.04), 0px 8px 16px rgba(96, 97, 112, 0.16);
   position: relative;
   overflow: hidden;
+  padding: var(--spacing-xxlarge);
+  display: flex;
+  .heading {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    top: var(--spacing-xxlarge);
+    left: var(--spacing-huge);
+  }
+  .main {
+    flex: 1;
+  }
+  .carousel {
+    height: 100%;
+    padding: 0px !important;
+    :global {
+      .Carousel--carouselView {
+        height: 100%;
+      }
+      .Carousel--carouselItem {
+        height: 100%;
+      }
+      .Carousel--carouselIndicators {
+        position: absolute;
+        bottom: 0px;
+        left: 50%;
+      }
+      .Carousel--carouselRight {
+        visibility: hidden;
+      }
+      .Carousel--carouselLeft {
+        visibility: hidden;
+      }
+    }
+  }
 }

@@ -7,13 +7,14 @@
 
 import React, { useState } from 'react'
 import cx from 'classnames'
+import { Link } from 'react-router-dom'
 import { Drawer, Position } from '@blueprintjs/core'
-import { Color, Container, Icon, IconName, Layout, Text } from '@harness/uicore'
-import { Link, useParams } from 'react-router-dom'
+import { Color, Container, Icon, Layout, Text } from '@harness/uicore'
 import { String, StringKeys } from 'framework/strings'
-
-import routes from '@common/RouteDefinitions'
-import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { ModuleName } from 'framework/types/ModuleName'
+import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
+import NavModule from './NavModule/NavModule'
 import ModuleConfigurationScreen from '../ModuleConfigurationScreen/ModuleConfigurationScreen'
 import css from './ModuleList.module.scss'
 
@@ -23,20 +24,13 @@ interface ModuleListProps {
   usePortal?: boolean
 }
 
-interface ItemConfig {
-  icon: IconName
-  label: StringKeys
-  link: string
-  className: string
-}
-
 interface GroupConfig {
   label: StringKeys
-  items: ItemConfig[]
+  items: NavModuleName[]
 }
 
 interface ItemProps {
-  data: ItemConfig
+  data: NavModuleName
 }
 
 interface GroupProps {
@@ -44,23 +38,15 @@ interface GroupProps {
 }
 
 const Item: React.FC<ItemProps> = ({ data }) => {
+  const { redirectionLink } = useNavModuleInfo(data)
+
   return (
-    <div className={css.itemContainer}>
-      <Link to={data.link} className={css.itemLink}>
-        <Text
-          icon={data.icon}
-          iconProps={{ size: 30, margin: { right: 'small' } }}
-          color={Color.WHITE}
-          background={Color.PRIMARY_9}
-          padding={'small'}
-          className={cx(css.itemLabel, data.className)}
-          font={{ size: 'small', weight: 'semi-bold' }}
-        >
-          <String stringID={data.label} />
-        </Text>
-      </Link>
-      <Icon name="tooltip-icon" padding={'small'} margin={{ left: 'small' }} size={12} className={css.clickable} />
-    </div>
+    <Link to={redirectionLink} className={css.itemLink}>
+      <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
+        <NavModule module={data} />
+        <Icon name="tooltip-icon" padding={'small'} margin={{ left: 'small' }} size={12} className={css.clickable} />
+      </Layout.Horizontal>
+    </Link>
   )
 }
 
@@ -72,75 +58,34 @@ const Group: React.FC<GroupProps> = ({ data }) => {
       </Text>
       <Layout.Vertical spacing="medium">
         {data.items.map(item => (
-          <Item key={item.label} data={item} />
+          <Item key={item} data={item} />
         ))}
       </Layout.Vertical>
     </Container>
   )
 }
 
-const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true }) => {
-  const { accountId } = useParams<AccountPathProps>()
-  const [showModuleConfigScreen, setModuleConfigScreen] = useState(false)
+const listConfig: GroupConfig[] = [
+  {
+    label: 'common.moduleList.buildAndTest',
+    items: [ModuleName.CI]
+  },
+  {
+    label: 'common.moduleList.deployChanges',
+    items: [ModuleName.CD]
+  },
+  {
+    label: 'common.moduleList.manageImpact',
+    items: [ModuleName.STO, ModuleName.CF]
+  },
+  {
+    label: 'common.moduleList.optimize',
+    items: [ModuleName.CE, ModuleName.CV]
+  }
+]
 
-  const listConfig: GroupConfig[] = [
-    {
-      label: 'common.moduleList.buildAndTest',
-      items: [
-        {
-          icon: 'ci-main',
-          label: 'common.purpose.ci.continuous',
-          link: routes.toCI({ accountId }),
-          className: css.ci
-        }
-      ]
-    },
-    {
-      label: 'common.moduleList.deployChanges',
-      items: [
-        {
-          icon: 'cd-main',
-          label: 'common.purpose.cd.continuous',
-          link: routes.toCD({ accountId }),
-          className: css.cd
-        }
-      ]
-    },
-    {
-      label: 'common.moduleList.manageImpact',
-      items: [
-        {
-          icon: 'sto-color-filled',
-          label: 'common.purpose.sto.continuous',
-          link: routes.toSTO({ accountId }),
-          className: css.sto
-        },
-        {
-          icon: 'ff-solid',
-          label: 'common.purpose.cf.continuous',
-          link: routes.toCF({ accountId }),
-          className: css.ff
-        }
-      ]
-    },
-    {
-      label: 'common.moduleList.optimize',
-      items: [
-        {
-          icon: 'ce-main',
-          label: 'common.purpose.ce.continuous',
-          link: routes.toCE({ accountId }),
-          className: css.ccm
-        },
-        {
-          icon: 'cv-main',
-          label: 'common.purpose.cv.continuous',
-          link: routes.toCV({ accountId }),
-          className: css.srm
-        }
-      ]
-    }
-  ]
+const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true }) => {
+  const [showModuleConfigScreen, setModuleConfigScreen] = useState(false)
 
   return (
     <>
@@ -166,7 +111,7 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
               onClick={() => setModuleConfigScreen(true)}
             />
           </Container>
-          <Layout.Vertical spacing="xxxlarge">
+          <Layout.Vertical flex spacing="xxxlarge">
             {listConfig.map(item => (
               <Group data={item} key={item.label} />
             ))}
@@ -177,6 +122,7 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
         <ModuleConfigurationScreen
           onClose={() => {
             setModuleConfigScreen(false)
+            close()
           }}
         />
       )}

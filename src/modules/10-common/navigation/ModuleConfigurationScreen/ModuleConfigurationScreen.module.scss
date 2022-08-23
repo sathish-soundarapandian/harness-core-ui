@@ -8,21 +8,35 @@
 .container {
   position: fixed;
   top: 0;
+  left: 88px;
   height: 100% !important;
   width: 100% !important;
   background: var(--theme-light-nav-panel-bg) !important;
   z-index: 100;
-
+  .sortableListContainer {
+    overflow-y: scroll;
+  }
+  .header {
+    height: 152px;
+    display: flex;
+    align-items: center;
+  }
+  .body {
+    height: calc(100vh - 192px);
+    width: calc(100vw - 112px);
+  }
   .crossIcon {
-    position: absolute;
+    position: fixed;
     cursor: pointer;
     right: var(--spacing-xxxlarge);
     top: var(--spacing-xxxlarge);
   }
-  .listContainer {
-    width: 17%;
+  .flex1 {
+    flex: 1;
   }
-  .detailsContainer {
-    width: 83%;
+  .blueText {
+    font-family: var(--font-family-reenie-beanie) !important;
+    font-size: 50px !important;
+    font-weight: bold;
   }
 }

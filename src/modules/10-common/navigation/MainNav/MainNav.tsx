@@ -18,13 +18,13 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import paths from '@common/RouteDefinitions'
 
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ResourceCenter } from '@common/components/ResourceCenter/ResourceCenter'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 
-import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'
-import { FeatureFlag } from '@common/featureFlags'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
+import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'
+import useNavModuleInfo, { NavModuleName } from '@common/hooks/useNavModuleInfo'
 import {
   MODULES_CONFIG_PREFERENCE_STORE_KEY,
   ModulesPreferenceStoreData
@@ -60,28 +60,25 @@ export default function L1Nav(): React.ReactElement {
     MODULES_CONFIG_PREFERENCE_STORE_KEY
   )
   const moduleToNavItemsMap = new Map<ModuleName, () => JSX.Element>()
-  const CDNG_ENABLED = useFeatureFlag(FeatureFlag.CDNG_ENABLED)
+  const CDNG_ENABLED = useNavModuleInfo(ModuleName.CD).shouldVisible
   CDNG_ENABLED && moduleToNavItemsMap.set(ModuleName.CD, DeploymentsNavItem)
-  const CING_ENABLED = useFeatureFlag(FeatureFlag.CING_ENABLED)
+  const CING_ENABLED = useNavModuleInfo(ModuleName.CI).shouldVisible
   CING_ENABLED && moduleToNavItemsMap.set(ModuleName.CI, BuildsNavItem)
-  const CFNG_ENABLED = useFeatureFlag(FeatureFlag.CFNG_ENABLED)
+  const CFNG_ENABLED = useNavModuleInfo(ModuleName.CF).shouldVisible
   CFNG_ENABLED && moduleToNavItemsMap.set(ModuleName.CF, FeatureFlagsNavItem)
-  const CENG_ENABLED = useFeatureFlag(FeatureFlag.CENG_ENABLED)
+  const CENG_ENABLED = useNavModuleInfo(ModuleName.CE).shouldVisible
   CENG_ENABLED && moduleToNavItemsMap.set(ModuleName.CE, CloudCostsNavItem)
-  const CVNG_ENABLED = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
+  const CVNG_ENABLED = useNavModuleInfo(ModuleName.CV).shouldVisible
   CVNG_ENABLED && moduleToNavItemsMap.set(ModuleName.CV, SRMNavItem)
-  const CHAOS_ENABLED = useFeatureFlag(FeatureFlag.CHAOS_ENABLED)
+  const CHAOS_ENABLED = useNavModuleInfo(ModuleName.CHAOS).shouldVisible
   CHAOS_ENABLED && moduleToNavItemsMap.set(ModuleName.CHAOS, ChaosNavItem)
-  const SECURITY = useFeatureFlag(FeatureFlag.SECURITY)
+  const SECURITY = useNavModuleInfo(ModuleName.STO).shouldVisible
   SECURITY && moduleToNavItemsMap.set(ModuleName.STO, STONavItem)
 
   const modulesToShow = [...(modulesPreferenceData?.selectedModules || DEFAULT_MODULES_ORDER)]
   // if current module is not selecting in the modules config, add it temporarily
-  if (
-    module &&
-    !(modulesPreferenceData?.selectedModules || DEFAULT_MODULES_ORDER).includes(moduleToModuleNameMapping[module])
-  ) {
-    modulesToShow.push(moduleToModuleNameMapping[module])
+  if (module && !modulesToShow.includes(moduleToModuleNameMapping[module] as NavModuleName)) {
+    modulesToShow.push(moduleToModuleNameMapping[module] as NavModuleName)
   }
   const modulesListHeight = 92 * Math.min(maxNumOfModulesToShow, modulesToShow.length)
 

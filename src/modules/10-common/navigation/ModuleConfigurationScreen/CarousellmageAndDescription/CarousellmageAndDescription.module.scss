@@ -1,0 +1,6 @@
+// 38px font size is not available in the desgin system, check with UX
+// Add font-family in uicore instead of here
+.primaryText {
+  font-family: var(--font-family-reenie-beanie) !important;
+  font-size: 38px !important;
+}

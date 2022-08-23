@@ -10,9 +10,12 @@ import { Text, Layout, Container } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Icon } from '@harness/icons'
 import { ModuleName } from 'framework/types/ModuleName'
-import { String, useStrings } from 'framework/strings'
+import { String } from 'framework/strings'
+import { PageSpinner } from '@common/components'
+import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
 import ModuleSortableList from './ModuleSortableList/ModuleSortableList'
 import ModuleDetailsSection from './ModuleDetailsSection/ModuleDetailsSection'
+import useGetContentfulModules from './useGetContentfulModules'
 import css from './ModuleConfigurationScreen.module.scss'
 
 interface ModulesConfigurationScreenProps {
@@ -20,35 +23,49 @@ interface ModulesConfigurationScreenProps {
 }
 
 const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({ onClose }) => {
-  const [activeModule, setActiveModule] = useState<ModuleName>(ModuleName.CD)
-  const { getString } = useStrings()
+  const [activeModule, setActiveModule] = useState<NavModuleName>(ModuleName.CD)
+  const { contentfulModuleMap, loading } = useGetContentfulModules()
+
+  const renderHeader = () => {
+    return (
+      <Container className={css.header}>
+        <Text inline margin={{ bottom: 'xsmall' }}>
+          <Text inline color={Color.WHITE} font={{ variation: FontVariation.H2 }}>
+            <String stringID="common.moduleConfig.selectModules" />
+          </Text>
+          <Text inline color={Color.PRIMARY_5} className={css.blueText} margin={{ left: 'small', right: 'small' }}>
+            <String stringID="common.moduleConfig.your" />
+          </Text>
+          <Text inline color={Color.WHITE} font={{ variation: FontVariation.H2 }}>
+            <String stringID="common.moduleConfig.navigation" />
+          </Text>
+        </Text>
+      </Container>
+    )
+  }
+
   return (
-    <Layout.Vertical className={css.container} padding={{ top: 'huge', bottom: 'huge', right: 'huge' }}>
+    <Layout.Vertical className={css.container} padding={{ left: 'xlarge' }}>
+      {renderHeader()}
       <Layout.Horizontal
-        flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-        padding={{ left: 'xxxlarge', bottom: 'large' }}
+        padding={{ bottom: 'huge', right: 'huge' }}
+        margin={{ bottom: 'xxxlarge' }}
+        className={css.body}
       >
-        <Icon name="customize" size={20} margin={{ right: 'small' }} />
-        <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL_BOLD }}>
-          <String stringID="common.moduleConfig.customize" />
-        </Text>
+        <Container margin={{ right: 'xxlarge' }} className={css.sortableListContainer}>
+          <ModuleSortableList activeModule={activeModule} onSelect={setActiveModule} />
+        </Container>
+        <Container className={css.flex1}>
+          {/* Handle error condition */}
+          {loading ? (
+            <PageSpinner />
+          ) : (
+            contentfulModuleMap && (
+              <ModuleDetailsSection key={activeModule} module={activeModule} data={contentfulModuleMap[activeModule]} />
+            )
+          )}
+        </Container>
       </Layout.Horizontal>
-      <Layout.Vertical padding={{ left: 'huge' }} margin={{ left: 'medium' }}>
-        <Text color={Color.WHITE} font={{ variation: FontVariation.H4 }} margin={{ bottom: 'xsmall' }}>
-          <String stringID="common.moduleConfig.title" />
-        </Text>
-        <Text color={Color.GREY_200} font={{ variation: FontVariation.SMALL }}>
-          ({getString('common.moduleConfig.autoSaved')})
-        </Text>
-        <Layout.Horizontal padding={{ top: 'huge', bottom: 'huge' }} height="100%">
-          <Container className={css.listContainer} margin={{ right: 'xxlarge' }}>
-            <ModuleSortableList activeModule={activeModule} onSelect={setActiveModule} />
-          </Container>
-          <Container className={css.detailsContainer}>
-            <ModuleDetailsSection module={activeModule} />
-          </Container>
-        </Layout.Horizontal>
-      </Layout.Vertical>
 
       <Icon name="cross" color={Color.WHITE} size={18} className={css.crossIcon} onClick={onClose} />
     </Layout.Vertical>

@@ -22,6 +22,7 @@ body,
 body {
   --font-family: 'Inter', sans-serif;
   --font-family-mono: Monaco, 'Ubuntu Mono', 'Courier New', monospace;
+  --font-family-reenie-beanie: 'Reenie Beanie';
   --font-size: var(--font-size-small);
   min-width: 1280px;
 }
@@ -59,9 +60,9 @@ body {
   --sto-background: #ebefff;
 
   // Chaos Engineering
-  --ce-foreground: #9a0041;
-  --ce-border: #ff006a;
-  --ce-background: #fff1f7;
+  --chaos-foreground: #9a0041;
+  --chaos-border: #ff006a;
+  --chaos-background: #fff1f7;
 }
 /* stylelint-enable  color-no-hex */
 

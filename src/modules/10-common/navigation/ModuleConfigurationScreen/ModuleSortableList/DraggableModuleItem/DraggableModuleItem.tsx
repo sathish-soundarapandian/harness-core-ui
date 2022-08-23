@@ -6,20 +6,20 @@
  */
 
 import React from 'react'
-import { Layout, Container, Checkbox, Text } from '@harness/uicore'
+import { Layout } from '@harness/uicore'
 import { Icon } from '@harness/icons'
 import { Color } from '@harness/design-system'
 import { Draggable } from 'react-beautiful-dnd'
-import cx from 'classnames'
-import type { ModuleName } from 'framework/types/ModuleName'
-import { getModuleInfo } from '../../util'
+import NavModule from '@common/navigation/ModuleList/NavModule/NavModule'
+import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import css from './DraggableModuleItem.module.scss'
 
 interface DraggableModuleItemProps {
   index: number
-  module: ModuleName
+  module: NavModuleName
   isActive?: boolean
-  onClick?: (module: ModuleName) => void
+  onClick?: (module: NavModuleName) => void
   onCheckboxChange?: (checked: boolean) => void
   checked?: boolean
 }
@@ -32,56 +32,40 @@ const DraggableModuleItem: React.FC<DraggableModuleItemProps> = ({
   onCheckboxChange,
   checked = false
 }) => {
-  const moduleInfo = getModuleInfo(module)
-
-  if (!moduleInfo) {
-    // This condition is not required.
-    return null
-  }
-
-  const { label, icon: moduleIcon } = moduleInfo
-
-  const background = isActive ? '#1b2e49' : Color.PRIMARY_9
-  const containerClass = cx(css.moduleCard, isActive ? css.borderLight : undefined)
-
   return (
-    <Container className={css.container}>
+    <>
       <Draggable key={module} draggableId={module} index={index}>
         {providedDrag => (
-          <div {...providedDrag.draggableProps} {...providedDrag.dragHandleProps} ref={providedDrag.innerRef}>
-            <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
-              <Icon
-                name="drag-handle-vertical"
-                className={css.dragIcon}
-                size={20}
-                color={Color.WHITE}
-                margin={{ right: 'xsmall' }}
+          <div
+            className={css.container}
+            {...providedDrag.draggableProps}
+            {...providedDrag.dragHandleProps}
+            ref={providedDrag.innerRef}
+          >
+            <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
+              <Icon name="drag-handle-vertical" size={20} color={Color.WHITE} margin={{ right: 'xsmall' }} />
+              <NavModule
+                module={module}
+                active={isActive}
+                onClick={onClick}
+                checkboxProps={{ checked, handleChange: onCheckboxChange }}
               />
-              <Container
-                className={containerClass}
-                flex={{ justifyContent: 'space-between' }}
-                padding={{ top: 'small', bottom: 'small', left: 'large', right: 'large' }}
-                background={background}
-                border={{ color: isActive ? Color.PRIMARY_5 : Color.PRIMARY_9 }}
-                onClick={() => {
-                  if (!isActive) {
-                    onClick?.(module)
-                  }
-                }}
-              >
-                <Layout.Horizontal flex={{ alignItems: 'center' }}>
-                  <Icon name={moduleIcon} size={24} margin={{ right: 'xsmall' }} />
-                  <Text color={Color.WHITE}>{label}</Text>
-                </Layout.Horizontal>
-
-                <Checkbox onChange={e => onCheckboxChange?.((e.target as any).checked)} checked={checked} />
-              </Container>
             </Layout.Horizontal>
           </div>
         )}
       </Draggable>
-    </Container>
+    </>
   )
 }
 
-export default DraggableModuleItem
+const DraggableModuleItemWithCondition: React.FC<DraggableModuleItemProps> = props => {
+  const { shouldVisible } = useNavModuleInfo(props.module)
+
+  if (!shouldVisible) {
+    return null
+  }
+
+  return <DraggableModuleItem {...props} />
+}
+
+export default DraggableModuleItemWithCondition

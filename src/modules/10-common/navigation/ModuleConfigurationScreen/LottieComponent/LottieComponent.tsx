@@ -1,0 +1,40 @@
+import React, { useState, useEffect } from 'react'
+import type { Asset } from 'contentful'
+import { Container } from '@harness/uicore'
+import Lottie from 'react-lottie-player'
+import type { ModuleName } from 'framework/types/ModuleName'
+
+interface LottieComponentProps {
+  activeModule: ModuleName
+  json: Asset
+}
+
+const LottieComponent: React.FC<LottieComponentProps> = ({ json: asset }) => {
+  const [lottieJson, setLottieJson] = useState<object | undefined>(undefined)
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (!lottieJson) {
+      setLoading(true)
+      fetch(`https://${asset.fields.file.url}`)
+        .then(res => res.json())
+        .then(res => {
+          setLoading(false)
+          setLottieJson(res)
+        })
+    }
+  }, [])
+
+  if (loading) {
+    // Check if we can add loader here, otherwise create a utility to cache the data.
+    return null
+  }
+
+  return (
+    <Container flex height="100%">
+      <Lottie animationData={lottieJson} play />
+    </Container>
+  )
+}
+
+export default LottieComponent

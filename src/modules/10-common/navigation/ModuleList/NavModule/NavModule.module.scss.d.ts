@@ -7,6 +7,15 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly active: string
+  readonly ccm: string
+  readonly cd: string
+  readonly chaos: string
+  readonly checkbox: string
+  readonly ci: string
   readonly container: string
+  readonly ff: string
+  readonly srm: string
+  readonly sto: string
 }
 export default styles

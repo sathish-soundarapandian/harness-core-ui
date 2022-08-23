@@ -5,21 +5,27 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { Entry } from 'contentful'
 import type { IconName } from '@harness/icons'
+import type { ModuleName } from 'framework/types/ModuleName'
 
-export interface Carousel {
+export interface LottieContent {
+  data: Record<any, any>
+}
+
+export interface CenterAlignedImageDesc {
   primaryText?: string
   secondoryText?: string
   imageUrl: string
 }
 
-export interface ModuleDetails {
-  title: string
-  carousel?: Carousel[]
-}
-
 export interface ModuleInfo {
   label: string
   icon: IconName
-  details: ModuleDetails
+}
+
+export interface ContentfulModuleResponse {
+  identifier: ModuleName
+  label: string
+  data: Entry<CenterAlignedImageDesc | LottieContent>[]
 }

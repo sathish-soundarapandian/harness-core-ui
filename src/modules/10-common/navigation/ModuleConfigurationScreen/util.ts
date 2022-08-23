@@ -6,9 +6,10 @@
  */
 
 import { ModuleName } from 'framework/types/ModuleName'
+import type { NavModuleName } from '../ModuleList/NavModule/NavModule'
 import type { ModuleInfo } from './types'
 
-export const DEFAULT_MODULES_ORDER: ModuleName[] = [
+export const DEFAULT_MODULES_ORDER: NavModuleName[] = [
   ModuleName.CD,
   ModuleName.CI,
   ModuleName.CF,
@@ -18,72 +19,34 @@ export const DEFAULT_MODULES_ORDER: ModuleName[] = [
   ModuleName.CHAOS
 ]
 
-export const moduleMap: Record<ModuleName, ModuleInfo | undefined> = {
+export const moduleConfig: Record<ModuleName, ModuleInfo | undefined> = {
   CD: {
     label: 'Deployments',
-    icon: 'cd-main',
-    details: {
-      title: 'Continuos Delivery',
-      carousel: [
-        // this will come from Contentful
-        {
-          primaryText: 'Automatically deploy, verify and Roll back Artifcats without tail',
-          secondoryText:
-            'CD as-a-Service without scripts, plugins, version dependencies, toil, downtime and frustration.',
-          imageUrl:
-            'https://assets-global.website-files.com/6222ca42ea87e1bd1aa1d10c/623d0a5d0f373855a9a621bb_screens-cd-new.png'
-        },
-        {
-          primaryText: '2nd Carousel item',
-          secondoryText:
-            'CD as-a-Service without scripts, plugins, version dependencies, toil, downtime and frustration.',
-          imageUrl:
-            'https://assets-global.website-files.com/6222ca42ea87e1bd1aa1d10c/623d0a5d0f373855a9a621bb_screens-cd-new.png'
-        }
-      ]
-    }
+    icon: 'cd-main'
   },
   CI: {
     label: 'Builds',
-    icon: 'ci-main',
-    details: {
-      title: 'Continuos Integration'
-    }
+    icon: 'ci-main'
   },
   CF: {
     label: 'Feature Flags',
-    icon: 'cf-main',
-    details: {
-      title: 'Feature Flags'
-    }
+    icon: 'cf-main'
   },
   CE: {
     label: 'Cloud Costs',
-    icon: 'ce-main',
-    details: {
-      title: 'Cloud Costs'
-    }
+    icon: 'ce-main'
   },
   CV: {
     label: 'Service Reliability',
-    icon: 'cv-main',
-    details: {
-      title: 'Service Reliability'
-    }
+    icon: 'cv-main'
   },
   STO: {
     label: 'Security Tests',
-    icon: 'sto-color-filled',
-    details: {
-      title: 'Security Tests'
-    }
+    icon: 'sto-color-filled'
   },
   CHAOS: {
     label: 'Chaos Engineering',
-    icon: 'chaos-main',
-    details: {
-      title: 'Chaos Engineering'
-    }
+    icon: 'chaos-main'
   },
   DX: undefined,
   COMMON: undefined,
@@ -91,4 +54,4 @@ export const moduleMap: Record<ModuleName, ModuleInfo | undefined> = {
   TEMPLATES: undefined
 }
 
-export const getModuleInfo = (module: ModuleName): ModuleInfo | undefined => moduleMap[module]
+export const getModuleInfo = (module: ModuleName): ModuleInfo | undefined => moduleConfig[module]
