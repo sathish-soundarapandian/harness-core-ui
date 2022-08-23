@@ -1185,7 +1185,7 @@ exports[`Test Get Started With CD initial render 3`] = `
                 class="Layout--vertical StyledProps--main"
               >
                 <p
-                  class="StyledProps--font StyledProps--main subHeading StyledProps--font-variation-h6"
+                  class="StyledProps--font StyledProps--main subHeading StyledProps--font-variation-h6 StyledProps--font-weight-semi-bold"
                 >
                   cd.downloadYAML
                 </p>
@@ -1249,7 +1249,7 @@ exports[`Test Get Started With CD initial render 3`] = `
                 class="Layout--vertical StyledProps--main panelLeft"
               >
                 <p
-                  class="StyledProps--font StyledProps--main subHeading StyledProps--font-variation-h6"
+                  class="StyledProps--font StyledProps--main subHeading StyledProps--font-variation-h6 StyledProps--font-weight-semi-bold"
                 >
                   cd.installCluster
                 </p>
@@ -1331,7 +1331,7 @@ exports[`Test Get Started With CD initial render 3`] = `
                 class="Layout--vertical StyledProps--main"
               >
                 <p
-                  class="StyledProps--font StyledProps--main subHeading StyledProps--font-variation-h6"
+                  class="StyledProps--font StyledProps--main subHeading StyledProps--font-variation-h6 StyledProps--font-weight-semi-bold"
                 >
                   cd.delegateConnectionWait
                 </p>
