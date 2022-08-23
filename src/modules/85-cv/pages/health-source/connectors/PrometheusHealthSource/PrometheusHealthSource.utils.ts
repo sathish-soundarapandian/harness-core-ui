@@ -332,7 +332,7 @@ export function getFilteredMetricThresholdValues(
     return []
   }
 
-  return (customMetricThresholdDetails?.metricThresholds as PrometheusMetricThresholdType[]).filter(
+  return (customMetricThresholdDetails?.metricThresholds as PrometheusMetricThresholdType[])?.filter(
     (metricThreshold: PrometheusMetricThresholdType) => metricThreshold.type === thresholdName
   )
 }
@@ -340,7 +340,8 @@ export function getFilteredMetricThresholdValues(
 export function transformPrometheusHealthSourceToSetupSource(
   sourceData: any,
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
-  isTemplate?: boolean
+  isTemplate?: boolean,
+  isMetricThresholdEnabled?: boolean
 ): PrometheusSetupSource {
   const healthSource: UpdatedHealthSource = sourceData?.healthSourceList?.find(
     (source: UpdatedHealthSource) => source.name === sourceData.healthSourceName
@@ -376,14 +377,18 @@ export function transformPrometheusHealthSourceToSetupSource(
     healthSourceName: sourceData.healthSourceName,
     product: sourceData.product,
     connectorRef: sourceData.connectorRef,
-    ignoreThresholds: getFilteredMetricThresholdValues(
-      MetricThresholdTypes.IgnoreThreshold,
-      (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks || []
-    ),
-    failFastThresholds: getFilteredMetricThresholdValues(
-      MetricThresholdTypes.FailImmediately,
-      (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks || []
-    )
+    ignoreThresholds: isMetricThresholdEnabled
+      ? getFilteredMetricThresholdValues(
+          MetricThresholdTypes.IgnoreThreshold,
+          (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks || []
+        )
+      : [],
+    failFastThresholds: isMetricThresholdEnabled
+      ? getFilteredMetricThresholdValues(
+          MetricThresholdTypes.FailImmediately,
+          (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks || []
+        )
+      : []
   }
 
   for (const metricDefinition of (healthSource?.spec as PrometheusHealthSourceSpec)?.metricDefinitions || []) {
