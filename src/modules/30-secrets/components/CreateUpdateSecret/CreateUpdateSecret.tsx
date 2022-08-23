@@ -317,11 +317,13 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
       const inputs: [] = secretManager.spec.template?.templateInputs?.environmentVariables
       if (inputs) {
         const filteredInputs = {
-          environmentVariables: inputs.map((item: InputSetSchema) => {
-            if (!item.useAsDefault) {
-              return { ...pick(item, ['name', 'type']), value: '' }
-            }
-          })
+          environmentVariables: inputs
+            .map((item: InputSetSchema) => {
+              if (!item.useAsDefault) {
+                return { ...pick(item, ['name', 'type']), value: '' }
+              }
+            })
+            .filter(value => value)
         }
         setTemplateInputSets(filteredInputs)
       }
