@@ -15,113 +15,6 @@ import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/Sta
 import type { NGTemplateInfoConfigWithGitDetails } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 
-export const templateColorStyleMap: { [keyof in TemplateType]: React.CSSProperties } = {
-  [TemplateType.Step]: {
-    color: '#592BAA',
-    stroke: '#E1D0FF',
-    fill: '#EADEFF'
-  },
-  [TemplateType.Stage]: {
-    color: '#06B7C3',
-    stroke: '#C0FBFE',
-    fill: '#D3FCFE'
-  },
-  [TemplateType.Pipeline]: {
-    color: '#004BA4',
-    stroke: '#CCCBFF',
-    fill: '#E8E8FF'
-  },
-
-  [TemplateType.CustomDeployment]: {
-    color: '#558B2F',
-    stroke: '#EAF8DB',
-    fill: '#F1FAE6'
-  },
-  [TemplateType.Service]: {
-    color: '#299B2C',
-    stroke: '#D4E7D1',
-    fill: '#E4F7E1'
-  },
-  [TemplateType.StepGroup]: {
-    color: '#299B2C',
-    stroke: '#D4E7D1',
-    fill: '#E4F7E1'
-  },
-  [TemplateType.Execution]: {
-    color: '#299B2C',
-    stroke: '#D4E7D1',
-    fill: '#E4F7E1'
-  },
-  [TemplateType.Infrastructure]: {
-    color: '#299B2C',
-    stroke: '#D4E7D1',
-    fill: '#E4F7E1'
-  },
-  [TemplateType.MonitoredService]: {
-    color: '#06B7C3',
-    stroke: '#D4E7D1',
-    fill: '#E4F7E1'
-  },
-  [TemplateType.SecretManager]: {
-    color: '#06B7C3',
-    stroke: '#D4E7D1',
-    fill: '#CDF4FE'
-  }
-}
-
-export const templateStudioColorStyleMap: { [keyof in TemplateType]: React.CSSProperties } = {
-  [TemplateType.Step]: {
-    color: '#EADEFF',
-    stroke: '#6938C0',
-    fill: '#7D4DD3'
-  },
-  [TemplateType.Stage]: {
-    color: '#E8E8FF',
-    stroke: '#03C0CD',
-    fill: '#0BC8D6'
-  },
-  [TemplateType.CustomDeployment]: {
-    color: '#F1FAE6',
-    stroke: '#76AF34',
-    fill: '#7FB800'
-  },
-  [TemplateType.Service]: {
-    color: '#299B2C',
-    stroke: '#D4E7D1',
-    fill: '#E4F7E1'
-  },
-  [TemplateType.Pipeline]: {
-    color: '#E8E8FF',
-    stroke: '#5452F6',
-    fill: '#6563F0'
-  },
-  [TemplateType.StepGroup]: {
-    color: '#299B2C',
-    stroke: '#D4E7D1',
-    fill: '#E4F7E1'
-  },
-  [TemplateType.Execution]: {
-    color: '#299B2C',
-    stroke: '#D4E7D1',
-    fill: '#E4F7E1'
-  },
-  [TemplateType.Infrastructure]: {
-    color: '#299B2C',
-    stroke: '#D4E7D1',
-    fill: '#E4F7E1'
-  },
-  [TemplateType.MonitoredService]: {
-    color: '#06B7C3',
-    stroke: '#D4E7D1',
-    fill: '#E4F7E1'
-  },
-  [TemplateType.SecretManager]: {
-    color: '#06B7C3',
-    stroke: '#D4E7D1',
-    fill: '#CDF4FE'
-  }
-}
-
 export enum Sort {
   DESC = 'DESC',
   ASC = 'ASC'
@@ -154,12 +47,6 @@ export const getTypeForTemplate = (
       return factory.getStepName(childType)
     case TemplateType.Stage:
       return stagesCollection.getStageAttributes(childType, getString)?.name
-    case TemplateType.MonitoredService:
-      return templateFactory.getTemplateLabel(TemplateType.MonitoredService)
-    case TemplateType.SecretManager:
-      return templateFactory.getTemplateLabel(TemplateType.SecretManager)
-    case TemplateType.CustomDeployment:
-      return templateFactory.getTemplateLabel(TemplateType.CustomDeployment)
     default:
       return templateFactory.getTemplateLabel(templateTye)
   }
