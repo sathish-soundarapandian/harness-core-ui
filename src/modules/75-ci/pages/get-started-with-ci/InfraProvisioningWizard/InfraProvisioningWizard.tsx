@@ -90,12 +90,12 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   }, [lastConfiguredWizardStepId])
 
   useEffect(() => {
-    if (selectGitProviderRef.current?.validatedConnector) {
-      setConfiguredGitConnector(selectGitProviderRef.current?.validatedConnector)
-    } else if (preSelectedGitConnector) {
-      setConfiguredGitConnector(preSelectedGitConnector)
-    }
-  }, [selectGitProviderRef.current?.validatedConnector, preSelectedGitConnector])
+    setConfiguredGitConnector(selectGitProviderRef.current?.validatedConnector)
+  }, [selectGitProviderRef.current?.validatedConnector])
+
+  useEffect(() => {
+    setConfiguredGitConnector(preSelectedGitConnector)
+  }, [preSelectedGitConnector])
 
   const { mutate: createTrigger } = useCreateTrigger({
     queryParams: {
@@ -434,48 +434,57 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             setDisableBtn(true)
             setShowPageLoader(true)
             if (selectGitProviderRef.current?.values?.gitAuthenticationMethod !== GitAuthenticationMethod.OAuth) {
-              createSCMConnector({
-                connector: set(
-                  set(
+              if (preSelectedGitConnector) {
+                setupPipelineWithCodebaseAndTriggers()
+              } else {
+                // The pre-selected connector shouldn't be modified
+                createSCMConnector({
+                  connector: set(
+                    set(
+                      configuredGitConnector,
+                      'spec.validationRepo',
+                      getFullRepoName(selectRepositoryRef?.current?.repository || {})
+                    ),
+                    'spec.authentication.spec.spec.username',
+                    get(configuredGitConnector, 'spec.authentication.spec.spec.username') ?? OAUTH2_USER_NAME
+                  ),
+                  secret: preSelectedGitConnector
+                    ? secretForPreSelectedConnector
+                    : selectGitProviderRef?.current?.validatedSecret
+                })
+                  .then((scmConnectorResponse: ResponseScmConnectorResponse) => {
+                    if (scmConnectorResponse.status === Status.SUCCESS) {
+                      setupPipelineWithCodebaseAndTriggers()
+                    }
+                  })
+                  .catch(scmCtrErr => {
+                    showErrorToaster(scmCtrErr?.data?.message)
+                    setDisableBtn(false)
+                    setShowPageLoader(false)
+                  })
+              }
+            } else {
+              if (preSelectedGitConnector) {
+                setupPipelineWithCodebaseAndTriggers()
+              } else {
+                updateConnector({
+                  connector: set(
                     configuredGitConnector,
                     'spec.validationRepo',
                     getFullRepoName(selectRepositoryRef?.current?.repository || {})
-                  ),
-                  'spec.authentication.spec.spec.username',
-                  get(configuredGitConnector, 'spec.authentication.spec.spec.username') ?? OAUTH2_USER_NAME
-                ),
-                secret: preSelectedGitConnector
-                  ? secretForPreSelectedConnector
-                  : selectGitProviderRef?.current?.validatedSecret
-              })
-                .then((scmConnectorResponse: ResponseScmConnectorResponse) => {
-                  if (scmConnectorResponse.status === Status.SUCCESS) {
-                    setupPipelineWithCodebaseAndTriggers()
-                  }
+                  )
                 })
-                .catch(scmCtrErr => {
-                  showErrorToaster(scmCtrErr?.data?.message)
-                  setDisableBtn(false)
-                  setShowPageLoader(false)
-                })
-            } else {
-              updateConnector({
-                connector: set(
-                  configuredGitConnector,
-                  'spec.validationRepo',
-                  getFullRepoName(selectRepositoryRef?.current?.repository || {})
-                )
-              })
-                .then((oAuthConnectoResponse: ResponseConnectorResponse) => {
-                  if (oAuthConnectoResponse.status === Status.SUCCESS) {
-                    setupPipelineWithCodebaseAndTriggers()
-                  }
-                })
-                .catch(oAuthCtrErr => {
-                  showErrorToaster(oAuthCtrErr?.data?.message)
-                  setDisableBtn(false)
-                  setShowPageLoader(false)
-                })
+                  .then((oAuthConnectoResponse: ResponseConnectorResponse) => {
+                    if (oAuthConnectoResponse.status === Status.SUCCESS) {
+                      setupPipelineWithCodebaseAndTriggers()
+                    }
+                  })
+                  .catch(oAuthCtrErr => {
+                    showErrorToaster(oAuthCtrErr?.data?.message)
+                    setDisableBtn(false)
+                    setShowPageLoader(false)
+                  })
+              }
             }
           } else if (!enableCloneCodebase) {
             setupPipelineWithoutCodebase()

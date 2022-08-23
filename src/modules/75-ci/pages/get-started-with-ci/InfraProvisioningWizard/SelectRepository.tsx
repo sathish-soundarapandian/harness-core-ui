@@ -106,10 +106,10 @@ const SelectRepositoryRef = (
     if (!validatedConnector) {
       return []
     }
-    let items = connectorsEligibleForPreSelection
-    if (!connectorsEligibleForPreSelection) {
-      items = validatedConnector ? [validatedConnector] : []
-    }
+    const items: ConnectorInfoDTO[] =
+      Array.isArray(connectorsEligibleForPreSelection) && connectorsEligibleForPreSelection?.length > 0
+        ? connectorsEligibleForPreSelection
+        : [validatedConnector]
     return items?.map((item: ConnectorInfoDTO) => {
       const { type, name, identifier } = item
       return {
@@ -128,20 +128,19 @@ const SelectRepositoryRef = (
     }
   }, [ConnectorSelectionItems, validatedConnector])
 
-  const fetchReposWithConnectorRef = useCallback((): void => {
-    const connectorRefForReposFetch = selectedConnectorOption?.value as string
-    if (connectorRefForReposFetch) {
+  const fetchReposWithConnectorRef = useCallback((connectorRef: string): void => {
+    if (connectorRef) {
       cancelRepositoriesFetch()
       fetchRepositories({
         queryParams: {
           accountIdentifier: accountId,
           projectIdentifier,
           orgIdentifier,
-          connectorRef: `${ACCOUNT_SCOPE_PREFIX}${connectorRefForReposFetch}`
+          connectorRef: `${ACCOUNT_SCOPE_PREFIX}${connectorRef}`
         }
       })
     }
-  }, [selectedConnectorOption])
+  }, [])
 
   useEffect(() => {
     if (selectedConnectorOption) {
@@ -152,7 +151,7 @@ const SelectRepositoryRef = (
         onConnectorSelect?.(matchingConnector)
       }
       setRepository(undefined)
-      fetchReposWithConnectorRef()
+      fetchReposWithConnectorRef(selectedConnectorOption?.value as string)
     }
   }, [selectedConnectorOption, connectorsEligibleForPreSelection])
 
@@ -277,7 +276,6 @@ const SelectRepositoryRef = (
                 value={selectedConnectorOption}
                 className={css.connectorSelect}
                 onChange={(item: SelectOption) => setSelectedConnectorOption(item)}
-                disabled={fetchingRepositories}
               />
             </Layout.Horizontal>
           </Container>
