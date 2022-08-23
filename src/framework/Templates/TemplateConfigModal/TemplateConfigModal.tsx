@@ -126,7 +126,8 @@ const BasicTemplateDetails = (
     lastPublishedVersion,
     onFailure
   } = props
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const formName = `create${initialValues.type}Template`
   const [loading, setLoading] = React.useState<boolean>()
   const { isReadonly } = useContext(TemplateContext)

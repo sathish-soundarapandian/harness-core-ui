@@ -90,7 +90,8 @@ const Overview: React.FC<StepProps<CEAzureDTO> & OverviewProps> = props => {
   useStepLoadTelemetry(CE_AZURE_CONNECTOR_CREATION_EVENTS.LOAD_OVERVIEW_STEP)
 
   const { accountId } = useParams<Params>()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: gitSyncAppStoreEnabled, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = gitSyncAppStoreEnabled && !gitSyncEnabledOnlyForFF
   const { getString } = useStrings()
   const { prevStepData, nextStep, isEditMode } = props
 
