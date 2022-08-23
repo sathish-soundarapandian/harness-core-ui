@@ -103,7 +103,10 @@ const StepGitAuthentication: React.FC<StepProps<StepGitAuthenticationProps> & Gi
   return loadingConnectorSecrets ? (
     <PageSpinner />
   ) : (
-    <Layout.Vertical className={cx(css.secondStep, commonCss.connectorModalMinHeight, commonCss.stepContainer)}>
+    <Layout.Vertical
+      width="60%"
+      className={cx(css.secondStep, commonCss.connectorModalMinHeight, commonCss.stepContainer)}
+    >
       <Text font={{ variation: FontVariation.H3 }}>{getString('credentials')}</Text>
 
       <Formik
