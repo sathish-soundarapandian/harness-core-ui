@@ -16,7 +16,7 @@ import {
   AllowedTypes
 } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
-import { get, defaultTo, set } from 'lodash-es'
+import { get, defaultTo } from 'lodash-es'
 import cx from 'classnames'
 import { SshWinRmAwsInfrastructure, useRegionsForAws, useTagsV2 } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -50,7 +50,7 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
   initialValues,
   template,
   path,
-  onUpdate,
+  // onUpdate,
   allowableTypes,
   allValues,
   readonly
@@ -65,19 +65,19 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
   const [tags, setTags] = useState<SelectOption[]>([])
   const { expressions } = useVariablesExpression()
 
-  const [renderCount, setRenderCount] = useState<number>(0)
+  // const [renderCount, setRenderCount] = useState<number>(0)
 
   const { getString } = useStrings()
 
-  const connectorRef = useMemo(
-    () => defaultTo(get(initialValues, 'connectorRef', ''), get(allValues, 'connectorRef', '')),
-    [initialValues.connectorRef, allValues?.connectorRef]
-  )
+  // const connectorRef = useMemo(
+  //   () => defaultTo(get(initialValues, 'connectorRef', ''), get(allValues, 'connectorRef', '')),
+  //   [initialValues.connectorRef, allValues?.connectorRef]
+  // )
 
-  const credentialsRef = useMemo(
-    () => defaultTo(get(initialValues, 'credentialsRef', ''), get(allValues, 'credentialsRef', '')),
-    [initialValues.credentialsRef, allValues?.credentialsRef]
-  )
+  // const credentialsRef = useMemo(
+  //   () => defaultTo(get(initialValues, 'credentialsRef', ''), get(allValues, 'credentialsRef', '')),
+  //   [initialValues.credentialsRef, allValues?.credentialsRef]
+  // )
 
   const environmentRef = useMemo(
     () => defaultTo(initialValues.environmentRef, allValues?.environmentRef),
@@ -89,13 +89,13 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
     [initialValues.infrastructureRef, allValues?.infrastructureRef]
   )
 
-  React.useEffect(() => {
-    if (renderCount) {
-      set(initialValues, 'region', '')
-      set(initialValues, 'tags', [])
-      onUpdate?.(initialValues)
-    }
-  }, [connectorRef, credentialsRef])
+  // React.useEffect(() => {
+  //   if (renderCount) {
+  //     // set(initialValues, 'region', '')
+  //     set(initialValues, 'tags', [])
+  //     onUpdate?.(initialValues)
+  //   }
+  // }, [connectorRef, credentialsRef])
 
   const {
     data: regionsData,
@@ -139,18 +139,22 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
     setTags(tagOptions)
   }, [tagsData])
 
-  useEffect(() => {
-    const connRef = get(initialValues, 'connectorRef', '')
-    const reg = get(initialValues, 'region', '')
-    if (connRef && getMultiTypeFromValue(connRef) === MultiTypeInputType.FIXED) {
-      refetchRegions({})
-    }
-    if (reg && getMultiTypeFromValue(reg) === MultiTypeInputType.FIXED) {
-      /* istanbul ignore else */
-      refetchTags()
-    }
-    setRenderCount(renderCount + 1)
-  }, [])
+  // useEffect(() => {
+  //   const connRef = get(initialValues, 'connectorRef', '')
+  //   const reg = get(initialValues, 'region', '')
+  //   if (
+  //     reg &&
+  //     getMultiTypeFromValue(reg) === MultiTypeInputType.FIXED &&
+  //     connRef &&
+  //     getMultiTypeFromValue(connRef) === MultiTypeInputType.FIXED
+  //   ) {
+  //     /* istanbul ignore else */
+  //     refetchTags()
+  //   }
+  //   setRenderCount(renderCount + 1)
+  // }, [])
+
+  // console.log(template, get(template, 'tags', ''), get(template, 'awsInstanceFilter.tags', ''))
 
   return (
     <Layout.Vertical spacing="small">
@@ -160,6 +164,7 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
             name={`${path}.credentialsRef`}
             type="SSHKey"
             label={getString('cd.steps.common.specifyCredentials')}
+            expressions={expressions}
           />
         </div>
       )}
@@ -200,9 +205,7 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
             label={getString('regionLabel')}
             multiTypeInputProps={{
               onFocus: () => {
-                if (get(initialValues, 'connectorRef', false) && get(initialValues, 'credentialsRef', false)) {
-                  refetchRegions()
-                }
+                refetchRegions()
               },
               selectProps: {
                 items: regions,
@@ -225,10 +228,11 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
           />
         </div>
       )}
-      {getMultiTypeFromValue(get(template, 'tags', '')) === MultiTypeInputType.RUNTIME && (
+      {(getMultiTypeFromValue(get(template, 'tags', '')) === MultiTypeInputType.RUNTIME ||
+        getMultiTypeFromValue(get(template, 'awsInstanceFilter.tags', '')) === MultiTypeInputType.RUNTIME) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormInput.MultiSelectTypeInput
-            name={`${path}.tags`}
+            name={`${path}.awsInstanceFilter.tags`}
             tooltipProps={{
               dataTooltipId: 'awsInfraTags'
             }}
