@@ -84,6 +84,7 @@ interface ThresholdsCommonPropTypes<T> {
   metricPacks?: TimeSeriesMetricPackDTO[]
   groupedCreatedMetrics: GroupedCreatedMetrics
   isOnlyCustomMetricHealthSource?: boolean
+  alwaysShowCustomMetricType?: boolean
 }
 
 export type IgnoreThresholdsFieldArrayInterface<T> = ThresholdsCommonPropTypes<T>
