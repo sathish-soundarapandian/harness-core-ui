@@ -517,7 +517,10 @@ function RenderColumnMenu(
             <RbacMenuItem
               icon="edit"
               text="Edit"
-              onClick={() => onEdit(row.original)}
+              onClick={e => {
+                e.stopPropagation()
+                onEdit(row.original)
+              }}
               permission={{
                 permission: PermissionIdentifier.EDIT_CCM_AUTOSTOPPING_RULE,
                 resource: {
