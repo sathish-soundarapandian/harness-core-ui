@@ -6,19 +6,31 @@
  */
 
 import React from 'react'
+import type { IconName } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
-import { Template, TemplateProps } from '@templates-library/components/AbstractTemplate/Template'
+import { Template } from '@templates-library/components/AbstractTemplate/Template'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
-import type { NGTemplateInfoConfig } from 'services/template-ng'
 import { DeploymentTemplateCanvasWrapperWithRef } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateCanvasWrapper'
+import { Scope } from '@common/interfaces/SecretsInterface'
+import type { TemplateInputsProps } from '@templates-library/components/TemplateInputs/TemplateInputs'
 
-export class DeploymentTemplate extends Template<NGTemplateInfoConfig> {
+export class DeploymentTemplate extends Template {
   protected type = TemplateType.CustomDeployment
   protected label = 'Deployment'
   protected color = Color.LIME_500
+  protected icon: IconName = 'disable'
+  protected allowedScopes = [Scope.PROJECT, Scope.ORG, Scope.ACCOUNT]
+  protected colorMap = {
+    color: '#558B2F',
+    stroke: '#EAF8DB',
+    fill: '#F1FAE6'
+  }
 
-  renderTemplateCanvas(props: TemplateProps<NGTemplateInfoConfig>): JSX.Element {
-    return <DeploymentTemplateCanvasWrapperWithRef ref={props.formikRef as TemplateFormRef<unknown> | undefined} />
+  renderTemplateCanvas(formikRef: TemplateFormRef): JSX.Element {
+    return <DeploymentTemplateCanvasWrapperWithRef ref={formikRef} />
+  }
+  renderTemplateInputsForm(_props: TemplateInputsProps & { accountId: string }): JSX.Element {
+    return <></>
   }
 }
