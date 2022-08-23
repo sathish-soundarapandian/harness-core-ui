@@ -142,7 +142,7 @@ const OverviewPage: React.FC = () => {
         {!showCostOverview && (
           <HandleError errorMsg={getString('ce.overview.costPermissionError')} imgSrc={PermissionError} />
         )}
-        {!summaryFetching && showCostOverview && (
+        {showCostOverview && (
           <Container padding={{ top: 'medium', right: 'xlarge', bottom: 'medium', left: 'xlarge' }}>
             <div className={css.mainContainer}>
               <div className={css.columnOne}>
