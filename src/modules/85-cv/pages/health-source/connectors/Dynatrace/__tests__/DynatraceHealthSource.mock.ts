@@ -122,7 +122,7 @@ export const MockDynatraceMetricData: DynatraceFormDataInterface = {
   connectorRef: MockConnectorName,
   isEdit: true,
   healthSourceIdentifier: 'dynatrace',
-  higherBaselineDeviation: true,
+
   healthSourceName: 'health_source_name',
   product: { label: DynatraceProductNames.APM, value: DynatraceProductNames.APM },
   selectedService: { label: 'mock_service_name', value: 'mock_service_id' },
@@ -135,9 +135,7 @@ export const MockDynatraceMetricData: DynatraceFormDataInterface = {
     Performance: true
   },
   customMetrics: mockMetricInfosMap,
-  healthScore: true,
-  continuousVerification: true,
-  sli: true
+  "serviceMethods": undefined,
 }
 
 export const ServiceListMock: DynatraceServiceDTO[] = [

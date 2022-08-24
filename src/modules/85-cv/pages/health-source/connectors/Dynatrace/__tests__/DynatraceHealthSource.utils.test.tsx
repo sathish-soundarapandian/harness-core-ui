@@ -268,6 +268,7 @@ describe('Validate DynatraceHealthSource Utils', () => {
     ).toEqual({
       ...MockDynatraceMetricData,
       aggregator: 'avg',
+      higherBaselineDeviation: true,
       serviceInstanceIdentifierTag: 'host',
       identifier: 'mapped_metric_1',
       isCustomCreatedMetric: false,
@@ -311,6 +312,6 @@ describe('Validate DynatraceHealthSource Utils', () => {
         'mapped_metric_2',
         false
       )
-    ).toEqual({ ...MockDynatraceMetricData, showCustomMetric: false, ...selectedMetric })
+    ).toEqual({ ...MockDynatraceMetricData, showCustomMetric: false, ...selectedMetric, higherBaselineDeviation: true })
   })
 })
