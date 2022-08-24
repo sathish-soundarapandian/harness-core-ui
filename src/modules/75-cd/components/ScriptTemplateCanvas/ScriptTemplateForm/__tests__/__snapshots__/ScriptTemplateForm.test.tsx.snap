@@ -50,7 +50,7 @@ exports[`Test OptionalConfigurations Switch the tabs with data 1`] = `
       <div
         aria-hidden="false"
         aria-labelledby="bp3-tab-title_configurationTabs_Configurations"
-        class="bp3-tab-panel scriptTab"
+        class="bp3-tab-panel scriptTab tabWidth"
         id="bp3-tab-panel_configurationTabs_Configurations"
         role="tabpanel"
       >
@@ -523,7 +523,7 @@ exports[`Test OptionalConfigurations initial render 1`] = `
       <div
         aria-hidden="false"
         aria-labelledby="bp3-tab-title_configurationTabs_Script"
-        class="bp3-tab-panel scriptTab"
+        class="bp3-tab-panel scriptTab tabWidth"
         id="bp3-tab-panel_configurationTabs_Script"
         role="tabpanel"
       >
