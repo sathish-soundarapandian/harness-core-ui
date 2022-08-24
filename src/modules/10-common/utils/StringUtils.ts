@@ -49,7 +49,7 @@ export function pluralize(number: number): string {
 export const regexEmail =
   /^(([^<>()\\[\]\\.,;:\s@"]+(\.[^<>()\\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-export const regexName = /^[A-Za-z0-9_-][A-Za-z0-9 _-]*$/
+export const regexName = /^[A-Za-z0-9_.-][A-Za-z0-9 _.-]*$/
 
 export const regexPositiveNumbers = /^[1-9]+[0-9]*$/
 

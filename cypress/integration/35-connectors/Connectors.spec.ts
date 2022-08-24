@@ -179,7 +179,7 @@ describe('Project level jenkins connector', () => {
     cy.get('[data-cy="Artifact Repositories_Jenkins"]').click()
     cy.get('input[name="name"]').clear().type('ap5$-&')
     cy.contains('span', 'Continue').click()
-    cy.contains('span', 'Name can only contain alphanumerics, _ and -').should('be.visible')
+    cy.contains('span', 'Name can only contain alphanumerics, . _ and -').should('be.visible')
   })
 
   it('jenkins connector description field is not mandatory', () => {
