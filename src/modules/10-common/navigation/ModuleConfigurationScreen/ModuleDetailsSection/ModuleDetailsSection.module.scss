@@ -32,10 +32,11 @@
       }
       .Carousel--carouselItem {
         height: 100%;
+        overflow: hidden;
       }
       .Carousel--carouselIndicators {
         position: absolute;
-        bottom: 0px;
+        bottom: var(--spacing-large);
         left: 50%;
       }
       .Carousel--carouselRight {

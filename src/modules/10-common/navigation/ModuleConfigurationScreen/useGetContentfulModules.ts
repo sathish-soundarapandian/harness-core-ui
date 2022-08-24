@@ -63,12 +63,16 @@ const useGetContentfulModules = (): UseGetContentfulModulesReturnType => {
               moduleMap[item.fields.identifier] = {
                 type: item.sys.contentType.sys.id,
                 label: item.fields.label,
-                data: item.fields.data.map(value => {
-                  return {
-                    type: value.sys.contentType.sys.id,
-                    ...value.fields
-                  }
-                })
+                data: item.fields.data
+                  .map(value => {
+                    if (value.sys.contentType) {
+                      return {
+                        type: value.sys.contentType.sys.id,
+                        ...value.fields
+                      }
+                    }
+                  })
+                  .filter(Boolean)
               }
               return moduleMap
             }, {})

@@ -7,6 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly backgroundModuleImage: string
+  readonly image: string
   readonly primaryText: string
 }
 export default styles

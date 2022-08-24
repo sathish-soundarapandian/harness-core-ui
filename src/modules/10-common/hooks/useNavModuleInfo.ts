@@ -16,7 +16,7 @@ export type NavModuleName =
   | ModuleName.CHAOS
   | ModuleName.STO
 
-interface usetNavModuleInfoReturnType {
+interface useNavModuleInfoReturnType {
   shouldVisible: boolean
   label: StringKeys
   icon: IconName
@@ -75,16 +75,18 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   }
 }
 
-const useNavModuleInfo = (module: NavModuleName): usetNavModuleInfoReturnType => {
+const useNavModuleInfo = (modules: NavModuleName[]): useNavModuleInfoReturnType[] => {
   const { accountId } = useParams<AccountPathProps>()
 
-  const { icon, label, getRedirectLink, featureFlagName } = moduleInfoMap[module]
-  return {
-    icon,
-    label,
-    redirectionLink: getRedirectLink(accountId),
-    shouldVisible: useFeatureFlag(featureFlagName)
-  }
+  return modules.map(module => {
+    const { icon, label, getRedirectLink, featureFlagName } = moduleInfoMap[module]
+    return {
+      icon,
+      label,
+      redirectionLink: getRedirectLink(accountId),
+      shouldVisible: useFeatureFlag(featureFlagName)
+    }
+  })
 }
 
 export default useNavModuleInfo

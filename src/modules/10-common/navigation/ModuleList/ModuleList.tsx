@@ -38,10 +38,14 @@ interface GroupProps {
 }
 
 const Item: React.FC<ItemProps> = ({ data }) => {
-  const { redirectionLink } = useNavModuleInfo(data)
+  const { redirectionLink, shouldVisible } = useNavModuleInfo([data])[0]
+
+  if (!shouldVisible) {
+    return null
+  }
 
   return (
-    <Link to={redirectionLink} className={css.itemLink}>
+    <Link to={redirectionLink}>
       <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
         <NavModule module={data} />
         <Icon name="tooltip-icon" padding={'small'} margin={{ left: 'small' }} size={12} className={css.clickable} />
@@ -51,6 +55,12 @@ const Item: React.FC<ItemProps> = ({ data }) => {
 }
 
 const Group: React.FC<GroupProps> = ({ data }) => {
+  const modules = useNavModuleInfo(data.items)
+
+  if (modules.filter(module => module.shouldVisible).length === 0) {
+    return null
+  }
+
   return (
     <Container>
       <Text color={Color.PRIMARY_2} margin={{ bottom: 'large' }} font={{ size: 'small', weight: 'semi-bold' }}>

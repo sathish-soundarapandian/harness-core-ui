@@ -60,19 +60,19 @@ export default function L1Nav(): React.ReactElement {
     MODULES_CONFIG_PREFERENCE_STORE_KEY
   )
   const moduleToNavItemsMap = new Map<ModuleName, () => JSX.Element>()
-  const CDNG_ENABLED = useNavModuleInfo(ModuleName.CD).shouldVisible
+  const CDNG_ENABLED = useNavModuleInfo([ModuleName.CD])[0].shouldVisible
   CDNG_ENABLED && moduleToNavItemsMap.set(ModuleName.CD, DeploymentsNavItem)
-  const CING_ENABLED = useNavModuleInfo(ModuleName.CI).shouldVisible
+  const CING_ENABLED = useNavModuleInfo([ModuleName.CI])[0].shouldVisible
   CING_ENABLED && moduleToNavItemsMap.set(ModuleName.CI, BuildsNavItem)
-  const CFNG_ENABLED = useNavModuleInfo(ModuleName.CF).shouldVisible
+  const CFNG_ENABLED = useNavModuleInfo([ModuleName.CF])[0].shouldVisible
   CFNG_ENABLED && moduleToNavItemsMap.set(ModuleName.CF, FeatureFlagsNavItem)
-  const CENG_ENABLED = useNavModuleInfo(ModuleName.CE).shouldVisible
+  const CENG_ENABLED = useNavModuleInfo([ModuleName.CE])[0].shouldVisible
   CENG_ENABLED && moduleToNavItemsMap.set(ModuleName.CE, CloudCostsNavItem)
-  const CVNG_ENABLED = useNavModuleInfo(ModuleName.CV).shouldVisible
+  const CVNG_ENABLED = useNavModuleInfo([ModuleName.CV])[0].shouldVisible
   CVNG_ENABLED && moduleToNavItemsMap.set(ModuleName.CV, SRMNavItem)
-  const CHAOS_ENABLED = useNavModuleInfo(ModuleName.CHAOS).shouldVisible
+  const CHAOS_ENABLED = useNavModuleInfo([ModuleName.CHAOS])[0].shouldVisible
   CHAOS_ENABLED && moduleToNavItemsMap.set(ModuleName.CHAOS, ChaosNavItem)
-  const SECURITY = useNavModuleInfo(ModuleName.STO).shouldVisible
+  const SECURITY = useNavModuleInfo([ModuleName.STO])[0].shouldVisible
   SECURITY && moduleToNavItemsMap.set(ModuleName.STO, STONavItem)
 
   const modulesToShow = [...(modulesPreferenceData?.selectedModules || DEFAULT_MODULES_ORDER)]

@@ -31,7 +31,7 @@ const navModuleToClassMap: Record<NavModuleName, string> = {
 }
 
 const NavModule: React.FC<NavModuleProps> = ({ module, active, onClick, checkboxProps }) => {
-  const { icon, label } = useNavModuleInfo(module)
+  const { icon, label } = useNavModuleInfo([module])[0]
 
   return (
     <Container

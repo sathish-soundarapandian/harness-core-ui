@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
+import Lottie from 'react-lottie-player'
 import { Icon } from '@harness/icons'
 import { Container, Layout, Text, FontVariation, Color, Carousel } from '@harness/uicore'
 import useNavModuleInfo, { NavModuleName } from '@common/hooks/useNavModuleInfo'
 import { MassagedModuleData, ModuleContentType } from '../useGetContentfulModules'
 import CarouselImageAndDescription from '../CarousellmageAndDescription/CarousellmageAndDescription'
 import LottieComponent from '../LottieComponent/LottieComponent'
+import defaultLottie from './default_lottie.json'
 import css from './ModuleDetailsSection.module.scss'
 
 interface ModuleDetailsSectionProps {
@@ -31,7 +33,7 @@ const ModuleDetailsSection: React.FC<ModuleDetailsSectionProps> = ({
   module: selectedModule,
   data: massagedModuleData
 }) => {
-  const { icon } = useNavModuleInfo(selectedModule)
+  const { icon } = useNavModuleInfo([selectedModule])[0]
 
   const { label, data = [] } = massagedModuleData || {}
 
@@ -45,10 +47,16 @@ const ModuleDetailsSection: React.FC<ModuleDetailsSectionProps> = ({
       </Layout.Horizontal>
       <Container className={css.main}>
         <Carousel className={css.carousel} autoPlay autoPlayInterval={3000} hideIndicators={data.length <= 1}>
-          {data.map((item, index) => {
-            const Component = getComponentBasedOnType(item.type)
-            return <Component key={index} {...item} />
-          })}
+          {data.length > 0 ? (
+            data.map((item, index) => {
+              const Component = getComponentBasedOnType(item.type)
+              return <Component key={index} {...item} activeModule={selectedModule} />
+            })
+          ) : (
+            <Container flex={{ justifyContent: 'center' }} height="100%">
+              <Lottie animationData={defaultLottie} play />
+            </Container>
+          )}
         </Carousel>
       </Container>
     </Container>

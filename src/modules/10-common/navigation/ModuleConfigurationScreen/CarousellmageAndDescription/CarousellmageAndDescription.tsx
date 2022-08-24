@@ -1,12 +1,13 @@
 import React from 'react'
 import type { Asset } from 'contentful'
 import { Layout, Text } from '@harness/uicore'
+import { Icon } from '@harness/icons'
 import { FontVariation, Color } from '@harness/design-system'
-import type { ModuleName } from 'framework/types/ModuleName'
+import useNavModuleInfo, { NavModuleName } from '@common/hooks/useNavModuleInfo'
 import css from './CarousellmageAndDescription.module.scss'
 
 interface CarouselImageAndDescriptionProps {
-  activeModule: ModuleName
+  activeModule: NavModuleName
   image: Asset
   primaryText: string
   secondaryText: string
@@ -15,11 +16,14 @@ interface CarouselImageAndDescriptionProps {
 const CarouselImageAndDescription: React.FC<CarouselImageAndDescriptionProps> = ({
   image,
   primaryText,
-  secondaryText
+  secondaryText,
+  activeModule
 }) => {
+  const { icon } = useNavModuleInfo([activeModule])[0]
+
   return (
     <Layout.Vertical flex={{ justifyContent: 'center' }} height="100%">
-      <img src={`https:${image.fields.file.url}`} />
+      <img className={css.image} src={`https:${image.fields.file.url}`} />
       {primaryText && (
         <Text
           className={css.primaryText}
@@ -36,13 +40,7 @@ const CarouselImageAndDescription: React.FC<CarouselImageAndDescriptionProps> = 
         </Text>
       )}
 
-      {/* {icon && (
-        <Icon
-          name={icon}
-          style={{ position: 'absolute', right: '-120px', bottom: '-120px', opacity: 0.14 }}
-          size={540}
-        />
-      )} */}
+      {icon && <Icon name={icon} size={540} className={css.backgroundModuleImage} />}
     </Layout.Vertical>
   )
 }

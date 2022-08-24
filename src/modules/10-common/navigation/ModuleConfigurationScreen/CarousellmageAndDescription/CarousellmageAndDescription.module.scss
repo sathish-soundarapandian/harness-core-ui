@@ -1,6 +1,18 @@
 // 38px font size is not available in the desgin system, check with UX
 // Add font-family in uicore instead of here
+.image {
+  max-width: 100%;
+  max-height: 100%;
+}
 .primaryText {
   font-family: var(--font-family-reenie-beanie) !important;
   font-size: 38px !important;
+}
+
+.backgroundModuleImage {
+  position: absolute;
+  right: -120px;
+  bottom: -120px;
+  opacity: 0.14;
+  z-index: -1;
 }

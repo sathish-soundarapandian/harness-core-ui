@@ -59,7 +59,7 @@ const DraggableModuleItem: React.FC<DraggableModuleItemProps> = ({
 }
 
 const DraggableModuleItemWithCondition: React.FC<DraggableModuleItemProps> = props => {
-  const { shouldVisible } = useNavModuleInfo(props.module)
+  const { shouldVisible } = useNavModuleInfo([props.module])[0]
 
   if (!shouldVisible) {
     return null
