@@ -2512,6 +2512,7 @@ exports[`Create Bitbucketconnector Wizard should be able to edit  usernamePasswo
        
       <div
         class="Layout--vertical StyledProps--main secondStep connectorModalMinHeight stepContainer"
+        style="width: 60%;"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
@@ -3070,6 +3071,7 @@ exports[`Create Bitbucketconnector Wizard should form for edit http and authtype
        
       <div
         class="Layout--vertical StyledProps--main secondStep connectorModalMinHeight stepContainer"
+        style="width: 60%;"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
