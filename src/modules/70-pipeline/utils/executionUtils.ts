@@ -1124,3 +1124,31 @@ export const processExecutionDataForGraph = (stages?: PipelineGraphState[]): Pip
   })
   return items
 }
+
+export const updateBackgroundStepNodeStatuses = ({
+  runningStageId,
+  nodeMap
+}: {
+  runningStageId?: string | null
+  nodeMap: { [key: string]: ExecutionNode }
+}): {
+  [key: string]: ExecutionNode
+} => {
+  const newNodeMap: { [key: string]: ExecutionNode } = { ...nodeMap }
+  const nodeMapValues: ExecutionNode[] = Object.values(nodeMap)
+  // Find stepIdentifiers in running stage
+  const runningStageStepIdentifiers: string[] =
+    nodeMapValues.find(node => node.setupId === runningStageId)?.stepParameters?.specConfig?.stepIdentifiers || []
+  // Overwrite status for stepType Background in running stage
+  nodeMapValues.forEach(node => {
+    if (
+      node?.uuid &&
+      node.identifier &&
+      runningStageStepIdentifiers.includes(node.identifier) &&
+      node.stepType === StepType.Background
+    ) {
+      newNodeMap[node.uuid].status = ExecutionStatusEnum.Running
+    }
+  })
+  return newNodeMap
+}

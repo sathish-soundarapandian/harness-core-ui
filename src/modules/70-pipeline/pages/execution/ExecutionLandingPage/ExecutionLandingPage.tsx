@@ -20,13 +20,14 @@ import {
   useGetExecutionDetailV2
 } from 'services/pipeline-ng'
 import type { ExecutionNode } from 'services/pipeline-ng'
-import { ExecutionStatus, isExecutionComplete } from '@pipeline/utils/statusHelpers'
+import { ExecutionStatus, isExecutionComplete, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import {
   getPipelineStagesMap,
   getActiveStageForPipeline,
   getActiveStep,
   addServiceDependenciesFromLiteTaskEngine,
-  isNodeTypeMatrixOrFor
+  isNodeTypeMatrixOrFor,
+  updateBackgroundStepNodeStatuses
 } from '@pipeline/utils/executionUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useQueryParams, useDeepCompareEffect } from '@common/hooks'
@@ -224,7 +225,18 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
 
   // combine steps and dependencies(ci stage)
   useDeepCompareEffect(() => {
-    const nodeMap = { ...data?.data?.executionGraph?.nodeMap }
+    let nodeMap = { ...data?.data?.executionGraph?.nodeMap }
+
+    // NOTE: Update Background stepType status as Running if the stage is still running
+    if (data?.data?.pipelineExecutionSummary?.status === ExecutionStatusEnum.Running && !isEmpty(nodeMap)) {
+      const runningStageId = getActiveStageForPipeline(
+        data.data.pipelineExecutionSummary,
+        data.data.pipelineExecutionSummary.status
+      )
+      console.log(runningStageId)
+
+      nodeMap = updateBackgroundStepNodeStatuses({ runningStageId, nodeMap })
+    }
     // NOTE: add dependencies from "liteEngineTask" (ci stage)
     addServiceDependenciesFromLiteTaskEngine(nodeMap, data?.data?.executionGraph?.nodeAdjacencyListMap)
     setAllNodeMap(oldNodeMap => {
