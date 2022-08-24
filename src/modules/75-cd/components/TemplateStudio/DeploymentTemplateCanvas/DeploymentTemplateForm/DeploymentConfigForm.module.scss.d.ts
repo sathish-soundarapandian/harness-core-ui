@@ -7,6 +7,9 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly infraWidgetWrapper: string
+  readonly navigationBtns: string
+  readonly tabsContainer: string
   readonly tabsInnerContainer: string
 }
 export default styles

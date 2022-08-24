@@ -7,13 +7,13 @@
 
 import React from 'react'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
-import { DeploymentTemplateFormWithRef } from './DeploymentTemplateForm/DeploymentTemplateForm'
+import { DeploymentConfigFormWithRef } from './DeploymentTemplateForm/DeploymentConfigForm'
 
-export const DeploymentTemplateCanvasWithRef = React.forwardRef(
+export const DeploymentConfigCanvasWithRef = React.forwardRef(
   (_props: unknown, formikRef: TemplateFormRef): JSX.Element => {
     return (
       <>
-        <DeploymentTemplateFormWithRef ref={formikRef} />
+        <DeploymentConfigFormWithRef ref={formikRef} />
         {/*<RightDrawer />*/}
       </>
     )
