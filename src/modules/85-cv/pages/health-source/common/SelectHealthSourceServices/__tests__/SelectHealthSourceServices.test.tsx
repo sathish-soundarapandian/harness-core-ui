@@ -25,6 +25,7 @@ describe('Validate SelectHealthSourceServices', () => {
             values={{ continuousVerification: true, healthScore: true, sli: false }}
             labelNamesResponse={labelNamesResponse as any}
             metricPackResponse={metricPackResponse as any}
+            formikSetField={jest.fn()}
           />
         </Formik>
       </TestWrapper>
@@ -48,6 +49,7 @@ describe('Validate SelectHealthSourceServices', () => {
             values={{ continuousVerification: false, healthScore: false, sli: true }}
             labelNamesResponse={labelNamesResponse as any}
             metricPackResponse={metricPackResponse as any}
+            formikSetField={jest.fn()}
           />
         </Formik>
       </TestWrapper>
@@ -72,6 +74,7 @@ describe('Validate SelectHealthSourceServices', () => {
             hideCV
             hideSLIAndHealthScore
             hideServiceIdentifier
+            formikSetField={jest.fn()}
           />
         </Formik>
       </TestWrapper>

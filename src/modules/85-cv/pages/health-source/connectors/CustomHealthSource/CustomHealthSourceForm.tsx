@@ -27,10 +27,11 @@ interface CustomHealthSourceFormInterface {
   mappedMetrics: Map<string, CustomMappedMetric>
   selectedMetric: string
   connectorIdentifier: string
+  formikSetField: (key: string, value: any) => void
 }
 
 export default function CustomHealthSourceForm(props: CustomHealthSourceFormInterface) {
-  const { formValue, onFieldChange, onValueChange, mappedMetrics, selectedMetric, connectorIdentifier } = props
+  const { formValue, onFieldChange, onValueChange, mappedMetrics, selectedMetric, connectorIdentifier, formikSetField } = props
   const { getString } = useStrings()
 
   const metricPacks = useMemo(() => generateCustomMetricPack(), [])
@@ -114,6 +115,7 @@ export default function CustomHealthSourceForm(props: CustomHealthSourceFormInte
                 metricPackResponse={metricPacks}
                 hideCV={formValue.queryType === QueryType.SERVICE_BASED}
                 hideSLIAndHealthScore={formValue.queryType === QueryType.HOST_BASED}
+                formikSetField={formikSetField}
               />
             }
           />

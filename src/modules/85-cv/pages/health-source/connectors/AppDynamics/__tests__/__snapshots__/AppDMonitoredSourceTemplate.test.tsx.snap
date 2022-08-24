@@ -1046,6 +1046,7 @@ exports[`Unit tests for createAppd monitoring source Component renders in edit m
                                                 class="RadioButton--radio StyledProps--main"
                                               >
                                                 <input
+                                                  checked=""
                                                   class="RadioButton--input"
                                                   name="riskCategory"
                                                   type="radio"
@@ -1074,7 +1075,6 @@ exports[`Unit tests for createAppd monitoring source Component renders in edit m
                                                 class="RadioButton--radio StyledProps--main"
                                               >
                                                 <input
-                                                  checked=""
                                                   class="RadioButton--input"
                                                   name="riskCategory"
                                                   type="radio"

@@ -131,6 +131,7 @@ describe('Unit tests for RiskProfile', () => {
         <RiskProfile
           metricPackResponse={MockResponse}
           labelNamesResponse={{ data: MockLabels } as unknown as ReturnType<typeof useGetLabelNames>}
+          formikSetField={jest.fn()}
         />
       </TestWrapper>
     )
@@ -148,6 +149,7 @@ describe('Unit tests for RiskProfile', () => {
         <RiskProfile
           metricPackResponse={{ loading: true } as unknown as ReturnType<typeof useGetMetricPacks>}
           labelNamesResponse={{ data: MockLabels } as unknown as ReturnType<typeof useGetLabelNames>}
+          formikSetField={jest.fn()}
         />
       </TestWrapper>
     )
@@ -163,6 +165,7 @@ describe('Unit tests for RiskProfile', () => {
             { error: { data: { detailedMessage: 'someError' } } } as unknown as ReturnType<typeof useGetMetricPacks>
           }
           labelNamesResponse={{ data: MockLabels } as unknown as ReturnType<typeof useGetLabelNames>}
+          formikSetField={jest.fn()}
         />
       </TestWrapper>
     )

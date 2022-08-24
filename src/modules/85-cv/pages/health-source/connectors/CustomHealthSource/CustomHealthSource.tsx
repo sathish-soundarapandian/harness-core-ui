@@ -59,7 +59,7 @@ export function CustomHealthSource(props: CustomHealthSourceProps): JSX.Element 
   return (
     <Formik<MapCustomHealthToService>
       formName="mapCustomhealth"
-      initialValues={mappedMetrics.get(selectedMetric || '') as MapCustomHealthToService}
+      initialValues={{...mappedMetrics.get(selectedMetric || '') as MapCustomHealthToService, sli:true, healthScore: true, continuousVerification: true, higherBaselineDeviation: true}}
       isInitialValid={(args: any) =>
         Object.keys(
           validateMappings(
@@ -106,6 +106,7 @@ export function CustomHealthSource(props: CustomHealthSourceProps): JSX.Element 
                 mappedMetrics={mappedMetrics}
                 selectedMetric={selectedMetric}
                 connectorIdentifier={sourceData?.connectorRef || ''}
+                formikSetField={formikProps.setFieldValue}
               />
             </CustomMetric>
             <DrawerFooter

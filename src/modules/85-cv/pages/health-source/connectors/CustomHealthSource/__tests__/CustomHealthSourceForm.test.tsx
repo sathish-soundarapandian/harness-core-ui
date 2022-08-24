@@ -116,12 +116,9 @@ describe('Verify CustomHealthSourceForm', () => {
 
     userEvent.click(getByText('cv.monitoringSources.assign'))
 
-    userEvent.click(container.querySelector('input[name="healthScore"]')!)
     await waitFor(() => expect(container.querySelector('input[name="healthScore"]')).toBeChecked())
     await waitFor(() => expect(container.querySelector('input[name="sli"]')).toBeChecked())
-
-    userEvent.click(container.querySelector('input[value="Errors/ERROR"]')!)
-    userEvent.click(container.querySelector('input[name="higherBaselineDeviation"]')!)
+    await waitFor(() => expect(container.querySelector('input[name="continousVerification"]')).toBeChecked())
   })
 
   test('should render CustomHealthSourceForm with no formikValue', async () => {
@@ -180,11 +177,10 @@ describe('Verify CustomHealthSourceForm', () => {
     )
     await waitFor(() => expect(getByText('cv.slos.sli')).toBeInTheDocument())
 
-    userEvent.click(container.querySelector('input[name="healthScore"]')!)
+    await waitFor(() => expect(container.querySelector('input[name="healthScore"]')).toBeChecked())
     await waitFor(() => expect(container.querySelector('input[name="sli"]')).toBeChecked())
     userEvent.click(container.querySelector('input[name="sli"]')!)
 
-    await waitFor(() => expect(container.querySelector('input[name="healthScore"]')).toBeChecked())
     await waitFor(() => expect(container.querySelector('input[name="sli"]')).not.toBeChecked())
 
     userEvent.click(container.querySelector('input[value="Errors/ERROR"]')!)

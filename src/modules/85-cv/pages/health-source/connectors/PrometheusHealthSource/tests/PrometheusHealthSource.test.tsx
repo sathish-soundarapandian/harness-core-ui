@@ -138,7 +138,7 @@ describe('Unit tests for PrometheusHealthSource', () => {
       fireEvent.click(getByText('submit'))
     })
 
-    await waitFor(() => expect(container.querySelector('input[name="sli"')).toBeInTheDocument())
+    //await waitFor(() => expect(container.querySelector('input[name="sli"')).toBeInTheDocument())
 
     // Correct warning message is shown
     // await waitFor(() =>
@@ -169,7 +169,10 @@ describe('Unit tests for PrometheusHealthSource', () => {
               prometheusMetric: 'container_cpu_load_average_10s',
               query: 'count(container_cpu_load_average_10s{container="cv-demo",namespace="cv-demo"})',
               serviceFilter: [{ labelName: 'container', labelValue: 'cv-demo' }],
-              sli: { enabled: true }
+              sli: { enabled: true },
+              healthScore: { enabled: true },
+              continuousVerification: { enabled: true },
+              higherBaselineDeviation: { enabled: true }
             }
           ],
           metricPacks: [{ identifier: 'Custom', metricThresholds: [] }]

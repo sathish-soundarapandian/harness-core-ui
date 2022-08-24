@@ -444,6 +444,7 @@ export const mockedFormDataCreate = {
   metricData: {},
   metricIdentifier: 'New_Relic_Metric',
   metricName: 'New Relic Metric',
+  higherBaselineDeviation: true,
   metricPacks: [],
   name: 'New_relic',
   newRelicApplication: {
