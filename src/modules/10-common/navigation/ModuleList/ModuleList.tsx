@@ -8,6 +8,7 @@
 import React, { useState } from 'react'
 import cx from 'classnames'
 import { Link } from 'react-router-dom'
+import { FontVariation } from '@harness/design-system'
 import { Drawer, Position } from '@blueprintjs/core'
 import { Color, Container, Icon, Layout, Text } from '@harness/uicore'
 import { String, StringKeys } from 'framework/strings'
@@ -31,13 +32,17 @@ interface GroupConfig {
 
 interface ItemProps {
   data: NavModuleName
+  activeModule: NavModuleName
+  onTooltipClick?: (module: NavModuleName) => void
 }
 
 interface GroupProps {
   data: GroupConfig
+  activeModule: NavModuleName
+  onTooltipClick?: (module: NavModuleName) => void
 }
 
-const Item: React.FC<ItemProps> = ({ data }) => {
+const Item: React.FC<ItemProps> = ({ data, onTooltipClick, activeModule }) => {
   const { redirectionLink, shouldVisible } = useNavModuleInfo([data])[0]
 
   if (!shouldVisible) {
@@ -47,14 +52,25 @@ const Item: React.FC<ItemProps> = ({ data }) => {
   return (
     <Link to={redirectionLink}>
       <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
-        <NavModule module={data} />
-        <Icon name="tooltip-icon" padding={'small'} margin={{ left: 'small' }} size={12} className={css.clickable} />
+        <NavModule module={data} active={activeModule === data} />
+        <Icon
+          name="tooltip-icon"
+          padding={'small'}
+          margin={{ left: 'small' }}
+          size={12}
+          className={css.clickable}
+          onClick={e => {
+            e.stopPropagation()
+            e.preventDefault()
+            onTooltipClick?.(data)
+          }}
+        />
       </Layout.Horizontal>
     </Link>
   )
 }
 
-const Group: React.FC<GroupProps> = ({ data }) => {
+const Group: React.FC<GroupProps> = ({ data, onTooltipClick, activeModule }) => {
   const modules = useNavModuleInfo(data.items)
 
   if (modules.filter(module => module.shouldVisible).length === 0) {
@@ -68,7 +84,7 @@ const Group: React.FC<GroupProps> = ({ data }) => {
       </Text>
       <Layout.Vertical spacing="medium">
         {data.items.map(item => (
-          <Item key={item} data={item} />
+          <Item key={item} data={item} onTooltipClick={onTooltipClick} activeModule={activeModule} />
         ))}
       </Layout.Vertical>
     </Container>
@@ -94,8 +110,27 @@ const listConfig: GroupConfig[] = [
   }
 ]
 
+const ModuleConfigHeader: React.FC = () => {
+  return (
+    <>
+      <Text inline margin={{ bottom: 'xsmall' }}>
+        <Text inline color={Color.WHITE} font={{ variation: FontVariation.H2 }}>
+          <String stringID="common.moduleConfig.selectModules" />
+        </Text>
+        <Text inline color={Color.PRIMARY_5} className={css.blueText} margin={{ left: 'small', right: 'small' }}>
+          <String stringID="common.moduleConfig.your" />
+        </Text>
+        <Text inline color={Color.WHITE} font={{ variation: FontVariation.H2 }}>
+          <String stringID="common.moduleConfig.navigation" />
+        </Text>
+      </Text>
+    </>
+  )
+}
+
 const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true }) => {
-  const [showModuleConfigScreen, setModuleConfigScreen] = useState(false)
+  const [showModuleSettings, setShowModuleSettings] = useState(false)
+  const [activeModule, setActiveModule] = useState<NavModuleName | undefined>(undefined)
 
   return (
     <>
@@ -118,24 +153,36 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
               size={20}
               className={cx(css.blue, css.clickable)}
               padding={'small'}
-              onClick={() => setModuleConfigScreen(true)}
+              onClick={() => setShowModuleSettings(true)}
             />
           </Container>
           <Layout.Vertical flex spacing="xxxlarge">
             {listConfig.map(item => (
-              <Group data={item} key={item.label} />
+              <Group
+                data={item}
+                key={item.label}
+                activeModule={activeModule}
+                onTooltipClick={module => {
+                  setActiveModule(module)
+                }}
+              />
             ))}
           </Layout.Vertical>
         </div>
       </Drawer>
-      {showModuleConfigScreen && (
+      {activeModule || showModuleSettings ? (
         <ModuleConfigurationScreen
           onClose={() => {
-            setModuleConfigScreen(false)
+            setShowModuleSettings(false)
             close()
+            setActiveModule(undefined)
           }}
+          activeModule={activeModule}
+          headerText={showModuleSettings ? <ModuleConfigHeader /> : undefined}
+          className={!showModuleSettings ? css.configScreenWithoutReorder : undefined}
+          hideReordering={!showModuleSettings}
         />
-      )}
+      ) : undefined}
     </>
   )
 }

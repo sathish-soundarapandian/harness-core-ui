@@ -5,12 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
-import { Text, Layout, Container } from '@harness/uicore'
-import { Color, FontVariation } from '@harness/design-system'
+import React, { useEffect, useState } from 'react'
+import { Layout, Container } from '@harness/uicore'
+import cx from 'classnames'
+import { Color } from '@harness/design-system'
 import { Icon } from '@harness/icons'
 import { ModuleName } from 'framework/types/ModuleName'
-import { String } from 'framework/strings'
 import { PageSpinner } from '@common/components'
 import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
 import ModuleSortableList from './ModuleSortableList/ModuleSortableList'
@@ -20,41 +20,46 @@ import css from './ModuleConfigurationScreen.module.scss'
 
 interface ModulesConfigurationScreenProps {
   onClose: () => void
+  className?: string
+  hideReordering?: boolean
+  headerText?: React.ReactElement
+  activeModule?: NavModuleName
 }
 
-const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({ onClose }) => {
+const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({
+  onClose,
+  className,
+  hideReordering,
+  headerText,
+  activeModule: activeModuleFromProps
+}) => {
   const [activeModule, setActiveModule] = useState<NavModuleName>(ModuleName.CD)
   const { contentfulModuleMap, loading } = useGetContentfulModules()
 
+  useEffect(() => {
+    if (activeModuleFromProps) {
+      setActiveModule(activeModuleFromProps)
+    }
+  }, [activeModuleFromProps])
+
   const renderHeader = () => {
-    return (
-      <Container className={css.header}>
-        <Text inline margin={{ bottom: 'xsmall' }}>
-          <Text inline color={Color.WHITE} font={{ variation: FontVariation.H2 }}>
-            <String stringID="common.moduleConfig.selectModules" />
-          </Text>
-          <Text inline color={Color.PRIMARY_5} className={css.blueText} margin={{ left: 'small', right: 'small' }}>
-            <String stringID="common.moduleConfig.your" />
-          </Text>
-          <Text inline color={Color.WHITE} font={{ variation: FontVariation.H2 }}>
-            <String stringID="common.moduleConfig.navigation" />
-          </Text>
-        </Text>
-      </Container>
-    )
+    return <Container className={css.header}>{headerText}</Container>
   }
 
   return (
-    <Layout.Vertical className={css.container} padding={{ left: 'xlarge' }}>
+    <Layout.Vertical className={cx(css.container, className)} padding={{ left: 'xlarge' }}>
       {renderHeader()}
       <Layout.Horizontal
         padding={{ bottom: 'huge', right: 'huge' }}
         margin={{ bottom: 'xxxlarge' }}
         className={css.body}
       >
-        <Container margin={{ right: 'xxlarge' }} className={css.sortableListContainer}>
-          <ModuleSortableList activeModule={activeModule} onSelect={setActiveModule} />
-        </Container>
+        {!hideReordering ? (
+          <Container margin={{ right: 'xxlarge' }} className={css.sortableListContainer}>
+            <ModuleSortableList activeModule={activeModule} onSelect={setActiveModule} />
+          </Container>
+        ) : null}
+
         <Container className={css.flex1}>
           {/* Handle error condition */}
           {loading ? (

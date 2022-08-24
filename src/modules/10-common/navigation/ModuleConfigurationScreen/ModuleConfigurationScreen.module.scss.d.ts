@@ -7,7 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly blueText: string
   readonly body: string
   readonly container: string
   readonly crossIcon: string

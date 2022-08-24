@@ -28,3 +28,14 @@
   width: calc(100vw - 88px);
   margin-left: 88px;
 }
+
+.configScreenWithoutReorder {
+  left: 448px;
+  width: calc(100% - 448px) !important;
+}
+
+.blueText {
+  font-family: var(--font-family-reenie-beanie) !important;
+  font-size: 50px !important;
+  font-weight: bold;
+}
