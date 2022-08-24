@@ -13,7 +13,6 @@ import type {
   DynatraceFormDataInterface,
   DynatraceHealthSourceProps
 } from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.types'
-import CardWithOuterTitle from '@cv/pages/health-source/common/CardWithOuterTitle/CardWithOuterTitle'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
 import useGroupedSideNaveHook from '@cv/hooks/GroupedSideNaveHook/useGroupedSideNaveHook'
 import { useStrings } from 'framework/strings'
@@ -25,6 +24,7 @@ import {
   setApplicationIfConnectorIsInput
 } from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.utils'
 import DynatraceCustomMetrics from '@cv/pages/health-source/connectors/Dynatrace/components/DynatraceCustomMetrics/DynatraceCustomMetrics'
+import CardWithOuterTitle from '@pipeline/components/CardWithOuterTitle/CardWithOuterTitle'
 import DynatraceMetricPacksToService from './components/DynatraceMetricPacksToService/DynatraceMetricPacksToService'
 
 import CustomMetric from '../../common/CustomMetric/CustomMetric'

@@ -1276,3 +1276,16 @@ azureWebApp:
     basic: In a Basic deployment, a new Service/Artifact version is deployed to the deployment slot. Basic deployments are useful for development, learning Harness, and any non-mission critical workflows.
     canary: 'Harness performs a three phase deployment: Phase 1 deploys a new service version to the deployment slot. Phase 2 performs a Traffic Shift to that deployment slot. Phase 3 swaps the deployment slot with target slot.'
     blueGreen: 'Harness performs a two phase deployment: Phase 1 deploys a new service version to deployment slot. Phase 2 swaps the deployment slot with target slot.'
+customDeployment:
+  infraVariablesTitle: 'Define the variables to be used in your environment and infrastructure.'
+  hostObjectArrayPath: 'Host Object Array Path'
+  hostAttributes: 'Host Attributes'
+  newAttribute: 'New Attribute'
+  fetchInstancesScript: 'Fetch Instance Script'
+  fetchInstanceScriptHeader: 'Define your script inline or from File Store.'
+  fieldNameLabel: 'Field Name'
+  jsonPathRelativeLabel: 'JSON Path (relative)'
+  fieldNamePlaceholder: 'Enter Field Name'
+  errors:
+    fetchScriptRequired: 'Fetch Instances Script is required'
+    fetchScriptBodyRequired: 'Fetch Instances Script body is required'

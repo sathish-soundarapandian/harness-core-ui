@@ -15,8 +15,8 @@ import { FormConnectorReferenceField } from '@connectors/components/ConnectorRef
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
-import CardWithOuterTitle from '@cv/pages/health-source/common/CardWithOuterTitle/CardWithOuterTitle'
 import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import CardWithOuterTitle from '@pipeline/components/CardWithOuterTitle/CardWithOuterTitle'
 import {
   createCardOptions,
   createChangesourceList,
