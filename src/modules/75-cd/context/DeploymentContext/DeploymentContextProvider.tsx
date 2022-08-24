@@ -8,17 +8,23 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import get from 'lodash/get'
 import { merge, map, compact, isEmpty } from 'lodash-es'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import type { NGTemplateInfoConfig, EntityGitDetails } from 'services/template-ng'
 import { sanitize } from '@common/utils/JSONUtils'
 import type { GetPipelineQueryParams } from 'services/pipeline-ng'
 import { getTemplateTypesByRef, TemplateServiceDataType } from '@pipeline/utils/templateUtils'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { usePermission } from '@rbac/hooks/usePermission'
+import type { PermissionCheck } from 'services/rbac'
 
 export interface DeploymentContextProps {
   onDeploymentConfigUpdate: (configValues: any) => Promise<void>
   deploymentConfigInitialValues: NGTemplateInfoConfig['spec']
-  isReadonly: boolean
+  isReadOnly: boolean
   gitDetails: EntityGitDetails
   queryParams: GetPipelineQueryParams
+  templateIdentifier?: string
 }
 
 export interface DeploymentConfigValues
@@ -27,14 +33,40 @@ export interface DeploymentConfigValues
   updateDeploymentConfig: (configValues: any) => Promise<void>
   templateTypes: { [key: string]: string }
   templateServiceData?: TemplateServiceDataType
+  allowableTypes: AllowedTypesWithRunTime[]
 }
-
-const DeploymentContext = React.createContext<DeploymentConfigValues>({} as DeploymentConfigValues)
+const initialValues = {
+  infrastructure: {
+    variables: [],
+    fetchInstancesScript: {
+      store: {
+        type: 'Inline',
+        spec: {}
+      }
+    },
+    instanceAttributes: [{ fieldName: 'hostName', jsonPath: '', description: '' }]
+  }
+}
+const allowableTypes: AllowedTypesWithRunTime[] = [
+  MultiTypeInputType.FIXED,
+  MultiTypeInputType.RUNTIME,
+  MultiTypeInputType.EXPRESSION
+]
+const DeploymentContext = React.createContext<DeploymentConfigValues>({
+  deploymentConfig: initialValues,
+  isReadOnly: false,
+  allowableTypes: allowableTypes,
+  gitDetails: {},
+  templateTypes: {},
+  updateDeploymentConfig: (_configValues: any) => new Promise<void>(() => undefined)
+} as DeploymentConfigValues)
 
 export function DeploymentContextProvider(props: React.PropsWithChildren<DeploymentContextProps>): React.ReactElement {
-  const { onDeploymentConfigUpdate, deploymentConfigInitialValues, isReadonly, gitDetails, queryParams } = props
+  const { onDeploymentConfigUpdate, deploymentConfigInitialValues, gitDetails, queryParams, templateIdentifier } = props
 
-  const [deploymentConfig, setDeploymentConfig] = useState<NGTemplateInfoConfig['spec']>(deploymentConfigInitialValues)
+  const [deploymentConfig, setDeploymentConfig] = useState<NGTemplateInfoConfig['spec']>(
+    deploymentConfigInitialValues || initialValues
+  )
 
   const [templateTypes, setTemplateTypes] = useState<{ [p: string]: string }>({})
   const [templateServiceData, setTemplateServiceData] = useState<TemplateServiceDataType>()
@@ -86,15 +118,41 @@ export function DeploymentContextProvider(props: React.PropsWithChildren<Deploym
     }
   }, [deploymentConfig, queryParams, gitDetails, templateTypes, templateServiceData])
 
+  const [isEdit] = usePermission(
+    {
+      resourceScope: {
+        accountIdentifier: queryParams.accountIdentifier,
+        orgIdentifier: queryParams.orgIdentifier,
+        projectIdentifier: queryParams.projectIdentifier
+      },
+      resource: {
+        resourceType: ResourceType.TEMPLATE,
+        resourceIdentifier: templateIdentifier
+      },
+      permissions: [PermissionIdentifier.EDIT_TEMPLATE],
+      options: {
+        skipCache: true,
+        skipCondition: (permissionCheck: PermissionCheck) => {
+          /* istanbul ignore next */
+          return permissionCheck.resourceIdentifier === '-1'
+        }
+      }
+    },
+    [queryParams.accountIdentifier, queryParams.orgIdentifier, queryParams.projectIdentifier, templateIdentifier]
+  )
+
+  const isReadOnly = !isEdit
+
   return (
     <DeploymentContext.Provider
       value={{
         updateDeploymentConfig: handleConfigUpdate,
         deploymentConfig,
-        isReadonly,
+        isReadOnly,
         gitDetails,
         templateTypes,
-        templateServiceData
+        templateServiceData,
+        allowableTypes
       }}
     >
       {props.children}
