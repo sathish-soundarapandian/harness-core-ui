@@ -40,10 +40,10 @@ export function OptionalConfigurations(
     spec: {
       executionTarget: {
         connectorRef: undefined,
-        ...initialValues.spec.executionTarget
+        ...initialValues.spec?.executionTarget
       },
       ...initialValues.spec,
-      onDelegate: initialValues.spec.onDelegate ? 'delegate' : 'targethost'
+      onDelegate: initialValues.spec?.onDelegate ? 'delegate' : 'targethost'
     }
   }
 
@@ -65,9 +65,6 @@ export function OptionalConfigurations(
     >
       {(formik: FormikProps<ShellScriptFormData>) => {
         setFormikRef(formikRef, formik)
-        if (formik.dirty) {
-          updateTemplate?.(formik.values)
-        }
 
         return (
           <React.Fragment>

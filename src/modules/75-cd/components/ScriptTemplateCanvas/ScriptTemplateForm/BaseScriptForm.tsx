@@ -49,7 +49,7 @@ export function BaseScriptForm(
       ...initialValues.spec,
 
       executionTarget: {
-        ...initialValues.spec.executionTarget,
+        ...initialValues.spec?.executionTarget,
         connectorRef: undefined
       }
     }
@@ -67,9 +67,6 @@ export function BaseScriptForm(
     >
       {(formik: FormikProps<ShellScriptFormData>) => {
         setFormikRef(formikRef, formik)
-        if (formik.dirty) {
-          updateTemplate?.(formik.values)
-        }
 
         return <BaseScript formik={formik} readonly={false} allowableTypes={allowableTypes} />
       }}

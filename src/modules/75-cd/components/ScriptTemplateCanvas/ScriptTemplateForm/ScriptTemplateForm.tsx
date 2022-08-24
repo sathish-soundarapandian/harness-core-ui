@@ -25,6 +25,7 @@ import css from './ScriptTemplateForm.module.scss'
 export interface ScriptTemplateFormInterface {
   template?: NGTemplateInfoConfig
   updateTemplate?: (template: ShellScriptFormData) => void
+  onChange?: (data: ShellScriptFormData) => void
 }
 
 enum ScriptTemplateFormTabs {
@@ -33,7 +34,7 @@ enum ScriptTemplateFormTabs {
 }
 
 export default function ScriptTemplateForm(
-  { updateTemplate, template }: ScriptTemplateFormInterface,
+  { updateTemplate, template, onChange }: ScriptTemplateFormInterface,
   formikRef: TemplateFormRef
 ): JSX.Element {
   const { getString } = useStrings()
@@ -115,6 +116,7 @@ export default function ScriptTemplateForm(
               allowableTypes={[]}
               readonly={false}
               ref={scriptRef as StepFormikFowardRef}
+              onChange={onChange}
             />
           }
         />
@@ -129,7 +131,8 @@ export default function ScriptTemplateForm(
               updateTemplate={updateTemplate}
               readonly={false}
               allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
-              initialValues={{ name: '', identifier: '', spec: { shell: 'Bash' }, type: 'Script', ...template }}
+              initialValues={{ onDelegate: true, ...template } as any}
+              onChange={onChange}
             />
           }
         />
