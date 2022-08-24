@@ -34,8 +34,8 @@ export const mockCloudMetricHealthSourceProps = (
       values: {
         query: 'test_query',
         sli: true,
-        healthScore: false,
-        continuousVerification: false,
+        healthScore: true,
+        continuousVerification: true,
         serviceInstance: 'cluster-name'
       },
       setFieldValue: jest.fn()
