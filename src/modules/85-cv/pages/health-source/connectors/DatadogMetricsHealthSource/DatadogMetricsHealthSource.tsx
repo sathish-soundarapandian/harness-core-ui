@@ -333,8 +333,8 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
     <Formik<DatadogMetricInfo>
       enableReinitialize={true}
       formName="mapDatadogMetrics"
-      initialValues={{ ...initialValues }}
       validateOnMount
+      initialValues={{...(initialValues), sli:true, healthScore: true, continuousVerification: true, higherBaselineDeviation: true}}
       onSubmit={noop}
       validate={values => {
         const newMap = new Map(metricHealthDetailsData)

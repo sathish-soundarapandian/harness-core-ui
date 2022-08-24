@@ -33,7 +33,8 @@ export default function SelectHealthSourceServices({
   expressions,
   showOnlySLI = false,
   isConnectorRuntimeOrExpression,
-  customServiceInstanceName
+  customServiceInstanceName,
+  formikSetField
 }: SelectHealthSourceServicesProps): JSX.Element {
   const { getString } = useStrings()
 
@@ -102,6 +103,7 @@ export default function SelectHealthSourceServices({
           serviceInstance={typeof serviceInstance === 'string' ? serviceInstance : (serviceInstance?.value as string)}
           riskCategory={riskCategory}
           isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
+          formikSetField={formikSetField}
         />
       )}
     </Container>

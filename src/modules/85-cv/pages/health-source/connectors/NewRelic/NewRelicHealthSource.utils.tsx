@@ -255,7 +255,9 @@ export const createNewRelicFormData = (
     showCustomMetric,
     sli: true,
     healthScore: true,
-    continuousVerification: true
+    continuousVerification: true,
+    higherBaselineDeviation: true
+    
   }
 }
 

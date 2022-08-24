@@ -593,7 +593,8 @@ export const createAppDFormData = (
     metricIdentifier,
     sli: true,
     healthScore: true,
-    continuousVerification: true
+    continuousVerification: true,
+    higherBaselineDeviation: true
   }
 }
 

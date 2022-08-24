@@ -6,6 +6,7 @@
  */
 
 import type { SelectOption } from '@harness/uicore'
+import type { FormikProps } from 'formik'
 import type { useGetMetricPacks, useGetLabelNames } from 'services/cv'
 
 export type SelectHealthSourceServicesProps = {
@@ -16,6 +17,7 @@ export type SelectHealthSourceServicesProps = {
     serviceInstance?: string | SelectOption
     riskCategory?: string
     serviceInstanceMetricPath?: string
+    
   }
   metricPackResponse: ReturnType<typeof useGetMetricPacks>
   labelNamesResponse?: ReturnType<typeof useGetLabelNames>
@@ -28,4 +30,6 @@ export type SelectHealthSourceServicesProps = {
   isConnectorRuntimeOrExpression?: boolean
   key?: string
   customServiceInstanceName?: string
+  formik?: FormikProps<unknown>
+  formikSetField: (key: string, value: any) => void
 }

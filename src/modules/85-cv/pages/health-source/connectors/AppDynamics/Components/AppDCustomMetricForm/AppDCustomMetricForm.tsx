@@ -170,7 +170,7 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
         subHeading={getString('cv.monitoringSources.prometheus.customizeQuery')}
       />
       <Container className={css.content}>
-        <Accordion activeId="metricToService" className={css.accordian} allowMultiOpen>
+        <Accordion activeId="riskProfile" className={css.accordian} allowMultiOpen>
           <Accordion.Panel
             id="metricToService"
             summary={getString('cv.monitoringSources.mapMetricsToServices')}
@@ -318,6 +318,7 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
                   expressions={expressions}
                   metricPackResponse={metricPackResponse}
                   hideServiceIdentifier
+                  formikSetField={formikSetField}
                 />
               </>
             }

@@ -8,6 +8,7 @@
 import type { ResponseString } from 'services/cv'
 import type { CustomMappedMetric } from '@cv/pages/health-source/common/CustomMetric/CustomMetric.types'
 import type { AppDynamicsFomikFormInterface } from '../../AppDHealthSource.types'
+import type { FormikProps } from 'formik'
 
 export interface AppDCustomMetricFormInterface {
   mappedMetrics: Map<string, CustomMappedMetric>
@@ -17,6 +18,7 @@ export interface AppDCustomMetricFormInterface {
   connectorIdentifier: string
   isTemplate?: boolean
   expressions?: string[]
+  formik?: FormikProps<unknown>
 }
 
 export interface SetServiceInstanceInterface {

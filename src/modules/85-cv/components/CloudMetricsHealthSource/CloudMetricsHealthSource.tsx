@@ -158,6 +158,8 @@ export default function CloudMetricsHealthSource<T>(props: CloudMetricsHealthSou
                       }
                       isTemplate={isTemplate}
                       expressions={expressions}
+                      formikSetField={formikProps.setFieldValue}
+
                     />
                   </Container>
                 </Container>

@@ -25,7 +25,8 @@ interface RiskProfileProps {
   riskCategory?: string
   isTemplate?: boolean
   expressions?: string[]
-  isConnectorRuntimeOrExpression?: boolean
+  isConnectorRuntimeOrExpression?: boolean,
+  formikSetField: (key: string, value: any) => void
 }
 
 export function RiskProfile(props: RiskProfileProps): JSX.Element {
@@ -37,7 +38,8 @@ export function RiskProfile(props: RiskProfileProps): JSX.Element {
     riskCategory,
     isTemplate,
     expressions,
-    isConnectorRuntimeOrExpression
+    isConnectorRuntimeOrExpression,
+    formikSetField
   } = props
   const { error, loading, data } = metricPackResponse
   const { getString } = useStrings()
@@ -49,6 +51,11 @@ export function RiskProfile(props: RiskProfileProps): JSX.Element {
       showError(getErrorMessage(error), 7000)
     }
   })
+  useEffect(() => {
+    if(metricPackOptions[0]?.value) {
+      formikSetField('riskCategory', metricPackOptions?.[0]?.value)
+    }
+  },[metricPackOptions?.[0]?.value])
 
   const transformedLabelNames: SelectOption[] = useMemo(
     () => labelNamesResponse?.data?.data?.map(label => ({ label, value: label })) || [],

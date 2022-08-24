@@ -119,7 +119,8 @@ export const mapDynatraceDataToDynatraceForm = (
     identifier: metricIdentifier,
     sli: true,
     healthScore: true,
-    continuousVerification: true
+    continuousVerification: true,
+    higherBaselineDeviation: true
   }
 }
 

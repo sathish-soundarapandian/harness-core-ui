@@ -293,6 +293,8 @@ export default function NewRelicCustomMetricForm(props: NewRelicCustomFormInterf
                   }}
                   metricPackResponse={metricPackResponse}
                   hideServiceIdentifier={true}
+                  formikSetField={formikSetField}
+
                 />
               </>
             }
