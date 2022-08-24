@@ -17,7 +17,7 @@ import {
 
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { get, defaultTo, isEqual, set } from 'lodash-es'
+import { get, defaultTo, isEqual, set, isUndefined } from 'lodash-es'
 import {
   AzureSubscriptionDTO,
   useGetAzureResourceGroupsBySubscription,
@@ -83,18 +83,19 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
 
   const { getString } = useStrings()
 
+  const shouldResetDependingFields = (field: string | undefined): boolean => {
+    return !isUndefined(field) && getMultiTypeFromValue(field) !== MultiTypeInputType.RUNTIME
+  }
+
   const resetForm = (parent: string): void => {
     switch (parent) {
       case 'connectorRef':
-        getMultiTypeFromValue(initialValues.connectorRef) !== MultiTypeInputType.RUNTIME &&
-          set(initialValues, 'subscriptionId', '')
-        getMultiTypeFromValue(initialValues.subscriptionId) !== MultiTypeInputType.RUNTIME &&
-          set(initialValues, 'resourceGroup', '')
+        shouldResetDependingFields(initialValues.connectorRef) && set(initialValues, 'subscriptionId', '')
+        shouldResetDependingFields(initialValues.subscriptionId) && set(initialValues, 'resourceGroup', '')
         onUpdate?.(initialValues)
         break
       case 'subscriptionId':
-        getMultiTypeFromValue(initialValues.subscriptionId) !== MultiTypeInputType.RUNTIME &&
-          set(initialValues, 'resourceGroup', '')
+        shouldResetDependingFields(initialValues.subscriptionId) && set(initialValues, 'resourceGroup', '')
         onUpdate?.(initialValues)
         break
     }
