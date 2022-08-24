@@ -17,7 +17,7 @@ import {
   useFetchPerspectiveFiltersValueQuery,
   QlceViewFilterWrapperInput
 } from 'services/ce/services'
-import { getTimeFilters } from '@ce/utils/perspectiveUtils'
+import { getRuleFilters, getTimeFilters, normalizeViewRules } from '@ce/utils/perspectiveUtils'
 import { getGMTEndDateTime, getGMTStartDateTime } from '@ce/utils/momentUtils'
 import OperatorSelector from './views/OperatorSelector'
 import OperandSelector from './views/OperandSelector'
@@ -143,6 +143,7 @@ const PerspectiveBuilderFilter: React.FC<FilterPillProps> = ({
 
   const filters = [
     ...getTimeFilters(getGMTStartDateTime(timeRange.from), getGMTEndDateTime(timeRange.to)),
+    ...getRuleFilters(normalizeViewRules(formikProps?.values.viewRules)),
     {
       idFilter: {
         field: {
@@ -202,6 +203,7 @@ const PerspectiveBuilderFilter: React.FC<FilterPillProps> = ({
         fieldValuesList={fieldValuesList}
         setProviderAndIdentifier={setProviderAndIdentifier}
         timeRange={timeRange}
+        formValues={formikProps?.values}
       />
       <OperatorSelector isDisabled={!provider.id} operator={operator} onOperatorChange={onOperatorChange} />
       <Layout.Vertical>
