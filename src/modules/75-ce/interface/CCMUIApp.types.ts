@@ -8,10 +8,12 @@
 import type React from 'react'
 import type { OverviewAddClusterProps } from '@ce/components/OverviewPage/OverviewAddCluster'
 import type { RecommendationFiltersProps } from '@ce/components/RecommendationFilters/RecommendationFilters'
+import type { AnomalyFiltersProps } from '@ce/components/AnomaliesFilter/AnomaliesFilter'
 
 export interface CCMUIAppCustomProps {
   customComponents: {
     OverviewAddCluster: React.ComponentType<OverviewAddClusterProps>
     RecommendationFilters: React.ComponentType<RecommendationFiltersProps>
+    AnomaliesFilter: React.ComponentType<AnomalyFiltersProps>
   }
 }

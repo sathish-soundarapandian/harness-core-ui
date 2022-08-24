@@ -38,6 +38,7 @@ import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { String as LocaleString } from 'framework/strings'
 import RecommendationFilters from '@ce/components/RecommendationFilters'
+import AnomaliesFilter from '@ce/components/AnomaliesFilter/AnomaliesFilter'
 import type { CCMUIAppCustomProps } from '@ce/interface/CCMUIApp.types'
 import CEHomePage from './pages/home/CEHomePage'
 import CECODashboardPage from './pages/co-dashboard/CECODashboardPage'
@@ -656,17 +657,19 @@ const CERoutes: React.FC = () => {
         >
           <NodeDetailsPage />
         </RouteWithLayout>
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCEAnomalyDetection({
-            ...accountPathProps
-          })}
-          exact
-          pageName={PAGE_NAME.CEAnomaliesOverviewPage}
-        >
-          <AnomaliesOverviewPage />
-        </RouteWithLayout>
+        {!enableMicroFrontend ? (
+          <RouteWithLayout
+            licenseRedirectData={licenseRedirectData}
+            sidebarProps={CESideNavProps}
+            path={routes.toCEAnomalyDetection({
+              ...accountPathProps
+            })}
+            exact
+            pageName={PAGE_NAME.CEAnomaliesOverviewPage}
+          >
+            <AnomaliesOverviewPage />
+          </RouteWithLayout>
+        ) : null}
         <RouteWithLayout
           licenseRedirectData={licenseRedirectData}
           sidebarProps={CESideNavProps}
@@ -706,14 +709,16 @@ const CERoutes: React.FC = () => {
                 ...projectPathProps,
                 recommendationName: ':recommendationName',
                 recommendation: ':recommendation'
-              })
+              }),
+              routes.toCEAnomalyDetection({ ...accountPathProps })
             ]}
             sidebarProps={CESideNavProps}
           >
             <ChildAppMounter<CCMUIAppCustomProps>
               customComponents={{
                 OverviewAddCluster,
-                RecommendationFilters
+                RecommendationFilters,
+                AnomaliesFilter
               }}
               ChildApp={CcmMicroFrontendPath}
             />
