@@ -141,7 +141,7 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
           </MultiTypeFieldSelector>
           {enabledExecutionDetails ? (
             <Layout.Vertical width={'400px'}>
-              {template.executionTarget.host ? (
+              {template.executionTarget?.host ? (
                 <FormInput.Text
                   name={`${prefix}.executionTarget.host`}
                   placeholder={getString('pipelineSteps.hostLabel')}
@@ -160,7 +160,7 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
                   allowableTypes={[]}
                 />
               ) : null} */}
-              {template.executionTarget.workingDirectory ? (
+              {template.executionTarget?.workingDirectory ? (
                 <FormInput.Text
                   name={`${prefix}.executionTarget.workingDirectory`}
                   placeholder={getString('workingDirectory')}

@@ -238,6 +238,7 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
                     allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
                     template={templateInputSets}
                     path={'templateInputs'}
+                    enableFixed
                     className={commonStyles.maxHeightScroll}
                   />
                 ) : null}
