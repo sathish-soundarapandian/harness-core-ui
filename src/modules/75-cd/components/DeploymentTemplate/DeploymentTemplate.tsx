@@ -7,7 +7,6 @@
 
 import React from 'react'
 import type { IconName } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { Template } from '@templates-library/components/AbstractTemplate/Template'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
@@ -18,14 +17,14 @@ import type { TemplateInputsProps } from '@templates-library/components/Template
 export class DeploymentTemplate extends Template {
   protected type = TemplateType.CustomDeployment
   protected label = 'Deployment'
-  protected color = Color.LIME_500
-  protected icon: IconName = 'disable'
+  protected icon: IconName = 'template-library'
   protected allowedScopes = [Scope.PROJECT, Scope.ORG, Scope.ACCOUNT]
   protected colorMap = {
     color: '#558B2F',
     stroke: '#EAF8DB',
     fill: '#F1FAE6'
   }
+  // protected isEnabled = false
 
   renderTemplateCanvas(formikRef: TemplateFormRef): JSX.Element {
     return <DeploymentTemplateCanvasWrapperWithRef ref={formikRef} />
