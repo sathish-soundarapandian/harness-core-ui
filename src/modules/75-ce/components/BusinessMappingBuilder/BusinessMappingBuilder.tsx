@@ -233,8 +233,7 @@ const BusinessMappingBuilder: (props: BusinessMappingBuilderProps) => React.Reac
                   background: Color.PURPLE_100,
                   total: 3,
                   current: 2,
-                  defaultOpen: false,
-                  isComingSoon: true
+                  defaultOpen: false
                 }}
               />
               <Step
