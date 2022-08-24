@@ -107,6 +107,7 @@ export default function ScriptTemplateForm(
           id={ScriptTemplateFormTabs.Script}
           title={getString('common.script')}
           className={css.scriptTab}
+          panelClassName={css.tabWidth}
           panel={
             <BaseScriptWithRef
               initialValues={{ name: '', identifier: '', spec: { shell: 'Bash' }, type: 'Script', ...template }}
@@ -121,6 +122,7 @@ export default function ScriptTemplateForm(
           id={ScriptTemplateFormTabs.Configurations}
           title={'Configuration'}
           className={css.scriptTab}
+          panelClassName={css.tabWidth}
           panel={
             <OptionalConfigurationWithRef
               ref={configfRef as StepFormikFowardRef}

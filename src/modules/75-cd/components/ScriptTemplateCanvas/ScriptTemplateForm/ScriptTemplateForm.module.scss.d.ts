@@ -9,5 +9,6 @@
 declare const styles: {
   readonly configurationTabs: string
   readonly scriptTab: string
+  readonly tabWidth: string
 }
 export default styles

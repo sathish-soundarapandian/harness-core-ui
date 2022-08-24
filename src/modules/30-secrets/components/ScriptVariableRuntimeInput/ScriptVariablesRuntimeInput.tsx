@@ -8,7 +8,7 @@
 import React from 'react'
 import { FieldArray } from 'formik'
 import { isArray, isEmpty } from 'lodash-es'
-import { AllowedTypes, FormInput, SelectOption } from '@harness/uicore'
+import { AllowedTypes, FormInput, Layout, SelectOption } from '@harness/uicore'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
@@ -140,7 +140,7 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
             />
           </MultiTypeFieldSelector>
           {enabledExecutionDetails ? (
-            <>
+            <Layout.Vertical width={'400px'}>
               {template.executionTarget.host ? (
                 <FormInput.Text
                   name={`${prefix}.executionTarget.host`}
@@ -169,7 +169,7 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
                   disabled={readonly}
                 />
               ) : null}
-            </>
+            </Layout.Vertical>
           ) : null}
         </div>
       ) : null}

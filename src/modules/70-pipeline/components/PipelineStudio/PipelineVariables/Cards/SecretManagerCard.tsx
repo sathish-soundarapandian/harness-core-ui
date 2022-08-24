@@ -6,9 +6,10 @@
  */
 
 import React from 'react'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, pick } from 'lodash-es'
 import { Text, NestedAccordionPanel, AllowedTypes } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
+import type { InputSetSchema } from '@secrets/components/ScriptVariableRuntimeInput/ScriptVariablesRuntimeInput'
 import type {
   CustomVariablesData,
   CustomVariableEditableExtraProps
@@ -76,11 +77,42 @@ export default function SecretManagerCard(props: SecretManagerVariableCardProps)
     },
     [updateSceretManager, unresolvedSecretManager]
   )
+  const data: Record<string, string> = pick(secretManager, ['shell', 'onDelegate'])
 
+  // istanbul ignore else
+  if (secretManager?.executionTarget?.connectorRef) {
+    data['executionTarget.connectorRef'] = secretManager.executionTarget.connectorRef
+  }
+  // istanbul ignore else
+  if (secretManager?.executionTarget?.host) {
+    data['executionTarget.host'] = secretManager.executionTarget.host
+  }
+  // istanbul ignore else
+  if (secretManager?.executionTarget?.workingDirectory) {
+    data['executionTarget.workingDirectory'] = secretManager.executionTarget.workingDirectory
+  }
+
+  // istanbul ignore else
+  if (secretManager?.source?.spec?.script) {
+    data['source.spec.script'] = secretManager.source.spec.script
+  }
+
+  // istanbul ignore else
+  if (Array.isArray(secretManager?.environmentVariables)) {
+    secretManager.environmentVariables.forEach((row: InputSetSchema, i: number) => {
+      data[`environmentVariables[${i}].value`] = row.value as string
+    })
+  }
+  // istanbul ignore else
+  if (Array.isArray(secretManager?.outputVariables)) {
+    secretManager.outputVariables.forEach((row: InputSetSchema, i: number) => {
+      data[`outputVariables[${i}].value`] = row.value as string
+    })
+  }
   const content = (
     <div className={css.variableCard}>
       <VariablesListTable
-        data={secretManager}
+        data={data}
         className={css.variablePaddingL0}
         originalData={originalSecretManager}
         metadataMap={updatedMetadataMap}
