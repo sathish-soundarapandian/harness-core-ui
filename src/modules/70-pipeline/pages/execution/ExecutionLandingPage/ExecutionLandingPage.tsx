@@ -20,7 +20,7 @@ import {
   useGetExecutionDetailV2
 } from 'services/pipeline-ng'
 import type { ExecutionNode } from 'services/pipeline-ng'
-import { ExecutionStatus, isExecutionComplete, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
+import { ExecutionStatus, isExecutionComplete, isExecutionRunning } from '@pipeline/utils/statusHelpers'
 import {
   getPipelineStagesMap,
   getActiveStageForPipeline,
@@ -228,12 +228,15 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
     let nodeMap = { ...data?.data?.executionGraph?.nodeMap }
 
     // NOTE: Update Background stepType status as Running if the stage is still running
-    if (data?.data?.pipelineExecutionSummary?.status === ExecutionStatusEnum.Running && !isEmpty(nodeMap)) {
+    if (
+      data?.data?.pipelineExecutionSummary?.status &&
+      isExecutionRunning(data.data.pipelineExecutionSummary.status) &&
+      !isEmpty(nodeMap)
+    ) {
       const runningStageId = getActiveStageForPipeline(
         data.data.pipelineExecutionSummary,
-        data.data.pipelineExecutionSummary.status
+        data.data.pipelineExecutionSummary.status as ExecutionStatus
       )
-      console.log(runningStageId)
 
       nodeMap = updateBackgroundStepNodeStatuses({ runningStageId, nodeMap })
     }

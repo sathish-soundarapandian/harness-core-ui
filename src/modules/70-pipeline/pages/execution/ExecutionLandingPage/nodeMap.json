@@ -1,0 +1,1390 @@
+{
+  "WIG3UUZfTwSxUI1R5fzRXw": {
+    "uuid": "WIG3UUZfTwSxUI1R5fzRXw",
+    "setupId": "4CwHhdVxQqe6w_wYLq1naQ",
+    "name": "Run Docker Command",
+    "identifier": "Run_Docker_Command",
+    "baseFqn": "pipeline.stages.Test_Stage.spec.execution.steps.Run_Docker_Command",
+    "outcomes": {
+      "output": {
+        "outputVariables": {}
+      }
+    },
+    "stepParameters": {
+      "identifier": "Run_Docker_Command",
+      "name": "Run Docker Command",
+      "timeout": "10h",
+      "type": "Run",
+      "spec": {
+        "uuid": "inl4jdxkSNyUGZJndU-ukA",
+        "retry": 1,
+        "command": "sleep 5\ndocker build -f Dockerfile2 .",
+        "envVariables": {
+          "__recast": "java.util.LinkedHashMap",
+          "HARNESS_STAGE_TOTAL": "null",
+          "HARNESS_NODE_INDEX": "null",
+          "HARNESS_NODE_TOTAL": "null",
+          "HARNESS_STAGE_INDEX": "null",
+          "HARNESS_STEP_INDEX": "null",
+          "HARNESS_STEP_TOTAL": "null"
+        },
+        "image": "docker",
+        "connectorRef": "Docker",
+        "shell": "SH"
+      }
+    },
+    "startTs": 1661264300382,
+    "endTs": 1661264330550,
+    "stepType": "Run",
+    "status": "Success",
+    "failureInfo": {
+      "message": "",
+      "failureTypeList": [],
+      "responseMessages": []
+    },
+    "skipInfo": null,
+    "nodeRunInfo": {
+      "whenCondition": "<+OnStageSuccess>",
+      "evaluatedCondition": true,
+      "expressions": [
+        {
+          "expression": "OnStageSuccess",
+          "expressionValue": "true",
+          "count": 1
+        }
+      ]
+    },
+    "executableResponses": [
+      {
+        "async": {
+          "callbackIds": ["HF5oenU8SzSpJeDKzc79TQ", "7SXNeUc9Qpe0D3ow1wU8mA"],
+          "logKeys": [
+            "accountId:kmpySmUISimoRrJL6NL73w/orgId:default/projectId:default/pipelineId:Background_Test/runSequence:65/level0:pipeline/level1:stages/level2:Test_Stage/level3:spec/level4:execution/level5:steps/level6:parallelBCBBCgr4T0CoTm5aEfU1Owparallel/level7:Run_Docker_Command"
+          ],
+          "units": []
+        }
+      }
+    ],
+    "unitProgresses": [],
+    "progressData": null,
+    "delegateInfoList": [],
+    "interruptHistories": [],
+    "stepDetails": null,
+    "strategyMetadata": null,
+    "executionInputConfigured": false
+  },
+  "40BNTS9ISqOWeeBItooK5Q": {
+    "uuid": "40BNTS9ISqOWeeBItooK5Q",
+    "setupId": "BCBBCgr4T0CoTm5aEfU1Owparallel",
+    "name": "parallel",
+    "identifier": "parallelBCBBCgr4T0CoTm5aEfU1Owparallel",
+    "baseFqn": "pipeline.stages.Test_Stage.spec.execution.steps",
+    "outcomes": {},
+    "stepParameters": {
+      "parallelNodeIds": ["8tHLzQu2TpybLL59rysFZQ", "4CwHhdVxQqe6w_wYLq1naQ", "mC1pI3cLTx6OJkaZDF3M7Q"]
+    },
+    "startTs": 1661264288367,
+    "endTs": 1661264354221,
+    "stepType": "NG_FORK",
+    "status": "Success",
+    "failureInfo": {
+      "message": "",
+      "failureTypeList": [],
+      "responseMessages": []
+    },
+    "skipInfo": null,
+    "nodeRunInfo": null,
+    "executableResponses": [
+      {
+        "children": {
+          "children": [
+            {
+              "childNodeId": "8tHLzQu2TpybLL59rysFZQ"
+            },
+            {
+              "childNodeId": "4CwHhdVxQqe6w_wYLq1naQ"
+            },
+            {
+              "childNodeId": "mC1pI3cLTx6OJkaZDF3M7Q"
+            }
+          ],
+          "maxConcurrency": "0"
+        }
+      }
+    ],
+    "unitProgresses": [],
+    "progressData": null,
+    "delegateInfoList": [],
+    "interruptHistories": [],
+    "stepDetails": null,
+    "strategyMetadata": null,
+    "executionInputConfigured": false
+  },
+  "h9t00w8YTl6GQgIDipJ6Xg": {
+    "uuid": "h9t00w8YTl6GQgIDipJ6Xg",
+    "setupId": "8tHLzQu2TpybLL59rysFZQ",
+    "name": "Run Redis Command",
+    "identifier": "Run",
+    "baseFqn": "pipeline.stages.Test_Stage.spec.execution.steps.Run",
+    "outcomes": {
+      "output": {
+        "outputVariables": {}
+      }
+    },
+    "stepParameters": {
+      "identifier": "Run",
+      "name": "Run Redis Command",
+      "timeout": "10h",
+      "type": "Run",
+      "spec": {
+        "uuid": "xqkTK7_KT_yUSL36Aghu1Q",
+        "retry": 1,
+        "command": "apk --update add redis \nsleep 5\nredis-cli ping\nredis-cli SET a \"hello\"\nredis-cli GET a",
+        "envVariables": {
+          "__recast": "java.util.LinkedHashMap",
+          "HARNESS_STAGE_TOTAL": "null",
+          "HARNESS_NODE_INDEX": "null",
+          "HARNESS_NODE_TOTAL": "null",
+          "HARNESS_STAGE_INDEX": "null",
+          "HARNESS_STEP_INDEX": "null",
+          "HARNESS_STEP_TOTAL": "null"
+        },
+        "image": "alpine",
+        "connectorRef": "Docker",
+        "shell": "SH"
+      }
+    },
+    "startTs": 1661264300382,
+    "endTs": 1661264325663,
+    "stepType": "Run",
+    "status": "Success",
+    "failureInfo": {
+      "message": "",
+      "failureTypeList": [],
+      "responseMessages": []
+    },
+    "skipInfo": null,
+    "nodeRunInfo": {
+      "whenCondition": "<+OnStageSuccess>",
+      "evaluatedCondition": true,
+      "expressions": [
+        {
+          "expression": "OnStageSuccess",
+          "expressionValue": "true",
+          "count": 1
+        }
+      ]
+    },
+    "executableResponses": [
+      {
+        "async": {
+          "callbackIds": ["aAhF_DgFRLaqRBaYjXtuOA", "ctt4bOP4TJ2ZaRs_49V3QQ"],
+          "logKeys": [
+            "accountId:kmpySmUISimoRrJL6NL73w/orgId:default/projectId:default/pipelineId:Background_Test/runSequence:65/level0:pipeline/level1:stages/level2:Test_Stage/level3:spec/level4:execution/level5:steps/level6:parallelBCBBCgr4T0CoTm5aEfU1Owparallel/level7:Run"
+          ],
+          "units": []
+        }
+      }
+    ],
+    "unitProgresses": [],
+    "progressData": null,
+    "delegateInfoList": [],
+    "interruptHistories": [],
+    "stepDetails": null,
+    "strategyMetadata": null,
+    "executionInputConfigured": false
+  },
+  "0j6H1JrbS5-asA4ut4KjBw": {
+    "uuid": "0j6H1JrbS5-asA4ut4KjBw",
+    "setupId": "Fg_5ZWHoTl6amj4FF0gUbQparallel",
+    "name": "parallel",
+    "identifier": "parallelFg_5ZWHoTl6amj4FF0gUbQparallel",
+    "baseFqn": "pipeline.stages.Test_Stage.spec.execution.steps.Mongo_Step_Group.steps",
+    "outcomes": {},
+    "stepParameters": {
+      "parallelNodeIds": ["afcnXB7pTTachCj4PPij2A"]
+    },
+    "startTs": 1661264240260,
+    "endTs": 1661264250167,
+    "stepType": "NG_FORK",
+    "status": "Success",
+    "failureInfo": {
+      "message": "",
+      "failureTypeList": [],
+      "responseMessages": []
+    },
+    "skipInfo": null,
+    "nodeRunInfo": null,
+    "executableResponses": [
+      {
+        "children": {
+          "children": [
+            {
+              "childNodeId": "afcnXB7pTTachCj4PPij2A"
+            }
+          ],
+          "maxConcurrency": "0"
+        }
+      }
+    ],
+    "unitProgresses": [],
+    "progressData": null,
+    "delegateInfoList": [],
+    "interruptHistories": [],
+    "stepDetails": null,
+    "strategyMetadata": null,
+    "executionInputConfigured": false
+  },
+  "bnTFyH_oS7SFgE1__OzZeA": {
+    "uuid": "bnTFyH_oS7SFgE1__OzZeA",
+    "setupId": "zePjzUVTRI-H64oF0FjXPw",
+    "name": "Redis BS Template",
+    "identifier": "Redis_BS_Template",
+    "baseFqn": "pipeline.stages.Test_Stage.spec.execution.steps.Redis_BS_Template",
+    "outcomes": {
+      "output": {
+        "outputVariables": {}
+      }
+    },
+    "stepParameters": {
+      "identifier": "Redis_BS_Template",
+      "name": "Redis BS Template",
+      "timeout": "10h",
+      "type": "Background",
+      "spec": {
+        "uuid": "H39jzk_pTt2fqwkgcOUEaA",
+        "retry": 1,
+        "envVariables": {
+          "__recast": "java.util.LinkedHashMap",
+          "HARNESS_STAGE_TOTAL": "null",
+          "HARNESS_NODE_INDEX": "null",
+          "HARNESS_NODE_TOTAL": "null",
+          "HARNESS_STAGE_INDEX": "null",
+          "HARNESS_STEP_INDEX": "null",
+          "HARNESS_STEP_TOTAL": "null"
+        },
+        "image": "redis",
+        "connectorRef": "Docker",
+        "shell": "SH",
+        "entrypoint": ["docker-entrypoint.sh", "redis-server", "--loglevel debug"]
+      }
+    },
+    "startTs": 1661264239860,
+    "endTs": 1661264255410,
+    "stepType": "Background",
+    "status": "Success",
+    "failureInfo": {
+      "message": "",
+      "failureTypeList": [],
+      "responseMessages": []
+    },
+    "skipInfo": null,
+    "nodeRunInfo": {
+      "whenCondition": "<+OnStageSuccess>",
+      "evaluatedCondition": true,
+      "expressions": [
+        {
+          "expression": "OnStageSuccess",
+          "expressionValue": "true",
+          "count": 1
+        }
+      ]
+    },
+    "executableResponses": [
+      {
+        "async": {
+          "callbackIds": ["tPGdxmf5Q26tBWq-YdgCGQ", "daw5V6aoQN2xOwoWdsEoBw"],
+          "logKeys": [
+            "accountId:kmpySmUISimoRrJL6NL73w/orgId:default/projectId:default/pipelineId:Background_Test/runSequence:65/level0:pipeline/level1:stages/level2:Test_Stage/level3:spec/level4:execution/level5:steps/level6:parallelnVlOCoRLTJWqEMvW5lrnQgparallel/level7:Redis_BS_Template"
+          ],
+          "units": []
+        }
+      }
+    ],
+    "unitProgresses": [],
+    "progressData": null,
+    "delegateInfoList": [],
+    "interruptHistories": [],
+    "stepDetails": null,
+    "strategyMetadata": null,
+    "executionInputConfigured": false
+  },
+  "_1tgaVlTSGW8DIeReaT1zg": {
+    "uuid": "_1tgaVlTSGW8DIeReaT1zg",
+    "setupId": "nVlOCoRLTJWqEMvW5lrnQgparallel",
+    "name": "parallel",
+    "identifier": "parallelnVlOCoRLTJWqEMvW5lrnQgparallel",
+    "baseFqn": "pipeline.stages.Test_Stage.spec.execution.steps",
+    "outcomes": {},
+    "stepParameters": {
+      "parallelNodeIds": ["6-T7Hu93Qj2IQUB7YWcNWA", "E-SqmlVzR0253f22H-pg4A", "zePjzUVTRI-H64oF0FjXPw"]
+    },
+    "startTs": 1661264239792,
+    "endTs": 1661264288362,
+    "stepType": "NG_FORK",
+    "status": "Success",
+    "failureInfo": {
+      "message": "",
+      "failureTypeList": [],
+      "responseMessages": []
+    },
+    "skipInfo": null,
+    "nodeRunInfo": null,
+    "executableResponses": [
+      {
+        "children": {
+          "children": [
+            {
+              "childNodeId": "6-T7Hu93Qj2IQUB7YWcNWA"
+            },
+            {
+              "childNodeId": "E-SqmlVzR0253f22H-pg4A"
+            },
+            {
+              "childNodeId": "zePjzUVTRI-H64oF0FjXPw"
+            }
+          ],
+          "maxConcurrency": "0"
+        }
+      }
+    ],
+    "unitProgresses": [],
+    "progressData": null,
+    "delegateInfoList": [],
+    "interruptHistories": [],
+    "stepDetails": null,
+    "strategyMetadata": null,
+    "executionInputConfigured": false
+  },
+  "7LyXdwToRieA-3ZZ-gxvnA": {
+    "uuid": "7LyXdwToRieA-3ZZ-gxvnA",
+    "setupId": "afcnXB7pTTachCj4PPij2A",
+    "name": "Mongo BS",
+    "identifier": "Mongo_BS",
+    "baseFqn": "pipeline.stages.Test_Stage.spec.execution.steps.Mongo_Step_Group.steps.Mongo_BS",
+    "outcomes": {
+      "output": {
+        "outputVariables": {}
+      }
+    },
+    "stepParameters": {
+      "identifier": "Mongo_BS",
+      "name": "Mongo BS",
+      "timeout": "10h",
+      "type": "Background",
+      "spec": {
+        "uuid": "40i_PM9YQZyf8ZyiOlTcZw",
+        "retry": 1,
+        "command": "mongod",
+        "envVariables": {
+          "__recast": "java.util.LinkedHashMap",
+          "HARNESS_STAGE_TOTAL": "null",
+          "HARNESS_NODE_INDEX": "null",
+          "HARNESS_NODE_TOTAL": "null",
+          "HARNESS_STAGE_INDEX": "null",
+          "HARNESS_STEP_INDEX": "null",
+          "HARNESS_STEP_TOTAL": "null"
+        },
+        "image": "mongo",
+        "connectorRef": "Docker",
+        "shell": "BASH"
+      }
+    },
+    "startTs": 1661264240379,
+    "endTs": 1661264250067,
+    "stepType": "Background",
+    "status": "Success",
+    "failureInfo": {
+      "message": "",
+      "failureTypeList": [],
+      "responseMessages": []
+    },
+    "skipInfo": null,
+    "nodeRunInfo": {
+      "whenCondition": "<+OnStageSuccess>",
+      "evaluatedCondition": true,
+      "expressions": [
+        {
+          "expression": "OnStageSuccess",
+          "expressionValue": "true",
+          "count": 1
+        }
+      ]
+    },
+    "executableResponses": [
+      {
+        "async": {
+          "callbackIds": ["nLXBvzPvTeuOxW1734uj2g", "btJH3T4lROWgX26HhYCrXw"],
+          "logKeys": [
+            "accountId:kmpySmUISimoRrJL6NL73w/orgId:default/projectId:default/pipelineId:Background_Test/runSequence:65/level0:pipeline/level1:stages/level2:Test_Stage/level3:spec/level4:execution/level5:steps/level6:parallelnVlOCoRLTJWqEMvW5lrnQgparallel/level7:Mongo_Step_Group/level8:steps/level9:parallelFg_5ZWHoTl6amj4FF0gUbQparallel/level10:Mongo_BS"
+          ],
+          "units": []
+        }
+      }
+    ],
+    "unitProgresses": [],
+    "progressData": null,
+    "delegateInfoList": [],
+    "interruptHistories": [],
+    "stepDetails": null,
+    "strategyMetadata": null,
+    "executionInputConfigured": false
+  },
+  "BNRqS-JaSgi_7TVj19zdwA": {
+    "uuid": "BNRqS-JaSgi_7TVj19zdwA",
+    "setupId": "ks1Nu_A8TPqRsP4aO0HYgA",
+    "name": "Execution",
+    "identifier": "execution",
+    "baseFqn": "pipeline.stages.Test_Stage.spec.execution",
+    "outcomes": {},
+    "stepParameters": {
+      "childNodeId": "ks1Nu_A8TPqRsP4aO0HYgAsteps",
+      "logMessage": "Execution Element"
+    },
+    "startTs": 1661264278166,
+    "endTs": 1661264399492,
+    "stepType": "NG_EXECUTION",
+    "status": "Success",
+    "failureInfo": {
+      "message": "",
+      "failureTypeList": [],
+      "responseMessages": []
+    },
+    "skipInfo": null,
+    "nodeRunInfo": null,
+    "executableResponses": [
+      {
+        "child": {
+          "childNodeId": "ks1Nu_A8TPqRsP4aO0HYgAsteps",
+          "logKeys": [],
+          "units": []
+        }
+      }
+    ],
+    "unitProgresses": [],
+    "progressData": null,
+    "delegateInfoList": [],
+    "interruptHistories": [],
+    "stepDetails": null,
+    "strategyMetadata": null,
+    "executionInputConfigured": false
+  },
+  "rA6y3RAtRl2JrzYK33Nhqw": {
+    "uuid": "rA6y3RAtRl2JrzYK33Nhqw",
+    "setupId": "6-T7Hu93Qj2IQUB7YWcNWA",
+    "name": "Docker BS",
+    "identifier": "Docker_BS",
+    "baseFqn": "pipeline.stages.Test_Stage.spec.execution.steps.Docker_BS",
+    "outcomes": {
+      "output": {
+        "outputVariables": {}
+      }
+    },
+    "stepParameters": {
+      "identifier": "Docker_BS",
+      "name": "Docker BS",
+      "timeout": "10h",
+      "type": "Background",
+      "spec": {
+        "uuid": "nB8m5NuZQRKcs3dTFtbOkQ",
+        "retry": 1,
+        "envVariables": {
+          "__recast": "java.util.LinkedHashMap",
+          "HARNESS_STAGE_TOTAL": "null",
+          "HARNESS_NODE_INDEX": "null",
+          "HARNESS_NODE_TOTAL": "null",
+          "HARNESS_STAGE_INDEX": "null",
+          "HARNESS_STEP_INDEX": "null",
+          "HARNESS_STEP_TOTAL": "null"
+        },
+        "image": "docker:dind",
+        "connectorRef": "Docker",
+        "privileged": true,
+        "shell": "SH"
+      }
+    },
+    "startTs": 1661264239840,
+    "endTs": 1661264267901,
+    "stepType": "Background",
+    "status": "Success",
+    "failureInfo": {
+      "message": "",
+      "failureTypeList": [],
+      "responseMessages": []
+    },
+    "skipInfo": null,
+    "nodeRunInfo": {
+      "whenCondition": "<+OnStageSuccess>",
+      "evaluatedCondition": true,
+      "expressions": [
+        {
+          "expression": "OnStageSuccess",
+          "expressionValue": "true",
+          "count": 1
+        }
+      ]
+    },
+    "executableResponses": [
+      {
+        "async": {
+          "callbackIds": ["uec14q3rT2-2_kRFsLG_fQ", "Hh2e027WQ8yVEgzTZ4I3og"],
+          "logKeys": [
+            "accountId:kmpySmUISimoRrJL6NL73w/orgId:default/projectId:default/pipelineId:Background_Test/runSequence:65/level0:pipeline/level1:stages/level2:Test_Stage/level3:spec/level4:execution/level5:steps/level6:parallelnVlOCoRLTJWqEMvW5lrnQgparallel/level7:Docker_BS"
+          ],
+          "units": []
+        }
+      }
+    ],
+    "unitProgresses": [],
+    "progressData": null,
+    "delegateInfoList": [],
+    "interruptHistories": [],
+    "stepDetails": null,
+    "strategyMetadata": null,
+    "executionInputConfigured": false
+  },
+  "X2VISC1JS4qrrR5cq3Fv-w": {
+    "uuid": "X2VISC1JS4qrrR5cq3Fv-w",
+    "setupId": "FuA2-PyRR0iSGmMAHbzj9g",
+    "name": "Clone codebase",
+    "identifier": "harness-git-clone",
+    "baseFqn": "pipeline.stages.Test_Stage.spec.execution.steps.harness-git-clone",
+    "outcomes": {
+      "output": {
+        "outputVariables": {}
+      },
+      "artifact-harness-git-clone": {
+        "stepArtifacts": {
+          "publishedFileArtifacts": [],
+          "publishedImageArtifacts": []
+        }
+      }
+    },
+    "stepParameters": {
+      "identifier": "harness-git-clone",
+      "name": "Clone codebase",
+      "timeout": "1h",
+      "type": "Plugin",
+      "spec": {
+        "retry": 1,
+        "settings": {
+          "__recast": "java.util.LinkedHashMap",
+          "depth": {
+            "__recast": "com.fasterxml.jackson.databind.node.TextNode",
+            "__encodedValue": "50"
+          }
+        },
+        "image": "harness/drone-git:1.2.2-rootless",
+        "entrypoint": ["/usr/local/bin/clone"],
+        "envVariables": {
+          "HARNESS_STAGE_TOTAL": "null",
+          "HARNESS_NODE_INDEX": "null",
+          "HARNESS_NODE_TOTAL": "null",
+          "HARNESS_STAGE_INDEX": "null",
+          "HARNESS_STEP_INDEX": "null",
+          "HARNESS_STEP_TOTAL": "null"
+        },
+        "harnessManagedImage": true
+      }
+    },
+    "startTs": 1661264227628,
+    "endTs": 1661264239786,
+    "stepType": "Plugin",
+    "status": "Success",
+    "failureInfo": {
+      "message": "",
+      "failureTypeList": [],
+      "responseMessages": []
+    },
+    "skipInfo": null,
+    "nodeRunInfo": {
+      "whenCondition": "<+OnStageSuccess>",
+      "evaluatedCondition": true,
+      "expressions": [
+        {
+          "expression": "OnStageSuccess",
+          "expressionValue": "true",
+          "count": 1
+        }
+      ]
+    },
+    "executableResponses": [
+      {
+        "async": {
+          "callbackIds": ["1YH3XwIgTOWQjtZfOK0BOg", "gJl-mwlDQkSdjQSHqBEJtQ"],
+          "logKeys": [
+            "accountId:kmpySmUISimoRrJL6NL73w/orgId:default/projectId:default/pipelineId:Background_Test/runSequence:65/level0:pipeline/level1:stages/level2:Test_Stage/level3:spec/level4:execution/level5:steps/level6:harness-git-clone"
+          ],
+          "units": []
+        }
+      }
+    ],
+    "unitProgresses": [],
+    "progressData": null,
+    "delegateInfoList": [],
+    "interruptHistories": [],
+    "stepDetails": null,
+    "strategyMetadata": null,
+    "executionInputConfigured": false
+  },
+  "cSvjQjoYRAiXhGU1h5D84Q": {
+    "uuid": "cSvjQjoYRAiXhGU1h5D84Q",
+    "setupId": "hXbwOOlESKa2Rlvce_uezw",
+    "name": "Test Stage",
+    "identifier": "Test_Stage",
+    "baseFqn": "pipeline.stages.Test_Stage",
+    "outcomes": {},
+    "stepParameters": {
+      "uuid": "hXbwOOlESKa2Rlvce_uezw",
+      "identifier": "Test_Stage",
+      "name": "Test Stage",
+      "variables": {
+        "__recast": "java.util.LinkedHashMap"
+      },
+      "tags": {},
+      "type": "CI",
+      "specConfig": {
+        "infrastructure": {
+          "type": "KUBERNETES_DIRECT",
+          "spec": {
+            "uuid": "H8LMp7vFTjOW-lo3jarPSA",
+            "connectorRef": "K8",
+            "namespace": "harness-delegate-raghav",
+            "nodeSelector": {
+              "__recast": "java.util.LinkedHashMap",
+              "__uuid": "DpXORQJXQo-GGN1NKHORrQ"
+            },
+            "automountServiceAccountToken": true,
+            "os": "Linux"
+          },
+          "uuid": "CE_KutwOQ3mD2nj9ZhIiNw"
+        },
+        "sharedPaths": ["/var/run"],
+        "enableCloneRepo": true,
+        "buildStatusUpdateParameter": {
+          "identifier": "Test_Stage",
+          "name": "Test Stage",
+          "connectorIdentifier": "Github"
+        },
+        "stepIdentifiers": [
+          "Docker_BS",
+          "Mongo_BS",
+          "Redis_BS_Template",
+          "Run",
+          "Run_Docker_Command",
+          "Mongo_Run_Command"
+        ],
+        "childNodeID": "3tjkiKfPRrefOAWz2gmFkA"
+      }
+    },
+    "startTs": 1661264101589,
+    "endTs": 1661264409882,
+    "stepType": "IntegrationStageStepPMS",
+    "status": "Success",
+    "failureInfo": {
+      "message": "",
+      "failureTypeList": [],
+      "responseMessages": []
+    },
+    "skipInfo": null,
+    "nodeRunInfo": {
+      "whenCondition": "<+OnPipelineSuccess>",
+      "evaluatedCondition": true,
+      "expressions": [
+        {
+          "expression": "OnPipelineSuccess",
+          "expressionValue": "true",
+          "count": 1
+        }
+      ]
+    },
+    "executableResponses": [
+      {
+        "child": {
+          "childNodeId": "3tjkiKfPRrefOAWz2gmFkA",
+          "logKeys": [],
+          "units": []
+        }
+      }
+    ],
+    "unitProgresses": [],
+    "progressData": null,
+    "delegateInfoList": [],
+    "interruptHistories": [],
+    "stepDetails": null,
+    "strategyMetadata": null,
+    "executionInputConfigured": false
+  },
+  "7czCNaRrQeCnLpXUjV-KKw": {
+    "uuid": "7czCNaRrQeCnLpXUjV-KKw",
+    "setupId": "4SoKNIQYQVWNtPe9znqclQ",
+    "name": "Initialize",
+    "identifier": "liteEngineTask",
+    "baseFqn": "pipeline.stages.Test_Stage.spec.execution.steps.liteEngineTask",
+    "outcomes": {
+      "podDetailsOutcome": {
+        "ipAddress": "10.28.5.91",
+        "namespace": "harness-delegate-raghav"
+      },
+      "dependencies": {
+        "serviceDependencyList": []
+      }
+    },
+    "stepParameters": {
+      "identifier": "liteEngineTask",
+      "name": "liteEngineTask",
+      "timeout": "10m",
+      "type": "liteEngineTask",
+      "spec": {
+        "timeout": 0,
+        "retry": 0,
+        "executionElementConfig": {
+          "steps": [
+            {
+              "uuid": "AJ5FRSMfTxGFxpdWig8QNg",
+              "step": {
+                "identifier": "harness-git-clone",
+                "name": "Clone codebase",
+                "timeout": "1h",
+                "type": "Plugin",
+                "__uuid": "FuA2-PyRR0iSGmMAHbzj9g",
+                "spec": {
+                  "settings": {
+                    "depth": "50"
+                  },
+                  "image": "harness/drone-git:1.2.2-rootless",
+                  "entrypoint": ["/usr/local/bin/clone"],
+                  "harnessManagedImage": true,
+                  "envVariables": {
+                    "HARNESS_STAGE_TOTAL": "null",
+                    "HARNESS_NODE_INDEX": "null",
+                    "HARNESS_NODE_TOTAL": "null",
+                    "HARNESS_STAGE_INDEX": "null",
+                    "HARNESS_STEP_INDEX": "null",
+                    "HARNESS_STEP_TOTAL": "null"
+                  }
+                }
+              },
+              "parallel": {},
+              "stepGroup": {}
+            },
+            {
+              "step": {},
+              "parallel": [
+                {
+                  "__uuid": "LcHMtg5HQ2Cyic06CacFKA",
+                  "step": {
+                    "identifier": "Docker_BS",
+                    "type": "Background",
+                    "name": "Docker BS",
+                    "spec": {
+                      "connectorRef": "Docker",
+                      "image": "docker:dind",
+                      "shell": "Sh",
+                      "privileged": true,
+                      "__uuid": "nB8m5NuZQRKcs3dTFtbOkQ",
+                      "envVariables": {
+                        "HARNESS_STAGE_TOTAL": "null",
+                        "HARNESS_NODE_INDEX": "null",
+                        "HARNESS_NODE_TOTAL": "null",
+                        "HARNESS_STAGE_INDEX": "null",
+                        "HARNESS_STEP_INDEX": "null",
+                        "HARNESS_STEP_TOTAL": "null"
+                      }
+                    },
+                    "__uuid": "6-T7Hu93Qj2IQUB7YWcNWA"
+                  }
+                },
+                {
+                  "__uuid": "mrZEnbFaSJewQvbkN2MgrA",
+                  "stepGroup": {
+                    "__uuid": "E-SqmlVzR0253f22H-pg4A",
+                    "identifier": "Mongo_Step_Group",
+                    "name": "Mongo Step Group",
+                    "steps": [
+                      {
+                        "parallel": [
+                          {
+                            "__uuid": "kp3jEi15TjeGjssWWd-zWQ",
+                            "step": {
+                              "identifier": "Mongo_BS",
+                              "type": "Background",
+                              "name": "Mongo BS",
+                              "spec": {
+                                "connectorRef": "Docker",
+                                "image": "mongo",
+                                "shell": "Bash",
+                                "command": "mongod",
+                                "__uuid": "40i_PM9YQZyf8ZyiOlTcZw",
+                                "envVariables": {
+                                  "HARNESS_STAGE_TOTAL": "null",
+                                  "HARNESS_NODE_INDEX": "null",
+                                  "HARNESS_NODE_TOTAL": "null",
+                                  "HARNESS_STAGE_INDEX": "null",
+                                  "HARNESS_STEP_INDEX": "null",
+                                  "HARNESS_STEP_TOTAL": "null"
+                                }
+                              },
+                              "failureStrategies": [],
+                              "__uuid": "afcnXB7pTTachCj4PPij2A"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "__uuid": "8G0gCBK6RUa_6kf9s8o2Aw",
+                  "step": {
+                    "identifier": "Redis_BS_Template",
+                    "name": "Redis BS Template",
+                    "type": "Background",
+                    "spec": {
+                      "connectorRef": "Docker",
+                      "image": "redis",
+                      "shell": "Sh",
+                      "entrypoint": ["docker-entrypoint.sh", "redis-server", "--loglevel debug"],
+                      "__uuid": "H39jzk_pTt2fqwkgcOUEaA",
+                      "envVariables": {
+                        "HARNESS_STAGE_TOTAL": "null",
+                        "HARNESS_NODE_INDEX": "null",
+                        "HARNESS_NODE_TOTAL": "null",
+                        "HARNESS_STAGE_INDEX": "null",
+                        "HARNESS_STEP_INDEX": "null",
+                        "HARNESS_STEP_TOTAL": "null"
+                      }
+                    },
+                    "__uuid": "zePjzUVTRI-H64oF0FjXPw"
+                  }
+                }
+              ],
+              "stepGroup": {}
+            },
+            {
+              "step": {},
+              "parallel": [
+                {
+                  "__uuid": "gshCjujpQoKgshkB-xNkYA",
+                  "step": {
+                    "identifier": "Run",
+                    "type": "Run",
+                    "name": "Run Redis Command",
+                    "spec": {
+                      "connectorRef": "Docker",
+                      "image": "alpine",
+                      "shell": "Sh",
+                      "command": "apk --update add redis \nsleep 5\nredis-cli ping\nredis-cli SET a \"hello\"\nredis-cli GET a",
+                      "__uuid": "xqkTK7_KT_yUSL36Aghu1Q",
+                      "envVariables": {
+                        "HARNESS_STAGE_TOTAL": "null",
+                        "HARNESS_NODE_INDEX": "null",
+                        "HARNESS_NODE_TOTAL": "null",
+                        "HARNESS_STAGE_INDEX": "null",
+                        "HARNESS_STEP_INDEX": "null",
+                        "HARNESS_STEP_TOTAL": "null"
+                      }
+                    },
+                    "__uuid": "8tHLzQu2TpybLL59rysFZQ"
+                  }
+                },
+                {
+                  "__uuid": "8mAsk2h1SaaYOsAIHszLBA",
+                  "step": {
+                    "identifier": "Run_Docker_Command",
+                    "type": "Run",
+                    "name": "Run Docker Command",
+                    "spec": {
+                      "connectorRef": "Docker",
+                      "image": "docker",
+                      "shell": "Sh",
+                      "command": "sleep 5\ndocker build -f Dockerfile2 .",
+                      "__uuid": "inl4jdxkSNyUGZJndU-ukA",
+                      "envVariables": {
+                        "HARNESS_STAGE_TOTAL": "null",
+                        "HARNESS_NODE_INDEX": "null",
+                        "HARNESS_NODE_TOTAL": "null",
+                        "HARNESS_STAGE_INDEX": "null",
+                        "HARNESS_STEP_INDEX": "null",
+                        "HARNESS_STEP_TOTAL": "null"
+                      }
+                    },
+                    "__uuid": "4CwHhdVxQqe6w_wYLq1naQ"
+                  }
+                },
+                {
+                  "__uuid": "yj4vp-4qTk6MHvg0IVts7A",
+                  "step": {
+                    "identifier": "Mongo_Run_Command",
+                    "type": "Run",
+                    "name": "Mongo Run Command",
+                    "spec": {
+                      "connectorRef": "Docker",
+                      "image": "mongo",
+                      "shell": "Sh",
+                      "command": "sleep 5\nmongo mongodb://localhost:27017",
+                      "__uuid": "Wi8idMDvTXuXyufCdo8ToQ",
+                      "envVariables": {
+                        "HARNESS_STAGE_TOTAL": "null",
+                        "HARNESS_NODE_INDEX": "null",
+                        "HARNESS_NODE_TOTAL": "null",
+                        "HARNESS_STAGE_INDEX": "null",
+                        "HARNESS_STEP_INDEX": "null",
+                        "HARNESS_STEP_TOTAL": "null"
+                      }
+                    },
+                    "__uuid": "mC1pI3cLTx6OJkaZDF3M7Q"
+                  }
+                }
+              ],
+              "stepGroup": {}
+            }
+          ]
+        },
+        "ciCodebase": {
+          "uuid": "oKw7PKb-QCKGBYP6hl9rHQ",
+          "connectorRef": "Github",
+          "build": {
+            "__recast": "io.harness.yaml.extended.ci.codebase.Build",
+            "type": "BRANCH",
+            "spec": {
+              "__recast": "io.harness.yaml.extended.ci.codebase.impl.BranchBuildSpec",
+              "branch": {
+                "__recast": "parameterField",
+                "__encodedValue": {
+                  "__recast": "io.harness.pms.yaml.ParameterDocumentField",
+                  "expression": false,
+                  "valueDoc": {
+                    "__recast": "io.harness.pms.yaml.ParameterFieldValueWrapper",
+                    "value": "test123"
+                  },
+                  "valueClass": "java.lang.String",
+                  "typeString": true,
+                  "skipAutoEvaluation": false,
+                  "jsonResponseField": false
+                }
+              }
+            }
+          }
+        },
+        "executionSource": {
+          "branch": "test123"
+        },
+        "stageIdentifier": "Test_Stage",
+        "stageElementConfig": {
+          "uuid": "3tjkiKfPRrefOAWz2gmFkA",
+          "sharedPaths": ["/var/run"],
+          "execution": {
+            "uuid": "ks1Nu_A8TPqRsP4aO0HYgA",
+            "steps": [
+              {
+                "uuid": "nVlOCoRLTJWqEMvW5lrnQg",
+                "step": {},
+                "parallel": [
+                  {
+                    "__uuid": "LcHMtg5HQ2Cyic06CacFKA",
+                    "step": {
+                      "identifier": "Docker_BS",
+                      "type": "Background",
+                      "name": "Docker BS",
+                      "spec": {
+                        "connectorRef": "Docker",
+                        "image": "docker:dind",
+                        "shell": "Sh",
+                        "privileged": true,
+                        "__uuid": "nB8m5NuZQRKcs3dTFtbOkQ",
+                        "envVariables": {
+                          "HARNESS_STAGE_TOTAL": "null",
+                          "HARNESS_NODE_INDEX": "null",
+                          "HARNESS_NODE_TOTAL": "null",
+                          "HARNESS_STAGE_INDEX": "null",
+                          "HARNESS_STEP_INDEX": "null",
+                          "HARNESS_STEP_TOTAL": "null"
+                        }
+                      },
+                      "__uuid": "6-T7Hu93Qj2IQUB7YWcNWA"
+                    }
+                  },
+                  {
+                    "__uuid": "mrZEnbFaSJewQvbkN2MgrA",
+                    "stepGroup": {
+                      "__uuid": "E-SqmlVzR0253f22H-pg4A",
+                      "identifier": "Mongo_Step_Group",
+                      "name": "Mongo Step Group",
+                      "steps": [
+                        {
+                          "__uuid": "Fg_5ZWHoTl6amj4FF0gUbQ",
+                          "parallel": [
+                            {
+                              "__uuid": "kp3jEi15TjeGjssWWd-zWQ",
+                              "step": {
+                                "identifier": "Mongo_BS",
+                                "type": "Background",
+                                "name": "Mongo BS",
+                                "spec": {
+                                  "connectorRef": "Docker",
+                                  "image": "mongo",
+                                  "shell": "Bash",
+                                  "command": "mongod",
+                                  "__uuid": "40i_PM9YQZyf8ZyiOlTcZw",
+                                  "envVariables": {
+                                    "HARNESS_STAGE_TOTAL": "null",
+                                    "HARNESS_NODE_INDEX": "null",
+                                    "HARNESS_NODE_TOTAL": "null",
+                                    "HARNESS_STAGE_INDEX": "null",
+                                    "HARNESS_STEP_INDEX": "null",
+                                    "HARNESS_STEP_TOTAL": "null"
+                                  }
+                                },
+                                "failureStrategies": [],
+                                "__uuid": "afcnXB7pTTachCj4PPij2A"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "__uuid": "8G0gCBK6RUa_6kf9s8o2Aw",
+                    "step": {
+                      "identifier": "Redis_BS_Template",
+                      "name": "Redis BS Template",
+                      "type": "Background",
+                      "spec": {
+                        "connectorRef": "Docker",
+                        "image": "redis",
+                        "shell": "Sh",
+                        "entrypoint": ["docker-entrypoint.sh", "redis-server", "--loglevel debug"],
+                        "__uuid": "H39jzk_pTt2fqwkgcOUEaA",
+                        "envVariables": {
+                          "HARNESS_STAGE_TOTAL": "null",
+                          "HARNESS_NODE_INDEX": "null",
+                          "HARNESS_NODE_TOTAL": "null",
+                          "HARNESS_STAGE_INDEX": "null",
+                          "HARNESS_STEP_INDEX": "null",
+                          "HARNESS_STEP_TOTAL": "null"
+                        }
+                      },
+                      "__uuid": "zePjzUVTRI-H64oF0FjXPw"
+                    }
+                  }
+                ],
+                "stepGroup": {}
+              },
+              {
+                "uuid": "BCBBCgr4T0CoTm5aEfU1Ow",
+                "step": {},
+                "parallel": [
+                  {
+                    "__uuid": "gshCjujpQoKgshkB-xNkYA",
+                    "step": {
+                      "identifier": "Run",
+                      "type": "Run",
+                      "name": "Run Redis Command",
+                      "spec": {
+                        "connectorRef": "Docker",
+                        "image": "alpine",
+                        "shell": "Sh",
+                        "command": "apk --update add redis \nsleep 5\nredis-cli ping\nredis-cli SET a \"hello\"\nredis-cli GET a",
+                        "__uuid": "xqkTK7_KT_yUSL36Aghu1Q",
+                        "envVariables": {
+                          "HARNESS_STAGE_TOTAL": "null",
+                          "HARNESS_NODE_INDEX": "null",
+                          "HARNESS_NODE_TOTAL": "null",
+                          "HARNESS_STAGE_INDEX": "null",
+                          "HARNESS_STEP_INDEX": "null",
+                          "HARNESS_STEP_TOTAL": "null"
+                        }
+                      },
+                      "__uuid": "8tHLzQu2TpybLL59rysFZQ"
+                    }
+                  },
+                  {
+                    "__uuid": "8mAsk2h1SaaYOsAIHszLBA",
+                    "step": {
+                      "identifier": "Run_Docker_Command",
+                      "type": "Run",
+                      "name": "Run Docker Command",
+                      "spec": {
+                        "connectorRef": "Docker",
+                        "image": "docker",
+                        "shell": "Sh",
+                        "command": "sleep 5\ndocker build -f Dockerfile2 .",
+                        "__uuid": "inl4jdxkSNyUGZJndU-ukA",
+                        "envVariables": {
+                          "HARNESS_STAGE_TOTAL": "null",
+                          "HARNESS_NODE_INDEX": "null",
+                          "HARNESS_NODE_TOTAL": "null",
+                          "HARNESS_STAGE_INDEX": "null",
+                          "HARNESS_STEP_INDEX": "null",
+                          "HARNESS_STEP_TOTAL": "null"
+                        }
+                      },
+                      "__uuid": "4CwHhdVxQqe6w_wYLq1naQ"
+                    }
+                  },
+                  {
+                    "__uuid": "yj4vp-4qTk6MHvg0IVts7A",
+                    "step": {
+                      "identifier": "Mongo_Run_Command",
+                      "type": "Run",
+                      "name": "Mongo Run Command",
+                      "spec": {
+                        "connectorRef": "Docker",
+                        "image": "mongo",
+                        "shell": "Sh",
+                        "command": "sleep 5\nmongo mongodb://localhost:27017",
+                        "__uuid": "Wi8idMDvTXuXyufCdo8ToQ",
+                        "envVariables": {
+                          "HARNESS_STAGE_TOTAL": "null",
+                          "HARNESS_NODE_INDEX": "null",
+                          "HARNESS_NODE_TOTAL": "null",
+                          "HARNESS_STAGE_INDEX": "null",
+                          "HARNESS_STEP_INDEX": "null",
+                          "HARNESS_STEP_TOTAL": "null"
+                        }
+                      },
+                      "__uuid": "mC1pI3cLTx6OJkaZDF3M7Q"
+                    }
+                  }
+                ],
+                "stepGroup": {}
+              }
+            ]
+          },
+          "infrastructure": {
+            "type": "KUBERNETES_DIRECT",
+            "spec": {
+              "uuid": "H8LMp7vFTjOW-lo3jarPSA",
+              "connectorRef": "K8",
+              "namespace": "harness-delegate-raghav",
+              "nodeSelector": {
+                "__recast": "java.util.LinkedHashMap",
+                "__uuid": "DpXORQJXQo-GGN1NKHORrQ"
+              },
+              "automountServiceAccountToken": true,
+              "os": "Linux"
+            },
+            "uuid": "CE_KutwOQ3mD2nj9ZhIiNw"
+          },
+          "cloneCodebase": true
+        },
+        "skipGitClone": false,
+        "infrastructure": {
+          "type": "KUBERNETES_DIRECT",
+          "spec": {
+            "uuid": "H8LMp7vFTjOW-lo3jarPSA",
+            "connectorRef": "K8",
+            "namespace": "harness-delegate-raghav",
+            "nodeSelector": {
+              "__recast": "java.util.LinkedHashMap",
+              "__uuid": "DpXORQJXQo-GGN1NKHORrQ"
+            },
+            "automountServiceAccountToken": true,
+            "os": "Linux"
+          },
+          "uuid": "CE_KutwOQ3mD2nj9ZhIiNw"
+        },
+        "strategyExpansionMap": {
+          "AJ5FRSMfTxGFxpdWig8QNg": {
+            "maxConcurrency": 1
+          },
+          "8G0gCBK6RUa_6kf9s8o2Aw": {
+            "maxConcurrency": 1
+          },
+          "kp3jEi15TjeGjssWWd-zWQ": {
+            "maxConcurrency": 1
+          },
+          "8mAsk2h1SaaYOsAIHszLBA": {
+            "maxConcurrency": 1
+          },
+          "LcHMtg5HQ2Cyic06CacFKA": {
+            "maxConcurrency": 1
+          },
+          "mrZEnbFaSJewQvbkN2MgrA": {
+            "maxConcurrency": 1
+          },
+          "gshCjujpQoKgshkB-xNkYA": {
+            "maxConcurrency": 1
+          },
+          "yj4vp-4qTk6MHvg0IVts7A": {
+            "maxConcurrency": 1
+          }
+        }
+      }
+    },
+    "startTs": 1661264166781,
+    "endTs": 1661264227622,
+    "stepType": "liteEngineTask",
+    "status": "Success",
+    "failureInfo": {
+      "message": "",
+      "failureTypeList": [],
+      "responseMessages": []
+    },
+    "skipInfo": null,
+    "nodeRunInfo": {
+      "whenCondition": "<+OnStageSuccess>",
+      "evaluatedCondition": true,
+      "expressions": [
+        {
+          "expression": "OnStageSuccess",
+          "expressionValue": "true",
+          "count": 1
+        }
+      ]
+    },
+    "executableResponses": [
+      {
+        "task": {
+          "taskId": "_XNFiEZDS0OBwhygHN2UKg",
+          "taskCategory": "DELEGATE_TASK_V2",
+          "logKeys": [
+            "accountId:kmpySmUISimoRrJL6NL73w/orgId:default/projectId:default/pipelineId:Background_Test/runSequence:65/level0:pipeline/level1:stages/level2:Test_Stage/level3:spec/level4:execution/level5:steps/level6:liteEngineTask"
+          ],
+          "units": [],
+          "taskName": "INITIALIZATION_PHASE"
+        }
+      }
+    ],
+    "unitProgresses": [],
+    "progressData": null,
+    "delegateInfoList": [
+      {
+        "id": null,
+        "name": null,
+        "taskId": "_XNFiEZDS0OBwhygHN2UKg",
+        "taskName": "INITIALIZATION_PHASE"
+      }
+    ],
+    "interruptHistories": [],
+    "stepDetails": null,
+    "strategyMetadata": null,
+    "executionInputConfigured": false
+  },
+  "1nR49y5LRwKSl2r7EZfVCQ": {
+    "uuid": "1nR49y5LRwKSl2r7EZfVCQ",
+    "setupId": "mC1pI3cLTx6OJkaZDF3M7Q",
+    "name": "Mongo Run Command",
+    "identifier": "Mongo_Run_Command",
+    "baseFqn": "pipeline.stages.Test_Stage.spec.execution.steps.Mongo_Run_Command",
+    "outcomes": {
+      "output": {
+        "outputVariables": {}
+      }
+    },
+    "stepParameters": {
+      "identifier": "Mongo_Run_Command",
+      "name": "Mongo Run Command",
+      "timeout": "10h",
+      "type": "Run",
+      "spec": {
+        "uuid": "Wi8idMDvTXuXyufCdo8ToQ",
+        "retry": 1,
+        "command": "sleep 5\nmongo mongodb://localhost:27017",
+        "envVariables": {
+          "__recast": "java.util.LinkedHashMap",
+          "HARNESS_STAGE_TOTAL": "null",
+          "HARNESS_NODE_INDEX": "null",
+          "HARNESS_NODE_TOTAL": "null",
+          "HARNESS_STAGE_INDEX": "null",
+          "HARNESS_STEP_INDEX": "null",
+          "HARNESS_STEP_TOTAL": "null"
+        },
+        "image": "mongo",
+        "connectorRef": "Docker",
+        "shell": "SH"
+      }
+    },
+    "startTs": 1661264300385,
+    "endTs": 1661264336281,
+    "stepType": "Run",
+    "status": "Success",
+    "failureInfo": {
+      "message": "",
+      "failureTypeList": [],
+      "responseMessages": []
+    },
+    "skipInfo": null,
+    "nodeRunInfo": {
+      "whenCondition": "<+OnStageSuccess>",
+      "evaluatedCondition": true,
+      "expressions": [
+        {
+          "expression": "OnStageSuccess",
+          "expressionValue": "true",
+          "count": 1
+        }
+      ]
+    },
+    "executableResponses": [
+      {
+        "async": {
+          "callbackIds": ["J2_uQp9qRPC8lz2oHFvb8w", "kMwF4BZVQM6iukQkoOgOEg"],
+          "logKeys": [
+            "accountId:kmpySmUISimoRrJL6NL73w/orgId:default/projectId:default/pipelineId:Background_Test/runSequence:65/level0:pipeline/level1:stages/level2:Test_Stage/level3:spec/level4:execution/level5:steps/level6:parallelBCBBCgr4T0CoTm5aEfU1Owparallel/level7:Mongo_Run_Command"
+          ],
+          "units": []
+        }
+      }
+    ],
+    "unitProgresses": [],
+    "progressData": null,
+    "delegateInfoList": [],
+    "interruptHistories": [],
+    "stepDetails": null,
+    "strategyMetadata": null,
+    "executionInputConfigured": false
+  },
+  "UzQ9CWx7T7ugvXQ-6wa9Hg": {
+    "uuid": "UzQ9CWx7T7ugvXQ-6wa9Hg",
+    "setupId": "E-SqmlVzR0253f22H-pg4A",
+    "name": "Mongo Step Group",
+    "identifier": "Mongo_Step_Group",
+    "baseFqn": "pipeline.stages.Test_Stage.spec.execution.steps.Mongo_Step_Group",
+    "outcomes": {},
+    "stepParameters": {
+      "identifier": "Mongo_Step_Group",
+      "name": "Mongo Step Group",
+      "childNodeID": "E-SqmlVzR0253f22H-pg4Asteps"
+    },
+    "startTs": 1661264239840,
+    "endTs": 1661264250388,
+    "stepType": "STEP_GROUP",
+    "status": "Success",
+    "failureInfo": {
+      "message": "",
+      "failureTypeList": [],
+      "responseMessages": []
+    },
+    "skipInfo": null,
+    "nodeRunInfo": {
+      "whenCondition": "<+OnStageSuccess>",
+      "evaluatedCondition": true,
+      "expressions": [
+        {
+          "expression": "OnStageSuccess",
+          "expressionValue": "true",
+          "count": 1
+        }
+      ]
+    },
+    "executableResponses": [
+      {
+        "child": {
+          "childNodeId": "E-SqmlVzR0253f22H-pg4Asteps",
+          "logKeys": [],
+          "units": []
+        }
+      }
+    ],
+    "unitProgresses": [],
+    "progressData": null,
+    "delegateInfoList": [],
+    "interruptHistories": [],
+    "stepDetails": null,
+    "strategyMetadata": null,
+    "executionInputConfigured": false
+  }
+}

@@ -25,6 +25,7 @@ import {
   ExecutionStatusEnum,
   ExecutionStatus
 } from '@pipeline/utils/statusHelpers'
+import { getBackgroundStepAllNodeMapStatus } from '@pipeline/utils/executionUtils'
 import { StatusIcon } from './StatusIcon'
 
 import css from './StepsTree.module.scss'
@@ -59,12 +60,15 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
 
     onStepSelect(identifier, retryId)
   }
-
   return (
     <ul className={css.root}>
       {nodes.map((step, i) => {
         if (step.item) {
-          const statusLower = step.item.status.toLowerCase()
+          const status =
+            (step.item.data?.stepType === 'Background' &&
+              getBackgroundStepAllNodeMapStatus({ identifier: step.item.identifier, allNodeMap })) ||
+            step.item.status
+          const statusLower = status.toLowerCase()
           const retryInterrupts = getRetryInterrupts(step)
 
           if (retryInterrupts.length > 0) {
@@ -103,7 +107,7 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
             return (
               <li key={step.item.identifier} className={css.item} data-type="retry-item">
                 <div className={css.step} data-status={statusLower}>
-                  <StatusIcon className={css.icon} status={step.item.status} />
+                  <StatusIcon className={css.icon} status={status as ExecutionStatus} />
                   <Text lineClamp={1} className={css.name}>
                     {step.item.name}
                   </Text>
@@ -126,7 +130,7 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
                 data-status={statusLower}
                 onClick={() => handleStepSelect(step.item?.identifier as string, step.item?.status, step.item?.retryId)}
               >
-                <StatusIcon className={css.icon} status={step.item.status} />
+                <StatusIcon className={css.icon} status={status as ExecutionStatus} />
                 <Text lineClamp={1} className={css.name}>
                   {step.item.name}
                 </Text>
@@ -143,12 +147,17 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
         }
 
         if (step.group) {
-          const statusLower = step.group.status.toLowerCase()
+          // const statusLower = step.group.status.toLowerCase()
+          const status =
+            (step.group.data?.stepType === 'Background' &&
+              getBackgroundStepAllNodeMapStatus({ identifier: step.group.identifier, allNodeMap })) ||
+            step.group.status
+          const statusLower = status.toLowerCase()
 
           return (
             <li className={css.item} key={step.group.identifier} data-type="group">
               <div className={css.step} data-status={statusLower}>
-                <StatusIcon className={css.icon} status={step.group.status} />
+                <StatusIcon className={css.icon} status={status as ExecutionStatus} />
                 <div className={css.nameWrapper}>
                   {isRoot ? null : <div className={css.groupIcon} />}
                   {step.group.name ? (
@@ -176,9 +185,12 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
         /* istanbul ignore else */
         if (step.parallel) {
           // here assumption is that parallel steps cannot have nested parallel steps
-          const isRunning = step.parallel.some(pStep =>
-            isExecutionRunning(defaultTo(pStep.item?.status, pStep.group?.status))
-          )
+          const isRunning =
+            step.parallel.some(pStep => isExecutionRunning(defaultTo(pStep.item?.status, pStep.group?.status))) ||
+            step.parallel.some(pStep => {
+              pStep.item?.data?.stepType === 'Background' &&
+                getBackgroundStepAllNodeMapStatus({ identifier: pStep.item.identifier, allNodeMap })
+            })
           const isSuccess = step.parallel.every(pStep =>
             isExecutionSuccess(defaultTo(pStep.item?.status, pStep.group?.status))
           )

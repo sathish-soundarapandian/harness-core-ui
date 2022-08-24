@@ -1152,3 +1152,39 @@ export const updateBackgroundStepNodeStatuses = ({
   })
   return newNodeMap
 }
+
+// Get accurate status for Background Steps from allNodeMap
+export const getBackgroundStepAllNodeMapStatus = ({
+  allNodeMap,
+  identifier
+}: {
+  allNodeMap: Record<string, ExecutionNode>
+  identifier: string
+}): Omit<ExecutionStatus, 'NOT_STARTED'> | undefined => {
+  return allNodeMap[identifier]?.status
+}
+
+// Get accurate status for Background Steps from allNodeMap
+export const getStepsTreeStatus = ({
+  allNodeMap,
+  step
+}: {
+  allNodeMap: Record<string, ExecutionNode>
+  step: ExecutionPipelineNode<ExecutionNode>
+}): Omit<ExecutionStatus, 'NOT_STARTED'> | undefined => {
+  const stepIdentifier = step?.item?.identifier
+  const groupIdentifier = step?.group?.identifier
+  if (stepIdentifier && step.item?.data) {
+    return (
+      (step.item.data?.stepType === 'Background' &&
+        getBackgroundStepAllNodeMapStatus({ identifier: step.item.identifier, allNodeMap })) ||
+      step.item.status
+    )
+  } else if (groupIdentifier && step.group?.data) {
+    return (
+      (step.group.data?.stepType === 'Background' &&
+        getBackgroundStepAllNodeMapStatus({ identifier: step.group.identifier, allNodeMap })) ||
+      step.group.status
+    )
+  }
+}
