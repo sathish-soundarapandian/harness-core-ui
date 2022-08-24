@@ -21,7 +21,6 @@ import {
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import CardWithOuterTitle from '@cv/pages/health-source/common/CardWithOuterTitle/CardWithOuterTitle'
 import { HealthSoureSupportedConnectorTypes } from '@cv/pages/health-source/connectors/MonitoredServiceConnector.constants'
 import { mapServiceListToOptions } from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.utils'
 import {
@@ -42,6 +41,7 @@ import {
   useGetDynatraceServices
 } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import CardWithOuterTitle from '@pipeline/components/CardWithOuterTitle/CardWithOuterTitle'
 import type { DynatraceMetricPacksToServiceProps } from './DynatraceMetricPacksToService.types'
 import { extractServiceMethods } from './DynatraceMetricPacksToService.utils'
 import { getTypeOfInput } from '../../../AppDynamics/AppDHealthSource.utils'

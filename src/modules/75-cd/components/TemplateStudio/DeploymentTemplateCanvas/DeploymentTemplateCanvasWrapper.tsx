@@ -10,9 +10,9 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
-import { DeploymentTemplateCanvasWithRef } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateCanvas'
+import { DeploymentConfigCanvasWithRef } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentConfigCanvas'
 import { DeploymentContextProvider } from '@cd/context/DeploymentContext/DeploymentContextProvider'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ModulePathParams, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 
 const DeploymentTemplateCanvasWrapper = (_props: unknown, formikRef: TemplateFormRef) => {
   const {
@@ -21,7 +21,9 @@ const DeploymentTemplateCanvasWrapper = (_props: unknown, formikRef: TemplateFor
     isReadonly
   } = React.useContext(TemplateContext)
 
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { accountId, projectIdentifier, orgIdentifier, templateIdentifier } = useParams<
+    TemplateStudioPathProps & ModulePathParams
+  >()
 
   const onDeploymentConfigUpdate = async (configValues: any) => {
     set(template, 'spec', configValues)
@@ -31,12 +33,13 @@ const DeploymentTemplateCanvasWrapper = (_props: unknown, formikRef: TemplateFor
   return (
     <DeploymentContextProvider
       queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier }}
+      templateIdentifier={templateIdentifier}
       onDeploymentConfigUpdate={onDeploymentConfigUpdate}
       deploymentConfigInitialValues={template.spec}
-      isReadonly={isReadonly}
+      isReadOnly={isReadonly}
       gitDetails={gitDetails}
     >
-      <DeploymentTemplateCanvasWithRef ref={formikRef} />
+      <DeploymentConfigCanvasWithRef ref={formikRef} />
     </DeploymentContextProvider>
   )
 }
