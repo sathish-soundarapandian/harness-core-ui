@@ -27,7 +27,8 @@ import {
   getActiveStep,
   addServiceDependenciesFromLiteTaskEngine,
   isNodeTypeMatrixOrFor,
-  updateBackgroundStepNodeStatuses
+  updateBackgroundStepNodeStatuses,
+  processForCIData
 } from '@pipeline/utils/executionUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useQueryParams, useDeepCompareEffect } from '@common/hooks'
@@ -227,21 +228,8 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
   useDeepCompareEffect(() => {
     let nodeMap = { ...data?.data?.executionGraph?.nodeMap }
 
-    // NOTE: Update Background stepType status as Running if the stage is still running
-    if (
-      data?.data?.pipelineExecutionSummary?.status &&
-      isExecutionRunning(data.data.pipelineExecutionSummary.status) &&
-      !isEmpty(nodeMap)
-    ) {
-      const runningStageId = getActiveStageForPipeline(
-        data.data.pipelineExecutionSummary,
-        data.data.pipelineExecutionSummary.status as ExecutionStatus
-      )
+    nodeMap = processForCIData({ nodeMap, data })
 
-      nodeMap = updateBackgroundStepNodeStatuses({ runningStageId, nodeMap })
-    }
-    // NOTE: add dependencies from "liteEngineTask" (ci stage)
-    addServiceDependenciesFromLiteTaskEngine(nodeMap, data?.data?.executionGraph?.nodeAdjacencyListMap)
     setAllNodeMap(oldNodeMap => {
       const interruptHistories = pickBy(oldNodeMap, val => get(val, '__isInterruptNode'))
 

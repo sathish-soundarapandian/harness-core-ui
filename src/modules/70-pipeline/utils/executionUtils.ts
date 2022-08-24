@@ -25,7 +25,8 @@ import type {
   PipelineExecutionSummary,
   ExecutionGraph,
   ExecutionNode,
-  ExecutionNodeAdjacencyList
+  ExecutionNodeAdjacencyList,
+  ResponsePipelineExecutionDetail
 } from 'services/pipeline-ng'
 import {
   ExecutionPipelineNode,
@@ -1154,7 +1155,7 @@ export const updateBackgroundStepNodeStatuses = ({
 }
 
 // Get accurate status for Background Steps from allNodeMap
-export const getBackgroundStepAllNodeMapStatus = ({
+export const getBackgroundStepStatus = ({
   allNodeMap,
   identifier
 }: {
@@ -1165,6 +1166,7 @@ export const getBackgroundStepAllNodeMapStatus = ({
 }
 
 // Get accurate status for Background Steps from allNodeMap
+// allNodeMap already has the status where UI overwrites when stage is running
 export const getStepsTreeStatus = ({
   allNodeMap,
   step
@@ -1176,15 +1178,44 @@ export const getStepsTreeStatus = ({
   const groupIdentifier = step?.group?.identifier
   if (stepIdentifier && step.item?.data) {
     return (
-      (step.item.data?.stepType === 'Background' &&
-        getBackgroundStepAllNodeMapStatus({ identifier: step.item.identifier, allNodeMap })) ||
+      (step.item.data?.stepType === StepType.Background &&
+        getBackgroundStepStatus({ identifier: step.item.identifier, allNodeMap })) ||
       step.item.status
     )
   } else if (groupIdentifier && step.group?.data) {
     return (
-      (step.group.data?.stepType === 'Background' &&
-        getBackgroundStepAllNodeMapStatus({ identifier: step.group.identifier, allNodeMap })) ||
+      (step.group.data?.stepType === StepType.Background &&
+        getBackgroundStepStatus({ identifier: step.group.identifier, allNodeMap })) ||
       step.group.status
     )
   }
+}
+
+export const processForCIData = ({
+  nodeMap,
+  data
+}: {
+  nodeMap: { [key: string]: ExecutionNode }
+  data?: ResponsePipelineExecutionDetail | null
+}): { [key: string]: ExecutionNode } => {
+  // NOTE: add dependencies from "liteEngineTask" (ci stage)
+  const adjacencyMap = data?.data?.executionGraph?.nodeAdjacencyListMap
+  addServiceDependenciesFromLiteTaskEngine(nodeMap, adjacencyMap)
+
+  // NOTE: Update Background stepType status as Running if the stage is still running
+  let newNodeMap = { ...nodeMap }
+  if (
+    data?.data?.pipelineExecutionSummary?.status &&
+    isExecutionRunning(data.data.pipelineExecutionSummary.status) &&
+    !isEmpty(nodeMap)
+  ) {
+    const runningStageId = getActiveStageForPipeline(
+      data.data.pipelineExecutionSummary,
+      data.data.pipelineExecutionSummary.status as ExecutionStatus
+    )
+
+    newNodeMap = updateBackgroundStepNodeStatuses({ runningStageId, nodeMap })
+  }
+
+  return newNodeMap
 }
