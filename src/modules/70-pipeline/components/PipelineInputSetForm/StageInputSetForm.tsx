@@ -107,7 +107,7 @@ function ServiceDependencyForm({
       <Label>
         <Icon
           padding={{ right: 'small' }}
-          name={factory.getStepIcon(allValues.type || /* istanbul ignore next */ '')}
+          name={factory.getStepIcon(allValues?.type || /* istanbul ignore next */ '')}
         />
         {getString('pipeline.serviceDependencyText')}: {getString('pipeline.stepLabel', allValues)}
       </Label>
