@@ -4032,6 +4032,7 @@ export interface StringsMap {
   'cd.addInline': string
   'cd.addRemote': string
   'cd.addService': string
+  'cd.addStepsForYourDeploymentType': string
   'cd.addTFVarFileLabel': string
   'cd.allowSimultaneousDeployments': string
   'cd.argoAdapterURL': string
@@ -4123,6 +4124,7 @@ export interface StringsMap {
   'cd.dashboard.subHeading': string
   'cd.deletedGitOpsServerSuccessfully': string
   'cd.deletedSuccessfully': string
+  'cd.deploymentSteps': string
   'cd.duplicateGitOpsServerIdError': string
   'cd.duplicateIdError': string
   'cd.dynamicProvisioning': string
@@ -4251,6 +4253,9 @@ export interface StringsMap {
   'cd.preProduction': string
   'cd.preProductionType': string
   'cd.releaseNameValidation': string
+  'cd.removeStepTemplate': string
+  'cd.removeStepTemplateConfirmationLabel': string
+  'cd.removeStepTemplateSuccess': string
   'cd.requiredPermissions': string
   'cd.resourceCannotBeEmpty': string
   'cd.searchPlaceholder': string

@@ -418,3 +418,8 @@ connectorRefText: connectorRef
 hosts: hosts
 hostFilters: hostFilters
 attributeFilters: attributeFilters
+deploymentSteps: Deployment Steps
+addStepsForYourDeploymentType: Add steps for your deployment type here
+removeStepTemplate: Remove Step Template
+removeStepTemplateConfirmationLabel: 'Are you sure you want to remove template "{{ name }}" ?'
+removeStepTemplateSuccess: Step Template has been successfully removed

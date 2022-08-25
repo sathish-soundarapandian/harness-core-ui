@@ -11,6 +11,7 @@ import type { TemplateFormRef } from '@templates-library/components/TemplateStud
 import { useStrings } from 'framework/strings'
 import { DeploymentInfraWrapperWithRef } from './DeploymentInfraWrapper/DeploymentInfraWrapper'
 import css from './DeploymentConfigForm.module.scss'
+import { ExecutionPanel } from './components/ExecutionPanel/ExecutionPanel'
 
 export enum DeploymentConfigFormTabs {
   Infrastructure = 'Infrastructure',
@@ -66,7 +67,7 @@ function DeploymentConfigForm(_props: unknown, formikRef: TemplateFormRef): JSX.
                 {getString('executionText')}
               </span>
             }
-            panel={<div>Execution tab content here{navBtns}</div>}
+            panel={<ExecutionPanel>{navBtns}</ExecutionPanel>}
           />
         </Tabs>
       </Container>
