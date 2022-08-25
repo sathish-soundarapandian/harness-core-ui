@@ -40,7 +40,10 @@ export const mapDynatraceMetricDataToHealthSource = (dynatraceMetricData: Dynatr
       ? dynatraceMetricData.selectedService.label
       : dynatraceMetricData.selectedService
   const specPayload: DynatraceHealthSourceSpec = {
-    connectorRef: dynatraceMetricData.connectorRef,
+    connectorRef:
+      typeof dynatraceMetricData?.connectorRef === 'string'
+        ? dynatraceMetricData?.connectorRef
+        : dynatraceMetricData?.connectorRef?.value,
     serviceId: dynatraceMetricDataSelectedServiceValue as string,
     serviceName: dynatraceMetricDataSelectedServiceLabel as string,
     feature: DynatraceProductNames.APM,
@@ -69,7 +72,7 @@ export const mapDynatraceMetricDataToHealthSource = (dynatraceMetricData: Dynatr
   }
 }
 export const mapHealthSourceToDynatraceMetricData = (sourceData: any): DynatraceMetricData => {
-  const healthSource: UpdatedHealthSource = sourceData.healthSourceList.find(
+  const healthSource: UpdatedHealthSource = sourceData?.healthSourceList?.find(
     (source: UpdatedHealthSource) => source.identifier === sourceData.healthSourceIdentifier
   )
   const dynatraceHealthSourceSpec = (healthSource?.spec as DynatraceHealthSourceSpec) || {}

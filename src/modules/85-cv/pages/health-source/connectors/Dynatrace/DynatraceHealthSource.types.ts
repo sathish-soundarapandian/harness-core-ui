@@ -44,7 +44,7 @@ export interface DynatraceMetricInfo {
 }
 
 export interface DynatraceMetricData {
-  connectorRef: string
+  connectorRef: string | { value?: string }
   isEdit?: boolean
   healthSourceIdentifier: string
   healthSourceName: string

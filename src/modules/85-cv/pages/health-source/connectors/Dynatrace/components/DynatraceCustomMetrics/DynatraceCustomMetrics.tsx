@@ -29,6 +29,7 @@ import GroupName from '@cv/components/GroupName/GroupName'
 import type { DynatraceCustomMetricsProps } from '@cv/pages/health-source/connectors/Dynatrace/components/DynatraceCustomMetrics/DynatraceCustomMetrics.types'
 import {
   editQueryConfirmationDialogProps,
+  getIsQueryExecuted,
   mapMetricSelectorsToMetricSelectorOptions
 } from '@cv/pages/health-source/connectors/Dynatrace/components/DynatraceCustomMetrics/DynatraceCustomMetrics.utils'
 import { DynatraceHealthSourceFieldNames } from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.constants'
@@ -121,7 +122,7 @@ export default function DynatraceCustomMetrics(props: DynatraceCustomMetricsProp
       }
       onFetchSampleData(metricValues.metricSelector)
     }
-  }, [])
+  }, [metricValues.metricSelector, shouldShowChart, isConnectorRuntimeOrExpression])
 
   return (
     <Container className={css.main}>
@@ -207,7 +208,7 @@ export default function DynatraceCustomMetrics(props: DynatraceCustomMetricsProp
                   error={timeseriesDataErrorMessage}
                   sampleData={timeseriesData}
                   queryValue={metricValues.metricSelector}
-                  isQueryExecuted={shouldShowChart}
+                  isQueryExecuted={getIsQueryExecuted(shouldShowChart, metricValues, setTimeseriesData, timeseriesData)}
                   onRetry={async () => {
                     onFetchSampleData(metricValues.metricSelector)
                   }}

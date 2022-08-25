@@ -104,7 +104,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
       return isTemplate ? (
         <FormMultiTypeConnectorField
           enableConfigureOptions={false}
-          name={formik?.values?.[ConnectorRefFieldName] ? ConnectorRefFieldName : 'connectorId'}
+          name={ConnectorRefFieldName}
           disabled={!formik?.values?.sourceType}
           label={
             <Text color={Color.BLACK} font={'small'} margin={{ bottom: 'small' }}>

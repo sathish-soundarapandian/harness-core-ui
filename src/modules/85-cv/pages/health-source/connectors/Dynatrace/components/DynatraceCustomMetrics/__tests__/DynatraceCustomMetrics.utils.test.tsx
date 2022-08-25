@@ -6,6 +6,7 @@
  */
 import {
   editQueryConfirmationDialogProps,
+  getIsQueryExecuted,
   initializeCreatedMetrics,
   initializeSelectedMetricsMap,
   mapMetricSelectorsToMetricSelectorOptions,
@@ -146,5 +147,18 @@ describe('Validate DynatraceCustomMetrics utils', () => {
     expect(setFieldMock).toHaveBeenNthCalledWith(1, DynatraceHealthSourceFieldNames.MANUAL_QUERY, true)
     editQueryDialogPropsResult.onCloseDialog(false)
     expect(setFieldMock).toHaveBeenCalledTimes(1)
+  })
+
+  test('should validate getIsQueryExecuted', () => {
+    const clearChartData = jest.fn()
+    const chartData = { className: 'chart' } as any
+    expect(getIsQueryExecuted(false, { metricSelector: 'dynatrace query' }, clearChartData, chartData)).toEqual(false)
+    expect(getIsQueryExecuted(false, { metricSelector: 'dynatrace query' }, clearChartData)).toEqual(false)
+    expect(getIsQueryExecuted(true, {}, clearChartData)).toEqual(false)
+    expect(getIsQueryExecuted(true, { metricSelector: '<+input>' }, clearChartData, chartData)).toEqual(false)
+    expect(
+      getIsQueryExecuted(true, { metricSelector: 'dynatrace query' }, clearChartData, { className: 'chart' } as any)
+    ).toEqual(true)
+    expect(clearChartData).toHaveBeenCalledTimes(2)
   })
 })

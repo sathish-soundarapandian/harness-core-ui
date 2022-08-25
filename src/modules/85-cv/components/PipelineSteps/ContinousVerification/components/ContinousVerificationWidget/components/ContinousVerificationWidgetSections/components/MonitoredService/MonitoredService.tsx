@@ -7,6 +7,7 @@
 
 import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import cx from 'classnames'
+import { defaultTo } from 'lodash-es'
 import { ButtonVariation, Container, FormInput, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import type { ProjectPathProps, AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -127,15 +128,14 @@ export default function MonitoredService({
 
   const createMonitoredService = useCallback(async () => {
     const createdMonitoredService = await createDefaultMonitoredService()
+    const { name = '', identifier = '', sources } = createdMonitoredService?.resource?.monitoredService || {}
     const newSpecs = {
       ...formValues.spec,
-      monitoredServiceRef: createdMonitoredService?.resource?.monitoredService?.identifier
+      monitoredServiceRef: identifier
     }
     setFieldValue('spec', newSpecs)
-    setMonitoredService({
-      identifier: createdMonitoredService?.resource?.monitoredService?.identifier as string,
-      name: createdMonitoredService?.resource?.monitoredService?.name as string
-    })
+    setHealthSourcesList(sources?.healthSources as RowData[])
+    setMonitoredService({ identifier, name })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formValues.spec])
 
@@ -211,7 +211,7 @@ export default function MonitoredService({
                   monitoredServiceRef={monitoredService}
                   onSuccess={onSuccess}
                   isRunTimeInput={false}
-                  changeSourcesList={monitoredServiceData?.sources?.changeSources as ChangeSourceDTO[]}
+                  changeSourcesList={defaultTo(monitoredServiceData?.sources?.changeSources, []) as ChangeSourceDTO[]}
                 />
               </>
             ) : null}
