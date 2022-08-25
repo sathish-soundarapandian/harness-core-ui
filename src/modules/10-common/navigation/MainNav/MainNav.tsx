@@ -38,7 +38,6 @@ import {
   SRMNavItem,
   STONavItem
 } from './ModuleLinks'
-import { DEFAULT_MODULES_ORDER } from '../ModuleConfigurationScreen/util'
 import css from './MainNav.module.scss'
 
 const commonLinkProps: Partial<NavLinkProps> = {
@@ -75,7 +74,7 @@ export default function L1Nav(): React.ReactElement {
   const SECURITY = useNavModuleInfo([ModuleName.STO])[0].shouldVisible
   SECURITY && moduleToNavItemsMap.set(ModuleName.STO, STONavItem)
 
-  const modulesToShow = [...(modulesPreferenceData?.selectedModules || DEFAULT_MODULES_ORDER)]
+  const modulesToShow = modulesPreferenceData?.selectedModules || []
   // if current module is not selecting in the modules config, add it temporarily
   if (module && !modulesToShow.includes(moduleToModuleNameMapping[module] as NavModuleName)) {
     modulesToShow.push(moduleToModuleNameMapping[module] as NavModuleName)
@@ -117,7 +116,7 @@ export default function L1Nav(): React.ReactElement {
             </Link>
           </li>
           <div className={css.modulesContainer} style={{ height: modulesListHeight }}>
-            {(modulesPreferenceData?.orderedModules || DEFAULT_MODULES_ORDER).map(moduleName => {
+            {(modulesPreferenceData?.orderedModules || []).map(moduleName => {
               const NavItem = moduleToNavItemsMap.get(moduleName)
               if (!NavItem || !modulesToShow.includes(moduleName)) return null
               return <NavItem key={moduleName} />
