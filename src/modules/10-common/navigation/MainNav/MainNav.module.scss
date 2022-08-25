@@ -49,20 +49,7 @@
       border-bottom: 1px solid var(--modules-container-border);
       border-top: 1px solid var(--modules-container-border);
       &::-webkit-scrollbar {
-        width: 5px;
-      }
-
-      &::-webkit-scrollbar-track {
-        background: transparent;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        background: rgb(196, 196, 196);
-        border-radius: 5px;
-      }
-
-      &::-webkit-scrollbar-thumb:hover {
-        background: var(--grey-350);
+        display: none;
       }
     }
   }
