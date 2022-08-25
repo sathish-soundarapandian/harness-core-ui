@@ -15,12 +15,21 @@ function OptionalConfiguration(props: { readonly?: boolean }): React.ReactElemen
   const { readonly } = props
   const { getString } = useStrings()
   return (
-    <div className={cx(stepCss.formGroup)}>
-      <FormInput.CheckBox
-        name="spec.unstableStatusAsSuccess"
-        label={getString('pipeline.jenkinsStep.unstableStatusAsSuccess')}
-        disabled={readonly}
-      />
+    <div className={stepCss.stepPanel}>
+      <div className={cx(stepCss.formGroup)}>
+        <FormInput.CheckBox
+          name="spec.unstableStatusAsSuccess"
+          label={getString('pipeline.jenkinsStep.unstableStatusAsSuccess')}
+          disabled={readonly}
+        />
+      </div>
+      <div className={cx(stepCss.formGroup)}>
+        <FormInput.CheckBox
+          name="spec.useConnectorUrlForJobExecution"
+          label={getString('pipeline.jenkinsStep.useConnectorUrlForJobExecution')}
+          disabled={readonly}
+        />
+      </div>
     </div>
   )
 }
