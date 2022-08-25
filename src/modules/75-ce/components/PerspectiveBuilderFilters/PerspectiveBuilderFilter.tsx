@@ -9,14 +9,16 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Icon, Container } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
+import type { FormikProps } from 'formik'
 import {
   QlceViewFieldIdentifierData,
   QlceViewFilterOperator,
   useFetchPerspectiveFiltersValueQuery,
   QlceViewFilterWrapperInput
 } from 'services/ce/services'
-import { getTimeFilters } from '@ce/utils/perspectiveUtils'
+import { getRuleFilters, getTimeFilters, normalizeViewRules } from '@ce/utils/perspectiveUtils'
 import { getGMTEndDateTime, getGMTStartDateTime } from '@ce/utils/momentUtils'
+import type { CEView } from 'services/ce'
 import OperatorSelector from './views/OperatorSelector'
 import OperandSelector from './views/OperandSelector'
 import ValuesSelector from './views/ValuesSelector'
@@ -52,6 +54,7 @@ interface FilterPillProps {
     to: string
     from: string
   }
+  formikProps?: FormikProps<CEView>
 }
 
 const LIMIT = 100
@@ -64,7 +67,8 @@ const PerspectiveBuilderFilter: React.FC<FilterPillProps> = ({
   onChange,
   pillData,
   id,
-  timeRange
+  timeRange,
+  formikProps
 }) => {
   const provider: ProviderType = {
     id: pillData.viewField.identifier,
@@ -136,6 +140,7 @@ const PerspectiveBuilderFilter: React.FC<FilterPillProps> = ({
 
   const filters = [
     ...getTimeFilters(getGMTStartDateTime(timeRange.from), getGMTEndDateTime(timeRange.to)),
+    ...getRuleFilters(normalizeViewRules(formikProps?.values.viewRules)),
     {
       idFilter: {
         field: {
@@ -193,6 +198,7 @@ const PerspectiveBuilderFilter: React.FC<FilterPillProps> = ({
         fieldValuesList={fieldValuesList}
         setProviderAndIdentifier={setProviderAndIdentifier}
         timeRange={timeRange}
+        formValues={formikProps?.values}
       />
       <OperatorSelector isDisabled={!provider.id} operator={operator} onOperatorChange={onOperatorChange} />
       <ValuesSelector

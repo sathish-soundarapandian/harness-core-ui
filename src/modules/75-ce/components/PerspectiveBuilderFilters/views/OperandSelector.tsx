@@ -20,11 +20,12 @@ import CustomMenuItem from '@ce/components/CustomMenu/CustomMenuItem'
 import { FIELD_TO_ICON_MAPPING } from '@ce/components/PerspectiveFilters/constants'
 import { useStrings } from 'framework/strings'
 import type { TimeRangeFilterType } from '@ce/types'
-import { getTimeFilters } from '@ce/utils/perspectiveUtils'
+import { getRuleFilters, getTimeFilters, normalizeViewRules } from '@ce/utils/perspectiveUtils'
 import { getGMTEndDateTime, getGMTStartDateTime } from '@ce/utils/momentUtils'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import type { CEView } from 'services/ce'
 import type { ProviderType } from '../PerspectiveBuilderFilter'
 import css from '../PerspectiveBuilderFilter.module.scss'
 
@@ -224,6 +225,7 @@ interface OperandSelectorProps {
   service: ProviderType | null | undefined
   setProviderAndIdentifier: (providerData: ProviderType, serviceData: ProviderType) => void
   timeRange: TimeRangeFilterType
+  formValues: CEView | undefined
 }
 
 const OperandSelector: React.FC<OperandSelectorProps> = ({
@@ -231,7 +233,8 @@ const OperandSelector: React.FC<OperandSelectorProps> = ({
   provider,
   fieldValuesList,
   setProviderAndIdentifier,
-  timeRange
+  timeRange,
+  formValues
 }) => {
   const { getString } = useStrings()
 
@@ -239,6 +242,7 @@ const OperandSelector: React.FC<OperandSelectorProps> = ({
     variables: {
       filters: [
         ...getTimeFilters(getGMTStartDateTime(timeRange.from), getGMTEndDateTime(timeRange.to)),
+        ...getRuleFilters(normalizeViewRules(formValues?.viewRules)),
         {
           idFilter: {
             field: {
