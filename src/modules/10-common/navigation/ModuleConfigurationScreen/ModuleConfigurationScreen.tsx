@@ -14,7 +14,7 @@ import { ModuleName } from 'framework/types/ModuleName'
 import { PageSpinner } from '@common/components'
 import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
 import ModuleSortableList from './ModuleSortableList/ModuleSortableList'
-import ModuleDetailsSection from './ModuleDetailsSection/ModuleDetailsSection'
+import ModuleCarousel from './ModuleDetailsSection/ModuleCarousel'
 import useGetContentfulModules from './useGetContentfulModules'
 import css from './ModuleConfigurationScreen.module.scss'
 
@@ -66,7 +66,7 @@ const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({
             <PageSpinner />
           ) : (
             contentfulModuleMap && (
-              <ModuleDetailsSection key={activeModule} module={activeModule} data={contentfulModuleMap[activeModule]} />
+              <ModuleCarousel key={activeModule} module={activeModule} data={contentfulModuleMap[activeModule]} />
             )
           )}
         </Container>

@@ -12,9 +12,10 @@ import { FontVariation } from '@harness/design-system'
 import { Drawer, Position } from '@blueprintjs/core'
 import { Color, Container, Icon, Layout, Text } from '@harness/uicore'
 import { String, StringKeys } from 'framework/strings'
-import { ModuleName } from 'framework/types/ModuleName'
+import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
+import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import NavModule from './NavModule/NavModule'
 import ModuleConfigurationScreen from '../ModuleConfigurationScreen/ModuleConfigurationScreen'
 import css from './ModuleList.module.scss'
@@ -25,6 +26,11 @@ interface ModuleListProps {
   usePortal?: boolean
 }
 
+interface ModuleTooltipProps {
+  activeModule?: NavModuleName
+  handleClick: (module: NavModuleName) => void
+}
+
 interface GroupConfig {
   label: StringKeys
   items: NavModuleName[]
@@ -32,18 +38,18 @@ interface GroupConfig {
 
 interface ItemProps {
   data: NavModuleName
-  activeModule: NavModuleName
-  onTooltipClick?: (module: NavModuleName) => void
+  tooltipProps?: ModuleTooltipProps
 }
 
 interface GroupProps {
   data: GroupConfig
-  activeModule: NavModuleName
-  onTooltipClick?: (module: NavModuleName) => void
+  tooltipProps?: ModuleTooltipProps
 }
 
-const Item: React.FC<ItemProps> = ({ data, onTooltipClick, activeModule }) => {
+const Item: React.FC<ItemProps> = ({ data, tooltipProps }) => {
   const { redirectionLink, shouldVisible } = useNavModuleInfo([data])[0]
+  const { module } = useModuleInfo()
+  const currentModule = module ? moduleToModuleNameMapping[module] : undefined
 
   if (!shouldVisible) {
     return null
@@ -52,17 +58,18 @@ const Item: React.FC<ItemProps> = ({ data, onTooltipClick, activeModule }) => {
   return (
     <Link to={redirectionLink}>
       <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
-        <NavModule module={data} active={activeModule === data} />
+        <NavModule module={data} active={currentModule === data} />
         <Icon
           name="tooltip-icon"
           padding={'small'}
           margin={{ left: 'small' }}
+          color={tooltipProps?.activeModule === data ? Color.SUCCESS : undefined}
           size={12}
           className={css.clickable}
           onClick={e => {
             e.stopPropagation()
             e.preventDefault()
-            onTooltipClick?.(data)
+            tooltipProps?.handleClick(data)
           }}
         />
       </Layout.Horizontal>
@@ -70,7 +77,7 @@ const Item: React.FC<ItemProps> = ({ data, onTooltipClick, activeModule }) => {
   )
 }
 
-const Group: React.FC<GroupProps> = ({ data, onTooltipClick, activeModule }) => {
+const Group: React.FC<GroupProps> = ({ data, tooltipProps }) => {
   const modules = useNavModuleInfo(data.items)
 
   if (modules.filter(module => module.shouldVisible).length === 0) {
@@ -84,7 +91,7 @@ const Group: React.FC<GroupProps> = ({ data, onTooltipClick, activeModule }) => 
       </Text>
       <Layout.Vertical spacing="medium">
         {data.items.map(item => (
-          <Item key={item} data={item} onTooltipClick={onTooltipClick} activeModule={activeModule} />
+          <Item key={item} data={item} tooltipProps={tooltipProps} />
         ))}
       </Layout.Vertical>
     </Container>
@@ -130,7 +137,28 @@ const ModuleConfigHeader: React.FC = () => {
 
 const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true }) => {
   const [showModuleSettings, setShowModuleSettings] = useState(false)
-  const [activeModule, setActiveModule] = useState<NavModuleName | undefined>(undefined)
+  const [activeModuleCarousel, setActiveModuleCarousel] = useState<NavModuleName | undefined>(undefined)
+
+  const onConfigScreenClose = () => {
+    setShowModuleSettings(false)
+    setActiveModuleCarousel(undefined)
+    close()
+  }
+
+  const renderModuleConfigScreen = () => {
+    if (showModuleSettings) {
+      return <ModuleConfigurationScreen onClose={onConfigScreenClose} headerText={<ModuleConfigHeader />} />
+    } else if (activeModuleCarousel) {
+      return (
+        <ModuleConfigurationScreen
+          onClose={onConfigScreenClose}
+          activeModule={activeModuleCarousel}
+          className={css.configScreenWithoutReorder}
+          hideReordering={true}
+        />
+      )
+    }
+  }
 
   return (
     <>
@@ -161,28 +189,18 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
               <Group
                 data={item}
                 key={item.label}
-                activeModule={activeModule}
-                onTooltipClick={module => {
-                  setActiveModule(module)
+                tooltipProps={{
+                  handleClick: (module: NavModuleName) => {
+                    setActiveModuleCarousel(module)
+                  },
+                  activeModule: activeModuleCarousel
                 }}
               />
             ))}
           </Layout.Vertical>
         </div>
       </Drawer>
-      {activeModule || showModuleSettings ? (
-        <ModuleConfigurationScreen
-          onClose={() => {
-            setShowModuleSettings(false)
-            close()
-            setActiveModule(undefined)
-          }}
-          activeModule={activeModule}
-          headerText={showModuleSettings ? <ModuleConfigHeader /> : undefined}
-          className={!showModuleSettings ? css.configScreenWithoutReorder : undefined}
-          hideReordering={!showModuleSettings}
-        />
-      ) : undefined}
+      {renderModuleConfigScreen()}
     </>
   )
 }

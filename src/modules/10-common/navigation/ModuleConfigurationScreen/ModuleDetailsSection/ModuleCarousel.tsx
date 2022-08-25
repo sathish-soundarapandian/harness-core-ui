@@ -14,7 +14,7 @@ import { MassagedModuleData, ModuleContentType } from '../useGetContentfulModule
 import CarouselImageAndDescription from '../CarousellmageAndDescription/CarousellmageAndDescription'
 import LottieComponent from '../LottieComponent/LottieComponent'
 import defaultLottie from './default_lottie.json'
-import css from './ModuleDetailsSection.module.scss'
+import css from './ModuleCarousel.module.scss'
 
 interface ModuleDetailsSectionProps {
   module: NavModuleName
@@ -29,10 +29,7 @@ const getComponentBasedOnType = (type: ModuleContentType): React.ComponentType<a
   return componentMap[type]
 }
 
-const ModuleDetailsSection: React.FC<ModuleDetailsSectionProps> = ({
-  module: selectedModule,
-  data: massagedModuleData
-}) => {
+const ModuleCarousel: React.FC<ModuleDetailsSectionProps> = ({ module: selectedModule, data: massagedModuleData }) => {
   const { icon } = useNavModuleInfo([selectedModule])[0]
 
   const { label, data = [] } = massagedModuleData || {}
@@ -63,4 +60,4 @@ const ModuleDetailsSection: React.FC<ModuleDetailsSectionProps> = ({
   )
 }
 
-export default ModuleDetailsSection
+export default ModuleCarousel
