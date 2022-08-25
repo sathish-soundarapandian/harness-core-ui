@@ -53,16 +53,6 @@ export const DeploymentInfraWrapper = ({ children }: React.PropsWithChildren<unk
     }
   }))
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debounceUpdateTemplate = React.useCallback(
-    debounce(
-      (changedTemplate?: any) =>
-        changedTemplate ? updateTemplate(changedTemplate) : /* istanbul ignore next */ Promise.resolve(),
-      300
-    ),
-    [updateTemplate]
-  )
-
   const updateConfigValue = (infraValues: DeploymentInfra): void => {
     const updatedInfraValues = produce(infraValues, draft => {
       if (draft) {
@@ -84,8 +74,14 @@ export const DeploymentInfraWrapper = ({ children }: React.PropsWithChildren<unk
         set(draft, 'infrastructure', updatedInfraValues)
       }
     })
-    debounceUpdateTemplate(updatedConfig)
+    updateTemplate(updatedConfig)
   }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debounceUpdateTemplate = React.useCallback(
+    debounce((infraValues: DeploymentInfra) => updateConfigValue(infraValues), 300),
+    [updateTemplate]
+  )
 
   return (
     <Container className={css.infraWidgetWrapper}>
@@ -94,13 +90,10 @@ export const DeploymentInfraWrapper = ({ children }: React.PropsWithChildren<unk
         onSubmit={noop}
         initialValues={getDeploymentInfraValues()}
         validationSchema={getValidationSchema(getString)}
-        // validateOnChange={false}
+        validate={debounceUpdateTemplate}
       >
         {formik => {
           ref.current = formik
-          if (formik.dirty) {
-            updateConfigValue(formik.values)
-          }
           return <DeploymentInfraSpecifications formik={formik} />
         }}
       </Formik>
