@@ -171,7 +171,7 @@ export const CIDashboardPage: React.FC = () => {
   useErrorHandler(error as GetDataError<Failure | Error> | null, undefined, 'ci.get.build.error')
   useErrorHandler(repoError as GetDataError<Failure | Error> | null, undefined, 'ci.get.repo.error')
 
-  if (loadingRepositories || pipelineLoading) {
+  if (pipelineLoading) {
     return (
       <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
         <PageSpinner />
