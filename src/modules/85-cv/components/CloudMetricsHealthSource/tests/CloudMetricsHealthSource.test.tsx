@@ -98,7 +98,7 @@ describe('Unit tests for CloudMetricsHealthSource', () => {
       onSelectMetric: expect.any(Function),
       showSpinnerOnLoad: expect.any(Boolean)
     })
-    expect(mockMetricsValidationChart).toHaveBeenNthCalledWith(1, {
+    expect(mockMetricsValidationChart).toHaveBeenNthCalledWith(2, {
       error: undefined,
       isQueryExecuted: false,
       loading: true,
@@ -107,7 +107,7 @@ describe('Unit tests for CloudMetricsHealthSource', () => {
       sampleData: {},
       submitQueryText: 'cv.monitoringSources.datadogLogs.submitQueryToSeeRecords'
     })
-    expect(mockSelectHealthSourceServices).toHaveBeenNthCalledWith(1, {
+    expect(mockSelectHealthSourceServices).toHaveBeenNthCalledWith(2, {
       values: {
         sli: mockCloudMetricHealthSourcePropsValue.formikProps.values.sli,
         healthScore: mockCloudMetricHealthSourcePropsValue.formikProps.values.healthScore,
