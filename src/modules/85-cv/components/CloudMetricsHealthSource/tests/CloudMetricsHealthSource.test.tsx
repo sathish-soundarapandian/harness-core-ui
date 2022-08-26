@@ -107,7 +107,18 @@ describe('Unit tests for CloudMetricsHealthSource', () => {
       sampleData: {},
       submitQueryText: 'cv.monitoringSources.datadogLogs.submitQueryToSeeRecords'
     })
-    expect(mockSelectHealthSourceServices).toHaveBeenNthCalledWith(1, {"labelNamesResponse": {"data": {"data": ["cluster-name"]}}, "metricPackResponse": {"data": {"data": []}, "refetch": jest.fn()}, "values": {"continuousVerification": true, "healthScore": true, "serviceInstance": "cluster-name", "sli": true}})
+    expect(mockSelectHealthSourceServices).toHaveBeenNthCalledWith(1, {
+      values: {
+        sli: mockCloudMetricHealthSourcePropsValue.formikProps.values.sli,
+        healthScore: mockCloudMetricHealthSourcePropsValue.formikProps.values.healthScore,
+        continuousVerification: mockCloudMetricHealthSourcePropsValue.formikProps.values.continuousVerification,
+        serviceInstance: 'cluster-name'
+      },
+      metricPackResponse: mockUseGetReturnData,
+      labelNamesResponse: { data: { data: ['cluster-name'] } },
+      refetch: jest.fn(),
+      formikSetField: jest.fn()
+    })
     expect(mockMonacoEditor).toHaveBeenCalledTimes(0)
   })
 
