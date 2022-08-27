@@ -652,6 +652,7 @@ export type AmazonS3ArtifactConfig = ArtifactConfig & {
   connectorRef: string
   filePath?: string
   filePathRegex?: string
+  region?: string
 }
 
 export interface ApiKeyAggregateDTO {
@@ -964,6 +965,7 @@ export type AwsConnector = ConnectorConfigDTO & {
 
 export interface AwsCredential {
   crossAccountAccess?: CrossAccountAccess
+  region?: string
   spec?: AwsCredentialSpec
   type: 'InheritFromDelegate' | 'ManualConfig' | 'Irsa'
 }
@@ -18724,6 +18726,7 @@ export interface GetIamRolesForAwsQueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  region: string
 }
 
 export type GetIamRolesForAwsProps = Omit<

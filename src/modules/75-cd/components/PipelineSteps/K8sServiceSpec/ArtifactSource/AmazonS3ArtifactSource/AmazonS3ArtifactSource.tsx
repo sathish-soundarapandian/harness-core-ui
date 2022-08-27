@@ -10,16 +10,33 @@ import type { FormikValues } from 'formik'
 import { defaultTo, get, memoize } from 'lodash-es'
 import { Menu } from '@blueprintjs/core'
 
-import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@wings-software/uicore'
+import {
+  FormInput,
+  getMultiTypeFromValue,
+  Layout,
+  MultiTypeInputType,
+  SelectOption,
+  Text
+} from '@wings-software/uicore'
 import { BucketResponse, SidecarArtifact, useGetV2BucketListForS3 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import {
+  ConnectorReferenceDTO,
+  FormMultiTypeConnectorField
+} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
+import { useListAwsRegions } from 'services/portal'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
-import { getDefaultQueryParam, isArtifactSourceRuntime, isFieldfromTriggerTabDisabled } from '../artifactSourceUtils'
+import {
+  getDefaultQueryParam,
+  getFinalQueryParamValue,
+  isArtifactSourceRuntime,
+  isFieldfromTriggerTabDisabled
+} from '../artifactSourceUtils'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 export const resetBuckets = (formik: FormikValues, bucketPath: string): void => {
@@ -69,6 +86,33 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
     get(initialValues?.artifacts, `${artifactPath}.spec.filePathRegex`, '')
   )
 
+  const fixedRegionValue = getDefaultQueryParam(
+    artifact?.spec?.region,
+    get(initialValues?.artifacts, `${artifactPath}.spec.region`, '')
+  )
+
+  const [connectorRef, setConnectorRef] = React.useState<string>()
+  const [regions, setRegions] = React.useState<SelectOption[]>([])
+
+  const {
+    data: regionData,
+    loading: loadingRegions,
+    error: errorRegions
+  } = useListAwsRegions({
+    queryParams: {
+      accountId
+    }
+  })
+
+  React.useEffect(() => {
+    const regionValues = (regionData?.resource || []).map(region => ({
+      value: region.value,
+      label: region.name
+    }))
+
+    setRegions(regionValues as SelectOption[])
+  }, [regionData?.resource])
+
   const {
     data: bucketData,
     error,
@@ -85,7 +129,8 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
         accountIdentifier: accountId,
         orgIdentifier,
         projectIdentifier,
-        connectorRef: fixedConnectorValue
+        connectorRef: fixedConnectorValue,
+        region: getFinalQueryParamValue(fixedRegionValue)
       }
     })
   }
@@ -162,15 +207,23 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
                 allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
                 expressions
               }}
-              onChange={selected => {
-                refetchBuckets({
-                  queryParams: {
-                    accountIdentifier: accountId,
-                    orgIdentifier,
-                    projectIdentifier,
-                    connectorRef: defaultTo((selected as any)?.record?.identifier, fixedConnectorValue)
-                  }
-                })
+              onChange={(selected, _typeValue, type) => {
+                const item = selected as unknown as { record?: ConnectorReferenceDTO; scope: Scope }
+                if (type === MultiTypeInputType.FIXED) {
+                  const connectorRefValue =
+                    item.scope === Scope.ORG || item.scope === Scope.ACCOUNT
+                      ? `${item.scope}.${item?.record?.identifier}`
+                      : item.record?.identifier
+                  refetchBuckets({
+                    queryParams: {
+                      accountIdentifier: accountId,
+                      orgIdentifier,
+                      projectIdentifier,
+                      connectorRef: defaultTo(connectorRefValue, fixedConnectorValue)
+                    }
+                  })
+                  setConnectorRef(connectorRefValue)
+                }
                 resetBuckets(formik, `${path}.artifacts.${artifactPath}.spec.bucketName`)
               }}
               className={css.connectorMargin}
@@ -180,6 +233,41 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
                 branch: defaultTo(branch, ''),
                 getDefaultFromOtherRepo: true
               }}
+            />
+          )}
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.region`, template) && (
+            <FormInput.MultiTypeInput
+              name="region"
+              selectItems={regions}
+              useValue
+              multiTypeInputProps={{
+                onChange: selected => {
+                  if (
+                    getMultiTypeFromValue(defaultTo(connectorRef, fixedConnectorValue)) === MultiTypeInputType.FIXED
+                  ) {
+                    refetchBuckets({
+                      queryParams: {
+                        accountIdentifier: accountId,
+                        orgIdentifier,
+                        projectIdentifier,
+                        connectorRef: defaultTo(connectorRef, fixedConnectorValue),
+                        region: defaultTo((selected as any).value, fixedRegionValue)
+                      }
+                    })
+                  }
+                  resetBuckets(formik, `${path}.artifacts.${artifactPath}.spec.bucketName`)
+                },
+                selectProps: {
+                  items: regions,
+                  noResults: (
+                    <Text lineClamp={1} width={500} height={100}>
+                      {getRBACErrorMessage(errorRegions as RBACError) || getString('pipeline.noRegions')}
+                    </Text>
+                  )
+                }
+              }}
+              label={getString('regionLabel')}
+              placeholder={loadingRegions ? getString('loading') : getString('select')}
             />
           )}
 

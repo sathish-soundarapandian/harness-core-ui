@@ -70,7 +70,8 @@ const AmazsonS3LastStepProps = {
     identifier: '',
     bucketName: '',
     tagType: 'value' as TagTypes,
-    filePath: ''
+    filePath: '',
+    region: ''
   },
   handleSubmit: jest.fn(),
   artifactIdentifiers: [],

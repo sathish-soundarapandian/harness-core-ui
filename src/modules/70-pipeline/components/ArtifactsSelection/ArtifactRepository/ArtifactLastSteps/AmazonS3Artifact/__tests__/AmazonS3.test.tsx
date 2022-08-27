@@ -29,12 +29,17 @@ import {
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ModalViewFor } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { AmazonS3 } from '../AmazonS3'
-import { bucketListData } from './mock'
+import { awsRegionsData, bucketListData } from './mock'
 
 const fetchBuckets = jest.fn().mockReturnValue(bucketListData)
 jest.mock('services/cd-ng', () => ({
   useGetV2BucketListForS3: jest.fn().mockImplementation(() => {
     return { data: bucketListData, refetch: fetchBuckets, error: null, loading: false }
+  })
+}))
+jest.mock('services/portal', () => ({
+  useListAwsRegions: jest.fn().mockImplementation(() => {
+    return { data: awsRegionsData, error: null, loading: false }
   })
 }))
 
@@ -43,7 +48,8 @@ const commonInitialValues: AmazonS3InitialValuesType = {
   bucketName: '',
   tagType: TagTypes.Value,
   filePath: '',
-  filePathRegex: ''
+  filePathRegex: '',
+  region: ''
 }
 
 const onSubmit = jest.fn()
@@ -501,7 +507,7 @@ describe('AmazonS3 tests', () => {
 
     const portalDivs = document.getElementsByClassName('bp3-portal')
     expect(portalDivs.length).toBe(0)
-    const bucketNameDropDownButton = container.querySelector('[data-icon="chevron-down"]')
+    const bucketNameDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[1]
     fireEvent.click(bucketNameDropDownButton!)
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDiv = portalDivs[0]
@@ -528,7 +534,7 @@ describe('AmazonS3 tests', () => {
 
     const portalDivs = document.getElementsByClassName('bp3-portal')
     expect(portalDivs.length).toBe(0)
-    const bucketNameDropDownButton = container.querySelector('[data-icon="chevron-down"]')
+    const bucketNameDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[1]
     fireEvent.click(bucketNameDropDownButton!)
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDiv = portalDivs[0]
@@ -558,7 +564,7 @@ describe('AmazonS3 tests', () => {
     expect(portalDivs.length).toBe(0)
 
     // Select bucketName from dropdown
-    const bucketNameDropDownButton = container.querySelector('[data-icon="chevron-down"]')
+    const bucketNameDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[1]
     fireEvent.click(bucketNameDropDownButton!)
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDiv = portalDivs[0]
@@ -619,7 +625,7 @@ describe('AmazonS3 tests', () => {
     expect(portalDivs.length).toBe(0)
 
     // Select bucketName from dropdown
-    const bucketNameDropDownButton = container.querySelector('[data-icon="chevron-down"]')
+    const bucketNameDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[1]
     fireEvent.click(bucketNameDropDownButton!)
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDiv = portalDivs[0]

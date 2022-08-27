@@ -86,6 +86,7 @@ export const CreateStack = (
   const [awsStates, setAwsStates] = useState<SelectOption[]>([])
   const [awsRoles, setAwsRoles] = useState<MultiSelectOption[]>([])
   const [awsRef, setAwsRef] = useState<string>(initialValues?.spec?.configuration?.connectorRef)
+  const [regionsRef, setRegionsRef] = useState<string>(initialValues?.spec?.configuration?.region)
   const { showError } = useToaster()
   const templateFile = getString('cd.cloudFormation.templateFile')
   const {
@@ -133,9 +134,10 @@ export const CreateStack = (
       accountIdentifier: accountId,
       orgIdentifier: orgIdentifier,
       projectIdentifier: projectIdentifier,
-      awsConnectorRef: awsRef
+      awsConnectorRef: awsRef,
+      region: regionsRef
     }
-  }, [accountId, orgIdentifier, projectIdentifier, awsRef])
+  }, [accountId, orgIdentifier, projectIdentifier, awsRef, regionsRef])
 
   const {
     data: roleData,
@@ -173,10 +175,18 @@ export const CreateStack = (
       }
       setAwsRoles(roles)
     }
-    if (!roleData && !isEmpty(awsRef) && getMultiTypeFromValue(awsRef) === MultiTypeInputType.FIXED) {
+  }, [roleData, awsRef, regionsRef])
+
+  useEffect(() => {
+    if (
+      !isEmpty(awsRef) &&
+      getMultiTypeFromValue(awsRef) === MultiTypeInputType.FIXED &&
+      !isEmpty(regionsRef) &&
+      getMultiTypeFromValue(regionsRef) === MultiTypeInputType.FIXED
+    ) {
       refetch()
     }
-  }, [roleData, awsRef])
+  }, [awsRef, refetch, regionsRef])
 
   /* istanbul ignore next */
   const onSelectChange = (
@@ -372,6 +382,8 @@ export const CreateStack = (
                   /* istanbul ignore next */
                   if (value?.record?.identifier !== awsRef) {
                     setAwsRef(newConnectorRef)
+                    getMultiTypeFromValue(formik?.values?.spec.configuration.roleArn) === MultiTypeInputType.FIXED &&
+                      setFieldValue('spec.configuration.roleArn', '')
                   }
                   /* istanbul ignore next */
                   setFieldValue('spec.configuration.connectorRef', newConnectorRef)
@@ -386,6 +398,13 @@ export const CreateStack = (
                   disabled={readonly}
                   useValue
                   multiTypeInputProps={{
+                    onChange: value => {
+                      if ((value as any).value !== regionsRef) {
+                        setRegionsRef((value as any).value as string)
+                        getMultiTypeFromValue(formik?.values?.spec.configuration.roleArn) ===
+                          MultiTypeInputType.FIXED && setFieldValue('spec.configuration.roleArn', '')
+                      }
+                    },
                     selectProps: {
                       allowCreatingNewItems: false,
                       items: regions
@@ -676,7 +695,7 @@ export const CreateStack = (
                         label={getString('optionalField', { name: getString('connectors.awsKms.roleArnLabel') })}
                         name="spec.configuration.roleArn"
                         placeholder={getString(rolesLoading ? 'common.loading' : 'select')}
-                        disabled={readonly}
+                        disabled={readonly || rolesLoading}
                         useValue
                         multiTypeInputProps={{
                           selectProps: {
