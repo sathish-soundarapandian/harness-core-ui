@@ -618,6 +618,7 @@ export const setupAWSFormData = async (connectorInfo: ConnectorInfoDTO, accountI
         : undefined,
 
     secretKeyRef: await setSecretField(connectorInfo.spec.credential.spec?.secretKeyRef, scopeQueryParams),
+    region: connectorInfo.spec.credential.region,
     crossAccountAccess: !!connectorInfo.spec.credential?.crossAccountAccess,
     crossAccountRoleArn: connectorInfo.spec.credential.crossAccountAccess?.crossAccountRoleArn,
     externalId: connectorInfo.spec.credential.crossAccountAccess?.externalId
@@ -887,6 +888,7 @@ export const buildAWSPayload = (formData: FormData) => {
       ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
       credential: {
         type: formData.delegateType,
+        ...(formData.region && { region: formData.region }),
         spec:
           formData.delegateType === DelegateTypes.DELEGATE_OUT_CLUSTER
             ? {

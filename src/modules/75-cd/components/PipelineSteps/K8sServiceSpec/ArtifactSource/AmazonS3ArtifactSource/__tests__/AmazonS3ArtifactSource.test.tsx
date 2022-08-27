@@ -27,6 +27,7 @@ import { ArtifactSourceBaseFactory } from '@cd/factory/ArtifactSourceFactory/Art
 import type { K8SDirectServiceStep } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sServiceSpecInterface'
 import { AmazonS3ArtifactSource } from '../AmazonS3ArtifactSource'
 import {
+  awsRegionsData,
   bucketListData,
   commonFormikInitialValues,
   templateAmazonS3Artifact,
@@ -37,6 +38,7 @@ import {
 // Mock API and Functions
 const fetchConnectors = (): Promise<unknown> => Promise.resolve(connectorsData)
 const fetchBuckets = jest.fn().mockReturnValue(bucketListData)
+
 jest.mock('services/cd-ng', () => ({
   getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
   useGetConnector: jest.fn().mockImplementation(() => {
@@ -44,6 +46,11 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetV2BucketListForS3: jest.fn().mockImplementation(() => {
     return { data: bucketListData, refetch: fetchBuckets, error: null, loading: false }
+  })
+}))
+jest.mock('services/portal', () => ({
+  useListAwsRegions: jest.fn().mockImplementation(() => {
+    return { data: awsRegionsData, error: null, loading: false }
   })
 }))
 
