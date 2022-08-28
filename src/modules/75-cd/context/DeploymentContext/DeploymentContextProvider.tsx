@@ -15,8 +15,6 @@ import type { GetPipelineQueryParams, TemplateStepNode, StepElementConfig } from
 import { getTemplateTypesByRef } from '@pipeline/utils/templateUtils'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
-import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
-import { Scope } from '@common/interfaces/SecretsInterface'
 import type { DeploymentInfra } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/DeploymentInfraWrapper/DeploymentInfraUtils'
 
 export interface DeploymentConfigExecutionStepWrapper {
@@ -137,11 +135,7 @@ export function DeploymentContextProvider(props: React.PropsWithChildren<Deploym
       )
     ) as string[]
     const unresolvedTemplateRefs = allTemplateRefs.filter(templateRef => {
-      const templateScope = getScopeFromValue(templateRef)
-      const tempIdentifier = getIdentifierFromValue(templateRef)
-      return isEmpty(
-        get(templateTypes, templateScope === Scope.PROJECT ? tempIdentifier : `${templateScope}.${tempIdentifier}`)
-      )
+      return isEmpty(get(templateTypes, templateRef))
     })
     if (unresolvedTemplateRefs.length > 0) {
       getTemplateTypesByRef(

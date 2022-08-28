@@ -6,46 +6,42 @@
  */
 
 import React from 'react'
-import { get, isNil } from 'lodash-es'
+import { get, isNil, defaultTo } from 'lodash-es'
 import { Button, ButtonVariation, Card, Icon, Layout, Text, useConfirmationDialog } from '@wings-software/uicore'
 import { Color } from '@wings-software/design-system'
 import cx from 'classnames'
 import { Intent } from '@blueprintjs/core'
-import { iconMap } from '@pipeline/components/PipelineStudio/StepPalette/iconMap'
 import type { TemplateStepNode } from 'services/pipeline-ng'
-import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/exports'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
-import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
-import { Scope } from '@common/interfaces/SecretsInterface'
 import css from './StepTemplateCard.module.scss'
 
 interface StepTemplateCardProps {
   stepNode: TemplateStepNode
-  stepsFactory: AbstractStepFactory
   className?: string
-  isReadOnly?: boolean
   onRemoveClick: (_stepNode: TemplateStepNode) => void
   onCardClick: (_stepNode: TemplateStepNode) => void
 }
 
 export function StepTemplateCard(props: StepTemplateCardProps): React.ReactElement | null {
-  const { templateTypes } = useDeploymentContext()
+  const { templateTypes, stepsFactory, isReadOnly } = useDeploymentContext()
 
-  const { stepNode, stepsFactory, className, isReadOnly, onRemoveClick, onCardClick } = props
+  const { stepNode, className, onRemoveClick, onCardClick } = props
 
   const { name, identifier, template } = stepNode || {}
   const { templateRef } = template || {}
 
-  const templateScope = getScopeFromValue(templateRef)
-  const templateIdentifier = getIdentifierFromValue(templateRef)
-  const templateType = get(templateTypes, templateScope === Scope.PROJECT ? templateIdentifier : templateRef)
+  const templateType = get(templateTypes, templateRef)
 
   const step = stepsFactory.getStep(templateType)
 
   const { getString } = useStrings()
   const { showSuccess } = useToaster()
+
+  const handleCardClick = React.useCallback(() => {
+    onCardClick?.(stepNode)
+  }, [onCardClick, stepNode])
 
   const { openDialog: openRemoveStepTemplateDialog } = useConfirmationDialog({
     intent: Intent.DANGER,
@@ -54,14 +50,21 @@ export function StepTemplateCard(props: StepTemplateCardProps): React.ReactEleme
     titleText: getString('cd.removeStepTemplate'),
     confirmButtonText: getString('yes'),
     buttonIntent: Intent.DANGER,
-    onCloseDialog: async isConfirmed => {
+    onCloseDialog: isConfirmed => {
       if (isConfirmed) {
         onRemoveClick?.(stepNode)
-        Promise.resolve()
         showSuccess(getString('cd.removeStepTemplateSuccess'))
       }
     }
   })
+
+  const handleRemoveTemplateClick = React.useCallback(
+    (e: React.MouseEvent<Element, MouseEvent>) => {
+      e.stopPropagation()
+      openRemoveStepTemplateDialog()
+    },
+    [openRemoveStepTemplateDialog]
+  )
 
   return (
     <Layout.Vertical spacing="small">
@@ -70,9 +73,7 @@ export function StepTemplateCard(props: StepTemplateCardProps): React.ReactEleme
         selected={false}
         className={cx(css.paletteCard, className)}
         data-testid={`step-card-${identifier}`}
-        onClick={() => {
-          onCardClick?.(stepNode)
-        }}
+        onClick={handleCardClick}
       >
         <Icon size={10} name="template-library" className={css.templateLibraryIcon} />
         {!isReadOnly && (
@@ -82,19 +83,13 @@ export function StepTemplateCard(props: StepTemplateCardProps): React.ReactEleme
             icon="cross"
             variation={ButtonVariation.PRIMARY}
             iconProps={{ size: 10 }}
-            onClick={e => {
-              e.stopPropagation()
-              openRemoveStepTemplateDialog()
-            }}
+            onClick={handleRemoveTemplateClick}
             withoutCurrentColor={true}
           />
         )}
-        <Icon
-          name={!isNil(step) ? step.getIconName?.() : iconMap[templateType || '']}
-          size={!isNil(step?.getIconSize?.()) ? step?.getIconSize?.() : 25}
-          {...(!isNil(step) && !isNil(step?.getIconColor?.()) ? { color: step.getIconColor() } : {})}
-          style={{ color: step?.getIconColor?.() }}
-        />
+        {!isNil(step) ? (
+          <Icon name={step.getIconName?.()} size={defaultTo(step.getIconSize?.(), 25)} color={step.getIconColor?.()} />
+        ) : null}
       </Card>
       <Text lineClamp={1} className={css.stepTemplateCardText} width={64} font="small" color={Color.GREY_600}>
         {name}

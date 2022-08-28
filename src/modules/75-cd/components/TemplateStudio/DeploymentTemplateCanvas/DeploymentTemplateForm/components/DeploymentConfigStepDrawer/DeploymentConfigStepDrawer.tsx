@@ -27,9 +27,7 @@ import {
 import type { StepOrStepGroupOrTemplateStepData } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { StepCommandsViews, Values } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { generateRandomString } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
-import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import type { TemplateStepValues } from '@templates-library/components/PipelineSteps/TemplateStep/TemplateStepWidget/TemplateStepWidget'
-import { Scope } from '@common/interfaces/SecretsInterface'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { getScopeBasedTemplateRef } from '@pipeline/utils/templateUtils'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
@@ -134,9 +132,7 @@ export function DeploymentConfigStepDrawer() {
         set(draft, 'execution.steps', updatedExecutionSteps)
       })
       const updatedTemplateTypes = produce(templateTypes, draft => {
-        const templateScope = getScopeFromValue(templateRef)
-        const templateIdentifier = getIdentifierFromValue(templateRef)
-        set(draft, templateScope === Scope.PROJECT ? templateIdentifier : templateRef, formValues.allValues?.type)
+        set(draft, templateRef, formValues.allValues?.type)
       })
 
       setTemplateTypes(updatedTemplateTypes)
@@ -223,9 +219,7 @@ export function DeploymentConfigStepDrawer() {
     if (drawerData.type === DrawerTypes.StepConfig && !isEmpty(drawerData.data)) {
       const stepNode = drawerData.data?.stepConfig?.node
       const { templateRef } = get(stepNode, 'template', {}) as TemplateLinkConfig
-      const templateScope = getScopeFromValue(templateRef)
-      const templateIdentifier = getIdentifierFromValue(templateRef)
-      const stepTemplateType = get(templateTypes, templateScope === Scope.PROJECT ? templateIdentifier : templateRef)
+      const stepTemplateType = get(templateTypes, templateRef)
 
       const stepType = (stepNode as StepElementConfig).type || stepTemplateType
       const toolTipType = `_${drawerData.type}`

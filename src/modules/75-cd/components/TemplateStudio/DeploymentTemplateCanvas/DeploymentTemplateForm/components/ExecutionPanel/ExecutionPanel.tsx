@@ -72,7 +72,7 @@ const getStepTypesFromCategories = (stepCategories: StepCategory[]): string[] =>
 }
 
 export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
-  const { deploymentConfig, updateDeploymentConfig, setDrawerData, stepsFactory, isReadOnly } = useDeploymentContext()
+  const { deploymentConfig, updateDeploymentConfig, setDrawerData, isReadOnly } = useDeploymentContext()
   const executionSteps = get(deploymentConfig, 'execution.steps', []) as DeploymentConfigExecutionStepWrapper[]
 
   const { getTemplate } = useTemplateSelector()
@@ -181,14 +181,22 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
     map(executionSteps, (executionStepObj: DeploymentConfigExecutionStepWrapper) => {
       return !isEmpty(executionStepObj?.step) ? (
         <StepTemplateCard
-          stepsFactory={stepsFactory}
           stepNode={executionStepObj.step}
           onRemoveClick={handleStepTemplateCardRemove}
           onCardClick={onStepTemplateCardViewClick}
-          isReadOnly={isReadOnly}
         />
       ) : null
     })
+
+  const handleAddStepClick = React.useCallback(() => {
+    setDrawerData({ type: DrawerTypes.AddStep, data: { isDrawerOpen: true } })
+    closeDeploymentStepPopover()
+  }, [])
+
+  const handleUseTemplateClick = React.useCallback(() => {
+    onUseTemplate()
+    closeDeploymentStepPopover()
+  }, [])
 
   return (
     <Container className={css.executionWidgetWrapper}>
@@ -218,20 +226,14 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
                     variation={ButtonVariation.PRIMARY}
                     icon="Edit"
                     text={getString('pipelines-studio.addStep')}
-                    onClick={() => {
-                      setDrawerData({ type: DrawerTypes.AddStep, data: { isDrawerOpen: true } })
-                      closeDeploymentStepPopover()
-                    }}
+                    onClick={handleAddStepClick}
                   />
                   <Button
                     minimal
                     variation={ButtonVariation.PRIMARY}
                     icon="template-library"
                     text={getString('common.useTemplate')}
-                    onClick={() => {
-                      onUseTemplate()
-                      closeDeploymentStepPopover()
-                    }}
+                    onClick={handleUseTemplateClick}
                   />
                 </Layout.Vertical>
               }
