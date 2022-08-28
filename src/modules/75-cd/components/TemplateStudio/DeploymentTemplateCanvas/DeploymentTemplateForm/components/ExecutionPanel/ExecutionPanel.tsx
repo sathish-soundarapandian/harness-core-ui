@@ -72,7 +72,7 @@ const getStepTypesFromCategories = (stepCategories: StepCategory[]): string[] =>
 }
 
 export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
-  const { deploymentConfig, updateDeploymentConfig, setDrawerData, isReadOnly } = useDeploymentContext()
+  const { deploymentConfig, updateDeploymentConfig, setDrawerData, isReadOnly, drawerData } = useDeploymentContext()
   const executionSteps = get(deploymentConfig, 'execution.steps', []) as DeploymentConfigExecutionStepWrapper[]
 
   const { getTemplate } = useTemplateSelector()
@@ -114,8 +114,9 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
       const { template } = await getTemplate({ templateType: 'Step', allChildTypes })
 
       const processNode = produce({} as StepElementConfig, draft => {
-        draft.name = defaultTo(template?.name, '')
-        draft.identifier = generateRandomString(defaultTo(template?.name, ''))
+        const nodeName = drawerData.data?.stepConfig?.node?.name
+        draft.name = defaultTo(nodeName, '')
+        draft.identifier = generateRandomString(defaultTo(nodeName, ''))
         draft.type = template?.childType as string
         set(draft, 'template.templateRef', getScopeBasedTemplateRef(template))
         if (template.versionLabel) {

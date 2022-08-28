@@ -30,8 +30,9 @@ function useSaveStepTemplateListener(): void {
 
   const updateViewForSavedStepTemplate = async (): Promise<void> => {
     const processNode = produce({} as TemplateStepNode & { type: string }, draft => {
-      draft.name = defaultTo(savedTemplate?.name, '')
-      draft.identifier = generateRandomString(defaultTo(savedTemplate?.name, ''))
+      const nodeName = drawerData.data?.stepConfig?.node?.name
+      draft.name = defaultTo(nodeName, '')
+      draft.identifier = generateRandomString(defaultTo(nodeName, ''))
       draft.type = defaultTo(savedTemplate?.childType, '')
       set(draft, 'template.templateRef', getScopeBasedTemplateRef(savedTemplate as TemplateSummaryResponse))
       if (savedTemplate?.versionLabel) {
