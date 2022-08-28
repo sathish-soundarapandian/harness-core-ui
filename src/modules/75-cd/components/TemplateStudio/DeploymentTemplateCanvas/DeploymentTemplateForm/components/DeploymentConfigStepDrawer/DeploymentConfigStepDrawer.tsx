@@ -154,7 +154,12 @@ export function DeploymentConfigStepDrawer() {
         allChildTypes: [stepType],
         selectedTemplate
       })
-      const processNode = createTemplate(drawerData.data?.stepConfig?.node, template)
+      // "type" is required here in processNode as it has not been added yet for the new template in templateTypes map since the changes
+      // have not been applied yet
+      const processNode = {
+        ...createTemplate(drawerData.data?.stepConfig?.node, template),
+        type: template.childType as string
+      }
       setDrawerData({
         type: drawerType,
         data: {

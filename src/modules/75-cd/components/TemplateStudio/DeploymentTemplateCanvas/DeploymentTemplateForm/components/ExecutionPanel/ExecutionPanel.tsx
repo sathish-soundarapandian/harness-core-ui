@@ -112,11 +112,12 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
   const onUseTemplate = async (): Promise<void> => {
     try {
       const { template } = await getTemplate({ templateType: 'Step', allChildTypes })
-      const processNode = createTemplate(
-        { name: '', identifier: generateRandomString('') },
-        template
-      ) as TemplateStepNode
-
+      // "type" is required here in processNode as it has not been added yet for the new template in templateTypes map since the changes
+      // have not been applied yet
+      const processNode = {
+        ...createTemplate({ name: '', identifier: generateRandomString('') }, template),
+        type: template?.childType as string
+      }
       setDrawerData({
         type: DrawerTypes.StepConfig,
         data: {

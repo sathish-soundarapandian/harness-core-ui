@@ -26,7 +26,12 @@ function useSaveStepTemplateListener(): void {
   const { drawerData, setDrawerData } = useDeploymentContext()
 
   const updateViewForSavedStepTemplate = async (): Promise<void> => {
-    const processNode = createTemplate(drawerData.data?.stepConfig?.node, savedTemplate)
+    // "type" is required here in processNode as it has not been added yet for the new template in templateTypes map since the changes
+    // have not been applied yet
+    const processNode = {
+      ...createTemplate(drawerData.data?.stepConfig?.node, savedTemplate),
+      type: savedTemplate?.childType
+    }
     const updatedDrawerData = produce(drawerData, draft => {
       set(draft, 'type', DrawerTypes.StepConfig)
       set(draft, 'data.stepConfig.node', processNode)
