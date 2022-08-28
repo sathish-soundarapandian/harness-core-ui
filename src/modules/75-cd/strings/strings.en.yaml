@@ -436,3 +436,8 @@ hostFilters: hostFilters
 attributeFilters: attributeFilters
 azureArmRollback:
   description: Restore the Azure ARM resource group to its previous running state.
+deploymentSteps: Deployment Steps
+addStepsForYourDeploymentType: Add steps for your deployment type here
+removeStepTemplate: Remove Step Template
+removeStepTemplateConfirmationLabel: 'Are you sure you want to remove template "{{ name }}" ?'
+removeStepTemplateSuccess: Step Template has been successfully removed

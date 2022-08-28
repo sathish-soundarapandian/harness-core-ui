@@ -9,6 +9,7 @@ import React, { useCallback, useState } from 'react'
 import { Button, ButtonVariation, Container, Icon, Layout, Tab, Tabs } from '@wings-software/uicore'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { useStrings } from 'framework/strings'
+import { ExecutionPanel } from './components/ExecutionPanel/ExecutionPanel'
 import { DeploymentInfraWrapperWithRef } from './DeploymentInfraWrapper/DeploymentInfraWrapper'
 import css from './DeploymentConfigForm.module.scss'
 
@@ -66,7 +67,7 @@ function DeploymentConfigForm(_props: unknown, formikRef: TemplateFormRef): JSX.
                 {getString('executionText')}
               </span>
             }
-            panel={<div>Execution tab content here{navBtns}</div>}
+            panel={<ExecutionPanel>{navBtns}</ExecutionPanel>}
           />
         </Tabs>
       </Container>

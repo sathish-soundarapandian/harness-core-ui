@@ -10,6 +10,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react'
 
 import { TestWrapper } from '@common/utils/testUtils'
 import { DeploymentContextProvider } from '@cd/context/DeploymentContext/DeploymentContextProvider'
+import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { DeploymentInfraWrapperWithRef } from '../DeploymentInfraWrapper'
 import { initialValues, defaultInitialValues, defaultInitialValuesWithFileStore } from './mocks'
 
@@ -23,6 +24,7 @@ const DeploymentContextWrapper = ({
     isReadOnly={false}
     gitDetails={{}}
     queryParams={{ accountIdentifier: 'accountId', orgIdentifier: '', projectIdentifier: '' }}
+    stepsFactory={{} as AbstractStepFactory}
   >
     {children}
   </DeploymentContextProvider>
