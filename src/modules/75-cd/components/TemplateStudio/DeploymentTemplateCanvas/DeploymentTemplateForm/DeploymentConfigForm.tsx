@@ -22,9 +22,12 @@ function DeploymentConfigForm(_props: unknown, formikRef: TemplateFormRef): JSX.
   const { getString } = useStrings()
   const [selectedTab, setSelectedTab] = useState<DeploymentConfigFormTabs>(DeploymentConfigFormTabs.Infrastructure)
 
-  const handleTabChange = useCallback((tab: DeploymentConfigFormTabs) => {
-    setSelectedTab(tab)
-  }, [])
+  const handleTabChange = useCallback(
+    (tab: DeploymentConfigFormTabs) => {
+      setSelectedTab(tab)
+    },
+    [setSelectedTab]
+  )
 
   const navBtns = (
     <Layout.Horizontal className={css.navigationBtns}>

@@ -7,11 +7,11 @@
 
 import React, { SyntheticEvent } from 'react'
 import { Button, Container } from '@wings-software/uicore'
-import { clone, defaultTo, isEmpty, noop, set, map, get, filter } from 'lodash-es'
+import { clone, isEmpty, noop, set, map, get, filter } from 'lodash-es'
 import produce from 'immer'
 import { Drawer, Position } from '@blueprintjs/core'
 import type { StepElementConfig } from 'services/cd-ng'
-import type { StepData, TemplateStepNode, TemplateLinkConfig } from 'services/pipeline-ng'
+import type { StepData, TemplateStepNode } from 'services/pipeline-ng'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { StepPalette } from '@pipeline/components/PipelineStudio/StepPalette/StepPalette'
 import { StageType } from '@pipeline/utils/stageHelpers'
@@ -29,7 +29,7 @@ import { StepCommandsViews, Values } from '@pipeline/components/PipelineStudio/S
 import { generateRandomString } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
 import type { TemplateStepValues } from '@templates-library/components/PipelineSteps/TemplateStep/TemplateStepWidget/TemplateStepWidget'
 import type { TemplateSummaryResponse } from 'services/template-ng'
-import { getScopeBasedTemplateRef } from '@pipeline/utils/templateUtils'
+import { createTemplate, getScopeBasedTemplateRef } from '@pipeline/utils/templateUtils'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 
 import { DeploymentConfigStepDrawerTitle } from './DeploymentConfigStepDrawerTitle'
@@ -148,25 +148,13 @@ export function DeploymentConfigStepDrawer() {
     drawerType: DrawerTypes
   ): Promise<void> => {
     try {
-      const stepType = (formikRef.current?.getValues() as TemplateStepValues)?.allValues?.type as string
+      const stepType = get(templateTypes, getScopeBasedTemplateRef(selectedTemplate))
       const { template } = await getTemplate({
         templateType: 'Step',
         allChildTypes: [stepType],
         selectedTemplate
       })
-      const node = drawerData.data?.stepConfig?.node as TemplateStepNode
-
-      const processNode = produce({} as StepElementConfig, draft => {
-        draft.name = defaultTo(node?.name, '')
-        draft.identifier = defaultTo(node?.identifier, '')
-        draft.type = stepType
-        if (template) {
-          set(draft, 'template.templateRef', getScopeBasedTemplateRef(template))
-          if (template.versionLabel) {
-            set(draft, 'template.versionLabel', template.versionLabel)
-          }
-        }
-      })
+      const processNode = createTemplate(drawerData.data?.stepConfig?.node, template)
       setDrawerData({
         type: drawerType,
         data: {
@@ -186,11 +174,10 @@ export function DeploymentConfigStepDrawer() {
 
   const removeTemplate = async (drawerType: DrawerTypes): Promise<void> => {
     const node = drawerData.data?.stepConfig?.node as TemplateStepNode
-    const stepType = (formikRef.current?.getValues() as TemplateStepValues)?.allValues?.type as string
     const processNode = produce({} as StepElementConfig, draft => {
       draft.name = node.name
       draft.identifier = generateRandomString(node.name as string)
-      draft.type = stepType
+      draft.type = get(templateTypes, node.template.templateRef)
     })
 
     const updatedDeploymentConfig = produce(deploymentConfig, draft => {
@@ -216,19 +203,9 @@ export function DeploymentConfigStepDrawer() {
   }
 
   const drawerTitle = React.useMemo(() => {
-    if (drawerData.type === DrawerTypes.StepConfig && !isEmpty(drawerData.data)) {
-      const stepNode = drawerData.data?.stepConfig?.node
-      const { templateRef } = get(stepNode, 'template', {}) as TemplateLinkConfig
-      const stepTemplateType = get(templateTypes, templateRef)
-
-      const stepType = (stepNode as StepElementConfig).type || stepTemplateType
-      const toolTipType = `_${drawerData.type}`
-
+    if (drawerData.type === DrawerTypes.StepConfig) {
       return (
         <DeploymentConfigStepDrawerTitle
-          stepType={stepType as string}
-          toolTipType={toolTipType}
-          stepData={stepsFactory.getStepData(stepType as string)}
           discardChanges={() => {
             setDrawerData({
               type: DrawerTypes.AddStep
@@ -243,8 +220,8 @@ export function DeploymentConfigStepDrawer() {
   const onSelection = React.useCallback(
     async (data: StepData) => {
       const processNode: StepElementConfig = {
-        name: data.name as string,
-        identifier: generateRandomString(data.name as string),
+        name: '',
+        identifier: generateRandomString(''),
         type: data.type as string
       }
       setDrawerData({
@@ -292,7 +269,7 @@ export function DeploymentConfigStepDrawer() {
         portalClassName={'pipeline-studio-right-drawer'}
       >
         <Button minimal className={css.closeButton} icon="cross" withoutBoxShadow onClick={onCloseDrawer} />
-        {drawerData.type === DrawerTypes.StepConfig && !isEmpty(drawerData?.data?.stepConfig?.node) && (
+        {drawerData.type === DrawerTypes.StepConfig && (
           <StepCommands
             step={drawerData?.data?.stepConfig?.node as StepOrStepGroupOrTemplateStepData}
             ref={formikRef}

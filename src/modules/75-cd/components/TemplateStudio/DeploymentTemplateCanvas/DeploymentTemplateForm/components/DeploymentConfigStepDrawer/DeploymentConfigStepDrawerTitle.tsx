@@ -8,20 +8,20 @@
 import React from 'react'
 import { Button, Icon, Text, ButtonVariation, ButtonSize } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
+import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
-import type { StepData } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
+import type { StepElementConfig, TemplateStepNode } from 'services/pipeline-ng'
 import css from './DeploymentConfigStepDrawer.module.scss'
 
 export function DeploymentConfigStepDrawerTitle(props: {
-  stepType: string
-  toolTipType: string
-  stepData: StepData | null | undefined
   discardChanges: () => void
   applyChanges?: () => void
 }): JSX.Element {
-  const { stepsFactory, drawerData, isReadOnly } = useDeploymentContext()
-  const { stepType, toolTipType, stepData } = props
+  const { stepsFactory, drawerData, isReadOnly, templateTypes } = useDeploymentContext()
+  const stepNode = drawerData.data?.stepConfig?.node
+  const stepType =
+    (stepNode as StepElementConfig)?.type || get(templateTypes, (stepNode as TemplateStepNode)?.template.templateRef)
   const showApplyChangesBtn = drawerData.data?.drawerConfig?.shouldShowApplyChangesBtn
   const { getString } = useStrings()
   return (
@@ -29,19 +29,16 @@ export function DeploymentConfigStepDrawerTitle(props: {
       <div className={css.title}>
         <Icon
           name={stepsFactory.getStepIcon(stepType || '')}
-          {...(stepsFactory.getStepIconColor(stepType || '')
-            ? { color: stepsFactory.getStepIconColor(stepType || '') }
-            : {})}
-          style={{ color: stepsFactory.getStepIconColor(stepType || '') }}
+          color={stepsFactory.getStepIconColor(stepType || '')}
           size={24}
         />
         <Text
           lineClamp={1}
           color={Color.BLACK}
-          tooltipProps={{ dataTooltipId: `${stepType}_stepName${toolTipType}` }}
+          tooltipProps={{ dataTooltipId: `${stepType}_stepName_${drawerData.type}` }}
           font={{ variation: FontVariation.H4 }}
         >
-          {stepData ? stepData?.name : stepsFactory.getStepName(stepType || '')}
+          {stepsFactory.getStepName(stepType || '')}
         </Text>
       </div>
       <div>

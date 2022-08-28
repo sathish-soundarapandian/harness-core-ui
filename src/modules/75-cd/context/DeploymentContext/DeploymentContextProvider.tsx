@@ -32,7 +32,7 @@ export interface DrawerData {
   type: DrawerTypes
   data?: {
     stepConfig?: {
-      node: Partial<TemplateStepNode> | StepElementConfig
+      node: TemplateStepNode | StepElementConfig
     }
     drawerConfig?: {
       shouldShowApplyChangesBtn: boolean
@@ -153,7 +153,7 @@ export function DeploymentContextProvider(props: React.PropsWithChildren<Deploym
         setTemplateTypes(merge(templateTypes, resp.templateTypes))
       })
     }
-  }, [deploymentConfig, queryParams, gitDetails, templateTypes])
+  }, [deploymentConfig])
 
   return (
     <DeploymentContext.Provider

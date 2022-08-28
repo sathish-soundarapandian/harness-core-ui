@@ -26,16 +26,9 @@ interface StepTemplateCardProps {
 
 export function StepTemplateCard(props: StepTemplateCardProps): React.ReactElement | null {
   const { templateTypes, stepsFactory, isReadOnly } = useDeploymentContext()
-
   const { stepNode, className, onRemoveClick, onCardClick } = props
-
   const { name, identifier, template } = stepNode || {}
-  const { templateRef } = template || {}
-
-  const templateType = get(templateTypes, templateRef)
-
-  const step = stepsFactory.getStep(templateType)
-
+  const step = stepsFactory.getStep(get(templateTypes, template.templateRef))
   const { getString } = useStrings()
   const { showSuccess } = useToaster()
 

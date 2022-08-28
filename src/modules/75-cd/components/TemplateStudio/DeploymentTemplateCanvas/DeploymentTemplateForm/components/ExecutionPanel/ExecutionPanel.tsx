@@ -8,7 +8,7 @@
 import React from 'react'
 import { Classes, Icon, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import produce from 'immer'
-import { defaultTo, filter, get, map, set, isEmpty } from 'lodash-es'
+import { filter, get, map, set, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Button, ButtonVariation, Container, Layout, Popover, Text } from '@wings-software/uicore'
@@ -18,14 +18,14 @@ import {
   DeploymentConfigExecutionStepWrapper,
   useDeploymentContext
 } from '@cd/context/DeploymentContext/DeploymentContextProvider'
-import { StepCategory, useGetStepsV2, StepElementConfig, TemplateStepNode } from 'services/pipeline-ng'
+import { StepCategory, useGetStepsV2, TemplateStepNode } from 'services/pipeline-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useMutateAsGet } from '@common/hooks'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import CardWithOuterTitle from '@pipeline/components/CardWithOuterTitle/CardWithOuterTitle'
 import { generateRandomString } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
 import { StepTemplateCard } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/components/StepTemplateCard/StepTemplateCard'
-import { getScopeBasedTemplateRef } from '@pipeline/utils/templateUtils'
+import { createTemplate } from '@pipeline/utils/templateUtils'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import css from './ExecutionPanel.module.scss'
 
@@ -72,7 +72,7 @@ const getStepTypesFromCategories = (stepCategories: StepCategory[]): string[] =>
 }
 
 export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
-  const { deploymentConfig, updateDeploymentConfig, setDrawerData, isReadOnly, drawerData } = useDeploymentContext()
+  const { deploymentConfig, updateDeploymentConfig, setDrawerData, isReadOnly } = useDeploymentContext()
   const executionSteps = get(deploymentConfig, 'execution.steps', []) as DeploymentConfigExecutionStepWrapper[]
 
   const { getTemplate } = useTemplateSelector()
@@ -112,17 +112,10 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
   const onUseTemplate = async (): Promise<void> => {
     try {
       const { template } = await getTemplate({ templateType: 'Step', allChildTypes })
-
-      const processNode = produce({} as StepElementConfig, draft => {
-        const nodeName = drawerData.data?.stepConfig?.node?.name
-        draft.name = defaultTo(nodeName, '')
-        draft.identifier = generateRandomString(defaultTo(nodeName, ''))
-        draft.type = template?.childType as string
-        set(draft, 'template.templateRef', getScopeBasedTemplateRef(template))
-        if (template.versionLabel) {
-          set(draft, 'template.versionLabel', template.versionLabel)
-        }
-      })
+      const processNode = createTemplate(
+        { name: '', identifier: generateRandomString('') },
+        template
+      ) as TemplateStepNode
 
       setDrawerData({
         type: DrawerTypes.StepConfig,
@@ -142,23 +135,11 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
   }
 
   const onStepTemplateCardViewClick = (stepNode: TemplateStepNode) => {
-    const { name, identifier, template } = stepNode
-    const { templateRef, versionLabel } = template || {}
-
-    const processNode = produce({} as TemplateStepNode, draft => {
-      draft.name = defaultTo(name, '')
-      draft.identifier = identifier
-      set(draft, 'template.templateRef', templateRef)
-      if (versionLabel) {
-        set(draft, 'template.versionLabel', versionLabel)
-      }
-    })
-
     setDrawerData({
       type: DrawerTypes.StepConfig,
       data: {
         stepConfig: {
-          node: processNode
+          node: stepNode
         },
         drawerConfig: {
           shouldShowApplyChangesBtn: true
@@ -217,9 +198,7 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
               position={Position.BOTTOM}
               disabled={isReadOnly}
               isOpen={isDeploymentStepPopoverOpen}
-              onInteraction={nextOpenState => {
-                setIsDeploymentStepPopoverOpen(nextOpenState)
-              }}
+              onInteraction={setIsDeploymentStepPopoverOpen}
               content={
                 <Layout.Vertical className={css.addStepPopoverContainer} spacing="small" padding="small">
                   <Button
