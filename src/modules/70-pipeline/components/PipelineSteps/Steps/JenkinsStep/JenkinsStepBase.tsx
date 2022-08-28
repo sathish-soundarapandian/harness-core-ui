@@ -16,7 +16,8 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   SelectOption,
-  RUNTIME_INPUT_VALUE
+  RUNTIME_INPUT_VALUE,
+  SelectWithSubmenuOption
 } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
 import { v4 as uuid } from 'uuid'
@@ -25,7 +26,7 @@ import { FieldArray } from 'formik'
 import cx from 'classnames'
 import { PopoverInteractionKind, Spinner } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
-import { cloneDeep, isArray, isEqual } from 'lodash-es'
+import { cloneDeep, get, isArray, isEqual } from 'lodash-es'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { StepFormikFowardRef, StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
@@ -47,7 +48,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { JenkinsStepProps } from './JenkinsStep'
 import { getGenuineValue } from '../JiraApproval/helper'
-import type { JenkinsFormContentInterface, JenkinsStepData, jobParameterInterface, SubmenuSelectOption } from './types'
+import type { JenkinsFormContentInterface, JenkinsStepData, jobParameterInterface } from './types'
 import { resetForm, scriptInputType, variableSchema } from './helper'
 import OptionalConfiguration from './OptionalConfiguration'
 import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
@@ -68,7 +69,7 @@ function FormContent({
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const [jobDetails, setJobDetails] = useState<SubmenuSelectOption[]>([])
+  const [jobDetails, setJobDetails] = useState<SelectWithSubmenuOption[]>([])
   const commonParams = {
     accountIdentifier: accountId,
     projectIdentifier,
@@ -154,6 +155,8 @@ function FormContent({
               }
             })
           }
+        } else if (getMultiTypeFromValue(formik.values.spec.jobName) === MultiTypeInputType.FIXED) {
+          setJobDetails([...jobDetails, { label: formik.values?.spec?.jobName, value: formik.values?.spec?.jobName }])
         }
       }
     }
@@ -167,7 +170,7 @@ function FormContent({
         getMultiTypeFromValue(formik.values.spec.jobName) === MultiTypeInputType.RUNTIME ||
         formik.values.spec.jobName === ''
       ) {
-        setJobDetails((prevState: SubmenuSelectOption[]) => {
+        setJobDetails((prevState: SelectWithSubmenuOption[]) => {
           const clonedJobDetails = cloneDeep(prevState)
           const parentJob = clonedJobDetails.find(obj => obj.label === lastOpenedJob.current)
           if (parentJob) {
@@ -182,7 +185,7 @@ function FormContent({
           label: job.jobName || '',
           value: job.url || '',
           submenuItems: [],
-          hasSubItems: job.folder
+          hasSubmenuItems: job.folder
         }
       })
       if (!isEqual(jobs, jobDetails)) {
@@ -204,18 +207,16 @@ function FormContent({
     }
   }, [formik.values.spec.connectorRef])
 
-  const getJobItems = (jobs: JobDetails[]): SubmenuSelectOption[] => {
+  const getJobItems = (jobs: JobDetails[]): SelectWithSubmenuOption[] => {
     return jobs?.map(job => {
       return {
         label: job.jobName || '',
         value: job.url || '',
         submenuItems: [],
-        hasSubItems: job.folder
+        hasSubmenuItems: job.folder
       }
     })
   }
-
-  console.log('formik', formik.values)
 
   return (
     <React.Fragment>
@@ -317,28 +318,24 @@ function FormContent({
           }
           selectWithSubmenuTypeInputProps={{
             expressions,
+
             selectWithSubmenuProps: {
-              loading: fetchingJobs,
+              value: get(formik, `values.spec.jobName`),
               items: jobDetails,
-              interactionKind: PopoverInteractionKind.CLICK,
               allowCreatingNewItems: true,
-              onChange: (primaryValue, secondaryValue, type) => {
-                const newJobName =
-                  type === MultiTypeInputType.FIXED && primaryValue && secondaryValue
-                    ? secondaryValue
-                    : primaryValue || ''
+              onChange: primaryValue => {
                 formik.setValues({
                   ...formik.values,
                   spec: {
                     ...formik.values.spec,
-                    jobName: newJobName as any,
+                    jobName: primaryValue as any,
                     jobParameter:
-                      getMultiTypeFromValue(newJobName) === MultiTypeInputType.RUNTIME ? RUNTIME_INPUT_VALUE : []
+                      getMultiTypeFromValue(primaryValue) === MultiTypeInputType.RUNTIME ? RUNTIME_INPUT_VALUE : []
                   }
                 })
-                if (type === MultiTypeInputType.FIXED && newJobName?.label?.length) {
+                if (getMultiTypeFromValue(primaryValue) === MultiTypeInputType.FIXED && primaryValue?.label?.length) {
                   refetchJobParameters({
-                    pathParams: { jobName: encodeURIComponent(encodeURIComponent(newJobName.label)) },
+                    pathParams: { jobName: encodeURIComponent(encodeURIComponent(primaryValue.label)) },
                     queryParams: {
                       ...commonParams,
                       connectorRef: connectorRefFixedValue?.toString()
@@ -346,17 +343,19 @@ function FormContent({
                   })
                 }
               },
-              onOpening: (item: SelectOption) => {
-                lastOpenedJob.current = item.label
-                const parentJob = jobDetails?.find(job => job.label === item.label)
+              onSubmenuOpen: (item?: SelectWithSubmenuOption) => {
+                lastOpenedJob.current = item?.label
+                const parentJob = jobDetails?.find(job => job.label === item?.label)
                 if (!parentJob?.submenuItems?.length) {
-                  refetchJobs({
+                  return refetchJobs({
                     queryParams: {
                       ...commonParams,
                       connectorRef: connectorRefFixedValue?.toString(),
-                      parentJobName: item.label
+                      parentJobName: item?.label
                     }
                   })
+                } else {
+                  return Promise.resolve()
                 }
               }
             }
