@@ -30,6 +30,7 @@ import { generateRandomString } from '@pipeline/components/PipelineStudio/Execut
 import type { TemplateStepValues } from '@templates-library/components/PipelineSteps/TemplateStep/TemplateStepWidget/TemplateStepWidget'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { createTemplate, getScopeBasedTemplateRef } from '@pipeline/utils/templateUtils'
+import { getUpdatedDeploymentConfig } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/components/ExecutionPanel/ExecutionPanelUtils'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 
 import { DeploymentConfigStepDrawerTitle } from './DeploymentConfigStepDrawerTitle'
@@ -87,9 +88,8 @@ export function DeploymentConfigStepDrawer() {
   const templateStepNode = drawerData.data?.stepConfig?.node
 
   const isNewStep = React.useMemo(() => {
-    const existingStepIdentifiersSet = getExistingStepIdentifiersSet(executionStepsList)
-    return !existingStepIdentifiersSet.has(templateStepNode?.identifier as string)
-  }, [executionStepsList, templateStepNode])
+    return !templateStepNode?.name
+  }, [templateStepNode])
 
   const applyChanges = async (): Promise<void> => {
     if (checkDuplicateStep(formikRef, executionStepsList, getString, isNewStep)) {
@@ -102,7 +102,7 @@ export function DeploymentConfigStepDrawer() {
     } else {
       const formValues = formikRef?.current?.getValues() as TemplateStepValues
       const stepNode = drawerData.data?.stepConfig?.node as TemplateStepNode
-      const { template } = stepNode
+      const { template, identifier: stepNodeIdentifier } = stepNode
       const { templateRef, versionLabel } = template || {}
 
       const updatedDeploymentConfig = produce(deploymentConfig, draft => {
@@ -119,15 +119,11 @@ export function DeploymentConfigStepDrawer() {
           }
         }
 
-        if (isNewStep) {
-          updatedExecutionSteps.push(newStepToAdd)
-        } else {
-          updatedExecutionSteps.forEach(executionStep => {
-            if (executionStep.step.identifier === newStepToAdd.step.identifier) {
-              executionStep.step = newStepToAdd.step
-            }
-          })
-        }
+        updatedExecutionSteps.forEach(executionStep => {
+          if (executionStep.step.identifier === stepNodeIdentifier) {
+            executionStep.step = newStepToAdd.step
+          }
+        })
 
         set(draft, 'execution.steps', updatedExecutionSteps)
       })
@@ -154,12 +150,10 @@ export function DeploymentConfigStepDrawer() {
         allChildTypes: [stepType],
         selectedTemplate
       })
-      // "type" is required here in processNode as it has not been added yet for the new template in templateTypes map since the changes
-      // have not been applied yet
-      const processNode = {
-        ...createTemplate(drawerData.data?.stepConfig?.node, template),
-        type: template.childType as string
-      }
+      const processNode = createTemplate(drawerData.data?.stepConfig?.node, template) as TemplateStepNode
+      const updatedDeploymentConfig = getUpdatedDeploymentConfig({ processNode, deploymentConfig })
+
+      updateDeploymentConfig(updatedDeploymentConfig)
       setDrawerData({
         type: drawerType,
         data: {

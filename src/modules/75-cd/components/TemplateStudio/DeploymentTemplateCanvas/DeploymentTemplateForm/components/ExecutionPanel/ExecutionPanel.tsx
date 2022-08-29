@@ -24,6 +24,7 @@ import { useMutateAsGet } from '@common/hooks'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import CardWithOuterTitle from '@pipeline/components/CardWithOuterTitle/CardWithOuterTitle'
 import { generateRandomString } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
+import { getUpdatedDeploymentConfig } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/components/ExecutionPanel/ExecutionPanelUtils'
 import { StepTemplateCard } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/components/StepTemplateCard/StepTemplateCard'
 import { createTemplate } from '@pipeline/utils/templateUtils'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
@@ -112,12 +113,13 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
   const onUseTemplate = async (): Promise<void> => {
     try {
       const { template } = await getTemplate({ templateType: 'Step', allChildTypes })
-      // "type" is required here in processNode as it has not been added yet for the new template in templateTypes map since the changes
-      // have not been applied yet
-      const processNode = {
-        ...createTemplate({ name: '', identifier: generateRandomString('') }, template),
-        type: template?.childType as string
-      }
+      const processNode = createTemplate(
+        { name: '', identifier: generateRandomString('') },
+        template
+      ) as TemplateStepNode
+
+      const updatedDeploymentConfig = getUpdatedDeploymentConfig({ processNode, deploymentConfig, isNewStep: true })
+      updateDeploymentConfig(updatedDeploymentConfig)
       setDrawerData({
         type: DrawerTypes.StepConfig,
         data: {

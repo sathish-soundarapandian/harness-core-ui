@@ -150,7 +150,7 @@ export function DeploymentContextProvider(props: React.PropsWithChildren<Deploym
         },
         unresolvedTemplateRefs
       ).then(resp => {
-        setTemplateTypes(merge(templateTypes, resp.templateTypes))
+        setTemplateTypes(merge({}, templateTypes, resp.templateTypes))
       })
     }
   }, [deploymentConfig])

@@ -69,6 +69,7 @@ export function StepTemplateCard(props: StepTemplateCardProps): React.ReactEleme
         onClick={handleCardClick}
       >
         <Icon size={10} name="template-library" className={css.templateLibraryIcon} />
+        {!name && <Icon name="warning-sign" intent={Intent.WARNING} size={10} className={css.warningIcon} />}
         {!isReadOnly && (
           <Button
             className={css.closeNode}

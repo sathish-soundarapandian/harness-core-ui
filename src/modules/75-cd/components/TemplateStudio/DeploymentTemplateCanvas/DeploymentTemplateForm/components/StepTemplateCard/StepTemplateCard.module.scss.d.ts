@@ -12,5 +12,6 @@ declare const styles: {
   readonly paletteCard: string
   readonly stepTemplateCardText: string
   readonly templateLibraryIcon: string
+  readonly warningIcon: string
 }
 export default styles
