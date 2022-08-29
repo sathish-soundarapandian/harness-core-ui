@@ -110,6 +110,7 @@ describe('Unit tests for CloudMetricsHealthSource', () => {
     })
     expect(mockSelectHealthSourceServices).toHaveBeenCalledTimes(2)
     expect(mockMonacoEditor).toHaveBeenCalledTimes(0)
+    ///test
   })
 
   test('Should pass error to ValidationChart when retrieving timeseries data request fails', async () => {
