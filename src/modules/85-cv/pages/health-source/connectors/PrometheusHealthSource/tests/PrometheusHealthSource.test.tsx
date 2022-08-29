@@ -118,8 +118,7 @@ describe('Unit tests for PrometheusHealthSource', () => {
   test('Ensure validation for Assign component works', async () => {
     const onSubmitMock = jest.fn()
     const cloneMockManualQueryData = clone(MockManualQueryData)
-    cloneMockManualQueryData.healthSourceList[0].spec.metricDefinitions[0].analysis.deploymentVerification.enabled =
-      false
+    cloneMockManualQueryData.healthSourceList[0].spec.metricDefinitions[0].analysis.deploymentVerification.enabled = false
     cloneMockManualQueryData.healthSourceList[0].spec.metricDefinitions[0].analysis.liveMonitoring.enabled = false
     // cloneMockManualQueryData.healthSourceList[0].spec.metricDefinitions[0].sli.enabled = false
     cloneMockManualQueryData.healthSourceList[0].spec.metricDefinitions[0].analysis.riskProfile = {} as any

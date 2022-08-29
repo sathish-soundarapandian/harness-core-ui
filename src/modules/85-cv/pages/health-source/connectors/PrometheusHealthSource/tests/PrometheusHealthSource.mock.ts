@@ -34,6 +34,8 @@ export const MockManualQueryData = {
             additionalFilters: null,
             aggregation: 'count',
             sli: { enabled: true },
+            healthScore: {enabled: true} ,
+            continuousVerification: {enabled: true},
             analysis: {
               liveMonitoring: { enabled: true },
               deploymentVerification: { enabled: true, serviceInstanceFieldName: 'serviceInstanceFieldName' },

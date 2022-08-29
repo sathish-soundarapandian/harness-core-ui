@@ -135,10 +135,14 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
   return (
     <Formik<MapPrometheusQueryToService>
       formName="mapPrometheus"
-      initialValues={{ ...initialFormValues, ...metricThresholds, sli: true,
+      initialValues={{
+        ...initialFormValues,
+        ...metricThresholds,
+        sli: true,
         healthScore: true,
         continuousVerification: true,
-        higherBaselineDeviation: true }}
+        higherBaselineDeviation: true
+      }}
       isInitialValid={(args: any) =>
         Object.keys(
           validateMappings(
@@ -346,16 +350,41 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
               isSubmit
               onPrevious={onPrevious}
               onNext={async () => {
+                console.log('1')
                 formikProps.submitForm()
+                console.log('1')
+                formikProps.setTouched({
+                  ...formikProps.touched,
+                  [PrometheusMonitoringSourceFieldNames.QUERY]: true,
+                  [PrometheusMonitoringSourceFieldNames.PROMETHEUS_METRIC]: true,
+                  [PrometheusMonitoringSourceFieldNames.GROUP_NAME]: true,
+                  [PrometheusMonitoringSourceFieldNames.SERVICE_FILTER]: true,
+                  [PrometheusMonitoringSourceFieldNames.ENVIRONMENT_FILTER]: true,
+                  [PrometheusMonitoringSourceFieldNames.SLI]: true,
+                  [PrometheusMonitoringSourceFieldNames.RISK_CATEGORY]: true,
+                  [PrometheusMonitoringSourceFieldNames.LOWER_BASELINE_DEVIATION]: true,
+                  [PrometheusMonitoringSourceFieldNames.METRIC_IDENTIFIER]: true,
+                  [PrometheusMonitoringSourceFieldNames.METRIC_NAME]: true
+                })
 
-                if (formikProps.isValid) {
-                  const updatedMetric = formikProps.values
-                  if (updatedMetric) mappedMetrics.set(selectedMetric, updatedMetric)
+                console.log('3', formikProps.errors)
 
-                  const filteredCVDisabledMetricThresholds = getFilteredCVDisabledMetricThresholds(
-                    metricThresholds.ignoreThresholds,
-                    metricThresholds.failFastThresholds,
-                    groupedCreatedMetrics
+                if (Object.keys(formikProps.errors || {})?.length > 0) {
+                  formikProps.validateForm()
+                  return
+                }
+                console.log('4')
+                const updatedMetric = formikProps.values
+                if (updatedMetric) mappedMetrics.set(selectedMetric, updatedMetric)
+                await onSubmit(
+                  sourceData,
+                  transformPrometheusSetupSourceToHealthSource(
+                    {
+                      ...transformedSourceData,
+                      ...metricThresholds,
+                      mappedServicesAndEnvs: mappedMetrics as Map<string, MapPrometheusQueryToService>
+                    },
+                    isMetricThresholdEnabled
                   )
 
                   await onSubmit(
