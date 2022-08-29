@@ -8,7 +8,7 @@
 import React, { useState } from 'react'
 import { defaultTo, get } from 'lodash-es'
 
-import { FormInput, Layout } from '@wings-software/uicore'
+import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@wings-software/uicore'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useMutateAsGet } from '@common/hooks'
@@ -115,8 +115,11 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
 
   const canFetchTags = (): boolean => {
     return (
-      !!(lastQueryData.connectorRef != connectorRefValue || lastQueryData.imagePath !== imagePathValue) &&
-      shouldFetchTagsSource([connectorRefValue, imagePathValue])
+      !!(
+        lastQueryData.connectorRef != connectorRefValue ||
+        lastQueryData.imagePath !== imagePathValue ||
+        getMultiTypeFromValue(artifact?.spec?.imagePath) === MultiTypeInputType.EXPRESSION
+      ) && shouldFetchTagsSource([connectorRefValue, imagePathValue])
     )
   }
 

@@ -8,7 +8,7 @@
 import React, { useState } from 'react'
 import { defaultTo, get } from 'lodash-es'
 
-import { FormInput, Layout } from '@wings-software/uicore'
+import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@wings-software/uicore'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useMutateAsGet } from '@common/hooks'
@@ -127,6 +127,7 @@ const Content = (props: NexusRenderContent): JSX.Element => {
     return !!(
       (lastQueryData.connectorRef != connectorRefValue ||
         lastQueryData.artifactPaths !== artifactPathValue ||
+        getMultiTypeFromValue(artifact?.spec?.artifactPath) === MultiTypeInputType.EXPRESSION ||
         lastQueryData.repository !== repositoryValue) &&
       shouldFetchTagsSource([connectorRefValue, artifactPathValue, repositoryValue])
     )

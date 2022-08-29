@@ -10,7 +10,7 @@ import { defaultTo, get } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
 
 import { parse } from 'yaml'
-import { AllowedTypes, FormInput, Layout, MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypes, FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@wings-software/uicore'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useMutateAsGet } from '@common/hooks'
@@ -346,6 +346,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     return !!(
       (lastQueryData.connectorRef != connectorRefValue ||
         lastQueryData.artifactPaths !== artifactPathValue ||
+        getMultiTypeFromValue(artifact?.spec?.artifactPath) === MultiTypeInputType.EXPRESSION ||
         lastQueryData.repository !== repositoryValue) &&
       shouldFetchTagsSource([connectorRefValue, artifactPathValue, repositoryValue])
     )
