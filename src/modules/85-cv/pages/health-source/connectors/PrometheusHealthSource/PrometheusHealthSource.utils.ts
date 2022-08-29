@@ -216,12 +216,18 @@ export function validateMappings(
   }
 
   requiredFieldErrors = validateGroupName(requiredFieldErrors, getString, values.groupName)
-  const duplicateNames = createdMetrics?.filter((metricName, index) => {
-    if (index === selectedMetricIndex) {
-      return false
-    }
-    return metricName === values.metricName
-  })
+
+  const selectedMetricIndexNew =
+    createdMetrics.indexOf(values.metricName) > -1 ? selectedMetricIndex : createdMetrics.indexOf(values.metricName)
+  const duplicateNames =
+    createdMetrics.length < 2
+      ? []
+      : createdMetrics?.filter((metricName, index) => {
+          if (index === selectedMetricIndexNew) {
+            return false
+          }
+          return metricName === values.metricName
+        })
 
   const identifiers = createdMetrics.map(metricName => {
     const metricData = mappedMetrics?.get(metricName) as MapPrometheusQueryToService

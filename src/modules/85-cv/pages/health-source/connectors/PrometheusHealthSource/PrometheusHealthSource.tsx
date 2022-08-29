@@ -16,7 +16,8 @@ import {
   Utils,
   Accordion,
   getMultiTypeFromValue,
-  MultiTypeInputType
+  MultiTypeInputType,
+  RUNTIME_INPUT_VALUE
 } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { noop } from 'lodash-es'
@@ -167,6 +168,15 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
           formikValues: formikProps.values,
           setMappedMetrics
         })
+
+        if (
+          isConnectorRuntimeOrExpression &&
+          formikProps.values.continuousVerification &&
+          formikProps.values.serviceInstance === undefined
+        ) {
+          formikProps.values['serviceInstance'] = RUNTIME_INPUT_VALUE
+        }
+
         const currentSelectedMetricDetail = metricDefinitions?.find(
           (metricDefinition: StackdriverDefinition) =>
             metricDefinition.metricName === mappedMetrics.get(selectedMetric || '')?.metricName
