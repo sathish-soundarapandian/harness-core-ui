@@ -355,6 +355,7 @@ export interface AccessControlCheckError {
     | 'SPOTINST_NULL_ERROR'
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -652,6 +653,7 @@ export type AmazonS3ArtifactConfig = ArtifactConfig & {
   connectorRef: string
   filePath?: string
   filePathRegex?: string
+  region?: string
 }
 
 export interface ApiKeyAggregateDTO {
@@ -813,6 +815,7 @@ export type ArtifactoryConnector = ConnectorConfigDTO & {
   artifactoryServerUrl: string
   auth?: ArtifactoryAuthentication
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
 }
 
 export type ArtifactoryGenericArtifactSummary = ArtifactSummary & {
@@ -960,10 +963,12 @@ export type AwsCodeCommitSecretKeyAccessKeyDTO = AwsCodeCommitHttpsCredentialsSp
 export type AwsConnector = ConnectorConfigDTO & {
   credential: AwsCredential
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
 }
 
 export interface AwsCredential {
   crossAccountAccess?: CrossAccountAccess
+  region?: string
   spec?: AwsCredentialSpec
   type: 'InheritFromDelegate' | 'ManualConfig' | 'Irsa'
 }
@@ -1099,6 +1104,7 @@ export type AzureConnector = ConnectorConfigDTO & {
   azureEnvironmentType: 'AZURE' | 'AZURE_US_GOVERNMENT'
   credential: AzureCredential
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
 }
 
 export interface AzureCredential {
@@ -1227,6 +1233,16 @@ export interface AzureResourceGroupDTO {
 
 export interface AzureResourceGroupsDTO {
   resourceGroups?: AzureResourceGroupDTO[]
+}
+
+export type AzureSshWinrmInfrastructureDetails = InfrastructureDetails & {
+  host?: string
+}
+
+export type AzureSshWinrmInstanceInfoDTO = InstanceInfoDTO & {
+  host: string
+  infrastructureKey?: string
+  serviceType: string
 }
 
 export interface AzureSubscriptionDTO {
@@ -2456,6 +2472,7 @@ export type DockerConnectorDTO = ConnectorConfigDTO & {
   auth?: DockerAuthenticationDTO
   delegateSelectors?: string[]
   dockerRegistryUrl: string
+  executeOnDelegate?: boolean
   providerType: 'DockerHub' | 'Harbor' | 'Quay' | 'Other'
 }
 
@@ -2759,6 +2776,7 @@ export interface EntityGitDetails {
   objectId?: string
   repoIdentifier?: string
   repoName?: string
+  repoUrl?: string
   rootFolder?: string
 }
 
@@ -3308,6 +3326,7 @@ export interface Error {
     | 'SPOTINST_NULL_ERROR'
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -3656,6 +3675,7 @@ export interface ErrorMetadata {
     | 'SPOTINST_NULL_ERROR'
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
   errorMessage?: string
 }
 
@@ -4061,6 +4081,7 @@ export interface Failure {
     | 'SPOTINST_NULL_ERROR'
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -4138,6 +4159,8 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'MONTHLY_ACTIVE_USERS'
     | 'JENKINS_ARTIFACT'
     | 'STRATEGY_MAX_CONCURRENT'
+    | 'MAX_CHAOS_SCENARIO_RUNS_PER_MONTH'
+    | 'MAX_CHAOS_DELEGATES'
   )[]
 }
 
@@ -4204,6 +4227,8 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'MONTHLY_ACTIVE_USERS'
     | 'JENKINS_ARTIFACT'
     | 'STRATEGY_MAX_CONCURRENT'
+    | 'MAX_CHAOS_SCENARIO_RUNS_PER_MONTH'
+    | 'MAX_CHAOS_DELEGATES'
 }
 
 export interface FeatureRestrictionDetailsDTO {
@@ -4272,6 +4297,8 @@ export interface FeatureRestrictionDetailsDTO {
     | 'MONTHLY_ACTIVE_USERS'
     | 'JENKINS_ARTIFACT'
     | 'STRATEGY_MAX_CONCURRENT'
+    | 'MAX_CHAOS_SCENARIO_RUNS_PER_MONTH'
+    | 'MAX_CHAOS_DELEGATES'
   restriction?: RestrictionDTO
   restrictionType?:
     | 'AVAILABILITY'
@@ -4348,6 +4375,8 @@ export interface FeatureRestrictionMetadataDTO {
     | 'MONTHLY_ACTIVE_USERS'
     | 'JENKINS_ARTIFACT'
     | 'STRATEGY_MAX_CONCURRENT'
+    | 'MAX_CHAOS_SCENARIO_RUNS_PER_MONTH'
+    | 'MAX_CHAOS_DELEGATES'
   restrictionMetadata?: {
     [key: string]: RestrictionMetadataDTO
   }
@@ -4500,6 +4529,7 @@ export type GcpCloudCostConnector = ConnectorConfigDTO & {
 export type GcpConnector = ConnectorConfigDTO & {
   credential: GcpConnectorCredential
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
 }
 
 export interface GcpConnectorCredential {
@@ -6054,6 +6084,7 @@ export interface InputSetErrorResponse {
 
 export type InputSetErrorWrapper = ErrorMetadataDTO & {
   errorPipelineYaml?: string
+  invalidInputSetReferences?: string[]
   uuidToErrorResponseMap?: {
     [key: string]: InputSetErrorResponse
   }
@@ -6348,6 +6379,7 @@ export type K8sApplyStepInfo = StepSpecType & {
   filePaths?: string[]
   overrides?: ManifestConfigWrapper[]
   skipDryRun?: boolean
+  skipRendering?: boolean
   skipSteadyStateCheck?: boolean
 }
 
@@ -9612,6 +9644,7 @@ export interface ResponseMessage {
     | 'SPOTINST_NULL_ERROR'
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -12706,7 +12739,7 @@ export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody = string
 
-export type UnsubscribeBodyRequestBody = string[]
+export type ProcessPollingResultNgBodyRequestBody = string[]
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
@@ -15076,6 +15109,7 @@ export interface GetBuildDetailsForACRRepositoryQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export type GetBuildDetailsForACRRepositoryProps = Omit<
@@ -15135,6 +15169,7 @@ export interface GetBuildDetailsForAcrArtifactWithYamlQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
   serviceId?: string
 }
 
@@ -15210,6 +15245,173 @@ export const getBuildDetailsForAcrArtifactWithYamlPromise = (
     GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/artifacts/acr/getBuildDetailsV2`, props, signal)
+
+export interface GetAzureSubscriptionsForAcrArtifactQueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  fqnPath: string
+  serviceId?: string
+}
+
+export type GetAzureSubscriptionsForAcrArtifactProps = Omit<
+  GetProps<ResponseAzureSubscriptionsDTO, Failure | Error, GetAzureSubscriptionsForAcrArtifactQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets azure subscriptions for ACR artifact
+ */
+export const GetAzureSubscriptionsForAcrArtifact = (props: GetAzureSubscriptionsForAcrArtifactProps) => (
+  <Get<ResponseAzureSubscriptionsDTO, Failure | Error, GetAzureSubscriptionsForAcrArtifactQueryParams, void>
+    path={`/artifacts/acr/subscriptions`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetAzureSubscriptionsForAcrArtifactProps = Omit<
+  UseGetProps<ResponseAzureSubscriptionsDTO, Failure | Error, GetAzureSubscriptionsForAcrArtifactQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets azure subscriptions for ACR artifact
+ */
+export const useGetAzureSubscriptionsForAcrArtifact = (props: UseGetAzureSubscriptionsForAcrArtifactProps) =>
+  useGet<ResponseAzureSubscriptionsDTO, Failure | Error, GetAzureSubscriptionsForAcrArtifactQueryParams, void>(
+    `/artifacts/acr/subscriptions`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets azure subscriptions for ACR artifact
+ */
+export const getAzureSubscriptionsForAcrArtifactPromise = (
+  props: GetUsingFetchProps<
+    ResponseAzureSubscriptionsDTO,
+    Failure | Error,
+    GetAzureSubscriptionsForAcrArtifactQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseAzureSubscriptionsDTO, Failure | Error, GetAzureSubscriptionsForAcrArtifactQueryParams, void>(
+    getConfig('ng/api'),
+    `/artifacts/acr/subscriptions`,
+    props,
+    signal
+  )
+
+export interface GetACRRegistriesForServiceQueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  subscriptionId?: string
+  fqnPath: string
+  serviceId?: string
+}
+
+export type GetACRRegistriesForServiceProps = Omit<
+  GetProps<ResponseAcrRegistriesDTO, Failure | Error, GetACRRegistriesForServiceQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets ACR registries
+ */
+export const GetACRRegistriesForService = (props: GetACRRegistriesForServiceProps) => (
+  <Get<ResponseAcrRegistriesDTO, Failure | Error, GetACRRegistriesForServiceQueryParams, void>
+    path={`/artifacts/acr/v2/container-registries`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetACRRegistriesForServiceProps = Omit<
+  UseGetProps<ResponseAcrRegistriesDTO, Failure | Error, GetACRRegistriesForServiceQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets ACR registries
+ */
+export const useGetACRRegistriesForService = (props: UseGetACRRegistriesForServiceProps) =>
+  useGet<ResponseAcrRegistriesDTO, Failure | Error, GetACRRegistriesForServiceQueryParams, void>(
+    `/artifacts/acr/v2/container-registries`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets ACR registries
+ */
+export const getACRRegistriesForServicePromise = (
+  props: GetUsingFetchProps<ResponseAcrRegistriesDTO, Failure | Error, GetACRRegistriesForServiceQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseAcrRegistriesDTO, Failure | Error, GetACRRegistriesForServiceQueryParams, void>(
+    getConfig('ng/api'),
+    `/artifacts/acr/v2/container-registries`,
+    props,
+    signal
+  )
+
+export interface GetACRRepositoriesForServiceQueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  subscriptionId?: string
+  registry?: string
+  fqnPath: string
+  serviceId?: string
+}
+
+export type GetACRRepositoriesForServiceProps = Omit<
+  GetProps<ResponseAcrRepositoriesDTO, Failure | Error, GetACRRepositoriesForServiceQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets ACR repositories
+ */
+export const GetACRRepositoriesForService = (props: GetACRRepositoriesForServiceProps) => (
+  <Get<ResponseAcrRepositoriesDTO, Failure | Error, GetACRRepositoriesForServiceQueryParams, void>
+    path={`/artifacts/acr/v2/repositories`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetACRRepositoriesForServiceProps = Omit<
+  UseGetProps<ResponseAcrRepositoriesDTO, Failure | Error, GetACRRepositoriesForServiceQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets ACR repositories
+ */
+export const useGetACRRepositoriesForService = (props: UseGetACRRepositoriesForServiceProps) =>
+  useGet<ResponseAcrRepositoriesDTO, Failure | Error, GetACRRepositoriesForServiceQueryParams, void>(
+    `/artifacts/acr/v2/repositories`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets ACR repositories
+ */
+export const getACRRepositoriesForServicePromise = (
+  props: GetUsingFetchProps<ResponseAcrRepositoriesDTO, Failure | Error, GetACRRepositoriesForServiceQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseAcrRepositoriesDTO, Failure | Error, GetACRRepositoriesForServiceQueryParams, void>(
+    getConfig('ng/api'),
+    `/artifacts/acr/v2/repositories`,
+    props,
+    signal
+  )
 
 export interface GetArtifactsBuildsDetailsForArtifactoryQueryParams {
   connectorRef: string
@@ -15299,6 +15501,7 @@ export interface GetBuildDetailsForArtifactoryArtifactQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export type GetBuildDetailsForArtifactoryArtifactProps = Omit<
@@ -15364,6 +15567,7 @@ export interface GetBuildDetailsForArtifactoryArtifactWithYamlQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
   serviceId?: string
 }
 
@@ -15656,6 +15860,7 @@ export interface GetBuildDetailsForDockerQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export type GetBuildDetailsForDockerProps = Omit<
@@ -15713,6 +15918,7 @@ export interface GetBuildDetailsForDockerWithYamlQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
   serviceId?: string
 }
 
@@ -16131,6 +16337,7 @@ export interface GetBuildDetailsForEcrQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export type GetBuildDetailsForEcrProps = Omit<
@@ -16189,6 +16396,7 @@ export interface GetBuildDetailsForEcrWithYamlQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
   serviceId?: string
 }
 
@@ -16576,6 +16784,7 @@ export interface GetBuildDetailsForGcrQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export type GetBuildDetailsForGcrProps = Omit<
@@ -16634,6 +16843,7 @@ export interface GetBuildDetailsForGcrWithYamlQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
   serviceId?: string
 }
 
@@ -16968,6 +17178,7 @@ export interface GetBuildsForJenkinsQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export interface GetBuildsForJenkinsPathParams {
@@ -17036,6 +17247,7 @@ export interface GetJobParametersForJenkinsQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export interface GetJobParametersForJenkinsPathParams {
@@ -17125,6 +17337,7 @@ export interface GetArtifactPathForJenkinsQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export interface GetArtifactPathForJenkinsPathParams {
@@ -17210,6 +17423,7 @@ export interface GetJobDetailsForJenkinsQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export type GetJobDetailsForJenkinsProps = Omit<
@@ -17269,6 +17483,7 @@ export interface GetBuildDetailsForNexusArtifactQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export type GetBuildDetailsForNexusArtifactProps = Omit<
@@ -17335,6 +17550,7 @@ export interface GetBuildDetailsForNexusArtifactWithYamlQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
   serviceId?: string
 }
 
@@ -18724,6 +18940,7 @@ export interface GetIamRolesForAwsQueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
+  region?: string
 }
 
 export type GetIamRolesForAwsProps = Omit<
@@ -19690,6 +19907,7 @@ export interface GetConnectorListQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export type GetConnectorListProps = Omit<
@@ -19936,6 +20154,7 @@ export interface GetCCMK8SConnectorListQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
   getDistinctFromBranches?: boolean
 }
 
@@ -20165,6 +20384,7 @@ export interface GetConnectorListV2QueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
   getDistinctFromBranches?: boolean
 }
 
@@ -20305,6 +20525,7 @@ export interface GetConnectorStatisticsQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export type GetConnectorStatisticsProps = Omit<
@@ -20358,6 +20579,7 @@ export interface GetTestConnectionResultQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export interface GetTestConnectionResultPathParams {
@@ -20749,6 +20971,7 @@ export interface GetConnectorQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export interface GetConnectorPathParams {
@@ -23577,6 +23800,8 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'MONTHLY_ACTIVE_USERS'
     | 'JENKINS_ARTIFACT'
     | 'STRATEGY_MAX_CONCURRENT'
+    | 'MAX_CHAOS_SCENARIO_RUNS_PER_MONTH'
+    | 'MAX_CHAOS_DELEGATES'
 }
 
 export type FetchFeatureRestrictionMetadataProps = Omit<
@@ -23713,6 +23938,8 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'MONTHLY_ACTIVE_USERS'
       | 'JENKINS_ARTIFACT'
       | 'STRATEGY_MAX_CONCURRENT'
+      | 'MAX_CHAOS_SCENARIO_RUNS_PER_MONTH'
+      | 'MAX_CHAOS_DELEGATES'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -23827,6 +24054,7 @@ export interface ListReferredByEntitiesQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export type ListReferredByEntitiesProps = Omit<
@@ -24023,6 +24251,7 @@ export interface CreateEnvironmentGroupQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export type CreateEnvironmentGroupProps = Omit<
@@ -24111,6 +24340,7 @@ export interface GetEnvironmentGroupListQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export type GetEnvironmentGroupListProps = Omit<
@@ -24265,6 +24495,7 @@ export interface GetEnvironmentGroupQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export interface GetEnvironmentGroupPathParams {
@@ -28407,6 +28638,7 @@ export interface ListGitSyncErrorsQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
   gitToHarness?: boolean
 }
 
@@ -28465,6 +28697,7 @@ export interface ListGitToHarnessErrorsCommitsQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
   numberOfErrorsInSummary?: number
 }
 
@@ -28537,6 +28770,7 @@ export interface ListGitToHarnessErrorsForCommitQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export interface ListGitToHarnessErrorsForCommitPathParams {
@@ -28626,6 +28860,7 @@ export interface GetGitSyncErrorsCountQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export type GetGitSyncErrorsCountProps = Omit<
@@ -31217,6 +31452,7 @@ export interface GetJiraIssueCreateMetadataQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export type GetJiraIssueCreateMetadataProps = Omit<
@@ -31276,6 +31512,7 @@ export interface GetJiraProjectsQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export type GetJiraProjectsProps = Omit<
@@ -31332,6 +31569,7 @@ export interface GetJiraStatusesQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export type GetJiraStatusesProps = Omit<
@@ -31387,6 +31625,7 @@ export interface GetJiraIssueUpdateMetadataQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export type GetJiraIssueUpdateMetadataProps = Omit<
@@ -31446,6 +31685,7 @@ export interface ValidateJiraCredentialsQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export type ValidateJiraCredentialsProps = Omit<
@@ -34233,7 +34473,7 @@ export type ProcessPollingResultNgProps = Omit<
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    UnsubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >,
   'path' | 'verb'
@@ -34245,7 +34485,7 @@ export const ProcessPollingResultNg = ({ perpetualTaskId, ...props }: ProcessPol
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    UnsubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >
     verb="POST"
@@ -34260,7 +34500,7 @@ export type UseProcessPollingResultNgProps = Omit<
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    UnsubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >,
   'path' | 'verb'
@@ -34272,7 +34512,7 @@ export const useProcessPollingResultNg = ({ perpetualTaskId, ...props }: UseProc
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    UnsubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >(
     'POST',
@@ -34288,7 +34528,7 @@ export const processPollingResultNgPromise = (
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    UnsubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   > & { perpetualTaskId: string },
   signal?: RequestInit['signal']
@@ -34297,17 +34537,17 @@ export const processPollingResultNgPromise = (
     void,
     Failure | Error,
     ProcessPollingResultNgQueryParams,
-    UnsubscribeBodyRequestBody,
+    ProcessPollingResultNgBodyRequestBody,
     ProcessPollingResultNgPathParams
   >('POST', getConfig('ng/api'), `/polling/delegate-response/${perpetualTaskId}`, props, signal)
 
 export type SubscribeProps = Omit<
-  MutateProps<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
+  MutateProps<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const Subscribe = (props: SubscribeProps) => (
-  <Mutate<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>
+  <Mutate<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>
     verb="POST"
     path={`/polling/subscribe`}
     base={getConfig('ng/api')}
@@ -34316,22 +34556,28 @@ export const Subscribe = (props: SubscribeProps) => (
 )
 
 export type UseSubscribeProps = Omit<
-  UseMutateProps<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
+  UseMutateProps<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const useSubscribe = (props: UseSubscribeProps) =>
-  useMutate<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>(
+  useMutate<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
     'POST',
     `/polling/subscribe`,
     { base: getConfig('ng/api'), ...props }
   )
 
 export const subscribePromise = (
-  props: MutateUsingFetchProps<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
+  props: MutateUsingFetchProps<
+    ResponsePollingResponseDTO,
+    Failure | Error,
+    void,
+    ProcessPollingResultNgBodyRequestBody,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponsePollingResponseDTO, Failure | Error, void, UnsubscribeBodyRequestBody, void>(
+  mutateUsingFetch<ResponsePollingResponseDTO, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/polling/subscribe`,
@@ -34340,12 +34586,12 @@ export const subscribePromise = (
   )
 
 export type UnsubscribeProps = Omit<
-  MutateProps<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
+  MutateProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const Unsubscribe = (props: UnsubscribeProps) => (
-  <Mutate<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>
+  <Mutate<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>
     verb="POST"
     path={`/polling/unsubscribe`}
     base={getConfig('ng/api')}
@@ -34354,21 +34600,22 @@ export const Unsubscribe = (props: UnsubscribeProps) => (
 )
 
 export type UseUnsubscribeProps = Omit<
-  UseMutateProps<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
+  UseMutateProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   'path' | 'verb'
 >
 
 export const useUnsubscribe = (props: UseUnsubscribeProps) =>
-  useMutate<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>('POST', `/polling/unsubscribe`, {
-    base: getConfig('ng/api'),
-    ...props
-  })
+  useMutate<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
+    'POST',
+    `/polling/unsubscribe`,
+    { base: getConfig('ng/api'), ...props }
+  )
 
 export const unsubscribePromise = (
-  props: MutateUsingFetchProps<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>,
+  props: MutateUsingFetchProps<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<boolean, Failure | Error, void, UnsubscribeBodyRequestBody, void>(
+  mutateUsingFetch<boolean, Failure | Error, void, ProcessPollingResultNgBodyRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/polling/unsubscribe`,
@@ -36300,6 +36547,52 @@ export const getListOfBranchesByConnectorPromise = (
     signal
   )
 
+export interface GetRepoURLQueryParams {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  repoName?: string
+  connectorRef?: string
+}
+
+export type GetRepoURLProps = Omit<GetProps<ResponseString, Failure | Error, GetRepoURLQueryParams, void>, 'path'>
+
+/**
+ * Get repo url
+ */
+export const GetRepoURL = (props: GetRepoURLProps) => (
+  <Get<ResponseString, Failure | Error, GetRepoURLQueryParams, void>
+    path={`/scm/repo-url`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetRepoURLProps = Omit<UseGetProps<ResponseString, Failure | Error, GetRepoURLQueryParams, void>, 'path'>
+
+/**
+ * Get repo url
+ */
+export const useGetRepoURL = (props: UseGetRepoURLProps) =>
+  useGet<ResponseString, Failure | Error, GetRepoURLQueryParams, void>(`/scm/repo-url`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Get repo url
+ */
+export const getRepoURLPromise = (
+  props: GetUsingFetchProps<ResponseString, Failure | Error, GetRepoURLQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseString, Failure | Error, GetRepoURLQueryParams, void>(
+    getConfig('ng/api'),
+    `/scm/repo-url`,
+    props,
+    signal
+  )
+
 export interface GetMetadataQueryParams {
   accountIdentifier: string
 }
@@ -36806,6 +37099,7 @@ export interface GetServiceNowIssueCreateMetadataQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export type GetServiceNowIssueCreateMetadataProps = Omit<
@@ -36869,6 +37163,7 @@ export interface GetServiceNowTemplateMetadataQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export type GetServiceNowTemplateMetadataProps = Omit<
@@ -36929,6 +37224,7 @@ export interface GetServiceNowIssueMetadataQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export type GetServiceNowIssueMetadataProps = Omit<
@@ -36988,6 +37284,7 @@ export interface GetServiceNowTicketTypesQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityRepoURL?: string
 }
 
 export type GetServiceNowTicketTypesProps = Omit<
@@ -39275,7 +39572,7 @@ export interface CreateFfSubscriptionQueryParams {
 }
 
 export type CreateFfSubscriptionProps = Omit<
-  MutateProps<ResponseInvoiceDetailDTO, Failure | Error, CreateFfSubscriptionQueryParams, FfSubscriptionDTO, void>,
+  MutateProps<ResponseSubscriptionDetailDTO, Failure | Error, CreateFfSubscriptionQueryParams, FfSubscriptionDTO, void>,
   'path' | 'verb'
 >
 
@@ -39283,7 +39580,7 @@ export type CreateFfSubscriptionProps = Omit<
  * Creates a feature flag subscription
  */
 export const CreateFfSubscription = (props: CreateFfSubscriptionProps) => (
-  <Mutate<ResponseInvoiceDetailDTO, Failure | Error, CreateFfSubscriptionQueryParams, FfSubscriptionDTO, void>
+  <Mutate<ResponseSubscriptionDetailDTO, Failure | Error, CreateFfSubscriptionQueryParams, FfSubscriptionDTO, void>
     verb="POST"
     path={`/subscriptions`}
     base={getConfig('ng/api')}
@@ -39292,7 +39589,13 @@ export const CreateFfSubscription = (props: CreateFfSubscriptionProps) => (
 )
 
 export type UseCreateFfSubscriptionProps = Omit<
-  UseMutateProps<ResponseInvoiceDetailDTO, Failure | Error, CreateFfSubscriptionQueryParams, FfSubscriptionDTO, void>,
+  UseMutateProps<
+    ResponseSubscriptionDetailDTO,
+    Failure | Error,
+    CreateFfSubscriptionQueryParams,
+    FfSubscriptionDTO,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -39300,7 +39603,7 @@ export type UseCreateFfSubscriptionProps = Omit<
  * Creates a feature flag subscription
  */
 export const useCreateFfSubscription = (props: UseCreateFfSubscriptionProps) =>
-  useMutate<ResponseInvoiceDetailDTO, Failure | Error, CreateFfSubscriptionQueryParams, FfSubscriptionDTO, void>(
+  useMutate<ResponseSubscriptionDetailDTO, Failure | Error, CreateFfSubscriptionQueryParams, FfSubscriptionDTO, void>(
     'POST',
     `/subscriptions`,
     { base: getConfig('ng/api'), ...props }
@@ -39311,7 +39614,7 @@ export const useCreateFfSubscription = (props: UseCreateFfSubscriptionProps) =>
  */
 export const createFfSubscriptionPromise = (
   props: MutateUsingFetchProps<
-    ResponseInvoiceDetailDTO,
+    ResponseSubscriptionDetailDTO,
     Failure | Error,
     CreateFfSubscriptionQueryParams,
     FfSubscriptionDTO,
@@ -39319,13 +39622,13 @@ export const createFfSubscriptionPromise = (
   >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponseInvoiceDetailDTO, Failure | Error, CreateFfSubscriptionQueryParams, FfSubscriptionDTO, void>(
-    'POST',
-    getConfig('ng/api'),
-    `/subscriptions`,
-    props,
-    signal
-  )
+  mutateUsingFetch<
+    ResponseSubscriptionDetailDTO,
+    Failure | Error,
+    CreateFfSubscriptionQueryParams,
+    FfSubscriptionDTO,
+    void
+  >('POST', getConfig('ng/api'), `/subscriptions`, props, signal)
 
 export interface UpdateBillingQueryParams {
   accountIdentifier: string
@@ -39710,6 +40013,7 @@ export const retrieveUpcomingInvoicePromise = (
   >('POST', getConfig('ng/api'), `/subscriptions/invoices/preview`, props, signal)
 
 export interface PayInvoiceQueryParams {
+  accountIdentifier: string
   invoiceId: string
 }
 

@@ -1678,6 +1678,7 @@ export interface StringsMap {
   'connectors.aws.enableCrossAcc': string
   'connectors.aws.externalId': string
   'connectors.aws.secretKey': string
+  'connectors.aws.testRegion': string
   'connectors.aws.useIRSA': string
   'connectors.aws.validation.accessKey': string
   'connectors.aws.validation.crossAccountRoleArn': string
@@ -3399,6 +3400,7 @@ export interface StringsMap {
   'pipeline.noBuildsText': string
   'pipeline.noDeploymentText': string
   'pipeline.noPipelineText': string
+  'pipeline.noRegions': string
   'pipeline.nodes': string
   'pipeline.nodesLabel': string
   'pipeline.numOfStage': string

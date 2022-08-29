@@ -27,6 +27,7 @@ import { ArtifactSourceBaseFactory } from '@cd/factory/ArtifactSourceFactory/Art
 import type { K8SDirectServiceStep } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sServiceSpecInterface'
 import { AmazonS3ArtifactSource } from '../AmazonS3ArtifactSource'
 import {
+  awsRegionsData,
   bucketListData,
   commonFormikInitialValues,
   templateAmazonS3Artifact,
@@ -37,6 +38,7 @@ import {
 // Mock API and Functions
 const fetchConnectors = (): Promise<unknown> => Promise.resolve(connectorsData)
 const fetchBuckets = jest.fn().mockReturnValue(bucketListData)
+
 jest.mock('services/cd-ng', () => ({
   getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
   useGetConnector: jest.fn().mockImplementation(() => {
@@ -44,6 +46,11 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetV2BucketListForS3: jest.fn().mockImplementation(() => {
     return { data: bucketListData, refetch: fetchBuckets, error: null, loading: false }
+  })
+}))
+jest.mock('services/portal', () => ({
+  useListAwsRegions: jest.fn().mockImplementation(() => {
+    return { data: awsRegionsData, error: null, loading: false }
   })
 }))
 
@@ -171,42 +178,6 @@ describe('AmazonS3ArtifactSource tests', () => {
     expect(connnectorRefInput).toBeDisabled()
     expect(bucketNameInput).toBeDisabled()
     expect(filePathInput).toBeDisabled()
-  })
-
-  test(`clicking on Bucket Name field should display loading option when bucket data is being fetched`, async () => {
-    jest.spyOn(cdng, 'useGetV2BucketListForS3').mockImplementation((): any => {
-      return {
-        loading: true,
-        data: null,
-        refetch: fetchBuckets
-      }
-    })
-
-    const { container } = renderComponent({
-      ...props,
-      artifact: {
-        identifier: '',
-        type: 'AmazonS3',
-        spec: {
-          connectorRef: 'AWSX',
-          bucketName: RUNTIME_INPUT_VALUE,
-          filePath: RUNTIME_INPUT_VALUE
-        }
-      },
-      template: templateAmazonS3ArtifactWithoutConnectorRef
-    })
-
-    const portalDivs = document.getElementsByClassName('bp3-portal')
-    expect(portalDivs.length).toBe(0)
-
-    const bucketNameDropDownButton = container.querySelector('[data-icon="chevron-down"]')
-    fireEvent.click(bucketNameDropDownButton!)
-    expect(portalDivs.length).toBe(1)
-    const dropdownPortalDiv = portalDivs[0]
-    const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
-    const loadingBucketsOption = await findByText(selectListMenu as HTMLElement, 'Loading Buckets...')
-    expect(loadingBucketsOption).toBeDefined()
-    await waitFor(() => expect(fetchBuckets).toHaveBeenCalled())
   })
 
   test(`clicking on Bucket Name field should call fetchBuckets function and display no buckets option when bucket data is not present`, async () => {

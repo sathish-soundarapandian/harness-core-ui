@@ -901,6 +901,7 @@ myDeploymentsText: My Deployments
 myBuildsText: My Builds
 mySecurityTestsText: My Security Tests
 myPipelineRunsText: My Pipeline Runs
+noRegions: No regions found
 noBuckets: No buckets found with given region
 gitRepo: Git Repo
 buildRepo: Build Repo

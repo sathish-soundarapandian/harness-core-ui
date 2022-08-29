@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { isEmpty, map, get } from 'lodash-es'
+import { isEmpty, map, get, defaultTo } from 'lodash-es'
 import cx from 'classnames'
 import {
   FormInput,
@@ -18,18 +18,24 @@ import {
   MultiSelectTypeInput,
   Label,
   Layout,
-  useToaster
+  useToaster,
+  getMultiTypeFromValue,
+  MultiTypeInputType
 } from '@harness/uicore'
 import { connect, FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import {
+  ConnectorReferenceDTO,
+  FormMultiTypeConnectorField
+} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { Connectors } from '@connectors/constants'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useListAwsRegions } from 'services/portal'
 import { useCFCapabilitiesForAws, useCFStatesForAws, useGetIamRolesForAws } from 'services/cd-ng'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import { TFMonaco } from '../../../Common/Terraform/Editview/TFMonacoEditor'
 import TemplateFileInputs from './TemplateFile'
 import ParameterFileInputs from './ParameterInputs'
@@ -42,7 +48,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
   props: CreateStackProps<T> & { formik?: FormikContextType<any> }
 ): React.ReactElement {
-  const { inputSetData, readonly, path, allowableTypes, formik, allValues } = props
+  const { inputSetData, readonly, path, allowableTypes, formik, allValues, initialValues } = props
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { expressions } = useVariablesExpression()
@@ -53,7 +59,12 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
   const [capabilities, setCapabilities] = useState<MultiSelectOption[]>([])
   const [selectedCapabilities, setSelectedCapabilities] = useState<MultiSelectOption[]>([])
   const [selectedStackStatus, setSelectedStackStatus] = useState<MultiSelectOption[]>([])
-  const [awsRef, setAwsRef] = useState(get(allValues, 'spec.configuration.connectorRef'))
+  const [awsRef, setAwsRef] = useState(
+    defaultTo(get(initialValues, 'spec.configuration.connectorRef'), get(allValues, 'spec.configuration.connectorRef'))
+  )
+  const [regionsRef, setRegionsRef] = useState(
+    defaultTo(get(initialValues, 'spec.configuration.region'), get(allValues, 'spec.configuration.region'))
+  )
 
   useEffect(() => {
     /* istanbul ignore next */
@@ -148,7 +159,8 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
       accountIdentifier: accountId,
       orgIdentifier: orgIdentifier,
       projectIdentifier: projectIdentifier,
-      awsConnectorRef: awsRef as string
+      awsConnectorRef: awsRef as string,
+      region: regionsRef as string
     }
   })
 
@@ -162,10 +174,18 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
       setAwsRoles(roles)
     }
     /* istanbul ignore next */
-    if (!roleData && roleRequired && awsRef) {
+  }, [roleData, roleRequired])
+
+  useEffect(() => {
+    if (
+      !isEmpty(awsRef) &&
+      getMultiTypeFromValue(awsRef) === MultiTypeInputType.FIXED &&
+      !isEmpty(regionsRef) &&
+      getMultiTypeFromValue(regionsRef) === MultiTypeInputType.FIXED
+    ) {
       getRoles()
     }
-  }, [roleData, roleRequired, awsRef])
+  }, [awsRef, getRoles, regionsRef])
 
   return (
     <FormikForm>
@@ -216,11 +236,21 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
             disabled={readonly}
             width={300}
             setRefValue
-            onChange={(value: any, _unused, _notUsed) => {
+            onChange={(selected: any, _typeValue, type) => {
+              const item = selected as unknown as { record?: ConnectorReferenceDTO; scope: Scope }
               /* istanbul ignore next */
-              setAwsRef(value?.record?.identifier || value)
-              /* istanbul ignore next */
-              formik?.setFieldValue(`${path}.spec.configuration.connectorRef`, value?.record?.identifier || value)
+              if (type === MultiTypeInputType.FIXED) {
+                const connectorRefValue =
+                  item.scope === Scope.ORG || item.scope === Scope.ACCOUNT
+                    ? `${item.scope}.${item?.record?.identifier}`
+                    : item.record?.identifier
+                setAwsRef(connectorRefValue as string)
+              } else setAwsRef(selected as string)
+              get(formik?.values, `${path}.spec.configuration.roleArn`) &&
+                getMultiTypeFromValue(get(formik?.values, `${path}.spec.configuration.roleArn`)) ===
+                  MultiTypeInputType.FIXED &&
+                formik?.setFieldValue(`${path}.spec.configuration.roleArn`, '')
+              setAwsRoles([])
             }}
           />
         </div>
@@ -234,6 +264,14 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
             disabled={readonly}
             useValue
             multiTypeInputProps={{
+              onChange: value => {
+                setRegionsRef((value as any).value as string)
+                get(formik?.values, `${path}.spec.configuration.roleArn`) &&
+                  getMultiTypeFromValue(get(formik?.values, `${path}.spec.configuration.roleArn`)) ===
+                    MultiTypeInputType.FIXED &&
+                  formik?.setFieldValue(`${path}.spec.configuration.roleArn`, '')
+                setAwsRoles([])
+              },
               selectProps: {
                 allowCreatingNewItems: true,
                 items: regions ? regions : []
@@ -266,7 +304,7 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
           <FormInput.MultiTypeInput
             label={getString('connectors.awsKms.roleArnLabel')}
             name={`${path}.spec.configuration.roleArn`}
-            disabled={readonly}
+            disabled={readonly || rolesLoading}
             useValue
             placeholder={getString(rolesLoading ? 'common.loading' : 'select')}
             multiTypeInputProps={{

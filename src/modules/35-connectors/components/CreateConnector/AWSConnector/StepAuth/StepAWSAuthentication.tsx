@@ -22,6 +22,7 @@ import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
+import { regionValues } from './StepAuthConstants'
 import css from './StepAWSAuthentication.module.scss'
 interface StepAWSAuthenticationProps extends ConnectorInfoDTO {
   name: string
@@ -34,6 +35,7 @@ interface AWSFormInterface {
   crossAccountAccess: boolean
   crossAccountRoleArn: string
   externalId: string
+  region: string
 }
 
 const defaultInitialFormData: AWSFormInterface = {
@@ -42,7 +44,8 @@ const defaultInitialFormData: AWSFormInterface = {
   secretKeyRef: undefined,
   crossAccountAccess: false,
   crossAccountRoleArn: '',
-  externalId: ''
+  externalId: '',
+  region: ''
 }
 
 const StepAWSAuthentication: React.FC<StepProps<StepAWSAuthenticationProps> & ConnectorDetailsProps> = props => {
@@ -164,6 +167,14 @@ const StepAWSAuthentication: React.FC<StepProps<StepAWSAuthenticationProps> & Co
                     />
                   </>
                 ) : null}
+              </Layout.Vertical>
+              <Layout.Vertical spacing="small">
+                <FormInput.Select
+                  name="region"
+                  items={regionValues}
+                  label={getString('connectors.aws.testRegion')}
+                  className={css.dropdownAws}
+                />
               </Layout.Vertical>
             </Layout.Vertical>
             <Layout.Horizontal padding={{ top: 'small' }} spacing="medium">

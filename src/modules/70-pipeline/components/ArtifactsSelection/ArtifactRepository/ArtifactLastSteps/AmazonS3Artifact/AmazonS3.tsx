@@ -21,6 +21,7 @@ import {
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
+  SelectOption,
   StepProps,
   Text
 } from '@harness/uicore'
@@ -43,6 +44,7 @@ import {
   defaultArtifactInitialValues,
   getConnectorIdValue
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { useListAwsRegions } from 'services/portal'
 import SideCarArtifactIdentifier from '../SideCarArtifactIdentifier'
 import css from '../../ArtifactConnector.module.scss'
 
@@ -65,6 +67,18 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
 
+  const [regions, setRegions] = React.useState<SelectOption[]>([])
+
+  const {
+    data: regionData,
+    loading: loadingRegions,
+    error: errorRegions
+  } = useListAwsRegions({
+    queryParams: {
+      accountId
+    }
+  })
+
   const {
     data: bucketData,
     error,
@@ -75,13 +89,14 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     debounce: 300
   })
 
-  const fetchBuckets = (): void => {
+  const fetchBuckets = (region: string): void => {
     refetchBuckets({
       queryParams: {
         accountIdentifier: accountId,
         orgIdentifier,
         projectIdentifier,
-        connectorRef: prevStepData?.connectorId?.value ?? prevStepData?.connectorId
+        connectorRef: prevStepData?.connectorId?.value ?? prevStepData?.connectorId,
+        region: region
       }
     })
   }
@@ -93,6 +108,15 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     }))
   }, [bucketData?.data])
 
+  React.useEffect(() => {
+    const regionValues = (regionData?.resource || []).map(region => ({
+      value: region.value,
+      label: region.name
+    }))
+
+    setRegions(regionValues as SelectOption[])
+  }, [regionData?.resource])
+
   const getBuckets = (): { label: string; value: string }[] => {
     if (loading) {
       return [{ label: 'Loading Buckets...', value: 'Loading Buckets...' }]
@@ -101,6 +125,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   }
 
   const schemaObject = {
+    region: Yup.string(),
     bucketName: Yup.mixed().required(getString('pipeline.manifestType.bucketNameRequired')),
     tagType: Yup.string().required(),
     filePath: Yup.string().when('tagType', {
@@ -151,9 +176,11 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     const artifactObj = {
       spec: {
         connectorRef: formData.connectorId,
-        bucketName: formData.bucketName
+        bucketName: formData.bucketName,
+        region: formData.region
       }
     }
+
     // Merge filePath or filePathRegex field value with initial data depending upon tagType selection
     const filePathData =
       formData?.tagType === TagTypes.Value ? { filePath: formData.filePath } : { filePathRegex: formData.filePathRegex }
@@ -230,9 +257,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
               allowCreatingNewItems: true
             },
             onFocus: () => {
-              if (!bucketData?.data) {
-                fetchBuckets()
-              }
+              fetchBuckets(formik?.values?.region)
             }
           }}
         />
@@ -276,6 +301,48 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
           <Form>
             <div className={css.connectorForm}>
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
+              <div className={css.imagePathContainer}>
+                <FormInput.MultiTypeInput
+                  name="region"
+                  selectItems={regions}
+                  useValue
+                  multiTypeInputProps={{
+                    onChange: () => {
+                      formik.values?.bucketName &&
+                        getMultiTypeFromValue(formik.values?.bucketName) === MultiTypeInputType.FIXED &&
+                        formik.setFieldValue('bucketName', '')
+                    },
+                    selectProps: {
+                      items: regions,
+                      noResults: (
+                        <Text lineClamp={1} width={500} height={100}>
+                          {getRBACErrorMessage(errorRegions as RBACError) || getString('pipeline.noRegions')}
+                        </Text>
+                      )
+                    }
+                  }}
+                  label={getString('regionLabel')}
+                  placeholder={loadingRegions ? getString('loading') : getString('select')}
+                />
+
+                {getMultiTypeFromValue(formik.values.region) === MultiTypeInputType.RUNTIME && (
+                  <div className={css.configureOptions}>
+                    <ConfigureOptions
+                      style={{ alignSelf: 'center' }}
+                      value={formik.values?.region as string}
+                      type="String"
+                      variableName="region"
+                      showRequiredField={false}
+                      showDefaultField={false}
+                      showAdvanced={true}
+                      onChange={value => {
+                        formik.setFieldValue('region', value)
+                      }}
+                      isReadonly={isReadonly}
+                    />
+                  </div>
+                )}
+              </div>
 
               {renderS3BucketField(formik)}
 

@@ -313,6 +313,7 @@ aws:
   enableCrossAcc: Enable cross-account access (STS Role)
   crossAccURN: Cross account role ARN
   externalId: External Id (Optional)
+  testRegion: Test Region
   assumeIAMRole: Assume IAM role on Delegate
   useIRSA: Use IRSA
   validation:
