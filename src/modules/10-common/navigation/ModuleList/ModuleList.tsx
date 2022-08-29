@@ -136,6 +136,7 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
           activeModule={activeModuleCarousel}
           className={css.configScreenWithoutReorder}
           hideReordering={true}
+          hideHeader
         />
       )
     }

@@ -42,7 +42,7 @@ export const MODULES_CONFIG_PREFERENCE_STORE_KEY = 'modulesConfiguration'
 
 const ModuleConfigHeader: React.FC<ModuleConfigHeaderProps> = ({ onDefaultSettingsClick }) => {
   return (
-    <Layout.Vertical className={css.header}>
+    <>
       <Text inline margin={{ bottom: 'xsmall' }}>
         <Text inline color={Color.WHITE} font={{ variation: FontVariation.H2 }}>
           <String stringID="common.moduleConfig.selectModules" />
@@ -69,7 +69,7 @@ const ModuleConfigHeader: React.FC<ModuleConfigHeaderProps> = ({ onDefaultSettin
           <String stringID="common.moduleConfig.restoreDefault" />
         </Text>
       </Text>
-    </Layout.Vertical>
+    </>
   )
 }
 
@@ -103,16 +103,18 @@ const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({
 
   return (
     <Layout.Vertical className={cx(css.container, className)} padding={{ left: 'xlarge' }}>
-      {!hideHeader ? (
-        <ModuleConfigHeader
-          onDefaultSettingsClick={() => {
-            setModuleConfigPreference({
-              selectedModules: [],
-              orderedModules: DEFAULT_MODULES_ORDER
-            })
-          }}
-        />
-      ) : null}
+      <Container className={css.header}>
+        {!hideHeader ? (
+          <ModuleConfigHeader
+            onDefaultSettingsClick={() => {
+              setModuleConfigPreference({
+                selectedModules: [],
+                orderedModules: DEFAULT_MODULES_ORDER
+              })
+            }}
+          />
+        ) : null}
+      </Container>
       <Layout.Horizontal
         padding={{ bottom: 'huge', right: 'huge' }}
         margin={{ bottom: 'xxxlarge' }}
