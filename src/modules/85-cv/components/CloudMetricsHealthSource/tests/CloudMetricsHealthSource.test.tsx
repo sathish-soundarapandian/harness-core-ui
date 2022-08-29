@@ -88,6 +88,7 @@ describe('Unit tests for CloudMetricsHealthSource', () => {
 
     const mockCloudMetricHealthSourcePropsValue = { ...mockCloudMetricHealthSourceProps(<></>) }
     render(WrapperComponent(<CloudMetricsHealthSource {...mockCloudMetricHealthSourcePropsValue} />))
+
     expect(mockMetricDashboardWidgetNav).toHaveBeenNthCalledWith(1, {
       connectorIdentifier: DefaultSourceData.identifier,
       addManualQueryTitle: mockAddQueryTitle,
@@ -98,7 +99,7 @@ describe('Unit tests for CloudMetricsHealthSource', () => {
       onSelectMetric: expect.any(Function),
       showSpinnerOnLoad: expect.any(Boolean)
     })
-    expect(mockMetricsValidationChart).toHaveBeenNthCalledWith(2, {
+    expect(mockMetricsValidationChart).toHaveBeenNthCalledWith(1, {
       error: undefined,
       isQueryExecuted: false,
       loading: true,
@@ -107,18 +108,7 @@ describe('Unit tests for CloudMetricsHealthSource', () => {
       sampleData: {},
       submitQueryText: 'cv.monitoringSources.datadogLogs.submitQueryToSeeRecords'
     })
-    expect(mockSelectHealthSourceServices).toHaveBeenNthCalledWith(2, {
-      values: {
-        sli: mockCloudMetricHealthSourcePropsValue.formikProps.values.sli,
-        healthScore: mockCloudMetricHealthSourcePropsValue.formikProps.values.healthScore,
-        continuousVerification: mockCloudMetricHealthSourcePropsValue.formikProps.values.continuousVerification,
-        serviceInstance: 'cluster-name'
-      },
-      metricPackResponse: mockUseGetReturnData,
-      labelNamesResponse: { data: { data: ['cluster-name'] } },
-      refetch: jest.fn(),
-      formikSetField: jest.fn()
-    })
+    expect(mockSelectHealthSourceServices).toHaveBeenCalledTimes(2)
     expect(mockMonacoEditor).toHaveBeenCalledTimes(0)
   })
 
