@@ -47,7 +47,7 @@ const ModuleCarousel: React.FC<ModuleDetailsSectionProps> = ({ module: selectedM
           {data.length > 0 ? (
             data.map((item, index) => {
               const Component = getComponentBasedOnType(item.type)
-              return <Component key={index} {...item} activeModule={selectedModule} />
+              return <Component key={index} {...item.data} activeModule={selectedModule} />
             })
           ) : (
             <Container flex={{ justifyContent: 'center' }} height="100%">

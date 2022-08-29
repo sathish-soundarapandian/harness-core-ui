@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
 import { ModuleName } from 'framework/types/ModuleName'
-import type { NavModuleName } from '../ModuleList/NavModule/NavModule'
 import type { ModuleInfo } from './types'
 
 export const DEFAULT_MODULES_ORDER: NavModuleName[] = [

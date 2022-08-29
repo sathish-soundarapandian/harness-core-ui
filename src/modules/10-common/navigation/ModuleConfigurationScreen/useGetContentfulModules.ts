@@ -1,7 +1,14 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import { useEffect, useState } from 'react'
 import type { Entry, Asset } from 'contentful'
 import Contentful from '@common/Contentful'
-import type { ModuleName } from 'framework/types/ModuleName'
+import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
 
 const CONTENT_TYPE = 'module'
 
@@ -26,25 +33,24 @@ export interface CenterAlignedImageDescription {
 }
 
 interface ContentfulModulesResponse {
-  identifier: ModuleName
+  identifier: NavModuleName
   label: string
   data: Entry<CenterAlignedImageDescription | LottieContent>[]
 }
 
-// Try to rename types
 export interface MassagedModuleData {
   label: string
   data: ModuleContentWithType<CenterAlignedImageDescription | LottieContent>[]
 }
 
 export interface UseGetContentfulModulesReturnType {
-  contentfulModuleMap: Record<ModuleName, MassagedModuleData> | undefined
+  contentfulModuleMap: Partial<Record<NavModuleName, MassagedModuleData>> | undefined
   loading: boolean
 }
 
 const useGetContentfulModules = (): UseGetContentfulModulesReturnType => {
   const [moduleContentfulDataMap, setModuleContentfulDataMap] = useState<
-    Record<ModuleName, MassagedModuleData> | undefined
+    Partial<Record<NavModuleName, MassagedModuleData>> | undefined
   >()
   const [loading, setLoading] = useState<boolean>(false)
 
@@ -59,23 +65,27 @@ const useGetContentfulModules = (): UseGetContentfulModulesReturnType => {
         })
         .then(response => {
           if (response && response.items.length > 0) {
-            const map: Record<ModuleName, MassagedModuleData> = response.items.reduce((moduleMap, item) => {
-              moduleMap[item.fields.identifier] = {
-                type: item.sys.contentType.sys.id,
-                label: item.fields.label,
-                data: item.fields.data
-                  .map(value => {
-                    if (value.sys.contentType) {
-                      return {
-                        type: value.sys.contentType.sys.id,
-                        ...value.fields
-                      }
-                    }
+            const map: Partial<Record<NavModuleName, MassagedModuleData>> = {}
+
+            response.items.forEach(item => {
+              const data = item.fields.data.reduce<
+                ModuleContentWithType<CenterAlignedImageDescription | LottieContent>[]
+              >((final, component) => {
+                if (component.sys.contentType.sys.id) {
+                  final.push({
+                    type: component.sys.contentType.sys.id as ModuleContentType,
+                    data: { ...component.fields }
                   })
-                  .filter(Boolean)
+                }
+                return final
+              }, [])
+
+              map[item.fields.identifier] = {
+                label: item.fields.label,
+                data
               }
-              return moduleMap
-            }, {})
+            })
+
             setModuleContentfulDataMap(map)
           }
         })
