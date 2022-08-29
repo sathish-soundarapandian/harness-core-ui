@@ -1,0 +1,67 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.paletteCard {
+  width: 64px;
+  height: 64px;
+  background: var(--white) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--elevation-2) !important;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+
+  .closeNode {
+    position: absolute;
+    height: 16px !important;
+    min-height: 16px !important;
+    width: 16px !important;
+    min-width: 16px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    left: -17px;
+    top: -0;
+    opacity: 0;
+
+    :global {
+      span[icon='cross'] {
+        padding: 0 !important;
+      }
+      svg[data-icon='cross'] {
+        fill: var(--white) !important;
+      }
+    }
+  }
+
+  &:hover .closeNode {
+    opacity: 1;
+    &.isReadOnly {
+      opacity: 0 !important;
+    }
+  }
+
+  &:hover {
+    cursor: pointer;
+    border: 1px solid transparent !important;
+  }
+}
+
+.templateLibraryIcon {
+  position: absolute;
+  left: var(--spacing-1);
+  top: var(--spacing-1);
+}
+
+.warningIcon {
+  position: absolute;
+  right: var(--spacing-1);
+  top: var(--spacing-1);
+}
+
+.stepTemplateCardText {
+  text-align: center;
+}

@@ -11,8 +11,9 @@ import { useParams } from 'react-router-dom'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { DeploymentConfigCanvasWithRef } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentConfigCanvas'
-import { DeploymentContextProvider } from '@cd/context/DeploymentContext/DeploymentContextProvider'
-import type { ModulePathParams, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
+import { DeploymentContextProvider, DeploymentConfig } from '@cd/context/DeploymentContext/DeploymentContextProvider'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 
 const DeploymentTemplateCanvasWrapper = (_props: unknown, formikRef: TemplateFormRef) => {
   const {
@@ -21,11 +22,9 @@ const DeploymentTemplateCanvasWrapper = (_props: unknown, formikRef: TemplateFor
     isReadonly
   } = React.useContext(TemplateContext)
 
-  const { accountId, projectIdentifier, orgIdentifier, templateIdentifier } = useParams<
-    TemplateStudioPathProps & ModulePathParams
-  >()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
-  const onDeploymentConfigUpdate = async (configValues: any) => {
+  const onDeploymentConfigUpdate = async (configValues: DeploymentConfig) => {
     set(template, 'spec', configValues)
     await updateTemplate(template)
   }
@@ -33,11 +32,11 @@ const DeploymentTemplateCanvasWrapper = (_props: unknown, formikRef: TemplateFor
   return (
     <DeploymentContextProvider
       queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier }}
-      templateIdentifier={templateIdentifier}
       onDeploymentConfigUpdate={onDeploymentConfigUpdate}
-      deploymentConfigInitialValues={template.spec}
+      deploymentConfigInitialValues={template.spec as DeploymentConfig}
       isReadOnly={isReadonly}
       gitDetails={gitDetails}
+      stepsFactory={factory}
     >
       <DeploymentConfigCanvasWithRef ref={formikRef} />
     </DeploymentContextProvider>

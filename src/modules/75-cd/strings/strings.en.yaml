@@ -511,3 +511,8 @@ miniKubeCmd1: curl -LO https://storage.googleapis.com/minikube/releases/latest/m
 miniKubeCmd2: sudo install minikube-linux-amd64 /usr/local/bin/minikube
 miniKubeCmd3: minikube start
 miniKubeCmd4: kubectl get pods -A
+deploymentSteps: Deployment Steps
+addStepsForYourDeploymentType: Add steps for your deployment type here
+removeStepTemplate: Remove Step Template
+removeStepTemplateConfirmationLabel: 'Are you sure you want to remove template "{{ name }}" ?'
+removeStepTemplateSuccess: Step Template has been successfully removed
