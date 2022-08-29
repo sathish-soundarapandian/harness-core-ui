@@ -197,7 +197,8 @@ export function PipelineListPage(): React.ReactElement {
           orgIdentifier,
           projectIdentifier,
           ...gitParams
-        }
+        },
+        headers: { 'content-type': 'application/json' }
       })
 
       if (status === 'SUCCESS') {
