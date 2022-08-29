@@ -23,6 +23,7 @@ import { useUpdateQueryParams } from '@common/hooks'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 import type { ChartConfigType } from './chartUtils'
+import { CE_COLOR_CONST } from '../CEChart/CEChartOptions'
 import CEChart from '../CEChart/CEChart'
 import ChartLegend from './ChartLegend'
 import css from './Chart.module.scss'
@@ -226,20 +227,27 @@ const GetChart: React.FC<GetChartProps> = ({
     return labels || []
   }
 
-  const chartData = useMemo(
-    () =>
-      chart.map(chartItem => {
-        switch (chartItem.name) {
-          case 'Others':
-            return { ...chartItem, color: 'var(--blue-100)' }
-          case 'Unallocated':
-            return { ...chartItem, color: 'var(--primary-2)' }
-          default:
-            return chartItem
+  const chartData = useMemo(() => {
+    let index = 0
+    const data: ChartConfigType[] = []
+
+    chart.forEach(chartItem => {
+      switch (chartItem.name) {
+        case 'Others':
+          data.push({ ...chartItem, color: 'var(--blue-100)' })
+          break
+        case 'Unallocated':
+          data.push({ ...chartItem, color: 'var(--primary-2)' })
+          break
+        default: {
+          data.push({ ...chartItem, color: CE_COLOR_CONST[index % CE_COLOR_CONST.length] })
+          index++
         }
-      }),
-    [chart]
-  )
+      }
+    })
+
+    return data
+  }, [chart])
 
   const anomaliesCounts = useMemo(() => {
     const anomaliesPointMap: Record<number, number> = {}
