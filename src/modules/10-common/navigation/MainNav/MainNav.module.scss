@@ -92,16 +92,6 @@
           opacity: 1;
         }
       }
-
-      &::after {
-        position: absolute;
-        content: '';
-        width: 20px;
-        height: 1px;
-        background: rgba(204, 204, 204, 0.4);
-        left: calc(50% - 10px);
-        bottom: 16px;
-      }
     }
 
     &.active {
@@ -111,15 +101,6 @@
         }
       }
       background: var(--theme-light-nav-panel-bg);
-      &::after {
-        position: absolute;
-        content: '';
-        width: 20px;
-        height: 1px;
-        background: var(--white);
-        left: calc(50% - 10px);
-        bottom: 16px;
-      }
     }
   }
 
@@ -131,6 +112,10 @@
     color: var(--grey-300);
     padding: 6px 10px;
     cursor: pointer;
+
+    & svg path {
+      fill: var(--grey-300);
+    }
 
     &:hover {
       box-shadow: none;

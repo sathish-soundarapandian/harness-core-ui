@@ -5,16 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Droppable, DragDropContext } from 'react-beautiful-dnd'
-import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
 import DraggableModuleItem from './DraggableModuleItem/DraggableModuleItem'
-import { DEFAULT_MODULES_ORDER } from '../util'
 
 interface ModuleSortableListProps {
   activeModule: NavModuleName
   onSelect: (module: NavModuleName) => void
+  handleUpdate: (updatedOrder: NavModuleName[], selectedModules: NavModuleName[]) => void
+  orderedModules: NavModuleName[]
+  selectedModules: NavModuleName[]
 }
 
 export interface ModulesPreferenceStoreData {
@@ -32,20 +33,13 @@ const reorder = (list: NavModuleName[], startIndex: number, endIndex: number) =>
   return result
 }
 
-const ModuleSortableList: React.FC<ModuleSortableListProps> = ({ onSelect, activeModule }) => {
-  const { setPreference: setModuleConfigPreference, preference: { orderedModules = [], selectedModules = [] } = {} } =
-    usePreferenceStore<ModulesPreferenceStoreData>(PreferenceScope.USER, MODULES_CONFIG_PREFERENCE_STORE_KEY)
-
-  useEffect(() => {
-    // Handle case when new module is added
-    if (!orderedModules || orderedModules.length === 0) {
-      setModuleConfigPreference({
-        selectedModules,
-        orderedModules: DEFAULT_MODULES_ORDER
-      })
-    }
-  }, [orderedModules])
-
+const ModuleSortableList: React.FC<ModuleSortableListProps> = ({
+  onSelect,
+  activeModule,
+  orderedModules,
+  selectedModules,
+  handleUpdate
+}) => {
   return (
     <>
       <DragDropContext
@@ -56,7 +50,7 @@ const ModuleSortableList: React.FC<ModuleSortableListProps> = ({ onSelect, activ
           // Re order modules based on source and destination index
           const reordered = reorder(orderedModules, result.source.index, result.destination.index)
           // Save reorderd modules in the preference store
-          setModuleConfigPreference({ orderedModules: reordered, selectedModules })
+          handleUpdate(reordered, selectedModules)
         }}
       >
         <Droppable droppableId="droppableModules">
@@ -80,10 +74,7 @@ const ModuleSortableList: React.FC<ModuleSortableListProps> = ({ onSelect, activ
                       tempOrderedSelectedModules.splice(moduleIndex, 1)
                     }
 
-                    setModuleConfigPreference({
-                      orderedModules,
-                      selectedModules: tempOrderedSelectedModules
-                    })
+                    handleUpdate(orderedModules, tempOrderedSelectedModules)
                   }}
                 />
               ))}

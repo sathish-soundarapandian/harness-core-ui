@@ -952,6 +952,7 @@ moduleConfig:
   your: your
   navigation: navigation
   autoSaved: Changes are automatically saved
+  restoreDefault: Restore Default Settings
 
 # Chaos Module
 chaosText: Chaos
@@ -1002,3 +1003,4 @@ moduleTitles:
 ignore: Ignore
 serviceDetails: Service Details
 serviceName: Service Name
+selectModules: Select Modules

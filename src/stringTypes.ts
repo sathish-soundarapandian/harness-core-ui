@@ -468,6 +468,7 @@ export interface StringsMap {
   'common.moduleConfig.autoSaved': string
   'common.moduleConfig.customize': string
   'common.moduleConfig.navigation': string
+  'common.moduleConfig.restoreDefault': string
   'common.moduleConfig.selectModules': string
   'common.moduleConfig.your': string
   'common.moduleLabel': string
@@ -702,6 +703,7 @@ export interface StringsMap {
   'common.selectAVersion.title': string
   'common.selectBranch': string
   'common.selectDefaultExperience': string
+  'common.selectModules': string
   'common.selectName': string
   'common.selectTimeFrame': string
   'common.selectType': string

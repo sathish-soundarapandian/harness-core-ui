@@ -6,34 +6,83 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Layout, Container } from '@harness/uicore'
+import { Layout, Container, Text } from '@harness/uicore'
 import cx from 'classnames'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { Icon } from '@harness/icons'
 import { ModuleName } from 'framework/types/ModuleName'
 import { PageSpinner } from '@common/components'
 import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { String } from 'framework/strings'
 import ModuleSortableList from './ModuleSortableList/ModuleSortableList'
 import ModuleCarousel from './ModuleDetailsSection/ModuleCarousel'
 import useGetContentfulModules from './useGetContentfulModules'
+import { DEFAULT_MODULES_ORDER } from './util'
 import css from './ModuleConfigurationScreen.module.scss'
 
 interface ModulesConfigurationScreenProps {
   onClose: () => void
   className?: string
   hideReordering?: boolean
-  headerText?: React.ReactElement
+  hideHeader?: boolean
   activeModule?: NavModuleName
+}
+
+interface ModuleConfigHeaderProps {
+  onDefaultSettingsClick: () => void
+}
+
+export interface ModulesPreferenceStoreData {
+  orderedModules: NavModuleName[]
+  selectedModules: NavModuleName[]
+}
+
+export const MODULES_CONFIG_PREFERENCE_STORE_KEY = 'modulesConfiguration'
+
+const ModuleConfigHeader: React.FC<ModuleConfigHeaderProps> = ({ onDefaultSettingsClick }) => {
+  return (
+    <Layout.Vertical className={css.header}>
+      <Text inline margin={{ bottom: 'xsmall' }}>
+        <Text inline color={Color.WHITE} font={{ variation: FontVariation.H2 }}>
+          <String stringID="common.moduleConfig.selectModules" />
+        </Text>
+        <Text inline color={Color.PRIMARY_5} className={css.blueText} margin={{ left: 'small', right: 'small' }}>
+          <String stringID="common.moduleConfig.your" />
+        </Text>
+        <Text inline color={Color.WHITE} font={{ variation: FontVariation.H2 }}>
+          <String stringID="common.moduleConfig.navigation" />
+        </Text>
+      </Text>
+      <Text className={css.defaultSettingsTextContainer}>
+        <Text font={{ variation: FontVariation.TINY }} color={Color.GREY_200} inline>
+          (<String stringID="common.moduleConfig.autoSaved" />)
+        </Text>
+        <Text
+          className={css.defaultSettings}
+          onClick={onDefaultSettingsClick}
+          margin={{ left: 'xsmall' }}
+          font={{ variation: FontVariation.TINY }}
+          inline
+          color={Color.PRIMARY_5}
+        >
+          <String stringID="common.moduleConfig.restoreDefault" />
+        </Text>
+      </Text>
+    </Layout.Vertical>
+  )
 }
 
 const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({
   onClose,
   className,
   hideReordering,
-  headerText,
-  activeModule: activeModuleFromProps
+  activeModule: activeModuleFromProps,
+  hideHeader
 }) => {
   const [activeModule, setActiveModule] = useState<NavModuleName>(ModuleName.CD)
+  const { setPreference: setModuleConfigPreference, preference: { orderedModules = [], selectedModules = [] } = {} } =
+    usePreferenceStore<ModulesPreferenceStoreData>(PreferenceScope.USER, MODULES_CONFIG_PREFERENCE_STORE_KEY)
   const { contentfulModuleMap, loading } = useGetContentfulModules()
 
   useEffect(() => {
@@ -42,13 +91,28 @@ const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({
     }
   }, [activeModuleFromProps])
 
-  const renderHeader = () => {
-    return <Container className={css.header}>{headerText}</Container>
-  }
+  useEffect(() => {
+    // Handle case when new module is added
+    if (!orderedModules || orderedModules.length === 0) {
+      setModuleConfigPreference({
+        selectedModules,
+        orderedModules: DEFAULT_MODULES_ORDER
+      })
+    }
+  }, [orderedModules])
 
   return (
     <Layout.Vertical className={cx(css.container, className)} padding={{ left: 'xlarge' }}>
-      {renderHeader()}
+      {!hideHeader ? (
+        <ModuleConfigHeader
+          onDefaultSettingsClick={() => {
+            setModuleConfigPreference({
+              selectedModules: [],
+              orderedModules: DEFAULT_MODULES_ORDER
+            })
+          }}
+        />
+      ) : null}
       <Layout.Horizontal
         padding={{ bottom: 'huge', right: 'huge' }}
         margin={{ bottom: 'xxxlarge' }}
@@ -56,12 +120,19 @@ const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({
       >
         {!hideReordering ? (
           <Container margin={{ right: 'xxlarge' }} className={css.sortableListContainer}>
-            <ModuleSortableList activeModule={activeModule} onSelect={setActiveModule} />
+            <ModuleSortableList
+              activeModule={activeModule}
+              onSelect={setActiveModule}
+              orderedModules={orderedModules}
+              selectedModules={selectedModules}
+              handleUpdate={(updatedOrder, selected) => {
+                setModuleConfigPreference({ orderedModules: updatedOrder, selectedModules: selected })
+              }}
+            />
           </Container>
         ) : null}
 
         <Container className={css.flex1}>
-          {/* Handle error condition */}
           {loading ? (
             <PageSpinner />
           ) : (

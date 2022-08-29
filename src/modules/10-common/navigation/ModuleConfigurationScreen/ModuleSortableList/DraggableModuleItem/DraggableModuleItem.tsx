@@ -43,7 +43,7 @@ const DraggableModuleItem: React.FC<DraggableModuleItemProps> = ({
             ref={providedDrag.innerRef}
           >
             <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
-              <Icon name="drag-handle-vertical" size={20} color={Color.WHITE} margin={{ right: 'xsmall' }} />
+              <Icon name="drag-handle-vertical" size={20} color={Color.GREY_300} margin={{ right: 'xsmall' }} />
               <NavModule
                 module={module}
                 active={isActive}

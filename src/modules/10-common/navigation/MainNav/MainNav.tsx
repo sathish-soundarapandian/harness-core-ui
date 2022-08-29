@@ -9,7 +9,7 @@ import React, { useLayoutEffect } from 'react'
 import cx from 'classnames'
 import { NavLink as Link, useParams } from 'react-router-dom'
 import type { NavLinkProps } from 'react-router-dom'
-import { Text, Icon, Layout, Avatar, Container, useToggleOpen } from '@wings-software/uicore'
+import { Text, Icon, Layout, Avatar, Container, useToggleOpen, Popover } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import ModuleList from '@common/navigation/ModuleList/ModuleList'
 import { String } from 'framework/strings'
@@ -39,6 +39,7 @@ import {
   STONavItem
 } from './ModuleLinks'
 import css from './MainNav.module.scss'
+import { Classes, PopoverInteractionKind, Position } from '@blueprintjs/core'
 
 const commonLinkProps: Partial<NavLinkProps> = {
   activeClassName: css.active,
@@ -125,14 +126,25 @@ export default function L1Nav(): React.ReactElement {
           {NEW_LEFT_NAVBAR_SETTINGS && (
             <li>
               <Container flex={{ justifyContent: 'center' }}>
-                <button
-                  className={cx(css.allModulesButton, {
-                    [css.allModulesOpen]: isModuleListOpen
-                  })}
-                  onClick={toggleModuleList}
+                <Popover
+                  content={
+                    <Text color={Color.WHITE} padding="small">
+                      <String stringID="common.selectModules" />
+                    </Text>
+                  }
+                  popoverClassName={Classes.DARK}
+                  interactionKind={PopoverInteractionKind.HOVER}
+                  position={Position.RIGHT}
                 >
-                  <Icon name="grid" size={isModuleListOpen ? 26 : 16} />
-                </button>
+                  <button
+                    className={cx(css.allModulesButton, {
+                      [css.allModulesOpen]: isModuleListOpen
+                    })}
+                    onClick={toggleModuleList}
+                  >
+                    <Icon name="grid" size={isModuleListOpen ? 26 : 16} />
+                  </button>
+                </Popover>
               </Container>
             </li>
           )}

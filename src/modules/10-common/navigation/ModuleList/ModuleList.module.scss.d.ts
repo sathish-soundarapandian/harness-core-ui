@@ -9,7 +9,6 @@
 declare const styles: {
   readonly backdrop: string
   readonly blue: string
-  readonly blueText: string
   readonly clickable: string
   readonly configScreenWithoutReorder: string
   readonly modulesList: string

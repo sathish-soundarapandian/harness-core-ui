@@ -8,7 +8,6 @@
 import React, { useState } from 'react'
 import cx from 'classnames'
 import { Link } from 'react-router-dom'
-import { FontVariation } from '@harness/design-system'
 import { Drawer, Position } from '@blueprintjs/core'
 import { Color, Container, Icon, Layout, Text } from '@harness/uicore'
 import { String, StringKeys } from 'framework/strings'
@@ -117,24 +116,6 @@ const listConfig: GroupConfig[] = [
   }
 ]
 
-const ModuleConfigHeader: React.FC = () => {
-  return (
-    <>
-      <Text inline margin={{ bottom: 'xsmall' }}>
-        <Text inline color={Color.WHITE} font={{ variation: FontVariation.H2 }}>
-          <String stringID="common.moduleConfig.selectModules" />
-        </Text>
-        <Text inline color={Color.PRIMARY_5} className={css.blueText} margin={{ left: 'small', right: 'small' }}>
-          <String stringID="common.moduleConfig.your" />
-        </Text>
-        <Text inline color={Color.WHITE} font={{ variation: FontVariation.H2 }}>
-          <String stringID="common.moduleConfig.navigation" />
-        </Text>
-      </Text>
-    </>
-  )
-}
-
 const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true }) => {
   const [showModuleSettings, setShowModuleSettings] = useState(false)
   const [activeModuleCarousel, setActiveModuleCarousel] = useState<NavModuleName | undefined>(undefined)
@@ -147,7 +128,7 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
 
   const renderModuleConfigScreen = () => {
     if (showModuleSettings) {
-      return <ModuleConfigurationScreen onClose={onConfigScreenClose} headerText={<ModuleConfigHeader />} />
+      return <ModuleConfigurationScreen onClose={onConfigScreenClose} />
     } else if (activeModuleCarousel) {
       return (
         <ModuleConfigurationScreen
