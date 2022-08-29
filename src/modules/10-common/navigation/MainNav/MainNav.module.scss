@@ -49,7 +49,8 @@
       border-bottom: 1px solid var(--modules-container-border);
       border-top: 1px solid var(--modules-container-border);
       &::-webkit-scrollbar {
-        display: none;
+        width: 0px;
+        background: transparent; /* make scrollbar transparent */
       }
     }
   }
