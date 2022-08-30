@@ -472,13 +472,13 @@ export interface StringsMap {
   'common.moduleConfig.selectModules': string
   'common.moduleConfig.your': string
   'common.moduleLabel': string
-  'common.moduleTitles.cd': string
-  'common.moduleTitles.cf': string
   'common.moduleList.buildAndTest': string
   'common.moduleList.deployChanges': string
   'common.moduleList.manageImpact': string
   'common.moduleList.optimize': string
   'common.moduleList.title': string
+  'common.moduleTitles.cd': string
+  'common.moduleTitles.cf': string
   'common.monitoredServices': string
   'common.monthly': string
   'common.moreInfo': string
