@@ -100,11 +100,14 @@ const CloudIntegrationPage: React.FC = () => {
     }
   }, [page, searchTerm, selectedTab])
 
+  const refetchMetadataAndK8sConnectors = (): void => {
+    refetchCCMMetaData({ requestPolicy: 'network-only' })
+    getK8sConnectors()
+  }
+
   const { openConnectorModal } = useCreateConnectorModal({
-    onSuccess: /* istanbul ignore next */ () => {
-      refetchCCMMetaData()
-      getK8sConnectors()
-    }
+    onSuccess: /* istanbul ignore next */ refetchMetadataAndK8sConnectors,
+    onClose: refetchMetadataAndK8sConnectors
   })
 
   const handleConnectorCreation = /* istanbul ignore next */ (selectedProvider: string): void => {

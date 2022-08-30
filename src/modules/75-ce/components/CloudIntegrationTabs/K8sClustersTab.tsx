@@ -313,15 +313,17 @@ const MenuCell: CustomK8sCell = ({ row, column }) => {
 
   const handleDelete = async (): Promise<void> => {
     try {
-      const ccmK8sConnectorDeleted = await deleteConnector(ccmk8sConnector?.identifier || '', {
-        headers: { 'content-type': 'application/json' }
-      })
+      if (ccmk8sConnector?.identifier) {
+        await deleteConnector(ccmk8sConnector?.identifier || '', {
+          headers: { 'content-type': 'application/json' }
+        })
+      }
 
       const k8sConnectorDeleted = await deleteConnector(k8sConnector?.identifier || '', {
         headers: { 'content-type': 'application/json' }
       })
 
-      if (ccmK8sConnectorDeleted && k8sConnectorDeleted) {
+      if (k8sConnectorDeleted) {
         showSuccess(getString('connectors.deletedSuccssMessage', { name: k8sConnector?.name }))
       }
     } catch (error) {

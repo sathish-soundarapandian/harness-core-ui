@@ -54,7 +54,7 @@ export const useDeleteConnectorModal = ({ onDelete }: UseDeleteConnectorProps) =
         <Button minimal icon="cross" iconProps={{ size: 18 }} onClick={closeModal} className={css.crossIcon} />
       </Dialog>
     ),
-    []
+    [onDelete]
   )
 
   return [openModal, closeModal]
