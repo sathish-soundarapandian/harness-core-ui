@@ -136,12 +136,12 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
     <Formik<MapPrometheusQueryToService>
       formName="mapPrometheus"
       initialValues={{
-        ...initialFormValues,
-        ...metricThresholds,
         sli: true,
         healthScore: true,
         continuousVerification: true,
-        higherBaselineDeviation: true
+        higherBaselineDeviation: true,
+        ...initialFormValues,
+        ...metricThresholds
       }}
       isInitialValid={(args: any) =>
         Object.keys(
