@@ -133,7 +133,7 @@ const SideNavItems = () => {
   const { accountId } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
-  const showCO = useFeatureFlag(FeatureFlag.CCM_CommOrch)
+  const showCO = useFeatureFlag(FeatureFlag.CCM_COMMORCH)
 
   return (
     <Layout.Vertical spacing="small">
