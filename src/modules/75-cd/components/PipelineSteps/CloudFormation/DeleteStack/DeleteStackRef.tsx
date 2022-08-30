@@ -59,7 +59,7 @@ export const CloudFormationDeleteStack = (
   const [regions, setRegions] = useState<MultiSelectOption[]>([])
   const [awsRoles, setAwsRoles] = useState<MultiSelectOption[]>([])
   const [awsRef, setAwsRef] = useState<string>('')
-  const [regionsRef, setRegionsRef] = useState<string>(initialValues?.spec?.configuration?.region)
+  const [regionsRef, setRegionsRef] = useState<string>(initialValues?.spec?.configuration?.spec?.region)
   const query = useQueryParams()
   const sectionId = (query as any).sectionId || ''
 
@@ -102,7 +102,7 @@ export const CloudFormationDeleteStack = (
       }
       setAwsRoles(roles)
     }
-  }, [roleData, awsRef])
+  }, [roleData])
   useEffect(() => {
     if (
       !isEmpty(awsRef) &&
@@ -183,6 +183,7 @@ export const CloudFormationDeleteStack = (
         const stackName = config?.spec?.stackName
         const stepType = config?.type
         const awsConnector = config?.spec?.connectorRef
+        const region = config?.spec?.region
         return (
           <>
             {stepViewType !== StepViewType.Template && (
@@ -273,8 +274,11 @@ export const CloudFormationDeleteStack = (
                         /* istanbul ignore next */
                         if (value?.record?.identifier !== awsConnector) {
                           setAwsRef(newConnectorRef)
-                          getMultiTypeFromValue(formik?.values?.spec.configuration.spec.roleArn) ===
-                            MultiTypeInputType.FIXED && setFieldValue('spec.configuration.spec.roleArn', '')
+                          formik?.values?.spec.configuration.spec.roleArn &&
+                            getMultiTypeFromValue(formik?.values?.spec.configuration.spec.roleArn) ===
+                              MultiTypeInputType.FIXED &&
+                            setFieldValue('spec.configuration.spec.roleArn', '')
+                          setAwsRoles([])
                         }
                         /* istanbul ignore next */
                         setFieldValue('spec.configuration.connectorRef', newConnectorRef)
@@ -290,12 +294,13 @@ export const CloudFormationDeleteStack = (
                       placeholder={regionLoading ? getString('loading') : getString('select')}
                       multiTypeInputProps={{
                         onChange: value => {
-                          if ((value as any).value !== regionsRef) {
+                          if ((value as any).value !== region) {
                             setRegionsRef((value as any).value as string)
                             formik?.values?.spec.configuration.spec.roleArn &&
                               getMultiTypeFromValue(formik?.values?.spec.configuration.spec.roleArn) ===
                                 MultiTypeInputType.FIXED &&
                               setFieldValue('spec.configuration.spec.roleArn', '')
+                            setAwsRoles([])
                           }
                         },
                         selectProps: {
@@ -324,7 +329,7 @@ export const CloudFormationDeleteStack = (
                         allowableTypes,
                         width: 300
                       }}
-                      disabled={readonly}
+                      disabled={readonly || rolesLoading}
                       selectItems={awsRoles || []}
                       useValue
                       isOptional

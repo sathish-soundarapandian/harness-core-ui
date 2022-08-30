@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { isEmpty, map, get } from 'lodash-es'
+import { isEmpty, map, get, defaultTo } from 'lodash-es'
 import cx from 'classnames'
 import {
   FormInput,
@@ -38,14 +38,21 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackData>(
   props: DeleteStackProps<T> & { formik?: FormikContextType<any> }
 ): React.ReactElement {
-  const { inputSetData, readonly, path, allowableTypes, allValues } = props
+  const { inputSetData, readonly, path, allowableTypes, allValues, formik, initialValues } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [regions, setRegions] = useState<MultiSelectOption[]>([])
   const [awsRoles, setAwsRoles] = useState<MultiSelectOption[]>([])
-  const [awsRef, setAwsRef] = useState<string>('')
-  const [regionsRef, setRegionsRef] = useState(get(allValues, 'spec.configuration.region'))
+  const [awsRef, setAwsRef] = useState<string>(
+    defaultTo(
+      get(initialValues, 'spec.configuration.spec.connectorRef'),
+      get(allValues, 'spec.configuration.spec.connectorRef')
+    )
+  )
+  const [regionsRef, setRegionsRef] = useState(
+    defaultTo(get(initialValues, 'spec.configuration.spec.region'), get(allValues, 'spec.configuration.spec.region'))
+  )
 
   const {
     data: regionData,
@@ -97,7 +104,7 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
       setAwsRoles(roles)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [roleData, roleRequired, awsRef])
+  }, [roleData, roleRequired])
 
   useEffect(() => {
     if (
@@ -171,7 +178,12 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
                       ? `${item.scope}.${item?.record?.identifier}`
                       : item.record?.identifier
                   setAwsRef(connectorRefValue as string)
-                }
+                } else setAwsRef(selected as string)
+                get(formik?.values, `${path}.spec.configuration.spec.roleArn`) &&
+                  getMultiTypeFromValue(get(formik?.values, `${path}.spec.configuration.spec.roleArn`)) ===
+                    MultiTypeInputType.FIXED &&
+                  formik?.setFieldValue(`${path}.spec.configuration.spec.roleArn`, '')
+                setAwsRoles([])
               }}
               setRefValue
             />
@@ -191,6 +203,11 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
               multiTypeInputProps={{
                 onChange: value => {
                   setRegionsRef((value as any).value as string)
+                  get(formik?.values, `${path}.spec.configuration.spec.roleArn`) &&
+                    getMultiTypeFromValue(get(formik?.values, `${path}.spec.configuration.spec.roleArn`)) ===
+                      MultiTypeInputType.FIXED &&
+                    formik?.setFieldValue(`${path}.spec.configuration.spec.roleArn`, '')
+                  setAwsRoles([])
                 },
                 selectProps: {
                   allowCreatingNewItems: true,
@@ -211,7 +228,7 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
             <FormInput.MultiTypeInput
               label={getString('connectors.awsKms.roleArnLabel')}
               name={`${path}.spec.configuration.spec.roleArn`}
-              disabled={readonly}
+              disabled={readonly || loading}
               placeholder={getString(loading ? 'common.loading' : 'select')}
               useValue
               multiTypeInputProps={{

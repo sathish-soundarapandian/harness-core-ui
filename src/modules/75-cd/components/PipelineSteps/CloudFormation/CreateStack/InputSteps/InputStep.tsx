@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { isEmpty, map, get } from 'lodash-es'
+import { isEmpty, map, get, defaultTo } from 'lodash-es'
 import cx from 'classnames'
 import {
   FormInput,
@@ -48,7 +48,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
   props: CreateStackProps<T> & { formik?: FormikContextType<any> }
 ): React.ReactElement {
-  const { inputSetData, readonly, path, allowableTypes, formik, allValues } = props
+  const { inputSetData, readonly, path, allowableTypes, formik, allValues, initialValues } = props
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { expressions } = useVariablesExpression()
@@ -59,8 +59,12 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
   const [capabilities, setCapabilities] = useState<MultiSelectOption[]>([])
   const [selectedCapabilities, setSelectedCapabilities] = useState<MultiSelectOption[]>([])
   const [selectedStackStatus, setSelectedStackStatus] = useState<MultiSelectOption[]>([])
-  const [awsRef, setAwsRef] = useState(get(allValues, 'spec.configuration.connectorRef'))
-  const [regionsRef, setRegionsRef] = useState(get(allValues, 'spec.configuration.region'))
+  const [awsRef, setAwsRef] = useState(
+    defaultTo(get(initialValues, 'spec.configuration.connectorRef'), get(allValues, 'spec.configuration.connectorRef'))
+  )
+  const [regionsRef, setRegionsRef] = useState(
+    defaultTo(get(initialValues, 'spec.configuration.region'), get(allValues, 'spec.configuration.region'))
+  )
 
   useEffect(() => {
     /* istanbul ignore next */
@@ -241,7 +245,12 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
                     ? `${item.scope}.${item?.record?.identifier}`
                     : item.record?.identifier
                 setAwsRef(connectorRefValue as string)
-              }
+              } else setAwsRef(selected as string)
+              get(formik?.values, `${path}.spec.configuration.roleArn`) &&
+                getMultiTypeFromValue(get(formik?.values, `${path}.spec.configuration.roleArn`)) ===
+                  MultiTypeInputType.FIXED &&
+                formik?.setFieldValue(`${path}.spec.configuration.roleArn`, '')
+              setAwsRoles([])
             }}
           />
         </div>
@@ -257,6 +266,11 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
             multiTypeInputProps={{
               onChange: value => {
                 setRegionsRef((value as any).value as string)
+                get(formik?.values, `${path}.spec.configuration.roleArn`) &&
+                  getMultiTypeFromValue(get(formik?.values, `${path}.spec.configuration.roleArn`)) ===
+                    MultiTypeInputType.FIXED &&
+                  formik?.setFieldValue(`${path}.spec.configuration.roleArn`, '')
+                setAwsRoles([])
               },
               selectProps: {
                 allowCreatingNewItems: true,

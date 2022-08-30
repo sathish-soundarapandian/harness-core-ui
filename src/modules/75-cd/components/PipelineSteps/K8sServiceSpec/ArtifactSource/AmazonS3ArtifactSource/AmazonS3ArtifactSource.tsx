@@ -219,7 +219,10 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
                       accountIdentifier: accountId,
                       orgIdentifier,
                       projectIdentifier,
-                      connectorRef: defaultTo(connectorRefValue, fixedConnectorValue)
+                      connectorRef: defaultTo(connectorRefValue, fixedConnectorValue),
+                      ...(getFinalQueryParamValue(fixedRegionValue) && {
+                        region: getFinalQueryParamValue(fixedRegionValue)
+                      })
                     }
                   })
                   setConnectorRef(connectorRefValue)
@@ -275,9 +278,9 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
             <FormInput.MultiTypeInput
               selectItems={getBuckets()}
               label={getString('pipeline.manifestType.bucketName')}
-              placeholder={getString('pipeline.manifestType.bucketPlaceHolder')}
+              placeholder={loading ? getString('loading') : getString('pipeline.manifestType.bucketPlaceHolder')}
               name={`${path}.artifacts.${artifactPath}.spec.bucketName`}
-              disabled={!fromTrigger && isFieldDisabled(`artifacts.${artifactPath}.spec.bucketName`, true)}
+              disabled={(!fromTrigger && isFieldDisabled(`artifacts.${artifactPath}.spec.bucketName`, true)) || loading}
               helperText={
                 !get(formik, `values.${path}.artifacts.${artifactPath}.spec.connectorRef`)?.length &&
                 getMultiTypeFromValue(artifact?.spec?.connectorRef) === MultiTypeInputType.RUNTIME &&

@@ -175,7 +175,7 @@ export const CreateStack = (
       }
       setAwsRoles(roles)
     }
-  }, [roleData, awsRef, regionsRef])
+  }, [roleData])
 
   useEffect(() => {
     if (
@@ -382,6 +382,7 @@ export const CreateStack = (
                   /* istanbul ignore next */
                   if (value?.record?.identifier !== awsRef) {
                     setAwsRef(newConnectorRef)
+                    setAwsRoles([])
                     getMultiTypeFromValue(formik?.values?.spec.configuration.roleArn) === MultiTypeInputType.FIXED &&
                       setFieldValue('spec.configuration.roleArn', '')
                   }
@@ -401,6 +402,7 @@ export const CreateStack = (
                     onChange: value => {
                       if ((value as any).value !== regionsRef) {
                         setRegionsRef((value as any).value as string)
+                        setAwsRoles([])
                         getMultiTypeFromValue(formik?.values?.spec.configuration.roleArn) ===
                           MultiTypeInputType.FIXED && setFieldValue('spec.configuration.roleArn', '')
                       }
