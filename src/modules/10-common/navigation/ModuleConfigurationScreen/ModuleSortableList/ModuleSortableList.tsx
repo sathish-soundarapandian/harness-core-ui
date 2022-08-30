@@ -10,7 +10,7 @@ import { Droppable, DragDropContext } from 'react-beautiful-dnd'
 import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
 import DraggableModuleItem from './DraggableModuleItem/DraggableModuleItem'
 
-interface ModuleSortableListProps {
+export interface ModuleSortableListProps {
   activeModule: NavModuleName
   onSelect: (module: NavModuleName) => void
   handleUpdate: (updatedOrder: NavModuleName[], selectedModules: NavModuleName[]) => void

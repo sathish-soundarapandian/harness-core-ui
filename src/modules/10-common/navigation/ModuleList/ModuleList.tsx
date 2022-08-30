@@ -166,7 +166,7 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
               onClick={() => setShowModuleSettings(true)}
             />
           </Container>
-          <Layout.Vertical flex spacing="xxxlarge">
+          <Layout.Vertical flex spacing="xxxlarge" data-testId="grouplistContainer">
             {listConfig.map(item => (
               <Group
                 data={item}

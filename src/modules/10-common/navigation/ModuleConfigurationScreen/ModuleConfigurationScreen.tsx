@@ -43,7 +43,7 @@ export const MODULES_CONFIG_PREFERENCE_STORE_KEY = 'modulesConfiguration'
 const ModuleConfigHeader: React.FC<ModuleConfigHeaderProps> = ({ onDefaultSettingsClick }) => {
   return (
     <>
-      <Text inline margin={{ bottom: 'xsmall' }}>
+      <Text inline margin={{ bottom: 'xsmall' }} flex={{ justifyContent: 'flex-start' }}>
         <Text inline color={Color.WHITE} font={{ variation: FontVariation.H2 }}>
           <String stringID="common.moduleConfig.selectModules" />
         </Text>
@@ -55,14 +55,14 @@ const ModuleConfigHeader: React.FC<ModuleConfigHeaderProps> = ({ onDefaultSettin
         </Text>
       </Text>
       <Text className={css.defaultSettingsTextContainer}>
-        <Text font={{ variation: FontVariation.TINY }} color={Color.GREY_200} inline>
+        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_200} inline>
           (<String stringID="common.moduleConfig.autoSaved" />)
         </Text>
         <Text
           className={css.defaultSettings}
           onClick={onDefaultSettingsClick}
           margin={{ left: 'xsmall' }}
-          font={{ variation: FontVariation.TINY }}
+          font={{ variation: FontVariation.SMALL }}
           inline
           color={Color.PRIMARY_5}
         >
@@ -92,6 +92,7 @@ const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({
   }, [activeModuleFromProps])
 
   useEffect(() => {
+    console.log('ordered modules', orderedModules)
     // Handle case when new module is added
     if (!orderedModules || orderedModules.length === 0) {
       setModuleConfigPreference({

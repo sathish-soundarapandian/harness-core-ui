@@ -6,26 +6,95 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import { noop } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
 import ModuleList from '../ModuleList'
 
+jest.mock('../../ModuleConfigurationScreen/ModuleConfigurationScreen', () => {
+  return () => {
+    return 'Module config screen'
+  }
+})
+
 describe('ModuleList', () => {
-  test('should render correctly', () => {
-    const { container, getByText } = render(
+  test('should render correctly without modules', () => {
+    const { container, getByText, getByTestId } = render(
       <TestWrapper path="/account/:accountId" pathParams={{ accountId: 'dummy' }}>
         <ModuleList isOpen={true} close={noop} usePortal={false} />
       </TestWrapper>
     )
 
+    expect(container.querySelector('[data-icon="customize"]')).not.toBeNull()
+    expect(getByText('common.moduleList.title')).toBeDefined()
+    expect(getByTestId('grouplistContainer').children.length).toEqual(0)
     expect(container).toMatchSnapshot()
+  })
 
-    expect(getByText('common.purpose.ci.continuous')).toBeDefined()
-    expect(getByText('common.purpose.cd.continuous')).toBeDefined()
-    expect(getByText('common.purpose.cv.continuous')).toBeDefined()
-    expect(getByText('common.purpose.cf.continuous')).toBeDefined()
-    expect(getByText('common.purpose.ce.continuous')).toBeDefined()
-    expect(getByText('common.purpose.sto.continuous')).toBeDefined()
+  test('should render correctly with modules enabled and disabled', () => {
+    const { queryByText } = render(
+      <TestWrapper
+        path="/account/:accountId"
+        pathParams={{ accountId: 'dummy' }}
+        defaultAppStoreValues={{
+          featureFlags: {
+            CDNG_ENABLED: true,
+            CING_ENABLED: true,
+            CVNG_ENABLED: true,
+            CFNG_ENABLED: true
+          }
+        }}
+      >
+        <ModuleList isOpen={true} close={noop} usePortal={false} />
+      </TestWrapper>
+    )
+    expect(queryByText('common.purpose.ci.continuous')).toBeDefined()
+    expect(queryByText('common.purpose.cd.continuous')).toBeDefined()
+    expect(queryByText('common.purpose.cf.continuous')).toBeDefined()
+    expect(queryByText('common.purpose.cv.serviceReliability')).toBeDefined()
+    expect(queryByText('common.purpose.ce.cloudCost')).toBeNull()
+    expect(queryByText('common.purpose.sto.continuous')).toBeNull()
+    expect(queryByText('common.chaosText')).toBeNull()
+  })
+
+  test('render module config screen by clicking on settings icon', () => {
+    const { container, queryByText } = render(
+      <TestWrapper
+        path="/account/:accountId"
+        pathParams={{ accountId: 'dummy' }}
+        defaultAppStoreValues={{
+          featureFlags: {
+            CDNG_ENABLED: true,
+            CING_ENABLED: true,
+            CVNG_ENABLED: true,
+            CFNG_ENABLED: true
+          }
+        }}
+      >
+        <ModuleList isOpen={true} close={noop} usePortal={false} />
+      </TestWrapper>
+    )
+    const customizeIcon = container.querySelector('[data-icon="customize"]')
+    fireEvent.click(customizeIcon!)
+    expect(queryByText('Module config screen')).not.toBeNull()
+  })
+
+  test('render module config screen by clicking on module tooltip', () => {
+    const { container, queryByText } = render(
+      <TestWrapper
+        path="/account/:accountId"
+        pathParams={{ accountId: 'dummy' }}
+        defaultAppStoreValues={{
+          featureFlags: {
+            CDNG_ENABLED: true
+          }
+        }}
+      >
+        <ModuleList isOpen={true} close={noop} usePortal={false} />
+      </TestWrapper>
+    )
+    const tooltip = container.querySelector('[data-icon="tooltip-icon"]')
+    fireEvent.click(tooltip!)
+    expect(queryByText('Module config screen')).not.toBeNull()
   })
 })
