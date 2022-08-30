@@ -110,6 +110,7 @@ function Artifactory({
 
   useLayoutEffect(() => {
     let repoFormat = RepositoryFormatTypes.Docker
+    if (isServerlessDeploymentTypeSelected) repoFormat = RepositoryFormatTypes.Generic
     if (isAzureWebAppOrSshWinrmDeploymentTypeSelected) {
       repoFormat = getRepositoryFormat(initialValues)
         ? (getRepositoryFormat(initialValues) as RepositoryFormatTypes)
