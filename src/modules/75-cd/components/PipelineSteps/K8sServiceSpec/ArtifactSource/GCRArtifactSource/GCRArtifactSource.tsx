@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { defaultTo, get } from 'lodash-es'
-import { FormInput, Layout, MultiTypeInputType } from '@wings-software/uicore'
+import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@wings-software/uicore'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useMutateAsGet } from '@common/hooks'
@@ -124,6 +124,7 @@ const Content = (props: GCRRenderContent): JSX.Element => {
     return !!(
       (lastQueryData.connectorRef != connectorRefValue ||
         lastQueryData.imagePath !== imagePathValue ||
+        getMultiTypeFromValue(artifact?.spec?.imagePath) === MultiTypeInputType.EXPRESSION ||
         lastQueryData.registryHostname !== registryHostnameValue) &&
       shouldFetchTagsSource([connectorRefValue, imagePathValue, registryHostnameValue])
     )
