@@ -1,5 +1,4 @@
-import { parse } from 'yaml'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { parse, stringify } from 'yaml'
 import { get, set } from 'lodash-es'
 export const getRuntimeInputKeys = object => {
   const arrayOfPaths = []
@@ -31,7 +30,7 @@ export const getTemplatesDataAsStepTemplate = templatesData => {
   )
   // replace inputSetTemplateYaml with step template yaml
   const templatesDataAsStepTemplate = { ...templatesData }
-  templatesDataAsStepTemplate.data.inputSetTemplateYaml = yamlStringify(newInputSetTemplateYaml)
+  templatesDataAsStepTemplate.data.inputSetTemplateYaml = stringify(newInputSetTemplateYaml)
   return templatesDataAsStepTemplate
   // stringify pipeline object
 }
