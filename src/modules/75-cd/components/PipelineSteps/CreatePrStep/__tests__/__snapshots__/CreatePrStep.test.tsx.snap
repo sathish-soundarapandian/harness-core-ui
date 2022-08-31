@@ -327,14 +327,14 @@ exports[`Test CreatePRStep expand override config panel 1`] = `
                 >
                   <label
                     class="bp3-label"
-                    for="spec.source.spec.updateConfigScript"
+                    for="spec.source.spec.script"
                   >
                     <div
                       class="formLabel"
                     >
                       <span
                         class="Tooltip--acenter"
-                        data-tooltip-id="createpr_spec.source.spec.updateConfigScript"
+                        data-tooltip-id="createpr_spec.source.spec.script"
                       >
                         common.script
                       </span>
@@ -384,7 +384,7 @@ exports[`Test CreatePRStep expand override config panel 1`] = `
                       class="monacoWrapper"
                     >
                       <textarea
-                        name="spec.source.spec.updateConfigScript"
+                        name="spec.source.spec.script"
                       />
                       <button
                         class="bp3-button bp3-small Button--button StyledProps--font StyledProps--main expandBtn Button--with-current-color Button--iconOnly Button--withLeftIcon"
