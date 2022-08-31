@@ -43,6 +43,10 @@ export const HEALTHSOURCE_LIST = [
     icon: getConnectorIconByType(Connectors.CUSTOM_HEALTH)
   },
   {
+    name: HealthSourceTypes.Elk,
+    icon: getConnectorIconByType(Connectors.ELK)
+  },
+  {
     name: HealthSourceTypes.ErrorTracking,
     icon: getConnectorIconByType(Connectors.ERROR_TRACKING)
   }

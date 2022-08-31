@@ -135,6 +135,13 @@ export const getFeatureOption = (
           value: CustomHealthProduct.LOGS
         }
       ]
+      case Connectors.ELK:
+        return [
+          {
+            value: 'Application Monitoring',
+            label: getString('cv.monitoringSources.appD.product.applicationMonitoring')
+          }
+        ]
     case Connectors.ERROR_TRACKING:
       return [
         {

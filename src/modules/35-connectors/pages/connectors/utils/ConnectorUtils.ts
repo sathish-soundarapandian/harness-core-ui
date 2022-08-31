@@ -2046,6 +2046,8 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'service-servicenow'
     case Connectors.CUSTOM_HEALTH:
       return 'service-custom-connector'
+      case Connectors.ELK:
+      return 'service-custom-connector'
     case Connectors.ERROR_TRACKING:
       return 'error-tracking'
     case Connectors.AZURE:

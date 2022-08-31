@@ -51,6 +51,8 @@ export const getConnectorIconByType = (type: string): string => {
       return 'service-datadog'
     case Connectors.CUSTOM_HEALTH:
       return 'service-custom-connector'
+      case Connectors.ELK:
+      return 'service-custom-connector'
     case Connectors.SPLUNK:
       return 'service-splunk'
     case Connectors.NEW_RELIC:
