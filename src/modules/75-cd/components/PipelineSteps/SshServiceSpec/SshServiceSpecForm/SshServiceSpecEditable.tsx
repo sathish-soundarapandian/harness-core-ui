@@ -18,6 +18,7 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import VariableListReadOnlyView from '@pipeline/components/WorkflowVariablesSelection/VariableListReadOnlyView'
 import { getArtifactsHeaderTooltipId } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
+import { getConfigFilesHeaderTooltipId } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { setupMode } from '../../PipelineStepsUtil'
 import type { SshWinRmServiceInputFormProps } from '../SshServiceSpecInterface'
 import css from '../SshServiceSpec.module.scss'
@@ -65,7 +66,7 @@ const SshServiceSpecEditable: React.FC<SshWinRmServiceInputFormProps> = ({
           <Card className={css.sectionCard} id={getString('pipelineSteps.configFiles')}>
             <div
               className={cx(css.tabSubHeading, 'ng-tooltip-native')}
-              data-tooltip-id={getArtifactsHeaderTooltipId(selectedDeploymentType)}
+              data-tooltip-id={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
             >
               {getString('pipelineSteps.configFiles')}
             </div>

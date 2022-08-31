@@ -23,6 +23,7 @@ import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes
 import VariableListReadOnlyView from '@pipeline/components/WorkflowVariablesSelection/VariableListReadOnlyView'
 import { getManifestsHeaderTooltipId } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { getArtifactsHeaderTooltipId } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
+import { getConfigFilesHeaderTooltipId } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import ConfigFilesSelection from '@pipeline/components/ConfigFilesSelection/ConfigFilesSelection'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useServiceContext } from '@cd/context/ServiceContext'
@@ -100,7 +101,7 @@ const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
               <Card className={css.sectionCard} id={getString('pipelineSteps.configFiles')}>
                 <div
                   className={cx(css.tabSubHeading, 'ng-tooltip-native')}
-                  data-tooltip-id={getArtifactsHeaderTooltipId(selectedDeploymentType)}
+                  data-tooltip-id={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
                 >
                   {getString('pipelineSteps.configFiles')}
                 </div>

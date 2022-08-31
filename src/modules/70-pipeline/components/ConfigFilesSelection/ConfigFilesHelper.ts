@@ -85,3 +85,7 @@ export const prepareConfigFilesValue = (formData: ConfigFileHarnessDataType & { 
 export const ENABLE_CONFIG_FILES = {
   Harness: 'Harness'
 }
+
+export const getConfigFilesHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']) => {
+  return `${selectedDeploymentType}DeploymentTypeConfigFiles`
+}

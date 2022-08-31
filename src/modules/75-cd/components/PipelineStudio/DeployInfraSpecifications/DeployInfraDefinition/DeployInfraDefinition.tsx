@@ -12,6 +12,7 @@ import {
   AllowedTypes,
   Card,
   Container,
+  HarnessDocTooltip,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
   Text
@@ -71,6 +72,7 @@ import { FeatureFlag } from '@common/featureFlags'
 import { isNewServiceEnvEntity } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import {
   cleanUpEmptyProvisioner,
+  getInfraDefinitionDetailsHeaderTooltipId,
   getInfraGroups,
   getInfrastructureDefaultValue,
   InfrastructureGroup,
@@ -714,11 +716,21 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
       ) : null}
       {selectedInfrastructureType && (
         <>
-          <div className={stageCss.tabHeading} id="clusterDetails">
-            {isAzureWebAppDeploymentType(selectedInfrastructureType) && isSvcEnvEnabled
-              ? ''
-              : defaultTo(detailsHeaderName[selectedInfrastructureType], getString('cd.steps.common.clusterDetails'))}
-          </div>
+          {isAzureWebAppDeploymentType(selectedInfrastructureType) && isSvcEnvEnabled ? (
+            <></>
+          ) : (
+            <div
+              className={stageCss.tabHeading}
+              id="clusterDetails"
+              data-tooltip-id={getInfraDefinitionDetailsHeaderTooltipId(selectedInfrastructureType)}
+            >
+              {defaultTo(detailsHeaderName[selectedInfrastructureType], getString('cd.steps.common.clusterDetails'))}
+              <HarnessDocTooltip
+                tooltipId={getInfraDefinitionDetailsHeaderTooltipId(selectedInfrastructureType)}
+                useStandAlone={true}
+              />
+            </div>
+          )}
           <Card className={stageCss.sectionCard}>{getClusterConfigurationStep(selectedInfrastructureType)}</Card>
         </>
       )}

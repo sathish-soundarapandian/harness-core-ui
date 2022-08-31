@@ -10,7 +10,7 @@ import { Card, HarnessDocTooltip } from '@wings-software/uicore'
 import cx from 'classnames'
 import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/WorkflowVariables'
 import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ArtifactsSelection'
-import { getSelectedDeploymentType, isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
+import { getSelectedDeploymentType } from '@pipeline/utils/stageHelpers'
 import StartupScriptSelection from '@cd/components/PipelineSteps/AzureWebAppServiceSpec/AzureWebAppStartupScriptSelection/StartupScriptSelection'
 import { useStrings } from 'framework/strings'
 import type { ServiceDefinition } from 'services/cd-ng'
@@ -23,6 +23,7 @@ import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes
 import VariableListReadOnlyView from '@pipeline/components/WorkflowVariablesSelection/VariableListReadOnlyView'
 import { getArtifactsHeaderTooltipId } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import ConfigFilesSelection from '@pipeline/components/ConfigFilesSelection/ConfigFilesSelection'
+import { getConfigFilesHeaderTooltipId } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { useServiceContext } from '@cd/context/ServiceContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { AzureWebAppServiceSpecFormProps } from './AzureWebAppServiceSpecInterface.types'
@@ -31,17 +32,11 @@ import { setupMode } from '../PipelineStepsUtil'
 import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 const getStartupScriptHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
-  if (isServerlessDeploymentType(selectedDeploymentType)) {
-    return 'serverlessDeploymentTypeStartupScript'
-  }
-  return 'deploymentTypeStartupScript'
+  return `${selectedDeploymentType}StartupScript`
 }
 
 const getAppConfigHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
-  if (isServerlessDeploymentType(selectedDeploymentType)) {
-    return 'serverlessDeploymentTypeApplicationConfig'
-  }
-  return 'deploymentTypeApplicationConfig'
+  return `${selectedDeploymentType}ApplicationConfig`
 }
 
 const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> = ({
@@ -138,7 +133,7 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
               <Card className={css.sectionCard} id={getString('pipelineSteps.configFiles')}>
                 <div
                   className={cx(css.tabSubHeading, 'ng-tooltip-native')}
-                  data-tooltip-id={getArtifactsHeaderTooltipId(selectedDeploymentType)}
+                  data-tooltip-id={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
                 >
                   {getString('pipelineSteps.configFiles')}
                 </div>
