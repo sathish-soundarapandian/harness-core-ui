@@ -29,10 +29,23 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacAvatarGroup from '@rbac/components/RbacAvatarGroup/RbacAvatarGroup'
+import OverviewGlanceCards, {
+  OverviewGalanceCard
+} from '@projects-orgs/components/OverviewGlanceCards/OverviewGlanceCards'
+import type { ResponseExecutionResponseCountOverview } from 'services/dashboard-service'
+// import LandingDashboardDeploymentsWidget from '@pipeline/components/LandingDashboardDeploymentsWidget/LandingDashboardDeploymentsWidget'
+import LandingDashboardFactory from '@common/factories/LandingDashboardFactory'
+import LandingDashboardWidgetWrapper from '@projects-orgs/components/LandingDashboardWidgetWrapper/LandingDashboardWidgetWrapper'
 import useDeleteProjectDialog from '../../DeleteProject'
 import css from './ProjectDetails.module.scss'
 
-const ProjectDetails: React.FC = () => {
+interface LandingDashboardSummaryWidgetProps {
+  glanceCardData: ResponseExecutionResponseCountOverview
+}
+
+const modules: Array<ModuleName> = [ModuleName.CD]
+
+const ProjectDetails: React.FC<LandingDashboardSummaryWidgetProps> = props => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const [menuOpen, setMenuOpen] = useState(false)
@@ -108,7 +121,7 @@ const ProjectDetails: React.FC = () => {
       <ModuleListCard
         module={module as ModuleName}
         key={module}
-        projectIdentifier={projectData.identifier}
+        projectIdentifier={projectData.identifier + projectData.description?.toLowerCase}
         orgIdentifier={projectData.orgIdentifier || ''}
         accountId={accountId}
       />
@@ -237,6 +250,26 @@ const ProjectDetails: React.FC = () => {
               <Text font={{ size: 'medium', weight: 'semi-bold' }} color={Color.BLACK}>
                 {getString('modules')}
               </Text>
+              <OverviewGlanceCards
+                glanceCardData={props.glanceCardData}
+                cardProps={{ cardClassName: 'GlanceCardInProject' }}
+                hideModules={[OverviewGalanceCard.PROJECT]}
+              />
+              <Layout.Vertical spacing="large">
+                {modules.map(moduleName => {
+                  const moduleHandler = LandingDashboardFactory.getModuleDashboardHandler(moduleName)
+                  return moduleHandler ? (
+                    <LandingDashboardWidgetWrapper
+                      icon={moduleHandler?.icon}
+                      title={moduleHandler?.label}
+                      iconProps={moduleHandler?.iconProps}
+                      key={moduleName}
+                    >
+                      {moduleHandler.moduleDashboardRenderer?.()}
+                    </LandingDashboardWidgetWrapper>
+                  ) : null
+                })}
+              </Layout.Vertical>
               {getModuleInfoCards()}
             </Layout.Vertical>
           </Container>

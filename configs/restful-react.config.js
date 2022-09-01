@@ -68,7 +68,7 @@ module.exports = {
   },
   'dashboard-service': {
     output: 'src/services/dashboard-service/index.tsx',
-    url: 'http://localhost:7100/swagger.json',
+    url: 'https://stress.harness.io/gateway/ng-dashboard/api/swagger.json',
     transformer: 'scripts/swagger-transform.js',
     customImport: `import { getConfig, getUsingFetch, GetUsingFetchProps } from "../config";`,
     customProps: {
