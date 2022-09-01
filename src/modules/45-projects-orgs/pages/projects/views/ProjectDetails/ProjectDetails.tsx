@@ -270,7 +270,6 @@ const ProjectDetails: React.FC<LandingDashboardSummaryWidgetProps> = props => {
                   ) : null
                 })}
               </Layout.Vertical>
-              {getModuleInfoCards()}
             </Layout.Vertical>
           </Container>
         </Layout.Horizontal>
