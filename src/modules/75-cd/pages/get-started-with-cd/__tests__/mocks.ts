@@ -268,3 +268,42 @@ export const heartbeatWaitingResponse = {
   },
   responseMessages: []
 }
+
+export const heartbeatSuccessResponse = {
+  metaData: {},
+  resource: {
+    numberOfRegisteredDelegates: 1,
+    numberOfConnectedDelegates: 1
+  },
+  responseMessages: []
+}
+
+export const dockerYamlResponse = `version: "3.7"
+services:
+  harness-ng-delegate:
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 2048M
+    image: harness/delegate:latest
+    environment:
+      - ACCOUNT_ID=px7xd_BFRCi-pfWPYXVjvw
+      - DELEGATE_TOKEN=0599b94c5d770ffc341eab0a8372ec51
+      - MANAGER_HOST_AND_PORT=https://qa.harness.io
+      - WATCHER_STORAGE_URL=https://qa.harness.io/public/qa/premium/watchers
+      - WATCHER_CHECK_LOCATION=current.version
+      - DELEGATE_STORAGE_URL=https://qa.harness.io
+      - DELEGATE_CHECK_LOCATION=delegateqa.txt
+      - CDN_URL=https://qa.harness.io
+      - REMOTE_WATCHER_URL_CDN=https://qa.harness.io/public/shared/watchers/builds
+      - DEPLOY_MODE=KUBERNETES
+      - DELEGATE_NAME=sample-a2c7a54f-3cc8-44dc-a7fa-16721a1acc54-delegate
+      - NEXT_GEN=true
+      - DELEGATE_DESCRIPTION=
+      - DELEGATE_TYPE=DOCKER
+      - DELEGATE_TAGS=
+      - PROXY_MANAGER=true
+      - INIT_SCRIPT=echo "Docker delegate init script executed."
+`
