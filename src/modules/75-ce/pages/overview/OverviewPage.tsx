@@ -81,7 +81,14 @@ const NoDataOverviewPage: React.FC<NoDataOverviewPageProps> = (props: NoDataOver
   }
 
   return (
-    <div style={{ backgroundImage: `url(${bgImage})`, backgroundSize: 'cover', height: '100%', width: '100%' }}>
+    <div
+      style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundSize: 'cover',
+        height: 'var(--page-min-height)',
+        width: '100%'
+      }}
+    >
       {showNoDataOverlay && <NoData onConnectorCreateClick={handleClick} />}
     </div>
   )
