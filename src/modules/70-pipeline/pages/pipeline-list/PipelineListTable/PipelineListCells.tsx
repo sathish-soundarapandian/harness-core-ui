@@ -126,7 +126,10 @@ export const CodeSourceCell: CellType = ({ row }) => {
   const { gitDetails } = row.original
   const { getString } = useStrings()
   const data = row.original
-  const isRemote = data.storeType === StoreType.REMOTE
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
+
+  const isRemote = data.storeType === StoreType.REMOTE || isGitSyncEnabled
 
   return (
     <div className={css.storeTypeColumnContainer}>
