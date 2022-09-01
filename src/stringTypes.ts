@@ -8932,6 +8932,10 @@ export interface StringsMap {
   /**
    * @deprecated migrate this string to module level file
    */
+  loadingDelegate: string
+  /**
+   * @deprecated migrate this string to module level file
+   */
   location: string
   /**
    * @deprecated migrate this string to module level file

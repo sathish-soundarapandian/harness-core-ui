@@ -12,16 +12,11 @@ import { Button, Container, Layout, PageSpinner, Text, useToaster } from '@harne
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { isEmpty, set } from 'lodash-es'
+import { DelegateSetupDetails, getDelegateTokensPromise, GetDelegateTokensQueryParams } from 'services/cd-ng'
 import {
-  DelegateSetupDetails,
-  DelegateTokenDetails,
-  GetDelegateTokensQueryParams,
-  useGetDelegateTokens
-} from 'services/cd-ng'
-import {
-  useGenerateDockerDelegateYAML,
   validateDockerDelegatePromise,
-  ValidateDockerDelegateQueryParams
+  ValidateDockerDelegateQueryParams,
+  generateDockerDelegateYAMLPromise
 } from 'services/portal'
 
 import YamlBuilder from '@common/components/YAMLBuilder/YamlBuilder'
@@ -36,16 +31,14 @@ import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss
 
 export interface CreateDockerDelegateProps {
   onSuccessHandler: () => void
-  trackEventRef: React.MutableRefObject<(() => void) | null>
 }
 
-export const CreateDockerDelegate = ({ onSuccessHandler, trackEventRef }: CreateDockerDelegateProps): JSX.Element => {
-  const [token, setToken] = React.useState<DelegateTokenDetails>()
-  const [yaml, setYaml] = React.useState<any>('')
-  const [isNameVerified, setNameVerified] = React.useState<boolean>(false)
+export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegateProps): JSX.Element => {
+  const [yaml, setYaml] = React.useState<string>('')
   const [delegateName, setDelegateName] = React.useState<string>('')
   const [isYamlVisible, setYamlVisible] = React.useState<boolean>(false)
   const [showPageLoader, setLoader] = React.useState<boolean>(true)
+
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<Record<string, string>>()
@@ -56,68 +49,6 @@ export const CreateDockerDelegate = ({ onSuccessHandler, trackEventRef }: Create
 
   const { trackEvent } = useTelemetry()
 
-  const { data: tokensResponse, refetch: getTokens } = useGetDelegateTokens({
-    queryParams: {
-      accountIdentifier: accountId,
-      projectIdentifier,
-      orgIdentifier,
-      status: 'ACTIVE'
-    } as GetDelegateTokensQueryParams,
-    lazy: true
-  })
-
-  const { mutate: getDockerYaml } = useGenerateDockerDelegateYAML({
-    queryParams: {
-      accountId
-    }
-  })
-
-  const delegateDetails = {
-    name: delegateName,
-    identifier: StringUtils.getIdentifierFromName(delegateName),
-    description: '',
-    tokenName: token?.name
-  }
-
-  const validateName = async (): Promise<void> => {
-    const response = (await validateDockerDelegatePromise({
-      queryParams: {
-        accountId,
-        projectIdentifier,
-        orgIdentifier,
-        delegateName: delegateName,
-        tokenName: token?.name
-      } as ValidateDockerDelegateQueryParams
-    })) as any
-    const isNameUnique = !response?.responseMessages[0]
-
-    if (isNameUnique) {
-      setNameVerified(true)
-    } else {
-      showError(getString('delegates.delegateNameNotUnique'))
-    }
-  }
-
-  const fetchDockerYaml = async (): Promise<void> => {
-    const createParams = { ...delegateDetails } as DelegateSetupDetails
-
-    if (projectIdentifier) {
-      set(createParams, 'projectIdentifier', projectIdentifier)
-    }
-    if (orgIdentifier) {
-      set(createParams, 'orgIdentifier', orgIdentifier)
-    }
-    set(createParams, 'delegateType', delegateType)
-
-    trackEvent(DelegateActions.SetupDelegate, {
-      category: Category.DELEGATE,
-      data: createParams
-    })
-
-    const dockerYaml = (await getDockerYaml(createParams)) as any
-    setYaml(dockerYaml)
-  }
-
   const onDownload = (): void => {
     const content = new Blob([yaml as BlobPart], { type: 'data:text/plain;charset=utf-8' })
     if (linkRef?.current) {
@@ -127,44 +58,83 @@ export const CreateDockerDelegate = ({ onSuccessHandler, trackEventRef }: Create
     }
   }
 
-  useEffect(() => {
-    if (isNameVerified) fetchDockerYaml()
-  }, [isNameVerified])
-
-  useEffect(() => {
-    setToken(tokensResponse?.resource?.[0])
-  }, [tokensResponse])
-
-  useEffect(() => {
-    getTokens()
-    setDelegateName(`sample-${uuid()}-delegate`)
-  }, [])
-
-  useEffect(() => {
-    if (token) {
-      validateName()
-    }
-  }, [token])
-
-  useEffect(() => {
-    if (!isEmpty(yaml)) {
-      setLoader(false)
-      onSuccessHandler()
-    }
-  }, [yaml])
-
-  const trackCreateEvent = (): void => {
-    trackEvent(DelegateActions.SaveCreateDelegate, {
-      category: Category.DELEGATE,
-      ...delegateDetails
+  const generateDockerDelegate = async (): Promise<void> => {
+    const delegateTokens = await getDelegateTokensPromise({
+      queryParams: {
+        accountIdentifier: accountId,
+        projectIdentifier,
+        orgIdentifier,
+        status: 'ACTIVE'
+      } as GetDelegateTokensQueryParams
     })
+    if (delegateTokens?.responseMessages?.length) {
+      showError(getString('somethingWentWrong'))
+    } else {
+      const delegateToken = delegateTokens?.resource?.[0]?.name
+      const delegateName1 = `sample-${uuid()}-delegate`
+      setDelegateName(delegateName1)
+      const validateDockerDelegateNameResponse = await validateDockerDelegatePromise({
+        queryParams: {
+          accountId,
+          projectIdentifier,
+          orgIdentifier,
+          delegateName: delegateName1,
+          tokenName: delegateToken
+        } as ValidateDockerDelegateQueryParams
+      })
+      const isNameUnique = !validateDockerDelegateNameResponse?.responseMessages?.[0]
+      if (!isNameUnique) {
+        showError(getString('somethingWentWrong'))
+      } else {
+        const createParams = {
+          name: delegateName1,
+          identifier: StringUtils.getIdentifierFromName(delegateName1),
+          description: '',
+          tokenName: delegateToken
+        } as DelegateSetupDetails
+
+        if (projectIdentifier) {
+          set(createParams, 'projectIdentifier', projectIdentifier)
+        }
+        if (orgIdentifier) {
+          set(createParams, 'orgIdentifier', orgIdentifier)
+        }
+        set(createParams, 'delegateType', delegateType)
+        trackEvent(DelegateActions.SetupDelegate, {
+          category: Category.DELEGATE,
+          data: createParams
+        })
+
+        const dockerYaml = (await generateDockerDelegateYAMLPromise({
+          queryParams: {
+            accountId
+          },
+          body: {
+            ...createParams
+          }
+        })) as any
+        if (dockerYaml?.responseMessages?.length) {
+          showError(getString('somethingWentWrong'))
+        } else {
+          setYaml(dockerYaml)
+          setLoader(false)
+          onSuccessHandler()
+          trackEvent(DelegateActions.SaveCreateDelegate, {
+            category: Category.DELEGATE,
+            ...createParams
+          })
+        }
+      }
+    }
   }
-  trackEventRef.current = trackCreateEvent
+  useEffect(() => {
+    generateDockerDelegate()
+  }, [])
 
   if (showPageLoader) {
     return (
       <Container className={css.spinner}>
-        <PageSpinner message="Creating a Delegate..." />
+        <PageSpinner message={getString('loadingDelegate')} />
       </Container>
     )
   }
