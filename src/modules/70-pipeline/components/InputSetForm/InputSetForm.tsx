@@ -198,6 +198,12 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
       orgIdentifier,
       pipelineIdentifier,
       projectIdentifier,
+      ...(isGitSyncEnabled
+        ? {
+            pipelineRepoID: repoIdentifier,
+            pipelineBranch: branch
+          }
+        : {}),
       repoIdentifier: isGitSyncEnabled ? inputSetRepoIdentifier : repoName,
       branch: isGitSyncEnabled ? inputSetBranch : branch
     },

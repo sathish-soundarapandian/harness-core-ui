@@ -327,7 +327,7 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
     defaultTo(queryParams.projectIdentifier, ''),
     templateIdentifier,
     versionLabel,
-    defaultTo(gitDetails.repoName, ''),
+    defaultTo(repoName, ''),
     defaultTo(gitDetails.branch, '')
   )
   if (IdbTemplate) {
@@ -375,7 +375,7 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
           defaultTo(queryParams.projectIdentifier, ''),
           templateIdentifier,
           versionLabel,
-          defaultTo(gitDetails.repoName, templateWithGitDetails?.gitDetails?.repoName ?? ''),
+          defaultTo(repoName, templateWithGitDetails?.gitDetails?.repoName ?? ''),
           defaultTo(gitDetails.branch, templateWithGitDetails?.gitDetails?.branch ?? '')
         )
         data = await IdbTemplate.get(IdbTemplateStoreName, id)
@@ -871,7 +871,7 @@ export const TemplateProvider: React.FC<{
   templateType: string
   renderPipelineStage?: PipelineContextInterface['renderPipelineStage']
 }> = ({ queryParams, templateIdentifier, versionLabel, templateType, renderPipelineStage, children }) => {
-  const { repoIdentifier, branch, repoName } = queryParams
+  const { repoIdentifier, branch } = queryParams
   const { supportingTemplatesGitx } = useAppStore()
   const abortControllerRef = React.useRef<AbortController | null>(null)
   const isMounted = React.useRef(false)
@@ -914,7 +914,6 @@ export const TemplateProvider: React.FC<{
     templateIdentifier,
     versionLabel,
     gitDetails: {
-      repoName,
       branch
     },
     templateType

@@ -206,6 +206,12 @@ export function OverlayInputSetForm({
   } = useGetOverlayInputSetForPipeline({
     queryParams: {
       ...commonQueryParams,
+      ...(isGitSyncEnabled
+        ? {
+            pipelineRepoID: repoIdentifier,
+            pipelineBranch: branch
+          }
+        : {}),
       repoIdentifier: isGitSyncEnabled ? overlayInputSetRepoIdentifier : repoName,
       branch: isGitSyncEnabled ? overlayInputSetBranch : branch
     },
