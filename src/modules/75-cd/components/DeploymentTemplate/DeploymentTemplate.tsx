@@ -13,6 +13,7 @@ import { TemplateType } from '@templates-library/utils/templatesUtils'
 import { DeploymentTemplateCanvasWrapperWithRef } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateCanvasWrapper'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { TemplateInputsProps } from '@templates-library/components/TemplateInputs/TemplateInputs'
+import { TemplateInputs } from '@templates-library/components/TemplateInputs/TemplateInputs'
 
 export class DeploymentTemplate extends Template {
   protected type = TemplateType.CustomDeployment
@@ -29,7 +30,7 @@ export class DeploymentTemplate extends Template {
   renderTemplateCanvas(formikRef: TemplateFormRef): JSX.Element {
     return <DeploymentTemplateCanvasWrapperWithRef ref={formikRef} />
   }
-  renderTemplateInputsForm(_props: TemplateInputsProps & { accountId: string }): JSX.Element {
-    return <></>
+  renderTemplateInputsForm({ template }: TemplateInputsProps & { accountId: string }): JSX.Element {
+    return <TemplateInputs template={template} />
   }
 }

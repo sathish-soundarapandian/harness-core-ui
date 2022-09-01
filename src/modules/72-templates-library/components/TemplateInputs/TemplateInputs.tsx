@@ -31,6 +31,7 @@ import type { StageElementConfig, StepElementConfig, PipelineInfoConfig } from '
 import type { NGTemplateInfoConfigWithGitDetails } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
+import { DeploymentConfigRuntimeInputs } from '@pipeline/components/DeploymentConfigRuntimeInputs/DeploymentConfigRuntimeInputs'
 import { PipelineInputSetFormInternal, StageForm } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
 import { getTemplateRuntimeInputsCount, TemplateType } from '@templates-library/utils/templatesUtils'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
@@ -189,6 +190,14 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template }) => {
                           allowableTypes={[]}
                           readonly
                           enabledExecutionDetails
+                          path={'data'}
+                        />
+                      )}
+                      {templateEntityType === TemplateType.CustomDeployment && (
+                        <DeploymentConfigRuntimeInputs
+                          template={inputSetTemplate as any}
+                          allowableTypes={allowableTypes}
+                          readonly
                           path={'data'}
                         />
                       )}
