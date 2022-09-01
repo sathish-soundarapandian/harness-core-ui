@@ -7,6 +7,7 @@
 
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import { v4 as uuid } from 'uuid'
 import { Button, Container, Layout, Text, useToaster } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
@@ -27,17 +28,23 @@ import YamlBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import { useStrings } from 'framework/strings'
 import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
+import { StringUtils } from '@common/exports'
+import { DelegateTypes } from '@delegates/constants'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, DelegateActions } from '@common/constants/TrackingConstants'
 import StepProcessing from '../CreateKubernetesDelegateWizard/StepProcessing'
 import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
 
 export interface CreateDockerDelegateProps {
   onSuccessHandler: () => void
+  trackEventRef: React.MutableRefObject<(() => void) | null>
 }
 
-export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegateProps): JSX.Element => {
+export const CreateDockerDelegate = ({ onSuccessHandler, trackEventRef }: CreateDockerDelegateProps): JSX.Element => {
   const [token, setToken] = React.useState<DelegateTokenDetails>()
   const [yaml, setYaml] = React.useState<any>('')
   const [isNameVerified, setNameVerified] = React.useState<boolean>(false)
+  const [delegateName, setDelegateName] = React.useState<string>('')
   const [isYamlVisible, setYamlVisible] = React.useState<boolean>(false)
   const [showPageLoader, setLoader] = React.useState<boolean>(true)
   const { getString } = useStrings()
@@ -46,6 +53,9 @@ export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegateP
   const linkRef = React.useRef<HTMLAnchorElement>(null)
   const dockerFileName = 'docker-compose.yml'
   const dockerComposeCommand = `docker-compose -f ${dockerFileName} up -d`
+  const delegateType = DelegateTypes.DOCKER
+
+  const { trackEvent } = useTelemetry()
 
   const { data: tokensResponse, refetch: getTokens } = useGetDelegateTokens({
     queryParams: {
@@ -64,8 +74,8 @@ export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegateP
   })
 
   const delegateDetails = {
-    name: 'sample-docker-delegate',
-    identifier: 'sampledockerdelegate',
+    name: delegateName,
+    identifier: StringUtils.getIdentifierFromName(delegateName),
     description: '',
     tokenName: token?.name
   }
@@ -76,7 +86,7 @@ export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegateP
         accountId,
         projectIdentifier,
         orgIdentifier,
-        delegateName: 'sample-docker-delegate-t',
+        delegateName: delegateName,
         tokenName: token?.name
       } as ValidateDockerDelegateQueryParams
     })) as any
@@ -98,7 +108,13 @@ export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegateP
     if (orgIdentifier) {
       set(createParams, 'orgIdentifier', orgIdentifier)
     }
-    set(createParams, 'delegateType', 'DOCKER')
+    set(createParams, 'delegateType', delegateType)
+
+    trackEvent(DelegateActions.SetupDelegate, {
+      category: Category.DELEGATE,
+      data: createParams
+    })
+
     const dockerYaml = (await getDockerYaml(createParams)) as any
     setYaml(dockerYaml)
   }
@@ -122,6 +138,7 @@ export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegateP
 
   useEffect(() => {
     getTokens()
+    setDelegateName(`sample-${uuid()}-delegate`)
   }, [])
 
   useEffect(() => {
@@ -136,6 +153,14 @@ export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegateP
       onSuccessHandler()
     }
   }, [yaml])
+
+  const trackCreateEvent = (): void => {
+    trackEvent(DelegateActions.SaveCreateDelegate, {
+      category: Category.DELEGATE,
+      ...delegateDetails
+    })
+  }
+  trackEventRef.current = trackCreateEvent
 
   if (showPageLoader) {
     return <ContainerSpinner className={css.spinner} />
@@ -160,6 +185,9 @@ export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegateP
                   text={getString('delegates.downloadYAMLFile')}
                   className={css.downloadButton}
                   onClick={() => {
+                    trackEvent(DelegateActions.DownloadYAML, {
+                      category: Category.DELEGATE
+                    })
                     onDownload()
                   }}
                   outlined
@@ -231,9 +259,7 @@ export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegateP
               <Text font={{ variation: FontVariation.H6, weight: 'semi-bold' }} className={css.subHeading}>
                 {getString('cd.delegateConnectionWait')}
               </Text>
-              {!isEmpty(yaml) ? (
-                <StepProcessing name="sample-docker-delegate-t" delegateType="DOCKER" replicas={1} />
-              ) : null}
+              {!isEmpty(yaml) ? <StepProcessing name={delegateName} delegateType={delegateType} replicas={1} /> : null}
             </Layout.Vertical>
           </li>
         </ul>

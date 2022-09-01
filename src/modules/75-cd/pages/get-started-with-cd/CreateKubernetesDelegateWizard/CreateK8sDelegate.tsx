@@ -7,10 +7,12 @@
 
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import { v4 as uuid } from 'uuid'
 import { Button, Container, Layout, Text, useToaster } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { isEmpty, set } from 'lodash-es'
+import { StringUtils } from '@common/exports'
 import {
   DelegateType,
   k8sPermissionType
@@ -34,19 +36,21 @@ import YamlBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import { useStrings } from 'framework/strings'
 import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, DelegateActions } from '@common/constants/TrackingConstants'
 import StepProcessing from './StepProcessing'
 import css from './CreateK8sDelegate.module.scss'
 
 export interface CreateK8sDelegateProps {
   onSuccessHandler: () => void
+  trackEventRef: React.MutableRefObject<(() => void) | null>
 }
 
-export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps): JSX.Element => {
-  const delegateName = `sample-${Math.floor(Math.random() * 100)}-delegate`
-  const delegateIdentifier = `sample${Math.floor(Math.random() * 100)}delegate`
+export const CreateK8sDelegate = ({ onSuccessHandler, trackEventRef }: CreateK8sDelegateProps): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<Record<string, string>>()
   const delegateType = DelegateType.KUBERNETES
   const [token, setToken] = React.useState<DelegateTokenDetails>()
+  const [delegateName, setDelegateName] = React.useState<string>('')
   const [yaml, setYaml] = React.useState<any>()
   const [generatedYaml, setGeneratedYaml] = React.useState<string>()
   const [isYamlVisible, setYamlVisible] = React.useState<boolean>(false)
@@ -59,7 +63,7 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps):
 
   const createParams = {
     name: delegateName,
-    identifier: delegateIdentifier,
+    identifier: StringUtils.getIdentifierFromName(delegateName),
     description: '',
     delegateType: delegateType,
     size: DelegateSize.LAPTOP,
@@ -102,6 +106,7 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps):
       fileFormat: 'text/plain'
     } as GenerateKubernetesYamlQueryParams
   })
+  const { trackEvent } = useTelemetry()
 
   const fetchYaml = async (): Promise<void> => {
     try {
@@ -109,8 +114,7 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps):
         ...(createParams as DelegateSetupDetails)
       })
       if ((response as any)?.responseMessages.length) {
-        const err = (response as any)?.responseMessages?.[0]?.message
-        showError(err)
+        showError(getString('somethingWentWrong'))
       } else {
         const delegateYaml = response.resource
         if (delegateSizeMappings) {
@@ -151,11 +155,12 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps):
   const delegateSizeMappings: DelegateSizeDetails[] | undefined = delegateSizes?.resource
 
   useEffect(() => {
-    if (tokensError || delegateSizeError) showError(getString('somethingWentWrong'))
+    if (tokensError || delegateSizeError) showError({ Error: getString('somethingWentWrong') })
   }, [tokensError, delegateSizeError, showError, getString])
 
   useEffect(() => {
     getTokens()
+    setDelegateName(`sample-${uuid()}-delegate`)
   }, [])
 
   useEffect(() => {
@@ -164,6 +169,10 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps):
 
   useEffect(() => {
     if (token && !isEmpty(delegateSizeMappings)) {
+      trackEvent(DelegateActions.SetupDelegate, {
+        category: Category.DELEGATE,
+        data: createParams
+      })
       fetchYaml()
     }
   }, [token, delegateSizeMappings])
@@ -178,6 +187,14 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps):
       onSuccessHandler()
     }
   }, [generatedYaml, onSuccessHandler])
+
+  const trackCreateEvent = (): void => {
+    trackEvent(DelegateActions.SaveCreateDelegate, {
+      category: Category.DELEGATE,
+      data: { ...yaml, generatedYaml: generatedYaml }
+    })
+  }
+  trackEventRef.current = trackCreateEvent
 
   if (showPageLoader) {
     return <ContainerSpinner className={css.spinner} />
@@ -202,6 +219,9 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps):
                   className={css.downloadButton}
                   onClick={() => {
                     onDownload()
+                    trackEvent(DelegateActions.DownloadYAML, {
+                      category: Category.DELEGATE
+                    })
                   }}
                   outlined
                 />

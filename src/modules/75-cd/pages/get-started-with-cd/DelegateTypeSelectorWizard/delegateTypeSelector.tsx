@@ -27,16 +27,17 @@ export const DelegateTypeSelector = ({ onClickBack }: DelegateTypeSelectorProps)
   const history = useHistory()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<Record<string, string>>()
 
+  const trackEventRef = React.useRef<(() => void) | null>(null)
+
   const onSuccessHandler = (): void => {
     setDisableBtn(false)
   }
-
   const conditionalContent = (): JSX.Element => {
     switch (delegateType) {
       case 'kubernetes':
-        return <CreateK8sDelegate onSuccessHandler={onSuccessHandler} />
+        return <CreateK8sDelegate onSuccessHandler={onSuccessHandler} trackEventRef={trackEventRef} />
       case 'docker':
-        return <CreateDockerDelegate onSuccessHandler={onSuccessHandler} />
+        return <CreateDockerDelegate onSuccessHandler={onSuccessHandler} trackEventRef={trackEventRef} />
       default:
         return <></>
     }
@@ -92,6 +93,7 @@ export const DelegateTypeSelector = ({ onClickBack }: DelegateTypeSelectorProps)
             rightIcon="chevron-right"
             disabled={disableBtn}
             onClick={() => {
+              trackEventRef.current?.()
               history.push(
                 routes.toPipelineStudio({
                   accountId: accountId,
