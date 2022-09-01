@@ -4360,6 +4360,7 @@ export interface StringsMap {
   'cd.learnMore': string
   'cd.learnMoreAboutHarnessAdapter': string
   'cd.learnMoreDelegate': string
+  'cd.loadingDelegate': string
   'cd.manifestId': string
   'cd.manifestPathsCannotBeEmpty': string
   'cd.moreIssue': string
@@ -8929,10 +8930,6 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   loading: string
-  /**
-   * @deprecated migrate this string to module level file
-   */
-  loadingDelegate: string
   /**
    * @deprecated migrate this string to module level file
    */

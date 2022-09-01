@@ -134,7 +134,7 @@ export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegateP
   if (showPageLoader) {
     return (
       <Container className={css.spinner}>
-        <PageSpinner message={getString('loadingDelegate')} />
+        <PageSpinner message={getString('cd.loadingDelegate')} />
       </Container>
     )
   }

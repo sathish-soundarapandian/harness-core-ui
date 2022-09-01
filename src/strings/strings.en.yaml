@@ -562,7 +562,6 @@ snippets:
   copied: Copied!
 fetching: Fetching
 somethingWentWrong: Something went wrong
-loadingDelegate: Please Wait, Creating a Delegate...
 saveChanges: Save Changes
 projectSelector:
   placeholder: 'Start typing to search'

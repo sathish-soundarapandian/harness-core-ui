@@ -436,6 +436,7 @@ serviceName: '{{ $.common.serviceName }}'
 skipRendering: Skip K8s Manifest(s) Rendering
 credentialsRef: credentialsRef
 connectorRefText: connectorRef
+loadingDelegate: Please Wait, Creating a Delegate...
 hosts: hosts
 hostFilters: hostFilters
 attributeFilters: attributeFilters

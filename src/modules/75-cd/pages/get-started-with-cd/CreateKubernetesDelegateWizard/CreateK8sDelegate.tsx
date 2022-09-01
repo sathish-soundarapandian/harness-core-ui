@@ -161,7 +161,7 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps):
   if (showPageLoader) {
     return (
       <Container className={css.spinner}>
-        <PageSpinner message={getString('loadingDelegate')} />
+        <PageSpinner message={getString('cd.loadingDelegate')} />
       </Container>
     )
   }
