@@ -8,7 +8,7 @@
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { v4 as uuid } from 'uuid'
-import { Button, Container, Layout, Text, useToaster } from '@harness/uicore'
+import { Button, Container, Layout, PageSpinner, Text, useToaster } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { isEmpty, set } from 'lodash-es'
@@ -27,7 +27,6 @@ import {
 import YamlBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import { useStrings } from 'framework/strings'
 import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
-import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { StringUtils } from '@common/exports'
 import { DelegateTypes } from '@delegates/constants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
@@ -163,7 +162,11 @@ export const CreateDockerDelegate = ({ onSuccessHandler, trackEventRef }: Create
   trackEventRef.current = trackCreateEvent
 
   if (showPageLoader) {
-    return <ContainerSpinner className={css.spinner} />
+    return (
+      <Container className={css.spinner}>
+        <PageSpinner message="Creating a Delegate..." />
+      </Container>
+    )
   }
 
   return (

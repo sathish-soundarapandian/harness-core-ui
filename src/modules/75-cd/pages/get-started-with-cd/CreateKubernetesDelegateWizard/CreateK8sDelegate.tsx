@@ -8,7 +8,7 @@
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { v4 as uuid } from 'uuid'
-import { Button, Container, Layout, Text, useToaster } from '@harness/uicore'
+import { Button, Container, Layout, PageSpinner, Text, useToaster } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { isEmpty, set } from 'lodash-es'
@@ -35,7 +35,6 @@ import { DelegateFileName } from '@delegates/components/CreateDelegate/K8sDelega
 import YamlBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import { useStrings } from 'framework/strings'
 import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
-import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, DelegateActions } from '@common/constants/TrackingConstants'
 import StepProcessing from './StepProcessing'
@@ -197,7 +196,11 @@ export const CreateK8sDelegate = ({ onSuccessHandler, trackEventRef }: CreateK8s
   trackEventRef.current = trackCreateEvent
 
   if (showPageLoader) {
-    return <ContainerSpinner className={css.spinner} />
+    return (
+      <Container className={css.spinner}>
+        <PageSpinner message="Creating a Delegate..." />
+      </Container>
+    )
   }
   return (
     <>
