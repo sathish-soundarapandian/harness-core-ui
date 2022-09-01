@@ -409,7 +409,10 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                       disabled: readonly,
                       onFocus: /* istanbul ignore next */ () => {
                         const connectorValue = getValue(formik.values?.connectorRef)
-                        if (getMultiTypeFromValue(formik.values?.subscriptionId) === MultiTypeInputType.FIXED) {
+                        if (
+                          getMultiTypeFromValue(formik.values?.subscriptionId) === MultiTypeInputType.FIXED &&
+                          getMultiTypeFromValue(connectorValue) === MultiTypeInputType.FIXED
+                        ) {
                           refetchSubscriptions({
                             queryParams: {
                               accountIdentifier: accountId,
@@ -471,16 +474,22 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                       expressions,
                       disabled: readonly,
                       onFocus: /* istanbul ignore next */ () => {
-                        if (getMultiTypeFromValue(formik.values?.resourceGroup) === MultiTypeInputType.FIXED) {
+                        const connectorValue = getValue(formik.values?.connectorRef)
+                        const subscriptionId = getValue(formik.values?.subscriptionId)
+                        if (
+                          getMultiTypeFromValue(formik.values?.resourceGroup) === MultiTypeInputType.FIXED &&
+                          getMultiTypeFromValue(connectorValue) === MultiTypeInputType.FIXED &&
+                          getMultiTypeFromValue(subscriptionId) === MultiTypeInputType.FIXED
+                        ) {
                           refetchResourceGroups({
                             queryParams: {
                               accountIdentifier: accountId,
                               projectIdentifier,
                               orgIdentifier,
-                              connectorRef: getValue(formik.values?.connectorRef)
+                              connectorRef: connectorValue
                             },
                             pathParams: {
-                              subscriptionId: getValue(formik.values?.subscriptionId)
+                              subscriptionId
                             }
                           })
                           refetchSubscriptionTags({
@@ -488,10 +497,10 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                               accountIdentifier: accountId,
                               projectIdentifier,
                               orgIdentifier,
-                              connectorRef: getValue(formik.values?.connectorRef)
+                              connectorRef: connectorValue
                             },
                             pathParams: {
-                              subscriptionId: getValue(formik.values?.subscriptionId)
+                              subscriptionId
                             }
                           })
                         }

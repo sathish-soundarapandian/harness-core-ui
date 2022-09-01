@@ -8,6 +8,7 @@
 import { isEmpty } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import type { MetricPackDTO, MetricThreshold, MetricThresholdCriteriaSpec, TimeSeriesMetricPackDTO } from 'services/cv'
+import type { GroupedMetric } from '@cv/components/MultiItemsSideNav/components/SelectedAppsSideNav/components/GroupedSideNav/GroupedSideNav.types'
 import type { MetricThresholdType } from '../../connectors/AppDynamics/AppDHealthSource.types'
 import type { GroupedCreatedMetrics } from '../CustomMetric/CustomMetric.types'
 import {
@@ -27,6 +28,7 @@ import type {
   MetricThresholdsState,
   SelectItem,
   ThresholdCriteriaPropsType,
+  ThresholdObject,
   ThresholdsPropertyNames
 } from './MetricThresholds.types'
 
@@ -52,8 +54,6 @@ export const getDefaultValueForMetricType = (
     ? MetricTypeValues.Custom
     : getDefaultMetricTypeValue(metricData as Record<string, boolean>, metricPacks)
 }
-
-type ThresholdObject = Partial<Record<ThresholdsPropertyNames, MetricThresholdType[]>>
 
 export function updateThresholdState(
   previousValues: MetricThresholdsState,
@@ -96,15 +96,37 @@ export function getActionItems(getString: UseStringsReturn['getString']): Select
 export const isGroupTransationTextField = (selectedMetricType?: string | null): boolean =>
   MetricTypesForTransactionTextField.some(field => field === selectedMetricType)
 
-export function getCustomMetricGroupNames(groupedCreatedMetrics: GroupedCreatedMetrics): string[] {
-  const groupsNames = Object.keys(groupedCreatedMetrics)
+function getGroupsWithCVEnabled(groupedCreatedMetrics: GroupedCreatedMetrics): string[] {
+  const CVEnabledGroups = []
 
-  return groupsNames.filter(
+  for (const groupName in groupedCreatedMetrics) {
+    const isCVEnabled = groupedCreatedMetrics[groupName].some(metricDetails => metricDetails.continuousVerification)
+
+    if (isCVEnabled) {
+      CVEnabledGroups.push(groupName)
+    }
+  }
+
+  return CVEnabledGroups
+}
+
+export function getCustomMetricGroupNames(groupedCreatedMetrics: GroupedCreatedMetrics): string[] {
+  if (!groupedCreatedMetrics) {
+    return []
+  }
+
+  const groupsWithCVEnabled = getGroupsWithCVEnabled(groupedCreatedMetrics)
+
+  return groupsWithCVEnabled.filter(
     groupName => groupName !== '' && groupName !== DefaultCustomMetricGroupName && groupName !== ExceptionGroupName
   )
 }
 
 export function getGroupDropdownOptions(groupedCreatedMetrics: GroupedCreatedMetrics): SelectItem[] {
+  if (!groupedCreatedMetrics) {
+    return []
+  }
+
   const validGroups = getCustomMetricGroupNames(groupedCreatedMetrics)
 
   return validGroups.map(group => ({
@@ -359,6 +381,8 @@ export function validateCommonFieldsForMetricThreshold(
 }
 
 export const getIsMetricPacksSelected = (metricData: { [key: string]: boolean }): boolean => {
+  if (!metricData) return false
+
   return Object.keys(metricData).some(metricPackKey => metricData[metricPackKey])
 }
 
@@ -394,22 +418,34 @@ export function getMetricTypeItems(
   return options
 }
 
+function getMetricsHaveCVEnabled(selectedMetricDetails: GroupedMetric[]): GroupedMetric[] {
+  return selectedMetricDetails.filter(metricDetail => metricDetail.continuousVerification)
+}
+
 function getMetricsNameOptionsFromGroupName(
   selectedGroup: string,
   groupedCreatedMetrics: GroupedCreatedMetrics
 ): SelectItem[] {
-  const selectedGroupDetails = groupedCreatedMetrics[selectedGroup]
+  const selectedMetricDetails = groupedCreatedMetrics[selectedGroup]
 
-  if (!selectedGroupDetails) {
+  if (!Array.isArray(selectedMetricDetails) || !selectedMetricDetails.length) {
     return []
   }
 
-  return selectedGroupDetails.map(selectedGroupDetail => {
-    return {
-      label: selectedGroupDetail.metricName as string,
-      value: selectedGroupDetail.metricName as string
+  const filteredCVSelectedMetrics = getMetricsHaveCVEnabled(selectedMetricDetails)
+
+  const metricNameOptions: SelectItem[] = []
+
+  filteredCVSelectedMetrics.forEach(selectedMetricDetail => {
+    if (selectedMetricDetail.metricName) {
+      metricNameOptions.push({
+        label: selectedMetricDetail.metricName,
+        value: selectedMetricDetail.metricName
+      })
     }
   })
+
+  return metricNameOptions
 }
 
 export function getMetricItems(
@@ -519,7 +555,7 @@ export const getMetricPacksForPayload = (
   const { metricData, ignoreThresholds, failFastThresholds } = formData
 
   const metricPacks = Object.entries(metricData).map(item => {
-    return item[1]
+    return item[1] && item[0] !== MetricTypeValues.Custom
       ? {
           identifier: item[0] as string,
           metricThresholds: isMetricThresholdEnabled
@@ -544,24 +580,25 @@ export const getMetricPacksForPayload = (
 
 // Utils for only custom metrics health source, like Prometheus, Datadog
 function getAllMetricsNameOptions(groupedCreatedMetrics: GroupedCreatedMetrics): SelectItem[] {
-  const groups = Object.keys(groupedCreatedMetrics)
+  const groups = getGroupsWithCVEnabled(groupedCreatedMetrics)
 
-  if (!groups.length) {
+  if (!Array.isArray(groups) || !groups.length) {
     return []
   }
 
   const options: SelectItem[] = []
 
   groups.forEach(group => {
-    const groupDetails = groupedCreatedMetrics[group]
-    const metricNameOptions = groupDetails.map(groupDetail => {
-      return {
-        label: groupDetail.metricName as string,
-        value: groupDetail.metricName as string
+    const cvEnabledMetrics = getMetricsHaveCVEnabled(groupedCreatedMetrics[group])
+
+    cvEnabledMetrics.forEach(metricDetail => {
+      if (metricDetail.metricName) {
+        options.push({
+          label: metricDetail.metricName,
+          value: metricDetail.metricName
+        })
       }
     })
-
-    options.push(...metricNameOptions)
   })
 
   return options
@@ -578,10 +615,77 @@ export function getMetricNameItems(
   groupName?: string,
   isOnlyCustomMetricHealthSource?: boolean
 ): SelectItem[] {
+  if (!groupedCreatedMetrics) {
+    return []
+  }
+
   // Should return all the metric names if it is isOnlyCustomMetricHealthSource
   if (isOnlyCustomMetricHealthSource) {
     return getMetricItemsForOnlyCustomMetrics(groupedCreatedMetrics)
   }
 
   return getMetricItems(metricPacks as TimeSeriesMetricPackDTO[], metricType, groupName, groupedCreatedMetrics)
+}
+
+export const getIsMetricThresholdCanBeShown = (
+  metricData: { [key: string]: boolean },
+  groupedCreatedMetrics: GroupedCreatedMetrics
+): boolean => {
+  if (!metricData || !groupedCreatedMetrics) {
+    return false
+  }
+  return getIsMetricPacksSelected(metricData) || Boolean(getCustomMetricGroupNames(groupedCreatedMetrics).length)
+}
+
+export const getMetricsWithCVEnabled = (groupedCreatedMetrics: GroupedCreatedMetrics): string[] => {
+  const groupNamesWithCVEnabled = getCustomMetricGroupNames(groupedCreatedMetrics)
+
+  if (!Array.isArray(groupNamesWithCVEnabled) || !groupNamesWithCVEnabled.length) {
+    return []
+  }
+
+  const metricsWithCVEnabled = [] as string[]
+
+  groupNamesWithCVEnabled.forEach(groupName => {
+    const cvEnabledMetrics = getMetricsHaveCVEnabled(groupedCreatedMetrics[groupName])
+
+    if (Array.isArray(cvEnabledMetrics) && cvEnabledMetrics.length) {
+      const cvEnabledMetricNames = cvEnabledMetrics.map(cvEnabledMetric => cvEnabledMetric.metricName as string)
+      metricsWithCVEnabled.push(...cvEnabledMetricNames)
+    }
+  })
+
+  return metricsWithCVEnabled
+}
+
+const getFilteredCVEnabledCustomThresholds = (
+  thresholds: MetricThresholdType[],
+  metricsWithCVEnabled: string[]
+): MetricThresholdType[] => {
+  return thresholds.filter(threshold => {
+    return (
+      threshold.metricType !== MetricTypeValues.Custom || metricsWithCVEnabled.includes(threshold.metricName as string)
+    )
+  })
+}
+
+const isThresholdPresent = (thresholds: MetricThresholdType[]): boolean => {
+  return Array.isArray(thresholds) && Boolean(thresholds.length)
+}
+
+export const getFilteredCVDisabledMetricThresholds = (
+  ignoreThresholds: MetricThresholdType[],
+  failFastThresholds: MetricThresholdType[],
+  groupedCreatedMetrics: GroupedCreatedMetrics
+): Record<ThresholdsPropertyNames, MetricThresholdType[]> => {
+  const metricsWithCVEnabled = getMetricsWithCVEnabled(groupedCreatedMetrics)
+
+  return {
+    ignoreThresholds: isThresholdPresent(ignoreThresholds)
+      ? getFilteredCVEnabledCustomThresholds(ignoreThresholds, metricsWithCVEnabled)
+      : [],
+    failFastThresholds: isThresholdPresent(failFastThresholds)
+      ? getFilteredCVEnabledCustomThresholds(failFastThresholds, metricsWithCVEnabled)
+      : []
+  }
 }

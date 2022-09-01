@@ -126,7 +126,17 @@ export const PrometheusThresholdProps: PrometheusMetricThresholdContextType = {
           label: 'g1',
           value: 'g1'
         },
-        metricName: 'Prometheus Metric'
+        metricName: 'Prometheus Metric',
+        continuousVerification: true
+      },
+      {
+        index: 1,
+        groupName: {
+          label: 'g1',
+          value: 'g1'
+        },
+        metricName: 'Prometheus Metric 2',
+        continuousVerification: false
       }
     ]
   },

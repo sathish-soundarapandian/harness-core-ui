@@ -17,7 +17,8 @@ export const groupedCreatedMetrics = {
         value: 'group1'
       },
       index: 0,
-      metricName: 'test metric'
+      metricName: 'test metric',
+      continuousVerification: true
     }
   ]
 }
@@ -133,7 +134,8 @@ export const formInitialValues = {
 export const formDataMock = {
   metricData: {
     Performance: true,
-    Errors: false
+    Errors: false,
+    Custom: true
   },
   ignoreThresholds: ignoreThresholdsMockData,
   failFastThresholds: failFastThresholdsMockData
@@ -173,7 +175,117 @@ export const singleIgnoreThreshold: MetricThresholdType = {
   }
 }
 
+export const singleFailFastThreshold: MetricThresholdType = {
+  metricType: 'Custom',
+  type: 'FailImmediately',
+  spec: {
+    action: 'FailAfterOccurrence'
+  },
+  criteria: {
+    type: 'Percentage',
+    spec: {
+      greaterThan: 21
+    }
+  }
+}
+
 export const formikInitialValuesCriteriaGreaterThanMock = {
   ignoreThresholds: [singleIgnoreThreshold],
   failFastThresholds: []
+}
+
+export const thresholdsForCVEnableTest = {
+  ignoreThresgholds: [
+    {
+      ...singleIgnoreThreshold,
+      metricName: 'metric 1'
+    },
+    {
+      ...singleIgnoreThreshold,
+      metricName: 'metric 2'
+    }
+  ],
+  failFastThresholds: [
+    {
+      ...singleFailFastThreshold,
+      metricName: 'metric 3'
+    },
+    {
+      ...singleFailFastThreshold,
+      metricName: 'metric 4'
+    }
+  ]
+}
+
+const singleMetricDetailMock = {
+  groupName: {
+    label: 'group 1',
+    value: 'group1'
+  },
+  index: 0,
+  metricName: 'metric 1',
+  continuousVerification: true
+}
+
+export const groupedCreatedMetricsForFailCVEnableTest = {
+  'group 1': [
+    {
+      ...singleMetricDetailMock,
+      continuousVerification: false
+    }
+  ]
+}
+
+export const groupedCreatedMetricsForCVEnableTest = {
+  'group 1': [
+    {
+      ...singleMetricDetailMock
+    },
+    {
+      ...singleMetricDetailMock,
+      metricName: 'metric 2',
+      continuousVerification: false
+    },
+    {
+      ...singleMetricDetailMock,
+      metricName: 'metric 3'
+    },
+    {
+      ...singleMetricDetailMock,
+      metricName: 'metric 4',
+      continuousVerification: false
+    }
+  ],
+  'group 2': [
+    {
+      groupName: {
+        label: 'group 2',
+        value: 'group 2'
+      },
+      index: 0,
+      metricName: 'metric 5',
+      continuousVerification: true
+    }
+  ]
+}
+
+export const cvEnabledThresholdsExpectedResultMock = {
+  failFastThresholds: [
+    {
+      criteria: { spec: { greaterThan: 21 }, type: 'Percentage' },
+      metricName: 'metric 3',
+      metricType: 'Custom',
+      spec: { action: 'FailAfterOccurrence' },
+      type: 'FailImmediately'
+    }
+  ],
+  ignoreThresholds: [
+    {
+      criteria: { spec: { greaterThan: 21 }, type: 'Percentage' },
+      metricName: 'metric 1',
+      metricType: 'Custom',
+      spec: { action: 'Ignore' },
+      type: 'IgnoreThreshold'
+    }
+  ]
 }

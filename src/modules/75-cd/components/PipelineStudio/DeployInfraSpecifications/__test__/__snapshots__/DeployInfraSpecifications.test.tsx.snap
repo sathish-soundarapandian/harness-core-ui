@@ -48,7 +48,7 @@ exports[`Deploy infra specifications test Should match snapshot 1`] = `
             class="align"
             data-tooltip-id="pipelineStep.infrastructureDefinitionMethod"
           >
-            pipelineSteps.deploy.infrastructure.selectMethod
+            cd.pipelineSteps.environmentTab.selectInfrastructureType
           </span>
         </p>
         <div

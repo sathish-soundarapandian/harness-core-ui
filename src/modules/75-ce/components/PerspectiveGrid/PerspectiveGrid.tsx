@@ -78,9 +78,11 @@ const PerspectiveGrid: React.FC<PerspectiveGridProps> = props => {
   }, [response, fetching])
 
   useEffect(() => {
-    const newColumnSequence = gridData.slice(0, 12).map(row => row['id'])
-    if (!isEqual(columnSequence, newColumnSequence) && setColumnSequence) {
-      setColumnSequence(newColumnSequence as string[])
+    if (gridPageIndex === 0) {
+      const newColumnSequence = gridData.slice(0, 12).map(row => row['id'])
+      if (!isEqual(columnSequence, newColumnSequence) && setColumnSequence) {
+        setColumnSequence(newColumnSequence as string[])
+      }
     }
   }, [gridData])
 

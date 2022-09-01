@@ -64,7 +64,7 @@ import AppDCustomMetricForm from './Components/AppDCustomMetricForm/AppDCustomMe
 import AppDApplications from './Components/AppDApplications/AppDApplications'
 import AppDynamicsTier from './Components/AppDynamicsTier/AppDynamicsTier'
 import AppDMetricThreshold from './Components/AppDMetricThreshold/AppDMetricThreshold'
-import { getIsMetricPacksSelected } from '../../common/MetricThresholds/MetricThresholds.utils'
+import { getIsMetricThresholdCanBeShown } from '../../common/MetricThresholds/MetricThresholds.utils'
 import css from './AppDHealthSource.module.scss'
 
 export default function AppDMonitoredSource({
@@ -434,14 +434,15 @@ export default function AppDMonitoredSource({
                 </Button>
               </CardWithOuterTitle>
             )}
-            {isMetricThresholdEnabled && getIsMetricPacksSelected(formik.values.metricData) && (
-              <AppDMetricThreshold
-                formikValues={formik.values}
-                groupedCreatedMetrics={groupedCreatedMetrics}
-                metricPacks={selectedMetricPacks}
-                setNonCustomFeilds={setNonCustomFeilds}
-              />
-            )}
+            {isMetricThresholdEnabled &&
+              getIsMetricThresholdCanBeShown(formik.values.metricData, groupedCreatedMetrics) && (
+                <AppDMetricThreshold
+                  formikValues={formik.values}
+                  groupedCreatedMetrics={groupedCreatedMetrics}
+                  metricPacks={selectedMetricPacks}
+                  setNonCustomFeilds={setNonCustomFeilds}
+                />
+              )}
 
             <DrawerFooter
               isSubmit
@@ -451,7 +452,7 @@ export default function AppDMonitoredSource({
                 formik.submitForm()
 
                 if (formik.isValid) {
-                  submitData(formik, mappedMetrics, selectedMetric, onSubmit)
+                  submitData(formik, mappedMetrics, selectedMetric, onSubmit, groupedCreatedMetrics)
                 }
               }}
             />

@@ -5,19 +5,17 @@ import { TestWrapper } from '@common/utils/testUtils'
 import {
   PrometheusThresholdProps as MockContextValues,
   formikInitialValues
-} from '../../../__tests__/PrometheusMetricThreshold.mock'
-import PrometheusFailFastThresholdTabContent from '../PrometheusFailFastThresholdTabContent'
-import { PrometheusMetricThresholdContext } from '../../../PrometheusMetricThresholdConstants'
+} from '../../__tests__/PrometheusMetricThreshold.mock'
+import { PrometheusMetricThresholdContext } from '../../PrometheusMetricThresholdConstants'
+import FailFastThresholdContent from '../FailFastThresholdsContent'
 
-const WrappingComponent = () => {
+const WrappingComponent = (): JSX.Element => {
   return (
     <TestWrapper>
       <Formik initialValues={formikInitialValues} onSubmit={jest.fn()} formName="appDHealthSourceform">
         <FormikForm>
-          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-          {/* @ts-ignore */}
           <PrometheusMetricThresholdContext.Provider value={MockContextValues}>
-            <PrometheusFailFastThresholdTabContent />
+            <FailFastThresholdContent />
           </PrometheusMetricThresholdContext.Provider>
         </FormikForm>
       </Formik>

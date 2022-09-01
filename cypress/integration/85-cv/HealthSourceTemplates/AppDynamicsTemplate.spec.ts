@@ -159,7 +159,7 @@ describe('Create empty monitored service', () => {
 
     cy.get('input[name="sli"]').click({ force: true })
     cy.get('input[name="continuousVerification"]').click({ force: true })
-    cy.get('input[name="serviceInstanceMetricPath"]').should('have.value', '<+input>')
+    cy.get('input[name="serviceInstanceMetricPath"]').scrollIntoView().should('have.value', '<+input>')
     cy.get('input[value="Errors/ERROR"]').click({ force: true })
     cy.get('input[name="higherBaselineDeviation"]').click({ force: true })
 

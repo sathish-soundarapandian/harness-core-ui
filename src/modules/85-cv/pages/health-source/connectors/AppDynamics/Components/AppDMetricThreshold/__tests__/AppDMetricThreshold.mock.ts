@@ -116,7 +116,8 @@ export const AppDMetricThresholdProps = {
           label: 'g1',
           value: 'g1'
         },
-        metricName: 'appdMetric'
+        metricName: 'appdMetric',
+        continuousVerification: true
       }
     ]
   },

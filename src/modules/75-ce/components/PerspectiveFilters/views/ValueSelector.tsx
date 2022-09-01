@@ -209,7 +209,7 @@ const ValueSelector: React.FC<ValueSelectorProps> = ({
   const valuesList = (data?.perspectiveFilters?.values || []).filter(x => x) as string[]
 
   useEffect(() => {
-    if (data?.perspectiveFilters?.values) {
+    if (data?.perspectiveFilters?.values && !fetching && service?.name) {
       const moreItemsPresent = data.perspectiveFilters.values.length === LIMIT
       const filteredVal = data.perspectiveFilters.values.filter(e => e) as string[]
       setPageInfo(prevInfo => ({
@@ -218,7 +218,7 @@ const ValueSelector: React.FC<ValueSelectorProps> = ({
         filtersValuesData: [...prevInfo.filtersValuesData, ...filteredVal]
       }))
     }
-  }, [data?.perspectiveFilters?.values])
+  }, [data?.perspectiveFilters?.values, service?.name, fetching])
 
   const onInputChange: (val: string) => void = val => {
     setPageInfo({

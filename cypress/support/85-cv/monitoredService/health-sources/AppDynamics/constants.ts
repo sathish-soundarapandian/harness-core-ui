@@ -23,8 +23,7 @@ export const applicationsResponse = {
   correlationId: 'a3c8c50f-4e61-43ac-b535-55a5aa444f7a'
 }
 
-export const metricPackCall =
-  '/cv/api/metric-pack?*&dataSourceType=APP_DYNAMICS'
+export const metricPackCall = '/cv/api/metric-pack?*&dataSourceType=APP_DYNAMICS'
 export const metricPackResponse = {
   metaData: {},
   resource: [
@@ -238,4 +237,50 @@ export const metricStructureResponse = {
   ],
   metaData: null,
   correlationId: '7d5498f7-29f6-40c5-af4b-0c4c6dc7a69f'
+}
+
+export const updatedMonitoredServiceResponse = {
+  metaData: {},
+  resource: {
+    createdAt: 1661770505538,
+    lastModifiedAt: 1661774021430,
+    monitoredService: {
+      orgIdentifier: 'CVNG',
+      projectIdentifier: 'Signoff',
+      identifier: 'testService_testEnv',
+      name: 'testService_testEnv',
+      type: 'Application',
+      description: '',
+      serviceRef: 'testService',
+      environmentRef: 'testEnv',
+      environmentRefList: ['testEnv'],
+      tags: {},
+      sources: {
+        healthSources: [
+          {
+            name: 'Appd health source',
+            identifier: 'Appd_health_source',
+            type: 'AppDynamics',
+            spec: {
+              connectorRef: 'org.appdprod',
+              feature: 'Application Monitoring',
+              applicationName: 'cv-app',
+              tierName: 'docker-tier',
+              metricPacks: [
+                { identifier: 'Performance', metricThresholds: null },
+                { identifier: 'Errors', metricThresholds: null }
+              ],
+              metricDefinitions: []
+            }
+          }
+        ],
+        changeSources: []
+      },
+      dependencies: [],
+      notificationRuleRefs: [],
+      template: null,
+      enabled: false
+    }
+  },
+  responseMessages: []
 }

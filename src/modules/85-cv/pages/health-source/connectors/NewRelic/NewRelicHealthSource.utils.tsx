@@ -6,7 +6,6 @@
  */
 
 import { cloneDeep, isEmpty, isEqual, omit } from 'lodash-es'
-import type { FormikProps } from 'formik'
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@wings-software/uicore'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import type { MetricPackDTO } from 'services/cv'
@@ -19,8 +18,9 @@ import type {
   PersistCustomMetricInterface,
   SelectedAndMappedMetrics
 } from './NewRelicHealthSource.types'
-import type { CustomMappedMetric } from '../../common/CustomMetric/CustomMetric.types'
+import type { CustomMappedMetric, GroupedCreatedMetrics } from '../../common/CustomMetric/CustomMetric.types'
 import {
+  getFilteredCVDisabledMetricThresholds,
   getFilteredMetricThresholdValues,
   validateCommonFieldsForMetricThreshold
 } from '../../common/MetricThresholds/MetricThresholds.utils'
@@ -272,16 +272,28 @@ export const setApplicationIfConnectorIsInput = (
 }
 
 export const createNewRelicPayloadBeforeSubmission = (
-  formik: FormikProps<CustomMappedMetric>,
+  formik: any,
   mappedMetrics: Map<string, CustomMappedMetric>,
   selectedMetric: string,
-  onSubmit: (healthSourcePayload: any) => void
+  onSubmit: (healthSourcePayload: any) => void,
+  groupedCreatedMetrics: GroupedCreatedMetrics
 ): void => {
   const updatedMetric = formik.values
   if (updatedMetric) {
     mappedMetrics.set(selectedMetric, updatedMetric)
   }
-  const updatedValues = { ...formik.values, mappedServicesAndEnvs: mappedMetrics }
+
+  const filteredCVDisabledMetricThresholds = getFilteredCVDisabledMetricThresholds(
+    formik.values.ignoreThresholds,
+    formik.values.failFastThresholds,
+    groupedCreatedMetrics
+  )
+
+  const updatedValues = {
+    ...formik.values,
+    ...filteredCVDisabledMetricThresholds,
+    mappedServicesAndEnvs: mappedMetrics
+  }
   onSubmit(updatedValues)
 }
 

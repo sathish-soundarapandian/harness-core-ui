@@ -7,6 +7,7 @@
 
 import type { MetricThresholdType } from '@cv/pages/health-source/connectors/AppDynamics/AppDHealthSource.types'
 import type { TimeSeriesMetricPackDTO } from 'services/cv'
+import type { GroupedCreatedMetrics } from '../../CustomMetric/CustomMetric.types'
 
 import { MetricCriteriaValues, PercentageCriteriaDropdownValues } from '../MetricThresholds.constants'
 import {
@@ -14,30 +15,38 @@ import {
   getActionItems,
   getCriterialItems,
   getCriteriaPercentageDropdownOptions,
+  getCustomMetricGroupNames,
   getDefaultMetricTypeValue,
   getDefaultValueForMetricType,
+  getFilteredCVDisabledMetricThresholds,
   getFilteredMetricThresholdValues,
   getGroupDropdownOptions,
   getIsMetricPacksSelected,
+  getIsMetricThresholdCanBeShown,
   getIsShowGreaterThan,
   getIsShowLessThan,
   getMetricItems,
   getMetricItemsForOnlyCustomMetrics,
   getMetricNameItems,
   getMetricPacksForPayload,
+  getMetricsWithCVEnabled,
   isGroupTransationTextField,
   updateThresholdState,
   validateCommonFieldsForMetricThreshold
 } from '../MetricThresholds.utils'
 import {
+  cvEnabledThresholdsExpectedResultMock,
   exceptionalGroupedCreatedMetrics,
   formDataMock,
   groupedCreatedMetrics,
   groupedCreatedMetricsDefault,
+  groupedCreatedMetricsForCVEnableTest,
+  groupedCreatedMetricsForFailCVEnableTest,
   metricPacksMock,
   metricThresholdsPayloadMockData,
   mockThresholdValue,
-  singleIgnoreThreshold
+  singleIgnoreThreshold,
+  thresholdsForCVEnableTest
 } from './MetricThresholds.utils.mock'
 
 describe('AppDIgnoreThresholdTabContent', () => {
@@ -74,6 +83,11 @@ describe('AppDIgnoreThresholdTabContent', () => {
 
   test('should validate getGroupDropdownOptions', () => {
     expect(getGroupDropdownOptions(groupedCreatedMetrics)).toEqual([{ label: 'group 1', value: 'group 1' }])
+  })
+
+  test('getGroupDropdownOptions should return empty [], if there is no groupedCreatedMetrics parameter', () => {
+    // casted to test the negative scenario
+    expect(getGroupDropdownOptions(null as unknown as GroupedCreatedMetrics)).toEqual([])
   })
 
   test('should validate getGroupDropdownOptions for default group name', () => {
@@ -470,6 +484,14 @@ describe('AppDIgnoreThresholdTabContent', () => {
     expect(result).toEqual([])
   })
 
+  test('getMetricItems should return metric names whose CV is enabled', () => {
+    const result = getMetricItems([], 'Custom', 'group 1', groupedCreatedMetricsForCVEnableTest)
+    expect(result).toEqual([
+      { label: 'metric 1', value: 'metric 1' },
+      { label: 'metric 3', value: 'metric 3' }
+    ])
+  })
+
   test('getDefaultValueForMetricType should return correct value', () => {
     let result = getDefaultValueForMetricType({ Performance: false, Errors: true })
 
@@ -551,7 +573,7 @@ describe('AppDIgnoreThresholdTabContent', () => {
     ])
   })
 
-  test('should create correct payload for AppD health source', () => {
+  test('getMetricPacksForPayload should ignore custom, if it is present in metric packs', () => {
     const result = getMetricPacksForPayload(formDataMock, true)
     expect(result).toEqual(metricThresholdsPayloadMockData)
   })
@@ -584,5 +606,77 @@ describe('AppDIgnoreThresholdTabContent', () => {
     const result = getMetricNameItems(groupedCreatedMetrics, [], '', '', true)
 
     expect(result).toEqual([{ label: 'test metric', value: 'test metric' }])
+  })
+  test('getFilteredCVDisabledMetricThresholds should return only thresholds with metric enabled with CV', () => {
+    const result = getFilteredCVDisabledMetricThresholds(
+      thresholdsForCVEnableTest.ignoreThresgholds,
+      thresholdsForCVEnableTest.failFastThresholds,
+      groupedCreatedMetricsForCVEnableTest
+    )
+
+    expect(result).toEqual(cvEnabledThresholdsExpectedResultMock)
+  })
+
+  test('getFilteredCVDisabledMetricThresholds should return empty array if no threshold values are passed', () => {
+    // ℹ️ Casted to test negative scenario
+    const result = getFilteredCVDisabledMetricThresholds(
+      [],
+      null as unknown as MetricThresholdType[],
+      groupedCreatedMetricsForCVEnableTest
+    )
+
+    expect(result).toEqual({
+      ignoreThresholds: [],
+      failFastThresholds: []
+    })
+  })
+
+  test('getMetricsWithCVEnabled should return correct metric names whose CV is enabled', () => {
+    const result = getMetricsWithCVEnabled(groupedCreatedMetricsForCVEnableTest)
+
+    expect(result).toEqual(['metric 1', 'metric 3', 'metric 5'])
+  })
+
+  test('getIsMetricThresholdCanBeShown should return true if atleast one metric pack is selected', () => {
+    const result = getIsMetricThresholdCanBeShown({ performance: true }, {})
+
+    expect(result).toEqual(true)
+  })
+
+  test('getIsMetricThresholdCanBeShown should return false if no metric pack is selected and no groups with CV is created', () => {
+    const result = getIsMetricThresholdCanBeShown({ performance: false }, groupedCreatedMetricsForFailCVEnableTest)
+
+    expect(result).toEqual(false)
+  })
+
+  test('getIsMetricThresholdCanBeShown should return true if no metric pack is selected and atleast groups with CV is created', () => {
+    const result = getIsMetricThresholdCanBeShown({ performance: false }, groupedCreatedMetricsForCVEnableTest)
+
+    expect(result).toEqual(true)
+  })
+
+  test('getIsMetricThresholdCanBeShown should return false if no valid metric pack or group is sent', () => {
+    // ℹ️ Casted to test unexpected scenario, to test robustness
+    const result = getIsMetricThresholdCanBeShown(
+      null as unknown as Record<string, boolean>,
+      null as unknown as GroupedCreatedMetrics
+    )
+
+    expect(result).toEqual(false)
+
+    // ℹ️ Casted to test unexpected scenario, to test robustness
+    const result2 = getIsMetricThresholdCanBeShown({}, null as unknown as GroupedCreatedMetrics)
+
+    expect(result2).toEqual(false)
+  })
+
+  test('getCustomMetricGroupNames should return group names which atleast contains one metric whose CV is enabled', () => {
+    const result = getCustomMetricGroupNames(groupedCreatedMetricsForCVEnableTest)
+
+    expect(result).toEqual(['group 1', 'group 2'])
+
+    const result2 = getCustomMetricGroupNames(groupedCreatedMetricsForFailCVEnableTest)
+
+    expect(result2).toEqual([])
   })
 })

@@ -564,8 +564,11 @@ describe('Metric thresholds in AppDynamics', () => {
     cy.get('.bp3-overlay input[name="name"]').type('group 1')
     cy.get('.bp3-overlay button[type="submit"]').click({ force: true })
 
+    cy.contains('span', 'Continuous Verification').click()
+
     cy.get("input[name='failFastThresholds.0.metricType']").click()
 
+    cy.get('.Select--menuItem:nth-child(3)').should('have.text', 'Custom')
     cy.get('.Select--menuItem:nth-child(3)').click()
 
     // group name should have created group name option

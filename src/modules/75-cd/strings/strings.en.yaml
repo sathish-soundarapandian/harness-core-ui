@@ -39,7 +39,7 @@ steps:
     hostsPlaceholder: Specify list of host names here (comma separated)
     specificHostsPlaceholder: Specify list of comma separated hosts here
     attributesPlaceholder: Specify list of comma separated attributes and values. E.g. hostType:DB, region:west
-    specifyHostsOption: Specify hosts here
+    specifyHostsOption: Specify hosts
     preconfiguredHostsOption: Select preconfigured hosts from Physical Data Center
     pdcConnectorLabel: Physical Datacentar Connector
     includeAllHosts: Include all hosts
@@ -151,6 +151,7 @@ pipelineSteps:
     selectEnvironment: '- Select Environment -'
     selectEnvironmentGroup: '- Select Environment Group -'
     selectInfrastructure: '- Select Infrastructure -'
+    selectInfrastructureType: 'Select Infrastructure Type'
     plusNewEnvironment: '+ {{$.newEnvironment}}'
     newEnvironment: '{{$.newEnvironment}}'
     deployToAll: Deploy in parallel on all infrastructure
@@ -174,6 +175,7 @@ pipelineSteps:
     plusNewService: '+ {{$.newService}}'
     serviceIsRequired: Service is required
     aboutYourService: About the Service
+    newServiceOverride: Add configuration overrides
   infraTab:
     deploymentType: Infrastructure type selection is required
     clusterError: No cluster found with given Connector

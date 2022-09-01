@@ -14,19 +14,17 @@ import {
   formikInitialValues,
   formikInitialValuesCriteriaMock,
   formikInitialValuesCriteriaGreaterThanMock
-} from '../../../__tests__/PrometheusMetricThreshold.mock'
-import PrometheusIgnoreThresholdTabContent from '../PrometheusIgnoreThresholdTabContent'
-import { PrometheusMetricThresholdContext } from '../../../PrometheusMetricThresholdConstants'
+} from '../../__tests__/PrometheusMetricThreshold.mock'
+import { PrometheusMetricThresholdContext } from '../../PrometheusMetricThresholdConstants'
+import IgnoreThresholdContent from '../IgnoreThresholdsContent'
 
-const WrappingComponent = ({ formValues }: { formValues?: any }) => {
+const WrappingComponent = ({ formValues }: { formValues?: any }): JSX.Element => {
   return (
     <TestWrapper>
       <Formik initialValues={formValues || formikInitialValues} onSubmit={jest.fn()} formName="appDHealthSourceform">
         <FormikForm>
-          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-          {/* @ts-ignore */}
           <PrometheusMetricThresholdContext.Provider value={MockContextValues}>
-            <PrometheusIgnoreThresholdTabContent />
+            <IgnoreThresholdContent />
           </PrometheusMetricThresholdContext.Provider>
         </FormikForm>
       </Formik>
@@ -160,8 +158,6 @@ describe('PrometheusIgnoreThresholdTabContent', () => {
     const criteriaPercentageType = container.querySelector(
       'input[name="ignoreThresholds.0.criteria.criteriaPercentageType"]'
     )
-
-    screen.debug(container, 30000)
 
     expect(greaterThanInput).toBeInTheDocument()
     expect(greaterThanInput).toHaveValue(21)

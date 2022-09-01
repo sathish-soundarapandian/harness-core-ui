@@ -44,6 +44,7 @@ export type MapSplunkMetricQueryToService = {
   recordCount?: number
   groupName?: SelectOption
   sli?: boolean
+  continuousVerification?: boolean
 }
 
 export type RiskProfileCatgory = 'Performance' | 'Errors' | 'Infrastructure'

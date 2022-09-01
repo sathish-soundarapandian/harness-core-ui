@@ -532,7 +532,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           ) : null}
         </div>
         <div className={cx(css.flexCenter, css.validationStatus)}>
-          {yamlValidationErrors && yamlValidationErrors.size > 0 ? (
+          {!isReadOnlyMode && yamlValidationErrors && yamlValidationErrors.size > 0 && (
             <Popover
               interactionKind={PopoverInteractionKind.HOVER}
               position={Position.TOP}
@@ -544,7 +544,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
                 <span className={css.invalidYaml}>{getString('invalidText')}</span>
               </div>
             </Popover>
-          ) : null}
+          )}
         </div>
       </div>
     ),

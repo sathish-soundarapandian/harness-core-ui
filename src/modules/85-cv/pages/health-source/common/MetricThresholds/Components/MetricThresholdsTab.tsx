@@ -22,7 +22,7 @@ export default function MetricThresholdTab<T>(props: MetricThresholdsTabProps): 
       tabList={[
         {
           id: getString('cv.monitoringSources.appD.ignoreThresholds'),
-          title: `${getString('cv.monitoringSources.appD.ignoreThresholds')} (${ignoreThresholdsLength})`,
+          title: `${getString('cv.monitoringSources.appD.ignoreThresholds')} (${ignoreThresholdsLength ?? 0})`,
           panel: (
             <Container margin={{ top: 'large' }}>
               <Text color={Color.BLACK}>{getString('cv.monitoringSources.appD.ignoreThresholdHint')}</Text>
@@ -34,7 +34,7 @@ export default function MetricThresholdTab<T>(props: MetricThresholdsTabProps): 
         },
         {
           id: getString('cv.monitoringSources.appD.failFastThresholds'),
-          title: `${getString('cv.monitoringSources.appD.failFastThresholds')} (${failFastThresholdsLength})`,
+          title: `${getString('cv.monitoringSources.appD.failFastThresholds')} (${failFastThresholdsLength ?? 0})`,
           panel: (
             <Container margin={{ top: 'large' }}>
               <Text color={Color.BLACK}>{getString('cv.monitoringSources.appD.failFastThresholdHint')}</Text>

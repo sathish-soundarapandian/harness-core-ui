@@ -655,8 +655,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
             <Text margin={{ bottom: 'medium' }} className={stageCss.info}>
               <StringWithTooltip
                 tooltipId="pipelineStep.infrastructureDefinitionMethod"
-                stringId="pipelineSteps.deploy.infrastructure.selectMethod"
-                stringIdVars={{ deploymentSpecificText: selectedDeploymentType }}
+                stringId="cd.pipelineSteps.environmentTab.selectInfrastructureType"
               />
             </Text>
           )}

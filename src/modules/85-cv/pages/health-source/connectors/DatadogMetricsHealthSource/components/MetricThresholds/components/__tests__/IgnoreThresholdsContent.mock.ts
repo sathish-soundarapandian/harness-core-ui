@@ -82,7 +82,8 @@ export const MockContextValues = {
           label: 'g1',
           value: 'g1'
         },
-        metricName: 'dataDogMetric'
+        metricName: 'dataDogMetric',
+        continuousVerification: true
       }
     ]
   } as GroupedCreatedMetrics,

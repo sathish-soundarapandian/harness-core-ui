@@ -225,7 +225,7 @@ export function ServiceOverrides(): React.ReactElement {
             icon="plus"
             variation={ButtonVariation.SECONDARY}
             onClick={createNewOverride}
-            text={getString('common.newName', { name: getString('common.override') })}
+            text={getString('cd.pipelineSteps.serviceTab.newServiceOverride')}
             permission={rbacPermission}
             margin={{ right: 'small' }}
           />

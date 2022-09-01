@@ -93,3 +93,5 @@ export interface MetricThresholdsState {
   ignoreThresholds: MetricThresholdType[]
   failFastThresholds: MetricThresholdType[]
 }
+
+export type ThresholdObject = Partial<Record<ThresholdsPropertyNames, MetricThresholdType[]>>

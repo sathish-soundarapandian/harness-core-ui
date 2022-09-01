@@ -300,6 +300,7 @@ export const mockData = {
           {
             identifier: 'test1',
             dashboardName: 'G2',
+            continuousVerification: true,
             metricPath: 'test1',
             metricName: 'test1',
             metric: 'No matching data.',
@@ -415,6 +416,7 @@ export const mockData = {
           metricPath: 'test1',
           query: 'avg:No matching data.{*}.rollup(avg, 60)',
           groupingQuery: 'avg:No matching data.{*}.rollup(avg, 60)',
+          continuousVerification: true,
           metric: 'No matching data.',
           aggregation: 'avg',
           serviceInstanceIdentifierTag: '',
@@ -435,6 +437,151 @@ export const mockData = {
   selectedDashboards: [
     {
       name: 'G2'
+    }
+  ]
+}
+
+export const mockDatadogData = {
+  connectorRef: 'org.ddtest0706',
+  isEdit: true,
+  healthSourceList: [
+    {
+      type: 'DatadogMetrics',
+      identifier: 'DD',
+      name: 'DD',
+      spec: {
+        connectorRef: 'org.ddtest0706',
+        feature: 'Datadog Cloud Metrics',
+        metricDefinitions: [
+          {
+            identifier: 'test_metric_name',
+            dashboardName: 'G1',
+            dashboardId: null,
+            metricPath: 'test metric name',
+            metricName: 'test metric name',
+            metric: 'container.cpu.limit',
+            aggregation: null,
+            isManualQuery: false,
+            isCustomCreatedMetric: true,
+            serviceInstanceIdentifierTag: 'host',
+            groupingQuery: 'container.cpu.limit{*} by {host}.rollup(avg, 60)',
+            query: 'container.cpu.limit{*}.rollup(avg, 60)',
+            sli: {
+              enabled: false
+            },
+            analysis: {
+              riskProfile: {
+                metricType: 'ERROR',
+                category: 'Performance',
+                thresholdTypes: ['ACT_WHEN_HIGHER']
+              },
+              liveMonitoring: {
+                enabled: false
+              },
+              deploymentVerification: {
+                enabled: true,
+                serviceInstanceFieldName: 'host'
+              }
+            }
+          }
+        ],
+        metricPacks: [
+          {
+            identifier: 'Custom',
+            metricThresholds: [
+              {
+                type: 'IgnoreThreshold',
+                spec: {
+                  action: 'Ignore'
+                },
+                criteria: {
+                  type: 'Absolute',
+                  spec: {
+                    greaterThan: 12
+                  }
+                },
+                metricType: 'Custom',
+                metricName: 'test metric name'
+              },
+              {
+                criteria: { spec: { greaterThan: 21 }, type: 'Percentage' },
+                metricName: 'metric 3',
+                metricType: 'Custom',
+                spec: { action: 'FailAfterOccurrence' },
+                type: 'FailImmediately'
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  serviceRef: 'appdtest',
+  environmentRef: 'prod',
+  monitoredServiceRef: {
+    name: 'appdtest_prod',
+    identifier: 'appdtest_prod'
+  },
+  existingMetricDetails: {
+    name: 'DD',
+    identifier: 'DD',
+    type: 'DatadogMetrics',
+    spec: {
+      connectorRef: 'org.ddtest0706',
+      feature: 'Datadog Cloud Metrics',
+      metricDefinitions: [
+        {
+          identifier: 'test_metric_name',
+          metricName: 'test metric name',
+          riskProfile: {
+            category: 'Performance',
+            metricType: 'ERROR',
+            thresholdTypes: ['ACT_WHEN_HIGHER']
+          },
+          analysis: {
+            liveMonitoring: {
+              enabled: false
+            },
+            deploymentVerification: {
+              enabled: true,
+              serviceInstanceFieldName: 'host',
+              serviceInstanceMetricPath: null
+            },
+            riskProfile: {
+              category: 'Performance',
+              metricType: 'ERROR',
+              thresholdTypes: ['ACT_WHEN_HIGHER']
+            }
+          },
+          sli: {
+            enabled: false
+          },
+          dashboardId: null,
+          dashboardName: 'G1',
+          metricPath: 'test metric name',
+          query: 'container.cpu.limit{*}.rollup(avg, 60)',
+          groupingQuery: 'container.cpu.limit{*} by {host}.rollup(avg, 60)',
+          metric: 'container.cpu.limit',
+          aggregation: null,
+          serviceInstanceIdentifierTag: 'host',
+          metricTags: null,
+          isManualQuery: false,
+          isCustomCreatedMetric: true
+        }
+      ]
+    }
+  },
+  healthSourceName: 'DD',
+  healthSourceIdentifier: 'DD',
+  sourceType: 'DatadogMetrics',
+  product: {
+    label: 'Datadog Cloud Metrics',
+    value: 'Datadog Cloud Metrics'
+  },
+  selectedDashboards: [
+    {
+      name: 'G1',
+      id: null
     }
   ]
 }

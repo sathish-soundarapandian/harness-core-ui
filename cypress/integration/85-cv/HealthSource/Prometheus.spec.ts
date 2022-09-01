@@ -110,6 +110,8 @@ describe('Health Source - Prometheus', () => {
     cy.get('input[name="continuousVerification"]').click({ force: true })
     cy.get('input[name="healthScore"]').click({ force: true })
 
+    cy.findByRole('button', { name: /Submit/i }).click()
+
     cy.contains('span', 'Risk Category is required.').should('exist')
     cy.contains('label', 'Errors').click()
     cy.contains('span', 'Risk Category is required.').should('not.exist')
@@ -313,6 +315,9 @@ describe('Prometheus metric thresholds', () => {
 
     cy.addingGroupName('Group 1')
 
+    cy.contains('div', 'Assign').click({ force: true })
+    cy.contains('span', 'Continuous Verification').click()
+
     cy.contains('.Accordion--label', 'Advanced (Optional)').should('exist')
   })
 
@@ -335,6 +340,9 @@ describe('Prometheus metric thresholds', () => {
     cy.fillField('metricName', 'Prometheus Metric')
 
     cy.addingGroupName('Group 1')
+
+    cy.contains('div', 'Assign').click({ force: true })
+    cy.contains('span', 'Continuous Verification').click()
 
     cy.contains('.Accordion--label', 'Advanced (Optional)').should('exist')
 

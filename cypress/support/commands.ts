@@ -95,7 +95,12 @@ declare global {
       addNewMonitoredServiceWithServiceAndEnv(): void
       mapMetricToServices(hasServiceIndentifier?: boolean): void
       addingGroupName(name: string): void
-      populateDefineHealthSource(connectorType: string, connectorName: string, healthSourceName: string): void
+      populateDefineHealthSource(
+        connectorType: string,
+        connectorName: string,
+        healthSourceName: string,
+        isVerifyStep?: boolean
+      ): void
       selectFeature(featureName: string): void
       visitVerifyStepInPipeline(): void
       apiMocksForVerifyStep(): void
@@ -315,10 +320,11 @@ Cypress.Commands.add('addingGroupName', name => {
     .click()
 })
 
-Cypress.Commands.add('populateDefineHealthSource', (connectorType, connectorName, healthSourceName) => {
-  cy.contains('span', 'Add New Health Source').click()
+Cypress.Commands.add('populateDefineHealthSource', (connectorType, connectorName, healthSourceName, isVerifyStep) => {
+  if (!isVerifyStep) {
+    cy.contains('span', 'Add New Health Source').click()
+  }
   cy.contains('span', 'Next').click()
-
   // Validate and fill Define HealthSource Ta
   cy.contains('span', 'Next').click()
   cy.contains('span', 'Source selection is required').should('be.visible')

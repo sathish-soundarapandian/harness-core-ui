@@ -4332,6 +4332,7 @@ export interface StringsMap {
   'cd.pipelineSteps.environmentTab.selectEnvironment': string
   'cd.pipelineSteps.environmentTab.selectEnvironmentGroup': string
   'cd.pipelineSteps.environmentTab.selectInfrastructure': string
+  'cd.pipelineSteps.environmentTab.selectInfrastructureType': string
   'cd.pipelineSteps.environmentTab.specifyEnvironmentOrGroup': string
   'cd.pipelineSteps.environmentTab.specifyGitOpsClusters': string
   'cd.pipelineSteps.environmentTab.specifyYourEnvironment': string
@@ -4345,6 +4346,7 @@ export interface StringsMap {
   'cd.pipelineSteps.serviceTab.deploymentTypeRequired': string
   'cd.pipelineSteps.serviceTab.differentService': string
   'cd.pipelineSteps.serviceTab.newService': string
+  'cd.pipelineSteps.serviceTab.newServiceOverride': string
   'cd.pipelineSteps.serviceTab.overrideChanges': string
   'cd.pipelineSteps.serviceTab.plusNewService': string
   'cd.pipelineSteps.serviceTab.propagateFrom': string

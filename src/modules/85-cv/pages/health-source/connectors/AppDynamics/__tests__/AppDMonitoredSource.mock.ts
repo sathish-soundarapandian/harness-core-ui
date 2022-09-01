@@ -7,7 +7,7 @@
 
 import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import { ThresholdTypes } from '../AppDHealthSource.constants'
-import type { AppDynamicsFomikFormInterface } from '../AppDHealthSource.types'
+import type { AppDynamicsData, AppDynamicsFomikFormInterface } from '../AppDHealthSource.types'
 
 export const sourceData = {
   isEdit: true,
@@ -1512,7 +1512,7 @@ export const onSubmitPayload = {
     metricDefinitions: [
       {
         analysis: {
-          deploymentVerification: { enabled: false, serviceInstanceMetricPath: '' },
+          deploymentVerification: { enabled: false },
           liveMonitoring: { enabled: true },
           riskProfile: { category: 'Errors', metricType: 'ERROR', thresholdTypes: ['ACT_WHEN_HIGHER'] }
         },
@@ -1597,12 +1597,13 @@ export const defaultPayload = {
   showCustomMetric: false,
   type: 'AppDynamics'
 }
-export const appDynamicsDataFull = {
+
+export const appDynamicsDataFull: AppDynamicsData = {
   name: 'appd',
   identifier: 'appd',
-  connectorRef: 'org.appdprod',
+  connectorRef: { connector: { identifier: 'org.appdprod' }, value: 'org.appdprod' },
   isEdit: true,
-  type: 'AppDynamics',
+  type: HealthSourceTypes.AppDynamics,
   applicationName: 'QA',
   tierName: 'manager',
   mappedServicesAndEnvs: new Map(),
@@ -1613,7 +1614,8 @@ export const appDynamicsDataFull = {
     {
       identifier: 'Errors'
     }
-  ]
+  ],
+  product: ''
 }
 
 export const formDataMock = {

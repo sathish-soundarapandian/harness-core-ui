@@ -120,6 +120,7 @@ export default function DatadogMetricsDetailsContent(props: DatadogMetricsDetail
     formikProps.values.query,
     formikProps.values.metricPath,
     formikProps.values.isManualQuery,
+    formikProps.values.continuousVerification,
     selectedMetricData?.metricPath
   ])
 

@@ -18,6 +18,8 @@ export const strategiesYamlSnippets2 = `/ng/api/pipelines/configuration/strategi
 export const strategiesYamlSnippets3 = `/ng/api/pipelines/configuration/strategies/yaml-snippets?routingId=accountId&serviceDefinitionType=Kubernetes&strategyType=Rolling`
 export const pipelineSteps = `/pipeline/api/pipelines/v2/steps?routingId=${accountId}&accountId=${accountId}`
 export const monitoresServices = `/cv/api/monitored-service/service-environment?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${org}&projectIdentifier=${project}&environmentIdentifier=*&serviceIdentifier=*`
+export const createMonitoredService = `/cv/api/monitored-service/create-default?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${org}&projectIdentifier=${project}&environmentIdentifier=testEnv&serviceIdentifier=testService`
+export const updateMonitoredService = `/cv/api/monitored-service/testEnv_testService?routingId=${accountId}&accountId=${accountId}`
 export const servicesCall = `/ng/api/servicesV2?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${org}&projectIdentifier=${project}`
 export const servicesCallV2 = `/ng/api/servicesV2/list/access?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${org}&projectIdentifier=${project}`
 export const stagesExecutionList = `/pipeline/api/pipeline/execute/stagesExecutionList?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${org}&projectIdentifier=${project}&pipelineIdentifier=${pipelineIdentifier}`
@@ -525,6 +527,39 @@ export const monitoresServicesResponse = {
   },
   metaData: null,
   correlationId: 'd986946a-3521-4648-a787-53150e21aed7'
+}
+
+export const emptyMonitoresServicesResponse = {
+  status: 'SUCCESS',
+  data: null,
+  metaData: null,
+  correlationId: 'e0d5d43a-21f7-41a3-bb59-6e953bcee461'
+}
+
+export const createMonitoredServiceResponse = {
+  metaData: {},
+  resource: {
+    createdAt: 1661770505538,
+    lastModifiedAt: 1661770505538,
+    monitoredService: {
+      orgIdentifier: 'CVNG',
+      projectIdentifier: 'Signoff',
+      identifier: 'testEnv_testService',
+      name: 'testEnv_testService',
+      type: 'Application',
+      description: 'Default Monitored Service',
+      serviceRef: 'testService',
+      environmentRef: 'testEnv',
+      environmentRefList: ['testEnv'],
+      tags: {},
+      sources: { healthSources: [], changeSources: [] },
+      dependencies: [],
+      notificationRuleRefs: [],
+      template: null,
+      enabled: false
+    }
+  },
+  responseMessages: []
 }
 
 export const monitoresServicesResponseWithNoHealthSource = {

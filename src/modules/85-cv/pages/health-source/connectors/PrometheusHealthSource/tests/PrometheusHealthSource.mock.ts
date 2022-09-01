@@ -5,6 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { cloneDeep } from 'lodash-es'
+
 export const MockManualQueryData = {
   isEdit: true,
   healthSourceList: [
@@ -55,6 +57,23 @@ export const MockManualQueryData = {
   sourceType: 'Prometheus',
   connectorRef: 'prometheusConnector',
   product: {}
+}
+
+const clonedData = cloneDeep(MockManualQueryData)
+
+export const mockDataWitCVEnabled = {
+  ...clonedData,
+  healthSourceList: [
+    {
+      ...clonedData.healthSourceList[0],
+      spec: {
+        ...clonedData.healthSourceList[0].spec,
+        metricDefinitions: [
+          { ...clonedData.healthSourceList[0].spec.metricDefinitions[0], continuousVerification: true }
+        ]
+      }
+    }
+  ]
 }
 
 const mockPromethesuTemplate = {

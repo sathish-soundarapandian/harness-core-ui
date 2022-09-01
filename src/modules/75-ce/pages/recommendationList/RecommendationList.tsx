@@ -101,10 +101,6 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
   }
 
   if (ccmData && !ccmData.k8sClusterConnectorPresent) {
-    trackEvent(USER_JOURNEY_EVENTS.RECOMMENDATION_PAGE_LOADED, {
-      clustersNotConfigured: 'no',
-      count: 0
-    })
     return (
       <Card elevation={1} className={css.errorContainer}>
         <OverviewAddCluster
@@ -116,10 +112,6 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
   }
 
   if (ccmData && ccmData.k8sClusterConnectorPresent && !ccmData.clusterDataPresent) {
-    trackEvent(USER_JOURNEY_EVENTS.RECOMMENDATION_PAGE_LOADED, {
-      clustersNotConfigured: 'yes',
-      count: 0
-    })
     return (
       <Card elevation={1} className={css.errorContainer}>
         <img src={EmptyView} />
@@ -127,11 +119,6 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
       </Card>
     )
   }
-
-  trackEvent(USER_JOURNEY_EVENTS.RECOMMENDATION_PAGE_LOADED, {
-    clustersNotConfigured: 'yes',
-    count: data.length
-  })
 
   const NameCell: Renderer<CellProps<RecommendationItemDTO>> = cell => {
     const originalRowData = cell.row.original
@@ -352,7 +339,7 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
 const RecommendationListPage: React.FC = () => {
   const [page, setPage] = useQueryParamsState('page', 0)
 
-  const { trackPage } = useTelemetry()
+  const { trackPage, trackEvent } = useTelemetry()
   const history = useHistory()
   const { accountId } = useParams<{ accountId: string }>()
   const {
@@ -383,6 +370,15 @@ const RecommendationListPage: React.FC = () => {
 
   const [ccmMetaResult, refetchCCMMetaData] = useFetchCcmMetaDataQuery()
   const { data: ccmData, fetching: fetchingCCMMetaData } = ccmMetaResult
+
+  useDeepCompareEffect(() => {
+    if (ccmData?.ccmMetaData && recommendationList.length) {
+      trackEvent(USER_JOURNEY_EVENTS.RECOMMENDATION_PAGE_LOADED, {
+        clustersNotConfigured: ccmData?.ccmMetaData.k8sClusterConnectorPresent ? 'yes' : 'no',
+        count: recommendationList.length
+      })
+    }
+  }, [ccmData, recommendationList])
 
   const { loading: statsLoading, mutate: fetchRecommendationStats } = useRecommendationStats({
     queryParams: {

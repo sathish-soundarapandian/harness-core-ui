@@ -173,7 +173,7 @@ function Artifactory({
   })
 
   const getConnectorRefQueryData = (): string => {
-    return defaultTo(prevStepData?.connectorId?.value, prevStepData?.identifier)
+    return prevStepData?.connectorId?.value || prevStepData?.connectorId?.connector?.value || prevStepData?.identifier
   }
 
   const {

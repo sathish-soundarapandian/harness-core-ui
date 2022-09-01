@@ -19,7 +19,7 @@ import * as cvService from 'services/cv'
 import type { GroupNameProps } from '@cv/components/GroupName/GroupName'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
-import { mockData, MockSampleData, mockWidgetSelectedData, SourceTabsData } from './mock'
+import { mockDatadogData, MockSampleData, mockWidgetSelectedData, SourceTabsData } from './mock'
 
 jest.mock('@cv/hooks/IndexedDBHook/IndexedDBHook', () => ({
   useIndexedDBHook: jest.fn().mockReturnValue({ isInitializingDB: false, dbInstance: { get: jest.fn() } }),
@@ -169,7 +169,7 @@ describe('DatadogMetricsHealthSource unit tests', () => {
   describe('Metric thresholds', () => {
     test('should render metric thresholds', () => {
       jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
-      render(<WrapperComponent data={mockData} onSubmit={jest.fn()} />)
+      render(<WrapperComponent data={mockDatadogData} onSubmit={jest.fn()} />)
 
       expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (1)')).toBeInTheDocument()
       expect(screen.getByText('cv.monitoringSources.appD.failFastThresholds (1)')).toBeInTheDocument()

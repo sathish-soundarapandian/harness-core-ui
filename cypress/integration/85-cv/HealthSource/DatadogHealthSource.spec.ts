@@ -298,7 +298,7 @@ describe('Datadog metric thresholds', () => {
     cy.visitSRMMonitoredServicePage()
   })
 
-  it('should render metric thresholds only if any group is created', () => {
+  it('should render metric thresholds only if any group is created with CV enabled', () => {
     //intercepting calls
     cy.intercept('GET', dataLogsIndexes.getDatadogLogsIndexes, dataLogsIndexes.getDatadogLogsIndexesResponse).as(
       'getLogsIndexes'
@@ -334,12 +334,19 @@ describe('Datadog metric thresholds', () => {
     cy.findAllByRole('button', { name: /Next/i }).last().click()
     cy.get('input[name="metricName"]').clear()
 
-    cy.fillField('metricName', 'Prometheus Metric')
+    cy.fillField('metricName', 'Datadog metric')
+
+    cy.contains('span', 'Continuous Verification').click({ force: true })
+
+    cy.get('input[name="serviceInstance"]').click({ force: true })
+
+    cy.contains('p', 'host').should('be.visible')
+    cy.contains('p', 'host').click()
 
     cy.contains('.Accordion--label', 'Advanced (Optional)').scrollIntoView().should('exist')
   })
 
-  it.only('should render metric thresholds and perform its features', () => {
+  it('should render metric thresholds and perform its features', () => {
     //intercepting calls
     cy.intercept('GET', dataLogsIndexes.getDatadogLogsIndexes, dataLogsIndexes.getDatadogLogsIndexesResponse).as(
       'getLogsIndexes'
@@ -373,7 +380,14 @@ describe('Datadog metric thresholds', () => {
 
     cy.findAllByRole('button', { name: /Next/i }).last().click()
 
-    cy.fillField('metricName', 'Datadog Metric')
+    cy.fillField('metricName', 'Datadog metric')
+
+    cy.contains('span', 'Continuous Verification').click({ force: true })
+
+    cy.get('input[name="serviceInstance"]').click({ force: true })
+
+    cy.contains('p', 'host').should('be.visible')
+    cy.contains('p', 'host').click()
 
     cy.contains('.Accordion--label', 'Advanced (Optional)').should('exist')
 
@@ -391,9 +405,8 @@ describe('Datadog metric thresholds', () => {
 
     cy.get("input[name='ignoreThresholds.0.metricName']").click()
 
-    cy.get('.Select--menuItem:nth-child(1)').should('have.text', 'Datadog Metric')
-
-    cy.get('.Select--menuItem:nth-child(1)').click()
+    cy.contains('p', 'Datadog metric').should('be.visible')
+    cy.contains('p', 'Datadog metric').click()
 
     // testing criteria
 
@@ -406,12 +419,14 @@ describe('Datadog metric thresholds', () => {
     cy.get("input[name='ignoreThresholds.0.criteria.spec.lessThan']").type('1')
 
     cy.get("input[name='ignoreThresholds.0.criteria.type']").click()
+    cy.contains('p', 'Percentage Deviation').should('be.visible')
     cy.contains('p', 'Percentage Deviation').click()
 
     cy.get("input[name='ignoreThresholds.0.criteria.spec.greaterThan']").should('exist')
     cy.get("input[name='ignoreThresholds.0.criteria.spec.lessThan']").should('not.exist')
 
     cy.get("input[name='ignoreThresholds.0.criteria.criteriaPercentageType']").click()
+    cy.contains('p', 'Lesser than').should('be.visible')
     cy.contains('p', 'Lesser than').click()
 
     cy.get("input[name='ignoreThresholds.0.criteria.spec.greaterThan']").should('not.exist')
@@ -426,7 +441,8 @@ describe('Datadog metric thresholds', () => {
 
     cy.get("input[name='failFastThresholds.0.metricName']").click()
 
-    cy.get('.Select--menuItem:nth-child(1)').should('have.text', 'Datadog Metric')
+    cy.contains('p', 'Datadog metric').should('be.visible')
+    cy.contains('p', 'Datadog metric').click()
 
     cy.get("input[name='failFastThresholds.0.spec.spec.count']").should('be.disabled')
 

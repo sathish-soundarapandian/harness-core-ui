@@ -61,12 +61,12 @@ export default function CustomMetric(props: CustomMetricInterface): JSX.Element 
         isPrimaryMetric
       })
     })
-  }, [formikValues?.groupName, formikValues?.metricName])
+  }, [formikValues?.groupName, formikValues?.metricName, formikValues?.continuousVerification])
 
   useEffect(() => {
     const updatedGroupedCreatedMetrics = getGroupedCreatedMetrics(mappedMetrics, getString)
     setGroupedCreatedMetrics(updatedGroupedCreatedMetrics)
-  }, [formikValues?.groupName, mappedMetrics, selectedMetric])
+  }, [formikValues?.groupName, mappedMetrics, selectedMetric, formikValues?.continuousVerification])
 
   const removeMetric = useCallback(
     (removedMetric, updatedMetric, updatedList, smIndex) =>

@@ -44,8 +44,6 @@ describe('DataDogIgnoreThresholdTabContent', () => {
   test('should render the metricType dropdown with correct options', async () => {
     const { container } = render(<WrappingComponent />)
 
-    screen.debug(container, 30000)
-
     expect(container.querySelector(`[name="ignoreThresholds.0.metricType"]`)).toBeDisabled()
     expect(container.querySelector(`[name="ignoreThresholds.0.metricType"]`)).toHaveValue('Custom')
   })

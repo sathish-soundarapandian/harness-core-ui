@@ -51,7 +51,10 @@ import { PrometheusQueryViewer } from './components/PrometheusQueryViewer/Promet
 import type { MetricThresholdsState } from './PrometheusHealthSource.types'
 import SelectHealthSourceServices from '../../common/SelectHealthSourceServices/SelectHealthSourceServices'
 import PrometheusMetricThreshold from './components/MetricThreshold/PrometheusMetricThreshold'
-import { getCustomMetricGroupNames } from '../../common/MetricThresholds/MetricThresholds.utils'
+import {
+  getCustomMetricGroupNames,
+  getFilteredCVDisabledMetricThresholds
+} from '../../common/MetricThresholds/MetricThresholds.utils'
 import css from './PrometheusHealthSource.module.scss'
 
 export interface PrometheusHealthSourceProps {
@@ -147,6 +150,7 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
       }
       onSubmit={noop}
       enableReinitialize
+      validateOnMount
       validate={values => {
         return validateMappings(
           getString,
@@ -340,37 +344,28 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
               onNext={async () => {
                 formikProps.submitForm()
 
-                formikProps.setTouched({
-                  ...formikProps.touched,
-                  [PrometheusMonitoringSourceFieldNames.QUERY]: true,
-                  [PrometheusMonitoringSourceFieldNames.PROMETHEUS_METRIC]: true,
-                  [PrometheusMonitoringSourceFieldNames.GROUP_NAME]: true,
-                  [PrometheusMonitoringSourceFieldNames.SERVICE_FILTER]: true,
-                  [PrometheusMonitoringSourceFieldNames.ENVIRONMENT_FILTER]: true,
-                  [PrometheusMonitoringSourceFieldNames.SLI]: true,
-                  [PrometheusMonitoringSourceFieldNames.RISK_CATEGORY]: true,
-                  [PrometheusMonitoringSourceFieldNames.LOWER_BASELINE_DEVIATION]: true,
-                  [PrometheusMonitoringSourceFieldNames.METRIC_IDENTIFIER]: true,
-                  [PrometheusMonitoringSourceFieldNames.METRIC_NAME]: true
-                })
+                if (formikProps.isValid) {
+                  const updatedMetric = formikProps.values
+                  if (updatedMetric) mappedMetrics.set(selectedMetric, updatedMetric)
 
-                if (Object.keys(formikProps.errors || {})?.length > 0) {
-                  formikProps.validateForm()
-                  return
-                }
-                const updatedMetric = formikProps.values
-                if (updatedMetric) mappedMetrics.set(selectedMetric, updatedMetric)
-                await onSubmit(
-                  sourceData,
-                  transformPrometheusSetupSourceToHealthSource(
-                    {
-                      ...transformedSourceData,
-                      ...metricThresholds,
-                      mappedServicesAndEnvs: mappedMetrics as Map<string, MapPrometheusQueryToService>
-                    },
-                    isMetricThresholdEnabled
+                  const filteredCVDisabledMetricThresholds = getFilteredCVDisabledMetricThresholds(
+                    metricThresholds.ignoreThresholds,
+                    metricThresholds.failFastThresholds,
+                    groupedCreatedMetrics
                   )
-                )
+
+                  await onSubmit(
+                    sourceData,
+                    transformPrometheusSetupSourceToHealthSource(
+                      {
+                        ...transformedSourceData,
+                        ...filteredCVDisabledMetricThresholds,
+                        mappedServicesAndEnvs: mappedMetrics as Map<string, MapPrometheusQueryToService>
+                      },
+                      isMetricThresholdEnabled
+                    )
+                  )
+                }
               }}
             />
           </FormikForm>

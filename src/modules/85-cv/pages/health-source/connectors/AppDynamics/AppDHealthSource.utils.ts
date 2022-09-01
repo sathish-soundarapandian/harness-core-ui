@@ -19,6 +19,7 @@ import type {
 } from 'services/cv'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import type { GroupedCreatedMetrics } from '@cv/components/MultiItemsSideNav/components/SelectedAppsSideNav/components/GroupedSideNav/GroupedSideNav.types'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { HealthSourceTypes } from '../../types'
 import type {
@@ -36,6 +37,7 @@ import { PATHTYPE } from './Components/AppDCustomMetricForm/AppDCustomMetricForm
 import type { CustomMappedMetric } from '../../common/CustomMetric/CustomMetric.types'
 import { MetricThresholdPropertyName, MetricTypeValues } from '../../common/MetricThresholds/MetricThresholds.constants'
 import {
+  getFilteredCVDisabledMetricThresholds,
   getFilteredMetricThresholdValues,
   getMetricPacksForPayload,
   validateCommonFieldsForMetricThreshold
@@ -512,13 +514,25 @@ export const submitData = (
   formik: FormikProps<AppDynamicsFomikFormInterface>,
   mappedMetrics: Map<string, CustomMappedMetric>,
   selectedMetric: string,
-  onSubmit: (healthSourcePayload: any) => void
+  onSubmit: (healthSourcePayload: any) => void,
+  groupedCreatedMetrics: GroupedCreatedMetrics
 ): void => {
   const updatedMetric = formik.values
   if (updatedMetric) {
     mappedMetrics.set(selectedMetric, updatedMetric)
   }
-  const updatedValues = { ...formik.values, mappedServicesAndEnvs: mappedMetrics }
+
+  const filteredCVDisabledMetricThresholds = getFilteredCVDisabledMetricThresholds(
+    formik.values.ignoreThresholds,
+    formik.values.failFastThresholds,
+    groupedCreatedMetrics
+  )
+
+  const updatedValues = {
+    ...formik.values,
+    ...filteredCVDisabledMetricThresholds,
+    mappedServicesAndEnvs: mappedMetrics
+  }
   onSubmit(updatedValues)
 }
 
@@ -544,7 +558,12 @@ export const createAppDFormData = (
 ): AppDynamicsFomikFormInterface => {
   const mappedMetricsData = mappedMetrics.get(selectedMetric) as MapAppDynamicsMetric
   const metricIdentifier = mappedMetricsData?.metricIdentifier || selectedMetric?.split(' ').join('_')
-  const { basePath = {}, metricPath = {}, completeMetricPath = '', serviceInstanceMetricPath } = mappedMetricsData || {}
+  const {
+    basePath = {},
+    metricPath = {},
+    completeMetricPath = '',
+    serviceInstanceMetricPath = ''
+  } = mappedMetricsData || {}
   const lastItemBasePath = Object.keys(basePath)[Object.keys(basePath).length - 1]
   const lastItemMetricPath = Object.keys(metricPath)[Object.keys(metricPath).length - 1]
   const fullPath =
@@ -552,7 +571,7 @@ export const createAppDFormData = (
       ? `${basePath[lastItemBasePath]?.path}|${appDynamicsData.tierName}|${metricPath[lastItemMetricPath]?.path}`
       : ''
 
-  if (isTemplate && serviceInstanceMetricPath === '') {
+  if (isTemplate && serviceInstanceMetricPath === '' && mappedMetricsData) {
     mappedMetricsData.serviceInstanceMetricPath = RUNTIME_INPUT_VALUE
   }
 

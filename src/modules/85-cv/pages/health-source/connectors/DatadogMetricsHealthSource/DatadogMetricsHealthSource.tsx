@@ -63,7 +63,10 @@ import { initGroupedCreatedMetrics } from '../../common/CustomMetric/CustomMetri
 import type { MetricThresholdsState } from '../../common/MetricThresholds/MetricThresholds.types'
 import MetricThresholdProvider from './components/MetricThresholds/MetricThresholdProvider'
 import type { CustomMappedMetric } from '../../common/CustomMetric/CustomMetric.types'
-import { getCustomMetricGroupNames } from '../../common/MetricThresholds/MetricThresholds.utils'
+import {
+  getCustomMetricGroupNames,
+  getFilteredCVDisabledMetricThresholds
+} from '../../common/MetricThresholds/MetricThresholds.utils'
 
 export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSourceProps): JSX.Element {
   const { data, isTemplate, expressions } = props
@@ -289,13 +292,21 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
         filteredData.set(metricName, metricInfo)
       }
     }
+
+    const filteredCVDisabledMetricThresholds = getFilteredCVDisabledMetricThresholds(
+      metricThresholds.ignoreThresholds,
+      metricThresholds.failFastThresholds,
+      groupedCreatedMetrics
+    )
+
     await props.onSubmit(
       data,
       mapDatadogMetricSetupSourceToDatadogHealthSource(
         {
           ...transformedData,
           metricDefinition: filteredData,
-          ...metricThresholds
+          ...metricThresholds,
+          ...filteredCVDisabledMetricThresholds
         },
         isMetricThresholdEnabled
       )
@@ -323,6 +334,7 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
       enableReinitialize={true}
       formName="mapDatadogMetrics"
       initialValues={{ ...initialValues }}
+      validateOnMount
       onSubmit={noop}
       validate={values => {
         const newMap = new Map(metricHealthDetailsData)

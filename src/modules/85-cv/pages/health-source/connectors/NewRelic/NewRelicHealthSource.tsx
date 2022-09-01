@@ -62,7 +62,7 @@ import MetricThresholdProvider from './components/MetricThresholds/MetricThresho
 import NewRelicCustomMetricForm from './components/NewRelicCustomMetricForm/NewRelicCustomMetricForm'
 import { initNewRelicCustomFormValue } from './components/NewRelicCustomMetricForm/NewRelicCustomMetricForm.utils'
 import { getTypeOfInput, setAppDynamicsApplication } from '../AppDynamics/AppDHealthSource.utils'
-import { getIsMetricPacksSelected } from '../../common/MetricThresholds/MetricThresholds.utils'
+import { getIsMetricThresholdCanBeShown } from '../../common/MetricThresholds/MetricThresholds.utils'
 import css from './NewrelicMonitoredSource.module.scss'
 
 const guid = Utils.randomId()
@@ -454,14 +454,15 @@ export default function NewRelicHealthSource({
               </CardWithOuterTitle>
             )}
 
-            {isMetricThresholdEnabled && getIsMetricPacksSelected(formik.values.metricData) && (
-              <MetricThresholdProvider
-                groupedCreatedMetrics={groupedCreatedMetrics}
-                formikValues={formik.values}
-                metricPacks={selectedMetricPacks}
-                setThresholdState={setNonCustomFeilds}
-              />
-            )}
+            {isMetricThresholdEnabled &&
+              getIsMetricThresholdCanBeShown(formik.values.metricData, groupedCreatedMetrics) && (
+                <MetricThresholdProvider
+                  groupedCreatedMetrics={groupedCreatedMetrics}
+                  formikValues={formik.values}
+                  metricPacks={selectedMetricPacks}
+                  setThresholdState={setNonCustomFeilds}
+                />
+              )}
             <Container style={{ marginBottom: '120px' }} />
             <DrawerFooter
               isSubmit
@@ -469,7 +470,13 @@ export default function NewRelicHealthSource({
               onNext={() => {
                 formik.submitForm()
                 if (formik.isValid) {
-                  createNewRelicPayloadBeforeSubmission(formik, mappedMetrics, selectedMetric, onSubmit)
+                  createNewRelicPayloadBeforeSubmission(
+                    formik,
+                    mappedMetrics,
+                    selectedMetric,
+                    onSubmit,
+                    groupedCreatedMetrics
+                  )
                 }
               }}
             />

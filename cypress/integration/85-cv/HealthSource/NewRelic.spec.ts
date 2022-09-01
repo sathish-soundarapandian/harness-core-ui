@@ -233,7 +233,7 @@ describe('Create empty monitored service', () => {
       cy.contains('.Accordion--label', 'Advanced (Optional)').should('not.exist')
     })
 
-    it.only('should add thresholds and do all the operations as expected', () => {
+    it('should add thresholds and do all the operations as expected', () => {
       cy.intercept('GET', applicationCall, applicationResponse).as('ApplicationCall')
       cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
       cy.intercept('GET', metricDataCall, metricDataResponse).as('MetricDataCall')
@@ -336,12 +336,13 @@ describe('Create empty monitored service', () => {
       // Adding custom metrics
       cy.contains('span', 'Add Metric').click()
 
-      // cy.contains('div', 'Assign').click({ force: true })
-
       cy.get('input[name="groupName"]').click()
       cy.contains('p', '+ Add New').click({ force: true })
       cy.get('.bp3-overlay input[name="name"]').type('group 1')
       cy.get('.bp3-overlay button[type="submit"]').click({ force: true })
+
+      cy.contains('div', 'Assign').click({ force: true })
+      cy.contains('span', 'Continuous Verification').click()
 
       cy.get("input[name='failFastThresholds.0.metricType']").scrollIntoView().click()
 

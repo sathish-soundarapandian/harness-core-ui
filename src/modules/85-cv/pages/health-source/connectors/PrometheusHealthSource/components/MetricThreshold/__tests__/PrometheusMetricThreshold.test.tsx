@@ -6,8 +6,8 @@ import PrometheusMetricThreshold from '../PrometheusMetricThreshold'
 import { PrometheusThresholdProps } from './PrometheusMetricThreshold.mock'
 
 // eslint-disable-next-line react/display-name
-jest.mock('../Components/PrometheusMetricThresholdContent', () => () => (
-  <Container data-testid="PrometheusMetricThresholdContent" />
+jest.mock('@cv/pages/health-source/common/MetricThresholds/MetricThresholdsContent', () => () => (
+  <Container data-testid="MetricThresholdContent" />
 ))
 
 describe('PrometheusMetricThreshold', () => {
@@ -20,6 +20,6 @@ describe('PrometheusMetricThreshold', () => {
       </TestWrapper>
     )
 
-    expect(screen.getByTestId('PrometheusMetricThresholdContent')).toBeInTheDocument()
+    expect(screen.getByTestId('MetricThresholdContent')).toBeInTheDocument()
   })
 })
