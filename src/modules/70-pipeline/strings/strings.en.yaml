@@ -797,6 +797,7 @@ artifactsSelection:
   filePathRegexLabel: File Path Regex
   filePathRegexPlaceholder: Enter File Path Regex
   amazonS3Title: Amazon S3
+  googleArtifactRegistryTitle: Google Artifact Registry
   existingDocker:
     sidecarId: Sidecar Identifier
     sidecarIdPlaceholder: Enter Artifact Identifier

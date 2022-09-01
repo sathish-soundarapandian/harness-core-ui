@@ -44,7 +44,7 @@ import {
   ConnectorResponse,
   SecretResponseWrapper,
   HostAttributesFilter,
-  HostNameFilter,
+  HostNamesFilter,
   ErrorDetail
 } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
@@ -215,7 +215,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
             getMultiTypeFromValue(getHostNames(initialValues)) === MultiTypeInputType.FIXED
               ? parseHosts(getHostNames(initialValues))
               : getHostNames(initialValues)
-        } as HostNameFilter
+        } as HostNamesFilter
       }
     }
     formikRef.current?.setValues({ ...initialValues, ...data })
@@ -483,7 +483,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                               : getMultiTypeFromValue(value.attributeFilters) === MultiTypeInputType.FIXED
                               ? parseAttributes(value.attributeFilters || '')
                               : value.attributeFilters
-                        } as HostNameFilter | HostAttributesFilter)
+                        } as HostNamesFilter | HostAttributesFilter)
                       : {} //todoremoveempty
                 }
               }
@@ -882,9 +882,9 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
     }
     if (
       data.hostFilter?.type === HostScope.HOST_NAME &&
-      isEmpty((data.hostFilter.spec as HostNameFilter)?.value) &&
+      isEmpty((data.hostFilter.spec as HostNamesFilter)?.value) &&
       isRequired &&
-      getMultiTypeFromValue((template?.hostFilter?.spec as HostNameFilter)?.value) === MultiTypeInputType.RUNTIME
+      getMultiTypeFromValue((template?.hostFilter?.spec as HostNamesFilter)?.value) === MultiTypeInputType.RUNTIME
     ) {
       errors.hostFilters = getString?.('common.validation.fieldIsRequired', { name: getString('cd.hostFilters') })
     }

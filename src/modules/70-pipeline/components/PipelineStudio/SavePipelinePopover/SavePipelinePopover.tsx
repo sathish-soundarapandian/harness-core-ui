@@ -285,7 +285,10 @@ function SavePipelinePopover(
           })
         } else {
           showError(
-            getRBACErrorMessage({ data: response as AccessControlCheckError }) || getString('errorWhileSaving'),
+            getRBACErrorMessage({
+              data: response as AccessControlCheckError,
+              message: defaultTo(response?.message, '')
+            }) || getString('errorWhileSaving'),
             undefined,
             'pipeline.save.pipeline.error'
           )

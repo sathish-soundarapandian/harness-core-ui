@@ -15,7 +15,7 @@ import { useStrings } from 'framework/strings'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import type { HostAttributesFilter, HostNameFilter, PdcInfrastructure } from 'services/cd-ng'
+import type { HostAttributesFilter, HostNamesFilter, PdcInfrastructure } from 'services/cd-ng'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { Connectors } from '@connectors/constants'
 import { useQueryParams } from '@common/hooks'
@@ -62,7 +62,7 @@ export const getHostNames = (value: PdcInfrastructure): string => {
   if (value.hostFilter && value.hostFilter.type !== HostScope.HOST_NAME) {
     return ''
   }
-  const hostNameValue = defaultTo((value.hostFilter?.spec as HostNameFilter)?.value, '')
+  const hostNameValue = defaultTo((value.hostFilter?.spec as HostNamesFilter)?.value, '')
   return isString(hostNameValue) ? hostNameValue : hostNameValue?.join(', ')
 }
 
@@ -134,7 +134,7 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
                   type: 'HostNames',
                   spec: {
                     value: data.hostFilters
-                  } as HostNameFilter
+                  } as HostNamesFilter
                 }
                 data.hostFilters = undefined
               }

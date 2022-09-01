@@ -50,7 +50,8 @@ export const ArtifactIconByType: Record<ArtifactType, IconName> = {
   CustomArtifact: 'custom-artifact',
   Acr: 'service-azure',
   Jenkins: 'service-jenkins',
-  AmazonS3: 'service-service-s3'
+  AmazonS3: 'service-service-s3',
+  GoogleArtifactRegistry: 'service-gar'
 }
 
 export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
@@ -62,7 +63,8 @@ export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
   CustomArtifact: 'common.repo_provider.customLabel',
   Acr: 'pipeline.ACR.name',
   Jenkins: 'connectors.jenkins.jenkins',
-  AmazonS3: 'pipeline.artifactsSelection.amazonS3Title'
+  AmazonS3: 'pipeline.artifactsSelection.amazonS3Title',
+  GoogleArtifactRegistry: 'pipeline.artifactsSelection.googleArtifactRegistryTitle'
 }
 
 export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {

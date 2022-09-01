@@ -9,7 +9,7 @@ import { defaultTo, set } from 'lodash-es'
 import * as Yup from 'yup'
 import type { UseStringsReturn } from 'framework/strings'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
-import type { Filter, HostFilter, PdcInfrastructure } from 'services/cd-ng'
+import type { HostFilter, HostFilterSpec, PdcInfrastructure } from 'services/cd-ng'
 import { getConnectorSchema } from '../PipelineStepsUtil'
 
 export interface PDCInfrastructureYAML {
@@ -78,7 +78,7 @@ export type PdcInfraTemplate = {
   credentialsRef: string
   delegateSelectors?: string
   hostFilter?: {
-    type: Filter
+    type: HostFilterSpec
     spec?: {
       value: string
     }
