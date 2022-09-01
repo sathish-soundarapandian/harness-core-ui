@@ -19,7 +19,7 @@ import type { UseGetMockData } from '@common/utils/testUtils'
 import DashboardAPIErrorWidget from '../DashboardAPIErrorWidget/DashboardAPIErrorWidget'
 import css from './OverviewGlanceCards.module.scss'
 
-enum OverviewGalanceCard {
+export enum OverviewGalanceCard {
   PROJECT = 'PROJECT',
   SERVICES = 'SERVICES',
   ENV = 'ENV',
@@ -122,11 +122,15 @@ const RenderGlanceCard: React.FC<RenderGlanceCardProps> = props => {
 export interface OverviewGlanceCardsProp {
   glanceCardData: ResponseExecutionResponseCountOverview
   mockData?: UseGetMockData<ResponseExecutionResponseCountOverview>
+  cardProps?: {
+    cardClassName?: string
+  }
+  hideModules?: any
 }
 
 const OverviewGlanceCards: React.FC<OverviewGlanceCardsProp> = props => {
   const { glanceCardData } = props
-  const { accountId } = useParams<ProjectPathProps>()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { selectedTimeRange } = useLandingDashboardContext()
   const [range] = useState([Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000, Date.now()])
   const [pageLoadGlanceCardData, setPageLoadGlanceCardData] =
@@ -140,7 +144,9 @@ const OverviewGlanceCards: React.FC<OverviewGlanceCardsProp> = props => {
     queryParams: {
       accountIdentifier: accountId,
       startTime: range[0],
-      endTime: range[1]
+      endTime: range[1],
+      projectIdentifier: projectIdentifier,
+      orgIdentifier: orgIdentifier
     },
     lazy: true,
     mock: props.mockData
@@ -172,14 +178,19 @@ const OverviewGlanceCards: React.FC<OverviewGlanceCardsProp> = props => {
       </Card>
     )
   }
-
+  const check = props.cardProps?.cardClassName === 'GlanceCardInProject'
   const { projectsCountDetail, envCountDetail, servicesCountDetail, pipelinesCountDetail } =
     countResponse?.data?.response || glanceCardData?.data?.response || {}
-
   return (
     <Layout.Horizontal spacing="large" className={css.container}>
-      <div className={css.glanceCards}>
-        <RenderGlanceCard loading={!!loading} data={getDataForCard(OverviewGalanceCard.PROJECT, projectsCountDetail)} />
+      <div className={check ? css.glanceCardInProject : css.glanceCards}>
+        {props.hideModules !== OverviewGalanceCard.PROJECT &&
+          props.cardProps?.cardClassName !== 'GlanceCardInProject' && (
+            <RenderGlanceCard
+              loading={!!loading}
+              data={getDataForCard(OverviewGalanceCard.PROJECT, projectsCountDetail)}
+            />
+          )}
         <RenderGlanceCard
           loading={!!loading}
           data={getDataForCard(OverviewGalanceCard.SERVICES, servicesCountDetail)}

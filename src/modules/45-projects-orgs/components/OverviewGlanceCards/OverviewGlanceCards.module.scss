@@ -29,3 +29,9 @@
   gap: 16px;
   width: 100%;
 }
+.glanceCardInProject {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 16px;
+  width: 45%;
+}

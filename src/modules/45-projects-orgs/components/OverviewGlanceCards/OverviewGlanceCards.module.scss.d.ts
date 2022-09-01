@@ -9,6 +9,7 @@
 declare const styles: {
   readonly container: string
   readonly errorCard: string
+  readonly glanceCardInProject: string
   readonly glanceCards: string
   readonly loadingWrapper: string
 }

@@ -316,7 +316,7 @@ const renderTooltipForServiceLabel = (service: ActiveServiceInfo): JSX.Element =
 function LandingDashboardDeploymentsWidget(): React.ReactElement {
   const { getString } = useStrings()
   const { selectedTimeRange } = useLandingDashboardContext()
-  const { accountId } = useParams<ProjectPathProps>()
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [range, setRange] = useState([0, 0])
   const [groupByValue, setGroupByValues] = useState(TimeRangeGroupByMapping[selectedTimeRange])
   const [sortByValue, setSortByValue] = useState<GetDeploymentStatsOverviewQueryParams['sortBy']>('DEPLOYMENTS')
@@ -338,7 +338,9 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
       startTime: range[0],
       endTime: range[1],
       groupBy: groupByValue,
-      sortBy: sortByValue
+      sortBy: sortByValue,
+      orgIdentifier,
+      projectIdentifier
     },
     lazy: true
   })
