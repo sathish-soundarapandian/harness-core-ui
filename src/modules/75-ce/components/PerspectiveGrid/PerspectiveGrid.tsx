@@ -18,6 +18,20 @@ import Grid from './Grid'
 import './test.scss' // will find a alternative
 import css from './PerspectiveGrid.module.scss'
 
+const getColumnSequence = (
+  columnSequence: string[] | undefined,
+  gridData: GridData[],
+  gridPageIndex?: number
+): string[] | undefined => {
+  if (gridPageIndex === 0) {
+    return gridData.slice(0, 12).map(row => row['id']) as string[]
+  } else if (gridPageIndex === 1) {
+    return [...(columnSequence || []), ...gridData.slice(0, 2).map(row => row['id'])] as string[]
+  } else {
+    return columnSequence
+  }
+}
+
 export interface PerspectiveGridProps {
   columnSequence?: string[]
   setColumnSequence?: (cols: string[]) => void
@@ -78,11 +92,10 @@ const PerspectiveGrid: React.FC<PerspectiveGridProps> = props => {
   }, [response, fetching])
 
   useEffect(() => {
-    if (gridPageIndex === 0) {
-      const newColumnSequence = gridData.slice(0, 12).map(row => row['id'])
-      if (!isEqual(columnSequence, newColumnSequence) && setColumnSequence) {
-        setColumnSequence(newColumnSequence as string[])
-      }
+    const newColumnSequence = getColumnSequence(columnSequence, gridData, gridPageIndex)
+
+    if (!isEqual(columnSequence, newColumnSequence) && setColumnSequence) {
+      setColumnSequence(newColumnSequence as string[])
     }
   }, [gridData])
 
