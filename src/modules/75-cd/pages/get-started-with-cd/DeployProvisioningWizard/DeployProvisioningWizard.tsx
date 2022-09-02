@@ -31,7 +31,7 @@ import { SelectWorkload, SelectWorkloadRefInstance } from '../SelectWorkload/Sel
 import { SelectInfrastructure, SelectInfrastructureRefInstance } from '../SelectInfrastructure/SelectInfrastructure'
 import { SelectArtifact, SelectArtifactRefInstance } from '../SelectArtifact/SelectArtifact'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
-import { DEFAULT_PIPELINE_PAYLOAD, getUniqueEntityIdentifier, PipelineRefPayload } from '../CDOnboardingUtils'
+import { DEFAULT_PIPELINE_PAYLOAD, getUniqueEntityIdentifier, PipelineRefPayload } from '../cdOnboardingUtils'
 import css from './DeployProvisioningWizard.module.scss'
 
 export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> = props => {

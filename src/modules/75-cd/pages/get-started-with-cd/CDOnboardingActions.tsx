@@ -14,7 +14,7 @@ import {
   newEnvironmentState as initialEnvironmentState,
   ServiceDataType,
   InfrastructureDataType
-} from './CDOnboardingUtils'
+} from './cdOnboardingUtils'
 
 export const DefaultPipeline: PipelineInfoConfig = {
   name: '',

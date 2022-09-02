@@ -40,7 +40,7 @@ import { SelectGitProvider } from './SelectGitProvider'
 import { SelectRepository } from './SelectRepository'
 import { ProvideManifest } from './ProvideManifest'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
-import { getStoreType, ServiceDataType } from '../CDOnboardingUtils'
+import { getStoreType, ServiceDataType } from '../cdOnboardingUtils'
 import css from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
 export interface SelectArtifactRefInstance {

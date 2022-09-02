@@ -16,7 +16,7 @@ import {
   CDOnboardingReducerState,
   initialState
 } from './CDOnboardingActions'
-import type { InfrastructureDataType, ServiceDataType } from './CDOnboardingUtils'
+import type { InfrastructureDataType, ServiceDataType } from './cdOnboardingUtils'
 
 export interface CDOnboardingContextInterface {
   state: CDOnboardingReducerState

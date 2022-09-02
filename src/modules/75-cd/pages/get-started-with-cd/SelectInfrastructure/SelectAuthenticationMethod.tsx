@@ -38,7 +38,7 @@ import type { ResponseConnectorResponse, ResponseMessage } from 'services/cd-ng'
 import useCreateEditConnector, { BuildPayloadProps } from '@connectors/hooks/useCreateEditConnector'
 import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
 import { CLIENT_KEY_ALGO_OPTIONS } from '../DeployProvisioningWizard/Constants'
-import { getUniqueEntityIdentifier } from '../CDOnboardingUtils'
+import { getUniqueEntityIdentifier } from '../cdOnboardingUtils'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 

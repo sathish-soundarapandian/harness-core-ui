@@ -13,7 +13,7 @@ import cx from 'classnames'
 import routes from '@common/RouteDefinitions'
 import { useStrings } from 'framework/strings'
 import { CreateK8sDelegate } from '../CreateKubernetesDelegateWizard/CreateK8sDelegate'
-import { CreateDockerDelegate } from '../CreateDockerDelegateWizard/CreateDockerDelegate'
+import { CreateDockerDelegate } from '../CreateDockerDelegateWizard/createDockerDelegate'
 import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
 
 export interface DelegateTypeSelectorProps {
