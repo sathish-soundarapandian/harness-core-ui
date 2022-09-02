@@ -40,7 +40,7 @@ import {
 } from '../DeployProvisioningWizard/Constants'
 
 import { useCDOnboardingContext } from '../CDOnboardingStore'
-import { cleanServiceDataUtil, getUniqueEntityIdentifier, newServiceState } from '../cdOnboardingUtils'
+import { cleanServiceDataUtil, getUniqueEntityIdentifier, newServiceState } from '../CDOnboardingUtils'
 import css from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
 export interface SelectWorkloadRefInstance {

@@ -11,7 +11,7 @@ import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import bgImageURL from '../home/images/cd.svg'
 import delegateImageURL from '../home/images/cd-delegates-banner.svg'
-import { DelegateTypeSelector } from './DelegateTypeSelectorWizard/delegateTypeSelector'
+import { DelegateTypeSelector } from './DelegateTypeSelectorWizard/DelegateTypeSelector'
 import css from './GetStartedWithCD.module.scss'
 
 export default function GetStartedWithCI(): React.ReactElement {

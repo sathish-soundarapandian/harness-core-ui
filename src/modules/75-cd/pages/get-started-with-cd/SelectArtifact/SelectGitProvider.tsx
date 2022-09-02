@@ -71,7 +71,7 @@ import {
   AccessTokenPermissionsDocLinks
 } from '../DeployProvisioningWizard/Constants'
 
-import { getOAuthConnectorPayload } from '../cdOnboardingUtils'
+import { getOAuthConnectorPayload } from '../CDOnboardingUtils'
 import css from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
 export interface SelectGitProviderRefInstance {
