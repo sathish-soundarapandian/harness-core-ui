@@ -79,6 +79,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
     onReconcile
   } = props
   const { getString } = useStrings()
+
   const checkIfRuntimeInputsNotPresent = (): string | undefined => {
     if (executionView && isEmpty(template)) {
       return getString('pipeline.inputSets.noRuntimeInputsWhileExecution')
@@ -109,6 +110,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
   }
 
   const noRuntimeInputs = checkIfRuntimeInputsNotPresent()
+
   return (
     <div
       className={cx(executionView ? css.runModalFormContentExecutionView : css.runModalFormContent, {

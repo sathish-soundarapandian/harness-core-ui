@@ -706,7 +706,7 @@ function RunPipelineFormBasic({
         storeType={storeType}
       />
     )
-  } else if (inputSetsError) {
+  } else if (inputSetsError?.message) {
     runPipelineFormContent = <PipelineInvalidRequestContent onClose={onClose} getTemplateError={inputSetsError} />
   } else {
     runPipelineFormContent = (
