@@ -2268,6 +2268,11 @@ export interface StringsMap {
   'connectors.dynatraceConnectorDetails': string
   'connectors.dynatraceLabel': string
   'connectors.editConnector': string
+  'connectors.elk.apiId': string
+  'connectors.elk.noAuthentication': string
+  'connectors.elk.validation.apiKeyId': string
+  'connectors.elk.validation.apiKeyRef': string
+  'connectors.elkConnectorDetails': string
   'connectors.elkLabel': string
   'connectors.encryptedAPIKeyLabel': string
   'connectors.encryptedAPIKeyValidation': string
@@ -2473,6 +2478,7 @@ export interface StringsMap {
   'connectors.testConnectionStep.validationText.customSM': string
   'connectors.testConnectionStep.validationText.datadog': string
   'connectors.testConnectionStep.validationText.docker': string
+  'connectors.testConnectionStep.validationText.elk': string
   'connectors.testConnectionStep.validationText.gcp': string
   'connectors.testConnectionStep.validationText.gcpKms': string
   'connectors.testConnectionStep.validationText.gcr': string

@@ -71,6 +71,8 @@ export const getHeadingIdByType = (type: string): StringKeys => {
       return 'connectors.appDynamicsDetails'
     case Connectors.SPLUNK:
       return 'connectors.splunkConnectorDetails'
+    case Connectors.ELK:
+      return 'connectors.elkConnectorDetails'
     case 'Gcr':
       return 'connectors.gcrConnectorDetails'
     default:

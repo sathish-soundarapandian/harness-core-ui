@@ -25,7 +25,8 @@ import type {
   VaultConnectorDTO,
   AzureKeyVaultConnectorDTO,
   GcpKmsConnectorDTO,
-  ErrorTrackingConnectorDTO
+  ErrorTrackingConnectorDTO,
+  ELKConnectorDTO
 } from 'services/cd-ng'
 import { FormData, CredTypeValues, HashiCorpVaultAccessTypes } from '@connectors/interfaces/ConnectorInterface'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
@@ -94,6 +95,12 @@ export const GitConnectionType = {
 export const AppDynamicsAuthType = {
   USERNAME_PASSWORD: 'UsernamePassword',
   API_CLIENT_TOKEN: 'ApiClientToken'
+}
+
+export const ElkAuthType = {
+  USERNAME_PASSWORD: 'UsernamePassword',
+  API_CLIENT_TOKEN: 'ApiClientToken',
+  NONE: 'None'
 }
 
 export const getRefFromIdAndScopeParams = (id: string, orgIdentifier?: string, projectIdentifier?: string) => {
@@ -1615,6 +1622,30 @@ export const buildAppDynamicsPayload = (formData: FormData): Connector => {
   return payload
 }
 
+export const buildELKPayload = (formData: FormData): Connector => {
+  const payload: Connector = {
+    connector: {
+      ...pick(formData, ['name', 'identifier', 'orgIdentifier', 'projectIdentifier', 'description', 'tags']),
+      type: Connectors.ELK,
+      spec: {
+        delegateSelectors: formData.delegateSelectors ?? {},
+        authType: formData.authType,
+        url: formData.url
+      } as ELKConnectorDTO
+    }
+  }
+
+  if (formData.authType === ElkAuthType.USERNAME_PASSWORD) {
+    payload.connector!.spec.username = formData.username
+    payload.connector!.spec.passwordRef = formData.password.referenceString
+  } else if (formData.authType === ElkAuthType.API_CLIENT_TOKEN) {
+    payload.connector!.spec.apiKeyId = formData.apiKeyId
+    payload.connector!.spec.apiKeyRef = formData.apiKeyRef.referenceString
+  }
+
+  return payload
+}
+
 export const buildNewRelicPayload = (formData: FormData) => ({
   connector: {
     name: formData.name,
@@ -2196,6 +2227,8 @@ export function GetTestConnectionValidationTextByType(type: ConnectorConfigDTO['
       return getString('connectors.testConnectionStep.validationText.gcr')
     case Connectors.APP_DYNAMICS:
       return getString('connectors.testConnectionStep.validationText.appD')
+    case Connectors.ELK:
+      return getString('connectors.testConnectionStep.validationText.elk') 
     case Connectors.SPLUNK:
       return getString('connectors.testConnectionStep.validationText.splunk')
     case Connectors.VAULT:

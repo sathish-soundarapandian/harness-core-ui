@@ -26,6 +26,7 @@ secretManagerDetails: 'Secret Manager Details'
 gcrConnectorDetails: 'Google Container Registry Overview'
 hashicorpVaultDetails: 'HashiCorp Vault Overview'
 appDynamicsDetails: 'AppDynamics Connector Details'
+elkConnectorDetails: 'ELK Connector Details'
 splunkConnectorDetails: 'Splunk Connector Details'
 datadogConnectorDetails: 'Datadog Connector Details'
 pagerDutyConnectorDetails: 'PagerDuty Connector Details'
@@ -164,6 +165,7 @@ testConnectionStep:
     gcr: Validating Google Container Registry authentication and permissions
     aws: Validating the AWS Cloud Provider authentication and permissions
     appD: Validating AppDynamics authentication and permissions
+    elk: Validating ELK authentication and permissions
     splunk: Validating Splunk authentication and permissions
     vault: Validating HashiCorp Vault authentication and permissions
     awsSecretManager: Validating AWS Secret Manager authentication and permissions
@@ -336,6 +338,12 @@ appD:
     controllerURL: Controller URL is a required field
     clientId: Client Id is a required field
     clientSecret: Client Secret is a required field
+elk:
+  apiId: API ID
+  noAuthentication: No Authentication
+  validation:
+    apiKeyId: API ID is a required field
+    apiKeyRef: API KEY is a required field
 newRelic:
   subTitle: To add New Relic Connector, you will need access to New Relic Insights API. Verification analysis is limited to APM only.
   urlFieldLabel: New Relic URL

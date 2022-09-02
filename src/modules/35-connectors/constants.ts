@@ -110,7 +110,7 @@ export const Connectors: ConnectorType = {
   AWSSECRETMANAGER: 'AwsSecretManager',
   JENKINS: 'Jenkins',
   CUSTOM_SECRET_MANAGER: 'CustomSecretManager',
-  ELK: 'Elk'
+  ELK: 'ELK'
 }
 
 export const ConnectorInfoText = {
