@@ -71,6 +71,10 @@ describe('Test the initial flow for kubernetes delegate Creation', () => {
     const downloadYAMLBtn = getByText('delegates.downloadYAMLFile') as HTMLElement
     downloadYAMLBtn.click()
     expect(global.URL.createObjectURL).toBeCalled()
+    const backBtn = getByText('back') as HTMLElement
+    backBtn.click()
+    const mainScreenBtn = getByText('cd.delegateInstallBtnText')
+    await waitFor(() => expect(mainScreenBtn).toBeInTheDocument())
   })
   test('failure API call', async () => {
     jest

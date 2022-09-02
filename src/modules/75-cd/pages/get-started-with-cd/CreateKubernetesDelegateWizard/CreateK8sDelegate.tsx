@@ -61,7 +61,7 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps):
   })
 
   const onDownload = (): void => {
-    if (linkRef?.current) {
+    /* istanbul ignore else */ if (linkRef?.current) {
       const content = new Blob([visibleYaml as BlobPart], { type: 'data:text/plain;charset=utf-8' })
       linkRef.current.href = window.URL.createObjectURL(content)
       linkRef.current.download = delegateFileName
@@ -115,11 +115,11 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps):
           data: createParams1
         })
         const delegateYaml = createKubernetesYamlResponse.resource
-        if (delegateSizeMappings) {
+        /* istanbul ignore else */ if (delegateSizeMappings) {
           const delegateSize: DelegateSizeDetails =
             delegateSizeMappings.find((item: DelegateSizeDetails) => item.size === createParams1.size) ||
             delegateSizeMappings[0]
-          if (delegateSize) {
+          /* istanbul ignore else */ if (delegateSize) {
             const stepPrevData = {
               delegateYaml,
               name: delegateName1,
@@ -152,8 +152,8 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps):
     }
   }
   useEffect(() => {
-    if (!isEmpty(delegateSizes)) generateSampleDelegate()
-    if (get(delegateSizes, 'responseMessages', []).length) {
+    /* istanbul ignore else */ if (!isEmpty(delegateSizes)) generateSampleDelegate()
+    /* istanbul ignore else */ if (get(delegateSizes, 'responseMessages', []).length) {
       showError(getString('somethingWentWrong'))
     }
   }, [delegateSizes])
