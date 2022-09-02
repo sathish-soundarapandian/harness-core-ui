@@ -40,6 +40,12 @@ export const delegateSizeResponse = {
   responseMessages: []
 }
 
+export const delegateSizesFailResponse = {
+  metaData: {},
+  resource: [],
+  responseMessages: [{ message: 'Failure' }]
+}
+
 export const delegateTokensResponse = {
   metaData: {},
   resource: [
@@ -56,6 +62,16 @@ export const delegateTokensResponse = {
     }
   ],
   responseMessages: []
+}
+
+export const delegateTokensFailedResponse = {
+  metaData: {},
+  resource: [],
+  responseMessages: [
+    {
+      message: 'Something Went Wrong'
+    }
+  ]
 }
 
 export const validateKubernetesYamlResponse = {

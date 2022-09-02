@@ -11,7 +11,7 @@ import { v4 as uuid } from 'uuid'
 import { Button, Container, Layout, PageSpinner, Text, useToaster } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
-import { isEmpty, set } from 'lodash-es'
+import { get, set } from 'lodash-es'
 import { DelegateSetupDetails, getDelegateTokensPromise, GetDelegateTokensQueryParams } from 'services/cd-ng'
 import {
   validateDockerDelegatePromise,
@@ -51,7 +51,7 @@ export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegateP
 
   const onDownload = (): void => {
     const content = new Blob([yaml as BlobPart], { type: 'data:text/plain;charset=utf-8' })
-    if (linkRef?.current) {
+    /* istanbul ignore else */ if (linkRef?.current) {
       linkRef.current.href = window.URL.createObjectURL(content)
       linkRef.current.download = dockerFileName
       linkRef.current.click()
@@ -67,10 +67,10 @@ export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegateP
         status: 'ACTIVE'
       } as GetDelegateTokensQueryParams
     })
-    if (delegateTokens?.responseMessages?.length) {
+    if (get(delegateTokens, 'responseMessages', []).length) {
       showError(getString('somethingWentWrong'))
     } else {
-      const delegateToken = delegateTokens?.resource?.[0]?.name
+      const delegateToken = get(delegateTokens, 'resource[0].name')
       const delegateName1 = `sample-${uuid()}-delegate`
       setDelegateName(delegateName1)
       const validateDockerDelegateNameResponse = await validateDockerDelegatePromise({
@@ -82,7 +82,7 @@ export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegateP
           tokenName: delegateToken
         } as ValidateDockerDelegateQueryParams
       })
-      const isNameUnique = !validateDockerDelegateNameResponse?.responseMessages?.[0]
+      const isNameUnique = !get(validateDockerDelegateNameResponse, 'responseMessages[0]', null)
       if (!isNameUnique) {
         showError(getString('somethingWentWrong'))
       } else {
@@ -113,7 +113,7 @@ export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegateP
             ...createParams
           }
         })) as any
-        if (dockerYaml?.responseMessages?.length) {
+        if (get(dockerYaml, 'responseMessages', []).length) {
           showError(getString('somethingWentWrong'))
         } else {
           setYaml(dockerYaml)
@@ -232,7 +232,7 @@ export const CreateDockerDelegate = ({ onSuccessHandler }: CreateDockerDelegateP
               <Text font={{ variation: FontVariation.H6, weight: 'semi-bold' }} className={css.subHeading}>
                 {getString('cd.delegateConnectionWait')}
               </Text>
-              {!isEmpty(yaml) ? <StepProcessing name={delegateName} delegateType={delegateType} replicas={1} /> : null}
+              <StepProcessing name={delegateName} delegateType={delegateType} replicas={1} />
             </Layout.Vertical>
           </li>
         </ul>

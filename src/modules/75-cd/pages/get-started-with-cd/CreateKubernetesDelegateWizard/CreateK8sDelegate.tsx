@@ -11,7 +11,7 @@ import { v4 as uuid } from 'uuid'
 import { Button, Container, Layout, PageSpinner, Text, useToaster } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
-import { isEmpty, set } from 'lodash-es'
+import { get, isEmpty, set } from 'lodash-es'
 import { StringUtils } from '@common/exports'
 import {
   DelegateType,
@@ -69,7 +69,7 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps):
     }
   }
 
-  const delegateSizeMappings: DelegateSizeDetails[] | undefined = delegateSizes?.resource
+  const delegateSizeMappings: DelegateSizeDetails[] | undefined = get(delegateSizes, 'resource')
 
   const generateSampleDelegate = async (): Promise<void> => {
     const delegateTokens = await getDelegateTokensPromise({
@@ -80,10 +80,10 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps):
         status: 'ACTIVE'
       } as GetDelegateTokensQueryParams
     })
-    if (delegateTokens?.responseMessages?.length) {
+    if (get(delegateTokens, 'responseMessages', []).length) {
       showError(getString('somethingWentWrong'))
     } else {
-      const delegateToken = delegateTokens?.resource?.[0]?.name
+      const delegateToken = get(delegateTokens, 'resource[0].name')
       const delegateName1 = `sample-${uuid()}-delegate`
       setDelegateName(delegateName1)
       const createParams1 = {
@@ -107,7 +107,7 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps):
           ...(createParams1 as DelegateSetupDetails)
         }
       })
-      if (createKubernetesYamlResponse?.responseMessages?.length) {
+      if (get(createKubernetesYamlResponse, 'responseMessages', []).length) {
         showError(getString('somethingWentWrong'))
       } else {
         trackEvent(DelegateActions.SetupDelegate, {
@@ -123,10 +123,10 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps):
             const stepPrevData = {
               delegateYaml,
               name: delegateName1,
-              replicas: delegateSize?.replicas
+              replicas: get(delegateSize, 'replicas')
             }
-            setReplicas(delegateSize?.replicas as number)
-            const data = stepPrevData?.delegateYaml || {}
+            setReplicas(get(delegateSize, 'replicas') as number)
+            const data = get(stepPrevData, 'delegateYaml', {})
             set(data, 'delegateType', delegateType)
             const generatedYamlResponse = await generateKubernetesYamlPromise({
               queryParams: {
@@ -153,8 +153,8 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps):
   }
   useEffect(() => {
     if (!isEmpty(delegateSizes)) generateSampleDelegate()
-    if (delegateSizes?.responseMessages?.length) {
-      getString('somethingWentWrong')
+    if (get(delegateSizes, 'responseMessages', []).length) {
+      showError(getString('somethingWentWrong'))
     }
   }, [delegateSizes])
 
@@ -258,9 +258,7 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps):
               <Text font={{ variation: FontVariation.H6, weight: 'semi-bold' }} className={css.subHeading}>
                 {getString('cd.delegateConnectionWait')}
               </Text>
-              {!isEmpty(visibleYaml) ? (
-                <StepProcessing name={delegateName} delegateType={delegateType} replicas={replicas} />
-              ) : null}
+              <StepProcessing name={delegateName} delegateType={delegateType} replicas={replicas} />
             </Layout.Vertical>
           </li>
         </ul>

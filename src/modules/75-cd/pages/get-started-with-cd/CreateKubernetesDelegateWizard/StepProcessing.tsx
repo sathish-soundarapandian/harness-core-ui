@@ -49,7 +49,7 @@ const StepProcessing: FC<StepDelegateData> = props => {
   })
   const [isTroubleShootVisible, setTroubleShootVisible] = React.useState(false)
 
-  React.useEffect(() => {
+  /* istanbul ignore next */ React.useEffect(() => {
     if (
       !loading &&
       (!data || (data && data?.resource?.numberOfConnectedDelegates !== replicas)) &&
@@ -118,7 +118,7 @@ const StepProcessing: FC<StepDelegateData> = props => {
         ) : null}
       </Layout.Vertical>
     )
-  } else if (showSuccess && isHeartBeatVerified) {
+  } else if (/* istanbul ignore next */ showSuccess && isHeartBeatVerified) {
     return (
       <Layout.Vertical className={css.iconPadding}>
         <Layout.Horizontal spacing="medium" className={css.checkItemsWrapper}>
