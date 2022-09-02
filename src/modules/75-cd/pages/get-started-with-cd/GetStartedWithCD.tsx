@@ -52,7 +52,7 @@ export default function GetStartedWithCI(): React.ReactElement {
                   {getString('cd.delegateInstallation')}
                 </Text>
                 <Text font={{ variation: FontVariation.SMALL }} padding={{ top: 'small' }} width={'80%'}>
-                  {getString('cd.delegateInfo')}
+                  {getString('cd.getStartedWithCD.delegateInfo')}
                 </Text>
                 <Layout.Horizontal className={css.buttonRow}>
                   <Button
@@ -62,7 +62,7 @@ export default function GetStartedWithCI(): React.ReactElement {
                     onClick={() => setShowWizard(true)}
                   />
                   <a
-                    href="https://docs.harness.io/article/h9tkwmkrm7-delegate-installation"
+                    href="https://docs.harness.io/article/2k7lnc7lvl-delegates-overview"
                     rel="noreferrer"
                     target="_blank"
                   >

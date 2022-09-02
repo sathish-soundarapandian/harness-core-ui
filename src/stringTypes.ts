@@ -4273,7 +4273,6 @@ export interface StringsMap {
   'cd.delegateFailText1': string
   'cd.delegateFailText2': string
   'cd.delegateFailed': string
-  'cd.delegateInfo': string
   'cd.delegateInstallBtnText': string
   'cd.delegateInstallCommand': string
   'cd.delegateInstallation': string

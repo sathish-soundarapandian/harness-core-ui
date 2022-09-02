@@ -9,7 +9,7 @@ import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { v4 as uuid } from 'uuid'
 import { Button, Container, Layout, PageSpinner, Text, useToaster } from '@harness/uicore'
-import { Color, FontVariation } from '@harness/design-system'
+import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { get, isEmpty, set } from 'lodash-es'
 import { StringUtils } from '@common/exports'
@@ -225,11 +225,6 @@ export const CreateK8sDelegate = ({ onSuccessHandler }: CreateK8sDelegateProps):
               <Text font={{ variation: FontVariation.H6, weight: 'semi-bold' }} className={css.subHeading}>
                 {getString('cd.installCluster')}
               </Text>
-              <Layout.Horizontal>
-                <Text font="normal" width={408} color={Color.PRIMARY_7}>
-                  {getString('cd.checkCluster')}
-                </Text>
-              </Layout.Horizontal>
               <Layout.Horizontal className={css.descriptionVerificationWrapper}>
                 <Text font="normal" width={408}>
                   {getString('cd.delegateInstallCommand')}

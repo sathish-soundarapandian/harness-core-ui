@@ -456,7 +456,6 @@ validation:
   specifyFilter: Specify the filter condition
 welcomeMessage: Welcome to Harness
 delegateInstallation: Install the Delegate to deploy your cluster
-delegateInfo: Harness Delegates are worker processes that runs on your infrastructure execute tasks on your infrastructure on behalf of Harness platform.
 delegateInstallBtnText: Install the Delegate
 learnMoreDelegate: Learn more about Delegates
 runDelegate: How do you want to run the Delegate
