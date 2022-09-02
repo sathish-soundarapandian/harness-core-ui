@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { Text, FontVariation, Icon, Layout, Button, ButtonVariation, Container, ButtonSize } from '@harness/uicore'
-import { NavLink } from 'react-router-dom'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import bgImageURL from '../home/images/cd.svg'
 import delegateImageURL from '../home/images/cd-delegates-banner.svg'
@@ -54,18 +54,22 @@ export default function GetStartedWithCI(): React.ReactElement {
                 <Text font={{ variation: FontVariation.SMALL }} padding={{ top: 'small' }} width={'80%'}>
                   {getString('cd.delegateInfo')}
                 </Text>
-                <Layout.Horizontal>
-                  <Container className={css.buttonRow}>
-                    <Button
-                      variation={ButtonVariation.PRIMARY}
-                      size={ButtonSize.LARGE}
-                      text={getString('cd.delegateInstallBtnText')}
-                      onClick={() => setShowWizard(true)}
-                    />
-                    <NavLink to="#" className={css.linkText}>
+                <Layout.Horizontal className={css.buttonRow}>
+                  <Button
+                    variation={ButtonVariation.PRIMARY}
+                    size={ButtonSize.LARGE}
+                    text={getString('cd.delegateInstallBtnText')}
+                    onClick={() => setShowWizard(true)}
+                  />
+                  <a
+                    href="https://docs.harness.io/article/h9tkwmkrm7-delegate-installation"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    <Text font={{ variation: FontVariation.BODY2 }} color={Color.PRIMARY_6} className={css.linkText}>
                       {getString('cd.learnMoreDelegate')}
-                    </NavLink>
-                  </Container>
+                    </Text>
+                  </a>
                 </Layout.Horizontal>
               </Layout.Vertical>
               <img
