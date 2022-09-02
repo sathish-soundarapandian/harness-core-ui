@@ -6,13 +6,14 @@ import {
   pipelineDetails,
   pipelineSaveCall,
   pipelineStudioRoute,
+  triggersRoute,
   inputSetsRoute,
   inputSetsCall,
   inputSetsTemplateCall,
   pipelineDetailsWithRoutingIdCall,
-  pipelineInputSetTemplate,
-  servicesCallV2,
-  servicesV2AccessResponse,
+  triggersList,
+  templatesListCall,
+  templatesListRoute,
   stepLibrary,
   pipelineVariablesCall,
   stagesExecutionList
@@ -20,7 +21,20 @@ import {
 import { getRuntimeInputKeys, getTemplatesDataAsStepTemplate } from '../../utils/step-utils'
 import templatesData from '../../fixtures/ci/api/runStep/inputSetTemplateResponse.json'
 // Data from QA, CI Automation Account
-//  https://qa.harness.io/ng/#/account/h61p38AZSV6MzEkpWWBtew/ci/orgs/default/projects/mtran/pipelines/CI_Pipeline1/pipeline-studio/
+// https://qa.harness.io/ng/#/account/h61p38AZSV6MzEkpWWBtew/ci/orgs/default/projects/mtran/pipelines/CI_Pipeline1/pipeline-studio/
+
+const runtimeInputLabels = [
+  'Description',
+  'Command',
+  'Privileged',
+  'Report Paths',
+  'Output Variables',
+  'Environment Variables',
+  'Timeout'
+]
+
+// These labels are not wrapped in Label tags
+const runtimeInputParagraphLabels = ['Container Registry', 'Image', 'Run as User', 'Limit Memory', 'Limit CPU']
 
 describe('Pipeline Studio', () => {
   const visitExecutionStageWithAssertion = (): void => {
@@ -66,10 +80,10 @@ describe('Pipeline Studio', () => {
     visitExecutionStageWithAssertion()
   })
 
-  it('STEP CONFIG: Toggle all fields as Runtime Inputs', () => {
-    const numOfPossibleRuntimeInputs = 11
-    var skipFieldIndexes: number[] = [3, 8] // start index count at 0
-    // skip Shell(3) and Image Pull Policy (8)
+  it.only('STEP CONFIG: Toggle all fields as Runtime Inputs', () => {
+    const numOfPossibleRuntimeInputs = 14
+    var skipFieldIndexes: number[] = [3, 9] // start index count at 0
+    // skip Shell(3) and Image Pull Policy (9)
     cy.intercept('POST', runPipelineTemplateCall, {
       fixture: 'ci/api/runStep/inputSetTemplateResponse.json'
     }).as('inputSetTemplateCall')
@@ -81,18 +95,17 @@ describe('Pipeline Studio', () => {
     cy.wait(1000)
     cy.contains('div', 'Optional Configuration').should('be.visible')
     cy.contains('div', 'Optional Configuration').click()
-    const multiTypeButton = Array.from(Array(numOfPossibleRuntimeInputs).keys()).filter(
-      (x: number) => !skipFieldIndexes.includes(x)
-    )
-    // should click on all but it skips some
-    // Need to manually test the following fields:
-    // Container Registry, Privileged, Report Paths, Output Variables, Limit Memory, Timeout
+    let indexCounter = 0
+    const multiTypeButton = Array.from(Array(numOfPossibleRuntimeInputs).keys()).map((_, index) => {
+      if (skipFieldIndexes.includes(index + indexCounter)) {
+        indexCounter += 1
+      }
+      return indexCounter
+    })
     multiTypeButton.forEach(i => {
-      cy.get('span[data-icon="fixed-input"]').eq(multiTypeButton[i]).click()
+      cy.get('span[data-icon="fixed-input"]').eq(i).click()
       cy.contains('span', 'Runtime input').click()
       cy.wait(200)
-
-      //   }
     })
     cy.wait(5000)
   })
@@ -125,6 +138,7 @@ describe('Pipeline Studio', () => {
         cy.get('[class*="view-line"] [class*="mtk5"]').contains(fieldName)
       }
     })
+    cy.log('Manually verify the following fields: description, outputVariables, runAsUser, memory, cpu, timeout')
     cy.wait(5000)
   })
 
@@ -158,34 +172,11 @@ describe('Pipeline Studio', () => {
         cy.get('[class*="view-line"] [class*="mtk5"]').contains(fieldName)
       }
     })
+    cy.log(
+      'Manually verify the following fields: paths, envVariables, description, outputVariables, runAsUser, memory, cpu, timeout'
+    )
     cy.wait(5000)
   })
-
-  // // Don't need to fill input set since we have a jest tests that can do this
-  // it('TRIGGER: Run Pipeline with Input Set prompts for all possible runtime inputs', () => {
-  //   const fixture = getTemplatesDataAsStepTemplate(templatesData)
-  //   cy.intercept('POST', runPipelineTemplateCall, fixture).as('inputSetTemplateCall')
-  //   cy.contains('span', 'Run').click()
-  //   cy.wait(1000)
-  //   // cy.get('.MultiTypeInput--btn').eq(numOfPossibleRuntimeInputs - skipFieldIndexes.length - 1)
-
-  //   console.log(templatesData)
-  //   // console.log(JSON.parse(templatesData.data.inputSetTemplateYaml))
-  //   console.log(parse(templatesData.data.inputSetTemplateYaml))
-  //   const arrayOfFieldNames = getRuntimeInputKeys(parse(templatesData.data.inputSetTemplateYaml))
-  //   //    cy.get('form > div').
-  //   cy.get('[class*="bp3-dialog"] [data-name="toggle-option-two"]').click()
-  //   // cy.contains('div', 'YAML').click()
-  //   cy.get('[class*="bp3-dialog"] [data-name="toggle-option-two"]').click()
-
-  //   cy.contains('span', 'run-pipeline.yaml').should('be.visible')
-  //   cy.get('.monaco-editor .overflow-guard').scrollTo('0%', '30%', { ensureScrollable: false })
-
-  //   arrayOfFieldNames.forEach(fieldName => {
-  //     cy.get('[class*="view-line"] [class*="mtk5"]').contains(fieldName)
-  //     //   cy.contains('span', fieldName).should('be.visible')
-  //   })
-  // })
 })
 describe('Input Sets', () => {
   beforeEach(() => {
@@ -198,85 +189,120 @@ describe('Input Sets', () => {
     cy.intercept('GET', inputSetsCall, { fixture: 'pipeline/api/inputSet/emptyInputSetsList' }).as('emptyInputSetList')
     cy.intercept('POST', inputSetsTemplateCall, {
       fixture: 'ci/api/runStep/inputSetTemplateResponse.json'
-      // fixture: 'pipeline/api/inputSet/fetchServiceTemplate'
     }).as('fetchServiceTemplate')
     cy.intercept('GET', pipelineDetailsWithRoutingIdCall, {
-      fixture: 'pipeline/api/inputSet/fetchPipelineTemplate'
+      fixture: 'ci/api/runStep/fetchPipelineTemplate'
     }).as('fetchPipelineTemplate')
-    cy.intercept('POST', pipelineInputSetTemplate, {
-      fixture: 'pipeline/api/inputSet/applyTemplates'
-    }).as('applyTemplates')
-    cy.intercept('GET', servicesCallV2, servicesV2AccessResponse).as('servicesCallV2')
     cy.visit(inputSetsRoute, {
       timeout: 30000
     })
     cy.wait(2000)
   })
 
-  it.only('Input Set Creation & Deletion', () => {
+  it('INPUT SET: Show all runtime inputs in Visual view with correct full-page styling', () => {
     cy.visitPageAssertion()
     cy.wait('@emptyInputSetList')
     cy.wait(1000)
     cy.contains('span', '+ New Input Set').should('be.visible')
     cy.get('.NoDataCard--buttonContainer').contains('span', '+ New Input Set').click()
-    // Input Flow - Service
+    cy.wait(5000)
+
+    runtimeInputLabels.forEach(fieldName => {
+      cy.get('[class*="PipelineInputSetForm"] label').contains(fieldName)
+    })
+
+    runtimeInputParagraphLabels.forEach(fieldName => {
+      cy.get('[class*="PipelineInputSetForm"] p').contains(fieldName)
+    })
+  })
+})
+
+describe('Triggers', () => {
+  beforeEach(() => {
+    cy.on('uncaught:exception', () => {
+      // returning false here prevents Cypress from
+      // failing the test
+      return false
+    })
+    cy.initializeRoute()
+    cy.intercept('GET', triggersList, { fixture: 'pipeline/api/triggers/emptyTriggersList' }).as('emptyTriggersList')
+    cy.intercept('POST', inputSetsTemplateCall, {
+      fixture: 'ci/api/runStep/inputSetTemplateResponse.json'
+    }).as('fetchServiceTemplate')
+    cy.intercept('GET', pipelineDetailsWithRoutingIdCall, {
+      fixture: 'ci/api/runStep/fetchPipelineTemplate'
+    }).as('fetchPipelineTemplate')
+    cy.visit(triggersRoute, {
+      timeout: 30000
+    })
+    cy.wait(2000)
+  })
+
+  it('TRIGGERS: Show all runtime inputs in Visual view with correct full-page styling', () => {
+    cy.visitPageAssertion()
+    cy.wait('@emptyTriggersList')
     cy.wait(1000)
-    cy.wait('@servicesCallV2').wait(1000)
-    // CI Code here
+    cy.contains('span', 'Add New Trigger').should('be.visible')
+    cy.get('.NoDataCard--buttonContainer').contains('span', 'Add New Trigger').click()
+    cy.contains('section', 'Custom').should('be.visible')
+    cy.get('section').contains('Custom').click()
+    cy.wait(1000)
+    cy.contains('span', 'Pipeline Input').should('be.visible')
+    cy.get('span').contains('Pipeline Input').click()
 
-    //   cy.fillField('name', 'testService')
-    //   cy.findByText('Select Service').should('exist')
-    //   cy.get('input[name="pipeline.stages[0].stage.spec.serviceConfig.serviceRef"]').click()
-    //   cy.contains('p', 'testService').click({ force: true })
+    runtimeInputLabels.forEach(fieldName => {
+      cy.get('[class*="PipelineInputSetForm"] label').contains(fieldName)
+    })
 
-    //   cy.fillField('pipeline.stages[0].stage.spec.infrastructure.infrastructureDefinition.spec.namespace', 'default')
-    //   cy.get('[value="default"]').should('be.visible')
+    runtimeInputParagraphLabels.forEach(fieldName => {
+      cy.get('[class*="PipelineInputSetForm"] p').contains(fieldName)
+    })
+  })
+})
 
-    //   // Toggle to YAML view
-    //   cy.get('[data-name="toggle-option-two"]').click({ force: true })
-    //   cy.wait(1000)
-    //   // Verify all details in YAML view
-    //   cy.contains('span', 'testService').should('be.visible')
-    //   cy.contains('span', 'project1').should('be.visible')
+describe('Templates', () => {
+  beforeEach(() => {
+    cy.on('uncaught:exception', () => {
+      // returning false here prevents Cypress from
+      // failing the test
+      return false
+    })
+    cy.initializeRoute()
+    cy.intercept('GET', templatesListCall, { fixture: 'template/api/emptyTemplatesList' }).as('emptyTemplatesList')
+    cy.intercept('POST', stepLibrary, { fixture: 'ci/api/common/stepLibraryResponse.json' }).as('stepLibrary')
+    cy.visit(templatesListRoute, {
+      timeout: 30000
+    })
+    cy.wait(2000)
+  })
 
-    //   cy.contains('span', 'identifier').should('be.visible')
-    //   cy.contains('span', 'testStage_Cypress').should('be.visible')
+  it('TEMPLATES: Sanity test to verify new Step Template with runtime input field labels', () => {
+    cy.contains('span', 'New Template').should('be.visible')
+    cy.get('span').contains('New Template').click()
+    cy.contains('li', 'Step').should('be.visible')
+    cy.get('li').contains('Step').click()
+    cy.wait(1000)
+    cy.fillField('name', 'runStepTemplate')
+    cy.fillField('versionLabel', 'v1')
 
-    //   cy.contains('span', 'identifier').should('be.visible')
-    //   cy.contains('span', 'testPipeline_Cypress').should('be.visible')
+    cy.contains('span', 'Start').should('be.visible')
+    cy.get('span').contains('Start').click()
 
-    //   cy.contains('span', 'serviceRef').should('be.visible')
-    //   cy.contains('span', 'testService').should('be.visible')
+    cy.wait(1000)
+    cy.get('[data-testid="step-card-Run"]').click({ force: true })
+    cy.wait(1000)
 
-    //   cy.contains('span', 'namespace').should('be.visible')
-    //   cy.contains('span', 'default').should('be.visible')
+    cy.get('[class*="SplitPane"]').scrollTo('0%', '50%', { ensureScrollable: false })
 
-    //   cy.contains('span', 'Save').click()
-    //   cy.intercept('GET', inputSetsCall, {
-    //     fixture: 'pipeline/api/inputSet/inputSetsList'
-    //   }).as('inputSetList')
-    //   cy.wait('@inputSetList')
-    //   cy.wait(1000)
+    cy.contains('div', 'Optional Configuration').should('be.visible')
+    cy.contains('div', 'Optional Configuration').click()
 
-    //   cy.contains('p', 'testService').should('be.visible')
-    //   cy.contains('p', 'Id: testService').should('be.visible')
-    //   cy.contains('span', 'Run Pipeline').should('be.visible')
+    runtimeInputLabels.forEach(fieldName => {
+      cy.get('form label').contains(fieldName)
+    })
 
-    //   cy.get('[data-icon="more"]').should('be.visible')
-    //   cy.get('[data-icon="more"]').first().click()
-
-    //   cy.contains('div', 'Edit').should('be.visible')
-    //   cy.contains('div', 'Delete').should('be.visible')
-
-    //   // Delete flow verification
-    //   cy.intercept('GET', inputSetsCall, {
-    //     fixture: 'pipeline/api/inputSet/emptyInputSetsList'
-    //   })
-    //   cy.contains('div', 'Delete').click()
-    //   cy.contains('p', 'Delete Input Set').should('be.visible')
-    //   cy.contains('span', 'Delete').should('be.visible')
-    //   cy.contains('span', 'Delete').click({ force: true })
-    //   cy.contains('span', 'Input Set "testService" deleted').should('be.visible')
-    //   cy.contains('p', 'testService').should('not.exist')
+    runtimeInputParagraphLabels.forEach(fieldName => {
+      cy.get('form p').contains(fieldName)
+    })
   })
 })

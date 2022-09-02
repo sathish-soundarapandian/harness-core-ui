@@ -1,6 +1,7 @@
 import { parse, stringify } from 'yaml'
 import { get, set } from 'lodash-es'
-export const getRuntimeInputKeys = object => {
+
+export const getRuntimeInputKeys = (object: object): string[] => {
   const arrayOfPaths = []
   const objectEntries = Object.entries(object)
   objectEntries.forEach(([key, value]) => {
@@ -13,13 +14,12 @@ export const getRuntimeInputKeys = object => {
   return arrayOfPaths
 }
 
-export const getTemplatesDataAsStepTemplate = templatesData => {
+export const getTemplatesDataAsStepTemplate = (templatesData: Record<string, any>): Record<string, any> => {
   // inject so step.spec becomes step.template.templateInputs.spec
   const parsedInputSetTemplateYaml = parse(templatesData.data.inputSetTemplateYaml)
   if (get(parsedInputSetTemplateYaml, 'pipeline.stages[0].stage.spec.execution.steps[0].step.template')) {
     return templatesData
   }
-  // const stepSpec = get(parsedInputSetTemplateYaml, 'pipeline.stages[0].stage.spec.execution.steps[0].step.spec')
   const identifier = get(parsedInputSetTemplateYaml, 'pipeline.stages[0].stage.spec.execution.steps[0].step.identifier')
   const stepProperties = get(parsedInputSetTemplateYaml, 'pipeline.stages[0].stage.spec.execution.steps[0].step')
   delete stepProperties.identifier
@@ -32,5 +32,4 @@ export const getTemplatesDataAsStepTemplate = templatesData => {
   const templatesDataAsStepTemplate = { ...templatesData }
   templatesDataAsStepTemplate.data.inputSetTemplateYaml = stringify(newInputSetTemplateYaml)
   return templatesDataAsStepTemplate
-  // stringify pipeline object
 }
