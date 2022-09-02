@@ -60,7 +60,6 @@ export function VariablesListTable<T>(props: VariableListTableProps<T>): React.R
   }, [data, metadataMap])
 
   if (!data || !originalData || !metadataMap) return null
-
   return (
     <div className={cx(css.variablesListTable, className)} ref={tableRef as any}>
       {Object.entries(data || {}).map(([key, value]) => {

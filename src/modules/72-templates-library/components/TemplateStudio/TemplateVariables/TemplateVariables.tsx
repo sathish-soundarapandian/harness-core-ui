@@ -28,6 +28,8 @@ import MonitoredServiceCard from '@pipeline/components/PipelineStudio/PipelineVa
 import SecretManagerCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/SecretManagerCard'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import { PipelineCardPanel } from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables'
+import DeploymentTemplateCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/DeploymentTemplateCard'
+import type { DeploymentTemplateConfig } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
 import css from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 const TemplateVariables: React.FC = (): JSX.Element => {
@@ -45,7 +47,7 @@ const TemplateVariables: React.FC = (): JSX.Element => {
   const [templateAtState, setTemplateAtState] = React.useState<NGTemplateInfoConfig>(originalTemplate)
 
   const onUpdate = useCallback(
-    async (values: PipelineInfoConfig | StageElementConfig | StepElementConfig) => {
+    async (values: PipelineInfoConfig | StageElementConfig | StepElementConfig | DeploymentTemplateConfig) => {
       const processNode = omit(values, 'name', 'identifier', 'description', 'tags')
       sanitize(processNode, { removeEmptyArray: false, removeEmptyObject: false, removeEmptyString: false })
       const updatedTemplate = produce(templateAtState, draft => {
@@ -68,7 +70,6 @@ const TemplateVariables: React.FC = (): JSX.Element => {
   if (initLoading) {
     return <PageSpinner />
   }
-
   return (
     <div className={css.pipelineVariables}>
       {error ? (
@@ -150,6 +151,26 @@ const TemplateVariables: React.FC = (): JSX.Element => {
                   allowableTypes={allowableTypes}
                   stepsFactory={factory}
                   updateMonitoredService={onUpdate}
+                />
+              )}
+              {originalTemplate.type === TemplateType.CustomDeployment && (
+                <DeploymentTemplateCard
+                  deploymentTemplate={variablesTemplate as DeploymentTemplateConfig}
+                  unresolvedDeploymentTemplate={
+                    { ...template.spec, identifier: DefaultNewStageId } as DeploymentTemplateConfig
+                  }
+                  originalDeploymentTemplate={
+                    {
+                      ...originalTemplate.spec,
+
+                      identifier: DefaultNewStageId
+                    } as DeploymentTemplateConfig
+                  }
+                  metadataMap={metadataMap}
+                  path="template"
+                  allowableTypes={allowableTypes}
+                  stepsFactory={factory}
+                  updateDeploymentTemplate={onUpdate}
                 />
               )}
             </GitSyncStoreProvider>

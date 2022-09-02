@@ -12,7 +12,7 @@ import { Button, Formik, FormikForm, FormInput, ButtonVariation, Dialog } from '
 import { useStrings } from 'framework/strings'
 import type { AllNGVariables } from '@pipeline/utils/types'
 
-import { getVaribaleTypeOptions } from './CustomVariableUtils'
+import { getVaribaleTypeOptions, VariableType } from './CustomVariableUtils'
 
 const MAX_LENGTH = 64
 
@@ -28,10 +28,21 @@ export interface AddEditCustomVariableProps {
   updateVariable(index: number, variable: AllNGVariables): void
   existingVariables?: AllNGVariables[]
   formName?: string
+  allowedVarialblesTypes?: VariableType[]
+  isDescriptionEnabled?: boolean
 }
 
 export default function AddEditCustomVariable(props: AddEditCustomVariableProps): React.ReactElement {
-  const { selectedVariable, setSelectedVariable, addNewVariable, updateVariable, existingVariables, formName } = props
+  const {
+    selectedVariable,
+    setSelectedVariable,
+    addNewVariable,
+    updateVariable,
+    existingVariables,
+    formName,
+    allowedVarialblesTypes,
+    isDescriptionEnabled
+  } = props
   const { getString } = useStrings()
 
   const existingNames: string[] = Array.isArray(existingVariables) ? existingVariables.map(v => v.name || '') : []
@@ -93,9 +104,12 @@ export default function AddEditCustomVariable(props: AddEditCustomVariableProps)
               label={getString('variableNameLabel')}
               placeholder={getString('pipeline.variable.variableNamePlaceholder')}
             />
+            {isDescriptionEnabled && (
+              <FormInput.TextArea name="description" isOptional={true} label={getString('description')} />
+            )}
             <FormInput.Select
               name="type"
-              items={getVaribaleTypeOptions(getString)}
+              items={getVaribaleTypeOptions(allowedVarialblesTypes, getString)}
               label={getString('typeLabel')}
               placeholder={getString('pipeline.variable.typePlaceholder')}
               selectProps={{

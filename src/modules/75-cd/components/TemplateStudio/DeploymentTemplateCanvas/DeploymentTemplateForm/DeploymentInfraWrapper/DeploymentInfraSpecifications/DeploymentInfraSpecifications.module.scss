@@ -7,11 +7,31 @@
 
 .infraSections {
   margin-top: var(--spacing-large) !important;
+  & :global(.variablesTableRow) {
+    grid-template-columns: 1fr 0.5fr 1.5fr 2fr !important;
+
+    :global(.connectorVariableField) {
+      :global(.bp3-form-content) > div:last-child {
+        width: 100% !important;
+        max-width: 264px;
+        > button {
+          width: 100% !important;
+          max-width: 264px;
+        }
+      }
+    }
+  }
+  .labelText {
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    color: var(--grey-900) !important;
+  }
 }
 .headerText {
   font-weight: 600 !important;
   font-size: 16px !important;
 }
+
 .headerRow {
   display: grid;
   grid-template-columns: 1fr 1fr 1.5fr 30px;
@@ -35,44 +55,6 @@
 .panel {
   padding: var(--spacing-small);
   margin-top: var(--spacing-small);
-}
-
-.infraVarHeader {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1.5fr 30px;
-  column-gap: var(--spacing-small);
-  margin-bottom: var(--spacing-small);
-
-  :global(.bp3-form-group) {
-    margin: 0;
-    width: 250px !important;
-  }
-
-  .label {
-    color: var(--grey-400);
-    width: 250px;
-  }
-  .connectorRef {
-    div {
-      margin-bottom: 0 !important;
-    }
-    button {
-      margin-left: 0 !important;
-    }
-    padding-bottom: 0px !important;
-    width: 250px;
-  }
-  .value-column {
-    display: grid;
-    grid-template-columns: 1fr 35px;
-    &[data-type='RUNTIME'] {
-      grid-template-columns: 1fr 35px;
-    }
-    width: 250px;
-    .configureOptions {
-      align-self: center;
-    }
-  }
 }
 
 .infraVariableSection {
