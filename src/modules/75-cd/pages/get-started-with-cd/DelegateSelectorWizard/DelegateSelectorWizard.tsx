@@ -13,14 +13,14 @@ import cx from 'classnames'
 import routes from '@common/RouteDefinitions'
 import { useStrings } from 'framework/strings'
 import { CreateK8sDelegate } from '../CreateKubernetesDelegateWizard/CreateK8sDelegate'
-import { CreateDockerDelegate } from '../CreateDockerDelegateWizard/createDockerDelegate'
+import { CreateDockerDelegate } from '../CreateDockerDelegateWizard/CreateDockerDelegate'
 import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
 
 export interface DelegateTypeSelectorProps {
   onClickBack: () => void
 }
 
-export const DelegateTypeSelector = ({ onClickBack }: DelegateTypeSelectorProps): JSX.Element => {
+export const DelegateSelectorWizard = ({ onClickBack }: DelegateTypeSelectorProps): JSX.Element => {
   const [delegateType, setDelegateType] = React.useState<string>('')
   const [disableBtn, setDisableBtn] = React.useState<boolean>(true)
   const { getString } = useStrings()
