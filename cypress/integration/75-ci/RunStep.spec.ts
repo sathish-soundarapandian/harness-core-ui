@@ -18,7 +18,7 @@ import {
   pipelineVariablesCall,
   stagesExecutionList
 } from '../../support/70-pipeline/constants'
-import { getRuntimeInputKeys, getTemplatesDataAsStepTemplate } from '../../utils/step-utils'
+import { getRuntimeInputKeys } from '../../utils/step-utils'
 import templatesData from '../../fixtures/ci/api/runStep/inputSetTemplateResponse.json'
 // Data from QA, CI Automation Account
 // https://qa.harness.io/ng/#/account/h61p38AZSV6MzEkpWWBtew/ci/orgs/default/projects/mtran/pipelines/CI_Pipeline1/pipeline-studio/
@@ -141,43 +141,8 @@ describe('Pipeline Studio', () => {
     cy.log('Manually verify the following fields: description, outputVariables, runAsUser, memory, cpu, timeout')
     cy.wait(5000)
   })
-
-  it('RUN PIPELINE: Run Pipeline with Run Step Template prompts for all possible runtime inputs', () => {
-    const fixture = getTemplatesDataAsStepTemplate(templatesData)
-    cy.intercept('POST', runPipelineTemplateCall, fixture).as('inputSetTemplateCall')
-    cy.contains('span', 'Run').click()
-    cy.wait(1000)
-
-    const arrayOfFieldNames = getRuntimeInputKeys(parse(templatesData.data.inputSetTemplateYaml))
-    cy.get('[class*="bp3-dialog"] [data-name="toggle-option-two"]').click()
-    // cy.contains('div', 'YAML').click()
-    cy.get('[class*="bp3-dialog"] [data-name="toggle-option-two"]').click()
-
-    cy.contains('span', 'run-pipeline.yaml').should('be.visible')
-    cy.get('.monaco-editor .overflow-guard').scrollTo('0%', '30%', { ensureScrollable: false })
-    // should verify all but it fails on some
-    // Need to manually test the following fields:
-    // paths, envVariables, description, outputVariables, runAsUser, memory, cpu, timeout
-    arrayOfFieldNames.forEach(fieldName => {
-      if (
-        fieldName !== 'paths' &&
-        fieldName !== 'envVariables' &&
-        fieldName !== 'description' &&
-        fieldName !== 'outputVariables' &&
-        fieldName !== 'runAsUser' &&
-        fieldName !== 'memory' &&
-        fieldName !== 'cpu' &&
-        fieldName !== 'timeout'
-      ) {
-        cy.get('[class*="view-line"] [class*="mtk5"]').contains(fieldName)
-      }
-    })
-    cy.log(
-      'Manually verify the following fields: paths, envVariables, description, outputVariables, runAsUser, memory, cpu, timeout'
-    )
-    cy.wait(5000)
-  })
 })
+
 describe('Input Sets', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
