@@ -10,30 +10,6 @@ import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
 import { variableSchema } from '@cd/components/PipelineSteps/ShellScriptStep/shellScriptTypes'
 import { InstanceScriptTypes } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/DeploymentInfraWrapper/DeploymentInfraSpecifications/DeploymentInfraSpecifications'
-import type { ShellScriptInlineSource, StoreConfigWrapper } from 'services/cd-ng'
-
-type CustomDeploymentInfraNGVariable = {
-  value?: number | string
-  id?: string
-  name?: string
-  type?: 'String' | 'Secret' | 'Connector'
-}
-
-interface InstanceAttributeVariable {
-  id?: string
-  fieldName?: string
-  jsonPath?: string
-  description?: string
-}
-
-export interface DeploymentInfra {
-  variables?: Array<CustomDeploymentInfraNGVariable>
-  fetchInstancesScript?: {
-    store?: StoreConfigWrapper | ShellScriptInlineSource
-  }
-  instancesListPath?: string
-  instanceAttributes?: Array<InstanceAttributeVariable>
-}
 
 export function getValidationSchema(getString: UseStringsReturn['getString']): any {
   return Yup.object().shape({
@@ -75,7 +51,7 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): a
     instanceAttributes: Yup.array()
       .of(
         Yup.object().shape({
-          fieldName: Yup.string().required(getString('common.validation.nameIsRequired')),
+          name: Yup.string().required(getString('common.validation.nameIsRequired')),
           jsonPath: Yup.string().required(getString('common.validation.valueIsRequired'))
         })
       )

@@ -11,9 +11,10 @@ import { useParams } from 'react-router-dom'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { DeploymentConfigCanvasWithRef } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentConfigCanvas'
-import { DeploymentContextProvider, DeploymentConfig } from '@cd/context/DeploymentContext/DeploymentContextProvider'
+import { DeploymentContextProvider } from '@cd/context/DeploymentContext/DeploymentContextProvider'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
+import type { DeploymentConfig } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
 
 const DeploymentTemplateCanvasWrapper = (_props: unknown, formikRef: TemplateFormRef) => {
   const {

@@ -14,32 +14,33 @@ import produce from 'immer'
 import DeploymentInfraSpecifications from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/DeploymentInfraWrapper/DeploymentInfraSpecifications/DeploymentInfraSpecifications'
 import { useStrings } from 'framework/strings'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
-import { DeploymentInfra, getValidationSchema } from './DeploymentInfraUtils'
+import type { DeploymentInfra } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
+import { getValidationSchema } from './DeploymentInfraUtils'
 import css from '../DeploymentConfigForm.module.scss'
 
 export const DeploymentInfraWrapper = ({ children }: React.PropsWithChildren<unknown>, formikRef: any): JSX.Element => {
   const ref = React.useRef<any | null>()
   const { getString } = useStrings()
 
-  const { updateDeploymentConfig: updateTemplate, deploymentConfig: templateValue } = useDeploymentContext()
+  const { updateDeploymentConfig, deploymentConfig } = useDeploymentContext()
 
   const getDeploymentInfraValues = React.useCallback((): DeploymentInfra => {
-    const instanceAttributes = get(templateValue, 'infrastructure.instanceAttributes')
-    const infraVars = get(templateValue, 'infrastructure.variables')
+    const instanceAttributes = get(deploymentConfig, 'infrastructure.instanceAttributes')
+    const infraVars = get(deploymentConfig, 'infrastructure.variables')
     return {
-      ...(templateValue?.infrastructure as DeploymentInfra),
+      ...(deploymentConfig?.infrastructure as DeploymentInfra),
       variables: Array.isArray(infraVars)
         ? infraVars.map(variable => ({
             ...variable,
             id: uuid()
           }))
         : [],
-      instanceAttributes: instanceAttributes.map((variable: any) => ({
+      instanceAttributes: instanceAttributes?.map((variable: any) => ({
         ...variable,
         id: uuid()
       }))
     }
-  }, [templateValue])
+  }, [deploymentConfig])
 
   /* istanbul ignore next */ React.useImperativeHandle(formikRef, () => ({
     resetForm() {
@@ -59,28 +60,30 @@ export const DeploymentInfraWrapper = ({ children }: React.PropsWithChildren<unk
         set(
           draft,
           'variables',
-          draft?.variables?.filter(variable => variable.value).map(({ id, ...variable }) => variable)
+          draft?.variables?.map(({ id, ...variable }) => variable)
         )
         set(
           draft,
           'instanceAttributes',
-          draft?.instanceAttributes?.filter(variable => variable.fieldName).map(({ id, ...variable }) => variable)
+          draft?.instanceAttributes?.map(({ id, ...variable }) => variable)
         )
       }
     })
 
-    const updatedConfig = produce(templateValue, draft => {
+    const updatedConfig = produce(deploymentConfig, draft => {
       if (draft) {
         set(draft, 'infrastructure', updatedInfraValues)
       }
     })
-    updateTemplate(updatedConfig)
+    updateDeploymentConfig(updatedConfig)
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceUpdateTemplate = React.useCallback(
-    debounce((infraValues: DeploymentInfra) => updateConfigValue(infraValues), 300),
-    [updateTemplate]
+    debounce((infraValues: DeploymentInfra) => {
+      updateConfigValue(infraValues)
+    }, 300),
+    [updateDeploymentConfig]
   )
 
   return (

@@ -32,6 +32,7 @@ export interface CustomVariableInputSetExtraProps {
   path?: string
   allValues?: CustomVariablesData
   executionIdentifier?: string
+  isDescriptionEnabled?: boolean
 }
 
 export interface CustomVariableInputSetProps extends CustomVariableInputSetExtraProps {

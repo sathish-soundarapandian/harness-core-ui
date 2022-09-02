@@ -15,10 +15,7 @@ import type { StepData, TemplateStepNode } from 'services/pipeline-ng'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { StepPalette } from '@pipeline/components/PipelineStudio/StepPalette/StepPalette'
 import { StageType } from '@pipeline/utils/stageHelpers'
-import {
-  DeploymentConfigExecutionStepWrapper,
-  useDeploymentContext
-} from '@cd/context/DeploymentContext/DeploymentContextProvider'
+import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
 import { DrawerSizes, DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import {
   StepCommandsWithRef as StepCommands,
@@ -33,6 +30,7 @@ import { createTemplate, getScopeBasedTemplateRef } from '@pipeline/utils/templa
 import { getUpdatedDeploymentConfig } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/components/ExecutionPanel/ExecutionPanelUtils'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 
+import type { DeploymentConfigExecutionStepWrapper } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
 import { DeploymentConfigStepDrawerTitle } from './DeploymentConfigStepDrawerTitle'
 import css from './DeploymentConfigStepDrawer.module.scss'
 

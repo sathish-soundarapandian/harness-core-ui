@@ -11,7 +11,7 @@ import type { TemplateStepNode } from 'services/pipeline-ng'
 import type {
   DeploymentConfig,
   DeploymentConfigExecutionStepWrapper
-} from '@cd/context/DeploymentContext/DeploymentContextProvider'
+} from '@pipeline/components/PipelineStudio/PipelineVariables/types'
 
 interface Params {
   processNode: TemplateStepNode
