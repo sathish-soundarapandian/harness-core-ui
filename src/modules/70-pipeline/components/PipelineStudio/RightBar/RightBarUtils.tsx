@@ -233,7 +233,7 @@ export const validateCIForm = ({
       Yup.number()
         .notRequired()
         .integer(getString(onlyPositiveIntegerKeyRef))
-        .positive(getString(onlyPositiveIntegerKeyRef))
+        .min(0, getString(onlyPositiveIntegerKeyRef))
         .typeError(getString(onlyPositiveIntegerKeyRef))
         .validateSync(values.depth === '' ? undefined : values.depth)
     } catch (error) {
