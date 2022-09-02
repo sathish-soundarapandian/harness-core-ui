@@ -50,8 +50,9 @@ const RenderColumnMenu: Renderer<CellProps<TemplateSummaryResponse>> = ({ row, c
 
 const RenderColumnType: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
   const data = row.original
-  const templateEntityType = data.templateEntityType
-  const style = templateFactory.getTemplateColorMap(defaultTo(templateEntityType, ''))
+  const templateEntityType = defaultTo(data.templateEntityType, '')
+  const templateLabel = templateFactory.getTemplateLabel(templateEntityType)
+  const style = templateFactory.getTemplateColorMap(templateEntityType)
 
   return (
     <Layout.Horizontal
@@ -67,9 +68,9 @@ const RenderColumnType: Renderer<CellProps<TemplateSummaryResponse>> = ({ row })
           stroke={style?.stroke}
         />
       </svg>
-      {templateEntityType && (
+      {templateLabel && (
         <Text font={{ size: 'xsmall', weight: 'bold' }} style={{ color: style?.color, letterSpacing: 2 }}>
-          {templateEntityType.toUpperCase()}
+          {templateLabel.toUpperCase()}
         </Text>
       )}
     </Layout.Horizontal>

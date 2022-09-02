@@ -68,7 +68,7 @@ export default function TemplatesPage(): React.ReactElement {
   } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const scope = getScopeFromDTO({ projectIdentifier, orgIdentifier, accountIdentifier: accountId })
-  const { CUSTOM_SECRET_MANAGER_NG, CVNG_TEMPLATE_MONITORED_SERVICE } = useFeatureFlags()
+  const { CUSTOM_SECRET_MANAGER_NG, CVNG_TEMPLATE_MONITORED_SERVICE, NG_DEPLOYMENT_TEMPLATE } = useFeatureFlags()
   const { enabled: templateFeatureEnabled } = useFeature({
     featureRequest: {
       featureName: FeatureIdentifier.TEMPLATE_SERVICE
@@ -76,7 +76,8 @@ export default function TemplatesPage(): React.ReactElement {
   })
   const allowedTemplateTypes = getAllowedTemplateTypes(scope, {
     [TemplateType.SecretManager]: !!CUSTOM_SECRET_MANAGER_NG,
-    [TemplateType.MonitoredService]: !!CVNG_TEMPLATE_MONITORED_SERVICE
+    [TemplateType.MonitoredService]: !!CVNG_TEMPLATE_MONITORED_SERVICE,
+    [TemplateType.CustomDeployment]: !!NG_DEPLOYMENT_TEMPLATE
   }).filter(item => !item.disabled)
 
   useDocumentTitle([getString('common.templates')])

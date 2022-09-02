@@ -1,0 +1,75 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.variablesWithDescription {
+  :global(.variable-list-row) {
+    grid-column-gap: 10px !important;
+    grid-template-columns: repeat(4, minmax(10px, 1fr)) !important;
+    :global(.connectorVariableField) {
+      :global(.bp3-form-content) > div {
+        width: 100% !important;
+        max-width: 250px !important;
+        > button {
+          width: 100% !important;
+          max-width: 250px !important;
+        }
+      }
+    }
+    > * {
+      max-width: 200px;
+    }
+  }
+  :global(.bp3-form-group) {
+    margin: 0 !important;
+  }
+  :global(.connectorVariableField) {
+    padding-bottom: 0 !important;
+  }
+}
+.infraVarHeader {
+  display: grid;
+  grid-auto-flow: column;
+  align-items: baseline;
+  border-bottom: solid 1px var(--grey-200);
+  position: relative;
+  grid-column-gap: 10px !important;
+  grid-template-columns: repeat(4, minmax(10px, 1fr)) !important;
+  margin-bottom: var(--spacing-small);
+  padding: var(--spacing-small) 0;
+  padding-left: var(--margin-container) !important;
+
+  :global(.bp3-form-group) {
+    margin: 0;
+    width: 250px !important;
+  }
+
+  .label {
+    color: var(--grey-400);
+    width: 250px;
+  }
+  .connectorRef {
+    div {
+      margin-bottom: 0 !important;
+    }
+    button {
+      margin-left: 0 !important;
+    }
+    padding-bottom: 0px !important;
+    width: 250px;
+  }
+  .value-column {
+    display: grid;
+    grid-template-columns: 1fr 35px;
+    &[data-type='RUNTIME'] {
+      grid-template-columns: 1fr 35px;
+    }
+    width: 250px;
+    .configureOptions {
+      align-self: center;
+    }
+  }
+}

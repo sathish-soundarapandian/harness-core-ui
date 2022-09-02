@@ -15,18 +15,10 @@ import type { GetPipelineQueryParams, TemplateStepNode, StepElementConfig } from
 import { getTemplateTypesByRef } from '@pipeline/utils/templateUtils'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
-import type { DeploymentInfra } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/DeploymentInfraWrapper/DeploymentInfraUtils'
-
-export interface DeploymentConfigExecutionStepWrapper {
-  step: TemplateStepNode
-}
-
-export interface DeploymentConfig {
-  infrastructure: DeploymentInfra
-  execution: {
-    steps: DeploymentConfigExecutionStepWrapper[]
-  }
-}
+import type {
+  DeploymentConfig,
+  DeploymentConfigExecutionStepWrapper
+} from '@pipeline/components/PipelineStudio/PipelineVariables/types'
 
 export interface DrawerData {
   type: DrawerTypes
@@ -69,7 +61,7 @@ const initialValues = {
         spec: {}
       }
     },
-    instanceAttributes: [{ fieldName: 'hostName', jsonPath: '', description: '' }]
+    instanceAttributes: [{ name: 'hostName', jsonPath: '', description: '' }]
   },
   execution: {
     steps: []

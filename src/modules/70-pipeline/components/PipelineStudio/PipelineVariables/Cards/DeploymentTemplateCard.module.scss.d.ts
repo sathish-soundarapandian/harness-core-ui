@@ -7,16 +7,11 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly addButton: string
-  readonly configLabel: string
-  readonly halfWidth: string
-  readonly headerRow: string
-  readonly headerText: string
-  readonly infraSections: string
-  readonly infraVariableSection: string
+  readonly configureOptions: string
+  readonly connectorRef: string
+  readonly infraVarHeader: string
   readonly label: string
-  readonly labelText: string
-  readonly panel: string
-  readonly templateDropdown: string
+  readonly valueColumn: string
+  readonly variablesWithDescription: string
 }
 export default styles

@@ -17,19 +17,15 @@ import {
   Layout,
   MultiTypeInputType,
   SelectOption,
-  Select
+  Select,
+  Text
 } from '@wings-software/uicore'
 import { v4 as uuid } from 'uuid'
 
-import { get } from 'lodash-es'
-import { useParams } from 'react-router-dom'
+import { defaultTo, get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { useQueryParams } from '@common/hooks'
-import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { ScriptType, ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import MultiConfigSelectField from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/MultiConfigSelectField/MultiConfigSelectField'
 import { FileUsage } from '@filestore/interfaces/FileStore'
@@ -39,6 +35,7 @@ import type { JsonNode } from 'services/pipeline-ng'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import CardWithOuterTitle from '@pipeline/components/CardWithOuterTitle/CardWithOuterTitle'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
+import { CustomVariablesEditableStage } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariablesEditableStage'
 import css from './DeploymentInfraSpecifications.module.scss'
 
 enum VariableType {
@@ -52,26 +49,12 @@ export enum InstanceScriptTypes {
   FileStore = 'Harness'
 }
 
-const scriptInputType: SelectOption[] = [
-  { label: 'String', value: 'String' },
-  { label: 'Secret', value: 'Secret' },
-  { label: 'Number', value: 'Number' },
-  { label: 'Connector', value: 'Connector' }
-]
-
 export default function DeploymentInfraSpecifications(props: { formik: FormikProps<JsonNode> }): React.ReactElement {
   const { formik } = props
   const { allowableTypes, isReadOnly } = useDeploymentContext()
   const { values: formValues, setFieldValue } = formik
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<{
-    projectIdentifier: string
-    orgIdentifier: string
-    accountId: string
-  }>()
-  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
   const scriptType: ScriptType = 'Bash'
   const instanceScriptTypes = React.useMemo(
@@ -88,46 +71,6 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
       type: item.value,
       spec: item.value === InstanceScriptTypes.Inline ? {} : { files: [''] }
     })
-  }
-  const getVariableValueComponent = (variable: AllNGVariables, index: number): JSX.Element => {
-    return (
-      <>
-        {variable.type === VariableType.Secret ? (
-          <MultiTypeSecretInput name={`variables[${index}].value`} label="" disabled={isReadOnly} />
-        ) : (
-          <FormInput.MultiTextInput
-            className="variableInput"
-            name={`variables[${index}].value`}
-            label=""
-            disabled={isReadOnly}
-            multiTextInputProps={{
-              disabled: isReadOnly,
-              defaultValueToReset: '',
-              expressions,
-              textProps: {
-                disabled: isReadOnly,
-                type: variable.type === VariableType.Number ? 'number' : 'text'
-              },
-              allowableTypes
-            }}
-          />
-        )}
-        {getMultiTypeFromValue(variable.value as string) === MultiTypeInputType.RUNTIME ? (
-          <ConfigureOptions
-            className={css.configureOptions}
-            value={variable.value as string}
-            defaultValue={variable.default}
-            type={variable.type || /* istanbul ignore next */ 'String'}
-            variableName={variable.name || /* istanbul ignore next */ ''}
-            onChange={(value, defaultValue) => {
-              setFieldValue(`variables[${index}].value`, value)
-              setFieldValue(`variables[${index}].default`, defaultValue)
-            }}
-            isReadonly={isReadOnly}
-          />
-        ) : null}
-      </>
-    )
   }
 
   const fetchScriptWidgetTitle = useMemo(
@@ -146,103 +89,32 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
         className={css.infraSections}
         headerClassName={css.headerText}
       >
-        <Layout.Horizontal spacing="large">
-          <MultiTypeFieldSelector
-            name="variables"
-            label={getString('pipeline.customDeployment.infraVariablesTitle')}
-            defaultValueToReset={[]}
-            disableTypeSelection
-            className={css.infraVariableSection}
-          >
-            <FieldArray
-              name="variables"
-              render={({ push, remove }) => {
-                return (
-                  <div className={css.panel}>
-                    <div className={css.infraVarHeader}>
-                      <span className={css.label}>{getString('name')}</span>
-                      <span className={css.label}>{getString('typeLabel')}</span>
-                      <span className={css.label}>{getString('common.configureOptions.defaultValue')}</span>
-                      <span className={css.label}>
-                        {getString('description')}
-                        {getString('common.optionalLabel')}
-                      </span>
-                    </div>
-                    {formValues?.variables?.map((variable: any, index: number) => {
-                      return (
-                        <div className={css.infraVarHeader} key={variable.id}>
-                          <FormInput.Text
-                            name={`variables[${index}].name`}
-                            placeholder={getString('name')}
-                            disabled={isReadOnly}
-                            className={css.label}
-                          />
-                          <FormInput.Select
-                            items={scriptInputType}
-                            name={`variables[${index}].type`}
-                            placeholder={getString('typeLabel')}
-                            disabled={isReadOnly}
-                            onChange={() => {
-                              setFieldValue(`variables[${index}].value`, '')
-                            }}
-                            className={css.label}
-                          />
-
-                          {variable?.type === VariableType.Connector ? (
-                            <FormMultiTypeConnectorField
-                              name={`variables[${index}].value`}
-                              label=""
-                              placeholder={getString('connectors.selectConnector')}
-                              disabled={isReadOnly}
-                              accountIdentifier={accountId}
-                              multiTypeProps={{ expressions, disabled: isReadOnly, allowableTypes }}
-                              projectIdentifier={projectIdentifier}
-                              orgIdentifier={orgIdentifier}
-                              width={250}
-                              connectorLabelClass={css.connectorRef}
-                              gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-                              setRefValue
-                            />
-                          ) : (
-                            <div
-                              className={css.valueColumn}
-                              data-type={getMultiTypeFromValue(variable.value as string)}
-                            >
-                              {getVariableValueComponent(variable, index)}
-                            </div>
-                          )}
-
-                          <FormInput.Text
-                            name={`variables[${index}].description`}
-                            placeholder={getString('common.descriptionPlaceholder')}
-                            disabled={isReadOnly}
-                          />
-                          <Button
-                            variation={ButtonVariation.ICON}
-                            icon="main-trash"
-                            data-testid={`remove-deploymentInfraVar-${index}`}
-                            onClick={() => remove(index)}
-                            disabled={isReadOnly}
-                          />
-                        </div>
-                      )
-                    })}
-                    <Button
-                      icon="plus"
-                      variation={ButtonVariation.LINK}
-                      data-testid="add-deploymentInfraVar"
-                      disabled={isReadOnly}
-                      onClick={() => push({ name: '', type: 'String', value: '', id: uuid() })}
-                      className={css.addButton}
-                    >
-                      {getString('variables.newVariable')}
-                    </Button>
-                  </div>
-                )
+        <Layout.Vertical>
+          <Text className={css.labelText}>{getString('pipeline.customDeployment.infraVariablesTitle')}</Text>
+          <Layout.Horizontal spacing="large">
+            <CustomVariablesEditableStage
+              className={css.infraVariableSection}
+              formName="editInfraVariables"
+              initialValues={{
+                variables: defaultTo(formValues?.variables, []) as AllNGVariables[],
+                canAddVariable: true
               }}
+              allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+              readonly={isReadOnly}
+              onUpdate={values => {
+                setFieldValue('variables', values.variables)
+              }}
+              allowedVarialblesTypes={[
+                VariableType.String,
+                VariableType.Secret,
+                VariableType.Number,
+                VariableType.Connector
+              ]}
+              isDescriptionEnabled={true}
+              enableValidation={true}
             />
-          </MultiTypeFieldSelector>
-        </Layout.Horizontal>
+          </Layout.Horizontal>
+        </Layout.Vertical>
       </CardWithOuterTitle>
 
       <CardWithOuterTitle
@@ -259,7 +131,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
                   label={fetchScriptWidgetTitle}
                   defaultValueToReset=""
                   disabled={isReadOnly}
-                  allowedTypes={allowableTypes}
+                  allowedTypes={[MultiTypeInputType.FIXED]}
                   disableTypeSelection={isReadOnly}
                   skipRenderValueInExpressionLabel
                   expressionRender={() => {
@@ -301,7 +173,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
             {fetchInstanceScriptType === InstanceScriptTypes.FileStore && (
               <MultiConfigSelectField
                 name="fetchInstancesScript.store.spec.files"
-                allowableTypes={allowableTypes}
+                allowableTypes={[MultiTypeInputType.FIXED]}
                 fileType={FILE_TYPE_VALUES.FILE_STORE}
                 formik={formik}
                 expressions={expressions}
@@ -323,6 +195,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
               type => type.value === get(formValues, 'fetchInstancesScript.store.type')
             )}
             onChange={onSelectChange}
+            disabled={isReadOnly}
           />
         </div>
       </CardWithOuterTitle>
@@ -352,7 +225,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
         <MultiTypeFieldSelector
           name="instanceAttributes"
           label=""
-          defaultValueToReset={[{ fieldName: 'hostName', jsonPath: '', description: '', id: uuid() }]}
+          defaultValueToReset={[{ name: 'hostName', jsonPath: '', description: '', id: uuid() }]}
           disableTypeSelection
         >
           <FieldArray
@@ -371,7 +244,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
                   {formValues.instanceAttributes?.map(({ id }: { id: string }, i: number) => (
                     <div className={css.headerRow} key={id}>
                       <FormInput.Text
-                        name={`instanceAttributes[${i}].fieldName`}
+                        name={`instanceAttributes[${i}].name`}
                         placeholder={getString('pipeline.customDeployment.fieldNamePlaceholder')}
                         disabled={isReadOnly || i === 0}
                       />
@@ -406,7 +279,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
                     icon="plus"
                     variation={ButtonVariation.LINK}
                     data-testid="add-instanceAttriburteVar"
-                    onClick={() => push({ fieldName: '', jsonPath: '', description: '', id: uuid() })}
+                    onClick={() => push({ name: '', jsonPath: '', description: '', id: uuid() })}
                     disabled={isReadOnly}
                     className={css.addButton}
                   >

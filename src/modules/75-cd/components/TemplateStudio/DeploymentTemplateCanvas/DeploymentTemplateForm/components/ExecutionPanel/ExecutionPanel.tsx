@@ -14,10 +14,7 @@ import cx from 'classnames'
 import { Button, ButtonVariation, Container, Layout, Popover, Text } from '@wings-software/uicore'
 import { Color } from '@wings-software/design-system'
 import { useStrings } from 'framework/strings'
-import {
-  DeploymentConfigExecutionStepWrapper,
-  useDeploymentContext
-} from '@cd/context/DeploymentContext/DeploymentContextProvider'
+import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
 import { StepCategory, useGetStepsV2, TemplateStepNode } from 'services/pipeline-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useMutateAsGet } from '@common/hooks'
@@ -28,6 +25,7 @@ import { getUpdatedDeploymentConfig } from '@cd/components/TemplateStudio/Deploy
 import { StepTemplateCard } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/components/StepTemplateCard/StepTemplateCard'
 import { createTemplate } from '@pipeline/utils/templateUtils'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
+import type { DeploymentConfigExecutionStepWrapper } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
 import css from './ExecutionPanel.module.scss'
 
 function AddStep({ onAddStepClick }: { onAddStepClick: () => void }) {
