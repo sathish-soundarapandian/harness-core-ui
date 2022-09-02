@@ -40,7 +40,6 @@ export const DelegateSelectorWizard = ({ onClickBack }: DelegateTypeSelectorProp
         return <></>
     }
   }
-
   return (
     <Layout.Vertical width="50%">
       <Container className={css.header}>
