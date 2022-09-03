@@ -6,12 +6,7 @@
  */
 
 import type { StoreConfigWrapper } from 'services/cd-ng'
-import type {
-  VariableMergeServiceResponse,
-  PipelineInfoConfig,
-  ShellScriptInlineSource,
-  TemplateStepNode
-} from 'services/pipeline-ng'
+import type { VariableMergeServiceResponse, PipelineInfoConfig, ShellScriptInlineSource } from 'services/pipeline-ng'
 
 export interface PipelineVariablesData {
   variablesPipeline: PipelineInfoConfig
@@ -41,14 +36,15 @@ export interface DeploymentInfra {
   instanceAttributes?: Array<InstanceAttributeVariable>
 }
 
-export interface DeploymentConfigExecutionStepWrapper {
-  step: TemplateStepNode
+export interface DeploymentConfigStepTemplateRefDetails {
+  templateRef: string
+  versionLabel: string
 }
 
 export interface DeploymentConfig {
   infrastructure: DeploymentInfra
   execution: {
-    steps: DeploymentConfigExecutionStepWrapper[]
+    stepTemplateRefs: DeploymentConfigStepTemplateRefDetails[]
   }
 }
 

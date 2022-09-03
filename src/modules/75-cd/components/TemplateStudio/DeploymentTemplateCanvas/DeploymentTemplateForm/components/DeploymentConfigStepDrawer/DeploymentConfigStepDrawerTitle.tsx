@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, Icon, Text, ButtonVariation, ButtonSize } from '@wings-software/uicore'
+import { Button, Icon, Text } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
@@ -18,11 +18,11 @@ export function DeploymentConfigStepDrawerTitle(props: {
   discardChanges: () => void
   applyChanges?: () => void
 }): JSX.Element {
-  const { stepsFactory, drawerData, isReadOnly, templateTypes } = useDeploymentContext()
+  const { stepsFactory, drawerData, isReadOnly, templateDetailsByRef } = useDeploymentContext()
   const stepNode = drawerData.data?.stepConfig?.node
   const stepType =
-    (stepNode as StepElementConfig)?.type || get(templateTypes, (stepNode as TemplateStepNode)?.template.templateRef)
-  const showApplyChangesBtn = drawerData.data?.drawerConfig?.shouldShowApplyChangesBtn
+    (stepNode as StepElementConfig)?.type ||
+    get(templateDetailsByRef, (stepNode as TemplateStepNode)?.template.templateRef)?.templateType
   const { getString } = useStrings()
   return (
     <div className={css.stepConfig}>
@@ -42,16 +42,6 @@ export function DeploymentConfigStepDrawerTitle(props: {
         </Text>
       </div>
       <div>
-        {showApplyChangesBtn && (
-          <Button
-            variation={ButtonVariation.SECONDARY}
-            size={ButtonSize.SMALL}
-            className={css.applyChanges}
-            text={getString('applyChanges')}
-            onClick={props.applyChanges}
-            disabled={isReadOnly}
-          />
-        )}
         <Button
           minimal
           className={css.discard}

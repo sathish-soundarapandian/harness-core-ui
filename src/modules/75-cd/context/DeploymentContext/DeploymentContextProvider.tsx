@@ -9,15 +9,15 @@ import React, { useCallback, useContext, useEffect, useState } from 'react'
 import get from 'lodash/get'
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { compact, isEmpty, map, merge } from 'lodash-es'
-import type { EntityGitDetails } from 'services/template-ng'
+import type { EntityGitDetails, TemplateSummaryResponse } from 'services/template-ng'
 import { sanitize } from '@common/utils/JSONUtils'
 import type { GetPipelineQueryParams, TemplateStepNode, StepElementConfig } from 'services/pipeline-ng'
-import { getTemplateTypesByRef } from '@pipeline/utils/templateUtils'
+import { getResolvedTemplateDetailsByRef } from '@pipeline/utils/templateUtils'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import type {
   DeploymentConfig,
-  DeploymentConfigExecutionStepWrapper
+  DeploymentConfigStepTemplateRefDetails
 } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
 
 export interface DrawerData {
@@ -46,11 +46,13 @@ export interface DeploymentConfigValues
   extends Omit<DeploymentContextProps, 'queryParams' | 'deploymentConfigInitialValues' | 'onDeploymentConfigUpdate'> {
   deploymentConfig: DeploymentConfig
   updateDeploymentConfig: (configValues: any) => Promise<void>
-  templateTypes: { [key: string]: string }
+  templateDetailsByRef: TemplateDetailsByRef
   allowableTypes: AllowedTypesWithRunTime[]
-  setTemplateTypes: (templateTypes: TemplateTypes) => void
+  setTemplateDetailsByRef: (_templateDetailsByRef: TemplateDetailsByRef) => void
   drawerData: DrawerData
   setDrawerData: (values: DrawerData) => void
+  selectedTemplateToView: TemplateSummaryResponse | undefined
+  setSelectedTemplateToView: (_templateToView: TemplateSummaryResponse | undefined) => void
 }
 const initialValues = {
   infrastructure: {
@@ -64,7 +66,7 @@ const initialValues = {
     instanceAttributes: [{ name: 'hostName', jsonPath: '', description: '' }]
   },
   execution: {
-    steps: []
+    stepTemplateRefs: []
   }
 }
 
@@ -79,15 +81,19 @@ const DeploymentContext = React.createContext<DeploymentConfigValues>({
   isReadOnly: false,
   allowableTypes: allowableTypes,
   gitDetails: {},
-  templateTypes: {},
+  templateDetailsByRef: {},
   updateDeploymentConfig: (_configValues: any) => new Promise<void>(() => undefined),
-  setTemplateTypes: (_templateTypes: TemplateTypes) => undefined,
+  setTemplateDetailsByRef: (_templateDetailsByRef: TemplateDetailsByRef) => undefined,
   drawerData: { type: DrawerTypes.AddStep },
   setDrawerData: (_values: DrawerData) => undefined,
-  stepsFactory: {} as AbstractStepFactory
+  stepsFactory: {} as AbstractStepFactory,
+  selectedTemplateToView: undefined,
+  setSelectedTemplateToView: (_templateToView: TemplateSummaryResponse | undefined) => undefined
 })
 
-export type TemplateTypes = { [p: string]: string }
+export type ResolvedTemplateDetails = { templateType: string; templateName: string }
+
+export type TemplateDetailsByRef = { [p: string]: ResolvedTemplateDetails }
 
 export function DeploymentContextProvider(props: React.PropsWithChildren<DeploymentContextProps>): React.ReactElement {
   const { onDeploymentConfigUpdate, deploymentConfigInitialValues, gitDetails, queryParams, stepsFactory, isReadOnly } =
@@ -97,8 +103,9 @@ export function DeploymentContextProvider(props: React.PropsWithChildren<Deploym
     deploymentConfigInitialValues || initialValues
   )
   const [drawerData, setDrawerData] = React.useState<DrawerData>({ type: DrawerTypes.AddStep })
+  const [selectedTemplateToView, setSelectedTemplateToView] = React.useState<TemplateSummaryResponse>()
 
-  const [templateTypes, setTemplateTypes] = useState<TemplateTypes>({})
+  const [templateDetailsByRef, setTemplateDetailsByRef] = useState<TemplateDetailsByRef>({})
 
   const handleConfigUpdate = useCallback(
     async (configValues: DeploymentConfig) => {
@@ -122,15 +129,15 @@ export function DeploymentContextProvider(props: React.PropsWithChildren<Deploym
   useEffect(() => {
     const allTemplateRefs = compact(
       map(
-        get(deploymentConfig, 'execution.steps'),
-        (executionStep: DeploymentConfigExecutionStepWrapper) => executionStep?.step?.template?.templateRef
+        get(deploymentConfig, 'execution.stepTemplateRefs'),
+        (stepTemplateRefObj: DeploymentConfigStepTemplateRefDetails) => stepTemplateRefObj.templateRef
       )
     ) as string[]
     const unresolvedTemplateRefs = allTemplateRefs.filter(templateRef => {
-      return isEmpty(get(templateTypes, templateRef))
+      return isEmpty(get(templateDetailsByRef, templateRef))
     })
     if (unresolvedTemplateRefs.length > 0) {
-      getTemplateTypesByRef(
+      getResolvedTemplateDetailsByRef(
         {
           accountIdentifier: queryParams.accountIdentifier,
           orgIdentifier: queryParams.orgIdentifier,
@@ -142,7 +149,7 @@ export function DeploymentContextProvider(props: React.PropsWithChildren<Deploym
         },
         unresolvedTemplateRefs
       ).then(resp => {
-        setTemplateTypes(merge({}, templateTypes, resp.templateTypes))
+        setTemplateDetailsByRef(merge({}, templateDetailsByRef, resp.templateDetailsByRef))
       })
     }
   }, [deploymentConfig])
@@ -154,12 +161,14 @@ export function DeploymentContextProvider(props: React.PropsWithChildren<Deploym
         deploymentConfig,
         isReadOnly,
         gitDetails,
-        templateTypes,
+        templateDetailsByRef,
         allowableTypes,
-        setTemplateTypes,
+        setTemplateDetailsByRef,
         drawerData,
         setDrawerData,
-        stepsFactory
+        stepsFactory,
+        selectedTemplateToView,
+        setSelectedTemplateToView
       }}
     >
       {props.children}
