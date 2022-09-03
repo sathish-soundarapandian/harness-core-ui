@@ -6,34 +6,38 @@
  */
 
 import produce from 'immer'
-import { clone, set } from 'lodash-es'
-import type { TemplateStepNode } from 'services/pipeline-ng'
+import { set } from 'lodash-es'
 import type {
   DeploymentConfig,
-  DeploymentConfigExecutionStepWrapper
+  DeploymentConfigStepTemplateRefDetails
 } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
+import type {
+  ResolvedTemplateDetails,
+  TemplateDetailsByRef
+} from '@cd/context/DeploymentContext/DeploymentContextProvider'
 
 interface Params {
-  processNode: TemplateStepNode
+  templateRefObj: DeploymentConfigStepTemplateRefDetails
   deploymentConfig: DeploymentConfig
-  isNewStep?: boolean
 }
 
-export const getUpdatedDeploymentConfig = ({ processNode, deploymentConfig, isNewStep }: Params) =>
+export const getUpdatedDeploymentConfig = ({ templateRefObj, deploymentConfig }: Params) =>
   produce(deploymentConfig, draft => {
-    const executionSteps = deploymentConfig?.execution?.steps || []
-    const updatedExecutionSteps = clone(executionSteps)
-    const newStepDetailsToAdd: DeploymentConfigExecutionStepWrapper = { step: processNode }
+    const stepTemplateRefs = deploymentConfig?.execution?.stepTemplateRefs || []
+    const updatedStepTemplateRefs = [...stepTemplateRefs, templateRefObj]
 
-    if (isNewStep) {
-      updatedExecutionSteps.push(newStepDetailsToAdd)
-    } else {
-      updatedExecutionSteps.forEach(executionStep => {
-        if (executionStep.step.identifier === newStepDetailsToAdd.step.identifier) {
-          executionStep.step = newStepDetailsToAdd.step
-        }
-      })
-    }
+    set(draft, 'execution.stepTemplateRefs', updatedStepTemplateRefs)
+  })
 
-    set(draft, 'execution.steps', updatedExecutionSteps)
+export const getUpdatedTemplateDetailsByRef = ({
+  templateDetailsObj,
+  templateDetailsByRef,
+  templateRef
+}: {
+  templateDetailsObj: ResolvedTemplateDetails
+  templateDetailsByRef: TemplateDetailsByRef
+  templateRef: string
+}) =>
+  produce(templateDetailsByRef, draft => {
+    set(draft, templateRef, templateDetailsObj)
   })

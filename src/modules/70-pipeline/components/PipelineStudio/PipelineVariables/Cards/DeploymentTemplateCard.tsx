@@ -26,21 +26,9 @@ import { VariableType } from '@pipeline/components/PipelineSteps/Steps/CustomVar
 import { useStrings } from 'framework/strings'
 import type { StoreConfigWrapper } from 'services/cd-ng'
 import VariableAccordionSummary from '../VariableAccordionSummary'
-import type {
-  DeploymentConfigExecutionStepWrapper,
-  DeploymentInfra,
-  DeploymentTemplateConfig,
-  PipelineVariablesData
-} from '../types'
+import type { DeploymentInfra, DeploymentTemplateConfig, PipelineVariablesData } from '../types'
 import css from '../PipelineVariables.module.scss'
 import moduleCss from './DeploymentTemplateCard.module.scss'
-
-export interface DeploymentConfig {
-  infrastructure: DeploymentInfra
-  execution: {
-    steps: DeploymentConfigExecutionStepWrapper[]
-  }
-}
 
 export interface DeploymentTemplateCardProps {
   deploymentTemplate: DeploymentTemplateConfig
