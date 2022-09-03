@@ -7,25 +7,26 @@
 
 import React from 'react'
 import { Classes, Icon, PopoverInteractionKind, Position } from '@blueprintjs/core'
-import produce from 'immer'
-import { filter, get, map, set, isEmpty } from 'lodash-es'
+import { get, map, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Button, ButtonVariation, Container, Layout, Popover, Text } from '@wings-software/uicore'
 import { Color } from '@wings-software/design-system'
 import { useStrings } from 'framework/strings'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
-import { StepCategory, useGetStepsV2, TemplateStepNode } from 'services/pipeline-ng'
+import type { DeploymentConfigStepTemplateRefDetails } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
+import { StepCategory, useGetStepsV2 } from 'services/pipeline-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useMutateAsGet } from '@common/hooks'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import CardWithOuterTitle from '@pipeline/components/CardWithOuterTitle/CardWithOuterTitle'
-import { generateRandomString } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
-import { getUpdatedDeploymentConfig } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/components/ExecutionPanel/ExecutionPanelUtils'
+import {
+  getUpdatedDeploymentConfig,
+  getUpdatedTemplateDetailsByRef
+} from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/components/ExecutionPanel/ExecutionPanelUtils'
 import { StepTemplateCard } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/components/StepTemplateCard/StepTemplateCard'
-import { createTemplate } from '@pipeline/utils/templateUtils'
+import { getScopeBasedTemplateRef } from '@pipeline/utils/templateUtils'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
-import type { DeploymentConfigExecutionStepWrapper } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
 import css from './ExecutionPanel.module.scss'
 
 function AddStep({ onAddStepClick }: { onAddStepClick: () => void }) {
@@ -71,8 +72,19 @@ const getStepTypesFromCategories = (stepCategories: StepCategory[]): string[] =>
 }
 
 export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
-  const { deploymentConfig, updateDeploymentConfig, setDrawerData, isReadOnly } = useDeploymentContext()
-  const executionSteps = get(deploymentConfig, 'execution.steps', []) as DeploymentConfigExecutionStepWrapper[]
+  const {
+    deploymentConfig,
+    updateDeploymentConfig,
+    setDrawerData,
+    isReadOnly,
+    templateDetailsByRef,
+    setTemplateDetailsByRef
+  } = useDeploymentContext()
+  const stepTemplateRefs = get(
+    deploymentConfig,
+    'execution.stepTemplateRefs',
+    []
+  ) as DeploymentConfigStepTemplateRefDetails[]
 
   const { getTemplate } = useTemplateSelector()
   const { accountId } = useParams<ProjectPathProps>()
@@ -111,63 +123,34 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
   const onUseTemplate = async (): Promise<void> => {
     try {
       const { template } = await getTemplate({ templateType: 'Step', allChildTypes })
-      const processNode = createTemplate(
-        { name: '', identifier: generateRandomString('') },
-        template
-      ) as TemplateStepNode
+      const templateRef = getScopeBasedTemplateRef(template)
 
-      const updatedDeploymentConfig = getUpdatedDeploymentConfig({ processNode, deploymentConfig, isNewStep: true })
+      const templateRefObj = {
+        templateRef,
+        versionLabel: template.versionLabel as string
+      }
+
+      const updatedDeploymentConfig = getUpdatedDeploymentConfig({ templateRefObj, deploymentConfig })
+      const updatedTemplateDetailsByRef = getUpdatedTemplateDetailsByRef({
+        templateDetailsObj: { templateType: template.childType as string, templateName: template.name as string },
+        templateRef,
+        templateDetailsByRef
+      })
+
+      setTemplateDetailsByRef(updatedTemplateDetailsByRef)
       updateDeploymentConfig(updatedDeploymentConfig)
       setDrawerData({
-        type: DrawerTypes.StepConfig,
-        data: {
-          stepConfig: {
-            node: processNode
-          },
-          drawerConfig: {
-            shouldShowApplyChangesBtn: true
-          },
-          isDrawerOpen: true
-        }
+        type: DrawerTypes.AddStep
       })
     } catch (_) {
       // Do nothing.. user cancelled template selection
     }
   }
 
-  const onStepTemplateCardViewClick = (stepNode: TemplateStepNode) => {
-    setDrawerData({
-      type: DrawerTypes.StepConfig,
-      data: {
-        stepConfig: {
-          node: stepNode
-        },
-        drawerConfig: {
-          shouldShowApplyChangesBtn: true
-        },
-        isDrawerOpen: true
-      }
-    })
-  }
-
-  const handleStepTemplateCardRemove = (stepNode: TemplateStepNode) => {
-    const updatedDeploymentConfig = produce(deploymentConfig, draft => {
-      const updatedExecutionSteps = filter(executionSteps, (executionStep: DeploymentConfigExecutionStepWrapper) => {
-        return executionStep.step.identifier !== stepNode.identifier
-      })
-      set(draft, 'execution.steps', updatedExecutionSteps)
-    })
-    updateDeploymentConfig(updatedDeploymentConfig)
-  }
-
   const renderLinkedStepTemplates = () =>
-    map(executionSteps, (executionStepObj: DeploymentConfigExecutionStepWrapper) => {
-      return !isEmpty(executionStepObj?.step) ? (
-        <StepTemplateCard
-          stepNode={executionStepObj.step}
-          onRemoveClick={handleStepTemplateCardRemove}
-          onCardClick={onStepTemplateCardViewClick}
-        />
+    map(stepTemplateRefs, (stepTemplateRefObj: DeploymentConfigStepTemplateRefDetails, stepTemplateIndex: number) => {
+      return !isEmpty(stepTemplateRefObj) ? (
+        <StepTemplateCard stepTemplateRefObj={stepTemplateRefObj} stepTemplateIndex={stepTemplateIndex} />
       ) : null
     })
 

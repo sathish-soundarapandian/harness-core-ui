@@ -212,7 +212,7 @@ exports[`Custom Variables can delete variable: After Delete 1`] = `
     class="customVariablesStage"
   >
     <div
-      class="tableRow headerRow"
+      class="tableRow headerRow variablesTableRow"
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -231,7 +231,7 @@ exports[`Custom Variables can delete variable: After Delete 1`] = `
       </p>
     </div>
     <div
-      class="tableRow"
+      class="tableRow variablesTableRow"
     >
       <div
         class="textInputWithCopyBtn disabled"
@@ -441,7 +441,7 @@ exports[`Custom Variables can delete variable: After Delete 1`] = `
       </div>
     </div>
     <div
-      class="tableRow"
+      class="tableRow variablesTableRow"
     >
       <div
         class="textInputWithCopyBtn disabled"
@@ -689,7 +689,7 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
     class="customVariablesStage"
   >
     <div
-      class="tableRow headerRow"
+      class="tableRow headerRow variablesTableRow"
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -708,7 +708,7 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
       </p>
     </div>
     <div
-      class="tableRow"
+      class="tableRow variablesTableRow"
     >
       <div
         class="textInputWithCopyBtn disabled"
@@ -918,7 +918,7 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
       </div>
     </div>
     <div
-      class="tableRow"
+      class="tableRow variablesTableRow"
     >
       <div
         class="textInputWithCopyBtn disabled"
@@ -1128,7 +1128,7 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
       </div>
     </div>
     <div
-      class="tableRow"
+      class="tableRow variablesTableRow"
     >
       <div
         class="textInputWithCopyBtn disabled"
@@ -1465,7 +1465,7 @@ exports[`Custom Variables should render variables 1`] = `
     class="customVariablesStage"
   >
     <div
-      class="tableRow headerRow"
+      class="tableRow headerRow variablesTableRow"
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -1484,7 +1484,7 @@ exports[`Custom Variables should render variables 1`] = `
       </p>
     </div>
     <div
-      class="tableRow"
+      class="tableRow variablesTableRow"
     >
       <div
         class="textInputWithCopyBtn disabled"
@@ -1694,7 +1694,7 @@ exports[`Custom Variables should render variables 1`] = `
       </div>
     </div>
     <div
-      class="tableRow"
+      class="tableRow variablesTableRow"
     >
       <div
         class="textInputWithCopyBtn disabled"
@@ -1904,7 +1904,7 @@ exports[`Custom Variables should render variables 1`] = `
       </div>
     </div>
     <div
-      class="tableRow"
+      class="tableRow variablesTableRow"
     >
       <div
         class="textInputWithCopyBtn disabled"

@@ -11,13 +11,16 @@ import { Intent } from '@blueprintjs/core'
 import { defaultTo, set } from 'lodash-es'
 import produce from 'immer'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
-import { createTemplate } from '@pipeline/utils/templateUtils'
+import { getScopeBasedTemplateRef } from '@pipeline/utils/templateUtils'
 import { useGlobalEventListener } from '@common/hooks'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { useStrings } from 'framework/strings'
-import { getUpdatedDeploymentConfig } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/components/ExecutionPanel/ExecutionPanelUtils'
-import type { TemplateStepNode } from 'services/pipeline-ng'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
+import { TemplateDetailsDrawer } from '@templates-library/components/TemplateDetailDrawer/TemplateDetailDrawer'
+import {
+  getUpdatedDeploymentConfig,
+  getUpdatedTemplateDetailsByRef
+} from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/components/ExecutionPanel/ExecutionPanelUtils'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
 import { DeploymentConfigStepDrawer } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/components/DeploymentConfigStepDrawer/DeploymentConfigStepDrawer'
 import { DeploymentConfigFormWithRef } from './DeploymentTemplateForm/DeploymentConfigForm'
@@ -25,17 +28,37 @@ import { DeploymentConfigFormWithRef } from './DeploymentTemplateForm/Deployment
 function useSaveStepTemplateListener(): void {
   const [savedTemplate, setSavedTemplate] = React.useState<TemplateSummaryResponse>()
   const { getString } = useStrings()
-  const { drawerData, setDrawerData, deploymentConfig, updateDeploymentConfig } = useDeploymentContext()
+  const {
+    drawerData,
+    setDrawerData,
+    deploymentConfig,
+    updateDeploymentConfig,
+    templateDetailsByRef,
+    setTemplateDetailsByRef
+  } = useDeploymentContext()
 
   const updateViewForSavedStepTemplate = async (): Promise<void> => {
-    const processNode = createTemplate(drawerData.data?.stepConfig?.node, savedTemplate) as TemplateStepNode
-    const updatedDeploymentConfig = getUpdatedDeploymentConfig({ processNode, deploymentConfig, isNewStep: true })
-    const updatedDrawerData = produce(drawerData, draft => {
-      set(draft, 'type', DrawerTypes.StepConfig)
-      set(draft, 'data.stepConfig.node', processNode)
-      set(draft, 'data.drawerConfig.shouldShowApplyChangesBtn', true)
-      set(draft, 'data.isDrawerOpen', true)
+    const templateRef = getScopeBasedTemplateRef(savedTemplate as TemplateSummaryResponse)
+    const templateRefObj = {
+      templateRef,
+      versionLabel: savedTemplate?.versionLabel as string
+    }
+
+    const updatedDeploymentConfig = getUpdatedDeploymentConfig({ templateRefObj, deploymentConfig })
+    const updatedTemplateDetailsByRef = getUpdatedTemplateDetailsByRef({
+      templateDetailsObj: {
+        templateType: savedTemplate?.childType as string,
+        templateName: savedTemplate?.name as string
+      },
+      templateDetailsByRef,
+      templateRef
     })
+
+    const updatedDrawerData = produce(drawerData, draft => {
+      set(draft, 'type', DrawerTypes.AddStep)
+      set(draft, 'data.isDrawerOpen', false)
+    })
+    setTemplateDetailsByRef(updatedTemplateDetailsByRef)
     updateDeploymentConfig(updatedDeploymentConfig)
     setDrawerData(updatedDrawerData)
   }
@@ -69,12 +92,21 @@ function useSaveStepTemplateListener(): void {
 
 export const DeploymentConfigCanvasWithRef = React.forwardRef(
   (_props: unknown, formikRef: TemplateFormRef): JSX.Element => {
+    const { selectedTemplateToView, setSelectedTemplateToView } = useDeploymentContext()
     useSaveStepTemplateListener()
 
     return (
       <>
         <DeploymentConfigFormWithRef ref={formikRef} />
         <DeploymentConfigStepDrawer />
+        {selectedTemplateToView && (
+          <TemplateDetailsDrawer
+            template={selectedTemplateToView}
+            onClose={() => {
+              setSelectedTemplateToView(undefined)
+            }}
+          />
+        )}
       </>
     )
   }

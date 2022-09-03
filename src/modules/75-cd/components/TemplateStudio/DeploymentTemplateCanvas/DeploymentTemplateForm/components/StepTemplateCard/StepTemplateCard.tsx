@@ -6,46 +6,81 @@
  */
 
 import React from 'react'
-import { get, isNil, defaultTo } from 'lodash-es'
+import { get, isNil, defaultTo, set } from 'lodash-es'
+import produce from 'immer'
 import { Button, ButtonVariation, Card, Icon, Layout, Text, useConfirmationDialog } from '@wings-software/uicore'
+import { useParams } from 'react-router-dom'
 import { Color } from '@wings-software/design-system'
 import cx from 'classnames'
 import { Intent } from '@blueprintjs/core'
-import type { TemplateStepNode } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/exports'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
+import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
+import type { DeploymentConfigStepTemplateRefDetails } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
 import css from './StepTemplateCard.module.scss'
 
 interface StepTemplateCardProps {
-  stepNode: TemplateStepNode
+  stepTemplateRefObj: DeploymentConfigStepTemplateRefDetails
   className?: string
-  onRemoveClick: (_stepNode: TemplateStepNode) => void
-  onCardClick: (_stepNode: TemplateStepNode) => void
+  stepTemplateIndex: number
 }
 
 export function StepTemplateCard(props: StepTemplateCardProps): React.ReactElement | null {
-  const { templateTypes, stepsFactory, isReadOnly } = useDeploymentContext()
-  const { stepNode, className, onRemoveClick, onCardClick } = props
-  const { name, identifier, template } = stepNode || {}
-  const step = stepsFactory.getStep(get(templateTypes, template.templateRef))
+  const {
+    state: { gitDetails }
+  } = React.useContext(TemplateContext)
+  const {
+    templateDetailsByRef,
+    stepsFactory,
+    isReadOnly,
+    deploymentConfig,
+    updateDeploymentConfig,
+    setSelectedTemplateToView
+  } = useDeploymentContext()
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const { stepTemplateRefObj, className, stepTemplateIndex } = props
+  const { templateRef, versionLabel } = stepTemplateRefObj
+  const templateDetails = get(templateDetailsByRef, templateRef)
+  const { templateType, templateName } = templateDetails || {}
+  const step = stepsFactory.getStep(templateType)
   const { getString } = useStrings()
   const { showSuccess } = useToaster()
 
   const handleCardClick = React.useCallback(() => {
-    onCardClick?.(stepNode)
-  }, [onCardClick, stepNode])
+    setSelectedTemplateToView({
+      identifier: getIdentifierFromValue(templateRef),
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      versionLabel,
+      gitDetails
+    })
+  }, [])
+
+  const handleCardRemove = () => {
+    const updatedDeploymentConfig = produce(deploymentConfig, draft => {
+      const stepTemplateRefs = deploymentConfig?.execution?.stepTemplateRefs || []
+      const updatedStepTemplateRefs = stepTemplateRefs.filter((_, index: number) => index !== stepTemplateIndex)
+
+      set(draft, 'execution.stepTemplateRefs', updatedStepTemplateRefs)
+    })
+
+    updateDeploymentConfig(updatedDeploymentConfig)
+  }
 
   const { openDialog: openRemoveStepTemplateDialog } = useConfirmationDialog({
     intent: Intent.DANGER,
     cancelButtonText: getString('no'),
-    contentText: getString('cd.removeStepTemplateConfirmationLabel', { name: name }),
+    contentText: getString('cd.removeStepTemplateConfirmationLabel'),
     titleText: getString('cd.removeStepTemplate'),
     confirmButtonText: getString('yes'),
     buttonIntent: Intent.DANGER,
     onCloseDialog: isConfirmed => {
       if (isConfirmed) {
-        onRemoveClick?.(stepNode)
+        handleCardRemove()
         showSuccess(getString('cd.removeStepTemplateSuccess'))
       }
     }
@@ -65,11 +100,10 @@ export function StepTemplateCard(props: StepTemplateCardProps): React.ReactEleme
         interactive={!isNil(step)}
         selected={false}
         className={cx(css.paletteCard, className)}
-        data-testid={`step-card-${identifier}`}
+        data-testid={`step-card-${templateRef}-${stepTemplateIndex}`}
         onClick={handleCardClick}
       >
         <Icon size={10} name="template-library" className={css.templateLibraryIcon} />
-        {!name && <Icon name="warning-sign" intent={Intent.WARNING} size={10} className={css.warningIcon} />}
         {!isReadOnly && (
           <Button
             className={css.closeNode}
@@ -86,7 +120,7 @@ export function StepTemplateCard(props: StepTemplateCardProps): React.ReactEleme
         ) : null}
       </Card>
       <Text lineClamp={1} className={css.stepTemplateCardText} width={64} font="small" color={Color.GREY_600}>
-        {name}
+        {templateName || templateRef}
       </Text>
     </Layout.Vertical>
   )
