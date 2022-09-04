@@ -192,14 +192,15 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                     </Button>
                   </div>
                 ) : /* istanbul ignore next */ null}
-                {headerComponent ? (
-                  headerComponent
-                ) : props.showHeaders && values.variables.length > 0 ? (
-                  <section className={css.subHeader}>
-                    <String stringID="variableLabel" />
-                    <String stringID="valueLabel" />
-                  </section>
-                ) : /* istanbul ignore next */ null}
+                {headerComponent
+                  ? headerComponent
+                  : props.showHeaders &&
+                    values.variables.length > 0 && (
+                      <section className={css.subHeader}>
+                        <String stringID="variableLabel" />
+                        <String stringID="valueLabel" />
+                      </section>
+                    )}
                 {values.variables.map?.((variable, index) => {
                   // generated uuid if they are not present
                   if (!uids.current[index]) {
