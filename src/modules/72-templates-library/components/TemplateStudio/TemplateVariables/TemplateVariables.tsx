@@ -74,109 +74,111 @@ const TemplateVariables: React.FC = (): JSX.Element => {
     <div className={css.pipelineVariables}>
       {error ? (
         <PageError message={(error?.data as Error)?.message || error?.message} />
-      ) : !isEmpty(variablesTemplate) ? (
-        <div className={css.content}>
-          <VariablesHeader enableSearch={false} applyChanges={applyChanges} discardChanges={discardChanges} />
-          <div className={css.variableList}>
-            <GitSyncStoreProvider>
-              {originalTemplate.type === TemplateType.Pipeline && (
-                <PipelineCardPanel
-                  variablePipeline={variablesTemplate as PipelineInfoConfig}
-                  pipeline={template.spec as PipelineInfoConfig}
-                  originalPipeline={originalTemplate.spec as PipelineInfoConfig}
-                  metadataMap={metadataMap}
-                  allowableTypes={allowableTypes}
-                  stepsFactory={factory}
-                  updatePipeline={onUpdate}
-                />
-              )}
-              {originalTemplate.type === TemplateType.Stage && (
-                <StageCard
-                  stage={variablesTemplate as StageElementConfig}
-                  unresolvedStage={{ ...template.spec, identifier: DefaultNewStageId } as StageElementConfig}
-                  originalStage={{ ...originalTemplate.spec, identifier: DefaultNewStageId } as StageElementConfig}
-                  metadataMap={metadataMap}
-                  path="template"
-                  allowableTypes={allowableTypes}
-                  stepsFactory={factory}
-                  updateStage={onUpdate}
-                />
-              )}
-              {originalTemplate.type === TemplateType.Step && (
-                <StepCardPanel
-                  step={variablesTemplate as StepElementConfig}
-                  originalStep={originalTemplate.spec as StepElementConfig}
-                  metadataMap={metadataMap}
-                  readonly={true}
-                  stepPath="template"
-                  allowableTypes={allowableTypes}
-                  stageIdentifier={DefaultNewStageId}
-                  onUpdateStep={onUpdate}
-                  stepsFactory={factory}
-                />
-              )}
-              {originalTemplate.type === TemplateType.SecretManager && (
-                <SecretManagerCard
-                  secretManager={variablesTemplate as any}
-                  unresolvedSecretManager={{ ...template.spec, identifier: DefaultNewStageId } as any}
-                  originalSecretManager={
-                    {
-                      ...originalTemplate.spec,
-                      identifier: DefaultNewStageId
-                    } as any
-                  }
-                  metadataMap={metadataMap}
-                  readonly={true}
-                  path="template"
-                  allowableTypes={allowableTypes}
-                  updateSceretManager={onUpdate}
-                  stepsFactory={factory}
-                />
-              )}
-              {originalTemplate.type === TemplateType.MonitoredService && (
-                <MonitoredServiceCard
-                  monitoredService={variablesTemplate as MonitoredServiceConfig}
-                  unresolvedMonitoredService={
-                    { ...template.spec, identifier: DefaultNewStageId } as MonitoredServiceConfig
-                  }
-                  originalMonitoredService={
-                    {
-                      ...originalTemplate.spec,
-                      spec: { env: {} },
-                      identifier: DefaultNewStageId
-                    } as MonitoredServiceConfig
-                  }
-                  metadataMap={metadataMap}
-                  path="template"
-                  allowableTypes={allowableTypes}
-                  stepsFactory={factory}
-                  updateMonitoredService={onUpdate}
-                />
-              )}
-              {originalTemplate.type === TemplateType.CustomDeployment && (
-                <DeploymentTemplateCard
-                  deploymentTemplate={variablesTemplate as DeploymentTemplateConfig}
-                  unresolvedDeploymentTemplate={
-                    { ...template.spec, identifier: DefaultNewStageId } as DeploymentTemplateConfig
-                  }
-                  originalDeploymentTemplate={
-                    {
-                      ...originalTemplate.spec,
+      ) : (
+        !isEmpty(variablesTemplate) && (
+          <div className={css.content}>
+            <VariablesHeader enableSearch={false} applyChanges={applyChanges} discardChanges={discardChanges} />
+            <div className={css.variableList}>
+              <GitSyncStoreProvider>
+                {originalTemplate.type === TemplateType.Pipeline && (
+                  <PipelineCardPanel
+                    variablePipeline={variablesTemplate as PipelineInfoConfig}
+                    pipeline={template.spec as PipelineInfoConfig}
+                    originalPipeline={originalTemplate.spec as PipelineInfoConfig}
+                    metadataMap={metadataMap}
+                    allowableTypes={allowableTypes}
+                    stepsFactory={factory}
+                    updatePipeline={onUpdate}
+                  />
+                )}
+                {originalTemplate.type === TemplateType.Stage && (
+                  <StageCard
+                    stage={variablesTemplate as StageElementConfig}
+                    unresolvedStage={{ ...template.spec, identifier: DefaultNewStageId } as StageElementConfig}
+                    originalStage={{ ...originalTemplate.spec, identifier: DefaultNewStageId } as StageElementConfig}
+                    metadataMap={metadataMap}
+                    path="template"
+                    allowableTypes={allowableTypes}
+                    stepsFactory={factory}
+                    updateStage={onUpdate}
+                  />
+                )}
+                {originalTemplate.type === TemplateType.Step && (
+                  <StepCardPanel
+                    step={variablesTemplate as StepElementConfig}
+                    originalStep={originalTemplate.spec as StepElementConfig}
+                    metadataMap={metadataMap}
+                    readonly={true}
+                    stepPath="template"
+                    allowableTypes={allowableTypes}
+                    stageIdentifier={DefaultNewStageId}
+                    onUpdateStep={onUpdate}
+                    stepsFactory={factory}
+                  />
+                )}
+                {originalTemplate.type === TemplateType.SecretManager && (
+                  <SecretManagerCard
+                    secretManager={variablesTemplate as any}
+                    unresolvedSecretManager={{ ...template.spec, identifier: DefaultNewStageId } as any}
+                    originalSecretManager={
+                      {
+                        ...originalTemplate.spec,
+                        identifier: DefaultNewStageId
+                      } as any
+                    }
+                    metadataMap={metadataMap}
+                    readonly={true}
+                    path="template"
+                    allowableTypes={allowableTypes}
+                    updateSceretManager={onUpdate}
+                    stepsFactory={factory}
+                  />
+                )}
+                {originalTemplate.type === TemplateType.MonitoredService && (
+                  <MonitoredServiceCard
+                    monitoredService={variablesTemplate as MonitoredServiceConfig}
+                    unresolvedMonitoredService={
+                      { ...template.spec, identifier: DefaultNewStageId } as MonitoredServiceConfig
+                    }
+                    originalMonitoredService={
+                      {
+                        ...originalTemplate.spec,
+                        spec: { env: {} },
+                        identifier: DefaultNewStageId
+                      } as MonitoredServiceConfig
+                    }
+                    metadataMap={metadataMap}
+                    path="template"
+                    allowableTypes={allowableTypes}
+                    stepsFactory={factory}
+                    updateMonitoredService={onUpdate}
+                  />
+                )}
+                {originalTemplate.type === TemplateType.CustomDeployment && (
+                  <DeploymentTemplateCard
+                    deploymentTemplate={variablesTemplate as DeploymentTemplateConfig}
+                    unresolvedDeploymentTemplate={
+                      { ...template.spec, identifier: DefaultNewStageId } as DeploymentTemplateConfig
+                    }
+                    originalDeploymentTemplate={
+                      {
+                        ...originalTemplate.spec,
 
-                      identifier: DefaultNewStageId
-                    } as DeploymentTemplateConfig
-                  }
-                  metadataMap={metadataMap}
-                  path="template"
-                  allowableTypes={allowableTypes}
-                  stepsFactory={factory}
-                  updateDeploymentTemplate={onUpdate}
-                />
-              )}
-            </GitSyncStoreProvider>
+                        identifier: DefaultNewStageId
+                      } as DeploymentTemplateConfig
+                    }
+                    metadataMap={metadataMap}
+                    path="template"
+                    allowableTypes={allowableTypes}
+                    stepsFactory={factory}
+                    updateDeploymentTemplate={onUpdate}
+                  />
+                )}
+              </GitSyncStoreProvider>
+            </div>
           </div>
-        </div>
-      ) : null}
+        )
+      )}
     </div>
   )
 }
