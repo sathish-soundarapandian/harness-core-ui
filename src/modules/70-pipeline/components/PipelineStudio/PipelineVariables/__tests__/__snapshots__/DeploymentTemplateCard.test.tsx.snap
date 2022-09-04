@@ -1,0 +1,521 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DeploymentTemplateCard test renders init 1`] = `
+<div>
+  <div
+    class="Accordion--panel"
+    data-open="false"
+    data-testid="undefined.stage_name-panel"
+    id="undefined.stage_name-panel"
+  >
+    <div
+      class="Accordion--summary stageSummary"
+      data-testid="undefined.stage_name-summary"
+    >
+      <div
+        class=""
+      >
+        <div
+          class="accordionSummary"
+        >
+          <span
+            class="bp3-icon StyledProps--main iconCollapsed"
+            data-icon="accordion-collapsed"
+          >
+            <svg
+              fill="none"
+              height="12"
+              viewBox="0 0 12 12"
+              width="12"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                fill="#F3F3FA"
+                height="11.5"
+                rx="0.75"
+                stroke="#9293AB"
+                stroke-width="0.5"
+                width="11.5"
+                x="0.25"
+                y="0.25"
+              />
+              <path
+                d="M10 6.571H6.571V10H5.43V6.571H2V5.43h3.429V2H6.57v3.429H10V6.57z"
+                fill="#0A3364"
+                opacity="0.7"
+              />
+            </svg>
+          </span>
+          <span
+            class="bp3-icon StyledProps--main iconExpanded"
+            data-icon="accordion-expanded"
+          >
+            <svg
+              fill="none"
+              height="12"
+              viewBox="0 0 12 11"
+              width="12"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                fill="#F3F3FA"
+                height="10.5"
+                rx="0.75"
+                stroke="#9293AB"
+                stroke-width="0.5"
+                width="11.5"
+                x="0.25"
+                y="0.25"
+              />
+              <path
+                d="M10 6.143H2V5h8v1.143z"
+                fill="#0A3364"
+                opacity="0.7"
+              />
+            </svg>
+          </span>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--color StyledProps--color-black"
+            >
+              Deployment Template
+            </p>
+          </p>
+        </div>
+      </div>
+      <div
+        class="Accordion--chevron"
+      />
+    </div>
+    <div
+      class="bp3-collapse Accordion--collapse"
+    >
+      <div
+        aria-hidden="true"
+        class="bp3-collapse-body"
+        style="transform: translateY(-undefinedpx);"
+      >
+        <div
+          class="Accordion--details"
+          data-testid="undefined.stage_name-details"
+        >
+          <div
+            class="variableCard"
+          >
+            <div
+              class="variablesListTable variablePaddingL0 variablesWithDescription"
+            >
+              <div
+                class="variableListRow variable-list-row"
+              >
+                <span
+                  class="nameSection"
+                >
+                  instancesListPath
+                </span>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
+                  style="--text-line-clamp: 1;"
+                >
+                  <span
+                    class=""
+                  >
+                    &lt;+input&gt;
+                  </span>
+                </p>
+              </div>
+            </div>
+            <div
+              class="variablesListTable variablePaddingL0 variablesWithDescription"
+            >
+              <div
+                class="variableListRow variable-list-row"
+              >
+                <span
+                  class="nameSection"
+                >
+                  content
+                </span>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
+                  style="--text-line-clamp: 1;"
+                >
+                  <span
+                    class=""
+                  >
+                    echo test
+                  </span>
+                </p>
+              </div>
+            </div>
+            <div
+              class="Accordion--panel"
+              data-open="false"
+              data-testid="undefined.stage_name.infrastructure.variables-panel"
+              id="undefined.stage_name.infrastructure.variables-panel"
+            >
+              <div
+                class="Accordion--summary"
+                data-testid="undefined.stage_name.infrastructure.variables-summary"
+              >
+                <div
+                  class=""
+                >
+                  <div
+                    class="accordionSummary"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main iconCollapsed"
+                      data-icon="accordion-collapsed"
+                    >
+                      <svg
+                        fill="none"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        width="12"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <rect
+                          fill="#F3F3FA"
+                          height="11.5"
+                          rx="0.75"
+                          stroke="#9293AB"
+                          stroke-width="0.5"
+                          width="11.5"
+                          x="0.25"
+                          y="0.25"
+                        />
+                        <path
+                          d="M10 6.571H6.571V10H5.43V6.571H2V5.43h3.429V2H6.57v3.429H10V6.57z"
+                          fill="#0A3364"
+                          opacity="0.7"
+                        />
+                      </svg>
+                    </span>
+                    <span
+                      class="bp3-icon StyledProps--main iconExpanded"
+                      data-icon="accordion-expanded"
+                    >
+                      <svg
+                        fill="none"
+                        height="12"
+                        viewBox="0 0 12 11"
+                        width="12"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <rect
+                          fill="#F3F3FA"
+                          height="10.5"
+                          rx="0.75"
+                          stroke="#9293AB"
+                          stroke-width="0.5"
+                          width="11.5"
+                          x="0.25"
+                          y="0.25"
+                        />
+                        <path
+                          d="M10 6.143H2V5h8v1.143z"
+                          fill="#0A3364"
+                          opacity="0.7"
+                        />
+                      </svg>
+                    </span>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-black"
+                      >
+                        Infrastructure Variables
+                      </p>
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="Accordion--chevron"
+                />
+              </div>
+              <div
+                class="bp3-collapse Accordion--collapse"
+              >
+                <div
+                  aria-hidden="true"
+                  class="bp3-collapse-body"
+                  style="transform: translateY(-undefinedpx);"
+                >
+                  <div
+                    class="Accordion--details"
+                    data-testid="undefined.stage_name.infrastructure.variables-details"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`DeploymentTemplateCard test renders when name is not set 1`] = `
+<div>
+  <div
+    class="Accordion--panel"
+    data-open="false"
+    data-testid="undefined.stage_name-panel"
+    id="undefined.stage_name-panel"
+  >
+    <div
+      class="Accordion--summary stageSummary"
+      data-testid="undefined.stage_name-summary"
+    >
+      <div
+        class=""
+      >
+        <div
+          class="accordionSummary"
+        >
+          <span
+            class="bp3-icon StyledProps--main iconCollapsed"
+            data-icon="accordion-collapsed"
+          >
+            <svg
+              fill="none"
+              height="12"
+              viewBox="0 0 12 12"
+              width="12"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                fill="#F3F3FA"
+                height="11.5"
+                rx="0.75"
+                stroke="#9293AB"
+                stroke-width="0.5"
+                width="11.5"
+                x="0.25"
+                y="0.25"
+              />
+              <path
+                d="M10 6.571H6.571V10H5.43V6.571H2V5.43h3.429V2H6.57v3.429H10V6.57z"
+                fill="#0A3364"
+                opacity="0.7"
+              />
+            </svg>
+          </span>
+          <span
+            class="bp3-icon StyledProps--main iconExpanded"
+            data-icon="accordion-expanded"
+          >
+            <svg
+              fill="none"
+              height="12"
+              viewBox="0 0 12 11"
+              width="12"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                fill="#F3F3FA"
+                height="10.5"
+                rx="0.75"
+                stroke="#9293AB"
+                stroke-width="0.5"
+                width="11.5"
+                x="0.25"
+                y="0.25"
+              />
+              <path
+                d="M10 6.143H2V5h8v1.143z"
+                fill="#0A3364"
+                opacity="0.7"
+              />
+            </svg>
+          </span>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--color StyledProps--color-black"
+            >
+              Deployment Template: Deployment Template Name
+            </p>
+          </p>
+        </div>
+      </div>
+      <div
+        class="Accordion--chevron"
+      />
+    </div>
+    <div
+      class="bp3-collapse Accordion--collapse"
+    >
+      <div
+        aria-hidden="true"
+        class="bp3-collapse-body"
+        style="transform: translateY(-undefinedpx);"
+      >
+        <div
+          class="Accordion--details"
+          data-testid="undefined.stage_name-details"
+        >
+          <div
+            class="variableCard"
+          >
+            <div
+              class="variablesListTable variablePaddingL0 variablesWithDescription"
+            >
+              <div
+                class="variableListRow variable-list-row"
+              >
+                <span
+                  class="nameSection"
+                >
+                  instancesListPath
+                </span>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
+                  style="--text-line-clamp: 1;"
+                >
+                  <span
+                    class=""
+                  >
+                    &lt;+input&gt;
+                  </span>
+                </p>
+              </div>
+            </div>
+            <div
+              class="variablesListTable variablePaddingL0 variablesWithDescription"
+            >
+              <div
+                class="variableListRow variable-list-row"
+              >
+                <span
+                  class="nameSection"
+                >
+                  content
+                </span>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
+                  style="--text-line-clamp: 1;"
+                >
+                  <span
+                    class=""
+                  >
+                    echo test
+                  </span>
+                </p>
+              </div>
+            </div>
+            <div
+              class="Accordion--panel"
+              data-open="false"
+              data-testid="undefined.stage_name.infrastructure.variables-panel"
+              id="undefined.stage_name.infrastructure.variables-panel"
+            >
+              <div
+                class="Accordion--summary"
+                data-testid="undefined.stage_name.infrastructure.variables-summary"
+              >
+                <div
+                  class=""
+                >
+                  <div
+                    class="accordionSummary"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main iconCollapsed"
+                      data-icon="accordion-collapsed"
+                    >
+                      <svg
+                        fill="none"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        width="12"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <rect
+                          fill="#F3F3FA"
+                          height="11.5"
+                          rx="0.75"
+                          stroke="#9293AB"
+                          stroke-width="0.5"
+                          width="11.5"
+                          x="0.25"
+                          y="0.25"
+                        />
+                        <path
+                          d="M10 6.571H6.571V10H5.43V6.571H2V5.43h3.429V2H6.57v3.429H10V6.57z"
+                          fill="#0A3364"
+                          opacity="0.7"
+                        />
+                      </svg>
+                    </span>
+                    <span
+                      class="bp3-icon StyledProps--main iconExpanded"
+                      data-icon="accordion-expanded"
+                    >
+                      <svg
+                        fill="none"
+                        height="12"
+                        viewBox="0 0 12 11"
+                        width="12"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <rect
+                          fill="#F3F3FA"
+                          height="10.5"
+                          rx="0.75"
+                          stroke="#9293AB"
+                          stroke-width="0.5"
+                          width="11.5"
+                          x="0.25"
+                          y="0.25"
+                        />
+                        <path
+                          d="M10 6.143H2V5h8v1.143z"
+                          fill="#0A3364"
+                          opacity="0.7"
+                        />
+                      </svg>
+                    </span>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-black"
+                      >
+                        Infrastructure Variables
+                      </p>
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="Accordion--chevron"
+                />
+              </div>
+              <div
+                class="bp3-collapse Accordion--collapse"
+              >
+                <div
+                  aria-hidden="true"
+                  class="bp3-collapse-body"
+                  style="transform: translateY(-undefinedpx);"
+                >
+                  <div
+                    class="Accordion--details"
+                    data-testid="undefined.stage_name.infrastructure.variables-details"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -11,7 +11,7 @@ import type { UseStringsReturn } from 'framework/strings'
 import { variableSchema } from '@cd/components/PipelineSteps/ShellScriptStep/shellScriptTypes'
 import { InstanceScriptTypes } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/DeploymentInfraWrapper/DeploymentInfraSpecifications/DeploymentInfraSpecifications'
 
-export function getValidationSchema(getString: UseStringsReturn['getString']): any {
+export function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({
     variables: variableSchema(getString),
     fetchInstancesScript: Yup.object().shape({
@@ -28,20 +28,16 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): a
           })
           .when('type', {
             is: value => value === InstanceScriptTypes.FileStore,
+            /* istanbul ignore next */
             then: Yup.object().shape({
-              store: Yup.object({
-                spec: Yup.object().shape({
-                  /* istanbul ignore next */
-                  files: Yup.lazy((value): Yup.Schema<unknown> => {
-                    if (getMultiTypeFromValue(value as string[]) === MultiTypeInputType.FIXED) {
-                      Yup.array(Yup.string().trim().required(getString?.('cd.pathCannotBeEmpty')))
-                        .required(getString?.('cd.filePathRequired'))
-                        .min(1, getString?.('cd.filePathRequired'))
-                        .ensure()
-                    }
-                    return Yup.string().required(getString('cd.filePathRequired'))
-                  })
-                })
+              /* istanbul ignore next */
+              files: Yup.lazy((value): Yup.Schema<unknown> => {
+                /* istanbul ignore next */
+                if (getMultiTypeFromValue(value as string[]) === MultiTypeInputType.FIXED) {
+                  return Yup.array().of(Yup.string().required(getString('pipeline.manifestType.pathRequired')))
+                }
+                /* istanbul ignore next */
+                return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
               })
             })
           })
