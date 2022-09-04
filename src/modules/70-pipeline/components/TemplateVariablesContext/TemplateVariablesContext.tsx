@@ -21,8 +21,7 @@ import {
 import type { UseMutateAsGetReturn } from '@common/hooks/useMutateAsGet'
 import type { StageElementConfig, StepElementConfig } from 'services/cd-ng'
 import type { AllNGVariables } from '@pipeline/utils/types'
-import type { ServiceExpressionProperties } from 'services/pipeline-ng'
-import type { YamlExtraProperties } from 'services/pipeline-ng'
+import type { ServiceExpressionProperties, YamlExtraProperties } from 'services/pipeline-ng'
 
 const templateTypeYamlKeyMap: { [key: string]: string } = {
   monitoredservice: 'monitoredService',
