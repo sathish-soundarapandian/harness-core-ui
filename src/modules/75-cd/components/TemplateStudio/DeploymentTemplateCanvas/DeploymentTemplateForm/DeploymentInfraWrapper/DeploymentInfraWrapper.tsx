@@ -53,7 +53,7 @@ export const DeploymentInfraWrapper = ({ children }: React.PropsWithChildren<unk
       return defaultTo(ref?.current.errors, {})
     }
   }))
-
+  /* istanbul ignore next */
   const updateConfigValue = (infraValues: DeploymentInfra): void => {
     const updatedInfraValues = produce(infraValues, draft => {
       if (draft) {

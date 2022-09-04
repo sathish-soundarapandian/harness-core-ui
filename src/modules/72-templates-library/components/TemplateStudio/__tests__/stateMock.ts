@@ -520,6 +520,146 @@ export const monitoedServiceMetaDataMap = {
 //   spec: {} as JsonNode
 // }
 
+export const deploymentTemplateMock: NGTemplateInfoConfig = {
+  name: 'Open Stack',
+  identifier: 'OpenStack1',
+  versionLabel: 'V6',
+  projectIdentifier: 'defaultproject',
+  orgIdentifier: 'default',
+  tags: {},
+  description: '',
+  type: 'CustomDeployment',
+  spec: {
+    infrastructure: {
+      variables: [
+        {
+          name: 'clusterUrl',
+          type: 'String',
+          value: '<+input>'
+        },
+        {
+          name: 'port',
+          type: 'String',
+          value: '100'
+        },
+        {
+          name: 'pwd',
+          type: 'Secret',
+          value: '<+input>',
+          description: 'IP address of the host'
+        },
+        {
+          name: 'image',
+          type: 'Connector',
+          value: 'account.harnessImage',
+          description: 'IP address of the host'
+        }
+      ],
+      fetchInstancesScript: {
+        store: {
+          type: 'Inline',
+          spec: {
+            content: 'echo test'
+          }
+        }
+      },
+      instancesListPath: '<+input>',
+      instanceAttributes: [
+        {
+          name: 'hostName',
+          jsonPath: '<+input>',
+          description: 'IP address of the host'
+        },
+        {
+          name: 'appName',
+          jsonPath: '<+input>',
+          description: 'Application Name'
+        }
+      ]
+    }
+  }
+}
+
+export const deploymentTemplateMetaDataMap = {
+  XfqaxItHQ4CIJZSd40PwYA: {
+    yamlProperties: {
+      fqn: 'customDeployment.infrastructure.fetchInstancesScript.store.spec.content',
+      localName: 'infra.fetchInstancesScript.store.spec.content',
+      variableName: 'content',
+      aliasFQN: '',
+      visible: true
+    },
+    yamlOutputProperties: null,
+    yamlExtraProperties: null
+  },
+  '4W6IRWtoToCzVg4GyB8xOQ': {
+    yamlProperties: {
+      fqn: 'customDeployment.name',
+      localName: 'name',
+      variableName: 'name',
+      aliasFQN: '',
+      visible: true
+    },
+    yamlOutputProperties: null,
+    yamlExtraProperties: null
+  },
+  dZ3glYuOSpGhV0n1SXH8Qw: {
+    yamlProperties: {
+      fqn: 'customDeployment.infrastructure.variables.port',
+      localName: 'infra.variables.port',
+      variableName: 'port',
+      aliasFQN: '',
+      visible: true
+    },
+    yamlOutputProperties: null,
+    yamlExtraProperties: null
+  },
+  aakc9DQtTVOHqcSaLgj2mQ: {
+    yamlProperties: {
+      fqn: 'customDeployment.infrastructure.variables.clusterUrl',
+      localName: 'infra.variables.clusterUrl',
+      variableName: 'clusterUrl',
+      aliasFQN: '',
+      visible: true
+    },
+    yamlOutputProperties: null,
+    yamlExtraProperties: null
+  },
+  vPrYo3w9QBCCcEn4YmLR0w: {
+    yamlProperties: {
+      fqn: 'customDeployment.infrastructure.variables.pwd',
+      localName: 'infra.variables.pwd',
+      variableName: 'pwd',
+      aliasFQN: '',
+      visible: true
+    },
+    yamlOutputProperties: null,
+    yamlExtraProperties: null
+  },
+  pC8CpUc4Ss2iKzcphSTIQw: {
+    yamlProperties: {
+      fqn: 'customDeployment.infrastructure.variables.image',
+      localName: 'infra.variables.image',
+      variableName: 'image',
+      aliasFQN: '',
+      visible: true
+    },
+    yamlOutputProperties: null,
+    yamlExtraProperties: null
+  },
+  HGk0SebUR3GSyMIVvrFF9w: {
+    yamlProperties: {
+      fqn: 'customDeployment.infrastructure.instancesListPath',
+      localName: 'infra.instancesListPath',
+      variableName: 'instancesListPath',
+      aliasFQN: '',
+      visible: true
+    },
+    yamlOutputProperties: null,
+    yamlExtraProperties: null
+  }
+}
+
 export const getTemplateContextMock = (type: TemplateType): TemplateContextInterface => {
   const defaultTemplateContextMock: TemplateContextInterface = {
     state: {
