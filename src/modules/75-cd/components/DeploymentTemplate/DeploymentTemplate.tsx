@@ -25,6 +25,7 @@ export class DeploymentTemplate extends Template {
     stroke: '#EAF8DB',
     fill: '#F1FAE6'
   }
+  protected isRemoteEnabled = false
   // protected isEnabled = false
 
   renderTemplateCanvas(formikRef: TemplateFormRef): JSX.Element {

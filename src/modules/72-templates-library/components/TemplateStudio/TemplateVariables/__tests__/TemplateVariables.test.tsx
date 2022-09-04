@@ -19,6 +19,8 @@ import {
 } from '@pipeline/components/TemplateVariablesContext/TemplateVariablesContext'
 import TemplateVariablesWrapper from '@templates-library/components/TemplateStudio/TemplateVariables/TemplateVariables'
 import {
+  deploymentTemplateMetaDataMap,
+  deploymentTemplateMock,
   getTemplateContextMock,
   monitoedServiceMetaDataMap,
   monitoredServiceTemplateMock,
@@ -31,6 +33,7 @@ import * as PipelineVariables from '@pipeline/components/PipelineStudio/Pipeline
 import * as StepCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/StepCard'
 import * as StageCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/StageCard'
 import * as MonitoredServiceCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/MonitoredServiceCard'
+import * as DeploymentTemplateCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/DeploymentTemplateCard'
 import type { PipelineCardProps } from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/PipelineCard'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { DrawerTypes } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateActions'
@@ -250,6 +253,36 @@ describe('<TemplateVariables /> tests', () => {
       1,
       expect.objectContaining({
         metadataMap: monitoedServiceMetaDataMap
+      }),
+      expect.anything()
+    )
+  })
+
+  test('should call DeploymentTemplateCard with correct props', async () => {
+    const DeploymentTemplateCardMock = jest.spyOn(DeploymentTemplateCard, 'default')
+    render(
+      <TestWrapper>
+        <TemplateContext.Provider value={getTemplateContextMock(TemplateType.CustomDeployment)}>
+          <TemplateVariablesContext.Provider
+            value={
+              {
+                originalTemplate: deploymentTemplateMock,
+                metadataMap: deploymentTemplateMetaDataMap,
+                variablesTemplate,
+                serviceExpressionPropertiesList: []
+              } as unknown as TemplateVariablesData
+            }
+          >
+            <TemplateVariablesWrapper />
+          </TemplateVariablesContext.Provider>
+        </TemplateContext.Provider>
+      </TestWrapper>
+    )
+
+    expect(DeploymentTemplateCardMock).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        metadataMap: deploymentTemplateMetaDataMap
       }),
       expect.anything()
     )
