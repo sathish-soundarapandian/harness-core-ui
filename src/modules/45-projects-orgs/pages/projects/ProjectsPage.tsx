@@ -162,7 +162,7 @@ const ProjectsListPage: React.FC = () => {
             value={orgIdentifier || OrgFilter.ALL}
             onChange={item => {
               history.push({
-                pathname: routes.toProjects({ accountId }),
+                pathname: routes.toAllProjects({ accountId }),
                 search: item.value !== OrgFilter.ALL ? `?orgIdentifier=${item.value.toString()}` : undefined
               })
             }}

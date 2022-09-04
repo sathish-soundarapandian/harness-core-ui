@@ -127,7 +127,7 @@ const ProjectDetails: React.FC = () => {
           <NGBreadcrumbs
             links={[
               {
-                url: routes.toProjects({ accountId }),
+                url: routes.toAllProjects({ accountId }),
                 label: getString('projectsText')
               }
             ]}
