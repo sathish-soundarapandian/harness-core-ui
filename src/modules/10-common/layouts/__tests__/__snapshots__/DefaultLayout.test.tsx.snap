@@ -48,6 +48,44 @@ exports[`<DefaultLayout /> tests feature banner tests Level up banner 1`] = `
             </div>
           </a>
         </li>
+        <li
+          class="navItem"
+        >
+          <a
+            class="navLink"
+            href="/account/undefined/projects"
+          >
+            <div
+              class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-align-center-center"
+            >
+              <span
+                class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary4"
+                data-icon="nav-project"
+              >
+                <svg
+                  height="30"
+                  viewBox="0 0 16 16"
+                  width="30"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M8.163 1.126a.5.5 0 00-.5 0L2.056 4.36a.5.5 0 00-.25.433v6.234a.5.5 0 00.248.432l5.87 3.415a.5.5 0 00.501 0l5.631-3.259a.5.5 0 00.25-.433V7.478a.5.5 0 00-1 0v3.417l-4.625 2.677.035-5.07 5.34-3.091a.5.5 0 000-.865l-5.894-3.42zM7.717 8.5l-.035 5.077-4.875-2.837V5.66l4.91 2.84zm.502-.865l-4.913-2.84 4.606-2.659 4.897 2.842-4.59 2.657zm-3.864-.068a.5.5 0 10-.5.866l2.165 1.25a.5.5 0 10.5-.866l-2.165-1.25z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              <p
+                class="StyledProps--font StyledProps--main text StyledProps--font-weight-semi-bold StyledProps--font-align-center StyledProps--padding-bottom-xsmall StyledProps--color StyledProps--color-white"
+              >
+                <span>
+                  projectsText
+                </span>
+              </p>
+            </div>
+          </a>
+        </li>
       </ul>
       <ul
         class="navList"
@@ -266,6 +304,44 @@ exports[`<DefaultLayout /> tests feature banner tests Overuse banner 1`] = `
               >
                 <span>
                   common.home
+                </span>
+              </p>
+            </div>
+          </a>
+        </li>
+        <li
+          class="navItem"
+        >
+          <a
+            class="navLink"
+            href="/account/undefined/projects"
+          >
+            <div
+              class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-align-center-center"
+            >
+              <span
+                class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary4"
+                data-icon="nav-project"
+              >
+                <svg
+                  height="30"
+                  viewBox="0 0 16 16"
+                  width="30"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M8.163 1.126a.5.5 0 00-.5 0L2.056 4.36a.5.5 0 00-.25.433v6.234a.5.5 0 00.248.432l5.87 3.415a.5.5 0 00.501 0l5.631-3.259a.5.5 0 00.25-.433V7.478a.5.5 0 00-1 0v3.417l-4.625 2.677.035-5.07 5.34-3.091a.5.5 0 000-.865l-5.894-3.42zM7.717 8.5l-.035 5.077-4.875-2.837V5.66l4.91 2.84zm.502-.865l-4.913-2.84 4.606-2.659 4.897 2.842-4.59 2.657zm-3.864-.068a.5.5 0 10-.5.866l2.165 1.25a.5.5 0 10.5-.866l-2.165-1.25z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              <p
+                class="StyledProps--font StyledProps--main text StyledProps--font-weight-semi-bold StyledProps--font-align-center StyledProps--padding-bottom-xsmall StyledProps--color StyledProps--color-white"
+              >
+                <span>
+                  projectsText
                 </span>
               </p>
             </div>
@@ -490,6 +566,44 @@ exports[`<DefaultLayout /> tests feature banner tests features banner is rendere
               >
                 <span>
                   common.home
+                </span>
+              </p>
+            </div>
+          </a>
+        </li>
+        <li
+          class="navItem"
+        >
+          <a
+            class="navLink"
+            href="/account/undefined/projects"
+          >
+            <div
+              class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-align-center-center"
+            >
+              <span
+                class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary4"
+                data-icon="nav-project"
+              >
+                <svg
+                  height="30"
+                  viewBox="0 0 16 16"
+                  width="30"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M8.163 1.126a.5.5 0 00-.5 0L2.056 4.36a.5.5 0 00-.25.433v6.234a.5.5 0 00.248.432l5.87 3.415a.5.5 0 00.501 0l5.631-3.259a.5.5 0 00.25-.433V7.478a.5.5 0 00-1 0v3.417l-4.625 2.677.035-5.07 5.34-3.091a.5.5 0 000-.865l-5.894-3.42zM7.717 8.5l-.035 5.077-4.875-2.837V5.66l4.91 2.84zm.502-.865l-4.913-2.84 4.606-2.659 4.897 2.842-4.59 2.657zm-3.864-.068a.5.5 0 10-.5.866l2.165 1.25a.5.5 0 10.5-.866l-2.165-1.25z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              <p
+                class="StyledProps--font StyledProps--main text StyledProps--font-weight-semi-bold StyledProps--font-align-center StyledProps--padding-bottom-xsmall StyledProps--color StyledProps--color-white"
+              >
+                <span>
+                  projectsText
                 </span>
               </p>
             </div>

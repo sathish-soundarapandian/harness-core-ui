@@ -33,7 +33,7 @@ exports[`Collaborators test Render Collaborators  1`] = `
               <input
                 class="bp3-input"
                 disabled=""
-                placeholder="http://localhost/#/account/testAcc/home/orgs/testOrg/projects/test/details"
+                placeholder="http://localhost/#/account/testAcc/projects/orgs/testOrg/projects/test/details"
                 style="padding-right: 0px;"
                 type="text"
               />
