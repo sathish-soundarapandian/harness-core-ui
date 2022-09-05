@@ -9,8 +9,9 @@ import React, { useLayoutEffect } from 'react'
 import cx from 'classnames'
 import { NavLink as Link, useParams } from 'react-router-dom'
 import type { NavLinkProps } from 'react-router-dom'
-import { Text, Icon, Layout, Avatar } from '@wings-software/uicore'
+import { Text, Icon, Layout, Avatar, useToggleOpen, Container, Popover } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
+import { Classes, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { String } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 
@@ -19,6 +20,26 @@ import paths from '@common/RouteDefinitions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ResourceCenter } from '@common/components/ResourceCenter/ResourceCenter'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+
+import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'
+import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
+import { useModuleInfo } from '@common/hooks/useModuleInfo'
+import {
+  MODULES_CONFIG_PREFERENCE_STORE_KEY,
+  ModulesPreferenceStoreData
+} from '../ModuleConfigurationScreen/ModuleSortableList/ModuleSortableList'
+import ModuleList from '../ModuleList/ModuleList'
+import {
+  BuildsNavItem,
+  ChaosNavItem,
+  CloudCostsNavItem,
+  DeploymentsNavItem,
+  FeatureFlagsNavItem,
+  SCMNavItem,
+  SRMNavItem,
+  STONavItem
+} from './ModuleLinks'
 import css from './MainNav.module.scss'
 
 const commonLinkProps: Partial<NavLinkProps> = {
@@ -26,22 +47,37 @@ const commonLinkProps: Partial<NavLinkProps> = {
   className: cx(css.navLink)
 }
 
+const maxNumOfModulesToShow = 3
+
+const moduleToNavItemsMap: Record<NavModuleName, () => JSX.Element> = {
+  [ModuleName.CD]: DeploymentsNavItem,
+  [ModuleName.CI]: BuildsNavItem,
+  [ModuleName.CF]: FeatureFlagsNavItem,
+  [ModuleName.CE]: CloudCostsNavItem,
+  [ModuleName.CV]: SRMNavItem,
+  [ModuleName.CHAOS]: ChaosNavItem,
+  [ModuleName.STO]: STONavItem,
+  [ModuleName.SCM]: SCMNavItem
+}
+
 export default function L1Nav(): React.ReactElement {
   const params = useParams<ProjectPathProps>()
-  const {
-    CDNG_ENABLED,
-    CVNG_ENABLED,
-    CING_ENABLED,
-    CENG_ENABLED,
-    CFNG_ENABLED,
-    CHAOS_ENABLED,
-    SCM_ENABLED,
-    SECURITY,
-    RESOURCE_CENTER_ENABLED,
-    NG_DASHBOARDS
-  } = useFeatureFlags()
+  const { RESOURCE_CENTER_ENABLED, NG_DASHBOARDS, NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
+  const { isOpen: isModuleListOpen, toggle: toggleModuleList, close: closeModuleList } = useToggleOpen(false)
 
   const { currentUserInfo: user } = useAppStore()
+  const { module } = useModuleInfo()
+  const { preference: modulesPreferenceData } = usePreferenceStore<ModulesPreferenceStoreData>(
+    PreferenceScope.USER,
+    MODULES_CONFIG_PREFERENCE_STORE_KEY
+  )
+
+  const modulesToShow = modulesPreferenceData?.selectedModules || []
+  // if current module is not selecting in the modules config, add it temporarily
+  if (module && !modulesToShow.includes(moduleToModuleNameMapping[module] as NavModuleName)) {
+    modulesToShow.push(moduleToModuleNameMapping[module] as NavModuleName)
+  }
+  const modulesListHeight = 92 * Math.min(maxNumOfModulesToShow, modulesToShow.length)
 
   useLayoutEffect(() => {
     // main nav consists of two UL sections with classname "css.navList"
@@ -54,214 +90,114 @@ export default function L1Nav(): React.ReactElement {
     // set the CSS variable defined in src/modules/10-common/layouts/layouts.module.scss
     const root = document.querySelector(':root') as HTMLElement
     root.style.setProperty('--main-nav-height', `${minNavHeight}px`)
+
+    document.getElementsByClassName(css.active)[0]?.scrollIntoView({ block: 'nearest' })
   })
 
   return (
-    <nav className={css.main}>
-      <ul className={css.navList}>
-        <li className={css.navItem}>
-          <Link {...commonLinkProps} to={paths.toHome(params)}>
-            <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-              <Icon name="harness" size={30} />
-              <Text
-                font={{ weight: 'semi-bold', align: 'center' }}
-                padding={{ bottom: 'xsmall' }}
-                color={Color.WHITE}
-                className={css.text}
+    <>
+      <nav className={cx(css.main, { [css.recessed]: isModuleListOpen })}>
+        <ul className={css.navList}>
+          <li className={css.navItem}>
+            <Link {...commonLinkProps} to={paths.toHome(params)}>
+              <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+                <Icon name="harness" size={30} />
+                <Text
+                  font={{ weight: 'semi-bold', align: 'center' }}
+                  padding={{ bottom: 'xsmall' }}
+                  color={Color.WHITE}
+                  className={css.text}
+                >
+                  <String stringID="common.home" />
+                </Text>
+              </Layout.Vertical>
+            </Link>
+          </li>
+          <div className={css.modulesContainer} style={{ height: modulesListHeight }}>
+            {(modulesPreferenceData?.orderedModules || []).map(moduleName => {
+              const NavItem = moduleToNavItemsMap[moduleName]
+              return <NavItem key={moduleName} />
+            })}
+          </div>
+          {NEW_LEFT_NAVBAR_SETTINGS && (
+            <li>
+              <Container flex={{ justifyContent: 'center' }}>
+                <Popover
+                  content={
+                    <Text color={Color.WHITE} padding="small">
+                      <String stringID="common.selectModules" />
+                    </Text>
+                  }
+                  popoverClassName={Classes.DARK}
+                  interactionKind={PopoverInteractionKind.HOVER}
+                  position={Position.RIGHT}
+                >
+                  <button
+                    className={cx(css.allModulesButton, {
+                      [css.allModulesOpen]: isModuleListOpen
+                    })}
+                    onClick={toggleModuleList}
+                  >
+                    <Icon name="grid" size={isModuleListOpen ? 26 : 16} />
+                  </button>
+                </Popover>
+              </Container>
+            </li>
+          )}
+        </ul>
+        <ul className={css.navList}>
+          {RESOURCE_CENTER_ENABLED && (
+            <li className={css.navItem}>
+              <ResourceCenter />
+            </li>
+          )}
+          {NG_DASHBOARDS && (
+            <li className={css.navItem}>
+              <Link
+                className={cx(css.navLink, css.settings, css.hoverNavLink)}
+                activeClassName={css.active}
+                to={paths.toCustomDashboard(params)}
               >
-                <String stringID="common.home" />
-              </Text>
-            </Layout.Vertical>
-          </Link>
-        </li>
-        {CDNG_ENABLED && (
-          <li className={css.navItem}>
-            <Link {...commonLinkProps} to={paths.toCD(params)}>
-              <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                <Icon name="cd-main" size={30} />
-                <Text
-                  font={{ weight: 'semi-bold', align: 'center' }}
-                  padding={{ bottom: 'xsmall' }}
-                  color={Color.WHITE}
-                  className={css.text}
-                >
-                  <String stringID="deploymentsText" />
-                </Text>
-              </Layout.Vertical>
-            </Link>
-          </li>
-        )}
-        {CING_ENABLED && (
-          <li className={css.navItem}>
-            <Link {...commonLinkProps} to={paths.toCI(params)}>
-              <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                <Icon name="ci-main" size={30} />
-                <Text
-                  font={{ weight: 'semi-bold', align: 'center' }}
-                  padding={{ bottom: 'xsmall' }}
-                  color={Color.WHITE}
-                  className={css.text}
-                >
-                  <String stringID="buildsText" />
-                </Text>
-              </Layout.Vertical>
-            </Link>
-          </li>
-        )}
-        {CFNG_ENABLED && (
-          <li className={css.navItem}>
-            <Link {...commonLinkProps} to={paths.toCF(params)}>
-              <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                <Icon name="cf-main" size={30} />
-                <Text
-                  font={{ weight: 'semi-bold', align: 'center' }}
-                  padding={{ bottom: 'xsmall' }}
-                  color={Color.WHITE}
-                  className={css.text}
-                >
-                  <String stringID="featureFlagsText" />
-                </Text>
-              </Layout.Vertical>
-            </Link>
-          </li>
-        )}
-        {CENG_ENABLED && (
-          <li className={css.navItem}>
-            <Link {...commonLinkProps} to={paths.toCE(params)}>
-              <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                <Icon name="ce-main" size={30} />
-                <Text
-                  font={{ weight: 'semi-bold', align: 'center' }}
-                  padding={{ bottom: 'xsmall' }}
-                  color={Color.WHITE}
-                  className={css.text}
-                >
-                  <String stringID="cloudCostsText" />
-                </Text>
-              </Layout.Vertical>
-            </Link>
-          </li>
-        )}
-        {CVNG_ENABLED && (
-          <li className={css.navItem}>
-            <Link {...commonLinkProps} to={paths.toCV(params)}>
-              <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                <Icon name="cv-main" size={30} />
-                <Text
-                  font={{ weight: 'semi-bold', align: 'center' }}
-                  padding={{ bottom: 'xsmall' }}
-                  color={Color.WHITE}
-                  className={css.text}
-                >
-                  <String stringID="common.purpose.cv.serviceReliability" />
-                </Text>
-              </Layout.Vertical>
-            </Link>
-          </li>
-        )}
-        {SCM_ENABLED && (
-          <li className={css.navItem}>
-            <Link {...commonLinkProps} to={paths.toSCM(params)}>
-              <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                <Icon name="gitops-green" size={30} />
-                <Text
-                  font={{ weight: 'semi-bold', align: 'center' }}
-                  padding={{ bottom: 'xsmall' }}
-                  color={Color.WHITE}
-                  className={css.text}
-                >
-                  <String stringID="common.purpose.scm.name" />
-                </Text>
-              </Layout.Vertical>
-            </Link>
-          </li>
-        )}
-        {SECURITY && (
-          <li className={css.navItem}>
-            <Link {...commonLinkProps} to={paths.toSTO(params)}>
-              <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                <Icon name="sto-color-filled" size={30} />
-                <Text
-                  font={{ weight: 'semi-bold', align: 'center' }}
-                  padding={{ bottom: 'xsmall' }}
-                  color={Color.WHITE}
-                  className={css.text}
-                >
-                  <String stringID="common.purpose.sto.continuous" />
-                </Text>
-              </Layout.Vertical>
-            </Link>
-          </li>
-        )}
-        {CHAOS_ENABLED && (
-          <li className={css.navItem}>
-            <Link {...commonLinkProps} to={paths.toChaos(params)}>
-              <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                <Icon name="chaos-main" size={30} />
-                <Text
-                  font={{ weight: 'semi-bold', align: 'center' }}
-                  padding={{ bottom: 'xsmall' }}
-                  color={Color.WHITE}
-                  className={css.text}
-                >
-                  <String stringID="common.chaosText" />
-                </Text>
-              </Layout.Vertical>
-            </Link>
-          </li>
-        )}
-      </ul>
-      <ul className={css.navList}>
-        {RESOURCE_CENTER_ENABLED && (
-          <li className={css.navItem}>
-            <ResourceCenter link={false} />
-          </li>
-        )}
-        {NG_DASHBOARDS && (
+                <Layout.Vertical flex spacing="xsmall">
+                  <Icon name="dashboard" size={20} />
+                  <Text font={{ size: 'xsmall', align: 'center' }} color={Color.WHITE} className={css.hoverText}>
+                    <String stringID="common.dashboards" />
+                  </Text>
+                </Layout.Vertical>
+              </Link>
+            </li>
+          )}
           <li className={css.navItem}>
             <Link
               className={cx(css.navLink, css.settings, css.hoverNavLink)}
               activeClassName={css.active}
-              to={paths.toCustomDashboard(params)}
+              to={paths.toAccountSettings(params)}
             >
               <Layout.Vertical flex spacing="xsmall">
-                <Icon name="dashboard" size={20} />
+                <Icon name="nav-settings" size={20} />
                 <Text font={{ size: 'xsmall', align: 'center' }} color={Color.WHITE} className={css.hoverText}>
-                  <String stringID="common.dashboards" />
+                  <String stringID="common.accountSettings" />
                 </Text>
               </Layout.Vertical>
             </Link>
           </li>
-        )}
-        <li className={css.navItem}>
-          <Link
-            className={cx(css.navLink, css.settings, css.hoverNavLink)}
-            activeClassName={css.active}
-            to={paths.toAccountSettings(params)}
-          >
-            <Layout.Vertical flex spacing="xsmall">
-              <Icon name="nav-settings" size={20} />
-              <Text font={{ size: 'xsmall', align: 'center' }} color={Color.WHITE} className={css.hoverText}>
-                <String stringID="common.accountSettings" />
-              </Text>
-            </Layout.Vertical>
-          </Link>
-        </li>
-        <li className={css.navItem}>
-          <Link
-            className={cx(css.navLink, css.userLink, css.hoverNavLink)}
-            activeClassName={css.active}
-            to={paths.toUser(params)}
-          >
-            <Layout.Vertical flex spacing="xsmall">
-              <Avatar name={user.name || user.email} email={user.email} size="small" hoverCard={false} />
-              <Text font={{ size: 'xsmall', align: 'center' }} color={Color.WHITE} className={css.hiddenText}>
-                <String stringID="common.myProfile" />
-              </Text>
-            </Layout.Vertical>
-          </Link>
-        </li>
-      </ul>
-    </nav>
+          <li className={css.navItem}>
+            <Link
+              className={cx(css.navLink, css.userLink, css.hoverNavLink)}
+              activeClassName={css.active}
+              to={paths.toUser(params)}
+            >
+              <Layout.Vertical flex spacing="xsmall">
+                <Avatar name={user.name || user.email} email={user.email} size="small" hoverCard={false} />
+                <Text font={{ size: 'xsmall', align: 'center' }} color={Color.WHITE} className={css.hiddenText}>
+                  <String stringID="common.myProfile" />
+                </Text>
+              </Layout.Vertical>
+            </Link>
+          </li>
+        </ul>
+      </nav>
+      {NEW_LEFT_NAVBAR_SETTINGS ? <ModuleList isOpen={isModuleListOpen} close={closeModuleList} /> : null}
+    </>
   )
 }
