@@ -17,7 +17,8 @@ import type {
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
 import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { TimeoutFieldInputSetView } from '../../../InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { TextFieldInputSetView } from '../../../InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
@@ -156,18 +157,22 @@ function FormContent(formContentProps: ServiceNowUpdateDeploymentModeFormContent
   return (
     <React.Fragment>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME ? (
-        <FormMultiTypeDurationField
-          name={`${prefix}timeout`}
-          label={getString('pipelineSteps.timeoutLabel')}
-          className={css.deploymentViewMedium}
-          multiTypeDurationProps={{
-            enableConfigureOptions: false,
-            allowableTypes,
-            expressions,
-            disabled: isApprovalStepFieldDisabled(readonly)
-          }}
-          disabled={isApprovalStepFieldDisabled(readonly)}
-        />
+        <div style={{ width: '50%' }}>
+          <TimeoutFieldInputSetView
+            name={`${prefix}timeout`}
+            label={getString('pipelineSteps.timeoutLabel')}
+            className={css.deploymentViewMedium}
+            multiTypeDurationProps={{
+              enableConfigureOptions: false,
+              allowableTypes,
+              expressions,
+              disabled: isApprovalStepFieldDisabled(readonly)
+            }}
+            disabled={isApprovalStepFieldDisabled(readonly)}
+            template={template}
+            fieldPath={'timeout'}
+          />
+        </div>
       ) : null}
 
       {getMultiTypeFromValue(template?.spec?.connectorRef) === MultiTypeInputType.RUNTIME ? (
@@ -226,16 +231,19 @@ function FormContent(formContentProps: ServiceNowUpdateDeploymentModeFormContent
       ) : null}
 
       {getMultiTypeFromValue(template?.spec?.ticketNumber) === MultiTypeInputType.RUNTIME ? (
-        <FormInput.MultiTextInput
-          label={getString('pipeline.serviceNowApprovalStep.issueNumber')}
-          name={`${prefix}spec.ticketNumber`}
-          multiTextInputProps={{
-            disabled: isApprovalStepFieldDisabled(readonly),
-            expressions,
-            allowableTypes
-          }}
-          className={css.deploymentViewMedium}
-        />
+        <div style={{ width: '50%' }}>
+          <TextFieldInputSetView
+            label={getString('pipeline.serviceNowApprovalStep.issueNumber')}
+            name={`${prefix}spec.ticketNumber`}
+            multiTextInputProps={{
+              disabled: isApprovalStepFieldDisabled(readonly),
+              expressions,
+              allowableTypes
+            }}
+            template={template}
+            fieldPath="spec.ticketNumber"
+          />
+        </div>
       ) : null}
       {getMultiTypeFromValue(
         template?.spec?.fields?.find(field => field.name === ServiceNowStaticFields.description)?.value as string

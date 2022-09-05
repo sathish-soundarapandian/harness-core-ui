@@ -8,6 +8,8 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
+import { defaultTo } from 'lodash-es'
+import { ALLOWED_VALUES_TYPE, VALIDATORS } from '@common/components/ConfigureOptions/ConfigureOptions'
 import * as Yup from 'yup'
 import {
   Formik,
@@ -31,6 +33,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { SelectConfigureOptions } from '../../../../../10-common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { useListAwsRegions } from 'services/portal'
 import { useGetIamRolesForAws } from 'services/cd-ng'
 import { useQueryParams } from '@common/hooks'
@@ -204,6 +207,20 @@ export const CloudFormationDeleteStack = (
                 multiTypeDurationProps={{ enableConfigureOptions: false, expressions, allowableTypes }}
                 disabled={readonly}
               />
+              {getMultiTypeFromValue(formik.values.timeout) === MultiTypeInputType.RUNTIME && (
+                <ConfigureOptions
+                  value={defaultTo(formik.values.timeout, '')}
+                  type="String"
+                  variableName="timeout"
+                  showRequiredField={false}
+                  showDefaultField={false}
+                  showAdvanced={true}
+                  onChange={value => formik.setFieldValue('timeout', value)}
+                  isReadonly={readonly}
+                  allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
+                  allowedValuesValidator={VALIDATORS[ALLOWED_VALUES_TYPE.TIME]({ minimum: '10s' })}
+                />
+              )}
             </div>
             <div className={css.divider} />
             <div className={cx(stepCss.formGroup, stepCss.md)}>
@@ -229,16 +246,17 @@ export const CloudFormationDeleteStack = (
                 />
                 {
                   /* istanbul ignore next */
-                  isRuntime(provisionerIdentifier) && (
+                  getMultiTypeFromValue(provisionerIdentifier) === MultiTypeInputType.RUNTIME && (
                     <ConfigureOptions
-                      value={provisionerIdentifier as string}
+                      value={defaultTo(provisionerIdentifier, '')}
                       type="String"
                       variableName="spec.configuration.spec.provisionerIdentifier"
                       showRequiredField={false}
                       showDefaultField={false}
                       showAdvanced={true}
                       isReadonly={readonly}
-                      className={css.inputWidth}
+                      onChange={value => formik.setFieldValue('spec.configuration.spec.provisionerIdentifier', value)}
+                      className={css.configureButton}
                     />
                   )
                 }
@@ -313,8 +331,23 @@ export const CloudFormationDeleteStack = (
                       }}
                       selectItems={regions || []}
                     />
+                    {getMultiTypeFromValue(formik.values.spec.configuration.spec.region) ===
+                      MultiTypeInputType.RUNTIME && (
+                      <SelectConfigureOptions
+                        value={defaultTo(formik.values.spec.configuration.spec.region, '')}
+                        options={regions}
+                        loading={false}
+                        type="String"
+                        variableName="spec.configuration.spec.region"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        showAdvanced={true}
+                        isReadonly={readonly}
+                        onChange={value => formik.setFieldValue('spec.configuration.spec.region', value)}
+                      />
+                    )}
                   </Layout.Horizontal>
-                  <Layout.Vertical className={css.addMarginBottom}>
+                  <Layout.Horizontal>
                     <FormInput.MultiTypeInput
                       label={getString('connectors.awsKms.roleArnLabel')}
                       name="spec.configuration.spec.roleArn"
@@ -334,7 +367,24 @@ export const CloudFormationDeleteStack = (
                       useValue
                       isOptional
                     />
-                  </Layout.Vertical>
+                    {getMultiTypeFromValue(formik.values.spec.configuration.spec.roleArn) ===
+                      MultiTypeInputType.RUNTIME && (
+                      <div className={css.configureButtonroleArn}>
+                        <SelectConfigureOptions
+                          value={defaultTo(formik.values.spec.configuration.spec.roleArn, '')}
+                          options={awsRoles}
+                          loading={false}
+                          type="String"
+                          variableName="spec.configuration.spec.roleArn"
+                          showRequiredField={false}
+                          showDefaultField={false}
+                          showAdvanced={true}
+                          isReadonly={readonly}
+                          onChange={value => formik.setFieldValue('spec.configuration.spec.roleArn', value)}
+                        />
+                      </div>
+                    )}
+                  </Layout.Horizontal>
                   <div className={cx(stepCss.formGroup)}>
                     <FormInput.MultiTextInput
                       name="spec.configuration.spec.stackName"
@@ -354,7 +404,8 @@ export const CloudFormationDeleteStack = (
                           showDefaultField={false}
                           showAdvanced={true}
                           isReadonly={readonly}
-                          className={css.inputWidth}
+                          className={css.configureButton}
+                          onChange={value => formik.setFieldValue('spec.configuration.spec.stackName', value)}
                         />
                       )
                     }

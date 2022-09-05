@@ -21,7 +21,9 @@ import {
 import { connect, FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { TimeoutFieldInputSetView } from '../../../../../70-pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { TextFieldInputSetView } from '../../../../../70-pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { SelectInputSetView } from '../../../../../70-pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import {
   ConnectorReferenceDTO,
   FormMultiTypeConnectorField
@@ -123,7 +125,7 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.timeout as string) && (
           <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <FormMultiTypeDurationField
+            <TimeoutFieldInputSetView
               label={getString('pipelineSteps.timeoutLabel')}
               name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
               disabled={readonly}
@@ -133,6 +135,8 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
                 expressions,
                 disabled: readonly
               }}
+              template={inputSetData?.template}
+              fieldPath={'timeout'}
             />
           </div>
         )
@@ -141,7 +145,7 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.spec?.configuration?.spec?.provisionerIdentifier as string) && (
           <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
               name={`${path}.spec.configuration.spec.provisionerIdentifier`}
               label={getString('pipelineSteps.provisionerIdentifier')}
               disabled={readonly}
@@ -149,6 +153,8 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
                 expressions,
                 allowableTypes
               }}
+              template={inputSetData?.template}
+              fieldPath={'spec.configuration.spec.provisionerIdentifier'}
             />
           </div>
         )
@@ -194,12 +200,14 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.spec?.configuration?.spec?.region as string) && (
           <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <FormInput.MultiTypeInput
+            <SelectInputSetView
               label={getString('regionLabel')}
               name={`${path}.spec.configuration.spec.region`}
               placeholder={getString(regionsLoading ? 'common.loading' : 'pipeline.regionPlaceholder')}
               disabled={readonly}
               useValue
+              template={inputSetData?.template}
+              fieldPath={'spec.configuration.spec.region'}
               multiTypeInputProps={{
                 onChange: value => {
                   setRegionsRef((value as any).value as string)
@@ -225,12 +233,14 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.spec?.configuration?.spec?.roleArn as string) && (
           <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <FormInput.MultiTypeInput
+            <SelectInputSetView
               label={getString('connectors.awsKms.roleArnLabel')}
               name={`${path}.spec.configuration.spec.roleArn`}
               disabled={readonly || loading}
               placeholder={getString(loading ? 'common.loading' : 'select')}
               useValue
+              template={inputSetData?.template}
+              fieldPath={'spec.configuration.spec.roleArn'}
               multiTypeInputProps={{
                 selectProps: {
                   allowCreatingNewItems: false,
@@ -248,7 +258,7 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.spec?.configuration?.spec?.stackName as string) && (
           <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
               name={`${path}.spec.configuration.spec.stackName`}
               label={getString('cd.cloudFormation.stackName')}
               disabled={readonly}
@@ -256,6 +266,8 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
                 expressions,
                 allowableTypes
               }}
+              template={inputSetData?.template}
+              fieldPath={'spec.configuration.spec.stackName'}
             />
           </div>
         )

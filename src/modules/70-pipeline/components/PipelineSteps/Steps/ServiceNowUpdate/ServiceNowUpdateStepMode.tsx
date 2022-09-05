@@ -24,6 +24,7 @@ import {
   AllowedTypes
 } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
+import { ALLOWED_VALUES_TYPE, VALIDATORS } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { String, StringKeys, useStrings } from 'framework/strings'
 import {
@@ -329,6 +330,8 @@ function FormContent({
             showAdvanced={true}
             onChange={value => formik.setFieldValue('timeout', value)}
             isReadonly={readonly}
+            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
+            allowedValuesValidator={VALIDATORS[ALLOWED_VALUES_TYPE.TIME]({ minimum: '10s' })}
           />
         )}
       </div>
