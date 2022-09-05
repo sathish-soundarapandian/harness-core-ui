@@ -8,6 +8,7 @@
 import { Github } from '@triggers/components/Triggers/WebhookTrigger/Github/Github'
 import { Gitlab } from '@triggers/components/Triggers/WebhookTrigger/Gitlab/Gitlab'
 import { Bitbucket } from '@triggers/components/Triggers/WebhookTrigger/Bitbucket/Bitbucket'
+import { AwsCodeCommit } from '@triggers/components/Triggers/WebhookTrigger/AwsCodeCommit/AwsCodeCommit'
 
 import { AbstractTriggerFactory } from './AbstractTriggerFactory'
 //Webhook Triggers
@@ -24,5 +25,6 @@ const TriggerFactory = new Factory()
 TriggerFactory.registerTrigger(new Github())
 TriggerFactory.registerTrigger(new Gitlab())
 TriggerFactory.registerTrigger(new Bitbucket())
+TriggerFactory.registerTrigger(new AwsCodeCommit())
 
 export default TriggerFactory

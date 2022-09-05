@@ -12,5 +12,6 @@ export enum TriggerBaseType {
 export enum SourceRepo {
   Github = 'Github',
   Gitlab = 'Gitlab',
-  Bitbucket = 'Bitbucket'
+  Bitbucket = 'Bitbucket',
+  AwsCodeCommit = 'AwsCodeCommit'
 }
