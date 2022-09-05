@@ -34,7 +34,10 @@ export const variableSchema = (
     })
   )
 
-export const scriptOutputType: SelectOption[] = [{ label: 'String', value: 'String' }]
+export const scriptOutputType: SelectOption[] = [
+  { label: 'String', value: 'String' },
+  { label: 'Secret', value: 'Secret' }
+]
 
 export interface CustomApprovalStepVariable {
   value: number | string
