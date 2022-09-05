@@ -1,0 +1,25 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+// 38px font size is not available in the desgin system, check with UX
+// Add font-family in uicore instead of here
+.image {
+  max-width: 100%;
+  max-height: 100%;
+}
+.primaryText {
+  font-family: var(--font-family-reenie-beanie) !important;
+  font-size: 38px !important;
+}
+
+.backgroundModuleImage {
+  position: absolute;
+  right: -120px;
+  bottom: -120px;
+  opacity: 0.14;
+  z-index: -1;
+}
