@@ -9,21 +9,10 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty, map, get, defaultTo } from 'lodash-es'
 import cx from 'classnames'
-import {
-  FormInput,
-  FormikForm,
-  Text,
-  Color,
-  MultiSelectOption,
-  getMultiTypeFromValue,
-  MultiTypeInputType
-} from '@harness/uicore'
+import { FormikForm, Text, Color, MultiSelectOption, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { connect, FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { TimeoutFieldInputSetView } from '../../../../../70-pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
-import { TextFieldInputSetView } from '../../../../../70-pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
-import { SelectInputSetView } from '../../../../../70-pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import {
   ConnectorReferenceDTO,
   FormMultiTypeConnectorField
@@ -33,6 +22,9 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { useListAwsRegions } from 'services/portal'
 import { useGetIamRolesForAws } from 'services/cd-ng'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { TimeoutFieldInputSetView } from '../../../../../70-pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { TextFieldInputSetView } from '../../../../../70-pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { SelectInputSetView } from '../../../../../70-pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import type { DeleteStackData, DeleteStackProps } from '../CloudFormationInterfaces.types'
 import { isRuntime } from '../CloudFormationHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'

@@ -17,8 +17,7 @@ import type {
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
 import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
-import { TimeoutFieldInputSetView } from '../../../InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
-import { TextFieldInputSetView } from '../../../InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
@@ -40,6 +39,8 @@ import {
   getInitialValueForSelectedField,
   setServiceNowFieldAllowedValuesOptions
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/helper'
+import { TimeoutFieldInputSetView } from '../../../InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { TextFieldInputSetView } from '../../../InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import css from './ServiceNowUpdate.module.scss'
 

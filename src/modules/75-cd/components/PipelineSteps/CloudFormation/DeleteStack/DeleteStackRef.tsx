@@ -8,8 +8,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { defaultTo } from 'lodash-es'
-import { ALLOWED_VALUES_TYPE, VALIDATORS } from '@common/components/ConfigureOptions/ConfigureOptions'
 import * as Yup from 'yup'
 import {
   Formik,
@@ -21,7 +19,7 @@ import {
   Text,
   MultiSelectOption
 } from '@harness/uicore'
-import { map, isEmpty } from 'lodash-es'
+import { map, isEmpty, defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
@@ -30,15 +28,15 @@ import {
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { IdentifierSchemaWithOutName, ConnectorRefSchema } from '@common/utils/Validation'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ConfigureOptions, ALLOWED_VALUES_TYPE, VALIDATORS } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { SelectConfigureOptions } from '../../../../../10-common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { useListAwsRegions } from 'services/portal'
 import { useGetIamRolesForAws } from 'services/cd-ng'
 import { useQueryParams } from '@common/hooks'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { Connectors } from '@connectors/constants'
+import { SelectConfigureOptions } from '../../../../../10-common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { DeleteStackTypes, CloudFormationDeleteStackProps } from '../CloudFormationInterfaces.types'
 import { isRuntime } from '../CloudFormationHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
