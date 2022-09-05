@@ -42,6 +42,7 @@ import { FeaturesProvider } from 'framework/featureStore/FeaturesContext'
 import { ThirdPartyIntegrations } from '3rd-party/ThirdPartyIntegrations'
 import { useGlobalEventListener } from '@common/hooks'
 import HelpPanelProvider from 'framework/utils/HelpPanelProvider'
+import Contentful, { ContentfulEnvironment } from '@common/Contentful'
 
 const RouteDestinations = React.lazy(() => import('modules/RouteDestinations'))
 
@@ -51,6 +52,8 @@ FocusStyleManager.onlyShowFocusOnTabs()
 SecureStorage.registerCleanupException(PREFERENCES_TOP_LEVEL_KEY)
 SecureStorage.registerCleanupException(MULTI_TYPE_INPUT_MENU_LEARN_MORE_STORAGE_KEY)
 SecureStorage.registerCleanupException(HELP_PANEL_STORAGE_KEY)
+
+Contentful.initialise('W0sCqe1jFV_3Ch3voln0ciABY-1o9XxfZCdD2lSimgM', 'uu5c47kz2byk', ContentfulEnvironment.PRODUCTION)
 
 // set up Immer
 setAutoFreeze(false)
