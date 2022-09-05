@@ -7,10 +7,12 @@
 
 import React, { useEffect } from 'react'
 import { act } from 'react-test-renderer'
+import userEvent from '@testing-library/user-event'
 import { fireEvent, render } from '@testing-library/react'
 import {
   DynatraceHealthSourcePropsMock,
   DynatraceMockHealthSourceData,
+  MockDynatraceMetricDataWithCustomMetric,
   mockUseGetDynatraceServices
 } from '@cv/pages/health-source/connectors/Dynatrace/__tests__/DynatraceHealthSource.mock'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -107,5 +109,23 @@ describe('Validate DynatraceHealthSource', () => {
     act(() => {
       fireEvent.click(getByTestId('triggerPreviousButtonMock'))
     })
+  })
+
+  test('should be able to delete all metrics and add again with default name', async () => {
+    const { container, getByText } = render(
+      <TestWrapper>
+        <DynatraceHealthSource
+          dynatraceFormData={MockDynatraceMetricDataWithCustomMetric}
+          onSubmit={jest.fn()}
+          onPrevious={jest.fn()}
+          connectorIdentifier="dynatrace"
+        />
+      </TestWrapper>
+    )
+    expect(getByText('Dynatrace metric custom')).toBeInTheDocument()
+    userEvent.click(container.querySelector('[data-icon="main-delete"]')!)
+    expect(getByText('cv.healthSource.connectors.customMetrics')).toBeInTheDocument()
+    userEvent.click(getByText('cv.monitoringSources.addMetric'))
+    expect(getByText('cv.healthSource.connectors.Dynatrace.defaultMetricName')).toBeInTheDocument()
   })
 })

@@ -52,7 +52,7 @@ describe('Create empty monitored service', () => {
     cy.visitSRMTemplate()
   })
 
-  it.only('Add new NewRelic monitored service ', () => {
+  it('Add new NewRelic monitored service ', () => {
     cy.addNewSRMTemplate()
     cy.populateTemplateDetails('NewRelic Template', '1')
     cy.setServiceEnvRuntime()

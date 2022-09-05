@@ -43,6 +43,12 @@ export default function CustomMetric(props: CustomMetricInterface): JSX.Element 
   useEffect(() => {
     setMappedMetrics(oldState => {
       const emptyName = formikValues.metricName?.length
+      // add default metric data when we delete last metric and add again
+      if (!emptyName && !oldState?.selectedMetric && mappedMetrics?.size === 0) {
+        const initMap = new Map()
+        initMap.set(defaultMetricName, initCustomForm)
+        return { selectedMetric: defaultMetricName, mappedMetrics: initMap }
+      }
       if (!emptyName) {
         return { selectedMetric: oldState.selectedMetric, mappedMetrics: mappedMetrics }
       }

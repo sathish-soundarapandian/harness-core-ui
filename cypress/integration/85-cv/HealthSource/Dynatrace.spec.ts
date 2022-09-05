@@ -94,6 +94,11 @@ describe('Create empty monitored service', () => {
     cy.contains('p', 'HealthResource').click({ force: true })
 
     cy.contains('span', 'Add Metric').click()
+
+    cy.get('span[data-icon="main-delete"]').click({ multiple: true })
+    cy.findByRole('button', { name: /Add Metric/i }).should('be.visible')
+
+    cy.contains('span', 'Add Metric').click()
     cy.wait('@QueriesCall')
     cy.contains('span', 'Submit').click({ force: true })
 

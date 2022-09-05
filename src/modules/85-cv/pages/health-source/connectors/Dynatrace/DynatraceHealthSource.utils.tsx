@@ -109,7 +109,7 @@ export const mapDynatraceDataToDynatraceForm = (
   selectedMetric: string,
   showCustomMetric: boolean
 ): DynatraceFormDataInterface => {
-  const metricIdentifier = selectedMetric.split(' ').join('_')
+  const metricIdentifier = selectedMetric?.split(' ')?.join('_')
   return {
     ...dynatraceMetricData,
     ...mappedMetrics.get(selectedMetric),

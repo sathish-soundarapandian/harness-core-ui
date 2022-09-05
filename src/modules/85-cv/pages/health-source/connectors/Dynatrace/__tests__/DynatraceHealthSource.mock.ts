@@ -89,6 +89,25 @@ const mockMetricInfosMap: Map<string, DynatraceMetricInfo> = new Map([
   ]
 ])
 
+const mockCustomMetricMap: Map<string, DynatraceMetricInfo> = new Map([
+  [
+    'Dynatrace metric custom',
+    {
+      metricSelector: 'builtin:service.cpu.perRequest Group 1',
+      identifier: 'Dynatrace_metric_custom',
+      metricName: 'Dynatrace metric custom',
+      riskCategory: '',
+      lowerBaselineDeviation: false,
+      higherBaselineDeviation: false,
+      groupName: { label: 'Group 1', value: 'Group 1' },
+      continuousVerification: false,
+      healthScore: false,
+      sli: true,
+      isManualQuery: true
+    }
+  ]
+])
+
 export const MockConnectorName = 'dynatraceConnector'
 
 const templateCustomMetric = new Map()
@@ -134,6 +153,19 @@ export const MockDynatraceMetricData: DynatraceFormDataInterface = {
     Performance: true
   },
   customMetrics: mockMetricInfosMap
+}
+
+export const MockDynatraceMetricDataWithCustomMetric: DynatraceFormDataInterface = {
+  product: { label: 'dynatrace_apm', value: 'dynatrace_apm' },
+  healthSourceName: 'Dynatrace',
+  healthSourceIdentifier: 'Dynatrace',
+  connectorRef: 'org.dynatrace',
+  isEdit: true,
+  selectedService: { label: ':4444', value: 'SERVICE-D739201C4CBBA618' },
+  metricPacks: [{ identifier: 'Performance' }, { identifier: 'Infrastructure' }],
+  metricData: { Performance: true, Infrastructure: true },
+  serviceMethods: ['SERVICE_METHOD-F3988BEE84FF7388'],
+  customMetrics: mockCustomMetricMap
 }
 
 export const ServiceListMock: DynatraceServiceDTO[] = [

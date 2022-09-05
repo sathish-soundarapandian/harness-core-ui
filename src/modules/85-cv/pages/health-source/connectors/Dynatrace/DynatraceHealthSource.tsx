@@ -28,6 +28,7 @@ import DynatraceCustomMetrics from '@cv/pages/health-source/connectors/Dynatrace
 import DynatraceMetricPacksToService from './components/DynatraceMetricPacksToService/DynatraceMetricPacksToService'
 
 import CustomMetric from '../../common/CustomMetric/CustomMetric'
+import { resetShowCustomMetric } from '../AppDynamics/AppDHealthSource.utils'
 import css from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.module.scss'
 
 export default function DynatraceHealthSource(props: DynatraceHealthSourceProps): JSX.Element {
@@ -55,7 +56,7 @@ export default function DynatraceHealthSource(props: DynatraceHealthSourceProps)
   } = useGroupedSideNaveHook({
     defaultCustomMetricName: getString('cv.healthSource.connectors.Dynatrace.defaultMetricName'),
     initCustomMetricData: defaultDynatraceCustomMetric(getString),
-    mappedServicesAndEnvs: dynatraceMetricData.customMetrics
+    mappedServicesAndEnvs: showCustomMetric ? dynatraceMetricData.customMetrics : new Map()
   })
 
   const dynatraceMetricFormData = useMemo(
@@ -69,6 +70,10 @@ export default function DynatraceHealthSource(props: DynatraceHealthSourceProps)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    resetShowCustomMetric(selectedMetric, mappedMetrics, setShowCustomMetric)
+  }, [mappedMetrics, selectedMetric])
 
   return (
     <Formik<DynatraceFormDataInterface>
@@ -133,6 +138,7 @@ export default function DynatraceHealthSource(props: DynatraceHealthSourceProps)
                 tooptipMessage={getString('cv.monitoringSources.gcoLogs.addQueryTooltip')}
                 addFieldLabel={getString('cv.monitoringSources.addMetric')}
                 initCustomForm={defaultDynatraceCustomMetric(getString)}
+                shouldBeAbleToDeleteLastMetric
               >
                 <DynatraceCustomMetrics
                   metricValues={formik.values}
