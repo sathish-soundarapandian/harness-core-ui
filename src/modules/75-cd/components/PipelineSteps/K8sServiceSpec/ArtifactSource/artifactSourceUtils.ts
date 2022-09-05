@@ -25,6 +25,8 @@ import type {
 } from 'services/cd-ng'
 import { checkIfQueryParamsisNotEmpty, RegistryHostNames } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
 export const DefaultParam = 'defaultParam'
 
@@ -211,3 +213,9 @@ export function getConnectorRefFqnPath(
     return `pipeline.stages.${stageIdentifier}.spec.serviceConfig.serviceDefinition.spec.artifacts.${artifactPath}.spec.${fieldName}`
   }
 }
+
+export const getYamlData = (formikValues: Record<string, any>, stepViewType: StepViewType, path: string): any =>
+  yamlStringify({
+    pipeline:
+      stepViewType === StepViewType.InputSet && path?.startsWith('pipeline') ? formikValues?.pipeline : formikValues
+  })

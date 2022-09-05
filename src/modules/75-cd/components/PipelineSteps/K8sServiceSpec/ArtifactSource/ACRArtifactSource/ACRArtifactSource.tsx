@@ -18,7 +18,6 @@ import {
   Text
 } from '@wings-software/uicore'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useMutateAsGet } from '@common/hooks'
 import {
   SidecarArtifact,
@@ -35,6 +34,7 @@ import {
   ConnectorReferenceDTO,
   FormMultiTypeConnectorField
 } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import ExperimentalInput from '../../K8sServiceSpecForms/ExperimentalInput'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
@@ -42,6 +42,7 @@ import {
   getDefaultQueryParam,
   getFinalQueryParamValue,
   getFqnPath,
+  getYamlData,
   isArtifactSourceRuntime,
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity,
@@ -77,7 +78,8 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     fromTrigger,
     artifact,
     isSidecar,
-    artifactPath
+    artifactPath,
+    stepViewType
   } = props
 
   const { getString } = useStrings()
@@ -131,9 +133,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     refetch: fetchTags,
     error: fetchTagsError
   } = useMutateAsGet(useGetBuildDetailsForAcrArtifactWithYaml, {
-    body: yamlStringify({
-      pipeline: formik?.values
-    }),
+    body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
     requestOptions: {
       headers: {
         'content-type': 'application/json'

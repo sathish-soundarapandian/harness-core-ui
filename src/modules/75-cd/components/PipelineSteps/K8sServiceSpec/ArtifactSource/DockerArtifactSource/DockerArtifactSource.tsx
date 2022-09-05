@@ -10,11 +10,10 @@ import { defaultTo, get } from 'lodash-es'
 
 import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@wings-software/uicore'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useMutateAsGet } from '@common/hooks'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { SidecarArtifact, useGetBuildDetailsForDockerWithYaml } from 'services/cd-ng'
-
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { useStrings } from 'framework/strings'
@@ -26,6 +25,7 @@ import {
   getFinalQueryParamValue,
   getFqnPath,
   getImagePath,
+  getYamlData,
   isArtifactSourceRuntime,
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity,
@@ -45,6 +45,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
     template,
     formik,
     path,
+    stepViewType,
     initialValues,
     accountId,
     projectIdentifier,
@@ -83,14 +84,13 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
     refetch: fetchTags,
     error: fetchTagsError
   } = useMutateAsGet(useGetBuildDetailsForDockerWithYaml, {
-    body: yamlStringify({
-      pipeline: formik?.values
-    }),
+    body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
     requestOptions: {
       headers: {
         'content-type': 'application/json'
       }
     },
+
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,

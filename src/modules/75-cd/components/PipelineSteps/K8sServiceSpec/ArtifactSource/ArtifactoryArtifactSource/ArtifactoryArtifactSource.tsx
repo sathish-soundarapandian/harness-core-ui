@@ -12,7 +12,6 @@ import type { GetDataError } from 'restful-react'
 import { parse } from 'yaml'
 import { AllowedTypes, FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@wings-software/uicore'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useMutateAsGet } from '@common/hooks'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import {
@@ -36,6 +35,7 @@ import {
   isServerlessDeploymentType,
   ServiceDeploymentType
 } from '@pipeline/utils/stageHelpers'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import ServerlessArtifactoryRepository from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/Artifactory/ServerlessArtifactoryRepository'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import { getStageFromPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
@@ -47,6 +47,7 @@ import {
   getFinalQueryParamValue,
   getFqnPath,
   getImagePath,
+  getYamlData,
   isArtifactSourceRuntime,
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity,
@@ -184,7 +185,8 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     fromTrigger,
     artifact,
     isSidecar,
-    artifactPath
+    artifactPath,
+    stepViewType
   } = props
 
   const { getString } = useStrings()
@@ -323,9 +325,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     refetch: refetchTags,
     error: fetchTagsError
   } = useMutateAsGet(useGetBuildDetailsForArtifactoryArtifactWithYaml, {
-    body: yamlStringify({
-      pipeline: formik?.values
-    }),
+    body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
     requestOptions: {
       headers: {
         'content-type': 'application/json'

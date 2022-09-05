@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { defaultTo, noop, some } from 'lodash-es'
+import { defaultTo, isArray, noop, some } from 'lodash-es'
 import { SimpleTagInput, Text, Icon, Layout, Container } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { Menu } from '@blueprintjs/core'
@@ -65,7 +65,9 @@ export const DelegateSelectorsV2 = (props: DelegateSelectorsV2Props): React.Reac
     setDelegateSelectors(data)
     const selectedList = mapSelectedData(data, selectedItems as string[])
     // Note: Need to check why tags created from UI are not coming in the delegate selectors API response hence updating here
-    const newItems = selectedItems?.filter(value => !some(data, ({ name }) => name === value)) || []
+    const newItems = isArray(selectedItems)
+      ? selectedItems?.filter(value => !some(data, ({ name }) => name === value))
+      : []
     const updateNewTags =
       newItems.length > 0 ? (newItems.map(name => ({ connected: false, name })) as DelegateSelector[]) : []
     setCreatedTags(updateNewTags)

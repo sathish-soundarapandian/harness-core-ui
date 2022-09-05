@@ -9,7 +9,6 @@ import React, { useState } from 'react'
 import { defaultTo, get } from 'lodash-es'
 import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@wings-software/uicore'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useMutateAsGet } from '@common/hooks'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { SidecarArtifact, useGetBuildDetailsForGcrWithYaml } from 'services/cd-ng'
@@ -18,6 +17,7 @@ import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/Triggers
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import ExperimentalInput from '../../K8sServiceSpecForms/ExperimentalInput'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
@@ -26,6 +26,7 @@ import {
   getFinalQueryParamValue,
   getFqnPath,
   getImagePath,
+  getYamlData,
   isArtifactSourceRuntime,
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity,
@@ -60,7 +61,8 @@ const Content = (props: GCRRenderContent): JSX.Element => {
     fromTrigger,
     artifact,
     isSidecar,
-    artifactPath
+    artifactPath,
+    stepViewType
   } = props
 
   const { getString } = useStrings()
@@ -86,9 +88,7 @@ const Content = (props: GCRRenderContent): JSX.Element => {
     refetch: refetchTags,
     error: fetchTagsError
   } = useMutateAsGet(useGetBuildDetailsForGcrWithYaml, {
-    body: yamlStringify({
-      pipeline: formik?.values
-    }),
+    body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
     requestOptions: {
       headers: {
         'content-type': 'application/json'
