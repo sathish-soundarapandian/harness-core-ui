@@ -23,7 +23,7 @@ import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Ste
 import { useStrings } from 'framework/strings'
 import type { K8sRollingStepInfo, StepElementConfig } from 'services/cd-ng'
 import { FormMultiTypeCheckboxField } from '@common/components'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import {
   FormMultiTypeDurationField,
@@ -35,6 +35,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import type { StringsMap } from 'stringTypes'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
@@ -120,6 +121,7 @@ function K8BGDeployWidget(props: K8BGDeployProps, formikRef: StepFormikFowardRef
                       setFieldValue('timeout', value)
                     }}
                     isReadonly={readonly}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
                   />
                 )}
               </div>
@@ -151,7 +153,7 @@ const K8BGDeployInputStep: React.FC<K8BGDeployProps> = ({ inputSetData, allowabl
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeDurationField
+          <TimeoutFieldInputSetView
             label={getString('pipelineSteps.timeoutLabel')}
             multiTypeDurationProps={{
               enableConfigureOptions: false,
@@ -161,6 +163,8 @@ const K8BGDeployInputStep: React.FC<K8BGDeployProps> = ({ inputSetData, allowabl
             }}
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
             disabled={inputSetData?.readonly}
+            fieldPath={'timeout'}
+            template={inputSetData?.template}
           />
         </div>
       )}
