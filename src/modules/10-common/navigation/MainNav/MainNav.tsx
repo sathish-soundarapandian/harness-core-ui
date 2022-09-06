@@ -210,6 +210,21 @@ export default function L1Nav(): React.ReactElement {
             </Link>
           </li>
         )}
+        <li className={css.navItem}>
+          <Link {...commonLinkProps} to={paths.toIDP(params)}>
+            <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+              <Icon name="chaos-main" size={30} />
+              <Text
+                font={{ weight: 'semi-bold', align: 'center' }}
+                padding={{ bottom: 'xsmall' }}
+                color={Color.WHITE}
+                className={css.text}
+              >
+                IDP
+              </Text>
+            </Layout.Vertical>
+          </Link>
+        </li>
       </ul>
       <ul className={css.navList}>
         {RESOURCE_CENTER_ENABLED && (

@@ -102,6 +102,12 @@ declare module 'chaos/MicroFrontendApp' {
   export default ChildApp
 }
 
+declare module 'idp/MicroFrontendApp' {
+  import type { ChildAppComponent } from './microfrontends'
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
 declare module 'errortracking/App' {
   const ChildApp: ChildAppComponent
   export default ChildApp

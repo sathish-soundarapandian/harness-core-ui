@@ -92,10 +92,10 @@ module.exports = {
     pathRewrite: { '^/pm': '' },
     target: process.env.OPA_GOVERNANCE_API_URL || 'http://localhost:3001'
   },
-  '/pm': {
-    pathRewrite: { '^/pm': '' },
-    target: process.env.OPA_GOVERNANCE_UI_URL || 'http://localhost:3000'
-  },
+  // '/pm': {
+  //   pathRewrite: { '^/pm': '' },
+  //   target: process.env.OPA_GOVERNANCE_UI_URL || 'http://localhost:3000'
+  // },
   '/scm/api': {
     pathRewrite: { '^/scm': '' },
     target: process.env.SCM_API_URL || 'http://localhost:3001'
@@ -103,6 +103,10 @@ module.exports = {
   '/scm': {
     pathRewrite: { '^/scm': '' },
     target: process.env.SCM_API_URL || 'http://localhost:3000'
+  },
+  '/idp': {
+    pathRewrite: { '^/idp': '' },
+    target: process.env.IDP_UI_URL || 'http://localhost:3000'
   },
   '/sto/api': {
     pathRewrite: { '^/sto': '' },
