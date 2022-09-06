@@ -76,7 +76,7 @@ describe('ModuleList', () => {
     )
     const customizeIcon = container.querySelector('[data-icon="customize"]')
     fireEvent.click(customizeIcon!)
-    expect(queryByText('Module config screen')).not.toBeNull()
+    expect(queryByText('common.moduleList.title')).not.toBeNull()
   })
 
   test('render module config screen by clicking on module tooltip', () => {
