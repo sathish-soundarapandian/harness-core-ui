@@ -17,6 +17,12 @@ import { BANNER_KEY } from '../FeatureBanner'
 import { BannerType } from '../Constants'
 import { DefaultLayout } from '../DefaultLayout'
 
+jest.mock('@common/navigation/MainNav', () => {
+  return () => {
+    return <div>Main nav</div>
+  }
+})
+
 jest.mock('@common/hooks/useFeatures', () => ({
   useFeatures: jest.fn(() => ({}))
 }))

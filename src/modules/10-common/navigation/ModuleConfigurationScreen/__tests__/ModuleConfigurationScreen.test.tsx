@@ -6,11 +6,10 @@
  */
 
 import React from 'react'
-import { render, fireEvent, screen } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ModuleName } from 'framework/types/ModuleName'
 import { usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
-import { DEFAULT_MODULES_ORDER } from '@common/hooks/useNavModuleInfo'
 import ModulesConfigurationScreen from '../ModuleConfigurationScreen'
 import type { ModuleCarouselProps } from '../ModuleDetailsSection/ModuleCarousel'
 import type { ModuleSortableListProps } from '../ModuleSortableList/ModuleSortableList'
@@ -43,15 +42,6 @@ jest.mock('../ModuleDetailsSection/ModuleCarousel', () => {
     return <>{props.module ? <div data-testId={`test-active-module-${props.module}`}></div> : null}</>
   }
 })
-
-// jest.spyOn(preferenceStore, 'usePreferenceStore').mockReturnValue({
-//   setPreference: setModuleConfigPreference,
-//   preference: {
-//     orderedModules: [ModuleName.CD, ModuleName.CI],
-//     selectedModules: [ModuleName.CD]
-//   },
-//   clearPreference: jest.fn
-// })
 
 describe('Module Configuration screen', () => {
   beforeEach(() => {
@@ -111,45 +101,5 @@ describe('Module Configuration screen', () => {
     )
 
     expect(getByTestId('test-active-module-CI')).toBeDefined()
-  })
-
-  test('test click on reset to default', async () => {
-    const { queryByText } = render(
-      <TestWrapper path="/account/:accountId" pathParams={{ accountId: 'dummy' }}>
-        <ModulesConfigurationScreen activeModule={ModuleName.CI} onClose={jest.fn} />
-      </TestWrapper>
-    )
-
-    const restoreToDefault = queryByText('common.moduleConfig.restoreDefault')
-    fireEvent.click(restoreToDefault!)
-    expect(restoreToDefault).toBeDefined()
-
-    expect(setModuleConfigPreference).toBeCalledWith({ selectedModules: [], orderedModules: DEFAULT_MODULES_ORDER })
-  })
-
-  test('test empty ordered modules from preference store', async () => {
-    const { queryByText, container } = render(
-      <TestWrapper path="/account/:accountId" pathParams={{ accountId: 'dummy' }}>
-        <ModulesConfigurationScreen activeModule={ModuleName.CI} onClose={jest.fn} />
-      </TestWrapper>
-    )
-    jest.resetAllMocks()
-    // eslint-disable-next-line
-    // @ts-ignore
-    usePreferenceStore.mockImplementation(() => {
-      return {
-        setPreference: setModuleConfigPreference,
-        preference: {
-          orderedModules: [],
-          selectedModules: []
-        },
-        clearPreference: jest.fn
-      }
-    })
-
-    screen.debug(container, 1000000)
-    const restoreToDefault = queryByText('common.moduleConfig.restoreDefault')
-    fireEvent.click(restoreToDefault!)
-    expect(restoreToDefault).toBeDefined()
   })
 })

@@ -9,7 +9,7 @@ exports[`Module Configuration screen should render correctly 1`] = `
       class="StyledProps--font StyledProps--main header"
     >
       <span
-        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--margin-bottom-xsmall"
+        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--margin-bottom-xsmall StyledProps--flex StyledProps--flex-justifyContent-flex-start"
       >
         <span
           class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-white StyledProps--font-variation-h2"
@@ -33,26 +33,6 @@ exports[`Module Configuration screen should render correctly 1`] = `
           </span>
         </span>
       </span>
-      <p
-        class="StyledProps--font StyledProps--main defaultSettingsTextContainer"
-      >
-        <span
-          class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny StyledProps--color StyledProps--color-grey200 StyledProps--inline"
-        >
-          (
-          <span>
-            common.moduleConfig.autoSaved
-          </span>
-          )
-        </span>
-        <span
-          class="StyledProps--font StyledProps--main defaultSettings StyledProps--margin-left-xsmall StyledProps--font-variation-tiny StyledProps--inline StyledProps--color StyledProps--color-primary5"
-        >
-          <span>
-            common.moduleConfig.restoreDefault
-          </span>
-        </span>
-      </p>
     </div>
     <div
       class="Layout--horizontal StyledProps--main body StyledProps--padding-bottom-huge StyledProps--padding-right-huge StyledProps--margin-bottom-xxxlarge"
