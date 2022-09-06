@@ -235,7 +235,7 @@ function DeployServiceEntityInputStep({
     }
   }
 
-  if (!services?.length && !inputSetData?.readonly) {
+  if (!services?.length || !inputSetData?.readonly) {
     return null
   }
 
