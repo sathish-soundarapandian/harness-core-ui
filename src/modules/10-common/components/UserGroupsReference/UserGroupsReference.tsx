@@ -24,6 +24,7 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { EntityReferenceResponse, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
+import { getUserName } from '@common/utils/utils'
 import css from './UserGroupsReference.module.scss'
 
 export interface UserGroupsRef extends Omit<UserGroupDTO, 'users'> {
@@ -166,7 +167,7 @@ const UserGroupsReference: React.FC<UserGroupsReferenceProps> = props => {
       recordRender={({ item, selected }) => {
         const avatars =
           item.record.users?.map(user => {
-            return { email: user.email, name: user.name }
+            return { email: user.email, name: getUserName(user) }
           }) || []
         return (
           <Container flex={{ justifyContent: 'space-between' }} width={'100%'}>

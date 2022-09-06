@@ -7,12 +7,11 @@
 
 import React, { ReactNode } from 'react'
 import type { IconName, ModalErrorHandlerBinding, SelectOption } from '@wings-software/uicore'
-import { defaultTo, pick } from 'lodash-es'
+import { pick } from 'lodash-es'
 import type { StringsMap } from 'stringTypes'
 import type {
   AccessControlCheckError,
   RoleAssignmentMetadataDTO,
-  UserMetadataDTO,
   Scope as CDScope,
   UserGroupDTO,
   Failure,
@@ -347,10 +346,6 @@ export function getTooltip({
   }
 
   return {}
-}
-
-export const getUserName = (user: UserMetadataDTO): string => {
-  return defaultTo(user.name, user.email)
 }
 
 export const generateScopeList = (org: string, projects: ProjectSelectOption[], accountId: string): CDScope[] => {
