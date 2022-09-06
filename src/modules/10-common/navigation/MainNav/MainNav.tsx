@@ -10,7 +10,7 @@ import cx from 'classnames'
 import { NavLink as Link, useParams } from 'react-router-dom'
 import type { NavLinkProps } from 'react-router-dom'
 import { Text, Icon, Layout, Avatar, useToggleOpen, Container, Popover } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { Classes, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { String } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -30,6 +30,7 @@ import {
   ModulesPreferenceStoreData
 } from '../ModuleConfigurationScreen/ModuleSortableList/ModuleSortableList'
 import ModuleList from '../ModuleList/ModuleList'
+import ModuleConfigurationScreen from '../ModuleConfigurationScreen/ModuleConfigurationScreen'
 import {
   BuildsNavItem,
   ChaosNavItem,
@@ -64,6 +65,7 @@ export default function L1Nav(): React.ReactElement {
   const params = useParams<ProjectPathProps>()
   const { RESOURCE_CENTER_ENABLED, NG_DASHBOARDS, NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
   const { isOpen: isModuleListOpen, toggle: toggleModuleList, close: closeModuleList } = useToggleOpen(false)
+  const { isOpen: isModuleConfigOpen, toggle: toggleModuleConfig, close: closeModuleConfig } = useToggleOpen(false)
 
   const { currentUserInfo: user } = useAppStore()
   const { module } = useModuleInfo()
@@ -72,7 +74,7 @@ export default function L1Nav(): React.ReactElement {
     MODULES_CONFIG_PREFERENCE_STORE_KEY
   )
 
-  const modulesToShow = modulesPreferenceData?.selectedModules || []
+  const modulesToShow = [...modulesPreferenceData?.selectedModules] || []
   // if current module is not selecting in the modules config, add it temporarily
   if (module && !modulesToShow.includes(moduleToModuleNameMapping[module] as NavModuleName)) {
     modulesToShow.push(moduleToModuleNameMapping[module] as NavModuleName)
@@ -138,7 +140,12 @@ export default function L1Nav(): React.ReactElement {
                     })}
                     onClick={toggleModuleList}
                   >
-                    <Icon name="grid" size={isModuleListOpen ? 26 : 16} />
+                    <Icon name={isModuleConfigOpen ? 'customize' : 'grid'} size={isModuleListOpen ? 26 : 16} />
+                    {isModuleConfigOpen && (
+                      <Text color={Color.WHITE} font={{ variation: FontVariation.TINY }} margin={{ top: 'xsmall' }}>
+                        <String stringID="common.configureModuleList" />
+                      </Text>
+                    )}
                   </button>
                 </Popover>
               </Container>
@@ -197,7 +204,17 @@ export default function L1Nav(): React.ReactElement {
           </li>
         </ul>
       </nav>
-      {NEW_LEFT_NAVBAR_SETTINGS ? <ModuleList isOpen={isModuleListOpen} close={closeModuleList} /> : null}
+      {NEW_LEFT_NAVBAR_SETTINGS ? (
+        <ModuleList isOpen={isModuleListOpen} close={closeModuleList} onConfigIconClick={toggleModuleConfig} />
+      ) : null}
+      {isModuleConfigOpen ? (
+        <ModuleConfigurationScreen
+          onClose={() => {
+            closeModuleConfig()
+            closeModuleList()
+          }}
+        />
+      ) : null}
     </>
   )
 }

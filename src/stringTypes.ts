@@ -145,6 +145,7 @@ export interface StringsMap {
   'common.community': string
   'common.confictOccured': string
   'common.config': string
+  'common.configureModuleList': string
   'common.configureOptions.advancedHelp': string
   'common.configureOptions.askDuringExecution': string
   'common.configureOptions.configureOptions': string
