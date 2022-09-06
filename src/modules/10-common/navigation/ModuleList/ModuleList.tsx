@@ -23,6 +23,7 @@ interface ModuleListProps {
   isOpen: boolean
   close: () => void
   usePortal?: boolean
+  onConfigIconClick?: () => void
 }
 
 interface ModuleTooltipProps {
@@ -116,30 +117,12 @@ const listConfig: GroupConfig[] = [
   }
 ]
 
-const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true }) => {
-  const [showModuleSettings, setShowModuleSettings] = useState(false)
+const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true, onConfigIconClick }) => {
   const [activeModuleCarousel, setActiveModuleCarousel] = useState<NavModuleName | undefined>(undefined)
 
   const onConfigScreenClose = () => {
-    setShowModuleSettings(false)
     setActiveModuleCarousel(undefined)
     close()
-  }
-
-  const renderModuleConfigScreen = () => {
-    if (showModuleSettings) {
-      return <ModuleConfigurationScreen onClose={onConfigScreenClose} />
-    } else if (activeModuleCarousel) {
-      return (
-        <ModuleConfigurationScreen
-          onClose={onConfigScreenClose}
-          activeModule={activeModuleCarousel}
-          className={css.configScreenWithoutReorder}
-          hideReordering
-          hideHeader
-        />
-      )
-    }
   }
 
   return (
@@ -163,7 +146,7 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
               size={20}
               className={cx(css.blue, css.clickable)}
               padding={'small'}
-              onClick={() => setShowModuleSettings(true)}
+              onClick={onConfigIconClick}
             />
           </Container>
           <Layout.Vertical flex spacing="xxxlarge" data-testId="grouplistContainer">
@@ -182,7 +165,18 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
           </Layout.Vertical>
         </div>
       </Drawer>
-      {renderModuleConfigScreen()}
+      {activeModuleCarousel ? (
+        <ModuleConfigurationScreen
+          onClose={() => {
+            onConfigScreenClose()
+            close()
+          }}
+          activeModule={activeModuleCarousel}
+          className={css.configScreenWithoutReorder}
+          hideReordering
+          hideHeader
+        />
+      ) : null}
     </>
   )
 }
