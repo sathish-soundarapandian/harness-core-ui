@@ -35,7 +35,8 @@ export const isSidecarAllowed = (deploymentType: ServiceDefinition['type'], isRe
     !(
       deploymentType === ServiceDeploymentType.WinRm ||
       deploymentType === ServiceDeploymentType.Ssh ||
-      deploymentType === ServiceDeploymentType.AzureWebApp
+      deploymentType === ServiceDeploymentType.AzureWebApp ||
+      deploymentType === ServiceDeploymentType.CustomDeployment
     )
   )
 }
@@ -161,12 +162,12 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Acr
   ],
   CustomDeployment: [
-    ENABLED_ARTIFACT_TYPES.DockerRegistry,
-    ENABLED_ARTIFACT_TYPES.Gcr,
-    ENABLED_ARTIFACT_TYPES.Ecr,
-    ENABLED_ARTIFACT_TYPES.Nexus3Registry,
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
-    ENABLED_ARTIFACT_TYPES.Acr
+    ENABLED_ARTIFACT_TYPES.Jenkins,
+    ENABLED_ARTIFACT_TYPES.Nexus3Registry,
+    ENABLED_ARTIFACT_TYPES.AmazonS3,
+    ENABLED_ARTIFACT_TYPES.DockerRegistry,
+    ENABLED_ARTIFACT_TYPES.Ecr
   ]
 }
 

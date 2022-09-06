@@ -173,7 +173,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
             {fetchInstanceScriptType === InstanceScriptTypes.FileStore && (
               <MultiConfigSelectField
                 name="fetchInstancesScript.store.spec.files"
-                allowableTypes={[MultiTypeInputType.FIXED]}
+                allowableTypes={allowableTypes}
                 fileType={FILE_TYPE_VALUES.FILE_STORE}
                 formik={formik}
                 expressions={expressions}

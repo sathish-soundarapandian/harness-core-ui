@@ -539,6 +539,8 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
       return StepType.WinRmServiceSpec
     case ServiceDeploymentType.ECS:
       return StepType.EcsService
+    case ServiceDeploymentType.CustomDeployment:
+      return StepType.CustomDeploymentServiceSpec
     default:
       return StepType.K8sServiceSpec
   }
