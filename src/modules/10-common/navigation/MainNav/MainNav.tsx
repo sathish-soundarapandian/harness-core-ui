@@ -74,7 +74,8 @@ export default function L1Nav(): React.ReactElement {
     MODULES_CONFIG_PREFERENCE_STORE_KEY
   )
 
-  const modulesToShow = [...modulesPreferenceData?.selectedModules] || []
+  const { selectedModules = [] } = modulesPreferenceData
+  const modulesToShow = [...selectedModules]
   // if current module is not selecting in the modules config, add it temporarily
   if (module && !modulesToShow.includes(moduleToModuleNameMapping[module] as NavModuleName)) {
     modulesToShow.push(moduleToModuleNameMapping[module] as NavModuleName)
