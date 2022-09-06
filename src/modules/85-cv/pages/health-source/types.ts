@@ -20,5 +20,5 @@ export enum HealthSourceTypes {
   CustomHealth = 'CustomHealth',
   ErrorTracking = 'ErrorTracking',
   Dynatrace = 'Dynatrace',
-  Elk='Elk'
+  Elk = 'ELK'
 }
