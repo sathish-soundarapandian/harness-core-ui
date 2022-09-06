@@ -70,11 +70,7 @@ const initialValues = {
   }
 }
 
-const allowableTypes: AllowedTypesWithRunTime[] = [
-  MultiTypeInputType.FIXED,
-  MultiTypeInputType.RUNTIME,
-  MultiTypeInputType.EXPRESSION
-]
+const allowableTypes: AllowedTypesWithRunTime[] = [MultiTypeInputType.FIXED]
 
 const DeploymentContext = React.createContext<DeploymentConfigValues>({
   deploymentConfig: initialValues,

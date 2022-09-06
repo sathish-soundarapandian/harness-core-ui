@@ -373,7 +373,6 @@ manifestTypeLabels:
   OpenshiftParam: OpenShift Param
   KustomizePatches: Kustomize Patches
   ServerlessAwsLambda: Serverless Lambda Manifest
-  CustomDeployment: Custom Deployment Manifest
   ServerlessAzure: Serverless Azure Manifest
   ServerlessGCP: Serverless GCP Manifest
   AwsSAM: AWS SAM Manifest
