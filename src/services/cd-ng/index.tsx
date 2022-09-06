@@ -12158,6 +12158,7 @@ export interface ServiceSpec {
   configFiles?: ConfigFileWrapper[]
   manifests?: ManifestConfigWrapper[]
   variables?: NGVariable[]
+  customDeploymentRef?: TemplateLinkConfig
 }
 
 export interface ServiceUsageDTO {
