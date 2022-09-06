@@ -968,6 +968,7 @@ moduleConfig:
   autoSaved: Changes are automatically saved
   restoreDefault: Restore Default Settings
 selectModules: Select Modules
+configureModuleList: Configure Module List
 
 # Chaos Module
 chaosText: Chaos
