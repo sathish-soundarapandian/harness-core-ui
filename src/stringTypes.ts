@@ -3720,6 +3720,7 @@ export interface StringsMap {
   'pipeline.selectOrCreatePipeline.setupHeader': string
   'pipeline.selectStage': string
   'pipeline.selectStagePlaceholder': string
+  'pipeline.selectiveStageExecution': string
   'pipeline.serviceDataDeleteWarningText': string
   'pipeline.serviceDataDeleteWarningTitle': string
   'pipeline.serviceDependenciesText': string
