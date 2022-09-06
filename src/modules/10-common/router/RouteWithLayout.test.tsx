@@ -16,6 +16,12 @@ import { LicenseRedirectProps, LICENSE_STATE_NAMES } from 'framework/LicenseStor
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import { RouteWithLayout } from './RouteWithLayout'
 
+jest.mock('@common/navigation/MainNav', () => {
+  return () => {
+    return <div>Main nav</div>
+  }
+})
+
 jest.mock('@common/hooks/useGetUsageAndLimit', () => {
   return {
     useGetUsageAndLimit: () => {
