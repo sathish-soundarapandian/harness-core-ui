@@ -161,7 +161,9 @@ const checkValidTriggerConfiguration = ({
   if (isIdentifierIllegal(identifier)) {
     return false
   }
-
+  if (sourceRepo === CUSTOM) {
+    return true
+  }
   if (sourceRepo !== CUSTOM) {
     if (!formikValues['connectorRef'] || !formikValues['event'] || !formikValues['actions']) return false
     // onEdit case, waiting for api response
