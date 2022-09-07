@@ -65,7 +65,7 @@ export default function CDSideNav(): React.ReactElement {
   const history = useHistory()
   const module = 'cd'
   const { updateAppStore, selectedProject } = useAppStore()
-  const { ARGO_PHASE1, CD_ONBOARDING_ENABLED } = useFeatureFlags()
+  const { CD_ONBOARDING_ENABLED } = useFeatureFlags()
   const { getString } = useStrings()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
   const isCommunity = useGetCommunity()
@@ -227,9 +227,9 @@ export default function CDSideNav(): React.ReactElement {
           <SidebarLink label="Pipelines" to={routes.toPipelines({ ...params, module })} />
           <SidebarLink label="Services" to={routes.toServices({ ...params, module })} />
           <SidebarLink label="Environments" to={routes.toEnvironment({ ...params, module })} />
-          {ARGO_PHASE1 && !isCommunity && (
+          {!isCommunity ? (
             <SidebarLink label={getString('cd.gitOps')} to={routes.toGitOps({ ...params, module })} />
-          )}
+          ) : null}
           <ProjectSetupMenu module={module} />
         </React.Fragment>
       ) : null}
