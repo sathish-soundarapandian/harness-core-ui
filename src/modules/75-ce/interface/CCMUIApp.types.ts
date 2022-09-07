@@ -6,12 +6,37 @@
  */
 
 import type React from 'react'
+import type { UseGetReturn, UseMutateReturn } from 'restful-react'
 import type { OverviewAddClusterProps } from '@ce/components/OverviewPage/OverviewAddCluster'
 import type { RecommendationFiltersProps } from '@ce/components/RecommendationFilters/RecommendationFilters'
+import type {
+  ACLAggregateFilter,
+  Failure,
+  GetAggregatedUsersQueryParams,
+  GetConnectorQueryParams,
+  ResponseConnectorResponse,
+  ResponsePageUserAggregate,
+  UseGetAggregatedUsersProps,
+  UseGetConnectorProps
+} from 'services/cd-ng'
 
 export interface CCMUIAppCustomProps {
   customComponents: {
     OverviewAddCluster: React.ComponentType<OverviewAddClusterProps>
     RecommendationFilters: React.ComponentType<RecommendationFiltersProps>
+  }
+  customAPIHooks: {
+    useGetAggregatedUsers: (
+      props: UseGetAggregatedUsersProps
+    ) => UseMutateReturn<
+      ResponsePageUserAggregate,
+      Failure | Error,
+      ACLAggregateFilter,
+      GetAggregatedUsersQueryParams,
+      void
+    >
+    useGetConnector: (
+      props: UseGetConnectorProps
+    ) => UseGetReturn<ResponseConnectorResponse, Failure | Error, GetConnectorQueryParams, unknown>
   }
 }
