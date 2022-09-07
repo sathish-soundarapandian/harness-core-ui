@@ -8,8 +8,8 @@
 import React, { useState } from 'react'
 import cx from 'classnames'
 import { Link } from 'react-router-dom'
-import { Drawer, Position } from '@blueprintjs/core'
-import { Color, Container, Icon, Layout, Text } from '@harness/uicore'
+import { Classes, Drawer, Position, PopoverInteractionKind } from '@blueprintjs/core'
+import { Color, Container, Icon, Layout, Text, Popover } from '@harness/uicore'
 import { String, StringKeys } from 'framework/strings'
 import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
@@ -141,13 +141,24 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
             <Text font={{ size: 'large', weight: 'bold' }} color={Color.WHITE}>
               <String stringID="common.moduleList.title" />
             </Text>
-            <Icon
-              name="customize"
-              size={20}
-              className={cx(css.blue, css.clickable)}
-              padding={'small'}
-              onClick={onConfigIconClick}
-            />
+            <Popover
+              content={
+                <Text color={Color.WHITE} padding="small">
+                  <String stringID="common.selectModules" />
+                </Text>
+              }
+              popoverClassName={Classes.DARK}
+              interactionKind={PopoverInteractionKind.HOVER}
+              position={Position.RIGHT}
+            >
+              <Icon
+                name="customize"
+                size={20}
+                className={cx(css.blue, css.clickable)}
+                padding={'small'}
+                onClick={onConfigIconClick}
+              />
+            </Popover>
           </Container>
           <Layout.Vertical flex spacing="xxxlarge" data-testId="grouplistContainer">
             {listConfig.map(item => (
