@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useLayoutEffect } from 'react'
+import React, { useEffect, useLayoutEffect } from 'react'
 import cx from 'classnames'
 import { NavLink as Link, useParams } from 'react-router-dom'
 import type { NavLinkProps } from 'react-router-dom'
@@ -23,8 +23,9 @@ import { ResourceCenter } from '@common/components/ResourceCenter/ResourceCenter
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 
 import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'
-import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
+import { DEFAULT_MODULES_ORDER, NavModuleName } from '@common/hooks/useNavModuleInfo'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import {
   MODULES_CONFIG_PREFERENCE_STORE_KEY,
   ModulesPreferenceStoreData
@@ -69,12 +70,11 @@ export default function L1Nav(): React.ReactElement {
 
   const { currentUserInfo: user } = useAppStore()
   const { module } = useModuleInfo()
-  const { preference: modulesPreferenceData } = usePreferenceStore<ModulesPreferenceStoreData>(
-    PreferenceScope.USER,
-    MODULES_CONFIG_PREFERENCE_STORE_KEY
-  )
+  const { licenseInformation } = useLicenseStore()
+  const { preference: modulesPreferenceData, setPreference: setModuleConfigPreference } =
+    usePreferenceStore<ModulesPreferenceStoreData>(PreferenceScope.USER, MODULES_CONFIG_PREFERENCE_STORE_KEY)
 
-  const { selectedModules = [] } = modulesPreferenceData
+  const { selectedModules = [] } = modulesPreferenceData || {}
   const modulesToShow = [...selectedModules]
   // if current module is not selecting in the modules config, add it temporarily
   if (module && !modulesToShow.includes(moduleToModuleNameMapping[module] as NavModuleName)) {
@@ -97,6 +97,18 @@ export default function L1Nav(): React.ReactElement {
     document.getElementsByClassName(css.active)[0]?.scrollIntoView({ block: 'nearest' })
   })
 
+  useEffect(() => {
+    if (!modulesPreferenceData?.orderedModules?.length) {
+      const availableModules = Object.keys(licenseInformation).filter(
+        license => !!licenseInformation[license]?.id
+      ) as NavModuleName[]
+      setModuleConfigPreference({
+        orderedModules: DEFAULT_MODULES_ORDER,
+        selectedModules: availableModules.length > 0 ? availableModules : DEFAULT_MODULES_ORDER
+      })
+    }
+  }, [licenseInformation])
+
   return (
     <>
       <nav className={cx(css.main, { [css.recessed]: isModuleListOpen })}>
@@ -116,12 +128,19 @@ export default function L1Nav(): React.ReactElement {
               </Layout.Vertical>
             </Link>
           </li>
-          <div className={css.modulesContainer} style={{ height: modulesListHeight }}>
-            {(modulesPreferenceData?.orderedModules || []).map(moduleName => {
+          {NEW_LEFT_NAVBAR_SETTINGS ? (
+            <div className={css.modulesContainer} style={{ height: modulesListHeight }}>
+              {(modulesPreferenceData?.orderedModules || []).map(moduleName => {
+                const NavItem = moduleToNavItemsMap[moduleName]
+                return selectedModules.indexOf(moduleName) > -1 ? <NavItem key={moduleName} /> : null
+              })}
+            </div>
+          ) : (
+            DEFAULT_MODULES_ORDER.map(moduleName => {
               const NavItem = moduleToNavItemsMap[moduleName]
               return <NavItem key={moduleName} />
-            })}
-          </div>
+            })
+          )}
           {NEW_LEFT_NAVBAR_SETTINGS && (
             <li>
               <Container flex={{ justifyContent: 'center' }}>

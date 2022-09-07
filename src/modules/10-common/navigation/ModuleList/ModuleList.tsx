@@ -144,7 +144,7 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
             <Popover
               content={
                 <Text color={Color.WHITE} padding="small">
-                  <String stringID="common.selectModules" />
+                  <String stringID="common.moduleConfig.customize" />
                 </Text>
               }
               popoverClassName={Classes.DARK}
@@ -156,7 +156,10 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
                 size={20}
                 className={cx(css.blue, css.clickable)}
                 padding={'small'}
-                onClick={onConfigIconClick}
+                onClick={() => {
+                  onConfigIconClick?.()
+                  setActiveModuleCarousel(undefined)
+                }}
               />
             </Popover>
           </Container>
