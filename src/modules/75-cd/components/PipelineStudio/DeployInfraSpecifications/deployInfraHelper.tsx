@@ -142,8 +142,10 @@ export const getInfrastructureDefaultValue = (
     }
     case InfraDeploymentType.CustomDeployment: {
       const variables = infrastructure?.spec?.variables
+      const customDeploymentRef = infrastructure?.spec?.customDeploymentRef
 
       return {
+        customDeploymentRef,
         variables,
         allowSimultaneousDeployments
       }

@@ -631,6 +631,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
             onUpdate={value =>
               onUpdateInfrastructureDefinition(
                 {
+                  customDeploymentRef: value.customDeploymentRef,
                   variables: value.variables,
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments
                 },

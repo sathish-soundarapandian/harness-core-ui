@@ -75,7 +75,8 @@ const CustomDeploymentInfrastructureSpecEditableNew: React.FC<CustomDeploymentIn
         initialValues={getInitialValues()}
         validate={value => {
           const data: Partial<CustomDeploymentInfrastructure> = {
-            variables: value?.variables
+            variables: value?.variables,
+            customDeploymentRef: value?.customDeploymentRef
           }
           delayedOnUpdate(data)
         }}
