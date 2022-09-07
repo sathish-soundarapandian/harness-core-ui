@@ -21,6 +21,13 @@ export type AbortFailureActionConfig = FailureStrategyActionConfig & {
   type: 'Abort'
 }
 
+export type CustomDeploymentInfraNGVariable = {
+  value?: number | string
+  id?: string
+  name?: string
+  type?: 'String' | 'Secret' | 'Connector'
+}
+
 export interface AccessControlCheckError {
   code?:
     | 'DEFAULT_ERROR_CODE'
@@ -1401,6 +1408,9 @@ export type AzureWebAppInfrastructure = Infrastructure & {
   connectorRef: string
   resourceGroup: string
   subscriptionId: string
+}
+export type CustomDeploymentInfrastructure = Infrastructure & {
+  variables: Array<CustomDeploymentInfraNGVariable>
 }
 
 export type AzureWebAppInfrastructureDetails = InfrastructureDetails & {
