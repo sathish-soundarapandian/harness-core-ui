@@ -7,8 +7,8 @@
 
 import { renderHook } from '@testing-library/react-hooks'
 import { TestWrapper } from '@common/utils/testUtils'
-import useNavModuleInfo from '../useNavModuleInfo'
 import { ModuleName } from 'framework/types/ModuleName'
+import useNavModuleInfo from '../useNavModuleInfo'
 
 describe('useModuleInfo tests', () => {
   test('test with empty array', () => {
