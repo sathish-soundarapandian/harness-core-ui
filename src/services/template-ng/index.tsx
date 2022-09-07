@@ -2028,7 +2028,7 @@ export interface TemplateMetadataSummaryResponse {
   tags?: {
     [key: string]: string
   }
-  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'CustomDeployment' | 'MonitoredService' | 'SecretManager'
+  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager' | 'CustomDeployment'
   templateScope?: 'account' | 'org' | 'project' | 'unknown'
   version?: number
   versionLabel?: string

@@ -16,6 +16,7 @@ import { InfraDeploymentType } from '@cd/components/PipelineSteps/PipelineStepsU
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import {
   isAzureWebAppDeploymentType,
+  isCustomDeploymentType,
   isServerlessDeploymentType,
   isSSHWinRMDeploymentType,
   ServiceDeploymentType
@@ -139,6 +140,14 @@ export const getInfrastructureDefaultValue = (
         allowSimultaneousDeployments
       }
     }
+    case InfraDeploymentType.CustomDeployment: {
+      const variables = infrastructure?.spec?.variables
+
+      return {
+        variables,
+        allowSimultaneousDeployments
+      }
+    }
     case InfraDeploymentType.PDC: {
       const { connectorRef, credentialsRef, delegateSelectors, hostFilter, hosts } = infrastructure?.spec || {}
 
@@ -208,7 +217,7 @@ export const getInfraGroups = (
   featureFlags: Record<string, boolean>,
   infrastructureType?: string
 ): InfrastructureGroup[] => {
-  const { AZURE_WEBAPP_NG } = featureFlags
+  const { AZURE_WEBAPP_NG, NG_DEPLOYMENT_TEMPLATE } = featureFlags
 
   const serverlessInfraGroups: InfrastructureGroup[] = [
     {
@@ -228,6 +237,13 @@ export const getInfraGroups = (
     {
       groupLabel: '',
       items: AZURE_WEBAPP_NG ? getInfraGroupItems([InfraDeploymentType.AzureWebApp], getString) : []
+    }
+  ]
+
+  const customDeploymentInfraGroups: InfrastructureGroup[] = [
+    {
+      groupLabel: '',
+      items: NG_DEPLOYMENT_TEMPLATE ? getInfraGroupItems([InfraDeploymentType.CustomDeployment], getString) : []
     }
   ]
 
@@ -274,6 +290,8 @@ export const getInfraGroups = (
       return sshWinRMInfraGroups
     case deploymentType === ServiceDeploymentType.ECS:
       return ecsInfraGroups
+    case isCustomDeploymentType(deploymentType):
+      return customDeploymentInfraGroups
     case deploymentType === null:
       return [
         {
@@ -370,6 +388,9 @@ export const isServerlessInfrastructureType = (infrastructureType?: string): boo
 
 export const isAzureWebAppInfrastructureType = (infrastructureType?: string): boolean => {
   return infrastructureType === InfraDeploymentType.AzureWebApp
+}
+export const isCustomDeploymentInfrastructureType = (infrastructureType?: string): boolean => {
+  return infrastructureType === InfraDeploymentType.CustomDeployment
 }
 
 export const getInfraDefinitionDetailsHeaderTooltipId = (selectedInfrastructureType: string): string => {

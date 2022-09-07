@@ -42,7 +42,7 @@ import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentCo
 import { CustomVariablesEditableStage } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariablesEditableStage'
 import css from './DeploymentInfraSpecifications.module.scss'
 
-enum VariableType {
+export enum VariableType {
   String = 'String',
   Secret = 'Secret',
   Number = 'Number',
