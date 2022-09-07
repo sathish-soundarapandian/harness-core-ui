@@ -50,9 +50,9 @@ import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { DefaultPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { ServiceDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
-import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
+import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
-import type { PipelineInfoConfig, StageElementConfig } from 'services/pipeline-ng'
+import type { PipelineInfoConfig, StageElementConfig, TemplateLinkConfig } from 'services/pipeline-ng'
 
 import DeployInfraDefinition from '@cd/components/PipelineStudio/DeployInfraSpecifications/DeployInfraDefinition/DeployInfraDefinition'
 import { DefaultNewStageId, DefaultNewStageName } from '@cd/components/Services/utils/ServiceUtils'
@@ -64,6 +64,11 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { DeployStageErrorProvider, StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
+import type {
+  GetTemplateProps,
+  GetTemplateResponse
+} from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
+import { getTemplateRefVersionLabelObject } from '@pipeline/utils/templateUtils'
 import css from './InfrastructureDefinition.module.scss'
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -84,7 +89,8 @@ export default function InfrastructureModal({
   refetch,
   selectedInfrastructure,
   environmentIdentifier,
-  stageDeploymentType
+  stageDeploymentType,
+  getTemplate
 }: {
   hideModal: () => void
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -92,6 +98,7 @@ export default function InfrastructureModal({
   selectedInfrastructure?: string
   environmentIdentifier: string
   stageDeploymentType?: ServiceDeploymentType
+  getTemplate?: (data: GetTemplateProps) => Promise<GetTemplateResponse>
 }): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
@@ -150,6 +157,7 @@ export default function InfrastructureModal({
             infrastructureDefinition={infrastructureDefinition}
             environmentIdentifier={environmentIdentifier}
             stageDeploymentType={stageDeploymentType}
+            getTemplate={getTemplate}
           />
         </DeployStageErrorProvider>
       </PipelineVariablesContextProvider>
@@ -162,13 +170,15 @@ function BootstrapDeployInfraDefinition({
   refetch,
   infrastructureDefinition,
   environmentIdentifier,
-  stageDeploymentType
+  stageDeploymentType,
+  getTemplate
 }: {
   hideModal: () => void
   refetch: (infrastructure?: InfrastructureResponseDTO) => void
   infrastructureDefinition?: InfrastructureDefinitionConfig
   environmentIdentifier: string
   stageDeploymentType?: ServiceDeploymentType
+  getTemplate?: (data: GetTemplateProps) => Promise<GetTemplateResponse>
 }): JSX.Element {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const {
@@ -203,6 +213,14 @@ function BootstrapDeployInfraDefinition({
   const formikRef = useRef<FormikProps<Partial<InfrastructureDefinitionConfig>>>()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
+  const getDeploymentTypeTemplateData = (): TemplateLinkConfig => {
+    return get(stage, 'stage.spec.infrastructure.infrastructureDefinition.spec.customDeploymentRef')
+  }
+
+  const [customDeploymentData, setCustomDeploymentData] = useState<TemplateLinkConfig | undefined>(
+    getDeploymentTypeTemplateData()
+  )
+
   useEffect(() => {
     setSelection({
       stageId: 'stage_id'
@@ -217,6 +235,22 @@ function BootstrapDeployInfraDefinition({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedStageId])
 
+  useEffect(() => {
+    if (customDeploymentData) {
+      const stageData = produce(stage, draft => {
+        if (draft) {
+          set(
+            draft,
+            'stage.spec.infrastructure.infrastructureDefinition.spec.customDeploymentRef',
+            customDeploymentData
+          )
+        }
+      })
+      updateStage(stageData?.stage as StageElementConfig)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customDeploymentData])
+
   const { data: infrastructureDefinitionSchema } = useGetYamlSchema({
     queryParams: {
       entityType: 'Infrastructure',
@@ -227,6 +261,13 @@ function BootstrapDeployInfraDefinition({
       scope: getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
     }
   })
+
+  const addOrUpdateTemplate = async (): Promise<void> => {
+    if (getTemplate) {
+      const { template } = await getTemplate({ templateType: 'CustomDeployment' })
+      setCustomDeploymentData(getTemplateRefVersionLabelObject(template))
+    }
+  }
 
   const updateFormValues = (infrastructureDefinitionConfig: InfrastructureDefinitionConfig): void => {
     setFormValues({
@@ -321,6 +362,34 @@ function BootstrapDeployInfraDefinition({
       })
   }
 
+  const onCustomDeploymentSelection = async (
+    stageData?: StageElementWrapper<DeploymentStageElementConfig>
+  ): Promise<void> => {
+    if (getTemplate) {
+      try {
+        const { template } = await getTemplate({ templateType: 'CustomDeployment' })
+        const templateRefObj = getTemplateRefVersionLabelObject(template)
+        setCustomDeploymentData(templateRefObj)
+        const templateJSON = parse(template.yaml || '').template
+        const stageUpdatedData = produce(stageData, draft => {
+          if (draft) {
+            set(draft, 'stage.spec.infrastructure.infrastructureDefinition.spec.customDeploymentRef', templateRefObj)
+            set(
+              draft,
+              'stage.spec.infrastructure.infrastructureDefinition.spec.variables',
+              templateJSON?.spec?.infrastructure?.variables
+            )
+          }
+        })
+        if (stage) {
+          updateStage(stageUpdatedData?.stage as StageElementConfig)
+        }
+      } catch (_) {
+        // Do nothing.. user cancelled template selection
+      }
+    }
+  }
+
   const handleDeploymentTypeChange = useCallback(
     (deploymentType: ServiceDeploymentType): void => {
       // istanbul ignore else
@@ -330,7 +399,12 @@ function BootstrapDeployInfraDefinition({
           serviceDefinition.type = deploymentType
         })
         setSelectedDeploymentType(deploymentType)
-        updateStage(stageData?.stage as StageElementConfig)
+        if (deploymentType === ServiceDeploymentType.CustomDeployment) {
+          onCustomDeploymentSelection(stageData)
+        } else {
+          setCustomDeploymentData(undefined)
+          updateStage(stageData?.stage as StageElementConfig)
+        }
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -405,6 +479,8 @@ function BootstrapDeployInfraDefinition({
                   isReadonly={!!stageDeploymentType}
                   handleDeploymentTypeChange={handleDeploymentTypeChange}
                   shouldShowGitops={false}
+                  customDeploymentData={customDeploymentData}
+                  addOrUpdateTemplate={addOrUpdateTemplate}
                 />
               )}
               {(selectedDeploymentType || infrastructureDefinition) && <DeployInfraDefinition />}

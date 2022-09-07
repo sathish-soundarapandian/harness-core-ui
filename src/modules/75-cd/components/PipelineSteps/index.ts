@@ -65,6 +65,7 @@ import { ECSCanaryDeleteStep } from './ECSCanaryDeleteStep/ECSCanaryDeleteStep'
 import { AzureArmRollback } from './AzureArmRollback/AzureArmRollback'
 import { AzureBlueprintStep } from './AzureBlueprint/AzureBlueprint'
 import { CustomDeploymentServiceSpec } from './CustomDeploymentServiceSpec/CustomDeploymentServiceSpec'
+import { CustomDeploymentInfrastructureSpec } from './CustomDeploymentInfrastructureSpec/CustomDeploymentInfrastructureStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new HttpStep())
@@ -124,3 +125,4 @@ factory.registerStep(new ECSCanaryDeleteStep())
 factory.registerStep(new AzureArmRollback())
 factory.registerStep(new AzureBlueprintStep())
 factory.registerStep(new CustomDeploymentServiceSpec())
+factory.registerStep(new CustomDeploymentInfrastructureSpec())

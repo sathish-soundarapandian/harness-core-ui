@@ -102,7 +102,8 @@ export enum StepType {
   AzureArmRollback = 'AzureARMRollback',
   Background = 'Background',
   AzureBlueprint = 'AzureCreateBPResource',
-  CustomDeploymentServiceSpec = 'CustomDeploymentServiceSpec'
+  CustomDeploymentServiceSpec = 'CustomDeploymentServiceSpec',
+  CustomDeploymentInfrastructureSpec = 'CustomDeploymentInfrastructureSpec'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {
