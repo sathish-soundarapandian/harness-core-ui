@@ -89,12 +89,17 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template }) => {
     try {
       const templateInput = parse(templateInputYaml?.data || '')
       setCount(getTemplateRuntimeInputsCount(templateInput))
-
       setInputSetTemplate(templateInput)
     } catch (error) {
       showError(getRBACErrorMessage(error), undefined, 'template.parse.inputSet.error')
     }
   }, [templateInputYaml?.data])
+
+  React.useEffect(() => {
+    if (loading) {
+      setInputSetTemplate(undefined)
+    }
+  }, [loading])
 
   return (
     <Container
