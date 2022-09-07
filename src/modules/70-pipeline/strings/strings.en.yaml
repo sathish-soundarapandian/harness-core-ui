@@ -1173,6 +1173,7 @@ serviceDeploymentTypes:
   awsSAM: AWS SAM
   azureFunctions: Azure Functions
   azureWebApp: Azure Web Apps
+  deploymentTemplate: Deployment Template
 noArtifactPaths: No artifact paths found with given Artifact Directory
 stageDataDeleteWarningTitle: Discard Stage Data
 serviceDataDeleteWarningTitle: Discard Service Data

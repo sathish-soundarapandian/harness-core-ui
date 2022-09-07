@@ -61,7 +61,8 @@ export enum ServiceDeploymentType {
   AmazonSAM = 'AwsSAM',
   AzureFunctions = 'AzureFunctions',
   AzureWebApp = 'AzureWebApp',
-  ECS = 'ECS'
+  ECS = 'ECS',
+  CustomDeployment = 'CustomDeployment'
 }
 
 export enum RepositoryFormatTypes {

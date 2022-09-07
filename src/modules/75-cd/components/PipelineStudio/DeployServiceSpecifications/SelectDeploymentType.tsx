@@ -90,7 +90,7 @@ export default function SelectDeploymentType({
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
-  const { SSH_NG, AZURE_WEBAPP_NG, ECS_NG } = useFeatureFlags()
+  const { SSH_NG, AZURE_WEBAPP_NG, ECS_NG, NG_DEPLOYMENT_TEMPLATE } = useFeatureFlags()
 
   // Supported in NG (Next Gen - The one for which you are coding right now)
   const ngSupportedDeploymentTypes: DeploymentTypeItem[] = React.useMemo(() => {
@@ -137,6 +137,14 @@ export default function SelectDeploymentType({
         value: ServiceDeploymentType.ECS
       })
     }
+    if (NG_DEPLOYMENT_TEMPLATE) {
+      baseTypes.push({
+        label: getString('pipeline.serviceDeploymentTypes.deploymentTemplate'),
+        icon: 'template-library',
+        value: ServiceDeploymentType.CustomDeployment
+      })
+    }
+
     return baseTypes as DeploymentTypeItem[]
   }, [getString, SSH_NG, AZURE_WEBAPP_NG])
 
