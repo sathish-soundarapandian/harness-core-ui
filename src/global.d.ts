@@ -131,4 +131,14 @@ declare module 'stoV2/PipelineSecurityView' {
   export default ChildApp
 }
 
+declare module 'scm/App' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'scm/Welcome' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
 declare type Optional<T, K extends keyof T = keyof T> = Omit<T, K> & Partial<Pick<T, K>>

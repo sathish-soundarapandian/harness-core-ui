@@ -14,6 +14,7 @@ import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import type { SCMPathProps } from '@common/interfaces/RouteInterfaces'
 import SideNav from '@scm/components/SideNav/SideNav'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+import { WelcomeView } from './SCMRemoteApp'
 
 export const SCMSideNavProps: SidebarContext = {
   navComponent: SideNav,
@@ -40,12 +41,19 @@ export const SCMRouteDestinations: React.FC<{
     <Route path={routes.toSCM(pathProps)} exact>
       <RedirectToDefaultSCMRoute />
     </Route>
-    <RouteWithLayout path={routes.toSCMHome(pathProps)} sidebarProps={sidebarProps} pageName={PAGE_NAME.SCMWelcome} />
-    <RouteWithLayout path={routes.toSCMRepos(pathProps)} sidebarProps={sidebarProps} pageName={PAGE_NAME.SCMRepos} />
+    <RouteWithLayout path={routes.toSCMHome(pathProps)} sidebarProps={sidebarProps} pageName={PAGE_NAME.SCMWelcome}>
+      <WelcomeView />
+    </RouteWithLayout>
     <RouteWithLayout
       path={routes.toSCMNewRepo(pathProps)}
       sidebarProps={sidebarProps}
       pageName={PAGE_NAME.SCMNewRepo}
+    />
+    <RouteWithLayout
+      path={routes.toSCMRepos(pathProps)}
+      sidebarProps={sidebarProps}
+      pageName={PAGE_NAME.SCMRepos}
+      exact
     />
     <RouteWithLayout
       path={routes.toSCMRepoSettings(pathProps)}

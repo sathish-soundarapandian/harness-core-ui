@@ -50,7 +50,7 @@ module.exports = ({ enableGitOpsUI, enableSTO, enableChaosUI, enableCCMUI, enabl
   }
 
   if (enableSCM) {
-    remotes.scm = "scm@[window.getApiBaseUrl('scm/remoteEntry.js')]"
+    remotes.scm = "scmRemote@[window.getApiBaseUrl('scm/remoteEntry.js')]"
   }
 
   if (process.env.TARGET_LOCALHOST) {

@@ -224,6 +224,7 @@ if (!enableSTO) {
 // render a mock app when SCM MF is disabled
 if (!enableSCM) {
   const scmModules = [
+    'scm/App',
     'scm/Welcome',
     'scm/Repos',
     'scm/NewRepo',
