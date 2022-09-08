@@ -3588,6 +3588,7 @@ export interface StringsMap {
   'pipeline.manifestType.valuesYamlPath': string
   'pipeline.manifestTypeLabels.AwsSAM': string
   'pipeline.manifestTypeLabels.AzureFunctions': string
+  'pipeline.manifestTypeLabels.CustomDeployment': string
   'pipeline.manifestTypeLabels.EcsScalableTargetDefinition': string
   'pipeline.manifestTypeLabels.EcsScalingPolicyDefinition': string
   'pipeline.manifestTypeLabels.EcsServiceDefinition': string

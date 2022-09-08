@@ -7405,6 +7405,7 @@ export interface ManifestConfig {
     | 'EcsServiceDefinition'
     | 'EcsScalableTargetDefinition'
     | 'EcsScalingPolicyDefinition'
+    | 'CustomDeployment'
 }
 
 export interface ManifestConfigWrapper {
