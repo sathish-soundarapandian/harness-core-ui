@@ -11,6 +11,7 @@ import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { defaultTo, get } from 'lodash-es'
 import { connect, FormikProps } from 'formik'
+import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { AllNGVariables } from '@pipeline/utils/types'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -18,6 +19,10 @@ import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiT
 import type { InputSetData } from '@pipeline/components/AbstractSteps/Step'
 import { parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { useQueryParams } from '@common/hooks'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { VariableType } from './CustomVariableUtils'
 import css from './CustomVariables.module.scss'
 export interface CustomVariablesData {
@@ -33,6 +38,8 @@ export interface CustomVariableInputSetExtraProps {
   allValues?: CustomVariablesData
   executionIdentifier?: string
   isDescriptionEnabled?: boolean
+  allowedVarialblesTypes?: VariableType[]
+  allowedConnectorTypes?: ConnectorInfoDTO['type'] | ConnectorInfoDTO['type'][]
 }
 
 export interface CustomVariableInputSetProps extends CustomVariableInputSetExtraProps {
@@ -59,13 +66,20 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
     inputSetData,
     formik,
     allowableTypes,
-    className
+    className,
+    allowedConnectorTypes
   } = props
   const basePath = path?.length ? `${path}.variables` : 'variables'
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
   const formikVariables = get(formik?.values, basePath, [])
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<{
+    projectIdentifier: string
+    orgIdentifier: string
+    accountId: string
+  }>()
 
+  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   return (
     <div className={cx(css.customVariablesInputSets, 'customVariables', className)} id={domId}>
       {stepViewType === StepViewType.StageVariable && initialValues.variables.length > 0 && (
@@ -95,7 +109,23 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
             <Text>{`${variableNamePrefix}${variable.name}`}</Text>
             <Text>{variable.type}</Text>
             <div className={css.valueRow}>
-              {variable.type === VariableType.Secret ? (
+              {(variable.type as any) === VariableType.Connector ? (
+                <FormMultiTypeConnectorField
+                  name={`${basePath}[${index}].value`}
+                  label=""
+                  placeholder={getString('connectors.selectConnector')}
+                  disabled={inputSetData?.readonly}
+                  accountIdentifier={accountId}
+                  multiTypeProps={{ expressions, disabled: inputSetData?.readonly, allowableTypes }}
+                  projectIdentifier={projectIdentifier}
+                  orgIdentifier={orgIdentifier}
+                  gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+                  setRefValue
+                  connectorLabelClass="connectorVariableField"
+                  enableConfigureOptions={false}
+                  type={allowedConnectorTypes}
+                />
+              ) : variable.type === VariableType.Secret ? (
                 <MultiTypeSecretInput
                   expressions={expressions}
                   allowableTypes={allowableTypes}
