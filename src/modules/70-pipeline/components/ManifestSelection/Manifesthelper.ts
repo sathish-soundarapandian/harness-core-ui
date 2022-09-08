@@ -65,7 +65,8 @@ export const ManifestDataType: Record<ManifestTypes, ManifestTypes> = {
   EcsTaskDefinition: 'EcsTaskDefinition',
   EcsServiceDefinition: 'EcsServiceDefinition',
   EcsScalingPolicyDefinition: 'EcsScalingPolicyDefinition',
-  EcsScalableTargetDefinition: 'EcsScalableTargetDefinition'
+  EcsScalableTargetDefinition: 'EcsScalableTargetDefinition',
+  CustomDeployment: 'CustomDeployment'
 }
 
 export const ManifestToPathMap: Record<PrimaryManifestType, string> = {
@@ -122,7 +123,8 @@ export const allowedManifestTypes: Record<string, Array<ManifestTypes>> = {
     ManifestDataType.EcsServiceDefinition,
     ManifestDataType.EcsScalingPolicyDefinition,
     ManifestDataType.EcsScalableTargetDefinition
-  ]
+  ],
+  CustomDeployment: [ManifestDataType.Values]
 }
 
 export const gitStoreTypes: Array<ManifestStores> = [
@@ -164,7 +166,8 @@ export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
   EcsTaskDefinition: gitStoreTypesWithHarnessStoreType,
   EcsServiceDefinition: gitStoreTypesWithHarnessStoreType,
   EcsScalingPolicyDefinition: gitStoreTypesWithHarnessStoreType,
-  EcsScalableTargetDefinition: gitStoreTypesWithHarnessStoreType
+  EcsScalableTargetDefinition: gitStoreTypesWithHarnessStoreType,
+  CustomDeployment: gitStoreTypes
 }
 
 export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
@@ -179,7 +182,8 @@ export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
   EcsTaskDefinition: 'service-amazon-ecs',
   EcsServiceDefinition: 'service-amazon-ecs',
   EcsScalingPolicyDefinition: 'service-amazon-ecs',
-  EcsScalableTargetDefinition: 'service-amazon-ecs'
+  EcsScalableTargetDefinition: 'service-amazon-ecs',
+  CustomDeployment: 'template-library'
 }
 
 export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
@@ -194,7 +198,8 @@ export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
   EcsTaskDefinition: 'pipeline.manifestTypeLabels.EcsTaskDefinition',
   EcsServiceDefinition: 'pipeline.manifestTypeLabels.EcsServiceDefinition',
   EcsScalingPolicyDefinition: 'pipeline.manifestTypeLabels.EcsScalingPolicyDefinition',
-  EcsScalableTargetDefinition: 'pipeline.manifestTypeLabels.EcsScalableTargetDefinition'
+  EcsScalableTargetDefinition: 'pipeline.manifestTypeLabels.EcsScalableTargetDefinition',
+  CustomDeployment: 'pipeline.manifestTypeLabels.CustomDeployment'
 }
 
 export const helmVersions: Array<{ label: string; value: HelmVersionOptions }> = [

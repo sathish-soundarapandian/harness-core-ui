@@ -373,6 +373,7 @@ manifestTypeLabels:
   OpenshiftParam: OpenShift Param
   KustomizePatches: Kustomize Patches
   ServerlessAwsLambda: Serverless Lambda Manifest
+  CustomDeployment: Custom Deployment Manifest
   ServerlessAzure: Serverless Azure Manifest
   ServerlessGCP: Serverless GCP Manifest
   AwsSAM: AWS SAM Manifest
@@ -1181,6 +1182,7 @@ serviceDeploymentTypes:
   awsSAM: AWS SAM
   azureFunctions: Azure Functions
   azureWebApp: Azure Web Apps
+  customDeployment: Deployment Type Template
 noArtifactPaths: No artifact paths found with given Artifact Directory
 stageDataDeleteWarningTitle: Discard Stage Data
 serviceDataDeleteWarningTitle: Discard Service Data

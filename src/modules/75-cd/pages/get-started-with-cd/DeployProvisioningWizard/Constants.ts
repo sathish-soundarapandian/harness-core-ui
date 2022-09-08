@@ -127,6 +127,12 @@ export const deploymentTypes: ServiceDeploymentTypes[] = [
     icon: deploymentIconMap[ServiceDeploymentType.ServerlessAwsLambda],
     value: ServiceDeploymentType.ServerlessAwsLambda,
     disabled: true
+  },
+  {
+    label: 'pipeline.serviceDeploymentTypes.customDeployment',
+    icon: deploymentIconMap[ServiceDeploymentType.CustomDeployment],
+    value: ServiceDeploymentType.CustomDeployment,
+    disabled: true
   }
 ]
 

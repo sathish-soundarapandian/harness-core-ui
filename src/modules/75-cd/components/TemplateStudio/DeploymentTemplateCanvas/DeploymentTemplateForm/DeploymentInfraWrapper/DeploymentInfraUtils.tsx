@@ -32,11 +32,9 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
             then: Yup.object().shape({
               /* istanbul ignore next */
               files: Yup.lazy((value): Yup.Schema<unknown> => {
-                /* istanbul ignore next */
                 if (getMultiTypeFromValue(value as string[]) === MultiTypeInputType.FIXED) {
                   return Yup.array().of(Yup.string().required(getString('pipeline.manifestType.pathRequired')))
                 }
-                /* istanbul ignore next */
                 return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
               })
             })

@@ -100,7 +100,8 @@ export const deploymentTypeInfraTypeMap = {
   AmazonSAM: InfraDeploymentType.AmazonSAM,
   AzureFunctions: InfraDeploymentType.AzureFunctions,
   AzureWebApp: InfraDeploymentType.AzureWebApp,
-  ECS: InfraDeploymentType.ECS
+  ECS: InfraDeploymentType.ECS,
+  CustomDeployment: InfraDeploymentType.CustomDeployment
 }
 
 type InfraTypes =

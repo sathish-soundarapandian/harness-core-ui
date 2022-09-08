@@ -3571,6 +3571,7 @@ export interface StringsMap {
   'pipeline.manifestType.valuesYamlPath': string
   'pipeline.manifestTypeLabels.AwsSAM': string
   'pipeline.manifestTypeLabels.AzureFunctions': string
+  'pipeline.manifestTypeLabels.CustomDeployment': string
   'pipeline.manifestTypeLabels.EcsScalableTargetDefinition': string
   'pipeline.manifestTypeLabels.EcsScalingPolicyDefinition': string
   'pipeline.manifestTypeLabels.EcsServiceDefinition': string
@@ -3743,6 +3744,7 @@ export interface StringsMap {
   'pipeline.serviceDeploymentTypes.awsSAM': string
   'pipeline.serviceDeploymentTypes.azureFunctions': string
   'pipeline.serviceDeploymentTypes.azureWebApp': string
+  'pipeline.serviceDeploymentTypes.customDeployment': string
   'pipeline.serviceDeploymentTypes.deployDifferentLabel': string
   'pipeline.serviceDeploymentTypes.kubernetes': string
   'pipeline.serviceDeploymentTypes.pcf': string

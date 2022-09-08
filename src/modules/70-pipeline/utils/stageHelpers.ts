@@ -55,6 +55,7 @@ export enum ServiceDeploymentType {
   pcf = 'pcf',
   Pdc = 'Pdc',
   Ssh = 'Ssh',
+  CustomDeployment = 'CustomDeployment',
   ServerlessAwsLambda = 'ServerlessAwsLambda',
   ServerlessAzureFunctions = 'ServerlessAzureFunctions',
   ServerlessGoogleFunctions = 'ServerlessGoogleFunctions',
