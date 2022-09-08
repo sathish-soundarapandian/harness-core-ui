@@ -88,6 +88,7 @@
 
 .left {
   background-size: contain !important;
+
   &:after {
     border-right: 1px solid var(--grey-100);
     content: '';
@@ -122,4 +123,9 @@
   max-width: 700px;
   background-color: rgb(238, 238, 255) !important;
   opacity: 0.8;
+}
+
+.templateBar {
+  margin-top: var(--spacing-5) !important;
+  width: 50%;
 }

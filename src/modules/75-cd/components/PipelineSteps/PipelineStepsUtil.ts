@@ -36,7 +36,8 @@ export enum InfraDeploymentType {
   SshWinRmAws = 'SshWinRmAws',
   SshWinRmAzure = 'SshWinRmAzure',
   AzureWebApp = 'AzureWebApp',
-  ECS = 'ECS'
+  ECS = 'ECS',
+  CustomDeployment = 'CustomDeployment'
 }
 
 export const deploymentTypeToInfraTypeMap = {
