@@ -43,7 +43,7 @@ import { CustomVariablesEditableStage } from '@pipeline/components/PipelineSteps
 import { Connectors } from '@connectors/constants'
 import css from './DeploymentInfraSpecifications.module.scss'
 
-enum VariableType {
+export enum VariableType {
   String = 'String',
   Secret = 'Secret',
   Number = 'Number',

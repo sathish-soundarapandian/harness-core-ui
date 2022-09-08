@@ -297,6 +297,10 @@ export const isAzureWebAppOrSshWinrmGenericDeploymentType = (
   return false
 }
 
+export const isCustomDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.CustomDeployment
+}
+
 export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessAwsLambda]: 'Amazon Web Services Details',
   [ServiceDeploymentType.ServerlessAzureFunctions]: 'Azure Details',
@@ -530,7 +534,8 @@ export const deleteStageInfo = (stage?: DeploymentStageElementConfig): void => {
 
 export const infraDefinitionTypeMapping: { [key: string]: string } = {
   ServerlessAwsLambda: StepType.ServerlessAwsInfra,
-  ECS: StepType.EcsInfra
+  ECS: StepType.EcsInfra,
+  CustomDeployment: StepType.CustomDeployment
 }
 
 export const getStepTypeByDeploymentType = (deploymentType: string): StepType => {

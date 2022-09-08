@@ -67,6 +67,7 @@ import { AzureBlueprintStep } from './AzureBlueprint/AzureBlueprint'
 import { DeployServiceEntityStep } from './DeployServiceEntityStep/DeployServiceEntityStep'
 import { AzureArmStep } from './AzureArm/AzureArm'
 import { CustomDeploymentServiceSpec } from './CustomDeploymentServiceSpec/CustomDeploymentServiceSpec'
+import { CustomDeploymentInfrastructureSpec } from './CustomDeploymentInfrastructureSpec/CustomDeploymentInfrastructureStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new HttpStep())
@@ -128,3 +129,4 @@ factory.registerStep(new AzureArmRollback())
 factory.registerStep(new AzureBlueprintStep())
 factory.registerStep(new AzureArmStep())
 factory.registerStep(new CustomDeploymentServiceSpec())
+factory.registerStep(new CustomDeploymentInfrastructureSpec())
