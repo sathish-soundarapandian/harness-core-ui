@@ -41,7 +41,7 @@ import { CustomVariablesEditableStage } from '@pipeline/components/PipelineSteps
 import { useGetConnectorsListHook } from '@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook'
 import css from './DeploymentInfraSpecifications.module.scss'
 
-enum VariableType {
+export enum VariableType {
   String = 'String',
   Secret = 'Secret',
   Number = 'Number',

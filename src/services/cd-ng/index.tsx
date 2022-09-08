@@ -21,6 +21,13 @@ export type AbortFailureActionConfig = FailureStrategyActionConfig & {
   type: 'Abort'
 }
 
+export type CustomDeploymentInfraNGVariable = {
+  value?: number | string
+  id?: string
+  name?: string
+  type?: 'String' | 'Secret' | 'Connector'
+}
+
 export interface AccessControlCheckError {
   code?:
     | 'DEFAULT_ERROR_CODE'
@@ -2286,7 +2293,7 @@ export type CustomArtifactSummary = ArtifactSummary & {
 
 export type CustomDeploymentInfrastructure = Infrastructure & {
   metadata?: string
-  variables: NGVariable[]
+  variables: Array<CustomDeploymentInfraNGVariable>
 }
 
 export type CustomDeploymentInstanceInfoDTO = InstanceInfoDTO & {

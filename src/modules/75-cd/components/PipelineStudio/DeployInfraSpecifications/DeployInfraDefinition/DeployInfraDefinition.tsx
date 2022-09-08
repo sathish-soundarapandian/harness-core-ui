@@ -32,7 +32,8 @@ import {
   StageElementConfig,
   EcsInfrastructure,
   GetExecutionStrategyYamlQueryParams,
-  SshWinRmAwsInfrastructure
+  SshWinRmAwsInfrastructure,
+  CustomDeploymentInfrastructure
 } from 'services/cd-ng'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
@@ -69,10 +70,11 @@ import {
 import type { ServerlessAwsLambdaSpec } from '@cd/components/PipelineSteps/ServerlessAWSLambda/ServerlessAwsLambdaSpec'
 import type { ServerlessGCPSpec } from '@cd/components/PipelineSteps/ServerlessGCP/ServerlessGCPSpec'
 import type { ServerlessAzureSpec } from '@cd/components/PipelineSteps/ServerlessAzure/ServerlessAzureSpec'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { isNewServiceEnvEntity } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import type { ECSInfraSpec } from '@cd/components/PipelineSteps/ECSInfraSpec/ECSInfraSpec'
+import type { CustomDeploymentInfrastructureSpec } from '@cd/components/PipelineSteps/CustomDeploymentInfrastructureSpec/CustomDeploymentInfrastructureStep'
 import {
   cleanUpEmptyProvisioner,
   getInfraDefinitionDetailsHeaderTooltipId,
@@ -81,6 +83,7 @@ import {
   getInfrastructureDefaultValue,
   InfrastructureGroup,
   isAzureWebAppInfrastructureType,
+  isCustomDeploymentInfrastructureType,
   isServerlessInfrastructureType
 } from '../deployInfraHelper'
 import stageCss from '../../DeployStageSetupShell/DeployStage.module.scss'
@@ -114,12 +117,14 @@ type InfraTypes =
   | SshWinRmAwsInfrastructure
   | AzureWebAppInfrastructure
   | EcsInfrastructure
+  | CustomDeploymentInfrastructure
 
 export default function DeployInfraDefinition(props: React.PropsWithChildren<unknown>): JSX.Element {
   const [initialInfrastructureDefinitionValues, setInitialInfrastructureDefinitionValues] =
     React.useState<Infrastructure>({})
 
   const { getString } = useStrings()
+  const { NG_DEPLOYMENT_TEMPLATE } = useFeatureFlags()
 
   const {
     state: {
@@ -155,7 +160,9 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
   >(getServiceDefinitionType(stage, getStageFromPipeline, isNewServiceEnvEntity, isSvcEnvEnabled, templateServiceData))
 
   const [infraGroups, setInfraGroups] = React.useState<InfrastructureGroup[]>(
-    getInfraGroups(selectedDeploymentType, getString)
+    getInfraGroups(selectedDeploymentType, getString, {
+      NG_DEPLOYMENT_TEMPLATE: defaultTo(NG_DEPLOYMENT_TEMPLATE, false)
+    })
   )
 
   useEffect(() => {
@@ -229,7 +236,9 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
       infraReset = true
     }
 
-    const initialInfraGroups = getInfraGroups(newDeploymentType, getString)
+    const initialInfraGroups = getInfraGroups(newDeploymentType, getString, {
+      NG_DEPLOYMENT_TEMPLATE: defaultTo(NG_DEPLOYMENT_TEMPLATE, false)
+    })
 
     const filteredInfraGroups = initialInfraGroups.map(group => ({
       ...group,
@@ -243,12 +252,29 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
         : deploymentTypeInfraTypeMap[newDeploymentType])
 
     setSelectedInfrastructureType(infrastructureType)
-    setInfraGroups(getInfraGroups(newDeploymentType, getString))
+    setInfraGroups(
+      getInfraGroups(newDeploymentType, getString, {
+        NG_DEPLOYMENT_TEMPLATE: defaultTo(NG_DEPLOYMENT_TEMPLATE, false)
+      })
+    )
 
     const initialInfraDefValues = getInfrastructureDefaultValue(stage, infrastructureType)
     setInitialInfrastructureDefinitionValues(initialInfraDefValues)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stage])
+
+  React.useEffect(() => {
+    // explicitly setting infraDefinition.type as variables prepoluated from template
+    if (selectedDeploymentType === InfraDeploymentType.CustomDeployment) {
+      const stageData = produce(stage, draft => {
+        !!draft && set(draft, 'stage.spec.infrastructure.infrastructureDefinition.type', selectedDeploymentType)
+      })
+      debounceUpdateStage(stageData?.stage)
+      const initialInfraDefValues = getInfrastructureDefaultValue(stageData, selectedDeploymentType)
+      setInitialInfrastructureDefinitionValues(initialInfraDefValues)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDeploymentType])
 
   const onUpdateInfrastructureDefinition = (extendedSpec: InfraTypes, type: string): void => {
     if (get(stageRef.current, 'stage.spec.infrastructure', null)) {
@@ -614,6 +640,29 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
           />
         )
       }
+      case InfraDeploymentType.CustomDeployment: {
+        return (
+          <StepWidget<CustomDeploymentInfrastructureSpec>
+            factory={factory}
+            key={stage.stage.identifier}
+            readonly={isReadonly}
+            initialValues={initialInfrastructureDefinitionValues as CustomDeploymentInfrastructureSpec}
+            type={StepType.CustomDeployment}
+            stepViewType={StepViewType.Edit}
+            allowableTypes={allowableTypes}
+            onUpdate={value =>
+              onUpdateInfrastructureDefinition(
+                {
+                  customDeploymentRef: value.customDeploymentRef,
+                  variables: value.variables,
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                },
+                InfraDeploymentType.CustomDeployment
+              )
+            }
+          />
+        )
+      }
       default: {
         return <div>{getString('cd.steps.common.undefinedType')}</div>
       }
@@ -677,7 +726,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
       )}
       {!(
         isAzureWebAppDeploymentType(selectedDeploymentType) ||
-        isAzureWebAppInfrastructureType(selectedInfrastructureType)
+        isAzureWebAppInfrastructureType(selectedInfrastructureType) ||
+        isCustomDeploymentInfrastructureType(selectedInfrastructureType)
       ) && (
         <Card className={stageCss.sectionCard}>
           {!(
@@ -745,7 +795,9 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
       ) : null}
       {selectedInfrastructureType && (
         <>
-          {isAzureWebAppDeploymentType(selectedInfrastructureType) && isSvcEnvEnabled ? (
+          {(isAzureWebAppDeploymentType(selectedInfrastructureType) ||
+            isCustomDeploymentInfrastructureType(selectedInfrastructureType)) &&
+          isSvcEnvEnabled ? (
             <></>
           ) : (
             <div
