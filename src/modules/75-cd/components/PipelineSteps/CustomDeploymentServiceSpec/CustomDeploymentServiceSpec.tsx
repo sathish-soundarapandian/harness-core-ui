@@ -45,7 +45,7 @@ const tagExists = (value: unknown): boolean => typeof value === 'number' || !isE
 const ArtifactsPrimaryRegex = /^.+artifacts\.primary\.spec\.connectorRef$/
 const ArtifactsPrimaryTagRegex = /^.+artifacts\.primary\.spec\.artifactPath$/
 
-const winRmAllowedArtifactTypes: Array<ArtifactType> = allowedArtifactTypes.WinRm
+const customDeplpoymenyAllowedArtifactTypes: Array<ArtifactType> = allowedArtifactTypes.CustomDeployment
 
 export class CustomDeploymentServiceSpec extends Step<ServiceSpec> {
   protected type = StepType.CustomDeploymentServiceSpec
@@ -94,7 +94,7 @@ export class CustomDeploymentServiceSpec extends Step<ServiceSpec> {
     }
     if (pipelineObj) {
       const obj = get(pipelineObj, path.replace('.spec.connectorRef', ''))
-      if (winRmAllowedArtifactTypes.includes(obj?.type)) {
+      if (customDeplpoymenyAllowedArtifactTypes.includes(obj?.type)) {
         return getConnectorListV2Promise({
           queryParams: {
             accountIdentifier: accountId,
@@ -133,7 +133,7 @@ export class CustomDeploymentServiceSpec extends Step<ServiceSpec> {
 
     if (pipelineObj) {
       const obj = get(pipelineObj, path.replace('.spec.artifactPath', ''))
-      if (winRmAllowedArtifactTypes.includes(obj?.type)) {
+      if (customDeplpoymenyAllowedArtifactTypes.includes(obj?.type)) {
         return getBuildDetailsForArtifactoryArtifactWithYamlPromise({
           queryParams: {
             artifactPath: obj.spec?.artifactDirectory,

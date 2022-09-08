@@ -28,9 +28,7 @@ import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes
 import { useServiceContext } from '@cd/context/ServiceContext'
 import type { ServicePipelineConfig } from '@cd/components/Services/utils/ServiceUtils'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
-import { generateRandomString } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
-import { createTemplate } from '@pipeline/utils/templateUtils'
-import type { PipelineInfoConfig } from 'services/pipeline-ng'
+import { getTemplateRefVersionLabelObject } from '@pipeline/utils/templateUtils'
 import { setupMode } from '../PropagateWidget/PropagateWidget'
 import SelectDeploymentType from '../SelectDeploymentType'
 import css from './DeployServiceDefinition.module.scss'
@@ -166,21 +164,13 @@ function DeployServiceDefinition(): React.ReactElement {
 
   const addOrUpdateTemplate = async (): Promise<void> => {
     const { template } = await getTemplate({ templateType: 'CustomDeployment' })
-    const processNode = createTemplate(
-      { name: '', identifier: generateRandomString('') } as PipelineInfoConfig,
-      template
-    )
-    setCustomDeploymentData(processNode?.template)
+    setCustomDeploymentData(getTemplateRefVersionLabelObject(template))
   }
 
   const onCustomDeploymentSelection = async (): Promise<void> => {
     try {
       const { template } = await getTemplate({ templateType: 'CustomDeployment' })
-      const processNode = createTemplate(
-        { name: '', identifier: generateRandomString('') } as PipelineInfoConfig,
-        template
-      )
-      setCustomDeploymentData(processNode?.template)
+      setCustomDeploymentData(getTemplateRefVersionLabelObject(template))
     } catch (_) {
       // Do nothing.. user cancelled template selection
     }
