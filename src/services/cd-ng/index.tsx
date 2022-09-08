@@ -7452,6 +7452,7 @@ export interface ManifestConfig {
     | 'EcsServiceDefinition'
     | 'EcsScalableTargetDefinition'
     | 'EcsScalingPolicyDefinition'
+    | 'CustomDeployment'
 }
 
 export interface ManifestConfigWrapper {
@@ -12233,6 +12234,7 @@ export interface ServiceSpec {
   configFiles?: ConfigFileWrapper[]
   manifests?: ManifestConfigWrapper[]
   variables?: NGVariable[]
+  customDeploymentRef?: TemplateLinkConfig
 }
 
 export interface ServiceUsageDTO {

@@ -27,7 +27,8 @@ export const deploymentIconMap: Record<ServiceDeploymentType, IconName> = {
   [ServiceDeploymentType.amazonAmi]: 'main-service-ami',
   [ServiceDeploymentType.awsCodeDeploy]: 'app-aws-code-deploy',
   [ServiceDeploymentType.awsLambda]: 'service-aws-lamda',
-  [ServiceDeploymentType.pcf]: 'service-pivotal'
+  [ServiceDeploymentType.pcf]: 'service-pivotal',
+  [ServiceDeploymentType.CustomDeployment]: 'CustomDeployment'
 }
 
 export interface DeploymentTypeItem {
@@ -43,10 +44,11 @@ export interface GetNgSupportedDeploymentTypesProps {
   SSH_NG?: boolean
   AZURE_WEBAPP_NG?: boolean
   ECS_NG?: boolean
+  NG_DEPLOYMENT_TEMPLATE?: boolean
 }
 
 export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTypesProps): DeploymentTypeItem[] {
-  const { SSH_NG, AZURE_WEBAPP_NG, ECS_NG } = props
+  const { SSH_NG, AZURE_WEBAPP_NG, ECS_NG, NG_DEPLOYMENT_TEMPLATE } = props
 
   const baseTypes: DeploymentTypeItem[] = [
     {
@@ -90,6 +92,13 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
       label: 'pipeline.serviceDeploymentTypes.amazonEcs',
       icon: deploymentIconMap[ServiceDeploymentType.ECS],
       value: ServiceDeploymentType.ECS
+    })
+  }
+  if (NG_DEPLOYMENT_TEMPLATE) {
+    baseTypes.push({
+      label: 'pipeline.serviceDeploymentTypes.customDeployment',
+      icon: deploymentIconMap[ServiceDeploymentType.CustomDeployment],
+      value: ServiceDeploymentType.CustomDeployment
     })
   }
 

@@ -21,6 +21,7 @@ declare const styles: {
   readonly left: string
   readonly newText: string
   readonly paddingNone: string
+  readonly templateBar: string
   readonly tooltipContainer: string
   readonly tooltipIcon: string
 }
