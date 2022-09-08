@@ -161,6 +161,7 @@ const View: React.FC<UseSubscribeModalProps> = ({ module, plan, time, onClose, c
           subscriptionDetails={subscriptionProps}
           setSubscriptionDetails={setSubscriptionProps}
           module={module}
+          canChangePaymentFrequency={view < SubscribeViews.PAYMENT_METHOD}
         />
       </Layout.Horizontal>
     </Layout.Vertical>

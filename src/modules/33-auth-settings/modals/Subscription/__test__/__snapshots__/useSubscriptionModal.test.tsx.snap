@@ -729,7 +729,6 @@ exports[`useSubscriptionModal render 1`] = `
               >
                 <input
                   class="Toggle--input"
-                  disabled=""
                   type="checkbox"
                   value=""
                 />

@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom'
 import { ButtonVariation, FontVariation, Button, Text, Card, OverlaySpinner, Color } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { ResponsePageUserAggregate, useGetAggregatedUsers, UserAggregate } from 'services/cd-ng'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import UserLabelBilling from './UserLabelBilling'
 import css from './BillingPage.module.scss'
@@ -23,7 +24,7 @@ function BillingAdminsCard(): JSX.Element {
   })
 
   useEffect(() => {
-    mutate({ roleIdentifiers: ['_billing_admin'] }).then((response: ResponsePageUserAggregate) => {
+    mutate({ roleIdentifiers: [PermissionIdentifier.EDIT_LICENSE] }).then((response: ResponsePageUserAggregate) => {
       if (response.data?.content && response.data?.content?.length) {
         setBillingAdmins(response.data?.content)
       }
