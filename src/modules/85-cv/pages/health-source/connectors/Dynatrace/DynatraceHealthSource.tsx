@@ -37,7 +37,7 @@ import {
   persistCustomMetric
 } from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.utils'
 import DynatraceCustomMetrics from '@cv/pages/health-source/connectors/Dynatrace/components/DynatraceCustomMetrics/DynatraceCustomMetrics'
-import CardWithOuterTitle from '@pipeline/components/CardWithOuterTitle/CardWithOuterTitle'
+import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import DynatraceMetricPacksToService from './components/DynatraceMetricPacksToService/DynatraceMetricPacksToService'
 
 import CustomMetric from '../../common/CustomMetric/CustomMetric'

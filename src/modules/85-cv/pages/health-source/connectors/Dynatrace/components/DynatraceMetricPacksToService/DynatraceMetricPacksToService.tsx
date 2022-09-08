@@ -41,7 +41,7 @@ import {
   useGetDynatraceServices
 } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import CardWithOuterTitle from '@pipeline/components/CardWithOuterTitle/CardWithOuterTitle'
+import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import type { DynatraceMetricPacksToServiceProps } from './DynatraceMetricPacksToService.types'
 import { extractServiceMethods } from './DynatraceMetricPacksToService.utils'
 import { getTypeOfInput } from '../../../AppDynamics/AppDHealthSource.utils'

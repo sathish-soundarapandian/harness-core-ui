@@ -38,7 +38,7 @@ import { StatusOfValidation } from '@cv/pages/components/ValidationStatus/Valida
 import useGroupedSideNaveHook from '@cv/hooks/GroupedSideNaveHook/useGroupedSideNaveHook'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import CardWithOuterTitle from '@pipeline/components/CardWithOuterTitle/CardWithOuterTitle'
+import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import {
   getOptions,
   getInputGroupProps,

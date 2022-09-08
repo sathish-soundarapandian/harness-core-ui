@@ -19,7 +19,7 @@ import { StepCategory, useGetStepsV2 } from 'services/pipeline-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useMutateAsGet } from '@common/hooks'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
-import CardWithOuterTitle from '@pipeline/components/CardWithOuterTitle/CardWithOuterTitle'
+import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import {
   getUpdatedDeploymentConfig,
   getUpdatedTemplateDetailsByRef

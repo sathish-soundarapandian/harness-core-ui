@@ -21,7 +21,7 @@ import { ChangeSourceCategoryName } from '@cv/pages/ChangeSource/ChangeSourceDra
 import type { EnvironmentSelectOrCreateProps } from '@cv/components/HarnessServiceAndEnvironment/components/EnvironmentSelectOrCreate/EnvironmentSelectOrCreate'
 import type { EnvironmentMultiSelectOrCreateProps } from '@cv/components/HarnessServiceAndEnvironment/components/EnvironmentMultiSelectAndEnv/EnvironmentMultiSelectAndEnv'
 import { useMonitoredServiceContext } from '@cv/pages/monitored-service/MonitoredServiceContext'
-import CardWithOuterTitle from '@pipeline/components/CardWithOuterTitle/CardWithOuterTitle'
+import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import { MonitoredServiceTypeOptions } from './MonitoredServiceOverview.constants'
 import {
   updateMonitoredServiceNameForService,

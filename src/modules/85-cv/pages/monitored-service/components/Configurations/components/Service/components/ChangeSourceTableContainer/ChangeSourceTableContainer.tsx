@@ -15,7 +15,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import ChangeSourceTable from '@cv/pages/ChangeSource/ChangeSourceTable/ChangeSourceTable'
 import type { ChangeSourceDTO } from 'services/cv'
 import { useStrings } from 'framework/strings'
-import CardWithOuterTitle from '@pipeline/components/CardWithOuterTitle/CardWithOuterTitle'
+import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 
 export default function ChangeSourceTableContainer({
   value,

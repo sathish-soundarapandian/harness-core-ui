@@ -33,7 +33,7 @@ import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/Conf
 import type { AllNGVariables } from '@pipeline/utils/types'
 import type { JsonNode } from 'services/pipeline-ng'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import CardWithOuterTitle from '@pipeline/components/CardWithOuterTitle/CardWithOuterTitle'
+import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
 import { CustomVariablesEditableStage } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariablesEditableStage'
 import css from './DeploymentInfraSpecifications.module.scss'
