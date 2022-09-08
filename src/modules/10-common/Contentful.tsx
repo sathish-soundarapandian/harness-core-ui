@@ -8,8 +8,7 @@
 import { createClient, ContentfulClientApi } from 'contentful'
 
 export enum ContentfulEnvironment {
-  PRODUCTION = 'master',
-  QA = 'QA'
+  PRODUCTION = 'master'
 }
 
 class Contentful {

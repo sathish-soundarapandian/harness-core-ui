@@ -58,6 +58,31 @@ describe('ModuleList', () => {
   })
 
   test('render module config screen by clicking on settings icon', () => {
+    const clickOnConfig = jest.fn()
+    const { container, queryByText } = render(
+      <TestWrapper
+        path="/account/:accountId"
+        pathParams={{ accountId: 'dummy' }}
+        defaultAppStoreValues={{
+          featureFlags: {
+            CDNG_ENABLED: true,
+            CING_ENABLED: true,
+            CVNG_ENABLED: true,
+            CFNG_ENABLED: true
+          }
+        }}
+      >
+        <ModuleList isOpen={true} close={noop} usePortal={false} onConfigIconClick={clickOnConfig} />
+      </TestWrapper>
+    )
+    const customizeIcon = container.querySelector('[data-icon="customize"]')
+    fireEvent.click(customizeIcon!)
+    expect(queryByText('common.moduleList.title')).not.toBeNull()
+    expect(clickOnConfig).toBeCalled()
+  })
+
+  test('click on customise without passing onConfigClick', () => {
+    const clickOnConfig = jest.fn()
     const { container, queryByText } = render(
       <TestWrapper
         path="/account/:accountId"
@@ -77,6 +102,8 @@ describe('ModuleList', () => {
     const customizeIcon = container.querySelector('[data-icon="customize"]')
     fireEvent.click(customizeIcon!)
     expect(queryByText('common.moduleList.title')).not.toBeNull()
+    expect(clickOnConfig).not.toBeCalled()
+    expect(queryByText('Module config screen')).toBeNull()
   })
 
   test('render module config screen by clicking on module tooltip', () => {
