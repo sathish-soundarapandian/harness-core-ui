@@ -30,7 +30,7 @@ const LottieComponent: React.FC<LottieComponentProps> = ({ json: asset }) => {
           setLottieJson(res)
         })
     }
-  }, [])
+  }, [lottieJson])
 
   if (loading) {
     // Check if we can add loader here, otherwise create a utility to cache the data.

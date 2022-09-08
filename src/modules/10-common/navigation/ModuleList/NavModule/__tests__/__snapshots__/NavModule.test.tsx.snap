@@ -52,6 +52,17 @@ exports[`nav module test render 1`] = `
         </span>
       </p>
     </div>
+    <label
+      class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+    >
+      <input
+        checked=""
+        type="checkbox"
+      />
+      <span
+        class="bp3-control-indicator"
+      />
+    </label>
   </div>
 </div>
 `;

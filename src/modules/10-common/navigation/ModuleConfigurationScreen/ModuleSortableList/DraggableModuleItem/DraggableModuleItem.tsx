@@ -15,7 +15,7 @@ import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import css from './DraggableModuleItem.module.scss'
 
-interface DraggableModuleItemProps {
+export interface DraggableModuleItemProps {
   index: number
   module: NavModuleName
   isActive?: boolean

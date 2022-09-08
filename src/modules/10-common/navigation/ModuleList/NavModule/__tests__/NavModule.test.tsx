@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ModuleName } from 'framework/types/ModuleName'
 import NavModule from '../NavModule'
@@ -15,7 +15,7 @@ describe('nav module test', () => {
   test('render', () => {
     const { container, queryByText } = render(
       <TestWrapper>
-        <NavModule module={ModuleName.CD} />
+        <NavModule module={ModuleName.CD} checkboxProps={{ checked: true }} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -31,5 +31,44 @@ describe('nav module test', () => {
 
     screen.debug(container)
     expect(queryByText('common.purpose.cd.continuous')).toBeDefined()
+  })
+
+  test('on click', () => {
+    const onClick = jest.fn()
+    const { container } = render(
+      <TestWrapper>
+        <NavModule module={ModuleName.CD} checkboxProps={{ checked: true }} onClick={onClick} />
+      </TestWrapper>
+    )
+
+    const parent = container.querySelector("[class*='container']")
+    fireEvent.click(parent!)
+    expect(onClick).toBeCalled()
+  })
+
+  test('on click when module is active', () => {
+    const onClick = jest.fn()
+    const { container } = render(
+      <TestWrapper>
+        <NavModule module={ModuleName.CD} active checkboxProps={{ checked: true }} onClick={onClick} />
+      </TestWrapper>
+    )
+
+    const parent = container.querySelector("[class*='container']")
+    fireEvent.click(parent!)
+    expect(onClick).not.toBeCalled()
+  })
+
+  test('click on checkbox', () => {
+    const onCheckboxClick = jest.fn()
+    const { container } = render(
+      <TestWrapper>
+        <NavModule module={ModuleName.CD} active checkboxProps={{ checked: true, handleChange: onCheckboxClick }} />
+      </TestWrapper>
+    )
+
+    const checkbox = container.querySelector('input[type="checkbox"]')
+    fireEvent.click(checkbox!)
+    expect(onCheckboxClick).toBeCalled()
   })
 })

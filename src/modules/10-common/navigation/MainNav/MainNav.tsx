@@ -132,6 +132,7 @@ export default function L1Nav(): React.ReactElement {
             <div className={css.modulesContainer} style={{ height: modulesListHeight }}>
               {(modulesPreferenceData?.orderedModules || []).map(moduleName => {
                 const NavItem = moduleToNavItemsMap[moduleName]
+
                 return selectedModules.indexOf(moduleName) > -1 ? <NavItem key={moduleName} /> : null
               })}
             </div>

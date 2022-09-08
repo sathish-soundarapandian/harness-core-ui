@@ -1,0 +1,94 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Draggable module item tests render when feature flag is off 1`] = `
+<div>
+  <div
+    class="container"
+  >
+    <div
+      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+    >
+      <span
+        class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main StyledProps--color StyledProps--color-grey300 StyledProps--margin-right-xsmall"
+        icon="drag-handle-vertical"
+      >
+        <svg
+          data-icon="drag-handle-vertical"
+          height="20"
+          viewBox="0 0 20 20"
+          width="20"
+        >
+          <desc>
+            drag-handle-vertical
+          </desc>
+          <path
+            d="M7.5 6C6.67 6 6 6.67 6 7.5S6.67 9 7.5 9 9 8.33 9 7.5 8.33 6 7.5 6zm0 5c-.83 0-1.5.67-1.5 1.5S6.67 14 7.5 14 9 13.33 9 12.5 8.33 11 7.5 11zm0 5c-.83 0-1.5.67-1.5 1.5S6.67 19 7.5 19 9 18.33 9 17.5 8.33 16 7.5 16zm5-12c.83 0 1.5-.67 1.5-1.5S13.33 1 12.5 1 11 1.67 11 2.5 11.67 4 12.5 4zm-5-3C6.67 1 6 1.67 6 2.5S6.67 4 7.5 4 9 3.33 9 2.5 8.33 1 7.5 1zm5 10c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0 5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-10c-.83 0-1.5.67-1.5 1.5S11.67 9 12.5 9 14 8.33 14 7.5 13.33 6 12.5 6z"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </span>
+      <div
+        class="StyledProps--font StyledProps--main container cd StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-large StyledProps--padding-right-large StyledProps--background-primary9"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+        >
+          <span
+            class="bp3-icon StyledProps--main StyledProps--margin-right-xsmall"
+            data-icon="cd-main"
+          >
+            <svg
+              height="24"
+              viewBox="0 0 32 32"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M26.427 7.06A5.073 5.073 0 0129 11.52l-.077 8.934a5.073 5.073 0 01-2.537 4.35l-8.002 4.618a5.073 5.073 0 01-5.035.021l-7.776-4.402A5.073 5.073 0 013 20.583l.077-8.935a5.073 5.073 0 012.537-4.35l8.002-4.619a5.073 5.073 0 015.035-.02l7.776 4.402zm-2.83 6.938c-.42 1.586-2.029 2.538-3.601 2.141l-7.489-2.026a4.696 4.696 0 00-3.62.48 4.773 4.773 0 00-2.222 2.925 4.835 4.835 0 00.479 3.664 4.757 4.757 0 002.905 2.251 4.696 4.696 0 003.62-.48 4.773 4.773 0 002.222-2.924l.26-1.047a.25.25 0 00-.177-.302l-1.258-.34a.25.25 0 00-.307.18l-.256 1.025c-.426 1.602-2.064 2.556-3.651 2.127-1.582-.428-2.523-2.073-2.1-3.67.421-1.586 2.03-2.538 3.602-2.142l7.489 2.027a4.696 4.696 0 003.62-.48 4.773 4.773 0 002.222-2.925 4.835 4.835 0 00-.479-3.664 4.757 4.757 0 00-2.905-2.251 4.696 4.696 0 00-3.62.48 4.773 4.773 0 00-2.222 2.924l-.247.828a.25.25 0 00.174.312l1.259.34a.25.25 0 00.304-.169l.248-.827c.426-1.602 2.064-2.557 3.651-2.127 1.582.428 2.523 2.073 2.1 3.67z"
+                fill="url(#cd-main_svg__a)"
+                fill-rule="evenodd"
+              />
+              <defs>
+                <lineargradient
+                  gradientUnits="userSpaceOnUse"
+                  id="cd-main_svg__a"
+                  x1="6.774"
+                  x2="21.5"
+                  y1="2"
+                  y2="30"
+                >
+                  <stop
+                    stop-color="#62F91F"
+                  />
+                  <stop
+                    offset="1"
+                    stop-color="#45BD35"
+                  />
+                </lineargradient>
+              </defs>
+            </svg>
+          </span>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-white"
+          >
+            <span>
+              common.purpose.cd.continuous
+            </span>
+          </p>
+        </div>
+        <label
+          class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+        >
+          <input
+            type="checkbox"
+          />
+          <span
+            class="bp3-control-indicator"
+          />
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;
