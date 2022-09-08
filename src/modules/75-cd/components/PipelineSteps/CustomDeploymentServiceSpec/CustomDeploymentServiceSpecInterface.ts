@@ -7,8 +7,7 @@
 
 import type { AllowedTypes } from '@wings-software/uicore'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { ServiceDefinition, ServiceSpec, ConfigFileWrapper, ConfigFile } from 'services/cd-ng'
-import type { ConfigFileSourceBaseFactory } from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBaseFactory'
+import type { ServiceDefinition, ServiceSpec } from 'services/cd-ng'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 
 export interface CustomDeploymentServiceStep extends ServiceSpec {
@@ -20,21 +19,6 @@ export interface CustomDeploymentServiceStep extends ServiceSpec {
   isReadonlyServiceMode?: boolean
 }
 
-export interface SshWinRmConfigFilesProps {
-  template: ServiceSpec
-  path?: string
-  stepViewType?: StepViewType
-  configFileSourceBaseFactory: ConfigFileSourceBaseFactory
-  configFiles?: ConfigFileWrapper[]
-  initialValues: CustomDeploymentServiceStep
-  readonly: boolean
-  stageIdentifier: string
-  formik?: any
-  fromTrigger?: boolean
-  allowableTypes: AllowedTypes
-  configFile?: ConfigFile
-  configFilePath?: string
-}
 export interface CustomDeploymentServiceInputFormProps {
   initialValues: CustomDeploymentServiceStep
   onUpdate?: ((data: ServiceSpec) => void) | undefined

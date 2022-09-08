@@ -19,7 +19,7 @@ import VariableListReadOnlyView from '@pipeline/components/WorkflowVariablesSele
 import { getArtifactsHeaderTooltipId } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { setupMode } from '../PipelineStepsUtil'
 import type { CustomDeploymentServiceInputFormProps } from './CustomDeploymentServiceSpecInterface'
-import css from '../SshServiceSpec/SshServiceSpec.module.scss'
+import css from './CustomDeploymentServiceSpec.module.scss'
 
 const CustomDeploymentServiceSpecEditable: React.FC<CustomDeploymentServiceInputFormProps> = ({
   initialValues: { stageIndex = 0, setupModeType, deploymentType, isReadonlyServiceMode = false },
