@@ -122,7 +122,8 @@ export const allowedManifestTypes: Record<string, Array<ManifestTypes>> = {
     ManifestDataType.EcsServiceDefinition,
     ManifestDataType.EcsScalingPolicyDefinition,
     ManifestDataType.EcsScalableTargetDefinition
-  ]
+  ],
+  CustomDeployment: []
 }
 
 export const gitStoreTypes: Array<ManifestStores> = [
