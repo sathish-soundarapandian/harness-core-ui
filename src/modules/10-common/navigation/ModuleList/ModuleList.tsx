@@ -38,12 +38,12 @@ interface GroupConfig {
 
 interface ItemProps {
   data: NavModuleName
-  tooltipProps?: ModuleTooltipProps
+  tooltipProps: ModuleTooltipProps
 }
 
 interface GroupProps {
   data: GroupConfig
-  tooltipProps?: ModuleTooltipProps
+  tooltipProps: ModuleTooltipProps
 }
 
 const Item: React.FC<ItemProps> = ({ data, tooltipProps }) => {
@@ -63,13 +63,13 @@ const Item: React.FC<ItemProps> = ({ data, tooltipProps }) => {
           name="tooltip-icon"
           padding={'small'}
           margin={{ left: 'small' }}
-          color={tooltipProps?.activeModule === data ? Color.SUCCESS : undefined}
+          color={tooltipProps.activeModule === data ? Color.SUCCESS : undefined}
           size={12}
           className={css.clickable}
           onClick={e => {
             e.stopPropagation()
             e.preventDefault()
-            tooltipProps?.handleClick(data)
+            tooltipProps.handleClick(data)
           }}
         />
       </Layout.Horizontal>
@@ -119,11 +119,6 @@ const listConfig: GroupConfig[] = [
 
 const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true, onConfigIconClick }) => {
   const [activeModuleCarousel, setActiveModuleCarousel] = useState<NavModuleName | undefined>(undefined)
-
-  const onConfigScreenClose = () => {
-    setActiveModuleCarousel(undefined)
-    close()
-  }
 
   return (
     <>
@@ -182,7 +177,7 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
       {activeModuleCarousel ? (
         <ModuleConfigurationScreen
           onClose={() => {
-            onConfigScreenClose()
+            setActiveModuleCarousel(undefined)
             close()
           }}
           activeModule={activeModuleCarousel}
