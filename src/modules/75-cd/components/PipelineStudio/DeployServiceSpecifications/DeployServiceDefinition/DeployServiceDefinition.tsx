@@ -5,12 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Intent, Layout, useConfirmationDialog } from '@harness/uicore'
-import { debounce, defaultTo, get, set } from 'lodash-es'
+import { debounce, defaultTo, get, set, unset } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'
-import type { ServiceDefinition, StageElementConfig } from 'services/cd-ng'
+import type { ServiceDefinition, StageElementConfig, TemplateLinkConfig } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
@@ -27,6 +27,8 @@ import {
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { useServiceContext } from '@cd/context/ServiceContext'
 import type { ServicePipelineConfig } from '@cd/components/Services/utils/ServiceUtils'
+import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
+import { getTemplateRefVersionLabelObject } from '@pipeline/utils/templateUtils'
 import { setupMode } from '../PropagateWidget/PropagateWidget'
 import SelectDeploymentType from '../SelectDeploymentType'
 import css from './DeployServiceDefinition.module.scss'
@@ -43,7 +45,7 @@ function DeployServiceDefinition(): React.ReactElement {
     allowableTypes,
     isReadonly
   } = usePipelineContext()
-
+  const { getTemplate } = useTemplateSelector()
   const {
     isServiceEntityModalView,
     isServiceCreateModalView,
@@ -62,6 +64,10 @@ function DeployServiceDefinition(): React.ReactElement {
     return get(stage, 'stage.spec.serviceConfig.serviceDefinition.type')
   }
 
+  const getDeploymentTypeTemplateData = (): TemplateLinkConfig => {
+    return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.customDeploymentRef')
+  }
+
   const getGitOpsCheckValue = (): boolean => {
     if (isServiceCreateModalView) {
       return defaultTo(defaultGitOpsValue, false)
@@ -74,6 +80,9 @@ function DeployServiceDefinition(): React.ReactElement {
   )
   const [gitOpsEnabled, setGitOpsEnabled] = useState(getGitOpsCheckValue())
   const [currStageData, setCurrStageData] = useState<DeploymentStageElementConfig | undefined>()
+  const [customDeploymentData, setCustomDeploymentData] = useState<TemplateLinkConfig | undefined>(
+    getDeploymentTypeTemplateData()
+  )
   const disabledState = isServiceEntityModalView ? true : isReadonly
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -120,9 +129,14 @@ function DeployServiceDefinition(): React.ReactElement {
     ...serviceDataDialogProps,
     onCloseDialog: async isConfirmed => {
       if (isConfirmed) {
+        setCustomDeploymentData(undefined)
         deleteServiceData(currStageData)
         if (gitOpsEnabled) {
           updateDeploymentTypeWithGitops()
+        } else if (
+          currStageData?.spec?.serviceConfig?.serviceDefinition?.type === ServiceDeploymentType.CustomDeployment
+        ) {
+          onCustomDeploymentSelection()
         } else {
           await debounceUpdateStage(currStageData)
         }
@@ -152,6 +166,41 @@ function DeployServiceDefinition(): React.ReactElement {
     }
   }
 
+  const addOrUpdateTemplate = async (): Promise<void> => {
+    const { template } = await getTemplate({ templateType: 'CustomDeployment' })
+    setCustomDeploymentData(getTemplateRefVersionLabelObject(template))
+  }
+
+  const onCustomDeploymentSelection = async (): Promise<void> => {
+    try {
+      const { template } = await getTemplate({ templateType: 'CustomDeployment' })
+      setCustomDeploymentData(getTemplateRefVersionLabelObject(template))
+    } catch (_) {
+      // Reset deployment data.. User cancelled template selection
+      setCustomDeploymentData(undefined)
+      setSelectedDeploymentType(undefined)
+      const stageData = produce(stage, draft => {
+        if (draft) {
+          unset(draft, 'stage.spec.serviceConfig.serviceDefinition.type')
+        }
+      })
+      updateStage(stageData?.stage as StageElementConfig)
+    }
+  }
+
+  useEffect(() => {
+    if (customDeploymentData) {
+      const stageData = produce(stage, draft => {
+        if (draft) {
+          set(draft, 'stage.spec.serviceConfig.serviceDefinition.type', ServiceDeploymentType.CustomDeployment)
+          set(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.customDeploymentRef', customDeploymentData)
+        }
+      })
+      updateStage(stageData?.stage as StageElementConfig)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customDeploymentData])
+
   const handleDeploymentTypeChange = useCallback(
     (deploymentType: ServiceDeploymentType): void => {
       if (deploymentType !== selectedDeploymentType) {
@@ -164,10 +213,14 @@ function DeployServiceDefinition(): React.ReactElement {
           openServiceDataDeleteWarningDialog()
         } else {
           setSelectedDeploymentType(deploymentType)
+          setCustomDeploymentData(undefined)
           if (gitOpsEnabled) {
             updateDeploymentTypeWithGitops(deploymentType)
           } else {
             updateStage(stageData?.stage as StageElementConfig)
+            if (deploymentType === ServiceDeploymentType.CustomDeployment) {
+              onCustomDeploymentSelection()
+            }
           }
         }
       }
@@ -187,6 +240,8 @@ function DeployServiceDefinition(): React.ReactElement {
         handleDeploymentTypeChange={handleDeploymentTypeChange}
         shouldShowGitops={true}
         handleGitOpsCheckChanged={handleGitOpsCheckChanged}
+        customDeploymentData={customDeploymentData}
+        addOrUpdateTemplate={addOrUpdateTemplate}
       />
       <Layout.Horizontal>
         <StepWidget<K8SDirectServiceStep>

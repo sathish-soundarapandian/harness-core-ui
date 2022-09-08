@@ -23,7 +23,11 @@ import {
   getCgSupportedDeploymentTypes,
   getNgSupportedDeploymentTypes
 } from '@cd/utils/deploymentUtils'
+import type { TemplateLinkConfig } from 'services/pipeline-ng'
+import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
+import type { TemplateSummaryResponse } from 'services/template-ng'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
+import deployServiceCsss from './DeployServiceSpecifications.module.scss'
 
 export function getServiceDeploymentTypeSchema(
   getString: UseStringsReturn['getString']
@@ -39,6 +43,8 @@ interface SelectServiceDeploymentTypeProps {
   viewContext?: string
   handleGitOpsCheckChanged?: (ev: React.FormEvent<HTMLInputElement>) => void
   gitOpsEnabled?: boolean
+  customDeploymentData?: TemplateLinkConfig
+  addOrUpdateTemplate?: (selectedTemplate: TemplateSummaryResponse) => void
 }
 
 interface CardListProps {
@@ -90,17 +96,19 @@ export default function SelectDeploymentType({
   viewContext,
   shouldShowGitops,
   handleDeploymentTypeChange,
-  handleGitOpsCheckChanged
+  handleGitOpsCheckChanged,
+  customDeploymentData,
+  addOrUpdateTemplate
 }: SelectServiceDeploymentTypeProps): JSX.Element {
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
-  const { SSH_NG, AZURE_WEBAPP_NG, ECS_NG } = useFeatureFlags()
+  const { SSH_NG, AZURE_WEBAPP_NG, ECS_NG, NG_DEPLOYMENT_TEMPLATE } = useFeatureFlags()
 
   // Supported in NG (Next Gen - The one for which you are coding right now)
   const ngSupportedDeploymentTypes = React.useMemo(() => {
-    return getNgSupportedDeploymentTypes({ SSH_NG, AZURE_WEBAPP_NG, ECS_NG })
-  }, [SSH_NG, AZURE_WEBAPP_NG, ECS_NG])
+    return getNgSupportedDeploymentTypes({ SSH_NG, AZURE_WEBAPP_NG, ECS_NG, NG_DEPLOYMENT_TEMPLATE })
+  }, [SSH_NG, AZURE_WEBAPP_NG, ECS_NG, NG_DEPLOYMENT_TEMPLATE])
 
   // Suppported in CG (First Gen - Old Version of Harness App)
   const cgSupportedDeploymentTypes: DeploymentTypeItem[] = React.useMemo(() => {
@@ -144,6 +152,15 @@ export default function SelectDeploymentType({
                 name={DEPLOYMENT_TYPE_KEY}
                 errorMessage={get(formikRef?.current?.errors, DEPLOYMENT_TYPE_KEY)}
               />
+            ) : null}
+            {customDeploymentData && addOrUpdateTemplate ? (
+              <Layout.Vertical padding={0} margin={{ top: 'medium' }}>
+                <TemplateBar
+                  templateLinkConfig={customDeploymentData}
+                  onOpenTemplateSelector={addOrUpdateTemplate}
+                  className={deployServiceCsss.templateBar}
+                />
+              </Layout.Vertical>
             ) : null}
           </Layout.Vertical>
         </Layout.Vertical>

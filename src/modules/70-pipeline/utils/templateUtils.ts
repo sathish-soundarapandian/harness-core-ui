@@ -92,6 +92,13 @@ export const createTemplate = <T extends PipelineInfoConfig | StageElementConfig
   })
 }
 
+export const getTemplateRefVersionLabelObject = (template: TemplateSummaryResponse): TemplateLinkConfig => {
+  return {
+    templateRef: defaultTo(getScopeBasedTemplateRef(template), ''),
+    versionLabel: defaultTo(template.versionLabel, '')
+  }
+}
+
 export const createStepNodeFromTemplate = (template: TemplateSummaryResponse, isCopied = false): StepElementConfig => {
   return (isCopied
     ? produce(defaultTo(parse<any>(defaultTo(template?.yaml, ''))?.template.spec, {}) as StepElementConfig, draft => {

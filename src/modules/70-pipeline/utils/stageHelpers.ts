@@ -55,6 +55,7 @@ export enum ServiceDeploymentType {
   pcf = 'pcf',
   Pdc = 'Pdc',
   Ssh = 'Ssh',
+  CustomDeployment = 'CustomDeployment',
   ServerlessAwsLambda = 'ServerlessAwsLambda',
   ServerlessAzureFunctions = 'ServerlessAzureFunctions',
   ServerlessGoogleFunctions = 'ServerlessGoogleFunctions',
@@ -279,6 +280,10 @@ export const isAzureWebAppDeploymentType = (deploymentType: string): boolean => 
   return deploymentType === ServiceDeploymentType.AzureWebApp
 }
 
+export const isCustomDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.CustomDeployment
+}
+
 export const isAzureWebAppGenericDeploymentType = (deploymentType: string, repo: string | undefined): boolean => {
   if (isAzureWebAppDeploymentType(deploymentType)) {
     // default repository format should be Generic if none is previously selected
@@ -452,6 +457,10 @@ export const isConfigFilesPresent = (stage: DeploymentStageElementConfig): boole
   return !!stage.spec?.serviceConfig && !!stage.spec?.serviceConfig.serviceDefinition?.spec.configFiles
 }
 
+export const isCustomDeploymentDataPresent = (stage: DeploymentStageElementConfig): boolean => {
+  return !!stage.spec?.serviceConfig && !!stage.spec?.serviceConfig.serviceDefinition?.spec.customDeploymentRef
+}
+
 export const isServiceEntityPresent = (stage: DeploymentStageElementConfig): boolean => {
   return !!stage.spec?.service?.serviceRef
 }
@@ -475,7 +484,8 @@ export const doesStageContainOtherData = (stage?: DeploymentStageElementConfig):
     isArtifactManifestPresent(stage) ||
     isInfraDefinitionPresent(stage) ||
     isExecutionFieldPresent(stage) ||
-    isConfigFilesPresent(stage)
+    isConfigFilesPresent(stage) ||
+    isCustomDeploymentDataPresent(stage)
   )
 }
 
@@ -509,6 +519,7 @@ export const deleteServiceData = (stage?: DeploymentStageElementConfig): void =>
     delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.artifacts
     delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.manifests
     delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.configFiles
+    delete stage?.spec?.serviceConfig?.serviceDefinition?.spec?.customDeploymentRef
   }
 }
 //This is to delete stage data in case of new service/ env entity
@@ -541,6 +552,8 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
       return StepType.WinRmServiceSpec
     case ServiceDeploymentType.ECS:
       return StepType.EcsService
+    case ServiceDeploymentType.CustomDeployment:
+      return StepType.CustomDeploymentServiceSpec
     default:
       return StepType.K8sServiceSpec
   }
