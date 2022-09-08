@@ -21,6 +21,13 @@ export type AbortFailureActionConfig = FailureStrategyActionConfig & {
   type: 'Abort'
 }
 
+export type CustomDeploymentInfraNGVariable = {
+  value?: number | string
+  id?: string
+  name?: string
+  type?: 'String' | 'Secret' | 'Connector'
+}
+
 export interface AccessControlCheckError {
   code?:
     | 'DEFAULT_ERROR_CODE'

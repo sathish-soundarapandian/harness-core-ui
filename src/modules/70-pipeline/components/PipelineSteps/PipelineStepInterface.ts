@@ -107,7 +107,8 @@ export enum StepType {
   EcsBlueGreenSwapTargetGroups = 'EcsBlueGreenSwapTargetGroups',
   EcsBlueGreenRollback = 'EcsBlueGreenRollback',
   CreateAzureARMResource = 'AzureCreateARMResource',
-  CustomDeploymentServiceSpec = 'CustomDeploymentServiceSpec'
+  CustomDeploymentServiceSpec = 'CustomDeploymentServiceSpec',
+  CustomDeployment = 'CustomDeployment'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

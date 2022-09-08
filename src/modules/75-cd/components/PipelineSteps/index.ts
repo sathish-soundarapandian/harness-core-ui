@@ -70,6 +70,7 @@ import { ECSBlueGreenRollbackStep } from './ECSBlueGreenRollbackStep/ECSBlueGree
 import { DeployServiceEntityStep } from './DeployServiceEntityStep/DeployServiceEntityStep'
 import { AzureArmStep } from './AzureArm/AzureArm'
 import { CustomDeploymentServiceSpec } from './CustomDeploymentServiceSpec/CustomDeploymentServiceSpec'
+import { CustomDeploymentInfrastructureSpec } from './CustomDeploymentInfrastructureSpec/CustomDeploymentInfrastructureStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new HttpStep())
@@ -134,3 +135,4 @@ factory.registerStep(new ECSBlueGreenSwapTargetGroupsStep())
 factory.registerStep(new ECSBlueGreenRollbackStep())
 factory.registerStep(new AzureArmStep())
 factory.registerStep(new CustomDeploymentServiceSpec())
+factory.registerStep(new CustomDeploymentInfrastructureSpec())
