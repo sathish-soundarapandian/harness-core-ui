@@ -94,7 +94,7 @@ export default function CreatePRScript(props: {
       </div>
       <div className={stepCss.divider} />
 
-      <Accordion className={cx(stepCss.accordion, css.overrideConfig)}>
+      <Accordion className={stepCss.accordion}>
         <Accordion.Panel
           id="override-config"
           summary={'Override Configuration'}
