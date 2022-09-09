@@ -3,7 +3,7 @@
   "viewportWidth": 1500,
   "viewportHeight": 1000,
   "retries": {
-    "runMode": 2,
+    "runMode": 1,
     "openMode": 0
   },
   "projectId": "if5p69",
@@ -11,5 +11,6 @@
   "pluginsFile": "plugins/index.js",
   "fixturesFolder": "fixtures",
   "supportFile": "support/index.ts",
-  "videoUploadOnPasses": false
+  "videoUploadOnPasses": false,
+  "pageLoadTimeout": 60000
 }
