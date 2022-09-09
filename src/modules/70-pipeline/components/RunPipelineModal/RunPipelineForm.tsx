@@ -789,6 +789,7 @@ function RunPipelineFormBasic({
                     invalidInputSetReferences={invalidInputSetReferences}
                     loadingInputSets={loadingInputSets}
                     onReconcile={onReconcile}
+                    reRunInputSetYaml={inputSetYAML}
                   />
                 ) : (
                   <div className={css.editor}>

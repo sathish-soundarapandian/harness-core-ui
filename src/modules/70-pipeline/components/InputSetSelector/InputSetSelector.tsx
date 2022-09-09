@@ -41,12 +41,13 @@ export interface InputSetSelectorProps {
   isOverlayInputSet?: boolean
   showNewInputSet?: boolean
   onNewInputSetClick?: () => void
-  pipelineGitDetails?: EntityGitDetails | undefined
+  pipelineGitDetails?: EntityGitDetails
   hideInputSetButton?: boolean
   invalidInputSetReferences?: string[]
   loadingMergeInputSets?: boolean
   isRetryPipelineForm?: boolean
   onReconcile?: (identifier: string) => void
+  reRunInputSetYaml?: string
 }
 
 export function InputSetSelector({
@@ -64,7 +65,8 @@ export function InputSetSelector({
   invalidInputSetReferences,
   loadingMergeInputSets,
   isRetryPipelineForm,
-  onReconcile
+  onReconcile,
+  reRunInputSetYaml
 }: InputSetSelectorProps): React.ReactElement {
   const [searchParam, setSearchParam] = React.useState('')
   const [selectedInputSets, setSelectedInputSets] = React.useState<InputSetValue[]>(value || [])
@@ -194,6 +196,7 @@ export function InputSetSelector({
               : false
           }
           onReconcile={onReconcile}
+          reRunInputSetYaml={reRunInputSetYaml}
         />
       ))
 
@@ -272,6 +275,7 @@ export function InputSetSelector({
                     disabled={!selectedInputSets?.length}
                     onClick={() => {
                       onChange?.(selectedInputSets)
+                      if (reRunInputSetYaml) setOpenInputSetsList(false)
                     }}
                   />
                 </>

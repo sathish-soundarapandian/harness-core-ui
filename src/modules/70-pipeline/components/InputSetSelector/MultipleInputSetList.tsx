@@ -30,16 +30,25 @@ interface MultipleInputSetListProps {
     inputSetErrorDetails?: InputSetErrorWrapper,
     overlaySetErrorDetails?: { [key: string]: string }
   ) => void
-  pipelineGitDetails?: EntityGitDetails | undefined
+  pipelineGitDetails?: EntityGitDetails
   refetch: () => Promise<void>
   hideInputSetButton?: boolean
   showReconcile: boolean
   onReconcile?: (identifier: string) => void
+  reRunInputSetYaml?: string
 }
 
 export function MultipleInputSetList(props: MultipleInputSetListProps): JSX.Element {
-  const { inputSet, onCheckBoxHandler, pipelineGitDetails, refetch, hideInputSetButton, showReconcile, onReconcile } =
-    props
+  const {
+    inputSet,
+    onCheckBoxHandler,
+    pipelineGitDetails,
+    refetch,
+    hideInputSetButton,
+    showReconcile,
+    onReconcile,
+    reRunInputSetYaml
+  } = props
   const { getString } = useStrings()
 
   return (
@@ -84,7 +93,7 @@ export function MultipleInputSetList(props: MultipleInputSetListProps): JSX.Elem
               </Layout.Horizontal>
             }
           />
-          {(isInputSetInvalid(inputSet) || showReconcile) && (
+          {(isInputSetInvalid(inputSet) || showReconcile) && !reRunInputSetYaml && (
             <Container padding={{ left: 'large' }} className={css.invalidEntity}>
               <Badge
                 text={'common.invalid'}
