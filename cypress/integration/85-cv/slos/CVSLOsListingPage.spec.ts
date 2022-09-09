@@ -34,6 +34,7 @@ import {
 describe('CVSLOsListingPage', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => false)
+    cy.login('test', 'test')
 
     cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponseCalenderType)
     cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)

@@ -7,6 +7,7 @@ describe('CCM Perspective Creation flow', () => {
       // failing the test
       return false
     })
+    cy.login('test', 'test')
   })
 
   it('should be able to create perspective', () => {

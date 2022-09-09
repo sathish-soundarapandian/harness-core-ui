@@ -27,6 +27,7 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
     cy.intercept('GET', gitSyncCall, { connectivityMode: null, gitSyncEnabled: false })
     cy.intercept('GET', jirayamlSnippetCall, { fixture: 'pipeline/api/jiraStage/stageYamlSnippet' }).as('stageYaml')
     cy.intercept('POST', stepsCall, { fixture: 'pipeline/api/approvals/steps' })
+    cy.login('test', 'test')
 
     cy.visitCreatePipeline()
 

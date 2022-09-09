@@ -35,6 +35,7 @@ describe.skip('Verify step add', () => {
       // failing the test
       return false
     })
+    cy.login('test', 'test')
 
     cy.visitVerifyStepInPipeline()
     cy.fillName('testPipeline_Cypress')

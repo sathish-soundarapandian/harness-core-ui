@@ -32,6 +32,7 @@ describe('RUN PIPELINE MODAL - deploy stage', () => {
       return false
     })
     cy.intercept('GET', gitSyncCall, { connectivityMode: null, gitSyncEnabled: false })
+    cy.login('test', 'test')
 
     cy.visitCreatePipeline()
 

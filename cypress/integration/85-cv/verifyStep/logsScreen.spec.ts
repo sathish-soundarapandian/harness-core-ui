@@ -73,7 +73,6 @@ describe('Verify step', () => {
 
     cy.on('uncaught:exception', () => false)
     cy.login('test', 'test')
-
     cy.contains('p', 'Projects').click()
     cy.contains('p', 'Project 1').click()
     cy.contains('p', 'Delivery').click()

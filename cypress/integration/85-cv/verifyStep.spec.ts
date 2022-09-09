@@ -63,6 +63,7 @@ describe.skip('Verify step', () => {
     cy.intercept('GET', aggregateProjectsCall, {}).as('aggregateProjectsCall')
 
     cy.on('uncaught:exception', () => false)
+    cy.login('test', 'test')
     cy.contains('p', 'Projects').click()
     cy.contains('p', 'Project 1').click()
     cy.contains('p', 'Delivery').click()

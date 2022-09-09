@@ -50,6 +50,7 @@ import {
 describe('CVSLODetailsPage', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => false)
+    cy.login('test', 'test')
     cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse)
     cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
     cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)
