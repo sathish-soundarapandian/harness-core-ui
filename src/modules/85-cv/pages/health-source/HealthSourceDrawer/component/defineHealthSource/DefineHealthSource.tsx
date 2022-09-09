@@ -69,6 +69,9 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   const isCustomLogEnabled = useFeatureFlag(FeatureFlag.CHI_CUSTOM_HEALTH_LOGS)
   const isElkEnabled = useFeatureFlag(FeatureFlag.ELK_HEALTH_SOURCE)
 
+  // 🚨 TODO: Update it with Feature flag
+  const isCloudWatchEnabled = true
+
   const disabledByFF: string[] = useMemo(() => {
     const disabledConnectorsList = []
     if (!isDynatraceAPMEnabled) {

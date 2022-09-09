@@ -22,6 +22,7 @@ import {
   DynatraceProductNames
 } from './DefineHealthSource.constant'
 import type { DefineHealthSourceFormInterface } from './DefineHealthSource.types'
+import { CloudWatchProductNames } from '@cv/pages/health-source/connectors/CloudWatch/CloudWatchConstants'
 
 export const validate = (getString: UseStringsReturn['getString']) => {
   return Yup.object().shape({
@@ -139,6 +140,14 @@ export const getFeatureOption = (
         {
           value: ErrorTrackingProductNames.LOGS,
           label: getString('cv.monitoringSources.gco.product.logs')
+        }
+      ]
+
+    case Connectors.CLOUD_WATCH:
+      return [
+        {
+          value: CloudWatchProductNames.METRICS,
+          label: getString('cv.monitoringSources.gco.product.metrics')
         }
       ]
     default:

@@ -150,6 +150,7 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     case Connectors.OciHelmRepo:
       return <OCIHelmConnector {...commonProps} />
     case Connectors.AWS:
+    case Connectors.CLOUD_WATCH:
       return <CreateAWSConnector {...commonProps} />
     case Connectors.AWS_CODECOMMIT:
       return <CreateAWSCodeCommitConnector {...commonProps} />
