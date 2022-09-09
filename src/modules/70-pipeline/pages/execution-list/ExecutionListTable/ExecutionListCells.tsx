@@ -6,7 +6,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Checkbox } from '@blueprintjs/core'
+import { Checkbox, Classes } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { Avatar, Icon, Layout, TagsPopover, Text } from '@harness/uicore'
 import { get, isEmpty, omit } from 'lodash-es'
@@ -127,7 +127,7 @@ export const PipelineNameCell: CellType = ({ row }) => {
 
   return (
     <Layout.Vertical spacing="xsmall">
-      <Layout.Horizontal spacing="small">
+      <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>
         <Link to={toPipelineStudio}>
           <Text font={{ variation: FontVariation.LEAD }} color={Color.PRIMARY_7} lineClamp={1}>
             {name}
@@ -135,11 +135,12 @@ export const PipelineNameCell: CellType = ({ row }) => {
         </Link>
         {!isEmpty(data?.tags) && (
           <TagsPopover
-            iconProps={{ size: 14 }}
+            iconProps={{ size: 12, color: Color.GREY_600 }}
+            popoverProps={{ className: Classes.DARK }}
             className={css.tags}
-            popoverProps={{ wrapperTagName: 'div', targetTagName: 'div' }}
-            tags={defaultTo(data?.tags, []).reduce((val, tag) => {
-              return Object.assign(val, { [tag.key]: tag.value })
+            tags={defaultTo(data?.tags, []).reduce((_tags, tag) => {
+              _tags[tag.key] = tag.value
+              return _tags
             }, {} as { [key: string]: string })}
           />
         )}
@@ -298,6 +299,7 @@ export const MenuCell: CellType = ({ row, column }) => {
 
 export const TriggerInfoCell: CellType = ({ row }) => {
   const data = row.original
+
   const IS_SERVICEDETAIL = hasServiceDetail(data)
   const IS_OVERVIEWPAGE = hasOverviewDetail(data)
   const cdInfo = executionFactory.getCardInfo(StageType.DEPLOY)

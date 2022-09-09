@@ -13,6 +13,9 @@ declare const styles: {
   readonly executionStageSummary: string
   readonly icon: string
   readonly iconWrapper: string
+  readonly matrixLabel: string
+  readonly matrixStage: string
+  readonly matrixStageList: string
   readonly menu: string
   readonly selectiveStageExecution: string
   readonly stage: string

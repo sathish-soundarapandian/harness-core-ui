@@ -211,7 +211,7 @@ describe('CD Pipeline List Page', () => {
     expect(mockDeleteFunction).toBeCalled()
   })
 
-  test('should be able to search with a specific text', async () => {
+  test('should be able to search by pipeline name and identifier', async () => {
     const useGetPipelineListMock = useGetPipelineList as jest.MockedFunction<any>
     const mutateListOfPipelines = jest.fn().mockResolvedValue(pipelines)
     useGetPipelineListMock.mockReturnValue({

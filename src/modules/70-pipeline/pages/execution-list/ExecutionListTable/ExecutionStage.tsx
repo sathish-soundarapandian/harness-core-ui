@@ -10,6 +10,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import { Icon, IconName, Layout, Text } from '@harness/uicore'
 import React, { FC } from 'react'
 import type { CellProps } from 'react-table'
+import cx from 'classnames'
 import { Duration } from '@common/components'
 import { ExecutionStatusIcon } from '@pipeline/components/ExecutionStatusIcon/ExecutionStatusIcon'
 import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/types'
@@ -24,6 +25,7 @@ export interface ExecutionStageProps {
   row?: CellProps<PipelineExecutionSummary>['row']
   stage: PipelineGraphState
   isSelectiveStage: boolean
+  isMatrixStage?: boolean
 }
 
 const stageIconMap: Partial<Record<StageType, IconName>> = {
@@ -32,7 +34,7 @@ const stageIconMap: Partial<Record<StageType, IconName>> = {
   [StageType.SECURITY]: 'sto-color-filled'
 }
 
-export const ExecutionStage: FC<ExecutionStageProps> = ({ stage, isSelectiveStage }) => {
+export const ExecutionStage: FC<ExecutionStageProps> = ({ stage, isSelectiveStage, isMatrixStage }) => {
   const { getString } = useStrings()
   const iconName = stageIconMap[stage.type as StageType]
   const data: PipelineExecutionSummary = stage.data || {}
@@ -43,9 +45,12 @@ export const ExecutionStage: FC<ExecutionStageProps> = ({ stage, isSelectiveStag
   const environment = stageInfo.infraExecutionSummary?.name || stageInfo.infraExecutionSummary?.identifier
 
   return (
-    <div className={css.stage}>
-      <div />
-      <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+    <div className={cx(css.stage, isMatrixStage && css.matrixStage)}>
+      <Layout.Horizontal
+        spacing="small"
+        flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+        margin={{ left: 'small' }}
+      >
         {iconName && <Icon name={iconName} size={18} />}
         <Text font={{ size: 'small' }} color={Color.GREY_900} lineClamp={1}>
           {stage.name}
@@ -55,24 +60,26 @@ export const ExecutionStage: FC<ExecutionStageProps> = ({ stage, isSelectiveStag
       <ExecutionStatusIcon status={data?.status as ExecutionStatus} />
 
       <div className={css.stageInfo}>
-        <div color={Color.GREY_900}>
-          <ExecutionStageSummary serviceDisplayName={serviceDisplayName} environment={environment} />
-        </div>
+        {serviceDisplayName && environment && (
+          <div color={Color.GREY_900}>
+            <ExecutionStageSummary serviceDisplayName={serviceDisplayName} environment={environment} />
+          </div>
+        )}
 
-        <div>
-          {isSelectiveStage && (
-            <div className={css.selectiveStageExecution}>
-              <Icon name="info" size={10} color={Color.GREY_600} />
-              <Text margin={{ left: 'xsmall' }} font={{ variation: FontVariation.TINY_SEMI }} color={Color.GREY_600}>
-                {getString('pipeline.selectiveStageExecution')}
-              </Text>
-            </div>
-          )}
-        </div>
+        {isSelectiveStage && (
+          <div className={css.selectiveStageExecution}>
+            <Icon name="info" size={10} color={Color.GREY_600} />
+            <Text margin={{ left: 'xsmall' }} font={{ variation: FontVariation.TINY_SEMI }} color={Color.GREY_600}>
+              {getString('pipeline.selectiveStageExecution')}
+            </Text>
+          </div>
+        )}
 
-        <Text font={{ size: 'small' }} color={Color.RED_800} lineClamp={1}>
-          {stageFailureMessage}
-        </Text>
+        {stageFailureMessage && (
+          <Text font={{ size: 'small' }} color={Color.RED_800} lineClamp={1}>
+            {stageFailureMessage}
+          </Text>
+        )}
       </div>
 
       <Duration
