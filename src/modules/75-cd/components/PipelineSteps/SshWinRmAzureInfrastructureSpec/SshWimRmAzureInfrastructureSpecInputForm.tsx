@@ -295,19 +295,6 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
     return (
       <Layout.Vertical spacing="small">
         {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
-          <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}></div>
-        )}
-        {getMultiTypeFromValue(template?.credentialsRef) === MultiTypeInputType.RUNTIME && (
-          <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-            <MultiTypeSecretInput
-              name={`${path}.credentialsRef`}
-              type={getMultiTypeSecretInputType(initialValues.serviceType)}
-              label={getString('cd.steps.common.specifyCredentials')}
-              expressions={expressions}
-            />
-          </div>
-        )}
-        {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
           <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
             <FormMultiTypeConnectorField
               accountIdentifier={accountId}
@@ -554,6 +541,16 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
                 {getString('tagLabel')}
               </Button>
             </MultiTypeFieldSelector>
+          </div>
+        )}
+        {getMultiTypeFromValue(template?.credentialsRef) === MultiTypeInputType.RUNTIME && (
+          <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper, css.credentialsRef)}>
+            <MultiTypeSecretInput
+              name={`${path}.credentialsRef`}
+              type={getMultiTypeSecretInputType(initialValues.serviceType)}
+              label={getString('cd.steps.common.specifyCredentials')}
+              expressions={expressions}
+            />
           </div>
         )}
       </Layout.Vertical>
