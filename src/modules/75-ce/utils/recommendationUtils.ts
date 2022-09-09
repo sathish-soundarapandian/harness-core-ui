@@ -11,6 +11,8 @@ import type { RecommendClusterRequest } from 'services/ce/recommenderService'
 import { ResourceType } from 'services/ce/services'
 import routes from '@common/RouteDefinitions'
 
+export const DAYS_IN_A_MONTH = 30
+
 export const getProviderIcon = (provider: string): IconName => {
   const iconMapping: Record<string, IconName> = {
     google: 'gcp',
@@ -23,6 +25,9 @@ export const getProviderIcon = (provider: string): IconName => {
 
 export const addBufferToValue = (value: number, bufferPercentage: number, precision?: number): number =>
   +(((100 + bufferPercentage) / 100) * value).toFixed(precision || 2)
+
+export const addBufferWithoutPrecision = (value: number, bufferPercentage: number): number =>
+  +(((100 + bufferPercentage) / 100) * value)
 
 export const calculateSavingsPercentage = (savings: number, totalCost: number): string =>
   `(${Math.floor((savings / totalCost) * 100)}%)`
