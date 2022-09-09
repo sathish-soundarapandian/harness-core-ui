@@ -15,7 +15,7 @@ import { TemplateInputs, TemplateInputsProps } from '@templates-library/componen
 import { Scope } from '@common/interfaces/SecretsInterface'
 
 export class SecretManagerTemplate extends Template {
-  protected label = 'Secret Manager'
+  protected label = 'Secrets Manager'
   protected type = TemplateType.SecretManager
   protected icon: IconName = 'script'
   protected allowedScopes = [Scope.PROJECT, Scope.ORG, Scope.ACCOUNT]
