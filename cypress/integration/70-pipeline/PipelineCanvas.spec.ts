@@ -374,7 +374,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
     cy.contains('span', regionName).should('be.visible')
   }
 
-  it(`fixed values to region and stage in infrastructure tab`, () => {
+  it.skip(`fixed values to region and stage in infrastructure tab`, () => {
     cy.visit(pipelineStudioRoute)
     cy.visitPageAssertion()
     cy.get(`div[data-testid="pipeline-studio"]`).should('be.visible')
