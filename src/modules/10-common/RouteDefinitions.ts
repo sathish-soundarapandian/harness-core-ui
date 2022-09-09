@@ -907,6 +907,7 @@ const routes = {
       sourceRepo,
       manifestType,
       artifactType,
+      scheduleType,
       accountId: _accountId,
       module,
       ...rest
@@ -917,7 +918,8 @@ const routes = {
         ...(isNewTrigger && triggerType && { triggerType }),
         ...(isNewTrigger && sourceRepo && { sourceRepo }),
         ...(isNewTrigger && manifestType && { manifestType }),
-        ...(isNewTrigger && artifactType && { artifactType })
+        ...(isNewTrigger && artifactType && { artifactType }),
+        ...(isNewTrigger && scheduleType && { scheduleType })
       }
       const queryString = qs.stringify(queryParams, { skipNulls: true })
       if (queryString.length > 0) {

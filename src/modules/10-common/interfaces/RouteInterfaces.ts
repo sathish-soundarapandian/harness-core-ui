@@ -96,6 +96,7 @@ export interface TriggerPathProps extends PipelinePathProps {
   sourceRepo?: string
   artifactType?: string
   manifestType?: string
+  scheduleType?: string
 }
 
 export interface TriggerQueryParams {
@@ -104,6 +105,7 @@ export interface TriggerQueryParams {
   sourceRepo?: string
   artifactType?: string
   manifestType?: string
+  scheduleType?: string
 }
 
 export interface ExecutionPathProps extends PipelinePathProps {

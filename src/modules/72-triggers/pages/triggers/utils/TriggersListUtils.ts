@@ -258,6 +258,7 @@ export interface TriggerDataInterface {
   sourceRepo?: string
   manifestType?: string
   artifactType?: string
+  scheduleType?: string
 }
 
 export const getEnabledStatusTriggerValues = ({

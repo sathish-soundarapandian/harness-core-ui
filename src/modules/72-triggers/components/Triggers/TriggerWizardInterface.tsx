@@ -7,7 +7,7 @@
 
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import type { NGTriggerConfigV2, NGTriggerSourceV2, PipelineInfoConfig } from 'services/pipeline-ng'
-import type { AddConditionInterface } from '../../AddConditionsSection/AddConditionsSection'
+import type { AddConditionInterface } from '../AddConditionsSection/AddConditionsSection'
 
 export interface ConnectorRefInterface {
   identifier?: string

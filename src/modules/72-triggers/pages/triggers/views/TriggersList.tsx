@@ -174,7 +174,8 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
           triggerType: val.categoryValue,
           sourceRepo: (val.categoryValue === TriggerTypes.WEBHOOK && val.value) || undefined,
           artifactType: (val.categoryValue === TriggerTypes.ARTIFACT && val.value) || undefined,
-          manifestType: (val.categoryValue === TriggerTypes.MANIFEST && val.value) || undefined
+          manifestType: (val.categoryValue === TriggerTypes.MANIFEST && val.value) || undefined,
+          scheduleType: (val.categoryValue === TriggerTypes.SCHEDULE && val.value) || undefined
         })
       }
     }

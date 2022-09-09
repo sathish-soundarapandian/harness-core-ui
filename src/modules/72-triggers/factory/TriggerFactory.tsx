@@ -5,14 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+//Webhook Triggers
 import { Github } from '@triggers/components/Triggers/WebhookTrigger/Github/Github'
 import { Gitlab } from '@triggers/components/Triggers/WebhookTrigger/Gitlab/Gitlab'
 import { Bitbucket } from '@triggers/components/Triggers/WebhookTrigger/Bitbucket/Bitbucket'
 import { AzureRepo } from '@triggers/components/Triggers/WebhookTrigger/AzureRepo/AzureRepo'
-
 import { Custom } from '@triggers/components/Triggers/WebhookTrigger/Custom/Custom'
+
+// Scheduled Triggers
+import { Cron } from '@triggers/components/Triggers/ScheduledTrigger/Cron/Cron'
+
 import { AbstractTriggerFactory } from './AbstractTriggerFactory'
-//Webhook Triggers
 
 class Factory extends AbstractTriggerFactory {
   constructor() {
@@ -28,5 +31,8 @@ TriggerFactory.registerTrigger(new Gitlab())
 TriggerFactory.registerTrigger(new Bitbucket())
 TriggerFactory.registerTrigger(new AzureRepo())
 TriggerFactory.registerTrigger(new Custom())
+
+// Scheduled Triggers
+TriggerFactory.registerTrigger(new Cron())
 
 export default TriggerFactory
