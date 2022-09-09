@@ -8,6 +8,7 @@
 .tabsInnerContainer {
   height: 44px;
   width: 100%;
+  background: var(--white) !important;
   border-bottom: 1px solid var(--grey-200);
 
   :global {

@@ -50,6 +50,7 @@ import { SshServiceSpec } from './SshServiceSpec/SshServiceSpec'
 import { WinRmServiceSpec } from './WinRmServiceSpec/WinRmServiceSpec'
 import { CreatePr } from './CreatePrStep/CreatePrStep'
 import { MergePR } from './MergePrStep/MergePrStep'
+import { FetchInstanceScript } from './FetchInstanceScriptStep/FetchInstanceScriptStep'
 import { AzureWebAppRollback } from './AzureWebAppRollback/AzureWebAppRollback'
 import { CommandScriptsStep } from './CommandScripts/CommandScriptsStep'
 import { AzureSlotDeployment } from './AzureSlotDeployment/AzureSlotDeployment'
@@ -115,6 +116,7 @@ factory.registerStep(new SshServiceSpec())
 factory.registerStep(new WinRmServiceSpec())
 factory.registerStep(new CreatePr())
 factory.registerStep(new MergePR())
+factory.registerStep(new FetchInstanceScript())
 factory.registerStep(new AzureWebAppRollback())
 factory.registerStep(new AzureSlotDeployment())
 factory.registerStep(new AzureTrafficShift())

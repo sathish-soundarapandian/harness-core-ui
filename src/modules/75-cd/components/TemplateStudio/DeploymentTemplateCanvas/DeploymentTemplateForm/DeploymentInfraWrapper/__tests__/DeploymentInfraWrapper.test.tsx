@@ -72,7 +72,7 @@ describe('Test DeploymentInfraWrapperWithRef', () => {
     expect(fileStoreContainer).toMatchSnapshot()
   })
 
-  test('default hostName always present field assertion', async () => {
+  test('default hostname always present field assertion', async () => {
     const { container } = render(
       <TestWrapper>
         <DeploymentContextWrapper initialValue={defaultInitialValues}>
@@ -80,7 +80,7 @@ describe('Test DeploymentInfraWrapperWithRef', () => {
         </DeploymentContextWrapper>
       </TestWrapper>
     )
-    const hotNameInput = container.querySelector('input[value="hostName"]') as HTMLInputElement
+    const hotNameInput = container.querySelector('input[value="hostname"]') as HTMLInputElement
     expect(hotNameInput).toBeDefined()
   })
 

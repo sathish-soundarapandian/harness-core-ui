@@ -1015,6 +1015,7 @@ stepDescription:
   ServerlessLambdaRollback: Deploy the previous successful version as a new version.
   createPR: Create PR
   mergePR: Merge PR
+  fetchInstanceScript: Fetch Instances
   AzureSlotDeployment: Select the Web App and source and target deployment slots for the deployment.
   CustomApproval: Custom Approval
   AzureTrafficShift: Shift network traffic to the new Web App version in the deployment slot.

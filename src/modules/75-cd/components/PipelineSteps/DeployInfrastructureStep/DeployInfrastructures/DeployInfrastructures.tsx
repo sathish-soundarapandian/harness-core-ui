@@ -302,6 +302,10 @@ function DeployInfrastructures({
               ? undefined
               : ((stage?.stage?.spec as DeploymentStageConfig)?.deploymentType as ServiceDeploymentType)
           }
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          // TODO: Fix once BE types are available
+          stageCustomDeploymentData={stage?.stage?.spec?.customDeploymentRef}
         />
       </ModalDialog>
     ),
