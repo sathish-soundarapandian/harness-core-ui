@@ -29,7 +29,6 @@ describe('Changing Project Page', () => {
       // failing the test
       return false
     })
-    cy.login('test', 'test')
 
     cy.visitPageAssertion('[class^=SideNav-module_main]')
     cy.contains('span', 'Service Reliability').click()

@@ -36,7 +36,6 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
       'stageYaml'
     )
     cy.intercept('POST', stepsCall, { fixture: 'pipeline/api/approvals/steps' })
-    cy.login('test', 'test')
 
     cy.visitCreatePipeline()
 

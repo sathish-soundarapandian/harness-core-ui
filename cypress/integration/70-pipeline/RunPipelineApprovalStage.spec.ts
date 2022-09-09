@@ -27,7 +27,6 @@ describe('RUN PIPELINE MODAL - approval stage', () => {
     cy.intercept('GET', yamlSnippetCall, { fixture: 'pipeline/api/approvals/stageYamlSnippet' })
     cy.intercept('GET', userGroupCall, { fixture: 'pipeline/api/approvals/userGroup' })
     cy.intercept('POST', stepsCall, { fixture: 'pipeline/api/approvals/steps' })
-    cy.login('test', 'test')
 
     cy.visitCreatePipeline()
 

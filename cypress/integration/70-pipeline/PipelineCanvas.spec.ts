@@ -51,7 +51,6 @@ describe('GIT SYNC DISABLED', () => {
     cy.intercept('GET', cdFailureStrategiesYaml, {
       fixture: 'pipeline/api/pipelines/failureStrategiesYaml'
     }).as('cdFailureStrategiesYaml')
-    cy.login('test', 'test')
 
     cy.visitCreatePipeline()
     cy.fillName('testPipeline_Cypress')
@@ -60,11 +59,9 @@ describe('GIT SYNC DISABLED', () => {
   })
 
   it('should display the close without saving dialog for pipeline', () => {
-    cy.wait(2000)
     cy.contains('p', 'Pipelines').should('be.visible', { timeout: 10000 }).click()
     cy.contains('p', 'Close without saving?').should('be.visible')
     cy.contains('span', 'Confirm').click({ force: true })
-    cy.wait(2000)
     cy.contains('span', 'Create a Pipeline').should('be.visible')
   })
 
@@ -117,7 +114,6 @@ describe('GIT SYNC DISABLED', () => {
     cy.contains('span', 'Save').click({ force: true })
 
     cy.wait('@pipelineSaveCallWithStoreType')
-    cy.wait(500)
     cy.contains(
       'span',
       'Invalid yaml: $.pipeline.stages[0].stage.spec.execution: is missing but it is required'
@@ -130,7 +126,6 @@ describe('GIT SYNC DISABLED', () => {
     )
     cy.contains('span', 'Save').click({ force: true })
     cy.wait('@pipelineSaveCallWithStoreType')
-    cy.wait(500)
     cy.contains('span', 'Pipeline published successfully').should('be.visible')
   })
 })
@@ -143,7 +138,6 @@ describe('APPROVAL STAGE', () => {
       return false
     })
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
-    cy.login('test', 'test')
 
     cy.visitCreatePipeline()
 
@@ -230,7 +224,6 @@ describe('GIT SYNC ENABLED', () => {
 
     cy.intercept('GET', gitSyncMetaCall, { fixture: 'ng/api/git-sync' })
     cy.intercept('GET', gitSyncBranchCall, { fixture: 'ng/api/git-sync-branches' })
-    cy.login('test', 'test')
 
     cy.visitCreatePipeline()
 
@@ -256,11 +249,9 @@ describe('Execution Stages', () => {
     cy.visit(pipelineStudioRoute, {
       timeout: 30000
     })
-    cy.wait(2000)
     cy.visitPageAssertion()
     cy.wait('@inputSetsTemplateCall', { timeout: 30000 })
     cy.wait('@pipelineDetails', { timeout: 30000 })
-    cy.wait(2000)
   }
 
   beforeEach(() => {
@@ -304,12 +295,10 @@ describe('Execution Stages', () => {
     })
 
     cy.contains('span', 'Apply Changes').click()
-    cy.wait(1000)
   }
   const yamlValidations = function (stepName: string, resourceName: StepResourceObject[]): void {
     // Toggle to YAML view
     cy.get('[data-name="toggle-option-two"]').click({ force: true })
-    cy.wait(1000)
     cy.get('.monaco-editor .overflow-guard').scrollTo('0%', '25%', { ensureScrollable: false })
     cy.contains('span', stepName).should('be.visible')
     cy.contains('span', getIdentifierFromName(stepName)).should('be.visible')
@@ -328,26 +317,22 @@ describe('Execution Stages', () => {
       .within(() => {
         cy.get('span[data-icon="zoom-out"]').click({ force: true })
         cy.get('p[data-name="node-name"]').contains('Add Step').click({ force: true })
-        cy.wait(1000)
         cy.get('[class*="ExecutionGraph-module_add-step-popover"]', { withinSubject: null })
           .should('be.visible')
           .within(() => {
             cy.contains('span', 'Add Step').should('be.visible').click({ force: true })
           })
-        cy.wait(500)
       })
-    cy.wait('@stepLibrary').wait(500)
+    cy.wait('@stepLibrary')
     cy.contains('section', stageText).click({ force: true })
 
     if (withWarning) {
       cy.get('.pipeline-studio-right-drawer span[icon="cross"]').click()
-      cy.wait(1000)
       cy.get('span[icon="warning-sign"]').should('exist')
       cy.get('p').contains(stageText).click({ force: true })
     }
 
     stepFieldSelection(stageText, resourceName)
-    cy.wait(500)
     cy.get('span[icon="warning-sign"]').should('not.exist')
     yamlValidations(stageText, resourceName)
   }
@@ -388,13 +373,12 @@ describe('ServerlessAwsLambda as deployment type', () => {
   const yamlValidations = function (stageName: string, regionName: string): void {
     // Toggle to YAML view
     cy.get('[data-name="toggle-option-two"]').click({ force: true })
-    cy.wait(1000)
     cy.get('.monaco-editor .overflow-guard').scrollTo('0%', '25%', { ensureScrollable: false })
     cy.contains('span', stageName).should('be.visible')
     cy.contains('span', regionName).should('be.visible')
   }
 
-  it(`fixed values to region and stage in infrastructure tab`, () => {
+  it.skip(`fixed values to region and stage in infrastructure tab`, () => {
     cy.visit(pipelineStudioRoute, { timeout: 30000 })
     cy.visitPageAssertion()
     cy.get(`div[data-testid="pipeline-studio"]`, {
@@ -402,19 +386,13 @@ describe('ServerlessAwsLambda as deployment type', () => {
     }).should('be.visible')
     cy.contains('p', 'testStage_Cypress').click()
     cy.contains('p', 'Serverless Lambda').click()
-    cy.wait(1000)
     cy.contains('span', 'Confirm').click()
-    cy.wait(1000)
     cy.contains('span', 'Continue').click()
     cy.contains('span', 'Select Connector').click()
     cy.contains('p', 'dynatrace').click()
-    cy.wait(500)
     cy.contains('span', 'Apply Selected').click()
-    cy.wait(500)
     cy.get('input[name="region"]').type('region1')
-    cy.wait(500)
     cy.get('input[name="stage"]').type('stage1')
-    cy.wait(1000)
     yamlValidations('stage1', 'region1')
   })
 
@@ -426,16 +404,12 @@ describe('ServerlessAwsLambda as deployment type', () => {
     }).should('be.visible')
     cy.contains('p', 'testStage_Cypress').click()
     cy.contains('p', 'Serverless Lambda').click()
-    cy.wait(1000)
     cy.contains('span', 'Confirm').click()
-    cy.wait(1000)
     cy.contains('span', 'Continue').click()
     cy.get('span[data-icon="fixed-input"]').eq(1).click()
     cy.get('.MultiTypeInput--header svg[data-icon="cross"]').eq(0).click()
     cy.contains('div', 'Runtime input').click()
-    cy.wait(1000)
     cy.get('[data-name="toggle-option-two"]').click({ force: true })
-    cy.wait(1000)
     cy.get('.monaco-editor .overflow-guard').scrollTo('0%', '25%', { ensureScrollable: false })
     cy.contains('span', '<+input>').should('be.visible')
   })
@@ -528,10 +502,8 @@ describe('ServerlessAwsLambda as deployment type', () => {
 
     // Select Stage
     cy.contains('p', 'Stage 1').click()
-    cy.wait(1000)
     cy.wait('@servicesCall')
     cy.wait('@stepLibrary')
-    cy.wait(1000)
 
     // Select Kubernetes as deployment type
     cy.contains('p', 'Kubernetes').click()
@@ -541,7 +513,6 @@ describe('ServerlessAwsLambda as deployment type', () => {
     // Got to Execution tab, 4 diff Execution Strategies should appear
     // Use Rolling strategy and check if respective step is added
     cy.contains('span', 'Execution').click()
-    cy.wait(1000)
     cy.contains('section', 'Rolling').should('be.visible')
     cy.contains('section', 'Blue Green').should('be.visible')
     cy.contains('section', 'Canary').should('be.visible')
@@ -573,21 +544,18 @@ describe('Input Sets', () => {
     cy.visit(inputSetsRoute, {
       timeout: 30000
     })
-    cy.wait(2000)
   })
 
   it('Input Set Creation & Deletion', () => {
     cy.visitPageAssertion()
     cy.wait('@emptyInputSetList')
-    cy.wait(1000)
     cy.contains('span', '+ New Input Set').should('be.visible')
     cy.get('.NoDataCard--buttonContainer').contains('span', '+ New Input Set').click()
     // Input Flow - Service
-    cy.wait(1000)
     cy.get('[class*=menuList]').within(() => {
       cy.contains('div', 'Input Set').click()
     })
-    cy.wait('@servicesCallV2').wait(1000)
+    cy.wait('@servicesCallV2')
     cy.fillField('name', 'testService')
     cy.findByText('Select Service').should('exist')
     cy.get('input[name="pipeline.stages[0].stage.spec.serviceConfig.serviceRef"]').click()
@@ -598,7 +566,6 @@ describe('Input Sets', () => {
 
     // Toggle to YAML view
     cy.get('[data-name="toggle-option-two"]').click({ force: true })
-    cy.wait(1000)
     // Verify all details in YAML view
     cy.contains('span', 'testService').should('be.visible')
     cy.contains('span', 'project1').should('be.visible')
@@ -620,7 +587,6 @@ describe('Input Sets', () => {
       fixture: 'pipeline/api/inputSet/inputSetsList'
     }).as('inputSetList')
     cy.wait('@inputSetList')
-    cy.wait(1000)
 
     cy.contains('p', 'testService').should('be.visible')
     cy.contains('p', 'Id: testService').should('be.visible')

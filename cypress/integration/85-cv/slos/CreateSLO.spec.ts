@@ -41,7 +41,6 @@ describe('Create SLO', () => {
       // failing the test
       return false
     })
-    cy.login('test', 'test')
 
     cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse).as('updatedListSLOsCallResponse')
     cy.intercept('GET', getSLORiskCount, getSLORiskCountResponse)

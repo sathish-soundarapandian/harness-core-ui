@@ -17,7 +17,6 @@ describe('Pipelines list view', () => {
       cy.intercept('POST', pipelineListAPI, {
         fixture: 'pipeline/api/pipelines/getPipelineList.json'
       }).as('pipelineList')
-      cy.login('test', 'test')
       cy.visitPipelinesList()
       cy.wait('@pipelineList')
     })
@@ -42,7 +41,6 @@ describe('Pipelines list view', () => {
       }).as('pipelineList')
       cy.intercept('GET', gitSyncMetaCall, { fixture: 'ng/api/git-sync' })
       cy.intercept('GET', gitSyncBranchCall, { fixture: 'ng/api/git-sync-branches' })
-      cy.login('test', 'test')
       cy.visitPipelinesList()
     })
 

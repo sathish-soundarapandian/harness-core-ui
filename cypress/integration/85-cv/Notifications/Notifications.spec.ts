@@ -37,7 +37,6 @@ describe('Create SLO with Notifications', () => {
       // failing the test
       return false
     })
-    cy.login('test', 'test')
 
     cy.visitChangeIntelligence()
   })

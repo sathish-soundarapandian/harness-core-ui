@@ -42,7 +42,6 @@ describe('Health Source - Prometheus', () => {
         ]
       })
     })
-    cy.login('test', 'test')
     cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
     cy.intercept(
       'GET',

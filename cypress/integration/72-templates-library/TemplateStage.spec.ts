@@ -26,8 +26,6 @@ describe('Template Stage Selection', () => {
       })
       cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
       cy.intercept('POST', templatesListCall, { fixture: 'template/api/templatesList' })
-      cy.login('test', 'test')
-
       cy.visitCreatePipeline()
 
       cy.fillName('testPipeline_Cypress')

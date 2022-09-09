@@ -30,7 +30,6 @@ describe('Create empty monitored service', () => {
         ]
       })
     })
-    cy.login('test', 'test')
     cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
     cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })
     cy.intercept(
