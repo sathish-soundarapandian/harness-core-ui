@@ -6,7 +6,7 @@
  */
 
 import React, { FC, useCallback, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import {
   Button,
   Checkbox,
@@ -25,6 +25,7 @@ import {
 import { Color, FontVariation } from '@harness/design-system'
 import { clone } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
+import routes from '@common/RouteDefinitions'
 import type { Failure, ServiceResponseDTO } from 'services/cd-ng'
 import { getErrorMessage, CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
 import useResponseError from '@cf/hooks/useResponseError'
@@ -33,7 +34,9 @@ import { useStrings } from 'framework/strings'
 import { useGetServiceList } from 'services/cd-ng'
 import { usePatchFeature } from 'services/cf'
 import type { Feature } from 'services/cf'
+import { NoData } from '../NoData/NoData'
 import ServicesFooter from './ServicesFooter'
+import NoServices from './images/NoServices.svg'
 
 import css from './ServicesList.module.scss'
 
@@ -49,15 +52,23 @@ export type PaginationProps = {
   pageIndex: number
   gotoPage: (pageNumber: number) => void
 }
+
+type queryParamsType = {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
 export interface EditServicesProps {
   closeModal: () => void
   loading: boolean
   filteredServices: ServiceResponseDTO[]
   paginationProps: PaginationProps
+  queryParams: queryParamsType
   onChange: (service: ServiceType) => void
   onSearch: (name: string) => void
   editedServices: ServiceType[]
   refetchServices: () => Promise<void>
+  searchTerm: string
   serviceError: GetDataError<Failure | Error> | null
   onSave: () => void
 }
@@ -71,11 +82,16 @@ const EditServicesModal: FC<EditServicesProps> = ({
   onSave,
   onSearch,
   paginationProps,
+  searchTerm,
   serviceError,
-  refetchServices
+  refetchServices,
+  queryParams
 }) => {
   const { getString } = useStrings()
-  const noServices = Boolean(!filteredServices?.length && !loading)
+  const history = useHistory()
+
+  const noServices = !filteredServices?.length && !loading && !searchTerm
+  const isEmptyState = !filteredServices?.length && !loading
 
   const column = [
     {
@@ -100,25 +116,40 @@ const EditServicesModal: FC<EditServicesProps> = ({
       title={getString('common.monitoredServices')}
       onClose={closeModal}
       toolbar={
-        <ExpandingSearchInput
-          name="serviceSearch"
-          alwaysExpanded
-          placeholder={getString('cf.featureFlagDetail.searchService')}
-          throttle={200}
-          onChange={onSearch}
-        />
+        !noServices && (
+          <ExpandingSearchInput
+            name="serviceSearch"
+            alwaysExpanded
+            placeholder={getString('cf.featureFlagDetail.searchService')}
+            throttle={200}
+            onChange={onSearch}
+          />
+        )
       }
       footer={
-        <ServicesFooter loading={loading} onSave={onSave} onClose={closeModal} paginationProps={paginationProps} />
+        !noServices && (
+          <ServicesFooter loading={loading} onSave={onSave} onClose={closeModal} paginationProps={paginationProps} />
+        )
       }
     >
       {loading && <ContainerSpinner height="100%" margin="0" flex={{ align: 'center-center' }} />}
 
-      {noServices && (
-        <Container height="100%" flex={{ align: 'center-center' }}>
-          <Text color={Color.GREY_600} font={{ variation: FontVariation.H4, weight: 'light' }}>
-            {getString('cf.featureFlagDetail.noServices')}
-          </Text>
+      {isEmptyState && (
+        <Container flex={{ justifyContent: 'center' }} padding="xxxlarge">
+          <NoData
+            imageURL={NoServices}
+            buttonProps={{ icon: 'plus' }}
+            buttonText={noServices ? getString('newService') : undefined}
+            onClick={() =>
+              history.push(
+                routes.toCVAddMonitoringServicesSetup({
+                  accountId: queryParams.accountIdentifier,
+                  ...queryParams
+                })
+              )
+            }
+            message={getString('cf.featureFlagDetail.noServices')}
+          />
         </Container>
       )}
 
@@ -327,8 +358,10 @@ const ServicesList: React.FC<ServicesListProps> = props => {
             }}
             editedServices={services}
             filteredServices={filteredServices}
+            searchTerm={searchTerm}
             serviceError={error}
             refetchServices={refetch}
+            queryParams={queryParams}
           />
         )}
       </Layout.Horizontal>

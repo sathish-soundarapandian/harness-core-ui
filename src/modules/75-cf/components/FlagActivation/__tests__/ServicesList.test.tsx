@@ -294,8 +294,7 @@ describe('EditServicesModal', () => {
     await waitFor(() => expect(screen.getByText(loadingMessage)).toBeInTheDocument())
   })
 
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip('it should return searched options', async () => {
+  test('it should return searched options', async () => {
     useGetServiceListMock.mockReturnValue({
       loading: false,
       data: mockServiceList,
@@ -348,5 +347,42 @@ describe('EditServicesModal', () => {
     await waitFor(() => {
       expect(screen.getByText('cf.featureFlagDetail.noServices')).toBeInTheDocument()
     })
+  })
+
+  test('it should render correct empty state', async () => {
+    useGetServiceListMock.mockReturnValue({
+      loading: false,
+      data: [],
+      refetch: jest.fn(),
+      error: false
+    } as any)
+
+    renderComponent()
+
+    userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
+
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: 'cf.featureFlagDetail.noServices' })).toBeInTheDocument()
+      expect(screen.getByTestId('nodata-image')).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'plus newService' })).toBeInTheDocument()
+    })
+  })
+
+  test('it should render link to take user to create a new Service', async () => {
+    useGetServiceListMock.mockReturnValue({
+      loading: false,
+      data: [],
+      refetch: jest.fn(),
+      error: false
+    } as any)
+
+    renderComponent()
+    userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
+
+    userEvent.click(await screen.findByRole('button', { name: 'plus newService' }))
+
+    expect(screen.getByTestId('location')).toHaveTextContent(
+      '/account/dummy/cv/orgs/dummy/projects/dummy/monitoringservices/setup'
+    )
   })
 })
