@@ -2,7 +2,10 @@
   "baseUrl": "https://localhost:8181",
   "viewportWidth": 1500,
   "viewportHeight": 1000,
-  "retries": 2,
+  "retries": {
+    "runMode": 2,
+    "openMode": 0
+  },
   "projectId": "if5p69",
   "integrationFolder": "integration",
   "pluginsFile": "plugins/index.js",
