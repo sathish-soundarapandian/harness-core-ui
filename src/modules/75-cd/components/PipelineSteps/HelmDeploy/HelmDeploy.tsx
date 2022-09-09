@@ -28,7 +28,7 @@ import type { StepElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StringsMap } from 'stringTypes'
 
@@ -43,6 +43,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -128,6 +129,7 @@ function HelmDeployWidget(
                         setFieldValue('timeout', value)
                       }}
                       isReadonly={props.isReadonly}
+                      allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
                     />
                   )}
                 </div>
@@ -147,7 +149,7 @@ const HelmDeployInputStep: React.FC<HelmDeployProps> = ({ inputSetData, allowabl
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeDurationField
+          <TimeoutFieldInputSetView
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
             label={getString('pipelineSteps.timeoutLabel')}
             disabled={inputSetData?.readonly}
@@ -157,6 +159,8 @@ const HelmDeployInputStep: React.FC<HelmDeployProps> = ({ inputSetData, allowabl
               expressions,
               disabled: inputSetData?.readonly
             }}
+            fieldPath={'timeout'}
+            template={inputSetData?.template}
           />
         </div>
       )}

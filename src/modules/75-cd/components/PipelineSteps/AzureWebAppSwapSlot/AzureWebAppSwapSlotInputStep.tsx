@@ -8,11 +8,12 @@
 import React from 'react'
 import { isEmpty } from 'lodash-es'
 import cx from 'classnames'
-import { FormikForm, MultiTypeInputType, getMultiTypeFromValue, FormInput } from '@harness/uicore'
+import { FormikForm, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
 import { connect, FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import type { AzureWebAppSwapSlotData, AzureWebAppSwapSlotProps } from './SwapSlot.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -31,7 +32,7 @@ export function AzureWebAppSwapSlotInputStepRef<T extends AzureWebAppSwapSlotDat
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.timeout as string) && (
           <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <FormMultiTypeDurationField
+            <TimeoutFieldInputSetView
               label={getString('pipelineSteps.timeoutLabel')}
               name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
               disabled={readonly}
@@ -41,13 +42,15 @@ export function AzureWebAppSwapSlotInputStepRef<T extends AzureWebAppSwapSlotDat
                 expressions,
                 disabled: readonly
               }}
+              template={inputSetData?.template}
+              fieldPath={'timeout'}
             />
           </div>
         )
       }
       {isRuntime(inputSetData?.template?.spec?.targetSlot as string) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             label={'Target Slot'}
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.targetSlot`}
             disabled={readonly}
@@ -56,6 +59,8 @@ export function AzureWebAppSwapSlotInputStepRef<T extends AzureWebAppSwapSlotDat
               disabled: readonly,
               allowableTypes
             }}
+            fieldPath={'spec.targetSlot'}
+            template={inputSetData?.template}
           />
         </div>
       )}

@@ -39,7 +39,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import type { StringsMap } from 'stringTypes'
 
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { MergePRVariableStepProps, MergePRVariableView } from './MergePrVariableView'
 import MergePRInputStep from './MergePrInputStep'
@@ -139,6 +139,7 @@ function MergePRWidget(props: MergePrProps, formikRef: StepFormikFowardRef<StepE
                       }
                     }
                     isReadonly={readonly}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
                   />
                 )}
               </div>

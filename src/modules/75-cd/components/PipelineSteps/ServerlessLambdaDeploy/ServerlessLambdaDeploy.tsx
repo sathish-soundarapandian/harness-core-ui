@@ -28,7 +28,7 @@ import {
   InputSetData
 } from '@pipeline/components/AbstractSteps/Step'
 import type { StepElementConfig } from 'services/cd-ng'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { useStrings } from 'framework/strings'
 import {
@@ -43,6 +43,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { ServerlessDeployCommandOptions } from './ServerlessDeployCommandOptions'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -127,6 +128,7 @@ function ServerlessLambdaDeployWidget(
                       setFieldValue('timeout', value)
                     }}
                     isReadonly={readonly}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
                   />
                 )}
               </div>
@@ -152,7 +154,7 @@ const ServerlessLambdaDeployInputStep: React.FC<ServerlessLambdaDeployProps> = (
     <>
       {getMultiTypeFromValue(inputSetData.template?.timeout) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeDurationField
+          <TimeoutFieldInputSetView
             name={`${isEmpty(inputSetData.path) ? '' : `${inputSetData.path}.`}timeout`}
             label={getString('pipelineSteps.timeoutLabel')}
             multiTypeDurationProps={{
@@ -162,6 +164,8 @@ const ServerlessLambdaDeployInputStep: React.FC<ServerlessLambdaDeployProps> = (
               disabled: inputSetData.readonly
             }}
             disabled={inputSetData.readonly}
+            fieldPath="timeout"
+            template={inputSetData.template}
           />
         </div>
       )}

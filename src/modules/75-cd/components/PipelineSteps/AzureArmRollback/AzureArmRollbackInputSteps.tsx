@@ -8,11 +8,12 @@
 import React from 'react'
 import { isEmpty } from 'lodash-es'
 import cx from 'classnames'
-import { FormInput, FormikForm, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { FormikForm, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { connect, FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import type { RollbackStackData, RollbackStackProps } from './AzureArmRollback.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -29,7 +30,9 @@ export function AzureArmRollbackInputStepRef<T extends RollbackStackData = Rollb
         /* istanbul ignore next */
         getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
           <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <FormMultiTypeDurationField
+            <TimeoutFieldInputSetView
+              template={inputSetData?.template}
+              fieldPath={'timeout'}
               label={getString('pipelineSteps.timeoutLabel')}
               name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
               disabled={readonly}
@@ -47,7 +50,9 @@ export function AzureArmRollbackInputStepRef<T extends RollbackStackData = Rollb
         /* istanbul ignore next */
         getMultiTypeFromValue(inputSetData?.template?.spec?.provisionerIdentifier) === MultiTypeInputType.RUNTIME && (
           <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
+              template={inputSetData?.template}
+              fieldPath={'spec.provisionerIdentifier'}
               name={`${path}.spec.provisionerIdentifier`}
               label={getString('pipelineSteps.provisionerIdentifier')}
               disabled={readonly}

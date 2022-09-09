@@ -31,7 +31,7 @@ exports[`Test Azure Infrastructure Spec behavior Should show errors if invalid v
           >
             <span
               class="Tooltip--acenter"
-              data-tooltip-id="azureInfraSubscription"
+              data-tooltip-id="stepTestUtilForm_.subscriptionId"
             >
               cd.steps.azureInfraStep.subscription
             </span>
@@ -134,7 +134,7 @@ exports[`Test Azure Infrastructure Spec behavior Should show errors if invalid v
           >
             <span
               class="Tooltip--acenter"
-              data-tooltip-id="azureInfraResourceGroup"
+              data-tooltip-id="stepTestUtilForm_.resourceGroup"
             >
               common.resourceGroupLabel
             </span>
@@ -237,7 +237,7 @@ exports[`Test Azure Infrastructure Spec behavior Should show errors if invalid v
           >
             <span
               class="Tooltip--acenter"
-              data-tooltip-id="azureInfraCluster"
+              data-tooltip-id="stepTestUtilForm_.cluster"
             >
               common.cluster
             </span>
@@ -340,7 +340,7 @@ exports[`Test Azure Infrastructure Spec behavior Should show errors if invalid v
           >
             <span
               class="Tooltip--acenter"
-              data-tooltip-id="azureInfraNamespace"
+              data-tooltip-id="stepTestUtilForm_.namespace"
             >
               common.namespace
             </span>
@@ -411,7 +411,7 @@ exports[`Test Azure Infrastructure Spec behavior Should show errors if invalid v
           >
             <span
               class="Tooltip--acenter"
-              data-tooltip-id="azureInfraReleaseName"
+              data-tooltip-id="stepTestUtilForm_.releaseName"
             >
               common.releaseName
             </span>
@@ -531,7 +531,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view for inp
           >
             <span
               class="Tooltip--acenter"
-              data-tooltip-id="azureInfraSubscription"
+              data-tooltip-id="stepTestUtilForm_.subscriptionId"
             >
               cd.steps.azureInfraStep.subscription
             </span>
@@ -634,7 +634,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view for inp
           >
             <span
               class="Tooltip--acenter"
-              data-tooltip-id="azureInfraResourceGroup"
+              data-tooltip-id="stepTestUtilForm_.resourceGroup"
             >
               common.resourceGroupLabel
             </span>
@@ -737,7 +737,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view for inp
           >
             <span
               class="Tooltip--acenter"
-              data-tooltip-id="azureInfraCluster"
+              data-tooltip-id="stepTestUtilForm_.cluster"
             >
               common.cluster
             </span>
@@ -840,7 +840,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view for inp
           >
             <span
               class="Tooltip--acenter"
-              data-tooltip-id="azureInfraNamespace"
+              data-tooltip-id="stepTestUtilForm_.namespace"
             >
               common.namespace
             </span>
@@ -911,7 +911,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view for inp
           >
             <span
               class="Tooltip--acenter"
-              data-tooltip-id="azureInfraReleaseName"
+              data-tooltip-id="stepTestUtilForm_.releaseName"
             >
               common.releaseName
             </span>

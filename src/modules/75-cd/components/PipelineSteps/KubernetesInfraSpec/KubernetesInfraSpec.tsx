@@ -47,6 +47,7 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
@@ -293,7 +294,7 @@ const KubernetesInfraSpecInputForm: React.FC<KubernetesInfraSpecEditableProps & 
       )}
       {getMultiTypeFromValue(template?.namespace) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             name={`${path}.namespace`}
             label={getString('common.namespace')}
             disabled={readonly}
@@ -302,12 +303,14 @@ const KubernetesInfraSpecInputForm: React.FC<KubernetesInfraSpecEditableProps & 
               expressions
             }}
             placeholder={getString('pipeline.infraSpecifications.namespacePlaceholder')}
+            template={template}
+            fieldPath={'namespace'}
           />
         </div>
       )}
       {getMultiTypeFromValue(template?.releaseName) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             name={`${path}.releaseName`}
             label={getString('common.releaseName')}
             disabled={readonly}
@@ -316,6 +319,8 @@ const KubernetesInfraSpecInputForm: React.FC<KubernetesInfraSpecEditableProps & 
               expressions
             }}
             placeholder={getString('cd.steps.common.releaseNamePlaceholder')}
+            template={template}
+            fieldPath={'releaseName'}
           />
         </div>
       )}

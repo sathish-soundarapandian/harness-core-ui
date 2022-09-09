@@ -462,6 +462,8 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
                 allowableTypes={allowableTypes}
                 formik={formik}
                 fieldName={`${path}.artifacts.${artifactPath}.spec.repository`}
+                fieldPath={`artifacts.${artifactPath}.spec.repository`}
+                template={template}
                 serviceId={isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined}
                 fqnPath={getConnectorRefFqnPath(
                   path as string,

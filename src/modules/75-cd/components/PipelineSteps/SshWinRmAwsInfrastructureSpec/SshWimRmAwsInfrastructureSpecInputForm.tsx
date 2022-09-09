@@ -31,6 +31,7 @@ import MultiTypeSecretInput, {
 } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
+import { MultiSelectInputSetView } from '@pipeline/components/InputSetView/MultiSelectInputSetView/MultiSelectInputSetView'
 import type { SshWinRmAwsInfrastructureTemplate } from './SshWinRmAwsInfrastructureSpec'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -256,7 +257,7 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
         )}
         {getMultiTypeFromValue(get(template, 'awsInstanceFilter.tags', '')) === MultiTypeInputType.RUNTIME && (
           <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <FormInput.MultiSelectTypeInput
+            <MultiSelectInputSetView
               name={'awsInstanceFilter.tags'}
               tooltipProps={{
                 dataTooltipId: 'awsInfraTags'
@@ -265,6 +266,8 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
               placeholder={loadingTags ? /* istanbul ignore next */ getString('loading') : getString('tagsLabel')}
               selectItems={tags}
               label={getString('tagsLabel')}
+              fieldPath={'awsInstanceFilter.tags'}
+              template={template}
               multiSelectTypeInputProps={{
                 placeholder: loadingTags ? /* istanbul ignore next */ getString('loading') : getString('tagsLabel'),
                 onKeyDown: preventEnter,

@@ -29,7 +29,7 @@ import {
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useQueryParams } from '@common/hooks'
 import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -143,6 +143,21 @@ export const AzureBlueprintRef = (
                 multiTypeDurationProps={{ enableConfigureOptions: false, expressions, allowableTypes }}
                 disabled={readonly}
               />
+              {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
+                <ConfigureOptions
+                  value={values.timeout as string}
+                  type="String"
+                  variableName="step.timeout"
+                  showRequiredField={false}
+                  showDefaultField={false}
+                  showAdvanced={true}
+                  onChange={value => {
+                    setFieldValue('timeout', value)
+                  }}
+                  isReadonly={readonly}
+                  allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
+                />
+              )}
             </div>
             <div className={css.divider} />
             <div className={cx(stepCss.formGroup, stepCss.lg)}>
@@ -167,6 +182,7 @@ export const AzureBlueprintRef = (
                       setFieldValue('spec.provisionerIdentifier', value)
                     }}
                     isReadonly={readonly}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                   />
                 )
               }
@@ -208,6 +224,25 @@ export const AzureBlueprintRef = (
                 name="spec.configuration.assignmentName"
                 label={getString('cd.azureBlueprint.assignmentName')}
               />
+              {
+                /* istanbul ignore next */
+                isValueRuntimeInput(values.spec?.configuration?.assignmentName) && (
+                  <ConfigureOptions
+                    value={values.spec?.configuration?.assignmentName as string}
+                    type="String"
+                    variableName="spec.configuration.assignmentName"
+                    showRequiredField={false}
+                    showDefaultField={false}
+                    showAdvanced={true}
+                    /* istanbul ignore next */
+                    onChange={value => {
+                      setFieldValue('spec.configuration.assignmentName', value)
+                    }}
+                    isReadonly={readonly}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
+                  />
+                )
+              }
             </div>
             <Layout.Vertical>
               <Label

@@ -20,7 +20,7 @@ import css from './SelectConfigureOptions.module.scss'
 export interface SelectConfigureOptionsProps extends ConfigureOptionsProps {
   value: string
   options: SelectOption[]
-  loading: boolean
+  loading?: boolean
   error?: GetDataError<Failure | Error> | null
 }
 
@@ -36,7 +36,8 @@ export const SelectConfigureOptions = (props: SelectConfigureOptionsProps): Reac
     showRequiredField,
     showDefaultField,
     loading,
-    error
+    error,
+    className
   } = props
 
   const { getString } = useStrings()
@@ -93,6 +94,7 @@ export const SelectConfigureOptions = (props: SelectConfigureOptionsProps): Reac
       isReadonly={isReadonly}
       getAllowedValuesCustomComponent={getAllowedValuesMultiSelectComponent}
       allowedValuesType={ALLOWED_VALUES_TYPE.MULTI_SELECT}
+      className={className}
     />
   )
 }

@@ -24,7 +24,6 @@ import {
   getServiceLevelObjectiveResponse,
   getSLODashboardWidgetsAfterEdit,
   updateSLO,
-  listRiskCountDataEmptyResponse,
   getMonitoredService,
   getMonitoredServiceResponse,
   listSLOsCallWithCVNGProd,

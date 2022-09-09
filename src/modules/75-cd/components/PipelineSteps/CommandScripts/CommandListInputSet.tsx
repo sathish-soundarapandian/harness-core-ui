@@ -21,9 +21,9 @@ import {
 } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
-import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ScriptType, ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { CommandScriptsData, CopyCommandUnit, CustomScriptCommandUnit } from './CommandScriptsTypes'
@@ -67,7 +67,7 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
                     {getMultiTypeFromValue((command as CopyCommandUnit).spec?.destinationPath) ===
                       MultiTypeInputType.RUNTIME && (
                       <Container className={css.textField}>
-                        <MultiTypeTextField
+                        <TextFieldInputSetView
                           label={
                             <Text
                               tooltipProps={{ dataTooltipId: 'destinationPath' }}
@@ -79,10 +79,13 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
                           }
                           name={`${prefix}spec.commandUnits[${i}].spec.destinationPath`}
                           multiTextInputProps={{
-                            multiTextInputProps: { expressions, allowableTypes },
+                            expressions,
+                            allowableTypes,
                             disabled: readonly,
                             placeholder: getString('cd.steps.commands.destinationPathPlaceholder')
                           }}
+                          fieldPath={`spec.commandUnits[${i}].spec.destinationPath`}
+                          template={template}
                         />
                       </Container>
                     )}
@@ -90,7 +93,7 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
                     {getMultiTypeFromValue((command as CustomScriptCommandUnit)?.spec?.workingDirectory) ===
                       MultiTypeInputType.RUNTIME && (
                       <Container className={css.textField}>
-                        <MultiTypeTextField
+                        <TextFieldInputSetView
                           label={
                             <Text
                               tooltipProps={{ dataTooltipId: 'workingDirectory' }}
@@ -102,10 +105,13 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
                           }
                           name={`${prefix}spec.commandUnits[${i}].spec.workingDirectory`}
                           multiTextInputProps={{
-                            multiTextInputProps: { expressions, allowableTypes },
+                            expressions,
+                            allowableTypes,
                             disabled: readonly,
                             placeholder: getString('cd.enterWorkDirectory')
                           }}
+                          fieldPath={`spec.commandUnits[${i}].spec.workingDirectory`}
+                          template={template}
                         />
                       </Container>
                     )}

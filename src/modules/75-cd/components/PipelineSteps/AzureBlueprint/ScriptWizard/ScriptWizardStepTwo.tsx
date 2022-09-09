@@ -24,7 +24,7 @@ import { Form } from 'formik'
 import * as Yup from 'yup'
 
 import { get, isEmpty, isUndefined, set } from 'lodash-es'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { Connectors } from '@connectors/constants'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -220,6 +220,7 @@ export const ScriptWizardStepTwo = ({
                           showAdvanced={true}
                           onChange={/* istanbul ignore next */ value => setFieldValue('repoName', value)}
                           isReadonly={isReadonly}
+                          allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                         />
                       )}
                     </div>
@@ -251,6 +252,7 @@ export const ScriptWizardStepTwo = ({
                         showAdvanced={true}
                         onChange={/* istanbul ignore next */ value => setFieldValue('branch', value)}
                         isReadonly={isReadonly}
+                        allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                       />
                     )}
                   </div>
@@ -275,6 +277,7 @@ export const ScriptWizardStepTwo = ({
                         showAdvanced={true}
                         onChange={/* istanbul ignore next */ value => setFieldValue('commitId', value)}
                         isReadonly={isReadonly}
+                        allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                       />
                     )}
                   </div>
@@ -301,6 +304,7 @@ export const ScriptWizardStepTwo = ({
                         }
                       }
                       isReadonly={isReadonly}
+                      allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                     />
                   )}
                 </div>

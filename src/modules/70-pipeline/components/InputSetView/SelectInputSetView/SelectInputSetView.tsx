@@ -31,6 +31,7 @@ interface SelectInputSetViewProps {
 
 export function SelectInputSetView(props: SelectInputSetViewProps): JSX.Element {
   const {
+    className,
     selectItems,
     name,
     label,
@@ -62,6 +63,7 @@ export function SelectInputSetView(props: SelectInputSetViewProps): JSX.Element 
 
   return (
     <FormInput.MultiTypeInput
+      className={className}
       selectItems={selectItems}
       label={label}
       placeholder={placeholder}

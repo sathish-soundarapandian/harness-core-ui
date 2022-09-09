@@ -18,7 +18,7 @@ import {
 import { useQueryParams } from '@common/hooks'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import type { AzureTrafficShiftProps } from './AzureTrafficShiftInterface.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -95,6 +95,7 @@ export const AzureTrafficShiftRef = (props: AzureTrafficShiftProps, formikRef: S
                     }
                   }
                   isReadonly={readonly}
+                  allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
                 />
               )}
             </div>
@@ -121,6 +122,7 @@ export const AzureTrafficShiftRef = (props: AzureTrafficShiftProps, formikRef: S
                     }
                   }
                   isReadonly={readonly}
+                  allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                 />
               )}
             </div>

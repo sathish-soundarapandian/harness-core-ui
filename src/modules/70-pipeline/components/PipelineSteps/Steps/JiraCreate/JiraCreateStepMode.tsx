@@ -50,7 +50,7 @@ import type {
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useQueryParams, useDeepCompareEffect } from '@common/hooks'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { JiraProjectSelectOption } from '../JiraApproval/types'
 import { getGenuineValue, setIssueTypeOptions } from '../JiraApproval/helper'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
@@ -354,6 +354,7 @@ function FormContent({
             showAdvanced={true}
             onChange={value => formik.setFieldValue('timeout', value)}
             isReadonly={readonly}
+            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
           />
         )}
       </div>

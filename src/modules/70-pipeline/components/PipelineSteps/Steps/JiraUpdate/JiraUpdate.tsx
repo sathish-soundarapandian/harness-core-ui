@@ -107,7 +107,7 @@ export class JiraUpdate extends PipelineStep<JiraUpdateData> {
     return errors
   }
 
-  processFormData(values: JiraUpdateData) {
+  processFormData(values: JiraUpdateData): JiraUpdateData {
     return processFormData(values)
   }
 

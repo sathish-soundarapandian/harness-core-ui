@@ -31,7 +31,7 @@ import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/compo
 import { useStrings } from 'framework/strings'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { CommandScriptsData, CommandScriptsFormData } from './CommandScriptsTypes'
 import { CommandList } from './CommandList'
 import { VariableList } from './VariableList'
@@ -134,6 +134,7 @@ function CommandScriptsEditWidget(
                     formik.setFieldValue('timeout', value)
                   }}
                   isReadonly={readonly}
+                  allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
                 />
               )}
             </div>

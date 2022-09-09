@@ -112,10 +112,10 @@ describe('Test Azure ARM rollback stack', () => {
       ref,
       onUpdate
     }
-    const { getByText } = renderComponent(data)
+    const { getAllByText } = renderComponent(data)
 
-    const runtimeSettingsCog = getByText('cog')
-    expect(runtimeSettingsCog).toBeInTheDocument()
+    const runtimeSettingsCog = getAllByText('cog')
+    expect(runtimeSettingsCog?.length).toBe(2)
   })
 
   test('should update field values', async () => {

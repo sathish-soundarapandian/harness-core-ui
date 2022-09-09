@@ -12,11 +12,11 @@ import cx from 'classnames'
 
 import { useStrings } from 'framework/strings'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StepElementConfig } from 'services/cd-ng'
 
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export interface MergePrInputStepProps {
@@ -40,13 +40,15 @@ export default function MergePRInputStep(props: MergePrInputStepProps): React.Re
     <FormikForm>
       {getMultiTypeFromValue(get(template, 'timeout', '')) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeDurationField
+          <TimeoutFieldInputSetView
             multiTypeDurationProps={{
               enableConfigureOptions: false,
               allowableTypes,
               expressions,
               disabled: readonly
             }}
+            fieldPath={'timeout'}
+            template={template}
             label={getString('pipelineSteps.timeoutLabel')}
             name={`${prefix}.timeout`}
             disabled={readonly}
