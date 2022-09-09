@@ -36,9 +36,12 @@ import type { ResourceDTO } from 'services/audit'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import { String as LocaleString } from 'framework/strings'
 import RecommendationFilters from '@ce/components/RecommendationFilters'
 import type { CCMUIAppCustomProps } from '@ce/interface/CCMUIApp.types'
+import { useGetAggregatedUsers, useGetConnector } from 'services/cd-ng'
+import { SimpleLogViewer } from '@common/components/LogViewer/SimpleLogViewer'
 import CEHomePage from './pages/home/CEHomePage'
 import CECODashboardPage from './pages/co-dashboard/CECODashboardPage'
 import CECOCreateGatewayPage from './pages/co-create-gateway/CECOCreateGatewayPage'
@@ -68,7 +71,6 @@ import CommitmentOrchestration from './pages/CommitmentOrchestration/CommitmentO
 import CommitmentOrchestrationSetup from './pages/CommitmentOrchestration/CommitmentOrchestrationSetup'
 import CloudIntegrationPage from './pages/cloud-integration/CloudIntegrationPage'
 import ServiceDetailsPage from './pages/service-details/ServiceDetailsPage'
-import { useGetAggregatedUsers, useGetConnector } from 'services/cd-ng'
 
 RbacFactory.registerResourceCategory(ResourceCategory.CLOUD_COSTS, {
   icon: 'ccm-solid',
@@ -754,7 +756,9 @@ const CERoutes: React.FC = () => {
             <ChildAppMounter<CCMUIAppCustomProps>
               customComponents={{
                 OverviewAddCluster,
-                RecommendationFilters
+                RecommendationFilters,
+                RBACTooltip,
+                SimpleLogViewer
               }}
               customAPIHooks={{
                 useGetAggregatedUsers: useGetAggregatedUsers,

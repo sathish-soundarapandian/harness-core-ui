@@ -19,11 +19,15 @@ import type {
   UseGetAggregatedUsersProps,
   UseGetConnectorProps
 } from 'services/cd-ng'
+import type { RBACTooltipProps } from '@rbac/components/RBACTooltip/RBACTooltip'
+import type { SimpleLogViewerProps } from '@common/components/LogViewer/SimpleLogViewer'
 
 export interface CCMUIAppCustomProps {
   customComponents: {
     OverviewAddCluster: React.ComponentType<OverviewAddClusterProps>
     RecommendationFilters: React.ComponentType<RecommendationFiltersProps>
+    RBACTooltip: React.ComponentType<RBACTooltipProps>
+    SimpleLogViewer: React.ComponentType<SimpleLogViewerProps>
   }
   customAPIHooks: {
     useGetAggregatedUsers: (
