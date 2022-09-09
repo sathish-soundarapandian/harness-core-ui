@@ -247,6 +247,35 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
 
     useEffect(() => {
       setRenderCount(renderCount + 1)
+      if (
+        initialValues?.connectorRef &&
+        getMultiTypeFromValue(initialValues?.connectorRef) === MultiTypeInputType.FIXED &&
+        initialValues.subscriptionId &&
+        getMultiTypeFromValue(initialValues?.subscriptionId) === MultiTypeInputType.FIXED
+      ) {
+        refetchResourceGroups({
+          queryParams,
+          pathParams: {
+            subscriptionId: initialValues?.subscriptionId
+          }
+        })
+        refetchSubscriptionTags({
+          queryParams,
+          pathParams: {
+            subscriptionId: initialValues?.subscriptionId
+          }
+        })
+        /* istanbul ignore else */
+      }
+
+      if (fetchResourceUsingEnvId()) {
+        refetchResourceGroupsV2({
+          queryParams
+        })
+        refetchSubscriptionTagsV2({
+          queryParams
+        })
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
