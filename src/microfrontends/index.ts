@@ -27,6 +27,7 @@ import type { STOAppCustomProps } from '@pipeline/interfaces/STOApp'
 import type { CCMUIAppCustomProps } from '@ce/interface/CCMUIApp.types'
 import type { ChaosCustomMicroFrontendProps } from '@chaos/interfaces/Chaos.types'
 import type { RbacErrorReturn } from '@rbac/utils/useRBACError/useRBACError'
+import type { UseCreateConnectorModalReturn } from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 
 export interface Scope {
   accountId?: string
@@ -50,6 +51,8 @@ export interface Hooks {
   useTelemetry?: (pageParams: PageParams) => TelemetryReturnType
   useLogout?: () => UseLogoutReturn
   useRBACError?: () => RbacErrorReturn
+  usePermission?: () => Array<boolean>
+  useCreateConnectorModal?: () => UseCreateConnectorModalReturn
 }
 
 /**

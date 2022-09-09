@@ -68,6 +68,7 @@ import CommitmentOrchestration from './pages/CommitmentOrchestration/CommitmentO
 import CommitmentOrchestrationSetup from './pages/CommitmentOrchestration/CommitmentOrchestrationSetup'
 import CloudIntegrationPage from './pages/cloud-integration/CloudIntegrationPage'
 import ServiceDetailsPage from './pages/service-details/ServiceDetailsPage'
+import AnomaliesFilter from './components/AnomaliesFilter/AnomaliesFilter'
 
 RbacFactory.registerResourceCategory(ResourceCategory.CLOUD_COSTS, {
   icon: 'ccm-solid',
@@ -753,7 +754,8 @@ const CERoutes: React.FC = () => {
             <ChildAppMounter<CCMUIAppCustomProps>
               customComponents={{
                 OverviewAddCluster,
-                RecommendationFilters
+                RecommendationFilters,
+                AnomaliesFilter
               }}
               ChildApp={CcmMicroFrontendPath}
             />
