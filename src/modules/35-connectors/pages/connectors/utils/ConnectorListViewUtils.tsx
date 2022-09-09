@@ -76,11 +76,11 @@ const getConnectorDisplaySummaryLabel = (titleStringId: StringKeys, Element: JSX
 
 const displayDelegatesTagsSummary = (delegateSelectors: []): JSX.Element => {
   return (
-    <div className={classNames(css.name)}>
+    <div className={classNames(css.name, css.flex)}>
       <Text inline color={Color.BLACK}>
         <String stringID={'delegate.delegateTags'} />:
       </Text>
-      <Text inline margin={{ left: 'xsmall' }} color={Color.GREY_400}>
+      <Text inline margin={{ left: 'xsmall' }} lineClamp={1} color={Color.GREY_400}>
         {delegateSelectors?.join?.(', ')}
       </Text>
     </div>

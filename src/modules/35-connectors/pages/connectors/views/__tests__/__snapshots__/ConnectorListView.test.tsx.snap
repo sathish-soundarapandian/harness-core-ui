@@ -10148,7 +10148,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
                 color="black"
               >
                 <div
-                  class="name"
+                  class="name flex"
                 >
                   <span
                     class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-black"
@@ -10159,7 +10159,8 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
                     :
                   </span>
                   <span
-                    class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--margin-left-xsmall StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--inline StyledProps--margin-left-xsmall StyledProps--color StyledProps--color-grey400"
+                    style="--text-line-clamp: 1;"
                   />
                 </div>
               </div>
@@ -11894,7 +11895,7 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
                 color="black"
               >
                 <div
-                  class="name"
+                  class="name flex"
                 >
                   <span
                     class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-black"
@@ -11905,7 +11906,8 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
                     :
                   </span>
                   <span
-                    class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--margin-left-xsmall StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--inline StyledProps--margin-left-xsmall StyledProps--color StyledProps--color-grey400"
+                    style="--text-line-clamp: 1;"
                   />
                 </div>
               </div>
