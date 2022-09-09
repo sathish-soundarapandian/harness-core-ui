@@ -72,6 +72,7 @@ export function SelectInputSetView(props: SelectInputSetViewProps): JSX.Element 
       helperText={helperText}
       useValue={useValue}
       multiTypeInputProps={multiTypeInputProps}
+      tooltipProps={tooltipProps}
     />
   )
 }

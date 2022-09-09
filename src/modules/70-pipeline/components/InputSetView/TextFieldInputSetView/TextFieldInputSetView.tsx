@@ -68,6 +68,7 @@ export function TextFieldInputSetView(props: TextFieldInputSetViewProps): JSX.El
       multiTextInputProps={multiTextInputProps}
       placeholder={placeholder}
       onChange={onChange}
+      tooltipProps={tooltipProps}
     />
   )
 }
