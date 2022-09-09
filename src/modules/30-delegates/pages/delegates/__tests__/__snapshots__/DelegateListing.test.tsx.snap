@@ -521,7 +521,6 @@ exports[`Test delegate buttons click on filter 1`] = `
                 </div>
                 <p
                   class="StyledProps--font StyledProps--main statusText StyledProps--background-grey300 StyledProps--color StyledProps--color-white StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall"
-                  style="height: 18px;"
                 >
                   AUTO UPGRADE: OFF
                 </p>
@@ -984,7 +983,6 @@ exports[`Test delegate buttons click on new delegate 1`] = `
                 </div>
                 <p
                   class="StyledProps--font StyledProps--main statusText StyledProps--background-grey300 StyledProps--color StyledProps--color-white StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall"
-                  style="height: 18px;"
                 >
                   AUTO UPGRADE: OFF
                 </p>

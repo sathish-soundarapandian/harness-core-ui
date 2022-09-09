@@ -147,7 +147,6 @@ exports[`Delegates Listing With Groups render data 1`] = `
         </div>
         <p
           class="StyledProps--font StyledProps--main statusText StyledProps--background-grey300 StyledProps--color StyledProps--color-white StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall"
-          style="height: 18px;"
         >
           AUTO UPGRADE: OFF
         </p>

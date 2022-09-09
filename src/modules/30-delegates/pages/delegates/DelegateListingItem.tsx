@@ -334,7 +334,6 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
             color={Color.WHITE}
             font={{ weight: 'semi-bold', size: 'xsmall' }}
             className={css.statusText}
-            height={18}
           >
             {autoUpgradeText}
           </Text>
@@ -459,7 +458,7 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
                 </Layout.Horizontal>
                 {USE_IMMUTABLE_DELEGATE ? (
                   <Layout.Horizontal width={'14%'} className={css.instanceStatus}>
-                    {delegate?.immutable ? (
+                    {!delegate?.immutable ? (
                       <Text>{getString('na')}</Text>
                     ) : (
                       <>
