@@ -44,6 +44,18 @@ import css from './CloudIntegrationTabs.module.scss'
 const ConnectorNameCell: CustomCloudCell = ({ row, column }) => {
   const name = row.original?.connector?.name
   const connectorType = row.original.connector?.type
+  const identifier = row.original.connector?.identifier
+
+  const [canUpdate] = usePermission(
+    {
+      resource: {
+        resourceType: ResourceType.CONNECTOR,
+        resourceIdentifier: identifier || ''
+      },
+      permissions: [PermissionIdentifier.UPDATE_CONNECTOR]
+    },
+    [identifier]
+  )
 
   return (
     <Text
@@ -52,11 +64,11 @@ const ConnectorNameCell: CustomCloudCell = ({ row, column }) => {
       font={{ variation: FontVariation.BODY2 }}
       className={css.nameCell}
       lineClamp={1}
-      onClick={
-        /* istanbul ignore next */ () => {
+      onClick={() => {
+        if (canUpdate) {
           ;(column as any).openConnectorModal(true, connectorType, { connectorInfo: row.original.connector })
         }
-      }
+      }}
     >
       {name}
     </Text>
@@ -193,7 +205,7 @@ const MenuCell: CustomCloudCell = ({ row, column }) => {
       },
       permissions: [PermissionIdentifier.UPDATE_CONNECTOR]
     },
-    []
+    [connector?.identifier]
   )
 
   return (
