@@ -25,7 +25,7 @@ import { scriptInputType } from '@cd/components/PipelineSteps/ShellScriptStep/sh
 import type { SidecarArtifact } from 'services/cd-ng'
 import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import DelegateSelectors from '@common/components/DelegateSelectors/DelegateSelectors'
-import { isArtifactSourceRuntime, isFieldfromTriggerTabDisabled } from '../artifactSourceUtils'
+import { isFieldfromTriggerTabDisabled } from '../artifactSourceUtils'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import css from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactConnector.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -72,8 +72,7 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
     }
     return false
   }
-  const isRuntime = isArtifactSourceRuntime(isPrimaryArtifactsRuntime, isSidecarRuntime, isSidecar as boolean)
-
+  const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   return (
     <>
       {isRuntime && (

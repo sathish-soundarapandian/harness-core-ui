@@ -31,12 +31,7 @@ import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/Artif
 import { useListAwsRegions } from 'services/portal'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
-import {
-  getDefaultQueryParam,
-  getFinalQueryParamValue,
-  isArtifactSourceRuntime,
-  isFieldfromTriggerTabDisabled
-} from '../artifactSourceUtils'
+import { getDefaultQueryParam, getFinalQueryParamValue, isFieldfromTriggerTabDisabled } from '../artifactSourceUtils'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 export const resetBuckets = (formik: FormikValues, bucketPath: string): void => {
@@ -171,8 +166,7 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
     return false
   }
 
-  const isRuntime = isArtifactSourceRuntime(isPrimaryArtifactsRuntime, isSidecarRuntime, isSidecar as boolean)
-
+  const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
     <div key={item.label.toString()}>
       <Menu.Item

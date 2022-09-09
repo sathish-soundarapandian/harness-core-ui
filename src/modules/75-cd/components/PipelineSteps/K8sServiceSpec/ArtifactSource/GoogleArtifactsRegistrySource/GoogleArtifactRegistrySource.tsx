@@ -23,7 +23,6 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { GARBuildDetailsDTO, useGetBuildDetailsForGoogleArtifactRegistry } from 'services/cd-ng'
 import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { isFieldFixedAndNonEmpty } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
-import { isArtifactSourceRuntime } from '../artifactSourceUtils'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 interface JenkinsRenderContent extends ArtifactSourceRenderProps {
   isTagsSelectionDisabled: (data: ArtifactSourceRenderProps) => boolean
@@ -37,7 +36,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     path,
     readonly,
     allowableTypes,
-    isSidecar,
     artifactPath,
     initialValues,
     accountId,
@@ -124,8 +122,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     return defaultTo(selectItems, [])
   }
 
-  const isRuntime = isArtifactSourceRuntime(isPrimaryArtifactsRuntime, isSidecarRuntime, isSidecar as boolean)
-
+  const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   return (
     <>
       {isRuntime && (
