@@ -7,18 +7,18 @@
 
 import React, { useCallback, useState } from 'react'
 import {
-  Text,
+  Accordion,
+  Button,
+  ButtonVariation,
+  Card,
   Container,
   Formik,
   FormikForm,
-  Button,
-  Card,
-  Accordion,
+  FormInput,
   HarnessDocTooltip,
+  Text,
   ThumbnailSelect,
-  ButtonVariation,
-  useConfirmationDialog,
-  FormInput
+  useConfirmationDialog
 } from '@harness/uicore'
 import type { Item } from '@wings-software/uicore/dist/components/ThumbnailSelect/ThumbnailSelect'
 import { Color, Intent } from '@harness/design-system'
@@ -29,8 +29,8 @@ import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type {
-  CustomVariablesData,
-  CustomVariableEditableExtraProps
+  CustomVariableEditableExtraProps,
+  CustomVariablesData
 } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableEditable'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -45,11 +45,13 @@ import {
   isNewServiceEnvEntity
 } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import DeployServiceErrors from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
+import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import type { StringNGVariable } from 'services/cd-ng'
+import type { StringNGVariable, TemplateLinkConfig } from 'services/cd-ng'
 import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
-import { createTemplate, getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
+import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
+import { createTemplate, getScopeBasedTemplateRef, getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import { hasStageData, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
@@ -116,6 +118,35 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
     getDeploymentType()
   )
 
+  const [linkedDeploymentTemplate, setLinkedDeploymentTemplate] = useState<TemplateLinkConfig>()
+
+  const { getTemplate } = useTemplateSelector()
+
+  const handleChangeTemplate = React.useCallback(() => {
+    getDeploymentTemplate().catch(_ => {
+      // user cancelled template selection - we keep the existing template
+    })
+  }, [])
+
+  const getDeploymentTemplate = async () => {
+    const { template: deploymentTemplate } = await getTemplate({ templateType: 'CustomDeployment' })
+    const templateLinkConfigDetails = {
+      templateRef: getScopeBasedTemplateRef(deploymentTemplate),
+      versionLabel: deploymentTemplate.versionLabel
+    }
+    setLinkedDeploymentTemplate(templateLinkConfigDetails)
+  }
+
+  React.useEffect(() => {
+    if (selectedDeploymentType === ServiceDeploymentType.CustomDeployment && isEmpty(linkedDeploymentTemplate)) {
+      getDeploymentTemplate().catch(_ => {
+        // user cancelled template selection
+        setSelectedDeploymentType(undefined)
+        formikRef.current?.setFieldValue('deploymentType', undefined)
+      })
+    }
+  }, [selectedDeploymentType, linkedDeploymentTemplate])
+
   React.useEffect(() => {
     /* istanbul ignore else */
     if (errorMap.size > 0) {
@@ -161,6 +192,12 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
         data.stage.name = values.name
         if (!isEmpty(values.deploymentType)) {
           set(data, 'stage.spec.deploymentType', values.deploymentType)
+          if (values.deploymentType === ServiceDeploymentType.CustomDeployment && linkedDeploymentTemplate) {
+            set(data, 'stage.spec.customDeploymentRef', {
+              templateRef: linkedDeploymentTemplate.templateRef,
+              versionLabel: linkedDeploymentTemplate.versionLabel
+            })
+          }
         }
         if (values.description) {
           data.stage.description = values.description
@@ -315,6 +352,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                       font={{ size: 'small' }}
                       iconProps={{ size: 12, margin: { right: 'xsmall' } }}
                       color={Color.BLACK}
+                      lineClamp={1}
                     >
                       {`Using Template: ${getTemplateNameWithLabel(template)}`}
                     </Text>
@@ -344,6 +382,14 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                           className={css.gitOpsCheck}
                         />
                       )}
+                      {linkedDeploymentTemplate &&
+                        selectedDeploymentType === ServiceDeploymentType.CustomDeployment && (
+                          <TemplateBar
+                            templateLinkConfig={linkedDeploymentTemplate}
+                            onOpenTemplateSelector={handleChangeTemplate}
+                            className={css.templateBarOverride}
+                          />
+                        )}
                     </>
                   )}
 

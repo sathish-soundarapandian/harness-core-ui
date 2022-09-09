@@ -13,5 +13,6 @@ declare const styles: {
   readonly gitOpsCheck: string
   readonly nameIdDescriptionTags: string
   readonly stageTypeThumbnail: string
+  readonly templateBarOverride: string
 }
 export default styles
