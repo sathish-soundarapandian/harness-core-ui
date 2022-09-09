@@ -314,7 +314,7 @@ describe('AppDIgnoreThresholdTabContent', () => {
     expect(errors).toEqual({ 'failFastThresholds.0.spec.spec.count': 'cv.metricThresholds.validations.countValue' })
   })
 
-  test('should check validateCommonFieldsForMetricThreshold for greater than and less than value should have value more than 1 or undefined', () => {
+  test('should check validateCommonFieldsForMetricThreshold for greater than and less than value can have values less than 1 and decimal', () => {
     const errors = {}
     const testValue: MetricThresholdType = {
       metricType: 'test',
@@ -333,10 +333,10 @@ describe('AppDIgnoreThresholdTabContent', () => {
       }
     }
     validateCommonFieldsForMetricThreshold('failFastThresholds', errors, [testValue], key => key, true)
-    expect(errors).toEqual({ 'failFastThresholds.0.criteria.spec.lessThan': 'cv.required' })
+    expect(errors).toEqual({})
   })
 
-  test('should check validateCommonFieldsForMetricThreshold for greater than and less than value should not have value 0', () => {
+  test('should check validateCommonFieldsForMetricThreshold shows error if any of the criteria spec value is 0', () => {
     const errors = {}
     const testValue: MetricThresholdType = {
       metricType: 'test',
@@ -351,14 +351,13 @@ describe('AppDIgnoreThresholdTabContent', () => {
         type: MetricCriteriaValues.Absolute,
         spec: {
           greaterThan: 0,
-          lessThan: 0.32
+          lessThan: 1
         }
       }
     }
     validateCommonFieldsForMetricThreshold('failFastThresholds', errors, [testValue], key => key, true)
     expect(errors).toEqual({
-      'failFastThresholds.0.criteria.spec.greaterThan': 'cv.required',
-      'failFastThresholds.0.criteria.spec.lessThan': 'cv.required'
+      'failFastThresholds.0.criteria.spec.greaterThan': 'cv.required'
     })
   })
 

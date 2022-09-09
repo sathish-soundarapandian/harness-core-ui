@@ -6,14 +6,8 @@
  */
 
 import type { StringKeys } from 'framework/strings'
-import type { TimeSeriesMetricPackDTO } from 'services/cv'
-import { metricThresholdsPayloadMockData } from '../../AppDynamics/__tests__/AppDMonitoredSource.mock'
 import type { PrometheusSetupSource } from '../PrometheusHealthSource.constants'
-import {
-  getFilteredMetricThresholdValues,
-  transformPrometheusSetupSourceToHealthSource,
-  validateAssginComponent
-} from '../PrometheusHealthSource.utils'
+import { transformPrometheusSetupSourceToHealthSource, validateAssginComponent } from '../PrometheusHealthSource.utils'
 import { expectedResultPrometheusPayload, sourceDataPrometheusPayload } from './PrometheusHealthSource.mock'
 
 function getString(key: StringKeys): StringKeys {
@@ -49,24 +43,6 @@ describe('Validate Prometheus Utils', () => {
       lowerBaselineDeviation: 'cv.monitoringSources.prometheus.validation.deviation',
       riskCategory: 'cv.monitoringSources.gco.mapMetricsToServicesPage.validation.riskCategory'
     })
-  })
-
-  test('should test getFilteredMetricThresholdValues', () => {
-    const result = getFilteredMetricThresholdValues(
-      'IgnoreThreshold',
-      metricThresholdsPayloadMockData as TimeSeriesMetricPackDTO[]
-    )
-
-    expect(result).toEqual([
-      {
-        criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 12 }, type: 'Percentage' },
-        groupName: 'testP',
-        metricName: 'stall_count',
-        metricType: 'Custom',
-        spec: { action: 'Ignore' },
-        type: 'IgnoreThreshold'
-      }
-    ])
   })
 
   test('prometheus payload with metric thresholds', () => {
