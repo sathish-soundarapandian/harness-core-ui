@@ -329,7 +329,10 @@ export const DelegateConfigurations: React.FC<DelegatesListProps> = ({ filtersMo
           pageIndex: 0
         }
         refetchDelegateProfiles(updatedQueryParams, filterFromFormData)
-        setAppliedFilter({ ...unsavedFilter, filterProperties: filterFromFormData })
+        setAppliedFilter(prevFilters => {
+          const prevFiltersTemp = prevFilters ? prevFilters : unsavedFilter
+          return { ...prevFiltersTemp, filterProperties: filterFromFormData }
+        })
         setPage(0)
         hideFilterDrawer()
       } else {

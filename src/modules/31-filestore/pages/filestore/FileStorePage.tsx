@@ -438,7 +438,10 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
           referenceName: formData.referenceName
         }
         refetchFileStoreList(queryParams, filterFromFormData)
-        setAppliedFilter({ ...unsavedFilter, filterProperties: filterFromFormData })
+        setAppliedFilter(prevFilters => {
+          const prevFiltersTemp = prevFilters ? prevFilters : unsavedFilter
+          return { ...prevFiltersTemp, filterProperties: filterFromFormData }
+        })
         hideFilterDrawer()
       }
     }

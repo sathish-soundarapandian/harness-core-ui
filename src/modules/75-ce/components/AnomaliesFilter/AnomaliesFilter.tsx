@@ -110,7 +110,6 @@ const AnomalyFilters: React.FC<AnomalyFiltersProps> = ({
         selectFilter={setSelectedFilter}
         applyFilter={(filter: FilterDTO) => {
           closeDrawer()
-          setSelectedFilter(filter)
           applyFilters({
             identifier: filter.identifier,
             filterProperties: filter?.filterProperties

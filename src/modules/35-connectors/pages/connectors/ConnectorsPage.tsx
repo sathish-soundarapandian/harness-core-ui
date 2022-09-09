@@ -656,7 +656,10 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
           pageIndex: 0
         }
         refetchConnectorList(updatedQueryParams, filterFromFormData, false)
-        setAppliedFilter({ ...unsavedFilter, filterProperties: filterFromFormData })
+        setAppliedFilter(prevFilters => {
+          const prevFiltersTemp = prevFilters ? prevFilters : unsavedFilter
+          return { ...prevFiltersTemp, filterProperties: filterFromFormData }
+        })
         setPage(0)
         hideFilterDrawer()
       } else {

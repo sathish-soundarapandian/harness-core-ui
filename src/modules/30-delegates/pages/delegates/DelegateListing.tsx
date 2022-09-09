@@ -319,7 +319,10 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
         }
         setShowDelegateLoader(true)
         refetchDelegates(updatedQueryParams, filterFromFormData)
-        setAppliedFilter({ ...unsavedFilter, filterProperties: filterFromFormData })
+        setAppliedFilter(prevFilters => {
+          const prevFiltersTemp = prevFilters ? prevFilters : unsavedFilter
+          return { ...prevFiltersTemp, filterProperties: filterFromFormData }
+        })
         setPage(0)
         hideFilterDrawer()
         setIsFilterOpen(false)

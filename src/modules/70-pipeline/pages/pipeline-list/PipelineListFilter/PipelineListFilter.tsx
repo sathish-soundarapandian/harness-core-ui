@@ -185,7 +185,6 @@ export function PipelineListFilter({
         const filterFromFormData = getValidFilterArguments({ ...inputFormData })
         updateQueryParams({
           page: undefined,
-          filterIdentifier: undefined,
           filters: filterFromFormData || {}
         })
         hideFilterDrawer()

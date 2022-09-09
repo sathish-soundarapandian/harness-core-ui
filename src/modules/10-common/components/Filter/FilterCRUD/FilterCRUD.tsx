@@ -426,7 +426,7 @@ const FilterCRUDRef = <T extends FilterInterface>(props: FilterCRUDProps<T>, fil
               name: Yup.string()
                 .trim()
                 .required(getString('common.validation.nameIsRequired'))
-                .matches(regexIdentifier, getString('common.validation.namePatternIsNotValid')),
+                .matches(regexIdentifier, getString('validation.validIdRegex')),
               filterVisibility: Yup.mixed()
                 .oneOf(['OnlyCreator', 'EveryOne'])
                 .required(getString('filters.visibilityRequired'))

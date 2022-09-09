@@ -61,7 +61,6 @@ const AuditTrailsFilters: React.FC<AuditFiltersProps> = ({ applyFilters }) => {
         selectFilter={setSelectedFilter}
         applyFilter={(filter: FilterDTO) => {
           closeDrawer()
-          setSelectedFilter(filter)
           applyFilters?.(filter.filterProperties)
         }}
       />
