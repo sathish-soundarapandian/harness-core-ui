@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { isEmpty, defaultTo, get } from 'lodash-es'
 import {
   Accordion,
@@ -243,6 +243,22 @@ const RuleDetailsTabContainer: React.FC<RuleDetailsTabContainerProps> = ({
   const cloudProvider = connectorData?.type && ceConnectorTypes[connectorData?.type]
   const provider = useMemo(() => allProviders.find(item => item.value === cloudProvider), [cloudProvider])
   const iconName = defaultTo(provider?.icon, 'spinner') as IconName
+  const hasCustomDomains = (service.custom_domains?.length as number) > 0
+  const getClickableLink = useCallback(
+    (withoutProtocol = false) => {
+      const hasHttpsConfig = !isEmpty(
+        service.routing?.ports?.find(portConfig => portConfig.protocol?.toLowerCase() === 'https')
+      )
+      const protocol = Utils.getConditionalResult(hasHttpsConfig, 'https', 'http')
+      const link = isK8sRule
+        ? service.routing?.k8s?.CustomDomain
+        : hasCustomDomains
+        ? service.custom_domains?.[0]
+        : service.host_name
+      return withoutProtocol ? link : `${protocol}://${link}`
+    },
+    [service]
+  )
 
   return (
     <Container>
@@ -282,7 +298,7 @@ const RuleDetailsTabContainer: React.FC<RuleDetailsTabContainerProps> = ({
             )}
             <DetailRow
               label={getString('ce.co.ruleDetailsHeader.hostName')}
-              value={<LinkWithCopy url={defaultTo(service.host_name, '')} protocol={domainProtocol} />}
+              value={<LinkWithCopy url={defaultTo(getClickableLink(true), '')} protocol={domainProtocol} />}
             />
             {!isEmpty(service.custom_domains) && (
               <DetailRow
