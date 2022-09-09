@@ -92,13 +92,16 @@ function Artifactory({
 
   const [lastQueryData, setLastQueryData] = useState({ artifactPath: '', repository: '' })
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
-  const [repositoryFormat, setRepositoryFormat] = useState<string | undefined>(undefined)
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(selectedDeploymentType)
   const isSSHWinRmDeploymentType = isSshOrWinrmDeploymentType(selectedDeploymentType)
-  const isServerlessWinRmSshDeploymentType = isServerlessDeploymentTypeSelected || isSSHWinRmDeploymentType
   const isAzureWebAppDeploymentTypeSelected = isAzureWebAppDeploymentType(selectedDeploymentType)
+  const [repositoryFormat, setRepositoryFormat] = useState<string | undefined>(
+    isServerlessDeploymentTypeSelected || isSSHWinRmDeploymentType || isAzureWebAppDeploymentTypeSelected
+      ? RepositoryFormatTypes.Generic
+      : RepositoryFormatTypes.Docker
+  )
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const isAzureWebAppOrSshWinrmDeploymentTypeSelected = isAzureWebAppDeploymentTypeSelected || isSSHWinRmDeploymentType
   const isAzureWebAppGenericTypeSelected = isAzureWebAppOrSshWinrmGenericDeploymentType(
     selectedDeploymentType,
@@ -107,8 +110,8 @@ function Artifactory({
   const [isAzureWebAppGeneric, setIsAzureWebAppGeneric] = useState<boolean>(isAzureWebAppGenericTypeSelected)
 
   const isGenericArtifactory = React.useMemo(() => {
-    return isServerlessWinRmSshDeploymentType || isAzureWebAppGeneric
-  }, [isServerlessWinRmSshDeploymentType, isAzureWebAppGeneric])
+    return repositoryFormat === RepositoryFormatTypes.Generic
+  }, [repositoryFormat])
 
   useLayoutEffect(() => {
     let repoFormat = RepositoryFormatTypes.Docker
