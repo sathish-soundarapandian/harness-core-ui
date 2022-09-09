@@ -246,9 +246,7 @@ describe('GIT SYNC ENABLED', () => {
 
 describe('Execution Stages', () => {
   const visitExecutionStageWithAssertion = (): void => {
-    cy.visit(pipelineStudioRoute, {
-      timeout: 30000
-    })
+    cy.visit(pipelineStudioRoute)
     cy.visitPageAssertion()
     cy.wait('@inputSetsTemplateCall', { timeout: 30000 })
     cy.wait('@pipelineDetails', { timeout: 30000 })
@@ -379,7 +377,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
   }
 
   it.skip(`fixed values to region and stage in infrastructure tab`, () => {
-    cy.visit(pipelineStudioRoute, { timeout: 30000 })
+    cy.visit(pipelineStudioRoute)
     cy.visitPageAssertion()
     cy.get(`div[data-testid="pipeline-studio"]`, {
       timeout: 5000
@@ -397,7 +395,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
   })
 
   it.skip(`runtime values to region, stage in infrastructure tab`, () => {
-    cy.visit(pipelineStudioRoute, { timeout: 30000 })
+    cy.visit(pipelineStudioRoute)
     cy.visitPageAssertion()
     cy.get(`div[data-testid="pipeline-studio"]`, {
       timeout: 5000
@@ -428,7 +426,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
     )
 
     // Visit Pipeline Studio
-    cy.visit(pipelineStudioRoute, { timeout: 30000 })
+    cy.visit(pipelineStudioRoute)
     cy.visitPageAssertion()
     cy.get(`div[data-testid="pipeline-studio"]`, {
       timeout: 5000
@@ -494,7 +492,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
     )
 
     // Visit Pipeline Studio
-    cy.visit(pipelineStudioRoute, { timeout: 30000 })
+    cy.visit(pipelineStudioRoute)
     cy.visitPageAssertion()
     cy.get(`div[data-testid="pipeline-studio"]`, {
       timeout: 5000
@@ -541,9 +539,7 @@ describe('Input Sets', () => {
       fixture: 'pipeline/api/inputSet/applyTemplates'
     }).as('applyTemplates')
     cy.intercept('GET', servicesCallV2, servicesV2AccessResponse).as('servicesCallV2')
-    cy.visit(inputSetsRoute, {
-      timeout: 30000
-    })
+    cy.visit(inputSetsRoute)
   })
 
   it('Input Set Creation & Deletion', () => {
@@ -620,9 +616,7 @@ describe('Add stage view with enabled licences', () => {
     })
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
     cy.initializeRoute()
-    cy.visit(pipelinesRoute, {
-      timeout: 30000
-    })
+    cy.visit(pipelinesRoute)
     cy.visitPageAssertion(pageHeaderClassName)
     cy.contains('span', 'Create a Pipeline').click()
     cy.fillName('testPipeline_Cypress')
@@ -680,9 +674,7 @@ describe('Add stage view with disabled licences', () => {
     })
 
     cy.initializeRoute()
-    cy.visit(pipelinesRoute, {
-      timeout: 30000
-    })
+    cy.visit(pipelinesRoute)
     cy.contains('span', 'Create a Pipeline').click()
     cy.fillName('testPipeline_Cypress')
     cy.clickSubmit()

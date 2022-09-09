@@ -29,9 +29,7 @@ describe('EnvironmentsV2 Configuration Page', () => {
     })
 
     cy.initializeRoute()
-    cy.visit(environmentConfigurationRoute, {
-      timeout: 30000
-    })
+    cy.visit(environmentConfigurationRoute)
   })
 
   it('Environment Variables Addition & YAML/Visual parity', () => {

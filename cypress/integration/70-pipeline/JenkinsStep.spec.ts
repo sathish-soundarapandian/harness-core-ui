@@ -15,9 +15,7 @@ import {
 
 describe('Connectors list', () => {
   const visitExecutionStageWithAssertion = (): void => {
-    cy.visit(pipelineStudioRoute, {
-      timeout: 30000
-    })
+    cy.visit(pipelineStudioRoute)
     cy.wait(2000)
     cy.visitPageAssertion()
     cy.wait('@pipelineDetailsAPIRoute', { timeout: 30000 })

@@ -2,9 +2,7 @@ import { environmentRoute, environmentsCall, envUpsertCall } from '../../support
 
 describe('Environment for Pipeline', () => {
   const visitEnvironmentsPageWithAssertion = (): void => {
-    cy.visit(environmentRoute, {
-      timeout: 30000
-    })
+    cy.visit(environmentRoute)
     cy.wait(1000)
     cy.visitPageAssertion()
   }

@@ -40,9 +40,7 @@ describe('CE GCP Connector', () => {
     })
 
     cy.initializeRoute()
-    cy.visit(accountResourceConnectors, {
-      timeout: 30000
-    })
+    cy.visit(accountResourceConnectors)
   })
 
   it('Create CE GCP connector', () => {

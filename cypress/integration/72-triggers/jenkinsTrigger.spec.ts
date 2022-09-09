@@ -11,9 +11,7 @@ import {
 
 describe.skip('Jenkins Trigger', () => {
   const visitTriggersPageWithAssertion = (): void => {
-    cy.visit(pipelineStudioRoute, {
-      timeout: 30000
-    })
+    cy.visit(pipelineStudioRoute)
     cy.wait(2000)
     cy.visitPageAssertion()
   }

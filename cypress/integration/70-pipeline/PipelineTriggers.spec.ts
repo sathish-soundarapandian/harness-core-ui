@@ -13,9 +13,7 @@ import {
 
 describe('Triggers for Pipeline', () => {
   const visitTriggersPageWithAssertion = (): void => {
-    cy.visit(triggersRoute, {
-      timeout: 30000
-    })
+    cy.visit(triggersRoute)
     cy.wait(2000)
     cy.visitPageAssertion()
   }

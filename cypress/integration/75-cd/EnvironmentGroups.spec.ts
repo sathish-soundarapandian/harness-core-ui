@@ -15,9 +15,7 @@ describe('Environment Groups CRUD', () => {
     })
     cy.initializeRoute()
 
-    cy.visit(environmentGroupRoute, {
-      timeout: 30000
-    })
+    cy.visit(environmentGroupRoute)
   })
 
   it('should be able to create environment group and route to Environments section of details page', () => {

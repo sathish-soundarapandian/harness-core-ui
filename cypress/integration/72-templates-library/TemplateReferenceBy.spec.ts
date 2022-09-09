@@ -30,9 +30,7 @@ describe('Template Reference By', () => {
       'templatesListCallForDrawer'
     )
     cy.initializeRoute()
-    cy.visit(templatesListRoute, {
-      timeout: 30000
-    })
+    cy.visit(templatesListRoute)
     cy.wait(2000)
     cy.visitPageAssertion('[class*=TemplatesPage-module_templatesPageBody]')
     cy.wait('@templatesListCall', { timeout: 10000 })

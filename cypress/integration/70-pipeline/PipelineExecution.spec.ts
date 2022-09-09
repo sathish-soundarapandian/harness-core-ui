@@ -27,9 +27,7 @@ describe('Pipeline Execution', () => {
     cy.intercept('POST', pipelineListAPI, {
       fixture: '/pipeline/api/pipelineExecution/getPipelineList'
     }).as('pipelineList')
-    cy.visit(pipelinesRoute, {
-      timeout: 30000
-    })
+    cy.visit(pipelinesRoute)
   })
 
   it('Pipeline Execution steps phases - Running & Failed', () => {

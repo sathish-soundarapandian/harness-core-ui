@@ -21,6 +21,7 @@ describe('PIPELINE NOTIFICATIONS FLOW', () => {
             return false
         })
         cy.intercept('GET', gitSyncCall, { connectivityMode: null, gitSyncEnabled: false })
+
         cy.visitCreatePipeline()
 
         cy.fillName('testPipeline_Cypress')

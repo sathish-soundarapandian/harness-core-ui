@@ -45,7 +45,7 @@ describe('Azure web app end to end test', () => {
     cy.contains('span', subscriptionId).should('be.visible')
   }
   it('end to end testing for azure web app', () => {
-    cy.visit(newPipelineRoute, { timeout: 30000 })
+    cy.visit(newPipelineRoute)
     cy.visitPageAssertion()
 
     // creating a new pipeline

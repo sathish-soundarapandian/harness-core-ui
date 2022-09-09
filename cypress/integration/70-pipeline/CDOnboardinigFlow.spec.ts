@@ -92,9 +92,7 @@ describe.skip('CD Onboarding Flow', () => {
       'onboardingPipeline'
     )
     cy.initializeRoute()
-    cy.visit(projectDashboardRoute, {
-      timeout: 30000
-    })
+    cy.visit(projectDashboardRoute)
     cy.wait('@emptyPipelineList', { timeout: 30000 })
   })
 

@@ -26,16 +26,13 @@ describe('Connectors list', () => {
       return false
     })
     cy.initializeRoute()
-    cy.visit(connectorsRoute, {
-      timeout: 30000
-    })
+    cy.visit(connectorsRoute)
   })
 
   it('Connector addition', () => {
     cy.intercept('GET', connectorsCatalogueAPI, { fixture: 'ng/api/connectors/catalogue.json' }).as(
       'connectorsCatalogue'
     )
-    cy.wait(1000)
     cy.visitPageAssertion(pageHeaderClassName)
     cy.wait('@connectorsCatalogue')
 
@@ -107,7 +104,6 @@ describe('Connectors list', () => {
     cy.intercept('GET', connectorsCatalogueAPI, { fixture: 'ng/api/connectors/catalogue.json' }).as(
       'connectorsCatalogue'
     )
-    cy.wait(1000)
     cy.visitPageAssertion(pageHeaderClassName)
     cy.wait('@connectorsList')
     cy.wait(1000)
@@ -146,9 +142,7 @@ describe('Project level jenkins connector', () => {
     )
     cy.intercept('GET', connectorStats, { fixture: 'pipeline/api/connector/connectorStats.json' }).as('connectorStats')
     cy.intercept('GET', connectorInfo, { fixture: 'pipeline/api/connector/connectorInfo.json' }).as('connectorInfo')
-    cy.visit(connectorsListRoute, {
-      timeout: 30000
-    })
+    cy.visit(connectorsListRoute)
     cy.wait(2000)
   })
   it('jenkins connector name field should not be empty', () => {

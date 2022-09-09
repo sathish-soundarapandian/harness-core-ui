@@ -26,9 +26,7 @@ describe('Pipeline Execution History', () => {
       return false
     })
     cy.initializeRoute()
-    cy.visit(executionHistoryRoute, {
-      timeout: 30000
-    })
+    cy.visit(executionHistoryRoute)
   })
 
   it('loads a pipeline with no executions', () => {

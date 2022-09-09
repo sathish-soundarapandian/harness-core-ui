@@ -13,9 +13,7 @@ describe('CE Azure Connector', () => {
       return false
     })
     cy.initializeRoute()
-    cy.visit(accountResourceConnectors, {
-      timeout: 30000
-    })
+    cy.visit(accountResourceConnectors)
   })
 
   it('Create CE Azure connector', () => {

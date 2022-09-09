@@ -13,9 +13,7 @@ describe('Services for Pipeline', () => {
       return false
     })
     cy.initializeRoute()
-    cy.visit(servicesRoute, {
-      timeout: 30000
-    })
+    cy.visit(servicesRoute)
   })
 
   it('Service Addition & YAML/visual parity', () => {

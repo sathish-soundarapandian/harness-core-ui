@@ -12,5 +12,5 @@
   "fixturesFolder": "fixtures",
   "supportFile": "support/index.ts",
   "videoUploadOnPasses": false,
-  "pageLoadTimeout": 60000
+  "pageLoadTimeout": 30000
 }
