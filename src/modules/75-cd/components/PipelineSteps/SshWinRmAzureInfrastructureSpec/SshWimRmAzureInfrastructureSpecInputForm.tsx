@@ -150,7 +150,7 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
         defaultTo(subscriptionsData?.data?.subscriptions, []).reduce(
           (subscriptionValues: SelectOption[], subscription: AzureSubscriptionDTO) => {
             subscriptionValues.push({
-              label: subscription.subscriptionId,
+              label: `${subscription.subscriptionName}:${subscription.subscriptionId}`,
               value: subscription.subscriptionId
             })
             return subscriptionValues
@@ -248,6 +248,14 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
 
     useEffect(() => {
       setRenderCount(renderCount + 1)
+      if (
+        initialValues?.connectorRef &&
+        getMultiTypeFromValue(initialValues?.connectorRef) === MultiTypeInputType.FIXED
+      ) {
+        refetchSubscriptions({
+          queryParams
+        })
+      }
       if (
         initialValues?.connectorRef &&
         getMultiTypeFromValue(initialValues?.connectorRef) === MultiTypeInputType.FIXED &&
