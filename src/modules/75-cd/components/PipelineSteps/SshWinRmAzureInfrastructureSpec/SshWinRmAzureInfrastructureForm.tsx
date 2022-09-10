@@ -20,7 +20,7 @@ import {
 import { FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
-import { debounce, noop, get } from 'lodash-es'
+import { debounce, noop, get, set, isEmpty } from 'lodash-es'
 import cx from 'classnames'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import {
@@ -330,7 +330,7 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                           formik.values?.resourceGroup?.value &&
                           formik.setFieldValue('resourceGroup', '')
                         typeof formik.values?.tags !== 'string' &&
-                          formik.values?.tags &&
+                          !isEmpty(formik.values?.tags) &&
                           formik.setFieldValue('tags', {})
                         setSubscriptions([])
                         setResourceGroups([])
@@ -378,7 +378,7 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                           formik.values?.resourceGroup?.value &&
                           formik.setFieldValue('resourceGroup', '')
                         typeof formik.values?.tags !== 'string' &&
-                          formik.values?.tags &&
+                          !isEmpty(formik.values?.tags) &&
                           formik.setFieldValue('tags', {})
 
                         setResourceGroups([])
