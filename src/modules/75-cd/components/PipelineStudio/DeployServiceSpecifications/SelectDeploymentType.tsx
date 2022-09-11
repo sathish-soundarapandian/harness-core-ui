@@ -154,11 +154,13 @@ export default function SelectDeploymentType({
               />
             ) : null}
             {customDeploymentData && addOrUpdateTemplate ? (
-              <TemplateBar
-                templateLinkConfig={customDeploymentData}
-                onOpenTemplateSelector={addOrUpdateTemplate}
-                className={deployServiceCsss.templateBar}
-              />
+              <Layout.Vertical padding={0} margin={{ top: 'medium' }}>
+                <TemplateBar
+                  templateLinkConfig={customDeploymentData}
+                  onOpenTemplateSelector={addOrUpdateTemplate}
+                  className={deployServiceCsss.templateBar}
+                />
+              </Layout.Vertical>
             ) : null}
           </Layout.Vertical>
         </Layout.Vertical>

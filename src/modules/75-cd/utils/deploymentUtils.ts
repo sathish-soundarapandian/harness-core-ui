@@ -97,7 +97,7 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
   if (NG_DEPLOYMENT_TEMPLATE) {
     baseTypes.push({
       label: 'pipeline.serviceDeploymentTypes.customDeployment',
-      icon: 'template-library',
+      icon: deploymentIconMap[ServiceDeploymentType.CustomDeployment],
       value: ServiceDeploymentType.CustomDeployment
     })
   }
