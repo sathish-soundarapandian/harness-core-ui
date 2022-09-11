@@ -8,53 +8,36 @@
 .infraSections {
   margin-top: var(--spacing-large) !important;
   & :global(.variablesTableRow) {
-    grid-template-columns: 1fr 0.5fr 1.5fr 2fr !important;
+    grid-template-columns: 2fr 1fr 1fr 3fr !important;
 
     :global(.connectorVariableField) {
       :global(.bp3-form-content) > div:last-child {
         width: 100% !important;
-        max-width: 264px;
+        max-width: 100% !important; // 264px;
         > button {
           width: 100% !important;
-          max-width: 264px;
+          max-width: 100% !important; // 264px;
         }
       }
     }
   }
+
   .labelText {
     font-size: 14px !important;
     font-weight: 400 !important;
     color: var(--grey-900) !important;
   }
 }
+
+.instanceAttributes {
+  & :global(.variablesTableRow) {
+    grid-template-columns: 2fr 2fr 3fr 1fr !important;
+  }
+}
+
 .headerText {
   font-weight: 600 !important;
   font-size: 16px !important;
-}
-
-.headerRow {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1.5fr 30px;
-  column-gap: var(--spacing-small);
-  margin-bottom: var(--spacing-small);
-  align-items: start;
-
-  :global(.bp3-form-group) {
-    margin: 0;
-  }
-
-  .label {
-    color: var(--grey-400);
-  }
-
-  :global(.bp3-icon-trash) {
-    color: var(--grey-400) !important;
-  }
-}
-
-.panel {
-  padding: var(--spacing-small);
-  margin-top: var(--spacing-small);
 }
 
 .infraVariableSection {
@@ -62,11 +45,14 @@
   margin-bottom: 0 !important;
 }
 
-.label {
-  color: var(--grey-400);
-}
 .addButton {
-  padding-left: 0 !important;
+  padding: 0px !important;
+}
+
+.dropdown {
+  :global(.bp3-menu) {
+    max-width: 300px;
+  }
 }
 
 .configLabel {
@@ -77,12 +63,9 @@
 
 .templateDropdown {
   width: 150px !important;
-  border: 1px solid var(--primary-7);
   border-radius: 4px;
-  background-color: unset;
   font-size: var(--font-size-normal);
   font-weight: 400 !important;
-  color: var(--grey-900) !important;
   text-align: center;
   position: absolute;
   right: calc(50% + 30px);
@@ -94,5 +77,74 @@
   display: grid;
   grid-template-columns: 1fr 30px;
   align-items: center;
-  margin-top: var(--spacing-small);
+}
+
+.instanceAttributesVariables {
+  margin-top: var(--spacing-medium);
+
+  .table-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 3fr;
+    column-gap: var(--spacing-8);
+    margin-bottom: var(--spacing-medium);
+    align-items: baseline;
+
+    & :global(.bp3-form-group) {
+      margin: 0;
+    }
+
+    .value-string {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .value-column {
+      display: grid;
+      grid-template-columns: 1fr 90px;
+      &[data-type='RUNTIME'] {
+        grid-template-columns: 1fr 32px 90px;
+      }
+    }
+
+    .actionButtons {
+      display: flex;
+      justify-content: flex-end;
+      column-gap: var(--spacing-xsmall);
+    }
+
+    &:last-of-type,
+    &.header-row {
+      padding-bottom: var(--spacing-medium);
+      border-bottom: 1px solid var(--grey-100);
+    }
+
+    &.header-row {
+      font-style: normal;
+      font-weight: 600;
+      font-size: var(--font-size-xsmall);
+      letter-spacing: 0.2px;
+      color: var(--grey-600);
+      text-transform: uppercase;
+    }
+  }
+}
+.actionButtons {
+  display: grid;
+  grid-template-columns: repeat(3, 30px);
+
+  section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  button {
+    margin-left: var(--spacing-small);
+    border-radius: var(--spacing-xxlarge) !important;
+    padding: 0 !important;
+    vertical-align: initial;
+  }
+}
+.tooltip {
+  display: block;
+  padding: var(--spacing-small);
 }

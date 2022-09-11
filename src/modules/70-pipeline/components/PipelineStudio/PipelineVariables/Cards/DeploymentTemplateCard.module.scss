@@ -10,17 +10,17 @@
     grid-column-gap: 10px !important;
     grid-template-columns: repeat(4, minmax(10px, 1fr)) !important;
     :global(.connectorVariableField) {
-      :global(.bp3-form-content) > div {
+      :global(.bp3-form-content) > div:last-child {
         width: 100% !important;
-        max-width: 250px !important;
+        max-width: 100% !important;
         > button {
           width: 100% !important;
-          max-width: 250px !important;
+          max-width: 100% !important;
         }
       }
     }
     > * {
-      max-width: 200px;
+      max-width: 100%;
     }
   }
   :global(.bp3-form-group) {
@@ -28,6 +28,9 @@
   }
   :global(.connectorVariableField) {
     padding-bottom: 0 !important;
+  }
+  :global(.descriptionRow) {
+    height: 22px !important;
   }
 }
 .infraVarHeader {
@@ -38,38 +41,6 @@
   position: relative;
   grid-column-gap: 10px !important;
   grid-template-columns: repeat(4, minmax(10px, 1fr)) !important;
-  margin-bottom: var(--spacing-small);
   padding: var(--spacing-small) 0;
-  padding-left: var(--margin-container) !important;
-
-  :global(.bp3-form-group) {
-    margin: 0;
-    width: 250px !important;
-  }
-
-  .label {
-    color: var(--grey-400);
-    width: 250px;
-  }
-  .connectorRef {
-    div {
-      margin-bottom: 0 !important;
-    }
-    button {
-      margin-left: 0 !important;
-    }
-    padding-bottom: 0px !important;
-    width: 250px;
-  }
-  .value-column {
-    display: grid;
-    grid-template-columns: 1fr 35px;
-    &[data-type='RUNTIME'] {
-      grid-template-columns: 1fr 35px;
-    }
-    width: 250px;
-    .configureOptions {
-      align-self: center;
-    }
-  }
+  padding-left: calc(var(--spacing-xlarge) + 4px) !important;
 }

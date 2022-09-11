@@ -61,9 +61,9 @@ export default function DeploymentTemplateCard(props: DeploymentTemplateCardProp
 
   const headerComponent: JSX.Element = (
     <div className={moduleCss.infraVarHeader}>
-      <div className={moduleCss.label}>{getString('name')}</div>
-      <div className={moduleCss.label}>{getString('description')}</div>
-      <div className={moduleCss.label}>{getString('common.configureOptions.defaultValue')}</div>
+      <div>{getString('name')}</div>
+      <div>{getString('description')}</div>
+      <div>{getString('common.configureOptions.defaultValue')}</div>
     </div>
   )
   const onUpdateInfrastructureVariables = React.useCallback(

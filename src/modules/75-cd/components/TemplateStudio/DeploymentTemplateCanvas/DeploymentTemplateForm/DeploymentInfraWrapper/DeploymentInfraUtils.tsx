@@ -6,7 +6,9 @@
  */
 
 import * as Yup from 'yup'
+import { uniqBy } from 'lodash-es'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { MAX_NUMBER_OF_CHARACTERS } from '@common/constants/Utils'
 import type { UseStringsReturn } from 'framework/strings'
 import { variableSchema } from '@cd/components/PipelineSteps/ShellScriptStep/shellScriptTypes'
 import { InstanceScriptTypes } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/DeploymentInfraWrapper/DeploymentInfraSpecifications/DeploymentInfraSpecifications'
@@ -45,10 +47,27 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
     instanceAttributes: Yup.array()
       .of(
         Yup.object().shape({
-          name: Yup.string().required(getString('common.validation.nameIsRequired')),
+          name: Yup.string()
+            .trim()
+            .required(getString('common.validation.nameIsRequired'))
+            .max(
+              MAX_NUMBER_OF_CHARACTERS,
+              getString('common.validation.fieldCannotbeLongerThanN', {
+                name: getString('name'),
+                n: MAX_NUMBER_OF_CHARACTERS
+              })
+            )
+            .matches(
+              /^[a-zA-Z_][0-9a-zA-Z_$]*$/,
+              getString('common.validation.fieldMustBeAlphanumeric', { name: getString('name') })
+            ),
           jsonPath: Yup.string().required(getString('common.validation.valueIsRequired'))
         })
       )
+      .test('keysShouldBeUnique', getString('pipeline.customDeployment.validations.nameUnique'), values => {
+        if (!values) return true
+        return uniqBy(values, 'name').length === values.length
+      })
       .min(1, getString?.('cd.filePathRequired'))
       .ensure()
   })
