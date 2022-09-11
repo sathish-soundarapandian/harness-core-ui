@@ -114,11 +114,16 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
   const getDeploymentType = (): ServiceDeploymentType => {
     return get(data, 'stage.spec.deploymentType')
   }
+  const getLinkedDeploymentTemplate = () => {
+    return get(data, 'stage.spec.customDeploymentRef')
+  }
   const [selectedDeploymentType, setSelectedDeploymentType] = useState<ServiceDeploymentType | undefined>(
     getDeploymentType()
   )
 
-  const [linkedDeploymentTemplate, setLinkedDeploymentTemplate] = useState<TemplateLinkConfig>()
+  const [linkedDeploymentTemplate, setLinkedDeploymentTemplate] = useState<TemplateLinkConfig>(
+    getLinkedDeploymentTemplate()
+  )
 
   const { getTemplate } = useTemplateSelector()
 
