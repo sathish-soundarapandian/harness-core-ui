@@ -182,3 +182,25 @@
 .selectedConnector {
   cursor: pointer;
 }
+
+.mini {
+  min-height: 0;
+
+  :global {
+    .MultiTypeInput--btn {
+      &:before {
+        height: var(--spacing-7) !important;
+      }
+      height: var(--spacing-7) !important;
+    }
+    .bp3-button {
+      min-height: var(--spacing-7) !important;
+      height: var(--spacing-7) !important
+    ;
+    }
+  }
+  input[type='text'],
+  :global(.bp3-input) {
+    height: var(--spacing-7);
+  }
+}

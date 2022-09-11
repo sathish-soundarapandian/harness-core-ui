@@ -79,6 +79,7 @@ export interface MultiTypeConnectorFieldProps extends Omit<ConnectorReferenceFie
   connectorLabelClass?: string
   onLoadingFinish?: () => void
   setConnector?: any
+  mini?: boolean
 }
 export interface ConnectorReferenceDTO extends ConnectorInfoDTO {
   status: ConnectorResponse['status']
@@ -109,6 +110,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     connectorLabelClass: connectorLabelClassFromProps = '',
     createNewLabel,
     setConnector,
+    mini,
     ...restProps
   } = props
   const hasError = errorCheck(name, formik)
@@ -435,7 +437,12 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
   )
 
   return (
-    <div style={style} className={cx(css.connectorLabel, connectorLabelClassFromProps)}>
+    <div
+      style={style}
+      className={cx(css.connectorLabel, connectorLabelClassFromProps, {
+        [css.mini]: mini
+      })}
+    >
       <Container style={{ marginBottom: 5 }}>
         <HarnessDocTooltip tooltipId={dataTooltipId} labelText={label} className={Classes.LABEL} />
       </Container>

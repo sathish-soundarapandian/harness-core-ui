@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { debounce } from 'lodash-es'
+import { debounce, isEmpty } from 'lodash-es'
 import { Formik, FieldArray, FormikProps } from 'formik'
 import { v4 as uuid } from 'uuid'
 import {
@@ -83,7 +83,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
 
   function addNew(): void {
     setSelectedVariable({
-      variable: { name: '', type: 'String', value: '', ...(isDescriptionEnabled && { description: '-' }) },
+      variable: { name: '', type: 'String', value: '', description: '' },
       index: -1
     })
   }
@@ -173,7 +173,9 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                           stringID={labelStringMap[variable.type as VariableType]}
                           data-testid={`variables[${index}].type`}
                         />
-                        {isDescriptionEnabled && <Text lineClamp={1}>{variable?.description}</Text>}
+                        {isDescriptionEnabled && (
+                          <Text lineClamp={1}>{isEmpty(variable?.description) ? '-' : variable?.description}</Text>
+                        )}
 
                         <div className={css.valueColumn} data-type={getMultiTypeFromValue(variable.value as string)}>
                           {(variable.type as any) === VariableType.Connector ? (

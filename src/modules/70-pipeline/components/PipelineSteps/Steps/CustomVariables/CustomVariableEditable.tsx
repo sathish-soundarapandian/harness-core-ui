@@ -20,7 +20,7 @@ import {
 import { Formik, FieldArray } from 'formik'
 import { v4 as uuid } from 'uuid'
 import cx from 'classnames'
-import { debounce, escape } from 'lodash-es'
+import { debounce, escape, isEmpty } from 'lodash-es'
 
 import { useParams } from 'react-router-dom'
 import { String, useStrings } from 'framework/strings'
@@ -113,7 +113,7 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
 
   function addNew(): void {
     setSelectedVariable({
-      variable: { name: '', type: 'String', value: '', ...(isDescriptionEnabled && { description: '-' }) },
+      variable: { name: '', type: 'String', value: '', description: '' },
       index: -1
     })
   }
@@ -259,12 +259,9 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                         </Text>
                       )}
                       {isDescriptionEnabled && (
-                        <FormInput.Text
-                          name={`variables[${index}].description`}
-                          placeholder={getString('common.descriptionPlaceholder')}
-                          disabled={readonly}
-                          className={css.descriptionRow}
-                        />
+                        <Text lineClamp={1} className="descriptionRow">
+                          {isEmpty(variable?.description) ? '-' : variable?.description}
+                        </Text>
                       )}
                       <div
                         className={cx(css.valueRow, {
@@ -287,6 +284,7 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                               setRefValue
                               connectorLabelClass="connectorVariableField"
                               enableConfigureOptions={false}
+                              mini={true}
                             />
                           ) : variable.type === VariableType.Secret ? (
                             <MultiTypeSecretInput
@@ -302,7 +300,7 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                               label=""
                               disabled={readonly}
                               multiTextInputProps={{
-                                mini: !isDescriptionEnabled,
+                                mini: true,
                                 defaultValueToReset: '',
                                 expressions,
                                 width: 264,
