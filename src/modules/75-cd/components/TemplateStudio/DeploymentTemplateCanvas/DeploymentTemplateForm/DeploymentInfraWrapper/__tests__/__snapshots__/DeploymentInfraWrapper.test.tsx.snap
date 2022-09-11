@@ -176,7 +176,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render 1`] = `
           </div>
         </div>
         <div
-          class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
+          class="Layout--vertical StyledProps--main tooltipStyle instanceAttributes StyledProps--margin-medium"
         >
           <p
             class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
@@ -208,30 +208,30 @@ exports[`Test DeploymentInfraWrapperWithRef initial render 1`] = `
                 class="bp3-form-content"
               >
                 <div
-                  class="panel"
+                  class="instanceAttributesVariables"
                 >
                   <div
-                    class="headerRow"
+                    class="tableRow headerRow variablesTableRow"
                   >
-                    <span
-                      class="label"
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                     >
                       pipeline.customDeployment.fieldNameLabel
-                    </span>
-                    <span
-                      class="label"
+                    </p>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                     >
                       pipeline.customDeployment.jsonPathRelativeLabel
-                    </span>
-                    <span
-                      class="label"
+                    </p>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                     >
                       description
                       common.optionalLabel
-                    </span>
+                    </p>
                   </div>
                   <div
-                    class="headerRow"
+                    class="tableRow variablesTableRow"
                   >
                     <div
                       class="bp3-form-group bp3-disabled"
@@ -302,14 +302,17 @@ exports[`Test DeploymentInfraWrapperWithRef initial render 1`] = `
                         </div>
                       </div>
                     </div>
+                    <div
+                      class="actionButtons"
+                    />
                   </div>
                   <button
-                    class="bp3-button Button--button StyledProps--font StyledProps--main addButton Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-link"
+                    class="bp3-button Button--button StyledProps--font StyledProps--main addButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                     data-testid="add-instanceAttriburteVar"
                     type="button"
                   >
                     <span
-                      class="bp3-icon bp3-icon-plus StyledProps--main"
+                      class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
                       icon="plus"
                     >
                       <svg
@@ -818,7 +821,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
           </div>
         </div>
         <div
-          class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
+          class="Layout--vertical StyledProps--main tooltipStyle instanceAttributes StyledProps--margin-medium"
         >
           <p
             class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
@@ -850,30 +853,30 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                 class="bp3-form-content"
               >
                 <div
-                  class="panel"
+                  class="instanceAttributesVariables"
                 >
                   <div
-                    class="headerRow"
+                    class="tableRow headerRow variablesTableRow"
                   >
-                    <span
-                      class="label"
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                     >
                       pipeline.customDeployment.fieldNameLabel
-                    </span>
-                    <span
-                      class="label"
+                    </p>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                     >
                       pipeline.customDeployment.jsonPathRelativeLabel
-                    </span>
-                    <span
-                      class="label"
+                    </p>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                     >
                       description
                       common.optionalLabel
-                    </span>
+                    </p>
                   </div>
                   <div
-                    class="headerRow"
+                    class="tableRow variablesTableRow"
                   >
                     <div
                       class="bp3-form-group bp3-disabled"
@@ -944,14 +947,17 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                         </div>
                       </div>
                     </div>
+                    <div
+                      class="actionButtons"
+                    />
                   </div>
                   <button
-                    class="bp3-button Button--button StyledProps--font StyledProps--main addButton Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-link"
+                    class="bp3-button Button--button StyledProps--font StyledProps--main addButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                     data-testid="add-instanceAttriburteVar"
                     type="button"
                   >
                     <span
-                      class="bp3-icon bp3-icon-plus StyledProps--main"
+                      class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
                       icon="plus"
                     >
                       <svg
@@ -1506,7 +1512,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
           </div>
         </div>
         <div
-          class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
+          class="Layout--vertical StyledProps--main tooltipStyle instanceAttributes StyledProps--margin-medium"
         >
           <p
             class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
@@ -1538,30 +1544,30 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
                 class="bp3-form-content"
               >
                 <div
-                  class="panel"
+                  class="instanceAttributesVariables"
                 >
                   <div
-                    class="headerRow"
+                    class="tableRow headerRow variablesTableRow"
                   >
-                    <span
-                      class="label"
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                     >
                       pipeline.customDeployment.fieldNameLabel
-                    </span>
-                    <span
-                      class="label"
+                    </p>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                     >
                       pipeline.customDeployment.jsonPathRelativeLabel
-                    </span>
-                    <span
-                      class="label"
+                    </p>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                     >
                       description
                       common.optionalLabel
-                    </span>
+                    </p>
                   </div>
                   <div
-                    class="headerRow"
+                    class="tableRow variablesTableRow"
                   >
                     <div
                       class="bp3-form-group bp3-disabled"
@@ -1632,14 +1638,17 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
                         </div>
                       </div>
                     </div>
+                    <div
+                      class="actionButtons"
+                    />
                   </div>
                   <button
-                    class="bp3-button Button--button StyledProps--font StyledProps--main addButton Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-link"
+                    class="bp3-button Button--button StyledProps--font StyledProps--main addButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                     data-testid="add-instanceAttriburteVar"
                     type="button"
                   >
                     <span
-                      class="bp3-icon bp3-icon-plus StyledProps--main"
+                      class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
                       icon="plus"
                     >
                       <svg
@@ -2194,7 +2203,7 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
           </div>
         </div>
         <div
-          class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
+          class="Layout--vertical StyledProps--main tooltipStyle instanceAttributes StyledProps--margin-medium"
         >
           <p
             class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
@@ -2226,30 +2235,30 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
                 class="bp3-form-content"
               >
                 <div
-                  class="panel"
+                  class="instanceAttributesVariables"
                 >
                   <div
-                    class="headerRow"
+                    class="tableRow headerRow variablesTableRow"
                   >
-                    <span
-                      class="label"
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                     >
                       pipeline.customDeployment.fieldNameLabel
-                    </span>
-                    <span
-                      class="label"
+                    </p>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                     >
                       pipeline.customDeployment.jsonPathRelativeLabel
-                    </span>
-                    <span
-                      class="label"
+                    </p>
+                    <p
+                      class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                     >
                       description
                       common.optionalLabel
-                    </span>
+                    </p>
                   </div>
                   <div
-                    class="headerRow"
+                    class="tableRow variablesTableRow"
                   >
                     <div
                       class="bp3-form-group bp3-disabled"
@@ -2320,14 +2329,17 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
                         </div>
                       </div>
                     </div>
+                    <div
+                      class="actionButtons"
+                    />
                   </div>
                   <button
-                    class="bp3-button Button--button StyledProps--font StyledProps--main addButton Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-link"
+                    class="bp3-button Button--button StyledProps--font StyledProps--main addButton Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
                     data-testid="add-instanceAttriburteVar"
                     type="button"
                   >
                     <span
-                      class="bp3-icon bp3-icon-plus StyledProps--main"
+                      class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
                       icon="plus"
                     >
                       <svg
