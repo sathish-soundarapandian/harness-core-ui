@@ -190,7 +190,7 @@ export default function ServiceV2ArtifactsSelection({
       }
       return artifacts.sidecars
     }
-  }, [artifactContext, artifacts])
+  }, [artifactContext, artifacts?.primary, artifacts?.sidecars])
 
   const getArtifactsPath = useCallback((type: ModalViewFor) => {
     if (type === ModalViewFor.PRIMARY) {
