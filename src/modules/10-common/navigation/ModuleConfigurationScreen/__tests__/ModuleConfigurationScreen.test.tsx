@@ -6,10 +6,11 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ModuleName } from 'framework/types/ModuleName'
 import { usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { DEFAULT_MODULES_ORDER } from '@common/hooks/useNavModuleInfo'
 import ModulesConfigurationScreen from '../ModuleConfigurationScreen'
 import type { ModuleCarouselProps } from '../ModuleDetailsSection/ModuleCarousel'
 import type { ModuleSortableListProps } from '../ModuleSortableList/ModuleSortableList'
@@ -101,5 +102,35 @@ describe('Module Configuration screen', () => {
     )
 
     expect(getByTestId('test-active-module-CI')).toBeDefined()
+  })
+
+  test('test with no modules in preference store', async () => {
+    ;(usePreferenceStore as jest.Mock).mockImplementation(() => {
+      return {
+        setPreference: setModuleConfigPreference,
+        preference: {},
+        clearPreference: jest.fn
+      }
+    })
+    const { findByTestId } = render(
+      <TestWrapper path="/account/:accountId" pathParams={{ accountId: 'dummy' }}>
+        <ModulesConfigurationScreen activeModule={ModuleName.CI} onClose={jest.fn} />
+      </TestWrapper>
+    )
+    const selectedModulesLength = await findByTestId('selected-modules-length')
+
+    expect(selectedModulesLength.innerHTML).toEqual('0')
+  })
+
+  test('test click on restore default settings', async () => {
+    const { queryByText } = render(
+      <TestWrapper path="/account/:accountId" pathParams={{ accountId: 'dummy' }}>
+        <ModulesConfigurationScreen activeModule={ModuleName.CI} onClose={jest.fn} />
+      </TestWrapper>
+    )
+
+    const restoreToDefault = queryByText('common.moduleConfig.restoreDefault')
+    fireEvent.click(restoreToDefault!)
+    expect(setModuleConfigPreference).toBeCalledWith({ selectedModules: [], orderedModules: DEFAULT_MODULES_ORDER })
   })
 })

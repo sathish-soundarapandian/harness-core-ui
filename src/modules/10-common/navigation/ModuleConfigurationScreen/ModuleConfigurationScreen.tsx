@@ -39,7 +39,7 @@ export interface ModulesPreferenceStoreData {
 
 export const MODULES_CONFIG_PREFERENCE_STORE_KEY = 'modulesConfiguration'
 
-const ModuleConfigHeader: React.FC<ModuleConfigHeaderProps> = () => {
+const ModuleConfigHeader: React.FC<ModuleConfigHeaderProps> = ({ onDefaultSettingsClick }) => {
   return (
     <>
       <Text inline margin={{ bottom: 'xsmall' }} flex={{ justifyContent: 'flex-start' }}>
@@ -53,7 +53,7 @@ const ModuleConfigHeader: React.FC<ModuleConfigHeaderProps> = () => {
           <String stringID="common.moduleConfig.navigation" />
         </Text>
       </Text>
-      {/* <Text className={css.defaultSettingsTextContainer}>
+      <Text className={css.defaultSettingsTextContainer}>
         <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_200} inline>
           (<String stringID="common.moduleConfig.autoSaved" />)
         </Text>
@@ -67,7 +67,7 @@ const ModuleConfigHeader: React.FC<ModuleConfigHeaderProps> = () => {
         >
           <String stringID="common.moduleConfig.restoreDefault" />
         </Text>
-      </Text> */}
+      </Text>
     </>
   )
 }
