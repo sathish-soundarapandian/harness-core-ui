@@ -71,7 +71,8 @@ export function StepCommands(
     viewType,
     allowableTypes,
     gitDetails,
-    storeMetadata
+    storeMetadata,
+    isSaveAsTemplateEnabled = true
   } = props
   const { getString } = useStrings()
   const [activeTab, setActiveTab] = React.useState(StepCommandTabs.StepConfiguration)
@@ -256,7 +257,8 @@ export function StepCommands(
                   />
                 }
               />
-              {!isStepGroup &&
+              {isSaveAsTemplateEnabled &&
+                !isStepGroup &&
                 viewType === StepCommandsViews.Pipeline &&
                 module !== 'cf' &&
                 (step as StepElementConfig).type !== StepType.FlagConfiguration && (

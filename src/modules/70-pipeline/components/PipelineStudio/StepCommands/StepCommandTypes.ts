@@ -54,6 +54,7 @@ export interface StepCommandsProps {
   allowableTypes: AllowedTypes
   gitDetails?: EntityGitDetails
   storeMetadata?: StoreMetadata
+  isSaveAsTemplateEnabled?: boolean
 }
 
 export enum TabTypes {

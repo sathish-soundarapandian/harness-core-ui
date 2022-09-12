@@ -24,7 +24,8 @@ import {
 } from '@pipeline/components/PipelineStudio/StepCommands/StepCommands'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import type { StepOrStepGroupOrTemplateStepData } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
-import { StepCommandsViews } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
+import { StepCommandsViews, Values } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
+import { getStepDataFromValues } from '@pipeline/utils/stepUtils'
 import { generateRandomString } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
 import { DeploymentConfigStepDrawerTitle } from './DeploymentConfigStepDrawerTitle'
 import css from './DeploymentConfigStepDrawer.module.scss'
@@ -59,6 +60,20 @@ export function DeploymentConfigStepDrawer() {
   const formikRef = React.useRef<StepFormikRef | null>(null)
   const { drawerData, setDrawerData, stepsFactory, allowableTypes, isReadOnly } = useDeploymentContext()
 
+  const getStepDataForTemplate = async (): Promise<StepElementConfig> => {
+    const stepData = drawerData?.data?.stepConfig?.node as StepOrStepGroupOrTemplateStepData
+
+    await formikRef?.current?.submitForm()
+
+    const errors = formikRef.current?.getErrors()
+
+    if (isEmpty(errors)) {
+      return getStepDataFromValues(formikRef.current?.getValues() as Values, stepData)
+    } else {
+      throw errors
+    }
+  }
+
   const drawerTitle = React.useMemo(() => {
     if (drawerData.type === DrawerTypes.StepConfig) {
       return (
@@ -68,6 +83,7 @@ export function DeploymentConfigStepDrawer() {
               type: DrawerTypes.AddStep
             })
           }}
+          getStepDataForTemplate={getStepDataForTemplate}
         />
       )
     }
@@ -135,6 +151,7 @@ export function DeploymentConfigStepDrawer() {
             isStepGroup={false}
             isReadonly={isReadOnly}
             allowableTypes={allowableTypes}
+            isSaveAsTemplateEnabled={false}
           />
         )}
         {drawerData.type === DrawerTypes.AddStep && (

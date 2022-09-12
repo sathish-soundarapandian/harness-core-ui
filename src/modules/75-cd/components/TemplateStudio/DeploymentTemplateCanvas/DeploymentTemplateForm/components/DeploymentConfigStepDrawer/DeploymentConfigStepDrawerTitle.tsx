@@ -6,18 +6,27 @@
  */
 
 import React from 'react'
-import { Button, Icon, Text } from '@wings-software/uicore'
+import { Button, Icon, Text, Layout } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
+import {
+  SaveTemplateButton,
+  TemplateData
+} from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
+import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import type { StepElementConfig, TemplateStepNode } from 'services/pipeline-ng'
 import css from './DeploymentConfigStepDrawer.module.scss'
 
 export function DeploymentConfigStepDrawerTitle(props: {
   discardChanges: () => void
   applyChanges?: () => void
+  getStepDataForTemplate: () => Promise<TemplateData>
 }): JSX.Element {
+  const {
+    state: { gitDetails, storeMetadata }
+  } = React.useContext(TemplateContext)
   const { stepsFactory, drawerData, isReadOnly, templateDetailsByRef } = useDeploymentContext()
   const stepNode = drawerData.data?.stepConfig?.node
   const stepType =
@@ -41,7 +50,13 @@ export function DeploymentConfigStepDrawerTitle(props: {
           {stepsFactory.getStepName(stepType || '')}
         </Text>
       </div>
-      <div>
+      <Layout.Horizontal spacing={'medium'}>
+        <SaveTemplateButton
+          data={props.getStepDataForTemplate}
+          type={'Step'}
+          gitDetails={gitDetails}
+          storeMetadata={storeMetadata}
+        />
         <Button
           minimal
           className={css.discard}
@@ -49,7 +64,7 @@ export function DeploymentConfigStepDrawerTitle(props: {
           text={getString('pipeline.discard')}
           onClick={props.discardChanges}
         />
-      </div>
+      </Layout.Horizontal>
     </div>
   )
 }

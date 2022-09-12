@@ -29,7 +29,7 @@ import { getScopeBasedTemplateRef } from '@pipeline/utils/templateUtils'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import css from './ExecutionPanel.module.scss'
 
-function AddStep({ onAddStepClick }: { onAddStepClick: () => void }) {
+function AddStepTemplate({ onAddStepClick }: { onAddStepClick: () => void }) {
   const { isReadOnly } = useDeploymentContext()
   const { getString } = useStrings()
 
@@ -49,7 +49,7 @@ function AddStep({ onAddStepClick }: { onAddStepClick: () => void }) {
         font={{ size: 'small', weight: 'semi-bold' }}
         color={Color.GREY_500}
       >
-        {getString('pipelines-studio.addStep')}
+        {getString('add')}
       </Text>
     </Layout.Vertical>
   )
@@ -173,7 +173,7 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
       >
         <Layout.Vertical spacing="medium" width={'100%'}>
           <Text color={Color.GREY_500} font={{ size: 'small', weight: 'semi-bold' }}>
-            {getString('cd.addStepsForYourDeploymentType')}
+            {getString('cd.addStepTemplatesForYourDeploymentType')}
           </Text>
           <Container className={css.stepsContainer}>
             <Popover
@@ -189,20 +189,20 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
                     minimal
                     variation={ButtonVariation.PRIMARY}
                     icon="Edit"
-                    text={getString('pipelines-studio.addStep')}
+                    text={getString('cd.addStepTemplate')}
                     onClick={handleAddStepClick}
                   />
                   <Button
                     minimal
                     variation={ButtonVariation.PRIMARY}
                     icon="template-library"
-                    text={getString('common.useTemplate')}
+                    text={getString('cd.useStepTemplate')}
                     onClick={handleUseTemplateClick}
                   />
                 </Layout.Vertical>
               }
             >
-              <AddStep onAddStepClick={openDeploymentStepPopover} />
+              <AddStepTemplate onAddStepClick={openDeploymentStepPopover} />
             </Popover>
             {renderLinkedStepTemplates()}
           </Container>

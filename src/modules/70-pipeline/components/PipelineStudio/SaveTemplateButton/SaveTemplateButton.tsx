@@ -19,7 +19,7 @@ import { useSaveAsTemplate } from '@pipeline/components/PipelineStudio/SaveTempl
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import css from './SaveTemplateButton.module.scss'
 
-type TemplateData = StepOrStepGroupOrTemplateStepData | StageElementConfig | PipelineInfoConfig
+export type TemplateData = StepOrStepGroupOrTemplateStepData | StageElementConfig | PipelineInfoConfig
 
 export interface SaveTemplateButtonProps {
   data: TemplateData | (() => Promise<TemplateData>)
