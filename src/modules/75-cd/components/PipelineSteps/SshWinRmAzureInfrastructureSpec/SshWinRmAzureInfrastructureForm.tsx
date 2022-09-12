@@ -20,7 +20,7 @@ import {
 import { FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
-import { debounce, noop, get, set, isEmpty } from 'lodash-es'
+import { debounce, noop, get, isEmpty } from 'lodash-es'
 import cx from 'classnames'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import {
