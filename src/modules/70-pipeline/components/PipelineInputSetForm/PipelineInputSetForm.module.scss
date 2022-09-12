@@ -8,6 +8,16 @@
 .container {
   --pipeline-form-blue: #89b1cc;
   max-width: 1000px;
+
+  :global(.bp3-icon) {
+    &[data-icon='rolling'] {
+      > svg {
+        path:nth-child(1) {
+          fill: var(--primary-6) !important;
+        }
+      }
+    }
+  }
 }
 
 .header {
