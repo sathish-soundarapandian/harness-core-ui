@@ -625,7 +625,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
             key={stage.stage.identifier}
             readonly={isReadonly}
             initialValues={initialInfrastructureDefinitionValues as CustomDeploymentInfrastructureSpec}
-            type={StepType.CustomDeploymentInfrastructureSpec}
+            type={StepType.CustomDeployment}
             stepViewType={StepViewType.Edit}
             allowableTypes={allowableTypes}
             onUpdate={value =>

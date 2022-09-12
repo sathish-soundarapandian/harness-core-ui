@@ -33,8 +33,6 @@ import {
 } from './CustomDeploymentInfrastructureInterface'
 import css from './CustomDeploymentInfrastructureSpec.module.scss'
 
-// const errorMessage = 'data.message'
-
 const CustomDeploymentInfrastructureSpecEditableNew: React.FC<CustomDeploymentInfrastructureSpecEditableProps> = ({
   initialValues,
   onUpdate,
@@ -97,7 +95,6 @@ const CustomDeploymentInfrastructureSpecEditableNew: React.FC<CustomDeploymentIn
                 </Text>
               </Layout.Vertical>
 
-              {/* RESOURCE GROUP */}
               <Layout.Horizontal className={cx(css.formRow, css.infraSections)} spacing="medium">
                 <StepWidget<CustomVariablesData, CustomVariableEditableExtraProps>
                   factory={factory as unknown as AbstractStepFactory}
