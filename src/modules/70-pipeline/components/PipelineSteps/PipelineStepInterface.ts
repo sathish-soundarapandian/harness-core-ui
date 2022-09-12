@@ -102,14 +102,15 @@ export enum StepType {
   EcsCanaryDelete = 'EcsCanaryDelete',
   AzureArmRollback = 'AzureARMRollback',
   Background = 'Background',
-  AzureBlueprint = 'AzureCreateBPResource',
   EcsBlueGreenCreateService = 'EcsBlueGreenCreateService',
   EcsBlueGreenSwapTargetGroups = 'EcsBlueGreenSwapTargetGroups',
   EcsBlueGreenRollback = 'EcsBlueGreenRollback',
-  CreateAzureARMResource = 'AzureCreateARMResource',
   CustomDeploymentServiceSpec = 'CustomDeploymentServiceSpec',
   CustomDeployment = 'CustomDeployment',
   FetchInstanceScript = 'FetchInstanceScript'
+  CreateAzureARMResource = 'AzureCreateARMResource'
+  AzureBlueprint = 'AzureCreateBPResource'
+  Wait='Wait'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

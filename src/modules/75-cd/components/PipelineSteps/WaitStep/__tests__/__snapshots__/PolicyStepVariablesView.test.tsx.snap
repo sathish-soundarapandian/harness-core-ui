@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<PolicyStepVariablesView /> tests snapshot test for PolicyStepVariablesView - complete data 1`] = `
+<div>
+  <div
+    class="variablesListTable variablePaddingL3"
+  >
+    <div
+      class="variableListRow variable-list-row"
+    >
+      <span
+        class="nameSection"
+      >
+        policySets
+      </span>
+      <p
+        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
+        style="--text-line-clamp: 1;"
+      >
+        <span
+          class=""
+        >
+          &lt;+pipeline.name&gt;, &lt;+pipeline.description&gt;
+        </span>
+      </p>
+    </div>
+    <div
+      class="variableListRow variable-list-row"
+    >
+      <span
+        class="nameSection"
+      >
+        payload
+      </span>
+      <p
+        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
+        style="--text-line-clamp: 1;"
+      >
+        <span
+          class=""
+        >
+          &lt;+input&gt;
+        </span>
+      </p>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<PolicyStepVariablesView /> tests snapshot test for PolicyStepVariablesView - no data 1`] = `<div />`;
