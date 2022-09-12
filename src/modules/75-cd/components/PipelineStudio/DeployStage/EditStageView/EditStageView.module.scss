@@ -36,7 +36,7 @@
   border: 1px solid var(--primary-5) !important;
   padding: var(--spacing-2) var(--spacing-4) !important;
   color: var(--black) !important;
-  max-width: 1024px;
+  width: 100% !important;
 
   :global(p) {
     color: var(--black) !important;
@@ -49,4 +49,8 @@
   svg[data-icon='more'] {
     color: var(--grey-400) !important;
   }
+}
+
+.halfWidthBar {
+  width: 50% !important;
 }

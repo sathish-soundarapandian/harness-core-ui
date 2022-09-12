@@ -45,6 +45,7 @@ interface SelectServiceDeploymentTypeProps {
   gitOpsEnabled?: boolean
   customDeploymentData?: TemplateLinkConfig
   addOrUpdateTemplate?: (selectedTemplate: TemplateSummaryResponse) => void
+  templateBarOverrideClassName?: string
 }
 
 interface CardListProps {
@@ -98,7 +99,8 @@ export default function SelectDeploymentType({
   handleDeploymentTypeChange,
   handleGitOpsCheckChanged,
   customDeploymentData,
-  addOrUpdateTemplate
+  addOrUpdateTemplate,
+  templateBarOverrideClassName = ''
 }: SelectServiceDeploymentTypeProps): JSX.Element {
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
@@ -158,7 +160,7 @@ export default function SelectDeploymentType({
                 <TemplateBar
                   templateLinkConfig={customDeploymentData}
                   onOpenTemplateSelector={addOrUpdateTemplate}
-                  className={deployServiceCsss.templateBar}
+                  className={cx(deployServiceCsss.templateBar, templateBarOverrideClassName)}
                 />
               </Layout.Vertical>
             ) : null}

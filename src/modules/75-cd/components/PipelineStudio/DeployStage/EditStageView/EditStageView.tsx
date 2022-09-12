@@ -26,6 +26,7 @@ import cx from 'classnames'
 import * as Yup from 'yup'
 import { get, isEmpty, omit, set } from 'lodash-es'
 import type { FormikProps } from 'formik'
+import produce from 'immer'
 import { useStrings } from 'framework/strings'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type {
@@ -49,8 +50,8 @@ import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import type { StringNGVariable, TemplateLinkConfig } from 'services/cd-ng'
+import type { StageElementConfig } from 'services/pipeline-ng'
 import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
-import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
 import { createTemplate, getScopeBasedTemplateRef, getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import { hasStageData, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
@@ -103,7 +104,17 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
       disabled: true
     }
   ]
-  const { stepsFactory, getStageFromPipeline, contextType, allowableTypes } = usePipelineContext()
+
+  const {
+    state: {
+      selectionState: { selectedStageId }
+    },
+    stepsFactory,
+    getStageFromPipeline,
+    contextType,
+    allowableTypes,
+    updateStage
+  } = usePipelineContext()
   const { variablesPipeline, metadataMap } = usePipelineVariables()
   const scrollRef = React.useRef<HTMLDivElement | null>(null)
   const allNGVariables = (data?.stage?.variables || []) as AllNGVariables[]
@@ -114,20 +125,22 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
   const getDeploymentType = (): ServiceDeploymentType => {
     return get(data, 'stage.spec.deploymentType')
   }
-  const getLinkedDeploymentTemplate = () => {
+  const getLinkedDeploymentTemplateConfig = () => {
     return get(data, 'stage.spec.customDeploymentRef')
   }
   const [selectedDeploymentType, setSelectedDeploymentType] = useState<ServiceDeploymentType | undefined>(
     getDeploymentType()
   )
 
-  const [linkedDeploymentTemplate, setLinkedDeploymentTemplate] = useState<TemplateLinkConfig>(
-    getLinkedDeploymentTemplate()
+  const [linkedDeploymentTemplateConfig, setLinkedDeploymentTemplateConfig] = useState<TemplateLinkConfig | undefined>(
+    getLinkedDeploymentTemplateConfig()
   )
+
+  const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   const { getTemplate } = useTemplateSelector()
 
-  const handleChangeTemplate = React.useCallback(() => {
+  const handleAddOrUpdateTemplate = React.useCallback(() => {
     getDeploymentTemplate().catch(_ => {
       // user cancelled template selection - we keep the existing template
     })
@@ -139,18 +152,44 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
       templateRef: getScopeBasedTemplateRef(deploymentTemplate),
       versionLabel: deploymentTemplate.versionLabel
     }
-    setLinkedDeploymentTemplate(templateLinkConfigDetails)
+    setLinkedDeploymentTemplateConfig(templateLinkConfigDetails)
   }
 
   React.useEffect(() => {
-    if (selectedDeploymentType === ServiceDeploymentType.CustomDeployment && isEmpty(linkedDeploymentTemplate)) {
+    if (!isEmpty(context)) {
+      const stageData = produce(stage, draft => {
+        if (draft) {
+          set(draft, 'stage.spec.deploymentType', selectedDeploymentType)
+          if (
+            !isEmpty(linkedDeploymentTemplateConfig) &&
+            selectedDeploymentType === ServiceDeploymentType.CustomDeployment
+          ) {
+            set(draft, 'stage.spec.customDeploymentRef', linkedDeploymentTemplateConfig)
+          } else if (selectedDeploymentType !== ServiceDeploymentType.CustomDeployment) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            // TODO: Fix once BE types are available
+            delete draft?.stage?.spec?.customDeploymentRef
+          }
+        }
+      })
+      updateStage(stageData?.stage as StageElementConfig)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [linkedDeploymentTemplateConfig, context, selectedDeploymentType])
+
+  React.useEffect(() => {
+    if (selectedDeploymentType === ServiceDeploymentType.CustomDeployment && isEmpty(linkedDeploymentTemplateConfig)) {
       getDeploymentTemplate().catch(_ => {
         // user cancelled template selection
         setSelectedDeploymentType(undefined)
         formikRef.current?.setFieldValue('deploymentType', undefined)
       })
     }
-  }, [selectedDeploymentType, linkedDeploymentTemplate])
+    if (selectedDeploymentType !== ServiceDeploymentType.CustomDeployment) {
+      setLinkedDeploymentTemplateConfig(undefined)
+    }
+  }, [selectedDeploymentType, linkedDeploymentTemplateConfig])
 
   React.useEffect(() => {
     /* istanbul ignore else */
@@ -197,10 +236,10 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
         data.stage.name = values.name
         if (!isEmpty(values.deploymentType)) {
           set(data, 'stage.spec.deploymentType', values.deploymentType)
-          if (values.deploymentType === ServiceDeploymentType.CustomDeployment && linkedDeploymentTemplate) {
+          if (values.deploymentType === ServiceDeploymentType.CustomDeployment && linkedDeploymentTemplateConfig) {
             set(data, 'stage.spec.customDeploymentRef', {
-              templateRef: linkedDeploymentTemplate.templateRef,
-              versionLabel: linkedDeploymentTemplate.versionLabel
+              templateRef: linkedDeploymentTemplateConfig.templateRef,
+              versionLabel: linkedDeploymentTemplateConfig.versionLabel
             })
           }
         }
@@ -378,6 +417,9 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                           isReadonly={isReadonly}
                           handleDeploymentTypeChange={handleDeploymentTypeChange}
                           shouldShowGitops={false}
+                          customDeploymentData={linkedDeploymentTemplateConfig}
+                          addOrUpdateTemplate={handleAddOrUpdateTemplate}
+                          templateBarOverrideClassName={cx(css.templateBarOverride, { [css.halfWidthBar]: !!context })}
                         />
                       </div>
                       {selectedDeploymentType === ServiceDeploymentType['Kubernetes'] && (
@@ -387,14 +429,6 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                           className={css.gitOpsCheck}
                         />
                       )}
-                      {linkedDeploymentTemplate &&
-                        selectedDeploymentType === ServiceDeploymentType.CustomDeployment && (
-                          <TemplateBar
-                            templateLinkConfig={linkedDeploymentTemplate}
-                            onOpenTemplateSelector={handleChangeTemplate}
-                            className={css.templateBarOverride}
-                          />
-                        )}
                     </>
                   )}
 
