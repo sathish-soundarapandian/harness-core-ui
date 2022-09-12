@@ -103,7 +103,7 @@ export enum StepType {
   Background = 'Background',
   AzureBlueprint = 'AzureCreateBPResource',
   CustomDeploymentServiceSpec = 'CustomDeploymentServiceSpec',
-  CustomDeploymentInfrastructureSpec = 'CustomDeploymentInfrastructureSpec'
+  CustomDeployment = 'CustomDeployment'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

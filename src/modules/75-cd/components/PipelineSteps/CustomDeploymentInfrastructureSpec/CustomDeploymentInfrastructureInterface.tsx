@@ -8,14 +8,11 @@
 import type { AllowedTypes } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { CustomDeploymentInfrastructure } from 'services/cd-ng' // add new type here
+import type { CustomDeploymentInfrastructure } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { UseStringsReturn } from 'framework/strings'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { variableSchema } from '../ShellScriptStep/shellScriptTypes'
-
-export const subscriptionLabel = 'cd.steps.azureInfraStep.subscription'
-export const resourceGroupLabel = 'common.resourceGroupLabel'
 
 export function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({

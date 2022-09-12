@@ -7,8 +7,10 @@
 
 import React from 'react'
 import type { IconName } from '@wings-software/uicore'
-import type { FormikErrors } from 'formik'
+import * as Yup from 'yup'
+import { FormikErrors, yupToFormErrors } from 'formik'
 
+import { isEmpty } from 'lodash-es'
 import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import type { CustomDeploymentInfrastructure } from 'services/cd-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
@@ -19,8 +21,9 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import type { CustomDeploymentInfrastructureSpecEditableProps } from './CustomDeploymentInfrastructureInterface'
 import { CustomDeploymentInfrastructureSpecEditable } from './CustomDeploymentInfrastructureSpecEditable'
 import { CustomDeploymentInfrastructureSpecInputForm } from './CustomDeploymentInfrastructureSpecInputForm'
+import { variableSchema } from '../ShellScriptStep/shellScriptTypes'
 
-const AzureWebAppInfrastructureSpecVariablesForm: React.FC<CustomDeploymentInfrastructureSpecEditableProps> = ({
+const CustomDeploymentInfrastructureSpecVariablesForm: React.FC<CustomDeploymentInfrastructureSpecEditableProps> = ({
   metadataMap,
   variablesData,
   initialValues
@@ -42,7 +45,7 @@ interface CustomDeploymentInfrastructureSpecStep extends CustomDeploymentInfrast
 
 export class CustomDeploymentInfrastructureSpec extends PipelineStep<CustomDeploymentInfrastructureSpecStep> {
   lastFetched: number
-  protected type = StepType.CustomDeploymentInfrastructureSpec
+  protected type = StepType.CustomDeployment
   protected defaultValues: CustomDeploymentInfrastructure = {
     variables: []
   }
@@ -61,14 +64,32 @@ export class CustomDeploymentInfrastructureSpec extends PipelineStep<CustomDeplo
     this._hasStepVariables = true
   }
 
-  validateInputSet(
-    _props: ValidateInputSetProps<CustomDeploymentInfrastructure>
-  ): FormikErrors<CustomDeploymentInfrastructure> {
+  validateInputSet({
+    data,
+    getString,
+    viewType
+  }: ValidateInputSetProps<CustomDeploymentInfrastructure>): FormikErrors<CustomDeploymentInfrastructure> {
     const errors: Partial<CustomDeploymentInfrastructure> = {}
+    const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
 
+    if (!isEmpty(data) && isRequired && getString) {
+      const variables = Yup.object().shape({
+        variables: variableSchema(getString)
+      })
+
+      try {
+        variables.validateSync(data, { abortEarly: false })
+      } catch (e) {
+        /* istanbul ignore else */
+        if (e instanceof Yup.ValidationError) {
+          const err = yupToFormErrors(e)
+
+          Object.assign(errors, err)
+        }
+      }
+    }
     return errors as any
   }
-
   renderStep(props: StepProps<CustomDeploymentInfrastructure>): JSX.Element {
     const { initialValues, onUpdate, stepViewType, inputSetData, customStepProps, readonly, allowableTypes, factory } =
       props
@@ -89,7 +110,7 @@ export class CustomDeploymentInfrastructureSpec extends PipelineStep<CustomDeplo
       )
     } else if (stepViewType === StepViewType.InputVariable) {
       return (
-        <AzureWebAppInfrastructureSpecVariablesForm
+        <CustomDeploymentInfrastructureSpecVariablesForm
           onUpdate={onUpdate}
           stepViewType={stepViewType}
           template={inputSetData?.template}
