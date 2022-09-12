@@ -158,7 +158,7 @@ describe('Configure Datadog health source', () => {
     cy.findByRole('button', { name: /Submit/i }).click()
 
     // Creating the template.
-    cy.findByRole('button', { name: /Save/i }).click()
+    cy.findByText('Save').click()
     // Saving modal.
     cy.get('.bp3-dialog').findByRole('button', { name: /Save/i }).click()
     cy.findByText('Template published successfully').should('be.visible')

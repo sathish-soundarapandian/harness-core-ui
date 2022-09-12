@@ -42,9 +42,10 @@ const MonacoEditor = (props: ExtendedMonacoEditorProps, ref: ReactMonacoEditorRe
     }
   }, [])
 
-  function handleHTMLEditorDidMount(editor: any) {
+  function handleHTMLEditorDidMount(editor: any, monaco: any) {
     props.setLineCount && props.setLineCount(editor.getModel().getLineCount())
     customHTMLRef.current = editor
+    props.editorDidMount?.(editor, monaco)
   }
 
   const editorWillMount = () => {

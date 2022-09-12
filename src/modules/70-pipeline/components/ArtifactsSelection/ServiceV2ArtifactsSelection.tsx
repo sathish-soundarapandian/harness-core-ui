@@ -640,8 +640,8 @@ export default function ServiceV2ArtifactsSelection({
   return (
     <ArtifactListView
       stage={stage}
-      primaryArtifact={artifacts.primary?.sources as ArtifactSource[]}
-      sideCarArtifact={artifacts.sidecars}
+      primaryArtifact={artifacts?.primary?.sources as ArtifactSource[]}
+      sideCarArtifact={artifacts?.sidecars}
       addNewArtifact={addNewArtifact}
       editArtifact={editArtifact}
       removeArtifactSource={index => removeArtifactObject(ModalViewFor.PRIMARY, index)}
