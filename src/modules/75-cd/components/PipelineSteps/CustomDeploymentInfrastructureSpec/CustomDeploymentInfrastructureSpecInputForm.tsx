@@ -20,7 +20,6 @@ import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { VariableType } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/DeploymentInfraWrapper/DeploymentInfraSpecifications/DeploymentInfraSpecifications'
 import type { CustomDeploymentInfrastructureSpecEditableProps } from './CustomDeploymentInfrastructureInterface'
-import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './CustomDeploymentInfrastructureSpec.module.scss'
 
 export const CustomDeploymentInfrastructureSpecInputForm: React.FC<
@@ -31,38 +30,39 @@ export const CustomDeploymentInfrastructureSpecInputForm: React.FC<
   return (
     <Layout.Vertical spacing="small">
       {!!template?.variables?.length && (
-        <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-          <div>{getString('common.variables')}</div>
-
-          <StepWidget<CustomVariablesData, CustomVariableInputSetExtraProps>
-            factory={factory as unknown as AbstractStepFactory}
-            initialValues={{
-              variables: (initialValues.variables || []) as AllNGVariables[],
-              canAddVariable: true
-            }}
-            type={StepType.CustomVariable}
-            stepViewType={StepViewType.InputSet}
-            allowableTypes={allowableTypes}
-            onUpdate={({ variables }: CustomVariablesData) => {
-              onUpdate?.({
-                variables: variables as any
-              })
-            }}
-            customStepProps={{
-              template: { variables: (template?.variables || []) as AllNGVariables[] },
-              path,
-              allValues: { variables: (allValues?.variables || []) as AllNGVariables[] },
-              allowedVarialblesTypes: [
-                VariableType.String,
-                VariableType.Secret,
-                VariableType.Number,
-                VariableType.Connector
-              ],
-              isDescriptionEnabled: true
-            }}
-            readonly={readonly}
-          />
-        </div>
+        <>
+          <div className={css.subheading}>{getString('common.variables')}</div>
+          <div className={cx(css.nestedAccordions, css.infraSections)}>
+            <StepWidget<CustomVariablesData, CustomVariableInputSetExtraProps>
+              factory={factory as unknown as AbstractStepFactory}
+              initialValues={{
+                variables: (initialValues.variables || []) as AllNGVariables[],
+                canAddVariable: true
+              }}
+              type={StepType.CustomVariable}
+              stepViewType={StepViewType.InputSet}
+              allowableTypes={allowableTypes}
+              onUpdate={({ variables }: CustomVariablesData) => {
+                onUpdate?.({
+                  variables: variables as any
+                })
+              }}
+              customStepProps={{
+                template: { variables: (template?.variables || []) as AllNGVariables[] },
+                path,
+                allValues: { variables: (allValues?.variables || []) as AllNGVariables[] },
+                allowedVarialblesTypes: [
+                  VariableType.String,
+                  VariableType.Secret,
+                  VariableType.Number,
+                  VariableType.Connector
+                ],
+                isDescriptionEnabled: true
+              }}
+              readonly={readonly}
+            />
+          </div>
+        </>
       )}
     </Layout.Vertical>
   )

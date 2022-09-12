@@ -19,6 +19,8 @@ declare const styles: {
   readonly labelText: string
   readonly lastRow: string
   readonly marginTop: string
+  readonly nestedAccordions: string
   readonly simultaneousDeployment: string
+  readonly subheading: string
 }
 export default styles
