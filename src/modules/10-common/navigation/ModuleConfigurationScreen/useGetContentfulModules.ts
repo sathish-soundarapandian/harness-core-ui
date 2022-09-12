@@ -56,6 +56,7 @@ const useGetContentfulModules = (): UseGetContentfulModulesReturnType => {
 
   useEffect(() => {
     // Try to cache this data
+    /* istanbul ignore next */
     if (!moduleContentfulDataMap) {
       setLoading(true)
       Contentful.getClient()
