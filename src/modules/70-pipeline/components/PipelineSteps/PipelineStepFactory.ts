@@ -20,6 +20,7 @@ import { ServiceNowCreate } from './Steps/ServiceNowCreate/ServiceNowCreate'
 import { ServiceNowUpdate } from './Steps/ServiceNowUpdate/ServiceNowUpdate'
 import { JenkinsStep } from './Steps/JenkinsStep/JenkinsStep'
 import { CustomApproval } from './Steps/CustomApproval/CustomApproval'
+import { WaitStep } from '@cd/components/PipelineSteps/WaitStep/WaitStep'
 
 class PipelineStepFactory extends AbstractStepFactory {
   protected type = 'pipeline-factory'
@@ -40,6 +41,7 @@ factory.registerStep(new ServiceNowApproval())
 factory.registerStep(new ServiceNowCreate())
 factory.registerStep(new ServiceNowUpdate())
 factory.registerStep(new JenkinsStep())
+factory.registerStep(new WaitStep())
 factory.registerStep(new CustomApproval())
 
 // build steps

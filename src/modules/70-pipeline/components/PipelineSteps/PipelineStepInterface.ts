@@ -102,6 +102,7 @@ export enum StepType {
   AzureArmRollback = 'AzureARMRollback',
   Background = 'Background',
   AzureBlueprint = 'AzureCreateBPResource'
+  Wait='WaitStep'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {
