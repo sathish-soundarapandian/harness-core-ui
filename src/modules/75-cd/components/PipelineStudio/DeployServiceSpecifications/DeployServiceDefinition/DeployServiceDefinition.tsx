@@ -7,7 +7,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import { Intent, Layout, useConfirmationDialog } from '@harness/uicore'
-import { debounce, defaultTo, get, set } from 'lodash-es'
+import { debounce, defaultTo, get, set, unset } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'
 import type { ServiceDefinition, StageElementConfig, TemplateLinkConfig } from 'services/cd-ng'
@@ -133,6 +133,10 @@ function DeployServiceDefinition(): React.ReactElement {
         deleteServiceData(currStageData)
         if (gitOpsEnabled) {
           updateDeploymentTypeWithGitops()
+        } else if (
+          currStageData?.spec?.serviceConfig?.serviceDefinition?.type === ServiceDeploymentType.CustomDeployment
+        ) {
+          onCustomDeploymentSelection()
         } else {
           await debounceUpdateStage(currStageData)
         }
@@ -172,7 +176,15 @@ function DeployServiceDefinition(): React.ReactElement {
       const { template } = await getTemplate({ templateType: 'CustomDeployment' })
       setCustomDeploymentData(getTemplateRefVersionLabelObject(template))
     } catch (_) {
-      // Do nothing.. user cancelled template selection
+      // Reset deployment data.. User cancelled template selection
+      setCustomDeploymentData(undefined)
+      setSelectedDeploymentType(undefined)
+      const stageData = produce(stage, draft => {
+        if (draft) {
+          unset(draft, 'stage.spec.serviceConfig.serviceDefinition.type')
+        }
+      })
+      updateStage(stageData?.stage as StageElementConfig)
     }
   }
 
@@ -180,6 +192,7 @@ function DeployServiceDefinition(): React.ReactElement {
     if (customDeploymentData) {
       const stageData = produce(stage, draft => {
         if (draft) {
+          set(draft, 'stage.spec.serviceConfig.serviceDefinition.type', ServiceDeploymentType.CustomDeployment)
           set(draft, 'stage.spec.serviceConfig.serviceDefinition.spec.customDeploymentRef', customDeploymentData)
         }
       })
@@ -205,11 +218,10 @@ function DeployServiceDefinition(): React.ReactElement {
             updateDeploymentTypeWithGitops(deploymentType)
           } else {
             updateStage(stageData?.stage as StageElementConfig)
+            if (deploymentType === ServiceDeploymentType.CustomDeployment) {
+              onCustomDeploymentSelection()
+            }
           }
-        }
-
-        if (deploymentType === ServiceDeploymentType.CustomDeployment) {
-          onCustomDeploymentSelection()
         }
       }
     },
