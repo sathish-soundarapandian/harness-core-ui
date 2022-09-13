@@ -50,7 +50,7 @@ import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { DefaultPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { ServiceDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
-import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
+import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import type { PipelineInfoConfig, StageElementConfig, TemplateLinkConfig } from 'services/pipeline-ng'
 
@@ -362,17 +362,16 @@ function BootstrapDeployInfraDefinition({
       })
   }
 
-  const onCustomDeploymentSelection = async (
-    stageData?: StageElementWrapper<DeploymentStageElementConfig>
-  ): Promise<void> => {
+  const onCustomDeploymentSelection = async (): Promise<void> => {
     if (getTemplate) {
       try {
         const { template } = await getTemplate({ templateType: 'CustomDeployment' })
         const templateRefObj = getTemplateRefVersionLabelObject(template)
         setCustomDeploymentData(templateRefObj)
         const templateJSON = parse(template.yaml || '').template
-        const stageUpdatedData = produce(stageData, draft => {
+        const stageUpdatedData = produce(stage, draft => {
           if (draft) {
+            set(draft, 'stage.spec.serviceConfig.serviceDefinition.type', ServiceDeploymentType.CustomDeployment)
             set(draft, 'stage.spec.infrastructure.infrastructureDefinition.spec.customDeploymentRef', templateRefObj)
             set(
               draft,
@@ -385,7 +384,9 @@ function BootstrapDeployInfraDefinition({
           updateStage(stageUpdatedData?.stage as StageElementConfig)
         }
       } catch (_) {
-        // Do nothing.. user cancelled template selection
+        // Reset data.. user cancelled template selection
+        setSelectedDeploymentType(undefined)
+        setCustomDeploymentData(undefined)
       }
     }
   }
@@ -400,7 +401,7 @@ function BootstrapDeployInfraDefinition({
         })
         setSelectedDeploymentType(deploymentType)
         if (deploymentType === ServiceDeploymentType.CustomDeployment) {
-          onCustomDeploymentSelection(stageData)
+          onCustomDeploymentSelection()
         } else {
           setCustomDeploymentData(undefined)
           updateStage(stageData?.stage as StageElementConfig)
