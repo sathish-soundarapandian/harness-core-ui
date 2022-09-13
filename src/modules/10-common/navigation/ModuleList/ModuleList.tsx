@@ -15,8 +15,13 @@ import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleNam
 import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import NavModule from './NavModule/NavModule'
 import ModuleConfigurationScreen from '../ModuleConfigurationScreen/ModuleConfigurationScreen'
+import {
+  ModulesPreferenceStoreData,
+  MODULES_CONFIG_PREFERENCE_STORE_KEY
+} from '../ModuleConfigurationScreen/ModuleSortableList/ModuleSortableList'
 import css from './ModuleList.module.scss'
 
 interface ModuleListProps {
@@ -49,6 +54,8 @@ interface GroupProps {
 const Item: React.FC<ItemProps> = ({ data, tooltipProps }) => {
   const { redirectionLink, shouldVisible } = useNavModuleInfo([data])[0]
   const { module } = useModuleInfo()
+  const { setPreference: setModuleConfigPreference, preference: { orderedModules = [], selectedModules = [] } = {} } =
+    usePreferenceStore<ModulesPreferenceStoreData>(PreferenceScope.USER, MODULES_CONFIG_PREFERENCE_STORE_KEY)
   const currentModule = module ? moduleToModuleNameMapping[module] : undefined
 
   if (!shouldVisible) {
@@ -58,7 +65,17 @@ const Item: React.FC<ItemProps> = ({ data, tooltipProps }) => {
   return (
     <Link to={redirectionLink}>
       <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
-        <NavModule module={data} active={currentModule === data} />
+        <NavModule
+          module={data}
+          active={currentModule === data}
+          onClick={() => {
+            // Adding module to preference store if the User clicks on it
+            setModuleConfigPreference({
+              selectedModules: selectedModules.indexOf(data) > -1 ? selectedModules : [...selectedModules, data],
+              orderedModules
+            })
+          }}
+        />
         <Icon
           name="tooltip-icon"
           padding={'small'}
