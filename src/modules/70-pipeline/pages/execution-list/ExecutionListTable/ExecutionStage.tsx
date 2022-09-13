@@ -29,8 +29,8 @@ export interface ExecutionStageProps {
 }
 
 const stageIconMap: Partial<Record<StageType, IconName>> = {
-  [StageType.BUILD]: 'cd-main',
-  [StageType.DEPLOY]: 'ci-main',
+  [StageType.BUILD]: 'ci-main',
+  [StageType.DEPLOY]: 'cd-main',
   [StageType.SECURITY]: 'sto-color-filled'
 }
 
