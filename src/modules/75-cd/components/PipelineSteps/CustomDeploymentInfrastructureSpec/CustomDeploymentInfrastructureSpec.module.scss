@@ -85,13 +85,13 @@
     grid-template-columns: 1fr 0.5fr 1.5fr 2fr !important;
   }
   :global(.connectorVariableField) {
-    :global(.bp3-form-content) > div:last-child {
+    :global(.bp3-form-content) > * {
       width: 100% !important;
-      max-width: 264px;
+      max-width: 100% !important;
 
       > button {
         width: 100% !important;
-        max-width: 264px;
+        max-width: 100% !important;
       }
     }
   }

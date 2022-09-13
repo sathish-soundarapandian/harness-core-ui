@@ -44,7 +44,6 @@ const CustomDeploymentInfrastructureSpecEditableNew: React.FC<CustomDeploymentIn
   const { getString } = useStrings()
 
   const formikRef = React.useRef<FormikProps<CustomDeploymentInfrastructure> | null>(null)
-
   const getInitialValues = (): CustomDeploymentInfrastructure => {
     return initialValues
   }
@@ -80,6 +79,7 @@ const CustomDeploymentInfrastructureSpecEditableNew: React.FC<CustomDeploymentIn
         }}
         validationSchema={getValidationSchema(getString)}
         onSubmit={noop}
+        enableReinitialize
       >
         {formik => {
           window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.INFRASTRUCTURE }))
@@ -123,7 +123,12 @@ const CustomDeploymentInfrastructureSpecEditableNew: React.FC<CustomDeploymentIn
                 />
               </Layout.Horizontal>
 
-              <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }} className={css.lastRow}>
+              <Layout.Horizontal
+                spacing="medium"
+                flex={{ alignItems: 'center' }}
+                margin={{ top: 'medium' }}
+                className={css.lastRow}
+              >
                 <FormInput.CheckBox
                   className={css.simultaneousDeployment}
                   tooltipProps={{

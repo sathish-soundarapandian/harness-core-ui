@@ -254,6 +254,19 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stage])
 
+  React.useEffect(() => {
+    // explicitly setting infraDefinition.type as variables prepoluated from template
+    if (selectedDeploymentType === InfraDeploymentType.CustomDeployment) {
+      const stageData = produce(stage, draft => {
+        !!draft && set(draft, 'stage.spec.infrastructure.infrastructureDefinition.type', selectedDeploymentType)
+      })
+      debounceUpdateStage(stageData?.stage)
+      const initialInfraDefValues = getInfrastructureDefaultValue(stageData, selectedDeploymentType)
+      setInitialInfrastructureDefinitionValues(initialInfraDefValues)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDeploymentType])
+
   const onUpdateInfrastructureDefinition = (extendedSpec: InfraTypes, type: string): void => {
     if (get(stageRef.current, 'stage.spec.infrastructure', null)) {
       const stageData = produce(stageRef.current, draft => {
