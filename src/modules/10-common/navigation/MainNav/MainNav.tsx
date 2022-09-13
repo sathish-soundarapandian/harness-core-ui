@@ -23,9 +23,12 @@ import { ResourceCenter } from '@common/components/ResourceCenter/ResourceCenter
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 
 import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'
-import { DEFAULT_MODULES_ORDER, NavModuleName } from '@common/hooks/useNavModuleInfo'
+import useNavModuleInfo, {
+  DEFAULT_MODULES_ORDER,
+  NavModuleName,
+  useNavModuleInfoMap
+} from '@common/hooks/useNavModuleInfo'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
-import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import {
   MODULES_CONFIG_PREFERENCE_STORE_KEY,
   ModulesPreferenceStoreData
@@ -70,7 +73,8 @@ export default function L1Nav(): React.ReactElement {
 
   const { currentUserInfo: user } = useAppStore()
   const { module } = useModuleInfo()
-  const { licenseInformation } = useLicenseStore()
+  const modules = useNavModuleInfo(DEFAULT_MODULES_ORDER)
+  const moduleMap = useNavModuleInfoMap()
   const { preference: modulesPreferenceData, setPreference: setModuleConfigPreference } =
     usePreferenceStore<ModulesPreferenceStoreData>(PreferenceScope.USER, MODULES_CONFIG_PREFERENCE_STORE_KEY)
 
@@ -99,15 +103,13 @@ export default function L1Nav(): React.ReactElement {
 
   useEffect(() => {
     if (!modulesPreferenceData?.orderedModules?.length) {
-      const availableModules = Object.keys(licenseInformation).filter(
-        license => !!licenseInformation[license]?.id
-      ) as NavModuleName[]
+      const modulesWithLicense = modules.filter(m => !!m.licenseType).map(m => m.name)
       setModuleConfigPreference({
-        orderedModules: DEFAULT_MODULES_ORDER,
-        selectedModules: availableModules.length > 0 ? availableModules : DEFAULT_MODULES_ORDER
+        selectedModules: modulesWithLicense,
+        orderedModules: DEFAULT_MODULES_ORDER
       })
     }
-  }, [licenseInformation])
+  }, [])
 
   return (
     <>
@@ -132,14 +134,18 @@ export default function L1Nav(): React.ReactElement {
             <div className={css.modulesContainer} style={{ height: modulesListHeight }}>
               {(modulesPreferenceData?.orderedModules || []).map(moduleName => {
                 const NavItem = moduleToNavItemsMap[moduleName]
+                const moduleInfo = moduleMap[moduleName]
 
-                return selectedModules.indexOf(moduleName) > -1 ? <NavItem key={moduleName} /> : null
+                return selectedModules.indexOf(moduleName) > -1 && moduleInfo.shouldVisible ? (
+                  <NavItem key={moduleName} />
+                ) : null
               })}
             </div>
           ) : (
             DEFAULT_MODULES_ORDER.map(moduleName => {
               const NavItem = moduleToNavItemsMap[moduleName]
-              return <NavItem key={moduleName} />
+              const moduleInfo = moduleMap[moduleName]
+              return moduleInfo.shouldVisible ? <NavItem key={moduleName} /> : null
             })
           )}
           {NEW_LEFT_NAVBAR_SETTINGS && (
