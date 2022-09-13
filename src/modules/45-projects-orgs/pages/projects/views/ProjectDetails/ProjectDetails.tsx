@@ -12,6 +12,7 @@ import { FontVariation, Color } from '@harness/design-system'
 import { Classes, Position } from '@blueprintjs/core'
 import ReactTimeago from 'react-timeago'
 import { isEmpty } from 'lodash-es'
+import cx from 'classnames'
 import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
 import { Project, useGetProjectAggregateDTO } from 'services/cd-ng'
@@ -29,6 +30,19 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacAvatarGroup from '@rbac/components/RbacAvatarGroup/RbacAvatarGroup'
+import OverviewGlanceCards, {
+  OverviewGalanceCard
+} from '@projects-orgs/components/OverviewGlanceCards/OverviewGlanceCards'
+import { useGetCounts } from 'services/dashboard-service'
+import LandingDashboardFactory from '@common/factories/LandingDashboardFactory'
+import LandingDashboardWidgetWrapper from '@projects-orgs/components/LandingDashboardWidgetWrapper/LandingDashboardWidgetWrapper'
+import { DASHBOARD_MODULES } from '@projects-orgs/pages/LandingDashboardPage/LandingDashboardPage'
+import {
+  TimeRangeToDays,
+  useLandingDashboardContext,
+  LandingDashboardContextProvider
+} from '@common/factories/LandingDashboardContext'
+import TimeRangeSelect from '@projects-orgs/components/TimeRangeSelect/TimeRangeSelect'
 import useDeleteProjectDialog from '../../DeleteProject'
 import css from './ProjectDetails.module.scss'
 
@@ -36,7 +50,10 @@ const ProjectDetails: React.FC = () => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const [menuOpen, setMenuOpen] = useState(false)
-  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, SECURITY } = useFeatureFlags()
+  const { selectedTimeRange } = useLandingDashboardContext()
+  const [range] = useState([Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000, Date.now()])
+  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, SECURITY, NEW_LEFT_NAVBAR_SETTINGS } =
+    useFeatureFlags()
   const invitePermission = {
     resourceScope: {
       accountIdentifier: accountId,
@@ -53,6 +70,16 @@ const ProjectDetails: React.FC = () => {
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier: orgIdentifier
+    }
+  })
+
+  const { data: countData } = useGetCounts({
+    queryParams: {
+      accountIdentifier: accountId,
+      startTime: range[0],
+      endTime: range[1],
+      projectIdentifier,
+      orgIdentifier
     }
   })
 
@@ -80,7 +107,7 @@ const ProjectDetails: React.FC = () => {
 
   const history = useHistory()
   const onDeleted = (): void => {
-    history.push(routes.toProjects({ accountId }))
+    history.push(routes.toAllProjects({ accountId }))
   }
   const { openDialog } = useDeleteProjectDialog(projectData || { identifier: '', name: '' }, onDeleted)
   useDocumentTitle(getString('projectsText'))
@@ -108,7 +135,7 @@ const ProjectDetails: React.FC = () => {
       <ModuleListCard
         module={module as ModuleName}
         key={module}
-        projectIdentifier={projectData.identifier}
+        projectIdentifier={projectData.identifier + projectData.description?.toLowerCase}
         orgIdentifier={projectData.orgIdentifier || ''}
         accountId={accountId}
       />
@@ -123,16 +150,7 @@ const ProjectDetails: React.FC = () => {
     <>
       <Page.Header
         size={projectData.description || !isEmpty(projectData.tags) ? 'xxlarge' : 'xlarge'}
-        breadcrumbs={
-          <NGBreadcrumbs
-            links={[
-              {
-                url: routes.toAllProjects({ accountId }),
-                label: getString('projectsText')
-              }
-            ]}
-          />
-        }
+        breadcrumbs={<NGBreadcrumbs links={[]} />}
         title={
           <Layout.Vertical spacing="small" padding={{ top: 'small' }} className={css.title}>
             <Layout.Horizontal
@@ -241,12 +259,53 @@ const ProjectDetails: React.FC = () => {
       />
       <Page.Body>
         <Layout.Horizontal>
-          <Container padding="xxlarge" className={css.enabledModules}>
+          <Container
+            padding="xxlarge"
+            className={cx(css.enabledModules, { [css.fullWidth]: NEW_LEFT_NAVBAR_SETTINGS })}
+          >
             <Layout.Vertical padding="small" spacing="large">
-              <Text font={{ size: 'medium', weight: 'semi-bold' }} color={Color.BLACK}>
-                {getString('modules')}
-              </Text>
-              {getModuleInfoCards()}
+              {!NEW_LEFT_NAVBAR_SETTINGS && (
+                <Text font={{ size: 'medium', weight: 'semi-bold' }} color={Color.BLACK}>
+                  {getString('modules')}
+                </Text>
+              )}
+              {NEW_LEFT_NAVBAR_SETTINGS ? (
+                <LandingDashboardContextProvider>
+                  <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
+                    <Text font={{ size: 'medium', weight: 'bold' }} color={Color.BLACK}>
+                      {getString('projectsOrgs.landingDashboard.atAGlance')}
+                    </Text>
+                    <TimeRangeSelect className={css.timeRangeSelect} />
+                  </Layout.Horizontal>
+                  {countData && (
+                    <>
+                      <OverviewGlanceCards
+                        glanceCardData={countData}
+                        hideCards={[OverviewGalanceCard.PROJECT]}
+                        className={css.glanceCardContainer}
+                        glanceCardProps={{ className: css.glanceCard }}
+                      />
+                    </>
+                  )}
+                  <Layout.Vertical spacing="large" padding={{ top: 'huge' }}>
+                    {DASHBOARD_MODULES.map(moduleName => {
+                      const moduleHandler = LandingDashboardFactory.getModuleDashboardHandler(moduleName)
+                      return moduleHandler ? (
+                        <LandingDashboardWidgetWrapper
+                          icon={moduleHandler?.icon}
+                          title={moduleHandler?.label}
+                          iconProps={moduleHandler?.iconProps}
+                          key={moduleName}
+                        >
+                          {moduleHandler.moduleDashboardRenderer?.()}
+                        </LandingDashboardWidgetWrapper>
+                      ) : null
+                    })}
+                  </Layout.Vertical>
+                </LandingDashboardContextProvider>
+              ) : (
+                getModuleInfoCards()
+              )}
             </Layout.Vertical>
           </Container>
         </Layout.Horizontal>
