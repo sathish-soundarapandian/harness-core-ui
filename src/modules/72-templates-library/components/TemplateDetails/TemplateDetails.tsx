@@ -21,7 +21,8 @@ import {
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty, unset } from 'lodash-es'
+import produce from 'immer'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import { TemplateTags } from '@templates-library/components/TemplateTags/TemplateTags'
@@ -211,10 +212,15 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   }, [selectedTemplate])
 
   React.useEffect(() => {
-    if (templateYamlData) {
-      setSelectedTemplate(templateYamlData?.data)
+    if (templateYamlData?.data) {
+      const templateWithYaml = produce(templateYamlData.data, draft => {
+        if (isEmpty(selectedTemplate?.versionLabel)) {
+          unset(draft, 'versionLabel')
+        }
+      })
+      setSelectedTemplate(templateWithYaml)
     }
-  }, [templateYamlData])
+  }, [templateYamlData?.data])
 
   const onChange = React.useCallback(
     (option: SelectOption): void => {

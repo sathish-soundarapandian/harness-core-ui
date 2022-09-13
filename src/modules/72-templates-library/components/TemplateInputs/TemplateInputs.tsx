@@ -20,7 +20,7 @@ import { Color } from '@harness/design-system'
 import { defaultTo, noop } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { TemplateSummaryResponse, useGetTemplateInputSetYaml } from 'services/template-ng'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { PageSpinner, useToaster } from '@common/components'
 import {
@@ -93,15 +93,9 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template }) => {
       setCount(getTemplateRuntimeInputsCount(templateInput))
       setInputSetTemplate(templateInput)
     } catch (error) {
-      showError(getRBACErrorMessage(error), undefined, 'template.parse.inputSet.error')
+      showError(getRBACErrorMessage(error as RBACError), undefined, 'template.parse.inputSet.error')
     }
   }, [templateInputYaml?.data])
-
-  React.useEffect(() => {
-    if (loading) {
-      setInputSetTemplate(undefined)
-    }
-  }, [loading])
 
   return (
     <Container
