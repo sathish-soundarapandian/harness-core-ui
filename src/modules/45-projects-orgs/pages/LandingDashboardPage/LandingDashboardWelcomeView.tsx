@@ -36,11 +36,11 @@ const LandingDashboardWelcomeView: React.FC<WelcomeViewProps> = props => {
 
   const { openProjectModal, closeProjectModal } = useProjectModal({
     onSuccess: () => {
-      history.push(routes.toProjects({ accountId }))
+      history.push(routes.toAllProjects({ accountId }))
     },
     onWizardComplete: () => {
       closeProjectModal()
-      history.push(routes.toProjects({ accountId }))
+      history.push(routes.toAllProjects({ accountId }))
     }
   })
 

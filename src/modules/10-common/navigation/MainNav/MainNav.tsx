@@ -130,6 +130,21 @@ export default function L1Nav(): React.ReactElement {
               </Layout.Vertical>
             </Link>
           </li>
+          <li className={css.navItem}>
+            <Link {...commonLinkProps} to={paths.toProjects(params)}>
+              <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+                <Icon name="nav-project" size={30} color={Color.PRIMARY_4} />
+                <Text
+                  font={{ weight: 'semi-bold', align: 'center' }}
+                  padding={{ bottom: 'xsmall' }}
+                  color={Color.WHITE}
+                  className={css.text}
+                >
+                  <String stringID="projectsText" />
+                </Text>
+              </Layout.Vertical>
+            </Link>
+          </li>
           {NEW_LEFT_NAVBAR_SETTINGS ? (
             <div className={css.modulesContainer} style={{ height: modulesListHeight }}>
               {(modulesPreferenceData?.orderedModules || []).map(moduleName => {

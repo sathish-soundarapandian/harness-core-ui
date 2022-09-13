@@ -316,7 +316,7 @@ const renderTooltipForServiceLabel = (service: ActiveServiceInfo): JSX.Element =
 function LandingDashboardDeploymentsWidget(): React.ReactElement {
   const { getString } = useStrings()
   const { selectedTimeRange } = useLandingDashboardContext()
-  const { accountId } = useParams<ProjectPathProps>()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [range, setRange] = useState([0, 0])
   const [groupByValue, setGroupByValues] = useState(TimeRangeGroupByMapping[selectedTimeRange])
   const [sortByValue, setSortByValue] = useState<GetDeploymentStatsOverviewQueryParams['sortBy']>('DEPLOYMENTS')
@@ -338,7 +338,9 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
       startTime: range[0],
       endTime: range[1],
       groupBy: groupByValue,
-      sortBy: sortByValue
+      sortBy: sortByValue,
+      projectIdentifier,
+      orgIdentifier
     },
     lazy: true
   })
@@ -357,7 +359,7 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
     refetch()
   }, [refetch, range, groupByValue, sortByValue])
 
-  useErrorHandler(error)
+  useErrorHandler(error as GetDataError<Failure | Error> | null)
 
   const deploymentStatsData = useMemo(() => {
     const successData: number[] = []
@@ -469,7 +471,7 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
       <LandingDashboardDeploymentsNoContentWidget
         loading={loading}
         response={response}
-        error={error}
+        error={error as GetDataError<Failure | Error> | null}
         count={deploymentsStatsSummaryCount}
         refetch={refetch}
         accountId={accountId}

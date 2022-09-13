@@ -57,11 +57,19 @@ export const NGBreadcrumbs: React.FC<Partial<NGBreadcrumbsProps>> = ({
   const isHome = pathname.indexOf(paths.toHome({ accountId: params.accountId })) !== -1
   const isDashBoards = pathname.indexOf(paths.toCustomDashboard({ accountId: params.accountId })) !== -1
 
+  const isProjects = pathname.indexOf(paths.toProjects({ accountId: params.accountId })) !== -1
+
   if (isHome) {
     moduleBreadCrumb = {
       label: getString('common.home'),
       iconProps: { name: 'harness', color: 'primary7' },
       url: resolveUrl(paths.toHome(params))
+    }
+  } else if (isProjects) {
+    moduleBreadCrumb = {
+      label: getString('projectsText'),
+      iconProps: { name: 'nav-project', color: 'primary7' },
+      url: resolveUrl(paths.toAllProjects(params))
     }
   } else if (isDashBoards) {
     moduleBreadCrumb = {

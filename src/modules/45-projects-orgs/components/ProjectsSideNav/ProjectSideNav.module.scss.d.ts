@@ -7,19 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly activityCard: string
-  readonly cardTags: string
-  readonly colorBar: string
-  readonly divider: string
-  readonly enabledModules: string
-  readonly fullWidth: string
-  readonly glanceCard: string
-  readonly glanceCardContainer: string
-  readonly header: string
-  readonly projectDetailsAvatarGroup: string
-  readonly tags: string
-  readonly timeRangeSelect: string
-  readonly title: string
-  readonly wrap: string
+  readonly divStyle: string
+  readonly iconColor: string
 }
 export default styles

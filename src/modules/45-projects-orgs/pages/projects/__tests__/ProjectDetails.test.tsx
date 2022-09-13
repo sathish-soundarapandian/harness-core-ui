@@ -171,7 +171,9 @@ describe('Project Details', () => {
       const back = getByText(container, 'projectsText')
       fireEvent.click(back)
       await waitFor(() => localGetByTestId('location'))
-      expect(localGetByTestId('location').innerHTML.endsWith(routes.toProjects({ accountId: 'testAcc' }))).toBeTruthy()
+      expect(
+        localGetByTestId('location').innerHTML.endsWith(routes.toAllProjects({ accountId: 'testAcc' }))
+      ).toBeTruthy()
     }),
     test('Click on Add Admin', async () => {
       const { container } = render(

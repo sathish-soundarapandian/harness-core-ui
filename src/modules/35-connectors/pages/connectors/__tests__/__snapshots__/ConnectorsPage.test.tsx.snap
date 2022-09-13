@@ -9,7 +9,7 @@ exports[`Connectors Page Test In CV module on clicking createViaYamlButton url s
     <div
       data-testid="location"
     >
-      /account/dummy/home/orgs/default/projects/dummyProject/setup/resources/connectors/yaml/create-connector
+      /account/dummy/projects/orgs/default/projects/dummyProject/setup/resources/connectors/yaml/create-connector
     </div>
   </div>
 </div>

@@ -5,116 +5,38 @@ exports[`Projects Side Nav render 1`] = `
   <div
     class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
   >
-    <div
-      class="Layout--vertical StyledProps--main StyledProps--padding-left-large StyledProps--padding-right-large StyledProps--padding-top-large StyledProps--padding-bottom-small"
-    >
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
-      >
-        projectLabel
-      </p>
-      <div
-        class="projectSelector selectProjectDisplay"
-      >
-        <div
-          class="bp3-popover-wrapper bp3-fill"
-        >
-          <div
-            class="bp3-popover-target"
-          >
-            <button
-              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main popoverTarget selectButton Button--with-current-color Button--without-shadow Button--withRightIcon"
-              data-testid="project-select-button"
-              type="button"
-            >
-              <span
-                class="bp3-button-text"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey400 StyledProps--font-size-normal StyledProps--padding-xsmall"
-                >
-                  selectProject
-                </p>
-              </span>
-              <span
-                class="bp3-icon bp3-icon-chevron-right StyledProps--main"
-                icon="chevron-right"
-              >
-                <svg
-                  data-icon="chevron-right"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  width="16"
-                >
-                  <desc>
-                    chevron-right
-                  </desc>
-                  <path
-                    d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
-                    fill-rule="evenodd"
-                  />
-                </svg>
-              </span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="pickProjectHelp"
-      style="background-image: url(test-file-stub);"
-    >
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey200 StyledProps--padding-small"
-      >
-        pickProject
-      </p>
-    </div>
     <a
-      aria-current="page"
-      class="link selected"
-      href="/account/account/home/orgs/org/projects/project/details"
+      class="link iconColor"
+      href="/account/account/projects/all"
     >
       <p
         class="StyledProps--font StyledProps--main text"
+        style="display: flex; align-items: center;"
       >
-        overview
+        <span
+          class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+          data-icon="nav-project"
+        >
+          <svg
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              clip-rule="evenodd"
+              d="M8.163 1.126a.5.5 0 00-.5 0L2.056 4.36a.5.5 0 00-.25.433v6.234a.5.5 0 00.248.432l5.87 3.415a.5.5 0 00.501 0l5.631-3.259a.5.5 0 00.25-.433V7.478a.5.5 0 00-1 0v3.417l-4.625 2.677.035-5.07 5.34-3.091a.5.5 0 000-.865l-5.894-3.42zM7.717 8.5l-.035 5.077-4.875-2.837V5.66l4.91 2.84zm.502-.865l-4.913-2.84 4.606-2.659 4.897 2.842-4.59 2.657zm-3.864-.068a.5.5 0 10-.5.866l2.165 1.25a.5.5 0 10.5-.866l-2.165-1.25z"
+              fill="currentColor"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+        rbac.scopeItems.allProjects
       </p>
     </a>
-    <div>
-      <div
-        class="border"
-      />
-      <div
-        class="Layout--vertical StyledProps--main main"
-      >
-        <p
-          class="StyledProps--font StyledProps--main text StyledProps--font-xsmall StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-space-between"
-          style="display: flex; align-items: center;"
-        >
-          common.projectSetup
-          <span
-            class="bp3-icon bp3-icon-chevron-down StyledProps--main Text--icon StyledProps--padding-left-xsmall"
-            icon="chevron-down"
-          >
-            <svg
-              data-icon="chevron-down"
-              height="16"
-              viewBox="0 0 16 16"
-              width="16"
-            >
-              <desc>
-                chevron-down
-              </desc>
-              <path
-                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </p>
-      </div>
-    </div>
+    <div
+      class="divStyle"
+    />
   </div>
 </div>
 `;
