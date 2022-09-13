@@ -131,6 +131,10 @@ export function MatrixStepNode(props: any): JSX.Element {
     }
   }, [childrenDimensions])
 
+  React.useEffect(() => {
+    !maxParallelism && setShowAllNodes(true)
+  }, [maxParallelism])
+
   return (
     <>
       <div style={{ position: 'relative' }}>
