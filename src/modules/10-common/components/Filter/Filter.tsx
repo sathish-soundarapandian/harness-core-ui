@@ -190,7 +190,12 @@ const FilterRef = <T, U extends FilterInterface>(props: FilterProps<T, U>, filte
                     isLeftFilterDirty={formik.dirty}
                     initialValues={{ name, filterVisibility, identifier } as U}
                     onClose={closeDrawer}
-                    onDelete={onDelete}
+                    onDelete={id => {
+                      onDelete(id).then(() => {
+                        onClear?.()
+                      })
+                      return Promise.resolve()
+                    }}
                     onFilterSelect={onFilterSelect}
                     ref={filterRef}
                     dataSvcConfig={dataSvcConfig}

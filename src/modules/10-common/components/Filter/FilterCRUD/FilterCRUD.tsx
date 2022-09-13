@@ -239,9 +239,7 @@ const FilterCRUDRef = <T extends FilterInterface>(props: FilterCRUDProps<T>, fil
             text={getString('confirm')}
             onClick={() => {
               if (identifier) {
-                onDelete(identifier).then(_res => {
-                  setIsEditEnabled(false)
-                })
+                onDelete(identifier)
               }
               hideModal()
             }}
@@ -284,9 +282,7 @@ const FilterCRUDRef = <T extends FilterInterface>(props: FilterCRUDProps<T>, fil
             className={css.menuItem}
             onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
               ignoreClickEventDefaultBehaviour(event)
-              handleDuplicate(filter.identifier).then(_res => {
-                setIsEditEnabled(false)
-              })
+              handleDuplicate(filter.identifier)
             }}
           />
           <Menu.Item
