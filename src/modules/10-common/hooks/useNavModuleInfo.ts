@@ -13,6 +13,8 @@ import routes from '@common/RouteDefinitions'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import type { ModuleLicenseDTO } from 'services/cd-ng'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 
 export type NavModuleName =
   | ModuleName.CD
@@ -35,10 +37,12 @@ export const DEFAULT_MODULES_ORDER: NavModuleName[] = [
 ]
 
 interface useNavModuleInfoReturnType {
+  name: NavModuleName
   shouldVisible: boolean
   label: StringKeys
   icon: IconName
   redirectionLink: string
+  licenseType?: ModuleLicenseDTO['licenseType']
 }
 
 interface ModuleInfo {
@@ -102,16 +106,35 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
 const useNavModuleInfo = (modules: NavModuleName[]): useNavModuleInfoReturnType[] => {
   const { accountId } = useParams<AccountPathProps>()
   const featureFlags = useFeatureFlags()
+  const { licenseInformation } = useLicenseStore()
 
   return modules.map(module => {
     const { icon, label, getRedirectLink, featureFlagName } = moduleInfoMap[module]
     return {
+      name: module,
       icon,
       label,
       redirectionLink: getRedirectLink(accountId),
-      shouldVisible: featureFlags[featureFlagName] || false
+      shouldVisible: featureFlags[featureFlagName] || false,
+      licenseType: licenseInformation[module]?.licenseType
     }
   })
+}
+
+export const useNavModuleInfoMap = (): Record<NavModuleName, useNavModuleInfoReturnType> => {
+  const modules = Object.keys(moduleInfoMap) as NavModuleName[]
+  const modulesInfo = useNavModuleInfo(modules)
+
+  const infoMap = modulesInfo.reduce((map, moduleInfo, index) => {
+    return {
+      ...map,
+      [modules[index]]: moduleInfo
+    }
+  }, {})
+
+  // eslint-disable-next-line
+  // @ts-ignore
+  return infoMap as Record<NavModuleName, useNavModuleInfoReturnType>
 }
 
 export default useNavModuleInfo
