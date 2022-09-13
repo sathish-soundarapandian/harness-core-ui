@@ -126,7 +126,7 @@ const listConfig: GroupConfig[] = [
   },
   {
     label: 'common.moduleList.manageImpact',
-    items: [ModuleName.STO, ModuleName.CF]
+    items: [ModuleName.STO, ModuleName.CF, ModuleName.CHAOS]
   },
   {
     label: 'common.moduleList.optimize',
