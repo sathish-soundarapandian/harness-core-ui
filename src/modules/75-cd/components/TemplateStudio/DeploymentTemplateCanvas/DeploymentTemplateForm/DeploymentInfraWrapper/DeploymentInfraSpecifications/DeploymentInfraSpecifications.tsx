@@ -119,6 +119,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
               isDescriptionEnabled={true}
               enableValidation={true}
               allowedConnectorTypes={Object.values(Connectors)}
+              addVariableLabel={getString('variables.newVariable')}
             />
           </Layout.Horizontal>
         </Layout.Vertical>
@@ -190,6 +191,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
                   disableTypeSelection: false,
                   label: fetchScriptWidgetTitle
                 }}
+                addFileLabel={getString('common.plusNewName', { name: getString('common.file') })}
               />
             )}
           </Layout.Horizontal>

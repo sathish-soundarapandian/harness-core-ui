@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { debounce, isEmpty } from 'lodash-es'
+import { debounce, defaultTo, isEmpty } from 'lodash-es'
 import { Formik, FieldArray, FormikProps } from 'formik'
 import { v4 as uuid } from 'uuid'
 import {
@@ -62,7 +62,8 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
     allowableTypes,
     allowedVarialblesTypes,
     isDescriptionEnabled,
-    allowedConnectorTypes
+    allowedConnectorTypes,
+    addVariableLabel
   } = props
   const uids = React.useRef<string[]>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
@@ -259,7 +260,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                       size={ButtonSize.SMALL}
                       variation={ButtonVariation.LINK}
                       onClick={addNew}
-                      text={getString('common.addVariable')}
+                      text={defaultTo(addVariableLabel, getString('common.addVariable'))}
                     />
                   )}
                 </div>

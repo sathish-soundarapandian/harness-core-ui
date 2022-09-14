@@ -63,6 +63,7 @@ export interface MultiTypeMapProps {
   values: string | string[]
   allowableTypes?: AllowedTypes
   fileUsage?: FileUsage
+  addFileLabel?: string
 }
 
 export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactElement {
@@ -83,6 +84,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
     values,
     allowableTypes,
     fileUsage,
+    addFileLabel,
     ...restProps
   } = props
 
@@ -252,7 +254,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                         <Button
                           intent="primary"
                           minimal
-                          text={getString('plusAdd')}
+                          text={defaultTo(addFileLabel, getString('plusAdd'))}
                           data-testid={`add-${name}`}
                           onClick={() => {
                             push('')
