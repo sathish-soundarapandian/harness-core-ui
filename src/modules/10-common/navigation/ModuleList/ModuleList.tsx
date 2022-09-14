@@ -10,10 +10,14 @@ import cx from 'classnames'
 import { Link } from 'react-router-dom'
 import { Classes, Drawer, Position, PopoverInteractionKind } from '@blueprintjs/core'
 import { Color, Container, Icon, Layout, Text, Popover } from '@harness/uicore'
-import { String, StringKeys } from 'framework/strings'
-import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'
-import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
-import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
+import { String } from 'framework/strings'
+import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
+import useNavModuleInfo, {
+  GroupConfig,
+  moduleGroupConfig,
+  NavModuleName,
+  useNavModuleInfoMap
+} from '@common/hooks/useNavModuleInfo'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import NavModule from './NavModule/NavModule'
@@ -36,26 +40,21 @@ interface ModuleTooltipProps {
   handleClick: (module: NavModuleName) => void
 }
 
-interface GroupConfig {
-  label: StringKeys
-  items: NavModuleName[]
-}
-
 interface ItemProps {
   data: NavModuleName
   tooltipProps: ModuleTooltipProps
+  onModuleClick: (module: NavModuleName) => void
 }
 
 interface GroupProps {
   data: GroupConfig
   tooltipProps: ModuleTooltipProps
+  onModuleClick: (module: NavModuleName) => void
 }
 
-const Item: React.FC<ItemProps> = ({ data, tooltipProps }) => {
-  const { redirectionLink, shouldVisible } = useNavModuleInfo([data])[0]
+const Item: React.FC<ItemProps> = ({ data, tooltipProps, onModuleClick }) => {
+  const { redirectionLink, shouldVisible } = useNavModuleInfo(data)
   const { module } = useModuleInfo()
-  const { setPreference: setModuleConfigPreference, preference: { orderedModules = [], selectedModules = [] } = {} } =
-    usePreferenceStore<ModulesPreferenceStoreData>(PreferenceScope.USER, MODULES_CONFIG_PREFERENCE_STORE_KEY)
   const currentModule = module ? moduleToModuleNameMapping[module] : undefined
 
   if (!shouldVisible) {
@@ -65,17 +64,7 @@ const Item: React.FC<ItemProps> = ({ data, tooltipProps }) => {
   return (
     <Link to={redirectionLink}>
       <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
-        <NavModule
-          module={data}
-          active={currentModule === data}
-          onClick={() => {
-            // Adding module to preference store if the User clicks on it
-            setModuleConfigPreference({
-              selectedModules: selectedModules.indexOf(data) > -1 ? selectedModules : [...selectedModules, data],
-              orderedModules
-            })
-          }}
-        />
+        <NavModule module={data} active={currentModule === data} onClick={onModuleClick} />
         <Icon
           name="tooltip-icon"
           padding={'small'}
@@ -94,10 +83,11 @@ const Item: React.FC<ItemProps> = ({ data, tooltipProps }) => {
   )
 }
 
-const Group: React.FC<GroupProps> = ({ data, tooltipProps }) => {
-  const modules = useNavModuleInfo(data.items)
+const Group: React.FC<GroupProps> = ({ data, tooltipProps, onModuleClick }) => {
+  const moduleMap = useNavModuleInfoMap()
+  const visibleItems = data.items.filter(module => !!moduleMap[module].shouldVisible)
 
-  if (modules.filter(module => module.shouldVisible).length === 0) {
+  if (visibleItems.length === 0) {
     return null
   }
 
@@ -108,34 +98,17 @@ const Group: React.FC<GroupProps> = ({ data, tooltipProps }) => {
       </Text>
       <Layout.Vertical spacing="medium">
         {data.items.map(item => (
-          <Item key={item} data={item} tooltipProps={tooltipProps} />
+          <Item key={item} data={item} tooltipProps={tooltipProps} onModuleClick={onModuleClick} />
         ))}
       </Layout.Vertical>
     </Container>
   )
 }
 
-const listConfig: GroupConfig[] = [
-  {
-    label: 'common.moduleList.buildAndTest',
-    items: [ModuleName.CI]
-  },
-  {
-    label: 'common.moduleList.deployChanges',
-    items: [ModuleName.CD]
-  },
-  {
-    label: 'common.moduleList.manageImpact',
-    items: [ModuleName.STO, ModuleName.CF]
-  },
-  {
-    label: 'common.moduleList.optimize',
-    items: [ModuleName.CE, ModuleName.CV]
-  }
-]
-
 const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true, onConfigIconClick }) => {
   const [activeModuleCarousel, setActiveModuleCarousel] = useState<NavModuleName | undefined>(undefined)
+  const { setPreference: setModuleConfigPreference, preference: { orderedModules = [], selectedModules = [] } = {} } =
+    usePreferenceStore<ModulesPreferenceStoreData>(PreferenceScope.USER, MODULES_CONFIG_PREFERENCE_STORE_KEY)
 
   return (
     <>
@@ -176,7 +149,7 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
             </Popover>
           </Container>
           <Layout.Vertical flex spacing="xxxlarge" data-testId="grouplistContainer">
-            {listConfig.map(item => (
+            {moduleGroupConfig.map(item => (
               <Group
                 data={item}
                 key={item.label}
@@ -185,6 +158,14 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
                     setActiveModuleCarousel(module)
                   },
                   activeModule: activeModuleCarousel
+                }}
+                onModuleClick={(module: NavModuleName) => {
+                  setModuleConfigPreference({
+                    selectedModules:
+                      selectedModules.indexOf(module) > -1 ? selectedModules : [...selectedModules, module],
+                    orderedModules
+                  })
+                  close()
                 }}
               />
             ))}

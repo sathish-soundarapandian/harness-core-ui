@@ -26,7 +26,7 @@ const CarouselImageAndDescription: React.FC<CarouselImageAndDescriptionProps> = 
   secondaryText,
   activeModule
 }) => {
-  const { icon } = useNavModuleInfo([activeModule])[0]
+  const { icon } = useNavModuleInfo(activeModule)
 
   return (
     <Layout.Vertical flex={{ justifyContent: 'center' }} height="100%">
