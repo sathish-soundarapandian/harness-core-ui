@@ -133,11 +133,11 @@ describe('Test DeploymentInfraWrapperWithRef', () => {
     )
 
     // addition and removal of infra variables
-    const add = await findByText('common.addVariable')
+    const add = await findByText('variables.newVariable')
     act(() => {
       fireEvent.click(add)
     })
-    await waitFor(() => findAllByText(document.body, 'common.addVariable'))
+    await waitFor(() => findAllByText(document.body, 'variables.newVariable'))
     const name = queryByAttribute('name', document.body.querySelector('.bp3-dialog') as HTMLElement, 'name')
     act(() => {
       fireEvent.change(name!, { target: { value: 'stringVariable' } })

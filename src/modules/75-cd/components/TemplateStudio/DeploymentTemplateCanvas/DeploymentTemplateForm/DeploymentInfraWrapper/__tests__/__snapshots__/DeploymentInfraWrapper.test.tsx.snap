@@ -61,7 +61,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render 1`] = `
                     <span
                       class="bp3-button-text"
                     >
-                      common.addVariable
+                      variables.newVariable
                     </span>
                   </button>
                 </div>
@@ -408,7 +408,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                     <span
                       class="bp3-button-text"
                     >
-                      common.addVariable
+                      variables.newVariable
                     </span>
                   </button>
                 </div>
@@ -722,7 +722,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                         <span
                           class="bp3-button-text"
                         >
-                          plusAdd
+                          common.plusNewName
                         </span>
                       </button>
                     </div>
@@ -1295,7 +1295,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
                     <span
                       class="bp3-button-text"
                     >
-                      common.addVariable
+                      variables.newVariable
                     </span>
                   </button>
                 </div>
@@ -1986,7 +1986,7 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
                     <span
                       class="bp3-button-text"
                     >
-                      common.addVariable
+                      variables.newVariable
                     </span>
                   </button>
                 </div>
