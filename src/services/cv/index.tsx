@@ -602,6 +602,7 @@ export type CEAwsConnector = ConnectorConfigDTO & {
   crossAccountAccess: CrossAccountAccess
   curAttributes?: AwsCurAttributes
   featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  isAWSGovCloudAccount?: boolean
 }
 
 export type CEAzureConnector = ConnectorConfigDTO & {
@@ -1049,6 +1050,8 @@ export interface DataCollectionRequest {
     | 'DYNATRACE_SAMPLE_DATA_REQUEST'
     | 'DYNATRACE_METRIC_LIST_REQUEST'
     | 'SPLUNK_METRIC_SAMPLE_DATA'
+    | 'ELK_SAMPLE_DATA'
+    | 'ELK_INDEX_DATA'
 }
 
 export interface DataCollectionTask {
@@ -1155,6 +1158,7 @@ export interface DatadogMetricHealthDefinition {
 export type DatadogMetricHealthSourceSpec = HealthSourceSpec & {
   feature: string
   metricDefinitions?: DatadogMetricHealthDefinition[]
+  metricPacks?: TimeSeriesMetricPackDTO[]
 }
 
 export interface DemoChangeEventDTO {
@@ -3366,6 +3370,16 @@ export interface PageSLODashboardWidget {
   totalPages?: number
 }
 
+export interface PageSLOHealthListView {
+  content?: SLOHealthListView[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
 export interface PageServiceLevelObjectiveResponse {
   content?: ServiceLevelObjectiveResponse[]
   empty?: boolean
@@ -4181,6 +4195,13 @@ export interface ResponsePageSLODashboardWidget {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponsePageSLOHealthListView {
+  correlationId?: string
+  data?: PageSLOHealthListView
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponsePageServiceLevelObjectiveResponse {
   correlationId?: string
   data?: PageServiceLevelObjectiveResponse
@@ -4958,6 +4979,34 @@ export interface SLOHealthIndicator {
   uuid?: string
 }
 
+export interface SLOHealthListView {
+  burnRate: number
+  description?: string
+  environmentIdentifier: string
+  environmentName: string
+  errorBudgetRemaining: number
+  errorBudgetRemainingPercentage: number
+  errorBudgetRisk: 'EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY'
+  healthSourceIdentifier: string
+  healthSourceName: string
+  monitoredServiceIdentifier: string
+  monitoredServiceName: string
+  name: string
+  noOfActiveAlerts: number
+  noOfMaximumAlerts: number
+  serviceIdentifier: string
+  serviceName: string
+  sloIdentifier: string
+  sloTargetPercentage: number
+  sloTargetType: 'Rolling' | 'Calender'
+  tags?: {
+    [key: string]: string
+  }
+  totalErrorBudget: number
+  userJourneyIdentifier: string
+  userJourneyName: string
+}
+
 export interface SLORiskCountResponse {
   riskCounts?: RiskCount[]
   totalCount?: number
@@ -5218,6 +5267,7 @@ export type StackdriverLogHealthSourceSpec = HealthSourceSpec & {
 
 export type StackdriverMetricHealthSourceSpec = HealthSourceSpec & {
   metricDefinitions?: StackdriverDefinition[]
+  metricPacks?: TimeSeriesMetricPackDTO[]
 }
 
 export type SumoLogicConnectorDTO = ConnectorConfigDTO & {
@@ -5383,12 +5433,13 @@ export interface TimeSeriesMetricDefinition {
   action?: 'FAIL_IMMEDIATELY' | 'FAIL_AFTER_OCCURRENCES' | 'FAIL_AFTER_CONSECUTIVE_OCCURRENCES' | 'IGNORE'
   actionType?: 'IGNORE' | 'FAIL'
   comparisonType?: 'RATIO' | 'DELTA' | 'ABSOLUTE'
+  deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
   metricGroupName?: string
   metricIdentifier?: string
   metricName?: string
   metricType?: 'INFRA' | 'RESP_TIME' | 'THROUGHPUT' | 'ERROR' | 'APDEX' | 'OTHER'
   occurrenceCount?: number
-  thresholdConfigType?: 'CUSTOMER' | 'DEFAULT'
+  thresholdConfigType?: 'DEFAULT' | 'USER_DEFINED'
   thresholdType?: 'ACT_WHEN_LOWER' | 'ACT_WHEN_HIGHER'
   value?: number
 }
@@ -5469,6 +5520,7 @@ export interface TimeSeriesThreshold {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+  deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
   lastUpdatedAt?: number
   metricGroupName?: string
   metricIdentifier: string
@@ -5477,13 +5529,14 @@ export interface TimeSeriesThreshold {
   metricType: 'INFRA' | 'RESP_TIME' | 'THROUGHPUT' | 'ERROR' | 'APDEX' | 'OTHER'
   orgIdentifier: string
   projectIdentifier: string
-  thresholdConfigType?: 'CUSTOMER' | 'DEFAULT'
+  thresholdConfigType?: 'DEFAULT' | 'USER_DEFINED'
   uuid?: string
 }
 
 export interface TimeSeriesThresholdCriteria {
   action?: 'FAIL_IMMEDIATELY' | 'FAIL_AFTER_OCCURRENCES' | 'FAIL_AFTER_CONSECUTIVE_OCCURRENCES' | 'IGNORE'
   criteria?: string
+  deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
   occurrenceCount?: number
   type?: 'RATIO' | 'DELTA' | 'ABSOLUTE'
 }
@@ -5871,7 +5924,7 @@ export type ServiceLevelObjectiveDTORequestBody = ServiceLevelObjectiveDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type SaveMonitoredServiceFromYamlBodyRequestBody = string
+export type SaveMonitoredServiceFromTemplateInputBodyRequestBody = string
 
 export interface ChangeEventListQueryParams {
   serviceIdentifiers?: string[]
@@ -7822,6 +7875,123 @@ export const getDynatraceServicesPromise = (
     signal
   )
 
+export interface GetELKIndicesQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  connectorIdentifier?: string
+  tracingId: string
+}
+
+export type GetELKIndicesProps = Omit<GetProps<ResponseListString, unknown, GetELKIndicesQueryParams, void>, 'path'>
+
+/**
+ * gets indices in ELK
+ */
+export const GetELKIndices = (props: GetELKIndicesProps) => (
+  <Get<ResponseListString, unknown, GetELKIndicesQueryParams, void>
+    path={`/elk/indices`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetELKIndicesProps = Omit<
+  UseGetProps<ResponseListString, unknown, GetELKIndicesQueryParams, void>,
+  'path'
+>
+
+/**
+ * gets indices in ELK
+ */
+export const useGetELKIndices = (props: UseGetELKIndicesProps) =>
+  useGet<ResponseListString, unknown, GetELKIndicesQueryParams, void>(`/elk/indices`, {
+    base: getConfig('cv/api'),
+    ...props
+  })
+
+/**
+ * gets indices in ELK
+ */
+export const getELKIndicesPromise = (
+  props: GetUsingFetchProps<ResponseListString, unknown, GetELKIndicesQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListString, unknown, GetELKIndicesQueryParams, void>(
+    getConfig('cv/api'),
+    `/elk/indices`,
+    props,
+    signal
+  )
+
+export interface GetELKLogSampleDataQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  connectorIdentifier: string
+  tracingId: string
+  index: string
+}
+
+export type GetELKLogSampleDataProps = Omit<
+  MutateProps<ResponseListLinkedHashMap, unknown, GetELKLogSampleDataQueryParams, LogSampleRequestDTORequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * get sample data for a query
+ */
+export const GetELKLogSampleData = (props: GetELKLogSampleDataProps) => (
+  <Mutate<ResponseListLinkedHashMap, unknown, GetELKLogSampleDataQueryParams, LogSampleRequestDTORequestBody, void>
+    verb="POST"
+    path={`/elk/sample-data`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetELKLogSampleDataProps = Omit<
+  UseMutateProps<
+    ResponseListLinkedHashMap,
+    unknown,
+    GetELKLogSampleDataQueryParams,
+    LogSampleRequestDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * get sample data for a query
+ */
+export const useGetELKLogSampleData = (props: UseGetELKLogSampleDataProps) =>
+  useMutate<ResponseListLinkedHashMap, unknown, GetELKLogSampleDataQueryParams, LogSampleRequestDTORequestBody, void>(
+    'POST',
+    `/elk/sample-data`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * get sample data for a query
+ */
+export const getELKLogSampleDataPromise = (
+  props: MutateUsingFetchProps<
+    ResponseListLinkedHashMap,
+    unknown,
+    GetELKLogSampleDataQueryParams,
+    LogSampleRequestDTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseListLinkedHashMap,
+    unknown,
+    GetELKLogSampleDataQueryParams,
+    LogSampleRequestDTORequestBody,
+    void
+  >('POST', getConfig('cv/api'), `/elk/sample-data`, props, signal)
+
 export interface GetAllErrorTrackingClusterDataQueryParams {
   accountId: string
   orgIdentifier: string
@@ -8953,7 +9123,7 @@ export type SaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -8967,7 +9137,7 @@ export const SaveMonitoredServiceFromYaml = (props: SaveMonitoredServiceFromYaml
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
     void
   >
     verb="POST"
@@ -8982,7 +9152,7 @@ export type UseSaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -8996,7 +9166,7 @@ export const useSaveMonitoredServiceFromYaml = (props: UseSaveMonitoredServiceFr
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
     void
   >('POST', `/monitored-service/yaml`, { base: getConfig('cv/api'), ...props })
 
@@ -9008,7 +9178,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -9017,7 +9187,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
     void
   >('POST', getConfig('cv/api'), `/monitored-service/yaml`, props, signal)
 

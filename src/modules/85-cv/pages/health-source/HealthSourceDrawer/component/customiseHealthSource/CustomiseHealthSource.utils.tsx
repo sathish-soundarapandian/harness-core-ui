@@ -26,6 +26,7 @@ import DynatraceHealthSourceContainer from '@cv/pages/health-source/connectors/D
 import CustomHealthLogSource from '@cv/pages/health-source/connectors/CustomHealthLogSource/CustomHealthLogSource'
 import { CustomHealthProduct } from '@cv/pages/health-source/connectors/CustomHealthSource/CustomHealthSource.constants'
 import { SplunkMetricsHealthSource } from '@cv/pages/health-source/connectors/SplunkMetricsHealthSourceV2/SplunkMetricsHealthSource'
+import ElkHealthSource from '@cv/pages/health-source/connectors/ElkHealthSource/ElkHealthSource'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawerContent.types'
 import { SplunkProduct } from '../defineHealthSource/DefineHealthSource.constant'
 
@@ -121,6 +122,9 @@ export const LoadSourceByType = ({
       } else {
         return <SplunkHealthSource data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
       }
+    case Connectors.ELK:
+      return <ElkHealthSource data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
+
     case HealthSourceTypes.SplunkMetric:
       if (!isSplunkMetricEnabled) {
         return null

@@ -123,6 +123,14 @@ export const getFeatureOption = (
         ...optionalFeature
       ]
     }
+    case Connectors.ELK: {
+      return [
+        {
+          value: 'Elk Cloud Logs',
+          label: 'Elk Cloud Logs'
+        }
+      ]
+    }
     case Connectors.CUSTOM_HEALTH:
       return [
         {

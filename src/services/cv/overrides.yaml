@@ -17,6 +17,8 @@ allowpaths:
   - /splunk/validation
   - /splunk/saved-searches
   - /splunk/sample-data
+  - /elk/sample-data
+  - /elk/indices
   - /splunk/metric-sample-data
   - /timeseries/metric-group-data
   - /timeseries/metric-template
