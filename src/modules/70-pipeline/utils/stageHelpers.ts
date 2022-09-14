@@ -450,6 +450,10 @@ export const isConfigFilesPresent = (stage: DeploymentStageElementConfig): boole
   return !!stage.spec?.serviceConfig && !!stage.spec?.serviceConfig.serviceDefinition?.spec.configFiles
 }
 
+export const isCustomDeploymentDataPresent = (stage: DeploymentStageElementConfig): boolean => {
+  return !!stage.spec?.serviceConfig && !!stage.spec?.serviceConfig.serviceDefinition?.spec.customDeploymentRef
+}
+
 export const isServiceEntityPresent = (stage: DeploymentStageElementConfig): boolean => {
   return !!stage.spec?.service?.serviceRef
 }
@@ -473,7 +477,8 @@ export const doesStageContainOtherData = (stage?: DeploymentStageElementConfig):
     isArtifactManifestPresent(stage) ||
     isInfraDefinitionPresent(stage) ||
     isExecutionFieldPresent(stage) ||
-    isConfigFilesPresent(stage)
+    isConfigFilesPresent(stage) ||
+    isCustomDeploymentDataPresent(stage)
   )
 }
 
