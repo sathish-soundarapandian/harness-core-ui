@@ -99,8 +99,7 @@ const CustomDeploymentInfrastructureSpecEditableNew: React.FC<CustomDeploymentIn
                 <StepWidget<CustomVariablesData, CustomVariableEditableExtraProps>
                   factory={factory as unknown as AbstractStepFactory}
                   initialValues={{
-                    variables: defaultTo(formik.values?.variables, []) as AllNGVariables[],
-                    canAddVariable: true
+                    variables: defaultTo(formik.values?.variables, []) as AllNGVariables[]
                   }}
                   stepViewType={StepViewType.StageVariable}
                   type={StepType.CustomVariable}
