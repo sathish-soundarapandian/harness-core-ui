@@ -37,7 +37,6 @@ export const DEFAULT_MODULES_ORDER: NavModuleName[] = [
 ]
 
 interface useNavModuleInfoReturnType {
-  name: NavModuleName
   shouldVisible: boolean
   label: StringKeys
   icon: IconName
@@ -103,32 +102,79 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   }
 }
 
-const useNavModuleInfo = (modules: NavModuleName[]): useNavModuleInfoReturnType[] => {
+export interface GroupConfig {
+  label: StringKeys
+  items: NavModuleName[]
+}
+
+// Grouping of modules with label
+export const moduleGroupConfig: GroupConfig[] = [
+  {
+    label: 'common.moduleList.buildAndTest',
+    items: [ModuleName.CI]
+  },
+  {
+    label: 'common.moduleList.deployChanges',
+    items: [ModuleName.CD]
+  },
+  {
+    label: 'common.moduleList.manageImpact',
+    items: [ModuleName.STO, ModuleName.CF, ModuleName.CHAOS]
+  },
+  {
+    label: 'common.moduleList.optimize',
+    items: [ModuleName.CE, ModuleName.CV]
+  }
+]
+
+const getModuleInfo = (
+  moduleInfo: ModuleInfo,
+  accountId: string,
+  licenseType: ModuleLicenseDTO['licenseType'],
+  shouldVisible = false
+) => {
+  const { icon: moduleIcon, label, getRedirectLink } = moduleInfo
+  return {
+    icon: moduleIcon,
+    label,
+    redirectionLink: getRedirectLink(accountId),
+    shouldVisible: shouldVisible,
+    licenseType: licenseType
+  }
+}
+
+const useNavModuleInfo = (module: NavModuleName) => {
   const { accountId } = useParams<AccountPathProps>()
   const featureFlags = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
 
-  return modules.map(module => {
-    const { icon, label, getRedirectLink, featureFlagName } = moduleInfoMap[module]
-    return {
-      name: module,
-      icon,
-      label,
-      redirectionLink: getRedirectLink(accountId),
-      shouldVisible: featureFlags[featureFlagName] || false,
-      licenseType: licenseInformation[module]?.licenseType
-    }
-  })
+  const { featureFlagName } = moduleInfoMap[module]
+
+  return getModuleInfo(
+    moduleInfoMap[module],
+    accountId,
+    licenseInformation[module]?.licenseType,
+    featureFlags[featureFlagName]
+  ) as useNavModuleInfoReturnType
 }
 
 export const useNavModuleInfoMap = (): Record<NavModuleName, useNavModuleInfoReturnType> => {
-  const modules = Object.keys(moduleInfoMap) as NavModuleName[]
-  const modulesInfo = useNavModuleInfo(modules)
+  const { accountId } = useParams<AccountPathProps>()
+  const featureFlags = useFeatureFlags()
 
-  const infoMap = modulesInfo.reduce((map, moduleInfo, index) => {
+  const { licenseInformation } = useLicenseStore()
+
+  const modules = Object.keys(moduleInfoMap) as NavModuleName[]
+
+  const infoMap = modules.reduce((map, module) => {
     return {
       ...map,
-      [modules[index]]: moduleInfo
+      [module]: getModuleInfo(
+        moduleInfoMap[module],
+        accountId,
+        licenseInformation[module]?.licenseType,
+        featureFlags[moduleInfoMap[module].featureFlagName]
+      )
     }
   }, {})
 

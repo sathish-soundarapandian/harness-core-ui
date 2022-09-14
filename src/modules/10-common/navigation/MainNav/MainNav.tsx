@@ -22,13 +22,8 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ResourceCenter } from '@common/components/ResourceCenter/ResourceCenter'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 
-import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'
-import useNavModuleInfo, {
-  DEFAULT_MODULES_ORDER,
-  NavModuleName,
-  useNavModuleInfoMap
-} from '@common/hooks/useNavModuleInfo'
-import { useModuleInfo } from '@common/hooks/useModuleInfo'
+import { ModuleName } from 'framework/types/ModuleName'
+import { DEFAULT_MODULES_ORDER, NavModuleName, useNavModuleInfoMap } from '@common/hooks/useNavModuleInfo'
 import {
   MODULES_CONFIG_PREFERENCE_STORE_KEY,
   ModulesPreferenceStoreData
@@ -72,19 +67,12 @@ export default function L1Nav(): React.ReactElement {
   const { isOpen: isModuleConfigOpen, toggle: toggleModuleConfig, close: closeModuleConfig } = useToggleOpen(false)
 
   const { currentUserInfo: user } = useAppStore()
-  const { module } = useModuleInfo()
-  const modules = useNavModuleInfo(DEFAULT_MODULES_ORDER)
   const moduleMap = useNavModuleInfoMap()
   const { preference: modulesPreferenceData, setPreference: setModuleConfigPreference } =
     usePreferenceStore<ModulesPreferenceStoreData>(PreferenceScope.USER, MODULES_CONFIG_PREFERENCE_STORE_KEY)
 
   const { selectedModules = [] } = modulesPreferenceData || {}
-  const modulesToShow = [...selectedModules]
-  // if current module is not selecting in the modules config, add it temporarily
-  if (module && !modulesToShow.includes(moduleToModuleNameMapping[module] as NavModuleName)) {
-    modulesToShow.push(moduleToModuleNameMapping[module] as NavModuleName)
-  }
-  const modulesListHeight = 92 * Math.min(maxNumOfModulesToShow, modulesToShow.length)
+  const modulesListHeight = 92 * Math.min(maxNumOfModulesToShow, selectedModules.length)
 
   useLayoutEffect(() => {
     // main nav consists of two UL sections with classname "css.navList"
@@ -103,7 +91,7 @@ export default function L1Nav(): React.ReactElement {
 
   useEffect(() => {
     if (!modulesPreferenceData?.orderedModules?.length) {
-      const modulesWithLicense = modules.filter(m => !!m.licenseType).map(m => m.name)
+      const modulesWithLicense = DEFAULT_MODULES_ORDER.filter(m => !!moduleMap[m].licenseType)
       setModuleConfigPreference({
         selectedModules: modulesWithLicense,
         orderedModules: DEFAULT_MODULES_ORDER

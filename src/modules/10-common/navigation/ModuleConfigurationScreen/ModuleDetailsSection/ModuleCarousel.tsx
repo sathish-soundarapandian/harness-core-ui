@@ -30,7 +30,7 @@ const getComponentBasedOnType = (type: ModuleContentType): React.ComponentType<a
 }
 
 const ModuleCarousel: React.FC<ModuleCarouselProps> = ({ module: selectedModule, data: massagedModuleData }) => {
-  const { icon } = useNavModuleInfo([selectedModule])[0]
+  const { icon } = useNavModuleInfo(selectedModule)
 
   const { label, data = [] } = massagedModuleData || {}
 

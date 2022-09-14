@@ -12,7 +12,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import { Icon } from '@harness/icons'
 import { ModuleName } from 'framework/types/ModuleName'
 import { PageSpinner } from '@common/components'
-import { DEFAULT_MODULES_ORDER, NavModuleName } from '@common/hooks/useNavModuleInfo'
+import { DEFAULT_MODULES_ORDER, NavModuleName, useNavModuleInfoMap } from '@common/hooks/useNavModuleInfo'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { String } from 'framework/strings'
 import ModuleSortableList from './ModuleSortableList/ModuleSortableList'
@@ -83,6 +83,7 @@ const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({
   const { setPreference: setModuleConfigPreference, preference: { orderedModules = [], selectedModules = [] } = {} } =
     usePreferenceStore<ModulesPreferenceStoreData>(PreferenceScope.USER, MODULES_CONFIG_PREFERENCE_STORE_KEY)
   const { contentfulModuleMap, loading } = useGetContentfulModules()
+  const moduleMap = useNavModuleInfoMap()
 
   useEffect(() => {
     if (activeModuleFromProps) {
@@ -106,8 +107,9 @@ const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({
         {!hideHeader ? (
           <ModuleConfigHeader
             onDefaultSettingsClick={() => {
+              const modulesWithLicense = DEFAULT_MODULES_ORDER.filter(m => !!moduleMap[m].licenseType)
               setModuleConfigPreference({
-                selectedModules: [],
+                selectedModules: modulesWithLicense,
                 orderedModules: DEFAULT_MODULES_ORDER
               })
             }}
