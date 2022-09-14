@@ -37,6 +37,7 @@ export class AzureSlotDeployment extends PipelineStep<AzureSlotDeploymentStepInf
   protected stepName = 'Azure Slot Deployment'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.AzureSlotDeployment'
   protected stepIconSize = 25
+  protected referenceId = 'AzureWebAppSlotDeployment'
 
   protected defaultValues = {
     type: StepType.AzureSlotDeployment,

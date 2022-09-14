@@ -38,6 +38,7 @@ export class AzureSwapSlot extends PipelineStep<AzureWebAppSwapSlotStepInfo> {
   protected stepName = 'Azure Swap Slot'
   protected stepDescription: keyof StringsMap = 'cd.azureWebAppSwapSlotDescription'
   protected stepIconSize = 25
+  protected referenceId = 'AzureWebAppSwapSlot'
 
   protected defaultValues = {
     type: StepType.AzureSwapSlot,
