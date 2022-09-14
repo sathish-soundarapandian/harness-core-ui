@@ -52,7 +52,7 @@ export const HEALTHSOURCE_LIST = [
   },
   {
     name: HealthSourceTypes.CloudWatch,
-    icon: getConnectorIconByType(Connectors.ERROR_TRACKING)
+    icon: getConnectorIconByType(Connectors.AWS)
   }
 ]
 

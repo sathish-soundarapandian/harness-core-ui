@@ -26,6 +26,7 @@ import DynatraceHealthSourceContainer from '@cv/pages/health-source/connectors/D
 import CustomHealthLogSource from '@cv/pages/health-source/connectors/CustomHealthLogSource/CustomHealthLogSource'
 import { CustomHealthProduct } from '@cv/pages/health-source/connectors/CustomHealthSource/CustomHealthSource.constants'
 import { SplunkMetricsHealthSource } from '@cv/pages/health-source/connectors/SplunkMetricsHealthSourceV2/SplunkMetricsHealthSource'
+import CloudWatch from '@cv/pages/health-source/connectors/CloudWatch/CloudWatch'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawerContent.types'
 import { SplunkProduct } from '../defineHealthSource/DefineHealthSource.constant'
 
@@ -134,6 +135,8 @@ export const LoadSourceByType = ({
       }
     case Connectors.ERROR_TRACKING:
       return <ErrorTrackingHealthSource data={data} onSubmit={onSubmit} />
+    case Connectors.AWS:
+      return <CloudWatch data={data} onSubmit={onSubmit} />
     default:
       return <></>
   }

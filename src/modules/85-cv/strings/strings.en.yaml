@@ -629,6 +629,8 @@ healthSource:
     customMetrics: Custom Metrics (optional)
     customMetricsTooltip: Add custom metrics
     buildChart: Build Chart
+    CloudWatch:
+      awsSelectorPlaceholder: Select an AWS Region
     NewRelic:
       applicationLabel: Find an NewRelic application
       nrqlQuery: NRQL Query

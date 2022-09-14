@@ -38,6 +38,7 @@ import { healthSourceTypeMapping } from '@cv/pages/monitored-service/MonitoredSe
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import { ConnectorRefFieldName, HEALTHSOURCE_LIST } from './DefineHealthSource.constant'
 import {
+  getConnectorTypeName,
   getFeatureOption,
   getInitialValues,
   modifyCustomHealthFeatureBasedOnFF,
@@ -87,8 +88,20 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
       disabledConnectorsList.push(HealthSourceTypes.Elk)
     }
 
+    if (!isCloudWatchEnabled) {
+      disabledConnectorsList.push(HealthSourceTypes.CloudWatch)
+    }
     return disabledConnectorsList
-  }, [isDynatraceAPMEnabled, isErrorTrackingEnabled, isCustomLogEnabled, isCustomMetricEnabled, isElkEnabled])
+  }, [
+    isCloudWatchEnabled,
+    isCustomLogEnabled,
+    isCustomMetricEnabled,
+    isDynatraceAPMEnabled,
+    isErrorTrackingEnabled,
+    isCustomLogEnabled,
+    isCustomMetricEnabled,
+    isElkEnabled
+  ])
 
   const initialValues = useMemo(() => {
     return getInitialValues(sourceData, getString)
@@ -222,8 +235,8 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
                         >
                           {HEALTHSOURCE_LIST.filter(({ name }) => !disabledByFF.includes(name)).map(
                             ({ name, icon }) => {
-                              const connectorTypeName =
-                                name === HealthSourceTypes.GoogleCloudOperations ? Connectors.GCP : name
+                              const connectorTypeName = getConnectorTypeName(name)
+
                               return (
                                 <div key={name} className={cx(css.squareCardContainer, isEdit && css.disabled)}>
                                   <Card

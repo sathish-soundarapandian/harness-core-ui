@@ -15,6 +15,7 @@ import { PrometheusProductNames } from '@cv/pages/health-source/connectors/Prome
 import { DatadogProduct } from '@cv/pages/health-source/connectors/DatadogMetricsHealthSource/DatadogMetricsHealthSource.utils'
 import { ErrorTrackingProductNames } from '@cv/pages/health-source/connectors/ErrorTrackingHealthSource/ErrorTrackingHealthSource.utils'
 import { CustomHealthProduct } from '@cv/pages/health-source/connectors/CustomHealthSource/CustomHealthSource.constants'
+import { CloudWatchProductNames } from '@cv/pages/health-source/connectors/CloudWatch/CloudWatchConstants'
 import {
   NewRelicProductNames,
   ConnectorRefFieldName,
@@ -22,7 +23,6 @@ import {
   DynatraceProductNames
 } from './DefineHealthSource.constant'
 import type { DefineHealthSourceFormInterface } from './DefineHealthSource.types'
-import { CloudWatchProductNames } from '@cv/pages/health-source/connectors/CloudWatch/CloudWatchConstants'
 
 export const validate = (getString: UseStringsReturn['getString']) => {
   return Yup.object().shape({
@@ -43,6 +43,23 @@ export const validateDuplicateIdentifier = (values: DefineHealthSourceFormInterf
   if (healthSourceList?.some(item => item.identifier === healthSourceIdentifier)) {
     return { healthSourceName: 'identifier already exist' }
   }
+}
+
+export const getConnectorTypeName = (name: HealthSourceTypes): string => {
+  let connectorTypeName
+
+  switch (name) {
+    case HealthSourceTypes.GoogleCloudOperations:
+      connectorTypeName = Connectors.GCP
+      break
+    case HealthSourceTypes.CloudWatch:
+      connectorTypeName = Connectors.AWS
+      break
+    default:
+      connectorTypeName = name
+  }
+
+  return connectorTypeName
 }
 
 export const getFeatureOption = (
@@ -143,7 +160,7 @@ export const getFeatureOption = (
         }
       ]
 
-    case Connectors.CLOUD_WATCH:
+    case Connectors.AWS:
       return [
         {
           value: CloudWatchProductNames.METRICS,
