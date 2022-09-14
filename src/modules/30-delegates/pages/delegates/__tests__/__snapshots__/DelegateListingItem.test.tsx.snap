@@ -29,7 +29,7 @@ exports[`DelegateListingHeader test render DelegateListingHeader 1`] = `
       delegate.LastHeartBeat
     </div>
     <div
-      style="width: 15%;"
+      style="width: 14%;"
     >
       connectivityStatus
     </div>
@@ -153,7 +153,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
       </div>
       <div
         class="StyledProps--font StyledProps--main connectivity StyledProps--padding-left-large"
-        style="width: 18%;"
+        style="width: 17%;"
       >
         <p
           class="StyledProps--font Text--lineclamp StyledProps--main"
@@ -191,7 +191,7 @@ exports[`Delegates Listing With Groups render data 1`] = `
       />
       <div
         class="Layout--horizontal StyledProps--main"
-        style="width: 13%;"
+        style="width: 14%;"
       >
         dummy date
       </div>

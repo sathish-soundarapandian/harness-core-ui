@@ -423,7 +423,7 @@ exports[`Test delegate buttons click on filter 1`] = `
               delegate.LastHeartBeat
             </div>
             <div
-              style="width: 15%;"
+              style="width: 14%;"
             >
               connectivityStatus
             </div>
@@ -527,7 +527,7 @@ exports[`Test delegate buttons click on filter 1`] = `
               </div>
               <div
                 class="StyledProps--font StyledProps--main connectivity StyledProps--padding-left-large"
-                style="width: 18%;"
+                style="width: 17%;"
               >
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main"
@@ -565,7 +565,7 @@ exports[`Test delegate buttons click on filter 1`] = `
               />
               <div
                 class="Layout--horizontal StyledProps--main"
-                style="width: 13%;"
+                style="width: 14%;"
               >
                 dummy date
               </div>
@@ -885,7 +885,7 @@ exports[`Test delegate buttons click on new delegate 1`] = `
               delegate.LastHeartBeat
             </div>
             <div
-              style="width: 15%;"
+              style="width: 14%;"
             >
               connectivityStatus
             </div>
@@ -989,7 +989,7 @@ exports[`Test delegate buttons click on new delegate 1`] = `
               </div>
               <div
                 class="StyledProps--font StyledProps--main connectivity StyledProps--padding-left-large"
-                style="width: 18%;"
+                style="width: 17%;"
               >
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main"
@@ -1027,7 +1027,7 @@ exports[`Test delegate buttons click on new delegate 1`] = `
               />
               <div
                 class="Layout--horizontal StyledProps--main"
-                style="width: 13%;"
+                style="width: 14%;"
               >
                 dummy date
               </div>
