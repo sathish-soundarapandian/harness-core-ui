@@ -1409,9 +1409,6 @@ export type AzureWebAppInfrastructure = Infrastructure & {
   resourceGroup: string
   subscriptionId: string
 }
-export type CustomDeploymentInfrastructure = Infrastructure & {
-  variables: Array<CustomDeploymentInfraNGVariable>
-}
 
 export type AzureWebAppInfrastructureDetails = InfrastructureDetails & {
   resourceGroup?: string
@@ -2283,7 +2280,7 @@ export type CustomArtifactSummary = ArtifactSummary & {
 
 export type CustomDeploymentInfrastructure = Infrastructure & {
   metadata?: string
-  variables: NGVariable[]
+  variables: Array<CustomDeploymentInfraNGVariable>
 }
 
 export type CustomDeploymentInstanceInfoDTO = InstanceInfoDTO & {
