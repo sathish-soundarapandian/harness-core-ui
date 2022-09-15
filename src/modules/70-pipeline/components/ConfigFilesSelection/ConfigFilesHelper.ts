@@ -43,7 +43,7 @@ export const allowedConfigFilesTypes: Record<ServiceDefinition['type'], Array<Co
   Ssh: [ConfigFilesMap.Harness],
   WinRm: [ConfigFilesMap.Harness],
   ECS: [ConfigFilesMap.Harness],
-  CustomDeployment: []
+  CustomDeployment: [ConfigFilesMap.Harness]
 }
 
 export const ConfigFilesToConnectorLabelMap: Record<ConfigFileType, StringKeys> = {
