@@ -20,7 +20,8 @@ import {
   SelectOption,
   TableV2,
   Text,
-  IconName
+  IconName,
+  ExpandingSearchInput
 } from '@wings-software/uicore'
 
 import { Color, FontVariation } from '@harness/design-system'
