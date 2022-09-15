@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import Contentful, { ContentfulEnvironment } from '@common/Contentful'
+import Contentful, { ContentfulEnvironment } from '../Contentful'
 
 jest.mock('contentful', () => {
   return {

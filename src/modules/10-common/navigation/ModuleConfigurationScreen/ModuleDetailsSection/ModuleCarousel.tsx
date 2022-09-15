@@ -12,7 +12,7 @@ import { Container, Layout, Text, FontVariation, Color, Carousel } from '@harnes
 import useNavModuleInfo, { NavModuleName } from '@common/hooks/useNavModuleInfo'
 import { MassagedModuleData, ModuleContentType } from '../useGetContentfulModules'
 import CarouselImageAndDescription from '../CarousellmageAndDescription/CarousellmageAndDescription'
-import LottieComponent from '../LottieComponent/LottieComponent'
+import LottieRenderer from '../LottieRenderer/LottieRenderer'
 import defaultLottie from './default_lottie.json'
 import css from './ModuleCarousel.module.scss'
 
@@ -24,7 +24,7 @@ export interface ModuleCarouselProps {
 const getComponentBasedOnType = (type: ModuleContentType): React.ComponentType<any> => {
   const componentMap: Record<ModuleContentType, React.ComponentType<any>> = {
     [ModuleContentType.CENTER_ALIGNED_IMAGE_DESC]: CarouselImageAndDescription,
-    [ModuleContentType.LOTTIE]: LottieComponent
+    [ModuleContentType.LOTTIE]: LottieRenderer
   }
   return componentMap[type]
 }

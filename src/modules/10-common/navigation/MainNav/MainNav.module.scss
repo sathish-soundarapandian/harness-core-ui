@@ -48,10 +48,6 @@
       background: var(--modules-container-bg);
       border-bottom: 1px solid var(--modules-container-border);
       border-top: 1px solid var(--modules-container-border);
-      &::-webkit-scrollbar {
-        width: 0px;
-        background: transparent; /* make scrollbar transparent */
-      }
     }
   }
 

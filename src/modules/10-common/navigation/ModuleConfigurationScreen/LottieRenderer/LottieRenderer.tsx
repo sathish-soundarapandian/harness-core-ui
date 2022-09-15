@@ -16,7 +16,7 @@ interface LottieComponentProps {
   json: Asset
 }
 
-const LottieComponent: React.FC<LottieComponentProps> = ({ json: asset }) => {
+const LottieRenderer: React.FC<LottieComponentProps> = ({ json: asset }) => {
   const [lottieJson, setLottieJson] = useState<object | undefined>(undefined)
   const [loading, setLoading] = useState(false)
 
@@ -33,7 +33,6 @@ const LottieComponent: React.FC<LottieComponentProps> = ({ json: asset }) => {
   }, [lottieJson])
 
   if (loading) {
-    // Check if we can add loader here, otherwise create a utility to cache the data.
     return null
   }
 
@@ -44,4 +43,4 @@ const LottieComponent: React.FC<LottieComponentProps> = ({ json: asset }) => {
   )
 }
 
-export default LottieComponent
+export default LottieRenderer

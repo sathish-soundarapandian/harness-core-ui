@@ -53,7 +53,7 @@ interface GroupProps {
 }
 
 const Item: React.FC<ItemProps> = ({ data, tooltipProps, onModuleClick }) => {
-  const { redirectionLink, shouldVisible } = useNavModuleInfo(data)
+  const { homePageUrl, shouldVisible } = useNavModuleInfo(data)
   const { module } = useModuleInfo()
   const currentModule = module ? moduleToModuleNameMapping[module] : undefined
 
@@ -62,7 +62,7 @@ const Item: React.FC<ItemProps> = ({ data, tooltipProps, onModuleClick }) => {
   }
 
   return (
-    <Link to={redirectionLink}>
+    <Link to={homePageUrl}>
       <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
         <NavModule module={data} active={currentModule === data} onClick={onModuleClick} />
         <Icon

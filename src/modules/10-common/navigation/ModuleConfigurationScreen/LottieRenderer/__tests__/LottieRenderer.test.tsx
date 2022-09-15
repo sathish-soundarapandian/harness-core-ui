@@ -9,7 +9,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ModuleName } from 'framework/types/ModuleName'
-import LottieComponent from '../LottieComponent'
+import LottieRenderer from '../LottieRenderer'
 
 jest.mock('react-lottie-player', () => {
   return () => <div>lottie</div>
@@ -30,7 +30,7 @@ describe('lottie component test', () => {
     })
     const { container } = render(
       <TestWrapper>
-        <LottieComponent
+        <LottieRenderer
           activeModule={ModuleName.CD}
           json={{
             fields: {

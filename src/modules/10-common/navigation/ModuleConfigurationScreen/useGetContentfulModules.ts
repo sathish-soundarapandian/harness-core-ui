@@ -7,8 +7,8 @@
 
 import { useEffect, useState } from 'react'
 import type { Entry, Asset } from 'contentful'
-import Contentful from '@common/Contentful'
 import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
+import Contentful, { ContentfulEnvironment } from './Contentful'
 
 const CONTENT_TYPE = 'module'
 
@@ -57,7 +57,17 @@ const useGetContentfulModules = (): UseGetContentfulModulesReturnType => {
   useEffect(() => {
     // Try to cache this data
     /* istanbul ignore next */
-    if (!moduleContentfulDataMap) {
+    if (
+      !moduleContentfulDataMap &&
+      window.newNavContentfulAccessToken &&
+      window.newNavContetfulSpace &&
+      window.newNavContentfulEnvironment
+    ) {
+      Contentful.initialise(
+        window.newNavContentfulAccessToken,
+        window.newNavContetfulSpace,
+        window.newNavContentfulEnvironment as ContentfulEnvironment
+      )
       setLoading(true)
       Contentful.getClient()
         .getEntries<ContentfulModulesResponse>({
