@@ -91,7 +91,7 @@ describe('<TemplateDetails /> tests', () => {
   test('should show selected version label', async () => {
     const { getByTestId } = render(
       <TestWrapper>
-        <ComponentWrapper {...baseProps} allowStableSelection={true} />
+        <ComponentWrapper {...baseProps} isStandAlone />
       </TestWrapper>
     )
     const dropValue = getByTestId('dropdown-value')
@@ -104,7 +104,7 @@ describe('<TemplateDetails /> tests', () => {
     })
     const { getByTestId } = render(
       <TestWrapper>
-        <ComponentWrapper {...newBaseProps} allowStableSelection={true} />
+        <ComponentWrapper {...newBaseProps} isStandAlone />
       </TestWrapper>
     )
     const dropValue = getByTestId('dropdown-value')

@@ -186,6 +186,7 @@ pipelineSteps:
     newServiceOverride: New configuration overrides
     multiServicesText: Deploy to multiple Services
     multiServicesTitleText: Deploy to multiple services?
+    multiServicesParallelDeployLabel: Deploy services in parallel?
     multiServicesConfirmationText: Are you sure you want to switch to deploying multiple services?. If you choose to proceed, your existing service will be migrated automatically.
     singleServicesTitleText: Deploy to single service?
     singleServicesConfirmationText: Are you sure you want to switch to deploying to a single services?. If you choose to proceed, your existing services will be lost.

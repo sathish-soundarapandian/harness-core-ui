@@ -18,7 +18,7 @@ import { TemplateInputs } from '@templates-library/components/TemplateInputs/Tem
 export class DeploymentTemplate extends Template {
   protected type = TemplateType.CustomDeployment
   protected label = 'Deployment'
-  protected icon: IconName = 'template-library'
+  protected icon: IconName = 'CustomDeployment'
   protected allowedScopes = [Scope.PROJECT, Scope.ORG, Scope.ACCOUNT]
   protected colorMap = {
     color: '#558B2F',

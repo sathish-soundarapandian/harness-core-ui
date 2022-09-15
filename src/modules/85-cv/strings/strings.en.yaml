@@ -785,6 +785,7 @@ SLOPerformanceTrend: SLO Performance Trend
 sloGraphUserHint: To view anomalies, metrics and logs for a specific time window, click the time slot on the timeline. To expand or contract the time window, simply drag the handles.
 sloRecalculationInProgress: SLO recalculation in progress
 errorBudgetRecalculationInProgress: Error Budget recalculation in progress
+sloAnalysisTakingLong: The SLO analysis is taking too long. Please check the execution logs and third party API call logs.
 errorBudgetRemaining: Error Budget Remaining
 errorBudgetRemainingWithMins: Error Budget Remaining (mins)
 minutesRemaining: minutes remaining

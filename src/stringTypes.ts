@@ -2974,6 +2974,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.artifactType': string
   'pipeline.artifactsSelection.artifactTyperequired': string
   'pipeline.artifactsSelection.artifactsArrayPath': string
+  'pipeline.artifactsSelection.azureArtifactRegistryTitle': string
   'pipeline.artifactsSelection.delegateselectionPlaceholder': string
   'pipeline.artifactsSelection.errors.noRepositories': string
   'pipeline.artifactsSelection.existingDocker.enterTagRegex': string
@@ -3656,6 +3657,7 @@ export interface StringsMap {
   'pipeline.phasesForm.packageTypes.tar': string
   'pipeline.phasesForm.packageTypes.war': string
   'pipeline.phasesForm.packageTypes.zip': string
+  'pipeline.phasesForm.packageTypesWinrm.application': string
   'pipeline.phasesForm.packageTypesWinrm.virtualDir': string
   'pipeline.phasesForm.packageTypesWinrm.website': string
   'pipeline.phasesForm.phase': string
@@ -4534,6 +4536,7 @@ export interface StringsMap {
   'cd.pipelineSteps.serviceTab.manifest.serviceDefinition': string
   'cd.pipelineSteps.serviceTab.manifest.taskDefinition': string
   'cd.pipelineSteps.serviceTab.multiServicesConfirmationText': string
+  'cd.pipelineSteps.serviceTab.multiServicesParallelDeployLabel': string
   'cd.pipelineSteps.serviceTab.multiServicesText': string
   'cd.pipelineSteps.serviceTab.multiServicesTitleText': string
   'cd.pipelineSteps.serviceTab.newService': string
@@ -7295,6 +7298,7 @@ export interface StringsMap {
   'cv.showingLogs': string
   'cv.showingLogsFor': string
   'cv.sliMissingDataTypeIsRequired': string
+  'cv.sloAnalysisTakingLong': string
   'cv.sloGraphUserHint': string
   'cv.sloRecalculationInProgress': string
   'cv.slos.backToSLI': string

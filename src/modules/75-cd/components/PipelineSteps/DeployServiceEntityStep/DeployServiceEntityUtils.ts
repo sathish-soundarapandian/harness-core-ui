@@ -25,6 +25,7 @@ export interface ServicesWithInputs {
   services: SelectOption[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   serviceInputs: Record<string, any>
+  parallel?: boolean
 }
 
 export interface FormState {
@@ -32,6 +33,7 @@ export interface FormState {
   service?: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   serviceInputs?: Record<string, any>
+  parallel?: boolean
 }
 
 export interface DeployServiceEntityCustomProps {
@@ -55,23 +57,28 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
       test(value: FormState) {
         const message = getString('cd.pipelineSteps.serviceTab.serviceIsRequired')
         // check for service
+        /* istanbul ignore else */
         if (isNil(value.services) && !value.service) {
           return this.createError({ message, path: 'service' })
         }
 
         // check for services
+        /* istanbul ignore else */
         if (isNil(value.service) && !isNil(value.services)) {
           // services must have at least one row and every row must have a value defined
+          /* istanbul ignore else */
           if (Array.isArray(value.services)) {
             const hasValues =
               value.services.length > 0 &&
               value.services.every(row => typeof row.value === 'string' && row.value.length > 0)
 
+            /* istanbul ignore else */
             if (hasValues) {
               return true
             }
           }
 
+          /* istanbul ignore else */
           if (value.services) {
             return true
           }

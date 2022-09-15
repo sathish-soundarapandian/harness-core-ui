@@ -42,8 +42,17 @@ const DIALOG_PROPS: Omit<IDialogProps, 'isOpen'> = {
   style: { width: 1114 }
 }
 
-export const ToggleAccordionCell: Renderer<{ row: UseExpandedRowProps<object> }> = ({ row }) => {
-  return <Icon name={row.isExpanded ? 'chevron-down' : 'chevron-right'} {...row.getToggleRowExpandedProps()} />
+export const ToggleAccordionCell: Renderer<{ row: Row<ServiceData> & UseExpandedRowProps<ServiceData> }> = ({
+  row
+}) => {
+  return (
+    <Button
+      variation={ButtonVariation.ICON}
+      icon={row.isExpanded ? 'chevron-down' : 'chevron-right'}
+      data-testid={`edit-service-${row.original.service.identifier}`}
+      {...row.getToggleRowExpandedProps()}
+    />
+  )
 }
 
 export interface ServiceInputsProps {
@@ -132,7 +141,7 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
       onRemoveServiceFormList(serviceToDelete.service.identifier)
     }
     closeDeleteConfirmation()
-    setServiceToDelete(null)
+    onCloseEditModal()
   }
 
   function onCloseEditModal(): void {
@@ -140,7 +149,7 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
   }
 
   function handleServiceEntityUpdate(val: ServiceYaml): void {
-    setServiceToEdit(null)
+    onCloseEditModal()
     onServiceEntityUpdate(val)
   }
 
@@ -149,13 +158,13 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
       {
         Header: '',
         id: 'expander',
-        width: '20px',
+        width: '32px',
         Cell: ToggleAccordionCell
       },
       {
         Header: '',
         id: 'svc',
-        width: 'calc(100% - 120px)',
+        width: 'calc(100% - 96px)',
         Cell({ row }: CellProps<ServiceData>) {
           const type = row.original.service.serviceDefinition?.type as ServiceDeploymentType
           return (
@@ -176,19 +185,21 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
       {
         Header: '',
         id: 'actions',
-        width: '100px',
+        width: '64px',
         Cell({ row }: CellProps<ServiceData>) {
           return (
             <div>
               <Button
                 variation={ButtonVariation.ICON}
                 icon="edit"
+                data-testid={`edit-service-${row.original.service.identifier}`}
                 disabled={readonly}
                 onClick={() => setServiceToEdit(row.original)}
               />
               <Button
                 variation={ButtonVariation.ICON}
                 icon="trash"
+                data-testid={`delete-service-${row.original.service.identifier}`}
                 disabled={readonly}
                 onClick={() => setServiceToDelete(row.original)}
               />

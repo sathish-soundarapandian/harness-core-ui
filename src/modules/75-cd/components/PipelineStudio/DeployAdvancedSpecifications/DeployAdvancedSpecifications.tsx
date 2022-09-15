@@ -18,7 +18,8 @@ import { FailureStrategyWithRef } from '@pipeline/components/PipelineStudio/Fail
 import { DelegateSelectorWithRef } from '@pipeline/components/PipelineStudio/DelegateSelector/DelegateSelector'
 import type { StepFormikRef } from '@pipeline/components/PipelineStudio/StepCommands/StepCommands'
 import ConditionalExecution from '@pipeline/components/PipelineStudio/ConditionalExecution/ConditionalExecution'
-import SkipInstances from '@pipeline/components/PipelineStudio/SkipInstances/SkipInstances'
+import MultiTypeSkipInstances from '@pipeline/components/PipelineStudio/SkipInstances/MultiTypeSkipInstances'
+
 import { useStrings } from 'framework/strings'
 import DeployServiceErrors from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
@@ -201,27 +202,7 @@ const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childr
         </Card>
         {SSH_NG && getSshOrWinRmType() ? (
           <div data-testid="skip-instances" className={stageCss.tabHeading}>
-            <SkipInstances
-              selectedStage={stage?.stage}
-              isReadonly={isReadonly}
-              onUpdate={checked => {
-                const { stage: pipelineStage } = getStageFromPipeline(selectedStageId)
-
-                if (pipelineStage?.stage) {
-                  const stageData = produce(pipelineStage, draft => {
-                    if (!checked) {
-                      unset(draft, 'stage.skipInstances')
-                    } else {
-                      set(draft, 'stage.skipInstances', checked)
-                    }
-                  })
-                  /* istanbul ignore else */
-                  if (stageData.stage) {
-                    updateStage(stageData.stage)
-                  }
-                }
-              }}
-            />
+            <MultiTypeSkipInstances value={stage?.stage?.skipInstances} />
           </div>
         ) : null}
         <Container margin={{ top: 'xxlarge' }}>{children}</Container>

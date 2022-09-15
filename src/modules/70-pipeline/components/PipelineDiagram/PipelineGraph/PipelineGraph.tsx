@@ -49,6 +49,7 @@ export interface PipelineGraphProps {
   showEndNode?: boolean
   graphActionsLayout?: 'horizontal' | 'vertical'
   graphLinkClassname?: string
+  optimizeRender?: boolean
 }
 
 function PipelineGraph({
@@ -65,7 +66,8 @@ function PipelineGraph({
   createNodeTitle,
   showEndNode = true,
   graphActionsLayout = 'vertical',
-  graphLinkClassname
+  graphLinkClassname,
+  optimizeRender
 }: PipelineGraphProps): React.ReactElement {
   const [svgPath, setSvgPath] = useState<SVGPathRecord[]>([])
 
@@ -220,6 +222,7 @@ function PipelineGraph({
                 parentSelector={parentSelector}
                 createNodeTitle={createNodeTitle}
                 showEndNode={showEndNode}
+                optimizeRender={optimizeRender}
               />
             </div>
           </div>

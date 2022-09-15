@@ -228,6 +228,7 @@
   border-radius: 4px;
   margin-right: var(--spacing-small) !important;
   margin-bottom: auto !important;
+  margin-top: auto !important;
 }
 
 .tickerContainer {
@@ -236,9 +237,13 @@
 
 .instanceStatus {
   height: fit-content;
-  padding-left: 2px !important;
+  padding-left: 6px !important;
 }
 
 .paddingLeft {
-  padding-left: 55px !important;
+  padding-left: 32px !important;
+}
+
+.marginLeft {
+  margin-left: 8px !important;
 }

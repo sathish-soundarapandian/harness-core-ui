@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
   Formik,
   Layout,
@@ -39,13 +39,20 @@ import {
   TagTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { ConnectorConfigDTO, GARBuildDetailsDTO, useGetBuildDetailsForGoogleArtifactRegistry } from 'services/cd-ng'
+import {
+  ConnectorConfigDTO,
+  GARBuildDetailsDTO,
+  RegionGar,
+  useGetBuildDetailsForGoogleArtifactRegistry,
+  useGetRegionsForGoogleArtifactRegistry
+} from 'services/cd-ng'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
 import { getHelpeTextForTags } from '@pipeline/utils/stageHelpers'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
-import { ArtifactIdentifierValidation, ModalViewFor, regions, tagOptions } from '../../../ArtifactHelper'
+import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../../ArtifactConnector.module.scss'
@@ -78,6 +85,7 @@ function FormComponent(
   } = props
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const [regions, setRegions] = useState<SelectOption[]>([])
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const commonParams = {
     accountIdentifier: accountId,
@@ -108,6 +116,17 @@ function FormComponent(
       repositoryName: repositoryNameValue
     }
   })
+  const { data: regionsData } = useGetRegionsForGoogleArtifactRegistry({})
+
+  useEffect(() => {
+    if (regionsData?.data) {
+      setRegions(
+        regionsData?.data?.map((item: RegionGar) => {
+          return { label: item.name, value: item.value } as SelectOption
+        })
+      )
+    }
+  }, [regionsData])
 
   const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
     <div key={item.label.toString()}>
@@ -290,6 +309,7 @@ function FormComponent(
           <div className={css.jenkinsFieldContainer}>
             <FormInput.MultiTypeInput
               selectItems={getBuilds()}
+              disabled={!isAllFieldsAreFixed()}
               label={getString('version')}
               placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
               name="spec.version"
@@ -317,7 +337,13 @@ function FormComponent(
                   items: getBuilds(),
                   allowCreatingNewItems: true
                 },
-                onFocus: () => {
+                onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                  if (
+                    e?.target?.type !== 'text' ||
+                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                  ) {
+                    return
+                  }
                   if (isAllFieldsAreFixed()) {
                     refetchBuildDetails({
                       queryParams: {

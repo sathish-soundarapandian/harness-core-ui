@@ -69,6 +69,7 @@ export interface CustomVariableEditableExtraProps {
   isDescriptionEnabled?: boolean
   headerComponent?: JSX.Element
   allowedConnectorTypes?: ConnectorInfoDTO['type'] | ConnectorInfoDTO['type'][]
+  addVariableLabel?: string
 }
 
 export interface CustomVariableEditableProps extends CustomVariableEditableExtraProps {

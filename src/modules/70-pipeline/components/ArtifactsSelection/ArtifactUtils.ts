@@ -313,7 +313,7 @@ export const getGithubPackageRegistryFormData = (
 }
 
 export const isFieldFixedAndNonEmpty = (field: string): boolean => {
-  return getMultiTypeFromValue(field) === MultiTypeInputType.FIXED && field?.length > 0
+  return getMultiTypeFromValue(field) === MultiTypeInputType.FIXED ? field?.length > 0 : true
 }
 
 export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): any => {
@@ -329,7 +329,7 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
           region: '',
           repositoryName: '',
           package: '',
-          version: ''
+          version: RUNTIME_INPUT_VALUE
         }
       }
     case ENABLED_ARTIFACT_TYPES.Jenkins:

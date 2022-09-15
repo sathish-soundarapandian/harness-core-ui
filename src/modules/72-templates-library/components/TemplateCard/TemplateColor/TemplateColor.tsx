@@ -33,7 +33,7 @@ export const StyledTrapazoidTitleContainer = styled.div`
     content: '';
     position: absolute;
     top: -10px;
-    bottom: -2px;
+    bottom: -1px;
     left: 0;
     right: 0;
     border: 1px solid ${(props: StyledTrapazoidTitleContainerInterface) => props.stroke};

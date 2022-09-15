@@ -241,9 +241,7 @@ const dispatchTemplateSuccess = async (args: DispatchTemplateSuccessArgs): Promi
         versions: versions,
         lastPublishedVersion,
         stableVersion: data.stableVersion,
-        gitDetails: templateWithGitDetails?.gitDetails?.objectId
-          ? templateWithGitDetails.gitDetails
-          : defaultTo(data?.gitDetails, {}),
+        gitDetails: templateWithGitDetails?.gitDetails ?? defaultTo(data?.gitDetails, {}),
         entityValidityDetails: defaultTo(
           templateWithGitDetails?.entityValidityDetails,
           defaultTo(data?.entityValidityDetails, {})
@@ -264,9 +262,7 @@ const dispatchTemplateSuccess = async (args: DispatchTemplateSuccessArgs): Promi
       versions: versions,
       lastPublishedVersion,
       stableVersion: stableVersion,
-      gitDetails: templateWithGitDetails?.gitDetails?.objectId
-        ? templateWithGitDetails.gitDetails
-        : defaultTo(data?.gitDetails, {}),
+      gitDetails: templateWithGitDetails?.gitDetails ?? defaultTo(data?.gitDetails, {}),
       storeMetadata,
       entityValidityDetails: defaultTo(
         templateWithGitDetails?.entityValidityDetails,
@@ -306,7 +302,7 @@ const dispatchTemplateSuccess = async (args: DispatchTemplateSuccessArgs): Promi
         versions: versions,
         lastPublishedVersion,
         stableVersion: stableVersion,
-        gitDetails: templateWithGitDetails?.gitDetails?.objectId ? templateWithGitDetails.gitDetails : {},
+        gitDetails: templateWithGitDetails?.gitDetails ?? {},
         storeMetadata,
         entityValidityDetails: defaultTo(templateWithGitDetails?.entityValidityDetails, {}),
         templateYaml: templateYamlStr,

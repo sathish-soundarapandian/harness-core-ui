@@ -46,6 +46,15 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetRepositoriesDetailsForArtifactory: jest.fn().mockImplementation(() => {
     return { data: {}, refetch: jest.fn(), error: null, loading: false }
+  }),
+  useGetV2BucketListForS3: jest.fn().mockImplementation(() => {
+    return { data: { data: ['bucket1'] }, refetch: jest.fn(), error: null, loading: false }
+  })
+}))
+
+jest.mock('services/portal', () => ({
+  useListAwsRegions: jest.fn().mockImplementation(() => {
+    return { data: { data: ['region1'] }, refetch: jest.fn(), error: null, loading: false }
   })
 }))
 
@@ -629,5 +638,44 @@ describe('ArtifactsSelection tests', () => {
     expect(addSidecarButton).toBeInTheDocument()
     fireEvent.click(addSidecarButton)
     await testArtifactTypeList()
+  })
+
+  test('clicking on New AWS Connector should show create view when deployment type is Azure Web App', async () => {
+    const context = {
+      ...pipelineContextWithoutArtifactsMock,
+      getStageFromPipeline: jest.fn(() => {
+        return { stage: pipelineContextWithoutArtifactsMock.state.pipeline.stages[0], parent: undefined }
+      })
+    } as any
+
+    const { container } = render(
+      <TestWrapper
+        defaultAppStoreValues={{
+          featureFlags: { AZURE_WEBAPP_NG_S3_ARTIFACTS: true }
+        }}
+      >
+        <PipelineContext.Provider value={context}>
+          <ArtifactsSelection isReadonlyServiceMode={false} readonly={false} deploymentType="AzureWebApp" />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const addPrimaryButton = await findByText(container, 'pipeline.artifactsSelection.addPrimaryArtifact')
+    expect(await findByText(container, 'pipeline.artifactsSelection.addPrimaryArtifact')).toBeInTheDocument()
+    fireEvent.click(addPrimaryButton)
+
+    const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
+    userEvent.click(getByText(portal, 'pipeline.artifactsSelection.amazonS3Title')!)
+    const continueButton = getByText(portal, 'continue').parentElement as HTMLElement
+    await waitFor(() => expect(continueButton).not.toBeDisabled())
+    userEvent.click(continueButton)
+
+    const artifactRepoLabel = await findByText(portal, 'AWS connector')
+    expect(artifactRepoLabel).toBeDefined()
+    userEvent.click(getByText(portal, 'newLabel AWS connector')!)
+
+    const overviewTitle = await findAllByText(portal, 'overview')
+    expect(overviewTitle).toHaveLength(2)
+    expect(getByText(portal, 'name')).toBeDefined()
   })
 })

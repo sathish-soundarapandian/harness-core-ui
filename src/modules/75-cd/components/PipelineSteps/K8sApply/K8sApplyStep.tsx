@@ -119,7 +119,6 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
   return (
     <>
       <Formik<K8sApplyFormData>
-        enableReinitialize={true}
         onSubmit={(values: K8sApplyFormData) => {
           const formData = {
             ...values,

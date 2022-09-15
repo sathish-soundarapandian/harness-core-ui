@@ -173,6 +173,44 @@ exports[`StageAdvancedInputSetForm tests viewType DeploymentForm initial render 
             </div>
           </div>
         </div>
+        <div
+          class="nestedAccordions formGroup md"
+        >
+          <div
+            class="StyledProps--font StyledProps--main StyledProps--margin-bottom-medium"
+          >
+            <div
+              class="Layout--vertical StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
+            >
+              <div
+                class="StyledProps--font StyledProps--main"
+                style="width: 100%;"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main"
+                >
+                  <label
+                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+                  >
+                    <input
+                      data-testid="skip-instances-check"
+                      name="stages[1].stage.skipInstances"
+                      type="checkbox"
+                    />
+                    <span
+                      class="bp3-control-indicator"
+                    />
+                    <p
+                      class="StyledProps--font StyledProps--main"
+                    >
+                      pipeline.skipInstances.title
+                    </p>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </form>
   </div>

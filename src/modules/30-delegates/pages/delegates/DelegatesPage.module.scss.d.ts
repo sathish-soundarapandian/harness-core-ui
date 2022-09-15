@@ -31,6 +31,7 @@ declare const styles: {
   readonly itemActionContainer: string
   readonly listBody: string
   readonly listPage: string
+  readonly marginLeft: string
   readonly overviewCard: string
   readonly paddedContainer: string
   readonly paddingLeft: string

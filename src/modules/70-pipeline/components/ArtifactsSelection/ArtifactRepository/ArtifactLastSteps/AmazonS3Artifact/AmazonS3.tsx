@@ -96,7 +96,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
         accountIdentifier: accountId,
         orgIdentifier,
         projectIdentifier,
-        connectorRef: prevStepData?.connectorId?.value ?? prevStepData?.connectorId,
+        connectorRef: prevStepData?.connectorId?.value || prevStepData?.identifier,
         region: region
       }
     })

@@ -137,3 +137,7 @@ export function isValueRuntimeInput(
 export const getUserName = (user: UserMetadataDTO): string => {
   return defaultTo(user.name, user.email)
 }
+
+export const REFERER_URL = 'refererURL'
+
+export const getSavedRefererURL = (): string => localStorage.getItem(REFERER_URL) || ''

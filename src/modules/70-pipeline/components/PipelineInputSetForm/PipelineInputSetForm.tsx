@@ -143,7 +143,8 @@ export function StageFormInternal({
       )}
       {(!isEmpty(template?.stage?.when) ||
         !isEmpty(template?.stage?.delegateSelectors) ||
-        !isEmpty(template?.stage?.strategy)) && (
+        !isEmpty(template?.stage?.strategy) ||
+        !isEmpty(template?.stage?.skipInstances)) && (
         <StageAdvancedInputSetForm
           stageIdentifier={allValues?.stage?.identifier}
           path={path}
@@ -151,6 +152,7 @@ export function StageFormInternal({
           readonly={readonly}
           allowableTypes={allowableTypes}
           delegateSelectors={template?.stage?.delegateSelectors}
+          skipInstances={template?.stage?.skipInstances}
         />
       )}
     </div>

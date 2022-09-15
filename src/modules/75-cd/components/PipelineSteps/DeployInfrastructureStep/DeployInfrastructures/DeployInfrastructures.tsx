@@ -142,15 +142,8 @@ function DeployInfrastructures({
           formik?.setFieldValue('infrastructureInputs', parsedInfrastructureDefinitionYaml)
         }
       } else {
-        if (selectedInfrastructure && path) {
-          const selectedInfrastructureParsed = parse(selectedInfrastructure)
-          const selectedInfraWithEmptyInputs = {
-            identifier: selectedInfrastructureParsed.infrastructureDefinition.identifier,
-            inputs: {
-              type: selectedInfrastructureParsed.infrastructureDefinition.type
-            }
-          }
-          updateTemplate(selectedInfraWithEmptyInputs, `${path}.infrastructureDefinitions[0]`)
+        if (path) {
+          updateTemplate([], `${path}.infrastructureDefinitions`)
           formik?.setFieldValue('environment.infrastructureDefinitions[0].inputs.spec', {})
         }
       }
@@ -176,6 +169,9 @@ function DeployInfrastructures({
           arrayFormat: 'comma'
         }
       })
+    } else {
+      formik?.setFieldValue('environment.infrastructureDefinitions[0].inputs.spec', {})
+      updateTemplate([], `${path}.infrastructureDefinitions`)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedInfrastructure])

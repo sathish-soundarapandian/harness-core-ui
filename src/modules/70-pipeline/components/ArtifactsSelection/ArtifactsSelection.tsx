@@ -60,6 +60,7 @@ import StepArtifactoryAuthentication from '@connectors/components/CreateConnecto
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import AzureAuthentication from '@connectors/components/CreateConnector/AzureConnector/StepAuth/AzureAuthentication'
 import { useCache } from '@common/hooks/useCache'
+import GcpAuthentication from '@connectors/components/CreateConnector/GcpConnector/StepAuth/GcpAuthentication'
 import ArtifactWizard from './ArtifactWizard/ArtifactWizard'
 import { DockerRegistryArtifact } from './ArtifactRepository/ArtifactLastSteps/DockerRegistryArtifact/DockerRegistryArtifact'
 import { ECRArtifact } from './ArtifactRepository/ArtifactLastSteps/ECRArtifact/ECRArtifact'
@@ -133,7 +134,8 @@ export default function ArtifactsSelection({
   const { expressions } = useVariablesExpression()
 
   const stepWizardTitle = getString('connectors.createNewConnector')
-  const { CUSTOM_ARTIFACT_NG, NG_GOOGLE_ARTIFACT_REGISTRY, GITHUB_PACKAGES } = useFeatureFlags()
+  const { CUSTOM_ARTIFACT_NG, NG_GOOGLE_ARTIFACT_REGISTRY, GITHUB_PACKAGES, AZURE_WEBAPP_NG_S3_ARTIFACTS } =
+    useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const getServiceCacheId = `${pipeline.identifier}-${selectedStageId}-service`
   const { getCache } = useCache([getServiceCacheId])
@@ -159,6 +161,14 @@ export default function ArtifactsSelection({
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
+    }
+
+    if (
+      deploymentType === 'AzureWebApp' &&
+      AZURE_WEBAPP_NG_S3_ARTIFACTS &&
+      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.AmazonS3)
+    ) {
+      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.AmazonS3)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deploymentType])
@@ -587,6 +597,7 @@ export default function ArtifactsSelection({
           </StepWizard>
         )
       case ENABLED_ARTIFACT_TYPES.Ecr:
+      case ENABLED_ARTIFACT_TYPES.AmazonS3:
         return (
           <StepWizard iconProps={{ size: 37 }} title={stepWizardTitle}>
             <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
@@ -628,6 +639,18 @@ export default function ArtifactsSelection({
             <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
             <AzureAuthentication name={getString('details')} {...authenticationStepProps} />
             <DelegateSelectorStep buildPayload={buildAzurePayload} {...delegateStepProps} />
+            <VerifyOutOfClusterDelegate
+              type={ArtifactToConnectorMap[selectedArtifact]}
+              {...verifyOutofClusterDelegateProps}
+            />
+          </StepWizard>
+        )
+      case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
+        return (
+          <StepWizard title={stepWizardTitle}>
+            <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
+            <GcpAuthentication name={getString('details')} {...authenticationStepProps} />
+            <DelegateSelectorStep buildPayload={buildGcpPayload} {...delegateStepProps} />
             <VerifyOutOfClusterDelegate
               type={ArtifactToConnectorMap[selectedArtifact]}
               {...verifyOutofClusterDelegateProps}

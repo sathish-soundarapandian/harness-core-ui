@@ -1,0 +1,20 @@
+[
+  {
+    "service": {
+      "identifier": "svc_1",
+      "name": "Service 1"
+    }
+  },
+  {
+    "service": {
+      "identifier": "svc_2",
+      "name": "Service 2"
+    }
+  },
+  {
+    "service": {
+      "identifier": "svc_3",
+      "name": "Service 3"
+    }
+  }
+]

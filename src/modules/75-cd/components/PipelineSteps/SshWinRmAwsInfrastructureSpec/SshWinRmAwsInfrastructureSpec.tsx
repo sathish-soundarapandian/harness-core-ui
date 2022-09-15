@@ -234,20 +234,6 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
             return (
               <FormikForm>
                 <Layout.Vertical className={css.formRow} spacing="medium" margin={{ bottom: 'large' }}>
-                  <div className={css.inputWidth}>
-                    <MultiTypeSecretInput
-                      name="credentialsRef"
-                      type={getMultiTypeSecretInputType(initialValues.serviceType)}
-                      label={getString('cd.steps.common.specifyCredentials')}
-                      onSuccess={secret => {
-                        if (secret) {
-                          /* istanbul ignore next */
-                          formikRef.current?.setFieldValue('credentialsRef', secret.referenceString)
-                        }
-                      }}
-                      expressions={expressions}
-                    />
-                  </div>
                   <Layout.Vertical>
                     <FormMultiTypeConnectorField
                       error={get(formik, 'errors.connectorRef', undefined)}
@@ -334,6 +320,20 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                       isLoadingTags={isTagsLoading}
                       initialTags={initialValues?.awsInstanceFilter?.tags}
                       errorMessage={get(tagsError, 'data.message', '')}
+                    />
+                  </Layout.Vertical>
+                  <Layout.Vertical className={css.inputWidth}>
+                    <MultiTypeSecretInput
+                      name="credentialsRef"
+                      type={getMultiTypeSecretInputType(initialValues.serviceType)}
+                      label={getString('cd.steps.common.specifyCredentials')}
+                      onSuccess={secret => {
+                        if (secret) {
+                          /* istanbul ignore next */
+                          formikRef.current?.setFieldValue('credentialsRef', secret.referenceString)
+                        }
+                      }}
+                      expressions={expressions}
                     />
                   </Layout.Vertical>
                 </Layout.Vertical>

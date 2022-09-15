@@ -234,7 +234,7 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.region`, template) && (
             <FormInput.MultiTypeInput
-              name="region"
+              name={`${path}.artifacts.${artifactPath}.spec.region`}
               selectItems={regions}
               useValue
               multiTypeInputProps={{

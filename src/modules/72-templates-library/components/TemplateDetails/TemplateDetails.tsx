@@ -69,10 +69,9 @@ import css from './TemplateDetails.module.scss'
 
 export interface TemplateDetailsProps {
   template: TemplateSummaryResponse
-  allowStableSelection?: boolean
   setTemplate?: (template: TemplateSummaryResponse) => void
-  allowBranchChange?: boolean
   storeMetadata?: StoreMetadata
+  isStandAlone?: boolean
 }
 
 export enum TemplateTabs {
@@ -101,7 +100,7 @@ const getTemplateEntityIdentifier = ({ selectedTemplate, templates }: Params): s
 }
 
 export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
-  const { template, allowStableSelection = false, setTemplate, allowBranchChange = true, storeMetadata } = props
+  const { template, setTemplate, storeMetadata, isStandAlone = false } = props
   const { getString } = useStrings()
   const history = useHistory()
   const [versionOptions, setVersionOptions] = React.useState<SelectOption[]>([])
@@ -172,14 +171,14 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   React.useEffect(() => {
     if (templateData?.data?.content) {
       const allVersions = [...templateData.data.content]
-      if (allowStableSelection) {
+      if (isStandAlone) {
         const templateStableVersion = { ...allVersions.find(item => item.stableTemplate) }
         delete templateStableVersion.versionLabel
         allVersions.unshift(templateStableVersion)
       }
       setTemplates(allVersions)
     }
-  }, [allowStableSelection, templateData])
+  }, [isStandAlone, templateData])
 
   React.useEffect(() => {
     const newVersionOptions: SelectOption[] = (templates as TemplateSummaryResponse[]).map(item => {
@@ -257,25 +256,29 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
 
   const goToTemplateStudio = (): void => {
     if (selectedTemplate) {
-      history.push(
-        routes.toTemplateStudio({
-          projectIdentifier: selectedTemplate.projectIdentifier,
-          orgIdentifier: selectedTemplate.orgIdentifier,
-          accountId: defaultTo(selectedTemplate.accountId, ''),
-          module,
-          templateType: selectedTemplate.templateEntityType,
-          templateIdentifier: selectedTemplate.identifier,
-          versionLabel: selectedTemplate.versionLabel,
-          repoIdentifier: selectedTemplate.gitDetails?.repoIdentifier,
-          branch: allowBranchChange ? selectedTemplate.gitDetails?.branch || selectedBranch : storeMetadata?.branch
-        })
-      )
+      const url = routes.toTemplateStudio({
+        projectIdentifier: selectedTemplate.projectIdentifier,
+        orgIdentifier: selectedTemplate.orgIdentifier,
+        accountId: defaultTo(selectedTemplate.accountId, ''),
+        module,
+        templateType: selectedTemplate.templateEntityType,
+        templateIdentifier: selectedTemplate.identifier,
+        versionLabel: selectedTemplate.versionLabel,
+        repoIdentifier: selectedTemplate.gitDetails?.repoIdentifier,
+        branch: !isStandAlone ? selectedTemplate.gitDetails?.branch || selectedBranch : storeMetadata?.branch
+      })
+
+      if (isStandAlone) {
+        window.open(`#${url}`, '_blank')
+      } else {
+        history.push(url)
+      }
     }
   }
 
   const ErrorPanel = (
     <Container className={css.errorPanel}>
-      {allowBranchChange ? (
+      {!isStandAlone ? (
         <NoEntityFound
           identifier={selectedTemplate?.identifier as string}
           entityType={'template'}
@@ -344,7 +347,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                       gitDetails={defaultTo(
                         {
                           ...selectedTemplate.gitDetails,
-                          branch: allowBranchChange
+                          branch: !isStandAlone
                             ? selectedTemplate.gitDetails?.branch || selectedBranch
                             : storeMetadata?.branch
                         },
@@ -352,7 +355,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                       )}
                       onGitBranchChange={onGitBranchChange}
                       identifier={defaultTo(selectedTemplate?.identifier, '')}
-                      isReadonly={!allowBranchChange}
+                      isReadonly={isStandAlone}
                       entityData={selectedTemplate as NGTemplateInfoConfig}
                       entityType={defaultTo(selectedTemplate?.templateEntityType, '')}
                     />
