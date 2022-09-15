@@ -64,7 +64,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   const isExecutionListPage = !!matchPath(location.pathname, {
     path: routes.toExecutions({ projectIdentifier, orgIdentifier, accountId, module })
   })
-  const Executions = isExecutionListPage ? ExecutionListCards : MemoisedExecutionListTable
+  const Executions = isExecutionListPage ? MemoisedExecutionListTable : ExecutionListCards
 
   const isExecutionHistoryView = !!matchPath(location.pathname, {
     path: routes.toPipelineDeploymentList({

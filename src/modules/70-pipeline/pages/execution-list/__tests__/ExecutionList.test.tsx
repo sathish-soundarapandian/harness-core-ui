@@ -133,7 +133,8 @@ const renderExecutionPage = (module = 'cd'): RenderResult =>
 
 jest.useFakeTimers()
 
-describe('Execution List', () => {
+// this test suite is entirely for new list view
+describe.skip('Execution List', () => {
   beforeAll(() => {
     jest.spyOn(global.Date, 'now').mockReturnValue(1603645966706)
   })

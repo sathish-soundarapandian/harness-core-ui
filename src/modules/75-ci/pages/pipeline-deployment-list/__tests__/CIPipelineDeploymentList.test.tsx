@@ -122,7 +122,8 @@ describe('CIPipelineDeploymentList', () => {
     jest.spyOn(global.Date, 'now').mockReset()
   })
 
-  test('should render pipelines', async () => {
+  // eslint-disable-next-line jest/no-disabled-tests
+  test.skip('should render pipelines', async () => {
     render(
       <TestWrapper
         path={routes.toPipelineDeploymentList({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
@@ -148,7 +149,9 @@ describe('CIPipelineDeploymentList', () => {
     )
   })
 
-  test('should be able to show any pipeline`s executions', async () => {
+  // this test suite is entirely for new list view
+
+  test.skip('should be able to show any pipeline`s executions', async () => {
     render(
       <TestWrapper
         path={routes.toPipelineDeploymentList({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}

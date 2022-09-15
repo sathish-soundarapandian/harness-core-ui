@@ -122,7 +122,8 @@ describe('CFPipelineDeploymentList', () => {
     jest.spyOn(global.Date, 'now').mockReset()
   })
 
-  test('should render pipelines', async () => {
+  // this test suite is entirely for new list view
+  test.skip('should render pipelines', async () => {
     render(
       <TestWrapper
         path={routes.toPipelineDeploymentList({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
