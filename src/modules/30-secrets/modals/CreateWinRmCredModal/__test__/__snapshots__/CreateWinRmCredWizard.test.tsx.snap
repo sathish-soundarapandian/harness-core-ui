@@ -1028,7 +1028,7 @@ exports[`Create WinRm Cred Wizard should render form 3`] = `
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--font-weight-bold"
                 >
-                  SECRETS.CREATESSHCREDWIZARD.HOSTNAMEINFO
+                  secrets.createSSHCredWizard.hostnameInfo
                 </p>
                 <button
                   class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-top-medium Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
@@ -1038,7 +1038,7 @@ exports[`Create WinRm Cred Wizard should render form 3`] = `
                   <span
                     class="bp3-button-text"
                   >
-                    secrets.createSSHCredWizard.btnVerifyConnection
+                    common.smtp.testConnection
                   </span>
                 </button>
               </div>

@@ -137,6 +137,6 @@ describe('Create WinRm Cred Wizard', () => {
       clickSubmit(container)
     })
     //Verification of delegate service
-    expect(getAllByText('secrets.createSSHCredWizard.verifyRetest')[0]).toBeDefined()
+    expect(getAllByText('retry')[0]).toBeDefined()
   })
 })
