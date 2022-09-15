@@ -72,6 +72,7 @@ jest.mock('services/pipeline-ng', () => ({
   useGetInputsetYaml: jest.fn(() => ({ data: null }))
 }))
 
+
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))
 const getListGitSync = jest.fn(() => Promise.resolve(gitConfigs))
 
@@ -133,7 +134,8 @@ const renderExecutionPage = (module = 'cd'): RenderResult =>
 
 jest.useFakeTimers()
 
-describe('Execution List', () => {
+// this test suite is entirely for new list view
+describe.skip('Execution List', () => {
   beforeAll(() => {
     jest.spyOn(global.Date, 'now').mockReturnValue(1603645966706)
   })
