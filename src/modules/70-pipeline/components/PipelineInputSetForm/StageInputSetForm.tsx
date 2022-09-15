@@ -892,6 +892,9 @@ export function StageInputSetFormInternal({
             stepViewType={viewType}
             path={path}
             readonly={readonly}
+            customStepProps={{
+              stageIdentifier
+            }}
           />
         </div>
       )}

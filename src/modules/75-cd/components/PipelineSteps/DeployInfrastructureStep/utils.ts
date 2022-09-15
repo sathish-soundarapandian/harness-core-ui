@@ -351,13 +351,13 @@ export function processInputSetInitialValues(
         gitOpsClusters: initialValues.environment?.gitOpsClusters
       })
     },
-    ...(!customStepProps.gitOpsEnabled && {
+    ...(!customStepProps?.gitOpsEnabled && {
       infrastructureRef: (initialValues.environment?.infrastructureDefinitions?.[0]?.identifier ||
         initialValues.environment?.infrastructureDefinitions ||
         '') as string
     }),
 
-    ...(customStepProps.gitOpsEnabled && {
+    ...(customStepProps?.gitOpsEnabled && {
       clusterRef:
         getMultiTypeFromValue(initialValues.environment?.gitOpsClusters as unknown as string) ===
         MultiTypeInputType.RUNTIME
