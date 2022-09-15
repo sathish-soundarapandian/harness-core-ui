@@ -61,12 +61,12 @@ const VerifyConnection: React.FC<VerifyConnectionProps> = ({ identifier, closeMo
                   disabled={!!validationMetadata}
                 />
                 <Text font={{ size: 'xsmall', weight: 'bold' }}>
-                  {getString('secrets.createSSHCredWizard.hostnameInfo').toUpperCase()}
+                  {getString('secrets.createSSHCredWizard.hostnameInfo')}
                 </Text>
                 {validationMetadata ? null : (
                   <Button
                     type="submit"
-                    text={getString('secrets.createSSHCredWizard.btnVerifyConnection')}
+                    text={getString('common.smtp.testConnection')}
                     style={{ fontSize: 'smaller' }}
                     margin={{ top: 'medium' }}
                     variation={ButtonVariation.SECONDARY}
@@ -90,7 +90,7 @@ const VerifyConnection: React.FC<VerifyConnectionProps> = ({ identifier, closeMo
           {finishStatus && (
             <>
               <Button
-                text={getString('secrets.createSSHCredWizard.verifyRetest')}
+                text={getString('retry')}
                 variation={ButtonVariation.SECONDARY}
                 size={ButtonSize.SMALL}
                 margin={{ top: 'medium' }}
@@ -98,24 +98,24 @@ const VerifyConnection: React.FC<VerifyConnectionProps> = ({ identifier, closeMo
                   setValidationMetadata(undefined)
                 }}
               />
-              <Container margin={{ top: 'large' }}>
-                <Button
-                  text={getString('finish').toUpperCase()}
-                  variation={ButtonVariation.SECONDARY}
-                  size={ButtonSize.SMALL}
-                  onClick={() => {
-                    trackEvent(SecretActions.SaveCreateSecret, {
-                      category: Category.SECRET,
-                      finishStatus,
-                      validationMetadata
-                    })
-                    /* istanbul ignore next */
-                    closeModal?.()
-                  }}
-                />
-              </Container>
             </>
           )}
+          <Container margin={{ top: 'large' }}>
+            <Button
+              text={getString('finish')}
+              variation={ButtonVariation.SECONDARY}
+              size={ButtonSize.SMALL}
+              onClick={() => {
+                trackEvent(SecretActions.SaveCreateSecret, {
+                  category: Category.SECRET,
+                  finishStatus,
+                  validationMetadata
+                })
+                /* istanbul ignore next */
+                closeModal?.()
+              }}
+            />
+          </Container>
         </Container>
       ) : null}
     </>

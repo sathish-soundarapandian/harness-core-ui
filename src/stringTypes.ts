@@ -1401,7 +1401,6 @@ export interface StringsMap {
   'secrets.createSSHCredWizard.validateRealm': string
   'secrets.createSSHCredWizard.validateSshKey': string
   'secrets.createSSHCredWizard.validateUsername': string
-  'secrets.createSSHCredWizard.verifyRetest': string
   'secrets.createSSHCredWizard.verifyStepOne': string
   'secrets.createSSHCredWizard.verifyStepTwo': string
   'secrets.createSecret': string
