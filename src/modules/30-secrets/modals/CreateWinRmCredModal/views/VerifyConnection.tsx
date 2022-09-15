@@ -22,6 +22,7 @@ import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, SecretActions } from '@common/constants/TrackingConstants'
 import VerifySecret, { Status } from './VerifySecret'
+import css from './StepDetails.module.scss'
 
 interface VerifyConnectionProps {
   identifier: string
@@ -35,87 +36,92 @@ const VerifyConnection: React.FC<VerifyConnectionProps> = ({ identifier, closeMo
   const { trackEvent } = useTelemetry()
   return (
     <>
-      <Container width={300}>
-        <Formik<WinRmCredentialsValidationMetadata>
-          onSubmit={formData => {
-            setValidationMetadata({
-              type: 'WinRmCredentials',
-              host: formData.host
-            })
-          }}
-          formName="sshVerifyConnectionForm"
-          initialValues={{
-            type: 'WinRmCredentials',
-            host: ''
-          }}
-          validationSchema={Yup.object().shape({
-            host: Yup.string().trim().required()
-          })}
-        >
-          {() => {
-            return (
-              <FormikForm>
-                <FormInput.Text
-                  name="host"
-                  label={getString('secrets.createSSHCredWizard.labelHostname')}
-                  disabled={!!validationMetadata}
-                />
-                <Text font={{ size: 'xsmall', weight: 'bold' }}>
-                  {getString('secrets.createSSHCredWizard.hostnameInfo')}
-                </Text>
-                {validationMetadata ? null : (
-                  <Button
-                    type="submit"
-                    text={getString('common.smtp.testConnection')}
-                    style={{ fontSize: 'smaller' }}
-                    margin={{ top: 'medium' }}
-                    variation={ButtonVariation.SECONDARY}
-                    size={ButtonSize.SMALL}
-                  />
-                )}
-              </FormikForm>
-            )
-          }}
-        </Formik>
-      </Container>
-      {validationMetadata ? (
-        <Container margin={{ top: 'xxlarge' }}>
-          <VerifySecret
-            identifier={identifier as string}
-            validationMetadata={validationMetadata}
-            onFinish={status => {
-              setFinishStatus(status)
+      <Container className={css.formData}>
+        <Container width={300}>
+          <Formik<WinRmCredentialsValidationMetadata>
+            onSubmit={formData => {
+              setValidationMetadata({
+                type: 'WinRmCredentials',
+                host: formData.host
+              })
             }}
-          />
-          {finishStatus && (
-            <>
-              <Button
-                text={getString('retry')}
-                variation={ButtonVariation.SECONDARY}
-                size={ButtonSize.SMALL}
-                margin={{ top: 'medium' }}
-                onClick={() => {
-                  setValidationMetadata(undefined)
-                }}
-              />
-            </>
-          )}
-          <Container margin={{ top: 'large' }}>
-            <Button
-              text={getString('finish')}
-              variation={ButtonVariation.SECONDARY}
-              size={ButtonSize.SMALL}
-              onClick={() => {
-                trackEvent(SecretActions.SaveCreateSecret, {
-                  category: Category.SECRET,
-                  finishStatus,
-                  validationMetadata
-                })
-                /* istanbul ignore next */
-                closeModal?.()
+            formName="sshVerifyConnectionForm"
+            initialValues={{
+              type: 'WinRmCredentials',
+              host: ''
+            }}
+            validationSchema={Yup.object().shape({
+              host: Yup.string().trim().required()
+            })}
+          >
+            {() => {
+              return (
+                <FormikForm>
+                  <FormInput.Text
+                    name="host"
+                    label={getString('secrets.createSSHCredWizard.labelHostname')}
+                    disabled={!!validationMetadata}
+                  />
+                  <Text font={{ size: 'xsmall', weight: 'bold' }}>
+                    {getString('secrets.createSSHCredWizard.hostnameInfo')}
+                  </Text>
+                  {validationMetadata ? null : (
+                    <Button
+                      type="submit"
+                      text={getString('common.smtp.testConnection')}
+                      style={{ fontSize: 'smaller' }}
+                      margin={{ top: 'medium' }}
+                      variation={ButtonVariation.SECONDARY}
+                      size={ButtonSize.SMALL}
+                    />
+                  )}
+                </FormikForm>
+              )
+            }}
+          </Formik>
+        </Container>
+        {validationMetadata ? (
+          <Container margin={{ top: 'xxlarge' }}>
+            <VerifySecret
+              identifier={identifier as string}
+              validationMetadata={validationMetadata}
+              onFinish={status => {
+                setFinishStatus(status)
               }}
             />
+            {finishStatus && (
+              <>
+                <Button
+                  text={getString('retry')}
+                  variation={ButtonVariation.SECONDARY}
+                  size={ButtonSize.SMALL}
+                  margin={{ top: 'medium' }}
+                  onClick={() => {
+                    setValidationMetadata(undefined)
+                  }}
+                />
+              </>
+            )}
           </Container>
+        ) : null}
+      </Container>
+      {validationMetadata ? (
+        <Container>
+          <Button
+            text={getString('finish')}
+            variation={ButtonVariation.SECONDARY}
+            hidden={!validationMetadata}
+            size={ButtonSize.SMALL}
+            onClick={() => {
+              trackEvent(SecretActions.SaveCreateSecret, {
+                category: Category.SECRET,
+                finishStatus,
+                validationMetadata
+              })
+              /* istanbul ignore next */
+              closeModal?.()
+            }}
+          />
         </Container>
       ) : null}
     </>
