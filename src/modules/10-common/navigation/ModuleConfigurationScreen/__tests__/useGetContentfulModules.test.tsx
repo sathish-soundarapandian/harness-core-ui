@@ -9,7 +9,7 @@ import { renderHook } from '@testing-library/react-hooks'
 import { TestWrapper } from '@common/utils/testUtils'
 import useGetContentfulModules from '../useGetContentfulModules'
 
-jest.mock('@common/Contentful', () => {
+jest.mock('../Contentful', () => {
   return {
     getClient: () => {
       return {

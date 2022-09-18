@@ -20,7 +20,7 @@ jest.mock('../../CarousellmageAndDescription/CarousellmageAndDescription', () =>
   return () => <div>{ModuleContentType.CENTER_ALIGNED_IMAGE_DESC}</div>
 })
 
-jest.mock('../../LottieComponent/LottieComponent', () => {
+jest.mock('../../LottieRenderer/LottieRenderer', () => {
   return () => <div>{ModuleContentType.LOTTIE}</div>
 })
 
