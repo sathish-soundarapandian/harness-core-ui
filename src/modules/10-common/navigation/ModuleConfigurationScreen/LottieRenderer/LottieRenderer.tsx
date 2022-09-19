@@ -23,7 +23,7 @@ const LottieRenderer: React.FC<LottieComponentProps> = ({ json: asset }) => {
   useEffect(() => {
     if (!lottieJson) {
       setLoading(true)
-      fetch(`https://${asset.fields.file.url}`)
+      fetch(`//${asset.fields.file.url}`)
         .then(res => res.json())
         .then(res => {
           setLoading(false)

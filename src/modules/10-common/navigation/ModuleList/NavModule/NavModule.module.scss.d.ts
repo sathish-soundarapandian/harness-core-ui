@@ -14,6 +14,7 @@ declare const styles: {
   readonly checkbox: string
   readonly ci: string
   readonly container: string
+  readonly default: string
   readonly ff: string
   readonly srm: string
   readonly sto: string

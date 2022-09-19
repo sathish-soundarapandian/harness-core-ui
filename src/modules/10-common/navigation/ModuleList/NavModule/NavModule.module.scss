@@ -38,6 +38,9 @@
     &.sto {
       border-color: var(--sto-border);
     }
+    &.default {
+      border-color: var(--default-module-border);
+    }
   }
 }
 

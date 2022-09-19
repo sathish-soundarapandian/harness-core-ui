@@ -6,9 +6,10 @@
  */
 
 .modulesList {
-  margin-left: 88px;
+  --main-nav-width: 88px;
   background: var(--theme-light-nav-panel-bg);
   padding: var(--spacing-xxlarge) var(--spacing-medium) var(--spacing-xxlarge) var(--spacing-xxlarge);
+  margin-left: var(--main-nav-width);
 
   .modulesListContainer {
     height: 100%;
