@@ -8,5 +8,5 @@
 import type { StepElementConfig } from 'services/cd-ng'
 
 export interface WaitStepData extends StepElementConfig {
-  duration: string
+  spec: { duration: string }
 }

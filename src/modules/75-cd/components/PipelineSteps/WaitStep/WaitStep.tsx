@@ -40,7 +40,7 @@ export class WaitStep extends PipelineStep<WaitStepData> {
     name: '',
     identifier: '',
     type: StepType.Wait,
-    duration: '10m'
+    spec: { duration: '10m' }
   }
 
   renderStep(props: StepProps<WaitStepData>): JSX.Element {
@@ -69,7 +69,9 @@ export class WaitStep extends PipelineStep<WaitStepData> {
     }
 
     if (stepViewType === StepViewType.InputVariable) {
-      return <WaitStepVariablesView {...(customStepProps as WaitStepVariablesViewProps)} originalData={initialValues} />
+      return (
+        <WaitStepVariablesView {...(customStepProps as WaitStepVariablesViewProps)} initialValues={initialValues} />
+      )
     }
 
     return (
@@ -94,18 +96,18 @@ export class WaitStep extends PipelineStep<WaitStepData> {
     const errors: FormikErrors<WaitStepData> = {}
     const isRequired = viewType === StepViewType.DeploymentForm
     /* istanbul ignore else */
-    if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
-      let timeoutSchema = getDurationValidationSchema({ minimum: '10s' })
+    if (getMultiTypeFromValue(template?.spec.duration) === MultiTypeInputType.RUNTIME) {
+      let durationSchema = getDurationValidationSchema({ minimum: '10s' })
       /* istanbul ignore else */
       if (isRequired) {
-        timeoutSchema = timeoutSchema.required(getString?.('validation.timeout10SecMinimum'))
+        durationSchema = durationSchema.required(getString?.('validation.timeout10SecMinimum'))
       }
-      const timeout = Yup.object().shape({
-        timeout: timeoutSchema
+      const duration = Yup.object().shape({
+        duration: durationSchema
       })
 
       try {
-        timeout.validateSync(data)
+        duration.validateSync(data)
       } catch (e) {
         /* istanbul ignore else */
         if (e instanceof Yup.ValidationError) {
@@ -115,26 +117,16 @@ export class WaitStep extends PipelineStep<WaitStepData> {
       }
     }
 
-    /* istanbul ignore else */
-    if (
-      getMultiTypeFromValue(/* istanbul ignore next */ template?.spec?.policySpec?.payload) ===
-        MultiTypeInputType.RUNTIME &&
-      isRequired &&
-      isEmpty(/* istanbul ignore next */ data?.spec?.policySpec?.payload?.trim())
-    ) {
-      set(errors, 'spec.policySpec.payload', getString?.('fieldRequired', { field: 'Payload' }))
-    }
-
     return errors
   }
 
-  private getInitialValues(initialValues: WaitStepData): WaitStepFormData {
+  private getInitialValues(initialValues: WaitStepData): WaitStepData {
     return {
       ...initialValues
     }
   }
 
-  processFormData(data: WaitStepFormData): WaitStepData {
+  processFormData(data: WaitStepData): WaitStepData {
     return {
       ...data
     }
