@@ -155,7 +155,7 @@ export default function SelectDeploymentType({
                 errorMessage={get(formikRef?.current?.errors, DEPLOYMENT_TYPE_KEY)}
               />
             ) : null}
-            {customDeploymentData && addOrUpdateTemplate ? (
+            {customDeploymentData ? (
               <Layout.Vertical padding={0} margin={{ top: 'medium' }}>
                 <TemplateBar
                   templateLinkConfig={customDeploymentData}

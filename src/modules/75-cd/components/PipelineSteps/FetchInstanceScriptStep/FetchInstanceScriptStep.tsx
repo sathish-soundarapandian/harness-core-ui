@@ -217,6 +217,7 @@ export class FetchInstanceScript extends PipelineStep<StepElementConfig> {
   protected stepIconColor = Color.GREY_700
   protected stepIcon: IconName = 'rolling'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.fetchInstanceScript'
+  protected stepPaletteVisible = false
 
   // istanbul ignore next
   validateInputSet({
