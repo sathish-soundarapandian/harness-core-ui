@@ -31,3 +31,7 @@ export interface BaseHealthSourceMetricInfo {
   isNew?: boolean
   isManualQuery?: boolean
 }
+
+export interface CommonSetupHealthSourceListType {
+  name: string
+}

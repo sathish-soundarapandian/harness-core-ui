@@ -9,5 +9,6 @@
 declare const styles: {
   readonly awsRegionSelector: string
   readonly cloudWatch: string
+  readonly expressionContainer: string
 }
 export default styles

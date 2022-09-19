@@ -7,7 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly customMetricV2: string
-  readonly sideNav: string
+  readonly checkBoxGroup: string
+  readonly groupLabel: string
+  readonly main: string
 }
 export default styles

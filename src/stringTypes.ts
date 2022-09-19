@@ -6843,6 +6843,7 @@ export interface StringsMap {
   'cv.healthSource.connectors.AppDynamics.validation.missingTierInFullPath': string
   'cv.healthSource.connectors.AppDynamics.validation.tier': string
   'cv.healthSource.connectors.CloudWatch.awsSelectorPlaceholder': string
+  'cv.healthSource.connectors.CloudWatch.validationMessage': string
   'cv.healthSource.connectors.Dynatrace.defaultMetricName': string
   'cv.healthSource.connectors.Dynatrace.keyRequestRequiredLabel': string
   'cv.healthSource.connectors.Dynatrace.servicePlaceholder': string
@@ -7154,6 +7155,7 @@ export interface StringsMap {
   'cv.monitoringSources.lowerCounts': string
   'cv.monitoringSources.mapMetricsToServices': string
   'cv.monitoringSources.mapQueriesToServices': string
+  'cv.monitoringSources.metricIdentifierValidation': string
   'cv.monitoringSources.metricLabel': string
   'cv.monitoringSources.metricNameLabel': string
   'cv.monitoringSources.metricNameValidation': string

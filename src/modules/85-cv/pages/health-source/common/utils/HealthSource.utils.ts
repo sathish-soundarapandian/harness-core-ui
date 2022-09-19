@@ -11,7 +11,8 @@ import { HealthSourceFieldNames } from '@cv/pages/health-source/common/utils/Hea
 import type { MetricPackDTO, RiskProfile } from 'services/cv'
 import type {
   BaseHealthSourceMetricDefinition,
-  BaseHealthSourceMetricInfo
+  BaseHealthSourceMetricInfo,
+  CommonSetupHealthSourceListType
 } from '@cv/pages/health-source/common/utils/HealthSource.types'
 
 export const convertMetricPackToMetricData = (value?: MetricPackDTO[]): { [key: string]: boolean } => {
@@ -158,4 +159,22 @@ export function mapCommonMetricDefinitionToCommonMetricInfo(
     sli: metricDefinition.sli?.enabled,
     isManualQuery: metricDefinition.isManualQuery
   }
+}
+
+// ⭐️ V2 utils ⭐️
+export const getCurrentHealthSourceData = (
+  healthSourceList: CommonSetupHealthSourceListType[],
+  selectedHealthSourceName: string
+): CommonSetupHealthSourceListType | null => {
+  if (!healthSourceList || !selectedHealthSourceName) {
+    return null
+  }
+
+  const foundHealthSource = healthSourceList.find(healthSource => healthSource.name === selectedHealthSourceName)
+
+  if (!foundHealthSource) {
+    return null
+  }
+
+  return foundHealthSource
 }

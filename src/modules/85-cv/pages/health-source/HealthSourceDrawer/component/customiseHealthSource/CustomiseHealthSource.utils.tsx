@@ -44,6 +44,9 @@ export const LoadSourceByType = ({
   expressions?: string[]
 }): JSX.Element | null => {
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
+  const isCloudWatchEnabled = true
+
+  console.log('type', type)
 
   switch (type) {
     case HealthSourceTypes.AppDynamics:
@@ -136,7 +139,12 @@ export const LoadSourceByType = ({
     case Connectors.ERROR_TRACKING:
       return <ErrorTrackingHealthSource data={data} onSubmit={onSubmit} />
     case Connectors.AWS:
+    case HealthSourceTypes.CloudWatch:
+      if (!isCloudWatchEnabled) {
+        return null
+      }
       return <CloudWatch data={data} onSubmit={onSubmit} />
+
     default:
       return <></>
   }

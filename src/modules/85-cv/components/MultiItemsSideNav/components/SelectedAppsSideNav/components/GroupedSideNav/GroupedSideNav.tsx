@@ -58,6 +58,8 @@ export default function GroupedSideNav({
     [onRemoveItem]
   )
 
+  console.log('groupedSelectedAppsList', groupedSelectedAppsList)
+
   return (
     <>
       {groupedSelectedAppsList.map(groupItem => {
@@ -66,7 +68,7 @@ export default function GroupedSideNav({
         }
         const [label, items] = groupItem
         return (
-          <CollapseList key={label} defaultOpenIndex={0}>
+          <CollapseList key={`${label}-${items.length}`} defaultOpenIndex={0}>
             <CollapseListPanel
               collapseHeaderProps={{
                 heading: (

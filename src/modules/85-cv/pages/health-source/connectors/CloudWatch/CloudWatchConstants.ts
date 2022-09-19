@@ -1,16 +1,24 @@
-import type { CloudWatchFormType } from './CloudWatch.types'
+import { customMetricsFormikPropertyName } from '../../common/CustomMetricV2/CustomMetricV2.constants'
+import type { CloudWatchFormCustomMetricType, CloudWatchFormType } from './CloudWatch.types'
 
 export const CloudWatchProductNames = {
-  METRICS: 'Cloud watch metrics'
-}
-
-export const CloudWatchProperties = {
-  region: 'region',
-  customMetrics: 'customMetrics'
+  METRICS: 'CloudWatch Metrics'
 }
 
 export const cloudWatchInitialValues: CloudWatchFormType = {
   region: '',
   customMetrics: [],
-  selectedCustomMetric: ''
+  selectedCustomMetricIndex: 0
+}
+
+export const CloudWatchProperties: Record<string, keyof CloudWatchFormType> = {
+  region: 'region',
+  customMetrics: customMetricsFormikPropertyName
+}
+
+export const CloudWatchCustomMetricsProperties: Record<string, keyof CloudWatchFormCustomMetricType> = {
+  metricName: 'metricName',
+  identifier: 'identifier',
+  groupName: 'groupName',
+  expression: 'expression'
 }
