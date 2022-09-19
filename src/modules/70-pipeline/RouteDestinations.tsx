@@ -60,6 +60,7 @@ import { HarnessApprovalLogsView } from '@pipeline/components/execution/StepDeta
 import { JiraApprovalView } from '@pipeline/components/execution/StepDetails/views/JiraApprovalView/JiraApprovalView'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { ServiceNowApprovalView } from '@pipeline/components/execution/StepDetails/views/ServiceNowApprovalView/ServiceNowApprovalView'
+import { WaitStepView } from '@pipeline/components/execution/StepDetails/views/WaitStepView/WaitStepView'
 import { CustomApprovalView } from '@pipeline/components/execution/StepDetails/views/CustomApprovalView/CustomApprovalView'
 import { PolicyEvaluationView } from '@pipeline/components/execution/StepDetails/views/PolicyEvaluationView/PolicyEvaluationView'
 import { QueueStepView } from '@pipeline/components/execution/StepDetails/views/QueueStepView/QueueStepView'
@@ -155,6 +156,10 @@ ExecFactory.registerStepDetails(StepType.JiraUpdate, {
 
 ExecFactory.registerStepDetails(StepType.JiraApproval, {
   component: JiraApprovalView
+})
+
+ExecFactory.registerStepDetails(StepType.Wait, {
+  component: WaitStepView
 })
 
 ExecFactory.registerStepDetails(StepType.ServiceNowApproval, {
