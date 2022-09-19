@@ -283,32 +283,21 @@
     }
   },
   "variablesData": {
-    "type": "Policy",
+    "type": "Wait",
     "name": "uZjxsvD3TZe6v6lrUFzsZA",
-    "identifier": "Expression_Policy_Set",
+    "identifier": "Wait",
     "spec": {
-      "policySets": "W_OOwWJjRUOt7lWMm_eEpA",
-      "type": "Custom",
-      "policySpec": {
-        "payload": "joGeGEPATL6qR1bVV4Lisg",
-        "__uuid": "AxJuPylWT6GFpO9D9ta-pA"
-      },
-      "__uuid": "Qje62lfSShqzWaVdQcn62w"
+      "duration": "10s"
     },
     "timeout": "-A1JI8r-SESxrt3ebaEtQQ",
     "__uuid": "2IsECMA2T6W4oxoEJnjB2w"
   },
-  "originalData": {
-    "type": "Policy",
-    "name": "Expression Policy Set",
-    "identifier": "Expression_Policy_Set",
+  "initialValues": {
+    "type": "Wait",
+    "name": "wait step",
+    "identifier": "Expression_Wait",
     "spec": {
-      "policySets": ["<+pipeline.name>", "<+pipeline.description>"],
-      "type": "Custom",
-      "policySpec": {
-        "payload": "<+input>"
-      }
-    },
-    "timeout": "10m"
+      "duration": "10s"
+    }
   }
 }

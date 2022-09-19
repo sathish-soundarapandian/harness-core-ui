@@ -4,7 +4,7 @@ import { VariablesListTable } from '@pipeline/components/VariablesListTable/Vari
 import { flatObject } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalCommons'
 import type { WaitStepData } from './WaitStepTypes'
 
-export interface WaitStepVariablesProps {
+export interface WaitStepVariablesViewProps {
   initialValues: WaitStepData
   stageIdentifier: string
   onUpdate?(data: WaitStepData): void
@@ -12,11 +12,11 @@ export interface WaitStepVariablesProps {
   variablesData: WaitStepData
 }
 
-export function JenkinsStepVariables({
+export function WaitStepVariablesView({
   variablesData,
   metadataMap,
   initialValues
-}: WaitStepVariablesProps): JSX.Element {
+}: WaitStepVariablesViewProps): JSX.Element {
   return (
     <VariablesListTable<WaitStepData>
       data={flatObject(variablesData) as unknown as WaitStepData}

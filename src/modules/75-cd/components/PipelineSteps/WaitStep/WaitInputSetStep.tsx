@@ -8,10 +8,9 @@
 import React from 'react'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
-
 import { AllowedTypes, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { WaitStepData } from './WaitStepTypes'
 
@@ -30,10 +29,10 @@ export default function WaitInputSetStep(props: {
 
   return (
     <>
-      {getMultiTypeFromValue(/* istanbul ignore next */ template?.duration) === MultiTypeInputType.RUNTIME && (
+      {getMultiTypeFromValue(/* istanbul ignore next */ template?.spec?.duration) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.lg)}>
-          <FormMultiTypeDurationField
-            name={`${prefix}timeout`}
+          <TimeoutFieldInputSetView
+            name={`${prefix}duration`}
             label={getString('pipeline.duration')}
             disabled={readonly}
             className={stepCss.duration}
@@ -42,6 +41,8 @@ export default function WaitInputSetStep(props: {
               expressions,
               disabled: readonly
             }}
+            template={template}
+            fieldPath={'spec.duration'}
           />
         </div>
       )}

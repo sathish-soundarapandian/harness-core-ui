@@ -10,28 +10,30 @@ import { render } from '@testing-library/react'
 
 import type { VariableResponseMapValue } from 'services/pipeline-ng'
 
-import { PolicyStepVariablesView } from '../PolicyStepVariablesView'
-import type { PolicyStepData } from '../PolicyStepTypes'
+import { WaitStepVariablesView } from '../WaitStepVariablesView'
+import type { WaitStepData } from '../WaitStepTypes'
 
-import PolicyStepVariablesViewProps from './PolicyStepVariablesViewProps.json'
+import WaitStepVariablesViewProps from './WaitStepVariablesViewProps.json'
 
 describe('<PolicyStepVariablesView /> tests', () => {
   test('snapshot test for PolicyStepVariablesView - no data', () => {
     const { container } = render(
-      <PolicyStepVariablesView
+      <WaitStepVariablesView
+        stageIdentifier="wait"
         metadataMap={{} as unknown as Record<string, VariableResponseMapValue>}
-        variablesData={{} as PolicyStepData}
-        originalData={{} as PolicyStepData}
+        variablesData={{} as WaitStepData}
+        initialValues={{} as WaitStepData}
       />
     )
     expect(container).toMatchSnapshot()
   })
   test('snapshot test for PolicyStepVariablesView - complete data', () => {
     const { container } = render(
-      <PolicyStepVariablesView
-        metadataMap={PolicyStepVariablesViewProps.metadataMap as unknown as Record<string, VariableResponseMapValue>}
-        variablesData={PolicyStepVariablesViewProps.variablesData as PolicyStepData}
-        originalData={PolicyStepVariablesViewProps.originalData as PolicyStepData}
+      <WaitStepVariablesView
+        stageIdentifier="wait"
+        metadataMap={WaitStepVariablesViewProps.metadataMap as unknown as Record<string, VariableResponseMapValue>}
+        variablesData={WaitStepVariablesViewProps.variablesData as WaitStepData}
+        initialValues={WaitStepVariablesViewProps.initialValues as WaitStepData}
       />
     )
     expect(container).toMatchSnapshot()

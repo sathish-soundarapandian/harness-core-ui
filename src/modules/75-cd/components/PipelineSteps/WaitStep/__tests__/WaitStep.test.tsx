@@ -14,29 +14,18 @@ import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 
-import { PolicyStep } from '../PolicyStep'
+import { WaitStep } from '../WaitStep'
 
-jest.mock('services/pm', () => ({
-  useGetPolicySet: jest.fn().mockImplementation(() => {
-    return {
-      data: {
-        name: 'test',
-        policies: ['ptest1']
-      },
-      loading: false,
-      error: {}
-    }
-  })
-}))
+jest.mock('services/pm', () => ({}))
 
-describe('Test Policy Step', () => {
+describe('Test Wait Step', () => {
   beforeEach(() => {
-    factory.registerStep(new PolicyStep())
+    factory.registerStep(new WaitStep())
   })
 
   test('render edit view as new step', () => {
     const { container } = render(
-      <TestStepWidget initialValues={{}} type={StepType.Policy} stepViewType={StepViewType.Edit} />
+      <TestStepWidget initialValues={{}} type={StepType.Wait} stepViewType={StepViewType.Edit} />
     )
 
     expect(container).toMatchSnapshot()
@@ -44,20 +33,15 @@ describe('Test Policy Step', () => {
 
   test('render runtime inputs in edit step', () => {
     const initialValues = {
-      name: 'Policy Step',
-      identifier: 'PolicyStep',
-      type: StepType.Policy,
-      timeout: RUNTIME_INPUT_VALUE,
+      name: 'Wait Step',
+      identifier: 'WaitStep',
+      type: StepType.Wait,
       spec: {
-        policySets: ['acc.pol1', 'org.pol2', 'pol3'],
-        type: 'Custom',
-        policySpec: {
-          payload: RUNTIME_INPUT_VALUE
-        }
+        duration: RUNTIME_INPUT_VALUE
       }
     }
     const { container } = render(
-      <TestStepWidget initialValues={initialValues} type={StepType.Policy} stepViewType={StepViewType.Edit} />
+      <TestStepWidget initialValues={initialValues} type={StepType.Wait} stepViewType={StepViewType.Edit} />
     )
 
     expect(container).toMatchSnapshot()
@@ -65,22 +49,16 @@ describe('Test Policy Step', () => {
 
   test('render edit view as edit step', () => {
     const initialValues = {
-      name: 'Policy Step',
-      identifier: 'PolicyStep',
-      type: StepType.Policy,
-      timeout: '10m',
+      name: 'Wait Step',
+      identifier: 'WaitStep',
+      type: StepType.Wait,
       spec: {
-        policySets: ['acc.pol1', 'org.pol2', 'pol3'],
-        type: 'Custom',
-        policySpec: {
-          payload: 'Some Custom input'
-        }
+        duration: '10s'
       }
     }
     const { container } = render(
-      <TestStepWidget initialValues={initialValues} type={StepType.Policy} stepViewType={StepViewType.Edit} />
+      <TestStepWidget initialValues={initialValues} type={StepType.Wait} stepViewType={StepViewType.Edit} />
     )
-
     expect(container).toMatchSnapshot()
   })
 
@@ -93,17 +71,12 @@ describe('Test Policy Step', () => {
         initialValues={{
           name: '',
           identifier: '',
-          type: StepType.Policy,
-          timeout: '10m',
+          type: StepType.Wait,
           spec: {
-            policySets: ['acc.test'],
-            type: 'Custom',
-            policySpec: {
-              payload: 'Input'
-            }
+            duration: '10s'
           }
         }}
-        type={StepType.Policy}
+        type={StepType.Wait}
         stepViewType={StepViewType.Edit}
         onChange={onChange}
         onUpdate={onUpdate}
@@ -114,10 +87,10 @@ describe('Test Policy Step', () => {
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
 
     await act(async () => {
-      fireEvent.input(queryByNameAttribute('name')!, { target: { value: 'Policy Step' } })
-      fireEvent.input(queryByNameAttribute('timeout')!, { target: { value: '20m' } })
-      fireEvent.input(queryByNameAttribute('spec.policySpec.payload')!, {
-        target: { value: 'Test Input' },
+      fireEvent.input(queryByNameAttribute('name')!, { target: { value: 'Wait Step' } })
+
+      fireEvent.input(queryByNameAttribute('spec.duration')!, {
+        target: { value: '10m' },
         bubbles: true
       })
     })
@@ -125,16 +98,12 @@ describe('Test Policy Step', () => {
     await act(() => ref.current?.submitForm()!)
 
     expect(onUpdate).toHaveBeenCalledWith({
-      name: 'Policy Step',
-      identifier: 'Policy_Step',
-      type: 'Policy',
-      timeout: '20m',
+      name: 'Wait Step',
+      identifier: 'Wait_Step',
+      type: 'Wait',
+
       spec: {
-        policySets: ['acc.test'],
-        type: 'Custom',
-        policySpec: {
-          payload: 'Test Input'
-        }
+        duration: '10m'
       }
     })
   })
@@ -143,35 +112,26 @@ describe('Test Policy Step', () => {
     const onChange = jest.fn()
     const onUpdate = jest.fn()
     const initialValues = {
-      name: 'Policy Step',
-      identifier: 'PolicyStep',
-      type: StepType.Policy,
-      timeout: RUNTIME_INPUT_VALUE,
+      name: 'Wait Step',
+      identifier: 'WaitStep',
+      type: StepType.Wait,
       spec: {
-        policySets: ['acc.pol1', 'org.pol2', 'pol3'],
-        type: 'Custom',
-        policySpec: {
-          payload: RUNTIME_INPUT_VALUE
-        }
+        duration: RUNTIME_INPUT_VALUE
       }
     }
     const { container } = render(
       <TestStepWidget
         initialValues={{}}
         template={initialValues}
-        type={StepType.Policy}
+        type={StepType.Wait}
         stepViewType={StepViewType.InputSet}
         onChange={onChange}
         onUpdate={onUpdate}
         inputSetData={{
           readonly: false,
           template: {
-            timeout: RUNTIME_INPUT_VALUE,
             spec: {
-              policySets: RUNTIME_INPUT_VALUE,
-              policySpec: {
-                payload: RUNTIME_INPUT_VALUE
-              }
+              duration: RUNTIME_INPUT_VALUE
             }
           } as any,
           path: '/test/path'
@@ -186,7 +146,7 @@ describe('Test Policy Step', () => {
     const { container } = render(
       <TestStepWidget
         initialValues={{}}
-        type={StepType.Policy}
+        type={StepType.Wait}
         stepViewType={StepViewType.InputSet}
         template={{}}
         path=""
@@ -200,23 +160,18 @@ describe('Test Policy Step', () => {
     const onChange = jest.fn()
     const onUpdate = jest.fn()
     const initialValues = {
-      name: 'Policy Step',
-      identifier: 'PolicyStep',
-      type: StepType.Policy,
-      timeout: RUNTIME_INPUT_VALUE,
+      name: 'Wait Step',
+      identifier: 'WaitStep',
+      type: StepType.Wait,
       spec: {
-        policySets: RUNTIME_INPUT_VALUE,
-        type: 'Custom',
-        policySpec: {
-          payload: RUNTIME_INPUT_VALUE
-        }
+        duration: RUNTIME_INPUT_VALUE
       }
     }
     const { container } = render(
       <TestStepWidget
         initialValues={{}}
         template={initialValues}
-        type={StepType.Policy}
+        type={StepType.Wait}
         stepViewType={StepViewType.DeploymentForm}
         onChange={onChange}
         onUpdate={onUpdate}
@@ -229,30 +184,21 @@ describe('Test Policy Step', () => {
 
 describe('validate policy step input sets', () => {
   test('validates default inputs set correctly', () => {
-    const response = new PolicyStep().validateInputSet({
+    const response = new WaitStep().validateInputSet({
       data: {
-        name: 'Policy Step',
-        identifier: 'PolicyStep',
-        timeout: '1',
-        type: StepType.Policy,
+        name: 'Wait Step',
+        identifier: 'WaitStep',
+        type: StepType.Wait,
         spec: {
-          type: 'Custom',
-          policySpec: {
-            payload: ''
-          }
+          duration: '10'
         }
       },
       template: {
-        name: 'Policy Step',
-        identifier: 'PolicyStep',
-        timeout: RUNTIME_INPUT_VALUE,
-        type: StepType.Policy,
+        name: 'Wait Step',
+        identifier: 'WaitStep',
+        type: StepType.Wait,
         spec: {
-          type: 'Custom',
-          policySets: RUNTIME_INPUT_VALUE,
-          policySpec: {
-            payload: RUNTIME_INPUT_VALUE
-          }
+          duration: RUNTIME_INPUT_VALUE
         }
       },
       viewType: StepViewType.DeploymentForm,
@@ -262,30 +208,21 @@ describe('validate policy step input sets', () => {
   })
 
   test('validates timeout is min 10s', () => {
-    const response = new PolicyStep().validateInputSet({
+    const response = new WaitStep().validateInputSet({
       data: {
-        name: 'Policy Step',
-        identifier: 'PolicyStep',
-        timeout: '1s',
-        type: StepType.Policy,
+        name: 'Wait Step',
+        identifier: 'WaitStep',
+        type: StepType.Wait,
         spec: {
-          type: 'Custom',
-          policySpec: {
-            payload: ''
-          }
+          duration: '10m'
         }
       },
       template: {
-        name: 'Policy Step',
-        identifier: 'PolicyStep',
-        timeout: RUNTIME_INPUT_VALUE,
-        type: StepType.Policy,
+        name: 'Wait Step',
+        identifier: 'WaitStep',
+        type: StepType.Wait,
         spec: {
-          type: 'Custom',
-          policySets: RUNTIME_INPUT_VALUE,
-          policySpec: {
-            payload: RUNTIME_INPUT_VALUE
-          }
+          duration: RUNTIME_INPUT_VALUE
         }
       },
       viewType: StepViewType.DeploymentForm
