@@ -33,25 +33,18 @@
   .carousel {
     height: 100%;
     padding: 0px !important;
-    :global {
-      .Carousel--carouselView {
-        height: 100%;
-      }
-      .Carousel--carouselItem {
-        height: 100%;
-        overflow: hidden;
-      }
-      .Carousel--carouselIndicators {
-        position: absolute;
-        bottom: var(--spacing-large);
-        left: 50%;
-      }
-      .Carousel--carouselRight {
-        visibility: hidden;
-      }
-      .Carousel--carouselLeft {
-        visibility: hidden;
-      }
+    & > div:first-child {
+      height: 100%;
+    }
+
+    .carouselSlide {
+      height: 100%;
+      overflow: hidden;
+    }
+    .indicators {
+      position: absolute;
+      bottom: var(--spacing-large);
+      left: 50%;
     }
   }
 }

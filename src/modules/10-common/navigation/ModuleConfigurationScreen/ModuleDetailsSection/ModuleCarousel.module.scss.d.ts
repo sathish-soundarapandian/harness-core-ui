@@ -8,8 +8,10 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly carousel: string
+  readonly carouselSlide: string
   readonly container: string
   readonly heading: string
+  readonly indicators: string
   readonly main: string
 }
 export default styles

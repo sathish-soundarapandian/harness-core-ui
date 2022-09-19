@@ -43,7 +43,15 @@ const ModuleCarousel: React.FC<ModuleCarouselProps> = ({ module: selectedModule,
         </Text>
       </Layout.Horizontal>
       <Container className={css.main}>
-        <Carousel className={css.carousel} autoPlay autoPlayInterval={3000} hideIndicators={data.length <= 1}>
+        <Carousel
+          className={css.carousel}
+          hideArrows
+          slideClassName={css.carouselSlide}
+          indicatorsClassName={css.indicators}
+          autoPlay
+          autoPlayInterval={3000}
+          hideIndicators={data.length <= 1}
+        >
           {data.length > 0 ? (
             data.map((item, index) => {
               const Component = getComponentBasedOnType(item.type)
