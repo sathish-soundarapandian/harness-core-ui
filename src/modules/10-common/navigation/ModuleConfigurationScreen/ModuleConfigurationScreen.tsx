@@ -10,9 +10,8 @@ import { Layout, Container, Text } from '@harness/uicore'
 import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
 import { Icon } from '@harness/icons'
-import { ModuleName } from 'framework/types/ModuleName'
 import { PageSpinner } from '@common/components'
-import { DEFAULT_MODULES_ORDER, NavModuleName, useNavModuleInfoMap } from '@common/hooks/useNavModuleInfo'
+import { DEFAULT_MODULES_ORDER, NavModuleName } from '@common/hooks/useNavModuleInfo'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { String } from 'framework/strings'
 import ModuleSortableList from './ModuleSortableList/ModuleSortableList'
@@ -25,7 +24,7 @@ interface ModulesConfigurationScreenProps {
   className?: string
   hideReordering?: boolean
   hideHeader?: boolean
-  activeModule?: NavModuleName
+  activeModuleIndex?: number
 }
 
 interface ModuleConfigHeaderProps {
@@ -39,7 +38,7 @@ export interface ModulesPreferenceStoreData {
 
 export const MODULES_CONFIG_PREFERENCE_STORE_KEY = 'modulesConfiguration'
 
-const ModuleConfigHeader: React.FC<ModuleConfigHeaderProps> = ({ onDefaultSettingsClick }) => {
+const ModuleConfigHeader: React.FC<ModuleConfigHeaderProps> = () => {
   return (
     <>
       <Text inline margin={{ bottom: 'xsmall' }} flex={{ justifyContent: 'flex-start' }}>
@@ -57,16 +56,6 @@ const ModuleConfigHeader: React.FC<ModuleConfigHeaderProps> = ({ onDefaultSettin
         <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_200} inline>
           (<String stringID="common.moduleConfig.autoSaved" />)
         </Text>
-        <Text
-          className={css.defaultSettings}
-          onClick={onDefaultSettingsClick}
-          margin={{ left: 'xsmall' }}
-          font={{ variation: FontVariation.SMALL }}
-          inline
-          color={Color.PRIMARY_5}
-        >
-          <String stringID="common.moduleConfig.restoreDefault" />
-        </Text>
       </Text>
     </>
   )
@@ -76,20 +65,19 @@ const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({
   onClose,
   className,
   hideReordering,
-  activeModule: activeModuleFromProps,
+  activeModuleIndex: activeModuleIndexFromProps,
   hideHeader
 }) => {
-  const [activeModule, setActiveModule] = useState<NavModuleName>(ModuleName.CD)
+  const [activeModuleIndex, setActiveModuleIndex] = useState<number>(0)
   const { setPreference: setModuleConfigPreference, preference: { orderedModules = [], selectedModules = [] } = {} } =
     usePreferenceStore<ModulesPreferenceStoreData>(PreferenceScope.USER, MODULES_CONFIG_PREFERENCE_STORE_KEY)
   const { contentfulModuleMap, loading } = useGetContentfulModules()
-  const moduleMap = useNavModuleInfoMap()
 
   useEffect(() => {
-    if (activeModuleFromProps) {
-      setActiveModule(activeModuleFromProps)
+    if (activeModuleIndexFromProps) {
+      setActiveModuleIndex(activeModuleIndexFromProps)
     }
-  }, [activeModuleFromProps])
+  }, [activeModuleIndexFromProps])
 
   useEffect(() => {
     // Handle case when new module is added
@@ -101,21 +89,10 @@ const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({
     }
   }, [orderedModules])
 
+  const activeModule = orderedModules[activeModuleIndex]
   return (
     <Layout.Vertical className={cx(css.container, className)} padding={{ left: 'xlarge' }}>
-      <Container className={css.header}>
-        {!hideHeader ? (
-          <ModuleConfigHeader
-            onDefaultSettingsClick={() => {
-              const modulesWithLicense = DEFAULT_MODULES_ORDER.filter(m => !!moduleMap[m].licenseType)
-              setModuleConfigPreference({
-                selectedModules: modulesWithLicense,
-                orderedModules: DEFAULT_MODULES_ORDER
-              })
-            }}
-          />
-        ) : null}
-      </Container>
+      <Container className={css.header}>{!hideHeader ? <ModuleConfigHeader /> : null}</Container>
       <Layout.Horizontal
         padding={{ bottom: 'huge', right: 'huge' }}
         margin={{ bottom: 'xxxlarge' }}
@@ -125,7 +102,7 @@ const ModulesConfigurationScreen: React.FC<ModulesConfigurationScreenProps> = ({
           <Container margin={{ right: 'xxlarge' }} className={css.sortableListContainer}>
             <ModuleSortableList
               activeModule={activeModule}
-              onSelect={setActiveModule}
+              onSelect={setActiveModuleIndex}
               orderedModules={orderedModules}
               selectedModules={selectedModules}
               handleUpdate={(updatedOrder, selected) => {

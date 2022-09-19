@@ -20,8 +20,16 @@ jest.mock('../../CarousellmageAndDescription/CarousellmageAndDescription', () =>
   return () => <div>{ModuleContentType.CENTER_ALIGNED_IMAGE_DESC}</div>
 })
 
-jest.mock('../../LottieRenderer/LottieRenderer', () => {
-  return () => <div>{ModuleContentType.LOTTIE}</div>
+global.fetch = jest.fn().mockImplementationOnce(() => {
+  return new Promise(resolve => {
+    resolve({
+      ok: true,
+      status,
+      json: () => {
+        return {}
+      }
+    })
+  })
 })
 
 describe('Module Carousel test', () => {
@@ -56,7 +64,17 @@ describe('Module Carousel test', () => {
               },
               {
                 type: ModuleContentType.LOTTIE,
-                data: { data: {} }
+                data: {
+                  json: {
+                    fields: {
+                      // eslint-disable-next-line
+                      // @ts-ignore
+                      file: {
+                        url: 'http://test.com'
+                      }
+                    }
+                  }
+                }
               }
             ]
           }}

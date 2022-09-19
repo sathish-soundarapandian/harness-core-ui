@@ -13,7 +13,8 @@ import Contentful, { ContentfulEnvironment } from './Contentful'
 const CONTENT_TYPE = 'module'
 
 export interface LottieContent {
-  data: object
+  activeModule: NavModuleName
+  json: Asset
 }
 
 export enum ModuleContentType {

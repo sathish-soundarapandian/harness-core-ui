@@ -47,7 +47,7 @@ const commonLinkProps: Partial<NavLinkProps> = {
   className: cx(css.navLink)
 }
 
-const maxNumOfModulesToShow = 3
+const MAX_NUM_OF_MODULES_TO_SHOW = 3
 
 const moduleToNavItemsMap: Record<NavModuleName, () => JSX.Element> = {
   [ModuleName.CD]: DeploymentsNavItem,
@@ -72,7 +72,7 @@ export default function L1Nav(): React.ReactElement {
     usePreferenceStore<ModulesPreferenceStoreData>(PreferenceScope.USER, MODULES_CONFIG_PREFERENCE_STORE_KEY)
 
   const { selectedModules = [] } = modulesPreferenceData || {}
-  const modulesListHeight = 92 * Math.min(maxNumOfModulesToShow, selectedModules.length)
+  const modulesListHeight = 92 * Math.min(MAX_NUM_OF_MODULES_TO_SHOW, selectedModules.length)
 
   useLayoutEffect(() => {
     // main nav consists of two UL sections with classname "css.navList"

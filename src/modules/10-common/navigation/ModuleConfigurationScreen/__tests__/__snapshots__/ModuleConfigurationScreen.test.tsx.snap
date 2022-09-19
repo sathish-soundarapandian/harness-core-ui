@@ -45,13 +45,6 @@ exports[`Module Configuration screen should render correctly 1`] = `
           </span>
           )
         </span>
-        <span
-          class="StyledProps--font StyledProps--main defaultSettings StyledProps--margin-left-xsmall StyledProps--font-variation-small StyledProps--inline StyledProps--color StyledProps--color-primary5"
-        >
-          <span>
-            common.moduleConfig.restoreDefault
-          </span>
-        </span>
       </p>
     </div>
     <div

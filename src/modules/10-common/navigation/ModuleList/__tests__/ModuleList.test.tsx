@@ -20,7 +20,7 @@ jest.mock('../../ModuleConfigurationScreen/ModuleConfigurationScreen', () => {
 describe('ModuleList', () => {
   test('should render correctly without modules', () => {
     const { container, getByText, getByTestId } = render(
-      <TestWrapper path="/account/:accountId" pathParams={{ accountId: 'dummy' }}>
+      <TestWrapper>
         <ModuleList isOpen={true} close={noop} usePortal={false} />
       </TestWrapper>
     )
@@ -34,8 +34,6 @@ describe('ModuleList', () => {
   test('should render correctly with modules enabled and disabled', () => {
     const { queryByText } = render(
       <TestWrapper
-        path="/account/:accountId"
-        pathParams={{ accountId: 'dummy' }}
         defaultAppStoreValues={{
           featureFlags: {
             CDNG_ENABLED: true,
@@ -61,8 +59,6 @@ describe('ModuleList', () => {
     const clickOnConfig = jest.fn()
     const { container, queryByText } = render(
       <TestWrapper
-        path="/account/:accountId"
-        pathParams={{ accountId: 'dummy' }}
         defaultAppStoreValues={{
           featureFlags: {
             CDNG_ENABLED: true,
@@ -85,8 +81,6 @@ describe('ModuleList', () => {
     const clickOnConfig = jest.fn()
     const { container, queryByText } = render(
       <TestWrapper
-        path="/account/:accountId"
-        pathParams={{ accountId: 'dummy' }}
         defaultAppStoreValues={{
           featureFlags: {
             CDNG_ENABLED: true,
@@ -109,8 +103,6 @@ describe('ModuleList', () => {
   test('render module config screen by clicking on module tooltip', () => {
     const { container, queryByText } = render(
       <TestWrapper
-        path="/account/:accountId"
-        pathParams={{ accountId: 'dummy' }}
         defaultAppStoreValues={{
           featureFlags: {
             CDNG_ENABLED: true

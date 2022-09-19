@@ -12,7 +12,7 @@ import DraggableModuleItem from './DraggableModuleItem/DraggableModuleItem'
 
 export interface ModuleSortableListProps {
   activeModule: NavModuleName
-  onSelect: (module: NavModuleName) => void
+  onSelect: (index: number) => void
   handleUpdate: (updatedOrder: NavModuleName[], selectedModules: NavModuleName[]) => void
   orderedModules: NavModuleName[]
   selectedModules: NavModuleName[]
@@ -62,7 +62,7 @@ const ModuleSortableList: React.FC<ModuleSortableListProps> = ({
                   index={index}
                   module={module}
                   isActive={activeModule === module}
-                  onClick={onSelect}
+                  onClick={() => onSelect(index)}
                   checked={selectedModules.indexOf(module) > -1}
                   onCheckboxChange={checked => {
                     const tempOrderedSelectedModules = [...selectedModules]
