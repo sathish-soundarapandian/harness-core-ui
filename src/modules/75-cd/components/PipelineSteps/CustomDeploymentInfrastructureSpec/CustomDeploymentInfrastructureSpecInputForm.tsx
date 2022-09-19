@@ -19,6 +19,7 @@ import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/Abs
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { VariableType } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/DeploymentInfraWrapper/DeploymentInfraSpecifications/DeploymentInfraSpecifications'
+import { Connectors } from '@connectors/constants'
 import type { CustomDeploymentInfrastructureSpecEditableProps } from './CustomDeploymentInfrastructureInterface'
 import css from './CustomDeploymentInfrastructureSpec.module.scss'
 
@@ -57,7 +58,8 @@ export const CustomDeploymentInfrastructureSpecInputForm: React.FC<
                   VariableType.Number,
                   VariableType.Connector
                 ],
-                isDescriptionEnabled: true
+                isDescriptionEnabled: true,
+                allowedConnectorTypes: Object.values(Connectors)
               }}
               readonly={readonly}
             />

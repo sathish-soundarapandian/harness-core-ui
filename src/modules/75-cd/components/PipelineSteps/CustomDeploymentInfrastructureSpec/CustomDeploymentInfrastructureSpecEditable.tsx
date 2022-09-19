@@ -32,6 +32,7 @@ import {
   getValidationSchema
 } from './CustomDeploymentInfrastructureInterface'
 import css from './CustomDeploymentInfrastructureSpec.module.scss'
+import { Connectors } from '@connectors/constants'
 
 const CustomDeploymentInfrastructureSpecEditableNew: React.FC<CustomDeploymentInfrastructureSpecEditableProps> = ({
   initialValues,
@@ -117,7 +118,8 @@ const CustomDeploymentInfrastructureSpecEditableNew: React.FC<CustomDeploymentIn
                     ],
                     isDescriptionEnabled: true,
                     tabName: DeployTabs.INFRASTRUCTURE,
-                    formName: 'addEditInfraVariableForm'
+                    formName: 'addEditInfraVariableForm',
+                    allowedConnectorTypes: Object.values(Connectors)
                   }}
                 />
               </Layout.Horizontal>

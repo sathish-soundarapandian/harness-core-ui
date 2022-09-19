@@ -22,6 +22,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { VariableType } from './CustomVariableUtils'
 import css from './CustomVariables.module.scss'
 export interface CustomVariablesData {
@@ -38,6 +39,7 @@ export interface CustomVariableInputSetExtraProps {
   executionIdentifier?: string
   isDescriptionEnabled?: boolean
   allowedVarialblesTypes?: VariableType[]
+  allowedConnectorTypes?: ConnectorInfoDTO['type'] | ConnectorInfoDTO['type'][]
 }
 
 export interface CustomVariableInputSetProps extends CustomVariableInputSetExtraProps {
@@ -64,7 +66,8 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
     inputSetData,
     formik,
     allowableTypes,
-    className
+    className,
+    allowedConnectorTypes
   } = props
   const basePath = path?.length ? `${path}.variables` : 'variables'
   const { expressions } = useVariablesExpression()
@@ -120,6 +123,7 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
                   setRefValue
                   connectorLabelClass="connectorVariableField"
                   enableConfigureOptions={false}
+                  type={allowedConnectorTypes}
                 />
               ) : variable.type === VariableType.Secret ? (
                 <MultiTypeSecretInput
