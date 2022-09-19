@@ -34,7 +34,9 @@ function WaitStepWidget(
   const { getString } = useStrings()
 
   const validationSchema = Yup.object().shape({
-    duration: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
+    spec: Yup.object().shape({
+      duration: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum'))
+    }),
     ...getNameAndIdentifierSchema(getString, stepViewType)
   })
 
