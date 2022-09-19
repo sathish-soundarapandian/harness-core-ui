@@ -31,7 +31,7 @@ import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { produce } from 'immer'
 import type { FormikProps } from 'formik'
-import { useGetDelegateGroupByIdentifier } from 'services/portal'
+import { DelegateGroupDetails, useGetDelegateGroupsNGV2 } from 'services/portal'
 import Volumes, { VolumesTypes } from '@pipeline/components/Volumes/Volumes'
 import MultiTypeCustomMap from '@common/components/MultiTypeCustomMap/MultiTypeCustomMap'
 import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
@@ -372,8 +372,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
     data: delegateDetails,
     refetch: fetchDelegateDetails,
     loading: fetchingDelegateDetails
-  } = useGetDelegateGroupByIdentifier({
-    identifier: ProvisionedByHarnessDelegateGroupIdentifier,
+  } = useGetDelegateGroupsNGV2({
     queryParams: { accountId },
     lazy: true
   })
@@ -442,7 +441,12 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
   )
 
   React.useEffect(() => {
-    if (!fetchingDelegateDetails && delegateDetails?.resource && delegateDetails.resource?.activelyConnected) {
+    if (
+      !fetchingDelegateDetails &&
+      delegateDetails?.resource?.delegateGroupDetails?.find(
+        (item: DelegateGroupDetails) => item?.delegateGroupIdentifier === ProvisionedByHarnessDelegateGroupIdentifier
+      )?.activelyConnected
+    ) {
       setIsProvisionedByHarnessDelegateHealthy(true)
     }
   }, [fetchingDelegateDetails, delegateDetails])
