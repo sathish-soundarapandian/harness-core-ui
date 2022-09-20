@@ -269,6 +269,23 @@ export const getPipelinePayloadWithCodebase = (): Record<string, any> => {
   )
 }
 
+export const getCloudPipelinePayloadWithoutCodebase = (): Record<string, any> => {
+  const originalPipeline = getPipelinePayloadWithoutCodebase()
+  set(originalPipeline, 'pipeline.stages.0.stage.spec.infrastructure', undefined)
+  set(originalPipeline, 'pipeline.stages.0.stage.spec.platform', { os: 'Linux', arch: 'Amd64' })
+  set(originalPipeline, 'pipeline.stages.0.stage.spec.runtime', { type: 'Cloud', spec: {} })
+  return originalPipeline
+}
+
+export const getCloudPipelinePayloadWithCodebase = (): Record<string, any> => {
+  const originalPipeline = getCloudPipelinePayloadWithoutCodebase()
+  return set(
+    set(originalPipeline, 'pipeline.properties', CodebaseProperties),
+    'pipeline.stages.0.stage.spec.cloneCodebase',
+    true
+  )
+}
+
 export const getFullRepoName = (repository: UserRepoResponse): string => {
   const { name: repositoryName, namespace } = repository
   return namespace && repositoryName ? `${namespace}/${repositoryName}` : repositoryName ?? ''
