@@ -6,7 +6,7 @@
  */
 
 import { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
-
+import { WaitStep } from '@cd/components/PipelineSteps/WaitStep/WaitStep'
 import { StepGroupStep } from './Steps/StepGroupStep/StepGroupStep'
 import { CustomVariables } from './Steps/CustomVariables/CustomVariables'
 import { BarrierStep } from './Steps/Barrier/Barrier'
@@ -20,7 +20,6 @@ import { ServiceNowCreate } from './Steps/ServiceNowCreate/ServiceNowCreate'
 import { ServiceNowUpdate } from './Steps/ServiceNowUpdate/ServiceNowUpdate'
 import { JenkinsStep } from './Steps/JenkinsStep/JenkinsStep'
 import { CustomApproval } from './Steps/CustomApproval/CustomApproval'
-import { WaitStep } from '@cd/components/PipelineSteps/WaitStep/WaitStep'
 
 class PipelineStepFactory extends AbstractStepFactory {
   protected type = 'pipeline-factory'
