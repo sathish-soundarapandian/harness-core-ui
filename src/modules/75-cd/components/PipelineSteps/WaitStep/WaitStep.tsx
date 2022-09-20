@@ -8,7 +8,6 @@
 import React from 'react'
 import * as Yup from 'yup'
 import { FormikErrors, yupToFormErrors } from 'formik'
-import { isEmpty, set } from 'lodash-es'
 
 import { IconName, Color, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { StringsMap } from 'stringTypes'
