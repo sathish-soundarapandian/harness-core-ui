@@ -6,13 +6,17 @@
  */
 
 import React from 'react'
-
+import { useParams } from 'react-router-dom'
 import { String, useStrings } from 'framework/strings'
-import { ExecutionNode } from 'services/pipeline-ng'
-import { Thumbnail, useToaster } from '@wings-software/uicore'
+import {
+  useHandleManualInterventionInterrupt,
+  ExecutionNode,
+  HandleManualInterventionInterruptQueryParams
+} from 'services/pipeline-ng'
+import { Thumbnail } from '@wings-software/uicore'
 import { Strategy, strategyIconMap, stringsMap } from '@pipeline/utils/FailureStrategyUtils'
-import headerCss from '@pipeline/pages/execution/ExecutionPipelineView/ExecutionGraphView/ExecutionStageDetailsHeader/ExecutionStageDetailsHeader.module.scss'
-import css from './WaitStepDetailsTab.module.scss'
+import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import css from '../ManualInterventionTab/ManualInterventionTab.module.scss'
 
 export interface WaitStepDetailsTabProps {
   step: ExecutionNode
@@ -22,9 +26,24 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
   const { step } = props
   const { getString } = useStrings()
   const STRATEGIES: Strategy[][] = [[Strategy.MarkAsSuccess], [Strategy.Abort]]
+  const { orgIdentifier, projectIdentifier, executionIdentifier, accountId } =
+    useParams<PipelineType<ExecutionPathProps>>()
+  const { mutate: handleInterrupt } = useHandleManualInterventionInterrupt({
+    planExecutionId: executionIdentifier,
+    nodeExecutionId: step.uuid || /* istanbul ignore next */ ''
+  })
 
-  const handleChange = () => {
-    console.log('hello')
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
+    const interruptType = e.target.value as HandleManualInterventionInterruptQueryParams['interruptType']
+    handleInterrupt(undefined, {
+      queryParams: {
+        interruptType,
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier
+      },
+      headers: { 'content-type': 'application/json' }
+    })
   }
   return (
     <React.Fragment>

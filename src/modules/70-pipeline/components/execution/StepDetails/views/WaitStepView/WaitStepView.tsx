@@ -6,29 +6,15 @@
  */
 
 import React from 'react'
-import { merge } from 'lodash-es'
 import { Tabs, Tab } from '@wings-software/uicore'
-
 import { useStrings } from 'framework/strings'
-import { isExecutionWaitingForInput, isExecutionWaitingForIntervention } from '@pipeline/utils/statusHelpers'
 import type { StepDetailProps } from '@pipeline/factories/ExecutionFactory/types'
-import { ExecutionInputs } from '@pipeline/components/execution/StepDetails/tabs/ExecutionInputs/ExecutionInputs'
-import { StepDetailsTab } from '@pipeline/components/execution/StepDetails/tabs/StepDetailsTab/StepDetailsTab'
-import { InputOutputTab } from '@pipeline/components/execution/StepDetails/tabs/InputOutputTab/InputOutputTab'
-import { ManualInterventionTab } from '@pipeline/components/execution/StepDetails/tabs/ManualInterventionTab/ManualInterventionTab'
-import { Strategy } from '@pipeline/utils/FailureStrategyUtils'
-import { allowedStrategiesAsPerStep } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/StrategySelection/StrategyConfig'
 import { StageType } from '@pipeline/utils/stageHelpers'
-import { StepMode } from '@pipeline/utils/stepUtils'
-
-import css from './DefaultView.module.scss'
+import css from '../DefaultView/DefaultView.module.scss'
+import { WaitStepDetailsTab } from '../../tabs/WaitStepDetailsTab/WaitStepDetailsTab'
 
 enum StepDetailTab {
-  STEP_DETAILS = 'STEP_DETAILS',
-  INPUT = 'INPUT',
-  OUTPUT = 'OUTPUT',
-  MANUAL_INTERVENTION = 'MANUAL_INTERVENTION',
-  STEP_EXECUTION_INPUTS = 'STEP_EXECUTION_INPUTS'
+  STEP_DETAILS = 'STEP_DETAILS'
 }
 
 export function DefaultView(props: StepDetailProps): React.ReactElement {
@@ -36,33 +22,6 @@ export function DefaultView(props: StepDetailProps): React.ReactElement {
   const { getString } = useStrings()
   const [activeTab, setActiveTab] = React.useState(StepDetailTab.STEP_DETAILS)
   const manuallySelected = React.useRef(false)
-  const isWaitingOnExecInputs = isExecutionWaitingForInput(step.status)
-  const shouldShowExecutionInputs = !!step.executionInputConfigured
-  const shouldShowInputOutput =
-    ((step?.stepType ?? '') as string) !== 'liteEngineTask' && !isStageExecutionInputConfigured
-  const isManualInterruption = isExecutionWaitingForIntervention(step.status)
-  const failureStrategies = allowedStrategiesAsPerStep(stageType)[StepMode.STEP].filter(
-    st => st !== Strategy.ManualIntervention
-  )
-
-  React.useEffect(() => {
-    if (!manuallySelected.current) {
-      let tab = StepDetailTab.STEP_DETAILS
-
-      if (shouldShowExecutionInputs && (isWaitingOnExecInputs || isStageExecutionInputConfigured)) {
-        tab = StepDetailTab.STEP_EXECUTION_INPUTS
-      } else if (isManualInterruption) {
-        tab = StepDetailTab.MANUAL_INTERVENTION
-      }
-      setActiveTab(tab)
-    }
-  }, [
-    step.identifier,
-    isManualInterruption,
-    shouldShowExecutionInputs,
-    isWaitingOnExecInputs,
-    isStageExecutionInputConfigured
-  ])
 
   return (
     <div className={css.tabs}>
