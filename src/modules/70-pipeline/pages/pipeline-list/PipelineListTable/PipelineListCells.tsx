@@ -71,7 +71,7 @@ export const PipelineNameCell: CellType = ({ row }) => {
     <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'start' }}>
       <Layout.Vertical spacing="xsmall" data-testid={data.identifier}>
         <Layout.Horizontal spacing="xsmall" flex={{ alignItems: 'center' }}>
-          <Link to={routes.toPipelineDeploymentList(getRouteProps(pathParams, data))}>
+          <Link to={routes.toPipelineStudio(getRouteProps(pathParams, data))}>
             <Text
               font={{ variation: FontVariation.LEAD }}
               color={Color.PRIMARY_7}
