@@ -30,6 +30,8 @@ import {
 import { getMultiTypeInputProps } from '../../../ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/VerificationJobFields/VerificationJobFields.utils'
 import { getRunTimeInputsFromHealthSource } from './TemplatisedRunTimeMonitoredService.utils'
 import css from './TemplatisedRunTimeMonitoredService.module.scss'
+import type { ConnectorInfoDTO } from 'services/cv'
+import { healthSourceTypeMapping } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
 
 export interface TemplatisedRunTimeMonitoredServiceProps {
   prefix: string
@@ -103,7 +105,7 @@ export default function TemplatisedRunTimeMonitoredService(
                       disabled={!healthSource?.type}
                       setRefValue
                       multiTypeProps={{ allowableTypes, expressions }}
-                      type={healthSource?.type}
+                      type={healthSourceTypeMapping(healthSource?.type as ConnectorInfoDTO['type'])}
                       enableConfigureOptions={false}
                     />
                   )
