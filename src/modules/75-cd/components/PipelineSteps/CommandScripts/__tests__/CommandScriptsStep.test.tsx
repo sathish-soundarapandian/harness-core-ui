@@ -30,7 +30,18 @@ describe('Command Scripts step', () => {
     const onChange = jest.fn()
     const { container, getByText } = render(
       <TestStepWidget
-        initialValues={{}}
+        initialValues={{
+          spec: {
+            commandUnits: [
+              {
+                type: 'Copy',
+                spec: {
+                  destinationPath: 'initialPath'
+                }
+              }
+            ]
+          }
+        }}
         type={StepType.Command}
         onUpdate={onUpdate}
         onChange={onChange}
@@ -60,7 +71,15 @@ describe('Command Scripts step', () => {
         spec: {
           environmentVariables: [],
           onDelegate: false,
-          outputVariables: []
+          outputVariables: [],
+          commandUnits: [
+            {
+              type: 'Copy',
+              spec: {
+                destinationPath: 'initialPath'
+              }
+            }
+          ]
         },
         timeout,
         type: StepType.Command

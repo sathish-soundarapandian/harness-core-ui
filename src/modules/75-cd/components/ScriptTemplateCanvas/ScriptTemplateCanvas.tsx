@@ -5,64 +5,60 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback } from 'react'
-import { debounce, isEqual } from 'lodash-es'
+import React from 'react'
+import { debounce, isEqual, set } from 'lodash-es'
+import { sanitize } from '@common/utils/JSONUtils'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
-import type { NGTemplateInfoConfig } from 'services/template-ng'
 import { ScriptTemplateFormWithRef } from './ScriptTemplateForm/ScriptTemplateForm'
 import type { ShellScriptFormData } from '../PipelineSteps/ShellScriptStep/shellScriptTypes'
 
-function getProcessedTemplate(template: NGTemplateInfoConfig, formikValue: ShellScriptFormData) {
+function getProcessedTemplate(formikValue: ShellScriptFormData) {
   return {
-    ...template,
-    spec: {
-      ...formikValue.spec,
-      onDelegate: formikValue.spec.onDelegate !== 'targethost',
-      source: {
-        ...formikValue.spec.source,
+    ...formikValue.spec,
+    onDelegate: formikValue.spec.onDelegate !== 'targethost',
+    source: {
+      ...formikValue.spec.source,
 
-        spec: {
-          ...formikValue.spec.source?.spec,
-          type: 'Inline',
-          script: formikValue.spec.source?.spec?.script
-        }
-      },
+      spec: {
+        ...formikValue.spec.source?.spec,
+        type: 'Inline',
+        script: formikValue.spec.source?.spec?.script
+      }
+    },
 
-      executionTarget: {
-        ...formikValue.spec.executionTarget,
-        connectorRef:
-          (formikValue.spec.executionTarget?.connectorRef?.value as string) ||
-          formikValue.spec.executionTarget?.connectorRef?.toString()
-      },
+    executionTarget:
+      formikValue.spec.onDelegate === 'targethost'
+        ? {
+            ...formikValue.spec.executionTarget,
+            connectorRef:
+              (formikValue.spec.executionTarget?.connectorRef?.value as string) ||
+              formikValue.spec.executionTarget?.connectorRef?.toString()
+          }
+        : {},
 
-      environmentVariables: Array.isArray(formikValue.spec.environmentVariables)
-        ? formikValue.spec.environmentVariables
-            .filter(variable => variable.value)
-            .map(({ id, ...variable }) => variable)
-        : undefined,
-
-      outputVariables: Array.isArray(formikValue.spec.outputVariables)
-        ? formikValue.spec.outputVariables.filter(variable => variable.value).map(({ id, ...variable }) => variable)
-        : undefined
-    }
+    environmentVariables: Array.isArray(formikValue.spec.environmentVariables)
+      ? formikValue.spec.environmentVariables.filter(variable => variable.value).map(({ id, ...variable }) => variable)
+      : undefined
   }
 }
 
 const ScriptTemplateCanvas = (_props: unknown, formikRef: TemplateFormRef) => {
-  const { state, updateTemplate } = React.useContext(TemplateContext)
+  const {
+    state: { template },
+    updateTemplate
+  } = React.useContext(TemplateContext)
 
-  const onUpdate = useCallback(
-    (formikValue: ShellScriptFormData) => {
-      if (!isEqual(state.template.spec, formikValue.spec)) {
-        updateTemplate(getProcessedTemplate(state.template, formikValue))
-      }
-    },
-    [state.template]
-  )
   const onSubmitStep = async (formikValue: ShellScriptFormData): Promise<void> => {
-    if (!isEqual(state.template.spec, formikValue.spec)) {
-      updateTemplate(getProcessedTemplate(state.template, formikValue))
+    const processNode = getProcessedTemplate(formikValue)
+    sanitize(processNode, {
+      removeEmptyArray: false,
+      removeEmptyObject: false,
+      removeEmptyString: false
+    })
+    if (!isEqual(template.spec, processNode)) {
+      set(template, 'spec', processNode)
+      updateTemplate(template)
     }
   }
   const debounceSubmit = debounce((formikValue: ShellScriptFormData): void => {
@@ -71,9 +67,9 @@ const ScriptTemplateCanvas = (_props: unknown, formikRef: TemplateFormRef) => {
 
   return (
     <ScriptTemplateFormWithRef
-      template={state.template}
+      template={template}
       ref={formikRef}
-      updateTemplate={onUpdate}
+      updateTemplate={debounceSubmit}
       onChange={debounceSubmit}
     />
   )

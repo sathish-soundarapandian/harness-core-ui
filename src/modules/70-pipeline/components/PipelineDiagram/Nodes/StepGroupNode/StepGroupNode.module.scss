@@ -104,6 +104,16 @@
       }
     }
   }
+  &.parallelNodes {
+    &.nestedGroup {
+      :global(#tree-container) {
+        top: 27px !important;
+      }
+      svg {
+        top: 27px !important;
+      }
+    }
+  }
   .nestedGroup {
     top: -10px;
     :global(.default-node) {

@@ -11,6 +11,7 @@ declare const styles: {
   readonly accordionPanel: string
   readonly addBtn: string
   readonly connectorRef: string
+  readonly credentialsRef: string
   readonly formRow: string
   readonly inputWidth: string
   readonly inputWrapper: string

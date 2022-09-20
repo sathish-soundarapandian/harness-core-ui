@@ -19,6 +19,7 @@ import {
 import { useStrings } from 'framework/strings'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { useToaster } from '@common/exports'
+import type { GitData } from '@common/modals/GitDiffEditor/useGitDiffEditorDialog'
 import { UseSaveSuccessResponse, useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
 import { DefaultNewTemplateId } from 'framework/Templates/templates'
@@ -30,6 +31,7 @@ import { useQueryParams } from '@common/hooks'
 import type { PromiseExtraArgs } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { Pipeline } from './types'
 
 export interface FetchTemplateUnboundProps {
@@ -48,6 +50,11 @@ declare global {
 
 interface SaveTemplateObj {
   template: NGTemplateInfoConfig
+}
+
+interface LastRemoteObjectId {
+  lastObjectId?: string
+  lastCommitId?: string
 }
 
 interface UseSaveTemplateReturnType {
@@ -70,6 +77,8 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
   const { templateIdentifier, templateType, projectIdentifier, orgIdentifier, accountId, module } = useParams<
     TemplateStudioPathProps & ModulePathParams
   >()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const { showSuccess, showError, clear } = useToaster()
@@ -113,7 +122,7 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
     latestTemplate: NGTemplateInfoConfig,
     comments?: string,
     updatedGitDetails?: SaveToGitFormInterface,
-    lastObject?: { lastObjectId?: string },
+    lastObject?: LastRemoteObjectId,
     storeMetadata?: StoreMetadata
   ): Promise<UseSaveSuccessResponse> => {
     const response = await updateExistingTemplateVersionPromise({
@@ -126,9 +135,11 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
         orgIdentifier,
         comments,
         ...(updatedGitDetails ?? {}),
-        ...(lastObject?.lastObjectId ? lastObject : {}),
-        ...(updatedGitDetails && updatedGitDetails.isNewBranch ? { baseBranch: branch } : {}),
-        ...(storeMetadata?.storeType === StoreType.REMOTE ? storeMetadata : {})
+        ...(lastObject ?? {}),
+        ...(storeMetadata?.storeType === StoreType.REMOTE ? storeMetadata : {}),
+        ...(updatedGitDetails && updatedGitDetails.isNewBranch
+          ? { baseBranch: defaultTo(branch, storeMetadata?.branch), branch: updatedGitDetails.branch }
+          : {})
       },
       requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
     })
@@ -152,7 +163,7 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
     comments?: string,
     isEdit = false,
     updatedGitDetails?: SaveToGitFormInterface,
-    lastObject?: { lastObjectId?: string },
+    lastObject?: LastRemoteObjectId,
     storeMetadata?: StoreMetadata
   ): Promise<UseSaveSuccessResponse> => {
     if (isEdit) {
@@ -197,6 +208,7 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
     payload?: SaveTemplateObj,
     objectId?: string,
     isEdit = false,
+    lastCommitId = '',
     storeMetadata?: StoreMetadata
   ): Promise<UseSaveSuccessResponse> => {
     let latestTemplate = payload?.template as NGTemplateInfoConfig
@@ -215,7 +227,7 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
       '',
       isEdit,
       omit(updatedGitDetails, 'name', 'identifier'),
-      templateIdentifier !== DefaultNewTemplateId ? { lastObjectId: objectId } : {},
+      templateIdentifier !== DefaultNewTemplateId ? { lastObjectId: objectId, lastCommitId } : {},
       storeMetadata
     )
     return {
@@ -225,13 +237,20 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
 
   const { openSaveToGitDialog } = useSaveToGitDialog<SaveTemplateObj>({
     onSuccess: (
-      gitData: SaveToGitFormInterface,
+      gitData: GitData,
       payload?: SaveTemplateObj,
       objectId?: string,
       isEdit = false,
       storeMetadata?: StoreMetadata
     ): Promise<UseSaveSuccessResponse> =>
-      saveAndPublishWithGitInfo(gitData, payload, defaultTo(objectId, ''), isEdit, storeMetadata)
+      saveAndPublishWithGitInfo(
+        gitData,
+        payload,
+        defaultTo(objectId, ''),
+        isEdit,
+        gitData?.resolvedConflictCommitId || gitData?.lastCommitId,
+        storeMetadata
+      )
   })
 
   const getUpdatedGitDetails = (
@@ -252,12 +271,13 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
     updatedTemplate: NGTemplateInfoConfig,
     extraInfo: PromiseExtraArgs
   ): Promise<UseSaveSuccessResponse> => {
-    const { isEdit, comment, updatedGitDetails, storeMetadata } = extraInfo
+    const { isEdit, comment, updatedGitDetails, storeMetadata, disableCreatingNewBranch } = extraInfo
 
     // if Git sync enabled then display modal
-    if ((updatedGitDetails && !isEmpty(updatedGitDetails)) || storeMetadata?.storeType === StoreType.REMOTE) {
+    if ((isGitSyncEnabled && !isEmpty(updatedGitDetails)) || storeMetadata?.storeType === StoreType.REMOTE) {
       openSaveToGitDialog({
         isEditing: defaultTo(isEdit, false),
+        disableCreatingNewBranch,
         resource: {
           type: 'Template',
           name: updatedTemplate.name,

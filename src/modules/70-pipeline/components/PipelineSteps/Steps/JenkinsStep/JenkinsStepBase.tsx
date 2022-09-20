@@ -43,7 +43,7 @@ import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { JenkinsStepProps } from './JenkinsStep'
 import { getGenuineValue } from '../JiraApproval/helper'
@@ -259,6 +259,7 @@ function FormContent({
             showAdvanced={true}
             onChange={value => formik.setFieldValue('timeout', value)}
             isReadonly={readonly}
+            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
           />
         )}
       </div>

@@ -90,6 +90,7 @@ export class PolicyStep extends PipelineStep<PolicyStepData> {
         readonly={readonly}
         ref={formikRef}
         allowableTypes={allowableTypes}
+        stepViewType={stepViewType}
       />
     )
   }

@@ -49,6 +49,7 @@ import {
   ManifestStoreMap
 } from '../Manifesthelper'
 import css from './ManifestWizardSteps.module.scss'
+import style from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactConnector.module.scss'
 
 interface ManifestStorePropType {
   stepName: string
@@ -189,13 +190,14 @@ function ManifestStore({
               <Layout.Vertical>
                 <Layout.Horizontal spacing="large">
                   <ThumbnailSelect
-                    className={css.thumbnailSelect}
+                    className={style.thumbnailSelect}
                     name={'store'}
                     items={supportedManifestStores}
                     isReadonly={isReadonly}
                     onChange={storeSelected => {
                       handleOptionSelection(formik?.values, storeSelected as ManifestStoreWithoutConnector)
                     }}
+                    layoutProps={{ className: style.wrapping }}
                   />
                 </Layout.Horizontal>
 

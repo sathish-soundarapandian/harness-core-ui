@@ -49,9 +49,9 @@ export function BaseScriptForm(
       ...initialValues.spec,
 
       executionTarget: {
-        ...initialValues.spec?.executionTarget,
-        connectorRef: undefined
-      }
+        ...initialValues.spec?.executionTarget
+      },
+      onDelegate: initialValues.spec?.onDelegate ? 'delegate' : 'targethost'
     }
   }
 

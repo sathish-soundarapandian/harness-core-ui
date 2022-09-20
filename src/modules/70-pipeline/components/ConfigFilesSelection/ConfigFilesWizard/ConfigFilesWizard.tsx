@@ -24,7 +24,7 @@ export function ConfigFilesWizard({
   handleConnectorViewChange,
   handleStoreChange,
   initialValues,
-  types,
+  stores,
   expressions,
   allowableTypes,
   firstStep,
@@ -53,7 +53,7 @@ export function ConfigFilesWizard({
     >
       {firstStep}
       <ConfigFilesStore
-        configFilesStoreTypes={types}
+        configFilesStoreTypes={stores}
         name={getString('pipeline.configFiles.source')}
         stepName={getString('pipeline.configFiles.source')}
         allowableTypes={allowableTypes}

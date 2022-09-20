@@ -5,11 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useRef } from 'react'
 import { Layout, PageSpinner } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { noop } from 'lodash-es'
-import { ServiceDetailsHeader } from '@cd/components/ServiceDetails/ServiceDetailsHeader/ServiceDetailsHeader'
+import { ServiceDetailHeaderRef } from '@cd/components/ServiceDetails/ServiceDetailsHeader/ServiceDetailsHeader'
 import { ServiceResponseDTO, useGetServiceV2 } from 'services/cd-ng'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { ServiceContextProvider } from '@cd/context/ServiceContext'
@@ -19,8 +19,13 @@ import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { EntityType } from '@common/pages/entityUsage/EntityConstants'
 import ServiceConfigurationWrapper from './ServiceConfigWrapper/ServiceConfigWrapper'
 
+export interface ServiceHeaderRefetchRef {
+  refetchData: () => void
+}
+
 function ServiceStudio(): React.ReactElement | null {
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
+  const refetch = useRef<ServiceHeaderRefetchRef>(null)
 
   const { data: serviceResponse, loading: serviceDataLoading } = useGetServiceV2({
     serviceIdentifier: serviceId,
@@ -31,12 +36,17 @@ function ServiceStudio(): React.ReactElement | null {
     }
   })
 
+  const invokeRefetch = (): void => {
+    refetch.current?.refetchData?.()
+  }
+
   if (serviceDataLoading) {
     return <PageSpinner />
   }
+
   return (
     <Layout.Vertical>
-      <ServiceDetailsHeader />
+      <ServiceDetailHeaderRef ref={refetch} />
       <ServiceContextProvider
         serviceResponse={serviceResponse?.data?.service as ServiceResponseDTO}
         isServiceEntityModalView={false}
@@ -51,6 +61,7 @@ function ServiceStudio(): React.ReactElement | null {
         <ServiceConfigurationWrapper
           summaryPanel={<ServiceDetailsSummary />}
           refercedByPanel={<EntitySetupUsage entityType={EntityType.Service} entityIdentifier={serviceId} />}
+          invokeServiceHeaderRefetch={invokeRefetch}
         />
       </ServiceContextProvider>
     </Layout.Vertical>

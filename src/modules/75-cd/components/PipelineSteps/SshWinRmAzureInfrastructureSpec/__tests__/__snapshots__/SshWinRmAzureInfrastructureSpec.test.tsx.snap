@@ -26,102 +26,6 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
             class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
           >
             <div
-              class="Layout--vertical StyledProps--main inputWidth"
-            >
-              <div
-                class="bp3-form-group"
-                data-id="credentialsRef-0"
-              >
-                <label
-                  class="bp3-label"
-                  for="credentialsRef"
-                >
-                  cd.steps.common.specifyCredentials
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
-                <div
-                  class="bp3-form-content"
-                >
-                  <div
-                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="flex-grow: 1;"
-                  >
-                    <button
-                      class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
-                      data-testid="create-or-select-secret"
-                      type="button"
-                    >
-                      <span
-                        class="bp3-icon StyledProps--main"
-                        data-icon="key-main"
-                        style="height: 12px;"
-                      >
-                        <svg
-                          height="24"
-                          width="24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g
-                            fill="none"
-                            stroke="#1C1C28"
-                            stroke-width="0.5"
-                          >
-                            <path
-                              d="M5.444 1A4.45 4.45 0 001 5.444c0 2.459 1.994 4.46 4.444 4.46 1.939 0 3.613-1.542 4.202-2.995a.393.393 0 01.23-.223.39.39 0 01.322.015l1.032.507.757-.72a.402.402 0 01.552-.007l.543.493.547-.556a.404.404 0 01.572-.005l.527.516.528-.53a.406.406 0 01.571-.002l.522.522.524-.523a.406.406 0 01.571 0l.522.522.523-.522a.414.414 0 01.315-.118.41.41 0 01.294.16l.277.369c.116-.153.234-.311.312-.396a.412.412 0 01.3-.134c.693 0 .927-.37.927-1.465 0-1.018-.636-1.381-1.23-1.381H9.638a.408.408 0 01-.35-.202A4.448 4.448 0 005.444 1h0z"
-                            />
-                            <path
-                              d="M3.828 3.99c.403 0 .769.163 1.034.428a1.458 1.458 0 010 2.067 1.458 1.458 0 01-2.067 0 1.458 1.458 0 010-2.067c.265-.265.63-.428 1.033-.428z"
-                            />
-                          </g>
-                        </svg>
-                      </span>
-                      <span
-                        class="bp3-button-text"
-                      >
-                        <p
-                          class="StyledProps--font Text--lineclamp StyledProps--main"
-                          style="--text-line-clamp: 1;"
-                        >
-                          credentialsRef
-                        </p>
-                      </span>
-                    </button>
-                    <span
-                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                    >
-                      <span
-                        class="bp3-popover-target"
-                      >
-                        <button
-                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                        >
-                          <span
-                            class="bp3-icon StyledProps--main"
-                            data-icon="fixed-input"
-                          >
-                            <svg
-                              height="12"
-                              viewBox="0 0 9 9"
-                              width="12"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                fill="currentColor"
-                              />
-                            </svg>
-                          </span>
-                        </button>
-                      </span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
             >
               <div>
@@ -137,7 +41,7 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
             >
               <div
                 class="bp3-form-group inputWidth"
-                data-id="subscriptionId-1"
+                data-id="subscriptionId-0"
               >
                 <label
                   class="bp3-label"
@@ -257,7 +161,7 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
             >
               <div
                 class="bp3-form-group inputWidth"
-                data-id="resourceGroup-2"
+                data-id="resourceGroup-1"
               >
                 <label
                   class="bp3-label"
@@ -373,11 +277,11 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
               </div>
             </div>
             <div
-              class="Layout--vertical Layout--layout-spacing-large StyledProps--main tags-select inputWidth"
+              class="Layout--vertical StyledProps--main inputWidth"
             >
               <div
                 class="bp3-form-group"
-                data-id="tags-3"
+                data-id="tags-2"
                 style="flex-grow: 1; margin-bottom: 0px;"
               >
                 <label
@@ -391,7 +295,7 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
                       class="Tooltip--acenter"
                       data-tooltip-id="sshWinRmAzureInfra_tags"
                     >
-                      Tags
+                      tagLabel
                     </span>
                     <div
                       class="bp3-popover-wrapper typeSelectorWrapper"
@@ -581,6 +485,107 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
               </div>
             </div>
             <div
+              class="Layout--vertical StyledProps--main formRow inputWidth credentialsRef"
+            >
+              <div
+                class="bp3-form-group"
+                data-id="credentialsRef-3"
+              >
+                <label
+                  class="bp3-label"
+                  for="credentialsRef"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="sshWinRmAzureInfra_credentialsRef"
+                  >
+                    cd.steps.common.specifyCredentials
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    style="flex-grow: 1;"
+                  >
+                    <button
+                      class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                      data-testid="create-or-select-secret"
+                      type="button"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main"
+                        data-icon="key-main"
+                        style="height: 12px;"
+                      >
+                        <svg
+                          height="24"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <g
+                            fill="none"
+                            stroke="#1C1C28"
+                            stroke-width="0.5"
+                          >
+                            <path
+                              d="M5.444 1A4.45 4.45 0 001 5.444c0 2.459 1.994 4.46 4.444 4.46 1.939 0 3.613-1.542 4.202-2.995a.393.393 0 01.23-.223.39.39 0 01.322.015l1.032.507.757-.72a.402.402 0 01.552-.007l.543.493.547-.556a.404.404 0 01.572-.005l.527.516.528-.53a.406.406 0 01.571-.002l.522.522.524-.523a.406.406 0 01.571 0l.522.522.523-.522a.414.414 0 01.315-.118.41.41 0 01.294.16l.277.369c.116-.153.234-.311.312-.396a.412.412 0 01.3-.134c.693 0 .927-.37.927-1.465 0-1.018-.636-1.381-1.23-1.381H9.638a.408.408 0 01-.35-.202A4.448 4.448 0 005.444 1h0z"
+                            />
+                            <path
+                              d="M3.828 3.99c.403 0 .769.163 1.034.428a1.458 1.458 0 010 2.067 1.458 1.458 0 01-2.067 0 1.458 1.458 0 010-2.067c.265-.265.63-.428 1.033-.428z"
+                            />
+                          </g>
+                        </svg>
+                      </span>
+                      <span
+                        class="bp3-button-text"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main"
+                          style="--text-line-clamp: 1;"
+                        >
+                          credentialsRef
+                        </p>
+                      </span>
+                    </button>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
               class="bp3-form-group"
               data-id="usePublicDns-4"
             >
@@ -670,102 +675,6 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
             class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
           >
             <div
-              class="Layout--vertical StyledProps--main inputWidth"
-            >
-              <div
-                class="bp3-form-group"
-                data-id="credentialsRef-0"
-              >
-                <label
-                  class="bp3-label"
-                  for="credentialsRef"
-                >
-                  cd.steps.common.specifyCredentials
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
-                <div
-                  class="bp3-form-content"
-                >
-                  <div
-                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="flex-grow: 1;"
-                  >
-                    <button
-                      class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
-                      data-testid="create-or-select-secret"
-                      type="button"
-                    >
-                      <span
-                        class="bp3-icon StyledProps--main"
-                        data-icon="key-main"
-                        style="height: 12px;"
-                      >
-                        <svg
-                          height="24"
-                          width="24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g
-                            fill="none"
-                            stroke="#1C1C28"
-                            stroke-width="0.5"
-                          >
-                            <path
-                              d="M5.444 1A4.45 4.45 0 001 5.444c0 2.459 1.994 4.46 4.444 4.46 1.939 0 3.613-1.542 4.202-2.995a.393.393 0 01.23-.223.39.39 0 01.322.015l1.032.507.757-.72a.402.402 0 01.552-.007l.543.493.547-.556a.404.404 0 01.572-.005l.527.516.528-.53a.406.406 0 01.571-.002l.522.522.524-.523a.406.406 0 01.571 0l.522.522.523-.522a.414.414 0 01.315-.118.41.41 0 01.294.16l.277.369c.116-.153.234-.311.312-.396a.412.412 0 01.3-.134c.693 0 .927-.37.927-1.465 0-1.018-.636-1.381-1.23-1.381H9.638a.408.408 0 01-.35-.202A4.448 4.448 0 005.444 1h0z"
-                            />
-                            <path
-                              d="M3.828 3.99c.403 0 .769.163 1.034.428a1.458 1.458 0 010 2.067 1.458 1.458 0 01-2.067 0 1.458 1.458 0 010-2.067c.265-.265.63-.428 1.033-.428z"
-                            />
-                          </g>
-                        </svg>
-                      </span>
-                      <span
-                        class="bp3-button-text"
-                      >
-                        <p
-                          class="StyledProps--font Text--lineclamp StyledProps--main"
-                          style="--text-line-clamp: 1;"
-                        >
-                          credentialsRef
-                        </p>
-                      </span>
-                    </button>
-                    <span
-                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                    >
-                      <span
-                        class="bp3-popover-target"
-                      >
-                        <button
-                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                        >
-                          <span
-                            class="bp3-icon StyledProps--main"
-                            data-icon="fixed-input"
-                          >
-                            <svg
-                              height="12"
-                              viewBox="0 0 9 9"
-                              width="12"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                fill="currentColor"
-                              />
-                            </svg>
-                          </span>
-                        </button>
-                      </span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
             >
               <div>
@@ -781,7 +690,7 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
             >
               <div
                 class="bp3-form-group inputWidth"
-                data-id="subscriptionId-1"
+                data-id="subscriptionId-0"
               >
                 <label
                   class="bp3-label"
@@ -901,7 +810,7 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
             >
               <div
                 class="bp3-form-group inputWidth"
-                data-id="resourceGroup-2"
+                data-id="resourceGroup-1"
               >
                 <label
                   class="bp3-label"
@@ -1017,11 +926,11 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
               </div>
             </div>
             <div
-              class="Layout--vertical Layout--layout-spacing-large StyledProps--main tags-select inputWidth"
+              class="Layout--vertical StyledProps--main inputWidth"
             >
               <div
                 class="bp3-form-group"
-                data-id="tags-3"
+                data-id="tags-2"
                 style="flex-grow: 1; margin-bottom: 0px;"
               >
                 <label
@@ -1035,7 +944,7 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
                       class="Tooltip--acenter"
                       data-tooltip-id="sshWinRmAzureInfra_tags"
                     >
-                      Tags
+                      tagLabel
                     </span>
                     <div
                       class="bp3-popover-wrapper typeSelectorWrapper"
@@ -1225,6 +1134,107 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
               </div>
             </div>
             <div
+              class="Layout--vertical StyledProps--main formRow inputWidth credentialsRef"
+            >
+              <div
+                class="bp3-form-group"
+                data-id="credentialsRef-3"
+              >
+                <label
+                  class="bp3-label"
+                  for="credentialsRef"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="sshWinRmAzureInfra_credentialsRef"
+                  >
+                    cd.steps.common.specifyCredentials
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    style="flex-grow: 1;"
+                  >
+                    <button
+                      class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                      data-testid="create-or-select-secret"
+                      type="button"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main"
+                        data-icon="key-main"
+                        style="height: 12px;"
+                      >
+                        <svg
+                          height="24"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <g
+                            fill="none"
+                            stroke="#1C1C28"
+                            stroke-width="0.5"
+                          >
+                            <path
+                              d="M5.444 1A4.45 4.45 0 001 5.444c0 2.459 1.994 4.46 4.444 4.46 1.939 0 3.613-1.542 4.202-2.995a.393.393 0 01.23-.223.39.39 0 01.322.015l1.032.507.757-.72a.402.402 0 01.552-.007l.543.493.547-.556a.404.404 0 01.572-.005l.527.516.528-.53a.406.406 0 01.571-.002l.522.522.524-.523a.406.406 0 01.571 0l.522.522.523-.522a.414.414 0 01.315-.118.41.41 0 01.294.16l.277.369c.116-.153.234-.311.312-.396a.412.412 0 01.3-.134c.693 0 .927-.37.927-1.465 0-1.018-.636-1.381-1.23-1.381H9.638a.408.408 0 01-.35-.202A4.448 4.448 0 005.444 1h0z"
+                            />
+                            <path
+                              d="M3.828 3.99c.403 0 .769.163 1.034.428a1.458 1.458 0 010 2.067 1.458 1.458 0 01-2.067 0 1.458 1.458 0 010-2.067c.265-.265.63-.428 1.033-.428z"
+                            />
+                          </g>
+                        </svg>
+                      </span>
+                      <span
+                        class="bp3-button-text"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main"
+                          style="--text-line-clamp: 1;"
+                        >
+                          credentialsRef
+                        </p>
+                      </span>
+                    </button>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
               class="bp3-form-group"
               data-id="usePublicDns-4"
             >
@@ -1299,101 +1309,6 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
       <div
         class="formGroup md inputWrapper"
       />
-      <div
-        class="formGroup md inputWrapper"
-      >
-        <div
-          class="bp3-form-group"
-        >
-          <label
-            class="bp3-label"
-            for=".credentialsRef"
-          >
-            cd.steps.common.specifyCredentials
-             
-            <span
-              class="bp3-text-muted"
-            />
-          </label>
-          <div
-            class="bp3-form-content"
-          >
-            <div
-              class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-              style="flex-grow: 1;"
-            >
-              <button
-                class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
-                data-testid="create-or-select-secret"
-                type="button"
-              >
-                <span
-                  class="bp3-icon StyledProps--main"
-                  data-icon="key-main"
-                  style="height: 12px;"
-                >
-                  <svg
-                    height="24"
-                    width="24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g
-                      fill="none"
-                      stroke="#1C1C28"
-                      stroke-width="0.5"
-                    >
-                      <path
-                        d="M5.444 1A4.45 4.45 0 001 5.444c0 2.459 1.994 4.46 4.444 4.46 1.939 0 3.613-1.542 4.202-2.995a.393.393 0 01.23-.223.39.39 0 01.322.015l1.032.507.757-.72a.402.402 0 01.552-.007l.543.493.547-.556a.404.404 0 01.572-.005l.527.516.528-.53a.406.406 0 01.571-.002l.522.522.524-.523a.406.406 0 01.571 0l.522.522.523-.522a.414.414 0 01.315-.118.41.41 0 01.294.16l.277.369c.116-.153.234-.311.312-.396a.412.412 0 01.3-.134c.693 0 .927-.37.927-1.465 0-1.018-.636-1.381-1.23-1.381H9.638a.408.408 0 01-.35-.202A4.448 4.448 0 005.444 1h0z"
-                      />
-                      <path
-                        d="M3.828 3.99c.403 0 .769.163 1.034.428a1.458 1.458 0 010 2.067 1.458 1.458 0 01-2.067 0 1.458 1.458 0 010-2.067c.265-.265.63-.428 1.033-.428z"
-                      />
-                    </g>
-                  </svg>
-                </span>
-                <span
-                  class="bp3-button-text"
-                >
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main"
-                    style="--text-line-clamp: 1;"
-                  >
-                    createOrSelectSecret
-                  </p>
-                </span>
-              </button>
-              <span
-                class="bp3-popover-wrapper MultiTypeInput--wrapper"
-              >
-                <span
-                  class="bp3-popover-target"
-                >
-                  <button
-                    class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                  >
-                    <span
-                      class="bp3-icon StyledProps--main"
-                      data-icon="fixed-input"
-                    >
-                      <svg
-                        height="12"
-                        viewBox="0 0 9 9"
-                        width="12"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                          fill="currentColor"
-                        />
-                      </svg>
-                    </span>
-                  </button>
-                </span>
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
       <div
         class="formGroup md inputWrapper"
       >
@@ -1846,40 +1761,6 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
           </div>
         </div>
       </div>
-    </div>
-    <p
-      class="StyledProps--font StyledProps--main"
-    >
-      Errors
-    </p>
-    <pre>
-      {}
-    </pre>
-    <button
-      class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
-      type="button"
-    >
-      <span
-        class="bp3-button-text"
-      >
-        Submit
-      </span>
-    </button>
-  </div>
-</div>
-`;
-
-exports[`Test Azure Infrastructure Spec snapshot Should render edit view for inputset view and fetch dropdowns on focus 1`] = `
-<div>
-  <div
-    class="OverlaySpinner--overlaySpinner"
-  >
-    <div
-      class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-    >
-      <div
-        class="formGroup md inputWrapper"
-      />
       <div
         class="formGroup md inputWrapper"
       >
@@ -1890,7 +1771,12 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view for inp
             class="bp3-label"
             for=".credentialsRef"
           >
-            cd.steps.common.specifyCredentials
+            <span
+              class="Tooltip--acenter"
+              data-tooltip-id="stepTestUtilForm_.credentialsRef"
+            >
+              cd.steps.common.specifyCredentials
+            </span>
              
             <span
               class="bp3-text-muted"
@@ -1975,6 +1861,40 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view for inp
           </div>
         </div>
       </div>
+    </div>
+    <p
+      class="StyledProps--font StyledProps--main"
+    >
+      Errors
+    </p>
+    <pre>
+      {}
+    </pre>
+    <button
+      class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
+      type="button"
+    >
+      <span
+        class="bp3-button-text"
+      >
+        Submit
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Test Azure Infrastructure Spec snapshot Should render edit view for inputset view and fetch dropdowns on focus 1`] = `
+<div>
+  <div
+    class="OverlaySpinner--overlaySpinner"
+  >
+    <div
+      class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+    >
+      <div
+        class="formGroup md inputWrapper"
+      />
       <div
         class="formGroup md inputWrapper"
       >
@@ -2399,6 +2319,106 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view for inp
           </div>
         </div>
       </div>
+      <div
+        class="formGroup md inputWrapper"
+      >
+        <div
+          class="bp3-form-group"
+        >
+          <label
+            class="bp3-label"
+            for=".credentialsRef"
+          >
+            <span
+              class="Tooltip--acenter"
+              data-tooltip-id="stepTestUtilForm_.credentialsRef"
+            >
+              cd.steps.common.specifyCredentials
+            </span>
+             
+            <span
+              class="bp3-text-muted"
+            />
+          </label>
+          <div
+            class="bp3-form-content"
+          >
+            <div
+              class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+              style="flex-grow: 1;"
+            >
+              <button
+                class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                data-testid="create-or-select-secret"
+                type="button"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="key-main"
+                  style="height: 12px;"
+                >
+                  <svg
+                    height="24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g
+                      fill="none"
+                      stroke="#1C1C28"
+                      stroke-width="0.5"
+                    >
+                      <path
+                        d="M5.444 1A4.45 4.45 0 001 5.444c0 2.459 1.994 4.46 4.444 4.46 1.939 0 3.613-1.542 4.202-2.995a.393.393 0 01.23-.223.39.39 0 01.322.015l1.032.507.757-.72a.402.402 0 01.552-.007l.543.493.547-.556a.404.404 0 01.572-.005l.527.516.528-.53a.406.406 0 01.571-.002l.522.522.524-.523a.406.406 0 01.571 0l.522.522.523-.522a.414.414 0 01.315-.118.41.41 0 01.294.16l.277.369c.116-.153.234-.311.312-.396a.412.412 0 01.3-.134c.693 0 .927-.37.927-1.465 0-1.018-.636-1.381-1.23-1.381H9.638a.408.408 0 01-.35-.202A4.448 4.448 0 005.444 1h0z"
+                      />
+                      <path
+                        d="M3.828 3.99c.403 0 .769.163 1.034.428a1.458 1.458 0 010 2.067 1.458 1.458 0 01-2.067 0 1.458 1.458 0 010-2.067c.265-.265.63-.428 1.033-.428z"
+                      />
+                    </g>
+                  </svg>
+                </span>
+                <span
+                  class="bp3-button-text"
+                >
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main"
+                    style="--text-line-clamp: 1;"
+                  >
+                    createOrSelectSecret
+                  </p>
+                </span>
+              </button>
+              <span
+                class="bp3-popover-wrapper MultiTypeInput--wrapper"
+              >
+                <span
+                  class="bp3-popover-target"
+                >
+                  <button
+                    class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main"
+                      data-icon="fixed-input"
+                    >
+                      <svg
+                        height="12"
+                        viewBox="0 0 9 9"
+                        width="12"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <p
       class="StyledProps--font StyledProps--main"
@@ -2448,102 +2468,6 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with em
             class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
           >
             <div
-              class="Layout--vertical StyledProps--main inputWidth"
-            >
-              <div
-                class="bp3-form-group"
-                data-id="credentialsRef-0"
-              >
-                <label
-                  class="bp3-label"
-                  for="credentialsRef"
-                >
-                  cd.steps.common.specifyCredentials
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
-                <div
-                  class="bp3-form-content"
-                >
-                  <div
-                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="flex-grow: 1;"
-                  >
-                    <button
-                      class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
-                      data-testid="create-or-select-secret"
-                      type="button"
-                    >
-                      <span
-                        class="bp3-icon StyledProps--main"
-                        data-icon="key-main"
-                        style="height: 12px;"
-                      >
-                        <svg
-                          height="24"
-                          width="24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g
-                            fill="none"
-                            stroke="#1C1C28"
-                            stroke-width="0.5"
-                          >
-                            <path
-                              d="M5.444 1A4.45 4.45 0 001 5.444c0 2.459 1.994 4.46 4.444 4.46 1.939 0 3.613-1.542 4.202-2.995a.393.393 0 01.23-.223.39.39 0 01.322.015l1.032.507.757-.72a.402.402 0 01.552-.007l.543.493.547-.556a.404.404 0 01.572-.005l.527.516.528-.53a.406.406 0 01.571-.002l.522.522.524-.523a.406.406 0 01.571 0l.522.522.523-.522a.414.414 0 01.315-.118.41.41 0 01.294.16l.277.369c.116-.153.234-.311.312-.396a.412.412 0 01.3-.134c.693 0 .927-.37.927-1.465 0-1.018-.636-1.381-1.23-1.381H9.638a.408.408 0 01-.35-.202A4.448 4.448 0 005.444 1h0z"
-                            />
-                            <path
-                              d="M3.828 3.99c.403 0 .769.163 1.034.428a1.458 1.458 0 010 2.067 1.458 1.458 0 01-2.067 0 1.458 1.458 0 010-2.067c.265-.265.63-.428 1.033-.428z"
-                            />
-                          </g>
-                        </svg>
-                      </span>
-                      <span
-                        class="bp3-button-text"
-                      >
-                        <p
-                          class="StyledProps--font Text--lineclamp StyledProps--main"
-                          style="--text-line-clamp: 1;"
-                        >
-                          createOrSelectSecret
-                        </p>
-                      </span>
-                    </button>
-                    <span
-                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                    >
-                      <span
-                        class="bp3-popover-target"
-                      >
-                        <button
-                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                        >
-                          <span
-                            class="bp3-icon StyledProps--main"
-                            data-icon="fixed-input"
-                          >
-                            <svg
-                              height="12"
-                              viewBox="0 0 9 9"
-                              width="12"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                fill="currentColor"
-                              />
-                            </svg>
-                          </span>
-                        </button>
-                      </span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
             >
               <div>
@@ -2559,7 +2483,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with em
             >
               <div
                 class="bp3-form-group inputWidth"
-                data-id="subscriptionId-1"
+                data-id="subscriptionId-0"
               >
                 <label
                   class="bp3-label"
@@ -2663,7 +2587,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with em
             >
               <div
                 class="bp3-form-group inputWidth"
-                data-id="resourceGroup-2"
+                data-id="resourceGroup-1"
               >
                 <label
                   class="bp3-label"
@@ -2763,11 +2687,11 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with em
               </div>
             </div>
             <div
-              class="Layout--vertical Layout--layout-spacing-large StyledProps--main tags-select inputWidth"
+              class="Layout--vertical StyledProps--main inputWidth"
             >
               <div
                 class="bp3-form-group"
-                data-id="tags-3"
+                data-id="tags-2"
                 style="flex-grow: 1; margin-bottom: 0px;"
               >
                 <label
@@ -2781,7 +2705,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with em
                       class="Tooltip--acenter"
                       data-tooltip-id="sshWinRmAzureInfra_tags"
                     >
-                      Tags
+                      tagLabel
                     </span>
                     <div
                       class="bp3-popover-wrapper typeSelectorWrapper"
@@ -2854,6 +2778,107 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with em
                       tagLabel
                     </span>
                   </button>
+                </div>
+              </div>
+            </div>
+            <div
+              class="Layout--vertical StyledProps--main formRow inputWidth credentialsRef"
+            >
+              <div
+                class="bp3-form-group"
+                data-id="credentialsRef-3"
+              >
+                <label
+                  class="bp3-label"
+                  for="credentialsRef"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="sshWinRmAzureInfra_credentialsRef"
+                  >
+                    cd.steps.common.specifyCredentials
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    style="flex-grow: 1;"
+                  >
+                    <button
+                      class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                      data-testid="create-or-select-secret"
+                      type="button"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main"
+                        data-icon="key-main"
+                        style="height: 12px;"
+                      >
+                        <svg
+                          height="24"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <g
+                            fill="none"
+                            stroke="#1C1C28"
+                            stroke-width="0.5"
+                          >
+                            <path
+                              d="M5.444 1A4.45 4.45 0 001 5.444c0 2.459 1.994 4.46 4.444 4.46 1.939 0 3.613-1.542 4.202-2.995a.393.393 0 01.23-.223.39.39 0 01.322.015l1.032.507.757-.72a.402.402 0 01.552-.007l.543.493.547-.556a.404.404 0 01.572-.005l.527.516.528-.53a.406.406 0 01.571-.002l.522.522.524-.523a.406.406 0 01.571 0l.522.522.523-.522a.414.414 0 01.315-.118.41.41 0 01.294.16l.277.369c.116-.153.234-.311.312-.396a.412.412 0 01.3-.134c.693 0 .927-.37.927-1.465 0-1.018-.636-1.381-1.23-1.381H9.638a.408.408 0 01-.35-.202A4.448 4.448 0 005.444 1h0z"
+                            />
+                            <path
+                              d="M3.828 3.99c.403 0 .769.163 1.034.428a1.458 1.458 0 010 2.067 1.458 1.458 0 01-2.067 0 1.458 1.458 0 010-2.067c.265-.265.63-.428 1.033-.428z"
+                            />
+                          </g>
+                        </svg>
+                      </span>
+                      <span
+                        class="bp3-button-text"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main"
+                          style="--text-line-clamp: 1;"
+                        >
+                          createOrSelectSecret
+                        </p>
+                      </span>
+                    </button>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2947,78 +2972,6 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with ru
             class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
           >
             <div
-              class="Layout--vertical StyledProps--main inputWidth"
-            >
-              <div
-                class="bp3-form-group"
-                data-id="credentialsRef-0"
-              >
-                <label
-                  class="bp3-label"
-                  for="credentialsRef"
-                >
-                  cd.steps.common.specifyCredentials
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
-                <div
-                  class="bp3-form-content"
-                >
-                  <div
-                    class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                    style="flex-grow: 1;"
-                  >
-                    <div
-                      class="TextInput--main MultiTypeInput--input"
-                    >
-                      <div
-                        class="bp3-input-group bp3-disabled"
-                      >
-                        <input
-                          class="bp3-input"
-                          disabled=""
-                          name="credentialsRef"
-                          placeholder="<+input>"
-                          type="text"
-                          value="<+input>"
-                        />
-                      </div>
-                    </div>
-                    <span
-                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                    >
-                      <span
-                        class="bp3-popover-target"
-                      >
-                        <button
-                          class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
-                        >
-                          <span
-                            class="bp3-icon StyledProps--main"
-                            data-icon="runtime-input"
-                          >
-                            <svg
-                              height="12"
-                              viewBox="0 0 10 7.97"
-                              width="12"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M8.14 4L8 3.72a2.53 2.53 0 01-.12-.3l-.16-.35c-.11-.25-.22-.38-.32-.38s-.28.15-.37.44C7 3.1 7 3.07 7 3a.73.73 0 01.24-.46.66.66 0 01.42-.26c.25 0 .5.35.76 1.05l.07.17.07-.12c.47-.73.86-1.1 1.18-1.1a.71.71 0 01.29.07l-.4.42h-.11c-.24 0-.52.28-.86.83l-.09.16.07.2c.29.79.53 1.18.71 1.18s.31-.12.4-.36q.09.06.09.12t-.27.39a.74.74 0 01-.45.23c-.25 0-.51-.36-.77-1.07l-.12-.25-.1.17c-.44.76-.87 1.14-1.28 1.14a.65.65 0 01-.39-.12L6.84 5a.32.32 0 00.23.1c.25 0 .53-.25.83-.74l.17-.28zm-4-.32L1.7.59h2.47S5 .52 5.35 1a3.28 3.28 0 01.42 1.14h.31L5.94 0H0v.31l3.06 3.74L0 7.62V8h6.08l.38-2.36-.31-.07a2.43 2.43 0 01-.52 1c-.42.48-2 .41-2 .41H1.39z"
-                                fill="current-color"
-                              />
-                            </svg>
-                          </span>
-                        </button>
-                      </span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
             >
               <div>
@@ -3068,7 +3021,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with ru
             >
               <div
                 class="bp3-form-group inputWidth"
-                data-id="subscriptionId-1"
+                data-id="subscriptionId-0"
               >
                 <label
                   class="bp3-label"
@@ -3178,7 +3131,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with ru
             >
               <div
                 class="bp3-form-group inputWidth"
-                data-id="resourceGroup-2"
+                data-id="resourceGroup-1"
               >
                 <label
                   class="bp3-label"
@@ -3284,11 +3237,11 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with ru
               </span>
             </div>
             <div
-              class="Layout--vertical Layout--layout-spacing-large StyledProps--main tags-select inputWidth"
+              class="Layout--vertical StyledProps--main inputWidth"
             >
               <div
                 class="bp3-form-group formGroup"
-                data-id="tags-3"
+                data-id="tags-2"
                 style="flex-grow: 1; margin-bottom: 0px;"
               >
                 <label
@@ -3302,7 +3255,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with ru
                       class="Tooltip--acenter"
                       data-tooltip-id="sshWinRmAzureInfra_tags"
                     >
-                      Tags
+                      tagLabel
                     </span>
                     <div
                       class="bp3-popover-wrapper typeSelectorWrapper"
@@ -3348,7 +3301,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with ru
                 >
                   <div
                     class="bp3-form-group bp3-disabled runtimeDisabled"
-                    data-id="tags-4"
+                    data-id="tags-3"
                   >
                     
                     <div
@@ -3367,6 +3320,83 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with ru
                         />
                       </div>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="Layout--vertical StyledProps--main formRow inputWidth credentialsRef"
+            >
+              <div
+                class="bp3-form-group"
+                data-id="credentialsRef-4"
+              >
+                <label
+                  class="bp3-label"
+                  for="credentialsRef"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="sshWinRmAzureInfra_credentialsRef"
+                  >
+                    cd.steps.common.specifyCredentials
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
+                    style="flex-grow: 1;"
+                  >
+                    <div
+                      class="TextInput--main MultiTypeInput--input"
+                    >
+                      <div
+                        class="bp3-input-group bp3-disabled"
+                      >
+                        <input
+                          class="bp3-input"
+                          disabled=""
+                          name="credentialsRef"
+                          placeholder="<+input>"
+                          type="text"
+                          value="<+input>"
+                        />
+                      </div>
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="runtime-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 10 7.97"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M8.14 4L8 3.72a2.53 2.53 0 01-.12-.3l-.16-.35c-.11-.25-.22-.38-.32-.38s-.28.15-.37.44C7 3.1 7 3.07 7 3a.73.73 0 01.24-.46.66.66 0 01.42-.26c.25 0 .5.35.76 1.05l.07.17.07-.12c.47-.73.86-1.1 1.18-1.1a.71.71 0 01.29.07l-.4.42h-.11c-.24 0-.52.28-.86.83l-.09.16.07.2c.29.79.53 1.18.71 1.18s.31-.12.4-.36q.09.06.09.12t-.27.39a.74.74 0 01-.45.23c-.25 0-.51-.36-.77-1.07l-.12-.25-.1.17c-.44.76-.87 1.14-1.28 1.14a.65.65 0 01-.39-.12L6.84 5a.32.32 0 00.23.1c.25 0 .53-.25.83-.74l.17-.28zm-4-.32L1.7.59h2.47S5 .52 5.35 1a3.28 3.28 0 01.42 1.14h.31L5.94 0H0v.31l3.06 3.74L0 7.62V8h6.08l.38-2.36-.31-.07a2.43 2.43 0 01-.52 1c-.42.48-2 .41-2 .41H1.39z"
+                                fill="current-color"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -3461,102 +3491,6 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with va
             class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
           >
             <div
-              class="Layout--vertical StyledProps--main inputWidth"
-            >
-              <div
-                class="bp3-form-group"
-                data-id="credentialsRef-0"
-              >
-                <label
-                  class="bp3-label"
-                  for="credentialsRef"
-                >
-                  cd.steps.common.specifyCredentials
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
-                <div
-                  class="bp3-form-content"
-                >
-                  <div
-                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="flex-grow: 1;"
-                  >
-                    <button
-                      class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
-                      data-testid="create-or-select-secret"
-                      type="button"
-                    >
-                      <span
-                        class="bp3-icon StyledProps--main"
-                        data-icon="key-main"
-                        style="height: 12px;"
-                      >
-                        <svg
-                          height="24"
-                          width="24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g
-                            fill="none"
-                            stroke="#1C1C28"
-                            stroke-width="0.5"
-                          >
-                            <path
-                              d="M5.444 1A4.45 4.45 0 001 5.444c0 2.459 1.994 4.46 4.444 4.46 1.939 0 3.613-1.542 4.202-2.995a.393.393 0 01.23-.223.39.39 0 01.322.015l1.032.507.757-.72a.402.402 0 01.552-.007l.543.493.547-.556a.404.404 0 01.572-.005l.527.516.528-.53a.406.406 0 01.571-.002l.522.522.524-.523a.406.406 0 01.571 0l.522.522.523-.522a.414.414 0 01.315-.118.41.41 0 01.294.16l.277.369c.116-.153.234-.311.312-.396a.412.412 0 01.3-.134c.693 0 .927-.37.927-1.465 0-1.018-.636-1.381-1.23-1.381H9.638a.408.408 0 01-.35-.202A4.448 4.448 0 005.444 1h0z"
-                            />
-                            <path
-                              d="M3.828 3.99c.403 0 .769.163 1.034.428a1.458 1.458 0 010 2.067 1.458 1.458 0 01-2.067 0 1.458 1.458 0 010-2.067c.265-.265.63-.428 1.033-.428z"
-                            />
-                          </g>
-                        </svg>
-                      </span>
-                      <span
-                        class="bp3-button-text"
-                      >
-                        <p
-                          class="StyledProps--font Text--lineclamp StyledProps--main"
-                          style="--text-line-clamp: 1;"
-                        >
-                          credentialsRef
-                        </p>
-                      </span>
-                    </button>
-                    <span
-                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                    >
-                      <span
-                        class="bp3-popover-target"
-                      >
-                        <button
-                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                        >
-                          <span
-                            class="bp3-icon StyledProps--main"
-                            data-icon="fixed-input"
-                          >
-                            <svg
-                              height="12"
-                              viewBox="0 0 9 9"
-                              width="12"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                fill="currentColor"
-                              />
-                            </svg>
-                          </span>
-                        </button>
-                      </span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
             >
               <div>
@@ -3572,7 +3506,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with va
             >
               <div
                 class="bp3-form-group inputWidth"
-                data-id="subscriptionId-1"
+                data-id="subscriptionId-0"
               >
                 <label
                   class="bp3-label"
@@ -3692,7 +3626,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with va
             >
               <div
                 class="bp3-form-group inputWidth"
-                data-id="resourceGroup-2"
+                data-id="resourceGroup-1"
               >
                 <label
                   class="bp3-label"
@@ -3808,11 +3742,11 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with va
               </div>
             </div>
             <div
-              class="Layout--vertical Layout--layout-spacing-large StyledProps--main tags-select inputWidth"
+              class="Layout--vertical StyledProps--main inputWidth"
             >
               <div
                 class="bp3-form-group"
-                data-id="tags-3"
+                data-id="tags-2"
                 style="flex-grow: 1; margin-bottom: 0px;"
               >
                 <label
@@ -3826,7 +3760,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with va
                       class="Tooltip--acenter"
                       data-tooltip-id="sshWinRmAzureInfra_tags"
                     >
-                      Tags
+                      tagLabel
                     </span>
                     <div
                       class="bp3-popover-wrapper typeSelectorWrapper"
@@ -4012,6 +3946,107 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with va
                       tagLabel
                     </span>
                   </button>
+                </div>
+              </div>
+            </div>
+            <div
+              class="Layout--vertical StyledProps--main formRow inputWidth credentialsRef"
+            >
+              <div
+                class="bp3-form-group"
+                data-id="credentialsRef-3"
+              >
+                <label
+                  class="bp3-label"
+                  for="credentialsRef"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="sshWinRmAzureInfra_credentialsRef"
+                  >
+                    cd.steps.common.specifyCredentials
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    style="flex-grow: 1;"
+                  >
+                    <button
+                      class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                      data-testid="create-or-select-secret"
+                      type="button"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main"
+                        data-icon="key-main"
+                        style="height: 12px;"
+                      >
+                        <svg
+                          height="24"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <g
+                            fill="none"
+                            stroke="#1C1C28"
+                            stroke-width="0.5"
+                          >
+                            <path
+                              d="M5.444 1A4.45 4.45 0 001 5.444c0 2.459 1.994 4.46 4.444 4.46 1.939 0 3.613-1.542 4.202-2.995a.393.393 0 01.23-.223.39.39 0 01.322.015l1.032.507.757-.72a.402.402 0 01.552-.007l.543.493.547-.556a.404.404 0 01.572-.005l.527.516.528-.53a.406.406 0 01.571-.002l.522.522.524-.523a.406.406 0 01.571 0l.522.522.523-.522a.414.414 0 01.315-.118.41.41 0 01.294.16l.277.369c.116-.153.234-.311.312-.396a.412.412 0 01.3-.134c.693 0 .927-.37.927-1.465 0-1.018-.636-1.381-1.23-1.381H9.638a.408.408 0 01-.35-.202A4.448 4.448 0 005.444 1h0z"
+                            />
+                            <path
+                              d="M3.828 3.99c.403 0 .769.163 1.034.428a1.458 1.458 0 010 2.067 1.458 1.458 0 01-2.067 0 1.458 1.458 0 010-2.067c.265-.265.63-.428 1.033-.428z"
+                            />
+                          </g>
+                        </svg>
+                      </span>
+                      <span
+                        class="bp3-button-text"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main"
+                          style="--text-line-clamp: 1;"
+                        >
+                          credentialsRef
+                        </p>
+                      </span>
+                    </button>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>

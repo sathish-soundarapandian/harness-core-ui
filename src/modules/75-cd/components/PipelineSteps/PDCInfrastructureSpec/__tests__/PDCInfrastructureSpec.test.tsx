@@ -333,6 +333,30 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
     })
     await checkTestConnection(getByText)
   })
+
+  test('populate hosts, open hosts table, select some checkbox and test selected connections', async () => {
+    const { getByText, container } = render(
+      <TestStepWidget
+        initialValues={getInitialValuesPreconfigured()}
+        template={getRuntimeInputsValues()}
+        allValues={getInitialValuesPreconfigured()}
+        type={StepType.PDC}
+        stepViewType={StepViewType.Edit}
+        onUpdate={jest.fn()}
+      />
+    )
+    await checkForFormInit(container)
+    await openPreviewHosts(getByText)
+    refreshHosts(getByText)
+    await waitFor(() => {
+      expect(getByText('1.2.3.4')).toBeDefined()
+    })
+    const selectOneCheckbox = queryByAttribute('data-testid', container, 'select-host-1.2.3.4')
+    act(() => {
+      fireEvent.click(selectOneCheckbox!)
+    })
+    await checkTestConnection(getByText)
+  })
 })
 
 describe('test api rejections', () => {

@@ -87,9 +87,13 @@ export const getPreviewTableData = (instanceGroupedByArtifact?: InstanceGroupedB
       let envShow = true
       artifact.instanceGroupedByEnvironmentList?.forEach(env => {
         let totalInstancesPerEnv = 0
+        let totalInfraPerEnv = 0
         if (env.envId && env.envName) {
           env.instanceGroupedByInfraList?.forEach(infra => {
             totalInstancesPerEnv += infra.count || 0
+            if (infra.infraIdentifier) {
+              totalInfraPerEnv += 1
+            }
           })
           tableData.push({
             artifactVersion: artifact.artifactVersion,
@@ -97,7 +101,7 @@ export const getPreviewTableData = (instanceGroupedByArtifact?: InstanceGroupedB
             envId: env.envId,
             envName: env.envName,
             showEnv: true,
-            totalInfras: env.instanceGroupedByInfraList?.length,
+            totalInfras: totalInfraPerEnv,
             instanceCount: totalInstancesPerEnv,
             tableType: TableType.PREVIEW
           })
@@ -255,7 +259,7 @@ export const RenderInfraCount: Renderer<CellProps<TableRowData>> = ({
       </Text>
     </Container>
   ) : (
-    <></>
+    <Text className={css.textStyle}>{'-'}</Text>
   )
 }
 

@@ -43,7 +43,6 @@ import {
   getFinalQueryParamValue,
   getFqnPath,
   getYamlData,
-  isArtifactSourceRuntime,
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity,
   resetTags,
@@ -346,8 +345,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     return typeof item === 'string' ? (item as string) : item?.value
   }
 
-  const isRuntime = isArtifactSourceRuntime(isPrimaryArtifactsRuntime, isSidecarRuntime, isSidecar as boolean)
-
+  const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   return (
     <>
       {isRuntime && (

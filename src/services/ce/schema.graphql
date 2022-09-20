@@ -486,6 +486,7 @@ type Query {
   perspectiveForecastCost(
     aggregateFunction: [QLCEViewAggregationInput]
     filters: [QLCEViewFilterWrapperInput]
+    groupBy: [QLCEViewGroupByInput]
     isClusterQuery: Boolean
   ): PerspectiveTrendStats
   "Table for perspective"
@@ -522,6 +523,7 @@ type Query {
   perspectiveTrendStats(
     aggregateFunction: [QLCEViewAggregationInput]
     filters: [QLCEViewFilterWrapperInput]
+    groupBy: [QLCEViewGroupByInput]
     isClusterQuery: Boolean
   ): PerspectiveTrendStats
   "Fetch perspectives for account"
@@ -901,6 +903,12 @@ input NodePoolIdInput {
   nodepoolname: String!
 }
 
+input QLCEInExpressionFilterInput {
+  fields: [QLCEViewFieldInputInput]!
+  nullValueField: String
+  values: [[String]]!
+}
+
 input QLCEViewAggregationInput {
   columnName: String!
   operationType: QLCEViewAggregateOperation!
@@ -921,6 +929,7 @@ input QLCEViewFilterInput {
 
 input QLCEViewFilterWrapperInput {
   idFilter: QLCEViewFilterInput
+  inExpressionFilter: QLCEInExpressionFilterInput
   ruleFilter: QLCEViewRuleInput
   timeFilter: QLCEViewTimeFilterInput
   viewMetadataFilter: QLCEViewMetadataFilterInput

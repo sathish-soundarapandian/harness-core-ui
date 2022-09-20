@@ -13,7 +13,6 @@ import { get, set, uniq, uniqBy, isEmpty, isUndefined } from 'lodash-es'
 import type { UseStringsReturn, StringKeys } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type { ExecutionWrapperConfig, StepElementConfig } from 'services/cd-ng'
-import type { K8sDirectInfraYaml } from 'services/ci'
 import {
   illegalIdentifiers,
   keyRegexIdentifier,
@@ -29,6 +28,7 @@ import {
   NameSchemaWithoutHook
 } from '@common/utils/Validation'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 
 export enum Types {
   Text,
@@ -336,6 +336,8 @@ function generateSchemaForOutputVariables(
 }
 
 export function generateSchemaForLimitMemory({ getString, isRequired = false }: GenerateSchemaDependencies): Lazy {
+  // requires suffix
+  const pattern = /^(([0-9]*[.])?[0-9]+)([GM]i?)|^$/
   return yup.lazy(value => {
     if (isRequired) {
       return getMultiTypeFromValue(value as string) === MultiTypeInputType.FIXED
@@ -343,22 +345,14 @@ export function generateSchemaForLimitMemory({ getString, isRequired = false }: 
             .string()
             .required()
             // ^$ in the end is to pass empty string because otherwise it will fail
-            // .matches(/^\d+$|^\d+(E|P|T|G|M|K|Ei|Pi|Ti|Gi|Mi|Ki)$|^$/, getString('pipeline.stepCommonFields.validation.invalidLimitMemory'))
-            .matches(
-              /^\d+(\.\d+)?$|^\d+(\.\d+)?(G|M|Gi|Mi)$|^$/,
-              getString('pipeline.stepCommonFields.validation.invalidLimitMemory')
-            )
+            .matches(pattern, getString('pipeline.stepCommonFields.validation.invalidLimitMemory'))
         : yup.string().required()
     }
     return getMultiTypeFromValue(value as string) === MultiTypeInputType.FIXED
       ? yup
           .string()
           // ^$ in the end is to pass empty string because otherwise it will fail
-          // .matches(/^\d+$|^\d+(E|P|T|G|M|K|Ei|Pi|Ti|Gi|Mi|Ki)$|^$/, getString('pipeline.stepCommonFields.validation.invalidLimitMemory'))
-          .matches(
-            /^\d+(\.\d+)?$|^\d+(\.\d+)?(G|M|Gi|Mi)$|^$/,
-            getString('pipeline.stepCommonFields.validation.invalidLimitMemory')
-          )
+          .matches(pattern, getString('pipeline.stepCommonFields.validation.invalidLimitMemory'))
       : yup.string()
   })
 }
@@ -433,7 +427,7 @@ export function generateSchemaFields(
   fields: Field[],
   { initialValues, steps, serviceDependencies, getString }: GenerateSchemaDependencies,
   stepViewType: StepViewType,
-  buildInfrastructureType?: K8sDirectInfraYaml['type']
+  buildInfrastructureType?: CIBuildInfrastructureType
 ): SchemaField[] {
   return fields.map(field => {
     const { name, type, label, isRequired, isActive } = field
@@ -535,7 +529,7 @@ export function validate(
   config: Field[],
   dependencies: GenerateSchemaDependencies,
   stepViewType: StepViewType,
-  buildInfrastructureType?: K8sDirectInfraYaml['type']
+  buildInfrastructureType?: CIBuildInfrastructureType
 ): FormikErrors<any> {
   const errors = {}
   if (isEmpty(dependencies.steps)) {

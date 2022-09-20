@@ -28,7 +28,7 @@ import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import {
   AzureSubscriptionDTO,
   getAzureClustersPromise,
@@ -60,6 +60,9 @@ import { useStrings } from 'framework/strings'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { getNameSpaceSchema, getReleaseNameSchema } from '../PipelineStepsUtil'
 import {
   AzureInfrastructureSpecEditableProps,
@@ -334,7 +337,7 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
       )}
       {getMultiTypeFromValue(template?.subscriptionId) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-          <FormInput.MultiTypeInput
+          <SelectInputSetView
             name={`${path}.subscriptionId`}
             tooltipProps={{
               dataTooltipId: 'azureInfraSubscription'
@@ -390,12 +393,14 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
               expressions,
               allowableTypes
             }}
+            fieldPath={'subscriptionId'}
+            template={template}
           />
         </div>
       )}
       {getMultiTypeFromValue(template?.resourceGroup) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-          <FormInput.MultiTypeInput
+          <SelectInputSetView
             name={`${path}.resourceGroup`}
             tooltipProps={{
               dataTooltipId: 'azureInfraResourceGroup'
@@ -451,12 +456,14 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
               expressions,
               allowableTypes
             }}
+            fieldPath={'resourceGroup'}
+            template={template}
           />
         </div>
       )}
       {getMultiTypeFromValue(template?.cluster) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-          <FormInput.MultiTypeInput
+          <SelectInputSetView
             name={`${path}.cluster`}
             tooltipProps={{
               dataTooltipId: 'azureInfraCluster'
@@ -512,12 +519,14 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
               expressions,
               allowableTypes
             }}
+            template={template}
+            fieldPath={'cluster'}
           />
         </div>
       )}
       {getMultiTypeFromValue(template?.namespace) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             name={`${path}.namespace`}
             tooltipProps={{
               dataTooltipId: 'azureInfraNamespace'
@@ -529,12 +538,14 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
               expressions
             }}
             placeholder={getString('pipeline.infraSpecifications.namespacePlaceholder')}
+            template={template}
+            fieldPath={'namespace'}
           />
         </div>
       )}
       {getMultiTypeFromValue(template?.releaseName) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             name={`${path}.releaseName`}
             tooltipProps={{
               dataTooltipId: 'azureInfraReleaseName'
@@ -546,6 +557,8 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
             label={getString('common.releaseName')}
             disabled={readonly}
             placeholder={getString('cd.steps.common.releaseNamePlaceholder')}
+            fieldPath={'releaseName'}
+            template={template}
           />
         </div>
       )}
@@ -897,8 +910,8 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
                 />
                 {getMultiTypeFromValue(getValue(formik.values.subscriptionId)) === MultiTypeInputType.RUNTIME &&
                   !readonly && (
-                    <ConfigureOptions
-                      value={!loadingSubscriptions && formik.values.subscriptionId}
+                    <SelectConfigureOptions
+                      value={getValue(formik.values.subscriptionId)}
                       type="String"
                       variableName="subscriptionId"
                       showRequiredField={false}
@@ -911,6 +924,8 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
                       }
                       isReadonly={readonly}
                       className={css.marginTop}
+                      loading={loadingSubscriptions}
+                      options={subscriptions}
                     />
                   )}
               </Layout.Horizontal>
@@ -967,8 +982,8 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
                 />
                 {getMultiTypeFromValue(getValue(formik.values.resourceGroup)) === MultiTypeInputType.RUNTIME &&
                   !readonly && (
-                    <ConfigureOptions
-                      value={!loadingResourceGroups && formik.values.resourceGroup}
+                    <SelectConfigureOptions
+                      value={getValue(formik.values.resourceGroup)}
                       type="String"
                       variableName="resourceGroup"
                       showRequiredField={false}
@@ -981,6 +996,8 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
                       }
                       isReadonly={readonly}
                       className={css.marginTop}
+                      options={resourceGroups}
+                      loading={loadingResourceGroups}
                     />
                   )}
               </Layout.Horizontal>
@@ -1034,8 +1051,8 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
                   label={getString(clusterLabel)}
                 />
                 {getMultiTypeFromValue(getValue(formik.values.cluster)) === MultiTypeInputType.RUNTIME && !readonly && (
-                  <ConfigureOptions
-                    value={!loadingClusters && formik.values.cluster}
+                  <SelectConfigureOptions
+                    value={getValue(formik.values.cluster)}
                     type="String"
                     variableName="cluster"
                     showRequiredField={false}
@@ -1048,6 +1065,8 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
                     }
                     isReadonly={readonly}
                     className={css.marginTop}
+                    options={clusters}
+                    loading={loadingClusters}
                   />
                 )}
               </Layout.Horizontal>
@@ -1074,6 +1093,7 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
                     }}
                     isReadonly={readonly}
                     className={css.marginTop}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                   />
                 )}
               </Layout.Horizontal>
@@ -1110,6 +1130,7 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
                           }}
                           isReadonly={readonly}
                           className={css.marginTop}
+                          allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                         />
                       )}
                     </Layout.Horizontal>

@@ -10,7 +10,7 @@ import { render, act, Matcher, fireEvent } from '@testing-library/react'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
-import { CIBuildInfrastructureType } from '@ci/constants/Constants'
+import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import { ACRStep } from '../ACRStep'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')

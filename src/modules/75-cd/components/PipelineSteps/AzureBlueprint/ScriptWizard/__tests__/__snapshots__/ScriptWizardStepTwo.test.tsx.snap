@@ -318,13 +318,13 @@ exports[`ScriptWizardStepTwo account repo type 1`] = `
               >
                 <label
                   class="bp3-label"
-                  for="paths"
+                  for="folderPath"
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="startupScriptDetails_paths"
+                    data-tooltip-id="startupScriptDetails_folderPath"
                   >
-                    pipeline.manifestType.osTemplatePath
+                    cd.azureBlueprint.templateFolderPath
                   </span>
                    
                   <span
@@ -346,7 +346,7 @@ exports[`ScriptWizardStepTwo account repo type 1`] = `
                         <input
                           class="bp3-input"
                           disabled=""
-                          name="paths"
+                          name="folderPath"
                           placeholder="<+input>"
                           type="text"
                           value="<+input>"
@@ -392,7 +392,7 @@ exports[`ScriptWizardStepTwo account repo type 1`] = `
                 >
                   <button
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withRightIcon"
-                    id="configureOptions_paths"
+                    id="configureOptions_folderPath"
                     style="align-self: center; margin-top: 1px;"
                     tabindex="0"
                     type="button"

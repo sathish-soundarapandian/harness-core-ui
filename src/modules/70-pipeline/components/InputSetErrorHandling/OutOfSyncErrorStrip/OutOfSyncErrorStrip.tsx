@@ -48,7 +48,7 @@ import css from './OutOfSyncErrorStrip.module.scss'
 
 interface OutOfSyncErrorStripProps {
   inputSet: InputSetDTO | OverlayInputSetDTO
-  pipelineGitDetails?: EntityGitDetails | undefined
+  pipelineGitDetails?: EntityGitDetails
   overlayInputSetRepoIdentifier?: string
   overlayInputSetBranch?: string
   overlayInputSetIdentifier?: string
@@ -152,17 +152,19 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
-      pipelineIdentifier,
+      pipelineIdentifier: pipelineIdentifier ?? get(inputSet, 'pipelineIdentifier'),
       ...(isGitSyncEnabled
         ? {
             pipelineRepoID: repoIdentifier,
             pipelineBranch: branch
           }
         : {}),
-      repoIdentifier: isGitSyncEnabled ? overlayInputSetRepoIdentifier ?? inputSetRepoIdentifier : repoName,
-      branch: isGitSyncEnabled ? overlayInputSetBranch ?? inputSetBranch : branch,
-      connectorRef: connectorRef,
-      storeType: storeType,
+      repoIdentifier: isGitSyncEnabled
+        ? overlayInputSetRepoIdentifier ?? inputSetRepoIdentifier
+        : repoName ?? get(inputSet, 'gitDetails.repoName'),
+      branch: isGitSyncEnabled ? overlayInputSetBranch ?? inputSetBranch : branch ?? get(inputSet, 'gitDetails.branch'),
+      connectorRef: connectorRef ?? get(inputSet, 'connectorRef'),
+      storeType: storeType ?? get(inputSet, 'storeType'),
       ...gitParams
     },
     inputSetIdentifier: overlayInputSetIdentifier ?? get(inputSet, 'identifier', ''),
@@ -181,7 +183,7 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
     refetch,
     fromInputSetForm,
     hideForm,
-    inpSetGitDetails: yamlDiffResponse?.data?.gitDetails,
+    inpSetGitDetails: get(yamlDiffResponse, 'data.gitDetails', ''),
     onReconcile,
     refetchInputSets
   })
@@ -229,7 +231,7 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
                     accountIdentifier: accountId,
                     orgIdentifier,
                     projectIdentifier,
-                    pipelineIdentifier,
+                    pipelineIdentifier: pipelineIdentifier ?? get(inputSet, 'pipelineIdentifier'),
                     commitMsg: get(inputSet, 'gitDetails.objectId')
                       ? `${getString('delete')} ${get(inputSet, 'name', '')}`
                       : '',
@@ -312,6 +314,7 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
           onClose={onClose}
           isOverlayInputSet={isOverlayInputSet}
           handleSubmit={handleSubmit}
+          yamlDiffGitDetails={get(yamlDiffResponse, 'data.gitDetails', '')}
         />
       </Dialog>
     )

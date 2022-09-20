@@ -93,6 +93,7 @@ export function ArtifactoryRepoType({
                   name={'artifactType'}
                   items={supportedArtifactTypes}
                   onChange={handleOptionSelection}
+                  layoutProps={{ className: css.wrapping }}
                 />
               </Layout.Horizontal>
             </div>

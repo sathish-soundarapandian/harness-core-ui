@@ -34,7 +34,13 @@ import {
 } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import type { CreateUpdateLdapWizardProps, LdapWizardStepProps } from '../CreateUpdateLdapWizard'
-import { QueryFormTitle, QueryStepTitle, QueryTestFailMsgs, QueryTestSuccessMsg } from '../utils'
+import {
+  getErrorMessageFromException,
+  QueryFormTitle,
+  QueryStepTitle,
+  QueryTestFailMsgs,
+  QueryTestSuccessMsg
+} from '../utils'
 import css from '../CreateUpdateLdapWizard.module.scss'
 
 export interface StepGroupQueriesProps {
@@ -44,6 +50,7 @@ export interface StepGroupQueriesProps {
 
 interface GroupQueryPreviewProps {
   index: number
+  displayIndex: number
   customClass?: string
 }
 
@@ -91,6 +98,7 @@ const GroupQueryEdit: React.FC<
   descriptionAttr,
   nameAttr,
   index,
+  displayIndex,
   customClass,
   onGroupQueryCommitEdit,
   onGroupQueryDiscardEdit,
@@ -123,12 +131,9 @@ const GroupQueryEdit: React.FC<
         )
       }
     } catch (e: any) /* istanbul ignore next */ {
-      const hasResponseMessages = e.data?.responseMessages && e.data?.responseMessages.length > 0
       setGroupQueryTestResult(
         <QueryTestFailMsgs
-          errorMessages={
-            hasResponseMessages ? e.data?.responseMessages : [{ level: 'ERROR', message: e.data?.message || e.message }]
-          }
+          errorMessages={getErrorMessageFromException(e, getString('authSettings.ldap.queryTestFail'))}
         />
       )
     }
@@ -145,7 +150,7 @@ const GroupQueryEdit: React.FC<
       >
         <FormikForm>
           <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
-            <QueryFormTitle title={getString('authSettings.ldap.groupQueryTitle', { index: index + 1 })} />
+            <QueryFormTitle title={getString('authSettings.ldap.groupQueryTitle', { index: displayIndex })} />
             <Container className={css.queryCtaContainer} flex={{ alignItems: 'center' }}>
               <Button
                 text={getString('test')}
@@ -220,6 +225,7 @@ const GroupQueryPreview: React.FC<
   descriptionAttr,
   nameAttr,
   index,
+  displayIndex,
   customClass,
   onDeleteGroupQuery,
   onEnableGroupQueryDraftMode
@@ -230,7 +236,7 @@ const GroupQueryPreview: React.FC<
       <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
         <Text font={{ variation: FontVariation.H5 }}>
           <Icon name="chevron-down" color={Color.PRIMARY_6} margin={{ right: 'small' }} />
-          {getString('authSettings.ldap.groupQueryTitle', { index: index + 1 })}
+          {getString('authSettings.ldap.groupQueryTitle', { index: displayIndex })}
         </Text>
         <Container className={css.queryCtaContainer}>
           <Button
@@ -297,7 +303,8 @@ export const StepGroupQueries: React.FC<
   StepProps<CreateUpdateLdapWizardProps> & LdapWizardStepProps<LdapGroupSettings[]>
 > = props => {
   const { getString } = useStrings()
-  const { stepData, name, updateStepData, auxilliaryData, triggerSaveData } = props
+  const { stepData, name, updateStepData, auxilliaryData, createUpdateActionProps } = props
+  const { isUpdateInProgress, createUpdateError, triggerSaveData } = createUpdateActionProps || {}
   const [groupSettingsList, setGroupSettingsList] = useState<LdapGroupSettingsDraft[]>(stepData || [])
   const [isAddSettingEnabled, setIsAddSettingEnabled] = useState<boolean>(true)
   const { accountId } = useParams<AccountPathProps>()
@@ -380,7 +387,7 @@ export const StepGroupQueries: React.FC<
       accountId: accountId
     })
   }
-  const GroupQueryListPreview = groupSettingsList?.map((groupSetting, groupQueryIdx) => {
+  const GroupQueryListPreview = groupSettingsList?.map((groupSetting, groupQueryIdx, groupSettingsArr) => {
     if (groupSetting.isDraft) {
       return (
         <GroupQueryEdit
@@ -391,6 +398,7 @@ export const StepGroupQueries: React.FC<
           onGroupQueryCommitEdit={onGroupQueryCommitEdit}
           onGroupQueryDiscardEdit={onGroupQueryDiscardEdit}
           onTestGroupQuery={onTestGroupQuery}
+          displayIndex={groupSettingsArr.length - groupQueryIdx}
         />
       )
     }
@@ -402,6 +410,7 @@ export const StepGroupQueries: React.FC<
         customClass={css.queryPreviewItem}
         onEnableGroupQueryDraftMode={onEnableGroupQueryDraftMode}
         onDeleteGroupQuery={onDeleteGroupQuery}
+        displayIndex={groupSettingsArr.length - groupQueryIdx}
       />
     )
   })
@@ -430,6 +439,7 @@ export const StepGroupQueries: React.FC<
           <Container className={css.settingsListCtr}>{GroupQueryListPreview}</Container>
         )}
       </Layout.Vertical>
+      {createUpdateError}
       <Layout.Horizontal className={css.stepCtaContainer}>
         <Button
           onClick={() => props.previousStep?.()}
@@ -441,6 +451,7 @@ export const StepGroupQueries: React.FC<
         />
         <Button
           intent="primary"
+          disabled={isUpdateInProgress}
           onClick={() => {
             onGroupQueriesSave()
             triggerSaveData?.()

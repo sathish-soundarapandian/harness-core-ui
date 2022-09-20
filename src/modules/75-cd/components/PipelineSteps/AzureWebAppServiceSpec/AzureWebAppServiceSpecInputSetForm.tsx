@@ -23,6 +23,7 @@ import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/Artifac
 import { KubernetesArtifacts } from '../K8sServiceSpec/KubernetesArtifacts/KubernetesArtifacts'
 import { AzureWebAppConfig } from './RuntimeAzureWebAppConfig/RuntimeAzureWebAppConfig'
 import { AzureWebAppConfigType, AzureWebAppServiceSpecFormProps } from './AzureWebAppServiceSpecInterface.types'
+import PrimaryArtifactRef from '../K8sServiceSpec/PrimaryArtifact/PrimaryArtifactRef'
 import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 const AzureWebAppServiceSpecInputSet = (props: AzureWebAppServiceSpecFormProps): React.ReactElement => {
@@ -41,73 +42,67 @@ const AzureWebAppServiceSpecInputSet = (props: AzureWebAppServiceSpecFormProps):
     allowableTypes
   } = props
   const { getString } = useStrings()
+  const commonProps = {
+    stepViewType,
+    formik,
+    path,
+    initialValues,
+    readonly,
+    allowableTypes,
+    serviceIdentifier
+  }
+
   return (
     <Layout.Vertical spacing="medium">
-      {!!(template?.artifacts?.primary?.type || template?.artifacts?.sidecars?.length) && (
+      {!!template?.artifacts?.primary?.primaryArtifactRef && (
+        <PrimaryArtifactRef primaryArtifact={allValues?.artifacts?.primary} template={template} {...commonProps} />
+      )}
+
+      {!!(
+        template?.artifacts?.primary?.type ||
+        (Array.isArray(template?.artifacts?.primary?.sources) && template?.artifacts?.primary?.sources?.length) ||
+        template?.artifacts?.sidecars?.length
+      ) && (
         <KubernetesArtifacts
           type={template?.artifacts?.primary?.type || ''}
           template={template}
           artifacts={allValues?.artifacts}
           artifactSourceBaseFactory={artifactSourceBaseFactory}
-          stepViewType={stepViewType}
           stageIdentifier={stageIdentifier}
-          serviceIdentifier={serviceIdentifier}
-          formik={formik}
-          path={path}
-          initialValues={initialValues}
-          readonly={readonly}
-          allowableTypes={allowableTypes}
+          {...commonProps}
         />
       )}
 
       {!!template?.startupCommand && (
         <AzureWebAppConfig
+          type={AzureWebAppConfigType.startupCommand}
           template={template}
           azureWebAppConfig={allValues?.startupCommand}
           azureWebAppConfigBaseFactory={azureWebAppConfigBaseFactory}
-          stepViewType={stepViewType}
           stageIdentifier={stageIdentifier}
-          serviceIdentifier={serviceIdentifier}
-          formik={formik}
-          path={path}
-          initialValues={initialValues}
-          readonly={readonly}
-          allowableTypes={allowableTypes}
-          type={AzureWebAppConfigType.startupCommand}
+          {...commonProps}
         />
       )}
 
       {!!template?.applicationSettings && (
         <AzureWebAppConfig
+          type={AzureWebAppConfigType.applicationSettings}
           template={template}
           azureWebAppConfig={allValues?.applicationSettings}
           azureWebAppConfigBaseFactory={azureWebAppConfigBaseFactory}
-          stepViewType={stepViewType}
           stageIdentifier={stageIdentifier}
-          serviceIdentifier={serviceIdentifier}
-          formik={formik}
-          path={path}
-          initialValues={initialValues}
-          readonly={readonly}
-          allowableTypes={allowableTypes}
-          type={AzureWebAppConfigType.applicationSettings}
+          {...commonProps}
         />
       )}
 
       {!!template?.connectionStrings && (
         <AzureWebAppConfig
+          type={AzureWebAppConfigType.connectionStrings}
           template={template}
           azureWebAppConfig={allValues?.connectionStrings}
           azureWebAppConfigBaseFactory={azureWebAppConfigBaseFactory}
-          stepViewType={stepViewType}
           stageIdentifier={stageIdentifier}
-          serviceIdentifier={serviceIdentifier}
-          formik={formik}
-          path={path}
-          initialValues={initialValues}
-          readonly={readonly}
-          allowableTypes={allowableTypes}
-          type={AzureWebAppConfigType.connectionStrings}
+          {...commonProps}
         />
       )}
 

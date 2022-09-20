@@ -25,7 +25,7 @@ exports[`Azure Web App config tests Should match snapshot for application settin
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               connector
             </div>
@@ -313,7 +313,7 @@ exports[`Azure Web App config tests Should match snapshot for connection strings
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               connector
             </div>
@@ -601,7 +601,7 @@ exports[`Azure Web App config tests Should match snapshot for startup script 1`]
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               connector
             </div>

@@ -274,6 +274,35 @@ exports[`Rule details page tests should render successfully 1`] = `
             delete
           </span>
         </button>
+        <button
+          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon Button--variation Button--variation-link"
+          type="button"
+        >
+          <span
+            class="bp3-icon bp3-icon-repeat StyledProps--main"
+            icon="repeat"
+          >
+            <svg
+              data-icon="repeat"
+              height="12"
+              viewBox="0 0 16 16"
+              width="12"
+            >
+              <desc>
+                repeat
+              </desc>
+              <path
+                d="M10 5c0 .55.45 1 1 1h4c.55 0 1-.45 1-1V1c0-.55-.45-1-1-1s-1 .45-1 1v1.74A7.95 7.95 0 008 0C3.58 0 0 3.58 0 8c0 4.06 3.02 7.4 6.94 7.92.02 0 .04.01.06.01.33.04.66.07 1 .07 4.42 0 8-3.58 8-8 0-.55-.45-1-1-1s-1 .45-1 1c0 3.31-2.69 6-6 6-.71 0-1.37-.15-2-.38v.01C3.67 12.81 2 10.61 2 8c0-3.31 2.69-6 6-6 1.77 0 3.36.78 4.46 2H11c-.55 0-1 .45-1 1z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          <span
+            class="bp3-button-text"
+          >
+            common.refresh
+          </span>
+        </button>
       </div>
     </div>
     <div
@@ -450,7 +479,7 @@ exports[`Rule details page tests should render successfully 1`] = `
                     <span
                       class="ansi-black-fg"
                     >
-                      2021-04-05T13:14:58.857084Z  Rule state changed to: coolingdown  
+                      05/04/2021 01:14 PM GMT  Rule state changed to: coolingdown  
                     </span>
                   </span>
                 </div>
@@ -471,7 +500,7 @@ exports[`Rule details page tests should render successfully 1`] = `
                     <span
                       class="ansi-red-fg ansi-decoration-bold"
                     >
-                      2021-04-05T13:14:58.857084Z  Rule state changed to: coolingdown Error: null 
+                      05/04/2021 01:14 PM GMT  Rule state changed to: coolingdown Error: null 
                     </span>
                   </span>
                 </div>
@@ -492,7 +521,7 @@ exports[`Rule details page tests should render successfully 1`] = `
                     <span
                       class="ansi-green-fg"
                     >
-                      2021-04-05T13:14:58.857084Z  Rule state changed to: active 
+                      05/04/2021 01:14 PM GMT  Rule state changed to: active 
                     </span>
                   </span>
                 </div>
@@ -863,34 +892,52 @@ exports[`Rule details page tests should render successfully 1`] = `
                   >
                     ce.co.autoStoppingRule.configuration.step4.advancedConfiguration
                   </p>
-                  <label
-                    class="Toggle--toggle toggleInput StyledProps--main"
-                    data-testid="progressPageViewToggle"
+                  <span
+                    class="bp3-popover-wrapper"
                   >
-                    <input
-                      class="Toggle--input"
-                      type="checkbox"
-                      value=""
-                    />
                     <span
-                      class="Toggle--toggleIcon"
-                    />
-                    ce.co.autoStoppingRule.review.hideProgressPage
-                  </label>
-                  <label
-                    class="Toggle--toggle toggleInput StyledProps--main"
-                    data-testid="dryRunToggle"
+                      class="bp3-popover-target"
+                    >
+                      <label
+                        class="Toggle--toggle toggleInput StyledProps--main"
+                        data-testid="progressPageViewToggle"
+                        tabindex="0"
+                      >
+                        <input
+                          class="Toggle--input"
+                          type="checkbox"
+                          value=""
+                        />
+                        <span
+                          class="Toggle--toggleIcon"
+                        />
+                        ce.co.autoStoppingRule.review.hideProgressPage
+                      </label>
+                    </span>
+                  </span>
+                  <span
+                    class="bp3-popover-wrapper"
                   >
-                    <input
-                      class="Toggle--input"
-                      type="checkbox"
-                      value=""
-                    />
                     <span
-                      class="Toggle--toggleIcon"
-                    />
-                    ce.co.dryRunLabel
-                  </label>
+                      class="bp3-popover-target"
+                    >
+                      <label
+                        class="Toggle--toggle toggleInput StyledProps--main"
+                        data-testid="dryRunToggle"
+                        tabindex="0"
+                      >
+                        <input
+                          class="Toggle--input"
+                          type="checkbox"
+                          value=""
+                        />
+                        <span
+                          class="Toggle--toggleIcon"
+                        />
+                        ce.co.dryRunLabel
+                      </label>
+                    </span>
+                  </span>
                 </div>
               </div>
             </div>
@@ -1191,6 +1238,35 @@ exports[`Rule details page tests should render successfully 2`] = `
             delete
           </span>
         </button>
+        <button
+          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon Button--variation Button--variation-link"
+          type="button"
+        >
+          <span
+            class="bp3-icon bp3-icon-repeat StyledProps--main"
+            icon="repeat"
+          >
+            <svg
+              data-icon="repeat"
+              height="12"
+              viewBox="0 0 16 16"
+              width="12"
+            >
+              <desc>
+                repeat
+              </desc>
+              <path
+                d="M10 5c0 .55.45 1 1 1h4c.55 0 1-.45 1-1V1c0-.55-.45-1-1-1s-1 .45-1 1v1.74A7.95 7.95 0 008 0C3.58 0 0 3.58 0 8c0 4.06 3.02 7.4 6.94 7.92.02 0 .04.01.06.01.33.04.66.07 1 .07 4.42 0 8-3.58 8-8 0-.55-.45-1-1-1s-1 .45-1 1c0 3.31-2.69 6-6 6-.71 0-1.37-.15-2-.38v.01C3.67 12.81 2 10.61 2 8c0-3.31 2.69-6 6-6 1.77 0 3.36.78 4.46 2H11c-.55 0-1 .45-1 1z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          <span
+            class="bp3-button-text"
+          >
+            common.refresh
+          </span>
+        </button>
       </div>
     </div>
     <div
@@ -1367,7 +1443,7 @@ exports[`Rule details page tests should render successfully 2`] = `
                     <span
                       class="ansi-black-fg"
                     >
-                      2021-04-05T13:14:58.857084Z  Rule state changed to: coolingdown  
+                      05/04/2021 01:14 PM GMT  Rule state changed to: coolingdown  
                     </span>
                   </span>
                 </div>
@@ -1388,7 +1464,7 @@ exports[`Rule details page tests should render successfully 2`] = `
                     <span
                       class="ansi-red-fg ansi-decoration-bold"
                     >
-                      2021-04-05T13:14:58.857084Z  Rule state changed to: coolingdown Error: null 
+                      05/04/2021 01:14 PM GMT  Rule state changed to: coolingdown Error: null 
                     </span>
                   </span>
                 </div>
@@ -1409,7 +1485,7 @@ exports[`Rule details page tests should render successfully 2`] = `
                     <span
                       class="ansi-green-fg"
                     >
-                      2021-04-05T13:14:58.857084Z  Rule state changed to: active 
+                      05/04/2021 01:14 PM GMT  Rule state changed to: active 
                     </span>
                   </span>
                 </div>
@@ -1780,34 +1856,52 @@ exports[`Rule details page tests should render successfully 2`] = `
                   >
                     ce.co.autoStoppingRule.configuration.step4.advancedConfiguration
                   </p>
-                  <label
-                    class="Toggle--toggle toggleInput StyledProps--main"
-                    data-testid="progressPageViewToggle"
+                  <span
+                    class="bp3-popover-wrapper"
                   >
-                    <input
-                      class="Toggle--input"
-                      type="checkbox"
-                      value=""
-                    />
                     <span
-                      class="Toggle--toggleIcon"
-                    />
-                    ce.co.autoStoppingRule.review.hideProgressPage
-                  </label>
-                  <label
-                    class="Toggle--toggle toggleInput StyledProps--main"
-                    data-testid="dryRunToggle"
+                      class="bp3-popover-target"
+                    >
+                      <label
+                        class="Toggle--toggle toggleInput StyledProps--main"
+                        data-testid="progressPageViewToggle"
+                        tabindex="0"
+                      >
+                        <input
+                          class="Toggle--input"
+                          type="checkbox"
+                          value=""
+                        />
+                        <span
+                          class="Toggle--toggleIcon"
+                        />
+                        ce.co.autoStoppingRule.review.hideProgressPage
+                      </label>
+                    </span>
+                  </span>
+                  <span
+                    class="bp3-popover-wrapper"
                   >
-                    <input
-                      class="Toggle--input"
-                      type="checkbox"
-                      value=""
-                    />
                     <span
-                      class="Toggle--toggleIcon"
-                    />
-                    ce.co.dryRunLabel
-                  </label>
+                      class="bp3-popover-target"
+                    >
+                      <label
+                        class="Toggle--toggle toggleInput StyledProps--main"
+                        data-testid="dryRunToggle"
+                        tabindex="0"
+                      >
+                        <input
+                          class="Toggle--input"
+                          type="checkbox"
+                          value=""
+                        />
+                        <span
+                          class="Toggle--toggleIcon"
+                        />
+                        ce.co.dryRunLabel
+                      </label>
+                    </span>
+                  </span>
                 </div>
               </div>
             </div>

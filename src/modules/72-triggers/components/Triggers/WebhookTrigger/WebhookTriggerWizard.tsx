@@ -85,7 +85,7 @@ import { clearRuntimeInput, mergeTemplateWithInputSetData } from '@pipeline/util
 import TabWizard from '@triggers/components/TabWizard/TabWizard'
 
 import type { AddConditionInterface } from '@triggers/components/AddConditionsSection/AddConditionsSection'
-import TitleWithSwitch from './components/TitleWithSwitch/TitleWithSwitch'
+import TitleWithSwitch from '../components/TitleWithSwitch/TitleWithSwitch'
 import {
   ConnectorRefInterface,
   eventTypes,
@@ -115,7 +115,7 @@ import type {
   FlatValidFormikValuesInterface,
   FlatValidWebhookFormikValuesInterface,
   TriggerConfigDTO
-} from './WizardInterface'
+} from '../TriggerWizardInterface'
 
 type ResponseNGTriggerResponseWithMessage = ResponseNGTriggerResponse & { message?: string }
 

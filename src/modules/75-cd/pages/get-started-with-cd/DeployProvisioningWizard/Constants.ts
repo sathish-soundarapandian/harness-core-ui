@@ -12,6 +12,7 @@ import type { ConnectorInfoDTO, UserRepoResponse } from 'services/cd-ng'
 import type { StringsMap } from 'stringTypes'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { InfraDeploymentType } from '@cd/components/PipelineSteps/PipelineStepsUtil'
+import { deploymentIconMap } from '@cd/utils/deploymentUtils'
 
 export interface DeployProvisioningWizardProps {
   lastConfiguredWizardStepId?: DeployProvisiongWizardStepId
@@ -93,37 +94,37 @@ export interface ServiceDeploymentTypes {
 export const deploymentTypes: ServiceDeploymentTypes[] = [
   {
     label: 'pipeline.serviceDeploymentTypes.kubernetes',
-    icon: 'service-kubernetes',
+    icon: deploymentIconMap[ServiceDeploymentType.Kubernetes],
     value: ServiceDeploymentType.Kubernetes,
     disabled: false
   },
   {
     label: 'pipeline.nativeHelm',
-    icon: 'service-helm',
+    icon: deploymentIconMap[ServiceDeploymentType.NativeHelm],
     value: ServiceDeploymentType.NativeHelm,
     disabled: true
   },
   {
     label: 'pipeline.serviceDeploymentTypes.ssh',
-    icon: 'secret-ssh',
+    icon: deploymentIconMap[ServiceDeploymentType.Ssh],
     value: ServiceDeploymentType.Ssh,
     disabled: true
   },
   {
     label: 'pipeline.serviceDeploymentTypes.winrm',
-    icon: 'command-winrm',
+    icon: deploymentIconMap[ServiceDeploymentType.WinRm],
     value: ServiceDeploymentType.WinRm,
     disabled: true
   },
   {
     label: 'pipeline.serviceDeploymentTypes.azureWebApp',
-    icon: 'azurewebapp',
+    icon: deploymentIconMap[ServiceDeploymentType.AzureWebApp],
     value: ServiceDeploymentType.AzureWebApp,
     disabled: true
   },
   {
     label: 'pipeline.serviceDeploymentTypes.serverlessAwsLambda',
-    icon: 'service-serverless-aws',
+    icon: deploymentIconMap[ServiceDeploymentType.ServerlessAwsLambda],
     value: ServiceDeploymentType.ServerlessAwsLambda,
     disabled: true
   }

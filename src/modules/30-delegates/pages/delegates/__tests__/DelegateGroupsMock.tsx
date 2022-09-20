@@ -46,7 +46,8 @@ export const delegateGroupsMock: any[] = [
       implicitSelector1: 'GROUP_SELECTORS'
     },
     groupName: 'delegate-1',
-    lastHeartBeat: 1616541640941
+    lastHeartBeat: 1616541640941,
+    autoUpgrade: false
   },
   {
     activelyConnected: false,
@@ -60,7 +61,37 @@ export const delegateGroupsMock: any[] = [
     groupId: 'groupId1',
     groupImplicitSelectors: {},
     groupName: 'Group1',
-    lastHeartBeat: 20000
+    lastHeartBeat: 20000,
+    autoUpgrade: false
+  },
+  {
+    groupId: 'ACDJgpvbTeWslY9NrSKU6Q',
+    delegateGroupIdentifier: 'cdpworkloadidentitygcp',
+    delegateType: 'KUBERNETES',
+    groupName: 'cdp-workload-identity-gcp',
+    groupImplicitSelectors: {
+      'cdp-workload-identity-gcp': 'GROUP_NAME'
+    },
+    lastHeartBeat: 1662461017905,
+    connectivityStatus: 'connected',
+    activelyConnected: true,
+    grpcActive: false,
+    delegateInstanceDetails: [
+      {
+        uuid: 'k70Mh9EeQ7SDlV9xPfxpHg',
+        lastHeartbeat: 1662461017905,
+        activelyConnected: true,
+        hostName: 'cdp-workload-identity-gcp-0',
+        tokenActive: true,
+        version: '1.0.76600',
+        delegateExpirationTime: 0
+      }
+    ],
+    tokenActive: true,
+    autoUpgrade: true,
+    delegateGroupExpirationTime: 0,
+    upgraderLastUpdated: 0,
+    immutable: false
   }
 ]
 

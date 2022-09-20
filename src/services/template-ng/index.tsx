@@ -1267,7 +1267,7 @@ export interface NGTemplateInfoConfig {
   tags?: {
     [key: string]: string
   }
-  type: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager'
+  type: 'Step' | 'Stage' | 'Pipeline' | 'CustomDeployment' | 'MonitoredService' | 'SecretManager'
   versionLabel: string
 }
 
@@ -1407,13 +1407,11 @@ export interface ResourceDTO {
     | 'VARIABLE'
     | 'CHAOS_HUB'
     | 'MONITORED_SERVICE'
-    | 'CHAOS_AGENT'
-    | 'CHAOS_WORKFLOW'
+    | 'CHAOS_DELEGATE'
+    | 'CHAOS_SCENARIO'
     | 'STO_TARGET'
     | 'STO_EXEMPTION'
     | 'CHAOS_GITOPS'
-    | 'STO_TARGET'
-    | 'STO_EXEMPTION'
     | 'SERVICE_LEVEL_OBJECTIVE'
     | 'PERSPECTIVE'
     | 'PERSPECTIVE_BUDGET'
@@ -1983,13 +1981,13 @@ export interface TemplateFilterProperties {
   tags?: {
     [key: string]: string
   }
-  templateEntityTypes?: ('Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager')[]
+  templateEntityTypes?: ('Step' | 'Stage' | 'Pipeline' | 'CustomDeployment' | 'MonitoredService' | 'SecretManager')[]
   templateIdentifiers?: string[]
   templateNames?: string[]
 }
 
 export interface TemplateInfo {
-  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager'
+  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'CustomDeployment' | 'MonitoredService' | 'SecretManager'
   templateIdentifier?: string
   versionLabel?: string
 }
@@ -2030,7 +2028,7 @@ export interface TemplateMetadataSummaryResponse {
   tags?: {
     [key: string]: string
   }
-  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager'
+  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'CustomDeployment' | 'MonitoredService' | 'SecretManager'
   templateScope?: 'account' | 'org' | 'project' | 'unknown'
   version?: number
   versionLabel?: string
@@ -2066,7 +2064,7 @@ export interface TemplateResponse {
   tags?: {
     [key: string]: string
   }
-  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager'
+  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'CustomDeployment' | 'MonitoredService' | 'SecretManager'
   templateScope?: 'account' | 'org' | 'project' | 'unknown'
   version?: number
   versionLabel?: string
@@ -2098,7 +2096,7 @@ export interface TemplateSummaryResponse {
   tags?: {
     [key: string]: string
   }
-  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager'
+  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'CustomDeployment' | 'MonitoredService' | 'SecretManager'
   templateScope?: 'account' | 'org' | 'project' | 'unknown'
   version?: number
   versionLabel?: string
@@ -2525,6 +2523,9 @@ export interface RefreshAndUpdateTemplateInputsQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type RefreshAndUpdateTemplateInputsProps = Omit<
@@ -2585,6 +2586,9 @@ export interface RefreshAllQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type RefreshAllProps = Omit<
@@ -2643,6 +2647,9 @@ export interface GetRefreshedYamlQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type GetRefreshedYamlProps = Omit<
@@ -2709,6 +2716,9 @@ export interface GetYamlDiffQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type GetYamlDiffProps = Omit<
@@ -2766,6 +2776,9 @@ export interface ValidateTemplateInputsQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type ValidateTemplateInputsProps = Omit<
@@ -2831,7 +2844,6 @@ export interface CreateTemplateQueryParams {
   connectorRef?: string
   storeType?: 'INLINE' | 'REMOTE'
   repoName?: string
-  parentEntityScope?: 'account' | 'org' | 'project' | 'unknown'
   setDefaultTemplate?: boolean
   comments?: string
 }
@@ -2918,6 +2930,9 @@ export interface GetYamlWithTemplateRefsResolvedQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type GetYamlWithTemplateRefsResolvedProps = Omit<
@@ -3053,6 +3068,9 @@ export interface GetTemplateListQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
   getDistinctFromBranches?: boolean
 }
 
@@ -3294,7 +3312,7 @@ export const getsMergedTemplateInputYamlPromise = (
   >('POST', getConfig('template/api'), `/templates/mergeTemplateInputs`, props, signal)
 
 export interface GetTemplateSchemaQueryParams {
-  templateEntityType: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager'
+  templateEntityType: 'Step' | 'Stage' | 'Pipeline' | 'CustomDeployment' | 'MonitoredService' | 'SecretManager'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -3356,6 +3374,9 @@ export interface GetTemplateInputSetYamlQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export interface GetTemplateInputSetYamlPathParams {
@@ -3425,6 +3446,9 @@ export interface GetTemplateReferencesQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type GetTemplateReferencesProps = Omit<
@@ -3625,6 +3649,9 @@ export interface UpdateStableTemplateQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
   comments?: string
 }
 
@@ -3717,6 +3744,9 @@ export interface UpdateTemplateSettingsQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
   getDistinctFromBranches?: boolean
 }
 
@@ -3810,6 +3840,9 @@ export interface GetYamlWithTemplateRefsResolvedV2QueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type GetYamlWithTemplateRefsResolvedV2Props = Omit<
@@ -4132,6 +4165,9 @@ export interface GetTemplateQueryParams {
   getDefaultFromOtherRepo?: boolean
   parentEntityConnectorRef?: string
   parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export interface GetTemplatePathParams {

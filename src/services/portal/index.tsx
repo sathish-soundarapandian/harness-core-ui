@@ -5020,6 +5020,7 @@ export interface Delegate {
   delegateType?: string
   description?: string
   excludeScopes?: DelegateScope[]
+  expirationTime?: number
   heartbeatAsObject?: boolean
   hostName?: string
   immutable?: boolean
@@ -5237,6 +5238,7 @@ export interface DelegateGroupDetails {
   connectivityStatus?: string
   delegateConfigurationId?: string
   delegateDescription?: string
+  delegateGroupExpirationTime?: number
   delegateGroupIdentifier?: string
   delegateInstanceDetails?: DelegateInner[]
   delegateType?: string
@@ -5255,6 +5257,7 @@ export interface DelegateGroupDetails {
   }
   groupName?: string
   grpcActive?: boolean
+  immutable?: boolean
   lastHeartBeat?: number
   tokenActive?: boolean
   upgraderLastUpdated?: number
@@ -5299,10 +5302,12 @@ export interface DelegateInitializationDetails {
 export interface DelegateInner {
   activelyConnected?: boolean
   connections?: DelegateConnectionDetails[]
+  delegateExpirationTime?: number
   hostName?: string
   lastHeartbeat?: number
   tokenActive?: boolean
   uuid?: string
+  version?: string
 }
 
 export interface DelegateMetaInfo {
@@ -5405,6 +5410,7 @@ export interface DelegateResponseData {
 
 export interface DelegateScalingGroup {
   autoUpgrade?: boolean
+  delegateGroupExpirationTime?: number
   delegates?: DelegateInner[]
   groupName?: string
   upgraderLastUpdated?: number
@@ -23162,6 +23168,8 @@ export type GcpBillingAccountRequestBody = GcpBillingAccount
 
 export type GcpOrganizationRequestBody = GcpOrganization
 
+export type GraphQLQueryRequestBody = GraphQLQuery
+
 export type HarnessTagRequestBody = HarnessTag
 
 export type HarnessTagLinkRequestBody = HarnessTagLink
@@ -23275,6 +23283,8 @@ export type YamlGitConfigRequestBody = YamlGitConfig
 export type YamlPayloadRequestBody = YamlPayload
 
 export type GcpSignUpRequestBody = void
+
+export type GetDelegatePropertiesBodyRequestBody = string[]
 
 export type ImportAccountDataRequestBody = void
 

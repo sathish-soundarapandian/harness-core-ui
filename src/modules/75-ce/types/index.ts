@@ -181,3 +181,5 @@ export interface ServiceWarning {
   action?: string
   warning?: string
 }
+
+export type RefreshFunction = () => void

@@ -20,7 +20,7 @@ import {
 } from '@harness/uicore'
 import { connect, FormikProps } from 'formik'
 import { Color, FontVariation } from '@harness/design-system'
-import { defaultTo, get, identity, isEmpty, isNil, pickBy, set, unset } from 'lodash-es'
+import { defaultTo, get, identity, isEmpty, isNil, pick, pickBy, set, unset } from 'lodash-es'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -31,6 +31,7 @@ import type {
   PipelineInfrastructure,
   ServiceConfig,
   ServiceSpec,
+  ServiceYamlV2,
   StageOverridesConfig,
   StepElementConfig
 } from 'services/cd-ng'
@@ -75,12 +76,14 @@ import { StepWidget } from '../AbstractSteps/StepWidget'
 import { ConditionalExecutionForm, StrategyForm } from './StageAdvancedInputSetForm'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StepViewType } from '../AbstractSteps/Step'
-import { OsTypes } from '../../utils/constants'
+import { OsTypes, ArchTypes, CIBuildInfrastructureType } from '../../utils/constants'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './PipelineInputSetForm.module.scss'
 
+export type DeployServiceEntityData = Pick<DeploymentStageConfig, 'service' | 'services'>
 const harnessImageConnectorRef = 'connectors.title.harnessImageConnectorRef'
 const osLabel = 'pipeline.infraSpecifications.os'
+const archLabel = 'pipeline.infraSpecifications.architecture'
 
 function ServiceDependencyForm({
   template,
@@ -827,11 +830,11 @@ export function StageInputSetFormInternal({
           <div className={css.inputheader}>{getString('service')}</div>
           <div className={css.nestedAccordions}>
             {deploymentStageTemplate.service?.serviceRef && (
-              /* istanbul ignore next */ <StepWidget<ServiceConfig>
+              <StepWidget<DeployServiceEntityData>
                 factory={factory}
-                initialValues={deploymentStageInputSet.service || {}}
-                template={deploymentStageTemplate.service || {}}
-                type={StepType.DeployService}
+                initialValues={pick(deploymentStageInputSet, ['service'])}
+                template={pick(deploymentStageTemplate, ['service'])}
+                type={StepType.DeployServiceEntity}
                 stepViewType={viewType}
                 path={`${path}.service`}
                 allowableTypes={
@@ -844,14 +847,14 @@ export function StageInputSetFormInternal({
                 readonly={readonly}
                 customStepProps={{
                   stageIdentifier,
-                  isNewServiceEntity: true,
                   deploymentType: deploymentStage?.deploymentType,
-                  gitOpsEnabled: deploymentStage?.gitOpsEnabled
+                  gitOpsEnabled: deploymentStage?.gitOpsEnabled,
+                  allValues: pick(deploymentStage, ['service'])
                 }}
               />
             )}
             {!isNil(deploymentStage?.deploymentType) && (
-              /* istanbul ignore next */ <StepWidget<ServiceSpec>
+              <StepWidget<ServiceSpec>
                 factory={factory}
                 initialValues={deploymentStageInputSet?.service?.serviceInputs?.serviceDefinition?.spec || {}}
                 allowableTypes={allowableTypes}
@@ -881,6 +884,85 @@ export function StageInputSetFormInternal({
         </div>
       )}
 
+      {isSvcEnvEntityEnabled && deploymentStageTemplate.services ? (
+        <div id={`Stage.${stageIdentifier}.Service`} className={cx(css.accordionSummary)}>
+          <div className={css.inputheader}>{getString('services')}</div>
+          <div className={css.nestedAccordions}>
+            {getMultiTypeFromValue(deploymentStageTemplate.services.values as unknown as string) ===
+              MultiTypeInputType.RUNTIME ||
+            (Array.isArray(deploymentStageTemplate.services.values) &&
+              deploymentStageTemplate.services.values.some(
+                svc => getMultiTypeFromValue(svc.serviceRef) === MultiTypeInputType.RUNTIME
+              )) ? (
+              <StepWidget<DeployServiceEntityData>
+                factory={factory}
+                initialValues={pick(deploymentStageInputSet, ['services'])}
+                template={pick(deploymentStageTemplate, ['services'])}
+                type={StepType.DeployServiceEntity}
+                stepViewType={viewType}
+                path={`${path}.services`}
+                allowableTypes={
+                  scope === Scope.PROJECT
+                    ? allowableTypes
+                    : ((allowableTypes as MultiTypeInputType[]).filter(
+                        item => item !== MultiTypeInputType.FIXED
+                      ) as AllowedTypes)
+                }
+                readonly={readonly}
+                customStepProps={{
+                  stageIdentifier,
+                  deploymentType: deploymentStage?.deploymentType,
+                  gitOpsEnabled: deploymentStage?.gitOpsEnabled,
+                  allValues: pick(deploymentStage, ['services'])
+                }}
+              />
+            ) : null}
+            {Array.isArray(deploymentStageTemplate.services.values) ? (
+              <>
+                {deploymentStageTemplate.services.values.map((serviceTemplate, i) => {
+                  const deploymentType = serviceTemplate.serviceInputs?.serviceDefinition?.type
+                  const service: ServiceYamlV2 = get(deploymentStageInputSet, `services.values[${i}]`, {})
+
+                  if (
+                    deploymentType &&
+                    getMultiTypeFromValue(serviceTemplate.serviceRef) === MultiTypeInputType.RUNTIME
+                  ) {
+                    return (
+                      <React.Fragment key={`${service.serviceRef}_${i}`}>
+                        <Text
+                          font={{ size: 'normal', weight: 'bold' }}
+                          margin={{ top: 'medium', bottom: 'medium' }}
+                          color={Color.GREY_800}
+                        >
+                          {getString('common.servicePrefix', { name: service.serviceRef })}
+                        </Text>
+                        <StepWidget<ServiceSpec>
+                          factory={factory}
+                          initialValues={get(service, `serviceInputs.serviceDefinition.spec`, {})}
+                          allowableTypes={allowableTypes}
+                          template={defaultTo(serviceTemplate?.serviceInputs?.serviceDefinition?.spec, {})}
+                          type={getStepTypeByDeploymentType(deploymentType)}
+                          stepViewType={viewType}
+                          path={`${path}.services.values[${i}].serviceInputs.serviceDefinition.spec`}
+                          readonly={readonly}
+                          customStepProps={{
+                            stageIdentifier,
+                            serviceIdentifier: defaultTo(service.serviceRef, ''),
+                            allValues: service.serviceInputs?.serviceDefinition?.spec
+                          }}
+                        />
+                      </React.Fragment>
+                    )
+                  }
+
+                  return null
+                })}
+              </>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
+
       {deploymentStageTemplate?.environmentGroup?.envGroupRef && (
         <div id={`Stage.${stageIdentifier}.EnvironmentGroup`} className={cx(css.accordionSummary)}>
           <StepWidget
@@ -892,6 +974,9 @@ export function StageInputSetFormInternal({
             stepViewType={viewType}
             path={path}
             readonly={readonly}
+            customStepProps={{
+              stageIdentifier
+            }}
           />
         </div>
       )}
@@ -902,6 +987,7 @@ export function StageInputSetFormInternal({
             factory={factory}
             initialValues={deploymentStageInputSet}
             allowableTypes={allowableTypes}
+            allValues={deploymentStage}
             template={deploymentStageTemplate}
             type={StepType.DeployInfrastructure}
             stepViewType={viewType}
@@ -918,7 +1004,9 @@ export function StageInputSetFormInternal({
               // load infrastructure runtime inputs
               infrastructureRef: deploymentStage.environment?.infrastructureDefinitions?.[0].identifier,
               // load cluster runtime inputs
-              clusterRef: deploymentStage.environment?.gitOpsClusters?.[0].identifier
+              clusterRef: deploymentStage.environment?.gitOpsClusters?.[0].identifier,
+              // required for artifact manifest inputs
+              stageIdentifier
             }}
             onUpdate={values => {
               if (deploymentStageInputSet?.environment) {
@@ -986,12 +1074,12 @@ export function StageInputSetFormInternal({
         </div>
       )}
 
-      {deploymentStageTemplate.infrastructure && (
+      {(deploymentStageTemplate.infrastructure || (deploymentStageTemplate as any).platform) && (
         <div id={`Stage.${stageIdentifier}.Infrastructure`} className={cx(css.accordionSummary)}>
           <div className={css.inputheader}>{getString('infrastructureText')}</div>
 
           <div className={cx(css.nestedAccordions, css.infraSection)}>
-            {(deploymentStageTemplate.infrastructure as any).type === 'KubernetesDirect' ? (
+            {(deploymentStageTemplate.infrastructure as any)?.type === CIBuildInfrastructureType.KubernetesDirect ? (
               <>
                 {(deploymentStageTemplate.infrastructure as any).spec?.connectorRef ? (
                   shouldRenderRunTimeInputViewWithAllowedValues(
@@ -1026,7 +1114,7 @@ export function StageInputSetFormInternal({
                     </Container>
                   )
                 ) : null}
-                {(deploymentStageTemplate.infrastructure as any).spec?.namespace && (
+                {(deploymentStageTemplate.infrastructure as any)?.spec?.namespace && (
                   <Container className={stepCss.bottomMargin3}>
                     {renderMultiTypeTextField({
                       name: `${namePath}infrastructure.spec.namespace`,
@@ -1043,7 +1131,7 @@ export function StageInputSetFormInternal({
                     })}
                   </Container>
                 )}
-                {(deploymentStageTemplate.infrastructure as any).spec?.os ? (
+                {(deploymentStageTemplate.infrastructure as any)?.spec?.os ? (
                   shouldRenderRunTimeInputViewWithAllowedValues(
                     'spec.spec.os',
                     deploymentStageTemplate.infrastructure
@@ -1085,7 +1173,7 @@ export function StageInputSetFormInternal({
                     </Container>
                   )
                 ) : null}
-                {(deploymentStageTemplate.infrastructure as any).spec?.harnessImageConnectorRef ? (
+                {(deploymentStageTemplate.infrastructure as any)?.spec?.harnessImageConnectorRef ? (
                   shouldRenderRunTimeInputViewWithAllowedValues(
                     'spec.harnessImageConnectorRef',
                     deploymentStageTemplate.infrastructure
@@ -1120,10 +1208,10 @@ export function StageInputSetFormInternal({
                   )
                 ) : null}
               </>
-            ) : (deploymentStageTemplate.infrastructure as any).type === 'VM' ? (
+            ) : (deploymentStageTemplate.infrastructure as any)?.type === CIBuildInfrastructureType.VM ? (
               renderVMInfra()
             ) : null}
-            {(deploymentStageTemplate.infrastructure as K8sDirectInfraYaml).spec?.volumes && (
+            {(deploymentStageTemplate.infrastructure as K8sDirectInfraYaml)?.spec?.volumes && (
               <Container data-name="100width" className={stepCss.bottomMargin5}>
                 <Volumes
                   name={`${namePath}infrastructure.spec.volumes`}
@@ -1134,7 +1222,7 @@ export function StageInputSetFormInternal({
                 />
               </Container>
             )}
-            {(deploymentStageTemplate.infrastructure as any).spec?.serviceAccountName && (
+            {(deploymentStageTemplate.infrastructure as any)?.spec?.serviceAccountName && (
               <Container className={cx(stepCss.formGroup, stepCss.sm, stepCss.bottomMargin3)}>
                 {renderMultiTypeTextField({
                   name: `${namePath}infrastructure.spec.serviceAccountName`,
@@ -1151,20 +1239,20 @@ export function StageInputSetFormInternal({
                 })}
               </Container>
             )}
-            {(deploymentStageTemplate.infrastructure as any).spec?.automountServiceAccountToken &&
+            {(deploymentStageTemplate.infrastructure as any)?.spec?.automountServiceAccountToken &&
               renderMultiTypeCheckboxInputSet({
                 name: `${namePath}infrastructure.spec.automountServiceAccountToken`,
                 labelKey: 'pipeline.buildInfra.automountServiceAccountToken',
                 tooltipId: 'automountServiceAccountToken',
                 defaultTrue: true
               })}
-            {(deploymentStageTemplate.infrastructure as any).spec?.labels &&
+            {(deploymentStageTemplate.infrastructure as any)?.spec?.labels &&
               renderMultiTypeMapInputSet({
                 fieldName: `${namePath}infrastructure.spec.labels`,
                 stringKey: 'ci.labels'
               })}
 
-            {(deploymentStageTemplate.infrastructure as any).spec?.annotations &&
+            {(deploymentStageTemplate.infrastructure as any)?.spec?.annotations &&
               renderMultiTypeMapInputSet({
                 fieldName: `${namePath}infrastructure.spec.annotations`,
                 stringKey: 'ci.annotations'
@@ -1178,44 +1266,45 @@ export function StageInputSetFormInternal({
                 </div>
               </>
             )}
-            {(deploymentStageTemplate.infrastructure as any).spec?.containerSecurityContext?.privileged &&
+            {(deploymentStageTemplate.infrastructure as any)?.spec?.containerSecurityContext?.privileged &&
               renderMultiTypeCheckboxInputSet({
                 name: `${namePath}infrastructure.spec.containerSecurityContext.privileged`,
                 labelKey: 'pipeline.buildInfra.privileged',
                 tooltipId: 'privileged'
               })}
-            {(deploymentStageTemplate.infrastructure as any).spec?.containerSecurityContext?.allowPrivilegeEscalation &&
+            {(deploymentStageTemplate.infrastructure as any)?.spec?.containerSecurityContext
+              ?.allowPrivilegeEscalation &&
               renderMultiTypeCheckboxInputSet({
                 name: `${namePath}infrastructure.spec.containerSecurityContext.allowPrivilegeEscalation`,
                 labelKey: 'pipeline.buildInfra.allowPrivilegeEscalation',
                 tooltipId: 'allowPrivilegeEscalation'
               })}
-            {(deploymentStageTemplate.infrastructure as any).spec?.containerSecurityContext?.capabilities?.add &&
+            {(deploymentStageTemplate.infrastructure as any)?.spec?.containerSecurityContext?.capabilities?.add &&
               renderMultiTypeListInputSet({
                 name: `${namePath}infrastructure.spec.containerSecurityContext.capabilities.add`,
                 labelKey: 'pipeline.buildInfra.addCapabilities',
                 tooltipId: 'addCapabilities'
               })}
-            {(deploymentStageTemplate.infrastructure as any).spec?.containerSecurityContext?.capabilities?.drop &&
+            {(deploymentStageTemplate.infrastructure as any)?.spec?.containerSecurityContext?.capabilities?.drop &&
               renderMultiTypeListInputSet({
                 name: `${namePath}infrastructure.spec.containerSecurityContext.capabilities.drop`,
                 labelKey: 'pipeline.buildInfra.dropCapabilities',
                 tooltipId: 'dropCapabilities'
               })}
-            {(deploymentStageTemplate.infrastructure as any).spec?.containerSecurityContext?.runAsNonRoot &&
+            {(deploymentStageTemplate.infrastructure as any)?.spec?.containerSecurityContext?.runAsNonRoot &&
               renderMultiTypeCheckboxInputSet({
                 name: `${namePath}infrastructure.spec.containerSecurityContext.runAsNonRoot`,
                 labelKey: 'pipeline.buildInfra.runAsNonRoot',
                 tooltipId: 'runAsNonRoot'
               })}
-            {(deploymentStageTemplate.infrastructure as any).spec?.containerSecurityContext?.readOnlyRootFilesystem &&
+            {(deploymentStageTemplate.infrastructure as any)?.spec?.containerSecurityContext?.readOnlyRootFilesystem &&
               renderMultiTypeCheckboxInputSet({
                 name: `${namePath}infrastructure.spec.containerSecurityContext.readOnlyRootFilesystem`,
                 labelKey: 'pipeline.buildInfra.readOnlyRootFilesystem',
                 tooltipId: 'readOnlyRootFilesystem'
               })}
-            {((deploymentStageTemplate.infrastructure as any).spec?.runAsUser ||
-              (deploymentStageTemplate.infrastructure as any).spec?.containerSecurityContext?.runAsUser) && (
+            {((deploymentStageTemplate.infrastructure as any)?.spec?.runAsUser ||
+              (deploymentStageTemplate.infrastructure as any)?.spec?.containerSecurityContext?.runAsUser) && (
               <Container className={cx(stepCss.formGroup, stepCss.sm, stepCss.bottomMargin3)}>
                 {renderMultiTypeTextField({
                   name: `${namePath}infrastructure.spec.containerSecurityContext.runAsUser`,
@@ -1234,7 +1323,7 @@ export function StageInputSetFormInternal({
               </Container>
             )}
             {hasContainerSecurityContextFields && <Separator topSeparation={16} bottomSeparation={16} />}
-            {(deploymentStageTemplate.infrastructure as any).spec?.priorityClassName && (
+            {(deploymentStageTemplate.infrastructure as any)?.spec?.priorityClassName && (
               <Container className={cx(stepCss.formGroup, stepCss.sm, stepCss.bottomMargin3)}>
                 {renderMultiTypeTextField({
                   name: `${namePath}infrastructure.spec.priorityClassName`,
@@ -1252,12 +1341,12 @@ export function StageInputSetFormInternal({
               </Container>
             )}
 
-            {(deploymentStageTemplate.infrastructure as K8sDirectInfraYaml).spec?.nodeSelector &&
+            {(deploymentStageTemplate.infrastructure as K8sDirectInfraYaml)?.spec?.nodeSelector &&
               renderMultiTypeMapInputSet({
                 fieldName: `${namePath}infrastructure.spec.nodeSelector`,
                 stringKey: 'pipeline.buildInfra.nodeSelector'
               })}
-            {(deploymentStageTemplate.infrastructure as K8sDirectInfraYaml).spec?.tolerations && (
+            {(deploymentStageTemplate.infrastructure as K8sDirectInfraYaml)?.spec?.tolerations && (
               <Container data-name="100width" className={cx(stepCss.formGroup, stepCss.bottomMargin3)}>
                 <MultiTypeCustomMap
                   name={`${namePath}infrastructure.spec.tolerations`}
@@ -1291,7 +1380,7 @@ export function StageInputSetFormInternal({
                 />
               </Container>
             )}
-            {(deploymentStageTemplate.infrastructure as any).spec?.initTimeout && (
+            {(deploymentStageTemplate.infrastructure as any)?.spec?.initTimeout && (
               <Container className={cx(stepCss.formGroup, stepCss.xlg, stepCss.bottomMargin3)}>
                 {shouldRenderRunTimeInputViewWithAllowedValues(
                   'spec.initTimeout',
@@ -1340,7 +1429,7 @@ export function StageInputSetFormInternal({
                 readonly={readonly}
               />
             )}
-            {deploymentStageTemplate.infrastructure.infrastructureDefinition && (
+            {deploymentStageTemplate.infrastructure?.infrastructureDefinition && (
               /* istanbul ignore next */ <StepWidget<Infrastructure>
                 factory={factory}
                 template={deploymentStageTemplate.infrastructure.infrastructureDefinition.spec}
@@ -1373,6 +1462,89 @@ export function StageInputSetFormInternal({
                 )}
               />
             )}
+            {(deploymentStageTemplate as any)?.platform?.os &&
+              (shouldRenderRunTimeInputViewWithAllowedValues('os', (deploymentStageTemplate as any).platform) ? (
+                renderMultiTypeInputWithAllowedValues({
+                  name: `${namePath}platform.os`,
+                  tooltipId: 'os',
+                  labelKey: osLabel,
+                  placeholderKey: osLabel,
+                  fieldPath: 'os',
+                  allowedTypes: [MultiTypeInputType.FIXED]
+                })
+              ) : (
+                <Container className={stepCss.bottomMargin3}>
+                  <MultiTypeSelectField
+                    label={
+                      <Text
+                        tooltipProps={{ dataTooltipId: 'os' }}
+                        font={{ variation: FontVariation.FORM_LABEL }}
+                        margin={{ bottom: 'xsmall' }}
+                      >
+                        {getString(osLabel)}
+                      </Text>
+                    }
+                    name={`${namePath}platform.os`}
+                    style={{ width: 300, paddingBottom: 'var(--spacing-small)' }}
+                    multiTypeInputProps={{
+                      selectItems: [
+                        { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
+                        { label: getString('pipeline.infraSpecifications.osTypes.macos'), value: OsTypes.MacOS },
+                        { label: getString('pipeline.infraSpecifications.osTypes.windows'), value: OsTypes.Windows }
+                      ],
+                      multiTypeInputProps: {
+                        allowableTypes: [MultiTypeInputType.FIXED]
+                      },
+                      disabled: readonly
+                    }}
+                    useValue
+                  />
+                </Container>
+              ))}
+            {(deploymentStageTemplate as any)?.platform?.arch &&
+              (shouldRenderRunTimeInputViewWithAllowedValues('arch', (deploymentStageTemplate as any).platform) ? (
+                renderMultiTypeInputWithAllowedValues({
+                  name: `${namePath}platform.arch`,
+                  tooltipId: 'arch',
+                  labelKey: archLabel,
+                  placeholderKey: archLabel,
+                  fieldPath: 'arch',
+                  allowedTypes: [MultiTypeInputType.FIXED]
+                })
+              ) : (
+                <Container className={stepCss.bottomMargin3}>
+                  <MultiTypeSelectField
+                    label={
+                      <Text
+                        tooltipProps={{ dataTooltipId: 'arch' }}
+                        font={{ variation: FontVariation.FORM_LABEL }}
+                        margin={{ bottom: 'xsmall' }}
+                      >
+                        {getString(osLabel)}
+                      </Text>
+                    }
+                    name={`${namePath}platform.arch`}
+                    style={{ width: 300, paddingBottom: 'var(--spacing-small)' }}
+                    multiTypeInputProps={{
+                      selectItems: [
+                        {
+                          label: getString('pipeline.infraSpecifications.architectureTypes.amd64'),
+                          value: ArchTypes.Amd64
+                        },
+                        {
+                          label: getString('pipeline.infraSpecifications.architectureTypes.arm64'),
+                          value: ArchTypes.Arm64
+                        }
+                      ],
+                      multiTypeInputProps: {
+                        allowableTypes: [MultiTypeInputType.FIXED]
+                      },
+                      disabled: readonly
+                    }}
+                    useValue
+                  />
+                </Container>
+              ))}
           </div>
         </div>
       )}

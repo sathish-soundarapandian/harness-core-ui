@@ -14,18 +14,18 @@ const accountId = 'accountId'
 
 export const getUserJourneysCall = `/cv/api/user-journey?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&offset=0&pageSize=100`
 export const getUserJourneysCallForNewerProject = `/cv/api/user-journey?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${newOrgIdentifier}&projectIdentifier=${newProjectIdentifier}&offset=0&pageSize=100`
-export const listSLOsCall = `/cv/api/slo-dashboard/widgets?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=4`
-export const listSLOsCallForNewerProject = `/cv/api/slo-dashboard/widgets?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${newOrgIdentifier}&projectIdentifier=${newProjectIdentifier}&pageNumber=0&pageSize=4`
-export const listSLOsCallWithUserJourneyNewOne = `/cv/api/slo-dashboard/widgets?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=4&userJourneyIdentifiers=newone`
-export const listSLOsCallWithUserJourneySecondJourney = `/cv/api/slo-dashboard/widgets?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=4&userJourneyIdentifiers=Second_Journey`
-export const listSLOsCallWithCVNGProd = `/cv/api/slo-dashboard/widgets?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&monitoredServiceIdentifier=cvng_prod&pageNumber=0&pageSize=4`
-export const listSLOsCallWithCVNGDev = `/cv/api/slo-dashboard/widgets?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&monitoredServiceIdentifier=cvng_prod&pageNumber=0&pageSize=4`
-export const listSLOsCallWithCalender = `/cv/api/slo-dashboard/widgets?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=4&targetTypes=Calender`
-export const listSLOsCallWithRolling = `/cv/api/slo-dashboard/widgets?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=4&targetTypes=Rolling`
-export const listSLOsCallWithAvailability = `/cv/api/slo-dashboard/widgets?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=4&sliTypes=Availability`
-export const listSLOsCallWithLatency = `/cv/api/slo-dashboard/widgets?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=4&sliTypes=Latency`
-export const listSLOsCallWithUnhealthy = `/cv/api/slo-dashboard/widgets?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=4&errorBudgetRisks=UNHEALTHY`
-export const listSLOsCallWithHealthy = `/cv/api/slo-dashboard/widgets?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=4&errorBudgetRisks=HEALTHY`
+export const listSLOsCall = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=10`
+export const listSLOsCallForNewerProject = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${newOrgIdentifier}&projectIdentifier=${newProjectIdentifier}&pageNumber=0&pageSize=10`
+export const listSLOsCallWithUserJourneyNewOne = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=10&userJourneyIdentifiers=newone`
+export const listSLOsCallWithUserJourneySecondJourney = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=10&userJourneyIdentifiers=Second_Journey`
+export const listSLOsCallWithCVNGProd = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&monitoredServiceIdentifier=cvng_prod&pageNumber=0&pageSize=10`
+export const listSLOsCallWithCVNGDev = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&monitoredServiceIdentifier=cvng_prod&pageNumber=0&pageSize=10`
+export const listSLOsCallWithCalender = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=10&targetTypes=Calender`
+export const listSLOsCallWithRolling = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=10&targetTypes=Rolling`
+export const listSLOsCallWithAvailability = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=10&sliTypes=Availability`
+export const listSLOsCallWithLatency = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=10&sliTypes=Latency`
+export const listSLOsCallWithUnhealthy = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=10&errorBudgetRisks=UNHEALTHY`
+export const listSLOsCallWithHealthy = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=10&errorBudgetRisks=HEALTHY`
 export const listMonitoredServices = `/cv/api/monitored-service/all/time-series-health-sources?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const listMonitoredServicesForNewerProject = `/cv/api/monitored-service/all/time-series-health-sources?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${newOrgIdentifier}&projectIdentifier=${newProjectIdentifier}`
 export const getSLOMetrics = `/cv/api/monitored-service/cvng_prod/health-source/${healthSource}/slo-metrics?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
@@ -59,7 +59,7 @@ export const getMonitoredServiceChangeEventSummary = `/cv/api/change-event/monit
 export const getChangeEventDetail = `/cv/api/account/${accountId}/org/${orgIdentifier}/project/${projectIdentifier}/change-event/_bDpV3daRFm7MYlqidI5Sw?routingId=${accountId}`
 export const getExecutionDetailv2 = `pipeline/api/pipelines/execution/v2/FIUabw9tRhqLSHMZY1BcKg?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&stageNodeId=VyUkWiR7T_uXkwajusV88Q`
 export const getMonitoredServiceOverAllHealthScore = `/cv/api/monitored-service/cvng_prod/overall-health-score?routingId=${accountId}&accountId=${accountId}&projectIdentifier=${projectIdentifier}&orgIdentifier=${orgIdentifier}&duration=FOUR_HOURS&endTime=1651731852793`
-export const getSLODashboardWidgets = `/cv/api/slo-dashboard/widgets?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&monitoredServiceIdentifier=cvng_prod`
+export const getSLODashboardWidgets = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&monitoredServiceIdentifier=cvng_prod`
 export const getSLODetailsForSLO_1 = `/cv/api/slo-dashboard/widget/SLO_1?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&startTime=1651717500000&endTime=1651731600000`
 export const getSLODetailsForSLO_2 = `/cv/api/slo-dashboard/widget/SLO_2?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&startTime=1651717500000&endTime=1651731600000`
 export const getSLODetailsForSLO_3 = `/cv/api/slo-dashboard/widget/SLO_3?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&startTime=1651717500000&endTime=1651731600000`
@@ -158,6 +158,7 @@ export const updatedListSLOsCallResponse = {
     content: [
       {
         sloIdentifier: 'SLO1',
+        name: 'SLO-1',
         title: 'SLO-1',
         monitoredServiceIdentifier: 'cvng_prod',
         monitoredServiceName: 'cvng_prod',
@@ -210,7 +211,7 @@ export const updatedListSLOsCallResponseCalenderType = {
     content: [
       {
         sloIdentifier: 'SLO1',
-        title: 'SLO-1',
+        name: 'SLO-1',
         monitoredServiceIdentifier: 'cvng_prod',
         monitoredServiceName: 'cvng_prod',
         healthSourceIdentifier: healthSource,
@@ -289,7 +290,7 @@ export const getTwoSLODashboardWidgets = {
       {
         ...updatedListSLOsCallResponse.data.content[0],
         sloIdentifier: 'SLO2',
-        title: 'SLO-2'
+        name: 'SLO-2'
       }
     ]
   }

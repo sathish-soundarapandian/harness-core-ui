@@ -575,6 +575,18 @@ export const createAppDFormData = (
     mappedMetricsData.serviceInstanceMetricPath = RUNTIME_INPUT_VALUE
   }
 
+  const isTierRuntimeOrExpression = getMultiTypeFromValue(nonCustomFeilds?.appDTier) !== MultiTypeInputType.FIXED
+  const isApplicationRuntimeOrExpression =
+    getMultiTypeFromValue(nonCustomFeilds.appdApplication) !== MultiTypeInputType.FIXED
+  const isConnectorRuntimeOrExpression =
+    getMultiTypeFromValue(appDynamicsData?.connectorRef?.value) !== MultiTypeInputType.FIXED
+
+  const completeMetricPathForTemplates =
+    (isTierRuntimeOrExpression || isApplicationRuntimeOrExpression || isConnectorRuntimeOrExpression) &&
+    getMultiTypeFromValue(completeMetricPath) === MultiTypeInputType.FIXED
+      ? RUNTIME_INPUT_VALUE
+      : completeMetricPath
+
   return {
     name: appDynamicsData.name,
     identifier: appDynamicsData.identifier,
@@ -584,10 +596,10 @@ export const createAppDFormData = (
     type: appDynamicsData.type,
     pathType: isTemplate || completeMetricPath ? PATHTYPE.FullPath : PATHTYPE.DropdownPath,
     fullPath,
-    completeMetricPath,
     mappedServicesAndEnvs: appDynamicsData.mappedServicesAndEnvs,
     ...nonCustomFeilds,
     ...(mappedMetrics.get(selectedMetric) as MapAppDynamicsMetric),
+    completeMetricPath: isTemplate ? completeMetricPathForTemplates : completeMetricPath,
     metricName: selectedMetric,
     showCustomMetric,
     metricIdentifier
@@ -743,7 +755,8 @@ export const persistCustomMetric = ({
   selectedMetric,
   nonCustomFeilds,
   formikValues,
-  setMappedMetrics
+  setMappedMetrics,
+  isTemplate
 }: PersistCustomMetricInterface): void => {
   const mapValue = mappedMetrics.get(selectedMetric) as MapAppDynamicsMetric
   if (!isEmpty(mapValue)) {
@@ -759,8 +772,10 @@ export const persistCustomMetric = ({
       nonCustomValuesFromSelectedMetric.appdApplication &&
       nonCustomValuesFromSelectedMetric.appDTier &&
       nonCustomValuesFromSelectedMetric.metricData
+
+    const shouldUpdate = isTemplate ? isTemplate : areAllFilled
     if (
-      areAllFilled &&
+      shouldUpdate &&
       selectedMetric === formikValues?.metricName &&
       !isEqual(nonCustomFeilds, nonCustomValuesFromSelectedMetric)
     ) {

@@ -26,9 +26,10 @@ import ConfigFilesSelection from '@pipeline/components/ConfigFilesSelection/Conf
 import { getConfigFilesHeaderTooltipId } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { useServiceContext } from '@cd/context/ServiceContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ServiceV2ArtifactsSelection'
 import type { AzureWebAppServiceSpecFormProps } from './AzureWebAppServiceSpecInterface.types'
 import AzureWebAppConfigSelection from './AzureWebAppServiceConfiguration/AzureWebAppServiceConfigSelection'
-import { setupMode } from '../PipelineStepsUtil'
+import { isMultiArtifactSourceEnabled, setupMode } from '../PipelineStepsUtil'
 import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 const getStartupScriptHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
@@ -57,12 +58,16 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
     getStageFromPipeline
   } = usePipelineContext()
   const { isServiceEntityPage } = useServiceContext()
-  const { NG_FILE_STORE, NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+  const { NG_FILE_STORE, NG_SVC_ENV_REDESIGN, NG_ARTIFACT_SOURCES } = useFeatureFlags()
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const selectedDeploymentType =
     deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating, templateServiceData)
   const isNewService = isNewServiceEnvEntity(!!NG_SVC_ENV_REDESIGN, stage?.stage as DeploymentStageElementConfig)
+  const isPrimaryArtifactSources = isMultiArtifactSourceEnabled(
+    !!NG_ARTIFACT_SOURCES,
+    stage?.stage as DeploymentStageElementConfig
+  )
 
   const updateStageData = async (newStage: any): Promise<void> => {
     setLoading(true)
@@ -125,12 +130,20 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
               {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
               <HarnessDocTooltip tooltipId={getArtifactsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
             </div>
-            <ArtifactsSelection
-              isPropagating={isPropagating}
-              deploymentType={selectedDeploymentType}
-              isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-              readonly={!!readonly}
-            />
+            {isPrimaryArtifactSources ? (
+              <ServiceV2ArtifactsSelection
+                deploymentType={selectedDeploymentType}
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                readonly={!!readonly}
+              />
+            ) : (
+              <ArtifactsSelection
+                isPropagating={isPropagating}
+                deploymentType={selectedDeploymentType}
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                readonly={!!readonly}
+              />
+            )}
           </Card>
           {(isNewService || isServiceEntityPage) &&
             NG_FILE_STORE && ( //Config files are only available for creation or readonly mode for service V2

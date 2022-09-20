@@ -7,16 +7,16 @@
 
 import React from 'react'
 import { deleteDB, IDBPDatabase, openDB } from 'idb'
-import { cloneDeep, defaultTo, get, isEmpty, isEqual, isNil, omit, pick } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isEmpty, isEqual, isNil, omit, pick, merge } from 'lodash-es'
 import {
   AllowedTypes,
   AllowedTypesWithRunTime,
   IconName,
   MultiTypeInputType,
   VisualYamlSelectedView as SelectedView
-} from '@wings-software/uicore'
-import merge from 'lodash-es/merge'
+} from '@harness/uicore'
 import type { GetDataError } from 'restful-react'
+import stableStringify from 'fast-json-stable-stringify'
 import type { PermissionCheck } from 'services/rbac'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -53,7 +53,7 @@ import type { PipelineStageWrapper } from '@pipeline/utils/pipelineTypes'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { getTemplateTypesByRef, TemplateServiceDataType } from '@pipeline/utils/templateUtils'
-import type { StoreMetadata } from '@common/constants/GitSyncTypes'
+import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { Pipeline } from '@pipeline/utils/types'
 import {
   ActionReturnType,
@@ -606,7 +606,9 @@ const _updateStoreMetadata = async (
   // We need all 5 properties in storeMetadata for use in templates, Other 3 are coming from gitDetails
   const newStoreMetadata: StoreMetadata = {
     ...storeMetadata,
-    ...pick(gitDetails, 'repoName', 'branch', 'filePath')
+    ...(storeMetadata.storeType === StoreType.REMOTE
+      ? pick(gitDetails, 'repoName', 'branch', 'filePath')
+      : { connectorRef: undefined })
   }
 
   try {
@@ -736,7 +738,8 @@ const _updatePipeline = async (
       logger.info(DBNotFoundErrorMessage)
     }
   }
-  const isUpdated = !isEqual(omit(originalPipeline, 'repo', 'branch'), pipeline)
+  // lodash.isEqual() gives wrong output some times, hence using fast-json-stable-stringify
+  const isUpdated = stableStringify(omit(originalPipeline, 'repo', 'branch')) !== stableStringify(pipeline)
   const payload: PipelinePayload = {
     [KeyPath]: id,
     pipeline: pipeline as PipelineInfoConfig,

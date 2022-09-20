@@ -147,3 +147,4 @@ delegateProfilesDepricated: 'Delegate profiles are deprecated, please use INIT_S
 noInstances: 'No instances'
 successfullyUpdatedConfig: 'Successfully Updated Delegate Configuration'
 configNameRequired: 'Delegate Configuration name is Required.'
+instanceStatus: 'Instance Status'

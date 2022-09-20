@@ -9,6 +9,7 @@ import React from 'react'
 import type { KubernetesArtifactsProps } from '../K8sServiceSpecInterface'
 import { KubernetesPrimaryArtifacts } from './KubernetesPrimaryArtifacts/KubernetesPrimaryArtifacts'
 import { KubernetesSidecarArtifacts } from './KubernetesSidecarArtifacts/KubernetesSidecarArtifacts'
+import { PrimaryArtifactSource } from './PrimaryArtifactSource/PrimaryArtifactSource'
 
 export const KubernetesArtifacts: React.FC<KubernetesArtifactsProps> = props => {
   const commonProps = {
@@ -28,7 +29,11 @@ export const KubernetesArtifacts: React.FC<KubernetesArtifactsProps> = props => 
   }
   return (
     <>
-      <KubernetesPrimaryArtifacts type={props.type} {...commonProps} />
+      {props.type ? (
+        <KubernetesPrimaryArtifacts type={props.type} {...commonProps} />
+      ) : (
+        <PrimaryArtifactSource {...commonProps} />
+      )}
       <KubernetesSidecarArtifacts {...commonProps} />
     </>
   )

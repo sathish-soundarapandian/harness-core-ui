@@ -23,7 +23,13 @@ jest.mock('services/template-ng', () => ({
     .mockImplementation(() => ({ data: stepMockTemplatesInputYaml, refetch: jest.fn(), error: null, loading: false })),
   useGetTemplate: jest
     .fn()
-    .mockImplementation(() => ({ data: stepTemplate, refetch: jest.fn(), error: null, loading: false }))
+    .mockImplementation(() => ({ data: stepTemplate, refetch: jest.fn(), error: null, loading: false })),
+  getsMergedTemplateInputYamlPromise: jest.fn().mockImplementation(() => ({
+    status: 'SUCCESS',
+    data: {
+      mergedTemplateInputs: stepMockTemplatesInputYaml
+    }
+  }))
 }))
 
 describe('<TemplateStepWidgetWithRef /> tests', () => {
@@ -50,7 +56,7 @@ describe('<TemplateStepWidgetWithRef /> tests', () => {
                 type: 'Http',
                 spec: {
                   requestBody: '<+input>',
-                  delegateSelectors: '<+input>'
+                  url: '<+input>'
                 }
               } as JsonNode
             }

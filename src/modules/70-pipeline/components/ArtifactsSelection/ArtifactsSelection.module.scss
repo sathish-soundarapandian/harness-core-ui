@@ -83,6 +83,14 @@
     text-transform: uppercase;
   }
 }
+.sidecarList {
+  width: 100%;
+  .primaryArtifactRef {
+    border: 1px solid var(--grey-100);
+    padding: var(--spacing-xsmall) var(--spacing-large);
+    background-color: var(--form-bg);
+  }
+}
 
 .noWrap {
   white-space: nowrap;

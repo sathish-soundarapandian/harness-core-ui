@@ -54,8 +54,9 @@ export default function OptionalConfiguration(props: {
   formik: FormikProps<ShellScriptFormData>
   readonly?: boolean
   allowableTypes: AllowedTypes
+  enableOutputVar?: boolean
 }): React.ReactElement {
-  const { formik, readonly, allowableTypes } = props
+  const { formik, readonly, allowableTypes, enableOutputVar = true } = props
   const { values: formValues, setFieldValue } = formik
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -133,71 +134,73 @@ export default function OptionalConfiguration(props: {
             />
           </MultiTypeFieldSelector>
         </div>
-        <div className={stepCss.formGroup}>
-          <MultiTypeFieldSelector
-            name="spec.outputVariables"
-            label={getString('pipeline.scriptOutputVariables')}
-            isOptional
-            optionalLabel={getString('common.optionalLabel')}
-            defaultValueToReset={[]}
-            disableTypeSelection
-          >
-            <FieldArray
+        {enableOutputVar ? (
+          <div className={stepCss.formGroup}>
+            <MultiTypeFieldSelector
               name="spec.outputVariables"
-              render={({ push, remove }) => {
-                return (
-                  <div className={css.panel}>
-                    <div className={css.outputVarHeader}>
-                      <span className={css.label}>Name</span>
-                      <span className={css.label}>Type</span>
-                      <span className={css.label}>Value</span>
+              label={getString('pipeline.scriptOutputVariables')}
+              isOptional
+              optionalLabel={getString('common.optionalLabel')}
+              defaultValueToReset={[]}
+              disableTypeSelection
+            >
+              <FieldArray
+                name="spec.outputVariables"
+                render={({ push, remove }) => {
+                  return (
+                    <div className={css.panel}>
+                      <div className={css.outputVarHeader}>
+                        <span className={css.label}>Name</span>
+                        <span className={css.label}>Type</span>
+                        <span className={css.label}>Value</span>
+                      </div>
+                      {formValues.spec.outputVariables?.map(({ id }: ShellScriptOutputStepVariable, i: number) => {
+                        return (
+                          <div className={css.outputVarHeader} key={id}>
+                            <FormInput.Text
+                              name={`spec.outputVariables[${i}].name`}
+                              placeholder={getString('name')}
+                              disabled={readonly}
+                            />
+                            <FormInput.Select
+                              items={scriptOutputType}
+                              name={`spec.outputVariables[${i}].type`}
+                              placeholder={getString('typeLabel')}
+                              disabled={readonly}
+                            />
+
+                            <FormInput.MultiTextInput
+                              name={`spec.outputVariables[${i}].value`}
+                              placeholder={getString('valueLabel')}
+                              multiTextInputProps={{
+                                allowableTypes,
+                                expressions,
+                                disabled: readonly
+                              }}
+                              label=""
+                              disabled={readonly}
+                            />
+
+                            <Button minimal icon="main-trash" onClick={() => remove(i)} disabled={readonly} />
+                          </div>
+                        )
+                      })}
+                      <Button
+                        icon="plus"
+                        variation={ButtonVariation.LINK}
+                        onClick={() => push({ name: '', type: 'String', value: '', id: uuid() })}
+                        disabled={readonly}
+                        className={css.addButton}
+                      >
+                        {getString('addOutputVar')}
+                      </Button>
                     </div>
-                    {formValues.spec.outputVariables?.map(({ id }: ShellScriptOutputStepVariable, i: number) => {
-                      return (
-                        <div className={css.outputVarHeader} key={id}>
-                          <FormInput.Text
-                            name={`spec.outputVariables[${i}].name`}
-                            placeholder={getString('name')}
-                            disabled={readonly}
-                          />
-                          <FormInput.Select
-                            items={scriptOutputType}
-                            name={`spec.outputVariables[${i}].type`}
-                            placeholder={getString('typeLabel')}
-                            disabled={readonly}
-                          />
-
-                          <FormInput.MultiTextInput
-                            name={`spec.outputVariables[${i}].value`}
-                            placeholder={getString('valueLabel')}
-                            multiTextInputProps={{
-                              allowableTypes,
-                              expressions,
-                              disabled: readonly
-                            }}
-                            label=""
-                            disabled={readonly}
-                          />
-
-                          <Button minimal icon="main-trash" onClick={() => remove(i)} disabled={readonly} />
-                        </div>
-                      )
-                    })}
-                    <Button
-                      icon="plus"
-                      variation={ButtonVariation.LINK}
-                      onClick={() => push({ name: '', type: 'String', value: '', id: uuid() })}
-                      disabled={readonly}
-                      className={css.addButton}
-                    >
-                      {getString('addOutputVar')}
-                    </Button>
-                  </div>
-                )
-              }}
-            />
-          </MultiTypeFieldSelector>
-        </div>
+                  )
+                }}
+              />
+            </MultiTypeFieldSelector>
+          </div>
+        ) : null}
         <div className={stepCss.formGroup}>
           <FormInput.RadioGroup
             name="spec.onDelegate"

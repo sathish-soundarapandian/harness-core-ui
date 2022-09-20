@@ -168,7 +168,7 @@ function ServiceConfigFileOverride({
       <Dialog onClose={onClose} {...DIALOG_PROPS}>
         <div className={css.createConnectorWizard}>
           <ConfigFilesWizard
-            types={[ConfigFilesMap.Harness]}
+            stores={[ConfigFilesMap.Harness]}
             expressions={expressions}
             allowableTypes={allowableTypes}
             isReadonly={isReadonly}

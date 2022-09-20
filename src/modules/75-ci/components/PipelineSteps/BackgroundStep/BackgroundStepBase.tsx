@@ -39,6 +39,7 @@ import {
   getFormValuesInCorrectFormat
 } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import type { BackgroundStepProps, BackgroundStepData, BackgroundStepDataUI } from './BackgroundStep'
 import { transformValuesFieldsConfig, getEditViewValidateFieldsConfig } from './BackgroundStepFunctionConfigs'
 import { CIStepOptionalConfig, getOptionalSubLabel, PathnameParams } from '../CIStep/CIStepOptionalConfig'
@@ -51,7 +52,6 @@ import {
 } from '../CIStep/StepUtils'
 import { CIStep } from '../CIStep/CIStep'
 import { ConnectorRefWithImage } from '../CIStep/ConnectorRefWithImage'
-import { CIBuildInfrastructureType } from '../../../constants/Constants'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const BackgroundStepBase = (
@@ -69,8 +69,11 @@ export const BackgroundStepBase = (
 
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
 
-  const buildInfrastructureType: CIBuildInfrastructureType = get(currentStage, 'stage.spec.infrastructure.type')
-  const isBuildInfrastructureTypeVM = buildInfrastructureType === CIBuildInfrastructureType.VM
+  const buildInfrastructureType: CIBuildInfrastructureType =
+    get(currentStage, 'stage.spec.infrastructure.type') || get(currentStage, 'stage.spec.runtime.type')
+  const isBuildInfrastructureTypeVM = [CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(
+    buildInfrastructureType
+  )
   const pathnameParams = useLocation()?.pathname?.split('/') || []
 
   const isTemplateStudio = pathnameParams.includes(PathnameParams.TEMPLATE_STUDIO)
@@ -135,7 +138,7 @@ export const BackgroundStepBase = (
                 description: {}
               }}
             />
-            {buildInfrastructureType !== CIBuildInfrastructureType.VM ? (
+            {![CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(buildInfrastructureType) ? (
               <ConnectorRefWithImage showOptionalSublabel={false} readonly={readonly} stepViewType={stepViewType} />
             ) : null}
             <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
@@ -268,6 +271,7 @@ export const BackgroundStepBase = (
                       enableFields={{
                         'spec.privileged': {
                           shouldHide: [
+                            CIBuildInfrastructureType.Cloud,
                             CIBuildInfrastructureType.VM,
                             CIBuildInfrastructureType.KubernetesHosted
                           ].includes(buildInfrastructureType)

@@ -1,4 +1,5 @@
 import {
+  validations,
   countOfServiceAPI,
   monitoredServiceListCall,
   monitoredServiceListResponse
@@ -14,7 +15,7 @@ import { Connectors } from '../../../utils/connctors-utils'
 
 function populateGroupName(groupName: string) {
   cy.contains('span', 'Submit').click({ force: true })
-  cy.contains('span', 'Group Name is required').should('be.visible')
+  cy.contains('span', validations.groupName).should('be.visible')
 
   cy.get('input[name="groupName"]').click()
   cy.contains('p', '+ Add New').click({ force: true })

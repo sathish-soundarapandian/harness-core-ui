@@ -22,8 +22,7 @@ import { LaunchButton } from '../LaunchButton/LaunchButton'
 export default function AccountSideNav(): React.ReactElement {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
-  const { NG_LICENSES_ENABLED, OPA_PIPELINE_GOVERNANCE, OPA_FF_GOVERNANCE, AUDIT_TRAIL_WEB_INTERFACE } =
-    useFeatureFlags()
+  const { NG_LICENSES_ENABLED, OPA_PIPELINE_GOVERNANCE, OPA_FF_GOVERNANCE } = useFeatureFlags()
   const canUsePolicyEngine = useAnyEnterpriseLicense()
   const { data: accountData } = useGetAccountNG({
     accountIdentifier: accountId,
@@ -44,9 +43,7 @@ export default function AccountSideNav(): React.ReactElement {
       {NG_LICENSES_ENABLED && (
         <SidebarLink exact label={getString('common.subscriptions.title')} to={routes.toSubscriptions({ accountId })} />
       )}
-      {AUDIT_TRAIL_WEB_INTERFACE && (
-        <SidebarLink label={getString('common.auditTrail')} to={routes.toAuditTrail({ accountId })} />
-      )}
+      <SidebarLink label={getString('common.auditTrail')} to={routes.toAuditTrail({ accountId })} />
       <SidebarLink label={getString('orgsText')} to={routes.toOrganizations({ accountId })} />
       <LaunchButton
         launchButtonText={getString('common.cgLaunchText')}

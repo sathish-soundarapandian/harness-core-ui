@@ -10,7 +10,6 @@ import { useParams } from 'react-router-dom'
 import { isEmpty, map, get, defaultTo } from 'lodash-es'
 import cx from 'classnames'
 import {
-  FormInput,
   FormikForm,
   Text,
   Color,
@@ -25,7 +24,6 @@ import {
 import { connect, FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import {
   ConnectorReferenceDTO,
   FormMultiTypeConnectorField
@@ -36,6 +34,9 @@ import { useListAwsRegions } from 'services/portal'
 import { useCFCapabilitiesForAws, useCFStatesForAws, useGetIamRolesForAws } from 'services/cd-ng'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { TFMonaco } from '../../../Common/Terraform/Editview/TFMonacoEditor'
 import TemplateFileInputs from './TemplateFile'
 import ParameterFileInputs from './ParameterInputs'
@@ -193,7 +194,7 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.timeout as string) && (
           <div className={cx(stepCss.formGroup, stepCss.sm)}>
-            <FormMultiTypeDurationField
+            <TimeoutFieldInputSetView
               label={getString('pipelineSteps.timeoutLabel')}
               name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
               disabled={readonly}
@@ -203,13 +204,15 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
                 expressions,
                 disabled: readonly
               }}
+              fieldPath={'timeout'}
+              template={inputSetData?.template}
             />
           </div>
         )
       }
       {isRuntime(inputSetData?.template?.spec?.provisionerIdentifier as string) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             name={`${path}.spec.provisionerIdentifier`}
             label={getString('pipelineSteps.provisionerIdentifier')}
             disabled={readonly}
@@ -218,6 +221,8 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
               allowableTypes
             }}
             data-testid={`${path}.spec.provisionerIdentifier`}
+            template={inputSetData?.template}
+            fieldPath={'spec.provisionerIdentifier'}
           />
         </div>
       )}
@@ -257,7 +262,7 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
       )}
       {isRuntime(inputSetData?.template?.spec?.configuration?.region as string) && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormInput.MultiTypeInput
+          <SelectInputSetView
             label={getString('regionLabel')}
             name={`${path}.spec.configuration.region`}
             placeholder={getString(regionsLoading ? 'common.loading' : 'pipeline.regionPlaceholder')}
@@ -280,6 +285,8 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
               allowableTypes
             }}
             selectItems={regions ? regions : []}
+            template={inputSetData?.template}
+            fieldPath={'spec.configuration.region'}
           />
         </div>
       )}
@@ -288,7 +295,7 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
       {inputSetData?.template?.spec?.configuration?.parameterOverrides && <OverrideParameterFileInputs {...props} />}
       {isRuntime(inputSetData?.template?.spec?.configuration?.stackName as string) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             name={`${path}.spec.configuration.stackName`}
             label={getString('cd.cloudFormation.stackName')}
             disabled={readonly}
@@ -296,12 +303,14 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
               expressions,
               allowableTypes
             }}
+            template={inputSetData?.template}
+            fieldPath={'spec.configuration.stackName'}
           />
         </div>
       )}
       {isRuntime(inputSetData?.template?.spec?.configuration?.roleArn as string) && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormInput.MultiTypeInput
+          <SelectInputSetView
             label={getString('connectors.awsKms.roleArnLabel')}
             name={`${path}.spec.configuration.roleArn`}
             disabled={readonly || rolesLoading}
@@ -316,6 +325,8 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
               allowableTypes
             }}
             selectItems={awsRoles}
+            template={inputSetData?.template}
+            fieldPath={'spec.configuration.roleArn'}
           />
         </div>
       )}

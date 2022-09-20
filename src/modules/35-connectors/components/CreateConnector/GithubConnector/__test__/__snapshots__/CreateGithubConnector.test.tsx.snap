@@ -4477,7 +4477,12 @@ exports[`Create Github connector Wizard should render form for edit http and aut
                         class="bp3-label"
                         for="privateKey"
                       >
-                        common.git.privateKey
+                        <span
+                          class="Tooltip--acenter"
+                          data-tooltip-id="stepGithubAuthForm_privateKey"
+                        >
+                          common.git.privateKey
+                        </span>
                          
                         <span
                           class="bp3-text-muted"
@@ -5281,7 +5286,12 @@ exports[`Create Github connector Wizard should render form for edit http and aut
                         class="bp3-label"
                         for="privateKey"
                       >
-                        common.git.privateKey
+                        <span
+                          class="Tooltip--acenter"
+                          data-tooltip-id="stepGithubAuthForm_privateKey"
+                        >
+                          common.git.privateKey
+                        </span>
                          
                         <span
                           class="bp3-text-muted"

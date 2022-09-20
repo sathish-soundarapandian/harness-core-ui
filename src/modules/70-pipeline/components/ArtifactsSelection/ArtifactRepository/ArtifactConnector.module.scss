@@ -57,6 +57,17 @@
       top: 22px;
     }
   }
+  .inputWidth {
+    width: 50% !important;
+  }
+  .customArtifactContainer {
+    display: grid;
+    grid-template-columns: 400px 20px;
+    div.configureOptions {
+      position: relative;
+      top: 22px;
+    }
+  }
   .jenkinsFieldContainer {
     display: grid;
     grid-template-columns: 500px 20px;
@@ -141,4 +152,38 @@
 }
 .thumbnailSelect {
   cursor: pointer;
+  min-width: 680px;
+
+  .wrapping {
+    display: flex;
+    flex-wrap: wrap;
+
+    label {
+      margin-left: 0px !important;
+      margin-right: var(--layout-spacing);
+      margin-bottom: var(--layout-spacing);
+    }
+  }
+}
+.panel {
+  border: 1px solid var(--form-field-border);
+  border-radius: 4px;
+  padding: var(--spacing-small);
+  margin-top: var(--spacing-small);
+}
+
+.variables {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 2fr 30px;
+  column-gap: var(--spacing-small);
+  margin-bottom: var(--spacing-small);
+  align-items: start;
+
+  :global(.bp3-form-group) {
+    margin: 0;
+  }
+
+  .label {
+    color: var(--grey-400);
+  }
 }

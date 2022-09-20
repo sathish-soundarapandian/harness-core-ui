@@ -33,9 +33,9 @@ import { useGetCommunity } from '@common/utils/utils'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
 import { FeatureFlag } from '@common/featureFlags'
-import { Sort, SortFields } from '@cd/utils/listUtils'
+import { Sort, SortFields } from '@common/utils/listUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
-import { SortOptionComponent } from '../ServicesList/ServicesList'
+import { SortOption } from '@common/components/SortOption/SortOption'
 import ServicesGridView from '../ServicesGridView/ServicesGridView'
 import ServicesListView from '../ServicesListView/ServicesListView'
 import { ServiceTabs } from '../utils/ServiceUtils'
@@ -204,7 +204,7 @@ export const ServicesListPage: React.FC = () => {
             }}
           />
           <Layout.Horizontal className={css.sortClass}>
-            {SortOptionComponent({ setSavedSortOption, setSort, sort })}
+            {SortOption({ setSavedSortOption, setSort, sort })}
             <GridListToggle initialSelectedView={Views.LIST} onViewToggle={setView} />
           </Layout.Horizontal>
         </Layout.Horizontal>

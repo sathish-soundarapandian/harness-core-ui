@@ -11,6 +11,7 @@ import { Formik, FormikForm } from '@wings-software/uicore'
 
 import { TestWrapper } from '@common/utils/testUtils'
 
+import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import StepCommonFields from '../StepCommonFields'
 
 interface TestProps {
@@ -22,7 +23,7 @@ const TestComponent = ({ initialValues }: TestProps): React.ReactElement => (
     {/* eslint-disable-next-line @typescript-eslint/no-empty-function */}
     <Formik initialValues={initialValues} onSubmit={() => {}} formName="stepCommonFieldsForm">
       <FormikForm>
-        <StepCommonFields buildInfrastructureType={'KubernetesDirect'} />
+        <StepCommonFields buildInfrastructureType={CIBuildInfrastructureType.KubernetesDirect} />
       </FormikForm>
     </Formik>
   </TestWrapper>

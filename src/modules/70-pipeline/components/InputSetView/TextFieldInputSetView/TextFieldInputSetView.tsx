@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { defaultTo } from 'lodash-es'
+import React, { ReactElement } from 'react'
+import { defaultTo, isString } from 'lodash-es'
 import { DataTooltipInterface, FormInput, MultiTextInputProps, MultiTypeInputType } from '@harness/uicore'
 
 import { shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
@@ -14,8 +14,9 @@ import { useRenderMultiTypeInputWithAllowedValues } from '../utils/utils'
 
 interface TextFieldInputSetViewProps {
   name: string
-  label: string
+  label: string | ReactElement
   fieldPath: string
+  className?: string
   template: any
   disabled?: boolean
   placeholder?: string
@@ -36,18 +37,22 @@ export function TextFieldInputSetView(props: TextFieldInputSetViewProps): JSX.El
     readonly,
     tooltipProps,
     onChange,
-    multiTextInputProps
+    multiTextInputProps,
+    className
   } = props
+
+  const labelKey = isString(label) ? label : label.props.children
 
   const { getMultiTypeInputWithAllowedValues } = useRenderMultiTypeInputWithAllowedValues({
     name: name,
-    labelKey: label,
+    labelKey: labelKey,
     placeholderKey: placeholder,
     fieldPath: fieldPath,
     allowedTypes: defaultTo(multiTextInputProps?.allowableTypes, [MultiTypeInputType.FIXED]),
     template: template,
     readonly: readonly,
-    tooltipProps: tooltipProps
+    tooltipProps: tooltipProps,
+    className
   })
 
   if (shouldRenderRunTimeInputViewWithAllowedValues(fieldPath, template)) {
@@ -59,8 +64,11 @@ export function TextFieldInputSetView(props: TextFieldInputSetViewProps): JSX.El
       name={name}
       label={label}
       disabled={disabled}
+      className={className}
       multiTextInputProps={multiTextInputProps}
+      placeholder={placeholder}
       onChange={onChange}
+      tooltipProps={tooltipProps}
     />
   )
 }

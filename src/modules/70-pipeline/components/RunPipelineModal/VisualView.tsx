@@ -50,6 +50,7 @@ export interface VisualViewProps {
   invalidInputSetReferences: string[]
   loadingInputSets: boolean
   onReconcile: (identifier: string) => void
+  reRunInputSetYaml?: string
 }
 
 export default function VisualView(props: VisualViewProps): React.ReactElement {
@@ -76,7 +77,8 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
     pipelineResponse,
     invalidInputSetReferences,
     loadingInputSets,
-    onReconcile
+    onReconcile,
+    reRunInputSetYaml
   } = props
   const { getString } = useStrings()
 
@@ -162,6 +164,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
                           invalidInputSetReferences={invalidInputSetReferences}
                           loadingMergeInputSets={loadingInputSets}
                           onReconcile={onReconcile}
+                          reRunInputSetYaml={reRunInputSetYaml}
                         />
                       </GitSyncStoreProvider>
                     ) : null}

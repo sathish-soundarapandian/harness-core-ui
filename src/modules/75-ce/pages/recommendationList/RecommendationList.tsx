@@ -346,12 +346,14 @@ const RecommendationListPage: React.FC = () => {
     perspectiveId,
     perspectiveName,
     origin,
-    filters: filterQuery = {}
+    filters: filterQuery = {},
+    perspectiveFilters = ''
   } = useQueryParams<{
     perspectiveId: string
     perspectiveName: string
     filters: Record<string, any>
     origin: string
+    perspectiveFilters: string
   }>()
 
   const [selectedFilter, setSelectedFilter] = useQueryParamsState<Partial<FilterDTO>>('filters', {
@@ -362,7 +364,9 @@ const RecommendationListPage: React.FC = () => {
   const [recommendationCount, setRecommendationCount] = useState<number>()
   const [recommendationList, setRecommendationList] = useState<RecommendationItemDTO[]>([])
   const { getRBACErrorMessage } = useRBACError()
-  const perspectiveFilters = (perspectiveId ? [getViewFilterForId(perspectiveId)] : []) as QLCEViewFilterWrapper[]
+  const perspectiveFiltersParams = perspectiveFilters
+    ? JSON.parse(perspectiveFilters)
+    : ((perspectiveId ? [getViewFilterForId(perspectiveId)] : []) as QLCEViewFilterWrapper[])
 
   useEffect(() => {
     trackPage(PAGE_NAMES.RECOMMENDATIONS_PAGE, {})
@@ -456,13 +460,13 @@ const RecommendationListPage: React.FC = () => {
           minSaving: 1,
           ...selectedFilter.filterProperties,
           filterType: 'CCMRecommendation',
-          perspectiveFilters
+          perspectiveFilters: perspectiveFiltersParams
         }),
         fetchRecommendationCount({
           minSaving: 1,
           ...selectedFilter.filterProperties,
           filterType: 'CCMRecommendation',
-          perspectiveFilters
+          perspectiveFilters: perspectiveFiltersParams
         })
       ])
 
@@ -478,7 +482,7 @@ const RecommendationListPage: React.FC = () => {
       minSaving: 1,
       ...selectedFilter.filterProperties,
       filterType: 'CCMRecommendation',
-      perspectiveFilters,
+      perspectiveFilters: perspectiveFiltersParams,
       offset: page * 10,
       limit: 10
     })

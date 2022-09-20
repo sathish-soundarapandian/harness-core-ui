@@ -111,6 +111,11 @@ export function transformGCOMetricHealthSourceToGCOMetricSetupSource(sourceData:
       metricTags[tag] = ''
     }
 
+    const parsedQuery =
+      getMultiTypeFromValue(JSON.stringify(defaultTo(metricDefinition.jsonMetricDefinition, ''))) ===
+      MultiTypeInputType.FIXED
+        ? JSON.stringify(defaultTo(metricDefinition.jsonMetricDefinition, ''), null, 2)
+        : metricDefinition.jsonMetricDefinition?.toString()
     setupSource.metricDefinition.set(metricDefinition.metricName, {
       metricName: metricDefinition.metricName,
       identifier: metricDefinition.identifier,
@@ -121,10 +126,7 @@ export function transformGCOMetricHealthSourceToGCOMetricSetupSource(sourceData:
       riskCategory: `${metricDefinition.riskProfile?.category}/${metricDefinition.riskProfile?.metricType}`,
       higherBaselineDeviation: metricDefinition.riskProfile?.thresholdTypes?.includes('ACT_WHEN_HIGHER'),
       lowerBaselineDeviation: metricDefinition.riskProfile?.thresholdTypes?.includes('ACT_WHEN_LOWER'),
-      query:
-        getMultiTypeFromValue(metricDefinition.jsonMetricDefinition as any) === MultiTypeInputType.FIXED
-          ? JSON.stringify(metricDefinition.jsonMetricDefinition, null, 2)
-          : metricDefinition.jsonMetricDefinition?.toString(),
+      query: parsedQuery,
       sli: metricDefinition.sli?.enabled,
       continuousVerification: metricDefinition.analysis?.deploymentVerification?.enabled,
       healthScore: metricDefinition.analysis?.liveMonitoring?.enabled,
@@ -418,10 +420,21 @@ export const onSelectNavItem = ({
     }
   }
 
-  metricInfo.query = formatJSON(metricInfo.query) || ''
+  metricInfo.query =
+    (getMultiTypeFromValue(metricInfo.query as any) === MultiTypeInputType.FIXED
+      ? formatJSON(metricInfo.query)
+      : metricInfo.query?.toString()) || ''
   updatedData.set(metricName, metricInfo)
   if (selectedMetric) {
     updatedData.set(selectedMetric as string, { ...formikProps.values })
   }
   setUpdatedData(new Map(updatedData))
 }
+
+export const getNoDataMessage = (getString: (key: StringKeys) => string, query?: string): string =>
+  getMultiTypeFromValue(query) === MultiTypeInputType.FIXED
+    ? getString('cv.monitoringSources.gcoLogs.submitQueryToSeeRecords')
+    : getString('cv.customHealthSource.chartRuntimeWarning')
+
+export const getIsQueryExecuted = (shouldShowChart: boolean, query?: string): boolean =>
+  shouldShowChart && getMultiTypeFromValue(query) === MultiTypeInputType.FIXED

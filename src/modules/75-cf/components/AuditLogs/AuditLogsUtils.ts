@@ -123,6 +123,13 @@ export function translateEvents(
       case 'updateOffVariation':
         message = getString('cf.auditLogs.events.updateOffVariation', { variation: Parameters.variation })
         break
+
+      case 'addService':
+        message = getString('cf.auditLogs.events.addService', { name: Parameters.name })
+        break
+      case 'removeService':
+        message = getString('cf.auditLogs.events.removeService', { name: Parameters.identifier })
+        break
     }
 
     return message

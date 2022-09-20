@@ -36,7 +36,7 @@ function ServiceVariablesOverridesList({
 }: ServiceVariablesOverridesListProps): React.ReactElement {
   const { getString } = useStrings()
   return (
-    <>
+    <Layout.Vertical>
       {!isEmpty(variableOverrides) && (
         <div className={cx(css.tableRow, css.headerRow)}>
           <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('cd.configurationVariable')}</Text>
@@ -73,7 +73,7 @@ function ServiceVariablesOverridesList({
           )}
         </div>
       ))}
-    </>
+    </Layout.Vertical>
   )
 }
 

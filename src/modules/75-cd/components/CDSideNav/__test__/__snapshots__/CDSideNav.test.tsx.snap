@@ -58,6 +58,16 @@ exports[`Sidenav render 1`] = `
         Environments
       </p>
     </a>
+    <a
+      class="link"
+      href="/account/dummy/cd/orgs/dummy/projects/dummy/gitops"
+    >
+      <p
+        class="StyledProps--font StyledProps--main text"
+      >
+        cd.gitOps
+      </p>
+    </a>
     <div>
       <div
         class="border"

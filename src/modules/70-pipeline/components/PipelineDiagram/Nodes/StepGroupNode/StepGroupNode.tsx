@@ -87,6 +87,7 @@ export function StepGroupNode(props: any): JSX.Element {
             className={cx(
               css.stepGroup,
               { [css.firstnode]: !props?.isParallelNode },
+              { [css.parallelNodes]: props?.isParallelNode },
               { [css.marginBottom]: props?.isParallelNode },
               { [css.nestedGroup]: isNestedStepGroup },
               { [css.stepGroupParent]: hasStepGroupChild },

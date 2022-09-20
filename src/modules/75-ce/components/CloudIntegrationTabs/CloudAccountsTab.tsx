@@ -11,22 +11,17 @@ import { Color, FontVariation } from '@harness/design-system'
 import { Menu, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isUndefined } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'
-import {
-  ConnectorResponse,
-  ConnectorValidationResult,
-  PageConnectorResponse,
-  useGetConnectorListV2,
-  useGetTestConnectionResult
-} from 'services/cd-ng'
+import { ConnectorResponse, PageConnectorResponse, useGetConnectorListV2 } from 'services/cd-ng'
 import type { CcmMetaData } from 'services/ce/services'
 import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { Connectors } from '@connectors/constants'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { usePermission } from '@rbac/hooks/usePermission'
+import useTestConnectionModal from '@connectors/common/useTestConnectionModal/useTestConnectionModal'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { ConnectorStatus } from '@ce/constants'
 import {
@@ -44,6 +39,18 @@ import css from './CloudIntegrationTabs.module.scss'
 const ConnectorNameCell: CustomCloudCell = ({ row, column }) => {
   const name = row.original?.connector?.name
   const connectorType = row.original.connector?.type
+  const identifier = row.original.connector?.identifier
+
+  const [canUpdate] = usePermission(
+    {
+      resource: {
+        resourceType: ResourceType.CONNECTOR,
+        resourceIdentifier: identifier || ''
+      },
+      permissions: [PermissionIdentifier.UPDATE_CONNECTOR]
+    },
+    [identifier]
+  )
 
   return (
     <Text
@@ -52,45 +59,30 @@ const ConnectorNameCell: CustomCloudCell = ({ row, column }) => {
       font={{ variation: FontVariation.BODY2 }}
       className={css.nameCell}
       lineClamp={1}
-      onClick={
-        /* istanbul ignore next */ () => {
+      onClick={() => {
+        if (canUpdate) {
           ;(column as any).openConnectorModal(true, connectorType, { connectorInfo: row.original.connector })
         }
-      }
+      }}
     >
       {name}
     </Text>
   )
 }
 
-const ConnectorStatusCell: CustomCloudCell = cell => {
+const ConnectorStatusCell: CustomCloudCell = ({ row, column }) => {
   const { getString } = useStrings()
-  const { accountId } = useParams<{ accountId: string }>()
 
-  const data = cell.row.original
+  const connector = row.original.connector
+  const status = row.original.status
 
-  const [status, setStatus] = useState<ConnectorValidationResult['status']>()
-  const [errorSummary, setErrorSummary] = useState()
-  const [lastTestedAt, setLastTestedAt] = useState<number | undefined>()
-
-  const { mutate: testConnection } = useGetTestConnectionResult({
-    identifier: defaultTo(data.connector?.identifier, ''),
-    queryParams: {
-      accountIdentifier: accountId
-    }
-  })
-
-  const isStatusSuccess = defaultTo(
-    data?.status?.status === ConnectorStatus.SUCCESS,
-    status === ConnectorStatus.SUCCESS
-  )
-
-  const tooltipText = (errorSummary || data.status?.errorSummary)?.trim() || getString('noDetails')
+  const isStatusSuccess = status?.status === ConnectorStatus.SUCCESS
+  const errorSummary = status?.errorSummary?.trim() || getString('noDetails')
 
   return (
     <div className={css.statusCell}>
       <Text
-        {...getConnectorStatusIcon(defaultTo(data?.status?.status, status))}
+        {...getConnectorStatusIcon(status?.status)}
         font={{ variation: FontVariation.BODY }}
         tooltip={
           <Text
@@ -105,13 +97,13 @@ const ConnectorStatusCell: CustomCloudCell = cell => {
             color={Color.WHITE}
             font={{ variation: FontVariation.BODY }}
           >
-            {tooltipText}
+            {errorSummary}
           </Text>
         }
         tooltipProps={{ isDark: true, position: 'bottom', disabled: isStatusSuccess }}
         color={Color.GREY_800}
       >
-        <ReactTimeago date={lastTestedAt || data?.status?.lastTestedAt || data?.status?.testedAt || ''} />
+        <ReactTimeago date={status?.lastTestedAt || status?.testedAt || ''} />
       </Text>
       {!isStatusSuccess ? (
         <Button
@@ -119,20 +111,7 @@ const ConnectorStatusCell: CustomCloudCell = cell => {
           size={ButtonSize.SMALL}
           text={getString('common.smtp.testConnection')}
           className={css.testBtn}
-          onClick={
-            /* istanbul ignore next */ async e => {
-              try {
-                e.stopPropagation()
-                const res = await testConnection()
-                setStatus(res.data?.status)
-              } catch (err) {
-                setStatus('FAILURE')
-                setErrorSummary(err?.data?.message)
-              } finally {
-                setLastTestedAt(new Date().getTime())
-              }
-            }
-          }
+          onClick={() => (column as any).openTestConnectionModal({ connector })}
         />
       ) : null}
     </div>
@@ -160,6 +139,7 @@ const ViewCostsCell: CustomCloudCell = ({ row, column }) => {
 
   return (
     <Button
+      disabled={isUndefined(route)}
       variation={ButtonVariation.LINK}
       rightIcon="launch"
       iconProps={{ size: 12, color: Color.PRIMARY_7 }}
@@ -193,7 +173,7 @@ const MenuCell: CustomCloudCell = ({ row, column }) => {
       },
       permissions: [PermissionIdentifier.UPDATE_CONNECTOR]
     },
-    []
+    [connector?.identifier]
   )
 
   return (
@@ -257,6 +237,10 @@ const CloudAccountsTab: React.FC<CloudAccountsTabProps> = ({ ccmMetaData, search
     onSuccess: getCloudAccounts
   })
 
+  const { openErrorModal } = useTestConnectionModal({
+    onClose: getCloudAccounts
+  })
+
   const columns = useMemo(
     () => [
       {
@@ -270,7 +254,8 @@ const CloudAccountsTab: React.FC<CloudAccountsTabProps> = ({ ccmMetaData, search
         accessor: 'status',
         Header: getString('ce.cloudIntegration.connectorStatus'),
         Cell: ConnectorStatusCell,
-        width: '35%'
+        width: '35%',
+        openTestConnectionModal: openErrorModal
       },
       {
         accessor: 'lastUpdated',

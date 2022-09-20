@@ -27,7 +27,7 @@ interface ModuleCardProps {
   className?: string
   cornerSelected?: boolean
   buttonText: string
-  handleButtonClick?: () => void
+  handleButtonClick?: () => Promise<void>
   buttonDisabled?: boolean
 }
 

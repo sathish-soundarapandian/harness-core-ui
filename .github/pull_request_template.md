@@ -32,4 +32,4 @@ NA
 - Fix Prettier: `fix prettier`
 </details>
 
-## [Contributor license agreement](https://github.com/harness/harness-core-ui/blob/develop/CONTRIBUTOR_LICENSE_AGREEMENT.md)
+#### [Contributor license agreement](https://github.com/harness/harness-core-ui/blob/develop/CONTRIBUTOR_LICENSE_AGREEMENT.md)

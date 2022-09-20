@@ -24,6 +24,11 @@ common:
   hoverWarningHeader: 'WARNING {{message}}'
   interval: 'Interval'
   protocol: 'Protocol'
+  targetProtocol: 'Target Protocol'
+  targetPort: 'Target Port'
+  redirectUrl: 'Redirect url'
+  serverName: 'Server name'
+  pathMatch: 'Path match'
 allRegions: 'All Regions'
 allClusters: 'All Clusters'
 enforcementMessage:
@@ -526,6 +531,8 @@ co:
         vmsManaged: 'VMs Managed'
         dependantRule: 'Dependant Rule'
         delayInSec: 'Delay(secs)'
+        serviceManaged: 'Service managed'
+        ecsClusterName: 'ECS cluster name'
       managedVmTableHeaders:
         name: 'Name/ID'
         ip: 'Public/Private IP'

@@ -131,35 +131,6 @@ exports[`Create Delegate Wizard render data 1`] = `
               </div>
             </div>
           </div>
-          <div
-            class="bp3-card bp3-interactive bp3-elevation-0 Card--card Card--interactive"
-            data-index="2"
-            tabindex="0"
-          >
-            <div
-              class="StyledProps--font StyledProps--main cardBody disableCursor"
-              data-type="ECS"
-            >
-              <img
-                src="test-file-stub"
-              />
-              <div
-                class="Layout--vertical StyledProps--main cardContent"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main cardHeader StyledProps--font-weight-bold StyledProps--color StyledProps--color-grey900"
-                >
-                  delegate.cardData.amazonECS.name
-                </p>
-                <p
-                  class="StyledProps--font StyledProps--main subTitle"
-                  style="color: rgb(107, 109, 133);"
-                >
-                  delegate.cardData.amazonECS.text
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
       <div

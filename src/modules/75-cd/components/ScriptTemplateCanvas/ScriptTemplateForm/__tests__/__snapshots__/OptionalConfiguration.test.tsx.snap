@@ -102,92 +102,8 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
             class="formGroup"
           >
             <div
-              class="bp3-form-group"
-              data-id="spec.outputVariables-1"
-            >
-              <label
-                class="bp3-label"
-                for="spec.outputVariables"
-              >
-                <div
-                  class="formLabel"
-                >
-                  <span
-                    class="Tooltip--acenter"
-                    data-tooltip-id="scriptOptionalForm_spec.outputVariables"
-                  >
-                    pipeline.scriptOutputVariables common.optionalLabel
-                  </span>
-                </div>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
-              >
-                <div
-                  class="panel"
-                >
-                  <div
-                    class="outputVarHeader"
-                  >
-                    <span
-                      class="label"
-                    >
-                      Name
-                    </span>
-                    <span
-                      class="label"
-                    >
-                      Type
-                    </span>
-                    <span
-                      class="label"
-                    >
-                      Value
-                    </span>
-                  </div>
-                  <button
-                    class="bp3-button Button--button StyledProps--font StyledProps--main addButton Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-link"
-                    type="button"
-                  >
-                    <span
-                      class="bp3-icon bp3-icon-plus StyledProps--main"
-                      icon="plus"
-                    >
-                      <svg
-                        data-icon="plus"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        width="16"
-                      >
-                        <desc>
-                          plus
-                        </desc>
-                        <path
-                          d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
-                          fill-rule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                    <span
-                      class="bp3-button-text"
-                    >
-                      addOutputVar
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="formGroup"
-          >
-            <div
               class="bp3-form-group radioGroup"
-              data-id="spec.onDelegate-2"
+              data-id="spec.onDelegate-1"
             >
               <label
                 class="bp3-label"
@@ -357,92 +273,8 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
             class="formGroup"
           >
             <div
-              class="bp3-form-group"
-              data-id="spec.outputVariables-1"
-            >
-              <label
-                class="bp3-label"
-                for="spec.outputVariables"
-              >
-                <div
-                  class="formLabel"
-                >
-                  <span
-                    class="Tooltip--acenter"
-                    data-tooltip-id="scriptOptionalForm_spec.outputVariables"
-                  >
-                    pipeline.scriptOutputVariables common.optionalLabel
-                  </span>
-                </div>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
-              >
-                <div
-                  class="panel"
-                >
-                  <div
-                    class="outputVarHeader"
-                  >
-                    <span
-                      class="label"
-                    >
-                      Name
-                    </span>
-                    <span
-                      class="label"
-                    >
-                      Type
-                    </span>
-                    <span
-                      class="label"
-                    >
-                      Value
-                    </span>
-                  </div>
-                  <button
-                    class="bp3-button Button--button StyledProps--font StyledProps--main addButton Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-link"
-                    type="button"
-                  >
-                    <span
-                      class="bp3-icon bp3-icon-plus StyledProps--main"
-                      icon="plus"
-                    >
-                      <svg
-                        data-icon="plus"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        width="16"
-                      >
-                        <desc>
-                          plus
-                        </desc>
-                        <path
-                          d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
-                          fill-rule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                    <span
-                      class="bp3-button-text"
-                    >
-                      addOutputVar
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="formGroup"
-          >
-            <div
               class="bp3-form-group radioGroup"
-              data-id="spec.onDelegate-2"
+              data-id="spec.onDelegate-1"
             >
               <label
                 class="bp3-label"
@@ -509,7 +341,7 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.executionTarget.host-3"
+                data-id="spec.executionTarget.host-2"
               >
                 <label
                   class="bp3-label"
@@ -553,13 +385,18 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.executionTarget.connectorRef-4"
+                data-id="spec.executionTarget.connectorRef-3"
               >
                 <label
                   class="bp3-label"
                   for="spec.executionTarget.connectorRef"
                 >
-                  sshConnector
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="scriptOptionalForm_spec.executionTarget.connectorRef"
+                  >
+                    sshConnector
+                  </span>
                    
                   <span
                     class="bp3-text-muted"
@@ -621,7 +458,7 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.executionTarget.workingDirectory-5"
+                data-id="spec.executionTarget.workingDirectory-4"
               >
                 <label
                   class="bp3-label"
@@ -908,92 +745,8 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
                 class="formGroup"
               >
                 <div
-                  class="bp3-form-group"
-                  data-id="spec.outputVariables-1"
-                >
-                  <label
-                    class="bp3-label"
-                    for="spec.outputVariables"
-                  >
-                    <div
-                      class="formLabel"
-                    >
-                      <span
-                        class="Tooltip--acenter"
-                        data-tooltip-id="scriptOptionalForm_spec.outputVariables"
-                      >
-                        pipeline.scriptOutputVariables common.optionalLabel
-                      </span>
-                    </div>
-                     
-                    <span
-                      class="bp3-text-muted"
-                    />
-                  </label>
-                  <div
-                    class="bp3-form-content"
-                  >
-                    <div
-                      class="panel"
-                    >
-                      <div
-                        class="outputVarHeader"
-                      >
-                        <span
-                          class="label"
-                        >
-                          Name
-                        </span>
-                        <span
-                          class="label"
-                        >
-                          Type
-                        </span>
-                        <span
-                          class="label"
-                        >
-                          Value
-                        </span>
-                      </div>
-                      <button
-                        class="bp3-button Button--button StyledProps--font StyledProps--main addButton Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-link"
-                        type="button"
-                      >
-                        <span
-                          class="bp3-icon bp3-icon-plus StyledProps--main"
-                          icon="plus"
-                        >
-                          <svg
-                            data-icon="plus"
-                            height="16"
-                            viewBox="0 0 16 16"
-                            width="16"
-                          >
-                            <desc>
-                              plus
-                            </desc>
-                            <path
-                              d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
-                              fill-rule="evenodd"
-                            />
-                          </svg>
-                        </span>
-                        <span
-                          class="bp3-button-text"
-                        >
-                          addOutputVar
-                        </span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="formGroup"
-              >
-                <div
                   class="bp3-form-group radioGroup"
-                  data-id="spec.onDelegate-2"
+                  data-id="spec.onDelegate-1"
                 >
                   <label
                     class="bp3-label"
@@ -1060,7 +813,7 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="spec.executionTarget.host-3"
+                    data-id="spec.executionTarget.host-2"
                   >
                     <label
                       class="bp3-label"
@@ -1104,13 +857,18 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="spec.executionTarget.connectorRef-4"
+                    data-id="spec.executionTarget.connectorRef-3"
                   >
                     <label
                       class="bp3-label"
                       for="spec.executionTarget.connectorRef"
                     >
-                      sshConnector
+                      <span
+                        class="Tooltip--acenter"
+                        data-tooltip-id="scriptOptionalForm_spec.executionTarget.connectorRef"
+                      >
+                        sshConnector
+                      </span>
                        
                       <span
                         class="bp3-text-muted"
@@ -1172,7 +930,7 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="spec.executionTarget.workingDirectory-5"
+                    data-id="spec.executionTarget.workingDirectory-4"
                   >
                     <label
                       class="bp3-label"

@@ -24,6 +24,7 @@ import { useToaster } from '@common/exports'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
+import { usePipelineVariables } from '../PipelineVariablesContext/PipelineVariablesContext'
 import type { InputSetValue } from './utils'
 import { MultipleInputSetList } from './MultipleInputSetList'
 import { RenderValue } from './RenderValue'
@@ -41,12 +42,13 @@ export interface InputSetSelectorProps {
   isOverlayInputSet?: boolean
   showNewInputSet?: boolean
   onNewInputSetClick?: () => void
-  pipelineGitDetails?: EntityGitDetails | undefined
+  pipelineGitDetails?: EntityGitDetails
   hideInputSetButton?: boolean
   invalidInputSetReferences?: string[]
   loadingMergeInputSets?: boolean
   isRetryPipelineForm?: boolean
   onReconcile?: (identifier: string) => void
+  reRunInputSetYaml?: string
 }
 
 export function InputSetSelector({
@@ -64,7 +66,8 @@ export function InputSetSelector({
   invalidInputSetReferences,
   loadingMergeInputSets,
   isRetryPipelineForm,
-  onReconcile
+  onReconcile,
+  reRunInputSetYaml
 }: InputSetSelectorProps): React.ReactElement {
   const [searchParam, setSearchParam] = React.useState('')
   const [selectedInputSets, setSelectedInputSets] = React.useState<InputSetValue[]>(value || [])
@@ -81,6 +84,7 @@ export function InputSetSelector({
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
   useEffect(() => setSelectedInputSets(defaultTo(value, [])), [value])
+  const { setSelectedInputSetsContext } = usePipelineVariables()
 
   const getGitQueryParams = React.useCallback(() => {
     if (!isEmpty(selectedRepo) && !isEmpty(selectedBranch)) {
@@ -155,6 +159,7 @@ export function InputSetSelector({
         selected.splice(selected.indexOf(removedItem), 1)
       }
       setSelectedInputSets(selected)
+      setSelectedInputSetsContext?.(selected)
     },
     [selectedInputSets]
   )
@@ -194,6 +199,7 @@ export function InputSetSelector({
               : false
           }
           onReconcile={onReconcile}
+          reRunInputSetYaml={reRunInputSetYaml}
         />
       ))
 
@@ -272,6 +278,7 @@ export function InputSetSelector({
                     disabled={!selectedInputSets?.length}
                     onClick={() => {
                       onChange?.(selectedInputSets)
+                      if (reRunInputSetYaml) setOpenInputSetsList(false)
                     }}
                   />
                 </>

@@ -20,7 +20,7 @@ import {
   useHealthOfService,
   useSavingsOfService
 } from 'services/lw'
-import type { TimeRangeFilterType } from '@ce/types'
+import type { RefreshFunction, TimeRangeFilterType } from '@ce/types'
 import { CE_DATE_FORMAT_INTERNAL, DATE_RANGE_SHORTCUTS, getStaticSchedulePeriodTime } from '@ce/utils/momentUtils'
 import TimeRangePicker from '@ce/common/TimeRangePicker/TimeRangePicker'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -41,10 +41,12 @@ interface RulesDetailsBodyProps {
   connectorData?: ConnectorInfoDTO
   dependencies?: ServiceDep[]
   setService: (data?: Service) => void
+  registerRefreshFunction: (fn: RefreshFunction) => void
 }
 
 interface RuleDataVisulisationProps {
   service?: Service
+  registerRefreshFunction: (fn: RefreshFunction) => void
 }
 
 interface CostCardProps {
@@ -87,7 +89,13 @@ const CostCard: React.FC<CostCardProps> = ({ title, changeInPercentage, cost, in
   )
 }
 
-const RulesDetailsBody: React.FC<RulesDetailsBodyProps> = ({ service, connectorData, dependencies, setService }) => {
+const RulesDetailsBody: React.FC<RulesDetailsBodyProps> = ({
+  service,
+  connectorData,
+  dependencies,
+  setService,
+  registerRefreshFunction
+}) => {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
   const hasAsg = !isEmpty(get(service, 'routing.instance.scale_group'))
@@ -116,10 +124,14 @@ const RulesDetailsBody: React.FC<RulesDetailsBodyProps> = ({ service, connectorD
     lazy: isK8sRule || hasAsg
   })
 
+  useEffect(() => {
+    registerRefreshFunction(refetchHealthState)
+  }, [])
+
   return (
     <PageBody className={css.ruleDetailsBody}>
       <Layout.Horizontal>
-        <RuleDataVisulisation service={service} />
+        <RuleDataVisulisation service={service} registerRefreshFunction={registerRefreshFunction} />
         <div className={css.colDivider} />
         <Container className={css.col2}>
           <Tabs id={'ruleDetailsTabs'}>
@@ -139,11 +151,13 @@ const RulesDetailsBody: React.FC<RulesDetailsBodyProps> = ({ service, connectorD
                 />
               }
             />
-            <Tab
-              id={'ssh'}
-              title={getString('ce.co.ruleDetails.sshTab.cli')}
-              panel={<CLITabContainer ruleName={get(service, 'name', '')} connectorData={connectorData} />}
-            />
+            {!isK8sRule && (
+              <Tab
+                id={'ssh'}
+                title={getString('ce.co.ruleDetails.sshTab.cli')}
+                panel={<CLITabContainer ruleName={get(service, 'name', '')} connectorData={connectorData} />}
+              />
+            )}
           </Tabs>
         </Container>
       </Layout.Horizontal>
@@ -151,7 +165,7 @@ const RulesDetailsBody: React.FC<RulesDetailsBodyProps> = ({ service, connectorD
   )
 }
 
-const RuleDataVisulisation: React.FC<RuleDataVisulisationProps> = ({ service }) => {
+const RuleDataVisulisation: React.FC<RuleDataVisulisationProps> = ({ service, registerRefreshFunction }) => {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
   const [timeRange, setTimeRange] = useState<TimeRangeFilterType>({
@@ -250,7 +264,7 @@ const RuleDataVisulisation: React.FC<RuleDataVisulisationProps> = ({ service }) 
       />
       <Layout.Vertical spacing={'medium'} className={css.logsContainer}>
         <Text font={{ variation: FontVariation.H6 }}>{getString('ce.co.ruleDetails.logsHeader')}</Text>
-        <COGatewayLogs service={service} />
+        <COGatewayLogs service={service} registerRefreshFunction={registerRefreshFunction} />
       </Layout.Vertical>
     </Container>
   )

@@ -11,6 +11,8 @@ import { RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { StageType } from '@pipeline/utils/stageHelpers'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
@@ -187,3 +189,13 @@ export const getGitUrl = (
       return ''
   }
 }
+
+export const getIsFailureStrategyDisabled = ({
+  stageType,
+  stepType
+}: {
+  stageType?: StageType
+  stepType?: StepType
+}): boolean => stageType === StageType.BUILD && stepType === StepType.Background
+
+export const GIT_EXTENSION = '.git'

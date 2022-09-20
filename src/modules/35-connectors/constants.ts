@@ -8,6 +8,7 @@
 import type { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import type { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
+import type { UseStringsReturn } from 'framework/strings'
 import type {
   GetTemplateProps,
   GetTemplateResponse
@@ -109,7 +110,8 @@ export const Connectors: ConnectorType = {
   AZURE: 'Azure',
   AWSSECRETMANAGER: 'AwsSecretManager',
   JENKINS: 'Jenkins',
-  CUSTOM_SECRET_MANAGER: 'CustomSecretManager'
+  CUSTOM_SECRET_MANAGER: 'CustomSecretManager',
+  ELK: 'ELK'
 }
 
 export const ConnectorInfoText = {
@@ -185,6 +187,37 @@ export const connectorHelperUrls = {
   ceAzureLaunchConsole: 'https://portal.azure.com/#blade/Microsoft_Azure_CostManagement/Menu/exports',
   ceAzureBillingExport:
     'https://docs.harness.io/article/v682mz6qfd-set-up-cost-visibility-for-azure#step_2_azure_billing_exports'
+}
+
+interface GetElkAuthTypeReturn {
+  label: string
+  value: string
+}
+
+export const getELKAuthType = (getString: UseStringsReturn['getString']): GetElkAuthTypeReturn[] => [
+  {
+    label: getString('usernamePassword'),
+    value: ElkAuthType.USERNAME_PASSWORD
+  },
+  {
+    label: getString('common.apikey'),
+    value: ElkAuthType.API_CLIENT_TOKEN
+  },
+  {
+    label: getString('connectors.elk.noAuthentication'),
+    value: ElkAuthType.NONE
+  }
+]
+
+export const ELKConnectorFields = {
+  USERNAME: 'username',
+  PASSWORD: 'password'
+}
+
+export const ElkAuthType = {
+  USERNAME_PASSWORD: 'UsernamePassword',
+  API_CLIENT_TOKEN: 'ApiClientToken',
+  NONE: 'None'
 }
 
 export const CONNECTOR_MODAL_MIN_WIDTH = 1175

@@ -86,6 +86,7 @@ export const createTemplate = <T extends PipelineInfoConfig | StageElementConfig
       if (template.versionLabel) {
         set(draft, 'template.versionLabel', template.versionLabel)
       }
+      set(draft, 'template.templateInputs', get(data, 'template.templateInputs'))
     }
   })
 }
@@ -106,13 +107,7 @@ export const createStepNodeFromTemplate = (template: TemplateSummaryResponse, is
       })) as unknown as StepElementConfig
 }
 
-export const getTemplateTypesByRef = (
-  params: GetTemplateListQueryParams,
-  templateRefs: string[]
-): Promise<{
-  templateTypes: { [key: string]: string }
-  templateServiceData: TemplateServiceDataType
-}> => {
+const getPromisesForTemplateList = (params: GetTemplateListQueryParams, templateRefs: string[]) => {
   const scopedTemplates = templateRefs.reduce((a: { [key: string]: string[] }, b) => {
     const identifier = getIdentifierFromValue(b)
     const scope = getScopeFromValue(b)
@@ -123,6 +118,7 @@ export const getTemplateTypesByRef = (
     }
     return a
   }, {})
+
   const promises: Promise<ResponsePageTemplateSummaryResponse>[] = []
   Object.keys(scopedTemplates).forEach(scope => {
     promises.push(
@@ -142,6 +138,18 @@ export const getTemplateTypesByRef = (
       })
     )
   })
+
+  return promises
+}
+
+export const getTemplateTypesByRef = (
+  params: GetTemplateListQueryParams,
+  templateRefs: string[]
+): Promise<{
+  templateTypes: { [key: string]: string }
+  templateServiceData: TemplateServiceDataType
+}> => {
+  const promises = getPromisesForTemplateList(params, templateRefs)
   return Promise.all(promises)
     .then(responses => {
       const templateServiceData = {}
@@ -165,6 +173,29 @@ export const getTemplateTypesByRef = (
     })
     .catch(_ => {
       return { templateTypes: {}, templateServiceData: {} }
+    })
+}
+
+export const getResolvedTemplateDetailsByRef = (
+  params: GetTemplateListQueryParams,
+  templateRefs: string[]
+): Promise<{
+  templateDetailsByRef: { [key: string]: TemplateSummaryResponse }
+}> => {
+  const promises = getPromisesForTemplateList(params, templateRefs)
+  return Promise.all(promises)
+    .then(responses => {
+      const templateDetailsByRef = {}
+      responses.forEach(response => {
+        response.data?.content?.forEach(item => {
+          const scopeBasedTemplateRef = getScopeBasedTemplateRef(item)
+          set(templateDetailsByRef, scopeBasedTemplateRef, item)
+        })
+      })
+      return { templateDetailsByRef }
+    })
+    .catch(_ => {
+      return { templateDetailsByRef: {} }
     })
 }
 

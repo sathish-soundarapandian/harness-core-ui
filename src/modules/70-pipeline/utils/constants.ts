@@ -75,6 +75,19 @@ export enum OsTypes {
   MacOS = 'MacOS'
 }
 
+export enum ArchTypes {
+  Amd64 = 'Amd64',
+  Arm64 = 'Arm64'
+}
+
+export enum CIBuildInfrastructureType {
+  KubernetesDirect = 'KubernetesDirect',
+  VM = 'VM',
+  KubernetesHosted = 'KubernetesHosted',
+  Cloud = 'Cloud',
+  UseFromStage = 'UseFromStage'
+}
+
 export const DEFAULT_PAGE_INDEX = 0
 export const DEFAULT_PAGE_SIZE = 20
 export const DEFAULT_PIPELINE_LIST_TABLE_SORT = ['lastUpdatedAt', 'DESC']

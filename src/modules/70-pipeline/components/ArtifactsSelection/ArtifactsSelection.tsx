@@ -32,7 +32,6 @@ import {
 } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
-
 import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { useStrings } from 'framework/strings'
@@ -61,6 +60,7 @@ import StepArtifactoryAuthentication from '@connectors/components/CreateConnecto
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import AzureAuthentication from '@connectors/components/CreateConnector/AzureConnector/StepAuth/AzureAuthentication'
 import { useCache } from '@common/hooks/useCache'
+import GcpAuthentication from '@connectors/components/CreateConnector/GcpConnector/StepAuth/GcpAuthentication'
 import ArtifactWizard from './ArtifactWizard/ArtifactWizard'
 import { DockerRegistryArtifact } from './ArtifactRepository/ArtifactLastSteps/DockerRegistryArtifact/DockerRegistryArtifact'
 import { ECRArtifact } from './ArtifactRepository/ArtifactLastSteps/ECRArtifact/ECRArtifact'
@@ -75,7 +75,9 @@ import type {
   ImagePathTypes,
   AmazonS3InitialValuesType,
   JenkinsArtifactType,
-  GoogleArtifactRegistryInitialValuesType
+  GoogleArtifactRegistryInitialValuesType,
+  CustomArtifactSource,
+  GithubPackageRegistryInitialValuesType
 } from './ArtifactInterface'
 import {
   ArtifactToConnectorMap,
@@ -84,19 +86,22 @@ import {
   ArtifactTitleIdByType,
   allowedArtifactTypes,
   ModalViewFor,
-  isAdditionAllowed,
   isAllowedCustomArtifactDeploymentTypes,
   isSidecarAllowed
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import NexusArtifact from './ArtifactRepository/ArtifactLastSteps/NexusArtifact/NexusArtifact'
 import Artifactory from './ArtifactRepository/ArtifactLastSteps/Artifactory/Artifactory'
-import { CustomArtifact } from './ArtifactRepository/ArtifactLastSteps/CustomArtifact/CustomArtifact'
+import {
+  CustomArtifact,
+  CustomArtifactOptionalConfiguration
+} from './ArtifactRepository/ArtifactLastSteps/CustomArtifact/CustomArtifact'
 import { showConnectorStep } from './ArtifactUtils'
 import { ACRArtifact } from './ArtifactRepository/ArtifactLastSteps/ACRArtifact/ACRArtifact'
 import { AmazonS3 } from './ArtifactRepository/ArtifactLastSteps/AmazonS3Artifact/AmazonS3'
 import { JenkinsArtifact } from './ArtifactRepository/ArtifactLastSteps/JenkinsArtifact/JenkinsArtifact'
 import { GoogleArtifactRegistry } from './ArtifactRepository/ArtifactLastSteps/GoogleArtifactRegistry/GoogleArtifactRegistry'
+import { GithubPackageRegistry } from './ArtifactRepository/ArtifactLastSteps/GithubPackageRegistry/GithubPackageRegistry'
 import css from './ArtifactsSelection.module.scss'
 
 export default function ArtifactsSelection({
@@ -129,7 +134,8 @@ export default function ArtifactsSelection({
   const { expressions } = useVariablesExpression()
 
   const stepWizardTitle = getString('connectors.createNewConnector')
-  const { CUSTOM_ARTIFACT_NG, NG_GOOGLE_ARTIFACT_REGISTRY } = useFeatureFlags()
+  const { CUSTOM_ARTIFACT_NG, NG_GOOGLE_ARTIFACT_REGISTRY, GITHUB_PACKAGES, AZURE_WEBAPP_NG_S3_ARTIFACTS } =
+    useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const getServiceCacheId = `${pipeline.identifier}-${selectedStageId}-service`
   const { getCache } = useCache([getServiceCacheId])
@@ -144,10 +150,25 @@ export default function ArtifactsSelection({
     }
     if (
       deploymentType === 'Kubernetes' &&
+      GITHUB_PACKAGES &&
+      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
+    ) {
+      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
+    }
+    if (
+      deploymentType === 'Kubernetes' &&
       NG_GOOGLE_ARTIFACT_REGISTRY &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
+    }
+
+    if (
+      deploymentType === 'AzureWebApp' &&
+      AZURE_WEBAPP_NG_S3_ARTIFACTS &&
+      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.AmazonS3)
+    ) {
+      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.AmazonS3)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deploymentType])
@@ -413,7 +434,7 @@ export default function ArtifactsSelection({
     refetchConnectorList()
   }
 
-  const editArtifact = (viewType: number, type: ArtifactType, index?: number): void => {
+  const editArtifact = (viewType: number, type?: ArtifactType, index?: number): void => {
     setModalContext(viewType)
     setConnectorView(false)
     setSelectedArtifact(type as ArtifactType)
@@ -467,12 +488,31 @@ export default function ArtifactsSelection({
     }
   }, [selectedArtifact])
 
+  const getLastStepName = () => {
+    switch (selectedArtifact) {
+      case ENABLED_ARTIFACT_TYPES.CustomArtifact:
+        return {
+          key: getString('pipeline.artifactsSelection.artifactDetails'),
+          name: getString('pipeline.artifactsSelection.artifactDetails')
+        }
+      default:
+        return {
+          key: getString('connectors.stepFourName'),
+          name: getString('connectors.stepFourName')
+        }
+    }
+  }
+
   const artifactLastStepProps = useCallback((): ImagePathProps<
-    ImagePathTypes & AmazonS3InitialValuesType & JenkinsArtifactType & GoogleArtifactRegistryInitialValuesType
+    ImagePathTypes &
+      AmazonS3InitialValuesType &
+      JenkinsArtifactType &
+      GoogleArtifactRegistryInitialValuesType &
+      CustomArtifactSource &
+      GithubPackageRegistryInitialValuesType
   > => {
     return {
-      key: getString('connectors.stepFourName'),
-      name: getString('connectors.stepFourName'),
+      ...getLastStepName(),
       context,
       expressions,
       allowableTypes,
@@ -485,6 +525,7 @@ export default function ArtifactsSelection({
       selectedArtifact,
       selectedDeploymentType: deploymentType
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     addArtifact,
     allowableTypes,
@@ -556,6 +597,7 @@ export default function ArtifactsSelection({
           </StepWizard>
         )
       case ENABLED_ARTIFACT_TYPES.Ecr:
+      case ENABLED_ARTIFACT_TYPES.AmazonS3:
         return (
           <StepWizard iconProps={{ size: 37 }} title={stepWizardTitle}>
             <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
@@ -603,6 +645,18 @@ export default function ArtifactsSelection({
             />
           </StepWizard>
         )
+      case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
+        return (
+          <StepWizard title={stepWizardTitle}>
+            <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
+            <GcpAuthentication name={getString('details')} {...authenticationStepProps} />
+            <DelegateSelectorStep buildPayload={buildGcpPayload} {...delegateStepProps} />
+            <VerifyOutOfClusterDelegate
+              type={ArtifactToConnectorMap[selectedArtifact]}
+              {...verifyOutofClusterDelegateProps}
+            />
+          </StepWizard>
+        )
 
       default:
         return <></>
@@ -629,9 +683,26 @@ export default function ArtifactsSelection({
         return <JenkinsArtifact {...artifactLastStepProps()} />
       case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
         return <GoogleArtifactRegistry {...artifactLastStepProps()} />
+      case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
+        return <GithubPackageRegistry {...artifactLastStepProps()} />
       case ENABLED_ARTIFACT_TYPES.DockerRegistry:
       default:
         return <DockerRegistryArtifact {...artifactLastStepProps()} />
+    }
+  }, [artifactLastStepProps, selectedArtifact])
+
+  const getOptionalConfigurationSteps = useCallback((): JSX.Element | null => {
+    switch (selectedArtifact) {
+      case ENABLED_ARTIFACT_TYPES.CustomArtifact:
+        return (
+          <CustomArtifactOptionalConfiguration
+            {...artifactLastStepProps()}
+            name={'Optional Configuration'}
+            key={'Optional_Configuration'}
+          />
+        )
+      default:
+        return null
     }
   }, [artifactLastStepProps, selectedArtifact])
 
@@ -654,6 +725,7 @@ export default function ArtifactsSelection({
           expressions={expressions}
           allowableTypes={allowableTypes}
           lastSteps={getLastSteps()}
+          getOptionalConfigurationSteps={getOptionalConfigurationSteps()}
           labels={getLabels()}
           isReadonly={readonly}
           selectedArtifact={selectedArtifact}
@@ -680,7 +752,6 @@ export default function ArtifactsSelection({
       accountId={accountId}
       refetchConnectors={refetchConnectorList}
       isReadonly={readonly}
-      isAdditionAllowed={isAdditionAllowed(readonly)}
       isSidecarAllowed={isSidecarAllowed(deploymentType, readonly)}
     />
   )

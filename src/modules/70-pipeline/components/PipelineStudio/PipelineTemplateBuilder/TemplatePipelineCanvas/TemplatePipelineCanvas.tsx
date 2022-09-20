@@ -27,11 +27,12 @@ import {
 } from '@common/components/EntityReference/EntityReference'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetTemplate } from 'services/template-ng'
+import { createParentEntityQueryParams } from '@common/utils/gitSyncUtils'
 import css from './TemplatePipelineCanvas.module.scss'
 
 export function TemplatePipelineCanvas(): React.ReactElement {
   const {
-    state: { pipeline, templateTypes, templateServiceData, gitDetails },
+    state: { pipeline, templateTypes, templateServiceData, gitDetails, storeMetadata },
     stagesMap,
     setTemplateTypes,
     setTemplateServiceData
@@ -80,8 +81,8 @@ export function TemplatePipelineCanvas(): React.ReactElement {
       ...getScopeBasedProjectPathParams(queryParams, templateScope),
       versionLabel: defaultTo(pipeline.template?.versionLabel, ''),
       repoIdentifier: gitDetails.repoIdentifier,
-      branch: gitDetails.branch,
-      getDefaultFromOtherRepo: true
+      getDefaultFromOtherRepo: true,
+      ...createParentEntityQueryParams(storeMetadata, queryParams, gitDetails.branch)
     }
   })
 

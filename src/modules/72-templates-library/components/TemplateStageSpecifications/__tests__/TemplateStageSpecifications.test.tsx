@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render } from '@testing-library/react'
+import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import produce from 'immer'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
@@ -55,7 +55,13 @@ jest.mock('services/template-ng', () => ({
   })),
   useGetTemplate: jest
     .fn()
-    .mockImplementation(() => ({ data: stageTemplateVersion1, refetch: jest.fn(), error: null, loading: false }))
+    .mockImplementation(() => ({ data: stageTemplateVersion1, refetch: jest.fn(), error: null, loading: false })),
+  getsMergedTemplateInputYamlPromise: jest.fn().mockImplementation(() => ({
+    status: 'SUCCESS',
+    data: {
+      mergedTemplateInputs: stageMockTemplateVersion1InputYaml
+    }
+  }))
 }))
 
 jest.mock('services/cd-ng', () => ({
@@ -124,7 +130,9 @@ describe('<TemplateStageSpecifications /> tests', () => {
     await act(async () => {
       fireEvent.change(nameInput, { target: { value: 'Stage 2' } })
     })
-    expect(contextMock.updateStage).toBeCalled()
+    await waitFor(() => {
+      expect(contextMock.updateStage).toBeCalled()
+    })
   })
 
   test('snapshot test with no template inputs', async () => {

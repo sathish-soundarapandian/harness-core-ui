@@ -290,7 +290,7 @@ exports[`Test cloudformation remote tags step one should click each repo option 
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -773,7 +773,7 @@ exports[`Test cloudformation remote tags step one should click each repo option 
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -1256,7 +1256,7 @@ exports[`Test cloudformation remote tags step one should click each repo option 
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -1739,7 +1739,7 @@ exports[`Test cloudformation remote tags step one should click each repo option 
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -2222,7 +2222,7 @@ exports[`Test cloudformation remote tags step one should error when submitting 1
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -2674,7 +2674,7 @@ exports[`Test cloudformation remote tags step one should open new connector moda
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -3157,7 +3157,7 @@ exports[`Test cloudformation remote tags step one should open new connector moda
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -3640,7 +3640,7 @@ exports[`Test cloudformation remote tags step one should render tags details inc
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -4247,7 +4247,7 @@ exports[`Test cloudformation remote tags step one should render with initial dat
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -4770,7 +4770,7 @@ exports[`Test cloudformation remote tags step one should render with no initial 
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -5222,7 +5222,7 @@ exports[`Test cloudformation remote tags step one should render with runtime dat
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -5689,7 +5689,7 @@ exports[`Test cloudformation remote tags step one should submit step one 1`] = `
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"

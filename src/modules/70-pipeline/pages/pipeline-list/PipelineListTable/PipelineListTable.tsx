@@ -104,7 +104,7 @@ export function PipelineListTable({
         serverSortProps: getServerSortProps('executionSummaryInfo.lastExecutionTs')
       },
       {
-        Header: getString('pipeline.lastModified'),
+        Header: getString('common.lastModified'),
         accessor: 'lastUpdatedAt',
         width: '12%',
         Cell: LastModifiedCell,

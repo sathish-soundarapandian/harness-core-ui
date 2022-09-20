@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, fireEvent, act, findByText, getByText as getElementByText, waitFor } from '@testing-library/react'
+import { render, act, findByText, getByText as getElementByText, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
@@ -114,10 +114,9 @@ describe('ECSInfraSpecInputForm tests', () => {
     expect(awsConnector2).toBeTruthy()
     userEvent.click(awsConnector1)
     const applySelected = getElementByText(connectorSelectorDialog, 'entityReference.apply')
-    await act(async () => {
-      fireEvent.click(applySelected)
-    })
-    await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(1))
+    userEvent.click(applySelected)
+
+    await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(0))
     await waitFor(() => expect(fetchClusters).toHaveBeenCalledTimes(1))
     expect(clusterInput.value).toBe('')
     // Choose region

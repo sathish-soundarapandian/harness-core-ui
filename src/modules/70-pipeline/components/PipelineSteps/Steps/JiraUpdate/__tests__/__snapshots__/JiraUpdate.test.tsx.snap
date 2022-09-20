@@ -10,7 +10,7 @@ exports[`Jira Update tests Basic snapshot - deploymentform mode: jira-update-dep
     >
       <div
         class="StyledProps--font StyledProps--main"
-        style="margin-bottom: 5px;"
+        data-test-id="connectorTooltip"
       >
         <span
           class="Tooltip--acenter bp3-label"
@@ -453,7 +453,7 @@ exports[`Jira Update tests Basic snapshot - inputset mode: input set with errors
     >
       <div
         class="StyledProps--font StyledProps--main"
-        style="margin-bottom: 5px;"
+        data-test-id="connectorTooltip"
       >
         <span
           class="Tooltip--acenter bp3-label"
@@ -1060,7 +1060,7 @@ exports[`Jira Update tests Edit stage - readony view: editstage-readonly 1`] = `
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -1267,7 +1267,7 @@ exports[`Jira Update tests deploymentform readonly mode: jira-update-deploymentf
     >
       <div
         class="StyledProps--font StyledProps--main"
-        style="margin-bottom: 5px;"
+        data-test-id="connectorTooltip"
       >
         <span
           class="Tooltip--acenter bp3-label"

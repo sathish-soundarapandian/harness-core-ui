@@ -14,12 +14,7 @@ import {
 } from '@wings-software/uicore'
 import { clone, cloneDeep, defaultTo, isEmpty, isEqual, isNumber } from 'lodash-es'
 import type { FormikProps } from 'formik'
-import type {
-  PrometheusFilter,
-  PrometheusHealthSourceSpec,
-  TimeSeriesMetricDefinition,
-  TimeSeriesMetricPackDTO
-} from 'services/cv'
+import type { PrometheusFilter, PrometheusHealthSourceSpec, TimeSeriesMetricDefinition } from 'services/cv'
 import type { StringsMap } from 'stringTypes'
 import type { UseStringsReturn } from 'framework/strings'
 import {
@@ -42,8 +37,10 @@ import {
   MetricThresholdTypes,
   MetricTypeValues
 } from '../../common/MetricThresholds/MetricThresholds.constants'
-import { validateCommonFieldsForMetricThreshold } from '../../common/MetricThresholds/MetricThresholds.utils'
-import type { AvailableThresholdTypes } from '../../common/MetricThresholds/MetricThresholds.types'
+import {
+  getFilteredMetricThresholdValues,
+  validateCommonFieldsForMetricThreshold
+} from '../../common/MetricThresholds/MetricThresholds.utils'
 import type { PersistMappedMetricsType, PrometheusMetricThresholdType } from './PrometheusHealthSource.types'
 
 type UpdateSelectedMetricsMap = {
@@ -326,21 +323,6 @@ function generateMultiSelectOptionListFromPrometheusFilter(filters?: PrometheusF
   }
 
   return options
-}
-
-export function getFilteredMetricThresholdValues(
-  thresholdName: AvailableThresholdTypes,
-  metricPacks: TimeSeriesMetricPackDTO[]
-): PrometheusMetricThresholdType[] {
-  const customMetricThresholdDetails = metricPacks.find(metricPack => metricPack.identifier === MetricTypeValues.Custom)
-
-  if (!customMetricThresholdDetails) {
-    return []
-  }
-
-  return (customMetricThresholdDetails?.metricThresholds as PrometheusMetricThresholdType[])?.filter(
-    (metricThreshold: PrometheusMetricThresholdType) => metricThreshold.type === thresholdName
-  )
 }
 
 export function transformPrometheusHealthSourceToSetupSource(

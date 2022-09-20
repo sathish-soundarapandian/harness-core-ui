@@ -57,7 +57,8 @@ export enum DrawerTypes {
   PolicySets = 'PolicySets',
   ProvisionerStepConfig = 'ProvisionerStepConfig',
   AddProvisionerStep = 'AddProvisionerStep',
-  TemplateInputs = 'TemplateInputs'
+  TemplateInputs = 'TemplateInputs',
+  ViewTemplateDetails = 'ViewTemplateDetails'
 }
 
 export const DrawerSizes: Record<DrawerTypes, React.CSSProperties['width']> = {
@@ -74,7 +75,8 @@ export const DrawerSizes: Record<DrawerTypes, React.CSSProperties['width']> = {
   [DrawerTypes.FlowControl]: 600,
   [DrawerTypes.AdvancedOptions]: 840,
   [DrawerTypes.PolicySets]: 1000,
-  [DrawerTypes.TemplateInputs]: 876
+  [DrawerTypes.TemplateInputs]: 876,
+  [DrawerTypes.ViewTemplateDetails]: 600
 }
 
 export enum SplitViewTypes {

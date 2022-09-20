@@ -24,7 +24,7 @@ export class ArtifactSourceBaseFactory {
     this.artifactSourceDict = new Map()
   }
 
-  getArtifactSource<T>(artifactSourceType: string): ArtifactSourceBase<T> | undefined {
+  getArtifactSource<T>(artifactSourceType?: string): ArtifactSourceBase<T> | undefined {
     if (artifactSourceType) {
       return this.artifactSourceDict.get(artifactSourceType) as ArtifactSourceBase<T>
     }

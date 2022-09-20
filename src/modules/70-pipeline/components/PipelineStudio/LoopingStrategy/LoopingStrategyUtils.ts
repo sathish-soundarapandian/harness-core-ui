@@ -48,21 +48,21 @@ export const getAvailableStrategies = (
       label: 'pipeline.loopingStrategy.matrix.label',
       defaultValue: {},
       helperText: 'pipeline.loopingStrategy.matrix.helperText',
-      helperLink: 'https://docs.harness.io',
+      helperLink: 'https://docs.harness.io/article/eh4azj73m4#matrix',
       disabled: disabled
     },
     [LoopingStrategyEnum.Repeat]: {
       label: 'pipeline.loopingStrategy.repeat.label',
       defaultValue: {},
       helperText: 'pipeline.loopingStrategy.repeat.helperText',
-      helperLink: 'https://docs.harness.io',
+      helperLink: 'https://docs.harness.io/article/eh4azj73m4#repeat',
       disabled: false
     },
     [LoopingStrategyEnum.Parallelism]: {
       label: 'pipeline.loopingStrategy.parallelism.label',
       defaultValue: 1,
       helperText: 'pipeline.loopingStrategy.parallelism.helperText',
-      helperLink: 'https://docs.harness.io',
+      helperLink: 'https://docs.harness.io/article/eh4azj73m4#parallelism',
       disabled: disabled
     }
   }

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
+import { useParams, useHistory, useRouteMatch, matchPath, useLocation } from 'react-router-dom'
 import { Layout } from '@wings-software/uicore'
 import { compile } from 'path-to-regexp'
 
@@ -32,7 +32,7 @@ import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMe
 import { returnLaunchUrl } from '@common/utils/routeUtils'
 import { LaunchButton } from '@common/components/LaunchButton/LaunchButton'
 import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
-import { useGetCommunity } from '@common/utils/utils'
+import { useGetCommunity, isOnPrem } from '@common/utils/utils'
 import { useGetPipelines } from '@pipeline/hooks/useGetPipelines'
 import { useSideNavContext } from 'framework/SideNavStore/SideNavContext'
 import type { PagePMSPipelineSummaryResponse } from 'services/pipeline-ng'
@@ -63,13 +63,17 @@ export default function CDSideNav(): React.ReactElement {
   } = params
   const routeMatch = useRouteMatch()
   const history = useHistory()
+  const location = useLocation()
   const module = 'cd'
   const { updateAppStore, selectedProject } = useAppStore()
-  const { ARGO_PHASE1, CD_ONBOARDING_ENABLED } = useFeatureFlags()
+  const { CD_ONBOARDING_ENABLED } = useFeatureFlags()
   const { getString } = useStrings()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
   const isCommunity = useGetCommunity()
   const { showGetStartedTabInMainMenu, setShowGetStartedTabInMainMenu } = useSideNavContext()
+  const isOverviewPage = !!matchPath(location.pathname, {
+    path: routes.toProjectOverview({ ...params, module })
+  })
   const {
     data: fetchPipelinesData,
     loading: fetchingPipelines,
@@ -93,25 +97,15 @@ export default function CDSideNav(): React.ReactElement {
   React.useEffect(() => {
     if (!fetchingPipelines && fetchPipelinesData) {
       const { data, status } = fetchPipelinesData
-      setShowGetStartedTabInMainMenu(
+      const isGettingStartedEnabled =
         status === 'SUCCESS' && (data as PagePMSPipelineSummaryResponse)?.totalElements === 0
-      )
+      setShowGetStartedTabInMainMenu(isGettingStartedEnabled)
+      if (isGettingStartedEnabled) {
+        isOverviewPage && history.replace(routes.toGetStartedWithCD({ ...params, module }))
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchPipelinesData])
-
-  React.useEffect(() => {
-    if (showGetStartedTabInMainMenu) {
-      history.replace(
-        routes.toGetStartedWithCD({
-          projectIdentifier,
-          orgIdentifier,
-          accountId,
-          module
-        })
-      )
-    }
-  }, [showGetStartedTabInMainMenu, history, module, accountId, orgIdentifier, projectIdentifier])
 
   return (
     <Layout.Vertical spacing="small">
@@ -217,19 +211,19 @@ export default function CDSideNav(): React.ReactElement {
       />
       {projectIdentifier && orgIdentifier ? (
         <React.Fragment>
-          {showGetStartedTabInMainMenu && (
-            <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCI({ ...params, module })} />
+          {showGetStartedTabInMainMenu && CD_ONBOARDING_ENABLED && (
+            <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCD({ ...params, module })} />
           )}
-          {!isCommunity && !showGetStartedTabInMainMenu && (
+          {!isCommunity && (!CD_ONBOARDING_ENABLED || !showGetStartedTabInMainMenu) && (
             <SidebarLink label="Overview" to={routes.toProjectOverview({ ...params, module })} />
           )}
           <SidebarLink label="Deployments" to={routes.toDeployments({ ...params, module })} />
           <SidebarLink label="Pipelines" to={routes.toPipelines({ ...params, module })} />
           <SidebarLink label="Services" to={routes.toServices({ ...params, module })} />
           <SidebarLink label="Environments" to={routes.toEnvironment({ ...params, module })} />
-          {ARGO_PHASE1 && !isCommunity && (
+          {!isCommunity && !isOnPrem() ? (
             <SidebarLink label={getString('cd.gitOps')} to={routes.toGitOps({ ...params, module })} />
-          )}
+          ) : null}
           <ProjectSetupMenu module={module} />
         </React.Fragment>
       ) : null}

@@ -40,6 +40,7 @@ import ServerlessArtifactoryRepository from '@pipeline/components/ArtifactsSelec
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import { getStageFromPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import type { StageElementWrapperConfig } from 'services/pipeline-ng'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getConnectorRefFqnPath,
@@ -48,7 +49,6 @@ import {
   getFqnPath,
   getImagePath,
   getYamlData,
-  isArtifactSourceRuntime,
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity,
   resetTags,
@@ -208,12 +208,23 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
       props.formik.values.pipeline ?? props.formik.values
     ).stage?.stage?.spec as DeploymentStageConfig
 
+    const stageArray: StageElementWrapperConfig[] = []
+    props.formik.values.stages?.forEach((stage: StageElementWrapperConfig) => {
+      if (get(stage, 'parallel')) {
+        stage.parallel?.forEach((parallelStage: StageElementWrapperConfig) => {
+          stageArray.push(parallelStage)
+        })
+      } else stageArray.push(stage)
+    })
     if (!selectedStageSpec) {
-      selectedStageSpec = props.formik.values.stages?.find(
+      const selectedStage = stageArray.find(
         (currStage: StageElementWrapper) => currStage.stage?.identifier === props.stageIdentifier
-      ).stage.spec as DeploymentStageConfig
+      )?.stage
+      selectedStageSpec = defaultTo(
+        get(selectedStage, 'spec'),
+        get(selectedStage, 'template.templateInputs.spec')
+      ) as DeploymentStageConfig
     }
-
     return isNewServiceEnvEntity(path as string)
       ? (get(selectedStageSpec, 'service.serviceInputs.serviceDefinition.type') as ServiceDeploymentType)
       : (get(selectedStageSpec, 'serviceConfig.serviceDefinition.type') as ServiceDeploymentType)
@@ -384,8 +395,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     return false
   }
 
-  const isRuntime = isArtifactSourceRuntime(isPrimaryArtifactsRuntime, isSidecarRuntime, isSidecar as boolean)
-
+  const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   return (
     <>
       {isRuntime && (
@@ -450,6 +460,8 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
                 allowableTypes={allowableTypes}
                 formik={formik}
                 fieldName={`${path}.artifacts.${artifactPath}.spec.repository`}
+                fieldPath={`artifacts.${artifactPath}.spec.repository`}
+                template={template}
                 serviceId={isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined}
                 fqnPath={getConnectorRefFqnPath(
                   path as string,

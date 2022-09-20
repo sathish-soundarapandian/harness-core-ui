@@ -38,6 +38,7 @@ import type {
   K8sDirectInfraYaml,
   K8sHostedInfraYaml,
   K8sHostedInfraYamlSpec,
+  Platform,
   UseFromStageInfraYaml,
   VmInfraYaml,
   VmPoolYaml
@@ -47,11 +48,11 @@ import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemp
 import { useAddStepTemplate } from '@pipeline/hooks/useAddStepTemplate'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import { isCloneCodebaseEnabledAtLeastOneStage } from '@pipeline/utils/CIUtils'
+import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import BuildInfraSpecifications from '../BuildInfraSpecifications/BuildInfraSpecifications'
 import BuildStageSpecifications from '../BuildStageSpecifications/BuildStageSpecifications'
 import BuildAdvancedSpecifications from '../BuildAdvancedSpecifications/BuildAdvancedSpecifications'
 import { BuildTabs } from '../CIPipelineStagesUtils'
-import { CIBuildInfrastructureType } from '../../../constants/Constants'
 import css from './BuildStageSetupShell.module.scss'
 
 export const MapStepTypeToIcon: { [key: string]: HarnessIconName } = {
@@ -131,7 +132,8 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
       (stageData?.spec?.infrastructure as UseFromStageInfraYaml)?.useFromStage ||
       ((stageData?.spec?.infrastructure as VmInfraYaml)?.spec as VmPoolYaml)?.spec?.poolName ||
       ((stageData?.spec?.infrastructure as VmInfraYaml)?.spec as VmPoolYaml)?.spec?.identifier ||
-      ((stageData?.spec?.infrastructure as K8sHostedInfraYaml)?.spec as K8sHostedInfraYamlSpec)?.identifier
+      ((stageData?.spec?.infrastructure as K8sHostedInfraYaml)?.spec as K8sHostedInfraYamlSpec)?.identifier ||
+      ((stageData?.spec?.platform as Platform)?.os && (stageData?.spec?.platform as Platform)?.arch)
     )
     const execution = !!stageData?.spec?.execution?.steps?.length
     setFilledUpStages({ specifications, infra, execution })

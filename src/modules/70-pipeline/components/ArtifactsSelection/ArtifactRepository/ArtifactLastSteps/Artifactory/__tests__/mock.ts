@@ -98,7 +98,17 @@ export const azureWebAppDeploymentTypeProps = {
   }
 }
 
-export const azureWebAppGenericInitialValues = {
+export const sshDeploymentTypeProps = {
+  ...azureWebAppDeploymentTypeProps,
+  selectedDeploymentType: ServiceDeploymentType.Ssh
+}
+
+export const winRmDeploymentTypeProps = {
+  ...azureWebAppDeploymentTypeProps,
+  selectedDeploymentType: ServiceDeploymentType.WinRm
+}
+
+export const genericArtifactoryInitialValues = {
   identifier: '',
   tag: '',
   tagRegex: '',
@@ -108,7 +118,7 @@ export const azureWebAppGenericInitialValues = {
   artifactDirectory: ''
 }
 
-export const azureWebAppDockerInitialValues = {
+export const dockerArtifactoryInitialValues = {
   identifier: '',
   artifactPath: 'path',
   tag: '<+input>',

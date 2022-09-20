@@ -251,6 +251,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
         setDetailHosts(
           hosts?.map((host: string) => ({
             host,
+            parsedHost: host.split(':')[0],
             error: undefined
           }))
         )
@@ -327,9 +328,10 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
         width: '20%',
         Cell: ({ row, column }: any) => (
           <Checkbox
-            onClick={event => column.onCheckboxSelect(event, row?.original)}
+            data-testid={`select-host-${get(row, 'original.host', '')}`}
+            onClick={event => column.onCheckboxSelect(event, get(row, 'original', ''))}
             checked={column.hostsToTest.some(
-              (selectedHost: HostValidationDTO) => selectedHost?.host === row?.original?.host
+              (selectedHost: HostValidationDTO) => selectedHost?.host === get(row, 'original.host', '')
             )}
           />
         ),
@@ -375,11 +377,14 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
       if (hostResults.status === 'SUCCESS') {
         const tempMap: any = {}
         detailHosts.forEach(hostItem => {
-          tempMap[get(hostItem, 'host', '')] = hostItem
+          tempMap[get(hostItem, 'parsedHost', '')] = hostItem
         }, {})
 
         get(hostResults, 'data', []).forEach((hostRes: HostValidationDTO) => {
-          tempMap[get(hostRes, 'host', '')] = hostRes
+          tempMap[get(hostRes, 'host', '')] = {
+            ...hostRes,
+            host: tempMap[get(hostRes, 'host', '')].host
+          }
         })
 
         setDetailHosts(Object.values(tempMap) as [])

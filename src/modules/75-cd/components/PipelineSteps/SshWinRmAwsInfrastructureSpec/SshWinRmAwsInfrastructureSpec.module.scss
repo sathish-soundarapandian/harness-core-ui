@@ -6,7 +6,7 @@
  */
 
 .inputWidth {
-  width: 50%;
+  width: 50% !important;
   margin-bottom: var(--spacing-large);
 }
 
@@ -29,4 +29,8 @@
     margin: auto var(--spacing) auto 0;
   }
   margin-bottom: var(--spacing);
+}
+
+.regionInput {
+  position: relative;
 }

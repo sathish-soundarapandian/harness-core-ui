@@ -319,36 +319,6 @@ export default function EnvironmentConfiguration({
                 }
                 details={
                   <Layout.Vertical spacing="medium" margin={{ bottom: 'small' }}>
-                    <Card
-                      className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
-                      id="variables"
-                    >
-                      <Text
-                        color={Color.GREY_700}
-                        margin={{ bottom: 'small' }}
-                        font={{ weight: 'bold' }}
-                        data-tooltip-id="variableOverride"
-                      >
-                        {getString('common.variables')}
-                        <HarnessDocTooltip useStandAlone={true} tooltipId="variableOverride" />
-                      </Text>
-                      <CustomVariablesEditableStage
-                        formName="editEnvironment"
-                        initialValues={{
-                          variables: defaultTo(formikProps.values.variables, []) as AllNGVariables[],
-                          canAddVariable: true
-                        }}
-                        allowableTypes={[
-                          MultiTypeInputType.FIXED,
-                          MultiTypeInputType.RUNTIME,
-                          MultiTypeInputType.EXPRESSION
-                        ]}
-                        readonly={!canEdit}
-                        onUpdate={values => {
-                          formikProps.setFieldValue('variables', values.variables)
-                        }}
-                      />
-                    </Card>
                     {NG_SERVICE_MANIFEST_OVERRIDE && (
                       <Card
                         className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
@@ -403,6 +373,36 @@ export default function EnvironmentConfiguration({
                         />
                       </Card>
                     )}
+                    <Card
+                      className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
+                      id="variables"
+                    >
+                      <Text
+                        color={Color.GREY_700}
+                        margin={{ bottom: 'small' }}
+                        font={{ weight: 'bold' }}
+                        data-tooltip-id="variableOverride"
+                      >
+                        {getString('common.variables')}
+                        <HarnessDocTooltip useStandAlone={true} tooltipId="variableOverride" />
+                      </Text>
+                      <CustomVariablesEditableStage
+                        formName="editEnvironment"
+                        initialValues={{
+                          variables: defaultTo(formikProps.values.variables, []) as AllNGVariables[],
+                          canAddVariable: true
+                        }}
+                        allowableTypes={[
+                          MultiTypeInputType.FIXED,
+                          MultiTypeInputType.RUNTIME,
+                          MultiTypeInputType.EXPRESSION
+                        ]}
+                        readonly={!canEdit}
+                        onUpdate={values => {
+                          formikProps.setFieldValue('variables', values.variables)
+                        }}
+                      />
+                    </Card>
                   </Layout.Vertical>
                 }
               />

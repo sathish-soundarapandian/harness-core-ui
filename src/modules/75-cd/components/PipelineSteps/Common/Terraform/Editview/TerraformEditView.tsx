@@ -41,7 +41,7 @@ import {
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
 import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
@@ -340,6 +340,7 @@ export default function TerraformEditView(
                       setFieldValue('timeout', value)
                     }}
                     isReadonly={readonly}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
                   />
                 )}
               </div>
@@ -376,6 +377,7 @@ export default function TerraformEditView(
                       setFieldValue('spec.provisionerIdentifier', value)
                     }}
                     isReadonly={readonly}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                   />
                 )}
               </div>
@@ -455,9 +457,10 @@ export default function TerraformEditView(
                                   showDefaultField={false}
                                   showAdvanced={true}
                                   onChange={value => {
-                                    formik.setFieldValue('values.spec.configuration.spec.workspace', value)
+                                    formik.setFieldValue('spec.configuration.spec.workspace', value)
                                   }}
                                   isReadonly={readonly}
+                                  allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                                 />
                               )}
                             </div>

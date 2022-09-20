@@ -6,3 +6,7 @@ chaosHub: ChaosHub
 chaosScenario: Chaos Scenario
 chaosDelegate: Chaos Delegate
 chaosGitops: Chaos Gitops
+navLabels:
+  chaosScenarios: Chaos Scenarios
+  chaosHubs: ChaosHubs
+  chaosDelegates: Chaos Delegates

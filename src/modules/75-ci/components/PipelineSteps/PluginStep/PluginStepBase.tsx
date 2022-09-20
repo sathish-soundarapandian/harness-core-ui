@@ -23,12 +23,12 @@ import {
   getFormValuesInCorrectFormat
 } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './PluginStepFunctionConfigs'
 import type { PluginStepProps, PluginStepData, PluginStepDataUI } from './PluginStep'
 import { CIStep } from '../CIStep/CIStep'
 import { CIStepOptionalConfig } from '../CIStep/CIStepOptionalConfig'
 import { AllMultiTypeInputTypesForStep, useGetPropagatedStageById } from '../CIStep/StepUtils'
-import { CIBuildInfrastructureType } from '../../../constants/Constants'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const PluginStepBase = (
@@ -122,6 +122,7 @@ export const PluginStepBase = (
                       enableFields={{
                         'spec.privileged': {
                           shouldHide: [
+                            CIBuildInfrastructureType.Cloud,
                             CIBuildInfrastructureType.VM,
                             CIBuildInfrastructureType.KubernetesHosted
                           ].includes(buildInfrastructureType)

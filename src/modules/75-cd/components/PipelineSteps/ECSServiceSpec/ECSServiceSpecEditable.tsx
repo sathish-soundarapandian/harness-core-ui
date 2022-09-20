@@ -21,18 +21,26 @@ import type {
 } from 'services/cd-ng'
 
 import { useCache } from '@common/hooks/useCache'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/WorkflowVariables'
 import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ArtifactsSelection'
 import ManifestSelection from '@pipeline/components/ManifestSelection/ManifestSelection'
 import { getSelectedDeploymentType } from '@pipeline/utils/stageHelpers'
 import { getManifestsHeaderTooltipId, ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { getArtifactsHeaderTooltipId } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
-import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
+import {
+  DeployTabs,
+  isNewServiceEnvEntity
+} from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import VariableListReadOnlyView from '@pipeline/components/WorkflowVariablesSelection/VariableListReadOnlyView'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
-import { setupMode } from '../PipelineStepsUtil'
+import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ServiceV2ArtifactsSelection'
+import { getConfigFilesHeaderTooltipId } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
+import ConfigFilesSelection from '@pipeline/components/ConfigFilesSelection/ConfigFilesSelection'
+import { useServiceContext } from '@cd/context/ServiceContext'
+import { isMultiArtifactSourceEnabled, setupMode } from '../PipelineStepsUtil'
 import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 interface ECSServiceSpecInitialValues extends ServiceSpec {
@@ -56,7 +64,6 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
 }) => {
   const { getString } = useStrings()
   const isPropagating = stageIndex > 0 && setupModeType === setupMode.PROPAGATE
-
   const {
     state: {
       pipeline,
@@ -66,6 +73,8 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
     updateStage,
     getStageFromPipeline
   } = usePipelineContext()
+  const { isServiceEntityPage } = useServiceContext()
+  const { NG_FILE_STORE, NG_SVC_ENV_REDESIGN, NG_ARTIFACT_SOURCES } = useFeatureFlags()
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(defaultTo(selectedStageId, ''))
   const selectedDeploymentType =
@@ -74,6 +83,11 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
   const getServiceCacheId = `${pipeline.identifier}-${selectedStageId}-service`
   const { getCache } = useCache([getServiceCacheId])
   const serviceInfo = getCache<ServiceDefinition>(getServiceCacheId)
+  const isPrimaryArtifactSources = isMultiArtifactSourceEnabled(
+    !!NG_ARTIFACT_SOURCES,
+    stage?.stage as DeploymentStageElementConfig
+  )
+  const isNewService = isNewServiceEnvEntity(!!NG_SVC_ENV_REDESIGN, stage?.stage as DeploymentStageElementConfig)
 
   const listOfManifests: ManifestConfigWrapper[] = useMemo(() => {
     /* istanbul ignore next */
@@ -261,7 +275,7 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
               readonly={!!readonly}
               initialManifestList={taskDefinitionManifests}
               allowOnlyOneManifest={true}
-              addManifestBtnText={getString('common.plusAddName', {
+              addManifestBtnText={getString('common.addName', {
                 name: getString('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
               })}
               updateManifestList={updateListOfManifests}
@@ -290,43 +304,13 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
               readonly={!!readonly}
               initialManifestList={serviceDefinitionManifests}
               allowOnlyOneManifest={true}
-              addManifestBtnText={getString('common.plusAddName', {
+              addManifestBtnText={getString('common.addName', {
                 name: getString('cd.pipelineSteps.serviceTab.manifest.serviceDefinition')
               })}
               updateManifestList={updateListOfManifests}
               preSelectedManifestType={ManifestDataType.EcsServiceDefinition}
               availableManifestTypes={[ManifestDataType.EcsServiceDefinition]}
               deleteManifest={deleteServiceDefinition}
-            />
-          </Card>
-
-          <Card
-            className={css.sectionCard}
-            id={getString('cd.pipelineSteps.serviceTab.manifest.scallingPolicy')}
-            data-testid={'scalling-policy-definition-card'}
-          >
-            <div
-              className={cx(css.tabSubHeading, 'ng-tooltip-native')}
-              data-tooltip-id={getManifestsHeaderTooltipId(selectedDeploymentType)}
-            >
-              {getString('common.headerWithOptionalText', {
-                header: getString('cd.pipelineSteps.serviceTab.manifest.scallingPolicy')
-              })}
-              <HarnessDocTooltip tooltipId={getManifestsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
-            </div>
-            <ManifestSelection
-              isPropagating={isPropagating}
-              deploymentType={selectedDeploymentType}
-              isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-              readonly={!!readonly}
-              initialManifestList={scallingPolicyManifests}
-              addManifestBtnText={getString('common.plusAddName', {
-                name: getString('cd.pipelineSteps.serviceTab.manifest.scallingPolicy')
-              })}
-              updateManifestList={updateListOfManifests}
-              preSelectedManifestType={ManifestDataType.EcsScalingPolicyDefinition}
-              availableManifestTypes={[ManifestDataType.EcsScalingPolicyDefinition]}
-              deleteManifest={deleteScallingPolicy}
             />
           </Card>
 
@@ -350,13 +334,43 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
               isReadonlyServiceMode={isReadonlyServiceMode as boolean}
               readonly={!!readonly}
               initialManifestList={scalableTargetManifests}
-              addManifestBtnText={getString('common.plusAddName', {
+              addManifestBtnText={getString('common.addName', {
                 name: getString('cd.pipelineSteps.serviceTab.manifest.scalableTarget')
               })}
               updateManifestList={updateListOfManifests}
               preSelectedManifestType={ManifestDataType.EcsScalableTargetDefinition}
               availableManifestTypes={[ManifestDataType.EcsScalableTargetDefinition]}
               deleteManifest={deleteScalableTarget}
+            />
+          </Card>
+
+          <Card
+            className={css.sectionCard}
+            id={getString('cd.pipelineSteps.serviceTab.manifest.scalingPolicy')}
+            data-testid={'scaling-policy-definition-card'}
+          >
+            <div
+              className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+              data-tooltip-id={getManifestsHeaderTooltipId(selectedDeploymentType)}
+            >
+              {getString('common.headerWithOptionalText', {
+                header: getString('cd.pipelineSteps.serviceTab.manifest.scalingPolicy')
+              })}
+              <HarnessDocTooltip tooltipId={getManifestsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
+            </div>
+            <ManifestSelection
+              isPropagating={isPropagating}
+              deploymentType={selectedDeploymentType}
+              isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+              readonly={!!readonly}
+              initialManifestList={scallingPolicyManifests}
+              addManifestBtnText={getString('common.addName', {
+                name: getString('cd.pipelineSteps.serviceTab.manifest.scalingPolicy')
+              })}
+              updateManifestList={updateListOfManifests}
+              preSelectedManifestType={ManifestDataType.EcsScalingPolicyDefinition}
+              availableManifestTypes={[ManifestDataType.EcsScalingPolicyDefinition]}
+              deleteManifest={deleteScallingPolicy}
             />
           </Card>
 
@@ -371,13 +385,42 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
               {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
               <HarnessDocTooltip tooltipId={getArtifactsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
             </div>
-            <ArtifactsSelection
-              isPropagating={isPropagating}
-              deploymentType={selectedDeploymentType}
-              isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-              readonly={!!readonly}
-            />
+            {isPrimaryArtifactSources ? (
+              <ServiceV2ArtifactsSelection
+                deploymentType={selectedDeploymentType}
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                readonly={!!readonly}
+              />
+            ) : (
+              <ArtifactsSelection
+                isPropagating={isPropagating}
+                deploymentType={selectedDeploymentType}
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                readonly={!!readonly}
+              />
+            )}
           </Card>
+          {(isNewService || isServiceEntityPage) &&
+            NG_FILE_STORE && ( //Config files are only available for creation or readonly mode for service V2
+              <Card
+                className={css.sectionCard}
+                id={getString('pipelineSteps.configFiles')}
+                data-testid={'configFiles-card'}
+              >
+                <div
+                  className={cx(css.tabSubHeading, 'ng-tooltip-native')}
+                  data-tooltip-id={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
+                >
+                  {getString('pipelineSteps.configFiles')}
+                </div>
+                <ConfigFilesSelection
+                  isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                  isPropagating={isPropagating}
+                  deploymentType={selectedDeploymentType}
+                  readonly={!!readonly}
+                />
+              </Card>
+            )}
         </>
       )}
 

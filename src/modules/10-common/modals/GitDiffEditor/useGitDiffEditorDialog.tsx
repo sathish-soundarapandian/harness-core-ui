@@ -31,6 +31,7 @@ export interface UseGitDiffEditorDialogProps<T> {
 }
 
 export interface GitData extends SaveToGitFormInterface {
+  lastCommitId?: string
   resolvedConflictCommitId?: string
   isV2?: boolean
 }

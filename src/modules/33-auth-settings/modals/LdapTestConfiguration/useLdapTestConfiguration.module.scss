@@ -15,3 +15,8 @@
 .dialog {
   width: 600px;
 }
+
+.layoutErrorMessage {
+  width: 100% !important;
+  margin: var(--spacing-medium) 0 !important;
+}

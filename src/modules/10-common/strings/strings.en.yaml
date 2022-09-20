@@ -19,10 +19,14 @@ gnupgKeys: GnuPG Keys
 featureComingSoon: This feature is coming soon.
 skip: Skip
 sync: Sync
+selectService: Select Service
+selectServices: Select Services
 inputVariables: Input Variables
 confirmAction: Confirm action
 accountSetup: Account Setup
 projectSetup: Project Setup
+additionalAttributes: Additional Attributes
+addAttribute: + Add Attribute
 orgSetup: Org Setup
 delegateForTask: '{{delegate}} for {{taskName}}'
 defineDelegateSelector: 'Define Delegate Selector'
@@ -72,6 +76,7 @@ remove: Remove
 member: Member
 showMore: Show More
 showLess: Show Less
+showSelected: Show Selected
 hideAll: Hide All
 moreInfo: More Info
 moreOptions: More options
@@ -87,6 +92,9 @@ copyFqn: Copy fully qualified name
 selectType: Select Type
 timeframe: Timeframe
 selectTimeFrame: Select Timeframe
+lastModified: 'Last Modified'
+servicePrefix: 'Service: {{ name }}'
+serviceInputs: Service inputs
 accountSetting:
   connector:
     loading: 'Loading settings...'
@@ -727,6 +735,7 @@ module:
   templateService: TEMPLATESERVICE
   sto: STO
   governance: POLICY ENGINE
+templateServiceLabel: Template Service
 customPricing: for Custom Pricing
 specified: Specified
 byType: By Type
@@ -943,6 +952,7 @@ freezeWindows: Freeze Windows
 oAuthLabel: OAuth
 import: Import
 importEntityFromGit: Import {{resourceType}} From Git
+environmentOverrides: Environment Overrides
 serviceOverrides: Service Overrides
 invalidIdentifiers: 'Identifier must not be one of the following values: {{identifiers}}'
 repositoryFormat: Repository Format

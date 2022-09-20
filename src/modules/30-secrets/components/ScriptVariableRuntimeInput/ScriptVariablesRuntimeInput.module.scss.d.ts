@@ -13,6 +13,8 @@ declare const styles: {
   readonly formGroup: string
   readonly gridFourColumn: string
   readonly gridThreeColumn: string
+  readonly inputMarginTopMedium: string
+  readonly inputMarginTopSmall: string
   readonly label: string
   readonly minConfigBtn: string
   readonly outputVarHeader: string

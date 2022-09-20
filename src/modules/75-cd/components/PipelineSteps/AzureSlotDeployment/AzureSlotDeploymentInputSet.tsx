@@ -8,11 +8,12 @@
 import React from 'react'
 import { isEmpty } from 'lodash-es'
 import cx from 'classnames'
-import { FormikForm, MultiTypeInputType, getMultiTypeFromValue, FormInput } from '@harness/uicore'
+import { FormikForm, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
 import { connect, FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import type { AzureSlotDeploymentData, AzureSlotDeploymentProps } from './AzureSlotDeploymentInterface.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -31,7 +32,7 @@ export function AzureSlotDeploymentInputSetRef<T extends AzureSlotDeploymentData
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.timeout as string) && (
           <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <FormMultiTypeDurationField
+            <TimeoutFieldInputSetView
               label={getString('pipelineSteps.timeoutLabel')}
               name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
               disabled={readonly}
@@ -41,13 +42,15 @@ export function AzureSlotDeploymentInputSetRef<T extends AzureSlotDeploymentData
                 expressions,
                 disabled: readonly
               }}
+              template={inputSetData?.template}
+              fieldPath={'timeout'}
             />
           </div>
         )
       }
       {isRuntime(inputSetData?.template?.spec?.webApp as string) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             label={'Web App Name'}
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.webApp`}
             disabled={readonly}
@@ -56,12 +59,14 @@ export function AzureSlotDeploymentInputSetRef<T extends AzureSlotDeploymentData
               disabled: readonly,
               allowableTypes
             }}
+            fieldPath={'spec.webApp'}
+            template={inputSetData?.template}
           />
         </div>
       )}
       {isRuntime(inputSetData?.template?.spec?.deploymentSlot as string) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             label={'Deployment Slot'}
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.deploymentSlot`}
             disabled={readonly}
@@ -70,6 +75,8 @@ export function AzureSlotDeploymentInputSetRef<T extends AzureSlotDeploymentData
               disabled: readonly,
               allowableTypes
             }}
+            fieldPath={'spec.deploymentSlot'}
+            template={inputSetData?.template}
           />
         </div>
       )}

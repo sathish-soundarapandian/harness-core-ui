@@ -91,31 +91,32 @@ describe('Test ScriptTemplateCanvasWithRef', () => {
     act(() => {
       fireEvent.click(changeButton as HTMLElement)
     })
-    expect(scriptTemplateContextMock.updateTemplate).toBeCalledWith({
-      name: 'Test Template Secret Manager',
-      identifier: 'Test_Template_SM',
-      versionLabel: 'v1',
-      type: 'SecretManager',
-      projectIdentifier: 'Yogesh_Test',
-      orgIdentifier: 'default',
-      tags: {},
-      spec: {
-        shell: 'Bash',
-        source: {
-          spec: {
-            script: 'echo hi',
-            type: 'Inline'
+    await waitFor(() =>
+      expect(scriptTemplateContextMock.updateTemplate).toBeCalledWith({
+        name: 'Test Template Secret Manager',
+        identifier: 'Test_Template_SM',
+        versionLabel: 'v1',
+        type: 'SecretManager',
+        projectIdentifier: 'Yogesh_Test',
+        orgIdentifier: 'default',
+        tags: {},
+        spec: {
+          shell: 'Bash',
+          source: {
+            spec: {
+              script: 'echo hi',
+              type: 'Inline'
+            }
+          },
+          onDelegate: true,
+          environmentVariables: [{ name: 'key', type: 'String', value: 1 }],
+          variables: undefined,
+          executionTarget: {
+            connectorRef: undefined
           }
-        },
-        onDelegate: true,
-        environmentVariables: [{ name: 'key', type: 'String', value: 1 }],
-        variables: undefined,
-        outputVariables: undefined,
-        executionTarget: {
-          connectorRef: undefined
         }
-      }
-    })
+      })
+    )
   })
 
   test('should call updateTemplate with correctly when form is updated with execution target', async () => {
@@ -133,32 +134,34 @@ describe('Test ScriptTemplateCanvasWithRef', () => {
     act(() => {
       fireEvent.click(changeButton as HTMLElement)
     })
-    expect(scriptTemplateContextMock.updateTemplate).toBeCalledWith({
-      name: 'Test Template Secret Manager',
-      identifier: 'Test_Template_SM',
-      versionLabel: 'v1',
-      type: 'SecretManager',
-      projectIdentifier: 'Yogesh_Test',
-      orgIdentifier: 'default',
-      tags: {},
-      spec: {
-        shell: 'Bash',
-        source: {
-          spec: {
-            script: 'echo hi',
-            type: 'Inline'
+    await waitFor(() =>
+      expect(scriptTemplateContextMock.updateTemplate).toBeCalledWith({
+        name: 'Test Template Secret Manager',
+        identifier: 'Test_Template_SM',
+        versionLabel: 'v1',
+        type: 'SecretManager',
+        projectIdentifier: 'Yogesh_Test',
+        orgIdentifier: 'default',
+        tags: {},
+        spec: {
+          shell: 'Bash',
+          source: {
+            spec: {
+              script: 'echo hi',
+              type: 'Inline'
+            }
+          },
+          onDelegate: false,
+          environmentVariables: undefined,
+          outputVariables: [{ name: 'key', type: 'String', value: 1 }],
+          executionTarget: {
+            connectorRef: 'acc.connectorId',
+            host: 'host',
+            workingDirectory: 'workingdirectory'
           }
-        },
-        onDelegate: false,
-        environmentVariables: undefined,
-        outputVariables: [{ name: 'key', type: 'String', value: 1 }],
-        executionTarget: {
-          connectorRef: 'acc.connectorId',
-          host: 'host',
-          workingDirectory: 'workingdirectory'
         }
-      }
-    })
+      })
+    )
   })
 
   test('should match snapshot for default scriptTemplateContextMock', async () => {

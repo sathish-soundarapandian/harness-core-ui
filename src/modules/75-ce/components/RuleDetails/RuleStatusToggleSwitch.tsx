@@ -14,17 +14,30 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { Utils } from '@ce/common/Utils'
 import type { Service } from 'services/lw'
 import { useStrings } from 'framework/strings'
+import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
+import { PermissionsRequest, usePermission } from '@rbac/hooks/usePermission'
+import type { ResourceType } from '@rbac/interfaces/ResourceType'
+import type { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import type { ResourceScope } from 'services/rbac'
 import useToggleRuleState from '../COGatewayList/useToggleRuleState'
 
 interface RuleStatusToggleSwitchProps {
   serviceData: Service
   onSuccess?: (data: Service) => void
+  enableRbac?: boolean
+  permissionRequest?: PermissionsRequest
 }
 
-const RuleStatusToggleSwitch: React.FC<RuleStatusToggleSwitchProps> = ({ serviceData, onSuccess }) => {
+const RuleStatusToggleSwitch: React.FC<RuleStatusToggleSwitchProps> = ({
+  serviceData,
+  onSuccess,
+  enableRbac = false,
+  permissionRequest
+}) => {
   const { accountId } = useParams<AccountPathProps>()
   const { showError, showSuccess } = useToaster()
   const { getString } = useStrings()
+  const [canDoAction] = usePermission(permissionRequest, [permissionRequest])
 
   const [loading, setLoading] = useState(false)
 
@@ -56,15 +69,27 @@ const RuleStatusToggleSwitch: React.FC<RuleStatusToggleSwitchProps> = ({ service
     triggerToggle()
   }
 
+  const noPermission = enableRbac && permissionRequest && !canDoAction
+
   return (
     <Layout.Horizontal>
       <Popover
         position={Position.TOP}
-        content={<Text padding={'small'}>{getString('ce.common.toggleLabel')}</Text>}
+        content={
+          noPermission ? (
+            <RBACTooltip
+              permission={permissionRequest?.permissions[0] as PermissionIdentifier}
+              resourceType={permissionRequest?.resource.resourceType as ResourceType}
+              resourceScope={permissionRequest?.resourceScope as ResourceScope}
+            />
+          ) : (
+            <Text padding={'small'}>{getString('ce.common.toggleLabel')}</Text>
+          )
+        }
         interactionKind={PopoverInteractionKind.HOVER}
       >
         <Toggle
-          disabled={loading}
+          disabled={loading || noPermission}
           checked={loading ? serviceData.disabled : !serviceData.disabled}
           onToggle={handleToggleClick}
         />

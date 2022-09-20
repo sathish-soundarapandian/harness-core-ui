@@ -54,7 +54,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
   const [searchParam, setSearchParam] = useState('')
   const { getString } = useStrings()
 
-  const { AZURE_REPO_CONNECTOR, NG_SVC_ENV_REDESIGN = false } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN = false } = useFeatureFlags()
   const isNewService = isNewServiceEnvEntity(
     NG_SVC_ENV_REDESIGN,
     pipeline?.stages?.[0]?.stage as DeploymentStageElementConfig
@@ -174,14 +174,15 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
           triggerType: val.categoryValue,
           sourceRepo: (val.categoryValue === TriggerTypes.WEBHOOK && val.value) || undefined,
           artifactType: (val.categoryValue === TriggerTypes.ARTIFACT && val.value) || undefined,
-          manifestType: (val.categoryValue === TriggerTypes.MANIFEST && val.value) || undefined
+          manifestType: (val.categoryValue === TriggerTypes.MANIFEST && val.value) || undefined,
+          scheduleType: (val.categoryValue === TriggerTypes.SCHEDULE && val.value) || undefined
         })
       }
     }
 
     return (
       <AddDrawer
-        addDrawerMap={getCategoryItems(getString, isNewService, AZURE_REPO_CONNECTOR)}
+        addDrawerMap={getCategoryItems(getString, isNewService)}
         onSelect={onSelect}
         onClose={hideDrawer}
         drawerContext={DrawerContext.STUDIO}

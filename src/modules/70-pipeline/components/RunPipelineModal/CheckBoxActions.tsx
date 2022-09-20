@@ -6,7 +6,6 @@
  */
 
 import React, { Dispatch, SetStateAction } from 'react'
-import { Tooltip } from '@blueprintjs/core'
 
 import { Checkbox, Layout, Color } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
@@ -40,24 +39,21 @@ export default function CheckBoxActions(props: CheckBoxActionsProps): React.Reac
         background={Color.GREY_100}
         color={skipPreFlightCheck ? Color.PRIMARY_8 : Color.BLACK}
         className={css.footerCheckbox}
+        margin={{ right: 'medium' }}
         padding={{ top: 'small', bottom: 'small', left: 'xxlarge', right: 'medium' }}
         checked={skipPreFlightCheck}
         onChange={e => setSkipPreFlightCheck(e.currentTarget.checked)}
         disabled={supportingGitSimplification && storeType === StoreType.REMOTE}
       />
-      <Tooltip position="top" content={getString('featureNA')}>
-        <Checkbox
-          background={notifyOnlyMe ? Color.PRIMARY_2 : Color.GREY_100}
-          color={notifyOnlyMe ? Color.PRIMARY_7 : Color.BLACK}
-          className={css.footerCheckbox}
-          margin={{ left: 'medium' }}
-          padding={{ top: 'small', bottom: 'small', left: 'xxlarge', right: 'medium' }}
-          disabled
-          label={getString('pipeline.runPipelineForm.notifyOnlyMe')}
-          checked={notifyOnlyMe}
-          onChange={e => setNotifyOnlyMe(e.currentTarget.checked)}
-        />
-      </Tooltip>
+      <Checkbox
+        background={Color.GREY_100}
+        color={notifyOnlyMe ? Color.PRIMARY_8 : Color.BLACK}
+        className={css.footerCheckbox}
+        padding={{ top: 'small', bottom: 'small', left: 'xxlarge', right: 'medium' }}
+        label={getString('pipeline.runPipelineForm.notifyOnlyMe')}
+        checked={notifyOnlyMe}
+        onChange={e => setNotifyOnlyMe(e.currentTarget.checked)}
+      />
     </Layout.Horizontal>
   )
 }

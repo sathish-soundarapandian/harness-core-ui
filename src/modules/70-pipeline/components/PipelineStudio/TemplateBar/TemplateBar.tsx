@@ -29,6 +29,7 @@ import { TemplateYaml } from '@pipeline/components/PipelineStudio/TemplateYaml/T
 import type { TemplateLinkConfig } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { createParentEntityQueryParams } from '@common/utils/gitSyncUtils'
 import css from './TemplateBar.module.scss'
 
 interface TemplateMenuItem {
@@ -46,7 +47,10 @@ export interface TemplateBarProps {
 }
 
 export function TemplateBar(props: TemplateBarProps): JSX.Element {
-  const { isReadonly } = usePipelineContext()
+  const {
+    isReadonly,
+    state: { storeMetadata }
+  } = usePipelineContext()
   const { templateLinkConfig, onOpenTemplateSelector, onRemoveTemplate, className = '' } = props
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { getString } = useStrings()
@@ -67,8 +71,8 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
       ...getScopeBasedProjectPathParams(params, scope),
       versionLabel: defaultTo(templateLinkConfig.versionLabel, ''),
       repoIdentifier,
-      branch,
-      getDefaultFromOtherRepo: true
+      getDefaultFromOtherRepo: true,
+      ...createParentEntityQueryParams(storeMetadata, params, branch)
     }
   })
 

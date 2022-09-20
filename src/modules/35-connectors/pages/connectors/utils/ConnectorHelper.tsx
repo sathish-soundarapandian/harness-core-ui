@@ -71,6 +71,8 @@ export const getHeadingIdByType = (type: string): StringKeys => {
       return 'connectors.appDynamicsDetails'
     case Connectors.SPLUNK:
       return 'connectors.splunkConnectorDetails'
+    case Connectors.ELK:
+      return 'connectors.elk.elkConnectorDetails'
     case 'Gcr':
       return 'connectors.gcrConnectorDetails'
     default:
@@ -232,6 +234,8 @@ export const getConnectorIconByType = (type: string): IconName => {
       return 'harness'
     case Connectors.CUSTOM_HEALTH:
       return 'service-custom-connector'
+    case Connectors.ELK:
+      return 'service-elk'
     case Connectors.ERROR_TRACKING:
       return 'error-tracking'
     case Connectors.AZURE:

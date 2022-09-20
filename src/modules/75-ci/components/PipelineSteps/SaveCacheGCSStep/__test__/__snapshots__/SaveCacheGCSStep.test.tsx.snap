@@ -128,7 +128,7 @@ exports[`Save Cache GCS Step Edit View edit mode works 1`] = `
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -767,7 +767,7 @@ exports[`Save Cache GCS Step Edit View renders runtime inputs 1`] = `
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -1393,7 +1393,7 @@ exports[`Save Cache GCS Step Edit View should render properly 1`] = `
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -1822,7 +1822,7 @@ exports[`Save Cache GCS Step InputSet View should render all fields 1`] = `
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"

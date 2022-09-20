@@ -31,7 +31,6 @@ import { useGetNewRelicApplications, MetricPackValidationResponse, TimeSeriesMet
 import { Connectors } from '@connectors/constants'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useStrings } from 'framework/strings'
-import CardWithOuterTitle from '@cv/pages/health-source/common/CardWithOuterTitle/CardWithOuterTitle'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
 import MetricsVerificationModal from '@cv/components/MetricsVerificationModal/MetricsVerificationModal'
 import ValidationStatus from '@cv/pages/components/ValidationStatus/ValidationStatus'
@@ -39,6 +38,7 @@ import { StatusOfValidation } from '@cv/pages/components/ValidationStatus/Valida
 import useGroupedSideNaveHook from '@cv/hooks/GroupedSideNaveHook/useGroupedSideNaveHook'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import {
   getOptions,
   getInputGroupProps,

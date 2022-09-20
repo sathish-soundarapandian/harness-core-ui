@@ -53,7 +53,7 @@ import type {
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import ArtifactImagePathTagView from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
-import SideCarArtifactIdentifier from '../SideCarArtifactIdentifier'
+import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import ServerlessArtifactoryRepository from './ServerlessArtifactoryRepository'
 import css from '../../ArtifactConnector.module.scss'
 
@@ -84,19 +84,24 @@ function Artifactory({
   artifactIdentifiers,
   isReadonly = false,
   selectedArtifact,
-  selectedDeploymentType
+  selectedDeploymentType,
+  isMultiArtifactSource
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<ImagePathTypes>): React.ReactElement {
   const { getString } = useStrings()
-  const [lastQueryData, setLastQueryData] = useState({ artifactPath: '', repository: '' })
+  const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
 
+  const [lastQueryData, setLastQueryData] = useState({ artifactPath: '', repository: '' })
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
-  const [repositoryFormat, setRepositoryFormat] = useState<string | undefined>(undefined)
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(selectedDeploymentType)
   const isSSHWinRmDeploymentType = isSshOrWinrmDeploymentType(selectedDeploymentType)
-  const isServerlessWinRmSshDeploymentType = isServerlessDeploymentTypeSelected || isSSHWinRmDeploymentType
   const isAzureWebAppDeploymentTypeSelected = isAzureWebAppDeploymentType(selectedDeploymentType)
+  const [repositoryFormat, setRepositoryFormat] = useState<string | undefined>(
+    isServerlessDeploymentTypeSelected || isSSHWinRmDeploymentType || isAzureWebAppDeploymentTypeSelected
+      ? RepositoryFormatTypes.Generic
+      : RepositoryFormatTypes.Docker
+  )
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const isAzureWebAppOrSshWinrmDeploymentTypeSelected = isAzureWebAppDeploymentTypeSelected || isSSHWinRmDeploymentType
   const isAzureWebAppGenericTypeSelected = isAzureWebAppOrSshWinrmGenericDeploymentType(
     selectedDeploymentType,
@@ -105,8 +110,8 @@ function Artifactory({
   const [isAzureWebAppGeneric, setIsAzureWebAppGeneric] = useState<boolean>(isAzureWebAppGenericTypeSelected)
 
   const isGenericArtifactory = React.useMemo(() => {
-    return isServerlessWinRmSshDeploymentType || isAzureWebAppGeneric
-  }, [isServerlessWinRmSshDeploymentType, isAzureWebAppGeneric])
+    return repositoryFormat === RepositoryFormatTypes.Generic
+  }, [repositoryFormat])
 
   useLayoutEffect(() => {
     let repoFormat = RepositoryFormatTypes.Docker
@@ -240,13 +245,13 @@ function Artifactory({
     return getArtifactFormData(
       initialValues,
       selectedArtifact as ArtifactType,
-      context === ModalViewFor.SIDECAR,
+      isIdentifierAllowed,
       isGenericArtifactory
     )
-  }, [context, initialValues, selectedArtifact, isGenericArtifactory])
+  }, [initialValues, selectedArtifact, isIdentifierAllowed, isGenericArtifactory])
 
   const submitFormData = (formData: ImagePathTypes & { connectorId?: string }): void => {
-    const artifactObj = getFinalArtifactFormObj(formData, context === ModalViewFor.SIDECAR, isGenericArtifactory)
+    const artifactObj = getFinalArtifactFormObj(formData, isIdentifierAllowed, isGenericArtifactory)
     merge(artifactObj.spec, {
       repository: getRepositoryValue(formData, isGenericArtifactory),
       repositoryUrl: formData?.repositoryUrl,
@@ -294,6 +299,7 @@ function Artifactory({
         {formik => (
           <Form>
             <div className={css.connectorForm}>
+              {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
               {isAzureWebAppOrSshWinrmDeploymentTypeSelected && (
                 <div className={css.imagePathContainer}>

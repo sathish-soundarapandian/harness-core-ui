@@ -160,9 +160,8 @@ describe('Test BaseScriptWithRef', () => {
       name: 'name',
       type: '',
       spec: {
-        executionTarget: {
-          connectorRef: undefined
-        },
+        executionTarget: {},
+        onDelegate: 'targethost',
         shell: 'Bash',
         source: {
           spec: {

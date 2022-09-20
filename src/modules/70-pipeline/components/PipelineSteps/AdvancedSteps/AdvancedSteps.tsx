@@ -21,6 +21,7 @@ import {
 import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 import { LoopingStrategy } from '@pipeline/components/PipelineStudio/LoopingStrategy/LoopingStrategy'
+import { getIsFailureStrategyDisabled } from '@pipeline/utils/CIUtils'
 import type { StepElementConfig, StepGroupElementConfig } from 'services/cd-ng'
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import DelegateSelectorPanel from './DelegateSelectorPanel/DelegateSelectorPanel'
@@ -111,6 +112,7 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
 
   const accordionRef = React.useRef<AccordionHandle>({} as AccordionHandle)
   const { getString } = useStrings()
+  const isFailureStrategyDisabled = getIsFailureStrategyDisabled({ stageType, stepType })
 
   React.useEffect(() => {
     if (formikProps.isSubmitting) {
@@ -175,7 +177,7 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
                   mode={hasStepGroupAncestor || isStepGroup ? Modes.STEP_GROUP : Modes.STEP}
                   stageType={stageType}
                   formikProps={formikProps}
-                  isReadonly={isReadonly}
+                  isReadonly={isReadonly || isFailureStrategyDisabled}
                 />
               }
             />

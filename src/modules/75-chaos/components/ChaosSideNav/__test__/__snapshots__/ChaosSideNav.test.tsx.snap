@@ -16,7 +16,7 @@ exports[`Chaos Sidenav Render render the chaos sidenav 1`] = `
       <p
         class="StyledProps--font StyledProps--main text"
       >
-        Overview
+        overview
       </p>
     </a>
     <a
@@ -26,7 +26,7 @@ exports[`Chaos Sidenav Render render the chaos sidenav 1`] = `
       <p
         class="StyledProps--font StyledProps--main text"
       >
-        Chaos Scenarios
+        chaos.navLabels.chaosScenarios
       </p>
     </a>
     <a
@@ -36,7 +36,7 @@ exports[`Chaos Sidenav Render render the chaos sidenav 1`] = `
       <p
         class="StyledProps--font StyledProps--main text"
       >
-        Chaoshub
+        chaos.navLabels.chaosHubs
       </p>
     </a>
     <a
@@ -46,7 +46,7 @@ exports[`Chaos Sidenav Render render the chaos sidenav 1`] = `
       <p
         class="StyledProps--font StyledProps--main text"
       >
-        Chaos Delegates
+        chaos.navLabels.chaosDelegates
       </p>
     </a>
     <div>

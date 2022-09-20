@@ -109,3 +109,31 @@ export const variableSchema = (
       type: Yup.string().trim().required(getString('common.validation.typeIsRequired'))
     })
   )
+
+export const commandUnitSchema = (
+  getString: UseStringsReturn['getString']
+): Yup.NotRequiredArraySchema<unknown | undefined> =>
+  Yup.array().of(
+    Yup.object({
+      type: Yup.string(),
+      spec: Yup.object().when('type', {
+        is: val => val === 'Script',
+        then: Yup.object({
+          source: Yup.object({
+            spec: Yup.object({
+              script: Yup.string().required(
+                getString?.('common.validation.fieldIsRequired', { name: getString('common.script') })
+              )
+            })
+          })
+        }),
+        otherwise: Yup.object({
+          destinationPath: Yup.string().required(
+            getString?.('common.validation.fieldIsRequired', {
+              name: getString('cd.steps.commands.destinationPath')
+            })
+          )
+        })
+      })
+    })
+  )

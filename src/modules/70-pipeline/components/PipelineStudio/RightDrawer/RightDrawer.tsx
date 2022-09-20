@@ -136,7 +136,7 @@ export const updateStepWithinStage = (
             }
           }
         }
-        updateStepWithinStage(stepWithinStage.stepGroup, processingNodeIdentifier, processedNode, isRollback)
+        updateStepWithinStage(stepWithinStage.stepGroup, processingNodeIdentifier, processedNode, false)
       }
     } else if (stepWithinStage.parallel) {
       // If stage has a parallel steps, loop over and update the matching identifier with node
@@ -146,7 +146,7 @@ export const updateStepWithinStage = (
         } else if (parallelStep.step?.identifier === processingNodeIdentifier) {
           parallelStep.step = processedNode as any
         } else if (parallelStep?.stepGroup) {
-          updateStepWithinStage(parallelStep?.stepGroup, processingNodeIdentifier, processedNode, isRollback)
+          updateStepWithinStage(parallelStep?.stepGroup, processingNodeIdentifier, processedNode, false)
         }
       })
     } else if (stepWithinStage.step?.identifier === processingNodeIdentifier) {

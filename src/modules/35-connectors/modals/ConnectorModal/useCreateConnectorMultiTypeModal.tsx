@@ -9,6 +9,7 @@ import React, { useState } from 'react'
 import { Button, Text, Card, Icon, Layout } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
+import cx from 'classnames'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { getConnectorIconByType, getConnectorTitleIdByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { useStrings } from 'framework/strings'
@@ -40,7 +41,8 @@ const modalProps: IDialogProps = {
     position: 'relative',
     overflow: 'hidden',
     backgroundColor: '#0278D5',
-    padding: '300px 140px 0'
+    padding: '150px 140px',
+    justifyContent: 'center'
   }
 }
 
@@ -85,7 +87,7 @@ const useCreateConnectorMultiTypeModal = (
         <Text font={{ size: 'normal', weight: 'semi-bold' }} color="white" margin={{ bottom: 'xxlarge' }}>
           Start by selecting your connector type
         </Text>
-        <Layout.Horizontal spacing="medium">
+        <Layout.Horizontal spacing="medium" className={css.cardsWrapper}>
           {props.types.map(type => (
             <div key={type} className={css.card}>
               <Card interactive={true} elevation={0} selected={false} onClick={() => handleSelect(type)}>
@@ -101,7 +103,13 @@ const useCreateConnectorMultiTypeModal = (
             </div>
           ))}
         </Layout.Horizontal>
-        <Button className={wizardCss.crossIcon} minimal icon="cross" iconProps={{ size: 18 }} onClick={handleClose} />
+        <Button
+          className={cx(wizardCss.crossIcon, css.white)}
+          minimal
+          icon="cross"
+          iconProps={{ size: 18 }}
+          onClick={handleClose}
+        />
       </Dialog>
     ),
     [props.types]

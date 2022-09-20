@@ -48,7 +48,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import RbacAvatarGroup from '@rbac/components/RbacAvatarGroup/RbacAvatarGroup'
-import { useGetCommunity } from '@common/utils/utils'
+import { getUserName, useGetCommunity } from '@common/utils/utils'
 import css from './UserGroupsListView.module.scss'
 
 interface UserGroupsListViewProps {
@@ -126,7 +126,7 @@ const RenderColumnMembers: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, 
   const { getString } = useStrings()
   const avatars =
     data.users?.map(user => {
-      return { email: user.email, name: user.name }
+      return { email: user.email, name: getUserName(user) }
     }) || []
 
   const handleAddMember = (e: React.MouseEvent<HTMLElement | Element, MouseEvent>): void => {
@@ -139,7 +139,12 @@ const RenderColumnMembers: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, 
     childProjectIdentifier,
     data.userGroupDTO
   )
-  const disabled = data.userGroupDTO.ssoLinked || data.userGroupDTO.externallyManaged || userGroupInherited
+  const disabled =
+    data.userGroupDTO.ssoLinked ||
+    data.userGroupDTO.externallyManaged ||
+    userGroupInherited ||
+    data.userGroupDTO.harnessManaged
+
   const disableTooltipText = getUserGroupActionTooltipText(
     accountIdentifier,
     childOrgIdentifier,
@@ -320,7 +325,9 @@ const RenderColumnMenu: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, col
     return <RbacMenuItem icon={icon} text={text} onClick={clickHandler} permission={permissionRequest} />
   }
 
-  return (
+  return row.original.userGroupDTO.harnessManaged ? (
+    <></>
+  ) : (
     <Layout.Horizontal flex={{ justifyContent: 'flex-end' }}>
       <Popover
         isOpen={menuOpen}

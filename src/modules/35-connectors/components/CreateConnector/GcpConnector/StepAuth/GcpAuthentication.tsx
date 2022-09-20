@@ -40,7 +40,7 @@ interface GcpAuthenticationProps {
   isEditMode: boolean
   setIsEditMode: (val: boolean) => void
   setFormData?: (formData: ConnectorConfigDTO) => void
-  onConnectorCreated: (data?: ConnectorConfigDTO) => void | Promise<void>
+  onConnectorCreated?: (data?: ConnectorConfigDTO) => void | Promise<void>
   connectorInfo: ConnectorInfoDTO | void
   accountId: string
   orgIdentifier: string

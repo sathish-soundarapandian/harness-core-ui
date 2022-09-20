@@ -12,7 +12,6 @@ import type { StringsMap } from 'stringTypes'
 import type {
   AccessControlCheckError,
   RoleAssignmentMetadataDTO,
-  UserMetadataDTO,
   Scope as CDScope,
   UserGroupDTO,
   Failure,
@@ -183,10 +182,6 @@ export const getScopeLevelManagedResourceGroup = (
   }
 }
 
-export const isAccountBasicRolePresent = (scope: Scope, flag: boolean): boolean => {
-  return flag && scope === Scope.ACCOUNT
-}
-
 export const isAccountBasicRole = (identifier: string): boolean => {
   return identifier === '_account_basic'
 }
@@ -195,31 +190,28 @@ export const getScopeBasedDefaultAssignment = (
   scope: Scope,
   getString: UseStringsReturn['getString'],
   isCommunity: boolean,
-  isBasicRolePresent: boolean,
   disableDefaultAssignment: boolean
 ): Assignment[] => {
-  if (isCommunity) {
+  if (isCommunity || disableDefaultAssignment) {
     return []
   } else {
     const resourceGroup: ResourceGroupOption = {
-      managedRoleAssignment: !isBasicRolePresent,
+      managedRoleAssignment: true,
       ...getScopeLevelManagedResourceGroup(scope, getString)
     }
     switch (scope) {
       case Scope.ACCOUNT:
-        return disableDefaultAssignment
-          ? []
-          : [
-              {
-                role: {
-                  label: getString('common.accViewer'),
-                  value: '_account_viewer',
-                  managed: true,
-                  managedRoleAssignment: !isBasicRolePresent
-                },
-                resourceGroup
-              }
-            ]
+        return [
+          {
+            role: {
+              label: getString('common.accViewer'),
+              value: '_account_viewer',
+              managed: true,
+              managedRoleAssignment: true
+            },
+            resourceGroup
+          }
+        ]
       case Scope.ORG:
         return [
           {
@@ -273,24 +265,28 @@ export interface ErrorHandlerProps {
 }
 
 export const getAssignments = (roleBindings: RoleAssignmentMetadataDTO[]): Assignment[] => {
-  return (
-    roleBindings?.map(roleAssignment => {
-      return {
-        role: {
-          label: roleAssignment.roleName,
-          value: roleAssignment.roleIdentifier,
-          managed: roleAssignment.managedRole,
-          assignmentIdentifier: roleAssignment.identifier,
-          managedRoleAssignment: roleAssignment.managedRoleAssignment
-        },
-        resourceGroup: {
-          label: roleAssignment.resourceGroupName || '',
-          value: roleAssignment.resourceGroupIdentifier || '',
-          managedRoleAssignment: roleAssignment.managedRoleAssignment,
-          assignmentIdentifier: roleAssignment.identifier
-        }
+  return defaultTo(
+    roleBindings?.reduce((acc: Assignment[], roleAssignment) => {
+      if (!isAccountBasicRole(roleAssignment.roleIdentifier)) {
+        acc.push({
+          role: {
+            label: roleAssignment.roleName,
+            value: roleAssignment.roleIdentifier,
+            managed: roleAssignment.managedRole,
+            managedRoleAssignment: roleAssignment.managedRoleAssignment,
+            assignmentIdentifier: roleAssignment.identifier
+          },
+          resourceGroup: {
+            label: defaultTo(roleAssignment.resourceGroupName, ''),
+            value: defaultTo(roleAssignment.resourceGroupIdentifier, ''),
+            managedRoleAssignment: roleAssignment.managedRoleAssignment,
+            assignmentIdentifier: roleAssignment.identifier
+          }
+        })
       }
-    }) || []
+      return acc
+    }, []),
+    []
   )
 }
 
@@ -354,10 +350,6 @@ export function getTooltip({
   }
 
   return {}
-}
-
-export const getUserName = (user: UserMetadataDTO): string => {
-  return defaultTo(user.name, user.email)
 }
 
 export const generateScopeList = (org: string, projects: ProjectSelectOption[], accountId: string): CDScope[] => {

@@ -259,15 +259,34 @@ exports[`ManifestSelection tests delete manifest list works correctly 1`] = `
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
     >
       <button
-        class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
+        class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
         data-test-id="addManifest"
         id="add-manifest"
         type="button"
       >
         <span
+          class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+          icon="plus"
+        >
+          <svg
+            data-icon="plus"
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+          >
+            <desc>
+              plus
+            </desc>
+            <path
+              d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+        <span
           class="bp3-button-text"
         >
-          pipelineSteps.serviceTab.manifestList.addManifest
+          pipeline.manifestType.addManifestLabel
         </span>
       </button>
     </div>
@@ -566,15 +585,34 @@ exports[`ManifestSelection tests edit manifest list works correctly 1`] = `
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
     >
       <button
-        class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
+        class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
         data-test-id="addManifest"
         id="add-manifest"
         type="button"
       >
         <span
+          class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+          icon="plus"
+        >
+          <svg
+            data-icon="plus"
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+          >
+            <desc>
+              plus
+            </desc>
+            <path
+              d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+        <span
           class="bp3-button-text"
         >
-          pipelineSteps.serviceTab.manifestList.addManifest
+          pipeline.manifestType.addManifestLabel
         </span>
       </button>
     </div>
@@ -601,15 +639,34 @@ exports[`ManifestSelection tests renders Manifest Listview with connectors Data 
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
     >
       <button
-        class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
+        class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
         data-test-id="addManifest"
         id="add-manifest"
         type="button"
       >
         <span
+          class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+          icon="plus"
+        >
+          <svg
+            data-icon="plus"
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+          >
+            <desc>
+              plus
+            </desc>
+            <path
+              d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+        <span
           class="bp3-button-text"
         >
-          pipelineSteps.serviceTab.manifestList.addManifest
+          pipeline.manifestType.addManifestLabel
         </span>
       </button>
     </div>
@@ -636,15 +693,34 @@ exports[`ManifestSelection tests renders Manifest Listview with overrideSetIdent
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
     >
       <button
-        class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
+        class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
         data-test-id="addManifest"
         id="add-manifest"
         type="button"
       >
         <span
+          class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+          icon="plus"
+        >
+          <svg
+            data-icon="plus"
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+          >
+            <desc>
+              plus
+            </desc>
+            <path
+              d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+        <span
           class="bp3-button-text"
         >
-          pipelineSteps.serviceTab.manifestList.addManifest
+          pipeline.manifestType.addManifestLabel
         </span>
       </button>
     </div>
@@ -671,15 +747,34 @@ exports[`ManifestSelection tests renders Manifest Listview without crashing 1`] 
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
     >
       <button
-        class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
+        class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
         data-test-id="addManifest"
         id="add-manifest"
         type="button"
       >
         <span
+          class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+          icon="plus"
+        >
+          <svg
+            data-icon="plus"
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+          >
+            <desc>
+              plus
+            </desc>
+            <path
+              d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+        <span
           class="bp3-button-text"
         >
-          pipelineSteps.serviceTab.manifestList.addManifest
+          pipeline.manifestType.addManifestLabel
         </span>
       </button>
     </div>
@@ -1403,15 +1498,34 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
         class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
       >
         <button
-          class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
+          class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
           data-test-id="addManifest"
           id="add-manifest"
           type="button"
         >
           <span
+            class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+            icon="plus"
+          >
+            <svg
+              data-icon="plus"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+            >
+              <desc>
+                plus
+              </desc>
+              <path
+                d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          <span
             class="bp3-button-text"
           >
-            pipelineSteps.serviceTab.manifestList.addManifest
+            pipeline.manifestType.addManifestLabel
           </span>
         </button>
       </div>
@@ -2136,15 +2250,34 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
         class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
       >
         <button
-          class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
+          class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
           data-test-id="addManifest"
           id="add-manifest"
           type="button"
         >
           <span
+            class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+            icon="plus"
+          >
+            <svg
+              data-icon="plus"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+            >
+              <desc>
+                plus
+              </desc>
+              <path
+                d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          <span
             class="bp3-button-text"
           >
-            pipelineSteps.serviceTab.manifestList.addManifest
+            pipeline.manifestType.addManifestLabel
           </span>
         </button>
       </div>
@@ -2175,15 +2308,34 @@ exports[`ManifestSelection tests renders without crashing 1`] = `
         class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
       >
         <button
-          class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
+          class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
           data-test-id="addManifest"
           id="add-manifest"
           type="button"
         >
           <span
+            class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+            icon="plus"
+          >
+            <svg
+              data-icon="plus"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+            >
+              <desc>
+                plus
+              </desc>
+              <path
+                d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          <span
             class="bp3-button-text"
           >
-            pipelineSteps.serviceTab.manifestList.addManifest
+            pipeline.manifestType.addManifestLabel
           </span>
         </button>
       </div>

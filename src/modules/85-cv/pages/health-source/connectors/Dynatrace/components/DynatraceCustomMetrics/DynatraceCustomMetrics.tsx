@@ -19,7 +19,7 @@ import {
   MultiTypeInputType
 } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
-import { useGetAllDynatraceServiceMetrics, useGetDynatraceSampleData, useGetMetricPacks } from 'services/cv'
+import { useGetAllDynatraceServiceMetrics, useGetDynatraceSampleData } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSourceCardHeader/SetupSourceCardHeader'
@@ -48,13 +48,12 @@ export default function DynatraceCustomMetrics(props: DynatraceCustomMetricsProp
     selectedServiceId,
     formikSetField,
     isTemplate,
-    expressions
+    expressions,
+    metricPackResponse
   } = props
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const metricPackResponse = useGetMetricPacks({
-    queryParams: { projectIdentifier, orgIdentifier, accountId, dataSourceType: 'DYNATRACE' }
-  })
+
   const [dynatraceGroupNames, setDynatraceGroupNames] = useState<SelectOption[]>(
     initializeGroupNames(mappedMetrics, getString)
   )
@@ -221,6 +220,7 @@ export default function DynatraceCustomMetrics(props: DynatraceCustomMetricsProp
             summary={getString('cv.monitoringSources.assign')}
             details={
               <SelectHealthSourceServices
+                key={metricValues.identifier}
                 values={{
                   sli: !!metricValues.sli,
                   healthScore: !!metricValues.healthScore,

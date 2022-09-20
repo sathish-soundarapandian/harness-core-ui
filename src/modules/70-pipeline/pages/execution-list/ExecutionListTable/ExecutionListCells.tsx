@@ -6,10 +6,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Checkbox } from '@blueprintjs/core'
+import { Checkbox, Classes } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
-import { Avatar, Icon, Layout, TagsPopover, Text } from '@harness/uicore'
-import { get, isEmpty, omit } from 'lodash-es'
+import { Avatar, Button, ButtonVariation, Icon, Layout, TagsPopover, Text } from '@harness/uicore'
+import { get, isEmpty } from 'lodash-es'
 import defaultTo from 'lodash-es/defaultTo'
 import React, { useRef } from 'react'
 import { Link, useParams } from 'react-router-dom'
@@ -30,14 +30,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
-import {
-  hasCDStage,
-  hasCIStage,
-  hasOverviewDetail,
-  hasServiceDetail,
-  hasSTOStage,
-  StageType
-} from '@pipeline/utils/stageHelpers'
+import { hasCDStage, hasCIStage, hasOverviewDetail, hasServiceDetail, StageType } from '@pipeline/utils/stageHelpers'
 import {
   ServiceExecutionsCard,
   DashboardSelected
@@ -46,9 +39,6 @@ import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactor
 import type { EnvironmentDeploymentsInfo, ServiceDeploymentInfo } from 'services/cd-ng'
 import executionFactory from '@pipeline/factories/ExecutionFactory'
 import { AUTO_TRIGGERS, CardVariant } from '@pipeline/utils/constants'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { getRouteProps } from '@pipeline/pages/pipeline-list/PipelineListUtils'
 import type { ExecutionListColumnActions } from './ExecutionListTable'
 import css from './ExecutionListTable.module.scss'
 
@@ -92,7 +82,13 @@ export const RowSelectCell: CellType = ({ row }) => {
 export const ToggleAccordionCell: Renderer<{ row: UseExpandedRowProps<PipelineExecutionSummary> }> = ({ row }) => {
   return (
     <Layout.Horizontal>
-      <Icon name={row.isExpanded ? 'chevron-down' : 'chevron-right'} {...row.getToggleRowExpandedProps()} />
+      <Button
+        {...row.getToggleRowExpandedProps()}
+        color={Color.GREY_600}
+        icon={row.isExpanded ? 'chevron-down' : 'chevron-right'}
+        variation={ButtonVariation.ICON}
+        iconProps={{ size: 19 }}
+      />
     </Layout.Horizontal>
   )
 }
@@ -100,20 +96,9 @@ export const ToggleAccordionCell: Renderer<{ row: UseExpandedRowProps<PipelineEx
 export const PipelineNameCell: CellType = ({ row }) => {
   const data = row.original
   const { runSequence, planExecutionId = '', name, pipelineIdentifier: rowDataPipelineIdentifier = '' } = data
-  const { getString } = useStrings()
   const pathParams = useParams<PipelineType<PipelinePathProps>>()
   const { orgIdentifier, projectIdentifier, accountId, pipelineIdentifier, module } = pathParams
   const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
-
-  const toPipelineStudio = routes.toPipelineStudio(
-    getRouteProps(
-      { ...pathParams, source },
-      {
-        ...omit(data, 'tags'),
-        identifier: pipelineIdentifier || rowDataPipelineIdentifier
-      }
-    )
-  )
 
   const toExecutionPipelineView = routes.toExecutionPipelineView({
     orgIdentifier,
@@ -126,30 +111,24 @@ export const PipelineNameCell: CellType = ({ row }) => {
   })
 
   return (
-    <Layout.Vertical spacing="xsmall">
-      <Layout.Horizontal spacing="small">
-        <Link to={toPipelineStudio}>
-          <Text font={{ variation: FontVariation.LEAD }} color={Color.PRIMARY_7} lineClamp={1}>
-            {name}
-          </Text>
-        </Link>
-        {!isEmpty(data?.tags) && (
-          <TagsPopover
-            iconProps={{ size: 14 }}
-            className={css.tags}
-            popoverProps={{ wrapperTagName: 'div', targetTagName: 'div' }}
-            tags={defaultTo(data?.tags, []).reduce((val, tag) => {
-              return Object.assign(val, { [tag.key]: tag.value })
-            }, {} as { [key: string]: string })}
-          />
-        )}
-      </Layout.Horizontal>
+    <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>
       <Link to={toExecutionPipelineView}>
-        <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.PRIMARY_7} lineClamp={1}>
-          {`${getString('pipeline.executionId')}: ${runSequence}`}
+        <Text font={{ variation: FontVariation.LEAD }} color={Color.PRIMARY_7} lineClamp={2}>
+          {name}: {runSequence}
         </Text>
       </Link>
-    </Layout.Vertical>
+      {!isEmpty(data?.tags) && (
+        <TagsPopover
+          iconProps={{ size: 12, color: Color.GREY_600 }}
+          popoverProps={{ className: Classes.DARK }}
+          className={css.tags}
+          tags={defaultTo(data?.tags, []).reduce((_tags, tag) => {
+            _tags[tag.key] = tag.value
+            return _tags
+          }, {} as { [key: string]: string })}
+        />
+      )}
+    </Layout.Horizontal>
   )
 }
 
@@ -291,6 +270,7 @@ export const MenuCell: CellType = ({ row, column }) => {
         canExecute={canExecute}
         canRetry={data.canRetry}
         modules={data.modules}
+        menuOnlyActions
       />
     </div>
   )
@@ -298,17 +278,15 @@ export const MenuCell: CellType = ({ row, column }) => {
 
 export const TriggerInfoCell: CellType = ({ row }) => {
   const data = row.original
+
   const IS_SERVICEDETAIL = hasServiceDetail(data)
   const IS_OVERVIEWPAGE = hasOverviewDetail(data)
   const cdInfo = executionFactory.getCardInfo(StageType.DEPLOY)
   const ciInfo = executionFactory.getCardInfo(StageType.BUILD)
-  const stoInfo = executionFactory.getCardInfo(StageType.SECURITY)
   const variant = CardVariant.Default
-  const SECURITY = useFeatureFlag(FeatureFlag.SECURITY)
 
   const showCI = !!(ciInfo && hasCIStage(data))
   const showCD = !!(cdInfo && hasCDStage(data))
-  const showSTO = !!(SECURITY && stoInfo && hasSTOStage(data))
 
   return (
     <Layout.Vertical spacing="small" className={css.triggerInfoCell}>
@@ -340,15 +318,6 @@ export const TriggerInfoCell: CellType = ({ row }) => {
             caller={IS_SERVICEDETAIL ? DashboardSelected.SERVICEDETAIL : DashboardSelected.OVERVIEW}
           />
         ))}
-
-      {showSTO &&
-        stoInfo?.component &&
-        React.createElement<ExecutionCardInfoProps<PipelineExecutionSummary>>(stoInfo.component, {
-          data: defaultTo(data, {}),
-          nodeMap: defaultTo(data?.layoutNodeMap, {}),
-          startingNodeId: defaultTo(data?.startingNodeId, ''),
-          variant
-        })}
     </Layout.Vertical>
   )
 }

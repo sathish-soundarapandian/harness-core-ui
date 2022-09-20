@@ -83,7 +83,9 @@ export const renderConnectorAndRepoName = ({
   connectorAndRepoNamePath,
   allowableTypes,
   codeBaseInputFieldFormName,
-  onConnectorChange
+  onConnectorChange,
+  setConnectorType,
+  connectorType
 }: {
   values: { [key: string]: any }
   setFieldValue: (field: string, value: any) => void
@@ -109,6 +111,8 @@ export const renderConnectorAndRepoName = ({
   allowableTypes: AllowedTypes // expression can be used for repoName
   codeBaseInputFieldFormName?: { [key: string]: string }
   onConnectorChange?: () => void // refetch onEdit connector
+  setConnectorType?: Dispatch<SetStateAction<string>>
+  connectorType?: string // required for getCompleteConnectorUrl on initial Add CI Stage
 }): JSX.Element => {
   const connectorFieldName = connectorAndRepoNamePath ? `${connectorAndRepoNamePath}.connectorRef` : 'connectorRef'
   const connectorValue = get(values, connectorFieldName)
@@ -151,6 +155,7 @@ export const renderConnectorAndRepoName = ({
               connectorRefType,
               setConnectionType,
               setConnectorUrl,
+              setConnectorType,
               setFieldValue,
               codeBaseInputFieldFormName,
               onConnectorChange
@@ -208,7 +213,7 @@ export const renderConnectorAndRepoName = ({
                 {getCompleteConnectorUrl({
                   partialUrl: connectorUrl,
                   repoName: repoNameValue,
-                  connectorType: get(connector, 'type'),
+                  connectorType: get(connector, 'type') || connectorType,
                   gitAuthProtocol: get(connector, 'spec.authentication.type')
                 })}
               </Text>

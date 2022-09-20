@@ -41,6 +41,7 @@ import { AppDynamicsMonitoringSourceFieldNames } from '../../AppDHealthSource.co
 import { PATHTYPE } from './AppDCustomMetricForm.constants'
 import {
   checkRuntimeFields,
+  getAllowedTypeForCompleteMetricPath,
   getBasePathValue,
   getDerivedCompleteMetricPath,
   getMetricPathValue,
@@ -221,12 +222,17 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
                   />
                 ) : (
                   <FormInput.MultiTextInput
-                    key={formikValues.metricIdentifier}
+                    key={formikValues.metricIdentifier + formikValues.appDTier + formikValues.appdApplication}
                     className={css.fullPath}
                     name={PATHTYPE.CompleteMetricPath}
                     label={''}
                     multiTextInputProps={{
-                      expressions
+                      expressions,
+                      allowableTypes: getAllowedTypeForCompleteMetricPath({
+                        appDTier: formikValues?.appDTier,
+                        appdApplication: formikValues?.appdApplication,
+                        connectorIdentifier
+                      })
                     }}
                     onChange={(_v, _type, multiType) => {
                       if (completeMetricPathType !== multiType) {

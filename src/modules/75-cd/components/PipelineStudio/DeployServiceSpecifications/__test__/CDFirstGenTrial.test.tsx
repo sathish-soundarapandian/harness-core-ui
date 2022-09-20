@@ -30,14 +30,16 @@ describe('CDFirstGenTrial Test cases', () => {
         <CDFirstGenTrial
           accountId="TEST_ACCOUNT_ID"
           selectedDeploymentType={{
-            label: 'serviceDeploymentTypes.awsLambda',
+            label: 'pipeline.serviceDeploymentTypes.awsLambda',
             icon: 'app-aws-lambda',
             value: 'awsLambda'
           }}
         />
       </TestWrapper>
     )
-    expect(getByText('serviceDeploymentTypes.awsLambda is available on Harness CD First Generation')).toBeDefined()
+    expect(
+      getByText('pipeline.serviceDeploymentTypes.awsLambda is available on Harness CD First Generation')
+    ).toBeDefined()
     expect(container).toMatchSnapshot()
     const launchTextBtn = getByText('cd.cdLaunchText')
     fireEvent.click(launchTextBtn)

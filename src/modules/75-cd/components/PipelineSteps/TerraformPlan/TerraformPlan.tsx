@@ -52,7 +52,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 
 import { useStrings } from 'framework/strings'
 
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 
@@ -341,6 +341,7 @@ function TerraformPlanWidget(
                       setFieldValue('timeout', value)
                     }}
                     isReadonly={readonly}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
                   />
                 )}
               </div>
@@ -372,6 +373,7 @@ function TerraformPlanWidget(
                     variableName="spec.provisionerIdentifier"
                     showRequiredField={false}
                     showDefaultField={false}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                     showAdvanced={true}
                     onChange={
                       /* istanbul ignore next */ value => {
@@ -466,6 +468,7 @@ function TerraformPlanWidget(
                             variableName="spec.configuration.workspace"
                             showRequiredField={false}
                             showDefaultField={false}
+                            allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                             showAdvanced={true}
                             onChange={value => {
                               /* istanbul ignore else */

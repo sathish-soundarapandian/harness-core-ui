@@ -25,9 +25,9 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { JobDetails, useGetJobDetailsForJenkins, useGetJobParametersForJenkins } from 'services/cd-ng'
 import { MultiTypeFieldSelector } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import type { jobParameterInterface, SubmenuSelectOption } from './types'
 import { resetForm } from './helper'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -197,7 +197,7 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
       <FormikForm className={css.removeBpPopoverWrapperTopMargin}>
         {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME && (
           <div className={cx(css.formGroup, css.sm)}>
-            <FormMultiTypeDurationField
+            <TimeoutFieldInputSetView
               multiTypeDurationProps={{
                 enableConfigureOptions: false,
                 allowableTypes,
@@ -207,6 +207,8 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
               label={getString('pipelineSteps.timeoutLabel')}
               name={`${prefix}timeout`}
               disabled={readonly}
+              fieldPath={'timeout'}
+              template={template}
             />
           </div>
         )}

@@ -8,5 +8,6 @@
 export enum ALLOWED_VALUES_TYPE {
   TIME = 'TIME',
   URL = 'URL',
+  TEXT = 'TEXT',
   MULTI_SELECT = 'MULTI_SELECT'
 }

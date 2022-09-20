@@ -25,6 +25,9 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import NoResultsView from './views/NoResultsView/NoResultsView'
+import { NewFreezeWindowButton } from './views/NewFreezeWindowButton/NewFreezeWindowButton'
+import FreezeWindowsView from './views/FreezeWindowsView/FreezeWindowsView'
+import ResultsViewHeader from './views/ResultsViewHeader/ResultsViewHeader'
 // import { useUpdateQueryParams } from '@common/hooks'
 import css from './FreezeWindowsPage.module.scss'
 
@@ -49,13 +52,16 @@ export default function FreezeWindowsPage(): React.ReactElement {
     setGitFilter(null)
   }, [searchRef.current, setGitFilter]) // updateQueryParams,
 
+  const loading = false
+  const hasListContent = false
+
   return (
     <>
       <Page.Header
         title={
           <div className="ng-tooltip-native">
             <h2 data-tooltip-id="freezeWindowsPageHeading"> {getString('common.freezeWindows')}</h2>
-            <HarnessDocTooltip tooltipId="freezeWindowPageHeading" useStandAlone={true} />
+            <HarnessDocTooltip tooltipId="freezeWindowsPageHeading" useStandAlone={true} />
           </div>
         }
         breadcrumbs={
@@ -68,6 +74,7 @@ export default function FreezeWindowsPage(): React.ReactElement {
       <Page.SubHeader className={css.freeeWindowsPageSubHeader}>
         <Layout.Horizontal spacing={'medium'}>
           {/*<NewTemplatePopover />*/}
+          <NewFreezeWindowButton />
           <DropDown
             onChange={() => {
               // todo
@@ -109,12 +116,24 @@ export default function FreezeWindowsPage(): React.ReactElement {
         </Layout.Horizontal>
       </Page.SubHeader>
 
-      <Page.Body>
-        <NoResultsView
-          hasSearchParam={!!searchParam} //  || !!templateType
-          onReset={reset}
-          text={getString('freezeWindows.freezeWindowsPage.noFreezeWindows', { scope })}
-        />
+      <Page.Body
+        loading={loading}
+        // error={(error?.data as Error)?.message || error?.message}
+        className={css.freezeWindowsPageBody}
+        // retryOnError={onRetry}
+      >
+        {!loading && hasListContent ? (
+          <>
+            <ResultsViewHeader />
+            <FreezeWindowsView data={[]} />
+          </>
+        ) : (
+          <NoResultsView
+            hasSearchParam={!!searchParam} //  || !!quick filter
+            onReset={reset}
+            text={getString('freezeWindows.freezeWindowsPage.noFreezeWindows', { scope })}
+          />
+        )}
       </Page.Body>
     </>
   )

@@ -47,6 +47,16 @@ exports[`AccountSideNav AccountSideNav simple snapshot test 1`] = `
     </a>
     <a
       class="link"
+      href="/account/undefined/settings/audit-trail"
+    >
+      <p
+        class="StyledProps--font StyledProps--main text"
+      >
+        common.auditTrail
+      </p>
+    </a>
+    <a
+      class="link"
       href="/account/undefined/settings/organizations"
     >
       <p
@@ -108,6 +118,16 @@ exports[`AccountSideNav Disable launch button for community edition 1`] = `
         class="StyledProps--font StyledProps--main text"
       >
         accessControl
+      </p>
+    </a>
+    <a
+      class="link"
+      href="/account/undefined/settings/audit-trail"
+    >
+      <p
+        class="StyledProps--font StyledProps--main text"
+      >
+        common.auditTrail
       </p>
     </a>
     <a

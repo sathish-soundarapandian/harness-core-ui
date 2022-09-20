@@ -689,3 +689,14 @@ export const newRelicServiceResponse = {
 
 export const countOfServiceAPI =
   '/cv/api/monitored-service/count-of-services?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1'
+
+export const validations = {
+  groupName: 'Group Name is required',
+  metricPack: 'Please select atleast one metric pack',
+  assign: 'One selection is required.',
+  query: 'Query is required.',
+  metric: 'Metric is required',
+  serviceInstance: 'Service Instance is required',
+  serviceInstanceIdentifier: 'Service Instance Identifier is required.',
+  riskCategory: 'Risk Category is required.'
+}

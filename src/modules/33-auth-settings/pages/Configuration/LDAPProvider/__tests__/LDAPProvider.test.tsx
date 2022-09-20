@@ -41,7 +41,31 @@ const mockLdapLoginTestFail = jest.fn().mockReturnValue(
   Promise.resolve({
     resource: {
       status: 'FAILURE',
-      message: 'Invalid Credentials'
+      message: 'Invalid Credentials',
+      responseMessages: [
+        {
+          code: 'HINT',
+          level: 'INFO',
+          message:
+            'Please check user email, password entered for Ldap test/enable authentication for the configured Ldap settings',
+          exception: null,
+          failureTypes: []
+        },
+        {
+          code: 'EXPLANATION',
+          level: 'INFO',
+          message: 'The email, password value supplied for the configured Ldap settings is incorrect',
+          exception: null,
+          failureTypes: []
+        },
+        {
+          code: 'GENERAL_ERROR',
+          level: 'ERROR',
+          message: 'Issue with Ldap Test Authentication',
+          exception: null,
+          failureTypes: []
+        }
+      ]
     }
   })
 )
@@ -54,6 +78,7 @@ const mockLdapLoginDelegateFailure = jest.fn().mockReturnValue(
     }
   })
 )
+
 const mockUpdateAuthMechanism = jest.fn().mockReturnValue(
   Promise.resolve({
     resource: {
@@ -61,6 +86,7 @@ const mockUpdateAuthMechanism = jest.fn().mockReturnValue(
     }
   })
 )
+
 const mockUpdateAuthMechanismFailure = jest.fn().mockReturnValue(
   Promise.resolve({
     responseMessages: [
@@ -279,7 +305,7 @@ describe('LDAP Provider', () => {
           mutate: mockLdapLoginTest
         } as any)
     )
-    const { getByTestId, getByText } = render(
+    const { getByTestId, getByText, getAllByText } = render(
       <TestWrapper pathParams={{ accountId: 'testAcc' }} defaultFeatureFlagValues={{ NG_ENABLE_LDAP_CHECK: true }}>
         <LDAPProvider
           authSettings={mockAuthSettingsResponse as AuthenticationSettingsResponse}
@@ -307,7 +333,7 @@ describe('LDAP Provider', () => {
     await act(async () => {
       testLdapConfigBtn && fireEvent.click(testLdapConfigBtn)
     })
-    await waitFor(() => expect(getByText('authSettings.ldap.ldapTestSuccessful')).not.toBeNull())
+    await waitFor(() => expect(getAllByText('authSettings.ldap.ldapTestSuccessful')).toBeDefined())
   })
   test('LDAP Provider test config fail', async () => {
     jest.spyOn(cdngServices, 'usePostLdapAuthenticationTest').mockImplementation(

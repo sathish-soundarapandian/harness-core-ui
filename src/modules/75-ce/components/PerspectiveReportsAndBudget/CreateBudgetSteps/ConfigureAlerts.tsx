@@ -418,6 +418,8 @@ const Threshold = (props: ThresholdProps): JSX.Element => {
         value={BASED_ON_OPTIONS.find(op => op.value === value.basedOn)}
         items={BASED_ON_OPTIONS}
         name={`alertThresholds.${idx}.basedOn`}
+        usePortal
+        selectProps={{ popoverClassName: css.selectDropdown }}
       />
       <Text className={css.pushdown7}>exceeds</Text>
       <FormInput.Text
@@ -428,6 +430,7 @@ const Threshold = (props: ThresholdProps): JSX.Element => {
       <Container>
         <Container className={css.sendAlertTo}>
           <Select
+            usePortal
             items={alertChannelOptions}
             allowCreatingNewItems={false}
             value={alertChannelOptions[isSlackChannel ? 1 : 0]}
@@ -437,6 +440,7 @@ const Threshold = (props: ThresholdProps): JSX.Element => {
             }}
             className={css.alertChannelsInput}
             name={`alertThresholds.${idx}.notificationChannel`}
+            popoverClassName={css.selectDropdown}
           />
           <TagInput
             addOnBlur

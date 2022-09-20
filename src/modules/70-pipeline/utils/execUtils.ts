@@ -35,6 +35,7 @@ interface ProcessParalellNodeArgs {
   rootNodes: Array<PipelineGraphState>
   items: Array<PipelineGraphState>
   id: string
+  isNestedGroup?: boolean
 }
 
 interface StepPipelineGraphState {
@@ -135,7 +136,8 @@ const processParallelNodeData = ({
   nodeMap,
   nodeAdjacencyListMap,
   id,
-  rootNodes
+  rootNodes,
+  isNestedGroup = false
 }: ProcessParalellNodeArgs): void => {
   const [parentNodeId, ...childNodeIds] = nodeAdjacencyListMap?.[id].children as string[]
   const parentNodeData = nodeMap?.[parentNodeId]
@@ -156,6 +158,7 @@ const processParallelNodeData = ({
       ...iconData,
       ...(parentNodeData?.stepType === NodeType.STEP_GROUP
         ? {
+            isNestedGroup,
             stepGroup: {
               name: parentNodeData?.name || /* istanbul ignore next */ '',
               identifier: parentNodeData?.identifier,
@@ -394,7 +397,7 @@ export const processNodeDataV1 = (
     const nodeData = nodeMap?.[item]
     const isRollback = nodeData?.name?.endsWith(StepGroupRollbackIdentifier) ?? false
     if (nodeData?.stepType === NodeType.FORK) {
-      processParallelNodeData({ items, id: item, nodeAdjacencyListMap, nodeMap, rootNodes })
+      processParallelNodeData({ items, id: item, nodeAdjacencyListMap, nodeMap, rootNodes, isNestedGroup: true })
     } else if (
       nodeData?.stepType === NodeType.STEP_GROUP ||
       nodeData?.stepType === NodeType.NG_SECTION ||
@@ -680,6 +683,7 @@ ProcessGroupItemArgs): void => {
   }
   items.push(finalDataItem)
 }
+
 interface ProcessNextNodesParams {
   nextIds: string[]
   nodeMap: ExecutionGraph['nodeMap']
@@ -699,7 +703,7 @@ export const processNextNodes = ({
     const nodeDataNext = nodeMap?.[id]
     const isRollbackNext = nodeDataNext?.name?.endsWith(StepGroupRollbackIdentifier) ?? false
     if (nodeDataNext?.stepType === NodeType.FORK) {
-      processParallelNodeData({ items: result, id, nodeAdjacencyListMap, nodeMap, rootNodes })
+      processParallelNodeData({ items: result, id, nodeAdjacencyListMap, nodeMap, rootNodes, isNestedGroup })
     } else if (nodeDataNext?.stepType === NodeType.STEP_GROUP || (isRollbackNext && nodeDataNext)) {
       processGroupItem({ items: result, id, isRollbackNext, nodeMap, nodeAdjacencyListMap, rootNodes, isNestedGroup })
     } else {

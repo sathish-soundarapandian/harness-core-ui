@@ -33,11 +33,12 @@ import {
   VariableMergeServiceResponse,
   StepElementConfig
 } from 'services/pipeline-ng'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { useStrings } from 'framework/strings'
 import {
-  DurationInputFieldForInputSet,
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -45,12 +46,12 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { PipelineStep, StepProps } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 
 import type { GitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { StringsMap } from 'stringTypes'
 import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
-import css from './Barrier.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
@@ -186,6 +187,7 @@ function BarrierWidget(props: BarrierProps, formikRef: StepFormikFowardRef<Barri
                       setFieldValue('timeout', value)
                     }}
                     isReadonly={props.isReadonly}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
                   />
                 )}
               </div>
@@ -206,7 +208,7 @@ function BarrierWidget(props: BarrierProps, formikRef: StepFormikFowardRef<Barri
                   }}
                 />
                 {getMultiTypeFromValue(formik?.values?.spec?.barrierRef) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
+                  <SelectConfigureOptions
                     value={formik?.values?.spec?.barrierRef as string}
                     type={getString('string')}
                     variableName="spec.barrierRef"
@@ -215,6 +217,8 @@ function BarrierWidget(props: BarrierProps, formikRef: StepFormikFowardRef<Barri
                     showAdvanced={true}
                     onChange={value => formik?.setFieldValue('spec.barrierRef', value)}
                     isReadonly={props.isReadonly}
+                    options={barriers}
+                    loading={false}
                   />
                 )}
               </div>
@@ -226,11 +230,12 @@ function BarrierWidget(props: BarrierProps, formikRef: StepFormikFowardRef<Barri
   )
 }
 
-function BarrierInputStep({ inputSetData }: BarrierProps): React.ReactElement {
+function BarrierInputStep({ inputSetData, allowableTypes }: BarrierProps): React.ReactElement {
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
     PipelineType<InputSetPathProps> & { accountId: string }
   >()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { expressions } = useVariablesExpression()
 
   const [pipeline, setPipeline] = React.useState<{ pipeline: PipelineInfoConfig } | undefined>()
   const { data: pipelineResponse, loading } = useGetPipeline({
@@ -253,26 +258,39 @@ function BarrierInputStep({ inputSetData }: BarrierProps): React.ReactElement {
   return (
     <>
       {getMultiTypeFromValue(inputSetData?.template?.spec?.barrierRef) === MultiTypeInputType.RUNTIME && (
-        <FormInput.Select
-          selectProps={{
-            addClearBtn: true,
-            allowCreatingNewItems: true
-          }}
-          disabled={loading}
-          className={css.width50}
-          items={barriers}
-          name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}`}.spec.barrierRef`}
-          key="barrierRef"
-          label={getString('pipeline.barrierStep.barrierReference')}
-        />
+        <div className={cx(stepCss.formGroup, stepCss.sm)}>
+          <SelectInputSetView
+            label={getString('pipeline.barrierStep.barrierReference')}
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}`}.spec.barrierRef`}
+            useValue={true}
+            fieldPath={'spec.barrierRef'}
+            template={inputSetData?.template}
+            selectItems={barriers}
+            multiTypeInputProps={{
+              expressions,
+              disabled: inputSetData?.readonly,
+              allowableTypes
+            }}
+            disabled={loading}
+          />
+        </div>
       )}
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
-        <DurationInputFieldForInputSet
-          label={getString('pipelineSteps.timeoutLabel')}
-          name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
-          disabled={inputSetData?.readonly}
-          className={css.width50}
-        />
+        <div className={cx(stepCss.formGroup, stepCss.sm)}>
+          <TimeoutFieldInputSetView
+            label={getString('pipelineSteps.timeoutLabel')}
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
+            disabled={inputSetData?.readonly}
+            multiTypeDurationProps={{
+              enableConfigureOptions: false,
+              expressions,
+              disabled: inputSetData?.readonly,
+              allowableTypes
+            }}
+            fieldPath={'timeout'}
+            template={inputSetData?.template}
+          />
+        </div>
       )}
     </>
   )

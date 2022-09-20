@@ -25,6 +25,10 @@ import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEdit
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import { global401HandlerUtils } from '@common/utils/global401HandlerUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { usePermission } from '@rbac/hooks/usePermission'
+import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
+import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
+import LevelUpBanner from '@common/components/FeatureWarning/LevelUpBanner'
 import ChildAppError from './ChildAppError'
 import type { ChildAppProps, Scope } from './index'
 
@@ -87,16 +91,20 @@ export class ChildAppMounter<T = never> extends React.Component<
           components={{
             RbacButton,
             RbacMenuItem,
+            RBACTooltip,
             NGBreadcrumbs,
             MonacoEditor,
             YAMLBuilder,
-            MonacoDiffEditor
+            MonacoDiffEditor,
+            LevelUpBanner
           }}
           hooks={{
             useDocumentTitle,
             useTelemetry,
             useLogout,
-            useRBACError
+            useRBACError,
+            usePermission,
+            useCreateConnectorModal
           }}
         >
           {children}

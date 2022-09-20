@@ -342,7 +342,7 @@ function ConfigFilesListView({
       <Dialog onClose={onClose} {...DIALOG_PROPS} className={cx(css.modal, Classes.DIALOG)}>
         <div className={css.createConnectorWizard}>
           <ConfigFilesWizard
-            types={allowedConfigFilesTypes[deploymentType]}
+            stores={allowedConfigFilesTypes[deploymentType]}
             newConnectorView={newConnectorView}
             expressions={expressions}
             allowableTypes={allowableTypes}
@@ -353,8 +353,6 @@ function ConfigFilesListView({
             lastSteps={getLastSteps()}
             deploymentType={deploymentType}
             iconsProps={getIconProps()}
-            selectedConfig={selectedConfig}
-            changeConfigFileType={setSelectedConfig}
             isReadonly={isReadonly}
             isNewFile={isNewFile}
             configFileIndex={configFileIndex}

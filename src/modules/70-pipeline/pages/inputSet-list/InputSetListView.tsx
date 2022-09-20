@@ -301,6 +301,10 @@ export function InputSetListView({
   const { getString } = useStrings()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
+  const totalItems = get(data, 'totalItems', 0)
+  const pageSize = get(data, 'pageSize', 10)
+  const totalPages = get(data, 'totalPages', -1)
+  const pageIndex = get(data, 'pageIndex', 0)
   const columns: CustomColumn<InputSetLocal>[] = React.useMemo(
     () => [
       {
@@ -362,15 +366,13 @@ export function InputSetListView({
     <TableV2<InputSetLocal>
       className={css.table}
       columns={columns}
-      data={data?.content || /* istanbul ignore next */ []}
+      data={get(data, 'content', [])}
       onRowClick={item => !isPipelineInvalid && pipelineHasRuntimeInputs && goToInputSetDetail?.(item)}
-      pagination={{
-        itemCount: data?.totalItems || /* istanbul ignore next */ 0,
-        pageSize: data?.pageSize || /* istanbul ignore next */ 10,
-        pageCount: data?.totalPages || /* istanbul ignore next */ -1,
-        pageIndex: data?.pageIndex || /* istanbul ignore next */ 0,
-        gotoPage
-      }}
+      pagination={
+        totalItems > pageSize
+          ? { itemCount: totalItems, pageSize: pageSize, pageCount: totalPages, pageIndex: pageIndex, gotoPage }
+          : undefined
+      }
     />
   )
 }

@@ -198,37 +198,43 @@ const UserGroupDetails: React.FC = () => {
                 </Layout.Horizontal>
               ) : null}
             </Layout.Horizontal>
-            <Layout.Horizontal className={cx({ [css.buttonPadding]: userGroup.ssoLinked })}>
-              <ManagePrincipalButton
-                disabled={userGroup.externallyManaged || userGroupInherited}
-                text={
-                  userGroup.ssoLinked
-                    ? getString('rbac.userDetails.linkToSSOProviderModal.delinkLabel')
-                    : getString('rbac.userDetails.linkToSSOProviderModal.linkLabel')
-                }
-                icon={userGroup.ssoLinked ? 'cross' : 'link'}
-                variation={ButtonVariation.LINK}
-                onClick={() => {
-                  openLinkToSSOProviderModal(userGroup)
-                }}
-                tooltip={ssoBtnTooltipText}
-                resourceType={ResourceType.USERGROUP}
-                resourceIdentifier={userGroupIdentifier}
-              />
-              <ManagePrincipalButton
-                disabled={userGroup.ssoLinked || userGroup.externallyManaged || userGroupInherited}
-                tooltip={membersBtnTooltipTextFormatted}
-                text={getString('common.plusNumber', { number: getString('members') })}
-                variation={ButtonVariation.LINK}
-                onClick={() => {
-                  openUserGroupModal(userGroup, true)
-                }}
-                resourceType={ResourceType.USERGROUP}
-                resourceIdentifier={userGroupIdentifier}
-              />
-            </Layout.Horizontal>
+            {userGroup.harnessManaged ? null : (
+              <Layout.Horizontal className={cx({ [css.buttonPadding]: userGroup.ssoLinked })}>
+                <ManagePrincipalButton
+                  disabled={userGroup.externallyManaged || userGroupInherited}
+                  text={
+                    userGroup.ssoLinked
+                      ? getString('rbac.userDetails.linkToSSOProviderModal.delinkLabel')
+                      : getString('rbac.userDetails.linkToSSOProviderModal.linkLabel')
+                  }
+                  icon={userGroup.ssoLinked ? 'cross' : 'link'}
+                  variation={ButtonVariation.LINK}
+                  onClick={() => {
+                    openLinkToSSOProviderModal(userGroup)
+                  }}
+                  tooltip={ssoBtnTooltipText}
+                  resourceType={ResourceType.USERGROUP}
+                  resourceIdentifier={userGroupIdentifier}
+                />
+                <ManagePrincipalButton
+                  disabled={userGroup.ssoLinked || userGroup.externallyManaged || userGroupInherited}
+                  tooltip={membersBtnTooltipTextFormatted}
+                  text={getString('common.plusNumber', { number: getString('members') })}
+                  variation={ButtonVariation.LINK}
+                  onClick={() => {
+                    openUserGroupModal(userGroup, true)
+                  }}
+                  resourceType={ResourceType.USERGROUP}
+                  resourceIdentifier={userGroupIdentifier}
+                />
+              </Layout.Horizontal>
+            )}
           </Layout.Horizontal>
-          <MemberList ssoLinked={userGroup.ssoLinked} userGroupInherited={userGroupInherited} />
+          <MemberList
+            ssoLinked={userGroup.ssoLinked}
+            userGroupInherited={userGroupInherited}
+            managed={userGroup.harnessManaged}
+          />
         </Container>
         <Container width="50%" className={css.detailsContainer}>
           {!isCommunity && (

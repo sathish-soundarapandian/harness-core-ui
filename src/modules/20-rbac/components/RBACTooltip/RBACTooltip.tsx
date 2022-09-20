@@ -21,7 +21,7 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import type { StringsMap } from 'stringTypes'
 import css from './RBACTooltip.module.scss'
 
-interface Props {
+export interface RBACTooltipProps {
   permission: PermissionIdentifier
   resourceType: ResourceType
   resourceScope?: ResourceScope
@@ -29,7 +29,13 @@ interface Props {
   className?: string
 }
 
-const RBACTooltip: React.FC<Props> = ({ permission, resourceType, resourceScope, resourceTypeLabel, className }) => {
+const RBACTooltip: React.FC<RBACTooltipProps> = ({
+  permission,
+  resourceType,
+  resourceScope,
+  resourceTypeLabel,
+  className
+}) => {
   const { getString } = useStrings()
   const { selectedProject } = useAppStore()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()

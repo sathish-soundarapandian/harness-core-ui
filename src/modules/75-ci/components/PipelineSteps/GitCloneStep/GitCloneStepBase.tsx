@@ -33,12 +33,12 @@ import { useGetConnector, ConnectorInfoDTO } from 'services/cd-ng'
 import { getScopeFromValue, getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { Connectors } from '@connectors/constants'
+import type { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import { CIStepOptionalConfig } from '../CIStep/CIStepOptionalConfig'
 import { transformValuesFieldsConfig, getEditViewValidateFieldsConfig } from './GitCloneStepFunctionConfigs'
 import type { GitCloneStepProps, GitCloneStepData, GitCloneStepDataUI } from './GitCloneStep'
 import { CIStep } from '../CIStep/CIStep'
 import { getIsRepoNameRequired, useGetPropagatedStageById } from '../CIStep/StepUtils'
-import type { CIBuildInfrastructureType } from '../../../constants/Constants'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const GitCloneStepBase = (

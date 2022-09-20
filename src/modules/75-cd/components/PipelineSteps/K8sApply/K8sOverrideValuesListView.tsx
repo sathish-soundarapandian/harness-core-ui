@@ -125,7 +125,10 @@ function K8sOverrideValuesListView({
   const getLastStepInitialData = (): ManifestConfig => {
     const initValues = get(listOfManifests[manifestIndex], 'manifest', null)
     /* istanbul ignore next */
-    if (initValues?.type && initValues?.type !== selectedManifest) {
+    if (
+      (initValues?.type && initValues?.type !== selectedManifest) ||
+      get(initValues, 'spec.store.type') !== manifestStore
+    ) {
       return null as unknown as ManifestConfig
     }
     return initValues

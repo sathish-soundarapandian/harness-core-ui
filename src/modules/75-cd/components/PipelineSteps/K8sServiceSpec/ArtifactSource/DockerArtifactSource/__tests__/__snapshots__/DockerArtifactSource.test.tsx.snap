@@ -132,7 +132,7 @@ exports[`Docker Artifact Source tests snapshot test for Sidecar Docker artifact 
         >
           <div
             class="StyledProps--font StyledProps--main"
-            style="margin-bottom: 5px;"
+            data-test-id="connectorTooltip"
           >
             pipelineSteps.deploy.inputSet.artifactServer
           </div>

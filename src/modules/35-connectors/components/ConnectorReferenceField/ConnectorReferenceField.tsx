@@ -25,7 +25,7 @@ import {
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
-import { isEmpty } from 'lodash-es'
+import { isEmpty, merge } from 'lodash-es'
 import {
   Failure,
   ConnectorInfoDTO,
@@ -120,6 +120,7 @@ export interface ConnectorReferenceFieldProps extends Omit<IFormGroupProps, 'lab
   category?: GetConnectorListQueryParams['category']
   error?: string
   tooltipProps?: DataTooltipInterface
+  connectorFilterProperties?: ConnectorFilterProperties
 }
 
 export interface ConnectorReferenceDTO extends ConnectorInfoDTO {
@@ -433,7 +434,8 @@ export function getReferenceFieldProps({
   placeholder,
   getString,
   openConnectorModal,
-  setPagedConnectorData
+  setPagedConnectorData,
+  connectorFilterProperties
 }: GetReferenceFieldMethodProps): Omit<
   ReferenceSelectProps<ConnectorReferenceDTO>,
   'onChange' | 'onCancel' | 'pagination'
@@ -469,13 +471,16 @@ export function getReferenceFieldProps({
               pageIndex: page,
               pageSize: 10
             },
-            body: {
-              ...(!category && { types: type }),
-              category,
-              filterType: 'Connector',
-              projectIdentifier: scope === Scope.PROJECT ? [projectIdentifier as string] : undefined,
-              orgIdentifier: scope === Scope.PROJECT || scope === Scope.ORG ? [orgIdentifier as string] : undefined
-            } as ConnectorFilterProperties
+            body: merge(
+              {
+                ...(!category && { types: type }),
+                category,
+                filterType: 'Connector',
+                projectIdentifier: scope === Scope.PROJECT ? [projectIdentifier as string] : undefined,
+                orgIdentifier: scope === Scope.PROJECT || scope === Scope.ORG ? [orgIdentifier as string] : undefined
+              },
+              connectorFilterProperties
+            ) as ConnectorFilterProperties
           })
         : getConnectorListPromise({
             queryParams: {
@@ -605,6 +610,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     category,
     error,
     disabled,
+    connectorFilterProperties,
     ...rest
   } = props
 
@@ -811,7 +817,8 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     getString,
     category,
     openConnectorModal,
-    setPagedConnectorData
+    setPagedConnectorData,
+    connectorFilterProperties
   })
   return (
     <FormGroup

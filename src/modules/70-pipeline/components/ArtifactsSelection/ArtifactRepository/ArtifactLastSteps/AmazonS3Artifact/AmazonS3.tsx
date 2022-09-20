@@ -45,7 +45,7 @@ import {
   getConnectorIdValue
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { useListAwsRegions } from 'services/portal'
-import SideCarArtifactIdentifier from '../SideCarArtifactIdentifier'
+import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import css from '../../ArtifactConnector.module.scss'
 
 export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3ArtifactProps): React.ReactElement {
@@ -59,13 +59,14 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     previousStep,
     artifactIdentifiers,
     isReadonly = false,
-    selectedArtifact
+    selectedArtifact,
+    isMultiArtifactSource
   } = props
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
+  const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
 
   const [regions, setRegions] = React.useState<SelectOption[]>([])
 
@@ -95,7 +96,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
         accountIdentifier: accountId,
         orgIdentifier,
         projectIdentifier,
-        connectorRef: prevStepData?.connectorId?.value ?? prevStepData?.connectorId,
+        connectorRef: prevStepData?.connectorId?.value || prevStepData?.identifier,
         region: region
       }
     })
@@ -165,7 +166,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     // Depending upon if filePath is present or not in specValues, decide typeType
     merge(specValues, { tagType: specValues.filePath ? TagTypes.Value : TagTypes.Regex })
     // If sidecar then merge identifier value to specValues
-    if (context === ModalViewFor.SIDECAR && initialValues?.identifier) {
+    if (isIdentifierAllowed && initialValues?.identifier) {
       merge(specValues, { identifier: initialValues?.identifier })
     }
     return specValues
@@ -186,7 +187,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
       formData?.tagType === TagTypes.Value ? { filePath: formData.filePath } : { filePathRegex: formData.filePathRegex }
     merge(artifactObj.spec, filePathData)
     // If sidecar artifact then merge identifier value with initial value
-    if (context === ModalViewFor.SIDECAR) {
+    if (isIdentifierAllowed) {
       merge(artifactObj, { identifier: formData?.identifier })
     }
     // Submit the final object
@@ -300,6 +301,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
         {formik => (
           <Form>
             <div className={css.connectorForm}>
+              {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
               <div className={css.imagePathContainer}>
                 <FormInput.MultiTypeInput

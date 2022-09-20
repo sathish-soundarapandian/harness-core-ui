@@ -3167,6 +3167,7 @@
               "FeatureFlagStage",
               "Template",
               "TemplateStage",
+              "CustomDeployment",
               "Triggers",
               "MonitoredService",
               "GitRepositories",
@@ -3184,6 +3185,7 @@
               "SaveCacheGCS",
               "SaveCacheS3",
               "Security",
+              "GitClone",
               "ArtifactoryUpload",
               "GCSUpload",
               "S3Upload",
@@ -3204,7 +3206,15 @@
               "AzureSwapSlot",
               "AzureWebAppRollback",
               "JenkinsBuild",
-              "BuildAndPushACR"
+              "EcsRollingDeploy",
+              "EcsRollingRollback",
+              "EcsCanaryDeploy",
+              "EcsCanaryDelete",
+              "AzureCreateARMResource",
+              "BuildAndPushACR",
+              "AzureCreateBPResource",
+              "AzureARMRollback",
+              "Background"
             ]
           },
           {
@@ -6776,6 +6786,51 @@
         }
       }
     },
+    "/monitored-service/template-input": {
+      "post": {
+        "tags": ["monitored-service"],
+        "summary": "saves monitored service from template input",
+        "description": "",
+        "operationId": "saveMonitoredServiceFromTemplateInput",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/RestResponseMonitoredServiceResponse"
+            }
+          }
+        }
+      }
+    },
     "/newrelic/endpoints": {
       "get": {
         "tags": ["newrelic"],
@@ -7625,6 +7680,110 @@
         }
       }
     },
+    "/splunk/latest-histogram": {
+      "get": {
+        "tags": ["splunk"],
+        "summary": "get latest histogram for the query",
+        "description": "",
+        "operationId": "getSplunkLatestHistogram",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "connectorIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "requestGuid",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/RestResponseListLinkedHashMap"
+            }
+          }
+        }
+      }
+    },
+    "/splunk/saved-searches": {
+      "get": {
+        "tags": ["splunk"],
+        "summary": "gets saved searches in splunk",
+        "description": "",
+        "operationId": "getSplunkSavedSearches",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "connectorIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "requestGuid",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/RestResponseListSplunkSavedSearch"
+            }
+          }
+        }
+      }
+    },
     "/splunk/sample-data": {
       "get": {
         "tags": ["splunk"],
@@ -7730,110 +7889,6 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/RestResponseSortedSetTimeSeriesSampleDTO"
-            }
-          }
-        }
-      }
-    },
-    "/splunk/latest-histogram": {
-      "get": {
-        "tags": ["splunk"],
-        "summary": "get latest histogram for the query",
-        "description": "",
-        "operationId": "getSplunkLatestHistogram",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "orgIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "projectIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "connectorIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "query",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "requestGuid",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/RestResponseListLinkedHashMap"
-            }
-          }
-        }
-      }
-    },
-    "/splunk/saved-searches": {
-      "get": {
-        "tags": ["splunk"],
-        "summary": "gets saved searches in splunk",
-        "description": "",
-        "operationId": "getSplunkSavedSearches",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "orgIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "projectIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "connectorIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "requestGuid",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/RestResponseListSplunkSavedSearch"
             }
           }
         }
@@ -9158,6 +9213,108 @@
         }
       }
     },
+    "/slo-dashboard/widgets/list": {
+      "get": {
+        "tags": ["slo-dashboard"],
+        "summary": "get slo list view",
+        "description": "",
+        "operationId": "getSLOHealthListView",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "userJourneyIdentifiers",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "monitoredServiceIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "sliTypes",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["Availability", "Latency"]
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "targetTypes",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["Rolling", "Calender"]
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "errorBudgetRisks",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["EXHAUSTED", "UNHEALTHY", "NEED_ATTENTION", "OBSERVE", "HEALTHY"]
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 10,
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponsePageSLOHealthListView"
+            }
+          }
+        }
+      }
+    },
     "/slo-dashboard/widget/{identifier}": {
       "get": {
         "tags": ["slo-dashboard"],
@@ -10272,7 +10429,6 @@
             "VAULT_OPERATION_ERROR",
             "AWS_SECRETS_MANAGER_OPERATION_ERROR",
             "AZURE_KEY_VAULT_OPERATION_ERROR",
-            "CYBERARK_OPERATION_ERROR",
             "UNSUPPORTED_OPERATION_EXCEPTION",
             "FEATURE_UNAVAILABLE",
             "GENERAL_ERROR",
@@ -10366,6 +10522,7 @@
             "GIT_UNSEEN_REMOTE_HEAD_COMMIT",
             "TIMEOUT_ENGINE_EXCEPTION",
             "NO_AVAILABLE_DELEGATES",
+            "NO_GLOBAL_DELEGATE_ACCOUNT",
             "NO_INSTALLED_DELEGATES",
             "DUPLICATE_DELEGATE_EXCEPTION",
             "GCP_MARKETPLACE_EXCEPTION",
@@ -10448,7 +10605,15 @@
             "TOO_MANY_REQUESTS",
             "INVALID_IDENTIFIER_REF",
             "SPOTINST_NULL_ERROR",
-            "SCM_UNEXPECTED_ERROR"
+            "SCM_UNEXPECTED_ERROR",
+            "DUPLICATE_FILE_IMPORT",
+            "AZURE_APP_SERVICES_TASK_EXCEPTION",
+            "MEDIA_NOT_SUPPORTED",
+            "AWS_ECS_ERROR",
+            "AWS_APPLICATION_AUTO_SCALING",
+            "AWS_ECS_SERVICE_NOT_ACTIVE",
+            "AWS_ECS_CLIENT_ERROR",
+            "AWS_STS_ERROR"
           ]
         },
         "message": {
@@ -10640,7 +10805,6 @@
             "VAULT_OPERATION_ERROR",
             "AWS_SECRETS_MANAGER_OPERATION_ERROR",
             "AZURE_KEY_VAULT_OPERATION_ERROR",
-            "CYBERARK_OPERATION_ERROR",
             "UNSUPPORTED_OPERATION_EXCEPTION",
             "FEATURE_UNAVAILABLE",
             "GENERAL_ERROR",
@@ -10734,6 +10898,7 @@
             "GIT_UNSEEN_REMOTE_HEAD_COMMIT",
             "TIMEOUT_ENGINE_EXCEPTION",
             "NO_AVAILABLE_DELEGATES",
+            "NO_GLOBAL_DELEGATE_ACCOUNT",
             "NO_INSTALLED_DELEGATES",
             "DUPLICATE_DELEGATE_EXCEPTION",
             "GCP_MARKETPLACE_EXCEPTION",
@@ -10816,7 +10981,15 @@
             "TOO_MANY_REQUESTS",
             "INVALID_IDENTIFIER_REF",
             "SPOTINST_NULL_ERROR",
-            "SCM_UNEXPECTED_ERROR"
+            "SCM_UNEXPECTED_ERROR",
+            "DUPLICATE_FILE_IMPORT",
+            "AZURE_APP_SERVICES_TASK_EXCEPTION",
+            "MEDIA_NOT_SUPPORTED",
+            "AWS_ECS_ERROR",
+            "AWS_APPLICATION_AUTO_SCALING",
+            "AWS_ECS_SERVICE_NOT_ACTIVE",
+            "AWS_ECS_CLIENT_ERROR",
+            "AWS_STS_ERROR"
           ]
         },
         "message": {
@@ -11007,7 +11180,6 @@
             "VAULT_OPERATION_ERROR",
             "AWS_SECRETS_MANAGER_OPERATION_ERROR",
             "AZURE_KEY_VAULT_OPERATION_ERROR",
-            "CYBERARK_OPERATION_ERROR",
             "UNSUPPORTED_OPERATION_EXCEPTION",
             "FEATURE_UNAVAILABLE",
             "GENERAL_ERROR",
@@ -11101,6 +11273,7 @@
             "GIT_UNSEEN_REMOTE_HEAD_COMMIT",
             "TIMEOUT_ENGINE_EXCEPTION",
             "NO_AVAILABLE_DELEGATES",
+            "NO_GLOBAL_DELEGATE_ACCOUNT",
             "NO_INSTALLED_DELEGATES",
             "DUPLICATE_DELEGATE_EXCEPTION",
             "GCP_MARKETPLACE_EXCEPTION",
@@ -11183,7 +11356,15 @@
             "TOO_MANY_REQUESTS",
             "INVALID_IDENTIFIER_REF",
             "SPOTINST_NULL_ERROR",
-            "SCM_UNEXPECTED_ERROR"
+            "SCM_UNEXPECTED_ERROR",
+            "DUPLICATE_FILE_IMPORT",
+            "AZURE_APP_SERVICES_TASK_EXCEPTION",
+            "MEDIA_NOT_SUPPORTED",
+            "AWS_ECS_ERROR",
+            "AWS_APPLICATION_AUTO_SCALING",
+            "AWS_ECS_SERVICE_NOT_ACTIVE",
+            "AWS_ECS_CLIENT_ERROR",
+            "AWS_STS_ERROR"
           ]
         },
         "level": {
@@ -11209,7 +11390,8 @@
               "APPLICATION_ERROR",
               "AUTHORIZATION_ERROR",
               "TIMEOUT_ERROR",
-              "POLICY_EVALUATION_FAILURE"
+              "POLICY_EVALUATION_FAILURE",
+              "EXECUTION_INPUT_TIMEOUT_FAILURE"
             ]
           }
         }
@@ -12691,6 +12873,10 @@
         "value": {
           "type": "number",
           "format": "double"
+        },
+        "thresholdConfigType": {
+          "type": "string",
+          "enum": ["CUSTOMER", "DEFAULT"]
         }
       }
     },
@@ -12844,6 +13030,9 @@
           "type": "number",
           "format": "double"
         },
+        "failFast": {
+          "type": "boolean"
+        },
         "hostSummaries": {
           "type": "array",
           "items": {
@@ -12938,6 +13127,9 @@
           "items": {
             "$ref": "#/definitions/HostData"
           }
+        },
+        "failFast": {
+          "type": "boolean"
         },
         "anomalous": {
           "type": "boolean"
@@ -13992,11 +14184,9 @@
           "type": "integer",
           "format": "int64"
         },
-        "negative": {
-          "type": "boolean"
-        },
-        "zero": {
-          "type": "boolean"
+        "nano": {
+          "type": "integer",
+          "format": "int32"
         },
         "units": {
           "type": "array",
@@ -14004,9 +14194,11 @@
             "$ref": "#/definitions/TemporalUnit"
           }
         },
-        "nano": {
-          "type": "integer",
-          "format": "int32"
+        "negative": {
+          "type": "boolean"
+        },
+        "zero": {
+          "type": "boolean"
         }
       }
     },
@@ -15866,7 +16058,18 @@
         },
         "status": {
           "type": "string",
-          "enum": ["CREATED", "RUNNING", "SUCCESS", "RETRY", "TRANSITION", "IGNORED", "TIMEOUT", "FAILED", "COMPLETED"]
+          "enum": [
+            "CREATED",
+            "RUNNING",
+            "SUCCESS",
+            "RETRY",
+            "TRANSITION",
+            "IGNORED",
+            "TIMEOUT",
+            "FAILED",
+            "COMPLETED",
+            "TERMINATED"
+          ]
         },
         "retryCount": {
           "type": "integer",
@@ -15929,7 +16132,18 @@
         },
         "status": {
           "type": "string",
-          "enum": ["CREATED", "RUNNING", "SUCCESS", "RETRY", "TRANSITION", "IGNORED", "TIMEOUT", "FAILED", "COMPLETED"]
+          "enum": [
+            "CREATED",
+            "RUNNING",
+            "SUCCESS",
+            "RETRY",
+            "TRANSITION",
+            "IGNORED",
+            "TIMEOUT",
+            "FAILED",
+            "COMPLETED",
+            "TERMINATED"
+          ]
         },
         "nextAttemptTime": {
           "type": "integer",
@@ -17096,12 +17310,12 @@
           "type": "integer",
           "format": "int64"
         },
+        "duration": {
+          "$ref": "#/definitions/Duration"
+        },
         "dateTimeBefore": {
           "type": "string",
           "format": "date-time"
-        },
-        "duration": {
-          "$ref": "#/definitions/Duration"
         }
       }
     },
@@ -17138,10 +17352,6 @@
         "offsetAfter": {
           "$ref": "#/definitions/ZoneOffset"
         },
-        "dayOfWeek": {
-          "type": "string",
-          "enum": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
-        },
         "dayOfMonthIndicator": {
           "type": "integer",
           "format": "int32"
@@ -17151,12 +17361,19 @@
         },
         "midnightEndOfDay": {
           "type": "boolean"
+        },
+        "dayOfWeek": {
+          "type": "string",
+          "enum": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
         }
       }
     },
     "ZoneRules": {
       "type": "object",
       "properties": {
+        "fixedOffset": {
+          "type": "boolean"
+        },
         "transitions": {
           "type": "array",
           "items": {
@@ -17168,9 +17385,6 @@
           "items": {
             "$ref": "#/definitions/ZoneOffsetTransitionRule"
           }
-        },
-        "fixedOffset": {
-          "type": "boolean"
         }
       }
     },
@@ -17909,10 +18123,10 @@
             "type": "string"
           }
         },
-        "isCustomCreatedMetric": {
+        "isManualQuery": {
           "type": "boolean"
         },
-        "isManualQuery": {
+        "isCustomCreatedMetric": {
           "type": "boolean"
         }
       }
@@ -17933,6 +18147,13 @@
               "type": "array",
               "items": {
                 "$ref": "#/definitions/DatadogMetricHealthDefinition"
+              }
+            },
+            "metricPacks": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/definitions/TimeSeriesMetricPackDTO"
               }
             }
           }
@@ -18214,6 +18435,9 @@
           "type": "string"
         },
         "metricIdentifier": {
+          "type": "string"
+        },
+        "metricType": {
           "type": "string"
         },
         "spec": {
@@ -18829,6 +19053,13 @@
               "items": {
                 "$ref": "#/definitions/StackdriverDefinition"
               }
+            },
+            "metricPacks": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/definitions/TimeSeriesMetricPackDTO"
+              }
             }
           }
         }
@@ -19342,7 +19573,18 @@
         "serviceLevelObjectiveIdentifier": {
           "type": "string"
         },
+        "monitoredServiceIdentifier": {
+          "type": "string"
+        },
         "errorBudgetRemainingPercentage": {
+          "type": "number",
+          "format": "double"
+        },
+        "errorBudgetRemainingMinutes": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "errorBudgetBurnRate": {
           "type": "number",
           "format": "double"
         },
@@ -19996,6 +20238,9 @@
               "items": {
                 "type": "string"
               }
+            },
+            "executeOnDelegate": {
+              "type": "boolean"
             }
           }
         }
@@ -20132,6 +20377,9 @@
               "items": {
                 "type": "string"
               }
+            },
+            "executeOnDelegate": {
+              "type": "boolean"
             }
           }
         }
@@ -20150,6 +20398,9 @@
         },
         "spec": {
           "$ref": "#/definitions/AwsCredentialSpec"
+        },
+        "region": {
+          "type": "string"
         }
       }
     },
@@ -20487,6 +20738,9 @@
             "azureEnvironmentType": {
               "type": "string",
               "enum": ["AZURE", "AZURE_US_GOVERNMENT"]
+            },
+            "executeOnDelegate": {
+              "type": "boolean"
             }
           }
         }
@@ -20650,6 +20904,9 @@
               "items": {
                 "type": "string"
               }
+            },
+            "executeOnDelegate": {
+              "type": "boolean"
             },
             "type": {
               "type": "string",
@@ -20843,6 +21100,9 @@
                 "type": "string"
               }
             },
+            "executeOnDelegate": {
+              "type": "boolean"
+            },
             "type": {
               "type": "string",
               "enum": ["Account", "Repo", "Project"]
@@ -20954,6 +21214,9 @@
             },
             "awsAccountId": {
               "type": "string"
+            },
+            "isAWSGovCloudAccount": {
+              "type": "boolean"
             },
             "featuresEnabled": {
               "type": "array",
@@ -21088,7 +21351,9 @@
             "Pdc",
             "AzureRepo",
             "Jenkins",
-            "OciHelmRepo"
+            "OciHelmRepo",
+            "CustomSecretManager",
+            "ELK"
           ]
         },
         "spec": {
@@ -21170,6 +21435,44 @@
           "type": "boolean"
         }
       }
+    },
+    "CustomSecretManager": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ConnectorConfigDTO"
+        },
+        {
+          "type": "object",
+          "required": ["onDelegate", "template"],
+          "properties": {
+            "delegateSelectors": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "onDelegate": {
+              "type": "boolean"
+            },
+            "connectorRef": {
+              "type": "string"
+            },
+            "host": {
+              "type": "string"
+            },
+            "workingDirectory": {
+              "type": "string"
+            },
+            "template": {
+              "$ref": "#/definitions/TemplateLinkConfigForCustomSecretManager"
+            },
+            "default": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
     },
     "DataCollectionRequest": {
       "type": "object",
@@ -21300,6 +21603,9 @@
               "items": {
                 "type": "string"
               }
+            },
+            "executeOnDelegate": {
+              "type": "boolean"
             }
           }
         }
@@ -21348,6 +21654,45 @@
               "items": {
                 "type": "string"
               }
+            }
+          }
+        }
+      ]
+    },
+    "ELKConnectorDTO": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ConnectorConfigDTO"
+        },
+        {
+          "type": "object",
+          "required": ["url"],
+          "properties": {
+            "url": {
+              "type": "string"
+            },
+            "delegateSelectors": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "username": {
+              "type": "string"
+            },
+            "apiKeyId": {
+              "type": "string"
+            },
+            "passwordRef": {
+              "type": "string"
+            },
+            "apiKeyRef": {
+              "type": "string"
+            },
+            "authType": {
+              "type": "string",
+              "enum": ["UsernamePassword", "ApiClientToken", "None"]
             }
           }
         }
@@ -21438,6 +21783,9 @@
               "items": {
                 "type": "string"
               }
+            },
+            "executeOnDelegate": {
+              "type": "boolean"
             }
           }
         }
@@ -21862,6 +22210,9 @@
               "items": {
                 "type": "string"
               }
+            },
+            "executeOnDelegate": {
+              "type": "boolean"
             },
             "type": {
               "type": "string",
@@ -22391,6 +22742,24 @@
         }
       ]
     },
+    "NameValuePairWithDefault": {
+      "type": "object",
+      "required": ["type", "value"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "useAsDefault": {
+          "type": "boolean"
+        }
+      }
+    },
     "NewRelicConnectorDTO": {
       "allOf": [
         {
@@ -22750,6 +23119,28 @@
         }
       ]
     },
+    "TemplateLinkConfigForCustomSecretManager": {
+      "type": "object",
+      "required": ["templateRef", "versionLabel"],
+      "properties": {
+        "templateRef": {
+          "type": "string"
+        },
+        "versionLabel": {
+          "type": "string",
+          "pattern": "^[0-9a-zA-Z][^\\s]{0,63}$"
+        },
+        "templateInputs": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/NameValuePairWithDefault"
+            }
+          }
+        }
+      }
+    },
     "VaultConnectorDTO": {
       "allOf": [
         {
@@ -22827,6 +23218,9 @@
             },
             "k8sAuthEndpoint": {
               "type": "string"
+            },
+            "renewAppRoleToken": {
+              "type": "boolean"
             },
             "default": {
               "type": "boolean"
@@ -23169,30 +23563,6 @@
         }
       }
     },
-    "RestResponseSortedSetTimeSeriesSampleDTO": {
-      "type": "object",
-      "properties": {
-        "metaData": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "object"
-          }
-        },
-        "resource": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": {
-            "$ref": "#/definitions/TimeSeriesSampleDTO"
-          }
-        },
-        "responseMessages": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ResponseMessage"
-          }
-        }
-      }
-    },
     "RestResponseListSplunkSavedSearch": {
       "type": "object",
       "properties": {
@@ -23224,6 +23594,30 @@
         },
         "searchQuery": {
           "type": "string"
+        }
+      }
+    },
+    "RestResponseSortedSetTimeSeriesSampleDTO": {
+      "type": "object",
+      "properties": {
+        "metaData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "resource": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/TimeSeriesSampleDTO"
+          }
+        },
+        "responseMessages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResponseMessage"
+          }
         }
       }
     },
@@ -24119,6 +24513,9 @@
         "value": {
           "type": "number",
           "format": "double"
+        },
+        "enabled": {
+          "type": "boolean"
         }
       }
     },
@@ -24260,11 +24657,172 @@
             "$ref": "#/definitions/Point"
           }
         },
-        "recalculatingSLI": {
-          "type": "boolean"
+        "errorBudgetRisk": {
+          "type": "string",
+          "enum": ["EXHAUSTED", "UNHEALTHY", "NEED_ATTENTION", "OBSERVE", "HEALTHY"]
         },
         "calculatingSLI": {
           "type": "boolean"
+        },
+        "recalculatingSLI": {
+          "type": "boolean"
+        }
+      }
+    },
+    "PageSLOHealthListView": {
+      "type": "object",
+      "properties": {
+        "totalPages": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "totalItems": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "pageItemCount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "content": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SLOHealthListView"
+          }
+        },
+        "pageIndex": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "empty": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ResponsePageSLOHealthListView": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/PageSLOHealthListView"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "SLOHealthListView": {
+      "type": "object",
+      "required": [
+        "burnRate",
+        "environmentIdentifier",
+        "environmentName",
+        "errorBudgetRemaining",
+        "errorBudgetRemainingPercentage",
+        "errorBudgetRisk",
+        "healthSourceIdentifier",
+        "healthSourceName",
+        "monitoredServiceIdentifier",
+        "monitoredServiceName",
+        "name",
+        "noOfActiveAlerts",
+        "noOfMaximumAlerts",
+        "serviceIdentifier",
+        "serviceName",
+        "sloIdentifier",
+        "sloTargetPercentage",
+        "sloTargetType",
+        "totalErrorBudget",
+        "userJourneyIdentifier",
+        "userJourneyName"
+      ],
+      "properties": {
+        "sloIdentifier": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "monitoredServiceIdentifier": {
+          "type": "string"
+        },
+        "monitoredServiceName": {
+          "type": "string"
+        },
+        "healthSourceIdentifier": {
+          "type": "string"
+        },
+        "healthSourceName": {
+          "type": "string"
+        },
+        "serviceIdentifier": {
+          "type": "string"
+        },
+        "environmentIdentifier": {
+          "type": "string"
+        },
+        "environmentName": {
+          "type": "string"
+        },
+        "serviceName": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "type": "string"
+        },
+        "userJourneyIdentifier": {
+          "type": "string"
+        },
+        "userJourneyName": {
+          "type": "string"
+        },
+        "burnRate": {
+          "type": "number",
+          "format": "double"
+        },
+        "errorBudgetRemainingPercentage": {
+          "type": "number",
+          "format": "double"
+        },
+        "errorBudgetRemaining": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalErrorBudget": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "sloTargetType": {
+          "type": "string",
+          "enum": ["Rolling", "Calender"]
+        },
+        "sloTargetPercentage": {
+          "type": "number",
+          "format": "double"
+        },
+        "noOfActiveAlerts": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "noOfMaximumAlerts": {
+          "type": "integer",
+          "format": "int32"
         },
         "errorBudgetRisk": {
           "type": "string",

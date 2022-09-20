@@ -38,6 +38,8 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
+export const AUTHORIZATION_ERROR_CODE = 403
+
 const CreateSecretFromYamlPage: React.FC<{ mockSchemaData?: UseGetMockData<ResponseJsonNode> }> = props => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { getRBACErrorMessage } = useRBACError()
@@ -107,7 +109,11 @@ const CreateSecretFromYamlPage: React.FC<{ mockSchemaData?: UseGetMockData<Respo
           }
         )
       } catch (err) {
-        showError(getRBACErrorMessage(err))
+        if (err.status === AUTHORIZATION_ERROR_CODE) {
+          showError(getRBACErrorMessage(err))
+        } else {
+          showError(err.data.details)
+        }
       }
     } else {
       showError(getString('createSecretYAML.invalidSecret'))

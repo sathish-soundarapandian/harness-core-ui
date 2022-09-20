@@ -57,7 +57,6 @@
 
   [class*='OverlaySpinner--overlaySpinner'] {
     min-height: calc(100% - var(--page-header-height, 64px));
-    overflow: hidden;
   }
 }
 

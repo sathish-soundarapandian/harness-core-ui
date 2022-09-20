@@ -37,9 +37,9 @@ declare const styles: {
   readonly runPipelineDialog: string
   readonly saveButton: string
   readonly savePublishContainer: string
-  readonly tagRender: string
   readonly tagsContainer: string
   readonly titleBar: string
+  readonly unsavedChanges: string
   readonly visualYamlToggle: string
 }
 export default styles

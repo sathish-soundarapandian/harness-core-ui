@@ -53,6 +53,7 @@ import {
   CodebaseTypes,
   getCodebaseRepoNameFromConnector,
   getConnectorRefWidth,
+  GIT_EXTENSION,
   isCodebaseFieldsRuntimeInputs,
   isRuntimeInput
 } from '@pipeline/utils/CIUtils'
@@ -133,6 +134,7 @@ export const handleCIConnectorRefOnChange = ({
   connectorRefType,
   setConnectionType,
   setConnectorUrl,
+  setConnectorType,
   setFieldValue,
   setIsConnectorExpression,
   setGitAuthProtocol,
@@ -144,6 +146,7 @@ export const handleCIConnectorRefOnChange = ({
   connectorRefType: MultiTypeInputType
   setConnectionType: Dispatch<SetStateAction<string>>
   setConnectorUrl: Dispatch<SetStateAction<string>>
+  setConnectorType?: Dispatch<SetStateAction<string>> // only used for Add CI Stage to render getCompleteConnectorUrl
   setFieldValue: (field: string, value: unknown) => void
   setGitAuthProtocol?: React.Dispatch<React.SetStateAction<GitAuthenticationProtocol>>
   setIsConnectorExpression?: Dispatch<SetStateAction<boolean>> // used in inputset form
@@ -163,6 +166,7 @@ export const handleCIConnectorRefOnChange = ({
       setConnectionType(ConnectionType.Account)
       setConnectorUrl(newConnectorRef.record?.spec?.url || '')
       setFieldValue(codeBaseInputFieldFormName?.repoName || 'repoName', '')
+      setConnectorType?.(newConnectorRef.record?.spec?.type || '')
     } else if (
       connectionType &&
       [ConnectionType.Repo, ConnectionType.Region, ConnectionType.Project].includes(connectionType as ConnectionType)
@@ -374,7 +378,7 @@ function CICodebaseInputSetFormInternal({
                 accountIdentifier: accountId,
                 orgIdentifier,
                 projectIdentifier,
-                repoName: encodeURI(repoName),
+                repoName: encodeURI(repoName.endsWith(GIT_EXTENSION) ? repoName.replace(/\.[^/.]+$/, '') : repoName),
                 size: 1
               }
             })

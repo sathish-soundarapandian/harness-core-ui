@@ -88,17 +88,15 @@ export default function MonitoredServiceInputSetsTemplate({
   }, [templateRefData?.identifier, templateRefData?.versionLabel])
 
   // default value for formik
-  const [isInputSetCreated, setInputSet] = React.useState(false)
   const [monitoredServiceInputSet, setMonitoredServiceInputSet] = React.useState<MonitoredServiceInputSetInterface>()
 
   // Set InputSet Yaml as state variable
   React.useEffect(() => {
-    if (templateInputYaml && templateInputYaml?.data && !isInputSetCreated && !loadingTemplateYaml) {
+    if (templateInputYaml && templateInputYaml?.data && !loadingTemplateYaml) {
       const inputSet = isReadOnlyInputSet
         ? parse(templateInputYaml?.data)
         : (parse(templateInputYaml?.data?.replace(/"<\+input>"/g, '""')) as any)
       setMonitoredServiceInputSet(inputSet)
-      setInputSet(true)
     }
   }, [templateInputYaml])
 
@@ -158,11 +156,11 @@ export default function MonitoredServiceInputSetsTemplate({
     if (selectedTemplateVersionLabel && selectedTemplateIdentifier) {
       updateQueryParams({
         templateRef: JSON.stringify({
-          selectedTemplateIdentifier,
-          selectedTemplateVersionLabel,
-          selectedTemplateAccountId,
-          selectedTemplateOrgIdentifier,
-          selectedTemplateProjectIdentifier
+          identifier: selectedTemplateIdentifier,
+          versionLabel: selectedTemplateVersionLabel,
+          accountId: selectedTemplateAccountId,
+          orgIdentifier: selectedTemplateOrgIdentifier,
+          projectIdentifier: selectedTemplateProjectIdentifier
         })
       })
     }

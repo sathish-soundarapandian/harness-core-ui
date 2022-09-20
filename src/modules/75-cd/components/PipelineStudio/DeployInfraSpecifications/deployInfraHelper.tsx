@@ -204,12 +204,8 @@ export interface InfrastructureGroup {
 
 export const getInfraGroups = (
   deploymentType: ServiceDefinition['type'],
-  getString: UseStringsReturn['getString'],
-  featureFlags: Record<string, boolean>,
-  infrastructureType?: string
+  getString: UseStringsReturn['getString']
 ): InfrastructureGroup[] => {
-  const { AZURE_WEBAPP_NG } = featureFlags
-
   const serverlessInfraGroups: InfrastructureGroup[] = [
     {
       groupLabel: '',
@@ -227,7 +223,7 @@ export const getInfraGroups = (
   const azureWebAppInfraGroups: InfrastructureGroup[] = [
     {
       groupLabel: '',
-      items: AZURE_WEBAPP_NG ? getInfraGroupItems([InfraDeploymentType.AzureWebApp], getString) : []
+      items: []
     }
   ]
 
@@ -274,13 +270,6 @@ export const getInfraGroups = (
       return sshWinRMInfraGroups
     case deploymentType === ServiceDeploymentType.ECS:
       return ecsInfraGroups
-    case deploymentType === null:
-      return [
-        {
-          groupLabel: '',
-          items: getInfraGroupItems([infrastructureType as InfraDeploymentType], getString)
-        }
-      ]
     default:
       return kuberntesInfraGroups
   }
@@ -374,4 +363,8 @@ export const isAzureWebAppInfrastructureType = (infrastructureType?: string): bo
 
 export const getInfraDefinitionDetailsHeaderTooltipId = (selectedInfrastructureType: string): string => {
   return `${selectedInfrastructureType}InfraDefinitionDetails`
+}
+
+export const getInfraDefinitionMethodTooltipId = (selectedDeploymentType: string): string => {
+  return `${selectedDeploymentType}InfrastructureDefinitionMethod`
 }

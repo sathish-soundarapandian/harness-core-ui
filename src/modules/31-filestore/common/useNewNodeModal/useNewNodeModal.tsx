@@ -61,7 +61,7 @@ const useNewNodeModal = ({
         enforceFocus={false}
         isOpen
         title={title}
-        style={{ width: 504, height }}
+        style={{ width: 504, minHeight: height }}
         onClose={hideModal}
         className={css.layout}
         usePortal

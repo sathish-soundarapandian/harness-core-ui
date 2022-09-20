@@ -19,9 +19,7 @@ import {
   useConfirmationDialog,
   useToaster,
   Dialog,
-  Icon,
-  SelectOption,
-  DropDown
+  Icon
 } from '@harness/uicore'
 import { Color, FontVariation, Intent } from '@harness/design-system'
 import { Classes, Menu, Position } from '@blueprintjs/core'
@@ -42,6 +40,7 @@ import type { DashboardListProps } from '@cd/components/DashboardList/DashboardL
 import type { ChangeValue } from '@cd/components/Services/DeploymentsWidget/DeploymentsWidget'
 import { useStrings } from 'framework/strings'
 import { Ticker } from '@common/components/Ticker/Ticker'
+import { SortOption } from '@common/components/SortOption/SortOption'
 import { PieChart, PieChartProps } from '@cd/components/PieChart/PieChart'
 import { getFixed, INVALID_CHANGE_RATE, numberFormatter } from '@cd/components/Services/common'
 import { ServiceDetailsDTO, useDeleteServiceV2 } from 'services/cd-ng'
@@ -53,7 +52,6 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
 import { isExecutionIgnoreFailed, isExecutionNotStarted } from '@pipeline/utils/statusHelpers'
-import { Sort, SortFields } from '@cd/utils/listUtils'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import { mapToExecutionStatus } from '@pipeline/components/Dashboards/shared'
 import { ServiceTabs } from '../utils/ServiceUtils'
@@ -98,72 +96,6 @@ export interface ServicesListProps {
   setSavedSortOption: (value: string[] | undefined) => void
   setSort: React.Dispatch<React.SetStateAction<string[]>>
   sort: string[]
-}
-
-export const selectedOpt = (sortOption: string[]): 1 | 2 | 0 => {
-  if (sortOption[0] === SortFields.Name && sortOption[1] === Sort.ASC) {
-    return 1
-  } else if (sortOption[0] === SortFields.Name) {
-    return 2
-  }
-  return 0
-}
-
-export const SortOptionComponent = (
-  props: Pick<ServicesListProps, 'setSavedSortOption' | 'setSort' | 'sort'>
-): JSX.Element => {
-  const { setSavedSortOption, setSort, sort } = props
-  const { getString } = useStrings()
-
-  const sortOptions = React.useMemo(() => {
-    return [
-      {
-        label: getString('pipeline.lastModified'),
-        value: SortFields.LastModifiedAt
-      },
-      {
-        label: getString('AZ09'),
-        value: SortFields.AZ09
-      },
-
-      {
-        label: getString('ZA90'),
-        value: SortFields.ZA90
-      }
-    ]
-  }, [])
-
-  const [selectedSort, setSelectedSort] = useState<SelectOption>(sortOptions[selectedOpt(sort)])
-
-  const onDropDownChange = React.useCallback(
-    item => {
-      if (item.value === SortFields.AZ09) {
-        setSort([SortFields.Name, Sort.ASC])
-        setSavedSortOption([SortFields.Name, Sort.ASC])
-      } else if (item.value === SortFields.ZA90) {
-        setSort([SortFields.Name, Sort.DESC])
-        setSavedSortOption([SortFields.Name, Sort.DESC])
-      } else {
-        setSort([SortFields.LastModifiedAt, Sort.DESC])
-        setSavedSortOption([SortFields.LastModifiedAt, Sort.DESC])
-      }
-      setSelectedSort(item)
-    },
-    [setSort, setSavedSortOption]
-  )
-
-  return (
-    <DropDown
-      items={sortOptions}
-      value={selectedSort.value.toString()}
-      filterable={false}
-      width={180}
-      icon={'main-sort'}
-      iconProps={{ size: 16, color: Color.GREY_400 }}
-      onChange={onDropDownChange}
-      usePortal
-    />
-  )
 }
 
 const transformServiceDetailsData = (data: ServiceDetailsDTO[]): ServiceListItem[] => {
@@ -680,7 +612,7 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
     refetch,
     HeaderCustomPrimary: ServiceListHeaderCustomPrimary,
     onRowClick: goToServiceDetails,
-    SortList: SortOptionComponent({ setSavedSortOption, setSort, sort })
+    SortList: SortOption({ setSavedSortOption, setSort, sort })
   }
   return <DashboardList<ServiceListItem> {...dashboardListProps} />
 }

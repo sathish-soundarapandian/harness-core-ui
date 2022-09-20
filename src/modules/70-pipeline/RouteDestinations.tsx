@@ -332,15 +332,6 @@ export function PipelineRouteDestinations({
         exact
         licenseRedirectData={licenseRedirectData}
         sidebarProps={sidebarProps}
-        path={routes.toExecutions({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
-        pageName={PAGE_NAME.ExecutionList}
-      >
-        <ExecutionListPage />
-      </RouteWithLayout>
-      <RouteWithLayout
-        exact
-        licenseRedirectData={licenseRedirectData}
-        sidebarProps={sidebarProps}
         path={routes.toInputSetList({ ...accountPathProps, ...pipelinePathProps, ...moduleParams })}
         pageName={PAGE_NAME.InputSetList}
       >

@@ -12,6 +12,7 @@ import cx from 'classnames'
 
 import { useStrings } from 'framework/strings'
 import type { ServiceSpec } from 'services/cd-ng'
+import configFileSourceBaseFactory from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBaseFactory'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
@@ -24,6 +25,8 @@ import manifestSourceBaseFactory from '@cd/factory/ManifestSourceFactory/Manifes
 import type { K8SDirectServiceStep } from '../../K8sServiceSpec/K8sServiceSpecInterface'
 import { KubernetesArtifacts } from '../../K8sServiceSpec/KubernetesArtifacts/KubernetesArtifacts'
 import { KubernetesManifests } from '../../K8sServiceSpec/KubernetesManifests/KubernetesManifests'
+import PrimaryArtifactRef from '../../K8sServiceSpec/PrimaryArtifact/PrimaryArtifactRef'
+import { ConfigFiles } from '../../SshServiceSpec/SshConfigFiles/ConfigFiles'
 import css from './GenericServiceSpec.module.scss'
 
 export interface KubernetesInputSetProps {
@@ -56,38 +59,54 @@ const GenericServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetProps
     allowableTypes
   } = props
   const { getString } = useStrings()
+  const commonProps = {
+    stepViewType,
+    formik,
+    path,
+    initialValues,
+    readonly,
+    allowableTypes,
+    serviceIdentifier
+  }
+
   return (
     <Layout.Vertical spacing="medium">
-      {!!(template?.artifacts?.primary?.type || template?.artifacts?.sidecars?.length) && (
+      {!!template?.artifacts?.primary?.primaryArtifactRef && (
+        <PrimaryArtifactRef primaryArtifact={allValues?.artifacts?.primary} template={template} {...commonProps} />
+      )}
+
+      {!!(
+        template?.artifacts?.primary?.type ||
+        (Array.isArray(template?.artifacts?.primary?.sources) && template?.artifacts?.primary?.sources?.length) ||
+        template?.artifacts?.sidecars?.length
+      ) && (
         <KubernetesArtifacts
           type={template?.artifacts?.primary?.type || ''}
-          template={template}
           artifacts={allValues?.artifacts}
           artifactSourceBaseFactory={artifactSourceBaseFactory}
-          stepViewType={stepViewType}
           stageIdentifier={stageIdentifier}
-          serviceIdentifier={serviceIdentifier}
-          formik={formik}
-          path={path}
-          initialValues={initialValues}
-          readonly={readonly}
-          allowableTypes={allowableTypes}
+          template={template as ServiceSpec}
+          {...commonProps}
         />
       )}
 
       {!!template?.manifests?.length && (
         <KubernetesManifests
-          template={template}
           manifests={allValues?.manifests}
           manifestSourceBaseFactory={manifestSourceBaseFactory}
-          stepViewType={stepViewType}
           stageIdentifier={stageIdentifier}
-          serviceIdentifier={serviceIdentifier}
-          formik={formik}
-          path={path}
-          initialValues={initialValues}
-          readonly={readonly}
-          allowableTypes={allowableTypes}
+          template={template}
+          {...commonProps}
+        />
+      )}
+
+      {!!template?.configFiles?.length && (
+        <ConfigFiles
+          configFiles={allValues?.configFiles}
+          configFileSourceBaseFactory={configFileSourceBaseFactory}
+          stageIdentifier={stageIdentifier}
+          template={template}
+          {...commonProps}
         />
       )}
 

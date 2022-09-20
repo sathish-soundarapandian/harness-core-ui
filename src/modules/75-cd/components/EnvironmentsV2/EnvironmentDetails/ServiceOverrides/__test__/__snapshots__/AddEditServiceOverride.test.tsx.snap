@@ -146,6 +146,9 @@ exports[`Add Edit Service Override Test add new service override 1`] = `
             <div
               class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
             >
+              <div
+                class="Layout--vertical StyledProps--main"
+              />
               <button
                 class="bp3-button Button--button StyledProps--font StyledProps--main addOverrideBtn Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
                 type="button"

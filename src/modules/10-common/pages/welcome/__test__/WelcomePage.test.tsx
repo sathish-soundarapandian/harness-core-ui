@@ -13,6 +13,28 @@ import WelcomePage from '../WelcomePage'
 jest.mock('services/cd-ng', () => ({
   useUpdateAccountDefaultExperienceNG: jest.fn().mockImplementation(() => {
     return { mutate: () => Promise.resolve({ status: 'SUCCESS', data: { defaultExperience: 'NG' } }) }
+  }),
+  useStartFreeLicense: jest.fn().mockImplementation(() => {
+    return {
+      mutate: () =>
+        Promise.resolve({
+          status: 'SUCCESS',
+          data: {
+            id: '631a3cd31353c237dedfb3a2',
+            accountIdentifier: '7-dnAHjpSNuHHQ2OChaiRw',
+            moduleType: 'CI',
+            edition: 'FREE',
+            status: 'ACTIVE',
+            premiumSupport: false,
+            selfService: false,
+            createdAt: 1662663890993,
+            lastModifiedAt: 1662663890993,
+            numberOfCommitters: -1
+          },
+          metaData: null,
+          correlationId: '9e8b87e6-afbb-44b6-b2b1-b96710328548'
+        })
+    }
   })
 }))
 

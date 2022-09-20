@@ -416,41 +416,43 @@ function ExecutionStrategyRef(
                       <img src={imageByType[selectedStrategy]} data-testid="blank-canvas-image" />
                     </section>
                   )}
-                  {selectedStrategy !== 'Default' && !isSshOrWinrmDeploymentType(serviceDefinitionType()) && (
+                  {selectedStrategy !== 'Default' && (
                     <>
                       <Steps strategy={selectedStrategy} />
 
-                      <Layout.Horizontal margin={{ top: 'medium', bottom: 'large' }}>
-                        <Container className={css.enableVerificationDetail}>
-                          <Text font={{ variation: FontVariation.H4 }}>
-                            {getString('pipeline.enableVerificationTitle')}
-                          </Text>
-                          <Text className={css.info} margin={{ top: 'medium' }} color={Color.BLACK}>
-                            {getString('pipeline.enableVerificationHelpText')}{' '}
-                            <a href={cvLearnMoreHref} rel="noreferrer" target="_blank">
-                              {getString('pipeline.createPipeline.learnMore')}
-                            </a>
-                          </Text>
-                          <Switch
-                            checked={isVerifyEnabled}
-                            onChange={() => setIsVerifyEnabled(prevIsVerifyEnabled => !prevIsVerifyEnabled)}
-                            data-testid="enable-verification-options-switch"
-                            className={css.cvEnableSwitch}
-                            labelElement={
-                              <Text font={{ variation: FontVariation.BODY1 }} style={{ fontWeight: 500 }}>
-                                {getString('pipeline.enableVerificationOptions')}
-                              </Text>
-                            }
-                          />
-                        </Container>
-                        <Container>
-                          <img
-                            className={css.enableVerificationImage}
-                            src={AddContinuousVerification}
-                            data-testid="blank-canvas-image"
-                          />
-                        </Container>
-                      </Layout.Horizontal>
+                      {!isSshOrWinrmDeploymentType(serviceDefinitionType()) ? (
+                        <Layout.Horizontal margin={{ top: 'medium', bottom: 'large' }}>
+                          <Container className={css.enableVerificationDetail}>
+                            <Text font={{ variation: FontVariation.H4 }}>
+                              {getString('pipeline.enableVerificationTitle')}
+                            </Text>
+                            <Text className={css.info} margin={{ top: 'medium' }} color={Color.BLACK}>
+                              {getString('pipeline.enableVerificationHelpText')}{' '}
+                              <a href={cvLearnMoreHref} rel="noreferrer" target="_blank">
+                                {getString('pipeline.createPipeline.learnMore')}
+                              </a>
+                            </Text>
+                            <Switch
+                              checked={isVerifyEnabled}
+                              onChange={() => setIsVerifyEnabled(prevIsVerifyEnabled => !prevIsVerifyEnabled)}
+                              data-testid="enable-verification-options-switch"
+                              className={css.cvEnableSwitch}
+                              labelElement={
+                                <Text font={{ variation: FontVariation.BODY1 }} style={{ fontWeight: 500 }}>
+                                  {getString('pipeline.enableVerificationOptions')}
+                                </Text>
+                              }
+                            />
+                          </Container>
+                          <Container>
+                            <img
+                              className={css.enableVerificationImage}
+                              src={AddContinuousVerification}
+                              data-testid="blank-canvas-image"
+                            />
+                          </Container>
+                        </Layout.Horizontal>
+                      ) : null}
                     </>
                   )}
                 </section>

@@ -9,6 +9,7 @@ import React from 'react'
 import { render, queryByAttribute } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Formik, FormikForm, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import { act } from 'react-dom/test-utils'
 import { TestWrapper } from '@common/utils/testUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -22,7 +23,6 @@ const initialValues = {
   identifier: 'test_identifier',
   timeout: '10m',
   spec: {
-    provisionerIdentifier: '',
     configuration: {
       connectorRef: '',
       assignmentName: '',
@@ -64,7 +64,6 @@ describe('Test Azure Blueprint template input set', () => {
       identifier: '',
       timeout: '10m',
       spec: {
-        provisionerIdentifier: '',
         configuration: {
           connectorRef: '',
           assignmentName: '',
@@ -84,7 +83,6 @@ describe('Test Azure Blueprint template input set', () => {
       identifier: 'testID',
       timeout: RUNTIME_INPUT_VALUE,
       spec: {
-        provisionerIdentifier: '',
         configuration: {
           connectorRef: 'testRef',
           assignmentName: '',
@@ -104,7 +102,6 @@ describe('Test Azure Blueprint template input set', () => {
       identifier: 'testID',
       timeout: RUNTIME_INPUT_VALUE,
       spec: {
-        provisionerIdentifier: '',
         configuration: {
           connectorRef: '',
           assignmentName: '',
@@ -116,8 +113,8 @@ describe('Test Azure Blueprint template input set', () => {
     const { getByPlaceholderText } = renderComponent(data)
 
     const timeout = getByPlaceholderText('Enter w/d/h/m/s/ms')
-    userEvent.type(timeout, '10m')
-    expect(timeout).toHaveDisplayValue('10m')
+    await act(() => userEvent.type(timeout, '10m'))
+    await expect(timeout).toHaveDisplayValue('10m')
   })
 
   test('should render with connectorRef data and make connector api request', () => {
@@ -127,7 +124,6 @@ describe('Test Azure Blueprint template input set', () => {
       identifier: 'testID',
       timeout: '10m',
       spec: {
-        provisionerIdentifier: '',
         configuration: {
           connectorRef: RUNTIME_INPUT_VALUE,
           assignmentName: '',
@@ -147,7 +143,6 @@ describe('Test Azure Blueprint template input set', () => {
       identifier: 'testID',
       timeout: '10m',
       spec: {
-        provisionerIdentifier: '',
         configuration: {
           connectorRef: '',
           assignmentName: RUNTIME_INPUT_VALUE,
@@ -167,7 +162,6 @@ describe('Test Azure Blueprint template input set', () => {
       identifier: 'testID',
       timeout: '10m',
       spec: {
-        provisionerIdentifier: '',
         configuration: {
           connectorRef: '',
           assignmentName: RUNTIME_INPUT_VALUE,
@@ -179,8 +173,8 @@ describe('Test Azure Blueprint template input set', () => {
     const { container } = renderComponent(data)
 
     const assignmentName = queryByAttribute('name', container, 'test.spec.configuration.assignmentName')
-    userEvent.type(assignmentName!, 'test name')
-    expect(assignmentName).toHaveDisplayValue('test name')
+    await act(() => userEvent.type(assignmentName!, 'test name'))
+    await expect(assignmentName).toHaveDisplayValue('test name')
   })
 
   test('should render template data', async () => {
@@ -190,7 +184,6 @@ describe('Test Azure Blueprint template input set', () => {
       identifier: 'testID',
       timeout: '10m',
       spec: {
-        provisionerIdentifier: '',
         configuration: {
           connectorRef: '',
           assignmentName: '',

@@ -6,7 +6,7 @@
  */
 
 import React, { FC, useCallback, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import {
   Button,
   Checkbox,
@@ -17,6 +17,8 @@ import {
   Layout,
   ModalDialog,
   Page,
+  Select,
+  SelectOption,
   TableV2,
   Tag,
   Text,
@@ -25,6 +27,7 @@ import {
 import { Color, FontVariation } from '@harness/design-system'
 import { clone } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
+import routes from '@common/RouteDefinitions'
 import type { Failure, ServiceResponseDTO } from 'services/cd-ng'
 import { getErrorMessage, CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
 import useResponseError from '@cf/hooks/useResponseError'
@@ -33,7 +36,9 @@ import { useStrings } from 'framework/strings'
 import { useGetServiceList } from 'services/cd-ng'
 import { usePatchFeature } from 'services/cf'
 import type { Feature } from 'services/cf'
+import { NoData } from '../NoData/NoData'
 import ServicesFooter from './ServicesFooter'
+import NoServices from './images/NoServices.svg'
 
 import css from './ServicesList.module.scss'
 
@@ -49,33 +54,58 @@ export type PaginationProps = {
   pageIndex: number
   gotoPage: (pageNumber: number) => void
 }
+
+type queryParamsType = {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
 export interface EditServicesProps {
   closeModal: () => void
   loading: boolean
+  initialServices: ServiceType[]
   filteredServices: ServiceResponseDTO[]
-  paginationProps: PaginationProps
+  paginationProps: PaginationProps | false
+  queryParams: queryParamsType
   onChange: (service: ServiceType) => void
+  onDropdownChange: (filter: SelectOption) => void
   onSearch: (name: string) => void
   editedServices: ServiceType[]
+  filterOptions: SelectOption[]
   refetchServices: () => Promise<void>
+  searchTerm: string
+  selectedDropdown: SelectOption
   serviceError: GetDataError<Failure | Error> | null
   onSave: () => void
 }
 
-const EditServicesModal: FC<EditServicesProps> = ({
+enum Option {
+  SHOW_ALL = 'showAll',
+  SHOW_SELECTED = 'showSelected'
+}
+
+export const EditServicesModal: FC<EditServicesProps> = ({
   closeModal,
   loading,
   editedServices,
   filteredServices = [],
+  filterOptions,
   onChange,
+  onDropdownChange,
   onSave,
   onSearch,
   paginationProps,
+  searchTerm,
   serviceError,
-  refetchServices
+  refetchServices,
+  queryParams,
+  selectedDropdown
 }) => {
   const { getString } = useStrings()
-  const noServices = Boolean(!filteredServices?.length && !loading)
+  const history = useHistory()
+
+  const noServices = !filteredServices?.length && !loading && !searchTerm
+  const isEmptyState = !filteredServices?.length && !loading
 
   const column = [
     {
@@ -100,25 +130,48 @@ const EditServicesModal: FC<EditServicesProps> = ({
       title={getString('common.monitoredServices')}
       onClose={closeModal}
       toolbar={
-        <ExpandingSearchInput
-          name="serviceSearch"
-          alwaysExpanded
-          placeholder={getString('cf.featureFlagDetail.searchService')}
-          throttle={200}
-          onChange={onSearch}
-        />
+        !noServices && (
+          <Layout.Horizontal className={css.serviceToolbar}>
+            <ExpandingSearchInput
+              name="serviceSearch"
+              alwaysExpanded
+              placeholder={getString('cf.featureFlagDetail.searchService')}
+              throttle={200}
+              onChange={onSearch}
+            />
+            <Select
+              name="serviceDropdown"
+              onChange={service => onDropdownChange(service)}
+              items={filterOptions}
+              value={selectedDropdown}
+            />
+          </Layout.Horizontal>
+        )
       }
       footer={
-        <ServicesFooter loading={loading} onSave={onSave} onClose={closeModal} paginationProps={paginationProps} />
+        !noServices && (
+          <ServicesFooter loading={loading} onSave={onSave} onClose={closeModal} paginationProps={paginationProps} />
+        )
       }
     >
       {loading && <ContainerSpinner height="100%" margin="0" flex={{ align: 'center-center' }} />}
 
-      {noServices && (
-        <Container height="100%" flex={{ align: 'center-center' }}>
-          <Text color={Color.GREY_600} font={{ variation: FontVariation.H4, weight: 'light' }}>
-            {getString('cf.featureFlagDetail.noServices')}
-          </Text>
+      {isEmptyState && (
+        <Container flex={{ justifyContent: 'center' }}>
+          <NoData
+            imageURL={NoServices}
+            buttonProps={{ icon: 'plus' }}
+            buttonText={noServices ? getString('newService') : undefined}
+            onClick={() =>
+              history.push(
+                routes.toCVAddMonitoringServicesSetup({
+                  accountId: queryParams.accountIdentifier,
+                  ...queryParams
+                })
+              )
+            }
+            message={getString('cf.featureFlagDetail.noServices')}
+          />
         </Container>
       )}
 
@@ -135,9 +188,9 @@ const EditServicesModal: FC<EditServicesProps> = ({
             columns={column}
             data={filteredServices}
             hideHeaders
-            onRowClick={(service: ServiceResponseDTO) =>
+            onRowClick={(service: ServiceResponseDTO) => {
               onChange({ name: service.name, identifier: service.identifier })
-            }
+            }}
           />
         </Layout.Horizontal>
       )}
@@ -157,11 +210,28 @@ const ServicesList: React.FC<ServicesListProps> = props => {
   const { showSuccess } = useToaster()
   const { getString } = useStrings()
 
+  const filterOptions: SelectOption[] = [
+    {
+      value: Option.SHOW_ALL,
+      label: getString('showAll')
+    },
+    {
+      value: Option.SHOW_SELECTED,
+      label: getString('common.showSelected')
+    }
+  ]
+
+  const getDefaultOption = (): SelectOption => {
+    return filterOptions.find(option => option.value === Option.SHOW_ALL) as SelectOption
+  }
+
   const [showModal, setShowModal] = useState<boolean>(false)
   const [services, setServices] = useState<ServiceType[]>([])
   const [initialServices, setInitialServices] = useState<ServiceType[]>([])
   const [filteredServices, setFilteredServices] = useState<ServiceType[]>([])
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchTerm, setSearchTerm] = useState<string>('')
+  const [dropdown, setDropdown] = useState<SelectOption>(getDefaultOption())
+  const [serviceData, setServiceData] = useState<ServiceType[]>([])
   const [page, setPage] = useState(0)
 
   const queryParams = {
@@ -205,14 +275,30 @@ const ServicesList: React.FC<ServicesListProps> = props => {
   })
 
   useEffect(() => {
-    const serviceData = servicesResponse?.data?.content
+    const data = servicesResponse?.data?.content
       ?.filter(serviceContent => serviceContent.service !== undefined)
       .map(serviceContent => serviceContent.service as ServiceResponseDTO)
 
+    if (data) {
+      setServiceData(data)
+    }
+  }, [servicesResponse?.data?.content])
+
+  useEffect(() => {
     if (serviceData) {
       setFilteredServices(applySearch(serviceData, searchTerm))
     }
-  }, [servicesResponse?.data?.content, searchTerm])
+  }, [serviceData, searchTerm, initialServices])
+
+  useEffect(() => {
+    if (dropdown.value === Option.SHOW_SELECTED && searchTerm) {
+      setFilteredServices(applySearch(services, searchTerm))
+    } else if (dropdown.value === Option.SHOW_SELECTED) {
+      setFilteredServices(services)
+    } else if (dropdown.value === Option.SHOW_ALL) {
+      setFilteredServices(serviceData)
+    }
+  }, [services, dropdown.value, searchTerm, serviceData])
 
   const handleChange = (service: ServiceType): void => {
     const { name, identifier } = service
@@ -230,9 +316,16 @@ const ServicesList: React.FC<ServicesListProps> = props => {
 
   const onSearchInputChanged = useCallback(
     (name: string) => {
-      setSearchTerm(name)
+      setSearchTerm(name.trim())
     },
     [setSearchTerm]
+  )
+
+  const onDropdownChange = useCallback(
+    (value: SelectOption) => {
+      setDropdown(value)
+    },
+    [setDropdown]
   )
 
   const { mutate: patchServices, loading: patchLoading } = usePatchFeature({
@@ -312,23 +405,32 @@ const ServicesList: React.FC<ServicesListProps> = props => {
               setServices(initialServices)
               setShowModal(false)
               setSearchTerm('')
+              setDropdown(getDefaultOption())
               setPage(0)
             }}
+            filterOptions={filterOptions}
             loading={loading || patchLoading}
             onChange={handleChange}
+            onDropdownChange={onDropdownChange}
             onSave={handleSave}
             onSearch={onSearchInputChanged}
-            paginationProps={{
-              itemCount: servicesResponse?.data?.totalItems || 0,
-              pageSize: CF_DEFAULT_PAGE_SIZE,
-              pageCount: servicesResponse?.data?.totalPages ?? 1,
-              pageIndex: servicesResponse?.data?.pageIndex ?? 0,
-              gotoPage: pageNumber => setPage(pageNumber)
-            }}
+            paginationProps={
+              dropdown.value !== Option.SHOW_SELECTED && {
+                itemCount: servicesResponse?.data?.totalItems || 0,
+                pageSize: CF_DEFAULT_PAGE_SIZE,
+                pageCount: servicesResponse?.data?.totalPages ?? 1,
+                pageIndex: servicesResponse?.data?.pageIndex ?? 0,
+                gotoPage: pageNumber => setPage(pageNumber)
+              }
+            }
+            initialServices={initialServices}
             editedServices={services}
             filteredServices={filteredServices}
+            searchTerm={searchTerm}
             serviceError={error}
+            selectedDropdown={dropdown}
             refetchServices={refetch}
+            queryParams={queryParams}
           />
         )}
       </Layout.Horizontal>

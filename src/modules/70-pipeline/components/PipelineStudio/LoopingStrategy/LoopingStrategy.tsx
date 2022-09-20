@@ -43,7 +43,7 @@ export interface LoopingStrategyProps {
   step?: StepOrStepGroupOrTemplateStepData
 }
 
-const DOCUMENT_URL = 'https://docs.harness.io/article/i36ibenkq2-step-skip-condition-settings'
+const DOCUMENT_URL = 'https://docs.harness.io/article/eh4azj73m4'
 
 const yamlSanityConfig = {
   removeEmptyObject: false,
@@ -222,6 +222,7 @@ export function LoopingStrategy({
                               variation={ButtonVariation.ICON}
                               icon={'main-trash'}
                               data-testid="delete"
+                              disabled={isReadonly}
                               onClick={() => onDelete(formikProps)}
                             />
                           </Container>
@@ -234,9 +235,10 @@ export function LoopingStrategy({
                           key={selectedStrategy}
                           entityType={'Pipelines'}
                           bind={setYamlHandler}
+                          isReadOnlyMode={isReadonly}
                           height="200px"
                           width="100%"
-                          schema={/* istanbul ignore next */ loopingStrategySchema?.data?.schema}
+                          schema={loopingStrategySchema?.data?.schema}
                           existingJSON={formikProps.values}
                           renderCustomHeader={renderCustomHeader}
                           yamlSanityConfig={yamlSanityConfig}

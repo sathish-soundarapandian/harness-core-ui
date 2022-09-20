@@ -7,7 +7,7 @@
 
 import React, { Dispatch, SetStateAction, useContext, useRef, useState } from 'react'
 import * as Yup from 'yup'
-import { defaultTo, isEmpty, isEqual, omit, unset } from 'lodash-es'
+import { defaultTo, isEmpty, isEqual, omit, pick, unset } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import {
   Button,
@@ -74,6 +74,7 @@ export interface PromiseExtraArgs {
   updatedGitDetails?: EntityGitDetails
   comment?: string
   storeMetadata?: StoreMetadata
+  disableCreatingNewBranch?: boolean
 }
 
 export enum Intent {
@@ -92,6 +93,7 @@ export interface ModalProps {
   disabledFields?: Fields[]
   allowScopeChange?: boolean
   lastPublishedVersion?: string
+  disableCreatingNewBranch?: boolean
   onFailure?: (error: any, latestTemplate: NGTemplateInfoConfig) => void
 }
 
@@ -141,7 +143,8 @@ const BasicTemplateDetails = (
     disabledFields = [],
     promise,
     lastPublishedVersion,
-    onFailure
+    onFailure,
+    disableCreatingNewBranch
   } = props
   const pathParams = useParams<TemplateStudioPathProps>()
   const { orgIdentifier, projectIdentifier } = pathParams
@@ -171,10 +174,21 @@ const BasicTemplateDetails = (
   const cardDisabledStatus = React.useMemo(
     () =>
       intent === Intent.EDIT ||
-      !!props.disabledFields?.includes(Fields.StoreType) ||
+      !!disabledFields?.includes(Fields.StoreType) ||
       !templateFactory.getTemplateIsRemoteEnabled(initialValues.type) ||
       (!isTemplateGitxAccountEnabled && selectedScope !== Scope.PROJECT),
-    [initialValues.type, intent, isTemplateGitxAccountEnabled, props.disabledFields, selectedScope]
+    [initialValues.type, intent, isTemplateGitxAccountEnabled, disabledFields, selectedScope]
+  )
+
+  const gitDisabledFields = pick(
+    disabledFields?.reduce((fields: Record<string, boolean>, field: string) => {
+      fields[field] = true
+      return fields
+    }, {}),
+    Fields.ConnectorRef,
+    Fields.RepoName,
+    Fields.Branch,
+    Fields.FilePath
   )
 
   React.useImperativeHandle(
@@ -246,7 +260,8 @@ const BasicTemplateDetails = (
       const updateTemplate = omit(values, 'repo', 'branch', 'comment', 'connectorRef', 'storeType', 'filePath')
       promise(updateTemplate, {
         isEdit: intent === Intent.EDIT,
-        ...(isGitSyncEnabled && {
+        disableCreatingNewBranch,
+        ...(!isEmpty(values.repo) && {
           updatedGitDetails: { ...gitDetails, repoIdentifier: values.repo, branch: values.branch }
         }),
         ...(supportingTemplatesGitx ? { storeMetadata: storeMetadataValues } : {}),
@@ -283,14 +298,9 @@ const BasicTemplateDetails = (
             unset(draft, 'branch')
           }
         }
-
         if (!isTemplateGitxAccountEnabled) {
           if (value === Scope.PROJECT) {
-            draft.connectorRef = formInitialValues.connectorRef
-            draft.repo = formInitialValues.repo
-            draft.branch = formInitialValues.branch
-            draft.storeType = formInitialValues.storeType
-            draft.filePath = formInitialValues.filePath
+            Object.assign(draft, pick(formInitialValues, 'connectorRef', 'repo', 'branch', 'storeType', 'filePath'))
           } else {
             draft.storeType = GitStoreType.INLINE
             unset(draft, 'connectorRef')
@@ -313,10 +323,7 @@ const BasicTemplateDetails = (
           unset(draft, 'branch')
           unset(draft, 'filePath')
         } else {
-          draft.connectorRef = formInitialValues.connectorRef
-          draft.repo = formInitialValues.repo
-          draft.branch = formInitialValues.branch
-          draft.filePath = formInitialValues.filePath
+          Object.assign(draft, pick(formInitialValues, 'connectorRef', 'repo', 'branch', 'filePath'))
         }
       })
     )
@@ -333,12 +340,13 @@ const BasicTemplateDetails = (
   }, [formInitialValues])
 
   const gitxValidationSchema = supportingTemplatesGitx ? gitSyncFormSchema(getString) : {}
-  const gitsyncValidationSchema = isGitSyncEnabled
-    ? {
-        repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
-        branch: Yup.string().trim().required(getString('common.git.validation.branchRequired'))
-      }
-    : {}
+  const gitsyncValidationSchema =
+    isGitSyncEnabled && selectedScope === Scope.PROJECT
+      ? {
+          repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
+          branch: Yup.string().trim().required(getString('common.git.validation.branchRequired'))
+        }
+      : {}
 
   return (
     <Container
@@ -485,6 +493,7 @@ const BasicTemplateDetails = (
                             isEdit={intent === Intent.EDIT}
                             initialValues={formInitialValues}
                             entityScope={getScopeFromDTO(formik.values)}
+                            disableFields={gitDisabledFields}
                           />
                         )}
                       </>

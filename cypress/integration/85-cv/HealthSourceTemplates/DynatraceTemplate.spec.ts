@@ -1,5 +1,6 @@
 import { featureFlagsCall } from '../../../support/85-cv/common'
 import {
+  validations,
   countOfServiceAPI,
   monitoredServiceListCall,
   monitoredServiceListResponse
@@ -69,10 +70,10 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="Infrastructure"]').uncheck({ force: true })
     cy.get('input[name="Performance"]').uncheck({ force: true })
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'Plese select metric packs').should('be.visible')
+    cy.contains('span', validations.metricPack).should('be.visible')
     cy.get('input[name="Infrastructure"]').check({ force: true })
     cy.get('input[name="Performance"]').check({ force: true })
-    cy.contains('span', 'Plese select metric packs').should('not.exist')
+    cy.contains('span', validations.metricPack).should('not.exist')
 
     cy.get('[data-testid="dynatraceService"] input').click()
     cy.get('.bp3-popover-content').within(() => {
@@ -90,7 +91,7 @@ describe('Create empty monitored service', () => {
     cy.contains('span', 'Submit').click({ force: true })
 
     // Creating the template.
-    cy.findByRole('button', { name: /Save/i }).click()
+    cy.findByText('Save').click()
     // Saving modal.
     cy.get('.bp3-dialog').findByRole('button', { name: /Save/i }).click()
     cy.findByText('Template published successfully').should('be.visible')
@@ -123,25 +124,25 @@ describe('Create empty monitored service', () => {
     cy.wait('@QueriesCall')
     cy.contains('span', 'Submit').click({ force: true })
 
-    cy.contains('span', 'Group Name is required').scrollIntoView().should('be.visible')
+    cy.contains('span', validations.groupName).scrollIntoView().should('be.visible')
     cy.addingGroupName('Group 1')
 
     cy.contains('div', 'Query Specifications and mapping').click({ force: true })
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'Query is required').scrollIntoView().should('be.visible')
+    cy.contains('span', validations.query).scrollIntoView().should('be.visible')
 
     cy.get('div[class="view-lines"]').type('builtin:service.cpu.time')
 
     cy.contains('div', 'Assign').click({ force: true })
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'One selection is required').scrollIntoView().should('be.visible')
+    cy.contains('span', validations.assign).scrollIntoView().should('be.visible')
     cy.get('input[name="sli"]').click({ force: true })
 
     // Validation
     cy.contains('span', 'Submit').click({ force: true })
 
     // Creating the template.
-    cy.findByRole('button', { name: /Save/i }).click()
+    cy.findByText('Save').click()
     // Saving modal.
     cy.get('.bp3-dialog').findByRole('button', { name: /Save/i }).click()
     cy.findByText('Template published successfully').should('be.visible')

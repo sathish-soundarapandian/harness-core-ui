@@ -35,13 +35,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
-import {
-  getDefaultQueryParam,
-  getImagePath,
-  isArtifactSourceRuntime,
-  isFieldfromTriggerTabDisabled,
-  resetTags
-} from '../artifactSourceUtils'
+import { getDefaultQueryParam, getImagePath, isFieldfromTriggerTabDisabled, resetTags } from '../artifactSourceUtils'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 interface JenkinsRenderContent extends ArtifactSourceRenderProps {
@@ -247,8 +241,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     }
     return false
   }
-  const isRuntime = isArtifactSourceRuntime(isPrimaryArtifactsRuntime, isSidecarRuntime, isSidecar as boolean)
-
+  const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   const getJobDetailsValue = (): SubmenuSelectOption | undefined => {
     const jobName = get(formik, `values.${path}.artifacts.${artifactPath}.spec.jobName`)
     if (jobName?.split('/').length > 1) {

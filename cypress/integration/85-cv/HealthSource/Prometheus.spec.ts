@@ -7,6 +7,7 @@
 
 import { featureFlagsCall } from '../../../support/85-cv/common'
 import {
+  validations,
   countOfServiceAPI,
   monitoredServiceListCall,
   monitoredServiceListResponse
@@ -61,10 +62,10 @@ describe('Health Source - Prometheus', () => {
     cy.contains('span', 'Metric Name is required.').should('not.exist')
 
     cy.findByRole('button', { name: /Submit/i }).click()
-    cy.contains('span', 'Group Name is required.').should('be.visible')
+    cy.contains('span', validations.groupName).should('be.visible')
     cy.addingGroupName('Group 1')
     cy.get('input[name="groupName"]').should('contain.value', 'Group 1')
-    cy.contains('span', 'Group Name is required.').should('not.exist')
+    cy.contains('span', validations.groupName).should('not.exist')
 
     cy.contains('div', 'Build your Query').should('be.visible')
     cy.get('button span[data-icon="Edit"]').click()
@@ -77,10 +78,10 @@ describe('Health Source - Prometheus', () => {
     cy.contains('div', 'Build your Query').should('not.exist')
 
     cy.get('textarea[name="query"]').focus().blur()
-    cy.contains('span', 'Query is required.').should('be.visible')
+    cy.contains('span', validations.query).should('be.visible')
     cy.findByRole('button', { name: /Fetch records/i }).should('be.disabled')
     cy.get('textarea[name="query"]').type(`classes	{}`)
-    cy.contains('span', 'Query is required.').should('not.exist')
+    cy.contains('span', validations.query).should('not.exist')
 
     cy.contains('p', 'Submit query to see records from Prometheus').should('be.visible')
 
@@ -103,18 +104,18 @@ describe('Health Source - Prometheus', () => {
     cy.contains('div', 'Assign').click()
     cy.findByRole('button', { name: /Submit/i }).click()
 
-    cy.contains('span', 'One selection is required.').should('be.visible')
+    cy.contains('span', validations.assign).should('be.visible')
     cy.get('input[name="sli"]').click({ force: true })
-    cy.contains('span', 'One selection is required.').should('not.exist')
+    cy.contains('span', validations.assign).should('not.exist')
 
     cy.get('input[name="continuousVerification"]').click({ force: true })
     cy.get('input[name="healthScore"]').click({ force: true })
 
     cy.findByRole('button', { name: /Submit/i }).click()
 
-    cy.contains('span', 'Risk Category is required.').should('exist')
+    cy.contains('span', validations.riskCategory).should('exist')
     cy.contains('label', 'Errors').click()
-    cy.contains('span', 'Risk Category is required.').should('not.exist')
+    cy.contains('span', validations.riskCategory).should('not.exist')
 
     cy.contains('span', 'Deviation Compared to Baseline is required.').should('exist')
     cy.get('input[name="higherBaselineDeviation"]').click({ force: true })

@@ -22,6 +22,7 @@ declare const styles: {
   readonly checkbox: string
   readonly code: string
   readonly delegate: string
+  readonly delegateSelector: string
   readonly divider: string
   readonly duration: string
   readonly fieldsGroup: string

@@ -3,7 +3,7 @@
 exports[`<ExecutionActions /> tests if feature restriction is applied on rerun button: repeat button should be disabled as cd, ci are not allowed 1`] = `
 <div>
   <div
-    class="main"
+    class="Layout--horizontal StyledProps--main"
   >
     <span
       class="bp3-popover-wrapper"
@@ -12,7 +12,7 @@ exports[`<ExecutionActions /> tests if feature restriction is applied on rerun b
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
           tabindex="0"
           type="button"
         >
@@ -39,31 +39,41 @@ exports[`<ExecutionActions /> tests if feature restriction is applied on rerun b
       </span>
     </span>
     <span
-      class="bp3-popover-wrapper"
+      class="bp3-popover-wrapper bp3-dark"
     >
       <span
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main more Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          aria-label="execution menu actions"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
           type="button"
         >
           <span
-            class="bp3-icon bp3-icon-more StyledProps--main"
-            icon="more"
+            class="bp3-icon StyledProps--main"
+            data-icon="Options"
           >
             <svg
-              data-icon="more"
+              fill="currentColor"
               height="16"
-              viewBox="0 0 16 16"
+              viewBox="0 0 4 16"
               width="16"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <desc>
-                more
-              </desc>
-              <path
-                d="M2 6.03a2 2 0 100 4 2 2 0 100-4zM14 6.03a2 2 0 100 4 2 2 0 100-4zM8 6.03a2 2 0 100 4 2 2 0 100-4z"
-                fill-rule="evenodd"
+              <circle
+                cx="2"
+                cy="2"
+                r="1.5"
+              />
+              <circle
+                cx="2"
+                cy="8"
+                r="1.5"
+              />
+              <circle
+                cx="2"
+                cy="14"
+                r="1.5"
               />
             </svg>
           </span>
@@ -78,12 +88,23 @@ exports[`<ExecutionActions /> tests snapshot tests "Aborted" status: Menu 1`] = 
 <ul
   class="bp3-menu"
 >
-  <a
-    class="bp3-menu-item"
-    href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+  <li
+    class=""
   >
-    editPipeline
-  </a>
+    <a
+      class="bp3-menu-item bp3-popover-dismiss link"
+    >
+      <div
+        class="bp3-text-overflow-ellipsis bp3-fill"
+      >
+        <a
+          href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+        >
+          pipeline.viewPipeline
+        </a>
+      </div>
+    </a>
+  </li>
   <li
     class=""
   >
@@ -107,7 +128,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Aborted" status: Menu 1`] = 
       <div
         class="bp3-text-overflow-ellipsis bp3-fill"
       >
-        pipeline.execution.actions.pausePipeline
+        pipeline.execution.actions.abortPipeline
       </div>
     </a>
   </li>
@@ -121,7 +142,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Aborted" status: Menu 1`] = 
       <div
         class="bp3-text-overflow-ellipsis bp3-fill"
       >
-        pipeline.execution.actions.abortPipeline
+        pipeline.execution.actions.pausePipeline
       </div>
     </a>
   </li>
@@ -145,7 +166,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Aborted" status: Menu 1`] = 
 exports[`<ExecutionActions /> tests snapshot tests "Aborted" status: container 1`] = `
 <div>
   <div
-    class="main"
+    class="Layout--horizontal StyledProps--main"
   >
     <span
       class="bp3-popover-wrapper"
@@ -154,7 +175,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Aborted" status: container 1
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
           tabindex="0"
           type="button"
         >
@@ -181,31 +202,41 @@ exports[`<ExecutionActions /> tests snapshot tests "Aborted" status: container 1
       </span>
     </span>
     <span
-      class="bp3-popover-wrapper"
+      class="bp3-popover-wrapper bp3-dark"
     >
       <span
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main more Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          aria-label="execution menu actions"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
           type="button"
         >
           <span
-            class="bp3-icon bp3-icon-more StyledProps--main"
-            icon="more"
+            class="bp3-icon StyledProps--main"
+            data-icon="Options"
           >
             <svg
-              data-icon="more"
+              fill="currentColor"
               height="16"
-              viewBox="0 0 16 16"
+              viewBox="0 0 4 16"
               width="16"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <desc>
-                more
-              </desc>
-              <path
-                d="M2 6.03a2 2 0 100 4 2 2 0 100-4zM14 6.03a2 2 0 100 4 2 2 0 100-4zM8 6.03a2 2 0 100 4 2 2 0 100-4z"
-                fill-rule="evenodd"
+              <circle
+                cx="2"
+                cy="2"
+                r="1.5"
+              />
+              <circle
+                cx="2"
+                cy="8"
+                r="1.5"
+              />
+              <circle
+                cx="2"
+                cy="14"
+                r="1.5"
               />
             </svg>
           </span>
@@ -220,12 +251,23 @@ exports[`<ExecutionActions /> tests snapshot tests "Expired" status: Menu 1`] = 
 <ul
   class="bp3-menu"
 >
-  <a
-    class="bp3-menu-item"
-    href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+  <li
+    class=""
   >
-    editPipeline
-  </a>
+    <a
+      class="bp3-menu-item bp3-popover-dismiss link"
+    >
+      <div
+        class="bp3-text-overflow-ellipsis bp3-fill"
+      >
+        <a
+          href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+        >
+          pipeline.viewPipeline
+        </a>
+      </div>
+    </a>
+  </li>
   <li
     class=""
   >
@@ -249,7 +291,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Expired" status: Menu 1`] = 
       <div
         class="bp3-text-overflow-ellipsis bp3-fill"
       >
-        pipeline.execution.actions.pausePipeline
+        pipeline.execution.actions.abortPipeline
       </div>
     </a>
   </li>
@@ -263,7 +305,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Expired" status: Menu 1`] = 
       <div
         class="bp3-text-overflow-ellipsis bp3-fill"
       >
-        pipeline.execution.actions.abortPipeline
+        pipeline.execution.actions.pausePipeline
       </div>
     </a>
   </li>
@@ -287,7 +329,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Expired" status: Menu 1`] = 
 exports[`<ExecutionActions /> tests snapshot tests "Expired" status: container 1`] = `
 <div>
   <div
-    class="main"
+    class="Layout--horizontal StyledProps--main"
   >
     <span
       class="bp3-popover-wrapper"
@@ -296,7 +338,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Expired" status: container 1
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
           tabindex="0"
           type="button"
         >
@@ -323,31 +365,41 @@ exports[`<ExecutionActions /> tests snapshot tests "Expired" status: container 1
       </span>
     </span>
     <span
-      class="bp3-popover-wrapper"
+      class="bp3-popover-wrapper bp3-dark"
     >
       <span
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main more Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          aria-label="execution menu actions"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
           type="button"
         >
           <span
-            class="bp3-icon bp3-icon-more StyledProps--main"
-            icon="more"
+            class="bp3-icon StyledProps--main"
+            data-icon="Options"
           >
             <svg
-              data-icon="more"
+              fill="currentColor"
               height="16"
-              viewBox="0 0 16 16"
+              viewBox="0 0 4 16"
               width="16"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <desc>
-                more
-              </desc>
-              <path
-                d="M2 6.03a2 2 0 100 4 2 2 0 100-4zM14 6.03a2 2 0 100 4 2 2 0 100-4zM8 6.03a2 2 0 100 4 2 2 0 100-4z"
-                fill-rule="evenodd"
+              <circle
+                cx="2"
+                cy="2"
+                r="1.5"
+              />
+              <circle
+                cx="2"
+                cy="8"
+                r="1.5"
+              />
+              <circle
+                cx="2"
+                cy="14"
+                r="1.5"
               />
             </svg>
           </span>
@@ -362,12 +414,23 @@ exports[`<ExecutionActions /> tests snapshot tests "Failed" status: Menu 1`] = `
 <ul
   class="bp3-menu"
 >
-  <a
-    class="bp3-menu-item"
-    href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+  <li
+    class=""
   >
-    editPipeline
-  </a>
+    <a
+      class="bp3-menu-item bp3-popover-dismiss link"
+    >
+      <div
+        class="bp3-text-overflow-ellipsis bp3-fill"
+      >
+        <a
+          href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+        >
+          pipeline.viewPipeline
+        </a>
+      </div>
+    </a>
+  </li>
   <li
     class=""
   >
@@ -391,7 +454,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Failed" status: Menu 1`] = `
       <div
         class="bp3-text-overflow-ellipsis bp3-fill"
       >
-        pipeline.execution.actions.pausePipeline
+        pipeline.execution.actions.abortPipeline
       </div>
     </a>
   </li>
@@ -405,7 +468,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Failed" status: Menu 1`] = `
       <div
         class="bp3-text-overflow-ellipsis bp3-fill"
       >
-        pipeline.execution.actions.abortPipeline
+        pipeline.execution.actions.pausePipeline
       </div>
     </a>
   </li>
@@ -429,7 +492,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Failed" status: Menu 1`] = `
 exports[`<ExecutionActions /> tests snapshot tests "Failed" status: container 1`] = `
 <div>
   <div
-    class="main"
+    class="Layout--horizontal StyledProps--main"
   >
     <span
       class="bp3-popover-wrapper"
@@ -438,7 +501,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Failed" status: container 1`
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
           tabindex="0"
           type="button"
         >
@@ -465,31 +528,41 @@ exports[`<ExecutionActions /> tests snapshot tests "Failed" status: container 1`
       </span>
     </span>
     <span
-      class="bp3-popover-wrapper"
+      class="bp3-popover-wrapper bp3-dark"
     >
       <span
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main more Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          aria-label="execution menu actions"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
           type="button"
         >
           <span
-            class="bp3-icon bp3-icon-more StyledProps--main"
-            icon="more"
+            class="bp3-icon StyledProps--main"
+            data-icon="Options"
           >
             <svg
-              data-icon="more"
+              fill="currentColor"
               height="16"
-              viewBox="0 0 16 16"
+              viewBox="0 0 4 16"
               width="16"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <desc>
-                more
-              </desc>
-              <path
-                d="M2 6.03a2 2 0 100 4 2 2 0 100-4zM14 6.03a2 2 0 100 4 2 2 0 100-4zM8 6.03a2 2 0 100 4 2 2 0 100-4z"
-                fill-rule="evenodd"
+              <circle
+                cx="2"
+                cy="2"
+                r="1.5"
+              />
+              <circle
+                cx="2"
+                cy="8"
+                r="1.5"
+              />
+              <circle
+                cx="2"
+                cy="14"
+                r="1.5"
               />
             </svg>
           </span>
@@ -504,12 +577,23 @@ exports[`<ExecutionActions /> tests snapshot tests "NotStarted" status: Menu 1`]
 <ul
   class="bp3-menu"
 >
-  <a
-    class="bp3-menu-item"
-    href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+  <li
+    class=""
   >
-    editPipeline
-  </a>
+    <a
+      class="bp3-menu-item bp3-popover-dismiss link"
+    >
+      <div
+        class="bp3-text-overflow-ellipsis bp3-fill"
+      >
+        <a
+          href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+        >
+          pipeline.viewPipeline
+        </a>
+      </div>
+    </a>
+  </li>
   <li
     class=""
   >
@@ -533,7 +617,7 @@ exports[`<ExecutionActions /> tests snapshot tests "NotStarted" status: Menu 1`]
       <div
         class="bp3-text-overflow-ellipsis bp3-fill"
       >
-        pipeline.execution.actions.pausePipeline
+        pipeline.execution.actions.abortPipeline
       </div>
     </a>
   </li>
@@ -546,7 +630,7 @@ exports[`<ExecutionActions /> tests snapshot tests "NotStarted" status: Menu 1`]
       <div
         class="bp3-text-overflow-ellipsis bp3-fill"
       >
-        pipeline.execution.actions.abortPipeline
+        pipeline.execution.actions.pausePipeline
       </div>
     </a>
   </li>
@@ -570,7 +654,7 @@ exports[`<ExecutionActions /> tests snapshot tests "NotStarted" status: Menu 1`]
 exports[`<ExecutionActions /> tests snapshot tests "NotStarted" status: container 1`] = `
 <div>
   <div
-    class="main"
+    class="Layout--horizontal StyledProps--main"
   >
     <span
       class="bp3-popover-wrapper"
@@ -579,7 +663,7 @@ exports[`<ExecutionActions /> tests snapshot tests "NotStarted" status: containe
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon Button--size Button--small"
           tabindex="0"
           type="button"
         >
@@ -612,7 +696,7 @@ exports[`<ExecutionActions /> tests snapshot tests "NotStarted" status: containe
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon Button--size Button--small"
           tabindex="0"
           type="button"
         >
@@ -639,31 +723,41 @@ exports[`<ExecutionActions /> tests snapshot tests "NotStarted" status: containe
       </span>
     </span>
     <span
-      class="bp3-popover-wrapper"
+      class="bp3-popover-wrapper bp3-dark"
     >
       <span
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main more Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          aria-label="execution menu actions"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
           type="button"
         >
           <span
-            class="bp3-icon bp3-icon-more StyledProps--main"
-            icon="more"
+            class="bp3-icon StyledProps--main"
+            data-icon="Options"
           >
             <svg
-              data-icon="more"
+              fill="currentColor"
               height="16"
-              viewBox="0 0 16 16"
+              viewBox="0 0 4 16"
               width="16"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <desc>
-                more
-              </desc>
-              <path
-                d="M2 6.03a2 2 0 100 4 2 2 0 100-4zM14 6.03a2 2 0 100 4 2 2 0 100-4zM8 6.03a2 2 0 100 4 2 2 0 100-4z"
-                fill-rule="evenodd"
+              <circle
+                cx="2"
+                cy="2"
+                r="1.5"
+              />
+              <circle
+                cx="2"
+                cy="8"
+                r="1.5"
+              />
+              <circle
+                cx="2"
+                cy="14"
+                r="1.5"
               />
             </svg>
           </span>
@@ -678,12 +772,23 @@ exports[`<ExecutionActions /> tests snapshot tests "Paused" status: Menu 1`] = `
 <ul
   class="bp3-menu"
 >
-  <a
-    class="bp3-menu-item"
-    href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+  <li
+    class=""
   >
-    editPipeline
-  </a>
+    <a
+      class="bp3-menu-item bp3-popover-dismiss link"
+    >
+      <div
+        class="bp3-text-overflow-ellipsis bp3-fill"
+      >
+        <a
+          href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+        >
+          pipeline.viewPipeline
+        </a>
+      </div>
+    </a>
+  </li>
   <li
     class=""
   >
@@ -695,6 +800,19 @@ exports[`<ExecutionActions /> tests snapshot tests "Paused" status: Menu 1`] = `
         class="bp3-text-overflow-ellipsis bp3-fill"
       >
         pipeline.execution.actions.rerunPipeline
+      </div>
+    </a>
+  </li>
+  <li
+    class=""
+  >
+    <a
+      class="bp3-menu-item bp3-popover-dismiss"
+    >
+      <div
+        class="bp3-text-overflow-ellipsis bp3-fill"
+      >
+        pipeline.execution.actions.abortPipeline
       </div>
     </a>
   </li>
@@ -721,19 +839,6 @@ exports[`<ExecutionActions /> tests snapshot tests "Paused" status: Menu 1`] = `
       <div
         class="bp3-text-overflow-ellipsis bp3-fill"
       >
-        pipeline.execution.actions.abortPipeline
-      </div>
-    </a>
-  </li>
-  <li
-    class=""
-  >
-    <a
-      class="bp3-menu-item bp3-popover-dismiss"
-    >
-      <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
-      >
         pipeline.execution.actions.resumePipeline
       </div>
     </a>
@@ -744,7 +849,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Paused" status: Menu 1`] = `
 exports[`<ExecutionActions /> tests snapshot tests "Paused" status: container 1`] = `
 <div>
   <div
-    class="main"
+    class="Layout--horizontal StyledProps--main"
   >
     <span
       class="bp3-popover-wrapper"
@@ -753,7 +858,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Paused" status: container 1`
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon Button--size Button--small"
           tabindex="0"
           type="button"
         >
@@ -786,7 +891,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Paused" status: container 1`
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon Button--size Button--small"
           tabindex="0"
           type="button"
         >
@@ -813,31 +918,41 @@ exports[`<ExecutionActions /> tests snapshot tests "Paused" status: container 1`
       </span>
     </span>
     <span
-      class="bp3-popover-wrapper"
+      class="bp3-popover-wrapper bp3-dark"
     >
       <span
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main more Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          aria-label="execution menu actions"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
           type="button"
         >
           <span
-            class="bp3-icon bp3-icon-more StyledProps--main"
-            icon="more"
+            class="bp3-icon StyledProps--main"
+            data-icon="Options"
           >
             <svg
-              data-icon="more"
+              fill="currentColor"
               height="16"
-              viewBox="0 0 16 16"
+              viewBox="0 0 4 16"
               width="16"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <desc>
-                more
-              </desc>
-              <path
-                d="M2 6.03a2 2 0 100 4 2 2 0 100-4zM14 6.03a2 2 0 100 4 2 2 0 100-4zM8 6.03a2 2 0 100 4 2 2 0 100-4z"
-                fill-rule="evenodd"
+              <circle
+                cx="2"
+                cy="2"
+                r="1.5"
+              />
+              <circle
+                cx="2"
+                cy="8"
+                r="1.5"
+              />
+              <circle
+                cx="2"
+                cy="14"
+                r="1.5"
               />
             </svg>
           </span>
@@ -852,12 +967,23 @@ exports[`<ExecutionActions /> tests snapshot tests "Queued" status: Menu 1`] = `
 <ul
   class="bp3-menu"
 >
-  <a
-    class="bp3-menu-item"
-    href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+  <li
+    class=""
   >
-    editPipeline
-  </a>
+    <a
+      class="bp3-menu-item bp3-popover-dismiss link"
+    >
+      <div
+        class="bp3-text-overflow-ellipsis bp3-fill"
+      >
+        <a
+          href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+        >
+          pipeline.viewPipeline
+        </a>
+      </div>
+    </a>
+  </li>
   <li
     class=""
   >
@@ -881,7 +1007,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Queued" status: Menu 1`] = `
       <div
         class="bp3-text-overflow-ellipsis bp3-fill"
       >
-        pipeline.execution.actions.pausePipeline
+        pipeline.execution.actions.abortPipeline
       </div>
     </a>
   </li>
@@ -894,7 +1020,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Queued" status: Menu 1`] = `
       <div
         class="bp3-text-overflow-ellipsis bp3-fill"
       >
-        pipeline.execution.actions.abortPipeline
+        pipeline.execution.actions.pausePipeline
       </div>
     </a>
   </li>
@@ -918,7 +1044,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Queued" status: Menu 1`] = `
 exports[`<ExecutionActions /> tests snapshot tests "Queued" status: container 1`] = `
 <div>
   <div
-    class="main"
+    class="Layout--horizontal StyledProps--main"
   >
     <span
       class="bp3-popover-wrapper"
@@ -927,7 +1053,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Queued" status: container 1`
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon Button--size Button--small"
           tabindex="0"
           type="button"
         >
@@ -960,7 +1086,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Queued" status: container 1`
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon Button--size Button--small"
           tabindex="0"
           type="button"
         >
@@ -987,31 +1113,41 @@ exports[`<ExecutionActions /> tests snapshot tests "Queued" status: container 1`
       </span>
     </span>
     <span
-      class="bp3-popover-wrapper"
+      class="bp3-popover-wrapper bp3-dark"
     >
       <span
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main more Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          aria-label="execution menu actions"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
           type="button"
         >
           <span
-            class="bp3-icon bp3-icon-more StyledProps--main"
-            icon="more"
+            class="bp3-icon StyledProps--main"
+            data-icon="Options"
           >
             <svg
-              data-icon="more"
+              fill="currentColor"
               height="16"
-              viewBox="0 0 16 16"
+              viewBox="0 0 4 16"
               width="16"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <desc>
-                more
-              </desc>
-              <path
-                d="M2 6.03a2 2 0 100 4 2 2 0 100-4zM14 6.03a2 2 0 100 4 2 2 0 100-4zM8 6.03a2 2 0 100 4 2 2 0 100-4z"
-                fill-rule="evenodd"
+              <circle
+                cx="2"
+                cy="2"
+                r="1.5"
+              />
+              <circle
+                cx="2"
+                cy="8"
+                r="1.5"
+              />
+              <circle
+                cx="2"
+                cy="14"
+                r="1.5"
               />
             </svg>
           </span>
@@ -1026,12 +1162,23 @@ exports[`<ExecutionActions /> tests snapshot tests "ResourceWaiting" status: Men
 <ul
   class="bp3-menu"
 >
-  <a
-    class="bp3-menu-item"
-    href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+  <li
+    class=""
   >
-    editPipeline
-  </a>
+    <a
+      class="bp3-menu-item bp3-popover-dismiss link"
+    >
+      <div
+        class="bp3-text-overflow-ellipsis bp3-fill"
+      >
+        <a
+          href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+        >
+          pipeline.viewPipeline
+        </a>
+      </div>
+    </a>
+  </li>
   <li
     class=""
   >
@@ -1055,7 +1202,7 @@ exports[`<ExecutionActions /> tests snapshot tests "ResourceWaiting" status: Men
       <div
         class="bp3-text-overflow-ellipsis bp3-fill"
       >
-        pipeline.execution.actions.pausePipeline
+        pipeline.execution.actions.abortPipeline
       </div>
     </a>
   </li>
@@ -1068,7 +1215,7 @@ exports[`<ExecutionActions /> tests snapshot tests "ResourceWaiting" status: Men
       <div
         class="bp3-text-overflow-ellipsis bp3-fill"
       >
-        pipeline.execution.actions.abortPipeline
+        pipeline.execution.actions.pausePipeline
       </div>
     </a>
   </li>
@@ -1092,7 +1239,7 @@ exports[`<ExecutionActions /> tests snapshot tests "ResourceWaiting" status: Men
 exports[`<ExecutionActions /> tests snapshot tests "ResourceWaiting" status: container 1`] = `
 <div>
   <div
-    class="main"
+    class="Layout--horizontal StyledProps--main"
   >
     <span
       class="bp3-popover-wrapper"
@@ -1101,7 +1248,7 @@ exports[`<ExecutionActions /> tests snapshot tests "ResourceWaiting" status: con
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon Button--size Button--small"
           tabindex="0"
           type="button"
         >
@@ -1134,7 +1281,7 @@ exports[`<ExecutionActions /> tests snapshot tests "ResourceWaiting" status: con
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon Button--size Button--small"
           tabindex="0"
           type="button"
         >
@@ -1161,31 +1308,41 @@ exports[`<ExecutionActions /> tests snapshot tests "ResourceWaiting" status: con
       </span>
     </span>
     <span
-      class="bp3-popover-wrapper"
+      class="bp3-popover-wrapper bp3-dark"
     >
       <span
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main more Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          aria-label="execution menu actions"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
           type="button"
         >
           <span
-            class="bp3-icon bp3-icon-more StyledProps--main"
-            icon="more"
+            class="bp3-icon StyledProps--main"
+            data-icon="Options"
           >
             <svg
-              data-icon="more"
+              fill="currentColor"
               height="16"
-              viewBox="0 0 16 16"
+              viewBox="0 0 4 16"
               width="16"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <desc>
-                more
-              </desc>
-              <path
-                d="M2 6.03a2 2 0 100 4 2 2 0 100-4zM14 6.03a2 2 0 100 4 2 2 0 100-4zM8 6.03a2 2 0 100 4 2 2 0 100-4z"
-                fill-rule="evenodd"
+              <circle
+                cx="2"
+                cy="2"
+                r="1.5"
+              />
+              <circle
+                cx="2"
+                cy="8"
+                r="1.5"
+              />
+              <circle
+                cx="2"
+                cy="14"
+                r="1.5"
               />
             </svg>
           </span>
@@ -1200,12 +1357,23 @@ exports[`<ExecutionActions /> tests snapshot tests "Running" status: Menu 1`] = 
 <ul
   class="bp3-menu"
 >
-  <a
-    class="bp3-menu-item"
-    href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+  <li
+    class=""
   >
-    editPipeline
-  </a>
+    <a
+      class="bp3-menu-item bp3-popover-dismiss link"
+    >
+      <div
+        class="bp3-text-overflow-ellipsis bp3-fill"
+      >
+        <a
+          href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+        >
+          pipeline.viewPipeline
+        </a>
+      </div>
+    </a>
+  </li>
   <li
     class=""
   >
@@ -1229,7 +1397,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Running" status: Menu 1`] = 
       <div
         class="bp3-text-overflow-ellipsis bp3-fill"
       >
-        pipeline.execution.actions.pausePipeline
+        pipeline.execution.actions.abortPipeline
       </div>
     </a>
   </li>
@@ -1242,7 +1410,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Running" status: Menu 1`] = 
       <div
         class="bp3-text-overflow-ellipsis bp3-fill"
       >
-        pipeline.execution.actions.abortPipeline
+        pipeline.execution.actions.pausePipeline
       </div>
     </a>
   </li>
@@ -1266,7 +1434,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Running" status: Menu 1`] = 
 exports[`<ExecutionActions /> tests snapshot tests "Running" status: container 1`] = `
 <div>
   <div
-    class="main"
+    class="Layout--horizontal StyledProps--main"
   >
     <span
       class="bp3-popover-wrapper"
@@ -1275,7 +1443,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Running" status: container 1
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon Button--size Button--small"
           tabindex="0"
           type="button"
         >
@@ -1308,7 +1476,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Running" status: container 1
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon Button--size Button--small"
           tabindex="0"
           type="button"
         >
@@ -1335,31 +1503,41 @@ exports[`<ExecutionActions /> tests snapshot tests "Running" status: container 1
       </span>
     </span>
     <span
-      class="bp3-popover-wrapper"
+      class="bp3-popover-wrapper bp3-dark"
     >
       <span
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main more Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          aria-label="execution menu actions"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
           type="button"
         >
           <span
-            class="bp3-icon bp3-icon-more StyledProps--main"
-            icon="more"
+            class="bp3-icon StyledProps--main"
+            data-icon="Options"
           >
             <svg
-              data-icon="more"
+              fill="currentColor"
               height="16"
-              viewBox="0 0 16 16"
+              viewBox="0 0 4 16"
               width="16"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <desc>
-                more
-              </desc>
-              <path
-                d="M2 6.03a2 2 0 100 4 2 2 0 100-4zM14 6.03a2 2 0 100 4 2 2 0 100-4zM8 6.03a2 2 0 100 4 2 2 0 100-4z"
-                fill-rule="evenodd"
+              <circle
+                cx="2"
+                cy="2"
+                r="1.5"
+              />
+              <circle
+                cx="2"
+                cy="8"
+                r="1.5"
+              />
+              <circle
+                cx="2"
+                cy="14"
+                r="1.5"
               />
             </svg>
           </span>
@@ -1374,12 +1552,23 @@ exports[`<ExecutionActions /> tests snapshot tests "Success" status: Menu 1`] = 
 <ul
   class="bp3-menu"
 >
-  <a
-    class="bp3-menu-item"
-    href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+  <li
+    class=""
   >
-    editPipeline
-  </a>
+    <a
+      class="bp3-menu-item bp3-popover-dismiss link"
+    >
+      <div
+        class="bp3-text-overflow-ellipsis bp3-fill"
+      >
+        <a
+          href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+        >
+          pipeline.viewPipeline
+        </a>
+      </div>
+    </a>
+  </li>
   <li
     class=""
   >
@@ -1403,7 +1592,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Success" status: Menu 1`] = 
       <div
         class="bp3-text-overflow-ellipsis bp3-fill"
       >
-        pipeline.execution.actions.pausePipeline
+        pipeline.execution.actions.abortPipeline
       </div>
     </a>
   </li>
@@ -1417,7 +1606,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Success" status: Menu 1`] = 
       <div
         class="bp3-text-overflow-ellipsis bp3-fill"
       >
-        pipeline.execution.actions.abortPipeline
+        pipeline.execution.actions.pausePipeline
       </div>
     </a>
   </li>
@@ -1441,7 +1630,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Success" status: Menu 1`] = 
 exports[`<ExecutionActions /> tests snapshot tests "Success" status: container 1`] = `
 <div>
   <div
-    class="main"
+    class="Layout--horizontal StyledProps--main"
   >
     <span
       class="bp3-popover-wrapper"
@@ -1450,7 +1639,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Success" status: container 1
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
           tabindex="0"
           type="button"
         >
@@ -1477,31 +1666,41 @@ exports[`<ExecutionActions /> tests snapshot tests "Success" status: container 1
       </span>
     </span>
     <span
-      class="bp3-popover-wrapper"
+      class="bp3-popover-wrapper bp3-dark"
     >
       <span
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main more Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          aria-label="execution menu actions"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
           type="button"
         >
           <span
-            class="bp3-icon bp3-icon-more StyledProps--main"
-            icon="more"
+            class="bp3-icon StyledProps--main"
+            data-icon="Options"
           >
             <svg
-              data-icon="more"
+              fill="currentColor"
               height="16"
-              viewBox="0 0 16 16"
+              viewBox="0 0 4 16"
               width="16"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <desc>
-                more
-              </desc>
-              <path
-                d="M2 6.03a2 2 0 100 4 2 2 0 100-4zM14 6.03a2 2 0 100 4 2 2 0 100-4zM8 6.03a2 2 0 100 4 2 2 0 100-4z"
-                fill-rule="evenodd"
+              <circle
+                cx="2"
+                cy="2"
+                r="1.5"
+              />
+              <circle
+                cx="2"
+                cy="8"
+                r="1.5"
+              />
+              <circle
+                cx="2"
+                cy="14"
+                r="1.5"
               />
             </svg>
           </span>
@@ -1516,12 +1715,23 @@ exports[`<ExecutionActions /> tests snapshot tests "Suspended" status: Menu 1`] 
 <ul
   class="bp3-menu"
 >
-  <a
-    class="bp3-menu-item"
-    href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+  <li
+    class=""
   >
-    editPipeline
-  </a>
+    <a
+      class="bp3-menu-item bp3-popover-dismiss link"
+    >
+      <div
+        class="bp3-text-overflow-ellipsis bp3-fill"
+      >
+        <a
+          href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+        >
+          pipeline.viewPipeline
+        </a>
+      </div>
+    </a>
+  </li>
   <li
     class=""
   >
@@ -1532,20 +1742,6 @@ exports[`<ExecutionActions /> tests snapshot tests "Suspended" status: Menu 1`] 
         class="bp3-text-overflow-ellipsis bp3-fill"
       >
         pipeline.execution.actions.rerunPipeline
-      </div>
-    </a>
-  </li>
-  <li
-    class=""
-  >
-    <a
-      class="bp3-menu-item bp3-disabled"
-      tabindex="-1"
-    >
-      <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
-      >
-        pipeline.execution.actions.pausePipeline
       </div>
     </a>
   </li>
@@ -1573,6 +1769,20 @@ exports[`<ExecutionActions /> tests snapshot tests "Suspended" status: Menu 1`] 
       <div
         class="bp3-text-overflow-ellipsis bp3-fill"
       >
+        pipeline.execution.actions.pausePipeline
+      </div>
+    </a>
+  </li>
+  <li
+    class=""
+  >
+    <a
+      class="bp3-menu-item bp3-disabled"
+      tabindex="-1"
+    >
+      <div
+        class="bp3-text-overflow-ellipsis bp3-fill"
+      >
         pipeline.execution.actions.resumePipeline
       </div>
     </a>
@@ -1583,7 +1793,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Suspended" status: Menu 1`] 
 exports[`<ExecutionActions /> tests snapshot tests "Suspended" status: container 1`] = `
 <div>
   <div
-    class="main"
+    class="Layout--horizontal StyledProps--main"
   >
     <span
       class="bp3-popover-wrapper"
@@ -1592,7 +1802,7 @@ exports[`<ExecutionActions /> tests snapshot tests "Suspended" status: container
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
           tabindex="0"
           type="button"
         >
@@ -1619,31 +1829,41 @@ exports[`<ExecutionActions /> tests snapshot tests "Suspended" status: container
       </span>
     </span>
     <span
-      class="bp3-popover-wrapper"
+      class="bp3-popover-wrapper bp3-dark"
     >
       <span
         class="bp3-popover-target"
       >
         <button
-          class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main more Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+          aria-label="execution menu actions"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
           type="button"
         >
           <span
-            class="bp3-icon bp3-icon-more StyledProps--main"
-            icon="more"
+            class="bp3-icon StyledProps--main"
+            data-icon="Options"
           >
             <svg
-              data-icon="more"
+              fill="currentColor"
               height="16"
-              viewBox="0 0 16 16"
+              viewBox="0 0 4 16"
               width="16"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <desc>
-                more
-              </desc>
-              <path
-                d="M2 6.03a2 2 0 100 4 2 2 0 100-4zM14 6.03a2 2 0 100 4 2 2 0 100-4zM8 6.03a2 2 0 100 4 2 2 0 100-4z"
-                fill-rule="evenodd"
+              <circle
+                cx="2"
+                cy="2"
+                r="1.5"
+              />
+              <circle
+                cx="2"
+                cy="8"
+                r="1.5"
+              />
+              <circle
+                cx="2"
+                cy="14"
+                r="1.5"
               />
             </svg>
           </span>

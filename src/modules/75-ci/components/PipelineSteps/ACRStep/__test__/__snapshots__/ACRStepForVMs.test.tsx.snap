@@ -126,7 +126,7 @@ exports[`ACR Step Edit View should render properly for AWS VMs build infra 1`] =
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"

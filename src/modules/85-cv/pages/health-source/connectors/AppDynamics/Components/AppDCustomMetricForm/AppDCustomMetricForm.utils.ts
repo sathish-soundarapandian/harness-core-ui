@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { AllowedTypes, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import { AppDynamicsMonitoringSourceFieldNames } from '../../AppDHealthSource.constants'
 import type { AppDynamicsFomikFormInterface } from '../../AppDHealthSource.types'
@@ -53,4 +53,22 @@ export const getDerivedCompleteMetricPath = (formikValues: AppDynamicsFomikFormI
     derivedCompleteMetricPath = defaultTo(formikValues.completeMetricPath, '')
   }
   return derivedCompleteMetricPath
+}
+
+export const getAllowedTypeForCompleteMetricPath = ({
+  appDTier,
+  appdApplication,
+  connectorIdentifier
+}: {
+  appDTier?: string
+  appdApplication?: string
+  connectorIdentifier?: string
+}): AllowedTypes => {
+  const isTierRuntimeOrExpression = getMultiTypeFromValue(appDTier) !== MultiTypeInputType.FIXED
+  const isApplicationRuntimeOrExpression = getMultiTypeFromValue(appdApplication) !== MultiTypeInputType.FIXED
+  const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED
+
+  return isConnectorRuntimeOrExpression || isApplicationRuntimeOrExpression || isTierRuntimeOrExpression
+    ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+    : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
 }

@@ -31,7 +31,7 @@ import css from './OrganizationDetailsPage.module.scss'
 
 const OrganizationDetailsPage: React.FC = () => {
   const { accountId, orgIdentifier } = useParams<OrgPathProps>()
-  const { OPA_PIPELINE_GOVERNANCE, OPA_FF_GOVERNANCE, AUDIT_TRAIL_WEB_INTERFACE } = useFeatureFlags()
+  const { OPA_PIPELINE_GOVERNANCE, OPA_FF_GOVERNANCE } = useFeatureFlags()
   const DEPLOYMENT_FREEZE = false
   const history = useHistory()
   const { getString } = useStrings()
@@ -83,17 +83,14 @@ const OrganizationDetailsPage: React.FC = () => {
         icon: 'access-control',
         route: routes.toAccessControl({ accountId, orgIdentifier }),
         colorClass: css.accessControl
-      }
-    ]
-
-    if (AUDIT_TRAIL_WEB_INTERFACE) {
-      list.push({
+      },
+      {
         label: <String stringID="common.auditTrail" />,
         icon: 'audit-trail',
         route: routes.toAuditTrail({ accountId, orgIdentifier }),
         colorClass: css.auditTrail
-      })
-    }
+      }
+    ]
 
     return list
   }
@@ -228,9 +225,7 @@ const OrganizationDetailsPage: React.FC = () => {
           </Layout.Vertical>
           <Layout.Vertical spacing="medium" padding={{ top: 'large' }}>
             <Heading font={{ size: 'medium', weight: 'bold' }} color={Color.BLACK}>
-              {AUDIT_TRAIL_WEB_INTERFACE
-                ? getString('projectsOrgs.orgAccessCtrlAndAuditTrail')
-                : getString('projectsOrgs.orgAccessControl')}
+              {getString('projectsOrgs.orgAccessCtrlAndAuditTrail')}
             </Heading>
             <ResourceCardList items={getResourceCardList()} />
           </Layout.Vertical>

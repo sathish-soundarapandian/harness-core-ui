@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useEffect, useState } from 'react'
+import React, { useMemo, useEffect, useState, useRef } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import {
@@ -29,6 +29,8 @@ import { Service, useRouteDetails } from 'services/lw'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import routes from '@common/RouteDefinitions'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useStrings } from 'framework/strings'
 import { useGetAggregatedUsers, useGetConnector, UserAggregate } from 'services/cd-ng'
 import { allProviders, ceConnectorTypes } from '@ce/constants'
@@ -43,6 +45,8 @@ import {
 import RuleStatusToggleSwitch from '@ce/components/RuleDetails/RuleStatusToggleSwitch'
 import RulesDetailsBody from '@ce/components/RuleDetails/RuleDetailsBody'
 import useDeleteServiceHook from '@ce/common/useDeleteService'
+import RbacButton from '@rbac/components/Button/Button'
+import type { RefreshFunction } from '@ce/types'
 import css from './CORuleDetailsPage.module.scss'
 
 const CORuleDetailsPage: React.FC = () => {
@@ -50,6 +54,7 @@ const CORuleDetailsPage: React.FC = () => {
   const { getString } = useStrings()
   const history = useHistory()
   const { showSuccess, showError } = useToaster()
+  const refreshFns = useRef<RefreshFunction[]>([])
 
   const [user, setUser] = useState<UserAggregate>()
 
@@ -109,6 +114,16 @@ const CORuleDetailsPage: React.FC = () => {
     }
   }
 
+  const handleRefresh = () => {
+    refreshFns.current.forEach(fn => {
+      fn()
+    })
+  }
+
+  const registerRefreshFn = (fn: RefreshFunction) => {
+    refreshFns.current.push(fn)
+  }
+
   const breadcrumbs = useMemo(
     () => [
       {
@@ -145,7 +160,17 @@ const CORuleDetailsPage: React.FC = () => {
                   <Text font={{ variation: FontVariation.H4 }}>{defaultTo(service?.name, '')}</Text>
                   {service && (
                     <Container>
-                      <RuleStatusToggleSwitch serviceData={service} onSuccess={setService} />
+                      <RuleStatusToggleSwitch
+                        serviceData={service}
+                        onSuccess={setService}
+                        enableRbac={true}
+                        permissionRequest={{
+                          permissions: [PermissionIdentifier.EDIT_CCM_AUTOSTOPPING_RULE],
+                          resource: {
+                            resourceType: ResourceType.AUTOSTOPPINGRULE
+                          }
+                        }}
+                      />
                     </Container>
                   )}
                 </Layout.Horizontal>
@@ -195,7 +220,7 @@ const CORuleDetailsPage: React.FC = () => {
         }
         toolbar={
           <Layout.Horizontal spacing={'medium'}>
-            <Button
+            <RbacButton
               variation={ButtonVariation.PRIMARY}
               icon="Edit"
               onClick={() => {
@@ -206,11 +231,37 @@ const CORuleDetailsPage: React.FC = () => {
                   })
                 )
               }}
+              permission={{
+                permission: PermissionIdentifier.EDIT_CCM_AUTOSTOPPING_RULE,
+                resource: {
+                  resourceType: ResourceType.AUTOSTOPPINGRULE
+                }
+              }}
             >
               {getString('edit')}
-            </Button>
-            <Button variation={ButtonVariation.SECONDARY} icon="main-trash" onClick={triggerDelete}>
+            </RbacButton>
+            <RbacButton
+              variation={ButtonVariation.SECONDARY}
+              icon="main-trash"
+              onClick={triggerDelete}
+              permission={{
+                permission: PermissionIdentifier.DELETE_CCM_AUTOSTOPPING_RULE,
+                resource: {
+                  resourceType: ResourceType.AUTOSTOPPINGRULE
+                }
+              }}
+            >
               {getString('delete')}
+            </RbacButton>
+            <Button
+              minimal
+              variation={ButtonVariation.LINK}
+              icon="repeat"
+              iconProps={{ size: 12 }}
+              onClick={handleRefresh}
+              color={Color.PRIMARY_7}
+            >
+              {getString('common.refresh')}
             </Button>
           </Layout.Horizontal>
         }
@@ -221,6 +272,7 @@ const CORuleDetailsPage: React.FC = () => {
           connectorData={get(connectorData, 'data.connector')}
           dependencies={get(data, 'response.deps')}
           setService={setService}
+          registerRefreshFunction={registerRefreshFn}
         />
       ) : (
         <PageSpinner />

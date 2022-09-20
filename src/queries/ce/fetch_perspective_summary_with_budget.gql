@@ -7,8 +7,14 @@ query FetchPerspectiveDetailsSummaryWithBudget(
   $filters: [QLCEViewFilterWrapperInput]
   $aggregateFunction: [QLCEViewAggregationInput]
   $isClusterQuery: Boolean
+  $groupBy: [QLCEViewGroupByInput]
 ) {
-  perspectiveTrendStats(filters: $filters, aggregateFunction: $aggregateFunction, isClusterQuery: $isClusterQuery) {
+  perspectiveTrendStats(
+    filters: $filters
+    aggregateFunction: $aggregateFunction
+    isClusterQuery: $isClusterQuery
+    groupBy: $groupBy
+  ) {
     cost {
       statsDescription
       statsLabel
@@ -38,7 +44,12 @@ query FetchPerspectiveDetailsSummaryWithBudget(
     }
   }
 
-  perspectiveForecastCost(filters: $filters, aggregateFunction: $aggregateFunction, isClusterQuery: $isClusterQuery) {
+  perspectiveForecastCost(
+    filters: $filters
+    aggregateFunction: $aggregateFunction
+    isClusterQuery: $isClusterQuery
+    groupBy: $groupBy
+  ) {
     cost {
       statsLabel
       statsTrend

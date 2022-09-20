@@ -36,9 +36,8 @@ export const TemplateSelector: React.FC = (): JSX.Element => {
         <TemplateDetails
           template={selectedTemplate}
           setTemplate={setSelectedTemplate}
-          allowStableSelection
-          allowBranchChange={false}
           storeMetadata={storeMetadata}
+          isStandAlone
         />
       )
     } else {

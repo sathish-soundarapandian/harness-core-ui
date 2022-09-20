@@ -126,7 +126,6 @@ export default function IgnoreThresholdsFieldArray<T>({
                       handleMetricTypeUpdate(index, value as string, props.replace.bind(null, index))
                     }}
                   />
-                  {/* <ErrorMessage name={`ignoreThresholds.${index}.${FieldName.METRIC_THRESHOLD_METRIC_TYPE}`} /> */}
 
                   {/* ==== ⭐️ Group ==== */}
                   {!isOnlyCustomMetricHealthSource && (

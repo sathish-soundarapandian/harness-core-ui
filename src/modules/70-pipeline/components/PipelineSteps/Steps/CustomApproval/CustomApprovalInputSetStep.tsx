@@ -13,13 +13,13 @@ import cx from 'classnames'
 import { FieldArray } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { ShellScriptMonacoField, ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import { isApprovalStepFieldDisabled } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalCommons'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { scriptInputType, scriptOutputType, CustomApprovalData, CustomApprovalFormData } from './types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './CustomApproval.module.scss'
@@ -46,7 +46,7 @@ export default function CustomApprovalInputSetStep(props: CustomApprovalInputSet
     <FormikForm>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeDurationField
+          <TimeoutFieldInputSetView
             multiTypeDurationProps={{
               enableConfigureOptions: false,
               allowableTypes,
@@ -56,6 +56,8 @@ export default function CustomApprovalInputSetStep(props: CustomApprovalInputSet
             label={getString('pipelineSteps.timeoutLabel')}
             name={`${prefix}timeout`}
             disabled={readonly}
+            fieldPath={'timeout'}
+            template={template}
           />
         </div>
       )}
@@ -96,7 +98,7 @@ export default function CustomApprovalInputSetStep(props: CustomApprovalInputSet
 
       {getMultiTypeFromValue(template?.spec?.retryInterval) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeDurationField
+          <TimeoutFieldInputSetView
             multiTypeDurationProps={{
               enableConfigureOptions: false,
               allowableTypes,
@@ -106,13 +108,15 @@ export default function CustomApprovalInputSetStep(props: CustomApprovalInputSet
             label={getString('pipeline.customApprovalStep.retryInterval')}
             name={`${prefix}spec.retryInterval`}
             disabled={readonly}
+            fieldPath={'spec.retryInterval'}
+            template={template}
           />
         </div>
       )}
 
       {getMultiTypeFromValue(template?.spec?.scriptTimeout) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeDurationField
+          <TimeoutFieldInputSetView
             multiTypeDurationProps={{
               enableConfigureOptions: false,
               allowableTypes,
@@ -122,6 +126,8 @@ export default function CustomApprovalInputSetStep(props: CustomApprovalInputSet
             label={getString('pipeline.customApprovalStep.scriptTimeout')}
             name={`${prefix}spec.scriptTimeout`}
             disabled={readonly}
+            fieldPath={'spec.scriptTimeout'}
+            template={template}
           />
         </div>
       )}

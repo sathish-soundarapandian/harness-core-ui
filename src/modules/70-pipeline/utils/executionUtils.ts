@@ -81,7 +81,10 @@ export enum NodeType {
   StepGroupNode = 'StepGroupNode',
   'GITOPS_CLUSTERS' = 'GITOPS CLUSTERS',
   STRATEGY = 'STRATEGY',
-  RUNTIME_INPUT = 'RUNTIME_INPUT' // virtual node
+  RUNTIME_INPUT = 'RUNTIME_INPUT', // virtual node
+  INFRASTRUCTURE_V2 = 'INFRASTRUCTURE_V2',
+  INFRASTRUCTURE_TASKSTEP_V2 = 'INFRASTRUCTURE_TASKSTEP_V2',
+  SERVICE_V3 = 'SERVICE_V3'
 }
 
 export const NonSelectableNodes: NodeType[] = [
@@ -103,6 +106,7 @@ export const StepTypeIconsMap: { [key in NodeType]: IconName } = {
   SERVICE: 'services',
   SERVICE_CONFIG: 'services',
   SERVICE_SECTION: 'services',
+  SERVICE_V3: 'services',
   GENERIC_SECTION: 'step-group',
   NG_SECTION_WITH_ROLLBACK_INFO: 'step-group',
   NG_SECTION: 'step-group',
@@ -111,6 +115,8 @@ export const StepTypeIconsMap: { [key in NodeType]: IconName } = {
   INFRASTRUCTURE_SECTION: 'step-group',
   STEP_GROUP: 'step-group',
   INFRASTRUCTURE: 'infrastructure',
+  INFRASTRUCTURE_V2: 'infrastructure',
+  INFRASTRUCTURE_TASKSTEP_V2: 'infrastructure',
   NG_FORK: 'fork',
   DEPLOYMENT_STAGE_STEP: 'circle',
   APPROVAL_STAGE: 'approval-stage-icon',
@@ -1002,7 +1008,15 @@ export const processLayoutNodeMapV1 = (executionSummary?: PipelineExecutionSumma
           type: nodedata.nodeType as string,
           name: nodedata.name as string,
           icon: 'cross',
-          data: nodedata as any,
+          data: {
+            ...(nodedata as any),
+            ...(isNodeTypeMatrixOrFor(nodedata?.nodeType) && {
+              children: getChildNodeDataForMatrix(nodedata, layoutNodeMap),
+              graphType: PipelineGraphType.STAGE_GRAPH,
+              id: nodedata?.nodeUuid,
+              maxParallelism: nodedata?.moduleInfo?.maxConcurrency?.value
+            })
+          },
           children: []
         })
         nodeDetails = layoutNodeMap[nodeDetails.edgeLayoutList?.nextIds?.[0] || '']

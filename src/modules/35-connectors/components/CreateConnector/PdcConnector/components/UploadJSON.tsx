@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useRef, DragEvent, useCallback } from 'react'
+import type { FormikProps } from 'formik'
 import { Icon, Text } from '@harness/uicore'
 import { Button, ButtonVariation, FormInput } from '@wings-software/uicore'
 import { debounce } from 'lodash-es'
@@ -17,9 +18,14 @@ import css from './UploadJSON.module.scss'
 
 interface UploadJSONInterface {
   setJsonValue: (value: uploadHostItem[]) => void
+  formikProps?: FormikProps<{
+    hostsJson: string
+    hosts: string | string[]
+  }>
+  previousHosts?: uploadHostItem[] | string
 }
 
-const UploadJSON = ({ setJsonValue }: UploadJSONInterface) => {
+const UploadJSON = ({ setJsonValue, formikProps, previousHosts }: UploadJSONInterface) => {
   const { getString } = useStrings()
   const { showError } = useToaster()
   const inputRef = useRef() as React.MutableRefObject<HTMLInputElement>
@@ -52,11 +58,8 @@ const UploadJSON = ({ setJsonValue }: UploadJSONInterface) => {
   }
 
   const prettyPrintJsonContent = (jsonValue: string) => {
-    const textAreaElement: HTMLTextAreaElement | null = document.getElementsByTagName('textarea')[0]
-    const pretty = JSON.stringify(jsonValue, undefined, 4)
-    if (textAreaElement) {
-      textAreaElement.value = pretty
-    }
+    const prettyJsonValue = JSON.stringify(jsonValue, undefined, 4)
+    formikProps?.setFieldValue('hostsJson', prettyJsonValue)
   }
 
   const handleJsonAreaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -81,7 +84,7 @@ const UploadJSON = ({ setJsonValue }: UploadJSONInterface) => {
         ref={inputRef}
         onChange={event => handleFileUpload((event.target as any).files[0])}
       />
-      {!fileName && (
+      {!fileName && !previousHosts && (
         <div
           className={`${css.uploadComponent} ${dropHighlight ? css.highlightedDrop : ''}`}
           onClick={() => inputRef.current.click()}
@@ -120,7 +123,7 @@ const UploadJSON = ({ setJsonValue }: UploadJSONInterface) => {
           )}
         </div>
       )}
-      {fileName && (
+      {(fileName || previousHosts) && (
         <>
           <Button
             variation={ButtonVariation.SECONDARY}

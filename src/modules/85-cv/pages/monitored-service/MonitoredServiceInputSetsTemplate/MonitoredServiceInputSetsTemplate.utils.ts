@@ -26,10 +26,13 @@ export const getLabelByName = (name: string, getString: UseStringsReturn['getStr
       return getString('cv.monitoringSources.appD.serviceInstanceMetricPath')
     case 'serviceInstanceFieldName':
     case 'serviceInstanceIdentifier':
+    case 'serviceInstanceField':
       return getString('cv.monitoringSources.appD.serviceInstanceFieldName')
     case 'connectorRef':
       return getString('connector')
     case 'query':
+    case 'nrql':
+    case 'jsonMetricDefinition':
       return getString('cv.query')
     case 'category':
       return `Category for ${getString('cv.monitoringSources.riskCategoryLabel')}`

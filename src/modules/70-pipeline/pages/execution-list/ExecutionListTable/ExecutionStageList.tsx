@@ -8,9 +8,12 @@
 
 import React, { Fragment, ReactElement } from 'react'
 import type { Row } from 'react-table'
+import { Color, FontVariation, Icon, Text } from '@harness/uicore'
 import { processLayoutNodeMapV1 } from '@pipeline/utils/executionUtils'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
+import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/types'
 import { ExecutionStage } from './ExecutionStage'
+import css from './ExecutionListTable.module.scss'
 
 export function ExecutionStageList({ row }: { row: Row<PipelineExecutionSummary> }): ReactElement {
   const data = row.original
@@ -22,6 +25,24 @@ export function ExecutionStageList({ row }: { row: Row<PipelineExecutionSummary>
         return (
           <Fragment key={stage.identifier}>
             <ExecutionStage stage={stage} isSelectiveStage={!!data?.stagesExecuted?.length} />
+            {stage.type === 'MATRIX' && (
+              <div className={css.matrixStageList}>
+                <div className={css.matrixLabel}>
+                  <Icon size={16} name="looping" color={Color.WHITE} />
+                  <Text font={{ variation: FontVariation.SMALL }} color={Color.WHITE} margin={{ left: 'xsmall' }}>
+                    {stage.type}
+                  </Text>
+                </div>
+                {(stage.data.children as PipelineGraphState[])?.map(loopStage => (
+                  <ExecutionStage
+                    stage={loopStage}
+                    key={loopStage.identifier}
+                    isSelectiveStage={!!data?.stagesExecuted?.length}
+                    isMatrixStage
+                  />
+                ))}
+              </div>
+            )}
             {stage.children?.map(subStage => (
               <ExecutionStage
                 stage={subStage}

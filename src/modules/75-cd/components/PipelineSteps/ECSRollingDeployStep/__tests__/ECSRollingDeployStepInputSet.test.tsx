@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { act, fireEvent, queryByAttribute, render } from '@testing-library/react'
 import { Formik } from 'formik'
@@ -21,8 +28,10 @@ const template: ECSRollingDeployStepInitialValues = {
   name: 'Test Name',
   type: StepType.EcsRollingDeploy,
   timeout: RUNTIME_INPUT_VALUE,
-  sameAsAlreadyRunningInstances: RUNTIME_INPUT_VALUE,
-  forceNewDeployment: RUNTIME_INPUT_VALUE
+  spec: {
+    sameAsAlreadyRunningInstances: RUNTIME_INPUT_VALUE,
+    forceNewDeployment: RUNTIME_INPUT_VALUE
+  }
 }
 const handleSubmit = jest.fn()
 
@@ -55,13 +64,13 @@ describe('GenericExecutionStepInputSet tests', () => {
     expect(timeoutInput).not.toBeDisabled()
 
     const sameAsAlreadyRunningInstancesCheckbox = queryByNameAttribute(
-      'pipeline.stages[0].stage.spec.execution.steps[0].step.sameAsAlreadyRunningInstances'
+      'pipeline.stages[0].stage.spec.execution.steps[0].step.spec.sameAsAlreadyRunningInstances'
     ) as HTMLInputElement
     expect(sameAsAlreadyRunningInstancesCheckbox).toBeInTheDocument()
     expect(sameAsAlreadyRunningInstancesCheckbox).not.toBeDisabled()
 
     const forceNewDeploymentCheckbox = queryByNameAttribute(
-      'pipeline.stages[0].stage.spec.execution.steps[0].step.forceNewDeployment'
+      'pipeline.stages[0].stage.spec.execution.steps[0].step.spec.forceNewDeployment'
     ) as HTMLInputElement
     expect(forceNewDeploymentCheckbox).toBeInTheDocument()
     expect(forceNewDeploymentCheckbox).not.toBeDisabled()
@@ -100,13 +109,13 @@ describe('GenericExecutionStepInputSet tests', () => {
     expect(timeoutInput).toBeDisabled()
 
     const sameAsAlreadyRunningInstancesCheckbox = queryByNameAttribute(
-      'pipeline.stages[0].stage.spec.execution.steps[0].step.sameAsAlreadyRunningInstances'
+      'pipeline.stages[0].stage.spec.execution.steps[0].step.spec.sameAsAlreadyRunningInstances'
     ) as HTMLInputElement
     expect(sameAsAlreadyRunningInstancesCheckbox).toBeInTheDocument()
     expect(sameAsAlreadyRunningInstancesCheckbox).toBeDisabled()
 
     const forceNewDeploymentCheckbox = queryByNameAttribute(
-      'pipeline.stages[0].stage.spec.execution.steps[0].step.forceNewDeployment'
+      'pipeline.stages[0].stage.spec.execution.steps[0].step.spec.forceNewDeployment'
     ) as HTMLInputElement
     expect(forceNewDeploymentCheckbox).toBeInTheDocument()
     expect(forceNewDeploymentCheckbox).toBeDisabled()
@@ -137,12 +146,12 @@ describe('GenericExecutionStepInputSet tests', () => {
     expect(timeoutInput).not.toBeInTheDocument()
 
     const sameAsAlreadyRunningInstancesCheckbox = queryByNameAttribute(
-      'pipeline.stages[0].stage.spec.execution.steps[0].step.sameAsAlreadyRunningInstances'
+      'pipeline.stages[0].stage.spec.execution.steps[0].step.spec.sameAsAlreadyRunningInstances'
     ) as HTMLInputElement
     expect(sameAsAlreadyRunningInstancesCheckbox).not.toBeInTheDocument()
 
     const forceNewDeploymentCheckbox = queryByNameAttribute(
-      'pipeline.stages[0].stage.spec.execution.steps[0].step.forceNewDeployment'
+      'pipeline.stages[0].stage.spec.execution.steps[0].step.spec.forceNewDeployment'
     ) as HTMLInputElement
     expect(forceNewDeploymentCheckbox).not.toBeInTheDocument()
   })
@@ -172,12 +181,12 @@ describe('GenericExecutionStepInputSet tests', () => {
     expect(timeoutInput).not.toBeDisabled()
 
     const sameAsAlreadyRunningInstancesCheckbox = queryByNameAttribute(
-      'sameAsAlreadyRunningInstances'
+      'spec.sameAsAlreadyRunningInstances'
     ) as HTMLInputElement
     expect(sameAsAlreadyRunningInstancesCheckbox).toBeInTheDocument()
     expect(sameAsAlreadyRunningInstancesCheckbox).not.toBeDisabled()
 
-    const forceNewDeploymentCheckbox = queryByNameAttribute('forceNewDeployment') as HTMLInputElement
+    const forceNewDeploymentCheckbox = queryByNameAttribute('spec.forceNewDeployment') as HTMLInputElement
     expect(forceNewDeploymentCheckbox).toBeInTheDocument()
     expect(forceNewDeploymentCheckbox).not.toBeDisabled()
   })

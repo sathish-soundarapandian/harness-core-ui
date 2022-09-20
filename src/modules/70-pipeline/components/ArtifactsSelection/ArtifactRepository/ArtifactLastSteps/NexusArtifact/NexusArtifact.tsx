@@ -40,7 +40,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { ArtifactType, ImagePathProps, ImagePathTypes, RepositoryPortOrServer } from '../../../ArtifactInterface'
 import { ArtifactIdentifierValidation, ModalViewFor, repositoryPortOrServer } from '../../../ArtifactHelper'
 import ArtifactImagePathTagView from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
-import SideCarArtifactIdentifier from '../SideCarArtifactIdentifier'
+import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import css from '../../ArtifactConnector.module.scss'
 
 export function NexusArtifact({
@@ -53,9 +53,12 @@ export function NexusArtifact({
   previousStep,
   artifactIdentifiers,
   isReadonly = false,
-  selectedArtifact
+  selectedArtifact,
+  isMultiArtifactSource
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<ImagePathTypes>): React.ReactElement {
   const { getString } = useStrings()
+  const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
+
   const [lastQueryData, setLastQueryData] = useState({ artifactPath: '', repository: '' })
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -85,7 +88,7 @@ export function NexusArtifact({
   }
 
   const primarySchema = Yup.object().shape(schemaObject)
-  const sidecarSchema = Yup.object().shape({
+  const schemaWithIdentifier = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
       artifactIdentifiers,
@@ -157,11 +160,7 @@ export function NexusArtifact({
   }, [])
 
   const getInitialValues = useCallback((): ImagePathTypes => {
-    const values = getArtifactFormData(
-      initialValues,
-      selectedArtifact as ArtifactType,
-      context === ModalViewFor.SIDECAR
-    )
+    const values = getArtifactFormData(initialValues, selectedArtifact as ArtifactType, isIdentifierAllowed)
 
     merge(values, {
       repositoryPortorRepositoryURL: !isEmpty(values?.repositoryPort)
@@ -169,7 +168,7 @@ export function NexusArtifact({
         : RepositoryPortOrServer.RepositoryUrl
     })
     return values
-  }, [context, initialValues, selectedArtifact])
+  }, [initialValues, isIdentifierAllowed, selectedArtifact])
 
   const submitFormData = (formData: ImagePathTypes & { connectorId?: string }): void => {
     const repositoryPortOrServerData =
@@ -177,7 +176,7 @@ export function NexusArtifact({
         ? { repositoryPort: formData?.repositoryPort }
         : { repositoryUrl: formData?.repositoryUrl }
 
-    const artifactObj = getFinalArtifactFormObj(formData, context === ModalViewFor.SIDECAR)
+    const artifactObj = getFinalArtifactFormObj(formData, isIdentifierAllowed)
     merge(artifactObj.spec, {
       repository: formData?.repository,
       repositoryFormat,
@@ -194,7 +193,7 @@ export function NexusArtifact({
       <Formik
         initialValues={getInitialValues()}
         formName="nexusArtifact"
-        validationSchema={context === ModalViewFor.SIDECAR ? sidecarSchema : primarySchema}
+        validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
         onSubmit={formData => {
           submitFormData({
             ...prevStepData,
@@ -207,6 +206,7 @@ export function NexusArtifact({
         {formik => (
           <Form>
             <div className={css.connectorForm}>
+              {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
 
               <div className={css.tagGroup}>

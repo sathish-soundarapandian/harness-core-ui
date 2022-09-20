@@ -347,6 +347,7 @@ const CreateConnectorFromYamlPage: React.FC = () => {
               }}
               disabled={!hasConnectorChanged}
             />
+
             {hasConnectorChanged ? (
               <Button
                 text={getString('cancel')}
@@ -354,7 +355,14 @@ const CreateConnectorFromYamlPage: React.FC = () => {
                 onClick={resetEditor}
                 variation={ButtonVariation.TERTIARY}
               />
-            ) : null}
+            ) : (
+              <Button
+                text={getString('cancel')}
+                margin={{ top: 'xlarge' }}
+                onClick={rerouteBasedOnContext}
+                variation={ButtonVariation.TERTIARY}
+              />
+            )}
           </Layout.Horizontal>
         </Container>
       </PageBody>

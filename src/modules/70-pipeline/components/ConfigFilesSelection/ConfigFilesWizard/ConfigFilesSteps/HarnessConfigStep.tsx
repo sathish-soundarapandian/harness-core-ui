@@ -41,6 +41,7 @@ export function HarnessConfigStep({
 }: StepProps<any> & ConfigFilesPropType): React.ReactElement {
   const { getString } = useStrings()
   const isEditState = defaultTo(prevStepData.isEditMode, isEditMode)
+  const fileIndex = defaultTo(prevStepData.configFileIndex, configFileIndex)
 
   const [initialValues, setInitialValues] = useState({
     identifier: '',
@@ -94,7 +95,7 @@ export function HarnessConfigStep({
             getString('validation.duplicateIdError')
           )
           .required(getString('validation.identifierRequired'))
-      : listOfConfigFiles.map(({ configFile }) => configFile.identifier).indexOf(value) === configFileIndex
+      : listOfConfigFiles.map(({ configFile }) => configFile.identifier).indexOf(value) === fileIndex
       ? Yup.mixed().required(getString('validation.identifierRequired'))
       : Yup.mixed()
           .notOneOf(

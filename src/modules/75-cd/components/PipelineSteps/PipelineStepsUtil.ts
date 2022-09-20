@@ -18,6 +18,7 @@ import {
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import type { GetExecutionStrategyYamlQueryParams } from 'services/cd-ng'
+import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 
 const namespaceRegex = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/
 const releaseNameRegex = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/
@@ -304,4 +305,11 @@ export function getECSInfraValidationSchema(getString: UseStringsReturn['getStri
       )
     })
   })
+}
+
+export const isMultiArtifactSourceEnabled = (
+  isMultiArtifactSource: boolean,
+  stage: DeploymentStageElementConfig
+): boolean => {
+  return isMultiArtifactSource && isEmpty(stage?.spec?.serviceConfig?.serviceDefinition?.spec?.artifacts?.primary?.type)
 }

@@ -170,8 +170,10 @@ pipelineSteps:
     deploymentTypeRequired: Deployment type selection is required
     propagateFrom: Propagate from
     differentService: Deploy different Service
-    specifyYourService: Select Service
+    specifyYourService: '{{$.common.selectService}}'
+    specifyYourServices: '{{$.common.selectServices}}'
     selectService: '- Select Service -'
+    selectServices: '- Select Services -'
     newService: '{{$.newService}}'
     plusNewService: '+ {{$.newService}}'
     serviceIsRequired: Service is required
@@ -179,9 +181,19 @@ pipelineSteps:
     manifest:
       taskDefinition: Task Definition
       serviceDefinition: Service Definition
-      scallingPolicy: Scalling Policy
+      scalingPolicy: Scaling Policy
       scalableTarget: Scalable Target
     newServiceOverride: New configuration overrides
+    multiServicesText: Deploy to multiple Services
+    multiServicesTitleText: Deploy to multiple services?
+    multiServicesParallelDeployLabel: Deploy services in parallel?
+    multiServicesConfirmationText: Are you sure you want to switch to deploying multiple services?. If you choose to proceed, your existing service will be migrated automatically.
+    singleServicesTitleText: Deploy to single service?
+    singleServicesConfirmationText: Are you sure you want to switch to deploying to a single services?. If you choose to proceed, your existing services will be lost.
+    deleteServiceFromListTitleText: Remove service from list?
+    deleteServiceFromListText: Are you sure you want to remove {{name}} service from the list?
+    viewServiceInputs: View service inputs
+    hideServiceInputs: Hide service inputs
   infraTab:
     deploymentType: Infrastructure type selection is required
     clusterError: No cluster found with given Connector
@@ -317,6 +329,7 @@ configFileStoreTitle: 'Config File'
 selectRepository: Select a repository
 selectArtifact: Select an artifact
 artifactName: Artifact Name
+selectArtifactSource: Select Artifact Source
 artifactFormErrors:
   artifactFilePath: Enter the artifact path. You can use wildcards such as `todo/*/*`
   repositoryName: Repository name is required
@@ -465,6 +478,7 @@ azureBlueprint:
   assignmentNameError: Assignment Name Required
   configuration: Azure Blueprint Configuration
   managementGroup: Management Group
+  templateFolderPath: Template Folder Path
 validation:
   specifyFilter: Specify the filter condition
 welcomeMessage: Welcome to Harness
@@ -511,3 +525,25 @@ miniKubeCmd1: curl -LO https://storage.googleapis.com/minikube/releases/latest/m
 miniKubeCmd2: sudo install minikube-linux-amd64 /usr/local/bin/minikube
 miniKubeCmd3: minikube start
 miniKubeCmd4: kubectl get pods -A
+deploymentSteps: Deployment Steps
+addStepTemplatesForYourDeploymentType: Add step templates for your deployment type here
+removeStepTemplate: Remove Step Template
+removeStepTemplateConfirmationLabel: 'Are you sure you want to remove linked step template ?'
+azureArm:
+  description: Deploy resources using Azure Resource Manager (ARM).
+  location: Location
+  templateFile: ARM Template File
+  templateFileSource: '{{ $.cd.azureBlueprint.templateFileSource }}'
+  templateFileDetails: '{{ $.cd.azureBlueprint.templateFileDetails }}'
+  paramFileSource: Parameter File Source
+  specifyTemplateFile: Specify ARM Template File
+  specifyTemplateFileSource: Specify Template File Source
+  paramFile: ARM Parameter File
+  paramFilePath: Parameter File Path
+  specifyParameterFile: Specify ARM Parameter File
+  managementGroup: '{{ $.cd.azureBlueprint.managementGroup }}'
+  tenant: Tenant
+  required: '{{name}} is Required'
+removeStepTemplateSuccess: Step Template has been successfully removed
+addStepTemplate: Add step template
+useStepTemplate: Use step template

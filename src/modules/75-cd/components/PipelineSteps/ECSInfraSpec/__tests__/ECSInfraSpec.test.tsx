@@ -7,7 +7,7 @@
 
 import React from 'react'
 import userEvent from '@testing-library/user-event'
-import { act, findByText, render, waitFor } from '@testing-library/react'
+import { findByText, render, waitFor } from '@testing-library/react'
 
 import type { EcsInfrastructure } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
@@ -100,9 +100,8 @@ describe('ECSInfraSpec tests', () => {
     // Choose connectorRef
     const connnectorRefInput = getByTestId(/connectorRef/)
     expect(connnectorRefInput).toBeTruthy()
-    act(() => {
-      userEvent.click(connnectorRefInput!)
-    })
+    userEvent.click(connnectorRefInput!)
+
     await testConnectorRefChange()
     expect(fetchClusters).not.toBeCalled()
     // Choose region

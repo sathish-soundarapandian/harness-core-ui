@@ -82,7 +82,7 @@ export function getInitialValuesInCorrectFormat<T, U>(
     frameworkVersionOptions
   }: Dependencies = {}
 ): U {
-  const values = {}
+  const values = set({}, 'strategy', get(initialValues, 'strategy', {}))
 
   fields.forEach(({ name, type }) => {
     const value = get(initialValues, name)
@@ -254,7 +254,7 @@ export function getInitialValuesInCorrectFormat<T, U>(
 }
 
 export function getFormValuesInCorrectFormat<T, U>(formValues: T, fields: Field[]): U {
-  const values = {}
+  const values = set({}, 'strategy', get(formValues, 'strategy', {}))
 
   fields.forEach(({ name, type }) => {
     if (type === Types.Text || type === Types.Boolean) {

@@ -88,6 +88,18 @@ export enum DATE_RANGE_SHORTCUTS_NAME {
 
 export const getUserTimeZone = () => Intl.DateTimeFormat().resolvedOptions().timeZone
 
+export const getGenericTimeZoneName = () => {
+  return new Date()
+    .toLocaleDateString('en-US', {
+      day: '2-digit',
+      timeZoneName: 'long'
+    })
+    .slice(4)
+    .split(' ')
+    .map(term => term[0])
+    .join('')
+}
+
 export const DEFAULT_TIME_RANGE: TimeRangeFilterType = {
   to: DATE_RANGE_SHORTCUTS.LAST_7_DAYS[1].format(CE_DATE_FORMAT_INTERNAL),
   from: DATE_RANGE_SHORTCUTS.LAST_7_DAYS[0].format(CE_DATE_FORMAT_INTERNAL)

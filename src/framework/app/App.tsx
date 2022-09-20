@@ -35,13 +35,13 @@ import SecureStorage from 'framework/utils/SecureStorage'
 import { SideNavProvider } from 'framework/SideNavStore/SideNavContext'
 import { useRefreshToken } from 'services/portal'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-
-import './App.scss'
+import { REFERER_URL } from '@common/utils/utils'
 import { PermissionsProvider } from 'framework/rbac/PermissionsContext'
 import { FeaturesProvider } from 'framework/featureStore/FeaturesContext'
 import { ThirdPartyIntegrations } from '3rd-party/ThirdPartyIntegrations'
 import { useGlobalEventListener } from '@common/hooks'
 import HelpPanelProvider from 'framework/utils/HelpPanelProvider'
+import './App.scss'
 
 const RouteDestinations = React.lazy(() => import('modules/RouteDestinations'))
 
@@ -51,6 +51,7 @@ FocusStyleManager.onlyShowFocusOnTabs()
 SecureStorage.registerCleanupException(PREFERENCES_TOP_LEVEL_KEY)
 SecureStorage.registerCleanupException(MULTI_TYPE_INPUT_MENU_LEARN_MORE_STORAGE_KEY)
 SecureStorage.registerCleanupException(HELP_PANEL_STORAGE_KEY)
+SecureStorage.registerCleanupException(REFERER_URL)
 
 // set up Immer
 setAutoFreeze(false)

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { isEmpty, defaultTo, get } from 'lodash-es'
 import {
   Accordion,
@@ -18,7 +18,6 @@ import {
   Table,
   Text,
   TextProps,
-  Toggle,
   useToaster
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
@@ -32,6 +31,9 @@ import { allProviders, ceConnectorTypes, GatewayKindType } from '@ce/constants'
 import { ConnectorInfoDTO, useGetConnector } from 'services/cd-ng'
 import { useBooleanStatus } from '@common/hooks'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import RbacToggle from '@ce/common/CERbacToggle'
 import FixedScheduleAccordion from '../COGatewayList/components/FixedScheduleAccordion/FixedScheduleAccordion'
 import css from './RuleDetailsBody.module.scss'
 
@@ -235,9 +237,28 @@ const RuleDetailsTabContainer: React.FC<RuleDetailsTabContainerProps> = ({
     return Utils.getConditionalResult(hasHttpsConfig, 'https', 'http')
   }, [service.routing?.ports])
 
+  const isK8sRule = service.kind === GatewayKindType.KUBERNETES
+  const isEcsRule = !isEmpty(get(service, 'routing.container_svc'))
+  const k8sYaml = isK8sRule ? JSON.parse(get(service, 'routing.k8s.RuleJson', '{}')) : null
   const cloudProvider = connectorData?.type && ceConnectorTypes[connectorData?.type]
   const provider = useMemo(() => allProviders.find(item => item.value === cloudProvider), [cloudProvider])
   const iconName = defaultTo(provider?.icon, 'spinner') as IconName
+  const hasCustomDomains = (service.custom_domains?.length as number) > 0
+  const getClickableLink = useCallback(
+    (withoutProtocol = false) => {
+      const hasHttpsConfig = !isEmpty(
+        service.routing?.ports?.find(portConfig => portConfig.protocol?.toLowerCase() === 'https')
+      )
+      const protocol = Utils.getConditionalResult(hasHttpsConfig, 'https', 'http')
+      const link = isK8sRule
+        ? service.routing?.k8s?.CustomDomain
+        : hasCustomDomains
+        ? service.custom_domains?.[0]
+        : service.host_name
+      return withoutProtocol ? link : `${protocol}://${link}`
+    },
+    [service]
+  )
 
   return (
     <Container>
@@ -249,19 +270,49 @@ const RuleDetailsTabContainer: React.FC<RuleDetailsTabContainerProps> = ({
             <Text font={{ variation: FontVariation.H5 }}>{getString('ce.co.gatewayReview.gatewayDetails')}</Text>
             <DetailRow label={getString('ce.co.ruleDetails.detailsTab.label.ruleId')} value={`${service.id}`} />
             <DetailRow label={getString('ce.co.ruleDetailsHeader.idleTime')} value={`${service.idle_time_mins} min`} />
-            {/* AWS Details - EC2 */}
-            <DetailRow
-              label={getString('ce.co.gatewayReview.instanceType')}
-              value={
-                service.fulfilment === 'ondemand'
-                  ? getString('ce.nodeRecommendation.onDemand')
-                  : /* istanbul ignore next */ getString('ce.nodeRecommendation.spot')
-              }
-            />
-            <DetailRow
-              label={getString('ce.co.ruleDetailsHeader.hostName')}
-              value={<LinkWithCopy url={defaultTo(service.host_name, '')} protocol={domainProtocol} />}
-            />
+            {isK8sRule ? (
+              <DetailRow
+                label={getString('ce.co.ruleDetails.detailsTab.label.serviceManaged')}
+                value={get(k8sYaml, 'spec.service.name', '')}
+              />
+            ) : isEcsRule ? (
+              <DetailRow
+                label={getString('ce.co.ruleDetails.detailsTab.label.ecsClusterName')}
+                value={get(service, 'routing.container_svc.cluster', '')}
+              />
+            ) : (
+              <DetailRow
+                label={getString('ce.co.gatewayReview.instanceType')}
+                value={
+                  service.fulfilment === 'ondemand'
+                    ? getString('ce.nodeRecommendation.onDemand')
+                    : /* istanbul ignore next */ getString('ce.nodeRecommendation.spot')
+                }
+              />
+            )}
+            {isEcsRule && (
+              <DetailRow
+                label={getString('ce.co.ruleDetails.detailsTab.label.serviceManaged')}
+                value={get(service, 'routing.container_svc.service', '')}
+              />
+            )}
+            {hasCustomDomains ? (
+              <DetailRow
+                label={getString('ce.co.ruleDetailsHeader.customDomain')}
+                value={
+                  <Container>
+                    {service.custom_domains?.map(domain => (
+                      <LinkWithCopy key={domain} url={defaultTo(domain, '')} protocol={domainProtocol} />
+                    ))}
+                  </Container>
+                }
+              />
+            ) : getClickableLink(true) ? (
+              <DetailRow
+                label={getString('ce.co.ruleDetailsHeader.hostName')}
+                value={<LinkWithCopy url={defaultTo(getClickableLink(true), '')} protocol={domainProtocol} />}
+              />
+            ) : null}
             <DetailRow
               label={getString('connector')}
               value={
@@ -272,12 +323,17 @@ const RuleDetailsTabContainer: React.FC<RuleDetailsTabContainerProps> = ({
                 />
               }
             />
-            <DetailRow label={getString('ce.co.accessPoint.loadbalancer')} value={get(accessPointData, 'name', '')} />
-            <DetailRow
-              label={getString('ce.co.ruleDetails.detailsTab.label.vmsManaged')}
-              value={<ManagedVms resources={defaultTo(resources, [])} />}
-            />
-            {/* AWS Details end */}
+            {isK8sRule ? (
+              <DetailRow label={getString('common.smtp.port')} value={get(k8sYaml, 'spec.service.port', '')} />
+            ) : isEcsRule ? null : (
+              <DetailRow label={getString('ce.co.accessPoint.loadbalancer')} value={get(accessPointData, 'name', '')} />
+            )}
+            {resources && (
+              <DetailRow
+                label={getString('ce.co.ruleDetails.detailsTab.label.vmsManaged')}
+                value={<ManagedVms resources={defaultTo(resources, [])} />}
+              />
+            )}
             <DetailRow
               label={getString('ce.co.rulesTableHeaders.status')}
               value={
@@ -392,21 +448,33 @@ const AdvancedConfigurationRow: React.FC<AdvancedConfigurationRowProps> = ({ ser
       <Text font={{ variation: FontVariation.H5 }}>
         {getString('ce.co.autoStoppingRule.configuration.step4.advancedConfiguration')}
       </Text>
-      <Toggle
+      <RbacToggle
         checked={hideProgressPage}
         disabled={service.disabled}
         label={getString('ce.co.autoStoppingRule.review.hideProgressPage')}
         onToggle={handleHideProgressPageToggle}
         data-testid={'progressPageViewToggle'}
         className={css.toggleInput}
+        permissionRequest={{
+          permissions: [PermissionIdentifier.EDIT_CCM_AUTOSTOPPING_RULE],
+          resource: {
+            resourceType: ResourceType.AUTOSTOPPINGRULE
+          }
+        }}
       />
-      <Toggle
+      <RbacToggle
         checked={dryRunMode}
         disabled={service.disabled}
         label={getString('ce.co.dryRunLabel')}
         onToggle={handleDryRunModeToggle}
         data-testid={'dryRunToggle'}
         className={css.toggleInput}
+        permissionRequest={{
+          permissions: [PermissionIdentifier.EDIT_CCM_AUTOSTOPPING_RULE],
+          resource: {
+            resourceType: ResourceType.AUTOSTOPPINGRULE
+          }
+        }}
       />
       {!isEmpty(dependencies) && <DependenciesAccordion data={dependencies} />}
       <FixedScheduleAccordion service={service} />

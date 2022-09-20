@@ -5,12 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
-import { isEmpty as _isEmpty, omit as _omit, debounce as _debounce } from 'lodash-es'
-import { FieldArray, Select, TextInput } from '@wings-software/uicore'
+import React from 'react'
+import { isEmpty as _isEmpty, debounce as _debounce } from 'lodash-es'
+import { FieldArray, Select, TextInput, Text } from '@wings-software/uicore'
+import { FontVariation } from '@harness/design-system'
 import { Formik } from 'formik'
 import type { Field } from '@wings-software/uicore/dist/components/FieldArray/FieldArray'
 import type { PortConfig } from 'services/lw'
+import { useStrings } from 'framework/strings'
 import css from './COGatewayConfig.module.scss'
 
 interface SelectItem {
@@ -43,21 +45,10 @@ const actions: SelectItem[] = [
 interface CORoutingTableProps {
   routingRecords: PortConfig[]
   setRoutingRecords: (records: PortConfig[]) => void
+  isAwsConfig?: boolean
 }
 const CORoutingTable: React.FC<CORoutingTableProps> = props => {
-  const [forwardConfigRows, setForwardConfigRows] = useState<Record<string, boolean>>({})
-
-  useEffect(() => {
-    if (!_isEmpty(props.routingRecords) && _isEmpty(forwardConfigRows)) {
-      const configRows: Record<string, boolean> = {}
-      props.routingRecords.forEach((record, _index) => {
-        if (record.action === 'forward') {
-          configRows[_index] = true
-        }
-      })
-      setForwardConfigRows(configRows)
-    }
-  }, [props.routingRecords])
+  const { getString } = useStrings()
 
   const getItembyValue = (items: SelectItem[], value: string): SelectItem => {
     return items.filter(x => x.value == value)[0]
@@ -98,50 +89,69 @@ const CORoutingTable: React.FC<CORoutingTableProps> = props => {
   const fields: Field[] = [
     {
       name: 'protocol',
-      label: 'PROTOCOL',
+      label: <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('ce.common.protocol')}</Text>,
       renderer: getProtocolSelect
     },
     {
       name: 'port',
-      label: 'PORT',
+      label: <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('common.smtp.port')}</Text>,
       renderer: NumericInput
     },
     {
       name: 'action',
-      label: 'ACTION',
-      renderer: (value, rowIndex, handleChange) => (
+      label: <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('action')}</Text>,
+      renderer: (value, _rowIndex, handleChange) => (
         <Select
           className={css.selectCell}
           value={getItembyValue(actions, value)}
           items={actions}
           onChange={item => {
             handleChange(item.value)
-            if (item.value === 'forward') {
-              setForwardConfigRows(prevRecord => ({ ...prevRecord, [rowIndex]: true }))
-            } else if (forwardConfigRows[rowIndex]) {
-              setForwardConfigRows(prevRecord => _omit(prevRecord, rowIndex))
-            }
           }}
         />
       )
     },
     {
       name: 'target_protocol',
-      label: 'TARGET PROTOCOL',
-      renderer: getProtocolSelect
+      label: <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('ce.common.targetProtocol')}</Text>,
+      renderer: (value, _rowIndex, handleChange) => (
+        <Select
+          className={css.selectCell}
+          value={getItembyValue(protocols, value)}
+          items={protocols}
+          onChange={item => handleChange(item.value)}
+          /* INFO: AWS check to disable target protocol in case of REDIRECT action */
+          disabled={props.isAwsConfig && props.routingRecords?.[_rowIndex]?.action === actions[0].value}
+        />
+      )
     },
     {
       name: 'target_port',
-      label: 'TARGET PORT',
-      renderer: NumericInput
+      label: <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('ce.common.targetPort')}</Text>,
+      renderer: (value, _rowIndex, handleChange) => {
+        return (
+          <TextInput
+            value={value}
+            style={{ border: 'none', marginBottom: 0 }}
+            type="number"
+            min={0}
+            onChange={e => {
+              const val = (e.currentTarget as HTMLInputElement).value
+              handleChange(val)
+            }}
+            /* INFO: AWS check to disable target port in case of REDIRECT action */
+            disabled={props.isAwsConfig && props.routingRecords?.[_rowIndex]?.action === actions[0].value}
+          />
+        )
+      }
     },
     {
       name: 'redirect_url',
-      label: 'REDIRECT URL',
-      renderer: (value, _rowIndex, handleChange) => (
+      label: <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('ce.common.redirectUrl')}</Text>,
+      renderer: (value, rowIndex, handleChange) => (
         <TextInput
-          defaultValue={value}
-          disabled={forwardConfigRows[_rowIndex]}
+          value={value}
+          disabled={props.routingRecords?.[rowIndex]?.action === actions[1].value}
           style={{ border: 'none', marginBottom: 0 }}
           onChange={e => handleChange((e.currentTarget as HTMLInputElement).value)}
         />
@@ -149,12 +159,12 @@ const CORoutingTable: React.FC<CORoutingTableProps> = props => {
     },
     {
       name: 'server_name',
-      label: 'SERVER NAME',
+      label: <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('ce.common.serverName')}</Text>,
       renderer: getTextInput
     },
     {
       name: 'routing_rules',
-      label: 'PATH MATCH',
+      label: <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('ce.common.pathMatch')}</Text>,
       renderer: (value, _rowIndex, handleChange) => (
         <TextInput
           defaultValue={value}
@@ -182,6 +192,17 @@ const CORoutingTable: React.FC<CORoutingTableProps> = props => {
       config['routing_rules'] = !_isEmpty(routingRules)
         ? [{ path_match: Array.isArray(routingRules) ? routingRules[0].path_match : routingRules }]
         : []
+
+      /* INFO: AWS check to remove target port & target protocol in case of REDIRECT action
+       * Need to remove once the support comes on BE
+       */
+      if (props.isAwsConfig && config.action === actions[0].value) {
+        config['target_protocol'] = ''
+        config['target_port'] = 0
+      }
+      if (config.action === actions[1].value) {
+        config['redirect_url'] = ''
+      }
       config.port = Number(config.port)
       config.target_port = Number(config.target_port)
     })

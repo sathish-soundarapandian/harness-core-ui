@@ -14,11 +14,13 @@ import routes from '@common/RouteDefinitions'
 import { ProjectSelector } from '@projects-orgs/components/ProjectSelector/ProjectSelector'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMenu'
+import { useStrings } from 'framework/strings'
 
 // ChaosSideNav: Renders sidenav for chaos module
 export default function ChaosSideNav(): React.ReactElement {
   const params = useParams<ProjectPathProps>()
   const { accountId, projectIdentifier, orgIdentifier } = params
+  const { getString } = useStrings()
 
   const { updateAppStore } = useAppStore()
   const history = useHistory()
@@ -40,10 +42,16 @@ export default function ChaosSideNav(): React.ReactElement {
       />
       {projectIdentifier && orgIdentifier ? (
         <>
-          <SidebarLink label="Overview" to={routes.toProjectOverview({ ...params, module: 'chaos' })} />
-          <SidebarLink label="Chaos Scenarios" to={routes.toChaosScenarios({ ...params })} />
-          <SidebarLink label="Chaoshub" to={routes.toChaosHubs({ ...params })} />
-          <SidebarLink label="Chaos Delegates" to={routes.toChaosDelegates({ ...params })} />
+          <SidebarLink label={getString('overview')} to={routes.toProjectOverview({ ...params, module: 'chaos' })} />
+          <SidebarLink
+            label={getString('chaos.navLabels.chaosScenarios')}
+            to={routes.toChaosScenarios({ ...params })}
+          />
+          <SidebarLink label={getString('chaos.navLabels.chaosHubs')} to={routes.toChaosHubs({ ...params })} />
+          <SidebarLink
+            label={getString('chaos.navLabels.chaosDelegates')}
+            to={routes.toChaosDelegates({ ...params })}
+          />
           <ProjectSetupMenu module="chaos" />
         </>
       ) : null}

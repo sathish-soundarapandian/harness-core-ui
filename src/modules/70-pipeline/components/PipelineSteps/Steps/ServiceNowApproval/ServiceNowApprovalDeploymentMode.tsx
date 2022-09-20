@@ -17,11 +17,12 @@ import type {
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useGetServiceNowIssueCreateMetadata, useGetServiceNowTicketTypes } from 'services/cd-ng'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type { ServiceNowTicketTypeSelectOption, SnowApprovalDeploymentModeProps } from './types'
 import { getDateTimeOptions } from './ServiceNowApprovalChangeWindow'
@@ -118,7 +119,7 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
   return (
     <Fragment>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME ? (
-        <FormMultiTypeDurationField
+        <TimeoutFieldInputSetView
           name={`${prefix}timeout`}
           label={getString('pipelineSteps.timeoutLabel')}
           className={css.deploymentViewMedium}
@@ -129,6 +130,8 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
             disabled: isApprovalStepFieldDisabled(readonly)
           }}
           disabled={isApprovalStepFieldDisabled(readonly)}
+          fieldPath="timeout"
+          template={template}
         />
       ) : null}
 
@@ -191,7 +194,7 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
       ) : null}
 
       {getMultiTypeFromValue(template?.spec?.ticketNumber) === MultiTypeInputType.RUNTIME ? (
-        <FormInput.MultiTextInput
+        <TextFieldInputSetView
           label={getString('pipeline.serviceNowApprovalStep.issueNumber')}
           name={`${prefix}spec.ticketNumber`}
           multiTextInputProps={{
@@ -200,6 +203,8 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
             allowableTypes
           }}
           className={css.deploymentViewMedium}
+          fieldPath="spec.ticketNumber"
+          template={template}
         />
       ) : null}
 

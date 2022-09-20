@@ -5,8 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { findByText, fireEvent, getAllByText, getByText, waitFor } from '@testing-library/dom'
-import { act } from '@testing-library/react'
+import { findByText, getAllByText, getByText, waitFor } from '@testing-library/dom'
 import userEvent from '@testing-library/user-event'
 
 export const getYaml = (): string => `
@@ -65,8 +64,6 @@ export const testConnectorRefChange = async (): Promise<void> => {
   expect(awsConnector2).toHaveLength(2)
   userEvent.click(awsConnector1)
   const applySelected = getByText(connectorSelectorDialog, 'entityReference.apply')
-  await act(async () => {
-    fireEvent.click(applySelected)
-  })
-  await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(1))
+  userEvent.click(applySelected)
+  await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(0))
 }

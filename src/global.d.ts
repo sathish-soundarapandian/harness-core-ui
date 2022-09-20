@@ -82,6 +82,11 @@ declare interface WindowEventMap {
 declare interface Document {
   msHidden: string
   webkitHidden: string
+  // these types are present in later versions on TS
+  fonts: {
+    check(opt: string): boolean
+    ready: Promise<void>
+  }
 }
 
 declare const monaco: any

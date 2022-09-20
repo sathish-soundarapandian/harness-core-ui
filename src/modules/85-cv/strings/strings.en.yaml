@@ -269,7 +269,7 @@ monitoringSources:
     validations:
       selectApp: Please select application and its environment
       selectTier: Please select tier and its service
-      selectMetricPack: Plese select metric packs
+      selectMetricPack: Please select atleast one metric pack
     connectToMonitoringSource: Connect to your AppDynamics Monitoring Source
     firstTimeSetupText: 'First time? You can setup a new Connector to AppDynamics. It takes 2 minutes.'
     createConnectorText: '+ New AppDynamics Connector'
@@ -331,6 +331,7 @@ monitoringSources:
       mappedMetrics: '{{metricCount}} metric(s) mapped to {{serviceCount}} service(s)'
       gcoMetrics: Google Cloud Operation metrics
   datadog:
+    noQueryAdded: 'Please add query manually or pick from dashboard'
     noMetricsWidgets: 'No metrics'
     manualInputQueryModal:
       modalTitle: 'Add your Datadog query'
@@ -434,7 +435,7 @@ activitySources:
     select: 'Select your Change Source'
     selectApplication: 'Select Applications'
     selectEnvironment: 'Select Environments'
-    selectService: 'Select Services'
+    selectService: '{{ $.common.selectServices }}'
     iconLabel: 'Harness FirstGen'
     harnessApps: 'HARNESS FIRSTGEN APPLICATION'
     application:
@@ -502,6 +503,7 @@ monitoredServices:
   changeMonitoredServiceTypeMessage: Changing monitored service type will reset change sources
   searchMonitoredServices: Search Monitored Services
   sloErrorBudget: SLO / Error Budget
+  searchMonitoresService: 'Search monitored services'
   serviceHealth:
     last4Hrs: Last 4 hours
     last24Hrs: Last 24 hours
@@ -689,6 +691,10 @@ templates:
 sensitivityValidation: Sensitivity should be high, medium or low
 slos:
   title: SLOs
+  monitoredService: MONITORED SERVICE
+  status: STATUS
+  target: TARGET
+  burnRate: BURN RATE/DAY
   deleteSLO: Delete SLO
   createSLO: Create SLO
   healthSource: Health source
@@ -779,6 +785,7 @@ SLOPerformanceTrend: SLO Performance Trend
 sloGraphUserHint: To view anomalies, metrics and logs for a specific time window, click the time slot on the timeline. To expand or contract the time window, simply drag the handles.
 sloRecalculationInProgress: SLO recalculation in progress
 errorBudgetRecalculationInProgress: Error Budget recalculation in progress
+sloAnalysisTakingLong: The SLO analysis is taking too long. Please check the execution logs and third party API call logs.
 errorBudgetRemaining: Error Budget Remaining
 errorBudgetRemainingWithMins: Error Budget Remaining (mins)
 minutesRemaining: minutes remaining
@@ -919,7 +926,7 @@ metricThresholds:
   validations:
     countValue: Enter 2 or more
     duplicateThreshold: Duplicate threshold
-    percentageValidation: Enter value between 1 - 100 for Percentage
+    percentageValidation: Enter value below 100
   deletePromptTitle: Confirm delete Metric thresholds
   metricPacksDeletePromptContent: Unchecking the metric pack will also remove the corresponding metric thresholds settings. This action cannot be undone.
   customMetricsDeletePromptContent: Deleting the custom metric will also remove the corresponding metric thresholds settings. This action cannot be undone.

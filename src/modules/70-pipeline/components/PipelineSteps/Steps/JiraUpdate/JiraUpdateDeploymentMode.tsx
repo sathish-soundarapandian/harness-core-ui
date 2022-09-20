@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash-es'
-import { FormInput, getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import type {
   AccountPathProps,
@@ -17,16 +17,18 @@ import type {
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { JiraStatusNG, useGetJiraStatuses } from 'services/cd-ng'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import { getGenuineValue } from '../JiraApproval/helper'
 import type { JiraUpdateDeploymentModeFormContentInterface, JiraUpdateDeploymentModeProps } from './types'
 import css from '../JiraCreate/JiraCreate.module.scss'
 
-function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterface) {
+function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterface): React.ReactElement {
   const {
     inputSetData,
     initialValues,
@@ -70,6 +72,7 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
         }
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connectorRefFixedValue])
 
   useEffect(() => {
@@ -87,12 +90,13 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
     if (matched) {
       setStatusValue(matched)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statusResponse?.data])
 
   return (
     <React.Fragment>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME ? (
-        <FormMultiTypeDurationField
+        <TimeoutFieldInputSetView
           name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
           label={getString('pipelineSteps.timeoutLabel')}
           className={css.deploymentViewMedium}
@@ -103,6 +107,8 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
             disabled: isApprovalStepFieldDisabled(readonly)
           }}
           disabled={isApprovalStepFieldDisabled(readonly)}
+          fieldPath="timeout"
+          template={template}
         />
       ) : null}
 
@@ -128,24 +134,28 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
       ) : null}
 
       {getMultiTypeFromValue(template?.spec?.issueKey) === MultiTypeInputType.RUNTIME ? (
-        <FormInput.MultiTextInput
+        <TextFieldInputSetView
           label={getString('pipeline.jiraApprovalStep.issueKey')}
           className={css.deploymentViewMedium}
           name={`${prefix}spec.issueKey`}
           disabled={isApprovalStepFieldDisabled(readonly)}
           placeholder={getString('pipeline.jiraApprovalStep.issueKeyPlaceholder')}
           multiTextInputProps={{ expressions, allowableTypes }}
+          template={template}
+          fieldPath="spec.issueKey"
         />
       ) : null}
 
       {getMultiTypeFromValue(template?.spec?.transitionTo?.status) === MultiTypeInputType.RUNTIME ? (
-        <FormInput.MultiTypeInput
+        <SelectInputSetView
           selectItems={statusOptions}
           className={css.deploymentViewMedium}
           label={getString('status')}
           name={`${prefix}spec.transitionTo.status`}
           disabled={isApprovalStepFieldDisabled(readonly)}
           useValue
+          template={template}
+          fieldPath="spec.transitionTo.status"
           multiTypeInputProps={{
             expressions,
             allowableTypes,
@@ -165,13 +175,15 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
       ) : null}
 
       {getMultiTypeFromValue(template?.spec?.transitionTo?.transitionName) === MultiTypeInputType.RUNTIME ? (
-        <FormInput.MultiTextInput
+        <TextFieldInputSetView
           placeholder={getString('pipeline.jiraUpdateStep.transitionPlaceholder')}
           label={getString('pipeline.jiraUpdateStep.transitionLabel')}
           className={css.deploymentViewMedium}
           name={`${prefix}spec.transitionTo.transitionName`}
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTextInputProps={{ expressions, allowableTypes }}
+          template={template}
+          fieldPath="spec.transitionTo.transitionName"
         />
       ) : null}
     </React.Fragment>

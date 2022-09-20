@@ -79,20 +79,21 @@ const ECSRollingDeployStepEdit = (
                 margin={{ top: 'small', bottom: 'medium' }}
               >
                 <FormMultiTypeCheckboxField
-                  name="sameAsAlreadyRunningInstances"
+                  name="spec.sameAsAlreadyRunningInstances"
                   label={getString('cd.ecsRollingDeployStep.sameAsAlreadyRunningInstances')}
                   multiTypeTextbox={{ expressions, allowableTypes }}
                   className={css.checkbox}
                 />
-                {getMultiTypeFromValue(formik.values?.sameAsAlreadyRunningInstances) === MultiTypeInputType.RUNTIME && (
+                {getMultiTypeFromValue(formik.values?.spec?.sameAsAlreadyRunningInstances) ===
+                  MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
-                    value={defaultTo(formik.values?.sameAsAlreadyRunningInstances, '') as string}
+                    value={defaultTo(formik.values?.spec?.sameAsAlreadyRunningInstances, '') as string}
                     type="String"
-                    variableName="sameAsAlreadyRunningInstances"
+                    variableName="spec.sameAsAlreadyRunningInstances"
                     showRequiredField={false}
                     showDefaultField={false}
                     showAdvanced={true}
-                    onChange={value => formik.setFieldValue('sameAsAlreadyRunningInstances', value)}
+                    onChange={value => formik.setFieldValue('spec.sameAsAlreadyRunningInstances', value)}
                     style={{ alignSelf: 'center', marginTop: 11 }}
                     className={css.addmarginTop}
                     isReadonly={readonly}
@@ -106,20 +107,20 @@ const ECSRollingDeployStepEdit = (
                 margin={{ top: 'small', bottom: 'medium' }}
               >
                 <FormMultiTypeCheckboxField
-                  name="forceNewDeployment"
+                  name="spec.forceNewDeployment"
                   label={getString('cd.ecsRollingDeployStep.forceNewDeployment')}
                   multiTypeTextbox={{ expressions, allowableTypes }}
                   className={css.checkbox}
                 />
-                {getMultiTypeFromValue(formik.values?.forceNewDeployment) === MultiTypeInputType.RUNTIME && (
+                {getMultiTypeFromValue(formik.values?.spec?.forceNewDeployment) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
-                    value={defaultTo(formik.values?.forceNewDeployment, '') as string}
+                    value={defaultTo(formik.values?.spec?.forceNewDeployment, '') as string}
                     type="String"
-                    variableName="forceNewDeployment"
+                    variableName="spec.forceNewDeployment"
                     showRequiredField={false}
                     showDefaultField={false}
                     showAdvanced={true}
-                    onChange={value => formik.setFieldValue('forceNewDeployment', value)}
+                    onChange={value => formik.setFieldValue('spec.forceNewDeployment', value)}
                     style={{ alignSelf: 'center', marginTop: 11 }}
                     className={css.addmarginTop}
                     isReadonly={readonly}

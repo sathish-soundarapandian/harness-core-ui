@@ -6,6 +6,7 @@
  */
 import { featureFlagsCall } from '../../../support/85-cv/common'
 import {
+  validations,
   countOfServiceAPI,
   monitoredServiceListCall,
   monitoredServiceListResponse
@@ -77,10 +78,10 @@ describe('Create empty monitored service', () => {
     cy.contains('span', 'Submit').click({ force: true })
 
     cy.contains('span', 'Please select application').should('be.visible')
-    cy.contains('span', 'Plese select metric packs').should('be.visible')
+    cy.contains('span', validations.metricPack).should('be.visible')
 
     cy.get('input[name="Performance"]').check({ force: true })
-    cy.contains('span', 'Plese select metric packs').should('not.exist')
+    cy.contains('span', validations.metricPack).should('not.exist')
 
     cy.get('[data-testid="newRelicApplication"] input').click()
     cy.get('.bp3-popover-content').within(() => {
@@ -97,7 +98,7 @@ describe('Create empty monitored service', () => {
     cy.contains('span', 'Submit').click({ force: true })
 
     // Creating the template.
-    cy.findByRole('button', { name: /Save/i }).click()
+    cy.findByText('Save').click()
     // Saving modal.
     cy.get('.bp3-dialog').findByRole('button', { name: /Save/i }).click()
     cy.findByText('Template published successfully').should('be.visible')
@@ -130,7 +131,7 @@ describe('Create empty monitored service', () => {
 
     // Custom validation
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'Group Name is required').scrollIntoView().should('be.visible')
+    cy.contains('span', validations.groupName).scrollIntoView().should('be.visible')
 
     cy.get('input[name="groupName"]').click()
     cy.contains('p', '+ Add New').click({ force: true })
@@ -204,7 +205,7 @@ describe('Create empty monitored service', () => {
 
     // Custom validation
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'Group Name is required').scrollIntoView().should('be.visible')
+    cy.contains('span', validations.groupName).scrollIntoView().should('be.visible')
 
     cy.get('input[name="groupName"]').click()
     cy.contains('p', '+ Add New').click({ force: true })

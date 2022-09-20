@@ -151,7 +151,10 @@ function ManifestListView({
 
   const getLastStepInitialData = (): ManifestConfig => {
     const initValues = get(listOfManifests[manifestIndex], 'manifest', null)
-    if (initValues?.type && initValues?.type !== selectedManifest) {
+    if (
+      (initValues?.type && initValues?.type !== selectedManifest) ||
+      get(initValues, 'spec.store.type') !== manifestStore
+    ) {
       return null as unknown as ManifestConfig
     }
     return initValues as ManifestConfig
@@ -600,11 +603,12 @@ function ManifestListView({
           <Button
             className={css.addManifest}
             id="add-manifest"
+            icon="plus"
             size={ButtonSize.SMALL}
             variation={ButtonVariation.LINK}
             data-test-id="addManifest"
             onClick={addNewManifest}
-            text={addManifestBtnText ?? getString('pipelineSteps.serviceTab.manifestList.addManifest')}
+            text={addManifestBtnText ?? getString('pipeline.manifestType.addManifestLabel')}
           />
         )}
       </Layout.Vertical>

@@ -26,6 +26,7 @@ import configFileSourceBaseFactory from '@cd/factory/ConfigFileSourceFactory/Con
 import { KubernetesArtifacts } from '@cd/components/PipelineSteps/K8sServiceSpec/KubernetesArtifacts/KubernetesArtifacts'
 import { KubernetesManifests } from '@cd/components/PipelineSteps/K8sServiceSpec/KubernetesManifests/KubernetesManifests'
 import type { SshWinRmDirectServiceStep } from './SshServiceSpecInterface'
+import PrimaryArtifactRef from '../K8sServiceSpec/PrimaryArtifact/PrimaryArtifactRef'
 import css from './SshServiceSpec.module.scss'
 
 export interface SshInputSetProps {
@@ -58,22 +59,34 @@ const SshServiceSpecInputSetModeFormikForm = (props: SshInputSetProps): React.Re
     allowableTypes
   } = props
   const { getString } = useStrings()
+  const commonProps = {
+    stepViewType,
+    formik,
+    path,
+    initialValues,
+    readonly,
+    allowableTypes,
+    serviceIdentifier
+  }
+
   return (
     <Layout.Vertical spacing="medium">
-      {!!(template?.artifacts?.primary?.type || template?.artifacts?.sidecars?.length) && (
+      {!!template?.artifacts?.primary?.primaryArtifactRef && (
+        <PrimaryArtifactRef primaryArtifact={allValues?.artifacts?.primary} template={template} {...commonProps} />
+      )}
+
+      {!!(
+        template?.artifacts?.primary?.type ||
+        (Array.isArray(template?.artifacts?.primary?.sources) && template?.artifacts?.primary?.sources?.length) ||
+        template?.artifacts?.sidecars?.length
+      ) && (
         <KubernetesArtifacts
           type={template?.artifacts?.primary?.type || ''}
           template={template}
           artifacts={allValues?.artifacts}
           artifactSourceBaseFactory={artifactSourceBaseFactory}
-          stepViewType={stepViewType}
           stageIdentifier={stageIdentifier}
-          serviceIdentifier={serviceIdentifier}
-          formik={formik}
-          path={path}
-          initialValues={initialValues}
-          readonly={readonly}
-          allowableTypes={allowableTypes}
+          {...commonProps}
         />
       )}
 
@@ -82,14 +95,8 @@ const SshServiceSpecInputSetModeFormikForm = (props: SshInputSetProps): React.Re
           template={template}
           manifests={allValues?.manifests}
           manifestSourceBaseFactory={manifestSourceBaseFactory}
-          stepViewType={stepViewType}
           stageIdentifier={stageIdentifier}
-          serviceIdentifier={serviceIdentifier}
-          formik={formik}
-          path={path}
-          initialValues={initialValues}
-          readonly={readonly}
-          allowableTypes={allowableTypes}
+          {...commonProps}
         />
       )}
 
@@ -99,13 +106,8 @@ const SshServiceSpecInputSetModeFormikForm = (props: SshInputSetProps): React.Re
             template={template}
             configFiles={allValues?.configFiles}
             configFileSourceBaseFactory={configFileSourceBaseFactory}
-            stepViewType={stepViewType}
             stageIdentifier={stageIdentifier}
-            formik={formik}
-            path={path}
-            initialValues={initialValues}
-            readonly={readonly}
-            allowableTypes={allowableTypes}
+            {...commonProps}
           />
         </>
       )}

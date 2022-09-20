@@ -79,6 +79,14 @@ export const getValidStatusForDnsLink = (
   if (validStatus && _isEmpty(gatewayDetails.routing.container_svc) && _isEmpty(gatewayDetails.routing.ports)) {
     validStatus = false
   }
+
+  // check for AWS redirect routing config
+  if (validStatus && Utils.isProviderAws(gatewayDetails.provider) && !_isEmpty(gatewayDetails.routing.ports)) {
+    validStatus = !gatewayDetails.routing.ports.some(
+      portConfig => portConfig.action === 'redirect' && _isEmpty(portConfig.redirect_url)
+    )
+  }
+
   return validStatus
 }
 

@@ -38,7 +38,7 @@ describe('DatadogLogsHealthSource unit tests', () => {
     const onSubmit = jest.fn()
     const { container, getByText } = render(
       <TestWrapper>
-        <DatadogLogsHealthSource data={template.runtimeData} onSubmit={onSubmit} isTemplate={true} />
+        <DatadogLogsHealthSource data={template.runtimeData as any} onSubmit={onSubmit} isTemplate={true} />
       </TestWrapper>
     )
     expect(container.querySelector('input[name="indexes"]')).toHaveValue('<+input>')
@@ -61,7 +61,7 @@ describe('DatadogLogsHealthSource unit tests', () => {
     fixedData.connectorRef = 'datadoglog'
     const { container, getByText } = render(
       <TestWrapper>
-        <DatadogLogsHealthSource data={fixedData} onSubmit={onSubmit} isTemplate={true} />
+        <DatadogLogsHealthSource data={fixedData as any} onSubmit={onSubmit} isTemplate={true} />
       </TestWrapper>
     )
     expect(container.querySelector('input[name="indexes"]')).toHaveValue('')

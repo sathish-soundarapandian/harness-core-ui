@@ -129,7 +129,12 @@ exports[`Test PDCInfrastructureSpec behavior - No Preconfigured should call onUp
                   class="bp3-label"
                   for="credentialsRef"
                 >
-                  cd.steps.common.specifyCredentials
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="pdcInfra_credentialsRef"
+                  >
+                    cd.steps.common.specifyCredentials
+                  </span>
                    
                   <span
                     class="bp3-text-muted"
@@ -362,7 +367,12 @@ exports[`test different stepViewType render runtimeview when no Preconfigured 1`
               class="bp3-label"
               for="cd.credentialsRef"
             >
-              cd.steps.common.specifyCredentials
+              <span
+                class="Tooltip--acenter"
+                data-tooltip-id="pdcInfraRuntime_cd.credentialsRef"
+              >
+                cd.steps.common.specifyCredentials
+              </span>
                
               <span
                 class="bp3-text-muted"

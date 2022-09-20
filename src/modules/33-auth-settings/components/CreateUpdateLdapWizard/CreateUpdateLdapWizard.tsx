@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { StepWizard, useToaster } from '@wings-software/uicore'
+import { Layout, StepWizard } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -20,10 +20,12 @@ import {
   useCreateLdapSettings,
   useUpdateLdapSettings
 } from 'services/cd-ng'
+import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import StepOverview, { LdapOverview } from './views/StepOverview'
 import StepConnectionSettings from './views/StepConnectionSettings'
 import StepUserQueries from './views/StepUserQueries'
 import StepGroupQueries from './views/StepGroupQueries'
+import { getErrorMessageFromException } from './utils'
 import css from './CreateUpdateLdapWizard.module.scss'
 
 export interface CreateUpdateLdapWizardProps {
@@ -45,12 +47,29 @@ export interface CreateUpdateLdapWizardProps {
   onSuccess: () => void
 }
 
+interface CreateUpdateSettingsActionProps {
+  /**
+   * Contains error message from previous update attempt
+   */
+  createUpdateError?: ReactElement
+  /**
+   * Create/Update action in progress
+   */
+  isUpdateInProgress: boolean
+  /**
+   * Triggers the back end API call to save data populated in wizard; concludes the wizard flow
+   * */
+  triggerSaveData: () => void
+}
+
 export interface LdapWizardStepProps<T> {
   stepData?: T
   updateStepData: (val: T) => void
   closeWizard?: () => void
-  /** Triggers the back end API call to save data populated in wizard; concludes the wizard flow */
-  triggerSaveData?: () => void
+  /**
+   * Following is to be provided to final step
+   */
+  createUpdateActionProps?: CreateUpdateSettingsActionProps
   auxilliaryData?: Partial<LDAPSettings>
 }
 
@@ -67,8 +86,9 @@ const CreateUpdateLdapWizard: React.FC<CreateUpdateLdapWizardProps> = props => {
     groupSettingsList
   )
   const [triggerSaveData, setTriggerSaveData] = useState<boolean>(false)
+  const [wiardUpdateError, setWizardUpdateError] = useState<ReactElement>()
+  const [isUpdateInProgress, setIsUpdateInProgress] = useState<boolean>(false)
   const { accountId } = useParams<AccountPathProps>()
-  const { showError } = useToaster()
   const { mutate: updateLdapSettings } = useUpdateLdapSettings({
     queryParams: {
       accountIdentifier: accountId
@@ -91,6 +111,8 @@ const CreateUpdateLdapWizard: React.FC<CreateUpdateLdapWizardProps> = props => {
 
   const saveStepsData = async (): Promise<void> => {
     let saved
+    setIsUpdateInProgress(true)
+    setWizardUpdateError(undefined)
 
     try {
       if (isEdit) {
@@ -103,7 +125,15 @@ const CreateUpdateLdapWizard: React.FC<CreateUpdateLdapWizardProps> = props => {
         props.onSuccess()
       }
     } catch (e) /* istanbul ignore next */ {
-      showError(getString('authSettings.ldap.updateStepFailMessage'))
+      setWizardUpdateError(
+        <Layout.Vertical margin={{ bottom: 'medium' }}>
+          <ErrorHandler
+            responseMessages={getErrorMessageFromException(e, getString('authSettings.ldap.updateStepFailMessage'))}
+          />
+        </Layout.Vertical>
+      )
+      setTriggerSaveData(false)
+      setIsUpdateInProgress(false)
     }
   }
 
@@ -146,7 +176,11 @@ const CreateUpdateLdapWizard: React.FC<CreateUpdateLdapWizardProps> = props => {
         stepData={groupSettingsListState}
         updateStepData={(val: LdapGroupSettings[]) => setGroupSettingsListState(val)}
         auxilliaryData={{ ...ldapOverviewState, connectionSettings: connectionSettingsState, identifier }}
-        triggerSaveData={() => setTriggerSaveData(true)}
+        createUpdateActionProps={{
+          isUpdateInProgress,
+          createUpdateError: wiardUpdateError,
+          triggerSaveData: () => setTriggerSaveData(true)
+        }}
       />
     </StepWizard>
   )

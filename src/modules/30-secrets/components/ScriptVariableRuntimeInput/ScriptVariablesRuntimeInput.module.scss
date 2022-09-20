@@ -52,6 +52,12 @@
 .variablesList {
   margin-top: var(--spacing-large);
 }
+.inputMarginTopSmall {
+  margin-top: var(--spacing-small);
+}
+.inputMarginTopMedium {
+  margin-top: var(--spacing-medium);
+}
 
 .minConfigBtn {
   padding: 0 !important;

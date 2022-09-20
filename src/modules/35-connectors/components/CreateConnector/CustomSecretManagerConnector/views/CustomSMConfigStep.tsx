@@ -146,8 +146,8 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
           formik.setFieldValue('templateInputs', inputSet)
           setTemplateInputSets(inputSet)
         } else {
-          formik.setFieldValue('templateInputs', { environmentVariables: templateJSON.spec.environmentVariables })
-          setTemplateInputSets({ environmentVariables: templateJSON.spec.environmentVariables })
+          formik.setFieldValue('templateInputs', {})
+          setTemplateInputSets({})
         }
 
         if (templateJSON.spec.onDelegate !== true) {

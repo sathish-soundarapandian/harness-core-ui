@@ -204,7 +204,7 @@
 }
 
 .podDetailsSeparator {
-  margin: var(--spacing-medium) 80px 0 !important;
+  margin: var(--spacing-medium) 48px 0 !important;
   border-top: solid 1px var(--grey-200);
 }
 .podDetailsContainer {
@@ -215,4 +215,35 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.paddedContainer {
+  width: fit-content;
+  padding: var(--spacing-small) 0;
+}
+
+.statusText {
+  width: fit-content !important;
+  padding: 2px 6px !important;
+  border-radius: 4px;
+  margin-right: var(--spacing-small) !important;
+  margin-bottom: auto !important;
+  margin-top: auto !important;
+}
+
+.tickerContainer {
+  background: var(--grey-100) !important;
+}
+
+.instanceStatus {
+  height: fit-content;
+  padding-left: 6px !important;
+}
+
+.paddingLeft {
+  padding-left: 32px !important;
+}
+
+.marginLeft {
+  margin-left: 8px !important;
 }

@@ -10,8 +10,9 @@
       "name": "Infra 1",
       "description": "",
       "tags": {},
+      "deploymentType": "Kubernetes",
       "type": "KubernetesDirect",
-      "yaml": "infrastructureDefinition:\n  name: \"Infra 10\"\n  identifier: \"Infra_1\"\n  orgIdentifier: \"dummy\"\n  projectIdentifier: \"dummy\"\n  environmentRef: \"test_env\"\n  description: \"\"\n  tags: {}\n  allowSimultaneousDeployments: false\n  type: \"KubernetesDirect\"\n  spec:\n    connectorRef: \"account.harnessci\"\n    namespace: \"ashwin\"\n    releaseName: \"release-<+INFRA_KEY>\"\n"
+      "yaml": "infrastructureDefinition:\n  name: \"Infra 10\"\n  identifier: \"Infra_1\"\n  orgIdentifier: \"dummy\"\n  projectIdentifier: \"dummy\"\n  environmentRef: \"test_env\"\n  description: \"\"\n  tags: {}\n  allowSimultaneousDeployments: false\n  deploymentType: \"Kubernetes\"\n  type: \"KubernetesDirect\"\n  spec:\n    connectorRef: \"account.harnessci\"\n    namespace: \"ashwin\"\n    releaseName: \"release-<+INFRA_KEY>\"\n"
     },
     "createdAt": 1659072066480,
     "lastModifiedAt": 1659072066480

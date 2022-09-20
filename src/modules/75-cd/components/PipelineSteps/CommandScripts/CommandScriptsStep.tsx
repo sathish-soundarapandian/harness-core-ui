@@ -22,7 +22,7 @@ import type { StringsMap } from 'stringTypes'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { getSanitizedflatObjectForVariablesView } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalCommons'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
-import { CommandScriptsData, variableSchema, CommandScriptsFormData } from './CommandScriptsTypes'
+import { CommandScriptsData, variableSchema, CommandScriptsFormData, commandUnitSchema } from './CommandScriptsTypes'
 import { CommandScriptsEdit } from './CommandScriptsEdit'
 import { CommandScriptsInputSet } from './CommandScriptsInputSet'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
@@ -111,6 +111,24 @@ export class CommandScriptsStep extends PipelineStep<CommandScriptsData> {
 
       try {
         timeout.validateSync(data)
+      } catch (e) {
+        /* istanbul ignore else */
+        if (e instanceof Yup.ValidationError) {
+          const err = yupToFormErrors(e)
+
+          Object.assign(errors, err)
+        }
+      }
+    }
+
+    if (isArray(template?.spec?.commandUnits) && isRequired && getString) {
+      try {
+        const schema = Yup.object().shape({
+          spec: Yup.object().shape({
+            commandUnits: commandUnitSchema(getString)
+          })
+        })
+        schema.validateSync(data, { abortEarly: false })
       } catch (e) {
         /* istanbul ignore else */
         if (e instanceof Yup.ValidationError) {

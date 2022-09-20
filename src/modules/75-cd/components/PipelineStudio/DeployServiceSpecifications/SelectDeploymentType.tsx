@@ -18,7 +18,11 @@ import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import type { DeploymentTypeItem } from './DeploymentInterface'
+import {
+  DeploymentTypeItem,
+  getCgSupportedDeploymentTypes,
+  getNgSupportedDeploymentTypes
+} from '@cd/utils/deploymentUtils'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 
 export function getServiceDeploymentTypeSchema(
@@ -48,6 +52,7 @@ interface CardListProps {
 const DEPLOYMENT_TYPE_KEY = 'deploymentType'
 
 const CardList = ({ items, isReadonly, selectedValue, onChange }: CardListProps): JSX.Element => {
+  const { getString } = useStrings()
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     onChange(e.target.value as ServiceDeploymentType)
   }
@@ -59,7 +64,7 @@ const CardList = ({ items, isReadonly, selectedValue, onChange }: CardListProps)
           const itemContent = (
             <Thumbnail
               key={item.value}
-              label={item.label}
+              label={getString(item.label)}
               value={item.value}
               icon={item.icon}
               disabled={item.disabled || isReadonly}
@@ -93,100 +98,14 @@ export default function SelectDeploymentType({
   const { SSH_NG, AZURE_WEBAPP_NG, ECS_NG } = useFeatureFlags()
 
   // Supported in NG (Next Gen - The one for which you are coding right now)
-  const ngSupportedDeploymentTypes: DeploymentTypeItem[] = React.useMemo(() => {
-    const baseTypes = [
-      {
-        label: getString('pipeline.serviceDeploymentTypes.kubernetes'),
-        icon: 'service-kubernetes',
-        value: ServiceDeploymentType.Kubernetes
-      },
-      {
-        label: getString('pipeline.nativeHelm'),
-        icon: 'service-helm',
-        value: ServiceDeploymentType.NativeHelm
-      },
-      {
-        label: getString('pipeline.serviceDeploymentTypes.serverlessAwsLambda'),
-        icon: 'service-serverless-aws',
-        value: ServiceDeploymentType.ServerlessAwsLambda
-      }
-    ]
-    if (SSH_NG) {
-      baseTypes.push({
-        label: getString('pipeline.serviceDeploymentTypes.ssh'),
-        icon: 'secret-ssh',
-        value: ServiceDeploymentType.Ssh
-      })
-      baseTypes.push({
-        label: getString('pipeline.serviceDeploymentTypes.winrm'),
-        icon: 'command-winrm',
-        value: ServiceDeploymentType.WinRm
-      })
-    }
-    if (AZURE_WEBAPP_NG) {
-      baseTypes.push({
-        label: 'Azure Web App',
-        icon: 'azurewebapp',
-        value: ServiceDeploymentType.AzureWebApp
-      })
-    }
-    if (ECS_NG) {
-      baseTypes.push({
-        label: getString('pipeline.serviceDeploymentTypes.amazonEcs'),
-        icon: 'service-amazon-ecs',
-        value: ServiceDeploymentType.ECS
-      })
-    }
-    return baseTypes as DeploymentTypeItem[]
-  }, [getString, SSH_NG, AZURE_WEBAPP_NG])
+  const ngSupportedDeploymentTypes = React.useMemo(() => {
+    return getNgSupportedDeploymentTypes({ SSH_NG, AZURE_WEBAPP_NG, ECS_NG })
+  }, [SSH_NG, AZURE_WEBAPP_NG, ECS_NG])
 
   // Suppported in CG (First Gen - Old Version of Harness App)
   const cgSupportedDeploymentTypes: DeploymentTypeItem[] = React.useMemo(() => {
-    const types = [
-      ...(!ECS_NG
-        ? [
-            {
-              label: getString('pipeline.serviceDeploymentTypes.amazonEcs'),
-              icon: 'service-amazon-ecs',
-              value: ServiceDeploymentType.ECS
-            }
-          ]
-        : []),
-      {
-        label: getString('pipeline.serviceDeploymentTypes.amazonAmi'),
-        icon: 'main-service-ami',
-        value: ServiceDeploymentType.amazonAmi
-      },
-      {
-        label: getString('pipeline.serviceDeploymentTypes.awsCodeDeploy'),
-        icon: 'app-aws-code-deploy',
-        value: ServiceDeploymentType.awsCodeDeploy
-      },
-      {
-        label: getString('pipeline.serviceDeploymentTypes.awsLambda'),
-        icon: 'app-aws-lambda',
-        value: ServiceDeploymentType.awsLambda
-      },
-      {
-        label: getString('pipeline.serviceDeploymentTypes.pcf'),
-        icon: 'service-pivotal',
-        value: ServiceDeploymentType.pcf
-      }
-    ]
-    if (!SSH_NG) {
-      types.splice(3, 0, {
-        label: getString('pipeline.serviceDeploymentTypes.ssh'),
-        icon: 'secret-ssh',
-        value: ServiceDeploymentType.Ssh
-      })
-      types.splice(4, 0, {
-        label: getString('pipeline.serviceDeploymentTypes.winrm'),
-        icon: 'command-winrm',
-        value: ServiceDeploymentType.WinRm
-      })
-    }
-    return types as DeploymentTypeItem[]
-  }, [getString, SSH_NG, ECS_NG])
+    return getCgSupportedDeploymentTypes({ SSH_NG, ECS_NG })
+  }, [SSH_NG, ECS_NG])
 
   const [cgDeploymentTypes, setCgDeploymentTypes] = React.useState(cgSupportedDeploymentTypes)
   const [ngDeploymentTypes, setNgDeploymentTypes] = React.useState(ngSupportedDeploymentTypes)

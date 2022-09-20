@@ -10,10 +10,11 @@ import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
 import cx from 'classnames'
 import type { FormikContextType } from 'formik'
-import { FormInput, Text, Color, Container, Layout } from '@harness/uicore'
+import { Text, Color, Container, Layout } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { isValueRuntimeInput } from '@common/utils/utils'
@@ -68,7 +69,7 @@ export const TemplateInputStep = (props: AzureBlueprintProps & { formik?: Formik
         /* istanbul ignore next */
         isValueRuntimeInput(inputSet?.store?.spec?.repoName as string) && (
           <div className={cx(stepCss.formGroup, stepCss.sm)}>
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
               name={`${path}.spec.configuration.template.store.spec.repoName`}
               label={getString('pipelineSteps.repoName')}
               disabled={readonly}
@@ -76,6 +77,8 @@ export const TemplateInputStep = (props: AzureBlueprintProps & { formik?: Formik
                 expressions,
                 allowableTypes
               }}
+              fieldPath={'spec.configuration.template.store.spec.repoName'}
+              template={inputSetData?.template}
             />
           </div>
         )
@@ -84,7 +87,7 @@ export const TemplateInputStep = (props: AzureBlueprintProps & { formik?: Formik
         /* istanbul ignore next */
         isValueRuntimeInput(inputSet?.store?.spec?.branch as string) && (
           <div className={cx(stepCss.formGroup, stepCss.sm)}>
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
               name={`${path}.spec.configuration.template.store.spec.branch`}
               label={getString('pipelineSteps.deploy.inputSet.branch')}
               disabled={readonly}
@@ -92,6 +95,8 @@ export const TemplateInputStep = (props: AzureBlueprintProps & { formik?: Formik
                 expressions,
                 allowableTypes
               }}
+              fieldPath={'spec.configuration.template.store.spec.branch'}
+              template={inputSetData?.template}
             />
           </div>
         )
@@ -100,7 +105,7 @@ export const TemplateInputStep = (props: AzureBlueprintProps & { formik?: Formik
         /* istanbul ignore next */
         isValueRuntimeInput(inputSet?.store?.spec?.commitId as string) && (
           <div className={cx(stepCss.formGroup, stepCss.sm)}>
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
               name={`${path}.spec.configuration.template.store.spec.commitId`}
               label={getString('pipeline.manifestType.commitId')}
               disabled={readonly}
@@ -108,22 +113,26 @@ export const TemplateInputStep = (props: AzureBlueprintProps & { formik?: Formik
                 expressions,
                 allowableTypes
               }}
+              fieldPath={'spec.configuration.template.store.spec.commitId'}
+              template={inputSetData?.template}
             />
           </div>
         )
       }
       {
         /* istanbul ignore next */
-        isValueRuntimeInput(inputSet?.store?.spec?.paths as string) && (
+        isValueRuntimeInput(inputSet?.store?.spec?.folderPath as string) && (
           <div className={cx(stepCss.formGroup, stepCss.sm)}>
-            <FormInput.MultiTextInput
-              name={`${path}.spec.configuration.template.store.spec.paths[0]`}
-              label={getString('common.git.filePath')}
+            <TextFieldInputSetView
+              name={`${path}.spec.configuration.template.store.spec.folderPath`}
+              label={getString('cd.azureBlueprint.templateFolderPath')}
               disabled={readonly}
               multiTextInputProps={{
                 expressions,
                 allowableTypes
               }}
+              fieldPath={'spec.configuration.template.store.spec.folderPath'}
+              template={inputSetData?.template}
             />
           </div>
         )

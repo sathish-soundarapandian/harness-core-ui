@@ -36,6 +36,7 @@ import ServiceStudioDetails from '../ServiceStudioDetails'
 interface ServiceConfigurationWrapperProps {
   summaryPanel?: JSX.Element
   refercedByPanel?: JSX.Element
+  invokeServiceHeaderRefetch?: () => void
 }
 function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()

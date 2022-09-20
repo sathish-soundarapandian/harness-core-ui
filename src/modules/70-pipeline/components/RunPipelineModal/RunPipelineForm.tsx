@@ -21,7 +21,7 @@ import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import cx from 'classnames'
 import { useHistory } from 'react-router-dom'
-import { isEmpty, defaultTo, keyBy } from 'lodash-es'
+import { isEmpty, defaultTo, keyBy, omitBy } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
@@ -165,7 +165,7 @@ function RunPipelineFormBasic({
     selectedStages: [getAllStageData(getString)],
     selectedStageItems: [getAllStageItem(getString)]
   })
-  const { setPipeline: updatePipelineInVaribalesContext } = usePipelineVariables()
+  const { setPipeline: updatePipelineInVaribalesContext, setSelectedInputSetsContext } = usePipelineVariables()
   const [existingProvide, setExistingProvide] = useState<'existing' | 'provide'>('existing')
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
 
@@ -268,7 +268,8 @@ function RunPipelineFormBasic({
       orgIdentifier,
       moduleType: module,
       repoIdentifier,
-      branch
+      branch,
+      notifyOnlyUser: notifyOnlyMe
     },
     identifier: pipelineIdentifier,
     requestOptions: {
@@ -373,6 +374,7 @@ function RunPipelineFormBasic({
 
   useEffect(() => {
     setSelectedInputSets(inputSetSelected)
+    setSelectedInputSetsContext?.(inputSetSelected)
   }, [inputSetSelected])
 
   useEffect(() => {
@@ -440,7 +442,7 @@ function RunPipelineFormBasic({
         />
       </Dialog>
     )
-  }, [])
+  }, [notifyOnlyMe])
 
   const handleRunPipeline = useCallback(
     async (valuesPipeline?: PipelineInfoConfig, forceSkipFlightCheck = false): Promise<PipelineInfoConfig> => {
@@ -540,7 +542,8 @@ function RunPipelineFormBasic({
       accountId,
       skipPreFlightCheck,
       formErrors,
-      selectedStageData
+      selectedStageData,
+      notifyOnlyMe
     ]
   )
 
@@ -789,13 +792,14 @@ function RunPipelineFormBasic({
                     invalidInputSetReferences={invalidInputSetReferences}
                     loadingInputSets={loadingInputSets}
                     onReconcile={onReconcile}
+                    reRunInputSetYaml={inputSetYAML}
                   />
                 ) : (
                   <div className={css.editor}>
                     <Layout.Vertical className={css.content} padding="xlarge">
                       <YamlBuilderMemo
                         {...yamlBuilderReadOnlyModeProps}
-                        existingJSON={{ pipeline: values }}
+                        existingJSON={{ pipeline: omitBy(values, (_val, key) => key.startsWith('_')) }}
                         bind={setYamlHandler}
                         schema={{}}
                         invocationMap={factory.getInvocationMap()}

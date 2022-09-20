@@ -118,6 +118,7 @@ declare global {
       configureStaticFieldsVerifyStepInStepTemplate(): void
       // https://github.com/jaredpalmer/cypress-image-snapshot
       matchImageSnapshot(snapshotName?: string, options?: unknown): void
+      checkIfMetricThresholdsExists(): void
     }
   }
 }
@@ -571,4 +572,8 @@ Cypress.Commands.add('configureStaticFieldsVerifyStepInStepTemplate', () => {
   cy.contains('p', 'High').click({ force: true })
   cy.get('input[name="spec.spec.duration"]').click({ force: true })
   cy.contains('p', '5 min').click({ force: true })
+})
+
+Cypress.Commands.add('checkIfMetricThresholdsExists', () => {
+  cy.contains('.Accordion--label', 'Advanced (Optional)').scrollIntoView().should('exist')
 })

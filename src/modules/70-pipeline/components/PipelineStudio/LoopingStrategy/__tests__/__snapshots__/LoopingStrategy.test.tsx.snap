@@ -17,7 +17,7 @@ exports[`<LoopingStrategy /> tests can select matrix 1`] = `
           pipeline.loopingStrategy.subTitle
            
           <a
-            href="https://docs.harness.io/article/i36ibenkq2-step-skip-condition-settings"
+            href="https://docs.harness.io/article/eh4azj73m4"
             rel="noreferrer"
             target="_blank"
           >
@@ -118,7 +118,7 @@ exports[`<LoopingStrategy /> tests can select matrix 1`] = `
                       pipeline.loopingStrategy.matrix.helperText
                        
                       <a
-                        href="https://docs.harness.io"
+                        href="https://docs.harness.io/article/eh4azj73m4#matrix"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -199,7 +199,7 @@ exports[`<LoopingStrategy /> tests can select parallelism 1`] = `
           pipeline.loopingStrategy.subTitle
            
           <a
-            href="https://docs.harness.io/article/i36ibenkq2-step-skip-condition-settings"
+            href="https://docs.harness.io/article/eh4azj73m4"
             rel="noreferrer"
             target="_blank"
           >
@@ -300,7 +300,7 @@ exports[`<LoopingStrategy /> tests can select parallelism 1`] = `
                       pipeline.loopingStrategy.parallelism.helperText
                        
                       <a
-                        href="https://docs.harness.io"
+                        href="https://docs.harness.io/article/eh4azj73m4#parallelism"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -381,7 +381,7 @@ exports[`<LoopingStrategy /> tests can select repeat 1`] = `
           pipeline.loopingStrategy.subTitle
            
           <a
-            href="https://docs.harness.io/article/i36ibenkq2-step-skip-condition-settings"
+            href="https://docs.harness.io/article/eh4azj73m4"
             rel="noreferrer"
             target="_blank"
           >
@@ -482,7 +482,7 @@ exports[`<LoopingStrategy /> tests can select repeat 1`] = `
                       pipeline.loopingStrategy.repeat.helperText
                        
                       <a
-                        href="https://docs.harness.io"
+                        href="https://docs.harness.io/article/eh4azj73m4#repeat"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -563,7 +563,7 @@ exports[`<LoopingStrategy /> tests snapshot test 1`] = `
           pipeline.loopingStrategy.subTitle
            
           <a
-            href="https://docs.harness.io/article/i36ibenkq2-step-skip-condition-settings"
+            href="https://docs.harness.io/article/eh4azj73m4"
             rel="noreferrer"
             target="_blank"
           >

@@ -21,12 +21,12 @@ import {
   useToaster,
   VisualYamlSelectedView as SelectedView,
   VisualYamlToggle
-} from '@wings-software/uicore'
+} from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { matchPath, useHistory, useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, isEqual, merge, omit } from 'lodash-es'
 import produce from 'immer'
-import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
+import { parse, stringify, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import {
   EntityGitDetails,
@@ -76,6 +76,7 @@ import { OutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHa
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import type { Pipeline } from '@pipeline/utils/types'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
+import useDiffDialog from '@common/hooks/useDiffDialog'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import CreatePipelines from '../CreateModal/PipelineCreate'
 import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
@@ -245,6 +246,7 @@ export function PipelineCanvas({
     if (isGitSyncEnabled || isPipelineRemote) {
       openPipelineErrorsModal(yamlSchemaErrorWrapper?.schemaErrors)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [yamlSchemaErrorWrapper, isGitSyncEnabled, isPipelineRemote])
 
   const [canExecute] = usePermission(
@@ -327,7 +329,7 @@ export function PipelineCanvas({
 
   useSaveTemplateListener()
 
-  const getDialogWidth = () => {
+  const getDialogWidth = (): string => {
     if (supportingGitSimplification) {
       return '800px'
     } else {
@@ -369,7 +371,7 @@ export function PipelineCanvas({
                 repo: repoName || gitDetails.repoIdentifier || '',
                 branch: branch || gitDetails.branch || '',
                 connectorRef: connectorRef || '',
-                storeType: storeType || '',
+                storeType: defaultTo(storeType, StoreType.INLINE),
                 filePath: gitDetails.filePath
               })}
               closeModal={onCloseCreate}
@@ -757,6 +759,12 @@ export function PipelineCanvas({
     ]
   )
 
+  const { open: openDiffModal } = useDiffDialog({
+    originalYaml: stringify(originalPipeline),
+    updatedYaml: stringify(pipeline),
+    title: getString('pipeline.piplineDiffTitle')
+  })
+
   if (isLoading) {
     return (
       <React.Fragment>
@@ -932,7 +940,16 @@ export function PipelineCanvas({
                     <div className={css.readonlyAccessText}>{permissionText}</div>
                   </div>
                 )}
-                {isUpdated && !isReadonly && <div className={css.tagRender}>{getString('unsavedChanges')}</div>}
+                {isUpdated && !isReadonly && (
+                  <Button
+                    variation={ButtonVariation.LINK}
+                    intent="warning"
+                    className={css.unsavedChanges}
+                    onClick={openDiffModal}
+                  >
+                    {getString('unsavedChanges')}
+                  </Button>
+                )}
                 <SavePipelinePopoverWithRef toPipelineStudio={toPipelineStudio} ref={savePipelineHandleRef} />
                 {pipelineIdentifier !== DefaultNewPipelineId && !isReadonly && (
                   <Button

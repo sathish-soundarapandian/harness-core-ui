@@ -52,6 +52,7 @@ import CreateSumoLogicConnector from '../CreateConnector/SumoLogicConnector/Crea
 import CENGAwsConnector from '../CreateConnector/CENGAwsConnector/CreateCeAwsConnector'
 import CreateCeGcpConnector from '../CreateConnector/CEGcpConnector/CreateCeGcpConnector'
 import CreateCustomHealthConnector from '../CreateConnector/CustomHealthConnector/CreateCustomHealthConnector'
+import CreateElkHealthConnector from '../CreateConnector/ElkConnector/CreateElkConnector'
 import CreateErrorTrackingConnector from '../CreateConnector/ErrorTrackingConnector/CreateErrorTrackingConnector'
 import CreateAzureConnector from '../CreateConnector/AzureConnector/CreateAzureConnector'
 import { ConnectorWizardContextProvider } from './ConnectorWizardContext'
@@ -116,6 +117,8 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
   switch (type) {
     case Connectors.CUSTOM:
       return <CreateCustomHealthConnector {...commonProps} />
+    case Connectors.ELK:
+      return <CreateElkHealthConnector {...commonProps} />
     case Connectors.KUBERNETES_CLUSTER:
       return <CreateK8sConnector {...commonProps} />
     case Connectors.GIT:

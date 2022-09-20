@@ -51,5 +51,5 @@ export const releaseRepoManifestStoreTypes: Array<ReleaseRepoManifestStores> = [
 export const ReleaseRepoManifestToConnectorMap: Record<ReleaseRepoManifestStores | string, ConnectorInfoDTO['type']> = {
   Github: Connectors.GITHUB,
   AzureRepo: Connectors.AZURE_REPO,
-  Gitlab: Connectors.GITLAB
+  GitLab: Connectors.GITLAB
 }

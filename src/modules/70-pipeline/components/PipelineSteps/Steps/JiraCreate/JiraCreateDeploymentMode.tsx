@@ -17,10 +17,10 @@ import type {
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { JiraProjectBasicNG, JiraProjectNG, useGetJiraIssueCreateMetadata, useGetJiraProjects } from 'services/cd-ng'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { getGenuineValue, setIssueTypeOptions } from '../JiraApproval/helper'
 import type { JiraProjectSelectOption } from '../JiraApproval/types'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
@@ -125,7 +125,7 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
   return (
     <React.Fragment>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME ? (
-        <FormMultiTypeDurationField
+        <TimeoutFieldInputSetView
           name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
           label={getString('pipelineSteps.timeoutLabel')}
           className={css.deploymentViewMedium}
@@ -136,6 +136,8 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
             disabled: isApprovalStepFieldDisabled(readonly)
           }}
           disabled={isApprovalStepFieldDisabled(readonly)}
+          fieldPath="timeout"
+          template={template}
         />
       ) : null}
 

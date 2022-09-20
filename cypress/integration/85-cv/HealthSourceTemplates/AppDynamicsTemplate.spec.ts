@@ -8,6 +8,7 @@
 import { templatesListCall } from '../../../support/70-pipeline/constants'
 import { featureFlagsCall } from '../../../support/85-cv/common'
 import {
+  validations,
   countOfServiceAPI,
   monitoredServiceListCall,
   monitoredServiceListResponse
@@ -49,7 +50,7 @@ describe('Create empty monitored service', () => {
     cy.login('test', 'test')
     cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
     cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })
-    cy.intercept('POST', templatesListCall, { fixture: 'template/api/templatesList' }).as('templatesListCall')
+    cy.intercept('POST', templatesListCall, { fixture: 'cv/templates/templateList' }).as('templatesListCall')
     cy.visitSRMTemplate()
   })
 
@@ -110,10 +111,10 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="Errors"]').uncheck({ force: true })
     cy.get('input[name="Performance"]').uncheck({ force: true })
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'Plese select metric packs').should('be.visible')
+    cy.contains('span', validations.metricPack).should('be.visible')
     cy.get('input[name="Errors"]').check({ force: true })
     cy.get('input[name="Performance"]').check({ force: true })
-    cy.contains('span', 'Plese select metric packs').should('not.exist')
+    cy.contains('span', validations.metricPack).should('not.exist')
 
     cy.get('[data-testid="appdApplication"] span[data-icon="fixed-input"]').should('be.visible').click()
     cy.get('a.bp3-menu-item').should('have.length', 3).as('valueList')
@@ -152,12 +153,7 @@ describe('Create empty monitored service', () => {
     cy.contains('p', '+ Add New').click({ force: true })
     cy.get('.bp3-overlay input[name="name"]').type('group 1')
     cy.get('.bp3-overlay button[type="submit"]').click({ force: true })
-    cy.get('span[data-icon="fixed-input"]').last().should('be.visible').click()
-    cy.get('a.bp3-menu-item').should('have.length', 3).as('valueList')
-    cy.get('@valueList').eq(0).should('contain.text', 'Fixed value').as('fixedValue')
-    cy.get('@valueList').eq(1).should('contain.text', 'Runtime input').as('runtimeValue')
-    cy.get('@valueList').eq(2).should('contain.text', 'Expression').as('expressionValue')
-    cy.get('@runtimeValue').click()
+    cy.get('input[name="completeMetricPath"]').should('have.value', '<+input>')
 
     cy.get('input[name="sli"]').click({ force: true })
     cy.get('input[name="continuousVerification"]').click({ force: true })
@@ -168,7 +164,7 @@ describe('Create empty monitored service', () => {
     cy.contains('span', 'Submit').click({ force: true })
 
     // Creating the template.
-    cy.findByRole('button', { name: /Save/i }).click()
+    cy.findByText('Save').click()
     // Saving modal.
     cy.get('.bp3-dialog').findByRole('button', { name: /Save/i }).click()
     cy.findByText('Template published successfully').should('be.visible')
@@ -207,10 +203,10 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="Errors"]').uncheck({ force: true })
     cy.get('input[name="Performance"]').uncheck({ force: true })
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'Plese select metric packs').should('be.visible')
+    cy.contains('span', validations.metricPack).should('be.visible')
     cy.get('input[name="Errors"]').check({ force: true })
     cy.get('input[name="Performance"]').check({ force: true })
-    cy.contains('span', 'Plese select metric packs').should('not.exist')
+    cy.contains('span', validations.metricPack).should('not.exist')
 
     cy.get('[data-testid="appdApplication"] input').click()
     cy.get('.bp3-popover-content').within(() => {
@@ -240,7 +236,7 @@ describe('Create empty monitored service', () => {
     cy.contains('span', 'Submit').click({ force: true })
 
     // Creating the template.
-    cy.findByRole('button', { name: /Save/i }).click()
+    cy.findByText('Save').click()
     // Saving modal.
     cy.get('.bp3-dialog').findByRole('button', { name: /Save/i }).click()
     cy.findByText('Template published successfully').should('be.visible')
@@ -281,17 +277,17 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="Errors"]').uncheck({ force: true })
     cy.get('input[name="Performance"]').uncheck({ force: true })
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'Plese select metric packs').should('be.visible')
+    cy.contains('span', validations.metricPack).should('be.visible')
     cy.contains('span', 'Add Metric').click()
-    cy.contains('span', 'Plese select metric packs').should('not.exist')
+    cy.contains('span', validations.metricPack).should('not.exist')
 
     cy.contains('div', 'Assign').click({ force: true })
 
     // Custom validation
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'Group Name is required').should('be.visible')
+    cy.contains('span', validations.groupName).should('be.visible')
     cy.contains('span', 'Please provide complete metric path').scrollIntoView().should('be.visible')
-    cy.contains('span', 'One selection is required.').scrollIntoView().should('be.visible')
+    cy.contains('span', validations.assign).scrollIntoView().should('be.visible')
 
     cy.get('input[name="groupName"]').click()
     cy.contains('p', '+ Add New').click({ force: true })
@@ -325,7 +321,7 @@ describe('Create empty monitored service', () => {
     )
     cy.contains('span', 'Submit').click({ force: true })
     // Creating the template.
-    cy.findByRole('button', { name: /Save/i }).click()
+    cy.findByText('Save').click()
     // Saving modal.
     cy.get('.bp3-dialog').findByRole('button', { name: /Save/i }).click()
     cy.findByText('Template published successfully').should('be.visible')
@@ -354,20 +350,14 @@ describe('Create empty monitored service', () => {
 
     // Custom validation
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', 'Group Name is required').should('be.visible')
-    cy.contains('span', 'Please provide complete metric path').scrollIntoView().should('be.visible')
-    cy.contains('span', 'One selection is required.').scrollIntoView().should('be.visible')
+    cy.contains('span', validations.groupName).should('be.visible')
+    cy.contains('span', validations.assign).scrollIntoView().should('be.visible')
 
     cy.get('input[name="groupName"]').click()
     cy.contains('p', '+ Add New').click({ force: true })
     cy.get('.bp3-overlay input[name="name"]').type('group 1')
     cy.get('.bp3-overlay button[type="submit"]').click({ force: true })
-    cy.get('span[data-icon="fixed-input"]').last().should('be.visible').click()
-    cy.get('a.bp3-menu-item').should('have.length', 3).as('valueList')
-    cy.get('@valueList').eq(0).should('contain.text', 'Fixed value').as('fixedValue')
-    cy.get('@valueList').eq(1).should('contain.text', 'Runtime input').as('runtimeValue')
-    cy.get('@valueList').eq(2).should('contain.text', 'Expression').as('expressionValue')
-    cy.get('@runtimeValue').click()
+    cy.get('input[name="completeMetricPath"]').should('have.value', '<+input>')
 
     cy.get('input[name="sli"]').click({ force: true })
     cy.get('input[name="continuousVerification"]').click({ force: true })
@@ -392,9 +382,107 @@ describe('Create empty monitored service', () => {
     cy.get('input[name="higherBaselineDeviation"]').should('be.checked')
     cy.contains('span', 'Submit').click({ force: true })
     // Creating the template.
-    cy.findByRole('button', { name: /Save/i }).click()
+    cy.findByText('Save').click()
     // Saving modal.
     cy.get('.bp3-dialog').findByRole('button', { name: /Save/i }).click()
     cy.findByText('Template published successfully').should('be.visible')
+  })
+
+  it('Edit AppDynamics template', () => {
+    cy.get('span[icon="more"]').first().click()
+    cy.intercept(
+      'POST',
+      'template/api/templates/applyTemplates?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&getDefaultFromOtherRepo=true',
+      {
+        fixture: 'cv/templates/healthsourceTemplate'
+      }
+    ).as('applyTemplates')
+    cy.intercept(
+      'POST',
+      'template/api/templates/list?accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&templateListType=All',
+      {
+        fixture: 'cv/templates/templateListIndivisual'
+      }
+    ).as('listIndv')
+
+    cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')
+    cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
+    cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
+
+    cy.contains('p', 'Open/Edit Template').click()
+    cy.wait('@applyTemplates')
+    cy.wait('@listIndv')
+    cy.contains('div', 'AppDynamics').click()
+    cy.wait(1000)
+    cy.contains('span', 'Next').click({ force: true })
+
+    cy.get('[data-testid="appDTier"] input').should('have.value', '<+input>')
+    cy.get('[data-testid="appdApplication"] input').should('have.value', '<+input>')
+    cy.get('input[name="groupName"]').should('have.value', 'Group 1')
+    cy.get('input[name="metricName"]').should('have.value', 'appdMetric 101')
+    cy.get('input[name="completeMetricPath"]').should('have.value', '<+input>')
+    cy.contains('div', 'Assign').click({ force: true })
+    cy.get('input[name="serviceInstanceMetricPath"]').should('have.value', '<+input>')
+    cy.get('input[value="Errors/ERROR"]').should('be.checked')
+    cy.get('input[name="higherBaselineDeviation"]').should('be.checked')
+
+    cy.contains('span', 'Previous').click({ force: true })
+
+    cy.get('span[data-icon="runtime-input"]').last().should('be.visible').click()
+    cy.get('a.bp3-menu-item').should('have.length', 3).as('valueList')
+    cy.get('@valueList').eq(0).should('contain.text', 'Fixed value').as('fixedValue')
+    cy.get('@valueList').eq(1).should('contain.text', 'Runtime input').as('runtimeValue')
+    cy.get('@valueList').eq(2).should('contain.text', 'Expression').as('expressionValue')
+    cy.get('@fixedValue').click()
+    cy.get('button[data-testid="cr-field-connectorRef"]').click()
+    cy.contains('p', 'appdtest').click()
+    cy.contains('span', 'Apply Selected').click()
+    cy.contains('span', 'Next').click({ force: true })
+    cy.get('[data-testid="appdApplication"] span[data-icon="runtime-input"]').should('be.visible').click()
+    cy.get('a.bp3-menu-item').should('have.length', 3).as('valueList')
+    cy.get('@valueList').eq(0).should('contain.text', 'Fixed value').as('fixedValue')
+    cy.get('@valueList').eq(1).should('contain.text', 'Runtime input').as('runtimeValue')
+    cy.get('@valueList').eq(2).should('contain.text', 'Expression').as('expressionValue')
+    cy.get('@fixedValue').click()
+    cy.get('[data-testid="appDTier"] input').should('not.exist')
+    cy.get('[data-testid="appdApplication"] input').click()
+    cy.contains('p', 'cv-app').click({ force: true })
+    cy.wait('@TierCall')
+    cy.get('[data-testid="appDTier"] span[data-icon="fixed-input"]').should('be.visible').click()
+    cy.get('a.bp3-menu-item').should('have.length', 3).as('valueList')
+    cy.get('@valueList').eq(0).should('contain.text', 'Fixed value').as('fixedValue')
+    cy.get('@valueList').eq(1).should('contain.text', 'Runtime input').as('runtimeValue')
+    cy.get('@valueList').eq(2).should('contain.text', 'Expression').as('expressionValue')
+    cy.get('@fixedValue').click()
+    cy.get('[data-testid="appDTier"] input').click()
+    cy.get('.bp3-popover-content').within(() => {
+      cy.contains('li', 'docker-tier').click({ force: true })
+    })
+    cy.get('span[data-icon="runtime-input"]').last().should('be.visible').click()
+    cy.get('a.bp3-menu-item').should('have.length', 3).as('valueList')
+    cy.get('@valueList').eq(0).should('contain.text', 'Fixed value').as('fixedValue')
+    cy.get('@valueList').eq(1).should('contain.text', 'Runtime input').as('runtimeValue')
+    cy.get('@valueList').eq(2).should('contain.text', 'Expression').as('expressionValue')
+    cy.get('@fixedValue').click()
+    cy.get('input[name="completeMetricPath"]').type('Overall Application Performance | docker-tier | Calls per Minute')
+    cy.contains('span', 'Submit').click({ force: true })
+    cy.contains('div', 'AppDynamics').click()
+    cy.wait(1000)
+    cy.contains('span', 'Next').click({ force: true })
+    cy.wait('@ApplicationCall')
+    cy.wait('@MetricPackCall')
+    cy.wait(1000)
+    cy.get('input[name="completeMetricPath"]').should(
+      'have.value',
+      'Overall Application Performance | docker-tier | Calls per Minute'
+    )
+    cy.get('[data-testid="appDTier"] span[data-icon="fixed-input"]').should('be.visible').click()
+    cy.get('a.bp3-menu-item').should('have.length', 3).as('valueList')
+    cy.get('@valueList').eq(0).should('contain.text', 'Fixed value').as('fixedValue')
+    cy.get('@valueList').eq(1).should('contain.text', 'Runtime input').as('runtimeValue')
+    cy.get('@valueList').eq(2).should('contain.text', 'Expression').as('expressionValue')
+    cy.get('@runtimeValue').click()
+    cy.get('input[name="completeMetricPath"]').should('have.value', '<+input>')
   })
 })

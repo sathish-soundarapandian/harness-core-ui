@@ -1,4 +1,5 @@
 import {
+  validations,
   countOfServiceAPI,
   monitoredServiceListCall,
   monitoredServiceListResponse
@@ -80,24 +81,24 @@ describe('Health Source - Google Cloud Operations', () => {
 
     cy.wait('@sampleDataResponse')
 
-    cy.contains('span', 'One selection is required.').should('be.visible')
+    cy.contains('span', validations.assign).should('be.visible')
     cy.get('input[name="sli"]').click({ force: true })
-    cy.contains('span', 'One selection is required.').should('not.exist')
+    cy.contains('span', validations.assign).should('not.exist')
 
     cy.get('input[name="continuousVerification"]').click({ force: true })
     cy.get('input[name="healthScore"]').click({ force: true })
 
-    cy.contains('span', 'Risk Category is required.').should('exist')
+    cy.contains('span', validations.riskCategory).should('exist')
     cy.contains('label', 'Errors').click()
-    cy.contains('span', 'Risk Category is required.').should('not.exist')
+    cy.contains('span', validations.riskCategory).should('not.exist')
 
-    cy.contains('span', 'One selection is required.').should('exist')
+    cy.contains('span', validations.assign).should('exist')
     cy.get('input[name="higherBaselineDeviation"]').click({ force: true })
-    cy.contains('span', 'One selection is required.').should('not.exist')
+    cy.contains('span', validations.assign).should('not.exist')
 
-    cy.contains('span', 'Service Instance Identifier is required.').should('exist')
+    cy.contains('span', validations.serviceInstanceIdentifier).should('exist')
     cy.fillField('serviceInstanceField', 'gco_service')
-    cy.contains('span', 'Service Instance Identifier is required.').should('not.exist')
+    cy.contains('span', validations.serviceInstanceIdentifier).should('not.exist')
 
     cy.findByRole('button', { name: /Submit/i }).click()
 
@@ -142,24 +143,24 @@ describe('Health Source - Google Cloud Operations', () => {
     cy.wait('@sampleDataResponse')
     cy.findByRole('button', { name: /Submit/i }).click()
 
-    cy.contains('span', 'One selection is required.').should('be.visible')
+    cy.contains('span', validations.assign).should('be.visible')
     cy.get('input[name="sli"]').click({ force: true })
-    cy.contains('span', 'One selection is required.').should('not.exist')
+    cy.contains('span', validations.assign).should('not.exist')
 
     cy.get('input[name="continuousVerification"]').click({ force: true })
     cy.get('input[name="healthScore"]').click({ force: true })
 
-    cy.contains('span', 'Risk Category is required.').should('exist')
+    cy.contains('span', validations.riskCategory).should('exist')
     cy.contains('label', 'Errors').click()
-    cy.contains('span', 'Risk Category is required.').should('not.exist')
+    cy.contains('span', validations.riskCategory).should('not.exist')
 
-    cy.contains('span', 'One selection is required.').should('exist')
+    cy.contains('span', validations.assign).should('exist')
     cy.get('input[name="higherBaselineDeviation"]').click({ force: true })
-    cy.contains('span', 'One selection is required.').should('not.exist')
+    cy.contains('span', validations.assign).should('not.exist')
 
-    cy.contains('span', 'Service Instance Identifier is required.').should('exist')
+    cy.contains('span', validations.serviceInstanceIdentifier).should('exist')
     cy.fillField('serviceInstanceField', 'gco_service')
-    cy.contains('span', 'Service Instance Identifier is required.').should('not.exist')
+    cy.contains('span', validations.serviceInstanceIdentifier).should('not.exist')
 
     cy.findByRole('button', { name: /Submit/i }).click()
 
@@ -185,9 +186,9 @@ describe('Health Source - Google Cloud Operations', () => {
 
     cy.findByRole('button', { name: /Submit/i }).click()
 
-    cy.contains('span', 'Query is required.').should('be.visible')
+    cy.contains('span', validations.query).should('be.visible')
     cy.fillField('query', '{}')
-    cy.contains('span', 'Query is required.').should('not.exist')
+    cy.contains('span', validations.query).should('not.exist')
 
     cy.contains('p', 'Submit query to see records from Stackdriver Logs').should('be.visible')
 
@@ -201,11 +202,11 @@ describe('Health Source - Google Cloud Operations', () => {
 
     cy.contains('p', 'Oops, something went wrong on our end. Please contact Harness Support.').should('not.exist')
 
-    cy.contains('span', 'Service Instance is required.').should('be.visible')
+    cy.contains('span', validations.serviceInstance).should('be.visible')
     cy.findByRole('button', { name: /Select path for service instance/i }).click()
     cy.contains('p', 'Select path for service instance').should('be.visible')
     cy.contains('span', 'logName').click()
-    cy.contains('span', 'Service Instance is required.').should('not.exist')
+    cy.contains('span', validations.serviceInstance).should('not.exist')
 
     cy.contains('span', 'Message Identifier is required.').should('be.visible')
     cy.findByRole('button', { name: /Select path for message identifier/i }).click()

@@ -602,6 +602,7 @@ export type CEAwsConnector = ConnectorConfigDTO & {
   crossAccountAccess: CrossAccountAccess
   curAttributes?: AwsCurAttributes
   featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  isAWSGovCloudAccount?: boolean
 }
 
 export type CEAzureConnector = ConnectorConfigDTO & {
@@ -1155,6 +1156,7 @@ export interface DatadogMetricHealthDefinition {
 export type DatadogMetricHealthSourceSpec = HealthSourceSpec & {
   feature: string
   metricDefinitions?: DatadogMetricHealthDefinition[]
+  metricPacks?: TimeSeriesMetricPackDTO[]
 }
 
 export interface DemoChangeEventDTO {
@@ -3366,6 +3368,16 @@ export interface PageSLODashboardWidget {
   totalPages?: number
 }
 
+export interface PageSLOHealthListView {
+  content?: SLOHealthListView[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
 export interface PageServiceLevelObjectiveResponse {
   content?: ServiceLevelObjectiveResponse[]
   empty?: boolean
@@ -4181,6 +4193,13 @@ export interface ResponsePageSLODashboardWidget {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponsePageSLOHealthListView {
+  correlationId?: string
+  data?: PageSLOHealthListView
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponsePageServiceLevelObjectiveResponse {
   correlationId?: string
   data?: PageServiceLevelObjectiveResponse
@@ -4958,6 +4977,34 @@ export interface SLOHealthIndicator {
   uuid?: string
 }
 
+export interface SLOHealthListView {
+  burnRate: number
+  description?: string
+  environmentIdentifier: string
+  environmentName: string
+  errorBudgetRemaining: number
+  errorBudgetRemainingPercentage: number
+  errorBudgetRisk: 'EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY'
+  healthSourceIdentifier: string
+  healthSourceName: string
+  monitoredServiceIdentifier: string
+  monitoredServiceName: string
+  name: string
+  noOfActiveAlerts: number
+  noOfMaximumAlerts: number
+  serviceIdentifier: string
+  serviceName: string
+  sloIdentifier: string
+  sloTargetPercentage: number
+  sloTargetType: 'Rolling' | 'Calender'
+  tags?: {
+    [key: string]: string
+  }
+  totalErrorBudget: number
+  userJourneyIdentifier: string
+  userJourneyName: string
+}
+
 export interface SLORiskCountResponse {
   riskCounts?: RiskCount[]
   totalCount?: number
@@ -5218,6 +5265,7 @@ export type StackdriverLogHealthSourceSpec = HealthSourceSpec & {
 
 export type StackdriverMetricHealthSourceSpec = HealthSourceSpec & {
   metricDefinitions?: StackdriverDefinition[]
+  metricPacks?: TimeSeriesMetricPackDTO[]
 }
 
 export type SumoLogicConnectorDTO = ConnectorConfigDTO & {
@@ -11410,6 +11458,63 @@ export const getSLODashboardWidgetsPromise = (
   getUsingFetch<ResponsePageSLODashboardWidget, unknown, GetSLODashboardWidgetsQueryParams, void>(
     getConfig('cv/api'),
     `/slo-dashboard/widgets`,
+    props,
+    signal
+  )
+
+export interface GetSLOHealthListViewQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  userJourneyIdentifiers?: string[]
+  monitoredServiceIdentifier?: string
+  sliTypes?: ('Availability' | 'Latency')[]
+  targetTypes?: ('Rolling' | 'Calender')[]
+  errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
+  pageNumber?: number
+  pageSize?: number
+}
+
+export type GetSLOHealthListViewProps = Omit<
+  GetProps<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewQueryParams, void>,
+  'path'
+>
+
+/**
+ * get slo list view
+ */
+export const GetSLOHealthListView = (props: GetSLOHealthListViewProps) => (
+  <Get<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewQueryParams, void>
+    path={`/slo-dashboard/widgets/list`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetSLOHealthListViewProps = Omit<
+  UseGetProps<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewQueryParams, void>,
+  'path'
+>
+
+/**
+ * get slo list view
+ */
+export const useGetSLOHealthListView = (props: UseGetSLOHealthListViewProps) =>
+  useGet<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewQueryParams, void>(`/slo-dashboard/widgets/list`, {
+    base: getConfig('cv/api'),
+    ...props
+  })
+
+/**
+ * get slo list view
+ */
+export const getSLOHealthListViewPromise = (
+  props: GetUsingFetchProps<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewQueryParams, void>(
+    getConfig('cv/api'),
+    `/slo-dashboard/widgets/list`,
     props,
     signal
   )

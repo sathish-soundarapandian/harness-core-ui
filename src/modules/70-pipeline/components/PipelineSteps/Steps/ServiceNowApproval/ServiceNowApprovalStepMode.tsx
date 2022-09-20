@@ -43,7 +43,7 @@ import {
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { isApprovalStepFieldDisabled } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalCommons'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { ApprovalRejectionCriteriaType } from '@pipeline/components/PipelineSteps/Steps/Common/types'
 import { useGetServiceNowIssueCreateMetadata, useGetServiceNowTicketTypes } from 'services/cd-ng'
@@ -168,6 +168,7 @@ function FormContent({
             showAdvanced={true}
             onChange={value => formik.setFieldValue('timeout', value)}
             isReadonly={readonly}
+            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
           />
         )}
       </div>
@@ -283,6 +284,7 @@ function FormContent({
               showAdvanced={true}
               onChange={value => formik.setFieldValue('spec.ticketNumber', value)}
               isReadonly={readonly}
+              allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
             />
           )}
         </div>

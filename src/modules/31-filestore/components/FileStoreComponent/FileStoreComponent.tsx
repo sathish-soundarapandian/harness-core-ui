@@ -36,11 +36,22 @@ interface FileStoreNodeDTOWithScope extends FileStoreNodeDTO {
 interface UseFileStoreModalProps {
   applySelected: (file: any) => void
   fileUsage?: FileUsage
+  defaultTab?: string
 }
 
-const useFileStoreModal = ({ applySelected, fileUsage }: UseFileStoreModalProps): UseFileStoreModalReturn => {
+const useFileStoreModal = ({
+  applySelected,
+  fileUsage,
+  defaultTab
+}: UseFileStoreModalProps): UseFileStoreModalReturn => {
   const [activeTab, setActiveTab] = useState<string>(Scope.ACCOUNT)
   const [isUnsaved, setIsUnsaved] = useState<boolean>(false)
+
+  React.useEffect(() => {
+    if (defaultTab) {
+      setActiveTab(defaultTab)
+    }
+  }, [defaultTab])
 
   const { getString } = useStrings()
 

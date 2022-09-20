@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import {
   Container,
   Formik,
@@ -23,12 +23,13 @@ import type { FormikProps } from 'formik'
 import { useModalHook } from '@harness/use-modal'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
-import { isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { EmailSchema } from '@common/utils/Validation'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { usePostLdapAuthenticationTest, useUpdateAuthMechanism } from 'services/cd-ng'
+import { ResponseMessage, usePostLdapAuthenticationTest, useUpdateAuthMechanism } from 'services/cd-ng'
 import { AuthenticationMechanisms } from '@rbac/utils/utils'
+import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import css from './useLdapTestConfiguration.module.scss'
 
 export interface useLdapTestConfigurationModalReturn {
@@ -52,6 +53,7 @@ const useLdapTestConfigurationProvider = ({
   const { accountId } = useParams<AccountPathProps>()
   const { showSuccess, showError } = useToaster()
   const formRef = useRef<FormikProps<LDAPConnectionTestConfig>>(null)
+  const [errorMessages, setErrorMessages] = useState<ResponseMessage[] | null>(null)
   const validationSchema = Yup.object().shape({
     email: EmailSchema(),
     password: Yup.string().min(6).required(getString('password'))
@@ -69,17 +71,14 @@ const useLdapTestConfigurationProvider = ({
       const formData = new FormData()
       formData.set('email', email)
       formData.set('password', password)
-      const { resource } = await ldapLoginTest(formData as any)
-      if (resource?.status != 'SUCCESS') {
-        showError(resource?.message, 5000)
-      } else {
-        showSuccess(getString('authSettings.ldap.ldapTestSuccessful'), 5000)
-      }
-    } catch (e) {
-      /* istanbul ignore next */ showError(e.data?.message || e.message, 5000)
+      await resetStatesAndInvokeLdapAuth(formData)
+    } catch (e: any) /* istanbul ignore next */ {
+      setErrorMessages(defaultTo(e.data?.responseMessages, [{ level: 'ERROR', message: e.data?.message || e.message }]))
     }
   }
+
   const testAndEnableLdap = async (): Promise<void> => {
+    let testConnectionPassed = false
     try {
       /* istanbul ignore else */
       if (!formRef.current) {
@@ -90,34 +89,50 @@ const useLdapTestConfigurationProvider = ({
       if (!isEmpty(formValidation) || !formRef.current) {
         return
       }
+
       const { email, password } = formRef.current.values as LDAPConnectionTestConfig
       const formData = new FormData()
       formData.set('email', email as string)
       formData.set('password', password as string)
+      testConnectionPassed = await resetStatesAndInvokeLdapAuth(formData)
+    } catch (e: any) /* istanbul ignore next */ {
+      setErrorMessages(defaultTo(e.data?.responseMessages, [{ level: 'ERROR', message: e.data?.message || e.message }]))
+    }
 
-      const { resource: ldapTestResource } = await ldapLoginTest(formData as any)
-      if (ldapTestResource?.status != 'SUCCESS') {
-        showError(ldapTestResource?.message, 5000)
-        return
-      }
-      const { resource: updateAuthResource, responseMessages } = await updateAuthMechanism(undefined, {
-        queryParams: {
-          accountIdentifier: accountId,
-          authenticationMechanism: AuthenticationMechanisms.LDAP
+    /* istanbul ignore else */
+    if (testConnectionPassed) {
+      try {
+        const { resource: updateAuthResource, responseMessages } = await updateAuthMechanism(undefined, {
+          queryParams: {
+            accountIdentifier: accountId,
+            authenticationMechanism: AuthenticationMechanisms.LDAP
+          }
+        })
+
+        if (!updateAuthResource) {
+          showError(responseMessages?.[0].message, 5000)
+        } else {
+          hideModal()
+          showSuccess(getString('authSettings.ldap.authChangeSuccessful'), 5000)
+          onSuccess()
         }
-      })
-
-      if (!updateAuthResource) {
-        showError(responseMessages?.[0].message, 5000)
-      } else {
-        hideModal()
-        showSuccess(getString('authSettings.ldap.authChangeSuccessful'), 5000)
-        onSuccess()
+      } catch (e: any) {
+        /* istanbul ignore next */ showError(e.data?.message || e.message, 5000)
       }
-    } catch (e) {
-      /* istanbul ignore next */ showError(e.data?.message || e.message, 5000)
     }
   }
+
+  const resetStatesAndInvokeLdapAuth = async (formData: FormData): Promise<boolean> => {
+    setErrorMessages(null)
+    const response = await ldapLoginTest(formData as any)
+    if (response?.resource?.status === 'SUCCESS') {
+      showSuccess(getString('authSettings.ldap.ldapTestSuccessful'), 5000)
+      return true
+    }
+    setErrorMessages(defaultTo(response?.responseMessages, [{ level: 'ERROR', message: response.resource?.message }]))
+    return false
+  }
+
   const [showModal, hideModal] = useModalHook(() => {
     const isDisabled = isTestLoading || isAuthUpdateLoading
     return (
@@ -144,6 +159,11 @@ const useLdapTestConfigurationProvider = ({
                   inputGroup={{ type: 'password' }}
                   disabled={isDisabled}
                 />
+                <Layout.Horizontal>
+                  {errorMessages && errorMessages?.length > 0 && (
+                    <ErrorHandler responseMessages={errorMessages} className={css.layoutErrorMessage} />
+                  )}
+                </Layout.Horizontal>
                 <Layout.Horizontal margin={{ top: 'large', bottom: 'large' }}>
                   <Button
                     intent="primary"
@@ -171,10 +191,11 @@ const useLdapTestConfigurationProvider = ({
         </Container>
       </Dialog>
     )
-  }, [isTestLoading, isAuthUpdateLoading])
+  }, [isTestLoading, isAuthUpdateLoading, errorMessages])
 
   return {
     openLdapTestModal: () => {
+      setErrorMessages(null)
       showModal()
     },
     closeLdapTestModal: hideModal

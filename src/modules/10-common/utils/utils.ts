@@ -6,10 +6,12 @@
  */
 
 import { getMultiTypeFromValue, IconName, MultiSelectOption, MultiTypeInputType, SelectOption } from '@harness/uicore'
+import { defaultTo } from 'lodash-es'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { Editions } from '@common/constants/SubscriptionTypes'
+import type { UserMetadataDTO } from 'services/cd-ng'
 
 const PR_ENV_HOST_NAME = 'pr.harness.io'
 
@@ -131,3 +133,11 @@ export function isValueRuntimeInput(
 
   return isMultiTypeRuntime(type)
 }
+
+export const getUserName = (user: UserMetadataDTO): string => {
+  return defaultTo(user.name, user.email)
+}
+
+export const REFERER_URL = 'refererURL'
+
+export const getSavedRefererURL = (): string => localStorage.getItem(REFERER_URL) || ''

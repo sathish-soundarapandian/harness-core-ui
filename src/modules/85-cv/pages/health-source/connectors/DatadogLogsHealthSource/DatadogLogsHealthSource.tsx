@@ -33,8 +33,8 @@ export function DatadogLogsHealthSource(props: DatadogLogsHealthSourceProps): JS
   const { getString } = useStrings()
   const [rerenderKey, setRerenderKey] = useState('')
   const transformedSourceData = useMemo(
-    () => transformDatadogHealthSourceToDatadogLogsSetupSource(sourceData),
-    [sourceData]
+    () => transformDatadogHealthSourceToDatadogLogsSetupSource(sourceData, isTemplate),
+    [sourceData, isTemplate]
   )
   const isConnectorRuntimeOrExpression =
     getMultiTypeFromValue(transformedSourceData?.connectorRef as string) !== MultiTypeInputType.FIXED

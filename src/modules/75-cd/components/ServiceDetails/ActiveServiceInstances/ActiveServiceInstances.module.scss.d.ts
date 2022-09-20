@@ -34,5 +34,6 @@ declare const styles: {
   readonly sectionValue: string
   readonly seeMore: string
   readonly tabsStyle: string
+  readonly textStyle: string
 }
 export default styles

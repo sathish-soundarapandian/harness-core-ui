@@ -8,7 +8,8 @@
 import { featureFlagsCall } from '../../../support/85-cv/common'
 import {
   monitoredServiceListCall,
-  monitoredServiceListResponse
+  monitoredServiceListResponse,
+  validations
 } from '../../../support/85-cv/monitoredService/constants'
 import {
   labelNamesAPI,
@@ -72,14 +73,14 @@ describe('Health Source - Prometheus', () => {
     cy.get('input[name="metricName"]').should('contain.value', 'Prometheus Metric')
 
     cy.findByRole('button', { name: /Submit/i }).click()
-    cy.contains('span', 'Group Name is required.').should('be.visible')
+    cy.contains('span', validations.groupName).should('be.visible')
     cy.addingGroupName('Group 1')
     cy.get('input[name="groupName"]').should('contain.value', 'Group 1')
-    cy.contains('span', 'Group Name is required.').should('not.exist')
+    cy.contains('span', validations.groupName).should('not.exist')
 
     cy.findByRole('button', { name: /Fetch records/i }).should('be.disabled')
     cy.get('div[class="view-lines"]').type(`classes	{}`)
-    cy.contains('span', 'Query is required.').should('not.exist')
+    cy.contains('span', validations.query).should('not.exist')
 
     cy.contains('p', 'Submit query to see records from Prometheus').should('be.visible')
 
@@ -102,16 +103,16 @@ describe('Health Source - Prometheus', () => {
     cy.contains('div', 'Assign').click()
     cy.findByRole('button', { name: /Submit/i }).click()
 
-    cy.contains('span', 'One selection is required.').should('be.visible')
+    cy.contains('span', validations.assign).should('be.visible')
     cy.get('input[name="sli"]').click({ force: true })
-    cy.contains('span', 'One selection is required.').should('not.exist')
+    cy.contains('span', validations.assign).should('not.exist')
 
     cy.get('input[name="continuousVerification"]').click({ force: true })
     cy.get('input[name="healthScore"]').click({ force: true })
     cy.findByRole('button', { name: /Submit/i }).click()
-    cy.contains('span', 'Risk Category is required.').should('exist')
+    cy.contains('span', validations.riskCategory).should('exist')
     cy.contains('label', 'Errors').click()
-    cy.contains('span', 'Risk Category is required.').should('not.exist')
+    cy.contains('span', validations.riskCategory).should('not.exist')
 
     cy.contains('span', 'Deviation Compared to Baseline is required.').should('exist')
     cy.get('input[name="higherBaselineDeviation"]').click({ force: true })
@@ -140,7 +141,7 @@ describe('Health Source - Prometheus', () => {
 
     cy.findByRole('button', { name: /Submit/i }).click({ force: true })
     // Creating the template.
-    cy.findByRole('button', { name: /Save/i }).click()
+    cy.findByText('Save').click()
     // Saving modal.
     cy.get('.bp3-dialog').findByRole('button', { name: /Save/i }).click()
     cy.findByText('Template published successfully').should('be.visible')
@@ -165,13 +166,13 @@ describe('Health Source - Prometheus', () => {
     cy.get('input[name="metricName"]').should('contain.value', 'Prometheus Metric')
 
     cy.findByRole('button', { name: /Submit/i }).click()
-    cy.contains('span', 'Group Name is required.').should('be.visible')
+    cy.contains('span', validations.groupName).should('be.visible')
     cy.addingGroupName('Group 1')
     cy.get('input[name="groupName"]').should('contain.value', 'Group 1')
-    cy.contains('span', 'Group Name is required.').should('not.exist')
+    cy.contains('span', validations.groupName).should('not.exist')
 
     cy.get('input[name="query"]').should('have.value', '<+input>')
-    cy.contains('span', 'Query is required.').should('not.exist')
+    cy.contains('span', validations.query).should('not.exist')
 
     cy.contains('p', 'Runtime inputs will be required to verify your configurations').should('be.visible')
 
@@ -182,7 +183,7 @@ describe('Health Source - Prometheus', () => {
     cy.get('input[name="higherBaselineDeviation"]').click({ force: true })
     cy.findByRole('button', { name: /Submit/i }).click()
     // Creating the template.
-    cy.findByRole('button', { name: /Save/i }).click()
+    cy.findByText('Save').click()
     // Saving modal.
     cy.get('.bp3-dialog').findByRole('button', { name: /Save/i }).click()
     cy.findByText('Template published successfully').should('be.visible')

@@ -66,7 +66,7 @@ describe('CVSLODetailsPage', () => {
     cy.intercept('GET', getChangeEventList, errorResponse)
 
     cy.contains('p', 'SLOs').click()
-    cy.contains('h2', 'SLO-1').click()
+    cy.contains('p', 'SLO-1').click()
 
     cy.contains('p', 'Oops, something went wrong on our end. Please contact Harness Support.').should('be.visible')
 
@@ -90,7 +90,7 @@ describe('CVSLODetailsPage', () => {
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
 
     cy.contains('p', 'SLOs').click()
-    cy.contains('h2', 'SLO-1').click()
+    cy.contains('p', 'SLO-1').click()
 
     cy.intercept('GET', getServiceLevelObjective, getServiceLevelObjectiveResponse)
     cy.findByRole('button', { name: /Edit/i }).click()
@@ -129,12 +129,12 @@ describe('CVSLODetailsPage', () => {
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
 
     cy.contains('p', 'SLOs').click()
-    cy.contains('h2', 'SLO-1').click()
+    cy.contains('p', 'SLO-1').click()
 
     cy.contains('p', 'Service Details').should('be.visible')
 
     cy.contains('p', 'SLI Type').next().should('contain.text', 'Latency')
-    cy.contains('p', 'Health Score').next().should('contain.text', 'appd_cvng_prod')
+    cy.contains('p', 'Health Source').next().should('contain.text', 'appd_cvng_prod')
     cy.contains('p', 'Period Type').next().should('contain.text', 'Calendar')
 
     cy.contains('p', 'Error Budget Remaining').next().should('contain.text', '100.00%')
@@ -153,7 +153,7 @@ describe('CVSLODetailsPage', () => {
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
 
     cy.contains('p', 'SLOs').click()
-    cy.contains('h2', 'SLO-1').click()
+    cy.contains('p', 'SLO-1').click()
 
     cy.findByRole('button', { name: /1 Hour/i }).click()
     cy.findByRole('button', { name: /1 Hour/i }).should('have.class', 'Button--variation-secondary')
@@ -176,7 +176,7 @@ describe('CVSLODetailsPage', () => {
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
 
     cy.contains('p', 'SLOs').click()
-    cy.contains('h2', 'SLO-1').click()
+    cy.contains('p', 'SLO-1').click()
 
     cy.contains('p', 'Service Details').should('be.visible')
     cy.get('.bp3-card').contains('p', 'Changes').scrollIntoView().should('be.visible')
@@ -220,7 +220,7 @@ describe('CVSLODetailsPage', () => {
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
 
     cy.contains('p', 'SLOs').click()
-    cy.contains('h2', 'SLO-1').click()
+    cy.contains('p', 'SLO-1').click()
 
     cy.contains('p', 'Service Details').should('be.visible')
     cy.get('.bp3-card').contains('p', 'Changes').scrollIntoView().should('be.visible')
@@ -240,7 +240,7 @@ describe('CVSLODetailsPage', () => {
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
 
     cy.contains('p', 'SLOs').click()
-    cy.contains('h2', 'SLO-1').click()
+    cy.contains('p', 'SLO-1').click()
 
     cy.contains('p', 'Service Details').should('be.visible')
     cy.get('.bp3-card').contains('p', 'Changes').scrollIntoView().should('be.visible')
@@ -263,7 +263,7 @@ describe('CVSLODetailsPage', () => {
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
 
     cy.contains('p', 'SLOs').click()
-    cy.contains('h2', 'SLO-1').click()
+    cy.contains('p', 'SLO-1').click()
 
     cy.contains('p', 'Service Details').should('be.visible')
     cy.get('.bp3-card').contains('p', 'Changes').scrollIntoView().should('be.visible')
@@ -289,7 +289,7 @@ describe('CVSLODetailsPage', () => {
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
 
     cy.contains('p', 'SLOs').click()
-    cy.contains('h2', 'SLO-1').click()
+    cy.contains('p', 'SLO-1').click()
 
     cy.contains('p', 'Service Details').should('be.visible')
     cy.get('.bp3-card').contains('p', 'Changes').scrollIntoView().should('be.visible')

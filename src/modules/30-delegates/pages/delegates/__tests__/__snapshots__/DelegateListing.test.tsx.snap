@@ -403,32 +403,32 @@ exports[`Test delegate buttons click on filter 1`] = `
               style="width: 80px;"
             />
             <div
-              style="width: 25%;"
+              style="width: 28%;"
             >
               delegate.DelegateName
             </div>
             <div
-              style="width: 20%;"
+              style="width: 16%;"
             >
               tagsLabel
             </div>
             <div
-              style="width: 20%;"
+              style="width: 16%;"
             >
-              instanceFieldOptions.instances
+              version
             </div>
             <div
-              style="width: calc(15% - 40px);"
+              style="width: 15%;"
             >
               delegate.LastHeartBeat
             </div>
             <div
-              style="width: calc(15% - 40px);"
+              style="width: 14%;"
             >
               connectivityStatus
             </div>
             <div
-              style="width: 5%;"
+              style="width: 2%;"
             />
           </div>
           <div
@@ -495,67 +495,83 @@ exports[`Test delegate buttons click on filter 1`] = `
               </div>
               <div
                 class="Layout--horizontal StyledProps--main"
-                style="width: 25%;"
+                style="width: 28%;"
               >
                 <div
-                  class="Layout--vertical StyledProps--main"
+                  class="Layout--vertical StyledProps--main StyledProps--margin-right-large"
+                  style="width: 55%;"
                 >
                   <div
                     class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
                     data-testid="delegate-1"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black"
+                      class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                      style="--text-line-clamp: 1;"
                     >
                       delegate-1
                     </p>
                   </div>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
+                    style="--text-line-clamp: 1;"
+                  >
+                    delGroupIdentifier1
+                  </p>
                 </div>
-              </div>
-              <div
-                class="StyledProps--font StyledProps--main connectivity"
-                style="width: 20%;"
-              >
-                <div
-                  class="StyledProps--font StyledProps--main"
-                  style="display: inline-flex; flex-wrap: wrap;"
+                <p
+                  class="StyledProps--font StyledProps--main statusText StyledProps--background-grey300 StyledProps--color StyledProps--color-white StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall"
                 >
-                  <p
-                    class="StyledProps--font StyledProps--main"
-                    style="display: inline-block; border-radius: 4px; font-size: 10px;"
-                  >
-                    implicitSelector1
-                  </p>
-                  <p
-                    class="StyledProps--font StyledProps--main"
-                    style="display: inline-block; border-radius: 4px; font-size: 10px;"
-                  >
-                    customtag1
-                  </p>
-                  <p
-                    class="StyledProps--font StyledProps--main"
-                    style="display: inline-block; border-radius: 4px; font-size: 10px;"
-                  >
-                    customtag2
-                  </p>
-                </div>
-                <span />
+                  AUTO UPGRADE: OFF
+                </p>
               </div>
               <div
-                class="Layout--horizontal StyledProps--main"
-                style="width: 20%;"
+                class="StyledProps--font StyledProps--main connectivity StyledProps--padding-left-large"
+                style="width: 17%;"
               >
-                0
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main"
+                  style="--text-line-clamp: 1;"
+                >
+                  <div
+                    class="StyledProps--font StyledProps--main"
+                    style="display: inline-flex; flex-wrap: wrap;"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main"
+                      style="display: inline-block; border-radius: 4px; font-size: 10px;"
+                    >
+                      implicitSelector1
+                    </p>
+                    <p
+                      class="StyledProps--font StyledProps--main"
+                      style="display: inline-block; border-radius: 4px; font-size: 10px;"
+                    >
+                      customtag1
+                    </p>
+                    <p
+                      class="StyledProps--font StyledProps--main"
+                      style="display: inline-block; border-radius: 4px; font-size: 10px;"
+                    >
+                      customtag2
+                    </p>
+                  </div>
+                  <span />
+                </p>
               </div>
               <div
                 class="Layout--horizontal StyledProps--main"
-                style="width: calc(15% - 40px);"
+                style="width: 15%;"
+              />
+              <div
+                class="Layout--horizontal StyledProps--main"
+                style="width: 14%;"
               >
                 dummy date
               </div>
               <div
                 class="Layout--vertical StyledProps--main"
-                style="width: calc(15% - 40px);"
+                style="width: 15%;"
               >
                 <p
                   class="StyledProps--font StyledProps--main"
@@ -585,7 +601,7 @@ exports[`Test delegate buttons click on filter 1`] = `
               </div>
               <div
                 class="Layout--vertical StyledProps--main"
-                style="width: 5%;"
+                style="width: 2%;"
               >
                 <div
                   class="Layout--horizontal StyledProps--main itemActionContainer"
@@ -849,32 +865,32 @@ exports[`Test delegate buttons click on new delegate 1`] = `
               style="width: 80px;"
             />
             <div
-              style="width: 25%;"
+              style="width: 28%;"
             >
               delegate.DelegateName
             </div>
             <div
-              style="width: 20%;"
+              style="width: 16%;"
             >
               tagsLabel
             </div>
             <div
-              style="width: 20%;"
+              style="width: 16%;"
             >
-              instanceFieldOptions.instances
+              version
             </div>
             <div
-              style="width: calc(15% - 40px);"
+              style="width: 15%;"
             >
               delegate.LastHeartBeat
             </div>
             <div
-              style="width: calc(15% - 40px);"
+              style="width: 14%;"
             >
               connectivityStatus
             </div>
             <div
-              style="width: 5%;"
+              style="width: 2%;"
             />
           </div>
           <div
@@ -941,67 +957,83 @@ exports[`Test delegate buttons click on new delegate 1`] = `
               </div>
               <div
                 class="Layout--horizontal StyledProps--main"
-                style="width: 25%;"
+                style="width: 28%;"
               >
                 <div
-                  class="Layout--vertical StyledProps--main"
+                  class="Layout--vertical StyledProps--main StyledProps--margin-right-large"
+                  style="width: 55%;"
                 >
                   <div
                     class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
                     data-testid="delegate-1"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black"
+                      class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                      style="--text-line-clamp: 1;"
                     >
                       delegate-1
                     </p>
                   </div>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
+                    style="--text-line-clamp: 1;"
+                  >
+                    delGroupIdentifier1
+                  </p>
                 </div>
-              </div>
-              <div
-                class="StyledProps--font StyledProps--main connectivity"
-                style="width: 20%;"
-              >
-                <div
-                  class="StyledProps--font StyledProps--main"
-                  style="display: inline-flex; flex-wrap: wrap;"
+                <p
+                  class="StyledProps--font StyledProps--main statusText StyledProps--background-grey300 StyledProps--color StyledProps--color-white StyledProps--font-weight-semi-bold StyledProps--font-size-xsmall"
                 >
-                  <p
-                    class="StyledProps--font StyledProps--main"
-                    style="display: inline-block; border-radius: 4px; font-size: 10px;"
-                  >
-                    implicitSelector1
-                  </p>
-                  <p
-                    class="StyledProps--font StyledProps--main"
-                    style="display: inline-block; border-radius: 4px; font-size: 10px;"
-                  >
-                    customtag1
-                  </p>
-                  <p
-                    class="StyledProps--font StyledProps--main"
-                    style="display: inline-block; border-radius: 4px; font-size: 10px;"
-                  >
-                    customtag2
-                  </p>
-                </div>
-                <span />
+                  AUTO UPGRADE: OFF
+                </p>
               </div>
               <div
-                class="Layout--horizontal StyledProps--main"
-                style="width: 20%;"
+                class="StyledProps--font StyledProps--main connectivity StyledProps--padding-left-large"
+                style="width: 17%;"
               >
-                0
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main"
+                  style="--text-line-clamp: 1;"
+                >
+                  <div
+                    class="StyledProps--font StyledProps--main"
+                    style="display: inline-flex; flex-wrap: wrap;"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main"
+                      style="display: inline-block; border-radius: 4px; font-size: 10px;"
+                    >
+                      implicitSelector1
+                    </p>
+                    <p
+                      class="StyledProps--font StyledProps--main"
+                      style="display: inline-block; border-radius: 4px; font-size: 10px;"
+                    >
+                      customtag1
+                    </p>
+                    <p
+                      class="StyledProps--font StyledProps--main"
+                      style="display: inline-block; border-radius: 4px; font-size: 10px;"
+                    >
+                      customtag2
+                    </p>
+                  </div>
+                  <span />
+                </p>
               </div>
               <div
                 class="Layout--horizontal StyledProps--main"
-                style="width: calc(15% - 40px);"
+                style="width: 15%;"
+              />
+              <div
+                class="Layout--horizontal StyledProps--main"
+                style="width: 14%;"
               >
                 dummy date
               </div>
               <div
                 class="Layout--vertical StyledProps--main"
-                style="width: calc(15% - 40px);"
+                style="width: 15%;"
               >
                 <p
                   class="StyledProps--font StyledProps--main"
@@ -1031,7 +1063,7 @@ exports[`Test delegate buttons click on new delegate 1`] = `
               </div>
               <div
                 class="Layout--vertical StyledProps--main"
-                style="width: 5%;"
+                style="width: 2%;"
               >
                 <div
                   class="Layout--horizontal StyledProps--main itemActionContainer"

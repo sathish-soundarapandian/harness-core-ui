@@ -120,11 +120,14 @@ function ServiceManifestOverride({
   }
   const getLastStepInitialData = useCallback((): ManifestConfig => {
     const initValues = get(manifestOverrides[manifestIndex], 'manifest', null)
-    if (initValues?.type && initValues?.type !== selectedManifest) {
+    if (
+      (initValues?.type && initValues?.type !== selectedManifest) ||
+      get(initValues, 'spec.store.type') !== manifestStore
+    ) {
       return null as unknown as ManifestConfig
     }
     return initValues as ManifestConfig
-  }, [manifestIndex, manifestOverrides, selectedManifest])
+  }, [manifestIndex, manifestOverrides, manifestStore, selectedManifest])
 
   const handleSubmit = useCallback(
     (manifestObj: ManifestConfigWrapper): void => {

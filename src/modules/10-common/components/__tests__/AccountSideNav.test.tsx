@@ -104,9 +104,6 @@ describe('AccountSideNav', () => {
   })
 
   test('AccountSideNav test audit trail', () => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-      AUDIT_TRAIL_WEB_INTERFACE: true
-    })
     const renderObj = render(
       <TestWrapper>
         <AccountSideNav />

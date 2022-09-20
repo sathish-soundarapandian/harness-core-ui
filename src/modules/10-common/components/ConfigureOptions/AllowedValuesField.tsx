@@ -71,6 +71,7 @@ const getTagProps = ({ formik, setInputValue, allowedValuesValidator, inputValue
         }
       }
     },
+    onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e?.target?.value || ''),
     inputValue
   }
 }

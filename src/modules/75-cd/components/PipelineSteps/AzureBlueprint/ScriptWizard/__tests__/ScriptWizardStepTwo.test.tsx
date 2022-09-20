@@ -38,7 +38,7 @@ describe('ScriptWizardStepTwo', () => {
                 spec: {
                   connectorRef: 'account.BBsaasAmit',
                   gitFetchType: 'Commit',
-                  paths: 'filePath',
+                  folderPath: 'filePath',
                   TemplatePath: 'commitId'
                 }
               }
@@ -63,7 +63,7 @@ describe('ScriptWizardStepTwo', () => {
                 spec: {
                   connectorRef: RUNTIME_INPUT_VALUE,
                   gitFetchType: 'Commit',
-                  paths: [RUNTIME_INPUT_VALUE],
+                  folderPath: RUNTIME_INPUT_VALUE,
                   repoName: RUNTIME_INPUT_VALUE,
                   commitId: RUNTIME_INPUT_VALUE
                 }
@@ -82,7 +82,7 @@ describe('ScriptWizardStepTwo', () => {
     const commitId = getByText('pipeline.manifestType.commitId')
     expect(commitId).toBeInTheDocument()
 
-    const templatePath = getByText('pipeline.manifestType.osTemplatePath')
+    const templatePath = getByText('cd.azureBlueprint.templateFolderPath')
     expect(templatePath).toBeInTheDocument()
   })
 
@@ -97,7 +97,7 @@ describe('ScriptWizardStepTwo', () => {
                 spec: {
                   connectorRef: RUNTIME_INPUT_VALUE,
                   gitFetchType: 'Branch',
-                  paths: RUNTIME_INPUT_VALUE,
+                  folderPath: RUNTIME_INPUT_VALUE,
                   repoName: RUNTIME_INPUT_VALUE,
                   branch: RUNTIME_INPUT_VALUE
                 }
@@ -122,7 +122,7 @@ describe('ScriptWizardStepTwo', () => {
     const branch = getByText('pipelineSteps.deploy.inputSet.branch')
     expect(branch).toBeInTheDocument()
 
-    const templatePath = getByText('pipeline.manifestType.osTemplatePath')
+    const templatePath = getByText('cd.azureBlueprint.templateFolderPath')
     expect(templatePath).toBeInTheDocument()
   })
 
@@ -137,7 +137,7 @@ describe('ScriptWizardStepTwo', () => {
                 spec: {
                   connectorRef: RUNTIME_INPUT_VALUE,
                   gitFetchType: 'Branch',
-                  paths: RUNTIME_INPUT_VALUE,
+                  folderPath: RUNTIME_INPUT_VALUE,
                   repoName: RUNTIME_INPUT_VALUE,
                   branch: RUNTIME_INPUT_VALUE
                 }
@@ -178,11 +178,11 @@ describe('ScriptWizardStepTwo', () => {
     userEvent.type(branch!, 'main')
     expect(branch).toHaveDisplayValue('main')
 
-    const paths = queryByAttribute('name', container, 'paths')
-    expect(paths).toHaveDisplayValue('')
-    userEvent.clear(paths!)
-    userEvent.type(paths!, 'main')
-    expect(paths).toHaveDisplayValue('main')
+    const folderPath = queryByAttribute('name', container, 'folderPath')
+    expect(folderPath).toHaveDisplayValue('')
+    userEvent.clear(folderPath!)
+    userEvent.type(folderPath!, 'main')
+    expect(folderPath).toHaveDisplayValue('main')
   })
 
   test('should render harness option', async () => {

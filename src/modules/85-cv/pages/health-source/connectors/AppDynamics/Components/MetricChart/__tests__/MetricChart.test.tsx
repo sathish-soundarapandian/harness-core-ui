@@ -25,7 +25,7 @@ describe('Unit tests for MetricChart', () => {
       >)
     render(
       <TestWrapper>
-        <MetricChart connectorIdentifier="123123" appName="sdddf" completeMetricPath={''} />
+        <MetricChart connectorIdentifier="123123" appName="sdddf" completeMetricPath={'testPath'} />
       </TestWrapper>
     )
 

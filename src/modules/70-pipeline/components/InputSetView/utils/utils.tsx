@@ -29,6 +29,7 @@ interface UseRenderMultiTypeInputWithAllowedValuesArgs {
   allowedTypes: AllowedTypes
   template: any
   readonly?: boolean
+  className?: string
 }
 
 export const useRenderMultiTypeInputWithAllowedValues = ({
@@ -39,7 +40,8 @@ export const useRenderMultiTypeInputWithAllowedValues = ({
   fieldPath,
   allowedTypes,
   template,
-  readonly
+  readonly,
+  className
 }: UseRenderMultiTypeInputWithAllowedValuesArgs): { getMultiTypeInputWithAllowedValues: () => JSX.Element } => {
   const { expressions } = useVariablesExpression()
 
@@ -59,6 +61,7 @@ export const useRenderMultiTypeInputWithAllowedValues = ({
         }}
         disabled={readonly}
         tooltipProps={tooltipProps}
+        className={className}
       />
     )
   }

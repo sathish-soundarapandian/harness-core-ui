@@ -31,15 +31,13 @@ export function OptionalConfigurations(
 
   const defaultSSHSchema = Yup.object().shape({
     spec: Yup.object().shape({
-      environmentVariables: variableSchema(getString),
-      outputVariables: variableSchema(getString)
+      environmentVariables: variableSchema(getString)
     })
   })
   const values = {
     ...initialValues,
     spec: {
       executionTarget: {
-        connectorRef: undefined,
         ...initialValues.spec?.executionTarget
       },
       ...initialValues.spec,
@@ -68,7 +66,12 @@ export function OptionalConfigurations(
 
         return (
           <React.Fragment>
-            <OptionalConfiguration formik={formik} readonly={readonly} allowableTypes={allowableTypes} />
+            <OptionalConfiguration
+              formik={formik}
+              readonly={readonly}
+              allowableTypes={allowableTypes}
+              enableOutputVar={false}
+            />
           </React.Fragment>
         )
       }}

@@ -527,6 +527,7 @@ const transformStepsData = (
           data: {
             ...first,
             isInComplete: isCustomGeneratedString(first.stepGroup?.identifier) || hasErrors,
+            loopingStrategyEnabled: !!first.stepGroup?.strategy,
             graphType
           },
           children: transformStepsData(

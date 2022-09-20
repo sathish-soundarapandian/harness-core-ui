@@ -23,6 +23,7 @@ import type { GitQueryParams, PipelinePathProps } from '@common/interfaces/Route
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useGetYamlWithTemplateRefsResolved } from 'services/template-ng'
 import { getRegexForSearch } from '../LogsContent/LogsState/utils'
+import type { InputSetValue } from '../InputSetSelector/utils'
 
 export interface KVPair {
   [key: string]: string
@@ -50,6 +51,8 @@ export interface PipelineVariablesData {
   searchResults?: SearchResult[]
   setPipeline: (pipeline: PipelineInfoConfig) => void
   setResolvedPipeline: (pipeline: PipelineInfoConfig) => void
+  setSelectedInputSetsContext?: (inputSets?: InputSetValue[]) => void
+  selectedInputSetsContext?: InputSetValue[]
 }
 export interface SearchMeta {
   searchText?: string
@@ -84,7 +87,8 @@ export const PipelineVariablesContext = React.createContext<PipelineVariablesDat
   initLoading: true,
   loading: false,
   setPipeline: () => void 0,
-  setResolvedPipeline: () => void 0
+  setResolvedPipeline: () => void 0,
+  setSelectedInputSetsContext: () => void 0
 })
 
 export function usePipelineVariables(): PipelineVariablesData {
@@ -112,6 +116,7 @@ export function PipelineVariablesContextProvider(
   const { accountId, orgIdentifier, projectIdentifier } = useParams<PipelinePathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [resolvedPipeline, setResolvedPipeline] = React.useState<PipelineInfoConfig>(originalPipeline)
+  const [selectedInputSetsContext, setSelectedInputSetsContext] = React.useState<InputSetValue[]>()
   const [{ searchText, searchResults, searchIndex, pipelineValues, pipelineFqns, pipelineMetaKeys }, setSearchMeta] =
     React.useState<SearchMeta>({
       searchText: '',
@@ -246,7 +251,9 @@ export function PipelineVariablesContextProvider(
         goToPrevSearchResult,
         goToNextSearchResult,
         setPipeline: setOriginalPipeline,
-        setResolvedPipeline
+        setResolvedPipeline,
+        setSelectedInputSetsContext,
+        selectedInputSetsContext
       }}
     >
       {props.children}

@@ -64,6 +64,8 @@ import { ECSCanaryDeployStep } from './ECSCanaryDeployStep/ECSCanaryDeployStep'
 import { ECSCanaryDeleteStep } from './ECSCanaryDeleteStep/ECSCanaryDeleteStep'
 import { AzureArmRollback } from './AzureArmRollback/AzureArmRollback'
 import { AzureBlueprintStep } from './AzureBlueprint/AzureBlueprint'
+import { DeployServiceEntityStep } from './DeployServiceEntityStep/DeployServiceEntityStep'
+import { AzureArmStep } from './AzureArm/AzureArm'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new HttpStep())
@@ -88,6 +90,7 @@ factory.registerStep(new ServerlessGCPSpec())
 factory.registerStep(new DeployEnvironmentStep())
 factory.registerStep(new DeployInfrastructureStep())
 factory.registerStep(new DeployServiceStep())
+factory.registerStep(new DeployServiceEntityStep())
 factory.registerStep(new GenericServiceSpec())
 factory.registerStep(new ServerlessAwsLambdaServiceSpec())
 factory.registerStep(new AzureWebAppServiceSpec())
@@ -122,3 +125,4 @@ factory.registerStep(new ECSCanaryDeployStep())
 factory.registerStep(new ECSCanaryDeleteStep())
 factory.registerStep(new AzureArmRollback())
 factory.registerStep(new AzureBlueprintStep())
+factory.registerStep(new AzureArmStep())

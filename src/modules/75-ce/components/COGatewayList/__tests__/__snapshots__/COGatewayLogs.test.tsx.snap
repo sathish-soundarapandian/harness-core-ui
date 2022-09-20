@@ -24,7 +24,7 @@ exports[`Auto stopping rule logs should show logs 1`] = `
           <span
             class="ansi-black-fg"
           >
-            2021-04-05T13:14:58.857084Z  Rule state changed to: coolingdown  
+            05/04/2021 01:14 PM GMT  Rule state changed to: coolingdown  
           </span>
         </span>
       </div>
@@ -45,7 +45,7 @@ exports[`Auto stopping rule logs should show logs 1`] = `
           <span
             class="ansi-red-fg ansi-decoration-bold"
           >
-            2021-04-05T13:14:58.857084Z  Rule state changed to: coolingdown Error: null 
+            05/04/2021 01:14 PM GMT  Rule state changed to: coolingdown Error: null 
           </span>
         </span>
       </div>
@@ -66,7 +66,7 @@ exports[`Auto stopping rule logs should show logs 1`] = `
           <span
             class="ansi-green-fg"
           >
-            2021-04-05T13:14:58.857084Z  Rule state changed to: active 
+            05/04/2021 01:14 PM GMT  Rule state changed to: active 
           </span>
         </span>
       </div>

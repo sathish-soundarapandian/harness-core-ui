@@ -54,4 +54,5 @@ export interface ValidationChartProps {
   sampleData?: Highcharts.Options
   setAsTooManyMetrics?: (_: boolean) => void
   isQueryExecuted?: boolean
+  noDataMessage?: string
 }

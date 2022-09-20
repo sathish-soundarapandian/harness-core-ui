@@ -291,13 +291,14 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                 { queryParams: commonQueryParams }
               )
 
-              Promise.all([createPushTrigger, createPRTrigger])
-                .then((createTriggerResponses: [ResponseNGTriggerResponse, ResponseNGTriggerResponse]) => {
-                  const [createPushTriggerResponse, createPRTriggerResponse] = createTriggerResponses
-                  if (
-                    createPushTriggerResponse?.status === Status.SUCCESS &&
-                    createPRTriggerResponse?.status === Status.SUCCESS
-                  ) {
+              createPRTrigger
+                .then((createPRTriggerResponse: ResponseNGTriggerResponse) => {
+                  if (createPRTriggerResponse?.status === Status.SUCCESS) {
+                    return createPushTrigger
+                  }
+                })
+                .then((createPushTriggerResponse?: ResponseNGTriggerResponse) => {
+                  if (createPushTriggerResponse?.status === Status.SUCCESS) {
                     setDisableBtn(false)
                     setShowPageLoader(false)
                     setShowGetStartedTabInMainMenu(false)

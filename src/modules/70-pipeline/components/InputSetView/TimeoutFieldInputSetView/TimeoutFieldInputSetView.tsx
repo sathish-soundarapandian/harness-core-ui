@@ -39,7 +39,8 @@ export function TimeoutFieldInputSetView(props: TimeoutFieldInpuSetViewProps): J
     allowedTypes: defaultTo(multiTypeDurationProps?.allowableTypes, [MultiTypeInputType.FIXED]),
     template: template,
     readonly: disabled,
-    tooltipProps: tooltipProps
+    tooltipProps: tooltipProps,
+    className
   })
 
   if (shouldRenderRunTimeInputViewWithAllowedValues(fieldPath, template)) {

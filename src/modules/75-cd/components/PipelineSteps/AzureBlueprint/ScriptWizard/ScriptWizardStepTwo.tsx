@@ -23,8 +23,8 @@ import { FontVariation } from '@harness/design-system'
 import { Form } from 'formik'
 import * as Yup from 'yup'
 
-import { get, isEmpty, isUndefined, set } from 'lodash-es'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { get, isEmpty, set } from 'lodash-es'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { Connectors } from '@connectors/constants'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -74,15 +74,14 @@ export const ScriptWizardStepTwo = ({
         commitId: specValues.commitId,
         repoName: specValues.repoName,
         gitFetchType: specValues.gitFetchType,
-        paths:
-          typeof specValues.paths === 'string' || isUndefined(specValues.paths) ? specValues.paths : specValues.paths[0]
+        folderPath: specValues.folderPath
       }
     }
     return {
       branch: undefined,
       commitId: undefined,
       gitFetchType: 'Branch',
-      paths: undefined,
+      folderPath: undefined,
       repoName: undefined
     }
   }, [])
@@ -93,7 +92,7 @@ export const ScriptWizardStepTwo = ({
       spec: {
         connectorRef: formData?.connectorRef,
         gitFetchType: formData?.gitFetchType,
-        paths: /* istanbul ignore next */ isValueRuntimeInput(formData.paths) ? formData?.paths : [formData?.paths]
+        folderPath: /* istanbul ignore next */ formData?.folderPath
       }
     }
     /* istanbul ignore next */
@@ -157,11 +156,11 @@ export const ScriptWizardStepTwo = ({
             is: 'Commit',
             then: Yup.string().trim().required(getString('validation.commitId'))
           }),
-          paths: Yup.string()
+          folderPath: Yup.string()
             .trim()
             .required(
               getString('common.validation.fieldIsRequired', {
-                name: getString('pipeline.startupCommand.scriptFilePath')
+                name: getString('cd.azureBlueprint.templateFolderPath')
               })
             ),
           repoName: Yup.string().test(
@@ -220,6 +219,7 @@ export const ScriptWizardStepTwo = ({
                           showAdvanced={true}
                           onChange={/* istanbul ignore next */ value => setFieldValue('repoName', value)}
                           isReadonly={isReadonly}
+                          allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                         />
                       )}
                     </div>
@@ -251,6 +251,7 @@ export const ScriptWizardStepTwo = ({
                         showAdvanced={true}
                         onChange={/* istanbul ignore next */ value => setFieldValue('branch', value)}
                         isReadonly={isReadonly}
+                        allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                       />
                     )}
                   </div>
@@ -275,32 +276,34 @@ export const ScriptWizardStepTwo = ({
                         showAdvanced={true}
                         onChange={/* istanbul ignore next */ value => setFieldValue('commitId', value)}
                         isReadonly={isReadonly}
+                        allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                       />
                     )}
                   </div>
                 )}
                 <div className={cx(stepCss.formGroup, stepCss.md)}>
                   <FormInput.MultiTextInput
-                    label={getString('pipeline.manifestType.osTemplatePath')}
-                    placeholder={getString('pipeline.manifestType.osTemplatePath')}
-                    name={'paths'}
+                    label={getString('cd.azureBlueprint.templateFolderPath')}
+                    placeholder={getString('cd.azureBlueprint.templateFolderPath')}
+                    name={'folderPath'}
                     multiTextInputProps={{ expressions, allowableTypes }}
                   />
-                  {isValueRuntimeInput(values?.paths as string) && (
+                  {isValueRuntimeInput(values?.folderPath as string) && (
                     <ConfigureOptions
                       style={{ alignSelf: 'center', marginTop: 1 }}
-                      value={values?.paths as string}
+                      value={values?.folderPath as string}
                       type="String"
-                      variableName={'paths'}
+                      variableName={'folderPath'}
                       showRequiredField={false}
                       showDefaultField={false}
                       showAdvanced={true}
                       onChange={
                         /* istanbul ignore next */ value => {
-                          setFieldValue('paths', value)
+                          setFieldValue('folderPath', value)
                         }
                       }
                       isReadonly={isReadonly}
+                      allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                     />
                   )}
                 </div>

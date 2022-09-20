@@ -337,28 +337,60 @@ exports[`Testing COGatewayAccess DNS checkbox checks succesfully 1`] = `
                                         <thead>
                                           <tr>
                                             <th>
-                                              PROTOCOL
+                                              <p
+                                                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                                              >
+                                                ce.common.protocol
+                                              </p>
                                             </th>
                                             <th>
-                                              PORT
+                                              <p
+                                                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                                              >
+                                                common.smtp.port
+                                              </p>
                                             </th>
                                             <th>
-                                              ACTION
+                                              <p
+                                                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                                              >
+                                                action
+                                              </p>
                                             </th>
                                             <th>
-                                              TARGET PROTOCOL
+                                              <p
+                                                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                                              >
+                                                ce.common.targetProtocol
+                                              </p>
                                             </th>
                                             <th>
-                                              TARGET PORT
+                                              <p
+                                                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                                              >
+                                                ce.common.targetPort
+                                              </p>
                                             </th>
                                             <th>
-                                              REDIRECT URL
+                                              <p
+                                                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                                              >
+                                                ce.common.redirectUrl
+                                              </p>
                                             </th>
                                             <th>
-                                              SERVER NAME
+                                              <p
+                                                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                                              >
+                                                ce.common.serverName
+                                              </p>
                                             </th>
                                             <th>
-                                              PATH MATCH
+                                              <p
+                                                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                                              >
+                                                ce.common.pathMatch
+                                              </p>
                                             </th>
                                             <th />
                                           </tr>

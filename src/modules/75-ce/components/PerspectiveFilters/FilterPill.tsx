@@ -98,6 +98,17 @@ const FilterPill: React.FC<FilterPillProps> = ({ fieldValuesList, removePill, id
 
   const filteredFieldValuesList = fieldValuesList.filter(fieldValue => fieldValue) as QlceViewFieldIdentifierData[]
 
+  const renderOperator = React.useMemo(() => {
+    if (service?.id && operator) {
+      return (
+        <Text color="primary7" font="small" inline padding={{ right: 'xsmall' }}>
+          {operator}
+        </Text>
+      )
+    }
+    return null
+  }, [operator, service?.id])
+
   return (
     <section className={css.filterPillContainer}>
       <Layout.Horizontal
@@ -111,11 +122,6 @@ const FilterPill: React.FC<FilterPillProps> = ({ fieldValuesList, removePill, id
       >
         {provider?.id ? <Text font="small">{`${provider.name}:`}</Text> : null}
         {service?.id ? <Text font="small">{service.name}</Text> : null}
-        {service?.id && operator ? (
-          <Text color="primary7" font="small">
-            {operator}
-          </Text>
-        ) : null}
         <Popover
           interactionKind={PopoverInteractionKind.CLICK}
           position={Position.BOTTOM_LEFT}
@@ -127,24 +133,29 @@ const FilterPill: React.FC<FilterPillProps> = ({ fieldValuesList, removePill, id
             preventOverflow: { enabled: true }
           }}
           usePortal={true}
-          onClose={() =>
-            onChange(id, {
-              values: Object.keys(values).filter(val => values[val]),
-              operator: operator,
-              field: {
-                fieldId: service?.id || '',
-                fieldName: service?.name || '',
-                identifier: provider?.id || ('' as any),
-                identifierName: provider?.name || ''
-              }
-            })
+          onClose={
+            /* istanbul ignore next */ () =>
+              onChange(id, {
+                values: Object.keys(values).filter(val => values[val]),
+                operator: operator,
+                field: {
+                  fieldId: service?.id || '',
+                  fieldName: service?.name || '',
+                  identifier: provider?.id || ('' as any),
+                  identifierName: provider?.name || ''
+                }
+              })
           }
-          onClosing={() => {
-            setShowError(!valueList.length)
-          }}
-          onOpening={() => {
-            setShowError(false)
-          }}
+          onClosing={
+            /* istanbul ignore next */ () => {
+              setShowError(!valueList.length)
+            }
+          }
+          onOpening={
+            /* istanbul ignore next */ () => {
+              setShowError(false)
+            }
+          }
           content={
             provider?.id ? (
               service?.id ? (
@@ -172,12 +183,18 @@ const FilterPill: React.FC<FilterPillProps> = ({ fieldValuesList, removePill, id
           }
         >
           {valueList.length ? (
-            <ValueRenderer valueList={valueList} />
+            <>
+              {renderOperator}
+              <ValueRenderer valueList={valueList} />
+            </>
           ) : (
-            <div className={css.placeholderContainer}></div>
+            <>
+              {renderOperator}
+              <div className={css.placeholderContainer}></div>
+            </>
           )}
         </Popover>
-        <Icon name="cross" color={'blue500'} size={12} onClick={removePill} />
+        <Icon name="cross" color={'blue500'} size={12} onClick={removePill} data-testid="removeFilterPill" />
       </Layout.Horizontal>
     </section>
   )

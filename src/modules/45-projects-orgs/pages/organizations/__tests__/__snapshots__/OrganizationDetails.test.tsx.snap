@@ -660,7 +660,7 @@ exports[`Organization Details Render 1`] = `
         <h1
           class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--font-size-medium StyledProps--font-weight-bold StyledProps--color StyledProps--color-black"
         >
-          projectsOrgs.orgAccessControl
+          projectsOrgs.orgAccessCtrlAndAuditTrail
         </h1>
         <div
           class="cardsWrapper"
@@ -720,6 +720,60 @@ exports[`Organization Details Render 1`] = `
               >
                 <span>
                   accessControl
+                </span>
+              </p>
+            </div>
+          </div>
+          <div
+            class="bp3-card bp3-elevation-0 Card--card card auditTrail"
+          >
+            <div
+              class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex"
+            >
+              <span
+                class="bp3-icon StyledProps--main"
+                data-icon="audit-trail"
+              >
+                <svg
+                  fill="none"
+                  height="70"
+                  viewBox="0 0 68 68"
+                  width="70"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M14.167 8.5h31.166l8.5 11.333V59.5H14.167v-51z"
+                    stroke="#383946"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2.833"
+                  />
+                  <g
+                    opacity="0.3"
+                  >
+                    <mask
+                      fill="#fff"
+                      id="audit-trail_svg__a"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M25.5 25.5a1.417 1.417 0 000 2.833h17a1.417 1.417 0 100-2.833h-17zm-1.417 9.917c0-.783.635-1.417 1.417-1.417h17a1.417 1.417 0 010 2.833h-17a1.417 1.417 0 01-1.417-1.416zm0 8.5c0-.783.635-1.417 1.417-1.417h17a1.417 1.417 0 010 2.833h-17a1.417 1.417 0 01-1.417-1.416z"
+                        fill-rule="evenodd"
+                      />
+                    </mask>
+                    <path
+                      d="M26.917 26.917c0 .782-.635 1.416-1.417 1.416v-5.666a4.25 4.25 0 00-4.25 4.25h5.667zM25.5 25.5c.782 0 1.417.634 1.417 1.417H21.25a4.25 4.25 0 004.25 4.25V25.5zm17 0h-17v5.667h17V25.5zm-1.417 1.417c0-.783.635-1.417 1.417-1.417v5.667a4.25 4.25 0 004.25-4.25h-5.667zm1.417 1.416a1.417 1.417 0 01-1.417-1.416h5.667a4.25 4.25 0 00-4.25-4.25v5.666zm-17 0h17v-5.666h-17v5.666zm0 2.834a4.25 4.25 0 00-4.25 4.25h5.667c0 .782-.635 1.416-1.417 1.416v-5.666zm17 0h-17v5.666h17v-5.666zm4.25 4.25a4.25 4.25 0 00-4.25-4.25v5.666a1.417 1.417 0 01-1.417-1.416h5.667zm-4.25 4.25a4.25 4.25 0 004.25-4.25h-5.667c0-.783.635-1.417 1.417-1.417v5.667zm-17 0h17V34h-17v5.667zm-4.25-4.25a4.25 4.25 0 004.25 4.25V34c.782 0 1.417.634 1.417 1.417H21.25zm4.25 4.25a4.25 4.25 0 00-4.25 4.25h5.667c0 .782-.635 1.416-1.417 1.416v-5.666zm17 0h-17v5.666h17v-5.666zm4.25 4.25a4.25 4.25 0 00-4.25-4.25v5.666a1.417 1.417 0 01-1.417-1.416h5.667zm-4.25 4.25a4.25 4.25 0 004.25-4.25h-5.667c0-.783.635-1.417 1.417-1.417v5.667zm-17 0h17V42.5h-17v5.667zm-4.25-4.25a4.25 4.25 0 004.25 4.25V42.5c.782 0 1.417.634 1.417 1.417H21.25z"
+                      fill="currentColor"
+                      mask="url(#audit-trail_svg__a)"
+                    />
+                  </g>
+                </svg>
+              </span>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold"
+              >
+                <span>
+                  common.auditTrail
                 </span>
               </p>
             </div>

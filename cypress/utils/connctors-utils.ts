@@ -40,7 +40,8 @@ export const Connectors = {
   PAGER_DUTY: 'PagerDuty',
   SERVICE_NOW: 'ServiceNow',
   CUSTOM_HEALTH: 'CustomHealth',
-  ERROR_TRACKING: 'ErrorTracking'
+  ERROR_TRACKING: 'ErrorTracking',
+  ELK: 'ELK'
 }
 
 export const getConnectorIconByType = (type: string): string => {
@@ -51,6 +52,8 @@ export const getConnectorIconByType = (type: string): string => {
       return 'service-datadog'
     case Connectors.CUSTOM_HEALTH:
       return 'service-custom-connector'
+    case Connectors.ELK:
+      return 'elk'
     case Connectors.SPLUNK:
       return 'service-splunk'
     case Connectors.NEW_RELIC:

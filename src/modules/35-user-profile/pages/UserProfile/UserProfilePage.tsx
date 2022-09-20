@@ -74,7 +74,16 @@ const UserProfilePage: React.FC = () => {
               <Button
                 icon="Edit"
                 data-testid="editUserProfile"
+                disabled={user.externallyManaged}
                 variation={ButtonVariation.ICON}
+                tooltip={
+                  user.externallyManaged
+                    ? getString('rbac.manageSCIMText', {
+                        action: getString('edit').toLowerCase(),
+                        target: getString('common.userLabel').toLowerCase()
+                      })
+                    : getString('userProfile.editProfile')
+                }
                 onClick={() => openUserProfile(user)}
               />
             </Layout.Horizontal>

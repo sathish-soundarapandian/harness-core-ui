@@ -77,7 +77,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { getToolTip } from '@ce/components/PerspectiveViews/PerspectiveMenuItems'
 import css from './PerspectiveDetailsPage.module.scss'
 
-const PAGE_SIZE = 10
+const PAGE_SIZE = 15
 interface PerspectiveParams {
   perspectiveId: string
   perspectiveName: string
@@ -305,14 +305,25 @@ const PerspectiveDetailsPage: React.FC = () => {
   }, [groupBy])
 
   const setFilterUsingChartClick: (value: string) => void = value => {
-    setFilters([
-      ...filters,
-      {
-        field: { ...groupBy },
-        operator: QlceViewFilterOperator.In,
-        values: [value]
-      }
-    ])
+    if (value.split('No ')[1] === groupBy.fieldName) {
+      setFilters([
+        ...filters,
+        {
+          field: { ...groupBy },
+          operator: QlceViewFilterOperator.Null,
+          values: [' ']
+        }
+      ])
+    } else {
+      setFilters([
+        ...filters,
+        {
+          field: { ...groupBy },
+          operator: QlceViewFilterOperator.In,
+          values: [value]
+        }
+      ])
+    }
   }
 
   const queryFilters = useMemo(
@@ -355,7 +366,8 @@ const PerspectiveDetailsPage: React.FC = () => {
         { operationType: QlceViewAggregateOperation.Max, columnName: 'startTime' },
         { operationType: QlceViewAggregateOperation.Min, columnName: 'startTime' }
       ],
-      filters: queryFilters
+      filters: queryFilters,
+      groupBy: [getGroupByFilter(groupBy)]
     },
     pause: !isPageReady
   })
@@ -582,7 +594,12 @@ const PerspectiveDetailsPage: React.FC = () => {
             }}
             allowExportAsCSV={true}
             openDownloadCSVModal={openDownloadCSVModal}
-            setGridSearchParam={setGridSearchParam}
+            setGridSearchParam={text => {
+              setPageIndex(0)
+              setGridPageOffset(0)
+              setGridSearchParam(text)
+            }}
+            gridSearchParam={gridSearchParam}
             isPerspectiveDetailsPage
           />
         </Container>

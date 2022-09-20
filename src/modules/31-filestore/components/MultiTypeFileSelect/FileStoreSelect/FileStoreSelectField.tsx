@@ -45,7 +45,7 @@ interface FormikFileStoreInput extends FileStoreSelectProps {
 
 export interface FileStoreFieldData {
   path: string
-  scope?: string
+  scope: string
 }
 
 function FileStoreInput(props: FormikFileStoreInput): React.ReactElement {
@@ -61,16 +61,6 @@ function FileStoreInput(props: FormikFileStoreInput): React.ReactElement {
         return `${path}`
     }
   }
-  const modalFileStore = useFileStoreModal({
-    applySelected: value => {
-      const { scope, path } = value
-      onChange?.(prepareFileStoreValue(scope, path))
-      formik.setFieldValue(name, prepareFileStoreValue(scope, path))
-    },
-    fileUsage
-  })
-  const placeholder_ = defaultTo(placeholder, getString('select'))
-
   const getScope = (fsValue: string): FileStoreFieldData => {
     const [scope, path] = (fsValue && fsValue.split(':')) || ['', '']
     switch (scope) {
@@ -87,6 +77,18 @@ function FileStoreInput(props: FormikFileStoreInput): React.ReactElement {
         }
     }
   }
+  const modalFileStore = useFileStoreModal({
+    applySelected: value => {
+      const { scope, path } = value
+      const preparedValue = prepareFileStoreValue(scope, path)
+      onChange?.(preparedValue)
+      formik.setFieldValue(name, preparedValue)
+    },
+    fileUsage,
+    defaultTab: fileStoreValue ? getScope(fileStoreValue)?.scope : ''
+  })
+  const placeholder_ = defaultTo(placeholder, getString('select'))
+
   const { scope, path } = (fileStoreValue && getScope(fileStoreValue)) || {}
   const errorCheck = (): boolean =>
     ((get(formik?.touched, name) || (formik?.submitCount && formik?.submitCount > 0)) &&

@@ -37,8 +37,7 @@ import css from './ExecutionHeader.module.scss'
 export function ExecutionHeader(): React.ReactElement {
   const { orgIdentifier, projectIdentifier, executionIdentifier, accountId, pipelineIdentifier, module, source } =
     useParams<PipelineType<ExecutionPathProps>>()
-  const { refetch, pipelineExecutionDetail, selectedStageId, selectedStepId, allNodeMap, isPipelineInvalid } =
-    useExecutionContext()
+  const { refetch, pipelineExecutionDetail, isPipelineInvalid } = useExecutionContext()
   const { supportingGitSimplification } = useAppStore()
   const { getString } = useStrings()
   const { pipelineExecutionSummary = {} } = pipelineExecutionDetail || {}
@@ -141,9 +140,6 @@ export function ExecutionHeader(): React.ReactElement {
             icon="main-view"
             onClick={ev => {
               ev.stopPropagation()
-              const allNodes = Object.values(allNodeMap)
-              const matchedStepNode = allNodes?.find(eachNode => eachNode.uuid === selectedStepId)
-              const matchedStageNode = allNodes?.find(eachNode => eachNode.setupId === selectedStageId)
               history.push(
                 routes.toPipelineStudio({
                   orgIdentifier,
@@ -155,9 +151,7 @@ export function ExecutionHeader(): React.ReactElement {
                   connectorRef: pipelineExecutionSummary?.connectorRef,
                   repoName: pipelineExecutionSummary?.gitDetails?.repoName,
                   branch: pipelineExecutionSummary?.gitDetails?.branch,
-                  storeType: pipelineExecutionSummary?.storeType as StoreType,
-                  stageId: matchedStageNode?.identifier,
-                  stepId: matchedStepNode?.identifier
+                  storeType: pipelineExecutionSummary?.storeType as StoreType
                 })
               )
             }}

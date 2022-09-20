@@ -14,7 +14,33 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { mockTemplates, mockTemplatesSuccessResponse } from '@templates-library/TemplatesTestHelper'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
+import { templatePathProps } from '@common/utils/routeUtils'
+import routes from '@common/RouteDefinitions'
 import { TemplateDetails, TemplateDetailsProps } from '../TemplateDetails'
+
+const gitAppStoreValues = {
+  featureFlags: {
+    NG_TEMPLATE_GITX: true,
+    NG_TEMPLATE_GITX_ACCOUNT_ORG: false
+  },
+  isGitSyncEnabled: false,
+  isGitSimplificationEnabled: true,
+  supportingGitSimplification: true,
+  gitSyncEnabledOnlyForFF: false,
+  supportingTemplatesGitx: true
+}
+
+const TEST_PATH = routes.toTemplateStudio(templatePathProps)
+const TEST_PATH_PARAMS = {
+  templateIdentifier: '-1',
+  accountId: 'accountId',
+  orgIdentifier: 'default',
+  projectIdentifier: 'projectId',
+  module: 'cd',
+  templateType: 'Step'
+}
+
+const useGetTemplateMock = jest.fn()
 
 jest.mock('@common/hooks', () => ({
   ...(jest.requireActual('@common/hooks') as any),
@@ -30,7 +56,10 @@ jest.mock('@templates-library/components/TemplateInputs/TemplateInputs', () => (
 
 jest.mock('services/template-ng', () => ({
   ...jest.requireActual('services/template-ng'),
-  useGetTemplate: jest.fn().mockImplementation(() => ({}))
+  useGetTemplate: jest.fn().mockImplementation((...args) => {
+    useGetTemplateMock(...args)
+    return {}
+  })
 }))
 
 function ComponentWrapper(props: TemplateDetailsProps): React.ReactElement {
@@ -62,7 +91,7 @@ describe('<TemplateDetails /> tests', () => {
   test('should show selected version label', async () => {
     const { getByTestId } = render(
       <TestWrapper>
-        <ComponentWrapper {...baseProps} allowStableSelection={true} />
+        <ComponentWrapper {...baseProps} isStandAlone />
       </TestWrapper>
     )
     const dropValue = getByTestId('dropdown-value')
@@ -75,7 +104,7 @@ describe('<TemplateDetails /> tests', () => {
     })
     const { getByTestId } = render(
       <TestWrapper>
-        <ComponentWrapper {...newBaseProps} allowStableSelection={true} />
+        <ComponentWrapper {...newBaseProps} isStandAlone />
       </TestWrapper>
     )
     const dropValue = getByTestId('dropdown-value')
@@ -99,5 +128,73 @@ describe('<TemplateDetails /> tests', () => {
         /account/kmpySmUISimoRrJL6NL73w/home/orgs/default/projects/Templateproject/setup/resources/template-studio/Step/template/manjutesttemplate/?versionLabel=v4
       </div>
     `)
+  })
+})
+
+describe('<TemplateDetails /> git experience', () => {
+  beforeAll(() => {
+    useGetTemplateMock.mockReset()
+    useGetTemplateMock.mockClear()
+  })
+
+  test('Template GET API sends parent entity context in query params', () => {
+    const baseProps: TemplateDetailsProps = {
+      template: defaultTo(mockTemplates?.data?.content?.[0], {}),
+      storeMetadata: {
+        connectorRef: 'connectorRefTest',
+        storeType: 'REMOTE',
+        branch: 'branchTest',
+        repoName: 'repoNameTest'
+      }
+    }
+
+    render(
+      <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS} defaultAppStoreValues={gitAppStoreValues}>
+        <ComponentWrapper {...baseProps} />
+      </TestWrapper>
+    )
+
+    expect(useGetTemplateMock).toHaveBeenCalledWith({
+      lazy: true,
+      queryParams: {
+        accountIdentifier: 'kmpySmUISimoRrJL6NL73w',
+        branch: 'branchTest',
+        orgIdentifier: 'default',
+        parentEntityAccountIdentifier: 'accountId',
+        parentEntityConnectorRef: 'connectorRefTest',
+        parentEntityOrgIdentifier: 'default',
+        parentEntityProjectIdentifier: 'projectId',
+        parentEntityRepoName: 'repoNameTest',
+        projectIdentifier: 'Templateproject',
+        versionLabel: 'v4'
+      },
+      templateIdentifier: 'manjutesttemplate'
+    })
+  })
+
+  test('Template GET API doesnt send parent entity context in query params for inline templates', () => {
+    const baseProps: TemplateDetailsProps = {
+      template: defaultTo(mockTemplates?.data?.content?.[0], {})
+    }
+
+    render(
+      <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS} defaultAppStoreValues={gitAppStoreValues}>
+        <ComponentWrapper {...baseProps} />
+      </TestWrapper>
+    )
+
+    expect(useGetTemplateMock).toHaveBeenCalledWith({
+      lazy: true,
+      queryParams: {
+        accountIdentifier: 'kmpySmUISimoRrJL6NL73w',
+        orgIdentifier: 'default',
+        projectIdentifier: 'Templateproject',
+        parentEntityConnectorRef: undefined,
+        parentEntityRepoName: undefined,
+        branch: undefined,
+        versionLabel: 'v4'
+      },
+      templateIdentifier: 'manjutesttemplate'
+    })
   })
 })

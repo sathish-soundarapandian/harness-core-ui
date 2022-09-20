@@ -6,11 +6,21 @@
  */
 
 export enum TriggerBaseType {
-  WEBHOOK = 'Webhook'
+  WEBHOOK = 'Webhook',
+  SCHEDULE = 'Scheduled'
 }
 
 export enum SourceRepo {
   Github = 'Github',
   Gitlab = 'Gitlab',
-  Bitbucket = 'Bitbucket'
+  Bitbucket = 'Bitbucket',
+  AzureRepo = 'AzureRepo',
+  Custom = 'Custom'
 }
+
+export enum ScheduleType {
+  Cron = 'Cron'
+}
+
+export const TriggerSubType = { ...SourceRepo, ...ScheduleType }
+export type TriggerSubType = SourceRepo | ScheduleType

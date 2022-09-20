@@ -23,8 +23,11 @@ import type { StageElementConfig, StepElementConfig } from 'services/cd-ng'
 import type { AllNGVariables } from '@pipeline/utils/types'
 import type { ServiceExpressionProperties } from 'services/pipeline-ng'
 
-const monitoredServiceYamlKey = 'monitoredService'
-const secretManagerYamlKey = 'secretManager'
+const templateTypeYamlKeyMap: { [key: string]: string } = {
+  monitoredservice: 'monitoredService',
+  secretmanager: 'secretManager',
+  customdeployment: 'customDeployment'
+}
 
 export interface MonitoredServiceConfig {
   environmentRef: string
@@ -115,11 +118,8 @@ export function TemplateVariablesContextProvider(
 
   React.useEffect(() => {
     const templateType =
-      resolvedTemplate.type?.toLowerCase() === monitoredServiceYamlKey.toLowerCase()
-        ? monitoredServiceYamlKey
-        : resolvedTemplate.type?.toLowerCase() === secretManagerYamlKey.toLowerCase()
-        ? secretManagerYamlKey
-        : resolvedTemplate.type?.toLowerCase()
+      templateTypeYamlKeyMap[resolvedTemplate.type?.toLowerCase()] || resolvedTemplate.type?.toLowerCase()
+
     setTemplateVariablesData({
       metadataMap: defaultTo(data?.data?.metadataMap, {}),
       variablesTemplate: get(parse(defaultTo(data?.data?.yaml, '')), templateType),

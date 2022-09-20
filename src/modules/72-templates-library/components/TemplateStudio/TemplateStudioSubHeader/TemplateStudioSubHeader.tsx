@@ -29,6 +29,8 @@ import {
 } from '@templates-library/components/TemplateStudio/SaveTemplatePopover/SaveTemplatePopover'
 import { DefaultNewTemplateId } from 'framework/Templates/templates'
 import { TemplateStudioSubHeaderLeftView } from '@templates-library/components/TemplateStudio/TemplateStudioSubHeader/views/TemplateStudioSubHeaderLeftView/TemplateStudioSubHeaderLeftView'
+import useDiffDialog from '@common/hooks/useDiffDialog'
+import { stringify } from '@common/utils/YamlHelperMethods'
 import css from './TemplateStudioSubHeader.module.scss'
 
 export interface TemplateStudioSubHeaderProps {
@@ -46,7 +48,7 @@ const TemplateStudioSubHeader: (
   ref: React.ForwardedRef<TemplateStudioSubHeaderHandle>
 ) => JSX.Element = ({ onViewChange, getErrors, onGitBranchChange }, ref) => {
   const { state, fetchTemplate, view, isReadonly } = React.useContext(TemplateContext)
-  const { isUpdated, entityValidityDetails, templateYamlError } = state
+  const { template, originalTemplate, isUpdated, entityValidityDetails, templateYamlError } = state
   const { getString } = useStrings()
   const { templateIdentifier } = useParams<TemplateStudioPathProps>()
   const isYaml = view === SelectedView.YAML
@@ -63,6 +65,12 @@ const TemplateStudioSubHeader: (
     }),
     [saveTemplateHandleRef.current]
   )
+
+  const { open: openDiffModal } = useDiffDialog({
+    originalYaml: stringify(originalTemplate),
+    updatedYaml: stringify(template),
+    title: getString('templatesLibrary.diffTitle')
+  })
 
   return (
     <Container
@@ -100,9 +108,14 @@ const TemplateStudioSubHeader: (
                 </Container>
               )}
               {isUpdated && !isReadonly && (
-                <Text color={Color.ORANGE_600} font={{ size: 'small' }} className={css.tagRender}>
+                <Button
+                  variation={ButtonVariation.LINK}
+                  intent="warning"
+                  className={css.tagRender}
+                  onClick={openDiffModal}
+                >
                   {getString('unsavedChanges')}
-                </Text>
+                </Button>
               )}
               {!isReadonly && (
                 <Container>

@@ -31,7 +31,6 @@ import {
 } from 'services/cv'
 import { Connectors } from '@connectors/constants'
 import { useStrings } from 'framework/strings'
-import CardWithOuterTitle from '@cv/pages/health-source/common/CardWithOuterTitle/CardWithOuterTitle'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
 import ValidationStatus from '@cv/pages/components/ValidationStatus/ValidationStatus'
 import MetricsVerificationModal from '@cv/components/MetricsVerificationModal/MetricsVerificationModal'
@@ -40,6 +39,7 @@ import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import useGroupedSideNaveHook from '@cv/hooks/GroupedSideNaveHook/useGroupedSideNaveHook'
+import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import {
   getOptions,
   validateMetrics,
@@ -342,7 +342,8 @@ export default function AppDMonitoredSource({
           selectedMetric,
           nonCustomFeilds,
           formikValues: formik.values,
-          setMappedMetrics
+          setMappedMetrics,
+          isTemplate
         })
         return (
           <FormikForm className={css.formFullheight}>

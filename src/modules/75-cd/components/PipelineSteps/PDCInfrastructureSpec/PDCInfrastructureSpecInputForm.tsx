@@ -104,7 +104,12 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
   }, [])
 
   return (
-    <Layout.Vertical spacing="small">
+    <Layout.Vertical
+      spacing="small"
+      onKeyDown={e => {
+        e.key === 'Enter' && e.stopPropagation()
+      }}
+    >
       {formikInitialValues && (
         <Formik<PDCInfrastructureUI>
           formName="pdcInfraRuntime"

@@ -227,7 +227,7 @@ describe('Deploy service stage specifications', () => {
 
     const serverlessLambda = getByText('pipeline.serviceDeploymentTypes.serverlessAwsLambda')
     userEvent.click(serverlessLambda)
-    await waitFor(() => expect(getByText('pipelineSteps.serviceTab.manifestList.addManifest')).toBeInTheDocument())
+    await waitFor(() => expect(getByText('pipeline.manifestType.addManifestLabel')).toBeInTheDocument())
   })
 
   test('Add manifest dialog should display manifest store screen directly if Serverless Lambda is deployment type', async () => {
@@ -245,8 +245,8 @@ describe('Deploy service stage specifications', () => {
 
     const serverlessLambda = getByText('pipeline.serviceDeploymentTypes.serverlessAwsLambda')
     userEvent.click(serverlessLambda)
-    await waitFor(() => expect(getByText('pipelineSteps.serviceTab.manifestList.addManifest')).toBeDefined())
-    const addManifestButton = getByText('pipelineSteps.serviceTab.manifestList.addManifest')
+    await waitFor(() => expect(getByText('pipeline.manifestType.addManifestLabel')).toBeDefined())
+    const addManifestButton = getByText('pipeline.manifestType.addManifestLabel')
     userEvent.click(addManifestButton)
 
     // Find Add Manifest dialog portal div
@@ -296,7 +296,7 @@ describe('Deploy service stage specifications', () => {
     userEvent.click(amazonEcs)
 
     // By checking Add buttons, check if manifest section for each manifest type is rendered
-    const allPlusAddManifestButtons = await findAllByText(/common.plusAddName/)
+    const allPlusAddManifestButtons = await findAllByText(/common.addName/)
     expect(allPlusAddManifestButtons).toHaveLength(4)
     // Check header of each manifest section card
     expect(getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')).toBeInTheDocument()
@@ -304,9 +304,9 @@ describe('Deploy service stage specifications', () => {
     expect(getAllByText('common.headerWithOptionalText')).toHaveLength(2)
 
     // Check for + Add Primary Artifact button which confirms if Primary Artifact section is rendered
-    expect(getByText('pipelineSteps.serviceTab.artifactList.addPrimary')).toBeInTheDocument()
+    expect(getByText('pipeline.artifactsSelection.addPrimaryArtifact')).toBeInTheDocument()
     // Check for + Add Sidecar button which confirms if Sidecar Artifact section is rendered
-    expect(getByText('pipelineSteps.serviceTab.artifactList.addSidecar')).toBeInTheDocument()
+    expect(getByText('pipeline.artifactsSelection.addSidecar')).toBeInTheDocument()
 
     // Check if Variable section is rendered
     expect(getByText('common.variables')).toBeInTheDocument()

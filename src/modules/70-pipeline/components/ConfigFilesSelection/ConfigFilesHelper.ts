@@ -42,7 +42,8 @@ export const allowedConfigFilesTypes: Record<ServiceDefinition['type'], Array<Co
   AzureWebApp: [ConfigFilesMap.Harness],
   Ssh: [ConfigFilesMap.Harness],
   WinRm: [ConfigFilesMap.Harness],
-  ECS: [ConfigFilesMap.Harness]
+  ECS: [ConfigFilesMap.Harness],
+  CustomDeployment: []
 }
 
 export const ConfigFilesToConnectorLabelMap: Record<ConfigFileType, StringKeys> = {

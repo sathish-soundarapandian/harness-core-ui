@@ -55,7 +55,9 @@ import {
   transformGCOMetricHealthSourceToGCOMetricSetupSource,
   getPlaceholderForIdentifier,
   mapstackdriverDashboardDetailToMetricWidget,
-  onSelectNavItem
+  onSelectNavItem,
+  getNoDataMessage,
+  getIsQueryExecuted
 } from './GCOMetricsHealthSource.utils'
 import DrawerFooter from '../../common/DrawerFooter/DrawerFooter'
 import type { GCOMetricInfo, GCOMetricsHealthSourceProps, ValidationChartProps } from './GCOMetricsHealthSource.type'
@@ -67,7 +69,16 @@ import css from './GCOMetricsHealthSource.module.scss'
 const GroupByClause = 'groupByFields'
 
 function ValidationChart(props: ValidationChartProps): JSX.Element {
-  const { loading, error, queryValue, onRetry, sampleData, setAsTooManyMetrics, isQueryExecuted = false } = props
+  const {
+    loading,
+    error,
+    queryValue,
+    onRetry,
+    sampleData,
+    setAsTooManyMetrics,
+    isQueryExecuted = false,
+    noDataMessage
+  } = props
   const { getString } = useStrings()
   const isTooManyMetrics = Boolean(
     sampleData?.series?.length && sampleData.series.length > 1 && queryValue?.includes(GroupByClause)
@@ -91,10 +102,7 @@ function ValidationChart(props: ValidationChartProps): JSX.Element {
   if (!isQueryExecuted) {
     return (
       <Container className={cx(css.chartContainer, css.noDataContainer)}>
-        <NoDataCard
-          icon="timeline-line-chart"
-          message={getString('cv.monitoringSources.gcoLogs.submitQueryToSeeRecords')}
-        />
+        <NoDataCard icon="timeline-line-chart" message={noDataMessage} />
       </Container>
     )
   }
@@ -230,7 +238,6 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
   })
 
   const formInitialValues: GCOMetricInfo = updatedData.get(selectedMetric || '') || {}
-
   return (
     <Formik<GCOMetricInfo>
       enableReinitialize={true}
@@ -241,6 +248,8 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
         const newMap = new Map(updatedData)
         if (selectedMetric) {
           newMap.set(selectedMetric, { ...values })
+        } else {
+          return {}
         }
 
         return validate(values, newMap, getString)
@@ -304,7 +313,9 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
                           }
                         }}
                       />
-                      <FormError name="metricTags" errorMessage={formikProps.errors['metricTags']} />
+                      {formikProps.errors['metricTags'] && (
+                        <FormError name="metricTags" errorMessage={formikProps.errors['metricTags']} />
+                      )}
                       <NameId
                         nameLabel={getString('cv.monitoringSources.metricNameLabel')}
                         identifierProps={{
@@ -314,7 +325,6 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
                         }}
                       />
                     </Container>
-
                     <Container className={css.validationContainer}>
                       <Container width={'500px'}>
                         <QueryContent
@@ -324,6 +334,7 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
                             }
                             onQueryChange(formikProps.values.query)
                           }}
+                          key={getMultiTypeFromValue(formikProps.values.query)}
                           onClickExpand={setIsQueryExpanded}
                           isDialogOpen={isQueryExpanded}
                           query={formikProps.values.query}
@@ -346,7 +357,8 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
                             formikProps.setFieldError('tooManyMetrics', '')
                           }
                         }}
-                        isQueryExecuted={shouldShowChart}
+                        noDataMessage={getNoDataMessage(getString, formikProps?.values?.query)}
+                        isQueryExecuted={getIsQueryExecuted(shouldShowChart, formikProps?.values?.query)}
                         onRetry={async () => {
                           if (!formikProps.values.query?.length) return
                           onQueryChange(formikProps.values.query)

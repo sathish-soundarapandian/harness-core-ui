@@ -390,7 +390,7 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
 
           formikRef.current?.setValues({
             ...omit(inputSet, 'gitDetails', 'entityValidityDetails', 'outdated', 'inputSetErrorWrapper'),
-            repo: defaultTo(repoIdentifier, ''),
+            repo: defaultTo(repoIdentifier || repoName, ''),
             branch: defaultTo(branch, ''),
             connectorRef: defaultTo(connectorRef, ''),
             repoName: defaultTo(repoName, ''),

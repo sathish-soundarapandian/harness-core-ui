@@ -22,7 +22,7 @@ import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/Rout
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useStrings } from 'framework/strings'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
-import { Sort, SortFields } from '@cd/utils/listUtils'
+import { Sort, SortFields } from '@common/utils/listUtils'
 import { getFormattedTimeRange } from '@cd/pages/dashboard/dashboardUtils'
 import css from '@cd/components/Services/ServicesContent/ServicesContent.module.scss'
 

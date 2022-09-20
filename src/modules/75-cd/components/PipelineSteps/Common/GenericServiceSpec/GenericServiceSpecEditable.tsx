@@ -30,8 +30,9 @@ import { getConfigFilesHeaderTooltipId } from '@pipeline/components/ConfigFilesS
 import ConfigFilesSelection from '@pipeline/components/ConfigFilesSelection/ConfigFilesSelection'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useServiceContext } from '@cd/context/ServiceContext'
+import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ServiceV2ArtifactsSelection'
 import type { KubernetesServiceInputFormProps } from '../../K8sServiceSpec/K8sServiceSpecInterface'
-import { setupMode } from '../../PipelineStepsUtil'
+import { setupMode, isMultiArtifactSourceEnabled } from '../../PipelineStepsUtil'
 import css from './GenericServiceSpec.module.scss'
 
 const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
@@ -50,12 +51,16 @@ const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
     getStageFromPipeline
   } = usePipelineContext()
   const { isServiceEntityPage } = useServiceContext()
-  const { NG_FILE_STORE, NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+  const { NG_FILE_STORE, NG_SVC_ENV_REDESIGN, NG_ARTIFACT_SOURCES } = useFeatureFlags()
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const selectedDeploymentType =
     deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating, templateServiceData)
   const isNewService = isNewServiceEnvEntity(!!NG_SVC_ENV_REDESIGN, stage?.stage as DeploymentStageElementConfig)
+  const isPrimaryArtifactSources = isMultiArtifactSourceEnabled(
+    !!NG_ARTIFACT_SOURCES,
+    stage?.stage as DeploymentStageElementConfig
+  )
 
   return (
     <div className={css.serviceDefinition}>
@@ -93,12 +98,20 @@ const GenericServiceSpecEditable: React.FC<KubernetesServiceInputFormProps> = ({
               {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.artifacts')}
               <HarnessDocTooltip tooltipId={getArtifactsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
             </div>
-            <ArtifactsSelection
-              isPropagating={isPropagating}
-              deploymentType={selectedDeploymentType}
-              isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-              readonly={!!readonly}
-            />
+            {isPrimaryArtifactSources ? (
+              <ServiceV2ArtifactsSelection
+                deploymentType={selectedDeploymentType}
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                readonly={!!readonly}
+              />
+            ) : (
+              <ArtifactsSelection
+                isPropagating={isPropagating}
+                deploymentType={selectedDeploymentType}
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                readonly={!!readonly}
+              />
+            )}
           </Card>
           {(isNewService || isServiceEntityPage) &&
             NG_FILE_STORE && ( //Config files are only available for creation or readonly mode for service V2

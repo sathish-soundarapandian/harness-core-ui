@@ -27,7 +27,6 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { HealthSourcesType } from '@cv/constants'
 import { BGColorWrapper } from '@cv/pages/health-source/common/StyledComponents'
-import CardWithOuterTitle from '@cv/pages/health-source/common/CardWithOuterTitle/CardWithOuterTitle'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { Connectors } from '@connectors/constants'
@@ -36,6 +35,7 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { AllMultiTypeInputTypesForStep } from '@ci/components/PipelineSteps/CIStep/StepUtils'
 import { FormConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
 import { healthSourceTypeMapping } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
+import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import { ConnectorRefFieldName, HEALTHSOURCE_LIST } from './DefineHealthSource.constant'
 import {
   getFeatureOption,
@@ -67,6 +67,8 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   const isDynatraceAPMEnabled = useFeatureFlag(FeatureFlag.DYNATRACE_APM_ENABLED)
   const isCustomMetricEnabled = useFeatureFlag(FeatureFlag.CHI_CUSTOM_HEALTH)
   const isCustomLogEnabled = useFeatureFlag(FeatureFlag.CHI_CUSTOM_HEALTH_LOGS)
+  const isElkEnabled = useFeatureFlag(FeatureFlag.ELK_HEALTH_SOURCE)
+
   const disabledByFF: string[] = useMemo(() => {
     const disabledConnectorsList = []
     if (!isDynatraceAPMEnabled) {
@@ -78,8 +80,12 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
     if (!isCustomLogEnabled && !isCustomMetricEnabled) {
       disabledConnectorsList.push(HealthSourceTypes.CustomHealth)
     }
+    if (!isElkEnabled) {
+      disabledConnectorsList.push(HealthSourceTypes.Elk)
+    }
+
     return disabledConnectorsList
-  }, [isDynatraceAPMEnabled, isErrorTrackingEnabled])
+  }, [isDynatraceAPMEnabled, isErrorTrackingEnabled, isCustomLogEnabled, isCustomMetricEnabled, isElkEnabled])
 
   const initialValues = useMemo(() => {
     return getInitialValues(sourceData, getString)

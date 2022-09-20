@@ -141,18 +141,20 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
               }}
             />
           </MultiTypeFieldSelector>
-          {enabledExecutionDetails ? (
-            <Layout.Vertical width={'400px'}>
-              {template.executionTarget?.host ? (
-                <FormInput.Text
-                  name={`${prefix}.executionTarget.host`}
-                  label={getString('targetHost')}
-                  style={{ marginTop: 'var(--spacing-small)' }}
-                  disabled={readonly}
-                />
-              ) : null}
-              {/* {skipping showing connector Ref as runtime input - for now. - does not impact functionality} */}
-              {/* {template.executionTarget.connectorRef ? (
+        </div>
+      ) : null}
+      {enabledExecutionDetails ? (
+        <Layout.Vertical width={'400px'}>
+          {template.executionTarget?.host ? (
+            <FormInput.Text
+              name={`${prefix}.executionTarget.host`}
+              label={getString('targetHost')}
+              className={css.inputMarginTopSmall}
+              disabled={readonly}
+            />
+          ) : null}
+          {/* {skipping showing connector Ref as runtime input - for now. - does not impact functionality} */}
+          {/* {template.executionTarget.connectorRef ? (
                 <MultiTypeSecretInput
                   type="SSHKey"
                   name={`${prefix}.executionTarget.connectorRef`}
@@ -161,18 +163,16 @@ export function ScriptVariablesRuntimeInput(props: InputOutputVariablesInputSetP
                   allowableTypes={[]}
                 />
               ) : null} */}
-              {template.executionTarget?.workingDirectory ? (
-                <FormInput.Text
-                  name={`${prefix}.executionTarget.workingDirectory`}
-                  placeholder={getString('workingDirectory')}
-                  label={getString('workingDirectory')}
-                  style={{ marginTop: 'var(--spacing-medium)' }}
-                  disabled={readonly}
-                />
-              ) : null}
-            </Layout.Vertical>
+          {template.executionTarget?.workingDirectory ? (
+            <FormInput.Text
+              name={`${prefix}.executionTarget.workingDirectory`}
+              placeholder={getString('workingDirectory')}
+              label={getString('workingDirectory')}
+              className={css.inputMarginTopMedium}
+              disabled={readonly}
+            />
           ) : null}
-        </div>
+        </Layout.Vertical>
       ) : null}
     </>
   )

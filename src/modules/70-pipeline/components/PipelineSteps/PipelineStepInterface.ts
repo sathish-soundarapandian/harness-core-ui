@@ -25,6 +25,7 @@ export enum StepType {
   K8sCanaryDelete = 'K8sCanaryDelete',
   K8sDelete = 'K8sDelete',
   StepGroup = 'StepGroup',
+  DeployServiceEntity = 'DeployServiceEntity',
   DeployService = 'DeployService',
   DeployEnvironment = 'DeployEnvironment',
   DeployInfrastructure = 'DeployInfrastructure',
@@ -102,7 +103,8 @@ export enum StepType {
   AzureArmRollback = 'AzureARMRollback',
   Background = 'Background',
   AzureBlueprint = 'AzureCreateBPResource',
-  Wait = 'Wait'
+  Wait = 'Wait',
+  CreateAzureARMResource = 'AzureCreateARMResource'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

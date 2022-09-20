@@ -246,6 +246,7 @@ function SaveAsInputSet({
         if (isGitSyncEnabled || storeMetadata?.storeType === StoreType.REMOTE) {
           openSaveToGitDialog({
             isEditing: false,
+            disableCreatingNewBranch: true,
             resource: {
               type: 'InputSets',
               name: inputSetObj.name as string,

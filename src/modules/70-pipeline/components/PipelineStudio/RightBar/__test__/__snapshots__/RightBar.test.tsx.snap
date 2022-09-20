@@ -57,7 +57,7 @@ exports[`RightBar Renders all ci codebase inputs as runtime inputs 1`] = `
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -1089,7 +1089,7 @@ exports[`RightBar Renders all ci codebase on edit values 1`] = `
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -1989,7 +1989,7 @@ exports[`RightBar Renders all ci codebase on edit values 2`] = `
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -2917,7 +2917,7 @@ exports[`RightBar Renders validation errors 1`] = `
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"

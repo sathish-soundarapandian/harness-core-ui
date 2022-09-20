@@ -40,6 +40,7 @@ interface ServiceStudioDetailsProps {
   serviceData: NGServiceConfig
   summaryPanel?: JSX.Element
   refercedByPanel?: JSX.Element
+  invokeServiceHeaderRefetch?: () => void
 }
 function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElement | null {
   const { getString } = useStrings()
@@ -143,6 +144,9 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     } catch (e: any) {
       showError(e?.data?.message || e?.message || getString('commonError'))
     }
+
+    // this is for refetching serviceHeader API for updating "last updated" time after "saveAndPublishService" action
+    props.invokeServiceHeaderRefetch?.()
   }
 
   if (isLoading) {

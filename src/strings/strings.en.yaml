@@ -767,9 +767,6 @@ pipelineSteps:
     stepName: Specify your Kubernetes Connector
     kubernetesConnector: Kubernetes Connector
   serviceTab:
-    artifactList:
-      addSidecar: + Add Sidecar
-      addPrimary: + Add Primary Artifact
     manifestList:
       manifestFormat: Manifest Format
       manifestType: Manifest Type

@@ -986,7 +986,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     })
   }, [engine])
 
-  const onRollbackToggleSwitchClick = (type: StepsType) => {
+  const onRollbackToggleSwitchClick = (type: StepsType): void => {
     const isRollbackToggled = type === StepsType.Rollback
     setState(prev => ({ ...prev, isRollback: isRollbackToggled }))
     updatePipelineView({ ...pipelineView, isRollbackToggled })
@@ -1087,7 +1087,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     }
   }, [ref, stepGroupUpdated])
 
-  const canvasClick = () => {
+  const canvasClick = (): void => {
     dynamicPopoverHandler?.hide()
   }
 
@@ -1234,6 +1234,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
               createNodeTitle={getString('addStep')}
               graphActionsLayout={canvasButtonsLayout}
               graphLinkClassname={css.graphLink}
+              optimizeRender={false}
             />
             {hasRollback && (
               <RollbackToggleSwitch

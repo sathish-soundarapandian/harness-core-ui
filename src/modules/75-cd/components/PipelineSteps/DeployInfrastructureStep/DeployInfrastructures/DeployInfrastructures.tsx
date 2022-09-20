@@ -29,6 +29,7 @@ import { useModalHook } from '@harness/use-modal'
 
 import { useStrings } from 'framework/strings'
 import {
+  DeploymentStageConfig,
   InfrastructureResponse,
   InfrastructureResponseDTO,
   useGetInfrastructureInputs,
@@ -45,10 +46,12 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import InfrastructureModal from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfrastructureModal'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
 import { useRunPipelineFormContext } from '@pipeline/context/RunPipelineFormContext'
 import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
+import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { isEditInfrastructure } from '../utils'
 
 import css from './DeployInfrastructures.module.scss'
@@ -81,6 +84,14 @@ function DeployInfrastructures({
   }, [environmentRef, /* istanbul ignore next */ formik?.values?.environment?.environmentRef])
 
   const { updateTemplate } = useRunPipelineFormContext()
+  const {
+    state: {
+      selectionState: { selectedStageId }
+    },
+    getStageFromPipeline
+  } = usePipelineContext()
+
+  const { stage } = getStageFromPipeline(selectedStageId || '')
 
   const {
     data: infrastructuresResponse,
@@ -91,7 +102,8 @@ function DeployInfrastructures({
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      environmentIdentifier
+      environmentIdentifier,
+      deploymentType: (stage?.stage?.spec as DeployStageConfig)?.deploymentType
     },
     lazy: getMultiTypeFromValue(environmentIdentifier) === MultiTypeInputType.RUNTIME
   })
@@ -131,15 +143,8 @@ function DeployInfrastructures({
           formik?.setFieldValue('infrastructureInputs', parsedInfrastructureDefinitionYaml)
         }
       } else {
-        if (selectedInfrastructure && path) {
-          const selectedInfrastructureParsed = parse(selectedInfrastructure)
-          const selectedInfraWithEmptyInputs = {
-            identifier: selectedInfrastructureParsed.infrastructureDefinition.identifier,
-            inputs: {
-              type: selectedInfrastructureParsed.infrastructureDefinition.type
-            }
-          }
-          updateTemplate(selectedInfraWithEmptyInputs, `${path}.infrastructureDefinitions[0]`)
+        if (path) {
+          updateTemplate([], `${path}.infrastructureDefinitions`)
           formik?.setFieldValue('environment.infrastructureDefinitions[0].inputs.spec', {})
         }
       }
@@ -165,6 +170,9 @@ function DeployInfrastructures({
           arrayFormat: 'comma'
         }
       })
+    } else {
+      formik?.setFieldValue('environment.infrastructureDefinitions[0].inputs.spec', {})
+      updateTemplate([], `${path}.infrastructureDefinitions`)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedInfrastructure])
@@ -289,6 +297,11 @@ function DeployInfrastructures({
           refetch={updateInfrastructuresList}
           environmentIdentifier={environmentIdentifier}
           selectedInfrastructure={selectedInfrastructure}
+          stageDeploymentType={
+            isEditInfrastructure(selectedInfrastructure)
+              ? undefined
+              : ((stage?.stage?.spec as DeploymentStageConfig)?.deploymentType as ServiceDeploymentType)
+          }
         />
       </ModalDialog>
     ),

@@ -113,8 +113,12 @@ export const getCloudViewCostsLink = ({
   accountId: string
   connector?: ConnectorInfoDTO
   ccmMetaData?: CcmMetaData | null
-}): string => {
+}): string | undefined => {
   const defaultPerspectiveId = ccmMetaData?.[defaultPerspectiveIdMap[connector?.type || '']] as string
+
+  if (!defaultPerspectiveId) {
+    return
+  }
 
   let filters = {}
 

@@ -56,6 +56,8 @@ describe('useSaveAsTemplate tests', () => {
     })
     expect(mockFunction).toBeCalledWith({
       allowScopeChange: true,
+      disableCreatingNewBranch: false,
+      disabledFields: [],
       initialValues: {
         identifier: '-1',
         name: '',

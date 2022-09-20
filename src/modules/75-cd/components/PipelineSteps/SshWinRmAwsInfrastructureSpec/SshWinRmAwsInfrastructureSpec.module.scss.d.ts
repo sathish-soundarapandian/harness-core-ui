@@ -10,5 +10,6 @@ declare const styles: {
   readonly formRow: string
   readonly inputWidth: string
   readonly radioGroup: string
+  readonly regionInput: string
 }
 export default styles
