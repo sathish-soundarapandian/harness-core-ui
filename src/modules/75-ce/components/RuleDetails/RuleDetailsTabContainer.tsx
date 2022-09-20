@@ -296,11 +296,7 @@ const RuleDetailsTabContainer: React.FC<RuleDetailsTabContainerProps> = ({
                 value={get(service, 'routing.container_svc.service', '')}
               />
             )}
-            <DetailRow
-              label={getString('ce.co.ruleDetailsHeader.hostName')}
-              value={<LinkWithCopy url={defaultTo(getClickableLink(true), '')} protocol={domainProtocol} />}
-            />
-            {!isEmpty(service.custom_domains) && (
+            {hasCustomDomains ? (
               <DetailRow
                 label={getString('ce.co.ruleDetailsHeader.customDomain')}
                 value={
@@ -311,7 +307,12 @@ const RuleDetailsTabContainer: React.FC<RuleDetailsTabContainerProps> = ({
                   </Container>
                 }
               />
-            )}
+            ) : getClickableLink(true) ? (
+              <DetailRow
+                label={getString('ce.co.ruleDetailsHeader.hostName')}
+                value={<LinkWithCopy url={defaultTo(getClickableLink(true), '')} protocol={domainProtocol} />}
+              />
+            ) : null}
             <DetailRow
               label={getString('connector')}
               value={
