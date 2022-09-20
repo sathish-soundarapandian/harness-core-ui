@@ -62,7 +62,7 @@ const initialValues = {
         spec: {}
       }
     },
-    instanceAttributes: [{ name: 'hostName', jsonPath: '', description: '' }]
+    instanceAttributes: [{ name: 'hostname', jsonPath: '', description: '' }]
   },
   execution: {
     stepTemplateRefs: []

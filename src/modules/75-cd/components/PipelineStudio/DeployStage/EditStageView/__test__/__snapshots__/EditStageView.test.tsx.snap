@@ -511,8 +511,8 @@ exports[`Edit stage view test Should match snapshot when template is provided 1`
                 </div>
               </div>
               <p
-                class="StyledProps--font StyledProps--main StyledProps--margin-top-medium StyledProps--margin-bottom-medium StyledProps--font-size-small StyledProps--color StyledProps--color-black"
-                style="display: flex; align-items: center;"
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-top-medium StyledProps--margin-bottom-medium StyledProps--font-size-small StyledProps--color StyledProps--color-black"
+                style="--text-line-clamp: 1; display: flex; align-items: center;"
               >
                 <span
                   class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--margin-right-xsmall"

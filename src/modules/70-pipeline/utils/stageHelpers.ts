@@ -528,6 +528,10 @@ export const deleteStageInfo = (stage?: DeploymentStageElementConfig): void => {
     delete stage?.spec?.service
     delete stage?.spec?.environment
     delete stage?.spec?.environmentGroup
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    // TODO: Fix once BE types are available
+    delete stage?.spec?.customDeploymentRef
     if (stage?.spec?.execution?.steps) {
       stage.spec.execution.steps.splice(0)
     }

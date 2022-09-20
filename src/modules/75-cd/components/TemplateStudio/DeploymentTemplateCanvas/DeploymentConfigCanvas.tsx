@@ -6,15 +6,12 @@
  */
 
 import React from 'react'
-import { useConfirmationDialog } from '@wings-software/uicore'
-import { Intent } from '@blueprintjs/core'
-import { defaultTo, set } from 'lodash-es'
+import { set } from 'lodash-es'
 import produce from 'immer'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { getScopeBasedTemplateRef } from '@pipeline/utils/templateUtils'
 import { useGlobalEventListener } from '@common/hooks'
 import type { TemplateSummaryResponse } from 'services/template-ng'
-import { useStrings } from 'framework/strings'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import {
   getUpdatedDeploymentConfig,
@@ -25,8 +22,6 @@ import { DeploymentConfigStepDrawer } from '@cd/components/TemplateStudio/Deploy
 import { DeploymentConfigFormWithRef } from './DeploymentTemplateForm/DeploymentConfigForm'
 
 function useSaveStepTemplateListener(): void {
-  const [savedTemplate, setSavedTemplate] = React.useState<TemplateSummaryResponse>()
-  const { getString } = useStrings()
   const {
     drawerData,
     setDrawerData,
@@ -36,7 +31,7 @@ function useSaveStepTemplateListener(): void {
     setTemplateDetailsByRef
   } = useDeploymentContext()
 
-  const updateViewForSavedStepTemplate = async (): Promise<void> => {
+  const updateViewForSavedStepTemplate = (savedTemplate: TemplateSummaryResponse) => {
     const templateRef = getScopeBasedTemplateRef(savedTemplate as TemplateSummaryResponse)
     const templateRefObj = {
       templateRef,
@@ -59,29 +54,10 @@ function useSaveStepTemplateListener(): void {
     setDrawerData(updatedDrawerData)
   }
 
-  const { openDialog: openUseTemplateDialog } = useConfirmationDialog({
-    intent: Intent.WARNING,
-    cancelButtonText: getString('no'),
-    contentText: getString('pipeline.templateSaved', {
-      name: savedTemplate?.name,
-      entity: savedTemplate?.templateEntityType?.toLowerCase()
-    }),
-    titleText: `Use Template ${defaultTo(savedTemplate?.name, '')}?`,
-    confirmButtonText: getString('yes'),
-    onCloseDialog: async isConfirmed => {
-      if (isConfirmed) {
-        await updateViewForSavedStepTemplate()
-      }
-    }
-  })
-
   useGlobalEventListener('TEMPLATE_SAVED', event => {
-    const { detail: newTemplate } = event
-    if (newTemplate) {
-      setSavedTemplate(newTemplate)
-      setTimeout(() => {
-        openUseTemplateDialog()
-      }, 0)
+    const { detail: savedTemplate } = event
+    if (savedTemplate) {
+      updateViewForSavedStepTemplate(savedTemplate)
     }
   })
 }

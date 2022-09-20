@@ -21,10 +21,10 @@ import {
   Formik,
   getErrorInfoFromErrorObject,
   Layout,
+  Tag,
   useToaster,
   VisualYamlSelectedView as SelectedView,
-  VisualYamlToggle,
-  Tag
+  VisualYamlToggle
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 
@@ -40,7 +40,12 @@ import {
   useUpdateInfrastructure
 } from 'services/cd-ng'
 
-import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
+import {
+  getIdentifierFromValue,
+  getScopeBasedProjectPathParams,
+  getScopeFromDTO,
+  getScopeFromValue
+} from '@common/components/EntityReference/EntityReference'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { NameIdDescriptionTags } from '@common/components'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -60,6 +65,8 @@ import { DefaultNewStageId, DefaultNewStageName } from '@cd/components/Services/
 import SelectDeploymentType from '@cd/components/PipelineStudio/DeployServiceSpecifications/SelectDeploymentType'
 import { InfrastructurePipelineProvider } from '@cd/context/InfrastructurePipelineContext'
 import { PipelineVariablesContextProvider } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
+import { useGetTemplate } from 'services/template-ng'
+import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -97,6 +104,7 @@ export default function InfrastructureModal({
   selectedInfrastructure,
   environmentIdentifier,
   stageDeploymentType,
+  stageCustomDeploymentData,
   getTemplate
 }: {
   hideModal: () => void
@@ -105,6 +113,7 @@ export default function InfrastructureModal({
   selectedInfrastructure?: string
   environmentIdentifier: string
   stageDeploymentType?: ServiceDeploymentType
+  stageCustomDeploymentData?: TemplateLinkConfig
   getTemplate?: (data: GetTemplateProps) => Promise<GetTemplateResponse>
 }): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -165,6 +174,7 @@ export default function InfrastructureModal({
             environmentIdentifier={environmentIdentifier}
             stageDeploymentType={(deploymentType as Partial<ServiceDeploymentType>) || stageDeploymentType}
             getTemplate={getTemplate}
+            stageCustomDeploymentData={stageCustomDeploymentData}
           />
         </DeployStageErrorProvider>
       </PipelineVariablesContextProvider>
@@ -178,6 +188,7 @@ function BootstrapDeployInfraDefinition({
   infrastructureDefinition,
   environmentIdentifier,
   stageDeploymentType,
+  stageCustomDeploymentData,
   getTemplate
 }: {
   hideModal: () => void
@@ -185,6 +196,7 @@ function BootstrapDeployInfraDefinition({
   infrastructureDefinition?: InfrastructureDefinitionConfig
   environmentIdentifier: string
   stageDeploymentType?: ServiceDeploymentType
+  stageCustomDeploymentData?: TemplateLinkConfig
   getTemplate?: (data: GetTemplateProps) => Promise<GetTemplateResponse>
 }): JSX.Element {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -199,6 +211,10 @@ function BootstrapDeployInfraDefinition({
   } = usePipelineContext()
   const { getString } = useStrings()
   const { showSuccess, showError, clear } = useToaster()
+  const queryParams = useParams<ProjectPathProps>()
+  const {
+    state: { gitDetails, storeMetadata }
+  } = usePipelineContext()
   const { checkErrorsForTab } = useContext(StageErrorContext)
 
   const { name, identifier, description, tags } = defaultTo(
@@ -231,6 +247,35 @@ function BootstrapDeployInfraDefinition({
   const [customDeploymentMetaData, setCustomDeploymentMetaData] = useState<CustomDeploymentMetaData | undefined>(
     getDeploymentTemplateData()
   )
+  const [deployInfraRemountCount, setDeployInfraRemountCount] = useState(0)
+
+  const shouldFetchCustomDeploymentTemplate =
+    !isEmpty(stageCustomDeploymentData) && isEmpty(getDeploymentTemplateData()?.templateMetaData)
+
+  const { data: customDeploymentTemplateResponse } = useGetTemplate({
+    templateIdentifier: getIdentifierFromValue(defaultTo(stageCustomDeploymentData?.templateRef, '')),
+    queryParams: {
+      ...getScopeBasedProjectPathParams(
+        queryParams,
+        getScopeFromValue(defaultTo(stageCustomDeploymentData?.templateRef, ''))
+      ),
+      versionLabel: defaultTo(stageCustomDeploymentData?.versionLabel, ''),
+      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, gitDetails.repoIdentifier, gitDetails.branch)
+    },
+    lazy: !shouldFetchCustomDeploymentTemplate
+  })
+
+  React.useEffect(() => {
+    if (customDeploymentTemplateResponse?.data) {
+      const customDeploymentTemplate = customDeploymentTemplateResponse?.data
+      const templateRefObj = getTemplateRefVersionLabelObject(customDeploymentTemplate)
+      const templateJSON = parse(customDeploymentTemplate.yaml || '').template
+      setCustomDeploymentMetaData({
+        templateMetaData: templateRefObj,
+        variables: templateJSON?.spec?.infrastructure?.variables
+      })
+    }
+  }, [customDeploymentTemplateResponse?.data])
 
   useEffect(() => {
     setSelection({
@@ -287,6 +332,7 @@ function BootstrapDeployInfraDefinition({
         templateMetaData: getTemplateRefVersionLabelObject(template),
         variables: templateJSON?.spec?.infrastructure?.variables
       })
+      setDeployInfraRemountCount(deployInfraRemountCount + 1)
     }
   }
 
@@ -388,7 +434,7 @@ function BootstrapDeployInfraDefinition({
   }
 
   const onCustomDeploymentSelection = async (): Promise<void> => {
-    if (getTemplate) {
+    if (getTemplate && !stageCustomDeploymentData) {
       try {
         const { template } = await getTemplate({ templateType: 'CustomDeployment' })
         const templateRefObj = getTemplateRefVersionLabelObject(template)
@@ -507,7 +553,7 @@ function BootstrapDeployInfraDefinition({
                 customDeploymentData={customDeploymentMetaData?.templateMetaData}
                 addOrUpdateTemplate={addOrUpdateTemplate}
               />
-              {selectedDeploymentType && <DeployInfraDefinition />}
+              {selectedDeploymentType && <DeployInfraDefinition key={deployInfraRemountCount} />}
             </>
           ) : (
             <div className={css.yamlBuilder}>

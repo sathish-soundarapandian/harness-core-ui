@@ -105,7 +105,8 @@ export enum StepType {
   AzureBlueprint = 'AzureCreateBPResource',
   CreateAzureARMResource = 'AzureCreateARMResource',
   CustomDeploymentServiceSpec = 'CustomDeploymentServiceSpec',
-  CustomDeployment = 'CustomDeployment'
+  CustomDeployment = 'CustomDeployment',
+  FetchInstanceScript = 'FetchInstanceScript'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {
