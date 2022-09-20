@@ -71,6 +71,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   const isElkEnabled = useFeatureFlag(FeatureFlag.ELK_HEALTH_SOURCE)
 
   // 🚨 TODO: Update it with Feature flag
+  // const isCloudWatchEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS)
   const isCloudWatchEnabled = true
 
   const disabledByFF: string[] = useMemo(() => {

@@ -7,12 +7,12 @@ import {
   getGroupedCustomMetrics
 } from '@cv/pages/health-source/common/CustomMetricV2/CustomMetric.utils'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
+import HealthSourceServicesV2 from '@cv/pages/health-source/common/CustomMetricV2/components/HealthSourceServicesV2'
 import { GroupName } from '@cv/pages/health-source/common/GroupName/GroupName'
 import type { CloudWatchFormType } from '../../../CloudWatch.types'
 import { getSelectedGroupItem } from '../../../CloudWatch.utils'
 import ExpressionTextbox from './components/ExpressionTextbox'
 import css from '../../../CloudWatch.module.scss'
-import HealthSourceServicesV2 from '@cv/pages/health-source/common/CustomMetricV2/components/HealthSourceServicesV2'
 
 export default function CloudWatchForm(): JSX.Element {
   const { getString } = useStrings()

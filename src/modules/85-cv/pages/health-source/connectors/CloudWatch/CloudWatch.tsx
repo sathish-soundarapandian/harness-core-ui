@@ -30,7 +30,7 @@ export default function CloudWatch({ data, onSubmit }: CloudWatchProps): JSX.Ele
 
   // 🚨 TODO: update dataSourceType as "cloudWatch"
   const metricPacksResponse = useGetMetricPacks({
-    queryParams: { projectIdentifier, orgIdentifier, accountId, dataSourceType: 'APP_DYNAMICS' }
+    queryParams: { projectIdentifier, orgIdentifier, accountId, dataSourceType: 'CLOUDWATCH_METRICS' }
   })
 
   const initialValues = getFormikInitialValue(data)
