@@ -23,6 +23,40 @@
   }
 }
 
+.ci:hover {
+  color: var(--ci-border);
+}
+.cd:hover {
+  color: var(--cd-border);
+}
+.ccm:hover {
+  color: var(--ccm-border);
+}
+.ff:hover {
+  color: var(--ff-border);
+}
+.srm:hover {
+  color: var(--srm-border);
+}
+.chaos:hover {
+  color: var(--chaos-border);
+}
+
+.blueText {
+  font-family: var(--font-family-reenie-beanie) !important;
+  font-size: 24px !important;
+}
+a:hover {
+  text-decoration: none;
+}
+.configHelpText {
+  padding: var(--spacing-small) var(--spacing-medium);
+  background-position: right 0;
+  background-size: 24px;
+  background-repeat: no-repeat;
+  line-height: 20px;
+  color: var(--grey-400);
+}
 .backdrop {
   backdrop-filter: blur(4px);
   width: calc(100vw - 88px);

@@ -36,13 +36,17 @@ const CarouselImageAndDescription: React.FC<CarouselImageAndDescriptionProps> = 
           className={css.primaryText}
           color={Color.PRIMARY_5}
           font={{ variation: FontVariation.H1_SEMI }}
-          padding={{ top: 'xlarge', bottom: 'small' }}
+          padding={{ top: 'xlarge', bottom: 'small', left: 'large' }}
         >
           {primaryText}
         </Text>
       )}
       {secondaryText && (
-        <Text color={Color.WHITE} font={{ variation: FontVariation.BODY1 }}>
+        <Text
+          color={Color.WHITE}
+          font={{ variation: FontVariation.BODY1 }}
+          padding={{ top: 'xlarge', bottom: 'large', left: 'large' }}
+        >
           {secondaryText}
         </Text>
       )}

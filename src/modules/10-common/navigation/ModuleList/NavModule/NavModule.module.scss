@@ -12,6 +12,7 @@
   background-color: var(--primary-9);
   border: 1px solid var(--primary-9);
   transition: border 200ms ease-out;
+  text-decoration: none;
   .checkbox {
     cursor: pointer;
   }
@@ -19,28 +20,37 @@
   &.active {
     &.cd {
       border-color: var(--cd-border);
+      text-decoration: none;
     }
     &.ci {
       border-color: var(--ci-border);
+      text-decoration: none;
     }
     &.ccm {
       border-color: var(--ccm-border);
+      text-decoration: none;
     }
     &.ff {
       border-color: var(--ff-border);
+      text-decoration: none;
     }
     &.srm {
       border-color: var(--srm-border);
+      text-decoration: none;
     }
     &.chaos {
       border-color: var(--chaos-border);
+      text-decoration: none;
     }
     &.sto {
       border-color: var(--sto-border);
+      text-decoration: none;
     }
   }
 }
-
+.moduleText {
+  text-decoration: none;
+}
 .active {
   background-color: var(--theme-light-nav-panel-bg) !important;
 }

@@ -57,16 +57,6 @@ const ModuleConfigHeader: React.FC<ModuleConfigHeaderProps> = ({ onDefaultSettin
         <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_200} inline>
           (<String stringID="common.moduleConfig.autoSaved" />)
         </Text>
-        <Text
-          className={css.defaultSettings}
-          onClick={onDefaultSettingsClick}
-          margin={{ left: 'xsmall' }}
-          font={{ variation: FontVariation.SMALL }}
-          inline
-          color={Color.PRIMARY_5}
-        >
-          <String stringID="common.moduleConfig.restoreDefault" />
-        </Text>
       </Text>
     </>
   )

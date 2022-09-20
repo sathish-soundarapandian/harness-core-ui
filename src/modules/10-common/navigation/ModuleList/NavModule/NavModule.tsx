@@ -40,7 +40,6 @@ const navModuleToClassMap: Record<NavModuleName, string> = {
 
 const NavModule: React.FC<NavModuleProps> = ({ module, active, onClick, checkboxProps }) => {
   const { icon, label } = useNavModuleInfo(module)
-
   return (
     <Container
       className={cx(css.container, { [css.active]: active }, navModuleToClassMap[module])}
@@ -55,7 +54,7 @@ const NavModule: React.FC<NavModuleProps> = ({ module, active, onClick, checkbox
     >
       <Layout.Horizontal flex={{ alignItems: 'center' }}>
         <Icon name={icon} size={24} margin={{ right: 'xsmall' }} />
-        <Text color={Color.WHITE}>
+        <Text color={Color.WHITE} className={css.moduleText}>
           <String stringID={label} />
         </Text>
       </Layout.Horizontal>

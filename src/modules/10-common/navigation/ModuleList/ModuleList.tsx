@@ -26,6 +26,7 @@ import {
   ModulesPreferenceStoreData,
   MODULES_CONFIG_PREFERENCE_STORE_KEY
 } from '../ModuleConfigurationScreen/ModuleSortableList/ModuleSortableList'
+import arrow from './arrow.svg'
 import css from './ModuleList.module.scss'
 
 interface ModuleListProps {
@@ -61,23 +62,51 @@ const Item: React.FC<ItemProps> = ({ data, tooltipProps, onModuleClick }) => {
     return null
   }
 
+  const navModuleToClassMap: Record<string, string> = {
+    ['CD']: css.cd,
+    ['CI']: css.ci,
+    ['CV']: css.srm,
+    ['CF']: css.ff,
+    ['CE']: css.ccm,
+    ['CHAOS']: css.chaos
+  }
+
+  const navModuleToStringMap: Record<string, string> = {
+    ['CD']: 'Continuous Delivery',
+    ['CI']: 'Continuous Integration',
+    ['CV']: 'Service Reliability',
+    ['CF']: 'Feature Flags',
+    ['CE']: 'Cloud Cost Management',
+    ['CHAOS']: 'Chaos Engineering'
+  }
   return (
     <Link to={redirectionLink}>
       <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
         <NavModule module={data} active={currentModule === data} onClick={onModuleClick} />
-        <Icon
-          name="tooltip-icon"
-          padding={'small'}
-          margin={{ left: 'small' }}
-          color={tooltipProps.activeModule === data ? Color.SUCCESS : undefined}
-          size={12}
-          className={css.clickable}
-          onClick={e => {
-            e.stopPropagation()
-            e.preventDefault()
-            tooltipProps.handleClick(data)
-          }}
-        />
+        <Popover
+          content={
+            <Text color={Color.WHITE} padding="small">
+              {navModuleToStringMap[data]}
+            </Text>
+          }
+          popoverClassName={Classes.DARK}
+          interactionKind={PopoverInteractionKind.HOVER}
+          position={Position.RIGHT}
+        >
+          <Icon
+            name="tooltip-icon"
+            padding={'small'}
+            margin={{ left: 'small' }}
+            color={tooltipProps.activeModule === data ? Color.WHITE : undefined}
+            size={17}
+            className={navModuleToClassMap[data]}
+            onClick={e => {
+              e.stopPropagation()
+              e.preventDefault()
+              tooltipProps.handleClick(data)
+            }}
+          />
+        </Popover>
       </Layout.Horizontal>
     </Link>
   )
@@ -122,32 +151,41 @@ const ModuleList: React.FC<ModuleListProps> = ({ isOpen, close, usePortal = true
         usePortal={usePortal}
       >
         <div className={css.modulesListContainer}>
-          <Container flex={{ alignItems: 'center' }} margin={{ bottom: 'huge' }}>
-            <Text font={{ size: 'large', weight: 'bold' }} color={Color.WHITE}>
-              <String stringID="common.moduleList.title" />
-            </Text>
-            <Popover
-              content={
-                <Text color={Color.WHITE} padding="small">
-                  <String stringID="common.moduleConfig.customize" />
-                </Text>
-              }
-              popoverClassName={Classes.DARK}
-              interactionKind={PopoverInteractionKind.HOVER}
-              position={Position.RIGHT}
-            >
-              <Icon
-                name="customize"
-                size={20}
-                className={cx(css.blue, css.clickable)}
-                padding={'small'}
-                onClick={() => {
-                  onConfigIconClick?.()
-                  setActiveModuleCarousel(undefined)
-                }}
-              />
-            </Popover>
-          </Container>
+          <Layout.Vertical margin={{ bottom: 'huge' }}>
+            <Container flex={{ alignItems: 'center' }} margin={{ bottom: 'none' }}>
+              <Text font={{ size: 'large', weight: 'bold' }} color={Color.WHITE}>
+                <String stringID="common.moduleList.title" />
+              </Text>
+              <Popover
+                content={
+                  <Text color={Color.WHITE} padding="small">
+                    <String stringID="common.moduleConfig.customize" />
+                  </Text>
+                }
+                popoverClassName={Classes.DARK}
+                interactionKind={PopoverInteractionKind.HOVER}
+                position={Position.RIGHT}
+              >
+                <Icon
+                  name="customize"
+                  size={24}
+                  className={cx(css.blue, css.clickable)}
+                  padding={'small'}
+                  onClick={() => {
+                    onConfigIconClick?.()
+                    setActiveModuleCarousel(undefined)
+                  }}
+                />
+              </Popover>
+            </Container>
+            <Layout.Horizontal>
+              <Text inline color={Color.GREY_400} className={css.blueText} margin={{ left: 'huge', right: 'small' }}>
+                or configure your own nav!
+              </Text>
+              <div style={{ backgroundImage: `url(${arrow})` }} className={css.configHelpText}></div>
+            </Layout.Horizontal>
+          </Layout.Vertical>
+
           <Layout.Vertical flex spacing="xxxlarge" data-testId="grouplistContainer">
             {moduleGroupConfig.map(item => (
               <Group

@@ -9,9 +9,17 @@
 declare const styles: {
   readonly backdrop: string
   readonly blue: string
+  readonly blueText: string
+  readonly ccm: string
+  readonly cd: string
+  readonly chaos: string
+  readonly ci: string
   readonly clickable: string
+  readonly configHelpText: string
   readonly configScreenWithoutReorder: string
+  readonly ff: string
   readonly modulesList: string
   readonly modulesListContainer: string
+  readonly srm: string
 }
 export default styles

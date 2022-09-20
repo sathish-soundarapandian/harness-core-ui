@@ -15,6 +15,7 @@ declare const styles: {
   readonly ci: string
   readonly container: string
   readonly ff: string
+  readonly moduleText: string
   readonly srm: string
   readonly sto: string
 }
