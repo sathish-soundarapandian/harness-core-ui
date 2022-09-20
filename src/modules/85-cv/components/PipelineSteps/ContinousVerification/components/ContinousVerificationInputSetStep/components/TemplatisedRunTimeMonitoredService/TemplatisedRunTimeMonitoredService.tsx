@@ -27,11 +27,11 @@ import {
   getMetricDefinitionPath,
   getMetricDefinitions
 } from '@cv/components/PipelineSteps/ContinousVerification/utils'
+import type { ConnectorInfoDTO } from 'services/cv'
+import { healthSourceTypeMapping } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
 import { getMultiTypeInputProps } from '../../../ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/VerificationJobFields/VerificationJobFields.utils'
 import { getRunTimeInputsFromHealthSource } from './TemplatisedRunTimeMonitoredService.utils'
 import css from './TemplatisedRunTimeMonitoredService.module.scss'
-import type { ConnectorInfoDTO } from 'services/cv'
-import { healthSourceTypeMapping } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
 
 export interface TemplatisedRunTimeMonitoredServiceProps {
   prefix: string
