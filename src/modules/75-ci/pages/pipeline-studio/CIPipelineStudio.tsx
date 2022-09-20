@@ -78,7 +78,16 @@ const CIPipelineStudio: React.FC = (): JSX.Element => {
   return (
     <PipelineProvider
       stagesMap={stagesCollection.getAllStagesAttributes(getString)}
-      queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier, repoIdentifier, branch }}
+      queryParams={{
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        repoIdentifier,
+        branch,
+        repoName,
+        connectorRef,
+        storeType
+      }}
       pipelineIdentifier={pipelineIdentifier}
       renderPipelineStage={args =>
         getCIPipelineStages({

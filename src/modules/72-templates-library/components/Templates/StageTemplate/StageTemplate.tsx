@@ -31,6 +31,6 @@ export class StageTemplate extends Template {
   }
 
   renderTemplateInputsForm(props: TemplateInputsProps & { accountId: string }): JSX.Element {
-    return <TemplateInputs template={props.template} />
+    return <TemplateInputs template={props.template} storeMetadata={props.storeMetadata} />
   }
 }

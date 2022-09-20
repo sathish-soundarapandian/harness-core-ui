@@ -234,13 +234,21 @@ function BarrierInputStep({ inputSetData, allowableTypes }: BarrierProps): React
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
     PipelineType<InputSetPathProps> & { accountId: string }
   >()
-  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { repoIdentifier, branch, connectorRef, repoName } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
 
   const [pipeline, setPipeline] = React.useState<{ pipeline: PipelineInfoConfig } | undefined>()
   const { data: pipelineResponse, loading } = useGetPipeline({
     pipelineIdentifier,
-    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier, repoIdentifier, branch }
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      repoIdentifier,
+      branch,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoName
+    }
   })
   React.useEffect(() => {
     if (pipelineResponse?.data?.yamlPipeline) {

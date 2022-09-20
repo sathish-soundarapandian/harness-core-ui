@@ -154,7 +154,9 @@ export default function WebhookTriggerWizard(
       orgIdentifier,
       pipelineIdentifier,
       projectIdentifier,
-      branch
+      branch,
+      parentEntityConnectorRef: pipelineConnectorRef,
+      parentEntityRepoName: pipelineRepoName
     },
     body: {
       stageIdentifiers: []
@@ -168,7 +170,9 @@ export default function WebhookTriggerWizard(
       orgIdentifier,
       projectIdentifier,
       getTemplatesResolvedPipeline: true,
-      branch
+      branch,
+      parentEntityConnectorRef: pipelineConnectorRef,
+      parentEntityRepoName: pipelineRepoName
     }
   })
 

@@ -224,6 +224,8 @@ export function StepCommands(
             templateLinkConfig={(step as TemplateStepNode).template}
             onOpenTemplateSelector={onUseTemplate}
             onRemoveTemplate={onRemoveTemplate}
+            isReadonly={isReadonly}
+            storeMetadata={storeMetadata}
           />
           <Container>{getStepWidgetWithFormikRef()}</Container>
         </Layout.Vertical>

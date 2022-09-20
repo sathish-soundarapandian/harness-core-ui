@@ -886,7 +886,9 @@ export function RightDrawer(): React.ReactElement {
         />
       )}
       {/* TODO */}
-      {type === DrawerTypes.PipelineVariables && <PipelineVariables ref={variablesRef} pipeline={pipeline} />}
+      {type === DrawerTypes.PipelineVariables && (
+        <PipelineVariables ref={variablesRef} pipeline={pipeline} storeMetadata={storeMetadata} />
+      )}
       {type === DrawerTypes.Templates && <PipelineTemplates />}
       {type === DrawerTypes.ExecutionStrategy && (
         <ExecutionStrategy selectedStage={defaultTo(selectedStage, {})} ref={executionStrategyRef} />

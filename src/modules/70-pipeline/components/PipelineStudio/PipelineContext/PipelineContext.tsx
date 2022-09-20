@@ -90,7 +90,7 @@ const logger = loggerFor(ModuleName.CD)
 const DBNotFoundErrorMessage = 'There was no DB found'
 
 export const getPipelineByIdentifier = (
-  params: GetPipelineQueryParams,
+  params: GetPipelineQueryParams & GitQueryParams,
   identifier: string,
   signal?: AbortSignal
 ): Promise<PipelineInfoConfigWithGitDetails | TemplateError> => {
@@ -102,7 +102,9 @@ export const getPipelineByIdentifier = (
         orgIdentifier: params.orgIdentifier,
         projectIdentifier: params.projectIdentifier,
         ...(params.branch ? { branch: params.branch } : {}),
-        ...(params.repoIdentifier ? { repoIdentifier: params.repoIdentifier } : {})
+        ...(params.repoIdentifier ? { repoIdentifier: params.repoIdentifier } : {}),
+        parentEntityConnectorRef: params.connectorRef,
+        parentEntityRepoName: params.repoName
       },
       requestOptions: {
         headers: {
@@ -885,7 +887,7 @@ export const PipelineContext = React.createContext<PipelineContextInterface>({
 })
 
 export interface PipelineProviderProps {
-  queryParams: GetPipelineQueryParams
+  queryParams: GetPipelineQueryParams & GitQueryParams
   pipelineIdentifier: string
   stepsFactory: AbstractStepFactory
   stagesMap: StagesMap

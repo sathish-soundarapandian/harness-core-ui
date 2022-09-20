@@ -92,7 +92,9 @@ function InputSetList(): React.ReactElement {
       pipelineIdentifier,
       projectIdentifier,
       repoIdentifier,
-      branch
+      branch,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoName
     },
     body: {
       stageIdentifiers: []

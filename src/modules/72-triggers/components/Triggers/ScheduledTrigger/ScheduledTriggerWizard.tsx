@@ -132,7 +132,9 @@ export default function ScheduledTriggerWizard(
       orgIdentifier,
       pipelineIdentifier,
       projectIdentifier,
-      branch
+      branch,
+      parentEntityConnectorRef: pipelineConnectorRef,
+      parentEntityRepoName: pipelineRepoName
     },
     body: {
       stageIdentifiers: []
@@ -146,7 +148,9 @@ export default function ScheduledTriggerWizard(
       orgIdentifier,
       projectIdentifier,
       getTemplatesResolvedPipeline: true,
-      branch
+      branch,
+      parentEntityConnectorRef: pipelineConnectorRef,
+      parentEntityRepoName: pipelineRepoName
     }
   })
 

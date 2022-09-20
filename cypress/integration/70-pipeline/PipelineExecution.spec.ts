@@ -8,7 +8,7 @@ import {
   serviceStepStageID
 } from '../../support/70-pipeline/constants'
 
-describe('Pipeline Execution', () => {
+describe.skip('Pipeline Execution', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from

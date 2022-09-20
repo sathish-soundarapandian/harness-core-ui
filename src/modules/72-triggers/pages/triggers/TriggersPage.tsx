@@ -72,7 +72,9 @@ const TriggersPage: React.FC = (): React.ReactElement => {
       orgIdentifier,
       projectIdentifier,
       getTemplatesResolvedPipeline: true,
-      branch
+      branch,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoName
     }
   })
   const resolvedPipeline = parse(pipelineResponse?.data?.yamlPipeline || '')

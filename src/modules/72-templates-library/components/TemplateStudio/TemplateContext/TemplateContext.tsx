@@ -332,15 +332,6 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
     let templateMetadata: TemplateMetadataSummaryResponse[] = []
     if ((!data || forceFetch) && templateIdentifier !== DefaultNewTemplateId) {
       try {
-        const templateInputsErrorNodeSummary = await getTemplateErrorNodeSummary({
-          ...queryParams,
-          templateIdentifier,
-          versionLabel,
-          repoIdentifier: repoName,
-          branch,
-          getDefaultFromOtherRepo: true
-        })
-
         templateMetadata = await getTemplateMetadata(
           {
             ...queryParams,
@@ -364,6 +355,15 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
           templateIdentifier,
           signal
         )
+
+        const templateInputsErrorNodeSummary = await getTemplateErrorNodeSummary({
+          ...queryParams,
+          templateIdentifier,
+          versionLabel,
+          repoIdentifier: templateWithGitDetails.gitDetails?.repoName,
+          branch: templateWithGitDetails.gitDetails?.branch,
+          getDefaultFromOtherRepo: true
+        })
 
         id = getId(
           queryParams.accountIdentifier,

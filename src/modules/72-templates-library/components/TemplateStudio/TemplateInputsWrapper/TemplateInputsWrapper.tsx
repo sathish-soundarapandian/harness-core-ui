@@ -14,15 +14,16 @@ import { TemplateContext } from '@templates-library/components/TemplateStudio/Te
 import { useStrings } from 'framework/strings'
 import type { NGTemplateInfoConfigWithGitDetails } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
-import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import css from './TemplateInputsWrapper.module.scss'
 
 export const TemplateInputsWrapper: React.FC = (): JSX.Element => {
   const { getString } = useStrings()
   const {
-    state: { template, gitDetails }
+    state: { template, gitDetails, storeMetadata }
   } = React.useContext(TemplateContext)
-  const { accountId } = useParams<AccountPathProps>()
+  const params = useParams<ProjectPathProps>()
+  const { accountId } = params
 
   const templateWithGitDetails: NGTemplateInfoConfigWithGitDetails = React.useMemo(
     () => ({
@@ -43,9 +44,11 @@ export const TemplateInputsWrapper: React.FC = (): JSX.Element => {
           </Layout.Horizontal>
         </Container>
         <Container className={css.templateInputsContainer}>
-          {templateFactory
-            .getTemplate(templateWithGitDetails.type || '')
-            ?.renderTemplateInputsForm({ template: templateWithGitDetails, accountId: accountId })}
+          {templateFactory.getTemplate(templateWithGitDetails.type || '')?.renderTemplateInputsForm({
+            template: templateWithGitDetails,
+            accountId: accountId,
+            storeMetadata
+          })}
         </Container>
       </Layout.Vertical>
     </Container>
