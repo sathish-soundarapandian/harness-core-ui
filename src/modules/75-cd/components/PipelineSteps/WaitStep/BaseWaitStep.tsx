@@ -16,10 +16,9 @@ import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { WaitStepData } from './WaitStepTypes'
-import { ALLOWED_VALUES_TYPE } from '@common/components/ConfigureOptions/ConfigureOptions'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 export default function BaseWaitStep(props: {
   formik: FormikProps<WaitStepData>
