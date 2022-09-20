@@ -45,7 +45,7 @@ const ModuleCarousel: React.FC<ModuleCarouselProps> = ({ module: selectedModule,
       <Container className={css.main}>
         <Carousel
           className={css.carousel}
-          hideArrows
+          hideSlideChangeButtons
           slideClassName={css.carouselSlide}
           indicatorsClassName={css.indicators}
           autoPlay
