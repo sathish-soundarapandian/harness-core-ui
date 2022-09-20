@@ -21,10 +21,10 @@ import {
   Formik,
   getErrorInfoFromErrorObject,
   Layout,
+  Tag,
   useToaster,
   VisualYamlSelectedView as SelectedView,
-  VisualYamlToggle,
-  Tag
+  VisualYamlToggle
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 
@@ -97,6 +97,7 @@ export default function InfrastructureModal({
   selectedInfrastructure,
   environmentIdentifier,
   stageDeploymentType,
+  stageCustomDeploymentData,
   getTemplate
 }: {
   hideModal: () => void
@@ -105,14 +106,21 @@ export default function InfrastructureModal({
   selectedInfrastructure?: string
   environmentIdentifier: string
   stageDeploymentType?: ServiceDeploymentType
+  stageCustomDeploymentData?: TemplateLinkConfig
   getTemplate?: (data: GetTemplateProps) => Promise<GetTemplateResponse>
 }): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-
   const infrastructureDefinition = useMemo(() => {
-    return /* istanbul ignore next */ (parse(defaultTo(selectedInfrastructure, '{}')) as InfrastructureConfig)
-      ?.infrastructureDefinition
-  }, [selectedInfrastructure])
+    const infrastructureDefinitionObj = defaultTo(
+      (parse(defaultTo(selectedInfrastructure, '{}')) as InfrastructureConfig)?.infrastructureDefinition,
+      {}
+    )
+    return produce(infrastructureDefinitionObj as InfrastructureDefinitionConfig, draft => {
+      if (stageDeploymentType === ServiceDeploymentType.CustomDeployment && !isEmpty(stageCustomDeploymentData)) {
+        set(draft, 'spec.customDeploymentRef', stageCustomDeploymentData)
+      }
+    })
+  }, [selectedInfrastructure, stageDeploymentType, stageCustomDeploymentData])
 
   const { type, spec, allowSimultaneousDeployments, deploymentType } = defaultTo(
     infrastructureDefinition,

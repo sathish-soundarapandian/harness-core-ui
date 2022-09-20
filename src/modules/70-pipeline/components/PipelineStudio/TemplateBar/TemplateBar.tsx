@@ -41,7 +41,7 @@ interface TemplateMenuItem {
 
 export interface TemplateBarProps {
   templateLinkConfig: TemplateLinkConfig
-  onOpenTemplateSelector: (selectedTemplate: TemplateSummaryResponse) => void
+  onOpenTemplateSelector?: (selectedTemplate: TemplateSummaryResponse) => void
   onRemoveTemplate?: () => Promise<void>
   className?: string
   isReadonly?: boolean
@@ -86,7 +86,7 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
 
   const onChangeTemplate = () => {
     if (selectedTemplate) {
-      onOpenTemplateSelector(selectedTemplate)
+      onOpenTemplateSelector?.(selectedTemplate)
     }
   }
 
@@ -164,11 +164,15 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
   )
 
   const menuItems = [
-    {
-      icon: 'command-switch',
-      label: getString('pipeline.changeTemplateLabel'),
-      onClick: onChangeTemplate
-    },
+    ...(onOpenTemplateSelector
+      ? [
+          {
+            icon: 'command-switch',
+            label: getString('pipeline.changeTemplateLabel'),
+            onClick: onChangeTemplate
+          }
+        ]
+      : []),
     ...(onRemoveTemplate
       ? [
           {

@@ -16,7 +16,7 @@ export const defaultInitialValues = {
     fetchInstancesScript: {},
     instanceAttributes: [
       {
-        name: 'hostName',
+        name: 'hostname',
         jsonPath: '',
         description: ''
       }
@@ -39,7 +39,7 @@ export const defaultInitialValuesWithFileStore = {
     },
     instanceAttributes: [
       {
-        name: 'hostName',
+        name: 'hostname',
         jsonPath: '',
         description: ''
       }
