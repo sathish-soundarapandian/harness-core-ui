@@ -36,6 +36,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
   const stepType = props.type || props?.data?.step?.stepType || ''
   const stepData = stepsfactory.getStepData(stepType)
   const stepIconSize = stepsfactory.getStepIconSize(stepType)
+  const isStepNonDeletable = stepsfactory.getIsStepNonDeletable(stepType)
   let stepIconColor = stepsfactory.getStepIconColor(stepType)
   if (stepIconColor && Object.values(Color).includes(stepIconColor)) {
     stepIconColor = Utils.getRealCSSColor(stepIconColor)
@@ -260,22 +261,24 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
             name={CODE_ICON}
           />
         )}
-        <Button
-          className={cx(defaultCss.closeNode, { [defaultCss.readonly]: props.readonly })}
-          minimal
-          icon="cross"
-          variation={ButtonVariation.PRIMARY}
-          iconProps={{ size: 10 }}
-          onMouseDown={e => {
-            e.stopPropagation()
-            props?.fireEvent?.({
-              type: Event.RemoveNode,
-              target: e.target,
-              data: { identifier: props?.identifier, node: props }
-            })
-          }}
-          withoutCurrentColor={true}
-        />
+        {!isStepNonDeletable && (
+          <Button
+            className={cx(defaultCss.closeNode, { [defaultCss.readonly]: props.readonly })}
+            minimal
+            icon="cross"
+            variation={ButtonVariation.PRIMARY}
+            iconProps={{ size: 10 }}
+            onMouseDown={e => {
+              e.stopPropagation()
+              props?.fireEvent?.({
+                type: Event.RemoveNode,
+                target: e.target,
+                data: { identifier: props?.identifier, node: props }
+              })
+            }}
+            withoutCurrentColor={true}
+          />
+        )}
       </div>
       {!isServiceStep && showMarkers && (
         <div className={cx(defaultCss.markerEnd, defaultCss.stepMarker, defaultCss.stepMarkerRight)}>

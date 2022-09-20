@@ -226,8 +226,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render 1`] = `
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                     >
-                      description
-                      common.optionalLabel
+                      description common.optionalLabel
                     </p>
                   </div>
                   <div
@@ -250,7 +249,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render 1`] = `
                             name="instanceAttributes[0].name"
                             placeholder="pipeline.customDeployment.fieldNamePlaceholder"
                             type="text"
-                            value="hostName"
+                            value="hostname"
                           />
                         </div>
                       </div>
@@ -793,8 +792,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                     >
-                      description
-                      common.optionalLabel
+                      description common.optionalLabel
                     </p>
                   </div>
                   <div
@@ -817,7 +815,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                             name="instanceAttributes[0].name"
                             placeholder="pipeline.customDeployment.fieldNamePlaceholder"
                             type="text"
-                            value="hostName"
+                            value="hostname"
                           />
                         </div>
                       </div>
@@ -1451,8 +1449,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                     >
-                      description
-                      common.optionalLabel
+                      description common.optionalLabel
                     </p>
                   </div>
                   <div
@@ -2109,8 +2106,7 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                     >
-                      description
-                      common.optionalLabel
+                      description common.optionalLabel
                     </p>
                   </div>
                   <div

@@ -13,6 +13,7 @@ import cx from 'classnames'
 import type { ServiceDefinition, StageElementConfig, TemplateLinkConfig } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
+import { useDeepCompareEffect } from '@common/hooks'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { getStageIndexFromPipeline } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import type { K8SDirectServiceStep } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sServiceSpecInterface'
@@ -80,9 +81,15 @@ function DeployServiceDefinition(): React.ReactElement {
   )
   const [gitOpsEnabled, setGitOpsEnabled] = useState(getGitOpsCheckValue())
   const [currStageData, setCurrStageData] = useState<DeploymentStageElementConfig | undefined>()
+  const customDeploymentDataFromYaml = getDeploymentTypeTemplateData()
   const [customDeploymentData, setCustomDeploymentData] = useState<TemplateLinkConfig | undefined>(
-    getDeploymentTypeTemplateData()
+    customDeploymentDataFromYaml
   )
+
+  useDeepCompareEffect(() => {
+    setCustomDeploymentData(customDeploymentDataFromYaml)
+  }, [customDeploymentDataFromYaml])
+
   const disabledState = isServiceEntityModalView ? true : isReadonly
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -241,7 +248,7 @@ function DeployServiceDefinition(): React.ReactElement {
         shouldShowGitops={true}
         handleGitOpsCheckChanged={handleGitOpsCheckChanged}
         customDeploymentData={customDeploymentData}
-        addOrUpdateTemplate={addOrUpdateTemplate}
+        addOrUpdateTemplate={isServiceEntityModalView ? undefined : addOrUpdateTemplate}
       />
       <Layout.Horizontal>
         <StepWidget<K8SDirectServiceStep>

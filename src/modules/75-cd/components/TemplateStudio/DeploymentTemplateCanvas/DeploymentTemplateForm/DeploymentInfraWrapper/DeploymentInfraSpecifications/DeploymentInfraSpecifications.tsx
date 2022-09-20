@@ -218,7 +218,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
         <MultiTypeFieldSelector
           name="instanceAttributes"
           label=""
-          defaultValueToReset={[{ name: 'hostName', jsonPath: '', description: '', id: uuid() }]}
+          defaultValueToReset={[{ name: 'hostname', jsonPath: '', description: '', id: uuid() }]}
           disableTypeSelection
         >
           <FieldArray
@@ -234,8 +234,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
                       {getString('pipeline.customDeployment.jsonPathRelativeLabel')}
                     </Text>
                     <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
-                      {getString('description')}
-                      {getString('common.optionalLabel')}
+                      {`${getString('description')} ${getString('common.optionalLabel')}`}
                     </Text>
                   </div>
 
