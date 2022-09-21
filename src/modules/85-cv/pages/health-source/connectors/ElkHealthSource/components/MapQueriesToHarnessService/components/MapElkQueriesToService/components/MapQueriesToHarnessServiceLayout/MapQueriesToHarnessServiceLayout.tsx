@@ -25,17 +25,16 @@ import Card from '@cv/components/Card/Card'
 import { ElkMetricNameAndHostIdentifier } from '../../ElkMetricNameAndHostIdentifier'
 import type { MapQueriesToHarnessServiceLayoutProps } from './types'
 import css from './MapQueriesToHarnessServiceLayout.module.scss'
-import { noop } from 'lodash-es'
 
 export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarnessServiceLayoutProps): JSX.Element {
   const { formikProps, connectorIdentifier, onChange, isConnectorRuntimeOrExpression, isTemplate, expressions } = props
-  console.log('MAPPPPPPPPPPPPPPPPPPPP', props)
   const [isQueryExecuted, setIsQueryExecuted] = useState(false)
+  const [elkSampleData, setElkSampleData] = useState<any>()
+  const [loading, setLoading] = useState<boolean>(false)
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const values = formikProps?.values
   const query = useMemo(() => (values?.query?.length ? values.query : ''), [values])
-  const isQueryRuntimeOrExpression = getMultiTypeFromValue(query) !== MultiTypeInputType.FIXED
 
   const queryParams = useMemo(
     () => ({
@@ -48,27 +47,6 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
     [accountId, projectIdentifier, orgIdentifier, connectorIdentifier]
   )
 
-  // const {
-  //   data: savedQuery,
-  //   loading: loadingSavedQuery,
-  //   refetch: refetchSavedQuery
-  // } = useGetSplunkSavedSearches({
-  //   lazy: isConnectorRuntimeOrExpression || isQueryRuntimeOrExpression,
-  //   queryParams: {
-  //     accountId,
-  //     orgIdentifier,
-  //     projectIdentifier,
-  //     connectorIdentifier,
-  //     requestGuid: queryParams?.tracingId
-  //   }
-  // })
-
-  // useEffect(() => {
-  //   if (!isConnectorRuntimeOrExpression || !isQueryRuntimeOrExpression) {
-  //     refetchSavedQuery()
-  //   }
-  // }, [isConnectorRuntimeOrExpression, isQueryRuntimeOrExpression])
-
   const { mutate: getSampleData } = useGetELKLogSampleData({
     queryParams: {
       accountId,
@@ -76,16 +54,24 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
       projectIdentifier,
       connectorIdentifier,
       tracingId: queryParams?.tracingId,
-      index: ''
+      index: formikProps.values.logIndexes
     }
   })
 
   const fetchElkRecords = useCallback(async () => {
+    setLoading(true)
     await getSampleData({
       query
-    }).then(reso => console.log('rrr', reso))
+    })
+      .then(response => {
+        if (response.data?.length) {
+          setElkSampleData(response.data)
+        }
+      })
+      .finally(() => {
+        setLoading(false)
+      })
     setIsQueryExecuted(true)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query])
   const postFetchingRecords = useCallback(() => {
     // resetting values of service once fetch records button is clicked.
@@ -93,37 +79,6 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
     // eslint-disable-next-line react-hooks/exhaustive-deps
     //onChange(MapSplunkToServiceFieldNames.IS_STALE_RECORD, false)
   }, [])
-
-  // const savedSearchQueryOption = useMemo(
-  //   () =>
-  //     loadingSavedQuery
-  //       ? [{ label: getString('loading'), value: getString('loading') }]
-  //       : savedQuery?.resource?.map(item => ({
-  //           label: item.title as string,
-  //           value: item.searchQuery as string
-  //         })) || [],
-  //   [loadingSavedQuery]
-  // )
-
-  // const onSavedQueryChange = useCallback(
-  //   (item: SelectOption) => {
-  //     onChange(MapSplunkToServiceFieldNames.QUERY, item.value as string)
-  //     onChange(MapSplunkToServiceFieldNames.SERVICE_INSTANCE, '')
-  //     onChange(MapSplunkToServiceFieldNames.RECORD_COUNT, '0')
-  //     setIsQueryExecuted(false)
-  //   },
-  //   [query]
-  // )
-
-  // const getSavedQueryValue = useCallback(
-  //   () => savedSearchQueryOption?.find(item => item.value === query) || { value: '', label: '' },
-  //   [query]
-  // )
-
-  // const staleRecordsWarningMessage = useMemo(
-  //   () => (values?.isStaleRecord ? getString('cv.monitoringSources.splunk.staleRecordsWarning') : ''),
-  //   [values?.isStaleRecord]
-  // )
 
   return (
     <Card>
@@ -136,7 +91,9 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
               details={
                 <ElkMetricNameAndHostIdentifier
                   serviceInstance={values?.serviceInstance}
-                  sampleRecord={null}
+                  identifyTimeStamp={values?.identifyTimestamp}
+                  messageIdentifier={values?.messageIdentifier}
+                  sampleRecord={elkSampleData?.[0] || null}
                   isQueryExecuted={isQueryExecuted}
                   onChange={onChange}
                   loading={false}
@@ -149,27 +106,16 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
             />
           </Accordion>
           <div className={css.queryViewContainer}>
-            {/* {!isConnectorRuntimeOrExpression && (
-              <FormInput.Select
-                className={css.savedQueryDropdown}
-                label={getString('cv.selectQuery')}
-                name={'savedSearchQuery'}
-                placeholder={getString('cv.monitoringSources.splunk.savedSearchQuery')}
-                value={getSavedQueryValue()}
-                items={savedSearchQueryOption}
-                onChange={onSavedQueryChange}
-              />
-            )} */}
             <QueryViewer
               isQueryExecuted={isQueryExecuted}
               className={css.validationContainer}
-              records={[]}
+              records={elkSampleData}
               fetchRecords={fetchElkRecords}
               postFetchingRecords={postFetchingRecords}
-              loading={false}
+              loading={loading}
               error={null}
               query={query}
-              queryNotExecutedMessage={getString('cv.monitoringSources.splunk.submitQueryToSeeRecords')}
+              queryNotExecutedMessage="Submit query to see records from ELK"
               queryTextAreaProps={{
                 onChangeCapture: () => {
                   onChange(MapElkToServiceFieldNames.IS_STALE_RECORD, true)

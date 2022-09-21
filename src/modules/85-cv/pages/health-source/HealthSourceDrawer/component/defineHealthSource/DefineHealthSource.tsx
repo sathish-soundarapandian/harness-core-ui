@@ -67,7 +67,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   const isDynatraceAPMEnabled = useFeatureFlag(FeatureFlag.DYNATRACE_APM_ENABLED)
   const isCustomMetricEnabled = useFeatureFlag(FeatureFlag.CHI_CUSTOM_HEALTH)
   const isCustomLogEnabled = useFeatureFlag(FeatureFlag.CHI_CUSTOM_HEALTH_LOGS)
-  const isElkEnabled = useFeatureFlag(FeatureFlag.ELK_HEALTH_SOURCE)
+  const isElkEnabled = true || useFeatureFlag(FeatureFlag.ELK_HEALTH_SOURCE)
 
   const disabledByFF: string[] = useMemo(() => {
     const disabledConnectorsList = []
@@ -93,6 +93,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   }, [sourceData?.healthSourceIdentifier])
 
   const isCardSelected = useCallback((name, formik) => {
+    console.log('ddddd', name, formik)
     if (formik?.values?.product?.value) {
       const features = getFeatureOption(name, getString, isSplunkMetricEnabled)
       return features.some(el => el?.value === formik.values.product.value)
@@ -230,6 +231,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
                                     cornerSelected={isCardSelected(connectorTypeName, formik)}
                                     className={css.squareCard}
                                     onClick={() => {
+                                      console.log('rrrr', connectorTypeName)
                                       formik.setFieldValue('sourceType', connectorTypeName)
                                       let featureOptionConnectorType = getFeatureOption(
                                         connectorTypeName,

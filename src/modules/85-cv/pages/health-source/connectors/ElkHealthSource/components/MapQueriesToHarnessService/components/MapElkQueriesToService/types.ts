@@ -13,6 +13,7 @@ export interface MapElkQueriesToServiceProps {
   isQueryExecuted: boolean
   loading: boolean
   serviceInstance: string
+  identifyTimeStamp: string
   isTemplate?: boolean
   expressions?: string[]
   isConnectorRuntimeOrExpression?: boolean

@@ -5,19 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Container, FormInput, MultiTypeInputType, Utils } from '@wings-software/uicore'
+import { useParams } from 'react-router'
 import { useStrings } from 'framework/strings'
 import { InputWithDynamicModalForJson } from '@cv/components/InputWithDynamicModalForJson/InputWithDynamicModalForJson'
-
+import { useGetELKIndices } from 'services/cv'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { InputWithDynamicModalForJsonMultiType } from '@cv/components/InputWithDynamicModalForJson/InputWithDynamicModalForJsonMultiType'
+import { MapGCPLogsToServiceFieldNames } from '@cv/pages/health-source/connectors/GCOLogsMonitoringSource/components/MapQueriesToHarnessService/constants'
 import { MapElkToServiceFieldNames } from '../../constants'
 import type { MapElkQueriesToServiceProps } from './types'
 import css from './ElkMetricNameAndHostIdentifier.module.scss'
-import { useGetELKIndices } from 'services/cv'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useParams } from 'react-router'
-import { InputWithDynamicModalForJsonMultiType } from '@cv/components/InputWithDynamicModalForJson/InputWithDynamicModalForJsonMultiType'
-import { MapGCPLogsToServiceFieldNames } from '@cv/pages/health-source/connectors/GCOLogsMonitoringSource/components/MapQueriesToHarnessService/constants'
 
 export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProps): JSX.Element {
   const {
@@ -33,7 +32,6 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
     connectorIdentifier
   } = props
 
-  console.log('pppppppp', props)
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const isAddingIdentifiersDisabled = !isQueryExecuted || loading
@@ -42,6 +40,15 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
     queryParams: { projectIdentifier, orgIdentifier, accountId, connectorIdentifier, tracingId: '' }
   })
   // .map(val => {label: val, value: val})
+
+  const getIndexItems = useMemo(
+    () =>
+      elkIndices?.data?.map(item => ({
+        label: item,
+        value: item
+      })) ?? [],
+    [elkIndices?.data]
+  )
 
   return (
     <Container className={css.main}>
@@ -54,7 +61,7 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
         label="Log Indexes"
         name={MapElkToServiceFieldNames.LOG_INDEXES}
         placeholder="Select Log Index"
-        items={elkIndices || []}
+        items={getIndexItems}
       />
 
       <InputWithDynamicModalForJsonMultiType
@@ -93,41 +100,32 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
             ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
             : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
         }
-        inputLabel={getString('cv.monitoringSources.gcoLogs.messageIdentifier')}
-        noRecordModalHeader={getString('cv.monitoringSources.gcoLogs.newGCOLogsMessageIdentifier')}
-        noRecordInputLabel={getString('cv.monitoringSources.gcoLogs.gcoLogsMessageIdentifer')}
-        recordsModalHeader={getString('cv.monitoringSources.gcoLogs.selectPathForMessageIdentifier')}
+        inputLabel="Identify TimeStamp"
+        //noRecordModalHeader={getString('cv.monitoringSources.gcoLogs.newGCOLogsMessageIdentifier')}
+        //noRecordInputLabel={getString('cv.monitoringSources.gcoLogs.gcoLogsMessageIdentifer')}
+        recordsModalHeader="Select Path for TimeStamp"
       />
 
-      {/* {isTemplate ? (
-        <FormInput.MultiTextInput
-          name={MapElkToServiceFieldNames.SERVICE_INSTANCE}
-          label={getString('cv.monitoringSources.gcoLogs.serviceInstance')}
-          multiTextInputProps={{
-            expressions,
-            allowableTypes: isConnectorRuntimeOrExpression
-              ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
-              : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
-            onChange(value) {
-              onChange(MapElkToServiceFieldNames.SERVICE_INSTANCE, value as string)
-            }
-          }}
-        />
-      ) : (
-        <InputWithDynamicModalForJson
-          onChange={onChange}
-          fieldValue={serviceInstance}
-          isQueryExecuted={isQueryExecuted}
-          isDisabled={isAddingIdentifiersDisabled}
-          sampleRecord={sampleRecord}
-          inputName={MapElkToServiceFieldNames.SERVICE_INSTANCE}
-          inputLabel={getString('cv.monitoringSources.gcoLogs.serviceInstance')}
-          noRecordModalHeader={getString('cv.monitoringSources.gcoLogs.newGCOLogsServiceInstance')}
-          noRecordInputLabel={getString('cv.monitoringSources.gcoLogs.gcoLogsServiceInstance')}
-          recordsModalHeader={getString('cv.monitoringSources.gcoLogs.selectPathForServiceInstance')}
-        />
-      )} */}
-      <FormInput.Text label="Message" name={MapElkToServiceFieldNames.MESSAGE} />
+      <InputWithDynamicModalForJsonMultiType
+        onChange={onChange}
+        fieldValue={messageIdentifier}
+        isDisabled={isAddingIdentifiersDisabled}
+        isQueryExecuted={isQueryExecuted}
+        sampleRecord={sampleRecord}
+        inputName={MapGCPLogsToServiceFieldNames.MESSAGE_IDENTIFIER}
+        dataTooltipId={'GCOLogsMessageIdentifier'}
+        isMultiType={Boolean(isTemplate)}
+        expressions={expressions}
+        allowableTypes={
+          isConnectorRuntimeOrExpression
+            ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+            : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+        }
+        inputLabel="Identify Message"
+        // noRecordModalHeader={getString('cv.monitoringSources.gcoLogs.newGCOLogsMessageIdentifier')}
+        //noRecordInputLabel={getString('cv.monitoringSources.gcoLogs.gcoLogsMessageIdentifer')}
+        recordsModalHeader="Select Path for Message"
+      />
     </Container>
   )
 }
