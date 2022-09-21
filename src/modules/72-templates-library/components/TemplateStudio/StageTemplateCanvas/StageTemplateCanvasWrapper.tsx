@@ -46,11 +46,11 @@ const StageTemplateCanvasWrapper = () => {
     [template.spec]
   )
 
-  const [pipeline, setPipeline] = React.useState<PipelineInfoConfig>(createPipelineFromTemplate())
+  const [Template, setTemplate] = React.useState<PipelineInfoConfig>(createPipelineFromTemplate())
 
   React.useEffect(() => {
     if (!isLoading && isUpdated) {
-      setPipeline(createPipelineFromTemplate())
+      setTemplate(createPipelineFromTemplate())
     }
   }, [createPipelineFromTemplate, isLoading, isUpdated])
 
@@ -66,7 +66,7 @@ const StageTemplateCanvasWrapper = () => {
   return (
     <TemplatePipelineProvider
       queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier }}
-      initialValue={pipeline}
+      initialValue={Template}
       gitDetails={gitDetails}
       storeMetadata={storeMetadata}
       onUpdatePipeline={onUpdatePipeline}
