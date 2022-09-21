@@ -4984,6 +4984,7 @@ export interface WaitStepRequestDto {
 
 export interface WaitStepResponseDto {
   status?: boolean
+  action?: 'MARK_AS_SUCCESS' | 'MARK_AS_FAIL'
 }
 
 export interface WebhookAutoRegistrationStatus {
@@ -9474,6 +9475,183 @@ export const submitExecutionInputPromise = (
     string,
     SubmitExecutionInputPathParams
   >('POST', getConfig('pipeline/api'), `/pipeline/execution-input/${nodeExecutionId}`, props, signal)
+
+export interface GetWaitStepExecutionDetailsQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export interface GetWaitStepExecutionDetailsPathParams {
+  nodeExecutionId: string
+}
+
+export type GetWaitStepExecutionDetailsProps = Omit<
+  GetProps<
+    ResponseWaitStepResponseDto,
+    Failure | Error,
+    GetWaitStepExecutionDetailsQueryParams,
+    GetWaitStepExecutionDetailsPathParams
+  >,
+  'path'
+> &
+  GetWaitStepExecutionDetailsPathParams
+
+/**
+ * Get Wait step execution details
+ */
+export const GetWaitStepExecutionDetails = ({ nodeExecutionId, ...props }: GetWaitStepExecutionDetailsProps) => (
+  <Get<
+    ResponseWaitStepResponseDto,
+    Failure | Error,
+    GetWaitStepExecutionDetailsQueryParams,
+    GetWaitStepExecutionDetailsPathParams
+  >
+    path={`/pipeline/waitStep/getWaitStepExecutionDetails/${nodeExecutionId}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseGetWaitStepExecutionDetailsProps = Omit<
+  UseGetProps<
+    ResponseWaitStepResponseDto,
+    Failure | Error,
+    GetWaitStepExecutionDetailsQueryParams,
+    GetWaitStepExecutionDetailsPathParams
+  >,
+  'path'
+> &
+  GetWaitStepExecutionDetailsPathParams
+
+/**
+ * Get Wait step execution details
+ */
+export const useGetWaitStepExecutionDetails = ({ nodeExecutionId, ...props }: UseGetWaitStepExecutionDetailsProps) =>
+  useGet<
+    ResponseWaitStepResponseDto,
+    Failure | Error,
+    GetWaitStepExecutionDetailsQueryParams,
+    GetWaitStepExecutionDetailsPathParams
+  >(
+    (paramsInPath: GetWaitStepExecutionDetailsPathParams) =>
+      `/pipeline/waitStep/getWaitStepExecutionDetails/${paramsInPath.nodeExecutionId}`,
+    { base: getConfig('pipeline/api'), pathParams: { nodeExecutionId }, ...props }
+  )
+
+/**
+ * Get Wait step execution details
+ */
+export const getWaitStepExecutionDetailsPromise = (
+  {
+    nodeExecutionId,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseWaitStepResponseDto,
+    Failure | Error,
+    GetWaitStepExecutionDetailsQueryParams,
+    GetWaitStepExecutionDetailsPathParams
+  > & { nodeExecutionId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseWaitStepResponseDto,
+    Failure | Error,
+    GetWaitStepExecutionDetailsQueryParams,
+    GetWaitStepExecutionDetailsPathParams
+  >(getConfig('pipeline/api'), `/pipeline/waitStep/getWaitStepExecutionDetails/${nodeExecutionId}`, props, signal)
+
+export interface MarkWaitStepQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export interface MarkWaitStepPathParams {
+  nodeExecutionId: string
+}
+
+export type MarkWaitStepProps = Omit<
+  MutateProps<
+    ResponseWaitStepResponseDto,
+    Failure | Error,
+    MarkWaitStepQueryParams,
+    WaitStepResponseDto,
+    MarkWaitStepPathParams
+  >,
+  'path' | 'verb'
+> &
+  MarkWaitStepPathParams
+
+/**
+ * Marks the wait step as fail or success
+ */
+export const MarkWaitStep = ({ nodeExecutionId, ...props }: MarkWaitStepProps) => (
+  <Mutate<
+    ResponseWaitStepResponseDto,
+    Failure | Error,
+    MarkWaitStepQueryParams,
+    WaitStepResponseDto,
+    MarkWaitStepPathParams
+  >
+    verb="POST"
+    path={`/pipeline/waitStep/${nodeExecutionId}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseMarkWaitStepProps = Omit<
+  UseMutateProps<
+    ResponseWaitStepResponseDto,
+    Failure | Error,
+    MarkWaitStepQueryParams,
+    WaitStepResponseDto,
+    MarkWaitStepPathParams
+  >,
+  'path' | 'verb'
+> &
+  MarkWaitStepPathParams
+
+/**
+ * Marks the wait step as fail or success
+ */
+export const useMarkWaitStep = ({ nodeExecutionId, ...props }: UseMarkWaitStepProps) =>
+  useMutate<
+    ResponseWaitStepResponseDto,
+    Failure | Error,
+    MarkWaitStepQueryParams,
+    WaitStepResponseDto,
+    MarkWaitStepPathParams
+  >('POST', (paramsInPath: MarkWaitStepPathParams) => `/pipeline/waitStep/${paramsInPath.nodeExecutionId}`, {
+    base: getConfig('pipeline/api'),
+    pathParams: { nodeExecutionId },
+    ...props
+  })
+
+/**
+ * Marks the wait step as fail or success
+ */
+export const markWaitStepPromise = (
+  {
+    nodeExecutionId,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseWaitStepResponseDto,
+    Failure | Error,
+    MarkWaitStepQueryParams,
+    WaitStepResponseDto,
+    MarkWaitStepPathParams
+  > & { nodeExecutionId: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseWaitStepResponseDto,
+    Failure | Error,
+    MarkWaitStepQueryParams,
+    WaitStepResponseDto,
+    MarkWaitStepPathParams
+  >('POST', getConfig('pipeline/api'), `/pipeline/waitStep/${nodeExecutionId}`, props, signal)
 
 export interface CreatePipelineQueryParams {
   accountIdentifier: string

@@ -17,7 +17,7 @@ enum StepDetailTab {
   STEP_DETAILS = 'STEP_DETAILS'
 }
 
-export function DefaultView(props: StepDetailProps): React.ReactElement {
+export function WaitStepView(props: StepDetailProps): React.ReactElement {
   const { step, stageType = StageType.DEPLOY, isStageExecutionInputConfigured } = props
   const { getString } = useStrings()
   const [activeTab, setActiveTab] = React.useState(StepDetailTab.STEP_DETAILS)

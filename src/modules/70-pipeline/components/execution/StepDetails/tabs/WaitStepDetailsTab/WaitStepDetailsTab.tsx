@@ -8,12 +8,8 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { String, useStrings } from 'framework/strings'
-import {
-  useHandleManualInterventionInterrupt,
-  ExecutionNode,
-  HandleManualInterventionInterruptQueryParams
-} from 'services/pipeline-ng'
-import { Thumbnail } from '@wings-software/uicore'
+import { useMarkWaitStep, ExecutionNode, WaitStepResponseDto } from 'services/pipeline-ng'
+import { Thumbnail, Container, Color } from '@wings-software/uicore'
 import { Strategy, strategyIconMap, stringsMap } from '@pipeline/utils/FailureStrategyUtils'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import css from '../ManualInterventionTab/ManualInterventionTab.module.scss'
@@ -26,18 +22,28 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
   const { step } = props
   const { getString } = useStrings()
   const STRATEGIES: Strategy[][] = [[Strategy.MarkAsSuccess], [Strategy.Abort]]
-  const { orgIdentifier, projectIdentifier, executionIdentifier, accountId } =
-    useParams<PipelineType<ExecutionPathProps>>()
-  const { mutate: handleInterrupt } = useHandleManualInterventionInterrupt({
-    planExecutionId: executionIdentifier,
+  const { orgIdentifier, projectIdentifier, accountId } = useParams<PipelineType<ExecutionPathProps>>()
+  const { mutate: handleInterrupt } = useMarkWaitStep({
     nodeExecutionId: step.uuid || /* istanbul ignore next */ ''
   })
 
+  function DurationMessage() {
+    return (
+      <Container
+        color={Color.BLACK}
+        background={Color.YELLOW_100}
+        padding={{ top: 'xxlarge', bottom: 'xxlarge', left: 'large', right: 'large' }}
+      >
+        <div>Duration:</div>
+      </Container>
+    )
+  }
+
   function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
-    const interruptType = e.target.value as HandleManualInterventionInterruptQueryParams['interruptType']
-    handleInterrupt(undefined, {
+    const actionPassed = e.target.value as WaitStepResponseDto['action']
+    const waitStepResponseDto = { action: actionPassed }
+    handleInterrupt(waitStepResponseDto, {
       queryParams: {
-        interruptType,
         accountIdentifier: accountId,
         orgIdentifier,
         projectIdentifier
@@ -47,7 +53,7 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
   }
   return (
     <React.Fragment>
-      <div className={css.detailsTab}>`Duration : ${step}`</div>
+      <DurationMessage />
       <div>
         <String tagName="div" className={css.title} stringID="common.PermissibleActions" />
         {STRATEGIES.map((layer, i) => {
