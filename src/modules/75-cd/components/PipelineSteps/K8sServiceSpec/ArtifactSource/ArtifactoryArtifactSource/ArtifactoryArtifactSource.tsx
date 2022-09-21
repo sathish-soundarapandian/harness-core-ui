@@ -293,12 +293,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
           path as string,
           !!isPropagatedStage,
           stageIdentifier,
-          defaultTo(
-            isSidecar
-              ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
-              : artifactPath,
-            ''
-          ),
+          defaultTo(artifactPath, ''),
           isGenericArtifactory
         )
       }
@@ -316,24 +311,14 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
       repositoryFormat,
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
       serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
-      fqnPath: getFqnPath(
-        path as string,
-        !!isPropagatedStage,
-        stageIdentifier,
-        defaultTo(
-          isSidecar
-            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
-            : artifactPath,
-          ''
-        )
-      )
+      fqnPath: getFqnPath(path as string, !!isPropagatedStage, stageIdentifier, defaultTo(artifactPath, ''))
     }
   }, [
-    initialValues,
-    artifactPath,
     isGenericArtifactory,
     artifact?.spec?.artifactPath,
     artifact?.spec?.artifactDirectory,
+    initialValues,
+    artifactPath,
     connectorRefValue,
     repositoryValue,
     pipelineIdentifier,
