@@ -76,7 +76,7 @@ interface GetCostCalculatorBodyByModuleProps {
   usageAndLimitInfo: UsageAndLimitReturn
   productPrices: ProductPricesProp
   subscriptionDetails: SubscriptionProps
-  setSubscriptionDetails: (props: SubscriptionProps) => void
+  setSubscriptionDetails: (props: SubscriptionProps | ((old: SubscriptionProps) => SubscriptionProps)) => void
   recommendation: { [key: string]: number } | null
 }
 
@@ -124,16 +124,18 @@ export function getCostCalculatorBodyByModule({
             usage={usageAndLimitInfo.usageData.usage?.ff?.activeFeatureFlagUsers?.count || 0}
             toggledNumberOfDevelopers={subscriptionDetails.quantities?.featureFlag?.numberOfDevelopers}
             setNumberOfDevelopers={(value: number) => {
-              setSubscriptionDetails({
-                ...subscriptionDetails,
-                quantities: {
-                  ...subscriptionDetails.quantities,
-                  featureFlag: {
-                    numberOfMau: subscriptionDetails.quantities?.featureFlag?.numberOfMau || sampleData.minValue,
-                    numberOfDevelopers: value || 1
+              setSubscriptionDetails(
+                (oldValue: SubscriptionProps): SubscriptionProps => ({
+                  ...oldValue,
+                  quantities: {
+                    ...oldValue.quantities,
+                    featureFlag: {
+                      numberOfMau: oldValue.quantities?.featureFlag?.numberOfMau as number,
+                      numberOfDevelopers: value || 1
+                    }
                   }
-                }
-              })
+                })
+              )
             }}
           />
           <FFMAUCard
@@ -154,16 +156,18 @@ export function getCostCalculatorBodyByModule({
               sampleData.minValue
             )}
             setNumberOfMAUs={(value: number) => {
-              setSubscriptionDetails({
-                ...subscriptionDetails,
-                quantities: {
-                  ...subscriptionDetails.quantities,
-                  featureFlag: {
-                    numberOfMau: value || sampleData.minValue,
-                    numberOfDevelopers: subscriptionDetails.quantities?.featureFlag?.numberOfDevelopers || 1
+              setSubscriptionDetails(
+                (oldValue: SubscriptionProps): SubscriptionProps => ({
+                  ...oldValue,
+                  quantities: {
+                    ...oldValue.quantities,
+                    featureFlag: {
+                      numberOfMau: value || sampleData.minValue,
+                      numberOfDevelopers: oldValue.quantities?.featureFlag?.numberOfDevelopers || 1
+                    }
                   }
-                }
-              })
+                })
+              )
             }}
           />
         </Layout.Vertical>

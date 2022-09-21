@@ -437,8 +437,7 @@ exports[`useSubscriptionModal render 1`] = `
                         <p
                           class="StyledProps--font StyledProps--main StyledProps--font-weight-bold"
                         >
-                          100000
-                          k
+                           100K
                         </p>
                         <p
                           class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall StyledProps--font-weight-bold"
