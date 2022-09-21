@@ -1,12 +1,11 @@
 import type { SelectOption } from '@harness/uicore'
-import type { AnalysisDTO, Slidto, useGetMetricPacks } from 'services/cv'
+import type { CloudWatchMetricDefinition, DynatraceMetricDefinition, useGetMetricPacks } from 'services/cv'
 
-export interface CommonCustomMetricsType {
-  metricName: string
-  identifier: string
-  groupName?: SelectOption
-  sli?: Slidto
-  analysis?: AnalysisDTO
+// For all Health sources, their custom metric types will be added here like "CloudWatchMetricDefinition | AppDMetricDefinition |..."
+type CombinedMetricDefinitionsOfHealthSources = CloudWatchMetricDefinition | DynatraceMetricDefinition
+
+export type CommonCustomMetricsType = CombinedMetricDefinitionsOfHealthSources & {
+  groupName?: SelectOption | string
 }
 
 export interface CommonCustomMetricPropertyType {
@@ -15,7 +14,7 @@ export interface CommonCustomMetricPropertyType {
 }
 
 export interface GroupedMetric {
-  groupName?: SelectOption
+  groupName?: SelectOption | string
   metricName?: string
   index?: number
   continuousVerification?: boolean

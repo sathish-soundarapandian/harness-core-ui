@@ -1,5 +1,6 @@
 import type { SelectOption } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
+import type { CloudWatchMetricsHealthSourceSpec, HealthSource } from 'services/cv'
 import {
   isDuplicateMetricIdentifier,
   isDuplicateMetricName,
@@ -49,7 +50,7 @@ export const getFormikInitialValue = (data: CloudWatchSetupSource): CloudWatchFo
 
   return {
     region: spec?.region,
-    customMetrics: updateGroupNameInSpecForFormik(spec?.metricDefinitions),
+    customMetrics: updateGroupNameInSpecForFormik(spec?.metricDefinitions) as CloudWatchFormType['customMetrics'],
     selectedCustomMetricIndex: 0
   }
 }
@@ -63,14 +64,13 @@ export function getSelectedGroupItem(
     Array.isArray(customMetrics) &&
     customMetrics[selectedCustomMetricIndex]
   ) {
-    return customMetrics[selectedCustomMetricIndex].groupName
+    return customMetrics[selectedCustomMetricIndex].groupName as SelectOption
   }
 
   return undefined
 }
 
-// 🚨 Add CloudWatch spec type from swagger
-const getCloudWatchSpec = (params: CreatePayloadUtilParams) => {
+const getCloudWatchSpec = (params: CreatePayloadUtilParams): CloudWatchMetricsHealthSourceSpec => {
   const { formikValues, setupSourceData } = params
   const { customMetrics, region } = formikValues
   return {
@@ -81,8 +81,7 @@ const getCloudWatchSpec = (params: CreatePayloadUtilParams) => {
   }
 }
 
-// 🚨 Add CloudWatch type from swagger
-export const createPayloadForCloudWatch = (params: CreatePayloadUtilParams) => {
+export const createPayloadForCloudWatch = (params: CreatePayloadUtilParams): HealthSource => {
   const { setupSourceData } = params
 
   const { healthSourceIdentifier, healthSourceName } = setupSourceData

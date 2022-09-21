@@ -24,7 +24,7 @@ export const defaultGroupedMetric = (getString: UseStringsReturn['getString']): 
 }
 
 const getCustomMetricIsValid = (
-  customMetrics: CommonCustomMetricsType[]
+  customMetrics?: CommonCustomMetricsType[]
 ): customMetrics is Array<CommonCustomMetricsType> => {
   return Array.isArray(customMetrics)
 }
@@ -34,7 +34,7 @@ export const getGroupedCustomMetrics = (
   getString: UseStringsReturn['getString']
 ): GroupedCreatedMetrics =>
   groupBy(getGroupAndMetric(customMetrics, getString), function (item) {
-    return item?.groupName?.label
+    return (item?.groupName as SelectOption)?.label
   })
 
 export const getGroupAndMetric = (
@@ -50,7 +50,7 @@ export const getGroupAndMetric = (
   })
 }
 
-export function getIsCustomMetricPresent(customMetrics: CommonCustomMetricsType[]): boolean {
+export function getIsCustomMetricPresent(customMetrics?: CommonCustomMetricsType[]): boolean {
   if (getCustomMetricIsValid(customMetrics)) {
     return Boolean(customMetrics.length)
   }
@@ -226,8 +226,9 @@ export function isDuplicateMetricIdentifier(
 
 // ⭐️ Payload utils ⭐️
 
-// 🚨 Add CloudWatch spec type from swagger
-export const updateGroupNameInSpecForPayload = (customMetrics: CommonCustomMetricsType[]) => {
+export const updateGroupNameInSpecForPayload = (
+  customMetrics: CommonCustomMetricsType[]
+): CommonCustomMetricsType[] => {
   if (!getIsCustomMetricPresent(customMetrics)) {
     return []
   }
@@ -235,7 +236,7 @@ export const updateGroupNameInSpecForPayload = (customMetrics: CommonCustomMetri
   return customMetrics.map(customMetric => {
     return {
       ...customMetric,
-      groupName: customMetric.groupName?.value
+      groupName: (customMetric.groupName as SelectOption)?.value as string
     }
   })
 }
@@ -251,8 +252,10 @@ const getGroupOption = (groupName?: string): SelectOption | undefined => {
   return undefined
 }
 
-export const updateGroupNameInSpecForFormik = (customMetrics: CommonCustomMetricsType[]) => {
-  if (!getIsCustomMetricPresent(customMetrics)) {
+export const updateGroupNameInSpecForFormik = (
+  customMetrics?: CommonCustomMetricsType[]
+): CommonCustomMetricsType[] => {
+  if (!customMetrics || !getIsCustomMetricPresent(customMetrics)) {
     return []
   }
 
@@ -260,7 +263,7 @@ export const updateGroupNameInSpecForFormik = (customMetrics: CommonCustomMetric
     return {
       ...customMetric,
       // From payload it comes as string, hence converting to Select option
-      groupName: getGroupOption(customMetric.groupName as unknown as string)
+      groupName: getGroupOption(customMetric.groupName)
     }
   })
 }
