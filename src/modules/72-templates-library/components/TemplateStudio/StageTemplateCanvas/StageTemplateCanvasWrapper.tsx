@@ -31,28 +31,32 @@ const StageTemplateCanvasWrapper = () => {
   } = React.useContext(TemplateContext)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
-  const createPipelineFromTemplate = () =>
-    produce({ ...DefaultPipeline }, draft => {
-      set(
-        draft,
-        'stages[0].stage',
-        merge({}, template.spec as StageElementConfig, {
-          name: DefaultNewStageName,
-          identifier: DefaultNewStageId
-        })
-      )
-    })
+  const createPipelineFromTemplate = React.useCallback(
+    () =>
+      produce({ ...DefaultPipeline }, draft => {
+        set(
+          draft,
+          'stages[0].stage',
+          merge({}, template.spec as StageElementConfig, {
+            name: DefaultNewStageName,
+            identifier: DefaultNewStageId
+          })
+        )
+      }),
+    [template.spec]
+  )
 
   const [pipeline, setPipeline] = React.useState<PipelineInfoConfig>(createPipelineFromTemplate())
 
   React.useEffect(() => {
-    if (!isLoading && !isUpdated) {
+    if (!isLoading && isUpdated) {
       setPipeline(createPipelineFromTemplate())
     }
-  }, [isLoading, isUpdated])
+  }, [createPipelineFromTemplate, isLoading, isUpdated])
 
   const onUpdatePipeline = async (pipelineConfig: PipelineInfoConfig) => {
     const stage = get(pipelineConfig, 'stages[0].stage')
+
     const processNode = omit(stage, 'name', 'identifier', 'description', 'tags')
     sanitize(processNode, { removeEmptyArray: false, removeEmptyObject: false, removeEmptyString: false })
     set(template, 'spec', processNode)

@@ -39,19 +39,22 @@ const PipelineTemplateCanvasWrapper = (): JSX.Element => {
   } = React.useContext(TemplateContext)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
-  const createPipelineFromTemplate = (): PipelineInfoConfig =>
-    merge({}, template.spec, {
-      name: DefaultNewPipelineName,
-      identifier: DefaultNewPipelineId
-    })
+  const createPipelineFromTemplate = React.useCallback(
+    (): PipelineInfoConfig =>
+      merge({}, template.spec, {
+        name: DefaultNewPipelineName,
+        identifier: DefaultNewPipelineId
+      }),
+    [template.spec]
+  )
 
   const [pipeline, setPipeline] = React.useState<PipelineInfoConfig>(createPipelineFromTemplate())
 
   React.useEffect(() => {
-    if (!isLoading && !isUpdated) {
+    if (!isLoading && isUpdated) {
       setPipeline(createPipelineFromTemplate())
     }
-  }, [isLoading, isUpdated])
+  }, [createPipelineFromTemplate, isLoading, isUpdated])
 
   const onUpdatePipeline = async (pipelineConfig: PipelineInfoConfig) => {
     const processNode = omit(pipelineConfig, 'name', 'identifier', 'description', 'tags')
