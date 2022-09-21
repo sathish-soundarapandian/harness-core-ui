@@ -68,8 +68,23 @@ function CreatePRWidget(props: CreatePrProps, formikRef: StepFormikFowardRef<Cre
         onSubmit={
           /* istanbul ignore next */
           (values: CreatePRStepData) => {
+            let payload = values
             /* istanbul ignore next */
-            onUpdate?.(values)
+            if (values?.spec?.overrideConfig) {
+              payload = {
+                ...values,
+                spec: {
+                  ...values.spec,
+                  source: {
+                    type: 'Inline',
+                    spec: {
+                      updateConfigScript: values?.spec?.source?.spec?.updateConfigScript
+                    }
+                  }
+                }
+              }
+            }
+            onUpdate?.(payload)
           }
         }
         validate={

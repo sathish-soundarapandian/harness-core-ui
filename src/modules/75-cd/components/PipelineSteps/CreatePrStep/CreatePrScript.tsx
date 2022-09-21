@@ -115,7 +115,7 @@ export default function CreatePRScript(props: {
               </div>
               <div className={cx(stepCss.formGroup)}>
                 <MultiTypeFieldSelector
-                  name="spec.source.spec.script"
+                  name="spec.source.spec.updateConfigScript"
                   label={getString('common.script')}
                   defaultValueToReset=""
                   disabled={readonly}
@@ -128,7 +128,7 @@ export default function CreatePRScript(props: {
                       // istanbul ignore next
                       return (
                         <ShellScriptMonacoField
-                          name="spec.source.spec.script"
+                          name="spec.source.spec.updateConfigScript"
                           scriptType={scriptType}
                           disabled={readonly}
                           expressions={expressions}
@@ -138,18 +138,18 @@ export default function CreatePRScript(props: {
                   }
                 >
                   <ShellScriptMonacoField
-                    name="spec.source.spec.script"
+                    name="spec.source.spec.updateConfigScript"
                     scriptType={scriptType}
                     disabled={readonly}
                     expressions={expressions}
                   />
                 </MultiTypeFieldSelector>
-                {getMultiTypeFromValue(get(formValues, 'spec.source.spec.script', '')) ===
+                {getMultiTypeFromValue(get(formValues, 'spec.source.spec.updateConfigScript', '')) ===
                   MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
-                    value={get(formValues, 'spec.source.spec.script', '')}
+                    value={get(formValues, 'spec.source.spec.updateConfigScript', '')}
                     type="String"
-                    variableName="spec.source.spec.script"
+                    variableName="spec.source.spec.updateConfigScript"
                     className={css.minConfigBtn}
                     showRequiredField={false}
                     showDefaultField={false}
@@ -159,7 +159,7 @@ export default function CreatePRScript(props: {
                       // istanbul ignore next
                       value => {
                         // istanbul ignore next
-                        setFieldValue('spec.source.spec.script', value)
+                        setFieldValue('spec.source.spec.updateConfigScript', value)
                       }
                     }
                     isReadonly={readonly}
