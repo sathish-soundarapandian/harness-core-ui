@@ -16,7 +16,9 @@ export const MapElkToServiceFieldNames = {
   TIMESTAMP_FORMAT: 'timestampFormat',
   SERVICE_INSTANCE: 'serviceInstance',
   LOG_INDEXES: 'logIndexes',
-  IDENTIFY_TIMESTAMP: 'identify_timestamp'
+  IDENTIFY_TIMESTAMP: 'identify_timestamp',
+  MESSAGE_IDENTIFIER: 'messageIdentifier',
+  RECORD_COUNT: 'recordCount'
 }
 
 export const initialFormData = {

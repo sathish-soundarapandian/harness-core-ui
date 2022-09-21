@@ -4,7 +4,7 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
+//xxx
 import React, { useMemo } from 'react'
 import { Container, FormInput, MultiTypeInputType, Utils } from '@wings-software/uicore'
 import { useParams } from 'react-router'
@@ -13,8 +13,8 @@ import { InputWithDynamicModalForJson } from '@cv/components/InputWithDynamicMod
 import { useGetELKIndices } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { InputWithDynamicModalForJsonMultiType } from '@cv/components/InputWithDynamicModalForJson/InputWithDynamicModalForJsonMultiType'
-import { MapGCPLogsToServiceFieldNames } from '@cv/pages/health-source/connectors/GCOLogsMonitoringSource/components/MapQueriesToHarnessService/constants'
-import { MapElkToServiceFieldNames } from '../../constants'
+import { MapElkToServiceFieldNames } from '@cv/pages/health-source/connectors/ElkHealthSource/components/MapQueriesToHarnessService/constants'
+
 import type { MapElkQueriesToServiceProps } from './types'
 import css from './ElkMetricNameAndHostIdentifier.module.scss'
 
@@ -70,7 +70,7 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
         isQueryExecuted={isQueryExecuted}
         isDisabled={isAddingIdentifiersDisabled}
         sampleRecord={sampleRecord}
-        inputName={MapGCPLogsToServiceFieldNames.SERVICE_INSTANCE}
+        inputName={MapElkToServiceFieldNames.SERVICE_INSTANCE}
         dataTooltipId={'GCOLogsServiceInstance'}
         isMultiType={Boolean(isTemplate)}
         expressions={expressions}
@@ -91,7 +91,7 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
         isDisabled={isAddingIdentifiersDisabled}
         isQueryExecuted={isQueryExecuted}
         sampleRecord={sampleRecord}
-        inputName={MapGCPLogsToServiceFieldNames.IDENTIFY_TIMESTAMP}
+        inputName={MapElkToServiceFieldNames.IDENTIFY_TIMESTAMP}
         dataTooltipId={'GCOLogsMessageIdentifier'}
         isMultiType={Boolean(isTemplate)}
         expressions={expressions}
@@ -112,7 +112,7 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
         isDisabled={isAddingIdentifiersDisabled}
         isQueryExecuted={isQueryExecuted}
         sampleRecord={sampleRecord}
-        inputName={MapGCPLogsToServiceFieldNames.MESSAGE_IDENTIFIER}
+        inputName={MapElkToServiceFieldNames.MESSAGE_IDENTIFIER}
         dataTooltipId={'GCOLogsMessageIdentifier'}
         isMultiType={Boolean(isTemplate)}
         expressions={expressions}
