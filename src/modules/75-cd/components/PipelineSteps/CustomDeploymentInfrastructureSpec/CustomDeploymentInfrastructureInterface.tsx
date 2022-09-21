@@ -19,15 +19,17 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
     variables: variableSchema(getString)
   })
 }
+
+export type CustomDeploymentInfrastructureStep = Omit<CustomDeploymentInfrastructure, 'customDeploymentRef'>
 export interface CustomDeploymentInfrastructureSpecEditableProps {
-  initialValues: CustomDeploymentInfrastructure
-  allValues?: CustomDeploymentInfrastructure
-  onUpdate?: (data: CustomDeploymentInfrastructure) => void
+  initialValues: CustomDeploymentInfrastructureStep
+  allValues?: CustomDeploymentInfrastructureStep
+  onUpdate?: (data: CustomDeploymentInfrastructureStep) => void
   stepViewType?: StepViewType
   readonly?: boolean
   factory?: AbstractStepFactory
-  template?: CustomDeploymentInfrastructure
+  template?: CustomDeploymentInfrastructureStep
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData: CustomDeploymentInfrastructure
+  variablesData: CustomDeploymentInfrastructureStep
   allowableTypes: AllowedTypes
 }

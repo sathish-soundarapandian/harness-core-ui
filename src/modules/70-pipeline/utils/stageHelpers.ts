@@ -458,6 +458,9 @@ export const isConfigFilesPresent = (stage: DeploymentStageElementConfig): boole
 }
 
 export const isCustomDeploymentDataPresent = (stage: DeploymentStageElementConfig): boolean => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  // TODO: Fix once BE types are available
   return !!stage.spec?.serviceConfig && !!stage.spec?.serviceConfig.serviceDefinition?.spec.customDeploymentRef
 }
 
@@ -519,6 +522,9 @@ export const deleteServiceData = (stage?: DeploymentStageElementConfig): void =>
     delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.artifacts
     delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.manifests
     delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.configFiles
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    // TODO: Fix once BE types are available
     delete stage?.spec?.serviceConfig?.serviceDefinition?.spec?.customDeploymentRef
   }
 }

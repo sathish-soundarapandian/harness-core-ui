@@ -5,19 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { StoreConfigWrapper } from 'services/cd-ng'
+import type { CustomDeploymentNGVariable, StoreConfigWrapper } from 'services/cd-ng'
 import type { VariableMergeServiceResponse, PipelineInfoConfig, ShellScriptInlineSource } from 'services/pipeline-ng'
 
 export interface PipelineVariablesData {
   variablesPipeline: PipelineInfoConfig
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-}
-
-type CustomDeploymentInfraNGVariable = {
-  value?: number | string
-  id?: string
-  name?: string
-  type?: 'String' | 'Secret' | 'Connector'
 }
 
 interface InstanceAttributeVariable {
@@ -28,7 +21,7 @@ interface InstanceAttributeVariable {
 }
 
 export interface DeploymentInfra {
-  variables?: Array<CustomDeploymentInfraNGVariable>
+  variables?: Array<CustomDeploymentNGVariable>
   fetchInstancesScript?: {
     store?: StoreConfigWrapper | ShellScriptInlineSource
   }

@@ -52,7 +52,7 @@ export function ReconcileDialog({
   setResolvedTemplateResponses: setResolvedTemplates,
   onRefreshEntity,
   updateRootEntity
-}: ReconcileDialogProps) {
+}: ReconcileDialogProps): JSX.Element {
   const { nodeInfo, templateResponse, childrenErrorNodes } = errorNodeSummary
   const hasChildren = !isEmpty(childrenErrorNodes)
   const [selectedErrorNodeSummary, setSelectedErrorNodeSummary] = React.useState<ErrorNodeSummary>()
@@ -201,50 +201,54 @@ export function ReconcileDialog({
           padding={{ top: 'large', right: 'xxxlarge', bottom: 'xxxlarge', left: 'xxxlarge' }}
         >
           <Layout.Horizontal spacing={'huge'} height={'100%'}>
-            <Container width={376}>
-              <Layout.Vertical spacing={'xlarge'}>
-                <Container>
-                  <Layout.Vertical spacing={'medium'}>
-                    <Text font={{ variation: FontVariation.H5 }}>{getString('pipeline.reconcileDialog.subtitle')}</Text>
-                    <Text font={{ variation: FontVariation.BODY }}>
-                      <String
-                        stringID={
-                          hasChildren
-                            ? 'pipeline.reconcileDialog.unsyncedTemplateInfo'
-                            : 'pipeline.reconcileDialog.updatedTemplateInfo'
-                        }
-                        vars={{
-                          name: title
-                        }}
-                        useRichText={true}
-                      />
-                    </Text>
-                  </Layout.Vertical>
-                </Container>
-                {isEdit && (
-                  <Button
-                    text={
-                      hasChildren
-                        ? getString('pipeline.reconcileDialog.updateAllLabel')
-                        : getString('pipeline.reconcileDialog.updateEntityLabel', { entity })
-                    }
-                    variation={ButtonVariation.PRIMARY}
-                    width={248}
-                    disabled={!updateButtonEnabled}
-                    onClick={onUpdateAll}
-                  />
-                )}
-                {hasChildren && (
-                  <ErrorNode
-                    entity={entity}
-                    errorNodeSummary={errorNodeSummary}
-                    resolvedTemplateResponses={resolvedTemplateResponses}
-                    selectedErrorNodeSummary={selectedErrorNodeSummary}
-                    setSelectedErrorNodeSummary={setSelectedErrorNodeSummary}
-                  />
-                )}
-              </Layout.Vertical>
-            </Container>
+            {entity !== TemplateErrorEntity.INFRASTRUCTURE && (
+              <Container width={376}>
+                <Layout.Vertical spacing={'xlarge'}>
+                  <Container>
+                    <Layout.Vertical spacing={'medium'}>
+                      <Text font={{ variation: FontVariation.H5 }}>
+                        {getString('pipeline.reconcileDialog.subtitle')}
+                      </Text>
+                      <Text font={{ variation: FontVariation.BODY }}>
+                        <String
+                          stringID={
+                            hasChildren
+                              ? 'pipeline.reconcileDialog.unsyncedTemplateInfo'
+                              : 'pipeline.reconcileDialog.updatedTemplateInfo'
+                          }
+                          vars={{
+                            name: title
+                          }}
+                          useRichText={true}
+                        />
+                      </Text>
+                    </Layout.Vertical>
+                  </Container>
+                  {isEdit && (
+                    <Button
+                      text={
+                        hasChildren
+                          ? getString('pipeline.reconcileDialog.updateAllLabel')
+                          : getString('pipeline.reconcileDialog.updateEntityLabel', { entity })
+                      }
+                      variation={ButtonVariation.PRIMARY}
+                      width={248}
+                      disabled={!updateButtonEnabled}
+                      onClick={onUpdateAll}
+                    />
+                  )}
+                  {hasChildren && (
+                    <ErrorNode
+                      entity={entity}
+                      errorNodeSummary={errorNodeSummary}
+                      resolvedTemplateResponses={resolvedTemplateResponses}
+                      selectedErrorNodeSummary={selectedErrorNodeSummary}
+                      setSelectedErrorNodeSummary={setSelectedErrorNodeSummary}
+                    />
+                  )}
+                </Layout.Vertical>
+              </Container>
+            )}
             <Container style={{ flex: 1 }}>
               <YamlDiffView
                 errorNodeSummary={selectedErrorNodeSummary}
@@ -252,6 +256,7 @@ export function ReconcileDialog({
                 originalEntityYaml={originalEntityYaml}
                 resolvedTemplateResponses={resolvedTemplateResponses}
                 onUpdate={onUpdateNode}
+                entity={entity}
               />
             </Container>
           </Layout.Horizontal>

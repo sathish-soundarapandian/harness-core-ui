@@ -12,13 +12,15 @@ import { FormikErrors, yupToFormErrors } from 'formik'
 
 import { isEmpty } from 'lodash-es'
 import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
-import type { CustomDeploymentInfrastructure } from 'services/cd-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 
-import type { CustomDeploymentInfrastructureSpecEditableProps } from './CustomDeploymentInfrastructureInterface'
+import type {
+  CustomDeploymentInfrastructureSpecEditableProps,
+  CustomDeploymentInfrastructureStep
+} from './CustomDeploymentInfrastructureInterface'
 import { CustomDeploymentInfrastructureSpecEditable } from './CustomDeploymentInfrastructureSpecEditable'
 import { CustomDeploymentInfrastructureSpecInputForm } from './CustomDeploymentInfrastructureSpecInputForm'
 import { variableSchema } from '../ShellScriptStep/shellScriptTypes'
@@ -38,7 +40,7 @@ const CustomDeploymentInfrastructureSpecVariablesForm: React.FC<CustomDeployment
   ) : null
 }
 
-interface CustomDeploymentInfrastructureSpecStep extends CustomDeploymentInfrastructure {
+interface CustomDeploymentInfrastructureSpecStep extends CustomDeploymentInfrastructureStep {
   name?: string
   identifier?: string
 }
@@ -46,7 +48,7 @@ interface CustomDeploymentInfrastructureSpecStep extends CustomDeploymentInfrast
 export class CustomDeploymentInfrastructureSpec extends PipelineStep<CustomDeploymentInfrastructureSpecStep> {
   lastFetched: number
   protected type = StepType.CustomDeployment
-  protected defaultValues: CustomDeploymentInfrastructure = {
+  protected defaultValues: CustomDeploymentInfrastructureStep = {
     variables: []
   }
 
@@ -68,8 +70,8 @@ export class CustomDeploymentInfrastructureSpec extends PipelineStep<CustomDeplo
     data,
     getString,
     viewType
-  }: ValidateInputSetProps<CustomDeploymentInfrastructure>): FormikErrors<CustomDeploymentInfrastructure> {
-    const errors: Partial<CustomDeploymentInfrastructure> = {}
+  }: ValidateInputSetProps<CustomDeploymentInfrastructureStep>): FormikErrors<CustomDeploymentInfrastructureStep> {
+    const errors: Partial<CustomDeploymentInfrastructureStep> = {}
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
 
     if (!isEmpty(data) && isRequired && getString) {
@@ -90,7 +92,7 @@ export class CustomDeploymentInfrastructureSpec extends PipelineStep<CustomDeplo
     }
     return errors as any
   }
-  renderStep(props: StepProps<CustomDeploymentInfrastructure>): JSX.Element {
+  renderStep(props: StepProps<CustomDeploymentInfrastructureStep>): JSX.Element {
     const { initialValues, onUpdate, stepViewType, inputSetData, customStepProps, readonly, allowableTypes, factory } =
       props
     if (this.isTemplatizedView(stepViewType)) {

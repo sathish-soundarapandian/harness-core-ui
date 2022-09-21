@@ -63,7 +63,7 @@ export const DeploymentInfraWrapper = ({ children }: React.PropsWithChildren<unk
         set(
           draft,
           'variables',
-          draft?.variables?.map(({ id, ...variable }) => variable)
+          (draft?.variables as any)?.map(({ id, ...variable }: any) => variable)
         )
         set(
           draft,
