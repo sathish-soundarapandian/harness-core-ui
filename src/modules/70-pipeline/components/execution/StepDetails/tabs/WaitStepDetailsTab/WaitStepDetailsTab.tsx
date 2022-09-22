@@ -9,12 +9,7 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import { String, useStrings } from 'framework/strings'
 import { Duration } from '@common/exports'
-import {
-  useMarkWaitStep,
-  ExecutionNode,
-  useGetWaitStepExecutionDetails,
-  WaitStepRequestDto
-} from 'services/pipeline-ng'
+import { useMarkWaitStep, ExecutionNode, useExecutionDetails, WaitStepRequestDto } from 'services/pipeline-ng'
 import { Thumbnail, Container, Color } from '@wings-software/uicore'
 import { Strategy, strategyIconMap, stringsMap } from '@pipeline/utils/FailureStrategyUtils'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
@@ -39,7 +34,7 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
     orgIdentifier
   }
 
-  const { data: stepData } = useGetWaitStepExecutionDetails({
+  const { data: stepData } = useExecutionDetails({
     nodeExecutionId: step.uuid || '',
     queryParams: {
       ...commonParams
