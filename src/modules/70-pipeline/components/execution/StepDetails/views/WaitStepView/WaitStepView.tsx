@@ -34,13 +34,13 @@ export function WaitStepView(props: StepDetailProps): React.ReactElement {
         }}
         renderAllTabPanels={false}
       >
-        {isStageExecutionInputConfigured ? null : (
+        {
           <Tab
             id={StepDetailTab.STEP_DETAILS}
             title={getString('details')}
             panel={<WaitStepDetailsTab step={step} />}
           />
-        )}
+        }
       </Tabs>
     </div>
   )

@@ -8,12 +8,9 @@
 import React from 'react'
 import * as Yup from 'yup'
 import { FormikErrors, yupToFormErrors } from 'formik'
-
 import { IconName, Color, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { StringsMap } from 'stringTypes'
-
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-
 import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'

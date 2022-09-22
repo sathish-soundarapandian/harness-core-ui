@@ -8,11 +8,17 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { String, useStrings } from 'framework/strings'
-import { useMarkWaitStep, ExecutionNode, WaitStepResponseDto } from 'services/pipeline-ng'
+import {
+  useMarkWaitStep,
+  ExecutionNode,
+  WaitStepResponseDto,
+  useGetWaitStepExecutionDetails,
+  WaitStepRequestDto
+} from 'services/pipeline-ng'
 import { Thumbnail, Container, Color } from '@wings-software/uicore'
 import { Strategy, strategyIconMap, stringsMap } from '@pipeline/utils/FailureStrategyUtils'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
-import css from '../ManualInterventionTab/ManualInterventionTab.module.scss'
+import css from './WaitStepTab.module.scss'
 
 export interface WaitStepDetailsTabProps {
   step: ExecutionNode
@@ -21,28 +27,46 @@ export interface WaitStepDetailsTabProps {
 export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactElement {
   const { step } = props
   const { getString } = useStrings()
-  const STRATEGIES: Strategy[][] = [[Strategy.MarkAsSuccess], [Strategy.Abort]]
+  const STRATEGIES: Strategy[][] = [[Strategy.MarkAsSuccess], [Strategy.MarkAsFailure]]
   const { orgIdentifier, projectIdentifier, accountId } = useParams<PipelineType<ExecutionPathProps>>()
   const { mutate: handleInterrupt } = useMarkWaitStep({
     nodeExecutionId: step.uuid || /* istanbul ignore next */ ''
   })
 
+  const commonParams = {
+    accountIdentifier: accountId,
+    projectIdentifier,
+    orgIdentifier
+  }
+
+  const { data: stepData } = useGetWaitStepExecutionDetails({
+    nodeExecutionId: step.uuid || '',
+    queryParams: {
+      ...commonParams
+    }
+  })
+
   function DurationMessage() {
+    console.log(stepData, 'hello')
+    const duration = stepData?.data?.duration
     return (
       <Container
         color={Color.BLACK}
         background={Color.YELLOW_100}
         padding={{ top: 'xxlarge', bottom: 'xxlarge', left: 'large', right: 'large' }}
       >
-        <div>Duration:</div>
+        <div>{stepData?.data?.duration ? `Duration : ${duration}` : null}</div>
       </Container>
     )
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
-    const actionPassed = e.target.value as WaitStepResponseDto['action']
-    const waitStepResponseDto = { action: actionPassed }
-    handleInterrupt(waitStepResponseDto, {
+    console.log(e.target.value, 'hello2')
+    const actionPassed = (
+      e.target.value === 'MarkAsSuccess' ? 'MARK_AS_SUCCESS' : 'MARK_AS_FAIL'
+    ) as WaitStepRequestDto['action']
+    const waitStepRequestDto = { action: actionPassed }
+    handleInterrupt(waitStepRequestDto, {
       queryParams: {
         accountIdentifier: accountId,
         orgIdentifier,
@@ -54,7 +78,7 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
   return (
     <React.Fragment>
       <DurationMessage />
-      <div>
+      <div className={css.manualInterventionTab}>
         <String tagName="div" className={css.title} stringID="common.PermissibleActions" />
         {STRATEGIES.map((layer, i) => {
           return (
