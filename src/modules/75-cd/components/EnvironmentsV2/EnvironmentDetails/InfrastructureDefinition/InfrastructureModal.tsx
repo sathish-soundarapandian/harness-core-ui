@@ -71,6 +71,7 @@ import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { DeployStageErrorProvider, StageErrorContext } from '@pipeline/context/StageErrorContext'
+import { isEditInfrastructure } from '@cd/components/PipelineSteps/DeployInfrastructureStep/utils'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import type {
   GetTemplateProps,
@@ -175,6 +176,7 @@ export default function InfrastructureModal({
             stageDeploymentType={(deploymentType as Partial<ServiceDeploymentType>) || stageDeploymentType}
             getTemplate={getTemplate}
             stageCustomDeploymentData={stageCustomDeploymentData}
+            selectedInfrastructure={selectedInfrastructure}
           />
         </DeployStageErrorProvider>
       </PipelineVariablesContextProvider>
@@ -189,6 +191,7 @@ function BootstrapDeployInfraDefinition({
   environmentIdentifier,
   stageDeploymentType,
   stageCustomDeploymentData,
+  selectedInfrastructure,
   getTemplate
 }: {
   hideModal: () => void
@@ -197,6 +200,7 @@ function BootstrapDeployInfraDefinition({
   environmentIdentifier: string
   stageDeploymentType?: ServiceDeploymentType
   stageCustomDeploymentData?: TemplateLinkConfig
+  selectedInfrastructure?: string
   getTemplate?: (data: GetTemplateProps) => Promise<GetTemplateResponse>
 }): JSX.Element {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -250,7 +254,9 @@ function BootstrapDeployInfraDefinition({
   const [deployInfraRemountCount, setDeployInfraRemountCount] = useState(0)
 
   const shouldFetchCustomDeploymentTemplate =
-    !isEmpty(stageCustomDeploymentData) && isEmpty(getDeploymentTemplateData()?.templateMetaData)
+    !isEmpty(stageCustomDeploymentData) &&
+    isEmpty(getDeploymentTemplateData()?.templateMetaData) &&
+    !isEditInfrastructure(selectedInfrastructure)
 
   const { data: customDeploymentTemplateResponse } = useGetTemplate({
     templateIdentifier: getIdentifierFromValue(defaultTo(stageCustomDeploymentData?.templateRef, '')),
