@@ -389,7 +389,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
       ? [
           {
             label: getString('ci.buildInfra.cloud'),
-            icon: 'main-cloud-providers',
+            icon: 'harness',
             value: CIBuildInfrastructureType.Cloud
           } as Item
         ]
