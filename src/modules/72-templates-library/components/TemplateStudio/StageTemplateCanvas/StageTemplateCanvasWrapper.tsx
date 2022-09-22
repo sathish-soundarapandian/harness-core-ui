@@ -22,8 +22,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { sanitize } from '@common/utils/JSONUtils'
 import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const StageTemplateCanvasWrapper = () => {
+const StageTemplateCanvasWrapper = (): JSX.Element => {
   const {
     state: { template, isLoading, isUpdated, gitDetails, storeMetadata },
     updateTemplate,
@@ -55,7 +54,6 @@ const StageTemplateCanvasWrapper = () => {
     }
   }, [createPipelineFromTemplate, isLoading, isUpdated])
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const onUpdatePipeline = async (pipelineConfig: PipelineInfoConfig) => {
     const stage = get(pipelineConfig, 'stages[0].stage')
 
