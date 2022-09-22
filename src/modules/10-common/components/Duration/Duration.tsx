@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Text, TextProps, timeToDisplayText } from '@wings-software/uicore'
+import { Text, TextProps, timeToDisplayText, Color } from '@wings-software/uicore'
 import { isNil } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 
@@ -18,12 +18,14 @@ export interface DurationProps extends Omit<TextProps, 'icon'> {
   showZeroSecondsResult?: boolean
   showMsLessThanOneSecond?: boolean
   icon?: TextProps['icon'] | null
+  color?: string
 }
 
 export function Duration(props: DurationProps): React.ReactElement {
   const {
     startTime,
     endTime,
+    color,
     durationText,
     icon,
     showMilliSeconds,
@@ -60,8 +62,13 @@ export function Duration(props: DurationProps): React.ReactElement {
   const text = showZeroSecondsResult ? timeToDisplayText(delta) || '0s' : timeToDisplayText(delta)
 
   return (
-    <Text inline icon={isNil(icon) ? undefined : icon || 'hourglass'} {...textProps}>
-      {durationText ?? getString('common.durationPrefix')}
+    <Text
+      inline
+      icon={isNil(icon) ? undefined : icon || 'hourglass'}
+      {...textProps}
+      color={isNil(color) ? undefined : color}
+    >
+      {`${durationText} ` ?? getString('common.durationPrefix')}
       {text}
     </Text>
   )

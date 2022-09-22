@@ -7,6 +7,11 @@
 .durationMsg {
   margin-left: 10px;
 }
+.timer {
+  font-size: var(--font-size-small) !important;
+  color: var(--grey-500) !important;
+  font-weight: 600 !important;
+}
 .timeEllapsedMsg {
   margin-left: 10px;
   margin-top: 10px;

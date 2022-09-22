@@ -8,6 +8,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { String, useStrings } from 'framework/strings'
+import { Duration } from '@common/exports'
 import {
   useMarkWaitStep,
   ExecutionNode,
@@ -56,27 +57,27 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
     else return days + ' Days'
   }
 
-  function timeEllapsed() {
-    const currentDateEpoch = Date.now()
-    const createdAt = stepData?.data?.createdAt || 0
-    const timeDiff = currentDateEpoch - createdAt
-    const timeEllpased = msToTime(timeDiff / 1000)
-    return timeEllpased
-  }
-
   function DurationMessage() {
     console.log(stepData, 'hello')
     const duration = stepData?.data?.duration
     const daysDuration = msToTime(duration || 0)
-    const timePassed = timeEllapsed()
     return (
       <Container
         color={Color.ORANGE_400}
         background={Color.YELLOW_100}
         padding={{ top: 'xxlarge', bottom: 'xxlarge', left: 'large', right: 'large' }}
       >
-        <div className={css.durationMsg}>{stepData?.data?.duration ? `Duration : ${daysDuration}` : null}</div>
-        <div className={css.timeEllapsedMsg}>{stepData?.data?.duration ? `Time Elapsed : ${timePassed}` : null}</div>
+        <div className={css.durationMsg}>{`Duration : ${daysDuration}`}</div>
+        <div className={css.timeEllapsedMsg}>
+          <Duration
+            color={Color.ORANGE_400}
+            className={css.timer}
+            durationText="Ellapsed Time"
+            startTime={stepData?.data?.createdAt}
+            endTime={''}
+            showZeroSecondsResult
+          />
+        </div>
       </Container>
     )
   }

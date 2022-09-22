@@ -13,6 +13,7 @@ declare const styles: {
   readonly manualInterventionTab: string
   readonly thumbnail: string
   readonly timeEllapsedMsg: string
+  readonly timer: string
   readonly title: string
 }
 export default styles
