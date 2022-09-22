@@ -25,7 +25,7 @@
 
   .action-row {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 100px 100px;
     place-items: center;
     margin: var(--spacing-medium);
     padding: var(--spacing-medium) 0;

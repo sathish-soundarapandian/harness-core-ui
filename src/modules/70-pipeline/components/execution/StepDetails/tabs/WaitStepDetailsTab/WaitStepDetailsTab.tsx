@@ -101,23 +101,27 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
       <DurationMessage />
       <div className={css.manualInterventionTab}>
         <String tagName="div" className={css.title} stringID="common.PermissibleActions" />
-        {STRATEGIES.map((layer, i) => {
-          return (
-            <span key={i} className={css.actionRow}>
-              {layer.map((strategy, j) => (
-                <Thumbnail
-                  key={j}
-                  label={getString(stringsMap[strategy])}
-                  icon={strategyIconMap[strategy]}
-                  value={strategy}
-                  name={strategy}
-                  onClick={handleChange}
-                  className={css.thumbnail}
-                />
-              ))}
-            </span>
-          )
-        })}
+
+        <div className={css.actionRow}>
+          <Thumbnail
+            key={0}
+            label={getString(stringsMap[Strategy.MarkAsSuccess])}
+            icon={strategyIconMap[Strategy.MarkAsSuccess]}
+            value={Strategy.MarkAsSuccess}
+            name={Strategy.MarkAsSuccess}
+            onClick={handleChange}
+            className={css.thumbnail}
+          />
+          <Thumbnail
+            key={0}
+            label={getString(stringsMap[Strategy.MarkAsFailure])}
+            icon={strategyIconMap[Strategy.MarkAsFailure]}
+            value={Strategy.MarkAsFailure}
+            name={Strategy.MarkAsFailure}
+            onClick={handleChange}
+            className={css.thumbnail}
+          />
+        </div>
       </div>
     </React.Fragment>
   )
