@@ -43,9 +43,16 @@ import { VariableType, labelStringMap } from './CustomVariableUtils'
 import AddEditCustomVariable, { VariableState } from './AddEditCustomVariable'
 import css from './CustomVariables.module.scss'
 
-const getValidationSchema = (getString: UseStringsReturn['getString']): Yup.Schema<unknown> =>
+export type VariablesCustomValidationSchemaType = (
+  getString: UseStringsReturn['getString']
+) => Record<string, Yup.Schema<unknown>>
+
+const getValidationSchema = (
+  getString: UseStringsReturn['getString'],
+  validationSchema?: VariablesCustomValidationSchemaType
+): Yup.Schema<unknown> =>
   Yup.object().shape({
-    ...getVariablesValidationField(getString)
+    ...(validationSchema ? validationSchema(getString) : getVariablesValidationField(getString))
   })
 
 export function CustomVariablesEditableStage(props: CustomVariableEditableProps): React.ReactElement {
@@ -62,8 +69,8 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
     allowableTypes,
     allowedVarialblesTypes,
     isDescriptionEnabled,
-    allowedConnectorTypes,
-    addVariableLabel
+    addVariableLabel,
+    validationSchema
   } = props
   const uids = React.useRef<string[]>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
@@ -107,7 +114,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
       initialValues={initialValues}
       onSubmit={data => onUpdate?.(data)}
       validate={debouncedUpdate}
-      validationSchema={enableValidation ? getValidationSchema(getString) : undefined}
+      validationSchema={enableValidation ? getValidationSchema(getString, validationSchema) : undefined}
     >
       {formik => {
         const { values, setFieldValue } = formik
@@ -194,7 +201,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                               setRefValue
                               connectorLabelClass="connectorVariableField"
                               enableConfigureOptions={false}
-                              type={allowedConnectorTypes}
+                              isDrawerMode={true}
                             />
                           ) : variable.type === VariableType.Secret ? (
                             <MultiTypeSecretInput name={`variables[${index}].value`} label="" disabled={readonly} />

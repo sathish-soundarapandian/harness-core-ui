@@ -45,6 +45,7 @@ import { isValueRuntimeInput } from '@common/utils/utils'
 import AddEditCustomVariable from './AddEditCustomVariable'
 import type { VariableState } from './AddEditCustomVariable'
 import { VariableType } from './CustomVariableUtils'
+import type { VariablesCustomValidationSchemaType } from './CustomVariablesEditableStage'
 import css from './CustomVariables.module.scss'
 
 export interface CustomVariablesData {
@@ -70,6 +71,7 @@ export interface CustomVariableEditableExtraProps {
   headerComponent?: JSX.Element
   allowedConnectorTypes?: ConnectorInfoDTO['type'] | ConnectorInfoDTO['type'][]
   addVariableLabel?: StringKeys
+  validationSchema?: VariablesCustomValidationSchemaType
 }
 
 export interface CustomVariableEditableProps extends CustomVariableEditableExtraProps {
@@ -96,7 +98,6 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
     allowedVarialblesTypes,
     isDescriptionEnabled,
     headerComponent,
-    allowedConnectorTypes,
     addVariableLabel
   } = props
   const uids = React.useRef<string[]>([])
@@ -289,7 +290,7 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                               connectorLabelClass="connectorVariableField"
                               enableConfigureOptions={false}
                               mini={true}
-                              type={allowedConnectorTypes}
+                              isDrawerMode={true}
                             />
                           ) : variable.type === VariableType.Secret ? (
                             <MultiTypeSecretInput

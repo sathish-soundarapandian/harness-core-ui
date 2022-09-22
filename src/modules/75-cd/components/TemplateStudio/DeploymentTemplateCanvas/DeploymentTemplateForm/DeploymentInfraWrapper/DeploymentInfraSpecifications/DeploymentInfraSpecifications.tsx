@@ -38,7 +38,7 @@ import type { JsonNode } from 'services/pipeline-ng'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
 import { CustomVariablesEditableStage } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariablesEditableStage'
-import { useGetConnectorsListHook } from '@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook'
+import { getDTInfraVariablesValidationField } from '../DeploymentInfraUtils'
 import css from './DeploymentInfraSpecifications.module.scss'
 
 export enum VariableType {
@@ -59,7 +59,6 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const infraAllowableTypes: AllowedTypesWithRunTime[] = [MultiTypeInputType.FIXED]
-  const { connectorsList } = useGetConnectorsListHook()
 
   const scriptType: ScriptType = 'Bash'
   const instanceScriptTypes = React.useMemo(
@@ -117,8 +116,8 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
               ]}
               isDescriptionEnabled={true}
               enableValidation={true}
-              allowedConnectorTypes={connectorsList}
               addVariableLabel={'variables.newVariable'}
+              validationSchema={getDTInfraVariablesValidationField}
             />
           </Layout.Horizontal>
         </Layout.Vertical>

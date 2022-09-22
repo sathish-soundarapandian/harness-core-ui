@@ -25,7 +25,6 @@ import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/Abs
 import { VariableType } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableUtils'
 import { useStrings } from 'framework/strings'
 import type { StoreConfigWrapper } from 'services/cd-ng'
-import { useGetConnectorsListHook } from '@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook'
 import VariableAccordionSummary from '../VariableAccordionSummary'
 import type { DeploymentInfra, DeploymentTemplateConfig, PipelineVariablesData } from '../types'
 import css from '../PipelineVariables.module.scss'
@@ -57,8 +56,6 @@ export default function DeploymentTemplateCard(props: DeploymentTemplateCardProp
   } = props
 
   const { getString } = useStrings()
-
-  const { connectorsList } = useGetConnectorsListHook()
 
   const infrastructureSpec = deploymentTemplate?.infrastructure as DeploymentInfra
 
@@ -155,7 +152,6 @@ export default function DeploymentTemplateCard(props: DeploymentTemplateCardProp
                       ],
                       isDescriptionEnabled: true,
                       headerComponent: headerComponent,
-                      allowedConnectorTypes: connectorsList,
                       addVariableLabel: 'variables.newVariable'
                     }}
                   />

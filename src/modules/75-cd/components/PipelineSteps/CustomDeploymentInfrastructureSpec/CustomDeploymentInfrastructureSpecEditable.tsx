@@ -26,7 +26,6 @@ import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/Abs
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { CustomVariableEditableExtraProps } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableEditable'
-import { useGetConnectorsListHook } from '@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook'
 import {
   CustomDeploymentInfrastructureSpecEditableProps,
   CustomDeploymentInfrastructureStep,
@@ -43,7 +42,6 @@ const CustomDeploymentInfrastructureSpecEditableNew: React.FC<CustomDeploymentIn
 }): JSX.Element => {
   const delayedOnUpdate = React.useRef(debounce(onUpdate || noop, 300)).current
   const { getString } = useStrings()
-  const { connectorsList } = useGetConnectorsListHook()
   const formikRef = React.useRef<FormikProps<CustomDeploymentInfrastructureStep> | null>(null)
   const getInitialValues = (): CustomDeploymentInfrastructureStep => {
     return initialValues
@@ -118,8 +116,7 @@ const CustomDeploymentInfrastructureSpecEditableNew: React.FC<CustomDeploymentIn
                     ],
                     isDescriptionEnabled: true,
                     tabName: DeployTabs.INFRASTRUCTURE,
-                    formName: 'addEditInfraVariableForm',
-                    allowedConnectorTypes: connectorsList
+                    formName: 'addEditInfraVariableForm'
                   }}
                 />
               </Layout.Horizontal>
