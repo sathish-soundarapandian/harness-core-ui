@@ -48,11 +48,11 @@ const PipelineTemplateCanvasWrapper = (): JSX.Element => {
     [template.spec]
   )
 
-  const [Template, setTemplate] = React.useState<PipelineInfoConfig>(createPipelineFromTemplate())
+  const [pipeline, setPipeline] = React.useState<PipelineInfoConfig>(createPipelineFromTemplate())
 
   React.useEffect(() => {
     if (!isLoading && isUpdated) {
-      setTemplate(createPipelineFromTemplate())
+      setPipeline(createPipelineFromTemplate())
     }
   }, [createPipelineFromTemplate, isLoading, isUpdated])
 
@@ -77,7 +77,7 @@ const PipelineTemplateCanvasWrapper = (): JSX.Element => {
   return (
     <TemplatePipelineProvider
       queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier }}
-      initialValue={Template}
+      initialValue={pipeline}
       gitDetails={gitDetails}
       storeMetadata={storeMetadata}
       onUpdatePipeline={onUpdatePipeline}
