@@ -49,7 +49,7 @@ const getParsedData = (items?: ItemDTO[]): PriceDetails => {
     developers: {} as ItemDTO
   }
   items?.forEach(item => {
-    if (item.description === 'Sales Tax (Avatax)') {
+    if (item.description?.includes('Sales Tax')) {
       priceBreakdown.tax = defaultTo(item.amount, 0) as number
     }
     if (item.price?.metaData?.type === PLAN_TYPES.MAU) {

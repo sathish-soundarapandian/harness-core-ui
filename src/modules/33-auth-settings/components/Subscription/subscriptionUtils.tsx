@@ -78,6 +78,7 @@ interface GetCostCalculatorBodyByModuleProps {
   subscriptionDetails: SubscriptionProps
   setSubscriptionDetails: (props: SubscriptionProps | ((old: SubscriptionProps) => SubscriptionProps)) => void
   recommendation: { [key: string]: number } | null
+  updateQuantities: ({ maus, devs }: { maus?: number; devs?: number | undefined }) => void
 }
 
 export function getCostCalculatorBodyByModule({
@@ -88,7 +89,8 @@ export function getCostCalculatorBodyByModule({
   paymentFrequency,
   subscriptionDetails,
   setSubscriptionDetails,
-  recommendation
+  recommendation,
+  updateQuantities
 }: GetCostCalculatorBodyByModuleProps): React.ReactElement {
   const { edition, paymentFreq } = subscriptionDetails
   const productPricesByPayFreq = getProductPrices(edition, paymentFreq, productPrices)
@@ -124,18 +126,9 @@ export function getCostCalculatorBodyByModule({
             usage={usageAndLimitInfo.usageData.usage?.ff?.activeFeatureFlagUsers?.count || 0}
             toggledNumberOfDevelopers={subscriptionDetails.quantities?.featureFlag?.numberOfDevelopers}
             setNumberOfDevelopers={(value: number) => {
-              setSubscriptionDetails(
-                (oldValue: SubscriptionProps): SubscriptionProps => ({
-                  ...oldValue,
-                  quantities: {
-                    ...oldValue.quantities,
-                    featureFlag: {
-                      numberOfMau: oldValue.quantities?.featureFlag?.numberOfMau as number,
-                      numberOfDevelopers: value || 1
-                    }
-                  }
-                })
-              )
+              updateQuantities({
+                devs: value || 1
+              })
             }}
           />
           <FFMAUCard
@@ -156,18 +149,9 @@ export function getCostCalculatorBodyByModule({
               sampleData.minValue
             )}
             setNumberOfMAUs={(value: number) => {
-              setSubscriptionDetails(
-                (oldValue: SubscriptionProps): SubscriptionProps => ({
-                  ...oldValue,
-                  quantities: {
-                    ...oldValue.quantities,
-                    featureFlag: {
-                      numberOfMau: value || sampleData.minValue,
-                      numberOfDevelopers: oldValue.quantities?.featureFlag?.numberOfDevelopers || 1
-                    }
-                  }
-                })
-              )
+              updateQuantities({
+                maus: value || sampleData.minValue
+              })
             }}
           />
         </Layout.Vertical>

@@ -168,9 +168,11 @@ costCalculator:
   developer:
     title: How many developers will use Feature Flags?
     developer: Who is a developer?
+    developerDefinition: A Developer is an active Feature Flags user with create/edit/delete permissions on Feature Flags, Targets, or Segments.
   mau:
     title: How many Monthly Active Users will view Feature Flags?
     mau: Who is a Monthly Active User?
+    mauDefinition: '"MAUs" refers to the Monthly Active Users viewing your Feature Flags'
     perkMau: 'per {{quantity}}K / month'
     kMauFree: (first 100k included free)
     permMau: 'per {{quantity}}M / month'

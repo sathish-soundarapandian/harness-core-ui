@@ -1593,10 +1593,12 @@ export interface StringsMap {
   'authSettings.costCalculator.comparePlans': string
   'authSettings.costCalculator.currentSubscribed': string
   'authSettings.costCalculator.developer.developer': string
+  'authSettings.costCalculator.developer.developerDefinition': string
   'authSettings.costCalculator.developer.title': string
   'authSettings.costCalculator.mau.kMauFree': string
   'authSettings.costCalculator.mau.mMauFree': string
   'authSettings.costCalculator.mau.mau': string
+  'authSettings.costCalculator.mau.mauDefinition': string
   'authSettings.costCalculator.mau.perkMau': string
   'authSettings.costCalculator.mau.permMau': string
   'authSettings.costCalculator.mau.title': string

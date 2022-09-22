@@ -55,7 +55,8 @@ const SubscriptionDetailsCard: React.FC<SubscriptionDetailsCardProps> = ({
         </Layout.Horizontal>
         <ul className={css.ul}>
           {items.map(item => {
-            return (
+            const isTaxItem = item?.includes('Sales Tax')
+            return isTaxItem ? null : (
               <li key={item} className={css.li}>
                 <Text>{item}</Text>
               </li>
