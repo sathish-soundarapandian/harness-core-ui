@@ -22,6 +22,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { sanitize } from '@common/utils/JSONUtils'
 import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const StageTemplateCanvasWrapper = () => {
   const {
     state: { template, isLoading, isUpdated, gitDetails, storeMetadata },
@@ -46,14 +47,15 @@ const StageTemplateCanvasWrapper = () => {
     [template.spec]
   )
 
-  const [Template, setTemplate] = React.useState<PipelineInfoConfig>(createPipelineFromTemplate())
+  const [pipeline, setPipeline] = React.useState<PipelineInfoConfig>(createPipelineFromTemplate())
 
   React.useEffect(() => {
     if (!isLoading && isUpdated) {
-      setTemplate(createPipelineFromTemplate())
+      setPipeline(createPipelineFromTemplate())
     }
   }, [createPipelineFromTemplate, isLoading, isUpdated])
 
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const onUpdatePipeline = async (pipelineConfig: PipelineInfoConfig) => {
     const stage = get(pipelineConfig, 'stages[0].stage')
 
@@ -66,7 +68,7 @@ const StageTemplateCanvasWrapper = () => {
   return (
     <TemplatePipelineProvider
       queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier }}
-      initialValue={Template}
+      initialValue={pipeline}
       gitDetails={gitDetails}
       storeMetadata={storeMetadata}
       onUpdatePipeline={onUpdatePipeline}
