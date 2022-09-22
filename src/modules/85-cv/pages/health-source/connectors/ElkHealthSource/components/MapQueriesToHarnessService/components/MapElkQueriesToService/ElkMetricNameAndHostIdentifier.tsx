@@ -10,7 +10,7 @@ import { Container, FormInput, MultiTypeInputType, Utils } from '@wings-software
 import { useParams } from 'react-router'
 import { useStrings } from 'framework/strings'
 import { InputWithDynamicModalForJson } from '@cv/components/InputWithDynamicModalForJson/InputWithDynamicModalForJson'
-import { useGetELKIndices } from 'services/cv'
+import { useGetELKIndices, useGetTimeFormat } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { InputWithDynamicModalForJsonMultiType } from '@cv/components/InputWithDynamicModalForJson/InputWithDynamicModalForJsonMultiType'
 import { MapElkToServiceFieldNames } from '@cv/pages/health-source/connectors/ElkHealthSource/components/MapQueriesToHarnessService/constants'
@@ -39,7 +39,7 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
   const { data: elkIndices } = useGetELKIndices({
     queryParams: { projectIdentifier, orgIdentifier, accountId, connectorIdentifier, tracingId: '' }
   })
-  // .map(val => {label: val, value: val})
+  const { data: elkTimeFormat } = useGetTimeFormat({})
 
   const getIndexItems = useMemo(
     () =>
@@ -48,6 +48,15 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
         value: item
       })) ?? [],
     [elkIndices?.data]
+  )
+
+  const getTimeFormatItems = useMemo(
+    () =>
+      elkTimeFormat?.data?.map(item => ({
+        label: item,
+        value: item
+      })) ?? [],
+    [elkTimeFormat?.data]
   )
 
   return (
@@ -104,6 +113,13 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
         //noRecordModalHeader={getString('cv.monitoringSources.gcoLogs.newGCOLogsMessageIdentifier')}
         //noRecordInputLabel={getString('cv.monitoringSources.gcoLogs.gcoLogsMessageIdentifer')}
         recordsModalHeader="Select Path for TimeStamp"
+      />
+
+      <FormInput.Select
+        label="TimeStamp Format"
+        name={MapElkToServiceFieldNames.TIMESTAMP_FORMAT}
+        placeholder="Select TimeStamp Format"
+        items={getTimeFormatItems}
       />
 
       <InputWithDynamicModalForJsonMultiType

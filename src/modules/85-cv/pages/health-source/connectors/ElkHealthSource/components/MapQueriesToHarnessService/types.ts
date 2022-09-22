@@ -7,7 +7,7 @@
 
 import type { HealthSourceTypes } from '@cv/pages/health-source/types'
 import type { UseStringsReturn } from 'framework/strings'
-import type { HealthSourceSpec } from 'services/cv'
+import type { ELKHealthSourceSpec } from 'services/cv'
 import type { ElkHealthSourceInfo } from '../../ElkHealthSource.types'
 
 export interface ElkQueryBuilderProps {
@@ -20,9 +20,12 @@ export interface ElkQueryBuilderProps {
 
 export type MapElkQueryToService = {
   metricName: string
-  serviceInstance?: string
+  serviceInstance: string
+  timeStampFormat: string
+  logIndexes: string
   query: string
-  isStaleRecord?: boolean
+  identify_timestamp: string
+  messageIdentifier: string
 }
 
 export interface ElkQueryDefinition {
@@ -31,7 +34,6 @@ export interface ElkQueryDefinition {
   serviceInstanceIdentifier?: string
   identifier?: string
 }
-
 export type ElkHealthSourceSpec = HealthSourceSpec & {
   connectorRef: string
   feature: string
@@ -41,7 +43,7 @@ export interface ElkHealthSourcePayload {
   name: string
   type: HealthSourceTypes.Elk
   identifier: string
-  spec: ElkHealthSourceSpec
+  spec: ELKHealthSourceSpec
 }
 
 export interface GetElkMappedMetricInterface {

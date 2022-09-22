@@ -654,6 +654,8 @@ export interface CVConfig {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
+    | 'CLOUDWATCH_METRICS'
   uuid?: string
   verificationTaskTags?: {
     [key: string]: string
@@ -814,6 +816,24 @@ export interface ChangeTimeline {
   categoryTimeline?: {
     [key: string]: TimeRangeDetail[]
   }
+}
+
+export interface CloudWatchMetricDefinition {
+  analysis?: AnalysisDTO
+  expression?: string
+  groupName?: string
+  identifier: string
+  metricName: string
+  responseMapping?: MetricResponseMapping
+  riskProfile?: RiskProfile
+  sli?: Slidto
+}
+
+export type CloudWatchMetricsHealthSourceSpec = HealthSourceSpec & {
+  feature: string
+  metricDefinitions?: CloudWatchMetricDefinition[]
+  metricThresholds?: TimeSeriesMetricPackDTO[]
+  region: string
 }
 
 export interface Cluster {
@@ -1052,6 +1072,9 @@ export interface DataCollectionRequest {
     | 'SPLUNK_METRIC_SAMPLE_DATA'
     | 'ELK_SAMPLE_DATA'
     | 'ELK_INDEX_DATA'
+    | 'CLOUDWATCH_METRIC_SAMPLE_DATA_REQUEST'
+    | 'CLOUDWATCH_METRIC_DATA_REQUEST'
+    | 'CLOUDWATCH_METRICS_METADATA_REQUEST'
 }
 
 export interface DataCollectionTask {
@@ -1309,6 +1332,11 @@ export type ELKConnectorDTO = ConnectorConfigDTO & {
   passwordRef?: string
   url: string
   username?: string
+}
+
+export type ELKHealthSourceSpec = HealthSourceSpec & {
+  feature: string
+  queries: QueryDTO[]
 }
 
 export interface Edge {
@@ -2378,6 +2406,8 @@ export interface HealthSource {
     | 'CustomHealthMetric'
     | 'CustomHealthLog'
     | 'SplunkMetric'
+    | 'ELKLog'
+    | 'CloudWatchMetrics'
 }
 
 export interface HealthSourceDTO {
@@ -2398,6 +2428,8 @@ export interface HealthSourceDTO {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
+    | 'CLOUDWATCH_METRICS'
   verificationType?: 'TIME_SERIES' | 'LOG'
 }
 
@@ -2835,6 +2867,13 @@ export interface LogsAnalysisSummary {
   totalClusterCount?: number
 }
 
+export interface MSDropdownResponse {
+  environmentRef?: string
+  identifier: string
+  name: string
+  serviceRef?: string
+}
+
 export interface MessageFrequency {
   count?: number
   host?: string
@@ -2908,6 +2947,8 @@ export interface MetricPack {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
+    | 'CLOUDWATCH_METRICS'
   identifier?: string
   lastUpdatedAt?: number
   metrics?: MetricDefinition[]
@@ -2934,6 +2975,8 @@ export interface MetricPackDTO {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
+    | 'CLOUDWATCH_METRICS'
   identifier?: string
   metrics?: MetricDefinitionDTO[]
   orgIdentifier?: string
@@ -3330,6 +3373,16 @@ export interface PageLogAnalysisRadarChartListDTO {
   totalPages?: number
 }
 
+export interface PageMSDropdownResponse {
+  content?: MSDropdownResponse[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
 export interface PageMonitoredServiceListItemDTO {
   content?: MonitoredServiceListItemDTO[]
   empty?: boolean
@@ -3581,10 +3634,13 @@ export interface PrometheusSampleData {
 export type QuarterlyCalenderSpec = CalenderSpec & { [key: string]: any }
 
 export interface QueryDTO {
-  indexes: string[]
+  index: string
+  messageIdentifier: string
   name: string
   query: string
   serviceInstanceIdentifier: string
+  timeStampFormat: string
+  timeStampIdentifier: string
 }
 
 export type RatioSLIMetricSpec = SLIMetricSpec & {
@@ -3749,6 +3805,15 @@ export interface ResponseListString {
 export interface ResponseListTimeSeriesSampleDTO {
   correlationId?: string
   data?: TimeSeriesSampleDTO[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseMap {
+  correlationId?: string
+  data?: {
+    [key: string]: { [key: string]: any }
+  }
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -4163,6 +4228,13 @@ export interface ResponsePageCVNGLogDTO {
 export interface ResponsePageDatadogDashboardDTO {
   correlationId?: string
   data?: PageDatadogDashboardDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePageMSDropdownResponse {
+  correlationId?: string
+  data?: PageMSDropdownResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -5418,6 +5490,8 @@ export interface TimeSeriesMetricDataDTO {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
+    | 'CLOUDWATCH_METRICS'
   environmentIdentifier?: string
   groupName?: string
   metricDataList?: MetricData[]
@@ -5439,7 +5513,7 @@ export interface TimeSeriesMetricDefinition {
   metricName?: string
   metricType?: 'INFRA' | 'RESP_TIME' | 'THROUGHPUT' | 'ERROR' | 'APDEX' | 'OTHER'
   occurrenceCount?: number
-  thresholdConfigType?: 'DEFAULT' | 'USER_DEFINED'
+  thresholdConfigType?: 'DEFAULT' | 'USER_DEFINED' | 'CUSTOMER'
   thresholdType?: 'ACT_WHEN_LOWER' | 'ACT_WHEN_HIGHER'
   value?: number
 }
@@ -5520,6 +5594,8 @@ export interface TimeSeriesThreshold {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
+    | 'CLOUDWATCH_METRICS'
   deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
   lastUpdatedAt?: number
   metricGroupName?: string
@@ -5529,7 +5605,7 @@ export interface TimeSeriesThreshold {
   metricType: 'INFRA' | 'RESP_TIME' | 'THROUGHPUT' | 'ERROR' | 'APDEX' | 'OTHER'
   orgIdentifier: string
   projectIdentifier: string
-  thresholdConfigType?: 'DEFAULT' | 'USER_DEFINED'
+  thresholdConfigType?: 'DEFAULT' | 'USER_DEFINED' | 'CUSTOMER'
   uuid?: string
 }
 
@@ -5560,6 +5636,8 @@ export interface TimeSeriesThresholdDTO {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
+    | 'CLOUDWATCH_METRICS'
   metricGroupName?: string
   metricName?: string
   metricPackIdentifier?: string
@@ -5618,6 +5696,8 @@ export interface TransactionMetricInfo {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
+    | 'CLOUDWATCH_METRICS'
   nodeRiskCountDTO?: NodeRiskCountDTO
   nodes?: HostData[]
   transactionMetric?: TransactionMetric
@@ -5711,6 +5791,8 @@ export interface VerificationJob {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
+    | 'CLOUDWATCH_METRICS'
   )[]
   defaultJob?: boolean
   duration?: Duration
@@ -5924,7 +6006,7 @@ export type ServiceLevelObjectiveDTORequestBody = ServiceLevelObjectiveDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type SaveMonitoredServiceFromTemplateInputBodyRequestBody = string
+export type SaveMonitoredServiceFromYamlBodyRequestBody = string
 
 export interface ChangeEventListQueryParams {
   serviceIdentifiers?: string[]
@@ -8119,6 +8201,31 @@ export const getAllErrorTrackingDataPromise = (
     signal
   )
 
+export type GetTimeFormatProps = Omit<GetProps<ResponseListString, unknown, void, void>, 'path'>
+
+/**
+ * get time formats for Health Source
+ */
+export const GetTimeFormat = (props: GetTimeFormatProps) => (
+  <Get<ResponseListString, unknown, void, void> path={`/health/time-format`} base={getConfig('cv/api')} {...props} />
+)
+
+export type UseGetTimeFormatProps = Omit<UseGetProps<ResponseListString, unknown, void, void>, 'path'>
+
+/**
+ * get time formats for Health Source
+ */
+export const useGetTimeFormat = (props: UseGetTimeFormatProps) =>
+  useGet<ResponseListString, unknown, void, void>(`/health/time-format`, { base: getConfig('cv/api'), ...props })
+
+/**
+ * get time formats for Health Source
+ */
+export const getTimeFormatPromise = (
+  props: GetUsingFetchProps<ResponseListString, unknown, void, void>,
+  signal?: RequestInit['signal']
+) => getUsingFetch<ResponseListString, unknown, void, void>(getConfig('cv/api'), `/health/time-format`, props, signal)
+
 export interface GetNamespacesQueryParams {
   accountId: string
   orgIdentifier: string
@@ -8446,6 +8553,8 @@ export interface GetMetricPacksQueryParams {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
+    | 'CLOUDWATCH_METRICS'
 }
 
 export type GetMetricPacksProps = Omit<
@@ -8511,6 +8620,8 @@ export interface SaveMetricPacksQueryParams {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
+    | 'CLOUDWATCH_METRICS'
 }
 
 export type SaveMetricPacksProps = Omit<
@@ -9123,7 +9234,7 @@ export type SaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -9137,7 +9248,7 @@ export const SaveMonitoredServiceFromYaml = (props: SaveMonitoredServiceFromYaml
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -9152,7 +9263,7 @@ export type UseSaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -9166,7 +9277,7 @@ export const useSaveMonitoredServiceFromYaml = (props: UseSaveMonitoredServiceFr
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', `/monitored-service/yaml`, { base: getConfig('cv/api'), ...props })
 
@@ -9178,7 +9289,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -9187,7 +9298,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromTemplateInputBodyRequestBody,
+    SaveMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', getConfig('cv/api'), `/monitored-service/yaml`, props, signal)
 

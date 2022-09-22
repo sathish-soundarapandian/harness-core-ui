@@ -5,25 +5,25 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { MapElkQueryToService } from './types'
+
 export const MapElkToServiceFieldNames = {
   METRIC_NAME: 'metricName',
   QUERY: 'query',
-  RECORD_COUNT: 'recordCount',
-  IS_STALE_RECORD: 'isStaleRecord',
-  HOST_NAME: 'hostName',
-  TIMESTAMP_FIELD: 'timestampField',
-  MESSAGE: 'message',
-  TIMESTAMP_FORMAT: 'timestampFormat',
+  TIMESTAMP_FORMAT: 'timeStampFormat',
   SERVICE_INSTANCE: 'serviceInstance',
   LOG_INDEXES: 'logIndexes',
   IDENTIFY_TIMESTAMP: 'identify_timestamp',
-  MESSAGE_IDENTIFIER: 'messageIdentifier',
-  RECORD_COUNT: 'recordCount'
+  MESSAGE_IDENTIFIER: 'messageIdentifier'
+  // RECORD_COUNT: 'recordCount'
 }
 
-export const initialFormData = {
+export const initialFormData: MapElkQueryToService = {
   metricName: 'Elk Logs Query',
   query: '',
-  recordCount: 0,
-  serviceInstance: ''
+  timeStampFormat: '',
+  serviceInstance: '',
+  logIndexes: '',
+  identify_timestamp: '',
+  messageIdentifier: ''
 }
