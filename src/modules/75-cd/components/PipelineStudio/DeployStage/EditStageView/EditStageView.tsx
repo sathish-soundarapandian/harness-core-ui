@@ -24,7 +24,7 @@ import type { Item } from '@wings-software/uicore/dist/components/ThumbnailSelec
 import { Color, Intent } from '@harness/design-system'
 import cx from 'classnames'
 import * as Yup from 'yup'
-import { get, isEmpty, omit, set } from 'lodash-es'
+import { debounce, get, isEmpty, isEqual, omit, set } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import produce from 'immer'
 import { useStrings } from 'framework/strings'
@@ -72,11 +72,6 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
   children,
   updateDeploymentType
 }): JSX.Element => {
-  const {
-    state: {
-      pipeline: { stages = [] }
-    }
-  } = usePipelineContext()
   const { getString } = useStrings()
   const newStageData: Item[] = [
     {
@@ -107,7 +102,8 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
 
   const {
     state: {
-      selectionState: { selectedStageId }
+      selectionState: { selectedStageId },
+      pipeline: { stages = [] }
     },
     stepsFactory,
     getStageFromPipeline,
@@ -136,6 +132,15 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
     getLinkedDeploymentTemplateConfig()
   )
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debounceUpdateStage = useCallback(
+    debounce(
+      (changedStage?: StageElementConfig) =>
+        changedStage ? updateStage(changedStage) : /* istanbul ignore next */ Promise.resolve(),
+      300
+    ),
+    [updateStage]
+  )
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   const { getTemplate } = useTemplateSelector()
@@ -164,6 +169,13 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
             !isEmpty(linkedDeploymentTemplateConfig) &&
             selectedDeploymentType === ServiceDeploymentType.CustomDeployment
           ) {
+            const currentDeploymentTemplateConfig = get(stage, 'stage.spec.customDeploymentRef')
+            if (!isEqual(currentDeploymentTemplateConfig, linkedDeploymentTemplateConfig)) {
+              // Need to clean up dependent data
+              delete draft?.stage?.spec?.service
+              delete draft?.stage?.spec?.environment
+              delete draft?.stage?.spec?.environmentGroup
+            }
             set(draft, 'stage.spec.customDeploymentRef', linkedDeploymentTemplateConfig)
           } else if (selectedDeploymentType !== ServiceDeploymentType.CustomDeployment) {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -173,7 +185,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
           }
         }
       })
-      updateStage(stageData?.stage as StageElementConfig)
+      debounceUpdateStage(stageData?.stage as StageElementConfig)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [linkedDeploymentTemplateConfig, context, selectedDeploymentType])
