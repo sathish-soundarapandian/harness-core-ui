@@ -8,9 +8,11 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly actionRow: string
+  readonly durationMsg: string
   readonly loading: string
   readonly manualInterventionTab: string
   readonly thumbnail: string
+  readonly timeEllapsedMsg: string
   readonly title: string
 }
 export default styles

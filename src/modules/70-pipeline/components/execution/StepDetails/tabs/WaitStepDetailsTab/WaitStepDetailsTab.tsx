@@ -11,7 +11,6 @@ import { String, useStrings } from 'framework/strings'
 import {
   useMarkWaitStep,
   ExecutionNode,
-  WaitStepResponseDto,
   useGetWaitStepExecutionDetails,
   WaitStepRequestDto
 } from 'services/pipeline-ng'
@@ -46,16 +45,38 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
     }
   })
 
+  function msToTime(ms: number) {
+    let seconds: number = parseInt((ms / 1000).toFixed(1))
+    let minutes: number = parseInt((ms / (1000 * 60)).toFixed(1))
+    let hours: number = parseInt((ms / (1000 * 60 * 60)).toFixed(1))
+    let days: number = parseInt((ms / (1000 * 60 * 60 * 24)).toFixed(1))
+    if (seconds < 60) return seconds + ' Sec'
+    else if (minutes < 60) return minutes + ' Min'
+    else if (hours < 24) return hours + ' Hrs'
+    else return days + ' Days'
+  }
+
+  function timeEllapsed() {
+    const currentDateEpoch = Date.now()
+    const createdAt = stepData?.data?.createdAt || 0
+    const timeDiff = currentDateEpoch - createdAt
+    const timeEllpased = msToTime(timeDiff / 1000)
+    return timeEllpased
+  }
+
   function DurationMessage() {
     console.log(stepData, 'hello')
     const duration = stepData?.data?.duration
+    const daysDuration = msToTime(duration || 0)
+    const timePassed = timeEllapsed()
     return (
       <Container
-        color={Color.BLACK}
+        color={Color.ORANGE_400}
         background={Color.YELLOW_100}
         padding={{ top: 'xxlarge', bottom: 'xxlarge', left: 'large', right: 'large' }}
       >
-        <div>{stepData?.data?.duration ? `Duration : ${duration}` : null}</div>
+        <div className={css.durationMsg}>{stepData?.data?.duration ? `Duration : ${daysDuration}` : null}</div>
+        <div className={css.timeEllapsedMsg}>{stepData?.data?.duration ? `Time Elapsed : ${timePassed}` : null}</div>
       </Container>
     )
   }
@@ -82,7 +103,7 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
         <String tagName="div" className={css.title} stringID="common.PermissibleActions" />
         {STRATEGIES.map((layer, i) => {
           return (
-            <div key={i} className={css.actionRow}>
+            <span key={i} className={css.actionRow}>
               {layer.map((strategy, j) => (
                 <Thumbnail
                   key={j}
@@ -94,7 +115,7 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
                   className={css.thumbnail}
                 />
               ))}
-            </div>
+            </span>
           )
         })}
       </div>

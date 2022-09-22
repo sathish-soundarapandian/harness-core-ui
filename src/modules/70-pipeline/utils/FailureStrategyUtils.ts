@@ -51,5 +51,5 @@ export const stringsMap: Record<Strategy, StringKeys> = {
   [Strategy.StageRollback]: 'pipeline.failureStrategies.strategiesLabel.StageRollback',
   [Strategy.Retry]: 'pipeline.failureStrategies.strategiesLabel.Retry',
   [Strategy.ManualIntervention]: 'pipeline.failureStrategies.strategiesLabel.ManualIntervention',
-  [Strategy.MarkAsFailure]: 'pipeline.failureStrategies.strategiesLabel.Abort'
+  [Strategy.MarkAsFailure]: 'pipeline.failureStrategies.strategiesLabel.MarkAsFail'
 }

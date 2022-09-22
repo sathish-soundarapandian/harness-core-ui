@@ -28,7 +28,7 @@ export class WaitStep extends PipelineStep<WaitStepData> {
 
   protected type = StepType.Wait
   protected stepName = 'Wait Step'
-  protected stepIcon: IconName = 'evaluate-policy' // to be refactored
+  protected stepIcon: IconName = 'waiting' // to be refactored
   protected stepIconColor = Color.GREY_700
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.Wait'
 

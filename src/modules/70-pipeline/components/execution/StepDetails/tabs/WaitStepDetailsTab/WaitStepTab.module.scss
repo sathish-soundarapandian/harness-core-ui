@@ -4,7 +4,13 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
+.durationMsg {
+  margin-left: 10px;
+}
+.timeEllapsedMsg {
+  margin-left: 10px;
+  margin-top: 10px;
+}
 .manual-intervention-tab {
   .title {
     margin: 0 var(--spacing-medium);
@@ -32,6 +38,8 @@
       }
     }
 
-    border-bottom: 1px solid var(--grey-200);
+    &:not(:last-child) {
+      border-bottom: 1px solid var(--grey-200);
+    }
   }
 }
