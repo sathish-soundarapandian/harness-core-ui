@@ -71,6 +71,7 @@ import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreate
 import ChaosHomePage from './pages/home/ChaosHomePage'
 import type { ChaosCustomMicroFrontendProps } from './interfaces/Chaos.types'
 import ChaosSideNav from './components/ChaosSideNav/ChaosSideNav'
+import { registerChaosPipelineStage } from './components/ChaosStage'
 
 // eslint-disable-next-line import/no-unresolved
 const ChaosMicroFrontend = React.lazy(() => import('chaos/MicroFrontendApp'))
@@ -181,6 +182,9 @@ export default function ChaosRoutes(): React.ReactElement {
 
   // Register Chaos into RBAC Factory and AuditTrail only when Feature Flag is enabled
   if (isChaosEnabled) {
+    // Pipeline Stage registration
+    registerChaosPipelineStage()
+
     // RBAC registrations
     RbacFactory.registerResourceCategory(ResourceCategory.CHAOS, {
       icon: 'chaos-main',

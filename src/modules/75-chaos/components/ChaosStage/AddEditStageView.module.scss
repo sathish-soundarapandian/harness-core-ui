@@ -1,0 +1,16 @@
+.addEditStageView {
+}
+
+.addExperimentDrawer {
+  .close-button {
+    position: absolute;
+    top: 0;
+    left: -43px;
+    box-shadow: none !important;
+    opacity: 0.8;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}

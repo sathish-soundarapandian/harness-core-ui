@@ -3681,6 +3681,7 @@ export interface StringsMap {
   'pipeline.pipelineSteps.approvalStageDescription': string
   'pipeline.pipelineSteps.chainedPipeline': string
   'pipeline.pipelineSteps.chainedPipelineDescription': string
+  'pipeline.pipelineSteps.chaosStageDescription': string
   'pipeline.pipelineSteps.customStage': string
   'pipeline.pipelineSteps.customStageDescription': string
   'pipeline.pipelineSteps.deployStageDescription': string
